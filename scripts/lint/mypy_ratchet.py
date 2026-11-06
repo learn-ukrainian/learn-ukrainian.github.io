@@ -338,6 +338,44 @@ def _sort_name_list(body: str) -> str:
     return inner
 
 
+# A single TypedDict key: 'Extra key "k" for TypedDict', 'has no key "k"',
+# 'Key "k" of TypedDict'. Key lists are protected separately (_UNORDERED_KEYS).
+_SINGLE_KEY = re.compile(r'\b[Kk]ey "((?:[^"\\]|\\.)*)"')
+_LITERAL_OPEN = "Literal["
+
+
+def _data_spans(message: str) -> list[tuple[int, int]]:
+    """Spans of data that only resembles a name: TypedDict keys and quoted Literal values.
+
+    mypy prints a string Literal with ``repr`` inside ``Literal[...]``
+    (``"Literal['x']"``), so every quoted string within those brackets is a
+    value. An enum member there (``Literal[pkg.E.A]``) is unquoted and stays a name.
+    """
+
+    spans = [match.span(1) for match in _SINGLE_KEY.finditer(message)]
+    start = message.find(_LITERAL_OPEN)
+    while start != -1:
+        index, depth, quote, opened = start + len(_LITERAL_OPEN), 1, "", 0
+        while index < len(message) and depth:
+            char = message[index]
+            if quote:
+                if char == "\\":
+                    index += 2
+                    continue
+                if char == quote:
+                    spans.append((opened, index + 1))
+                    quote = ""
+            elif char in "'\"":
+                quote, opened = char, index
+            elif char == "[":
+                depth += 1
+            elif char == "]":
+                depth -= 1
+            index += 1
+        start = message.find(_LITERAL_OPEN, index)
+    return spans
+
+
 def _canonical_modules(message: str) -> str:
     """Spell machinery module names under the census package name.
 
@@ -346,28 +384,39 @@ def _canonical_modules(message: str) -> str:
     censused where that directory was ``scripts``. A renamed machinery
     directory names the same modules differently, so its dotted names are
     rewritten to the census spelling before comparison. A product module
-    already uses that spelling. In this checkout the names are equal and the
-    message is unchanged.
+    already uses that spelling. Data that only looks like a name (a TypedDict
+    key, a quoted Literal value) keeps its spelling, so two different values
+    never compare equal. In this checkout the names are equal and the message
+    is unchanged.
     """
 
     package = _machinery_dir()
     if package == _CENSUS_PACKAGE:
         return message
-    pattern = rf"(?<![\w.]){re.escape(package)}(?=\.[A-Za-z_])"
-    return re.sub(pattern, _CENSUS_PACKAGE, message)
+    spans = _data_spans(message)
+    pattern = re.compile(rf"(?<![\w.]){re.escape(package)}(?=\.[A-Za-z_])")
+
+    def rename(match: re.Match[str]) -> str:
+        if any(begin <= match.start() < end for begin, end in spans):
+            return match.group(0)
+        return _CENSUS_PACKAGE
+
+    return pattern.sub(rename, message)
 
 
 def _normalize_message(message: str) -> str:
     """Drop order that mypy does not keep stable, line references, and the machinery directory name."""
 
-    message = _canonical_modules(_LINE_REFERENCE.sub("", message))
+    message = _LINE_REFERENCE.sub("", message)
     slots: list[str] = []
 
     def protect(match: re.Match[str]) -> str:
         slots.append(f"{match.group('prefix')} ({_sort_name_list(match.group('body'))})")
         return f"\ue000{len(slots) - 1}\ue001"
 
-    ordered = _sort_unions(_UNORDERED_KEYS.sub(protect, message))
+    # Key lists are protected before machinery names are canonicalized, so a
+    # key keeps its spelling; names are canonical before union members sort.
+    ordered = _sort_unions(_canonical_modules(_UNORDERED_KEYS.sub(protect, message)))
     return _KEY_SLOT.sub(lambda slot: slots[int(slot.group(1))], ordered)
 
 
