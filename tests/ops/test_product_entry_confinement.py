@@ -170,6 +170,77 @@ def test_a_foreign_cached_leaf_is_refused_and_kept(product, tmp_path, monkeypatc
     assert product.ran() == []
 
 
+def test_a_package_that_repoints_its_search_path_is_refused_before_its_child_runs(product, tmp_path):
+    """The package's own code moves its search path to another checkout: that checkout's module never runs."""
+    foreign = tmp_path / "other" / "scripts" / "pkg"
+    foreign.mkdir(parents=True)
+    (foreign / "leaf.py").write_text(product.recording("foreign-leaf"), encoding="utf-8")
+    product.write("pkg/__init__.py", product.recording("pkg", f"__path__.insert(0, {str(foreign)!r})\n"))
+    product.write("pkg/leaf.py", product.recording("leaf"))
+    product.names.append("scripts.pkg.leaf")
+
+    with pytest.raises(ConfiguredModuleError, match=r"scripts\.pkg searches outside"):
+        load_configured_module("scripts.pkg.leaf")
+
+    assert product.ran() == ["scripts", "pkg"]
+    assert "scripts.pkg.leaf" not in sys.modules
+
+
+def test_a_foreign_cached_part_below_a_missing_package_is_refused_before_anything_runs(product, tmp_path, monkeypatch):
+    """Every cached part is checked on its own first, even below a package that does not exist."""
+    name = "scripts.lu_confined_missing.leaf"
+    foreign = ModuleType(name)
+    foreign.__file__ = str(tmp_path / "other" / "scripts" / "lu_confined_missing" / "leaf.py")
+    monkeypatch.setitem(sys.modules, name, foreign)
+
+    with pytest.raises(ConfiguredModuleError, match="not a file in this checkout"):
+        load_configured_module(name)
+
+    assert sys.modules[name] is foreign
+    assert "scripts" not in sys.modules
+    assert product.ran() == []
+
+
+def test_a_load_waiting_on_an_ordinary_import_does_not_deadlock(product, monkeypatch):
+    """A product module, imported the ordinary way in one thread, calls the loader while another thread waits for it."""
+    load_configured_module(product.leaf("VALUE = 1\n"))
+    events = ModuleType(f"lu_confined_events_{uuid.uuid4().hex}")
+    events.started = threading.Event()
+    events.resume = threading.Event()
+    events.load = load_configured_module
+    monkeypatch.setitem(sys.modules, events.__name__, events)
+    other = product.leaf("VALUE = 2\n")
+    blocked = product.leaf(
+        f"import sys\nevents = sys.modules[{events.__name__!r}]\nevents.started.set()\n"
+        f"events.resume.wait(10)\nOTHER = events.load({other!r})\n"
+    )
+    results: dict[str, ModuleType] = {}
+    errors: list[BaseException] = []
+
+    def run(label: str, load) -> None:
+        try:
+            results[label] = load(blocked)
+        except BaseException as exc:
+            errors.append(exc)
+
+    ordinary = threading.Thread(target=run, args=("ordinary", importlib.import_module), daemon=True)
+    ordinary.start()
+    assert events.started.wait(10)
+    configured = threading.Thread(target=run, args=("configured", load_configured_module), daemon=True)
+    configured.start()
+    # The configured load now waits for the module the ordinary import is still running.
+    configured.join(timeout=0.5)
+    assert configured.is_alive()
+    events.resume.set()
+    ordinary.join(timeout=10)
+    configured.join(timeout=10)
+
+    assert not ordinary.is_alive() and not configured.is_alive()
+    assert errors == []
+    assert results["ordinary"] is results["configured"]
+    assert results["configured"].OTHER.VALUE == 2
+
+
 def test_a_module_symlinked_out_of_the_root_is_refused_before_it_runs(product, tmp_path):
     outside = tmp_path / "outside.py"
     outside.write_text(product.recording("outside"), encoding="utf-8")

@@ -22,26 +22,37 @@ Contract of :func:`load_configured_module`:
   ``scripts/`` directory; it is checked before anything is imported.
 * The product's ``scripts`` package is found in that root, not on ``sys.path``
   (C-4764): once the machinery runs from its own repository, the product
-  checkout is not on the import path. Before any product code runs, every
-  package and module of the name, cached or not, is checked against the root:
-  its file and every package search path must resolve (symlinks followed) under
-  the root's ``scripts/`` directory. A cached module from another checkout is
-  refused and left cached (never evicted or rebound), and so is a namespace
-  package as the module itself.
-* An uncached top-level package is executed from its checked spec and cached;
-  the rest is imported with :func:`importlib.import_module`, which takes the
-  per-module import lock, reuses ``sys.modules``, binds the module on its parent
-  package, and removes a module whose import raised, ``BaseException``
-  included. The loaded modules are checked again afterwards.
+  checkout is not on the import path. A module is accepted when its file and
+  every package search path resolve (symlinks followed) under the root's
+  ``scripts/`` directory; a namespace package is accepted only as a package
+  above the module, never as the module itself.
+* First, every part of the name that is already cached is checked, each on its
+  own, and then every uncached part that can be found without running product
+  code. A refusal there runs no product code and changes no cache entry: a
+  cached module from another checkout is refused and left cached, never evicted
+  or rebound.
+* Then the parts are imported one at a time, from the top. Each part is found
+  before it runs: the top-level package by the file finder in the root, every
+  other part by the import system in its parent's search path, which is checked
+  again after the parent's own code has run. The found spec is checked, then
+  the part is imported and checked once more. So no module outside the root
+  runs because of this call, whatever a package's code did to its search path.
+* The top-level package is executed from its checked spec under the import
+  system's own module lock, as an ordinary import executes it. Every other part
+  is imported with :func:`importlib.import_module`, which takes the per-module
+  import lock, reuses ``sys.modules``, binds the module on its parent package,
+  and removes a module whose import raised, ``BaseException`` included. No lock
+  of this module's own is held while product code runs or an import lock is
+  awaited, so a product module may call this function again from any thread.
 * Standard-library, installed and machinery imports made by the product code
   are not confined: this is an origin check for the named product modules, not
   a sandbox for product code.
 
 A refusal raises :class:`ConfiguredModuleError`, an ``ImportError``. An import
 that fails raises what the import raised; a part of the name that does not
-exist raises ``ModuleNotFoundError`` naming it, after the checked packages
-before it are imported, as an ordinary import does. Callers keep their own
-data-file validation, error contracts and callable checks.
+exist raises ``ModuleNotFoundError`` naming it, after the parts before it are
+imported, as an ordinary import does. Callers keep their own data-file
+validation, error contracts and callable checks.
 
 Example:
   .venv/bin/python -c "from scripts.ops.product_entry import load_configured_module as l; print(l('scripts.lib.readonly_sqlite'))"
@@ -50,11 +61,11 @@ Example:
 from __future__ import annotations
 
 import importlib
+import importlib._bootstrap as _bootstrap
 import importlib.machinery
 import importlib.util
 import re
 import sys
-import threading
 from collections.abc import Iterable
 from importlib.machinery import ModuleSpec
 from pathlib import Path
@@ -64,9 +75,7 @@ from scripts.common import repo_root
 
 _SQLITE_MODULES = frozenset({"sqlite3", "_sqlite3"})
 _NAME_RE = re.compile(r"scripts(?:\.[a-z_][a-z0-9_]*)+")
-# Serializes this loader's own top-level package loads, which the import system's
-# per-module locks do not cover (the package is executed from its spec here).
-_LOAD_LOCK = threading.RLock()
+_TOP = "scripts"
 # The file finder's loaders, in the order the import system's path hook uses them.
 _LOADER_DETAILS = (
     (importlib.machinery.ExtensionFileLoader, importlib.machinery.EXTENSION_SUFFIXES),
@@ -88,10 +97,17 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
     if _NAME_RE.fullmatch(name) is None:
         raise ConfiguredModuleError(f"configured module name is not a lowercase scripts.* name: {name!r}", name=name)
     scripts_dir = _scripts_dir(name, product_root)
-    with _LOAD_LOCK:
-        _confine(name, scripts_dir)
-        _recheck(name, scripts_dir)
-        return _in_this_checkout(name, importlib.import_module(name), scripts_dir)
+    parts = name.split(".")
+    prefixes = [".".join(parts[:index]) for index in range(1, len(parts) + 1)]
+    for prefix in prefixes:
+        cached = sys.modules.get(prefix)
+        if cached is not None:
+            _check_module(name, prefix, cached, scripts_dir, is_leaf=prefix == name)
+    _preflight(name, prefixes, scripts_dir)
+    module = _load_top_level(name, scripts_dir)
+    for prefix in prefixes[1:]:
+        module = _load_part(name, prefix, scripts_dir)
+    return module
 
 
 def _scripts_dir(name: str, product_root: Path | None) -> Path:
@@ -108,46 +124,72 @@ def _scripts_dir(name: str, product_root: Path | None) -> Path:
     return scripts_dir
 
 
-def _confine(name: str, scripts_dir: Path) -> None:
-    """Check every package and module of ``name`` against the root before any product code runs.
+def _preflight(name: str, prefixes: list[str], scripts_dir: Path) -> None:
+    """Check every uncached part that can be found without running product code, before any runs.
 
-    Cached entries are checked as they are. Uncached ones are found from the root (the top-level
-    package) or from their parent's checked search paths, without importing them, and their specs
-    are checked. Then an uncached top-level package is executed from its checked spec, so the final
-    import resolves every submodule through checked search paths.
+    Found as the import system would find it: the top-level package in the root, each other part in
+    its parent's cached search path or found spec. The walk ends at the first part that does not
+    exist; the import then raises ``ModuleNotFoundError`` for it, as an ordinary import does.
     """
-    parts = name.split(".")
-    top_spec: ModuleSpec | None = None
-    search: list[str] | None = None
-    for index in range(1, len(parts) + 1):
-        prefix = ".".join(parts[:index])
-        is_leaf = index == len(parts)
+    search: list[str] = [str(scripts_dir.parent)]
+    for prefix in prefixes:
         cached = sys.modules.get(prefix)
         if cached is not None:
-            _check_cached(name, prefix, cached, scripts_dir, is_leaf=is_leaf)
             search = list(getattr(cached, "__path__", None) or [])
             continue
-        spec = _find_spec(prefix, [str(scripts_dir.parent)] if index == 1 else search or [])
+        spec = _find_spec(prefix, search)
         if spec is None:
-            if index == 1:
-                raise ModuleNotFoundError(f"No module named {prefix!r}", name=prefix)
-            # Nothing of this name to run: the import below imports the checked packages before it and
-            # raises ModuleNotFoundError for this name, as an ordinary import does.
-            break
-        _check_spec(name, prefix, spec, scripts_dir, is_leaf=is_leaf)
-        if index == 1:
-            top_spec = spec
+            return
+        _check_spec(name, prefix, spec, scripts_dir, is_leaf=prefix == name)
         search = list(spec.submodule_search_locations or [])
-    if top_spec is not None:
-        _load_top_level(top_spec)
+
+
+def _load_top_level(name: str, scripts_dir: Path) -> ModuleType:
+    """The checked top-level package, executed from the root under its import lock if it is not cached."""
+    with _bootstrap._ModuleLockManager(_TOP):  # type: ignore[attr-defined]
+        module = sys.modules.get(_TOP)
+        if module is None:
+            spec = _find_spec(_TOP, [str(scripts_dir.parent)])
+            if spec is None:
+                raise ModuleNotFoundError(f"No module named {_TOP!r}", name=_TOP)
+            _check_spec(name, _TOP, spec, scripts_dir, is_leaf=False)
+            if spec.loader is None:
+                raise ConfiguredModuleError(f"{_TOP} has no loader", name=name)
+            # What an ordinary import runs here: caches the module, marks it initializing, and
+            # removes it again if its code raises.
+            module = _bootstrap._load_unlocked(spec)  # type: ignore[attr-defined]
+    _check_module(name, _TOP, module, scripts_dir, is_leaf=False)
+    return module
+
+
+def _load_part(name: str, prefix: str, scripts_dir: Path) -> ModuleType:
+    """Import ``prefix`` from its parent's checked search path, checking it before and after it runs."""
+    parent_name = prefix.rpartition(".")[0]
+    parent = sys.modules.get(parent_name)
+    if parent is None:
+        raise ConfiguredModuleError(f"{parent_name} was removed from the module cache while {name} loaded", name=name)
+    # The parent's own code has run by now: its search path is checked as that code left it.
+    _check_module(name, parent_name, parent, scripts_dir, is_leaf=False)
+    if prefix not in sys.modules:
+        spec = importlib.util.find_spec(prefix)
+        if spec is None:
+            raise ModuleNotFoundError(f"No module named {prefix!r}", name=prefix)
+        _check_spec(name, prefix, spec, scripts_dir, is_leaf=prefix == name)
+    module = _import(prefix, scripts_dir)
+    _check_module(name, prefix, module, scripts_dir, is_leaf=prefix == name)
+    return module
+
+
+def _import(name: str, scripts_dir: Path) -> ModuleType:
+    """The ordinary import of one checked part of a configured name: this module's one import site."""
+    return _in_this_checkout(name, importlib.import_module(name), scripts_dir)
 
 
 def _find_spec(prefix: str, entries: list[str]) -> ModuleSpec | None:
     """The file-system spec the import system would find for ``prefix`` in ``entries``, without importing.
 
     As the path finder does: the first regular module or package wins; otherwise the namespace
-    portions of every entry form one namespace package. Built from the public file finder, because
-    the path finder needs the parent package imported before it can describe a namespace portion.
+    portions of every entry form one namespace package.
     """
     portions: list[str] = []
     for entry in entries:
@@ -164,7 +206,7 @@ def _find_spec(prefix: str, entries: list[str]) -> ModuleSpec | None:
     return namespace
 
 
-def _check_cached(name: str, prefix: str, module: ModuleType, scripts_dir: Path, *, is_leaf: bool) -> None:
+def _check_module(name: str, prefix: str, module: ModuleType, scripts_dir: Path, *, is_leaf: bool) -> None:
     origin = getattr(module, "__file__", None)
     if (origin is None and is_leaf) or (
         origin is not None and not (isinstance(origin, str) and _inside(origin, scripts_dir))
@@ -199,32 +241,6 @@ def _inside(path: str, scripts_dir: Path) -> bool:
         return False
 
 
-def _load_top_level(spec: ModuleSpec) -> None:
-    """Execute and cache the checked top-level package; a failed execution leaves nothing cached."""
-    if spec.loader is None:
-        raise ConfiguredModuleError(f"{spec.name} has no loader", name=spec.name)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    try:
-        spec.loader.exec_module(module)
-    except BaseException:
-        sys.modules.pop(spec.name, None)
-        raise
-
-
-def _recheck(name: str, scripts_dir: Path) -> None:
-    """Every cached package of ``name`` still comes from the root (the top level just loaded included)."""
-    parts = name.split(".")
-    for index in range(1, len(parts)):
-        prefix = ".".join(parts[:index])
-        cached = sys.modules.get(prefix)
-        if cached is not None:
-            _check_cached(name, prefix, cached, scripts_dir, is_leaf=False)
-
-
 def _in_this_checkout(name: str, module: ModuleType, scripts_dir: Path) -> ModuleType:
-    _recheck(name, scripts_dir)
-    origin = getattr(module, "__file__", None)
-    if not isinstance(origin, str) or not Path(origin).resolve().is_relative_to(scripts_dir):
-        raise ConfiguredModuleError(_not_here(name, origin, scripts_dir), name=name)
+    _check_module(name, name, module, scripts_dir, is_leaf=False)
     return module
