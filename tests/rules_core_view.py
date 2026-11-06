@@ -93,7 +93,14 @@ def _view_sources() -> tuple[Path, ...]:
     product data, the linked machinery package) and its machinery-owned files come from here.
     """
     product = product_checkout()
-    return (product,) if product.resolve() == REPO.resolve() else (product, REPO)
+    if product.resolve() == REPO.resolve():
+        return (product,)
+    # Two checkouts only in the extracted layout: the machinery side must be the tested machinery
+    # tree, never an unrenamed source checkout whose scripts/ still holds the machinery.
+    assert machinery_package() != "scripts" and not (REPO / "scripts" / "common" / "repo_root.py").exists(), (
+        f"the machinery side of a checkout view is an unrenamed source checkout: {REPO}"
+    )
+    return (product, REPO)
 
 
 def _apply(target: Path, action: Path | str | None) -> None:
