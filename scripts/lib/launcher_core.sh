@@ -61,7 +61,7 @@ _lc_machinery_package="${_lc_machinery_package##*/}"
 _lc_machinery_flags="$(declare -p LC_MACHINERY_PACKAGE 2>/dev/null)" || _lc_machinery_flags=''
 _lc_machinery_flags="${_lc_machinery_flags#declare -}"
 _lc_machinery_flags="${_lc_machinery_flags%% *}"
-if [[ "$_lc_machinery_flags" == *r* ]]; then
+if [[ "$_lc_machinery_flags" =~ r ]]; then
   if [ "$LC_MACHINERY_PACKAGE" != "$_lc_machinery_package" ]; then
     printf 'launcher: LC_MACHINERY_PACKAGE is already %s; refusing a second machinery package %s\n' \
       "$LC_MACHINERY_PACKAGE" "$_lc_machinery_package" >&2
