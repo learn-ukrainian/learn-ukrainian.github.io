@@ -60,8 +60,8 @@ SCHEMA = "mypy-ratchet-baseline.v1"
 DEFAULT_TARGET = _machinery_dir()
 _PRODUCT_TREE = "scripts"
 # Baseline messages spell machinery modules as they were censused, under this
-# package name. A machinery package that now has another directory name
-# compares through this spelling (see _canonical_modules).
+# package name. A machinery package that now has another directory name reads
+# them in its own spelling (see _local_spelling).
 _CENSUS_PACKAGE = "scripts"
 MYPY_TIMEOUT_SECONDS = 600
 # python-ci-env installs the lock without these wheels. Skipping them makes a
@@ -338,74 +338,52 @@ def _sort_name_list(body: str) -> str:
     return inner
 
 
-# A single TypedDict key: 'Extra key "k" for TypedDict', 'has no key "k"',
-# 'Key "k" of TypedDict'. Key lists are protected separately (_UNORDERED_KEYS).
-_SINGLE_KEY = re.compile(r'\b[Kk]ey "((?:[^"\\]|\\.)*)"')
-_LITERAL_OPEN = "Literal["
+def _resolved_depth(base: Path, parts: Sequence[str]) -> int:
+    """How many leading ``parts`` name a module or package directory under ``base``."""
+
+    depth = 0
+    while depth < len(parts) and (
+        base.joinpath(*parts[: depth + 1]).is_dir()
+        or base.joinpath(*parts[:depth], f"{parts[depth]}.py").is_file()
+    ):
+        depth += 1
+    return depth
 
 
-def _data_spans(message: str) -> list[tuple[int, int]]:
-    """Spans of data that only resembles a name: TypedDict keys and quoted Literal values.
+_CENSUS_NAME = re.compile(rf"(?<![\w.]){_CENSUS_PACKAGE}((?:\.[A-Za-z_]\w*)+)")
 
-    mypy prints a string Literal with ``repr`` inside ``Literal[...]``
-    (``"Literal['x']"``), so every quoted string within those brackets is a
-    value. An enum member there (``Literal[pkg.E.A]``) is unquoted and stays a name.
+
+def _local_spelling(message: str) -> str:
+    """Spell a baseline message's machinery module names under this package directory.
+
+    The committed baseline was censused where the machinery package directory
+    was ``scripts``, so mypy then wrote ``Module "scripts.x" ...``. Under a
+    renamed directory mypy writes ``<package>.x`` for the same module. A
+    census-spelled dotted name is respelled only when its module path resolves
+    inside this package directory, and not deeper in a product ``scripts``
+    tree beside it: the same complete-module mapping the rename applies to
+    code. A product module, or a name that resolves nowhere (a Literal value, a
+    TypedDict key), keeps its spelling. mypy output itself is never rewritten.
+    In this checkout the directory is ``scripts`` and the message is unchanged.
     """
 
-    spans = [match.span(1) for match in _SINGLE_KEY.finditer(message)]
-    start = message.find(_LITERAL_OPEN)
-    while start != -1:
-        index, depth, quote, opened = start + len(_LITERAL_OPEN), 1, "", 0
-        while index < len(message) and depth:
-            char = message[index]
-            if quote:
-                if char == "\\":
-                    index += 2
-                    continue
-                if char == quote:
-                    spans.append((opened, index + 1))
-                    quote = ""
-            elif char in "'\"":
-                quote, opened = char, index
-            elif char == "[":
-                depth += 1
-            elif char == "]":
-                depth -= 1
-            index += 1
-        start = message.find(_LITERAL_OPEN, index)
-    return spans
-
-
-def _canonical_modules(message: str) -> str:
-    """Spell machinery module names under the census package name.
-
-    mypy qualifies a module with the package directory it was imported from
-    (``Module "<package>.x" has no attribute ...``). The committed baseline was
-    censused where that directory was ``scripts``. A renamed machinery
-    directory names the same modules differently, so its dotted names are
-    rewritten to the census spelling before comparison. A product module
-    already uses that spelling. Data that only looks like a name (a TypedDict
-    key, a quoted Literal value) keeps its spelling, so two different values
-    never compare equal. In this checkout the names are equal and the message
-    is unchanged.
-    """
-
-    package = _machinery_dir()
-    if package == _CENSUS_PACKAGE:
+    package_dir = Path(os.path.abspath(__file__)).parents[1]
+    if package_dir.name == _CENSUS_PACKAGE:
         return message
-    spans = _data_spans(message)
-    pattern = re.compile(rf"(?<![\w.]){re.escape(package)}(?=\.[A-Za-z_])")
+    product_dir = package_dir.parent / _PRODUCT_TREE
 
-    def rename(match: re.Match[str]) -> str:
-        if any(begin <= match.start() < end for begin, end in spans):
-            return match.group(0)
-        return _CENSUS_PACKAGE
+    def respell(match: re.Match[str]) -> str:
+        parts = match.group(1)[1:].split(".")
+        local = _resolved_depth(package_dir, parts)
+        if local and local >= _resolved_depth(product_dir, parts):
+            return package_dir.name + match.group(1)
+        return match.group(0)
 
-    return pattern.sub(rename, message)
+    return _CENSUS_NAME.sub(respell, message)
 
 
 def _normalize_message(message: str) -> str:
-    """Drop order that mypy does not keep stable, line references, and the machinery directory name."""
+    """Drop order that mypy does not keep stable and line references, and nothing else."""
 
     message = _LINE_REFERENCE.sub("", message)
     slots: list[str] = []
@@ -414,9 +392,7 @@ def _normalize_message(message: str) -> str:
         slots.append(f"{match.group('prefix')} ({_sort_name_list(match.group('body'))})")
         return f"\ue000{len(slots) - 1}\ue001"
 
-    # Key lists are protected before machinery names are canonicalized, so a
-    # key keeps its spelling; names are canonical before union members sort.
-    ordered = _sort_unions(_canonical_modules(_UNORDERED_KEYS.sub(protect, message)))
+    ordered = _sort_unions(_UNORDERED_KEYS.sub(protect, message))
     return _KEY_SLOT.sub(lambda slot: slots[int(slot.group(1))], ordered)
 
 
@@ -684,7 +660,7 @@ def _entries_from_rows(rows: object, where: str) -> list[MypyError]:
             raise ValueError(f"{where}: an entry needs path, code, and message")
         if rel.startswith(("/", "\\")) or ".." in Path(rel).parts:
             raise ValueError(f"{where}: entry path is not relative: {rel}")
-        entries.append(MypyError(rel, code, _normalize_message(message)))
+        entries.append(MypyError(rel, code, _normalize_message(_local_spelling(message))))
     return entries
 
 
