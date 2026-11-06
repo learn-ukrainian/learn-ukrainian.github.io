@@ -69,6 +69,22 @@ ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/ $ORPHAN_PATHS_RUNTIME"
 # to the gemini_extensions rsync --exclude list.
 GEMINI_SHARED_SKILL_OVERLAY_PATHS="skills/*"
 
+# The overlay entries for SHARED_SKILLS (the shared skills source directory), as
+# deploy and the checker both declare them. skills/* matches only the children of
+# .gemini/skills; the overlay creates .gemini/skills itself for the first shared
+# skill, so while one exists that directory is deploy output too, even in a
+# project without gemini_extensions/skills (#12818).
+gemini_shared_skill_overlay_paths() {
+    local shared_skill
+    for shared_skill in "$1"/*; do
+        if [[ -d "$shared_skill" ]]; then
+            printf '%s\n' "skills $GEMINI_SHARED_SKILL_OVERLAY_PATHS"
+            return 0
+        fi
+    done
+    printf '%s\n' "$GEMINI_SHARED_SKILL_OVERLAY_PATHS"
+}
+
 # --- deploy-owned: Claude autoload excludes (checker mirrors for .claude drift) ---
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into the system
 # prompt. These always-load rules are served by the Monitor API and must not be

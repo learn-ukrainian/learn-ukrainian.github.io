@@ -272,12 +272,12 @@ check_pair \
 check_overlay "agents_extensions/codex" ".codex" || drift=1
 # shellcheck disable=SC2086
 check_pair "agents_extensions/shared/skills" ".agents/skills" $ORPHAN_PATHS_AGENTS || drift=1
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2046
 check_pair \
     "gemini_extensions" \
     ".gemini" \
     $ORPHAN_PATHS_GEMINI \
-    $GEMINI_SHARED_SKILL_OVERLAY_PATHS || drift=1
+    $(gemini_shared_skill_overlay_paths agents_extensions/shared/skills) || drift=1
 check_gemini_provider_skill_pairs || drift=1
 check_shared_skill_pairs || drift=1
 check_gemini_skill_owners || drift=1
