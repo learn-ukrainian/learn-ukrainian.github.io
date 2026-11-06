@@ -144,17 +144,17 @@ def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
 
     Only test files count, not ``conftest.py``: a conftest literal would select every
     test under its directory, and the root conftest names the Claude adapter module,
-    so a change to that adapter would select the whole suite. A byte search first
-    skips files that cannot contain a match.
+    so a change to that adapter would select the whole suite. Every test file is
+    parsed. A byte search for the raw path misses a literal written with escapes
+    and a file whose coding declaration is not UTF-8.
     """
     names = set(targets) | {
         target[:-3].replace("/", ".") for target in targets
         if target.endswith(".py") and PurePosixPath(target).name != "__init__.py"
     }
-    encoded = [name.encode() for name in names]
     found = set()
     for path, source in sources.items():
-        if not TEST.fullmatch(path) or not any(name in source for name in encoded):
+        if not TEST.fullmatch(path):
             continue
         try:
             tree = ast.parse(source, filename=path)

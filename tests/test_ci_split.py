@@ -1078,6 +1078,50 @@ def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch
     assert reader not in unrelated['run_files']
 
 
+def test_text_references_selects_escaped_and_non_utf8_literals() -> None:
+    """An escaped literal and a non-UTF-8 coding declaration still name a changed path.
+
+    A byte search for the raw path skips both, so the file never reaches the parser
+    and PR CI misses the test. A docstring, an f-string piece, a comment, a longer
+    string and a conftest still do not count, and a package ``__init__.py`` still
+    matches by path only.
+    """
+    from scripts.ci import pr_affected_tests as affected
+
+    path = 'pkg/' + 'escaped_target.py'
+    module = 'pkg.' + 'escaped_target'
+    reencoded = 'pkg/' + 'caf\u00e9.py'
+    init_path = 'pkg/' + '__init__.py'
+    sources = {
+        'tests/test_escaped.py': b"PATH = 'pkg\\x2fescaped_target.py'\n",
+        'tests/test_module.py': b"NAME = 'pkg\\x2eescaped_target'\n",
+        'tests/test_reencoded.py': "# coding: latin-1\nPATH = 'pkg/caf\xe9.py'\n".encode('latin-1'),
+        'tests/test_plain.py': b"PATH = 'pkg/escaped_target.py'\n",
+        'tests/test_prose.py': b"'pkg/escaped_target.py'\n",
+        'tests/test_fstring.py': b"PATH = f'pkg/escaped_target.py'\n",
+        'tests/test_comment.py': b'# pkg/escaped_target.py\nx = 1\n',
+        'tests/test_longer.py': b"PATH = 'pkg/escaped_target.py.extra'\n",
+        'tests/conftest.py': b"PATH = 'pkg/escaped_target.py'\n",
+        'tests/test_init_name.py': b"NAME = 'pkg'\n",
+        'tests/test_init_path.py': b"PATH = 'pkg/__init__.py'\n",
+        'tests/test_broken.py': b"PATH = 'pkg/escaped_target.py'\n(",
+    }
+    # The raw bytes are not the UTF-8 of the decoded literal. That is the miss.
+    assert path.encode() not in sources['tests/test_escaped.py']
+    assert module.encode() not in sources['tests/test_module.py']
+    assert reencoded.encode() not in sources['tests/test_reencoded.py']
+    found = affected.text_references(sources, {path, init_path})
+    assert found == {
+        'tests/test_escaped.py',
+        'tests/test_module.py',
+        'tests/test_plain.py',
+        'tests/test_init_path.py',
+    }
+    assert affected.text_references(
+        {'tests/test_reencoded.py': sources['tests/test_reencoded.py']}, {reencoded},
+    ) == {'tests/test_reencoded.py'}
+
+
 def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
