@@ -4,16 +4,17 @@ One loader for every seat: launchers (``scripts/lib/rules_core.sh``), legacy dis
 workers and review dispatches, ACP asks and discussion legs
 (``agent_runtime.runner.invoke_inter_agent``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
-checkout this module runs from (or an explicit ``root``), never from the working
-directory or the Monitor API. The one exception is the rules directory: the operator's
+configured source trees, never from the working directory or the Monitor API.
+For fleet rules, the operator's
 machinery configuration (``LEARN_UKRAINIAN_RULES_DIR``, see
 ``scripts/common/repo_root.py``) names it for every root, so machinery installed outside
 the checkout serves the configured rules. Unset, it is ``<root>/agents_extensions/shared/rules``.
 
 Seats:
     core     ``core.md`` in the rules directory
-    content  the core plus ``core-curriculum.md`` from the same directory (curriculum
-             seats); a rules directory without it refuses a content seat
+    content  the core plus ``core-curriculum.md`` from ``product_root(root)``;
+             a product without it refuses a content seat, even if the rules
+             directory carries an addendum
 
 An absent, unreadable or empty core file refuses: every entry point raises
 ``RulesCoreMissing`` (naming the repo-relative path) before any side effect, and the
@@ -28,7 +29,7 @@ selects for a task; ``/api/rules?scope=task:<name>`` serves them, and
 ``_load-via-api.md`` lists the same selection for offline reads.
 
 Usage:
-    rules_core.py [--root DIR] [--seat core|content] [--lane LANE] [--provider P]
+    rules_core.py [--root DIR] [--rules-root DIR] [--seat core|content] [--lane LANE] [--provider P]
                   [--format text|block|toml|kimi-agent-file|seat|json] [--output PATH]
 
 Exit codes:
@@ -52,7 +53,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if __package__ in (None, "") and str(ROOT) not in sys.path:  # run as a file by rules_core.sh
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.repo_root import RULES_DIR_REL, rules_dir
+from scripts.common.repo_root import RULES_DIR_REL, ProductRootError, product_root, rules_dir
 
 CORE_REL = f"{RULES_DIR_REL}/core.md"
 CONTENT_ADDENDUM_REL = f"{RULES_DIR_REL}/core-curriculum.md"
@@ -169,19 +170,30 @@ def scope_sources(scope: str) -> tuple[str, ...]:
     raise RulesCoreError(f"unknown scope {scope!r} (expected core, content, or task:<name>)")
 
 
-def source_path(rel: str, root: Path | None = None) -> Path:
-    """Path of a repo-relative source; a source under the rules directory is read from :func:`core_dir`."""
+def source_path(rel: str, root: Path | None = None, *, rules_root: Path | None = None) -> Path:
+    """Resolve product curriculum separately from fleet rules.
+
+    ``root`` explicitly selects the product as well as the default rules checkout.
+    ``rules_root`` only selects the machinery checkout; it never overrides the
+    configured product. Core seats therefore never call the product resolver.
+    """
+    if rel == CONTENT_ADDENDUM_REL:
+        try:
+            return product_root(root) / rel
+        except ProductRootError as exc:
+            raise RulesCoreMissing(f"rules source unavailable: {rel} ({exc})") from exc
+    checkout = root if rules_root is None else rules_root
     rel_path = Path(rel)
     if rel_path.is_relative_to(RULES_DIR_REL):
-        return core_dir(root) / rel_path.relative_to(RULES_DIR_REL)
-    return (ROOT if root is None else Path(root)) / rel
+        return core_dir(checkout) / rel_path.relative_to(RULES_DIR_REL)
+    return (ROOT if checkout is None else Path(checkout)) / rel
 
 
-def assemble(sources: tuple[str, ...], root: Path | None = None) -> str:
+def assemble(sources: tuple[str, ...], root: Path | None = None, *, rules_root: Path | None = None) -> str:
     """Join sources the way the legacy bundle does; every source must be readable and non-empty."""
     parts: list[str] = []
     for rel in sources:
-        path = source_path(rel, root)
+        path = source_path(rel, root, rules_root=rules_root)
         try:
             body = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
@@ -192,13 +204,13 @@ def assemble(sources: tuple[str, ...], root: Path | None = None) -> str:
     return FILE_SEP.join(parts).rstrip() + "\n"
 
 
-def core_text(seat: str = "core", root: Path | None = None) -> str:
-    return assemble(seat_sources(seat), root)
+def core_text(seat: str = "core", root: Path | None = None, *, rules_root: Path | None = None) -> str:
+    return assemble(seat_sources(seat), root, rules_root=rules_root)
 
 
-def core_block(seat: str = "core", root: Path | None = None) -> str:
+def core_block(seat: str = "core", root: Path | None = None, *, rules_root: Path | None = None) -> str:
     """The core framed for injection into a prompt or system prompt."""
-    text = core_text(seat, root)
+    text = core_text(seat, root, rules_root=rules_root)
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
     return f'{BLOCK_OPEN} seat="{seat}" sha256="{digest}">\n{text}{BLOCK_CLOSE}'
 
@@ -282,19 +294,19 @@ def kimi_agent_file_text(block: str) -> str:
     )
 
 
-def _render(fmt: str, seat: str, root: Path) -> str:
+def _render(fmt: str, seat: str, root: Path | None, *, rules_root: Path | None = None) -> str:
     if fmt == "seat":
         return seat + "\n"
     if fmt == "text":
-        return core_text(seat, root)
-    block = core_block(seat, root)
+        return core_text(seat, root, rules_root=rules_root)
+    block = core_block(seat, root, rules_root=rules_root)
     if fmt == "block":
         return block + "\n"
     if fmt == "toml":
         return toml_basic_string(block) + "\n"
     if fmt == "kimi-agent-file":
         return kimi_agent_file_text(block)
-    text = core_text(seat, root)
+    text = core_text(seat, root, rules_root=rules_root)
     first, last = pillar_anchors(text)
     payload = {
         "seat": seat,
@@ -310,32 +322,50 @@ def _render(fmt: str, seat: str, root: Path) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Print the rules core for an agent seat from the local checkout.",
+        description=(
+            "Print the rules core for an agent seat from the configured source trees.\n"
+            "Use for offline seat loading; task references are served separately by the rules API."
+        ),
         epilog=(
             "Examples:\n"
-            "  rules_core.py --format json\n"
-            "  rules_core.py --lane core --format seat\n"
-            "  rules_core.py --seat content --format block\n"
-            "Exit codes: 0 printed; 2 usage error; 3 a core source is missing."
+            "  .venv/bin/python scripts/lib/rules_core.py --format json\n"
+            "  .venv/bin/python scripts/lib/rules_core.py --lane core --format seat\n"
+            "  .venv/bin/python scripts/lib/rules_core.py --seat content --root /product --format block\n"
+            "Outputs: requested rendering on stdout, or in the --output file.\n"
+            "Exit codes: 0 printed; 2 usage error; 3 a core source is missing.\n"
+            "Related: scripts/lib/rules_core.sh; scripts/api/rules_router.py; #12819."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--root", type=Path, default=ROOT, help="checkout to read (default: this checkout)")
+    parser.add_argument(
+        "--root",
+        type=Path,
+        help="explicit product and default rules checkout, e.g. /product "
+        "(product default: LU_PRODUCT_ROOT, then this checkout)",
+    )
+    parser.add_argument(
+        "--rules-root",
+        type=Path,
+        help="machinery checkout for fleet rules only, e.g. /machinery "
+        "(default: --root, then this checkout; LEARN_UKRAINIAN_RULES_DIR overrides fleet rules)",
+    )
     parser.add_argument("--seat", choices=SEATS, help=f"seat to load (default: ${SEAT_ENV}, then --lane, then core)")
-    parser.add_argument("--lane", help="driver lane; a curriculum-orchestrator lane is a content seat")
+    parser.add_argument(
+        "--lane", help="driver lane, e.g. core (default: none); curriculum-orchestrator selects content"
+    )
     parser.add_argument("--provider", default="claude", help="slot provider for --lane lookup (default: claude)")
     parser.add_argument(
         "--format",
         choices=("text", "block", "toml", "kimi-agent-file", "seat", "json"),
         default="block",
         help="text: sources joined; block: framed for a prompt; toml: block as a TOML string; "
-        "kimi-agent-file: Kimi agent definition; seat: resolved seat; json: sizes and anchors",
+        "kimi-agent-file: Kimi agent definition; seat: resolved seat; json: sizes and anchors (default: block)",
     )
-    parser.add_argument("--output", type=Path, help="write to this file instead of stdout")
+    parser.add_argument("--output", type=Path, help="write to this file, e.g. rules.md (default: stdout)")
     args = parser.parse_args(argv)
     seat = resolve_seat(args.seat, lane=args.lane, provider=args.provider)
     try:
-        rendered = _render(args.format, seat, args.root)
+        rendered = _render(args.format, seat, args.root, rules_root=args.rules_root)
     except RulesCoreMissing as exc:
         print(f"rules_core: {exc}", file=sys.stderr)
         return 3

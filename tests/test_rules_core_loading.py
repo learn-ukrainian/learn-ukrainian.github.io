@@ -31,6 +31,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
 from scripts.lib import rules_core
 from tests.helpers import machinery_package
 from tests.rules_core_view import CORE_FILES, absent_checkout, checkout_view
@@ -72,19 +73,25 @@ def _rules_dir_with_fixture_core(request: pytest.FixtureRequest) -> Path:
 
 
 @pytest.fixture(autouse=True)
-def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, core_root: Path) -> None:
     """In-process code reads the CORE_DIR core (the fixture stands in for a checkout without the core)."""
     if CORE_DIR != REAL_CORE_DIR:
         rules = _rules_dir_with_fixture_core(request)
         monkeypatch.setattr(rules_core, "core_dir", lambda root=None: rules)
+        monkeypatch.setenv(PRODUCT_ROOT_ENV, str(core_root))
 
 
 @pytest.fixture(scope="module")
 def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The checkout launchers and the CLI run from: this one, or a view carrying the fixture."""
-    if CORE_DIR == REAL_CORE_DIR:
+    if CORE_DIR == REAL_CORE_DIR and (REPO / PRODUCT_MARKER).is_file():
         return REPO
-    return checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", FIXTURE_CORE_DIR)
+    view = checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", CORE_DIR)
+    marker = view / PRODUCT_MARKER
+    if not marker.is_file():
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text("levels: {}\n", encoding="utf-8")
+    return view
 
 
 @pytest.fixture
@@ -104,11 +111,16 @@ def missing_core(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
 
 @pytest.fixture
 def core_without_addendum(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
-    """In-process loader reads ``core.md`` but no ``core-curriculum.md``."""
+    """The fleet core exists, but a valid product tree has no curriculum addendum."""
     partial = tmp_path / "core-only"
     partial.mkdir()
     (partial / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
     monkeypatch.setattr(rules_core, "core_dir", lambda root=None: partial)
+    product = tmp_path / "product-without-addendum"
+    marker = product / PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n", encoding="utf-8")
+    monkeypatch.setenv(PRODUCT_ROOT_ENV, str(product))
     return partial
 
 
@@ -492,12 +504,18 @@ def addendum_less_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     core_only = tmp_path_factory.mktemp("rules-core-partial") / "rules"
     core_only.mkdir()
     (core_only / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
-    return checkout_view(core_only.parent / "checkout", core_only)
+    view = checkout_view(core_only.parent / "checkout", core_only)
+    marker = view / PRODUCT_MARKER
+    if not marker.is_file():
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text("levels: {}\n", encoding="utf-8")
+    return view
 
 
 def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
-    tmp_path: Path, addendum_less_root: Path
+    tmp_path: Path, addendum_less_root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setenv(PRODUCT_ROOT_ENV, str(addendum_less_root))
     refused, _ = _launch(
         addendum_less_root,
         "start-claude-driver.sh",

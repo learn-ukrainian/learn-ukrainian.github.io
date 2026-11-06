@@ -30,9 +30,10 @@ Source of truth is the Claude extensions rule directory — `.claude/rules/`,
 `.agent/rules/`, and `.gemini/rules/` are deployed copies
 (``npm run agents:deploy``). We read the source so a fresh checkout
 (or a worktree that hasn't deployed) still gets the current rules. Every scope,
-``full`` included, reads a rules-directory source from the machinery rules root
+``full`` included, reads fleet rules from the machinery rules root
 (``LEARN_UKRAINIAN_RULES_DIR``, via ``rules_core.source_path``) and any other
-source from the checkout.
+source from the checkout. The content seat's curriculum addendum comes from
+``product_root()``; the API context's machinery root never selects the product.
 """
 
 from __future__ import annotations
@@ -158,7 +159,7 @@ def _assemble_scope(project_root: Path, scope: str) -> tuple[str, list[str], str
         return _assemble_rules(project_root)
     try:
         sources = list(rules_core.scope_sources(scope))
-        markdown = rules_core.assemble(tuple(sources), project_root)
+        markdown = rules_core.assemble(tuple(sources), rules_root=project_root)
     except rules_core.RulesCoreMissing as exc:
         raise HTTPException(status_code=503, detail=f"{exc}; scope {scope!r} is unavailable in this checkout.") from exc
     except rules_core.RulesCoreError as exc:

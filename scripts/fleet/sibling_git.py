@@ -357,14 +357,23 @@ class Git:
         git_dir, common = _git_dir(path)
         if git_dir != common:
             result = safe_git(
-                ["config", "--null", "--list", "--show-scope"], cwd=path,
-                runner=SafeGitRunner(_GIT), env=env, capture_output=True, text=True,
-                timeout=30, check=False,
+                ["config", "--null", "--list", "--show-scope"],
+                cwd=path,
+                runner=SafeGitRunner(_GIT),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
             )
         else:
             result = subprocess.run(
                 [_GIT, "--no-pager", "-C", str(path), "config", "--null", "--list", "--show-scope"],
-                env=env, capture_output=True, text=True, timeout=30, check=False,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
             )
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
