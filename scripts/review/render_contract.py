@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import project_interpreter
+from scripts.lib import rules_core
 
 #: The sources server a review seat calls, relative to a checkout.
 SERVER_ENTRY = ".mcp/servers/sources/server.py"
@@ -43,7 +44,7 @@ SERVER_ENTRY = ".mcp/servers/sources/server.py"
 LOCK_FILE = "requirements-lock.txt"
 #: Key of the render record inside the prompt's ``<prompt>.files_read.json`` sidecar.
 RENDER_RECORD_KEY = "render_contract"
-RENDER_RECORD_VERSION = 4
+RENDER_RECORD_VERSION = 5
 _SERVER_DIGEST_VERSION = b"lu-review-server-code-digest-v3"
 _REPOSITORY_DIGEST_VERSION = b"lu-review-server-repository-digest-v1"
 _TEMPLATE_DIGEST_VERSION = b"lu-review-template-digest-v1"
@@ -57,6 +58,36 @@ _RERENDER = (
 
 class ReviewContractError(ValueError):
     """A review attempt's prompt cannot be tied to the code it was rendered against, or that code differs (#9163)."""
+
+
+def trusted_core_context() -> tuple[str, dict[str, Any]]:
+    """Load machinery rules independently of learner pins and template-produced text."""
+    try:
+        seat = rules_core.resolve_seat()
+        paths = [rules_core.source_path(rel).resolve() for rel in rules_core.seat_sources(seat)]
+        before = [path.read_bytes() for path in paths]
+        block = rules_core.core_block(seat)
+        if before != [path.read_bytes() for path in paths]:
+            raise ReviewContractError("review_rules_core_changed: rules changed during rendering; " + _RERENDER)
+    except (rules_core.RulesCoreError, OSError, UnicodeError) as exc:
+        raise ReviewContractError(f"review_rules_core_unavailable: {exc}; {_RERENDER}") from exc
+    dependency = {
+        "seat": seat,
+        "sources": [{"path": str(path), "sha256": hashlib.sha256(data).hexdigest()}
+                    for path, data in zip(paths, before, strict=True)],
+        "block_sha256": hashlib.sha256(block.encode("utf-8")).hexdigest(),
+    }
+    provenance = json.dumps(dependency, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return f"{block}\n<trusted-rules-dependency>\n{provenance}\n</trusted-rules-dependency>\n\n", dependency
+
+
+def check_rules_dependency(dependency: object, prompt_text: str | None = None) -> None:
+    """Refuse stale or substituted machinery rules; never repair validated prompt bytes."""
+    prefix, current = trusted_core_context()
+    if dependency != current:
+        raise ReviewContractError("review_rules_core_changed: trusted rules provenance differs; " + _RERENDER)
+    if prompt_text is not None and not prompt_text.startswith(prefix):
+        raise ReviewContractError("review_rules_core_prompt_mismatch: prompt omits the trusted rules dependency; " + _RERENDER)
 
 
 @dataclass(frozen=True)
@@ -246,6 +277,7 @@ def current_templates(prompts_dir: Path, names: Iterable[str]) -> dict[str, str]
 def render_record(
     render_checkout: Path, prompts_dir: Path, loaded_templates: Mapping[str, str], prompt_sha256: str,
     *, review_id: str | None = None, attempt_id: str | None = None, input_root: Path | None = None,
+    machinery_dependencies: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """The record a render writes beside its prompt: where it rendered, what it loaded, the server it matched."""
     checkout = Path(render_checkout).resolve()
@@ -260,6 +292,8 @@ def render_record(
         "prompt_sha256": prompt_sha256,
         "review_id": review_id,
         "attempt_id": attempt_id,
+        "machinery_dependencies": dict(machinery_dependencies) if machinery_dependencies is not None
+        else {"rules_core": trusted_core_context()[1]},
     }
 
 
@@ -345,6 +379,10 @@ def check_render_contract(
     digests compared, and the server components and interpreter ``check_launch_contract`` checks again at launch.
     """
     recorded, reads = _read_render_record(prompt_file)
+    dependencies = recorded.get("machinery_dependencies")
+    if not isinstance(dependencies, dict) or set(dependencies) != {"rules_core"}:
+        raise ReviewContractError("review_rules_core_dependency_missing: " + _RERENDER)
+    check_rules_dependency(dependencies["rules_core"], prompt_text)
     if (review_id is not None or attempt_id is not None) and (
         recorded.get("review_id"), recorded.get("attempt_id")
     ) != (review_id, attempt_id):
@@ -412,6 +450,7 @@ def check_render_contract(
         "recorded_templates": recorded["templates"],
         "recorded_files_read": reads.get("files_read", []),
         "recorded_template_sha256": reads.get("template_sha256", {}),
+        "machinery_dependencies": dependencies,
     }
     differing = [
         what
@@ -442,6 +481,7 @@ def check_launch_contract(contract: Mapping[str, Any], server_checkout: Path, in
     are exactly what the seat's MCP configuration launches. The server code is digested again from them now, so an
     update of the primary checkout (its code or its lock) after admission refuses here, before launch.
     """
+    check_rules_dependency((contract.get("machinery_dependencies") or {}).get("rules_core"))
     server = Path(server_checkout).resolve()
     code = server_code(server)
     admitted = (contract.get("server_checkout"), contract.get("server_interpreter"), contract.get("server_digest"))

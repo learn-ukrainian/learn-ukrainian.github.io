@@ -12018,11 +12018,6 @@
       "message": "Returning Any from function declared to return \"Invocation\""
     },
     {
-      "path": "scripts/dispatcher/runtime_context.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"Invocation\""
-    },
-    {
       "path": "scripts/dispatcher/site_deps.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"dict[Any, Any]\""

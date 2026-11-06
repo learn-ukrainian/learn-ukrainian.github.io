@@ -26,6 +26,7 @@ import yaml
 from scripts.build.fresh import manifest, plan_manifest
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.curriculum.evidence import lock
+from scripts.lib import rules_core
 from scripts.review.prompts import eligibility
 from scripts.review.prompts.check import (
     ATTEMPT_ENTRY,
@@ -69,6 +70,23 @@ _SHIPPED_PROMPTS = (Path(__file__).resolve().parents[2] / "scripts" / "review" /
 #: behaviour itself (further below) pass their own.
 TEST_REVIEW_ID = "r2b-test-review"
 TEST_ATTEMPT_ID = "test-attempt-1"
+
+
+@pytest.mark.parametrize("access", ("isolated", "full"))
+def test_instruction_free_review_render_hash_covers_trusted_core(tmp_path, access):
+    """Defect class: isolated bound reviewers receive no hash-bound trusted machinery rules."""
+    manifest_path, _, _ = _setup_lexical_fixture(tmp_path)
+    output = tmp_path / "prompt.md"
+    text, sha, reads = render_prompt(manifest_path, repo_root=tmp_path, output_path=output,
+                                    review_access=access)
+    core = rules_core.core_text(rules_core.resolve_seat())
+    assert core in text
+    assert sha == hashlib.sha256(text.encode()).hexdigest()
+    assert sha != hashlib.sha256(text.replace(core, "").encode()).hexdigest()
+    assert not any(tmp_path.rglob("AGENTS.md"))
+    assert not any(tmp_path.rglob("CLAUDE.md"))
+    assert check_prompt(text, manifest_path, repo_root=tmp_path, files_read=reads,
+                        review_access=access).passed
 
 
 def render_prompt(manifest_source, template_name=None, **kwargs):
@@ -242,7 +260,10 @@ def _cache_repeated_exact_renders_and_template_lint():
         )
         if key is None:
             return original_render(manifest_source, template_name, **kwargs)
-        key = (*key, kwargs.get("review_access", "full"))
+        # Machinery bytes are render inputs too; a changed or missing core cannot hit an old render.
+        from scripts.review.render_contract import trusted_core_context
+
+        key = (*key, kwargs.get("review_access", "full"), trusted_core_context()[0])
         cached = renders.get(key)
         if cached is None:
             cached = original_render(manifest_source, template_name, **kwargs)
