@@ -24,6 +24,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -224,6 +225,38 @@ def test_toml_and_kimi_forms_round_trip() -> None:
     assert "${base_prompt}\n\n" + block in agent_file
     with pytest.raises(rules_core.RulesCoreError):
         rules_core.kimi_agent_file_text("x ${injected} y")
+
+
+def test_cli_help_paths_follow_relocated_module(tmp_path: Path) -> None:
+    """Catch hardcoded machinery paths in CLI help after package relocation."""
+    machinery = tmp_path / "relocated_machinery"
+    script = machinery / "lib" / "rules_core.py"
+    script.parent.mkdir(parents=True)
+    shutil.copyfile(REPO / "scripts" / "lib" / "rules_core.py", script)
+    # Keep the existing scripts.common imports available without rewriting the copied module.
+    (tmp_path / "scripts").symlink_to(REPO / "scripts", target_is_directory=True)
+    result = subprocess.run(
+        [sys.executable, os.fspath(script), "--help"],
+        cwd=tmp_path,
+        env={**os.environ, "PYTHONPATH": os.fspath(tmp_path), "COLUMNS": "100"},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout
+    for example in (
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --format json",
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --lane core --format seat",
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --seat content --root /product --format block",
+    ):
+        assert example in result.stdout
+    assert (
+        "Related: relocated_machinery/lib/rules_core.sh; relocated_machinery/api/rules_router.py; #12819."
+        in result.stdout
+    )
+    assert "scripts/" not in result.stdout
 
 
 def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_root: Path) -> None:

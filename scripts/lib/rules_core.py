@@ -55,6 +55,11 @@ if __package__ in (None, "") and str(ROOT) not in sys.path:  # run as a file by 
 
 from scripts.common.repo_root import RULES_DIR_REL, ProductRootError, product_root, rules_dir
 
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+_ENTRY = f"{_MACHINERY}/lib/{Path(__file__).name}"
+_SHELL = Path(_ENTRY).with_suffix(".sh").as_posix()
+_ROUTER = f"{_MACHINERY}/api/rules_router.py"
+
 CORE_REL = f"{RULES_DIR_REL}/core.md"
 CONTENT_ADDENDUM_REL = f"{RULES_DIR_REL}/core-curriculum.md"
 SEATS = ("core", "content")
@@ -328,12 +333,12 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/lib/rules_core.py --format json\n"
-            "  .venv/bin/python scripts/lib/rules_core.py --lane core --format seat\n"
-            "  .venv/bin/python scripts/lib/rules_core.py --seat content --root /product --format block\n"
+            f"  .venv/bin/python {_ENTRY} --format json\n"
+            f"  .venv/bin/python {_ENTRY} --lane core --format seat\n"
+            f"  .venv/bin/python {_ENTRY} --seat content --root /product --format block\n"
             "Outputs: requested rendering on stdout, or in the --output file.\n"
             "Exit codes: 0 printed; 2 usage error; 3 a core source is missing.\n"
-            "Related: scripts/lib/rules_core.sh; scripts/api/rules_router.py; #12819."
+            f"Related: {_SHELL}; {_ROUTER}; #12819."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
