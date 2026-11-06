@@ -1,6 +1,6 @@
 """Run the launcher deploy fail-honest fixtures under the required pytest gate.
 
-``scripts/audit/test_deploy_extensions.sh`` exercises
+``scripts/agent_deploy/test_deploy_extensions.sh`` exercises
 ``scripts/lib/deploy_extensions.sh`` — the helper both launchers
 (``start-claude.sh``, ``start-codex.sh``) use to deploy
 ``agents_extensions/shared`` into the gitignored runtime dirs at startup.
@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_FIXTURES = _REPO_ROOT / "scripts" / "audit" / "test_deploy_extensions.sh"
+_FIXTURES = _REPO_ROOT / "scripts" / "agent_deploy" / "test_deploy_extensions.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -72,8 +72,8 @@ def _make_worktree_fixture(tmp_path: Path, *, primary_venv: bool) -> tuple[Path,
     for rel in (
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
-        "scripts/deploy/update_agent_deploy_status.py",
-        "scripts/deploy/agent_directory.py",
+        "scripts/agent_deploy/update_agent_deploy_status.py",
+        "scripts/agent_deploy/agent_directory.py",
     ):
         (worktree / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / rel, worktree / rel)

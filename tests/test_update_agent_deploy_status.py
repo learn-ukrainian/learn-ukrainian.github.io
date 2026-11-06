@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEPLOY_DIR = REPO_ROOT / "scripts" / "deploy"
+DEPLOY_DIR = REPO_ROOT / "scripts" / "agent_deploy"
 MODULE_PATH = DEPLOY_DIR / "update_agent_deploy_status.py"
 
 sys.path.insert(0, str(DEPLOY_DIR))

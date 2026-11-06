@@ -25,7 +25,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-MODULE_PATH = REPO_ROOT / "scripts" / "deploy" / "reap_agent_mirrors.py"
+MODULE_PATH = REPO_ROOT / "scripts" / "agent_deploy" / "reap_agent_mirrors.py"
 
 spec = importlib.util.spec_from_file_location("reap_agent_mirrors_under_test", MODULE_PATH)
 assert spec and spec.loader

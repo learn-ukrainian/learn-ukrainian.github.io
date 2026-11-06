@@ -1,5 +1,8 @@
 schema: package-boundary.v1
 packages:
+  agent_deploy:
+    reason: Deploys shared skills, rules and prompts into agent directories, not the learner site.
+    role: machinery
   agent_runtime:
     reason: operator classification
     role: machinery
