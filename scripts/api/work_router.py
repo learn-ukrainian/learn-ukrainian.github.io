@@ -12,6 +12,7 @@ import contextlib
 import logging
 import threading
 import time
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
@@ -775,7 +776,10 @@ async def work_next(
         ...,
         min_length=1,
         max_length=64,
-        description="Stream key from scripts/config/issue_streams.yaml (the caller's lane epic).",
+        description=(
+            "Stream key from "
+            f"{Path(__file__).parents[1].name}/config/issue_streams.yaml (the caller's lane epic)."
+        ),
     ),
     limit: int = Query(NEXT_DEFAULT_LIMIT, ge=1, le=NEXT_MAX_LIMIT),
     ctx: MonitorContext = Depends(get_ctx),
@@ -973,7 +977,8 @@ async def work_capabilities() -> dict[str, Any]:
             "route": "GET /api/work/v1/next",
             "params": {
                 "stream": (
-                    "required — stream key from scripts/config/issue_streams.yaml; the pick list is scoped to it. "
+                    "required — stream key from "
+                    f"{Path(__file__).parents[1].name}/config/issue_streams.yaml; the pick list is scoped to it. "
                     "Unambiguous fleet-taxonomy area aliases (e.g. infra → infra-harness) are accepted (#6984)"
                 ),
                 "limit": f"optional int, default {NEXT_DEFAULT_LIMIT}, max {NEXT_MAX_LIMIT}",

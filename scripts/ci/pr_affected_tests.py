@@ -229,7 +229,11 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     infrastructure = any(
         p in INFRA
         or Path(p).name == "conftest.py"
-        or p.startswith((f"{_checkout_relative('ci').as_posix()}/", "scripts/common/flake_quarantine", ".github/actions/python-ci-env/"))
+        or p.startswith((
+            f"{_checkout_relative('ci').as_posix()}/",
+            _checkout_relative("common", "flake_quarantine").as_posix(),
+            ".github/actions/python-ci-env/",
+        ))
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )

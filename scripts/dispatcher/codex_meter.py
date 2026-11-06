@@ -73,16 +73,20 @@ def estimate(directory: Path, budget: Decimal, account: str = "api") -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    package = Path(__file__).absolute().parents[1].name
+    entry = f"-m {package}.dispatcher.codex_meter"
+    dispatch, catalog = f"{package}/dispatch.py", f"{package}/config/model_catalog.yaml"
     parser = argparse.ArgumentParser(
         description="Estimate spend and remaining budget for one bound Codex account's dispatch tasks.\n"
         "Use for fleet usage meters, not provider billing or an authoritative credit balance.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.codex_meter\n"
-        "  .venv/bin/python -m scripts.dispatcher.codex_meter --json\n"
-        "  .venv/bin/python -m scripts.dispatcher.codex_meter --account b-sub\n"
+        epilog=f"Examples:\n  .venv/bin/python {entry}\n"
+        f"  .venv/bin/python {entry} --json\n"
+        f"  .venv/bin/python {entry} --account b-sub\n"
         "Outputs: stdout only; reads task records and the private account binding, never credentials.\n"
         "Exit codes: 0 estimate printed; 1 configuration, store or usage incomplete.\n"
-        "Related: scripts/dispatch.py dispatch --codex-account api|b-sub|b-api; scripts/config/model_catalog.yaml.",
+        f"Related: {dispatch} dispatch --codex-account api|b-sub|b-api; {catalog}.",
     )
     parser.add_argument("--json", action="store_true", help="Print structured JSON (default: one meter line)")
     bound = (*CODEX_BOUND_ACCOUNTS, *(name for name, label in CODEX_ACCOUNT_ALIASES.items() if label in CODEX_BOUND_ACCOUNTS))

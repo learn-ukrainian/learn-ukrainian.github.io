@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
+from scripts.common.repo_root import machinery_path
+
 from .. import state_router
 from ..monitor_context import MonitorContext
 from ..subscription_usage import _parse_resets_at_any, compute_usage_pace
@@ -164,7 +166,7 @@ def _invoke(ctx: MonitorContext) -> dict[str, Any]:
         transport="dispatch",
         fresh_codexbar=False,
         refresh_requested=False,
-        budget_config_path=roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+        budget_config_path=machinery_path("config/agent_budgets.yaml"),
         tasks_dir=roots.batch_state_dir / "tasks",
         project_root=roots.project_root,
         curriculum_root=roots.curriculum_root,

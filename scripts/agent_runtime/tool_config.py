@@ -336,7 +336,7 @@ def assert_agy_mcp_catalog_visible(
             f"agy MCP catalog cannot expose required tools ({details}). "
             "`agy -p` would run with no mcp__<server>__* tools. Recovery: "
             "re-run the register helper — "
-            "`scripts.agent_runtime.tool_config.ensure_agy_mcp_catalog([...])` "
+            f"`{Path(__file__).absolute().parents[1].name}.agent_runtime.tool_config.ensure_agy_mcp_catalog([...])` "
             "or `agy mcp add --type http <name> <url>` — then check `agy mcp list`."
         )
     return {name: catalog[name] for name in server_names}

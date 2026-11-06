@@ -37,10 +37,11 @@ from collections import Counter
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, cast
 
 import yaml
 
+from scripts.common.repo_root import machinery_path
 from scripts.orchestration import issue_stream_audit as isa
 from scripts.research import consumption
 from scripts.research import registry as reg
@@ -55,23 +56,29 @@ class _Check(NamedTuple):
     is_registered_source_family: Callable[[object], bool]
 
 
-def _load_named_check(key: str) -> Any:
-    return reg._load_configured_module(key)
+def _load_named_check(key: str, *, product_root: Path | None = None) -> Any:
+    return reg._load_configured_module(key, product_root=product_root)
 
 
-def _configured_check() -> _Check:
-    corpus = _load_named_check("corpus_module")
+def _configured_check(*, product_root: Path | None = None) -> _Check:
+    corpus = _load_named_check("corpus_module", product_root=product_root)
     return _Check(
-        registry=_load_named_check("check_module"),
+        registry=_load_named_check("check_module", product_root=product_root),
         is_registered_source_family=corpus.is_registered_source_family,
     )
 
 
-_DEFAULT_CHECK = _configured_check()
+_default_check: _Check | None = None
 
 
 def _resolve_check(check: Any | None) -> _Check:
-    return _DEFAULT_CHECK if check is None else check
+    """The process-wide checker, loaded on first use so import stays product-free."""
+    global _default_check
+    if check is not None:
+        return cast(_Check, check)
+    if _default_check is None:
+        _default_check = _configured_check()
+    return _default_check
 
 
 # Consumer kinds P1 resolves deterministically OFFLINE (file/symbol/decision), PLUS
@@ -214,7 +221,7 @@ def _lifecycle_and_adoption(root: Path, max_age_s: int, check: _Check) -> dict[s
         }
 
     try:
-        streams = check.registry.load_streams(root / "scripts" / "config" / "issue_streams.yaml")
+        streams = check.registry.load_streams(machinery_path("config/issue_streams.yaml"))
     except (OSError, ValueError, yaml.YAMLError):
         streams = {}
     try:

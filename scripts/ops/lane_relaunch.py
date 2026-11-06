@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -24,6 +25,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -129,20 +134,20 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.lane_relaunch --dry-run\n"
-            "  .venv/bin/python scripts/ops/lane_relaunch.py\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.lane_relaunch --dry-run\n"
+            f"  .venv/bin/python {_MACHINERY}/ops/lane_relaunch.py\n"
             "Outputs: --dry-run prints the JSON plan (session, command, cwd, env keys without values) and\n"
             "  starts nothing; otherwise creates detached tmux sessions and prints one JSON outcome per lane.\n"
             "Exit codes: 0 every lane exists or started; 1 invalid lane data; 2 invalid arguments;\n"
             "  3 at least one lane failed, was refused by its local config, or is unverified (logged; the\n"
             "  others still ran).\n"
-            "Related: scripts/config/driver_lanes.json, packaging/systemd/learn-ukrainian-lane-relaunch.service,\n"
+            f"Related: {_MACHINERY}/config/driver_lanes.json, packaging/systemd/learn-ukrainian-lane-relaunch.service,\n"
             "  docs/runbooks/maintenance-window.md, issue #10814."
         ),
     )
     parser.add_argument("--dry-run", action="store_true", help="Print the relaunch plan for all lanes; start nothing.")
     parser.add_argument(
-        "--data", type=Path, default=None, help="Lane data file (default: scripts/config/driver_lanes.json)."
+        "--data", type=Path, default=None, help=f"Lane data file (default: {_MACHINERY}/config/driver_lanes.json)."
     )
     parser.add_argument(
         "--settle-seconds",

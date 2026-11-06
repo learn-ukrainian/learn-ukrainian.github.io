@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import errno
 import fnmatch
+import functools
 import json
 import logging
 import math
@@ -56,10 +57,25 @@ _MODULE_NAME_RE = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
 _CHECK_CONFIG_PATH = Path(__file__).resolve().parents[1] / "audit" / "research_check.v1.json"
 
 
-def research_check_config() -> dict[str, str]:
-    """Return the check and corpus module names from the product data file."""
+def _config_path(product_root: Path | None) -> Path:
+    """The research-check data file under ``product_root``, or this checkout's copy."""
+    if product_root is None:
+        return _CHECK_CONFIG_PATH
+    if not isinstance(product_root, Path) or not product_root.is_absolute():
+        raise RuntimeError("product root is not an absolute path")
+    return product_root / "scripts" / "audit" / "research_check.v1.json"
+
+
+def research_check_config(*, product_root: Path | None = None) -> dict[str, str]:
+    """Return the check and corpus module names from the product data file.
+
+    ``product_root`` selects the product checkout. Omitted, the file is the one
+    beside this package (the combined repository). The file is read when this
+    function runs, not when the module is imported. A missing or unreadable
+    file refuses the call.
+    """
     try:
-        payload = json.loads(_CHECK_CONFIG_PATH.read_text(encoding="utf-8"))
+        payload = json.loads(_config_path(product_root).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise RuntimeError("research check config is unreadable") from exc
     if not isinstance(payload, dict) or payload.get("schema") != _CHECK_SCHEMA:
@@ -75,28 +91,45 @@ def research_check_config() -> dict[str, str]:
     return names
 
 
-def _load_configured_module(key: str) -> Any:
+def _load_configured_module(key: str, *, product_root: Path | None = None) -> Any:
     """Validate the research-check data and load its configured product module."""
-    name = research_check_config()[key]
+    name = research_check_config(product_root=product_root)[key]
     try:
-        return load_configured_module(name)
+        return load_configured_module(name, product_root=product_root)
     except ModuleNotFoundError as exc:
         if exc.name and (name == exc.name or name.startswith(exc.name + ".")):
-            location = Path(__file__).resolve().parents[2].joinpath(*exc.name.split(".")).with_suffix(".py")
+            base = Path(__file__).resolve().parents[2] if product_root is None else product_root
+            location = base.joinpath(*exc.name.split(".")).with_suffix(".py")
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(location)) from None
         raise
 
 
-_DEFAULT_CHECK_MODULE = _load_configured_module("check_module")
+def _check_cache_key(product_root: Path | None) -> str:
+    if product_root is None:
+        return ""
+    if not isinstance(product_root, Path) or not product_root.is_absolute():
+        raise RuntimeError("product root is not an absolute path")
+    return os.fspath(product_root)
 
 
-def configured_check_module() -> Any:
-    """The product registry checker named by the research-check data file."""
-    return _DEFAULT_CHECK_MODULE
+@functools.lru_cache(maxsize=8)
+def _cached_check_module(key: str) -> Any:
+    root = None if key == "" else Path(key)
+    return _load_configured_module("check_module", product_root=root)
+
+
+def configured_check_module(*, product_root: Path | None = None) -> Any:
+    """The product registry checker named by the research-check data file.
+
+    The module is loaded on the first call for a product root and reused, so
+    importing this module does not read product data. A missing file refuses
+    the call.
+    """
+    return _cached_check_module(_check_cache_key(product_root))
 
 
 def _resolve_check(check: Any | None) -> Any:
-    return _DEFAULT_CHECK_MODULE if check is None else check
+    return configured_check_module() if check is None else check
 
 # --------------------------------------------------------------------------- #
 # Kill switch (ADR-011 §"Runtime kill switch")

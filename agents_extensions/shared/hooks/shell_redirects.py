@@ -14,10 +14,16 @@ from collections.abc import Callable
 
 # The sibling module is also imported from deployed, read-only hook trees.
 sys.dont_write_bytecode = True
-from shell_shlex import (
-    ShellPreprocessLimit,
-    preprocess_shell_command,
-)
+if __package__:  # imported as part of a package: the sibling is in the same package
+    from .shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+    )
+else:  # deployed hook tree: the importing hook put this directory on sys.path
+    from shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+    )
 
 # Longest redirect spellings come first; `>&` is one operator, not `>` then `&`.
 _REDIRECT_OPERATOR = re.compile(r"&>>?|<<<|<<-?|[<>]&|<>|>\||>>?|<")

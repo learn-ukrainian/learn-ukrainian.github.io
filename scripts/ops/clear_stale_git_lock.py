@@ -12,6 +12,11 @@ from pathlib import Path
 
 import psutil
 
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+
 MIN_AGE_SECONDS = 600
 
 
@@ -112,8 +117,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run\n"
-            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --apply\n\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.clear_stale_git_lock --repo . --dry-run\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.clear_stale_git_lock --repo . --apply\n\n"
             "Outputs: inspection/removal receipt to stdout; --apply removes one Git lock.\n"
             "Exit codes: 0 eligible or removed; 1 unsafe or failed.\n"
             "Related: docs/runbooks/clear-stale-git-lock.md; issues #8887 and #8874."

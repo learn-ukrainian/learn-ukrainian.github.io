@@ -20,7 +20,15 @@ Issue: #1184
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import NotRequired, TypedDict
+
+# The machinery package's canonical import name is the (unresolved) name of the package
+# directory this file is in. Adapter targets are always named under it, even when this
+# registry is reached through the historical top-level ``agent_runtime`` alias, so every
+# caller loads one module object.
+MACHINERY_PACKAGE = Path(__file__).absolute().parents[1].name
+_ADAPTERS = f"{MACHINERY_PACKAGE}.agent_runtime.adapters"
 
 
 class AgentEntry(TypedDict):
@@ -39,7 +47,7 @@ class AgentEntry(TypedDict):
 
 AGENTS: dict[str, AgentEntry] = {
     "codex": {
-        "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
+        "adapter": f"{_ADAPTERS}.codex:CodexAdapter",
         # Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high orchestrates and
         # advises. Luna is an explicit pin for scouting.
         "default_model": "gpt-6.1-sol",
@@ -57,7 +65,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "codex-desktop": {
-        "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
+        "adapter": f"{_ADAPTERS}.codex:CodexAdapter",
         "default_model": "gpt-6.1-sol",
         "cost_tier": "high",
         "capabilities": frozenset(
@@ -72,7 +80,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "claude": {
-        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "adapter": f"{_ADAPTERS}.claude:ClaudeAdapter",
         "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
@@ -87,7 +95,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "claude-desktop": {
-        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "adapter": f"{_ADAPTERS}.claude:ClaudeAdapter",
         "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
@@ -102,7 +110,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "claude-infra": {
-        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "adapter": f"{_ADAPTERS}.claude:ClaudeAdapter",
         "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
@@ -116,7 +124,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "claude-monitor": {
-        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "adapter": f"{_ADAPTERS}.claude:ClaudeAdapter",
         "default_model": "claude-sonnet-5-5",
         "cost_tier": "high",
         "capabilities": frozenset(
@@ -130,7 +138,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "gemini": {
-        "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
+        "adapter": f"{_ADAPTERS}.gemini:GeminiAdapter",
         "default_model": "gemini-3.8-flash-high",
         "cost_tier": "low",
         "capabilities": frozenset(
@@ -152,7 +160,7 @@ AGENTS: dict[str, AgentEntry] = {
         # (currently grok-4.7, operator order 2026-09-22 / #8464). Historical
         # alias: "grok-build" (see agent_identity.SEAT_ALIASES); dual-READ
         # only, prefer-WRITE "grok".
-        "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
+        "adapter": f"{_ADAPTERS}.grok_build:GrokBuildAdapter",
         "default_model": "grok-4.7",
         "default_effort": "high",
         "cost_tier": "medium",
@@ -172,7 +180,7 @@ AGENTS: dict[str, AgentEntry] = {
         # keep resolving. Prefer-WRITE is "grok"; this entry exists so bare
         # registry lookups of the historical key still succeed without every
         # caller remembering to normalize first.
-        "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
+        "adapter": f"{_ADAPTERS}.grok_build:GrokBuildAdapter",
         "default_model": "grok-4.7",
         "default_effort": "high",
         "cost_tier": "medium",
@@ -193,7 +201,7 @@ AGENTS: dict[str, AgentEntry] = {
         # Bridge asks (`ask-deepseek`) ride the acpx-deepseek-shadow ACP
         # seat on the same first-party opencode route. First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
-        "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
+        "adapter": f"{_ADAPTERS}.deepseek:DeepSeekAdapter",
         "default_model": "deepseek-v4.1-flash",
         "default_effort": "high",
         "cost_tier": "low",
@@ -210,7 +218,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "glm": {
-        "adapter": "scripts.agent_runtime.adapters.glm:GlmAdapter",
+        "adapter": f"{_ADAPTERS}.glm:GlmAdapter",
         # Catalog model id; provider pin (Flash API vs Coding Plan) is applied
         # at invocation time by the adapter (_OPENCODE_MODEL_ROUTES).
         "default_model": "glm-5.3-flash",
@@ -227,7 +235,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "cursor": {
-        "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
+        "adapter": f"{_ADAPTERS}.cursor:CursorAdapter",
         "default_model": "grok-4.7",
         "cost_tier": "low",
         "capabilities": frozenset(
@@ -246,7 +254,7 @@ AGENTS: dict[str, AgentEntry] = {
         # coding) with no forced effort; full K3 (high/max, 1M window) is the
         # advisor/complex seat selected via --model k3 --effort high|max.
         # Ukrainian content capabilities remain separately gated.
-        "adapter": "scripts.agent_runtime.adapters.kimi:KimiAdapter",
+        "adapter": f"{_ADAPTERS}.kimi:KimiAdapter",
         "default_model": "k3-256k",
         "cost_tier": "medium",
         "capabilities": frozenset(
@@ -266,7 +274,7 @@ AGENTS: dict[str, AgentEntry] = {
         # ``available_agents()`` and never a general dispatch or failover
         # candidate. Only the runner-owned communication controller and its
         # parent-sealed formal-review executable may invoke this seat.
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxAdapter",
         # ACPX resolves its own agent default when no --model is supplied;
         # this direct-only seat must not advertise an invented catalog model.
         "default_model": None,
@@ -284,7 +292,7 @@ AGENTS: dict[str, AgentEntry] = {
         # Fixed effective model/effort live inside the custom --agent command;
         # do not advertise a catalog model here. Native Grok remains the
         # provider authority; this registry name is not a coordination plane.
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGrokShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxGrokShadowAdapter",
         "default_model": None,
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -293,7 +301,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-claude-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxClaudeShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxClaudeShadowAdapter",
         "default_model": None,
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -302,7 +310,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-kimi-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxKimiShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxKimiShadowAdapter",
         "default_model": None,
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -311,7 +319,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-kimicc-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxKimiCcShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxKimiCcShadowAdapter",
         "default_model": "kimi-code/k3",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -320,7 +328,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-cursor-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxCursorShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxCursorShadowAdapter",
         "default_model": None,
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -329,7 +337,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-pool-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxPoolShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxPoolShadowAdapter",
         "default_model": "poolside/laguna-s-2.1",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -338,7 +346,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-agy-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxAgyShadowAdapter",
         "default_model": "gemini-3.8-flash-high",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -347,7 +355,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "never",
     },
     "acpx-glm-shadow": {
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxGlmShadowAdapter",
         "default_model": "glm-5.3",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -358,7 +366,7 @@ AGENTS: dict[str, AgentEntry] = {
     "acpx-deepseek-shadow": {
         # Native opencode ACP transport (``opencode acp --pure``, deny-all)
         # pinned to first-party deepseek-direct — the standing route.
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxDeepSeekShadowAdapter",
         "default_model": "deepseek-v4.1-flash",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -368,7 +376,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "acpx-gemma-shadow": {
         # $0 toolless AIS-direct Gemma ACP participant (#6805).
-        "adapter": "scripts.agent_runtime.adapters.acpx:AcpxGemmaShadowAdapter",
+        "adapter": f"{_ADAPTERS}.acpx:AcpxGemmaShadowAdapter",
         "default_model": "google-ais/gemma-4-31b-it",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
@@ -383,7 +391,7 @@ AGENTS: dict[str, AgentEntry] = {
         # MCP plugin wiring is a Phase-2 follow-up — until then `-tools`
         # writer mode will trip MCP_TOOLS_NEVER_INVOKED, which is the
         # expected signal in the bakeoff.
-        "adapter": "scripts.agent_runtime.adapters.agy:AgyAdapter",
+        "adapter": f"{_ADAPTERS}.agy:AgyAdapter",
         "default_model": "gemini-3.8-flash-high",
         "cost_tier": "low",
         "capabilities": frozenset(
@@ -396,7 +404,7 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "muse": {
-        "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
+        "adapter": f"{_ADAPTERS}.muse:MuseAdapter",
         "default_model": "muse-wonder-full-1.0",
         "default_effort": "high",
         "cost_tier": "unknown",

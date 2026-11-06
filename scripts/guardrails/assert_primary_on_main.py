@@ -30,6 +30,11 @@ from scripts.guardrails.worktree_containment import (
 
 # Git probes feed primary_head_state / heal decisions; bound them so a wedged
 # git surfaces as a failed probe instead of hanging a launcher (#7213).
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+
 _GIT_TIMEOUT_S = 30
 
 
@@ -200,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.heal:
         print(
             "Fix: cd <primary> && git checkout main && git pull --ff-only origin main\n"
-            "Or:  .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal",
+            f"Or:  .venv/bin/python {_MACHINERY}/guardrails/assert_primary_on_main.py --heal",
             file=sys.stderr,
         )
         return 1

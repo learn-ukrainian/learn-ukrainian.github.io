@@ -18,7 +18,9 @@ from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
-ENTRY_POINT = Path("scripts/agent_runtime/secret_print_hook.py")
+# Checkout-relative: the machinery package directory as this file was imported from it
+# (unresolved, whatever the package is called), then the hook.
+ENTRY_POINT = Path(Path(__file__).absolute().parents[1].name, "agent_runtime", "secret_print_hook.py")
 GUARD_TIMEOUT_FLOOR = 10
 
 
@@ -254,9 +256,11 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.agy_hook_config"
     parser = argparse.ArgumentParser(
         description="Read effective AGY hooks files and refuse missing no-print wiring.",
-        epilog="Example: .venv/bin/python -m scripts.agent_runtime.agy_hook_config --cwd .\n"
+        epilog=f"Example: .venv/bin/python {entry} --cwd .\n"
         "Outputs: PASS or REFUSE with a reason code. Writes: none. Exit: 0 PASS, 2 REFUSE.",
     )
     parser.add_argument("--cwd", type=Path, required=True, help="AGY workspace directory.")

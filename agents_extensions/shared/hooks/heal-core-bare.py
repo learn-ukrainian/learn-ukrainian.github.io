@@ -39,10 +39,21 @@ def _is_git_command(command: str) -> bool:
     return "git" in tokens
 
 
+# The machinery modules this hook loads and runs, by import name; under a checkout their files are
+# at the same dotted path (this hook is outside the machinery package).
+_ROOTS_READER_MODULE = "scripts.common.repo_root"
+_CORE_BARE_CHECK_MODULE = "scripts.hygiene.check_core_bare"
+
+
+def _module_file(module: str) -> Path:
+    """The checkout-relative file of a machinery module named by its import name."""
+    return Path(*module.split(".")).with_suffix(".py")
+
+
 def _project_dir() -> Path | None:
     here = Path(__file__).resolve()
     for candidate in (here.parent, *here.parents):
-        if (candidate / "scripts" / "common" / "repo_root.py").is_file():
+        if (candidate / _module_file(_ROOTS_READER_MODULE)).is_file():
             return candidate
     return None
 
@@ -131,7 +142,7 @@ def main() -> int:
     if project_dir is None or not _may_be_bare(project_dir):
         return 0
 
-    script = project_dir / "scripts" / "hygiene" / "check_core_bare.py"
+    script = project_dir / _module_file(_CORE_BARE_CHECK_MODULE)
     try:
         if str(project_dir) not in sys.path:
             sys.path.insert(0, str(project_dir))

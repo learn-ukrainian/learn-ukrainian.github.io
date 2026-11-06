@@ -1206,5 +1206,5 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
 
 if __name__ == "__main__":  # the worktree hooks: refresh TREE REGISTRY
     if len(sys.argv) != 4 or sys.argv[1] != "refresh":
-        sys.exit("usage: python -m scripts.dispatcher.git refresh TREE REGISTRY")
+        sys.exit(f"usage: python -m {Path(__file__).absolute().parents[1].name}.dispatcher.git refresh TREE REGISTRY")
     refresh_worktree(Path(sys.argv[3]), Path(sys.argv[2]))
