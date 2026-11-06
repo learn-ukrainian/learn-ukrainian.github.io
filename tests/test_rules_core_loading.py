@@ -480,12 +480,18 @@ def addendum_less_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     core_only = tmp_path_factory.mktemp("rules-core-partial") / "rules"
     core_only.mkdir()
     (core_only / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
-    return checkout_view(core_only.parent / "checkout", core_only)
+    view = checkout_view(core_only.parent / "checkout", core_only)
+    marker = view / PRODUCT_MARKER
+    if not marker.is_file():
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text("levels: {}\n", encoding="utf-8")
+    return view
 
 
 def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
-    tmp_path: Path, addendum_less_root: Path
+    tmp_path: Path, addendum_less_root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setenv(PRODUCT_ROOT_ENV, str(addendum_less_root))
     refused, _ = _launch(
         addendum_less_root,
         "start-claude-driver.sh",
