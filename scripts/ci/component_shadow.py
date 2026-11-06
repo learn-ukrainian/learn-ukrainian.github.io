@@ -498,6 +498,7 @@ def main(argv: list[str] | None = None) -> int:
         if command == "check":
             sub.add_argument("--registration", type=Path, required=True, help="pre-result registration JSON")
             sub.add_argument("--receipts", type=Path, required=True, help="receipt directory including complete live runs.json census")
+            sub.add_argument("--now", help="scoring instant, e.g. 2026-11-06T00:00:00Z (default: current UTC time)")
     args = parser.parse_args(argv)
     try:
         if args.command == "select":
@@ -512,7 +513,7 @@ def main(argv: list[str] | None = None) -> int:
                               minimum_narrowed_cases=args.minimum_narrowed_cases)
             write_json(args.output, result, exclusive=True)
         else:
-            result = check(json.loads(args.registration.read_text()), args.receipts)
+            result = check(json.loads(args.registration.read_text()), args.receipts, now=args.now)
             print(json.dumps(result, sort_keys=True))
             return int(result["unresolved_count"] > 0 or result["missed_failure_count"] > 0)
         print(json.dumps(result, sort_keys=True))

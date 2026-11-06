@@ -1400,8 +1400,20 @@ def run_pre_commit_stage(
     # learner-surface filter and scanner remain the source of truth.
     code, output = run_bounded(
         [
-            "bash", launcher, "-m", "pre_commit", "run", "check-no-internal-ids",
-            "--hook-stage", "pre-commit", "-c", config, "--from-ref", plan.base, "--to-ref", plan.head,
+            "bash",
+            launcher,
+            "-m",
+            "pre_commit",
+            "run",
+            "check-no-internal-ids",
+            "--hook-stage",
+            "pre-commit",
+            "-c",
+            config,
+            "--from-ref",
+            plan.base,
+            "--to-ref",
+            plan.head,
         ],
         cwd=root,
         deadline=deadline,
