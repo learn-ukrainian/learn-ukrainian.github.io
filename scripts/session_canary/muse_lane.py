@@ -15,9 +15,8 @@ from scripts.common.epic_selector import validate_epic
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.session_canary import grok_lane
 
-# This package's import name, as ``python -m`` names its modules: from this module's package,
-# or from its unresolved location when run as a file.
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, as ``python -m`` names its modules (derived once, in grok_lane).
+_PACKAGE = grok_lane._PACKAGE
 
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = "muse-wonder-full-1.0"

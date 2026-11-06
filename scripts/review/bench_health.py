@@ -134,7 +134,7 @@ def _bench_inventory(
 def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] | None = None) -> int:
     # Named as it was started: by import name under ``-m``, else by file; the sibling the same way.
     if __spec__ is not None:
-        entry, closeout = f"-m {__spec__.name}", f"{__spec__.parent}.closeout_cli"
+        entry, closeout = f"-m {__spec__.name}", f"{_MACHINERY}.review.closeout_cli"
     else:
         entry, closeout = os.fspath(__file__), os.fspath(Path(__file__).with_name("closeout_cli.py"))
     catalog = f"{_MACHINERY}/config/model_catalog.yaml"

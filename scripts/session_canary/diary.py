@@ -17,9 +17,9 @@ from pathlib import Path
 
 from scripts.session_canary import handoff_select
 
-# This package's import name, as ``python -m`` names its modules: from this module's package,
-# or from its unresolved location when run as a file.
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, as ``python -m`` names its modules: from this module's unresolved
+# location (design-v1 amendment 1), never __package__.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.session_canary"
 
 DIARY_MARKER = "## 📔 Diary — reverse chrono (newest first)"
 NEXT_DRIVE_MARKER = "## Next Drive"

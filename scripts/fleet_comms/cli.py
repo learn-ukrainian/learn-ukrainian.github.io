@@ -73,9 +73,9 @@ from scripts.fleet_comms.opsec_store import (
 from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
-# This package's import name, as ``python -m`` runs it: from this module's package, or from
-# its unresolved location when run as a file.
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, as ``python -m`` runs it: from this module's unresolved location
+# (design-v1 amendment 1), never __package__.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.fleet_comms"
 
 EXIT_OK = 0
 EXIT_USAGE = 2

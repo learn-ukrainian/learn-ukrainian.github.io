@@ -1,7 +1,9 @@
 """Closed, lazy component registry. Request data never names executable code."""
 
+import os
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from types import MappingProxyType
 from typing import Protocol
 
@@ -11,6 +13,10 @@ from ..attribution import AttributionAdapter
 from ..contract import Candidate
 from ..errors import BuildError, require
 from ..snapshot import FileStore, SnapshotReader
+
+# This package's canonical import name: the machinery package's directory, from this file's
+# unresolved location (design-v1 amendment 1), plus the known package-relative suffix.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[4].name}.projects.open_model_data.review_build.components"
 
 REGISTRY = {
     "C1": "c1",
@@ -98,7 +104,7 @@ def load_components(
         if _test_overrides is not None and component in _test_overrides:
             result[component] = _test_overrides[component]
             continue
-        target = f"{__name__}.{REGISTRY[component]}"
+        target = f"{_PACKAGE}.{REGISTRY[component]}"
         try:
             module = import_named_module(target)
         except ModuleNotFoundError as exc:

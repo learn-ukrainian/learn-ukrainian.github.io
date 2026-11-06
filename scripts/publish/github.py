@@ -37,8 +37,8 @@ from scripts.publish import recovery
 _MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 _FLEET_REPOS = f"{_MACHINERY}/config/fleet_repos.yaml"
 _RECORDER = f"{_MACHINERY}/review/record_cf_verdict.py"
-# This publisher's import name, as ``python -m`` runs it.
-_PUBLISHER = __package__
+# This publisher's import name, as ``python -m`` runs it (never __package__).
+_PUBLISHER = f"{_MACHINERY}.publish"
 
 # Each field has one type and one meaning; strings never select gh flags.
 COMMON = {"repo": "repo"}

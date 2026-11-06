@@ -8,6 +8,7 @@ to a drop-in directory, is refused in preview and apply alike.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -19,9 +20,8 @@ from scripts.common.safe_unit_install import InstallError, install_unit, load_un
 
 
 def _mp(relative: str) -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return f"{top or Path(__file__).parents[1].name}/{relative}"
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 TEMPLATE_ROOT = REPO_ROOT / "packaging" / "systemd" / "dropins"
 DEFAULT_DESTINATION = Path("/etc/systemd/user")

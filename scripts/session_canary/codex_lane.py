@@ -20,9 +20,8 @@ from scripts.session_canary import gemini_lane as _gemini_lane
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
-# This package's import name, as ``python -m`` names its modules: from this module's package,
-# or from its unresolved location when run as a file.
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, as ``python -m`` names its modules (derived once, in grok_lane).
+_PACKAGE = _gl._PACKAGE
 
 _HOLDER_AGENT = "codex"
 _HOLDER_HARNESS = "codex-cli"

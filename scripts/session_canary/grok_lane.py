@@ -64,11 +64,11 @@ from scripts.common.epic_selector import validate_epic
 from scripts.common.repo_root import machinery_path
 from scripts.session_canary import handoff_select
 
-# This package's import name, as ``python -m`` names its modules: from this module's package,
-# or from its unresolved location when run as a file.
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
-# The machinery package's import name, which is also the directory its files have in checkout paths.
-_MACHINERY = _PACKAGE.partition(".")[0]
+# The machinery package's import name, which is also the directory its files have in checkout paths:
+# from this module's unresolved location (design-v1 amendment 1), never __package__.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+# This package's import name, as ``python -m`` names its modules.
+_PACKAGE = f"{_MACHINERY}.session_canary"
 
 
 class StreamResolutionError(ValueError):

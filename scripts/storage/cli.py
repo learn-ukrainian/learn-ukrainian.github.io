@@ -23,9 +23,8 @@ from scripts.storage.wal_permissions import hold_database, lift_database
 
 
 def _machinery_top() -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return top or Path(__file__).parents[1].name
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
 
 
 def _mod(*parts: str) -> str:
