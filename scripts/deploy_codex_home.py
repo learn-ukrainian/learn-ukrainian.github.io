@@ -9,10 +9,16 @@ import json
 import os
 import re
 import stat
+import sys
 import tempfile
 import tomllib
 import uuid
 from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.common.repo_root import ProductRootError, product_root
 
 
 class DeployError(Exception):
@@ -167,11 +173,7 @@ def atomic_write(path: Path, data: bytes, mode: int = 0o600) -> None:
 def deploy(source: Path, home: Path, *, dry_run: bool = False, check: bool = False) -> int:
     home = safe_path(home)
     assets = source_assets(safe_path(source))
-    superseded = [
-        name
-        for name in SUPERSEDED_PROFILES
-        if safe_path(home / "agents" / f"{name}.toml").exists()
-    ]
+    superseded = [name for name in SUPERSEDED_PROFILES if safe_path(home / "agents" / f"{name}.toml").exists()]
     if superseded:
         for name in superseded:
             print(f"agents/{name}.toml: superseded profile remains active")
@@ -179,9 +181,7 @@ def deploy(source: Path, home: Path, *, dry_run: bool = False, check: bool = Fal
             return 1
         if dry_run:
             return 0
-        raise DeployError(
-            "move superseded profiles from active agents/ to a private backup before deployment"
-        )
+        raise DeployError("move superseded profiles from active agents/ to a private backup before deployment")
     changes = []
     for relative, data in assets.items():
         target = safe_path(home / relative)
@@ -260,15 +260,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--codex-home", type=Path, required=True)
     parser.add_argument(
-        "--source-root", type=Path, default=Path(__file__).resolve().parents[1] / "agents_extensions/codex-home"
+        "--source-root",
+        type=Path,
+        default=None,
+        help="default: agents_extensions/codex-home in the product checkout (LU_PRODUCT_ROOT or this checkout)",
     )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--check", action="store_true")
     args = parser.parse_args()
     try:
-        return deploy(args.source_root, args.codex_home, dry_run=args.dry_run, check=args.check)
-    except DeployError as error:
+        source_root = args.source_root or product_root() / "agents_extensions/codex-home"
+        return deploy(source_root, args.codex_home, dry_run=args.dry_run, check=args.check)
+    except (DeployError, ProductRootError) as error:
         print(f"status: error: {error}")
         return 2
     except OSError:

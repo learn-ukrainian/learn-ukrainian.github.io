@@ -13,30 +13,29 @@ Exit code 0 = clean, 1 = violations found.
 """
 
 import argparse
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if __package__ and "." in __package__:
+    from ..common.repo_root import product_root
+else:  # run by path or imported top-level: the resolver is in the package directory above this file
+    _PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _PACKAGE_DIR not in sys.path:
+        sys.path.insert(0, _PACKAGE_DIR)
+    from common.repo_root import product_root  # type: ignore[no-redef]
 
+# Every path below is a product path, relative to the product checkout that
+# ``product_root`` selects when a scan runs (C-4746), never to this file.
 # Directories to scan for prompt/skill files (deploy gate)
-PROMPT_SCAN_DIRS = [
-    PROJECT_ROOT / "gemini_extensions" / "skills",
-    PROJECT_ROOT / "agents_extensions/shared" / "phases",
-]
-
-ORCHESTRATOR_PROMPT_ROOT = PROJECT_ROOT / "docs" / "prompts" / "orchestrators"
-CURRICULUM_MANIFEST = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-LEGACY_PROMPT_MIGRATION = (
-    PROJECT_ROOT
-    / "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
-)
-
+PROMPT_SCAN_RELS = ("gemini_extensions/skills", "agents_extensions/shared/phases")
+ORCHESTRATOR_PROMPT_REL = "docs/prompts/orchestrators"
+CURRICULUM_MANIFEST_REL = "curriculum/l2-uk-en/curriculum.yaml"
+LEGACY_PROMPT_MIGRATION_REL = "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
 # Directories to scan for curriculum research files (--curriculum mode)
-CURRICULUM_RESEARCH_DIRS = [
-    PROJECT_ROOT / "curriculum" / "l2-uk-en",
-]
+CURRICULUM_RESEARCH_RELS = ("curriculum/l2-uk-en",)
 
 LEGACY_NON_SUITE_PROMPT_TRACKS = {"a1", "a2", "b1", "b2", "folk"}
 SEMINAR_SUITE_TRACKS = {
@@ -238,7 +237,7 @@ def check_line_rules(filepath: Path) -> list[dict]:
                 violations.append({
                     "rule": rule_id,
                     "severity": severity,
-                    "file": str(filepath.relative_to(PROJECT_ROOT)),
+                    "file": str(filepath.relative_to(product_root())),
                     "line": i,
                     "message": description,
                     "content": line.strip()[:120],
@@ -251,7 +250,8 @@ def scan_prompts() -> list[dict]:
     """Scan prompt/skill files for violations (deploy gate)."""
     all_violations = []
 
-    for scan_dir in PROMPT_SCAN_DIRS:
+    root = product_root()
+    for scan_dir in (root / rel for rel in PROMPT_SCAN_RELS):
         if not scan_dir.exists():
             continue
         for filepath in sorted(scan_dir.rglob("*.md")):
@@ -273,7 +273,7 @@ def make_violation(
 ) -> dict:
     """Return a linter violation in the existing prompt-lint shape."""
     try:
-        rel_file = str(filepath.relative_to(PROJECT_ROOT))
+        rel_file = str(filepath.relative_to(product_root()))
     except ValueError:
         rel_file = str(filepath)
     return {
@@ -305,8 +305,8 @@ def extract_section(text: str, heading: str) -> str:
     return text[start:next_heading]
 
 
-def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> set[str]:
-    """Extract active level/track keys from curriculum.yaml without PyYAML."""
+def extract_curriculum_level_keys(manifest_path: Path | None = None) -> set[str]:
+    """Extract active level/track keys from curriculum.yaml (default: the product's) without PyYAML."""
     return set(extract_curriculum_level_types(manifest_path))
 
 
@@ -373,8 +373,10 @@ def _manifest_text(manifest_path: Path) -> str | None:
     return _skip_worktree_blob(manifest_path)
 
 
-def extract_curriculum_level_types(manifest_path: Path = CURRICULUM_MANIFEST) -> dict[str, str]:
-    """Extract active level/track types from curriculum.yaml without PyYAML."""
+def extract_curriculum_level_types(manifest_path: Path | None = None) -> dict[str, str]:
+    """Extract active level/track types from curriculum.yaml (default: the product's) without PyYAML."""
+    if manifest_path is None:
+        manifest_path = product_root() / CURRICULUM_MANIFEST_REL
     text = _manifest_text(manifest_path)
     if text is None:
         return {}
@@ -637,16 +639,20 @@ def check_orchestrator_track_coverage(
 
 
 def scan_orchestrator_suites(
-    root: Path = ORCHESTRATOR_PROMPT_ROOT,
-    manifest_path: Path = CURRICULUM_MANIFEST,
+    root: Path | None = None,
+    manifest_path: Path | None = None,
     migration_path: Path | None = None,
 ) -> list[dict]:
-    """Validate orchestrator prompt suite coverage and contracts."""
+    """Validate orchestrator prompt suite coverage and contracts (default: the product's suites)."""
+    product = product_root()
+    default_root = product / ORCHESTRATOR_PROMPT_REL
+    root = default_root if root is None else root
+    manifest_path = product / CURRICULUM_MANIFEST_REL if manifest_path is None else manifest_path
     if not root.exists():
         return []
 
-    if migration_path is None and root.resolve() == ORCHESTRATOR_PROMPT_ROOT.resolve():
-        migration_path = LEGACY_PROMPT_MIGRATION
+    if migration_path is None and root.resolve() == default_root.resolve():
+        migration_path = product / LEGACY_PROMPT_MIGRATION_REL
     legacy_frozen = migration_path is not None and migration_path.is_file()
 
     violations: list[dict] = []
@@ -681,7 +687,7 @@ def scan_curriculum_research() -> list[dict]:
     """Scan curriculum research files for persona contamination."""
     violations = []
 
-    for base_dir in CURRICULUM_RESEARCH_DIRS:
+    for base_dir in (product_root() / rel for rel in CURRICULUM_RESEARCH_RELS):
         if not base_dir.exists():
             continue
         # Find all research directories
@@ -700,7 +706,7 @@ def scan_curriculum_research() -> list[dict]:
                             violations.append({
                                 "rule": rule_id,
                                 "severity": severity,
-                                "file": str(filepath.relative_to(PROJECT_ROOT)),
+                                "file": str(filepath.relative_to(product_root())),
                                 "line": i,
                                 "message": description,
                                 "content": line.strip()[:120],
@@ -728,7 +734,7 @@ def fix_research_persona(dry_run: bool = False) -> int:
         r"(Do NOT reference persona|NEVER.*persona|forbid)", re.IGNORECASE
     )
 
-    for base_dir in CURRICULUM_RESEARCH_DIRS:
+    for base_dir in (product_root() / rel for rel in CURRICULUM_RESEARCH_RELS):
         if not base_dir.exists():
             continue
         for research_dir in sorted(base_dir.rglob("research")):
@@ -747,7 +753,7 @@ def fix_research_persona(dry_run: bool = False) -> int:
                         new_lines.append(line)
 
                 if removed:
-                    rel_path = filepath.relative_to(PROJECT_ROOT)
+                    rel_path = filepath.relative_to(product_root())
                     if dry_run:
                         print(f"  Would fix: {rel_path} ({len(removed)} lines)")
                         for line_num, content in removed:

@@ -430,6 +430,7 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
         subprocess.run(["git", "-C", str(seed), *args], check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "clone", str(seed), str(clone)], check=True, capture_output=True, timeout=30)
     assert not (clone / ".claude").exists()
+    _mark_product_checkout(clone, monkeypatch)
     monkeypatch.setattr(claude, "__file__", str(clone / "scripts/agent_runtime/adapters/claude.py"))
     settings = json.loads(claude._worker_guard_settings(publish_guard=True))
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
@@ -440,6 +441,16 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
 _ROOT = Path(__file__).resolve().parents[2]
 _WRAPPER = 'bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh"'
 _PINNED_GUARDS = ("guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py")
+
+
+def _mark_product_checkout(root: Path, monkeypatch) -> None:
+    """Select ``root`` as the product checkout too: the settings file is product configuration."""
+    from scripts.common import repo_root
+
+    marker = root / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker.write_text("levels: {}\n", encoding="utf-8")
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(root))
 
 
 def _guard_source_tree(root: Path, commands: list[str], *, interpreter: bool = True) -> Path:
@@ -462,6 +473,7 @@ def _guard_source_tree(root: Path, commands: list[str], *, interpreter: bool = T
 def _settings_from(root: Path, monkeypatch) -> list[dict]:
     from scripts.agent_runtime.adapters import claude
 
+    _mark_product_checkout(root, monkeypatch)
     monkeypatch.setattr(claude, "__file__", str(root / "scripts/agent_runtime/adapters/claude.py"))
     settings = json.loads(claude._worker_guard_settings())
     return [hook for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
@@ -478,6 +490,7 @@ def test_worker_settings_omit_the_interactive_advisor(tmp_path: Path, monkeypatc
     if advisor is not None:
         source["advisorModel"] = advisor
     source_path.write_text(json.dumps(source), encoding="utf-8")
+    _mark_product_checkout(tmp_path, monkeypatch)
     monkeypatch.setattr(claude, "__file__", str(tmp_path / "scripts/agent_runtime/adapters/claude.py"))
 
     settings = json.loads(claude._headless_worker_settings(publish_guard=False))

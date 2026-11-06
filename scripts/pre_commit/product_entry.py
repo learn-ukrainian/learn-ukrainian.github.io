@@ -8,9 +8,11 @@ reader: it validates the file, imports the named module through the shared
 ``scripts.ops.product_entry.load_configured_module`` boundary (which refuses
 SQLite modules) and calls the named function with the recorded arguments.
 
-The file is trusted because of where it is read from: the path is fixed
-relative to this module, and no environment variable or flag redirects it.
-Changing an entry point is a reviewed commit to that file.
+The file is trusted because of where it is read from: the product checkout
+that ``scripts.common.repo_root.product_root`` selects (``LU_PRODUCT_ROOT``, else
+the marker-bearing checkout this package is in; C-4746), and the named module
+must come from that same checkout. Changing an entry point is a reviewed
+commit to that file.
 
 Fail closed. :func:`load_entry_point` raises :class:`EntryPointError` when the
 file is missing, a symlink, not a regular file or too large; is not strict
@@ -36,12 +38,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import ProductRootError, product_root
 from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.pre-commit-entry-points"
 SCHEMA_VERSION = 1
 ENTRY_POINTS_REL = "scripts/build/pre_commit_entry_points.v1.json"
-ENTRY_POINTS_PATH = Path(__file__).resolve().parents[2] / ENTRY_POINTS_REL
 MAX_BYTES = 16 * 1024
 
 _TOP_FIELDS = frozenset({"schema", "schema_version", "origin", "entry_points"})
@@ -103,8 +105,21 @@ def _fields(value: Any, expected: frozenset[str], where: str) -> dict[str, Any]:
     return value
 
 
-def load_entry_point(hook_id: str, path: Path = ENTRY_POINTS_PATH) -> EntryPoint:
-    """Return the validated entry point for one hook id, or raise :class:`EntryPointError`."""
+def _product_checkout() -> Path:
+    """The product checkout ``product_root`` selects (C-4746); a hook without one refuses."""
+    try:
+        return product_root()
+    except ProductRootError as exc:
+        raise EntryPointError(str(exc)) from None
+
+
+def load_entry_point(hook_id: str, path: Path | None = None) -> EntryPoint:
+    """Return the validated entry point for one hook id, or raise :class:`EntryPointError`.
+
+    ``path`` defaults to ``ENTRY_POINTS_REL`` in the product checkout.
+    """
+    if path is None:
+        path = _product_checkout() / ENTRY_POINTS_REL
     document = _fields(_read(path), _TOP_FIELDS, "entry-point file")
     if document["schema"] != SCHEMA or type(document["schema_version"]) is not int:
         raise EntryPointError(f"schema must be {SCHEMA!r} with an integer schema_version")

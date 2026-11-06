@@ -4,11 +4,10 @@ The dispatcher, the agent runtime and the review contract are machinery and impo
 module. The product names the one module that does, ``attempt_hooks`` in
 ``scripts/curriculum/review_hooks.v1.json``, and :func:`attempt_hooks` imports it. The file is
 trusted because of where it is read from: the product checkout, a product-repository path that
-stays where it is when the machinery moves. By default that is the checkout this module is in, as
-``scripts.orchestration.product_policy`` reads its policy file, so code that runs from the primary
-checkout also reads that checkout's hooks; a caller may name the product checkout with
-``product_root``, and the module the file names must then come from that checkout too. No
-environment variable or flag redirects it.
+stays where it is when the machinery moves. That checkout is ``product_root`` when a caller names
+it, else the one :func:`scripts.common.repo_root.product_root` selects (``LU_PRODUCT_ROOT``, else
+the marker-bearing checkout this package is in; C-4746), and the module the file names must come
+from that same checkout.
 
 Fail closed: :class:`ProductHooksError` (an ``ImportError``, which is what a caller saw before when
 a product module could not be imported) when the file is missing, a symlink, not a regular file,
@@ -26,14 +25,13 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
+from scripts.common import repo_root
 from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.review-hooks"
 SCHEMA_VERSION = 1
 # A product-repository path, relative to the product checkout; it is also the file's ``origin``.
 HOOKS_REL = "scripts/curriculum/review_hooks.v1.json"
-# The hooks file of the default product checkout: the one this module is in.
-HOOKS_PATH = Path(__file__).resolve().parents[2] / HOOKS_REL
 MAX_HOOKS_BYTES = 4096
 
 _FIELDS = frozenset({"schema", "schema_version", "origin", "attempt_hooks"})
@@ -84,18 +82,30 @@ def _module_name(path: Path) -> str:
     return name
 
 
-@functools.cache
 def attempt_hooks(*, product_root: Path | None = None) -> ModuleType:
-    """Validate and load the product's review checks once through the configured entry point.
+    """Validate and load the product's review checks once per product checkout.
 
-    The hooks file is ``HOOKS_REL`` under ``product_root`` (an absolute path; default: this
-    checkout, ``HOOKS_PATH``), and the module it names must come from that root.
+    The hooks file is ``HOOKS_REL`` under ``product_root`` (an absolute path) or, when it is
+    omitted, under the checkout :func:`scripts.common.repo_root.product_root` selects; the module
+    it names must come from that checkout. The checkout is selected before the cache is consulted,
+    so the cache is keyed by it.
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ProductHooksError("hooks_product_root", f"product root is not an absolute path: {product_root!r}")
-    name = _module_name(HOOKS_PATH if product_root is None else product_root / HOOKS_REL)
+    if product_root is not None:
+        return _attempt_hooks_from(product_root)
     try:
-        return load_configured_module(name, product_root=product_root)
+        root = repo_root.product_root()
+    except repo_root.ProductRootError as exc:
+        raise ProductHooksError("hooks_product_root", str(exc)) from None
+    return _attempt_hooks_from(root)
+
+
+@functools.cache
+def _attempt_hooks_from(root: Path) -> ModuleType:
+    name = _module_name(root / HOOKS_REL)
+    try:
+        return load_configured_module(name, product_root=root)
     except ModuleNotFoundError as exc:
         if exc.name == name and hasattr(sys.modules.get(name.rpartition(".")[0]), "__path__"):
             raise ProductHooksError("hooks_module_missing", f"{HOOKS_REL}: no module {name!r}") from None

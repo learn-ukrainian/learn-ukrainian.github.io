@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 from scripts.common.bridge_paths import configured_bridge_db_path
+from scripts.common.repo_root import product_root
 
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
@@ -39,9 +40,24 @@ MESSAGE_DB = configured_bridge_db_path(PROJECT_ROOT)
 # Dashboards directory (for static file serving)
 DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
 
-# Product root (C-4687): the checkout whose configured product entry supplies
-# the product half of the API. In this repository it is the same checkout.
-PRODUCT_ROOT = PROJECT_ROOT
+
+def __getattr__(name: str) -> Path:
+    """``PRODUCT_ROOT``, selected once, when the application first asks for it (C-4746).
+
+    Product root (C-4687): the checkout whose configured product entry supplies the
+    product half of the API. It is ``repo_root.product_root()``'s choice, made at
+    startup rather than at import, so importing this module never needs a product.
+    Served from a release snapshot, that is the snapshot itself (its ``curriculum``
+    live-data link carries the product marker); it is never the live checkout
+    (``LIVE_REPO_ROOT``), which owns no snapshot code. Outside a product checkout the
+    startup names the product with ``LU_PRODUCT_ROOT``, or the first use refuses.
+    """
+    if name != "PRODUCT_ROOT":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    selected = product_root()
+    globals()["PRODUCT_ROOT"] = selected
+    return selected
+
 
 # Batch state directory
 BATCH_STATE_DIR = Path(os.environ.get("LEARN_UKRAINIAN_BATCH_STATE_DIR", PROJECT_ROOT / "batch_state"))

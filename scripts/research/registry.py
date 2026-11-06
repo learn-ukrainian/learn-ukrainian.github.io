@@ -45,6 +45,7 @@ from typing import Any
 
 import yaml
 
+from scripts.common import repo_root
 from scripts.ops.product_entry import load_configured_module
 
 logger = logging.getLogger("research.registry")
@@ -54,28 +55,37 @@ logger = logging.getLogger("research.registry")
 _CHECK_SCHEMA = "learn-ukrainian.research-check.v1"
 _CHECK_KEYS = ("check_module", "corpus_module")
 _MODULE_NAME_RE = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
-_CHECK_CONFIG_PATH = Path(__file__).resolve().parents[1] / "audit" / "research_check.v1.json"
+_CHECK_CONFIG_REL = Path("scripts/audit/research_check.v1.json")
 
 
-def _config_path(product_root: Path | None) -> Path:
-    """The research-check data file under ``product_root``, or this checkout's copy."""
-    if product_root is None:
-        return _CHECK_CONFIG_PATH
-    if not isinstance(product_root, Path) or not product_root.is_absolute():
-        raise RuntimeError("product root is not an absolute path")
-    return product_root / "scripts" / "audit" / "research_check.v1.json"
+def _selected_product_root(product_root: Path | None) -> Path:
+    """The product checkout to read from: ``product_root``, else :func:`repo_root.product_root`'s choice."""
+    if product_root is not None:
+        if not isinstance(product_root, Path) or not product_root.is_absolute():
+            raise RuntimeError("product root is not an absolute path")
+        return product_root
+    try:
+        return repo_root.product_root()
+    except repo_root.ProductRootError as exc:
+        raise RuntimeError(f"research check has no product checkout: {exc}") from None
+
+
+def _check_config_path(root: Path) -> Path:
+    """The research-check data file of the product checkout ``root``."""
+    return root / _CHECK_CONFIG_REL
 
 
 def research_check_config(*, product_root: Path | None = None) -> dict[str, str]:
     """Return the check and corpus module names from the product data file.
 
-    ``product_root`` selects the product checkout. Omitted, the file is the one
-    beside this package (the combined repository). The file is read when this
-    function runs, not when the module is imported. A missing or unreadable
-    file refuses the call.
+    ``product_root`` selects the product checkout; omitted, it is the one
+    :func:`scripts.common.repo_root.product_root` selects (C-4746). The file is
+    read when this function runs, not when the module is imported. A missing
+    product checkout or a missing or unreadable file refuses the call.
     """
+    path = _check_config_path(_selected_product_root(product_root))
     try:
-        payload = json.loads(_config_path(product_root).read_text(encoding="utf-8"))
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise RuntimeError("research check config is unreadable") from exc
     if not isinstance(payload, dict) or payload.get("schema") != _CHECK_SCHEMA:
@@ -92,40 +102,32 @@ def research_check_config(*, product_root: Path | None = None) -> dict[str, str]
 
 
 def _load_configured_module(key: str, *, product_root: Path | None = None) -> Any:
-    """Validate the research-check data and load its configured product module."""
-    name = research_check_config(product_root=product_root)[key]
+    """Validate the research-check data and load its configured product module from one checkout."""
+    root = _selected_product_root(product_root)
+    name = research_check_config(product_root=root)[key]
     try:
-        return load_configured_module(name, product_root=product_root)
+        return load_configured_module(name, product_root=root)
     except ModuleNotFoundError as exc:
         if exc.name and (name == exc.name or name.startswith(exc.name + ".")):
-            base = Path(__file__).resolve().parents[2] if product_root is None else product_root
-            location = base.joinpath(*exc.name.split(".")).with_suffix(".py")
+            location = root.joinpath(*exc.name.split(".")).with_suffix(".py")
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(location)) from None
         raise
 
 
-def _check_cache_key(product_root: Path | None) -> str:
-    if product_root is None:
-        return ""
-    if not isinstance(product_root, Path) or not product_root.is_absolute():
-        raise RuntimeError("product root is not an absolute path")
-    return os.fspath(product_root)
-
-
 @functools.lru_cache(maxsize=8)
-def _cached_check_module(key: str) -> Any:
-    root = None if key == "" else Path(key)
-    return _load_configured_module("check_module", product_root=root)
+def _cached_check_module(root: str) -> Any:
+    return _load_configured_module("check_module", product_root=Path(root))
 
 
 def configured_check_module(*, product_root: Path | None = None) -> Any:
     """The product registry checker named by the research-check data file.
 
-    The module is loaded on the first call for a product root and reused, so
-    importing this module does not read product data. A missing file refuses
-    the call.
+    The product checkout is selected first and the module is cached by that
+    checkout, so a call for another checkout never reuses this one's module.
+    Importing this module does not read product data. A missing checkout or
+    file refuses the call.
     """
-    return _cached_check_module(_check_cache_key(product_root))
+    return _cached_check_module(os.fspath(_selected_product_root(product_root)))
 
 
 def _resolve_check(check: Any | None) -> Any:

@@ -16,9 +16,10 @@ Contract of :func:`load_configured_module`:
 * A name with ``sqlite3`` or ``_sqlite3`` as a part is refused first, as
   ``scripts.lib.readonly_sqlite.import_named_module`` refuses it.
 * ``product_root`` is the product checkout the module must come from. It
-  defaults to the checkout this file is in. A given root must be an absolute
-  path to a directory that has a ``scripts/`` directory; it is checked before
-  anything is imported.
+  defaults to :func:`scripts.common.repo_root.product_root`, resolved at each
+  call (C-4746); a refusal there refuses the load. A given root must be an
+  absolute path to a directory that has a ``scripts/`` directory; it is checked
+  before anything is imported.
 * The module is imported with :func:`importlib.import_module`. It takes the
   per-module import lock, reuses ``sys.modules``, binds the module on its parent
   package, and removes a module whose import raised, ``BaseException`` included.
@@ -40,7 +41,8 @@ import re
 from pathlib import Path
 from types import ModuleType
 
-CHECKOUT_ROOT = Path(__file__).resolve().parents[2]
+from scripts.common import repo_root
+
 _SQLITE_MODULES = frozenset({"sqlite3", "_sqlite3"})
 _NAME_RE = re.compile(r"scripts(?:\.[a-z_][a-z0-9_]*)+")
 
@@ -63,7 +65,10 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
 
 def _scripts_dir(name: str, product_root: Path | None) -> Path:
     if product_root is None:
-        return CHECKOUT_ROOT / "scripts"
+        try:
+            return repo_root.product_root().resolve() / "scripts"
+        except repo_root.ProductRootError as exc:
+            raise ConfiguredModuleError(f"no product checkout for {name}: {exc}", name=name) from None
     if not isinstance(product_root, Path) or not product_root.is_absolute():
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}", name=name)
     scripts_dir = product_root.resolve() / "scripts"

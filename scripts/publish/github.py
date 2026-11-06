@@ -240,8 +240,9 @@ def _workflow_input_schema(workflow: str, *, product_root: Path | None = None) -
     """Input schema for an allowlisted workflow, read from its file.
 
     The file is a product-repository workflow, read under ``product_root`` (an
-    absolute path; default: the checkout this module is in), never from the
-    machinery package. None refuses every dispatch of that workflow, including
+    absolute path; default: the checkout ``scripts.common.repo_root.product_root``
+    selects, C-4746), never from the machinery package. None, also when no product
+    checkout can be selected, refuses every dispatch of that workflow, including
     an empty input object. A workflow with no declared inputs returns an empty
     schema.
     """
@@ -249,7 +250,13 @@ def _workflow_input_schema(workflow: str, *, product_root: Path | None = None) -
         return None
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         return None
-    root = Path(__file__).resolve().parents[2] if product_root is None else product_root
+    from scripts.common.repo_root import ProductRootError
+    from scripts.common.repo_root import product_root as resolve_product_root
+
+    try:
+        root = resolve_product_root() if product_root is None else product_root
+    except ProductRootError:
+        return None
     path = root / ".github" / "workflows" / workflow
     try:
         document = yaml.load(path.read_text(encoding="utf-8"), Loader=_WORKFLOW_YAML_LOADER)

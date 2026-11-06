@@ -17,7 +17,7 @@ from scripts.lib import rules_core
 from scripts.orchestration import dispatch_admission, product_policy
 from scripts.review import reviewer_resolver, ukrainian_seats
 
-REAL = product_policy.DEFAULT_POLICY_PATH
+REAL = product_policy.default_policy_path()
 
 
 def _stub_document() -> dict:
@@ -212,7 +212,7 @@ def test_admission_interface_reads_the_real_policy() -> None:
 @pytest.fixture
 def no_policy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     missing = tmp_path / "absent" / "admission_policy.v1.json"
-    monkeypatch.setattr(product_policy, "DEFAULT_POLICY_PATH", missing)
+    monkeypatch.setattr(product_policy, "default_policy_path", lambda: missing)
     return missing
 
 
@@ -222,7 +222,7 @@ def wrong_version(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     document["schema_version"] = 2
     document["content_sha256"] = product_policy.canonical_digest(document)
     path = _write(tmp_path, document)
-    monkeypatch.setattr(product_policy, "DEFAULT_POLICY_PATH", path)
+    monkeypatch.setattr(product_policy, "default_policy_path", lambda: path)
     return path
 
 

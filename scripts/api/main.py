@@ -36,7 +36,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
-from scripts.common.repo_root import machinery_path
+from scripts.common.repo_root import ProductRootError, machinery_path
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
@@ -50,6 +50,7 @@ except ImportError:
 
 from scripts.orchestration import issue_stream_audit as isa
 
+from . import config
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
 from . import state_router as state_api
@@ -59,7 +60,6 @@ from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
-from .config import PRODUCT_ROOT
 from .coordination_router import router as coordination_router
 from .delegate_router import router as delegate_router
 from .discussions_router import router as discussions_router
@@ -1952,11 +1952,20 @@ def create_app(
     return factory_app
 
 
-# Build the production app at import when its product data is in this checkout.
-# An extracted machinery tree has no product file, so import stays product-free
-# and the first use of app builds it. A missing file still refuses that build.
-_monitor_paths = PRODUCT_ROOT / PRODUCT_DATA
-if not _monitor_paths.is_symlink() and _monitor_paths.is_file():
+def _product_data_present() -> bool:
+    """The selected product checkout holds the product entry data; no product checkout means no."""
+    try:
+        monitor_paths = config.PRODUCT_ROOT / PRODUCT_DATA
+    except ProductRootError:
+        return False
+    return not monitor_paths.is_symlink() and monitor_paths.is_file()
+
+
+# Build the production app at import when the product checkout (product_root, C-4746)
+# holds its product data. An extracted machinery tree has no product checkout, so import
+# stays product-free and the first use of app builds it. A missing product checkout or
+# file still refuses that build.
+if _product_data_present():
     app = create_app(production_context())
 else:
 

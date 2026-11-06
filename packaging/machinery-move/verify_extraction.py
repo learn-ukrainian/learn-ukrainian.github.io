@@ -18,7 +18,9 @@ tool's scratch directory.
 * V7 every check inspected the expected, nonzero number of items;
 * V8 (``--run-tests``) the ported machinery tests pass against the extracted code;
 * V9 HEAD is the single transformation commit on top of the rewrite tip, with the frozen tree;
-* HP (``--history-policy``) ``history_policy.py verify`` passes up to the rewrite tip.
+* HP (``--history-policy``) ``history_policy.py verify`` passes up to the rewrite tip;
+* PR (``--product-root-cases``) the product marker is absent and the evaluator's held-out product-root
+  cases hold for the migrated consumers in the extracted tree (C-4746).
 
 V4 is fail-closed: whatever it cannot classify exactly is reported (failed or listed), never treated as
 safe or as prose. Its two invariants:
@@ -188,6 +190,7 @@ class Inputs:
     test_timeout: int
     tools_dir: Path
     head: str = ""
+    product_root_cases: list[ProductRootCase] | None = None
 
     @property
     def dests(self) -> list[str]:
@@ -267,6 +270,25 @@ class Sandbox:
         if probe.returncode != 0:
             detail = probe.stderr.decode("utf-8", "replace").strip()
             raise Unusable(f"bubblewrap cannot start the read-only sandbox here: {detail}")
+
+    def narrowed(self, writable: Path) -> Sandbox:
+        """The same sandbox with only ``writable`` (a directory inside the scratch directory) writable.
+
+        Its children cannot touch the rest of the scratch directory, so the parent may keep writing
+        there after they ran. HOME and TMPDIR move inside ``writable``.
+        """
+        if not inside(writable, self.scratch) or writable.resolve() == self.scratch.resolve():
+            raise RuntimeError(f"{writable} is not a directory inside the scratch directory")
+        if self.prefix[-3:] != ["--bind", str(self.scratch), str(self.scratch)]:
+            raise RuntimeError("the sandbox prefix does not end with the scratch bind")
+        child = object.__new__(Sandbox)
+        child.scratch = writable
+        child.home = writable / "home"
+        child.tmp = writable / "tmp"
+        child.home.mkdir()
+        child.tmp.mkdir()
+        child.prefix = [*self.prefix[:-3], "--bind", str(writable), str(writable)]
+        return child
 
     def env(self, **extra: str) -> dict[str, str]:
         """The cleaned environment with HOME, TMPDIR and XDG directories inside the scratch directory."""
@@ -854,6 +876,10 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
         tools_dir=tools_dir,
     )
     inputs.head = resolve_commit(repo, "HEAD", "--repo HEAD")
+    if args.product_root_cases is not None:
+        inputs.product_root_cases = load_product_root_cases(
+            require_file(args.product_root_cases, "--product-root-cases")
+        )
     protected = protected_paths(args)
     for checked in (repo, source_repo):
         check_storage_against_git(checked, protected)
@@ -870,7 +896,7 @@ def load_inputs(args: argparse.Namespace) -> Inputs:
 
 def input_files(args: argparse.Namespace) -> list[Path]:
     files = [args.commit_map, args.tree_manifest, args.history_paths, args.exclude, args.expectations, args.map]
-    files += [path for path in (args.history_policy, args.external_names) if path is not None]
+    files += [path for path in (args.history_policy, args.external_names, args.product_root_cases) if path is not None]
     return files
 
 
@@ -2139,6 +2165,348 @@ def check_history_policy(inputs: Inputs, scratch: Path) -> CheckResult:
     return result
 
 
+# --------------------------------------------------------------------------- PR product-root resolution
+
+# C-4746: machinery finds the product checkout through ``product_root()`` or refuses. The marker below
+# proves a product checkout's layout and must never be in the extracted tree; the evaluator-owned cases
+# (--product-root-cases) exercise the migrated consumers in the extracted tree.
+PRODUCT_MARKER = "curriculum/l2-uk-en/curriculum.yaml"
+RESOLVER_DEST = f"{NEW_PREFIX}common/repo_root.py"
+PRODUCT_ROOT_CASES_SCHEMA = "lu-machinery.product-root-cases"
+_CASE_ID_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
+_CALL_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*:[A-Za-z_][A-Za-z0-9_]*")
+_PLACEHOLDER_RE = re.compile(r"\{([a-z]+)\}")
+_CASE_FIELDS = {"id", "layout", "sys_path", "env", "call", "attr", "args", "kwargs", "expect"}
+_EXPECT_FIELDS = {"raises", "returns", "contains", "not_contains"}
+
+
+@dataclass(frozen=True)
+class ProductRootCase:
+    """One evaluator-owned case: a layout in its own scratch directory, one consumer call and its outcome."""
+
+    case_id: str
+    layout: tuple[dict[str, str], ...]
+    sys_path: str
+    env: dict[str, str]
+    target: str
+    is_attr: bool
+    args: tuple[Any, ...]
+    kwargs: dict[str, Any]
+    expect: dict[str, Any]
+
+
+def _case_strings(value: Any, where: str) -> Any:
+    """Arguments are strings, ``{"path": str}`` (a ``Path``), lists of those, or null/bool/int."""
+    if value is None or isinstance(value, (bool, int, str)):
+        return value
+    if isinstance(value, dict) and set(value) == {"path"} and isinstance(value["path"], str):
+        return value
+    if isinstance(value, list):
+        return [_case_strings(item, where) for item in value]
+    raise Unusable(f'{where}: an argument must be a string, number, boolean, null, list or {{"path": str}}')
+
+
+def load_product_root_cases(path: Path) -> list[ProductRootCase]:
+    """Parse the evaluator's held-out product-root cases; any defect is unusable input."""
+    try:
+        document = json.loads(read_text(path, "--product-root-cases"))
+    except json.JSONDecodeError as exc:
+        raise Unusable(f"--product-root-cases is not JSON: {exc}") from exc
+    if (
+        not isinstance(document, dict)
+        or set(document) != {"schema", "schema_version", "cases"}
+        or document["schema"] != PRODUCT_ROOT_CASES_SCHEMA
+        or document["schema_version"] != 1
+        or type(document["schema_version"]) is not int
+        or not isinstance(document["cases"], list)
+        or not document["cases"]
+    ):
+        raise Unusable(
+            f"--product-root-cases must be {{schema: {PRODUCT_ROOT_CASES_SCHEMA}, schema_version: 1, cases: [...]}}"
+        )
+    cases: list[ProductRootCase] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(document["cases"]):
+        where = f"--product-root-cases case {index}"
+        if not isinstance(raw, dict) or not set(raw) <= _CASE_FIELDS or not {"id", "sys_path", "expect"} <= set(raw):
+            raise Unusable(f"{where}: fields must be {sorted(_CASE_FIELDS)} with id, sys_path and expect")
+        case_id = raw["id"]
+        if not isinstance(case_id, str) or not _CASE_ID_RE.fullmatch(case_id) or case_id in seen:
+            raise Unusable(f"{where}: id must be a unique lowercase slug")
+        seen.add(case_id)
+        where = f"--product-root-cases case {case_id}"
+        if ("call" in raw) == ("attr" in raw):
+            raise Unusable(f"{where}: give exactly one of call and attr")
+        target = raw.get("call", raw.get("attr"))
+        if not isinstance(target, str) or not _CALL_RE.fullmatch(target):
+            raise Unusable(f"{where}: call/attr must be module.path:name")
+        if "attr" in raw and ("args" in raw or "kwargs" in raw):
+            raise Unusable(f"{where}: attr takes no args or kwargs")
+        layout = raw.get("layout", [])
+        if not isinstance(layout, list):
+            raise Unusable(f"{where}: layout must be a list")
+        entries = []
+        for entry in layout:
+            kind = entry.get("kind") if isinstance(entry, dict) else None
+            keys = {
+                "dir": {"kind", "path"},
+                "file": {"kind", "path", "text"},
+                "source": {"kind", "path", "source"},
+                "symlink": {"kind", "path", "target"},
+                "package": {"kind", "path"},
+            }.get(kind)
+            if keys is None or set(entry) != keys or not all(isinstance(entry[key], str) for key in keys):
+                raise Unusable(f"{where}: layout entry {entry!r} is not a dir, file, source, symlink or package entry")
+            if not valid_path(entry["path"], allow_dir=True):
+                raise Unusable(f"{where}: layout path {entry['path']!r} is not a clean relative path")
+            if kind == "source" and not valid_path(entry["source"]):
+                raise Unusable(f"{where}: source path {entry['source']!r} is not a clean relative path")
+            entries.append(dict(entry))
+        env = raw.get("env", {})
+        if not isinstance(env, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in env.items()):
+            raise Unusable(f"{where}: env must map names to strings")
+        args = raw.get("args", [])
+        kwargs = raw.get("kwargs", {})
+        if not isinstance(args, list) or not isinstance(kwargs, dict):
+            raise Unusable(f"{where}: args must be a list and kwargs an object")
+        expect = raw["expect"]
+        if not isinstance(expect, dict) or not expect or not set(expect) <= _EXPECT_FIELDS:
+            raise Unusable(f"{where}: expect must hold some of {sorted(_EXPECT_FIELDS)}")
+        if "raises" in expect and set(expect) != {"raises"}:
+            raise Unusable(f"{where}: expect.raises excludes the other expectations")
+        for key in ("raises", "returns"):
+            if key in expect and not isinstance(expect[key], str):
+                raise Unusable(f"{where}: expect.{key} must be a string")
+        for key in ("contains", "not_contains"):
+            if key in expect and (
+                not isinstance(expect[key], list) or not all(isinstance(x, str) for x in expect[key])
+            ):
+                raise Unusable(f"{where}: expect.{key} must be a list of strings")
+        if not isinstance(raw["sys_path"], str):
+            raise Unusable(f"{where}: sys_path must be a string")
+        cases.append(
+            ProductRootCase(
+                case_id=case_id,
+                layout=tuple(entries),
+                sys_path=raw["sys_path"],
+                env=dict(env),
+                target=target,
+                is_attr="attr" in raw,
+                args=tuple(_case_strings(arg, where) for arg in args),
+                kwargs={str(key): _case_strings(value, where) for key, value in kwargs.items()},
+                expect=dict(expect),
+            )
+        )
+    return cases
+
+
+def _substitute(value: Any, places: dict[str, str], where: str) -> Any:
+    """Replace ``{extracted}``, ``{case}`` and ``{python}`` in every string; any other placeholder is unusable input."""
+    if isinstance(value, str):
+
+        def replace(match: re.Match[str]) -> str:
+            if match[1] not in places:
+                raise Unusable(f"{where}: unknown placeholder {match[0]} (known: {sorted(places)})")
+            return places[match[1]]
+
+        return _PLACEHOLDER_RE.sub(replace, value)
+    if isinstance(value, list):
+        return [_substitute(item, places, where) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_substitute(item, places, where) for item in value)
+    if isinstance(value, dict):
+        return {key: _substitute(item, places, where) for key, item in value.items()}
+    return value
+
+
+def _case_target(case_dir: Path, rel: str, case_id: str) -> Path:
+    """``case_dir/rel`` with its missing parents created; refuse a symlinked parent or an existing target.
+
+    The layout is built by this process, outside the sandbox, so nothing may be created through a link
+    (a case links into the extracted tree, which must stay untouched).
+    """
+    current = case_dir
+    for part in PurePosixPath(rel).parts[:-1]:
+        current = current / part
+        if current.is_symlink():
+            raise Unusable(f"--product-root-cases case {case_id}: {rel} would be created through the link {current}")
+        current.mkdir(exist_ok=True)
+    target = current / PurePosixPath(rel).name
+    if os.path.lexists(target):
+        raise Unusable(f"--product-root-cases case {case_id}: layout path {rel} is given twice")
+    return target
+
+
+def _build_layout(inputs: Inputs, case: ProductRootCase, case_dir: Path, places: dict[str, str]) -> None:
+    """Create the case's files under ``case_dir`` (never through a symlink), sources from --source."""
+    package = inputs.repo / NEW_PREFIX.rstrip("/")
+    sources = [entry["source"] for entry in case.layout if entry["kind"] == "source"]
+    blobs: dict[str, bytes] = {}
+    if sources:
+        oids = {}
+        for line in git_z(inputs.source_repo, "ls-tree", "-r", "-z", inputs.source, "--", *sorted(set(sources))):
+            meta, path = line.split("\t", 1)
+            mode, kind, oid = meta.split()
+            if kind == "blob" and mode in ("100644", "100755"):
+                oids[path] = oid
+        missing = sorted(set(sources) - set(oids))
+        if missing:
+            raise Unusable(f"--product-root-cases case {case.case_id}: --source has no file {missing}")
+        content = read_blobs(inputs.source_repo, sorted(set(oids.values())))
+        blobs = {path: content[oid] for path, oid in oids.items()}
+    for entry in case.layout:
+        target = _case_target(case_dir, entry["path"].rstrip("/"), case.case_id)
+        kind = entry["kind"]
+        if kind == "dir":
+            target.mkdir()
+        elif kind in ("file", "source"):
+            data = (
+                _substitute(entry["text"], places, case.case_id).encode() if kind == "file" else blobs[entry["source"]]
+            )
+            descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(data)
+        elif kind == "symlink":
+            target.symlink_to(_substitute(entry["target"], places, case.case_id))
+        else:  # package: a copy of the extracted machinery package, not a link to it
+            shutil.copytree(package, target, symlinks=True, ignore=shutil.ignore_patterns("__pycache__"))
+
+
+_PRODUCT_ROOT_CHILD = r"""
+import importlib, json, os, sys
+from pathlib import Path
+spec = json.loads(sys.argv[1])
+out = sys.argv[2]
+sys.path.insert(0, spec["sys_path"])
+os.environ.update(spec["env"])
+def value(item):
+    if isinstance(item, dict):
+        return Path(item["path"])
+    if isinstance(item, list):
+        return [value(x) for x in item]
+    return item
+result = {}
+try:
+    module_name, _, name = spec["target"].partition(":")
+    module = importlib.import_module(module_name)
+    result["module_file"] = getattr(module, "__file__", None)
+    got = getattr(module, name) if spec["is_attr"] else getattr(module, name)(
+        *[value(x) for x in spec["args"]], **{k: value(v) for k, v in spec["kwargs"].items()})
+    result["ok"] = True
+    result["value"] = json.dumps(got, default=str, sort_keys=True) if isinstance(got, (dict, list, tuple)) else str(got)
+except BaseException as exc:
+    result["ok"] = False
+    result["error_types"] = [cls.__name__ for cls in type(exc).__mro__]
+    result["error"] = (type(exc).__name__ + ": " + str(exc))[:600]
+with open(out, "w", encoding="utf-8") as handle:
+    json.dump(result, handle)
+sys.stdout.flush()
+os._exit(0)
+"""
+
+
+def _resolver_marker(inputs: Inputs) -> str | None:
+    """The ``PRODUCT_MARKER`` string the extracted resolver defines, read from its source (never imported)."""
+    path = inputs.repo / RESOLVER_DEST
+    try:
+        tree = ast.parse(path.read_bytes())
+    except (OSError, SyntaxError):
+        return None
+    for node in tree.body:
+        named = isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "PRODUCT_MARKER" for target in node.targets
+        )
+        if named and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+            return node.value.value
+    return None
+
+
+def check_product_root(inputs: Inputs, scratch: Path) -> CheckResult:
+    result = CheckResult("PR", "product-root resolution: no marker in the tree; held-out consumer cases hold")
+    if inputs.product_root_cases is None:
+        result.status = "skipped"
+        result.notes.append("not requested (--product-root-cases absent)")
+        return result
+    if PRODUCT_MARKER in inputs.dests or os.path.lexists(inputs.repo / PRODUCT_MARKER):
+        result.fail(f"the extracted tree carries the product marker {PRODUCT_MARKER}")
+    declared = _resolver_marker(inputs)
+    if declared != PRODUCT_MARKER:
+        result.fail(f"{RESOLVER_DEST} declares PRODUCT_MARKER {declared!r}, not {PRODUCT_MARKER!r}")
+    # Each case's child may write only its own case root (layout, home, tmp, result). The parent builds
+    # every layout before that case's child starts, in a fresh root no earlier child could reach, and
+    # afterwards only reads the result without following links.
+    base = Path(tempfile.mkdtemp(prefix="pr-cases-", dir=scratch))
+    extracted = str(inputs.repo)
+    passed = 0
+    for case in inputs.product_root_cases:
+        case_root = base / case.case_id
+        case_root.mkdir()
+        case_dir = case_root / "case"
+        case_dir.mkdir()
+        cwd = case_root / "cwd"
+        cwd.mkdir()
+        box = sandbox().narrowed(case_root)
+        env = isolated_env(box)
+        places = {"extracted": extracted, "case": str(case_dir), "python": inputs.python}
+        _build_layout(inputs, case, case_dir, places)
+        spec = {
+            "sys_path": _substitute(case.sys_path, places, case.case_id),
+            "env": _substitute(case.env, places, case.case_id),
+            "target": case.target,
+            "is_attr": case.is_attr,
+            "args": _substitute(list(case.args), places, case.case_id),
+            "kwargs": _substitute(case.kwargs, places, case.case_id),
+        }
+        expect = _substitute(case.expect, places, case.case_id)
+        out = case_root / "result.json"
+        cmd = [inputs.python, "-I", "-B", "-c", _PRODUCT_ROOT_CHILD, json.dumps(spec), str(out)]
+        try:
+            proc = box.run(cmd, cwd=cwd, env=env, timeout=inputs.import_timeout)
+        except subprocess.TimeoutExpired:
+            result.fail(f"{case.case_id}: timed out after {inputs.import_timeout}s")
+            continue
+        if not os.path.lexists(out):
+            tail = proc.stderr.decode("utf-8", "replace").strip().splitlines()[-1:]
+            result.fail(f"{case.case_id}: the child exited {proc.returncode} without a result {tail}")
+            continue
+        try:
+            data = read_child_json(out)
+        except (OSError, ValueError) as exc:
+            result.fail(f"{case.case_id}: unreadable result: {exc}")
+            continue
+        module_file = data.get("module_file")
+        if isinstance(module_file, str) and not (
+            inside(Path(os.path.realpath(module_file)), inputs.repo) or inside(Path(module_file), case_dir)
+        ):
+            result.fail(f"{case.case_id}: {case.target} loaded from {module_file}, outside the extracted tree")
+            continue
+        problems = _case_problems(expect, data)
+        for problem in problems:
+            result.fail(f"{case.case_id}: {problem}")
+        passed += not problems
+    result.inspected = {"product_root_cases": len(inputs.product_root_cases)}
+    result.notes.append(f"{passed} of {len(inputs.product_root_cases)} held-out cases hold")
+    return result
+
+
+def _case_problems(expect: dict[str, Any], data: dict[str, Any]) -> list[str]:
+    if "raises" in expect:
+        if data.get("ok"):
+            return [f"expected {expect['raises']}, got the value {data.get('value')!r}"]
+        if expect["raises"] not in (data.get("error_types") or []):
+            return [f"expected {expect['raises']}, got {data.get('error')}"]
+        return []
+    if not data.get("ok"):
+        return [f"expected a value, got {data.get('error')}"]
+    got = str(data.get("value"))
+    problems = []
+    if "returns" in expect and got != expect["returns"]:
+        problems.append(f"returned {got!r}, expected {expect['returns']!r}")
+    problems += [f"result lacks {needle!r}: {got[:300]}" for needle in expect.get("contains", []) if needle not in got]
+    problems += [f"result holds {needle!r}: {got[:300]}" for needle in expect.get("not_contains", []) if needle in got]
+    return problems
+
+
 # --------------------------------------------------------------------------- V8 harness
 
 # Runs pytest on the whole [run] files and records every collected node id before any filtering and the
@@ -2372,6 +2740,7 @@ PRIMARY = {
     "V8": "tests_collected",
     "V9": "commits_after_tip",
     "HP": "policy_runs",
+    "PR": "product_root_cases",
 }
 
 
@@ -2504,6 +2873,14 @@ Checks (every finding is printed; nothing stops at the first one):
   V9  HEAD has exactly one parent, the --rewrite-tip, and is the only commit after it; HEAD^{{tree}} equals
       --final-tree; its diff against the tip only adds manifest addition rows (new at the tip), modifies manifest
       paths and deletes nothing the manifest keeps.
+  PR  (--product-root-cases) the product marker {PRODUCT_MARKER} is not in the tree and the extracted
+      {RESOLVER_DEST} declares it; then each evaluator case builds its layout in its own scratch directory
+      (dirs, files, --source files, symlinks, copies of the extracted package; never written through a link)
+      and calls or reads one consumer in a sandboxed child that can write only that case's directory
+      (--python -I, sys.path[0] = the case's sys_path, the case's env only; placeholders {{extracted}},
+      {{case}} and {{python}}). The consumer must load from the extracted tree or the case directory, and the
+      outcome must match: the named exception in the raised type's MRO, or the returned value (str, or JSON
+      for containers) equal to "returns" and holding every "contains" and no "not_contains" string.
   HP  (--history-policy) runs {HISTORY_POLICY_TOOL} verify --repo EXTRACT --rev REWRITE_TIP --policy FILE
       --policy-sha256 HEX --commit-map FILE --path-rename {PATH_RENAME}; its nonzero exit fails.
 
@@ -2586,6 +2963,12 @@ Related:
     opt.add_argument("--policy-sha256", metavar="HEX", help="The policy's frozen SHA-256 (with --history-policy).")
     opt.add_argument("--run-tests", action="store_true", help="Run the V8 ported-test harness. Default: off.")
     opt.add_argument(
+        "--product-root-cases",
+        type=Path,
+        metavar="FILE",
+        help="Evaluator-owned held-out product-root cases (JSON); runs PR (C-4746). Default: not run.",
+    )
+    opt.add_argument(
         "--python",
         default=sys.executable,
         help="Interpreter with the machinery dependencies and pytest, for V3 and V8 (default: this interpreter).",
@@ -2642,9 +3025,10 @@ def run_checks(inputs: Inputs, scratch: Path) -> list[CheckResult]:
         check_v8(inputs, scratch),
         check_v9(inputs),
         check_history_policy(inputs, scratch),
+        check_product_root(inputs, scratch),
     ]
     results.append(check_v7(inputs, results))
-    order = ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "HP"]
+    order = ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "HP", "PR"]
     return sorted(results, key=lambda item: order.index(item.check))
 
 

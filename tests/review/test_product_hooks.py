@@ -109,16 +109,17 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
     import sys
     from types import ModuleType
 
+    from scripts.common.repo_root import product_root
     from scripts.ops.product_entry import ConfiguredModuleError
     from scripts.review import product_hooks as hooks
 
     pinned = hooks.attempt_hooks()
-    name = _module_name(hooks.HOOKS_PATH)
+    name = _module_name(product_root() / hooks.HOOKS_REL)
     foreign = ModuleType(name)
     foreign.__file__ = str(tmp_path / "foreign.py")
     monkeypatch.setitem(sys.modules, name, foreign)
     with pytest.raises(ConfiguredModuleError, match="not a file in this checkout"):
-        hooks.attempt_hooks.__wrapped__()
+        hooks._attempt_hooks_from.__wrapped__(product_root())
     assert hooks.attempt_hooks() is pinned
 
 
@@ -133,16 +134,16 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
 def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkeypatch, name, expected, missing):
     from scripts.review import product_hooks as hooks
 
-    path = tmp_path / "hooks.json"
+    path = tmp_path / HOOKS_REL
+    path.parent.mkdir(parents=True)
     path.write_text(_hooks_document(attempt_hooks=name))
-    monkeypatch.setattr(hooks, "HOOKS_PATH", path)
     if expected:
         with pytest.raises(ProductHooksError) as caught:
-            hooks.attempt_hooks.__wrapped__()
+            hooks.attempt_hooks(product_root=tmp_path)
         assert caught.value.code == expected
     else:
         with pytest.raises(ModuleNotFoundError) as caught:
-            hooks.attempt_hooks.__wrapped__()
+            hooks.attempt_hooks(product_root=tmp_path)
         assert caught.value.name == missing
 
 
@@ -154,12 +155,12 @@ def test_hooks_existing_module_dependency_error_is_not_translated(tmp_path, monk
 
     name = "scripts.audit.loader_slice_dependency"
     (tmp_path / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
-    path = tmp_path / "hooks.json"
+    path = tmp_path / HOOKS_REL
+    path.parent.mkdir(parents=True)
     path.write_text(_hooks_document(attempt_hooks=name))
-    monkeypatch.setattr(hooks, "HOOKS_PATH", path)
     monkeypatch.setattr(scripts.audit, "__path__", [str(tmp_path)])
     with pytest.raises(ModuleNotFoundError) as caught:
-        hooks.attempt_hooks.__wrapped__()
+        hooks.attempt_hooks(product_root=tmp_path)
     assert caught.value.name == "loader_slice_missing_dependency"
     assert name not in sys.modules
 

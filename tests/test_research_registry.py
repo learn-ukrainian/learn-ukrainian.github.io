@@ -702,7 +702,7 @@ def test_research_config_json_refusals(tmp_path, monkeypatch, raw, message):
 
     path = tmp_path / "research.json"
     path.write_text(raw)
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", path)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
     with pytest.raises(RuntimeError, match=message):
         reg._load_configured_module("check_module")
 
@@ -710,7 +710,7 @@ def test_research_config_json_refusals(tmp_path, monkeypatch, raw, message):
 def test_research_config_missing_file_keeps_unreadable_error(tmp_path, monkeypatch):
     from scripts.research import registry as reg
 
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", tmp_path / "missing.json")
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: tmp_path / "missing.json")
     with pytest.raises(RuntimeError, match="research check config is unreadable"):
         reg._load_configured_module("check_module")
 
@@ -727,7 +727,7 @@ def test_research_config_refuses_malformed_names(tmp_path, monkeypatch, key, nam
     payload = {"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), key: name}
     path = tmp_path / "research.json"
     path.write_text(json.dumps(payload))
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", path)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
     with pytest.raises(RuntimeError, match=f"{key} is not a module name"):
         reg._load_configured_module(key)
 
@@ -741,7 +741,7 @@ def test_research_shared_loader_refuses_capitals_and_sqlite_names(tmp_path, monk
 
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", path)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
     assert reg.research_check_config()["check_module"] == name
     with pytest.raises(ConfiguredModuleError):
         reg._load_configured_module("check_module")
@@ -774,7 +774,7 @@ def test_research_missing_configured_target_keeps_file_not_found(tmp_path, monke
 
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", path)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
     with pytest.raises(FileNotFoundError) as caught:
         reg._load_configured_module("check_module")
     assert caught.value.errno == errno.ENOENT
@@ -793,7 +793,7 @@ def test_research_existing_module_dependency_error_is_not_translated(tmp_path, m
     (tmp_path / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
-    monkeypatch.setattr(reg, "_CHECK_CONFIG_PATH", path)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
     monkeypatch.setattr(scripts.audit, "__path__", [str(tmp_path)])
     with pytest.raises(ModuleNotFoundError) as caught:
         reg._load_configured_module("check_module")

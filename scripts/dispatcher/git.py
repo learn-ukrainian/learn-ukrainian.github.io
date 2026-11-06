@@ -20,7 +20,7 @@ import yaml
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.git_credentials import canonical_origins as canonical_origins
 from scripts.common.git_credentials import verification_credentials
-from scripts.common.repo_root import configured_github_slug, resolve_repo_root
+from scripts.common.repo_root import configured_github_slug, product_root, resolve_repo_root
 from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
@@ -956,9 +956,10 @@ def _require_public_push(tree: Path, remote: str, ref: str, commit: str) -> None
             refuse()
         except git_push.ScanTimeout:
             refuse()
-        # The checkout under salvage can replace its own linter. Run the copy next to this
-        # module, and point Git at the salvage objects.
-        script = Path(__file__).resolve().parents[2] / "scripts/audit/lint_opsec_leaks.py"
+        # The checkout under salvage can replace its own linter. Run the product checkout's
+        # copy (``product_root``'s choice, C-4746; refused when there is none), never one
+        # inside the salvage tree, and point Git at the salvage objects.
+        script = (product_root() / "scripts/audit/lint_opsec_leaks.py").resolve()
         try:
             script.resolve().relative_to(tree.resolve())
         except ValueError:

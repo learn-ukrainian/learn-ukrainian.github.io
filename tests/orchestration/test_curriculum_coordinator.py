@@ -578,7 +578,7 @@ def test_unreadable_rate_limit_evidence_fails_the_wave_gate(monkeypatch: pytest.
 
 
 def _health_lane_validator() -> Draft202012Validator:
-    schema = json.loads(coordinator.LEDGER_SCHEMA_PATH.read_text(encoding="utf-8"))
+    schema = json.loads(coordinator.product_file(coordinator.LEDGER_SCHEMA_REL).read_text(encoding="utf-8"))
     return Draft202012Validator({"$defs": schema["$defs"], "$ref": "#/$defs/healthLane"})
 
 
@@ -660,7 +660,7 @@ def test_missing_lane_record_is_unknown_health_in_a_valid_paused_ledger(repo: Pa
         "stale": True,
     }
     coordinator._validate(
-        json.loads(path.read_text(encoding="utf-8")), coordinator.LEDGER_SCHEMA_PATH, "coordinator ledger"
+        json.loads(path.read_text(encoding="utf-8")), coordinator.product_file(coordinator.LEDGER_SCHEMA_REL), "coordinator ledger"
     )
 
 

@@ -1044,7 +1044,7 @@ def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     monkeypatch.setattr(runtime_router.codex_transport_health, "TRANSPORT_RECEIPT_PATH", receipt_path)
-    monkeypatch.setattr(runtime_router.codex_transport_health, "DEFAULT_CONFIG_PATH", config_path)
+    monkeypatch.setattr(runtime_router.codex_transport_health, "default_config_path", lambda: config_path)
 
     response = client.get("/api/runtime/transport-health")
 
@@ -1069,7 +1069,7 @@ def test_transport_health_is_unknown_without_probe_receipt(tmp_path, monkeypatch
         "TRANSPORT_RECEIPT_PATH",
         tmp_path / "missing.json",
     )
-    monkeypatch.setattr(runtime_router.codex_transport_health, "DEFAULT_CONFIG_PATH", config_path)
+    monkeypatch.setattr(runtime_router.codex_transport_health, "default_config_path", lambda: config_path)
 
     response = client.get("/api/runtime/transport-health")
 

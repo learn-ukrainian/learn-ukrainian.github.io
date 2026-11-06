@@ -26,12 +26,17 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 def _product_hooks() -> Any:
-    """Load the product hook named by this checkout's bakeoff configuration."""
+    """Load the product hook named by the product checkout's bakeoff configuration.
+
+    The configuration and the module it names come from the one product checkout
+    ``product_root`` selects (C-4746).
+    """
+    from scripts.common.repo_root import product_root
     from scripts.ops.product_entry import load_configured_module
 
-    path = PROJECT_ROOT / "scripts/build/bakeoff_hooks.v1.json"
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return load_configured_module(payload["module"])
+    root = product_root()
+    payload = json.loads((root / "scripts/build/bakeoff_hooks.v1.json").read_text(encoding="utf-8"))
+    return load_configured_module(payload["module"], product_root=root)
 
 
 B1_M01_SLUG = "b1-baseline-past-present"

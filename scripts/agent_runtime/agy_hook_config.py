@@ -13,7 +13,7 @@ from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root, project_interpreter
+from scripts.common.repo_root import main_checkout_root, product_root, project_interpreter
 from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -160,8 +160,13 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
 
 
 def guard_registration(*, repo_root: Path = ROOT) -> dict:
-    """Use the tracked overlay, with absolute interpreter and entry-point paths."""
-    guard = copy.deepcopy(_read_config(repo_root / "agents_extensions/agy/hooks.json")[GUARD_NAME])
+    """Use the tracked overlay, with absolute interpreter and entry-point paths.
+
+    The overlay is product configuration, read from the product checkout ``product_root``
+    selects (C-4746). The guard entry point and its interpreter are machinery: they come from
+    ``repo_root``, the trusted machinery checkout, never from product configuration.
+    """
+    guard = copy.deepcopy(_read_config(product_root() / "agents_extensions/agy/hooks.json")[GUARD_NAME])
     guard["PreToolUse"][0]["hooks"][0]["command"] = shlex.join(
         [str(project_interpreter(repo_root)), str((repo_root / ENTRY_POINT).absolute()), "--harness", "agy"]
     )

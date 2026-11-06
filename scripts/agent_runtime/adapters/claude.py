@@ -645,9 +645,17 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build worker hook settings from tracked sources in this checkout."""
+    """Build worker hook settings: the product's hook list, run with this installation's guards.
+
+    The settings file is product configuration, read from the product checkout
+    ``product_root`` selects (C-4746). The guards it names and the interpreter that runs
+    them are machinery: they always come from the checkout this code runs from
+    (``source_root``), never from product configuration.
+    """
+    from scripts.common.repo_root import product_root
+
     source_root = Path(__file__).resolve().parents[3]
-    source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
+    source = json.loads((product_root() / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
     for group in source["hooks"]["PreToolUse"]:
         hooks = []

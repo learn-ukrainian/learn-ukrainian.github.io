@@ -31,7 +31,7 @@ from scripts.agent_runtime.errors import (
     RateLimitedError,
 )
 from scripts.agent_runtime.result import Result
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import ProductRootError, main_checkout_root, product_root
 
 SCHEMA_VERSION = "codex-transport-health.v2"
 HEALTHY = "healthy"
@@ -46,7 +46,8 @@ DEFAULT_EFFORT = "low"
 
 SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNTIME_REPO_ROOT = main_checkout_root(SOURCE_REPO_ROOT)
-DEFAULT_CONFIG_PATH = SOURCE_REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
+# The product's Codex config, relative to the product checkout (C-4746).
+DEFAULT_CONFIG_REL = "agents_extensions/codex/config.toml"
 TRANSPORT_RECEIPT_PATH = RUNTIME_REPO_ROOT / "batch_state" / "runtime" / "codex-transport-health.json"
 
 NativeInvoker = Callable[..., Result]
@@ -85,8 +86,15 @@ def _parse_datetime(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
-def configured_tool_namespace(config_path: Path = DEFAULT_CONFIG_PATH) -> str | None:
+def default_config_path() -> Path:
+    """The product's Codex config in the product checkout ``product_root`` selects; raise if none."""
+    return product_root() / DEFAULT_CONFIG_REL
+
+
+def configured_tool_namespace(config_path: Path | None = None) -> str | None:
     """Return the configured V2 tool namespace without exposing other config."""
+    if config_path is None:
+        config_path = default_config_path()
     try:
         config = tomllib.loads(config_path.read_text(encoding="utf-8"))
     except (OSError, tomllib.TOMLDecodeError):
@@ -142,7 +150,7 @@ def _write_receipt(receipt: dict[str, Any], receipt_path: Path) -> None:
 def current_transport_health(
     *,
     receipt_path: Path = TRANSPORT_RECEIPT_PATH,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    config_path: Path | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Return a sanitized read-only health snapshot; never launch a model."""
@@ -239,7 +247,7 @@ def _receipt(
 def probe_codex_transport(
     *,
     receipt_path: Path = TRANSPORT_RECEIPT_PATH,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    config_path: Path | None = None,
     runtime_repo_root: Path = RUNTIME_REPO_ROOT,
     ttl_seconds: int = DEFAULT_TTL_SECONDS,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
@@ -370,12 +378,12 @@ def _parser() -> argparse.ArgumentParser:
 
     status = subparsers.add_parser("status", help="Read the cached probe receipt")
     status.add_argument("--receipt", type=Path, default=TRANSPORT_RECEIPT_PATH)
-    status.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
+    status.add_argument("--config", type=Path, default=None, help="default: the product's Codex config")
     status.add_argument("--json", action="store_true")
 
     probe = subparsers.add_parser("probe", help="Run or reuse a fresh-process probe")
     probe.add_argument("--receipt", type=Path, default=TRANSPORT_RECEIPT_PATH)
-    probe.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
+    probe.add_argument("--config", type=Path, default=None, help="default: the product's Codex config")
     probe.add_argument("--ttl-seconds", type=int, default=DEFAULT_TTL_SECONDS)
     probe.add_argument("--timeout-seconds", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     probe.add_argument("--model", default=DEFAULT_MODEL)
@@ -387,6 +395,10 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    try:
+        args.config = args.config or default_config_path()
+    except ProductRootError as exc:
+        raise SystemExit(f"codex transport health: {exc}") from None
     if args.command == "status":
         result = current_transport_health(
             receipt_path=args.receipt,

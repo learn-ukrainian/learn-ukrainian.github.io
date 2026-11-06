@@ -1,8 +1,22 @@
 """Prompt building for Gemini and Claude interactions."""
 
+import os
+from pathlib import Path
+
+from scripts.common.repo_root import product_root
 from scripts.lib import rules_core
 
 from ._config import MACHINERY_PACKAGE, REPO_ROOT
+
+
+def _product_doc(relative: str) -> Path:
+    """A product document the prompts quote, at checkout-relative ``relative``.
+
+    ``AB_REPO_ROOT`` names the bridge's repository explicitly and keeps that meaning (the
+    bridge also serves other repositories); unset, the document is in the product checkout
+    ``product_root`` selects (C-4746), which refuses when there is none.
+    """
+    return (REPO_ROOT if os.environ.get("AB_REPO_ROOT") else product_root()) / relative
 
 
 def review_protocol_prefix(
@@ -12,7 +26,7 @@ def review_protocol_prefix(
     worktree_provisioned: bool = False,
 ) -> str:
     """Load the canonical review protocol and optional branch-target guard."""
-    protocol = (REPO_ROOT / "docs" / "review-protocol.md").read_text("utf-8").rstrip()
+    protocol = _product_doc("docs/review-protocol.md").read_text("utf-8").rstrip()
     if branch is None:
         return protocol + "\n\n"
 
@@ -95,7 +109,7 @@ def _load_gemini_context() -> str:
     to "read these files" — we inject them directly so there's no chance
     of Gemini skipping or hallucinating their contents.
     """
-    docs_dir = REPO_ROOT / ".gemini" / "docs"
+    docs_dir = _product_doc(".gemini/docs")
     if not docs_dir.exists():
         return ""
 

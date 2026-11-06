@@ -1744,15 +1744,16 @@ async def runtime_routing_assignments(
 async def runtime_transport_health():
     """Return the cached Codex fresh-process probe; never launch a model.
 
-    No ``MonitorContext`` root applies here: the config/receipt paths are
-    resolved through ``codex_transport_health``'s own module attributes
-    (read at call time, never re-exported as a local ``Path`` global), and
-    the response is fully sanitized status fields with no filesystem paths.
+    No ``MonitorContext`` root applies here: the receipt path and the
+    product's Codex config are resolved through ``codex_transport_health``'s
+    own attributes at call time (the config through ``product_root``,
+    C-4746; never re-exported as a local ``Path`` global), and the response
+    is fully sanitized status fields with no filesystem paths.
     """
     return await asyncio.to_thread(
         codex_transport_health.current_transport_health,
         receipt_path=codex_transport_health.TRANSPORT_RECEIPT_PATH,
-        config_path=codex_transport_health.DEFAULT_CONFIG_PATH,
+        config_path=codex_transport_health.default_config_path(),
     )
 
 

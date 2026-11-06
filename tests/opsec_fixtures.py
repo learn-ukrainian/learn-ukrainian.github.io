@@ -188,6 +188,10 @@ def gh_shim_sandbox(tmp_path):
     deploy_paths = scripts / "curriculum/deploy_paths.v1.json"
     deploy_paths.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
+    # Those reads go through product_root() (C-4746), so this fake checkout carries the product marker.
+    marker = root / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("")
     shim = scripts / "agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
     shutil.copy2(ROOT / "scripts/agent_runtime/shims/gh", shim)
