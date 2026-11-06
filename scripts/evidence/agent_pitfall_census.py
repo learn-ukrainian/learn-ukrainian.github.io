@@ -20,9 +20,8 @@ from pathlib import Path
 
 
 def _mp(relative: str) -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return f"{top or Path(__file__).parents[1].name}/{relative}"
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 
 # Windows chosen from the measured X-Agent adoption curve in this script:
