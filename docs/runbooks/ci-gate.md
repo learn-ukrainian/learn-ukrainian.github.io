@@ -64,7 +64,17 @@ recorded duration first, tests that import the changed code themselves before te
 `importing_test_files` and `deferred_files`. If the guards alone exceed the safe budget,
 the job writes `pr-affected.json` with `execution_status` `not_run_guards_exceed_safe_budget`
 and fails with that reason instead of running to the timeout. The recorded estimate includes the importing tests that run, and
-`unknown_duration_files` includes every importing test with no recorded time. Infrastructure
+`unknown_duration_files` includes every importing test with no recorded time.
+Some tests read a changed file as text through a computed path (for example a parametrized
+list of paths that the test parses), which the import scan cannot follow. A test file whose
+parsed source holds a string literal equal to a changed file's repository-relative path, or
+to the dotted module name of a changed Python module that is not a package `__init__.py`, is
+a text reader of that file (#12789). The whole literal must match; comments, docstrings and
+other bare string statements never count, and `conftest.py` files are not scanned. Text
+readers fill their own 60-second room after every other selection, cheapest recorded duration
+first, so they never displace a test that would run without them; the rest defer, are listed in
+`text_reading_test_files` and `deferred_files`, and run in merge-group pytest. When text readers
+run, the pytest timeout grows to the estimate times 1.18, at most 550 seconds. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
@@ -129,7 +139,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files, tests that import changed files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
+| PR changed tests and guards | PRs execute changed test files, tests that import changed files, tests that name a changed file as text, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
 | Frontend | Every event. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |

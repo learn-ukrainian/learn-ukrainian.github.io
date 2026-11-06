@@ -71,6 +71,11 @@ GUARDS_REASON = "guards alone exceed the safe budget under the 480 second pytest
 # has no room for runner speed variance. Measured from the mandatory selection, not
 # from zero, so a heavy guard list never starves every importing test.
 FILL_SHARE = 0.5
+# Tests that name a changed file as text (`text_references`, #12789) fill a room of
+# their own after every other selection, so they never displace one; the rest defer to
+# merge-group pytest. The pytest timeout grows by the runner-variance margin of what
+# they use: at most ceil((406 + 60) * 1.18) = 550 seconds, under the 600 second cap.
+READER_ROOM_SECONDS = 60
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 # A guard line is a test file, or `file::name[::name]` to pin one test (or Class::test) in a file
 # too slow to run whole under the PR cap. Names are plain identifiers, so a pinned id carries no
@@ -121,6 +126,53 @@ def safe_path(name: str, *, node: bool = False) -> str:
     ):
         raise ValueError("unsafe repository path")
     return name
+
+
+def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
+    """Test files with a string literal that names a changed file.
+
+    A test can read a file through a computed path, such as ``ROOT / reader`` over a
+    parametrized list of paths, which the import scan cannot follow. The rule: a
+    string literal in a test file whose whole value equals a changed file's
+    repository-relative path, or the dotted module name of a changed Python module,
+    is a dependency on that file. Literals come from the parsed source, so comments
+    never count; a bare string statement, such as a docstring, is prose and never
+    counts; a literal that only contains a name does not match. A package
+    ``__init__.py`` matches by path only: a package name such as ``scripts`` is
+    also an everyday path segment.
+
+    Only test files count, not ``conftest.py``: a conftest literal would select every
+    test under its directory, and the root conftest names the Claude adapter module,
+    so a change to that adapter would select the whole suite. A byte search first
+    skips files that cannot contain a match.
+    """
+    names = set(targets) | {
+        target[:-3].replace("/", ".") for target in targets
+        if target.endswith(".py") and PurePosixPath(target).name != "__init__.py"
+    }
+    encoded = [name.encode() for name in names]
+    found = set()
+    for path, source in sources.items():
+        if not TEST.fullmatch(path) or not any(name in source for name in encoded):
+            continue
+        try:
+            tree = ast.parse(source, filename=path)
+        except (SyntaxError, ValueError):
+            continue
+        nodes = list(ast.walk(tree))
+        prose = {id(node.value) for node in nodes if isinstance(node, ast.Expr)}
+        if any(isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names
+               and id(node) not in prose for node in nodes):
+            found.add(path)
+    return found
+
+
+def text_reading_tests(targets: set[str], entries: dict[str, str]) -> list[str]:
+    """Tracked regular test files in the candidate that name a changed file (`text_references`)."""
+    from scripts.ci import components
+
+    regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
+    return sorted(text_references(components.python_sources(), targets) & regular)
 
 
 def importing_tests(
@@ -270,8 +322,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         else ([], [])
     )
     imported = direct + shared
-    unknown += [p for p in imported if p not in durations]
-    for p in imported:
+    readers = (
+        [p for p in text_reading_tests(sources, entries) if p not in run and p not in imported]
+        if importers and sources and not reason
+        else []
+    )
+    unknown += [p for p in imported + readers if p not in durations]
+    for p in imported + readers:
         value = durations.get(p, default)
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
@@ -284,7 +341,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
             if budget + durations.get(p, default) <= fill_limit:
                 run.add(p)
                 budget += durations.get(p, default)
-    if set(imported) - run:
+    used = budget
+    for p in sorted(readers, key=lambda p: (durations.get(p, default), p)):
+        if budget + durations.get(p, default) <= fill_limit + READER_ROOM_SECONDS:
+            run.add(p)
+            budget += durations.get(p, default)
+    timeout = min(CAP_SECONDS, max(TIMEOUT_SECONDS, math.ceil(budget * VARIANCE_RATIO))) if budget > used else TIMEOUT_SECONDS
+    if (set(imported) | set(readers)) - run:
         reason = BUDGET_REASON if fill_limit == SAFE_SECONDS else "recorded estimate exceeds 600 second cap"
     # A whole file already covers its pinned ids.
     run = sorted(p for p in run if "::" not in p or guard_file(p) not in run)
@@ -294,11 +357,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         "guards": guards,
         "changed_test_files": tests,
         "importing_test_files": imported,
+        "text_reading_test_files": readers,
         "run_files": run,
-        "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
+        "deferred_files": sorted((set(tests) | set(imported) | set(readers)) - set(run)),
         "reason": reason,
         "estimate_seconds": budget,
         "safe_budget_seconds": SAFE_SECONDS,
+        "timeout_seconds": timeout,
         "guards_exceed_safe_budget": guard_estimate > SAFE_SECONDS,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
@@ -309,7 +374,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run changed tests, tests that import changed files and guards, or marker-only\n"
+        description="Run changed tests, tests that import or name changed files and guards, or marker-only\n"
         "repository invariants for a PR candidate. PR CI runs no pytest shards; merge-group CI runs the full suite.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"Example: .venv/bin/python -m {_module_name()}\n"
@@ -348,7 +413,7 @@ def main() -> int:
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
-        timeout = 1500 if args.repo_wide else TIMEOUT_SECONDS
+        timeout = 1500 if args.repo_wide else record["timeout_seconds"]
         record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
                       logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"
