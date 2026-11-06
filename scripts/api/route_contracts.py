@@ -12,6 +12,7 @@ lookups and ``/api/contracts/routes`` read both: machinery first, then product
 
 from __future__ import annotations
 
+import os
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -29,7 +30,7 @@ RouteLocality = Literal["host_affine", "cluster_authoritative", "mixed"]
 
 def _top() -> str:
     """Unresolved name of this file's top package directory."""
-    return Path(__file__).parents[1].name
+    return Path(os.path.abspath(__file__)).parents[1].name
 
 
 def _rel(*parts: str) -> str:
@@ -217,7 +218,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Configured and durable fleet agent endpoint inventory with configuration secrets omitted.",
-        "Endpoint registry (scripts/config) plus durable agent_endpoints rows from the fleet-comms v1 SQLite read model.",
+        f"Endpoint registry ({_rel('config')}) plus durable agent_endpoints rows from the fleet-comms v1 SQLite read model.",
         "Generated per request; every fleet route opens the durable plane read-only. No response cache.",
         ("fleet.html", "operators", "agents"),
         "Specific member of the /api/fleet observer family; /api/fleet/endpoints serves the same handler as an alias.",
@@ -350,7 +351,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Parallel-agent coordination ledger summary, active task list, and task detail.",
-        "orchestration/agent-ledger/tasks/*.json written by scripts/orchestration/agent_ledger.py.",
+        f"orchestration/agent-ledger/tasks/*.json written by {_rel('orchestration', 'agent_ledger.py')}.",
         "No route cache; live filesystem reads from the local coordination ledger.",
         ("agents", "orchestrator", "future dashboards"),
         "Complements /api/delegate process state with explicit task ownership and review metadata.",

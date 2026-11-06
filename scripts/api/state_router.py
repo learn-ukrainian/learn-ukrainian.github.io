@@ -26,13 +26,7 @@ from typing import Any, Literal, cast
 
 import yaml
 from fastapi import APIRouter, Depends, Query, Request
-
-from scripts.telemetry.cost_report import CostRecord, load_cost_records
-
-try:
-    from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
-except ImportError:
-    from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.common.repo_root import machinery_path, main_checkout_root
@@ -44,6 +38,7 @@ from scripts.fleet.reset_reserve import (
 )
 from scripts.github_graphql_budget import probe_graphql_budget
 from scripts.research.registry import research_manifest_component
+from scripts.telemetry.cost_report import CostRecord, load_cost_records
 
 from . import delegate_router as delegate_api
 from . import state_helpers
