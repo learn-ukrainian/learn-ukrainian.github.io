@@ -212,10 +212,16 @@ def test_a_namespace_package_is_refused_as_the_module(product):
 
 
 def test_a_missing_module_raises_module_not_found_with_its_name(product):
+    """As an ordinary import: the checked packages before the missing part are imported first."""
     with pytest.raises(ModuleNotFoundError) as caught:
         load_configured_module("scripts.lu_confined_absent.child")
     assert caught.value.name == "scripts.lu_confined_absent"
-    assert product.ran() == []
+    product.write("pkg/__init__.py", product.recording("pkg"))
+    with pytest.raises(ModuleNotFoundError) as caught:
+        load_configured_module("scripts.pkg.lu_confined_absent")
+    assert caught.value.name == "scripts.pkg.lu_confined_absent"
+    assert "scripts.pkg" in sys.modules
+    assert product.ran() == ["scripts", "pkg"]
 
 
 def test_a_failed_top_level_execution_leaves_nothing_cached(product):
@@ -268,3 +274,29 @@ def test_this_checkout_still_loads_its_own_modules():
     module = load_configured_module("scripts.lib.readonly_sqlite")
     assert module is sys.modules["scripts.lib.readonly_sqlite"]
     assert Path(module.__file__).resolve().is_relative_to(repo_root.product_root().resolve() / "scripts")
+
+
+def test_the_cached_checkout_package_searching_another_root_is_refused(tmp_path, monkeypatch):
+    """The mixed setup: this checkout's cached ``scripts`` package, its search path reaching another root.
+
+    Selecting the other root refuses the cached package itself; selecting this checkout refuses
+    the foreign search path. Neither runs the other root's module or caches it.
+    """
+    import scripts
+
+    other = tmp_path / "other"
+    (other / "scripts").mkdir(parents=True)
+    runs = tmp_path / "runs.log"
+    leaf = f"lu_confined_{uuid.uuid4().hex}"
+    (other / "scripts" / f"{leaf}.py").write_text(f"open({str(runs)!r}, 'a').write('ran')\n", encoding="utf-8")
+    importlib.invalidate_caches()
+    monkeypatch.setattr(scripts, "__path__", [*scripts.__path__, str(other / "scripts")])
+    this_checkout = Path(product_entry.__file__).resolve().parents[2]
+
+    with pytest.raises(ConfiguredModuleError, match="scripts is not a file in this checkout"):
+        load_configured_module(f"scripts.{leaf}", product_root=other)
+    with pytest.raises(ConfiguredModuleError, match="scripts searches outside"):
+        load_configured_module(f"scripts.{leaf}", product_root=this_checkout)
+
+    assert not runs.exists()
+    assert f"scripts.{leaf}" not in sys.modules

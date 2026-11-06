@@ -38,9 +38,10 @@ Contract of :func:`load_configured_module`:
   a sandbox for product code.
 
 A refusal raises :class:`ConfiguredModuleError`, an ``ImportError``. An import
-that fails raises what the import raised; a package of the name that does not
-exist raises ``ModuleNotFoundError``. Callers keep their own data-file
-validation, error contracts and callable checks.
+that fails raises what the import raised; a part of the name that does not
+exist raises ``ModuleNotFoundError`` naming it, after the checked packages
+before it are imported, as an ordinary import does. Callers keep their own
+data-file validation, error contracts and callable checks.
 
 Example:
   .venv/bin/python -c "from scripts.ops.product_entry import load_configured_module as l; print(l('scripts.lib.readonly_sqlite'))"
@@ -128,7 +129,11 @@ def _confine(name: str, scripts_dir: Path) -> None:
             continue
         spec = _find_spec(prefix, [str(scripts_dir.parent)] if index == 1 else search or [])
         if spec is None:
-            raise ModuleNotFoundError(f"No module named {prefix!r}", name=prefix)
+            if index == 1:
+                raise ModuleNotFoundError(f"No module named {prefix!r}", name=prefix)
+            # Nothing of this name to run: the import below imports the checked packages before it and
+            # raises ModuleNotFoundError for this name, as an ordinary import does.
+            break
         _check_spec(name, prefix, spec, scripts_dir, is_leaf=is_leaf)
         if index == 1:
             top_spec = spec

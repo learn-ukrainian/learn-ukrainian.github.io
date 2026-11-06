@@ -27,6 +27,41 @@ def test_schema_version_rejects_boolean_and_float_lookalikes(tmp_path):
         assert caught.value.code == "hooks_schema_mismatch"
 
 
+@pytest.fixture
+def product_checkout_root(tmp_path, monkeypatch):
+    """``tmp_path`` as a self-contained product checkout whose ``scripts`` package is the cached one.
+
+    It has the package shapes the cases name (``scripts.audit`` a package, ``scripts.ops.product_entry``
+    a module), and the machinery's cached entries of those names are hidden for the test, as once the
+    machinery is extracted (C-4764): the loader refuses a cached package from another checkout.
+    """
+    import importlib.util
+    import sys
+
+    from scripts.common import repo_root
+    from scripts.review import product_hooks  # noqa: F401 - machinery, imported before the swap
+
+    for relative in ("__init__.py", "audit/__init__.py", "ops/__init__.py", "ops/product_entry.py"):
+        (tmp_path / "scripts" / relative).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "scripts" / relative).write_text("")
+    marker = tmp_path / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
+    spec = importlib.util.spec_from_file_location(
+        "scripts", tmp_path / "scripts" / "__init__.py", submodule_search_locations=[str(tmp_path / "scripts")]
+    )
+    package = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(package)
+    for name in ("scripts.audit", "scripts.ops", "scripts.ops.product_entry"):
+        monkeypatch.delitem(sys.modules, name, raising=False)
+    monkeypatch.setitem(sys.modules, "scripts", package)
+    before = set(sys.modules)
+    yield tmp_path
+    for name in set(sys.modules) - before:
+        if name.startswith("scripts."):
+            sys.modules.pop(name, None)
+
+
 def _hooks_document(**changes):
     return json.dumps({
         "schema": SCHEMA,
@@ -131,7 +166,9 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
         ("scripts.ops.product_entry.child", None, "scripts.ops.product_entry.child"),
     ],
 )
-def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkeypatch, name, expected, missing):
+def test_hooks_missing_target_keeps_leaf_error_and_parent_error(
+    product_checkout_root, tmp_path, monkeypatch, name, expected, missing
+):
     from scripts.review import product_hooks as hooks
 
     path = tmp_path / HOOKS_REL
@@ -147,18 +184,16 @@ def test_hooks_missing_target_keeps_leaf_error_and_parent_error(tmp_path, monkey
         assert caught.value.name == missing
 
 
-def test_hooks_existing_module_dependency_error_is_not_translated(tmp_path, monkeypatch):
+def test_hooks_existing_module_dependency_error_is_not_translated(product_checkout_root, tmp_path, monkeypatch):
     import sys
 
-    import scripts.audit
     from scripts.review import product_hooks as hooks
 
     name = "scripts.audit.loader_slice_dependency"
-    (tmp_path / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
+    (tmp_path / "scripts" / "audit" / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
     path = tmp_path / HOOKS_REL
     path.parent.mkdir(parents=True)
     path.write_text(_hooks_document(attempt_hooks=name))
-    monkeypatch.setattr(scripts.audit, "__path__", [str(tmp_path)])
     with pytest.raises(ModuleNotFoundError) as caught:
         hooks.attempt_hooks(product_root=tmp_path)
     assert caught.value.name == "loader_slice_missing_dependency"

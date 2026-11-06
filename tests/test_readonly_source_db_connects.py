@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import importlib
+import importlib.util
 import subprocess
 import sys
 import threading
@@ -823,13 +824,26 @@ def test_rebound_reader_alias_still_reports_collection_access():
 
 @pytest.fixture
 def configured_module(tmp_path, monkeypatch):
-    """Write a scripts.* module into a tree selected as the product checkout; drop it again afterwards."""
+    """Write a scripts.* module into a tree selected as the product checkout; drop it again afterwards.
+
+    The tree is a self-contained product checkout (its own ``scripts`` package and the product
+    marker), and its package is the cached ``scripts`` for the test, as once the machinery is
+    extracted (C-4764): the loader refuses a cached package from another checkout. ``scripts``
+    in this module names that product package for the test.
+    """
     root = tmp_path / "checkout"
     (root / "scripts").mkdir(parents=True)
+    (root / "scripts" / "__init__.py").write_text("")
     marker = root / repo_root.PRODUCT_MARKER
     marker.parent.mkdir(parents=True)
     marker.write_text("levels: {}\n")
-    monkeypatch.setattr(scripts, "__path__", [*scripts.__path__, str(root / "scripts")])
+    spec = importlib.util.spec_from_file_location(
+        "scripts", root / "scripts" / "__init__.py", submodule_search_locations=[str(root / "scripts")]
+    )
+    package = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(package)
+    monkeypatch.setitem(sys.modules, "scripts", package)
+    monkeypatch.setitem(globals(), "scripts", package)
     monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(root))
     leaves = []
 
@@ -842,8 +856,6 @@ def configured_module(tmp_path, monkeypatch):
     yield write
     for leaf in leaves:
         sys.modules.pop(f"scripts.{leaf}", None)
-        if leaf in vars(scripts):
-            delattr(scripts, leaf)
 
 
 def _no_import(monkeypatch):
