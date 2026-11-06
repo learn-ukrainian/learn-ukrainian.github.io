@@ -229,7 +229,7 @@ def test_window_without_any_skipped_files_cannot_pass(registration, window, mode
     assert result["narrowed_red_case_count"] == result["narrowed_injected_case_count"] == 0
     assert "narrowed-cases:0/1" in result["unresolved"]
     assert s.main(["check", "--registration", str(_registration_file(window, registration)),
-                   "--receipts", str(window)]) == 1
+                   "--receipts", str(window), "--now", IN_WINDOW]) == 1
 
 
 def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
@@ -240,7 +240,7 @@ def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
     assert result["minimum_narrowed_cases"] == 44
     assert "narrowed-cases:43/44" in result["unresolved"]
     assert s.main(["check", "--registration", str(_registration_file(window, registration)),
-                   "--receipts", str(window)]) == 1
+                   "--receipts", str(window), "--now", IN_WINDOW]) == 1
     registration["minimum_narrowed_cases"] = 43
     assert s.check(registration, window, now=IN_WINDOW)["status"] == "pass"
 
@@ -275,13 +275,34 @@ def test_every_skipped_failure_is_counted(registration, window):
     result = s.check(registration, window, now=IN_WINDOW)
     assert result["missed_failure_count"] == 2
     assert result["status"] == "fail"
-    assert s.main(["check", "--registration", str(_registration_file(window, registration)), "--receipts", str(window)]) == 1
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--receipts", str(window), "--now", IN_WINDOW]) == 1
 
 
 def _registration_file(root, registration):
     path = root / "registration.input"
     path.write_text(json.dumps(registration))
     return path
+
+
+def test_check_cli_now_controls_stop_boundary_without_real_clock(registration, window, monkeypatch, capsys):
+    """Prevent real-clock dependence from changing unresolved CLI results at the stop boundary."""
+    (window / "999.json").unlink()
+    registration_path = _registration_file(window, registration)
+
+    def unexpected_real_clock():
+        raise AssertionError("check --now must not read the real clock")
+
+    monkeypatch.setattr(s, "utc_now", unexpected_real_clock)
+    for now, status, stopped in [
+        ("2026-11-05T23:59:59.999999Z", "unresolved", False),
+        (registration["stop_at"], "inconclusive", True),
+    ]:
+        assert s.main(["check", "--registration", str(registration_path),
+                       "--receipts", str(window), "--now", now]) == 1
+        result = json.loads(capsys.readouterr().out)
+        assert result["status"] == status
+        assert result["day_30_stop"] is stopped
 
 
 def test_pre_registered_base_rerun_exempts_only_identical_id(registration, window):
@@ -315,7 +336,8 @@ def test_unresolved_historical_cases_block_success(registration, window, problem
     result = s.check(registration, window, now="2026-11-07T00:00:00Z")
     assert result["status"] == "inconclusive"
     assert result["unresolved_count"] == 1
-    assert s.main(["check", "--registration", str(_registration_file(window, registration)), "--receipts", str(window)]) == 1
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--receipts", str(window), "--now", "2026-11-07T00:00:00Z"]) == 1
 
 
 def test_registration_after_live_results_is_refused_but_historical_is_allowed(registration, window):
