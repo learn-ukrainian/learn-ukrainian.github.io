@@ -143,6 +143,10 @@ def test_selection_uses_resolved_importers_and_integration(repo, static_graph):
     assert set(c.load_manifest()["shared_integration_tests"]) <= set(result["selected_test_files"])
 
 
+# A fixed instant inside the registration window: check() must never read the real clock here.
+IN_WINDOW = "2026-10-09T00:00:00Z"
+
+
 @pytest.fixture
 def registration():
     return {"schema": s.SCHEMA, "registered_at": "2026-10-07T00:00:00Z", "stop_at": "2026-11-06T00:00:00Z",
@@ -203,7 +207,7 @@ def window(tmp_path):
 
 
 def test_complete_window_zero_misses_is_the_only_success(registration, window):
-    result = s.check(registration, window, now="2026-10-09T00:00:00Z")
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["status"] == "pass"
     assert result["registered_case_count"] == 163
     assert result["narrowed_red_case_count"] == 31
@@ -219,7 +223,7 @@ def test_window_without_any_skipped_files_cannot_pass(registration, window, mode
         if value.get("schema") == s.SCHEMA:
             value.update(mode=mode, would_skip_test_files=[])
             path.write_text(json.dumps(value))
-    result = s.check(registration, window, now="2026-10-09T00:00:00Z")
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["status"] == "unresolved"
     assert result["narrowed_case_count"] == 0
     assert result["narrowed_red_case_count"] == result["narrowed_injected_case_count"] == 0
@@ -230,7 +234,7 @@ def test_window_without_any_skipped_files_cannot_pass(registration, window, mode
 
 def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
     registration["minimum_narrowed_cases"] = 44
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["status"] == "unresolved"
     assert result["narrowed_case_count"] == 43
     assert result["minimum_narrowed_cases"] == 44
@@ -238,13 +242,13 @@ def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
     assert s.main(["check", "--registration", str(_registration_file(window, registration)),
                    "--receipts", str(window)]) == 1
     registration["minimum_narrowed_cases"] = 43
-    assert s.check(registration, window)["status"] == "pass"
+    assert s.check(registration, window, now=IN_WINDOW)["status"] == "pass"
 
 
 @pytest.mark.parametrize("minimum", [None, 0, -1, True, "1"])
 def test_missing_or_invalid_registered_narrowing_minimum_is_unresolved(registration, window, minimum):
     registration["minimum_narrowed_cases"] = minimum
-    assert "minimum-narrowed-cases-not-pre-registered" in s.check(registration, window)["unresolved"]
+    assert "minimum-narrowed-cases-not-pre-registered" in s.check(registration, window, now=IN_WINDOW)["unresolved"]
 
 
 @pytest.mark.parametrize("fields", [
@@ -254,7 +258,7 @@ def test_missing_or_invalid_registered_narrowing_minimum_is_unresolved(registrat
 ])
 def test_invalid_narrowing_evidence_is_not_counted(registration, window, fields):
     save(window, receipt("999", **fields))
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["narrowed_red_case_count"] == 30
     assert result["status"] == "unresolved"
 
@@ -263,12 +267,12 @@ def test_in_flight_run_completed_after_registration_enters_window(registration, 
     census = json.loads((window / "runs.json").read_text())
     census["runs"][0]["created_at"] = "2026-10-06T23:59:00Z"
     save(window, census, "runs.json")
-    assert s.check(registration, window)["status"] == "pass"
+    assert s.check(registration, window, now=IN_WINDOW)["status"] == "pass"
 
 
 def test_every_skipped_failure_is_counted(registration, window):
     save(window, receipt("999", full_junit_failing_ids=["tests/test_skip.py::test_a", "tests/test_skip.py::test_b"]))
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["missed_failure_count"] == 2
     assert result["status"] == "fail"
     assert s.main(["check", "--registration", str(_registration_file(window, registration)), "--receipts", str(window)]) == 1
@@ -284,20 +288,20 @@ def test_pre_registered_base_rerun_exempts_only_identical_id(registration, windo
     save(window, receipt("999", full_junit_failing_ids=["tests/test_skip.py::test_a", "tests/test_skip.py::test_b"]))
     save(window, receipt("base-99", "base", candidate_run_id="999", head_sha="base",
                          full_junit_failing_ids=["tests/test_skip.py::test_a"]), "base.json")
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["missed_failure_count"] == 1
     assert result["base_exemptions"] == [{"run_id": "999", "test_id": "tests/test_skip.py::test_a"}]
     wrong_rule = copy.deepcopy(registration)
     wrong_rule["base_commit_rerun_rule"] = "after the fact exemption"
     with pytest.raises(ValueError, match="required rules"):
-        s.check(wrong_rule, window)
+        s.check(wrong_rule, window, now=IN_WINDOW)
 
 
 def test_collection_error_outside_selection_counts_even_with_base_failure(registration, window):
     save(window, receipt("999", collection_errors=["tests/test_skip.py"]))
     save(window, receipt("base-99", "base", candidate_run_id="999", head_sha="base",
                          full_junit_failing_ids=["tests/test_skip.py"]), "base.json")
-    assert s.check(registration, window)["missed_failure_count"] == 1
+    assert s.check(registration, window, now=IN_WINDOW)["missed_failure_count"] == 1
 
 
 @pytest.mark.parametrize("problem", ["missing", "artifactless", "unreproducible"])
@@ -316,15 +320,15 @@ def test_unresolved_historical_cases_block_success(registration, window, problem
 
 def test_registration_after_live_results_is_refused_but_historical_is_allowed(registration, window):
     save(window, receipt("999", observed_at="2026-10-03T00:00:00Z"))
-    assert not s.check(registration, window)["unresolved_count"]
+    assert not s.check(registration, window, now=IN_WINDOW)["unresolved_count"]
     save(window, receipt("1", "live", observed_at=registration["registered_at"]))
     with pytest.raises(ValueError, match="registration-after-results"):
-        s.check(registration, window)
+        s.check(registration, window, now=IN_WINDOW)
 
 
 def test_missing_live_census_or_red_denominator_cannot_pass(registration, window):
     (window / "runs.json").unlink()
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert result["unresolved_count"] >= 3
     assert result["missed_failure_count"] == 0
 
@@ -334,15 +338,15 @@ def test_oracle_rejects_altered_receipt_and_missing_artifacts(registration, wind
     save(window, value)
     value["full_junit_failing_ids"] = []
     (window / "999.json").write_text(json.dumps(value))
-    result = s.check(registration, window)
+    result = s.check(registration, window, now=IN_WINDOW)
     assert "oracle-unavailable-or-mismatched:999" in result["unresolved"]
     (window / "1/junit/shard.xml").unlink()
-    assert "oracle-unavailable-or-mismatched:1" in s.check(registration, window)["unresolved"]
+    assert "oracle-unavailable-or-mismatched:1" in s.check(registration, window, now=IN_WINDOW)["unresolved"]
 
 
 def test_unobserved_injected_fault_is_unresolved(registration, window):
     save(window, receipt("injection-harness", "injected"))
-    assert "injection-not-demonstrated:injection-harness" in s.check(registration, window)["unresolved"]
+    assert "injection-not-demonstrated:injection-harness" in s.check(registration, window, now=IN_WINDOW)["unresolved"]
 
 
 def test_day_30_does_not_accept_late_evidence(registration, window):
