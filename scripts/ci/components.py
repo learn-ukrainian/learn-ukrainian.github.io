@@ -20,7 +20,7 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import deque
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
@@ -316,12 +316,17 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
     return edges, unresolved
 
 
-def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
+def dependency_nodes(tree: ast.AST, strings: set[str] | None = None) -> list[ast.AST]:
     """Keep imports, bindings and calls in breadth-first order.
 
     Parsed constants, import aliases, operators and contexts cannot contain
     dependencies. Retain every other subtree, including defaults and decorators.
     Standalone names only matter to the sys.path alias check.
+
+    The walk reaches every node that can hold a string literal, so ``strings``, when
+    given, receives the value of each one that is not prose: neither a bare string
+    statement, such as a docstring, nor a literal piece of an f-string, which is part
+    of a longer computed string (`pr_affected_tests.text_references`).
     """
     relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
                 ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute}
@@ -347,15 +352,31 @@ def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
                 pending.extend(child for child in value
                                if isinstance(child, ast.AST) and child._fields
                                and not isinstance(child, ignored))
+                if strings is not None and not isinstance(node, ast.JoinedStr):
+                    strings.update(child.value for child in value
+                                   if isinstance(child, ast.Constant) and isinstance(child.value, str))
             elif isinstance(value, ast.AST) and value._fields and not isinstance(value, ignored):
                 pending.append(value)
+            elif (strings is not None and isinstance(value, ast.Constant) and isinstance(value.value, str)
+                  and not isinstance(node, ast.Expr)):
+                strings.add(value.value)
     if include_names:
         nodes.extend(node for node in ast.walk(tree) if isinstance(node, ast.Name))
     return nodes
 
 
-def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None) -> dict:
-    """Compute local import/load edges, retaining each unprovable target."""
+def scan_imports(
+    sources: dict[str, bytes], known_paths: set[str] | None = None, importers: set[str] | None = None,
+    on_strings: Callable[[str, bytes, frozenset[str]], None] | None = None,
+) -> dict:
+    """Compute local import/load edges, retaining each unprovable target.
+
+    A file's edges depend on its own bytes and on the other files' paths only, so
+    ``importers`` limits which files are parsed without changing their edges: every
+    source stays a resolvable target. ``None`` scans every source. ``on_strings``
+    receives each parsed file's string literals (`dependency_nodes`) from the same
+    walk, so a caller that also needs them parses and walks no file twice.
+    """
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
     packages = {".".join(name.split(".")[:index]) for name in modules
                 for index in range(1, len(name.split(".")))}
@@ -387,13 +408,18 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             unresolved.add((importer, line, "missing-local-import"))
 
     for path, source in sources.items():
+        if importers is not None and path not in importers:
+            continue
         try:
             tree = ast.parse(source, filename=path)
         except (SyntaxError, ValueError):
             unresolved.add((path, 0, "parse-error"))
             continue
         bindings = {}
-        nodes = dependency_nodes(tree)
+        strings: set[str] | None = None if on_strings is None else set()
+        nodes = dependency_nodes(tree, strings)
+        if on_strings is not None:
+            on_strings(path, source, frozenset(strings or ()))
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
         configured_names: set[str] = set()
