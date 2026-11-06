@@ -37,12 +37,16 @@ class _Execed(Exception):
 
 @pytest.fixture
 def clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in (*rr.MACHINERY_ENV_VARS, "LU_TASKS_DIR"):
+    for name in (*rr.MACHINERY_ENV_VARS, rr.PRODUCT_ROOT_ENV, "LU_TASKS_DIR"):
         monkeypatch.delenv(name, raising=False)
 
 
 def _subprocess_env(**configured: str) -> dict[str, str]:
-    env = {key: value for key, value in os.environ.items() if key not in (*rr.MACHINERY_ENV_VARS, "LU_TASKS_DIR")}
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in (*rr.MACHINERY_ENV_VARS, rr.PRODUCT_ROOT_ENV, "LU_TASKS_DIR")
+    }
     return {**env, **configured}
 
 
@@ -86,9 +90,23 @@ def layout(tmp_path: Path) -> dict[str, Path]:
     rules = tmp_path / "policy" / "rules"
     rules.mkdir(parents=True)
     (rules / "core.md").write_text("# Configured core\n", encoding="utf-8")
-    (rules / "core-curriculum.md").write_text("# Configured curriculum addendum\n", encoding="utf-8")
+    (rules / "core-curriculum.md").write_text("# Machinery decoy addendum\n", encoding="utf-8")
+    product = tmp_path / "product"
+    marker = product / rr.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("product: fixture\n", encoding="utf-8")
+    addendum = product / rules_core.CONTENT_ADDENDUM_REL
+    addendum.parent.mkdir(parents=True)
+    addendum.write_text("# Configured curriculum addendum\n", encoding="utf-8")
     python = _executable(tmp_path / "interp" / "bin" / "python", "#!/bin/sh\nexit 0\n")
-    return {"primary": primary, "kube-dojo": kube, "public": primary, "rules": rules, "python": python}
+    return {
+        "primary": primary,
+        "kube-dojo": kube,
+        "public": primary,
+        "rules": rules,
+        "python": python,
+        "product": product,
+    }
 
 
 def _configured(layout: dict[str, Path], repo: str) -> dict[str, str]:
@@ -98,6 +116,7 @@ def _configured(layout: dict[str, Path], repo: str) -> dict[str, str]:
         rr.STATE_ROOT_ENV: str(layout["primary"]),
         rr.RULES_DIR_ENV: str(layout["rules"]),
         rr.INTERPRETER_ENV: str(layout["python"]),
+        rr.PRODUCT_ROOT_ENV: str(layout["product"]),
     }
 
 
@@ -279,7 +298,11 @@ def test_runtime_target_interpreter_policy_and_state_roots_are_distinct(monkeypa
         monkeypatch.setenv(key, value)
     roots = rr.machinery_roots()
     assert (roots.runtime, roots.primary, roots.state) == (rr.RUNTIME_ROOT, layout["primary"], layout["primary"])
-    assert (roots.rules_dir, roots.interpreter, roots.github_slug) == (layout["rules"], layout["python"], CONFIGURED_SLUG)
+    assert (roots.rules_dir, roots.interpreter, roots.github_slug) == (
+        layout["rules"],
+        layout["python"],
+        CONFIGURED_SLUG,
+    )
     target = layout[repo]
     distinct = {roots.runtime, roots.rules_dir, roots.interpreter, roots.state}
     assert len(distinct) == 4
