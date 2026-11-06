@@ -54,11 +54,6 @@
     },
     {
       "path": "scripts/agent_runtime/acpx_discuss.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\""
-    },
-    {
-      "path": "scripts/agent_runtime/acpx_discuss.py",
       "code": "misc",
       "message": "Generator has incompatible item type \"int | str\"; expected \"bool\""
     },
@@ -583,11 +578,6 @@
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
     },
     {
-      "path": "scripts/agent_runtime/result.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\""
-    },
-    {
       "path": "scripts/agent_runtime/review_mcp.py",
       "code": "arg-type",
       "message": "Argument \"cwd\" has incompatible type \"Path | str\"; expected \"Path\""
@@ -641,21 +631,6 @@
       "path": "scripts/agent_runtime/runner.py",
       "code": "attr-defined",
       "message": "\"BaseException\" has no attribute \"model_identity\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"apply_mcp_capability_to_tool_config\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"inject_sources_capability\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"transported_prompt_bytes\""
     },
     {
       "path": "scripts/agent_runtime/runner.py",
@@ -791,11 +766,6 @@
       "path": "scripts/agent_runtime/trail_isolation.py",
       "code": "arg-type",
       "message": "Argument 1 to \"set\" has incompatible type \"Any | None\"; expected \"Iterable[Any]\""
-    },
-    {
-      "path": "scripts/agent_runtime/usage.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\""
     },
     {
       "path": "scripts/agent_runtime/usage.py",

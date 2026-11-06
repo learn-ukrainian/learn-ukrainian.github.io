@@ -40,6 +40,8 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
+from learn_ukrainian_v4_runtime.contracts import new_id
+
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,
     TRANSPORT_ENV,
@@ -55,7 +57,6 @@ from scripts.agent_runtime.runner import (
     resolve_inter_agent_route,
 )
 from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import classify_repo_path
 from scripts.lib import rules_core

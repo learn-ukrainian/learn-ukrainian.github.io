@@ -9,9 +9,11 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from ._config import REPO_ROOT
+from ._config import MACHINERY_PACKAGE, REPO_ROOT
 
-_ALLOWED_ROOTS = ("scripts/", "tests/", "docs/", "plans/")
+# Code and documentation roots a recovered commit may touch: the product checkout's scripts/
+# and the machinery package directory (one entry while the package is scripts/).
+_ALLOWED_ROOTS = tuple(dict.fromkeys(("scripts/", f"{MACHINERY_PACKAGE}/", "tests/", "docs/", "plans/")))
 _PATH_HINT_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/)+(?:[A-Za-z0-9_.-]+)?")
 
 

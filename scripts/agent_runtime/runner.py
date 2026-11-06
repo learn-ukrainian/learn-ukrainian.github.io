@@ -2083,7 +2083,8 @@ def _execute_invocation_once(
                     stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
             review_cmd, env = _prepare_spawn_command(review_cmd, env)
             if v4_authorization_id:
-                from scripts.fleet_comms import v4_execution_origin as origin
+                from learn_ukrainian_v4_runtime import v4_execution_origin as origin
+
                 from scripts.fleet_comms.request_executor import RequestExecutor
 
                 with RequestExecutor() as executor:
@@ -2457,7 +2458,8 @@ def _finalize_v4_runner_origin(
     requested_model: str,
 ) -> ParseResult:
     """Persist the runner-owned V4 observation, including typed read refusals."""
-    from scripts.fleet_comms import v4_execution_origin as origin
+    from learn_ukrainian_v4_runtime import v4_execution_origin as origin
+
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     output_bytes = b""
