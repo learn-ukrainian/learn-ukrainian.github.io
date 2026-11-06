@@ -900,12 +900,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "scripts/projects/open_model_data/build_decolonization_cases.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 9c8f7fdc58ed64143a902d9b9f64aac9cc160b58ddd32f760994e7702538b88f:1",
+        "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 088653846953d8d13a08690a3a9d0fade9599f9ff16fd20a5ecd8e3805d7e63a:1",
     ),
     (
         "scripts/projects/open_model_data/build_grammar_component_8342.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 43cafe21f889387aaea06226e5a7146adf83e7be30fd1a80d88cd5bf56f3ae65:1 46cbe8a42acef477318044eb5f89b1afe3cf12e318f520858ae73d91740e9e98:1",
+        "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 5e3da10cd66c6e4c85629dd489ba6cbed6751dadf94fb2e1a7637bbe608efc66:1 46cbe8a42acef477318044eb5f89b1afe3cf12e318f520858ae73d91740e9e98:1",
     ),
     (
         "scripts/projects/open_model_data/build_phase3_p4_pilot.py",
@@ -975,7 +975,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "scripts/projects/open_model_data/package_unified_dataset.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "487116ece65c02a87594e950040ad7f02bf6bb00ffd1ac3c9b1aa5b58073d22c:1 c5104e9eeac83dd9938de462dd05c879fa70c18ea22d7ab8da4f375afa3c99d8:1 cd222ec08b8ecc752640976c249a000a3051bcd56802cdc23971ec5162715483:1",
+        "487116ece65c02a87594e950040ad7f02bf6bb00ffd1ac3c9b1aa5b58073d22c:1 c5104e9eeac83dd9938de462dd05c879fa70c18ea22d7ab8da4f375afa3c99d8:1 55caf14511ead12180f1e44cb7f5103f3ecf2bc0ce14685c5ef012b872147e8a:1",
     ),
     (
         "scripts/projects/open_model_data/phase3_babych_acoustic_excerpt_intake.py",
