@@ -17,14 +17,16 @@ storage topology.
 
 ## Typical flow
 
+Run these from this directory, the one that holds this README and both scripts.
+
 ```powershell
 # 1) Copy from a pre-configured read-only Drive remote into local NTFS
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File `
-  .\scripts\storage\windows\Copy-BulkSourcesFromDrive.ps1
+  .\Copy-BulkSourcesFromDrive.ps1
 
 # 2) Verify markers (and optional exact-file manifest)
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File `
-  .\scripts\storage\windows\Verify-BulkSources.ps1
+  .\Verify-BulkSources.ps1
 ```
 
 Optional exact-file check: pass `-ManifestPath` with JSONL rows of

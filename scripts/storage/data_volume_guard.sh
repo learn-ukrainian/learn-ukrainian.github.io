@@ -4,10 +4,13 @@ set -euo pipefail
 
 EX_CONFIG=78
 UUID_FILE=/etc/learn-ukrainian/data-volume.uuid
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+GUARD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$GUARD_DIR/../.." && pwd)"
+# Checkout-relative path of this file, from its unresolved location, for the help text.
+GUARD_REL="${GUARD_DIR#"$REPO_ROOT"/}/${BASH_SOURCE[0]##*/}"
 
 usage() {
-    cat <<'EOF'
+    cat <<EOF
 Usage: data_volume_guard.sh [-- COMMAND [ARG ...] | --status | --help]
 
 Check that repository data/ resolves to the configured volume UUID. Use this
@@ -19,9 +22,9 @@ Arguments:
   --help                Show this help.
 
 Examples:
-  bash scripts/storage/data_volume_guard.sh
-  bash scripts/storage/data_volume_guard.sh -- /usr/bin/env true
-  bash scripts/storage/data_volume_guard.sh --status
+  bash $GUARD_REL
+  bash $GUARD_REL -- /usr/bin/env true
+  bash $GUARD_REL --status
 
 Outputs: no files or database writes; errors go to stderr.
 Exit codes: 0 on success; 78 when the configured mount is unavailable or wrong;

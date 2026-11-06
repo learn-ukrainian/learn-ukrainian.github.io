@@ -12,10 +12,12 @@ from pathlib import Path, PurePosixPath
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.ci._location import checkout_relative
+from scripts.ci._location import checkout_relative, package_dir_name
 from scripts.lib.readonly_sqlite import open_readonly
 
-SOURCES = ("scripts", ".mcp", "agents_extensions", "packages")
+# The machinery package directory and the product scripts tree are one
+# directory in this checkout; a renamed machinery package reports under its own.
+SOURCES = tuple(dict.fromkeys((package_dir_name(), "scripts", ".mcp", "agents_extensions", "packages")))
 # pytest-cov --cov-context=test records "<nodeid>|<phase>", not a bare node ID.
 TEST_PHASES = {"setup", "run", "teardown"}
 
