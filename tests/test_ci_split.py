@@ -1022,6 +1022,80 @@ def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypat
     assert affected.importing_tests({'scripts/unrelated.py'}, set(), 'unused', entries) == ([], [])
 
 
+def _count_parses(monkeypatch: pytest.MonkeyPatch) -> list[bytes]:
+    import ast
+
+    parsed: list[bytes] = []
+    real = ast.parse
+    monkeypatch.setattr(ast, 'parse', lambda source, *args, **kwargs: parsed.append(source) or real(source, *args, **kwargs))
+    return parsed
+
+
+def test_pr_import_scan_parses_only_files_that_can_select_a_test(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: the planner's import scan parses every source file (#12817).
+
+    Only the edges of a test file or a conftest can select a test, so parsing the rest only
+    costs time: the real tree has twice as many other files. Those files stay import targets,
+    and the scan gives each file it parses exactly the edges of a whole-tree scan.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    sources = {
+        'scripts/x.py': b'X = 1\n',
+        'scripts/y.py': b'from scripts import x\n',
+        'tests/test_a.py': b'from scripts import y\n',
+        'tests/sub/conftest.py': b'from scripts import x\n',
+        'tests/sub/test_b.py': b'def test_b():\n    pass\n',
+    }
+    monkeypatch.setattr(components, 'python_sources', lambda: sources)
+    monkeypatch.setattr(components, 'tracked_paths', lambda: list(sources))
+    entries = {name: '100644' for name in sources if name.startswith('tests/')}
+    parsed = _count_parses(monkeypatch)
+    assert affected.importing_tests({'scripts/x.py'}, set(), 'unused', entries) == ([], ['tests/sub/test_b.py'])
+    assert affected.importing_tests({'scripts/y.py'}, set(), 'unused', entries) == (['tests/test_a.py'], [])
+    selecting = {'tests/test_a.py', 'tests/sub/conftest.py', 'tests/sub/test_b.py'}
+    assert sorted(parsed) == sorted(sources[name] for name in selecting)
+    assert affected.selecting(sources) == selecting
+    whole = components.scan_imports(sources, set(sources))
+    part = components.scan_imports(sources, set(sources), importers=selecting)
+    assert ('scripts/y.py', 'scripts/x.py') in whole['file_edges']
+    assert part['file_edges'] == [edge for edge in whole['file_edges'] if edge[0] in selecting]
+    assert part['directory_edges'] == [edge for edge in whole['directory_edges'] if edge[0] in selecting]
+
+
+def test_pr_candidate_tree_parses_each_test_file_once_across_plans(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: the planner parses the same test file again for every selection (#12817).
+
+    `importing_tests` and `text_reading_tests` read one candidate tree, and every plan asks
+    both, so the real tree's test files were parsed twice per plan. Each is now parsed once,
+    by the import scan, which records its string literals; a literal written with an escape
+    still counts. An edited tree is scanned afresh, so a new literal is never missed.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    sources = {
+        'scripts/x.py': b'X = 1\n',
+        'tests/test_imports.py': b'from scripts import x\n# parsed once\n',
+        'tests/test_reads.py': b"PATH = 'scripts\\x2fx.py'\n# parsed once\n",
+        'tests/test_other.py': b"PATH = 'scripts/y.py'\n# parsed once\n",
+        'tests/conftest.py': b'# parsed once\n',
+    }
+    monkeypatch.setattr(components, 'python_sources', lambda: dict(sources))
+    monkeypatch.setattr(components, 'tracked_paths', lambda: sorted(sources))
+    entries = {name: '100644' for name in sources if affected.TEST.fullmatch(name)}
+    parsed = _count_parses(monkeypatch)
+    for _ in range(2):
+        assert affected.importing_tests({'scripts/x.py'}, set(), 'unused', entries) == (['tests/test_imports.py'], [])
+        assert affected.text_reading_tests({'scripts/x.py'}, entries) == ['tests/test_reads.py']
+    assert sorted(parsed) == sorted(source for name, source in sources.items() if name.startswith('tests/'))
+    sources['tests/test_other.py'] = b"PATH = 'scripts/x.py'\n# parsed once, edited\n"
+    parsed.clear()
+    assert affected.text_reading_tests({'scripts/x.py'}, entries) == ['tests/test_other.py', 'tests/test_reads.py']
+    assert sorted(parsed) == sorted(source for name, source in sources.items() if name.startswith('tests/'))
+
+
 def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch: pytest.MonkeyPatch) -> None:
     """Defect class: a text-reading test is not selected for a changed source file (#12789).
 
@@ -1046,7 +1120,7 @@ def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch
         'dispatcher': 'agy_sandbox cli codex_meter git primary',
     }.items() for name in names.split()] + ['scripts/lint/mypy_baseline' + '.json']
     reader = 'tests/test_readonly_harness_readers.py'
-    real_git, real_scan, scans = affected.git, components.scan_imports, {}
+    real_git = affected.git
     diff: list[str] = []
 
     def git(*args: str) -> bytes:
@@ -1054,15 +1128,8 @@ def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch
             return b''.join(name.encode() + b'\0' for name in ([] if '--diff-filter=D' in args else diff))
         return real_git(*args)
 
-    def scan_once(sources: dict[str, bytes], known: set[str]) -> dict:
-        # The real repository scan, run once: every plan below reads the same candidate tree.
-        if 'scan' not in scans:
-            scans['scan'] = real_scan(sources, known)
-        return scans['scan']
-
     monkeypatch.chdir(components.ROOT)
     monkeypatch.setattr(affected, 'git', git)
-    monkeypatch.setattr(components, 'scan_imports', scan_once)
     diff[:] = changed_12777
     selected = affected.plan('HEAD', 'HEAD')
     assert reader in selected['run_files']

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import gc
 import json
 import math
 import os
@@ -14,6 +15,7 @@ import sys
 import time
 import unicodedata
 import xml.etree.ElementTree as ET
+from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from scripts.ci.gate import event_tier
@@ -152,21 +154,45 @@ def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
         target[:-3].replace("/", ".") for target in targets
         if target.endswith(".py") and PurePosixPath(target).name != "__init__.py"
     }
-    found = set()
-    for path, source in sources.items():
-        if not TEST.fullmatch(path):
-            continue
+    return {path for path, source in sources.items()
+            if TEST.fullmatch(path) and not names.isdisjoint(string_literals(source))}
+
+
+# Literal values by file bytes (`string_literals`). Bounded, so a session that plans
+# many synthetic trees cannot grow it without limit; an evicted file is parsed again.
+_LITERALS: dict[bytes, frozenset[str]] = {}
+_LITERALS_LIMIT = 8192
+
+
+def string_literals(source: bytes) -> frozenset[str]:
+    """The values of a file's string literals, without prose (`components.dependency_nodes`).
+
+    Keyed by the file's bytes, which alone fix its syntax tree, so a planner that
+    asks about the same file again parses it once, and an edited file is parsed
+    afresh. `candidate_scan` records them from its own parse. A file that does not
+    parse has no literals.
+    """
+    found = _LITERALS.get(source)
+    if found is None:
+        from scripts.ci import components
+
+        strings: set[str] = set()
+        tree: ast.Module | None
         try:
-            tree = ast.parse(source, filename=path)
+            tree = ast.parse(source)
         except (SyntaxError, ValueError):
-            continue
-        nodes = list(ast.walk(tree))
-        prose = {id(node.value) for node in nodes if isinstance(node, ast.Expr)} | {
-            id(part) for node in nodes if isinstance(node, ast.JoinedStr) for part in node.values}
-        if any(isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names
-               and id(node) not in prose for node in nodes):
-            found.add(path)
+            tree = None
+        if tree is not None:
+            components.dependency_nodes(tree, strings)
+        found = _remember_literals(source, frozenset(strings))
     return found
+
+
+def _remember_literals(source: bytes, strings: frozenset[str]) -> frozenset[str]:
+    if len(_LITERALS) >= _LITERALS_LIMIT:
+        _LITERALS.clear()
+    _LITERALS[source] = strings
+    return strings
 
 
 def text_reading_tests(targets: set[str], entries: dict[str, str]) -> list[str]:
@@ -174,7 +200,46 @@ def text_reading_tests(targets: set[str], entries: dict[str, str]) -> list[str]:
     from scripts.ci import components
 
     regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
-    return sorted(text_references(components.python_sources(), targets) & regular)
+    sources = components.python_sources()
+    # The candidate scan's one parse of each test file records its literals.
+    candidate_scan(tuple(sources.items()), tuple(components.tracked_paths()))
+    return sorted(text_references(sources, targets) & regular)
+
+
+def selecting(sources: dict[str, bytes]) -> set[str]:
+    """The files whose own edges can select a test: test files and every ``conftest.py``.
+
+    `importing_tests` keeps an edge only when its importer is a test file or a conftest,
+    so the scan parses only these; the other sources stay import targets.
+    """
+    return {path for path in sources if TEST.fullmatch(path) or PurePosixPath(path).name == "conftest.py"}
+
+
+@lru_cache(maxsize=2)
+def candidate_scan(sources: tuple[tuple[str, bytes], ...], known_paths: tuple[str, ...]) -> dict:
+    """The import scan of the files that can select a test (`selecting`), shared, never mutated.
+
+    Cached by every source byte and indexed path, never by time, so `importing_tests`
+    and `text_reading_tests` on one candidate tree parse each file once: the same
+    parse records each test file's string literals.
+    """
+    from scripts.ci import components
+
+    files = dict(sources)
+
+    def remember(path: str, source: bytes, strings: frozenset[str]) -> None:
+        if TEST.fullmatch(path):
+            _remember_literals(source, strings)
+
+    # Parsing allocates millions of syntax nodes that form no reference cycles, so the
+    # cycle collector's repeated passes over them are pure cost during the scan.
+    collecting = gc.isenabled()
+    gc.disable()
+    try:
+        return components.scan_imports(files, set(known_paths), importers=selecting(files), on_strings=remember)
+    finally:
+        if collecting:
+            gc.enable()
 
 
 def importing_tests(
@@ -196,7 +261,7 @@ def importing_tests(
     """
     from scripts.ci import components
 
-    scan = components.scan_imports(components.python_sources(), set(components.tracked_paths()))
+    scan = candidate_scan(tuple(components.python_sources().items()), tuple(components.tracked_paths()))
     edges, directories = scan["file_edges"], scan["directory_edges"]
     if deleted:
         tree = {}
@@ -206,7 +271,7 @@ def importing_tests(
                 tree[name] = meta.split()
         blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
         sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
-        scan = components.scan_imports(sources, set(tree))
+        scan = components.scan_imports(sources, set(tree), importers=selecting(sources))
         edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
         directories = [*directories, *scan["directory_edges"]]
     regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
