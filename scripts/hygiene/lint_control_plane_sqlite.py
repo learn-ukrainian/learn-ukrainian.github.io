@@ -39,9 +39,10 @@ def _mod(*parts: str) -> str:
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-_SCAN_ROOTS: tuple[str, ...] = (
-    "scripts",
-    "agents_extensions/shared/session_streams",
+# The machinery package directory and the product scripts tree (one directory
+# in this checkout), then the shared session streams.
+_SCAN_ROOTS: tuple[str, ...] = tuple(
+    dict.fromkeys((_machinery_top(), "scripts", "agents_extensions/shared/session_streams"))
 )
 _CONTROL_PLANE_PACKAGE = _mp("control_plane")
 _SKIP_PATH_PREFIXES: tuple[str, ...] = ("tests/",)
