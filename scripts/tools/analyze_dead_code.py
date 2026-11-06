@@ -12,6 +12,7 @@ Output: JSON report with removal candidates categorized by risk level
 """
 
 import json
+import os
 import re
 import subprocess
 import tempfile
@@ -19,10 +20,21 @@ from datetime import datetime
 from pathlib import Path
 
 
+def _code_dir() -> str:
+    """Unresolved name of this file's top package directory."""
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _tool_path(name: str) -> str:
+    """Checkout-relative path of a tool beside this file."""
+    here = Path(os.path.abspath(__file__))
+    return f"{here.parents[1].name}/{here.parent.name}/{name}"
+
+
 class DeadCodeAnalyzer:
     def __init__(self, project_root):
         self.project_root = Path(project_root)
-        self.scripts_dir = self.project_root / 'scripts'
+        self.scripts_dir = self.project_root / _code_dir()
         self.results = {}
 
     def get_all_python_scripts(self):
@@ -59,7 +71,7 @@ class DeadCodeAnalyzer:
             result = subprocess.run(
                 ['rg', '-l', name_no_ext,
                  '--type', 'md', '--type', 'json', '--type', 'yaml', '--type', 'sh',
-                 '--glob', '!scripts/**'],  # Exclude scripts directory
+                 '--glob', f'!{_code_dir()}/**'],  # Exclude the code directory
                 capture_output=True,
                 text=True,
                 cwd=self.project_root,
@@ -80,7 +92,7 @@ class DeadCodeAnalyzer:
             result = subprocess.run(
                 ['rg', '-l', f'(from|import).*{name_no_ext}',
                  '--type', 'py',
-                 '--glob', f'!scripts/{script_name}'],  # Exclude the script itself
+                 '--glob', f'!{_code_dir()}/{script_name}'],  # Exclude the script itself
                 capture_output=True,
                 text=True,
                 cwd=self.project_root,
@@ -270,7 +282,7 @@ def main():
     analyzer.print_summary(report)
 
     print("\nTo remove low-risk scripts, run:")
-    print("  python3 scripts/remove_dead_code.py --low-risk")
+    print(f"  python3 {_tool_path('remove_dead_code.py')} --low-risk")
 
 if __name__ == '__main__':
     main()

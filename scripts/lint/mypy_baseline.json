@@ -1799,16 +1799,6 @@
     },
     {
       "path": "scripts/api/lane_health.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/api/lane_health.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
-    },
-    {
-      "path": "scripts/api/lane_health.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
     },
@@ -2396,16 +2386,6 @@
       "path": "scripts/api/state_router.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"float\", target has type \"None | dict[str, Any] | dict[str, None | bool | str] | str\")"
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
     },
     {
       "path": "scripts/api/state_router.py",

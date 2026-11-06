@@ -8,9 +8,16 @@ Supports dry-run mode and incremental removal by risk level.
 
 import argparse
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
+
+
+def _tool_path(name: str) -> str:
+    """Checkout-relative path of a tool beside this file."""
+    here = Path(os.path.abspath(__file__))
+    return f"{here.parents[1].name}/{here.parent.name}/{name}"
 
 
 def load_report():
@@ -21,7 +28,7 @@ def load_report():
             return json.load(f)
     except FileNotFoundError:
         print(f"Error: Report not found at {report_path}")
-        print("Run: python3 scripts/analyze_dead_code.py first")
+        print(f"Run: python3 {_tool_path('analyze_dead_code.py')} first")
         sys.exit(1)
 
 def remove_scripts(scripts, dry_run=True, project_root=None):
@@ -76,13 +83,13 @@ def main():
         parser.print_help()
         print("\nExample usage:")
         print("  # Dry run (safe)")
-        print("  python3 scripts/remove_dead_code.py --low-risk")
+        print(f"  python3 {_tool_path('remove_dead_code.py')} --low-risk")
         print()
         print("  # Actually remove low risk scripts")
-        print("  python3 scripts/remove_dead_code.py --low-risk --execute")
+        print(f"  python3 {_tool_path('remove_dead_code.py')} --low-risk --execute")
         print()
         print("  # Remove one-time scripts >60 days old (dry run)")
-        print("  python3 scripts/remove_dead_code.py --one-time-only")
+        print(f"  python3 {_tool_path('remove_dead_code.py')} --one-time-only")
         sys.exit(0)
 
     report = load_report()
