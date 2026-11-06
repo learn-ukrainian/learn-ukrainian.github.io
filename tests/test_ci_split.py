@@ -1022,6 +1022,62 @@ def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypat
     assert affected.importing_tests({'scripts/unrelated.py'}, set(), 'unused', entries) == ([], [])
 
 
+def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: a text-reading test is not selected for a changed source file (#12789).
+
+    `tests/test_readonly_harness_readers.py` parses `_inbox_watch.py` through a computed path, so the
+    import scan never links them: PR #12777 passed PR CI and its merge group failed on that test. With
+    the #12777 source paths as the diff, the real scanner and planner run the test, and every test the
+    plan runs without text readers still runs. A sibling in the same package does not select it.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    # Built from parts: a whole-path literal here would make this test a text reader of each file.
+    changed_12777 = [f'scripts/{folder}/{name}.py' for folder, names in {
+        'agent_runtime/adapters': 'acpx claude gemini grok_build',
+        'agent_runtime': 'agent_identity agy_hook_config attempt_forwarder failover grok_reviewer_permissions '
+                         'kimi_admission lane_probe registry review_mcp runner secret_print_hook tool_config '
+                         'trail_isolation',
+        'ai_agent_bridge': '__main__ _acp_compat _ask_lifecycle _channels _channels_cli _cli _config '
+                           '_dispatch_wrappers _gemini _inbox _inbox_watch _job_host_forward _prompts _ui_codex '
+                           'routing_guard',
+        'ai_llm': 'agent_runtime_call claude_call codex_call fallback',
+        'dispatcher': 'agy_sandbox cli codex_meter git primary',
+    }.items() for name in names.split()] + ['scripts/lint/mypy_baseline' + '.json']
+    reader = 'tests/test_readonly_harness_readers.py'
+    real_git, real_scan, scans = affected.git, components.scan_imports, {}
+    diff: list[str] = []
+
+    def git(*args: str) -> bytes:
+        if args[0] == 'diff':
+            return b''.join(name.encode() + b'\0' for name in ([] if '--diff-filter=D' in args else diff))
+        return real_git(*args)
+
+    def scan_once(sources: dict[str, bytes], known: set[str]) -> dict:
+        # The real repository scan, run once: every plan below reads the same candidate tree.
+        if 'scan' not in scans:
+            scans['scan'] = real_scan(sources, known)
+        return scans['scan']
+
+    monkeypatch.chdir(components.ROOT)
+    monkeypatch.setattr(affected, 'git', git)
+    monkeypatch.setattr(components, 'scan_imports', scan_once)
+    diff[:] = changed_12777
+    selected = affected.plan('HEAD', 'HEAD')
+    assert reader in selected['run_files']
+    assert reader in selected['text_reading_test_files']
+    with monkeypatch.context() as without_readers:
+        without_readers.setattr(affected, 'text_reading_tests', lambda *_: [])
+        baseline = affected.plan('HEAD', 'HEAD')
+    assert set(baseline['run_files']) <= set(selected['run_files'])
+
+    diff[:] = ['scripts/ai_agent_bridge/_monitor_cache.py']
+    unrelated = affected.plan('HEAD', 'HEAD')
+    assert reader not in unrelated['text_reading_test_files'] + unrelated['importing_test_files']
+    assert reader not in unrelated['run_files']
+
+
 def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
