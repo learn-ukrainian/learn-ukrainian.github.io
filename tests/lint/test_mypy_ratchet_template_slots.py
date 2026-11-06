@@ -473,8 +473,8 @@ def _break_key(root: Path) -> None:
 
 
 _BROKEN = {
-    "missing-map": (_break_missing_map, "unreadable"),
-    "missing-digest": (_break_missing_digest, "unreadable"),
+    "missing-map": (_break_missing_map, "required for machinery package 'lu_machinery'; unreadable"),
+    "missing-digest": (_break_missing_digest, "required for machinery package 'lu_machinery'; unreadable"),
     "mismatched-digest": (_break_mismatch, "does not match the recorded"),
     "uppercase-digest": (_break_digest_format, "expected one line"),
     "digest-without-name": (_break_digest_name, "expected one line"),

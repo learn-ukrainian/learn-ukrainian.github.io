@@ -474,12 +474,13 @@ class _RenameMap:
         return entry.owner
 
 
-def _load_rename_map(checkout: Path) -> _RenameMap:
+def _load_rename_map(package_dir: Path) -> _RenameMap:
     """Read and verify the rename map a renamed machinery checkout must carry.
 
-    Contract: ``<checkout>/packaging/machinery-move/rename-map.json`` holds the
-    exact bytes of the ownership map (``path -> machinery|product``) that the
-    extraction's rename tools read; portcheck keeps it as
+    Contract: ``packaging/machinery-move/rename-map.json``, in the directory
+    that holds the machinery package, has the exact bytes of the ownership
+    map (``path -> machinery|product``) that the extraction's rename tools
+    read; portcheck keeps it as
     ``runs/<sha12>-all/derive/map.json``. Those tools record the SHA-256 of
     the bytes as ``map_sha256`` in their reports (``transform/{py,np,st}.json``).
     ``rename-map.json.sha256`` beside it records that receipt value in
@@ -488,14 +489,14 @@ def _load_rename_map(checkout: Path) -> _RenameMap:
     or mismatched artifact is an error, never the source layout.
     """
 
-    path = checkout / RENAME_MAP
+    path = package_dir.parent / RENAME_MAP
     digest_path = path.with_name(path.name + ".sha256")
     prefix = f"rename map {path}"
     try:
         raw = path.read_bytes()
         recorded = digest_path.read_bytes().decode("ascii")
     except (OSError, UnicodeDecodeError) as exc:
-        raise ValueError(f"{prefix}: required in the {checkout.name} layout and unreadable: {exc}") from exc
+        raise ValueError(f"{prefix}: required for machinery package {package_dir.name!r}; unreadable: {exc}") from exc
     line = _DIGEST_LINE.fullmatch(recorded)
     if line is None:
         raise ValueError(f"{digest_path}: expected one line '<sha256>  {RENAME_MAP.name}'")
@@ -546,7 +547,7 @@ def _baseline_spelling() -> _BaselineSpelling:
     package_dir = _package_dir()
     if package_dir.name == _SOURCE_PACKAGE:
         return _BaselineSpelling(_SOURCE_PACKAGE, None)
-    return _BaselineSpelling(package_dir.name, _load_rename_map(package_dir.parent))
+    return _BaselineSpelling(package_dir.name, _load_rename_map(package_dir))
 
 
 def _relative(root: Path, raw: str) -> str | None:
