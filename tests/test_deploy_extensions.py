@@ -1,6 +1,6 @@
 """Run the launcher deploy fail-honest fixtures under the required pytest gate.
 
-``scripts/audit/test_deploy_extensions.sh`` exercises
+``scripts/agent_deploy/test_deploy_extensions.sh`` exercises
 ``scripts/lib/deploy_extensions.sh`` — the helper both launchers
 (``start-claude.sh``, ``start-codex.sh``) use to deploy
 ``agents_extensions/shared`` into the gitignored runtime dirs at startup.
@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_FIXTURES = _REPO_ROOT / "scripts" / "audit" / "test_deploy_extensions.sh"
+_FIXTURES = _REPO_ROOT / "scripts" / "agent_deploy" / "test_deploy_extensions.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")

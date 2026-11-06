@@ -350,7 +350,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 8e756caf7dc8d194a6469f8a6ddc616f8842bb1c4a045a283175af69c1e2ef17:1",
     ),
     (
-        "scripts/audit/test_deploy_extensions.sh",
+        "scripts/agent_deploy/test_deploy_extensions.sh",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "c91d3c8d2d4ad32906b7565c00fa61faccf0ebec5abc6364b0609e3c87faf43b:1 d6703f7c067222863f3ac30400dd113b2bb4f7f98124e85afbaff2efc261bb3b:1",
     ),

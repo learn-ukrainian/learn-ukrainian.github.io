@@ -15,7 +15,7 @@
 # start-claude.sh refuses to launch against stale definitions.
 #
 # Usage: deploy_agent_extensions <project_dir> <npm_script>
-# Load-bearing tests: scripts/audit/test_deploy_extensions.sh (wrapped by
+# Load-bearing tests: scripts/agent_deploy/test_deploy_extensions.sh (wrapped by
 # tests/test_deploy_extensions.py in the required pytest gate).
 
 # The deploy-status helper runs under the project interpreter resolved by
