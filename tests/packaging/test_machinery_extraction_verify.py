@@ -518,7 +518,9 @@ def test_correct_extraction_passes_every_check_and_reports_denominators(world: W
         env={"STUB_EXPECT_EXTERNAL_NAMES": str(names.resolve())},
     )
     assert code == 0, output
-    assert {name: item["status"] for name, item in checks.items()} == dict.fromkeys(checks, "pass")
+    # PR runs only with --product-root-cases, which this run does not pass.
+    assert {name: item["status"] for name, item in checks.items()} == {**dict.fromkeys(checks, "pass"), "PR": "skipped"}
+    assert checks["PR"]["notes"] == ["not requested (--product-root-cases absent)"]
     assert checks["V1"]["inspected"] == {"manifest_rows": 5, "tree_paths": 5}
     assert checks["V2"]["inspected"]["exclude_entries"] == 3
     assert checks["V2"]["inspected"]["history_commits"] == 4
@@ -1402,6 +1404,65 @@ def test_v8_harness_defect_zero_collected_tests(world: World) -> None:
     assert code == 1, output
     assert "pytest collected zero tests" in findings(checks, "V8")
     assert "V8 inspected zero tests_collected" in findings(checks, "V7")
+
+
+# A case module that tries to replace each scratch directory above its case directory with a link into
+# the extracted tree, so the verifier's later layout writes for the next case would land there.
+SWAP_SCRATCH_CASE_MODULE = """
+import os
+from pathlib import Path
+CASE = Path(__file__).parent
+def attack():
+    out = []
+    for level, victim in ((1, CASE.parent), (2, CASE.parent.parent)):
+        try:
+            os.rename(victim, str(victim) + "-moved")
+            os.symlink("{extracted}", victim)
+            out.append(str(level) + ":swapped")
+        except OSError:
+            out.append(str(level) + ":refused")
+    return " ".join(out)
+"""
+
+
+def test_pr_case_child_cannot_redirect_later_layout_writes_into_the_extracted_tree(world: World) -> None:
+    cases = world.write_input(
+        "product-root-cases.json",
+        json.dumps(
+            {
+                "schema": "lu-machinery.product-root-cases",
+                "schema_version": 1,
+                "cases": [
+                    {
+                        "id": "a-swap",
+                        "layout": [{"kind": "file", "path": "swap.py", "text": SWAP_SCRATCH_CASE_MODULE}],
+                        "sys_path": "{case}",
+                        "call": "swap:attack",
+                        "expect": {"returns": "1:refused 2:refused"},
+                    },
+                    {
+                        "id": "b-victim",
+                        "layout": [
+                            {"kind": "dir", "path": "made/deep"},
+                            {"kind": "file", "path": "probe.py", "text": "def name():\n    return 'ok'\n"},
+                        ],
+                        "sys_path": "{case}",
+                        "call": "probe:name",
+                        "expect": {"returns": "ok"},
+                    },
+                ],
+            }
+        ),
+    )
+    code, checks, output = world.run("--product-root-cases", str(cases))
+    assert not (world.extract / "b-victim").exists()
+    assert not (world.extract / "made").exists()
+    assert git(world.extract, "status", "--porcelain", "--ignored", "--untracked-files=all") == ""
+    assert code == 1, output  # the synthetic tree has no extracted resolver to declare the marker
+    assert checks["PR"]["findings"] == [
+        "lu_machinery/common/repo_root.py declares PRODUCT_MARKER None, not 'curriculum/l2-uk-en/curriculum.yaml'"
+    ]
+    assert "2 of 2 held-out cases hold" in checks["PR"]["notes"]
 
 
 def test_v8_harness_defect_symlinked_test_directory_is_never_written_through(build: Build) -> None:

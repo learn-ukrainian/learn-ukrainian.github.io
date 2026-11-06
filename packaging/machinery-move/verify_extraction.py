@@ -271,6 +271,25 @@ class Sandbox:
             detail = probe.stderr.decode("utf-8", "replace").strip()
             raise Unusable(f"bubblewrap cannot start the read-only sandbox here: {detail}")
 
+    def narrowed(self, writable: Path) -> Sandbox:
+        """The same sandbox with only ``writable`` (a directory inside the scratch directory) writable.
+
+        Its children cannot touch the rest of the scratch directory, so the parent may keep writing
+        there after they ran. HOME and TMPDIR move inside ``writable``.
+        """
+        if not inside(writable, self.scratch) or writable.resolve() == self.scratch.resolve():
+            raise RuntimeError(f"{writable} is not a directory inside the scratch directory")
+        if self.prefix[-3:] != ["--bind", str(self.scratch), str(self.scratch)]:
+            raise RuntimeError("the sandbox prefix does not end with the scratch bind")
+        child = object.__new__(Sandbox)
+        child.scratch = writable
+        child.home = writable / "home"
+        child.tmp = writable / "tmp"
+        child.home.mkdir()
+        child.tmp.mkdir()
+        child.prefix = [*self.prefix[:-3], "--bind", str(writable), str(writable)]
+        return child
+
     def env(self, **extra: str) -> dict[str, str]:
         """The cleaned environment with HOME, TMPDIR and XDG directories inside the scratch directory."""
         return clean_env(
@@ -2413,17 +2432,21 @@ def check_product_root(inputs: Inputs, scratch: Path) -> CheckResult:
     declared = _resolver_marker(inputs)
     if declared != PRODUCT_MARKER:
         result.fail(f"{RESOLVER_DEST} declares PRODUCT_MARKER {declared!r}, not {PRODUCT_MARKER!r}")
-    box = sandbox()
-    env = isolated_env(box)
-    base = scratch / "pr-cases"
-    base.mkdir()
-    cwd = scratch / "pr-cwd"
-    cwd.mkdir()
+    # Each case's child may write only its own case root (layout, home, tmp, result). The parent builds
+    # every layout before that case's child starts, in a fresh root no earlier child could reach, and
+    # afterwards only reads the result without following links.
+    base = Path(tempfile.mkdtemp(prefix="pr-cases-", dir=scratch))
     extracted = str(inputs.repo)
     passed = 0
     for case in inputs.product_root_cases:
-        case_dir = base / case.case_id
+        case_root = base / case.case_id
+        case_root.mkdir()
+        case_dir = case_root / "case"
         case_dir.mkdir()
+        cwd = case_root / "cwd"
+        cwd.mkdir()
+        box = sandbox().narrowed(case_root)
+        env = isolated_env(box)
         places = {"extracted": extracted, "case": str(case_dir), "python": inputs.python}
         _build_layout(inputs, case, case_dir, places)
         spec = {
@@ -2435,14 +2458,14 @@ def check_product_root(inputs: Inputs, scratch: Path) -> CheckResult:
             "kwargs": _substitute(case.kwargs, places, case.case_id),
         }
         expect = _substitute(case.expect, places, case.case_id)
-        out = base / f"{case.case_id}.json"
+        out = case_root / "result.json"
         cmd = [inputs.python, "-I", "-B", "-c", _PRODUCT_ROOT_CHILD, json.dumps(spec), str(out)]
         try:
             proc = box.run(cmd, cwd=cwd, env=env, timeout=inputs.import_timeout)
         except subprocess.TimeoutExpired:
             result.fail(f"{case.case_id}: timed out after {inputs.import_timeout}s")
             continue
-        if not out.is_file():
+        if not os.path.lexists(out):
             tail = proc.stderr.decode("utf-8", "replace").strip().splitlines()[-1:]
             result.fail(f"{case.case_id}: the child exited {proc.returncode} without a result {tail}")
             continue
@@ -2853,11 +2876,11 @@ Checks (every finding is printed; nothing stops at the first one):
   PR  (--product-root-cases) the product marker {PRODUCT_MARKER} is not in the tree and the extracted
       {RESOLVER_DEST} declares it; then each evaluator case builds its layout in its own scratch directory
       (dirs, files, --source files, symlinks, copies of the extracted package; never written through a link)
-      and calls or reads one consumer in a sandboxed child (--python -I, sys.path[0] = the case's sys_path, the
-      case's env only; placeholders {{extracted}}, {{case}} and {{python}}). The consumer must load from the extracted tree or
-      the case directory, and the outcome must match: the named exception in the raised type's MRO, or the
-      returned value (str, or JSON for containers) equal to "returns" and holding every "contains" and no
-      "not_contains" string.
+      and calls or reads one consumer in a sandboxed child that can write only that case's directory
+      (--python -I, sys.path[0] = the case's sys_path, the case's env only; placeholders {{extracted}},
+      {{case}} and {{python}}). The consumer must load from the extracted tree or the case directory, and the
+      outcome must match: the named exception in the raised type's MRO, or the returned value (str, or JSON
+      for containers) equal to "returns" and holding every "contains" and no "not_contains" string.
   HP  (--history-policy) runs {HISTORY_POLICY_TOOL} verify --repo EXTRACT --rev REWRITE_TIP --policy FILE
       --policy-sha256 HEX --commit-map FILE --path-rename {PATH_RENAME}; its nonzero exit fails.
 

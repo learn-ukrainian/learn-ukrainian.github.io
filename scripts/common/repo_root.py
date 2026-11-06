@@ -322,12 +322,18 @@ def _carries_product_marker(checkout: Path, *, through_primary: bool) -> bool:
     product file is present: a reader whose required file is missing fails through its own
     missing-input error.
     """
-    if (checkout / PRODUCT_MARKER).is_file():
-        return True
-    if not through_primary:
+    # An unreadable candidate, or unreadable, malformed or looping Git metadata, does not qualify:
+    # OSError covers permissions, ValueError covers NUL bytes and UnicodeDecodeError, and
+    # RuntimeError is what Path.resolve() raises for a symlink loop before Python 3.13.
+    try:
+        if (checkout / PRODUCT_MARKER).is_file():
+            return True
+        if not through_primary:
+            return False
+        primary = main_checkout_root(checkout)
+        return primary != checkout and (primary / PRODUCT_MARKER).is_file()
+    except (OSError, ValueError, RuntimeError):
         return False
-    primary = main_checkout_root(checkout)
-    return primary != checkout and (primary / PRODUCT_MARKER).is_file()
 
 
 def product_root(explicit: Path | str | None = None, *, env: Mapping[str, str] | None = None) -> Path:
