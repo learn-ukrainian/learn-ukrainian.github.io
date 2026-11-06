@@ -7,6 +7,9 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# The machinery package directory this script sits in, from its own location, so
+# the commands printed below name it in either checkout layout.
+MACHINERY_REL="$(basename "$(cd "$(dirname "$0")" && pwd)")"
 cd "$PROJECT_ROOT"
 
 # shellcheck disable=SC1091
@@ -98,7 +101,7 @@ if [[ "${1:-}" == "--tracked-mirrors-only" ]]; then
     check_tracked_mirrors
     exit $?
 elif [[ $# -ne 0 ]]; then
-    echo "Usage: scripts/check_rules_deployment.sh [--tracked-mirrors-only]" >&2
+    echo "Usage: $MACHINERY_REL/check_rules_deployment.sh [--tracked-mirrors-only]" >&2
     exit 2
 fi
 
@@ -128,7 +131,7 @@ check_pair() {
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"
         echo
-        echo "This means scripts/deploy_prompts.sh is out of sync with its source."
+        echo "This means $MACHINERY_REL/deploy_prompts.sh is out of sync with its source."
         echo "Fix the deploy script, not the target tree."
         return 1
     fi
@@ -165,7 +168,7 @@ check_overlay() {
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"
         echo
-        echo "This means scripts/deploy_prompts.sh is out of sync with its source overlay."
+        echo "This means $MACHINERY_REL/deploy_prompts.sh is out of sync with its source overlay."
         return 1
     fi
 
@@ -242,7 +245,7 @@ check_gemini_file_owners() {
 drift=0
 # Duplicate skill discovery is an error even when the two copies agree.
 if [[ -e .codex/skills || -L .codex/skills ]]; then
-    echo "::error::Legacy .codex/skills discovery path remains; run scripts/deploy_prompts.sh and reconcile any unverified content."
+    echo "::error::Legacy .codex/skills discovery path remains; run $MACHINERY_REL/deploy_prompts.sh and reconcile any unverified content."
     drift=1
 fi
 

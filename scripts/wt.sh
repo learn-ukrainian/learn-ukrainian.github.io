@@ -20,6 +20,8 @@ set -euo pipefail
 # Resolve the shared repository root even when this script is run from a linked
 # worktree. The common Git directory belongs to the primary checkout.
 SCRIPT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# This script's checkout-relative path, from its own location, for the usage text.
+WT_SELF="$(basename "$(cd "$(dirname "$0")" && pwd)")/wt.sh"
 GIT_COMMON_DIR="$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir)"
 REPO_ROOT="$(dirname "$GIT_COMMON_DIR")"
 WT_BASE="$(dirname "$REPO_ROOT")"
@@ -214,7 +216,7 @@ case "${1:-help}" in
         cmd_status
         ;;
     *)
-        echo "Usage: scripts/wt.sh {create|list|merge|clean|status}"
+        echo "Usage: $WT_SELF {create|list|merge|clean|status}"
         echo ""
         echo "Commands:"
         echo "  create <issue> [desc]  Create worktree + branch for issue"

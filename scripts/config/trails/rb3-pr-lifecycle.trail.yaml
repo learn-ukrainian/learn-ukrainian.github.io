@@ -35,7 +35,8 @@ steps:
       argv:
         - sh
         - -c
-        - 'OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" 2>&1); case "$OUT" in *"pending: 0"*) echo inbox-empty;; *"pending:"*) echo inbox-pending;; *) echo inbox-unreadable;; esac'
+        - |-
+          OUT=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" 2>&1); case "$OUT" in *"pending: 0"*) echo inbox-empty;; *"pending:"*) echo inbox-pending;; *) echo inbox-unreadable;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         HANDOFF_AGENT: "{handoff_agent}"
@@ -88,7 +89,11 @@ steps:
     intent: Request the designated independent review via ask-* --type review (shielded review-pr removed in #8520).
     command:
       adapter: shell
-      argv: [sh, -c, 'printf "%s\n" "Cross-family review of PR $PR_NUMBER: VERDICT APPROVE or REQUEST CHANGES with findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py "ask-$REVIEWER_SEAT" - --task-id "review-$PR_NUMBER" --type review >/dev/null 2>&1 && echo review-request-command-succeeded || echo review-request-command-failed']
+      argv:
+        - sh
+        - -c
+        - |-
+          printf "%s\n" "Cross-family review of PR $PR_NUMBER: VERDICT APPROVE or REQUEST CHANGES with findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py "ask-$REVIEWER_SEAT" - --task-id "review-$PR_NUMBER" --type review >/dev/null 2>&1 && echo review-request-command-succeeded || echo review-request-command-failed
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"
@@ -113,7 +118,11 @@ steps:
     intent: Observe the ask ledger state rather than inferring review completion from dispatch output.
     command:
       adapter: shell
-      argv: [sh, -c, 'ROW=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py asks --task-id "review-$PR_NUMBER" 2>/dev/null | tail -1); case "$ROW" in *replied*) echo review-replied;; *processing*|*sent*) echo review-in-flight;; *timed-out*|*failed*) echo review-unresolved;; *) echo review-ledger-unreadable;; esac']
+      argv:
+        - sh
+        - -c
+        - |-
+          ROW=$(.venv/bin/python scripts/ai_agent_bridge/__main__.py asks --task-id "review-$PR_NUMBER" 2>/dev/null | tail -1); case "$ROW" in *replied*) echo review-replied;; *processing*|*sent*) echo review-in-flight;; *timed-out*|*failed*) echo review-unresolved;; *) echo review-ledger-unreadable;; esac
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"
@@ -260,10 +269,22 @@ steps:
     blocked_on: null
 
   - step_id: evaluate_review_gate
-    intent: Evaluate P2's complete review-gate-arm table from the observed typed receipt.
+    intent: Evaluate the complete P2 review-gate-arm table from the observed typed receipt.
     command:
       adapter: shell
-      argv: [.venv/bin/python, -c, 'import json, os; from pathlib import Path; from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables; facts=json.load(open(os.environ["GATE_FACTS_RECEIPT"], encoding="utf-8")); print(evaluate_named_table(load_decision_tables(Path(os.environ["TABLES_PATH"])), os.environ["TABLE_ID"], facts))']
+      argv:
+        - .venv/bin/python
+        - -c
+        - |-
+          import json
+          import os
+          from pathlib import Path
+
+          import scripts.orchestration.trail_predicates as tp
+
+          facts = json.load(open(os.environ["GATE_FACTS_RECEIPT"], encoding="utf-8"))
+          tables = tp.load_decision_tables(Path(os.environ["TABLES_PATH"]))
+          print(tp.evaluate_named_table(tables, os.environ["TABLE_ID"], facts))
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         GATE_FACTS_RECEIPT: "{gate_facts_receipt}"

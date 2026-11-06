@@ -48,7 +48,7 @@ paths the delivery used. Grants never change sparse checkout or a sealed admissi
 Every Codex / Gemini / Claude-headless dispatch prompt MUST include
 wording equivalent to:
 
-```
+```bash
 ## Worktree instructions (mandatory)
 
 Work in a git worktree under `.worktrees/dispatch/<agent>/<task>/`

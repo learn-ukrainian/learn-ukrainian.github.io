@@ -151,8 +151,10 @@ Every epic driver session (any harness) MUST:
    and same-family chat are still not the gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
-   - **grok / gemini / kimi:** canary mint/score
-     (`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane …`); end on
+   - **grok / gemini / kimi:** canary mint/score with the seat lane
+     (`.venv/bin/python -m scripts.session_canary.grok_lane …`,
+     `.venv/bin/python -m scripts.session_canary.gemini_lane …` or
+     `.venv/bin/python -m scripts.session_canary.kimi_lane …`); end on
      FAIL-HANDOFF (&lt;8/10), not compact count.
    - **Claude / Sonnet:** SessionStart / PostCompact + thread-handoff — **no** canary lane
      (do not invent `<model>_lane`).

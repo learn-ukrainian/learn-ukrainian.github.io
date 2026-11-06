@@ -167,7 +167,7 @@ that chose *which* tests or checks a change ran is gone.
 | Read-only token (`permissions: contents: read`) | workflow | workflow; pytest duration refresh adds `actions: read` |
 | Credential-free checkout (`persist-credentials: false`) | every checkout | every checkout (tested) |
 | SHA-pinned actions | every `uses:` | every `uses:` (tested; actionlint + zizmor) |
-| Ruff lint (`ruff check scripts/ tests/ agents_extensions/ dashboards/`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
+| Ruff lint (`ruff check` of the machinery package plus scripts/, tests/, agents_extensions/ and dashboards/; see `scripts/ci/checks.sh`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
 | Strict v2 plan validation | Fast checks | checks.sh (same PR path scoping) |
 | Arc landing drift (`build_arc_landing a1 --check`) | Fast checks | checks.sh |
 | Word Atlas sense-lint ratchet | Contracts | checks.sh |

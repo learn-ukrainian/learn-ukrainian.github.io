@@ -181,7 +181,7 @@ steps:
     blocked_on: null
 
   - step_id: observe_triage_facts
-    intent: Observe complete typed facts for P2's red-ci-triage table.
+    intent: Observe complete typed facts for the P2 red-ci-triage table.
     command:
       adapter: shell
       argv: [.venv/bin/python, -c, 'import json, os; d=json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8")); ok=set(d)=={"known_failure_class","reproduces_on_main","base_fixed_after_ci"} and d.get("known_failure_class") in {"matched","not-matched"} and type(d.get("reproduces_on_main")) is bool and type(d.get("base_fixed_after_ci")) is bool; print("triage-facts-complete" if ok else "triage-facts-invalid")']
@@ -205,10 +205,22 @@ steps:
     blocked_on: null
 
   - step_id: evaluate_red_ci_triage
-    intent: Evaluate P2's red-ci-triage table from the observed typed receipt.
+    intent: Evaluate the P2 red-ci-triage table from the observed typed receipt.
     command:
       adapter: shell
-      argv: [.venv/bin/python, -c, 'import json, os; from pathlib import Path; from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables; facts=json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8")); print(evaluate_named_table(load_decision_tables(Path(os.environ["TABLES_PATH"])), os.environ["TABLE_ID"], facts))']
+      argv:
+        - .venv/bin/python
+        - -c
+        - |-
+          import json
+          import os
+          from pathlib import Path
+
+          import scripts.orchestration.trail_predicates as tp
+
+          facts = json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8"))
+          tables = tp.load_decision_tables(Path(os.environ["TABLES_PATH"]))
+          print(tp.evaluate_named_table(tables, os.environ["TABLE_ID"], facts))
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         TRIAGE_FACTS_RECEIPT: "{triage_facts_receipt}"
@@ -297,7 +309,11 @@ steps:
     intent: Observe the fail-closed known-failure registry outcome; retry-once remains a manual STOP.
     command:
       adapter: shell
-      argv: [sh, -c, 'RUN=$(jq -r ''.databaseId // empty'' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); REPO=$(gh repo view --json databaseId --jq .databaseId 2>/dev/null); OUT="batch_state/rb4-lookup-$PR_NUMBER.json"; if [ -z "$RUN" ] || [ -z "$REPO" ]; then echo lookup-failed; elif .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup --registry "$KNOWN_FAILURES_REGISTRY_PATH" --receipt "$SIGNATURE_RECEIPT_PATH" --repository-id "$REPO" --pr "$PR_NUMBER" --run-id "$RUN" --as-of "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --output "$OUT" >/dev/null 2>&1; then jq -r ''if .status == "matched" then "matched-" + .action.kind else "table-unknown" end'' "$OUT"; else echo lookup-failed; fi']
+      argv:
+        - sh
+        - -c
+        - |-
+          RUN=$(jq -r '.databaseId // empty' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); REPO=$(gh repo view --json databaseId --jq .databaseId 2>/dev/null); OUT="batch_state/rb4-lookup-$PR_NUMBER.json"; if [ -z "$RUN" ] || [ -z "$REPO" ]; then echo lookup-failed; elif .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup --registry "$KNOWN_FAILURES_REGISTRY_PATH" --receipt "$SIGNATURE_RECEIPT_PATH" --repository-id "$REPO" --pr "$PR_NUMBER" --run-id "$RUN" --as-of "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --output "$OUT" >/dev/null 2>&1; then jq -r 'if .status == "matched" then "matched-" + .action.kind else "table-unknown" end' "$OUT"; else echo lookup-failed; fi
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"

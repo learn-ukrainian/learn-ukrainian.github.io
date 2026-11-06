@@ -26,6 +26,8 @@ case "${1-}" in
 esac
 
 repo_root="$(git rev-parse --show-toplevel)"
+# This installer's checkout-relative path, from its own location, for the rerun hints.
+installer_rel="$(basename "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")/install_git_hooks.sh"
 tracked_hooks_dir="$repo_root/.githooks"
 if [[ ! -d "$tracked_hooks_dir" ]]; then
     echo "Tracked hooks directory not found at $tracked_hooks_dir" >&2
@@ -115,7 +117,7 @@ run_check() {
             echo "$hook_name: UNSAFE — $wrapper is a symlink" >&2
             failures=$((failures + 1))
         elif [[ -f "$wrapper" ]] && grep -qF "$entire_marker" "$wrapper"; then
-            echo "$hook_name: RETIRED — $wrapper is an Entire CLI wrapper (rerun scripts/install_git_hooks.sh)" >&2
+            echo "$hook_name: RETIRED — $wrapper is an Entire CLI wrapper (rerun $installer_rel)" >&2
             failures=$((failures + 1))
         fi
     done
@@ -132,7 +134,7 @@ run_check() {
         elif [[ -f "$wrapper" ]] && grep -qF "$entire_marker" "$wrapper"; then
             : # reported as RETIRED above
         else
-            echo "$stage: UNREACHABLE — $wrapper does not run the current repo delegator (rerun scripts/install_git_hooks.sh)" >&2
+            echo "$stage: UNREACHABLE — $wrapper does not run the current repo delegator (rerun $installer_rel)" >&2
             failures=$((failures + 1))
         fi
     done <<<"$stages"

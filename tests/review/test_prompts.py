@@ -1865,7 +1865,11 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     monkeypatch.setattr(record, "attested_return", attest)
     monkeypatch.setattr(review_validator, "validate_review", validate)
     monkeypatch.setenv("CANARY_INITIATOR", "synthetic-canary")
-    monkeypatch.setattr(sys, "argv", ["-", "plan-template", str(path), str(tmp_path)])
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["-", "plan-template", str(path), str(tmp_path), "scripts.agent_runtime.runner", "scripts.agent_runtime.review_mcp"],
+    )
     runbook = Path(__file__).resolve().parents[2] / "docs/runbooks/agy-review-permissions.md"
     snippet = runbook.read_text().split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]
     capsys.readouterr()

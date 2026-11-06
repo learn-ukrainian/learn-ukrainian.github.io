@@ -129,7 +129,7 @@ A takeover or any worker pushing to an existing PR branch is dispatched with `--
 A workspace-write dispatch uses `--base origin/main` with that branch, and the PR's files as owned paths. A `--base` that settlement cannot verify, including a commit SHA, is refused at dispatch by the origin-base rule settlement uses. A `--base` whose branch equals `--branch` is refused at dispatch too, because settlement requires those refs to differ. Read-only dispatches still accept a SHA base.
 
 If frozen inputs require creating a tree before dispatch, use
-`scripts.dispatcher.git.create_worktree`, with `creator_actor` naming the driver.
+`create_worktree` from `scripts.dispatcher.git`, with `creator_actor` naming the driver.
 The helper writes a durable creator receipt. Tasks launched with `--cwd` borrow
 that tree. Once all borrowers are terminal, use `worktree_claims remove PATH`
 without `--owner-task-id`. The remover preserves output before plain Git removal.

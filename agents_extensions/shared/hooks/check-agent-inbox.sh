@@ -193,9 +193,10 @@ if [ -n "$PREVIEWS" ]; then
 ${PREVIEWS}"
 fi
 
+INBOX_MODULE=scripts.ai_agent_bridge
 CONTEXT="${CONTEXT}
 ---
-.venv/bin/python -m scripts.ai_agent_bridge inbox --for ${RECIPIENT}"
+.venv/bin/python -m ${INBOX_MODULE} inbox --for ${RECIPIENT}"
 
 jq -n --arg msg "$CONTEXT" \
   '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":$msg}}'

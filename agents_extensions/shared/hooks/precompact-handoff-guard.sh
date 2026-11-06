@@ -17,7 +17,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/context-rollover-lib.sh" 2>/dev/null || e
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 CANONICAL_ROOT=$(context_canonical_root "$PROJECT_DIR") || exit 0
 BOUNDED_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
-BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
+BOUNDED_RUNNER_DEFAULT="$PROJECT_DIR/scripts/agent_runtime/bounded_command.py"
+BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$BOUNDED_RUNNER_DEFAULT}"
 [ -x "$BOUNDED_PYTHON" ] && [ -f "$BOUNDED_RUNNER" ] || exit 0
 cd "$PROJECT_DIR" 2>/dev/null || exit 0
 
