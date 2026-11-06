@@ -10,7 +10,8 @@ Environment=PATH=/usr/local/bin:/usr/bin:/bin
 # LEARN_UKRAINIAN_PYTHON. The wrapper and the reporter read them from this optional file;
 # without it they keep their defaults.
 EnvironmentFile=-%h/.config/learn-ukrainian/machinery.env
-ExecStart=/usr/bin/env bash --noprofile --norc %h/projects/learn-ukrainian/scripts/orchestration/run_project_state_reporter.sh
+# The wrapper path is relative to WorkingDirectory.
+ExecStart=/usr/bin/env bash --noprofile --norc scripts/orchestration/run_project_state_reporter.sh
 WorkingDirectory=%h/projects/learn-ukrainian
 
 [Install]

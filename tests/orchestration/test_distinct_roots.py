@@ -248,7 +248,9 @@ def test_systemd_exec_start_runs_with_the_configured_roots(tmp_path: Path, layou
     result = _systemd_exec_start(home)
     assert result.returncode == 0, result.stderr
     ran = json.loads(record.read_text(encoding="utf-8"))
-    reporter = home / "projects" / "learn-ukrainian" / "scripts" / "api" / "project_state_local.py"
+    # The relative ExecStart (machinery move, C-4755) starts bash in the physical WorkingDirectory: systemd
+    # sets no PWD, so the wrapper's REPO_ROOT is the resolved checkout, not the %h symlink.
+    reporter = REPO / "scripts" / "api" / "project_state_local.py"
     assert ran == {
         "argv": [str(reporter), "report"],
         "primary": str(layout["primary"]),
@@ -355,8 +357,7 @@ def test_unset_configuration_reexecs_with_this_interpreter(clean_env, monkeypatc
 def test_unset_configuration_keeps_todays_systemd_exec_start() -> None:
     unit = _unit_lines()
     assert unit["ExecStart"] == [
-        "/usr/bin/env bash --noprofile --norc %h/projects/learn-ukrainian/scripts/orchestration/"
-        "run_project_state_reporter.sh"
+        "/usr/bin/env bash --noprofile --norc scripts/orchestration/run_project_state_reporter.sh"
     ]
     assert unit["WorkingDirectory"] == ["%h/projects/learn-ukrainian"]
     assert unit["EnvironmentFile"] == ["-%h/.config/learn-ukrainian/machinery.env"]

@@ -72,7 +72,10 @@ def install_override(tooling, source=OVERRIDE):
 
 
 def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
-    policy = json.loads((ROOT / "scripts/opsec/blocking.json").read_text())
+    # The machinery package finds its own policy file, so this holds in either checkout layout.
+    from scripts.common.repo_root import machinery_path
+
+    policy = json.loads(machinery_path("opsec/blocking.json").read_text())
     rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
     rows = rules.setdefault(str(level), {"patterns": []})["patterns"]
     rows[:] = [row for row in rows if row["id"] != rule]
