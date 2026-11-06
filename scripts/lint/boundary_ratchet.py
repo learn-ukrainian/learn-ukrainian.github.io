@@ -63,6 +63,23 @@ def _machinery_top() -> str:
     return Path(os.path.abspath(__file__)).parents[1].name
 
 
+# The product scripts tree keeps this name after the machinery package moves.
+_PRODUCT_TREE = "scripts"
+
+
+def _trees() -> tuple[str, ...]:
+    """Checkout-relative trees the census reads: the machinery package, then the product tree.
+
+    In this checkout both are the same directory, so the tuple has one name.
+    """
+
+    return tuple(dict.fromkeys((_machinery_top(), _PRODUCT_TREE)))
+
+
+def _in_trees(parts: Sequence[str]) -> bool:
+    return bool(parts) and parts[0] in _trees()
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("boundary_baseline.json")
 CONFIG_PATH = machinery_path("config/package_boundary.yaml")
@@ -199,17 +216,17 @@ def load_config(path: Path) -> Classified:
     )
 
 
-def _scripts_dir(root: Path) -> Path:
-    return root / "scripts"
+def _tree_dirs(root: Path) -> list[Path]:
+    return [root / name for name in _trees() if (root / name).is_dir()]
 
 
 def _tracked_scripts(root: Path) -> set[str] | None:
-    """Git-tracked paths under ``scripts/``, or None when ``root`` is not a checkout."""
+    """Git-tracked paths under the census trees, or None when ``root`` is not a checkout."""
 
     if not (root / ".git").exists():
         return None
     result = subprocess.run(
-        ["git", "ls-files", "-z", "--", "scripts"],
+        ["git", "ls-files", "-z", "--", *_trees()],
         cwd=root,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SECONDS,
@@ -228,9 +245,9 @@ def _names_from_python_paths(paths: set[str]) -> tuple[set[str], set[str]]:
         path = Path(rel)
         if path.suffix != ".py" or not _SKIP_DIRS.isdisjoint(path.parts):
             continue
-        if len(path.parts) == 2 and path.parts[0] == "scripts":
+        if len(path.parts) == 2 and _in_trees(path.parts):
             modules.add(path.name)
-        elif len(path.parts) > 2 and path.parts[0] == "scripts":
+        elif len(path.parts) > 2 and _in_trees(path.parts):
             packages.add(path.parts[1])
     return packages, modules
 
@@ -238,12 +255,10 @@ def _names_from_python_paths(paths: set[str]) -> tuple[set[str], set[str]]:
 def _disk_python_names(root: Path) -> tuple[set[str], set[str]]:
     """Python packages and modules on disk. A directory with no Python file is absent."""
 
-    scripts = _scripts_dir(root)
     packages: set[str] = set()
     modules: set[str] = set()
-    if not scripts.is_dir():
-        return packages, modules
-    for child in scripts.iterdir():
+    children = [child for tree in _tree_dirs(root) for child in tree.iterdir()]
+    for child in children:
         if child.name.startswith(".") or child.name in _SKIP_DIRS:
             continue
         if child.is_file() and child.suffix == ".py":
@@ -259,12 +274,10 @@ def _disk_python_names(root: Path) -> tuple[set[str], set[str]]:
 def _tree_names(root: Path) -> tuple[set[str], set[str]]:
     """Directories and top-level modules that exist, including ones with no Python file."""
 
-    scripts = _scripts_dir(root)
     packages: set[str] = set()
     modules: set[str] = set()
-    if not scripts.is_dir():
-        return packages, modules
-    for child in scripts.iterdir():
+    children = [child for tree in _tree_dirs(root) for child in tree.iterdir()]
+    for child in children:
         if child.name.startswith(".") or child.name in _SKIP_DIRS:
             continue
         if child.is_dir():
@@ -316,7 +329,7 @@ def file_role(rel: str, config: Classified) -> str | None:
     if override:
         return override
     path = Path(rel)
-    if not path.parts or path.parts[0] != "scripts":
+    if not _in_trees(path.parts):
         return None
     return importer_role(Path(*path.parts[1:]), config)
 
@@ -338,9 +351,13 @@ def importer_role(rel: Path, config: Classified) -> str | None:
 
 
 def _python_files(root: Path, targets: Sequence[str] | None) -> list[Path]:
-    scripts = _scripts_dir(root)
     if targets is None:
-        return sorted(path for path in scripts.rglob("*.py") if _SKIP_DIRS.isdisjoint(path.parts) and path.is_file())
+        return sorted(
+            path
+            for tree in _tree_dirs(root)
+            for path in tree.rglob("*.py")
+            if _SKIP_DIRS.isdisjoint(path.parts) and path.is_file()
+        )
     files: list[Path] = []
     for target in targets:
         path = root / target
@@ -586,7 +603,9 @@ def _scope(targets: Sequence[str] | None) -> list[str] | None:
         return None
     selected: list[str] = []
     for target in targets:
-        bare_dir = Path(target).suffix == "" and (target == "scripts" or target.startswith("scripts/"))
+        bare_dir = Path(target).suffix == "" and any(
+            target == tree or target.startswith(f"{tree}/") for tree in _trees()
+        )
         if target.endswith(".py") or bare_dir:
             selected.append(target)
     return selected or None
@@ -696,7 +715,11 @@ def _collect_causes(sources: dict[str, bytes]) -> dict[tuple[str, str], list[tup
     causes: dict[tuple[str, str], list[tuple[str, int, bool]]] = defaultdict(list)
 
     def resolve(module: str) -> str | None:
-        return modules.get(module) or modules.get("scripts." + module)
+        # A short spelling resolves under the machinery package first, then the product tree.
+        found = modules.get(module)
+        for tree in _trees():
+            found = found or modules.get(f"{tree}.{module}")
+        return found
 
     def add(importer: str, target: str, kind: str, line: int, fallback: bool) -> None:
         causes[(importer, target)].append((kind, line, fallback))
@@ -877,7 +900,8 @@ def _pair(rows: Sequence[_Edge], src: str, dst: str, config: Classified) -> list
 
 
 def _scripts_module(edge: _Edge) -> bool:
-    return edge.module == "scripts"
+    # The bare root package of a census tree.
+    return edge.module in _trees()
 
 
 def _count_direct(rows: Sequence[_Edge]) -> int:
@@ -1055,12 +1079,15 @@ def _summarize(counts: Mapping[tuple[str, str], int]) -> str:
     return f"Wrote {total} machinery-to-product import sites ({detail})"
 
 
+_TREES_HELP = ", ".join(f"{tree}/" for tree in _trees())
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "paths",
         nargs="*",
-        help="Python files to check (default: scripts/). Other paths recheck scripts/.",
+        help=f"Python files to check (default: {_TREES_HELP}). Other paths recheck {_TREES_HELP}.",
     )
     parser.add_argument("--baseline", type=Path, default=BASELINE_PATH, help="Baseline JSON.")
     parser.add_argument(

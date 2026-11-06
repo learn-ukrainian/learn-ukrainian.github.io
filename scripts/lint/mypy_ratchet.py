@@ -42,15 +42,27 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-def _mp(relative: str) -> str:
+def _machinery_dir() -> str:
     # Unresolved package directory (design-v1 amendment 1). Never __package__.
-    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mp(relative: str) -> str:
+    return f"{_machinery_dir()}/{relative}"
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("mypy_baseline.json")
 SCHEMA = "mypy-ratchet-baseline.v1"
-DEFAULT_TARGET = "scripts"
+# The machinery package directory. A product checkout also has the product
+# scripts tree, which keeps this name after the machinery moves; in this
+# checkout the two are the same directory.
+DEFAULT_TARGET = _machinery_dir()
+_PRODUCT_TREE = "scripts"
+# Baseline messages spell machinery modules as they were censused, under this
+# package name. A machinery package that now has another directory name
+# compares through this spelling (see _canonical_modules).
+_CENSUS_PACKAGE = "scripts"
 MYPY_TIMEOUT_SECONDS = 600
 # python-ci-env installs the lock without these wheels. Skipping them makes a
 # laptop venv that has them report the same errors as CI.
@@ -326,10 +338,29 @@ def _sort_name_list(body: str) -> str:
     return inner
 
 
-def _normalize_message(message: str) -> str:
-    """Drop order that mypy does not keep stable and line references, and nothing else."""
+def _canonical_modules(message: str) -> str:
+    """Spell machinery module names under the census package name.
 
-    message = _LINE_REFERENCE.sub("", message)
+    mypy qualifies a module with the package directory it was imported from
+    (``Module "<package>.x" has no attribute ...``). The committed baseline was
+    censused where that directory was ``scripts``. A renamed machinery
+    directory names the same modules differently, so its dotted names are
+    rewritten to the census spelling before comparison. A product module
+    already uses that spelling. In this checkout the names are equal and the
+    message is unchanged.
+    """
+
+    package = _machinery_dir()
+    if package == _CENSUS_PACKAGE:
+        return message
+    pattern = rf"(?<![\w.]){re.escape(package)}(?=\.[A-Za-z_])"
+    return re.sub(pattern, _CENSUS_PACKAGE, message)
+
+
+def _normalize_message(message: str) -> str:
+    """Drop order that mypy does not keep stable, line references, and the machinery directory name."""
+
+    message = _canonical_modules(_LINE_REFERENCE.sub("", message))
     slots: list[str] = []
 
     def protect(match: re.Match[str]) -> str:
@@ -690,35 +721,49 @@ def evaluate(
 
     selected = _normalize_targets(root, targets)
     py_targets = [target for target in selected if target.endswith(".py") or (root / target).is_dir()]
-    # A baseline-only path (no Python) rechecks the whole scripts tree.
-    scoped = py_targets or [DEFAULT_TARGET]
+    # A baseline-only path (no Python) rechecks the whole tree.
+    defaults = default_targets(root)
+    scoped = py_targets or defaults
     current, fatal = collect_errors(
         root, scoped, config_file=config_file, incremental=incremental
     )
     if fatal:
         return fatal
     entries = load_entries(baseline)
-    # A file list compares only those files. The full scripts/ census also
-    # rejects a baseline entry that names something outside scripts/.
+    # A file list compares only those files. The full census also rejects a
+    # baseline entry that names something outside the default trees.
     relevant = [entry for entry in entries if _in_scope(entry.path, scoped)]
     violations: list[str] = []
-    if DEFAULT_TARGET in scoped:
+    if all(target in scoped for target in defaults):
         violations.extend(
             f"{entry.path}: stale baseline {entry.code}: {entry.message}"
             for entry in entries
-            if not _in_scope(entry.path, (DEFAULT_TARGET,))
+            if not _in_scope(entry.path, defaults)
         )
     violations.extend(compare(current, relevant))
     violations.extend(shrink_violations(root, baseline, entries))
     return violations
 
 
+def _default_names() -> list[str]:
+    return list(dict.fromkeys((DEFAULT_TARGET, _PRODUCT_TREE)))
+
+
+def default_targets(root: Path) -> list[str]:
+    """The machinery package directory, plus the product scripts tree when ``root`` has it."""
+
+    return [name for name in _default_names() if name == DEFAULT_TARGET or (root / name).is_dir()]
+
+
 def _python_targets(paths: Sequence[str], root: Path) -> list[str]:
     if not paths:
-        return [DEFAULT_TARGET]
+        return default_targets(root)
     selected = _normalize_targets(root, paths)
     python = [target for target in selected if target.endswith(".py")]
-    return python or [DEFAULT_TARGET]
+    return python or default_targets(root)
+
+
+_DEFAULT_HELP = ", ".join(f"{name}/" for name in _default_names())
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -729,7 +774,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "paths",
         nargs="*",
-        help="Python files to check (default: scripts/). Other paths recheck scripts/.",
+        help=f"Python files to check (default: {_DEFAULT_HELP}). Other paths recheck {_DEFAULT_HELP}.",
     )
     parser.add_argument(
         "--baseline",
@@ -757,7 +802,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     root = args.root.resolve()
     baseline = args.baseline if args.baseline.is_absolute() else root / args.baseline
     try:
-        targets = [DEFAULT_TARGET] if args.write_baseline else _python_targets(args.paths, root)
+        targets = default_targets(root) if args.write_baseline else _python_targets(args.paths, root)
         if args.write_baseline:
             current, fatal = collect_errors(
                 root, targets, incremental=not args.no_incremental

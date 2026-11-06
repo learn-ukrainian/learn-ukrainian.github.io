@@ -2501,7 +2501,9 @@ def scan_shell(source: str, path: str) -> list[Finding]:
     return sorted(set(findings))
 
 
-SCAN_DIRECTORIES = ("scripts", "tests")
+# The machinery package directory, the product scripts tree and tests; in this
+# checkout the first two are one directory.
+SCAN_DIRECTORIES = tuple(dict.fromkeys((_machinery_top(), "scripts", "tests")))
 SCAN_SUFFIXES = {".py", ".sh", ".bash"}
 
 

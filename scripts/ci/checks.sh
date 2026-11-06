@@ -22,7 +22,13 @@ check() {
 }
 
 # Lint only; `ruff format --check` is not a gate (~2,050 files differ).
-check "Ruff" .venv/bin/python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
+# The machinery package directory is named from this file's unresolved location
+# (design-v1 amendment 1). In this checkout it is scripts/ itself and adds no
+# path; a renamed machinery package is linted beside the product scripts/ tree.
+machinery_dir="$(basename -- "$(dirname -- "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -L)")")"
+machinery_ruff=()
+[ "$machinery_dir" = scripts ] || machinery_ruff=("$machinery_dir/")
+check "Ruff" .venv/bin/python -m ruff check "${machinery_ruff[@]}" scripts/ tests/ agents_extensions/ dashboards/
 
 # Cryptographic curriculum manifest canary: runs before any generator to inspect untouched tree
 check "Curriculum manifest canary" .venv/bin/python scripts/audit/curriculum_manifest_canary.py --check
