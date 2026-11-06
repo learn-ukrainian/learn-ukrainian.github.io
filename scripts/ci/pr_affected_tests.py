@@ -137,7 +137,8 @@ def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
     repository-relative path, or the dotted module name of a changed Python module,
     is a dependency on that file. Literals come from the parsed source, so comments
     never count; a bare string statement, such as a docstring, is prose and never
-    counts; a literal that only contains a name does not match. A package
+    counts; a literal that only contains a name does not match, nor does a piece of
+    an f-string, which is part of a longer computed string. A package
     ``__init__.py`` matches by path only: a package name such as ``scripts`` is
     also an everyday path segment.
 
@@ -160,7 +161,8 @@ def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
         except (SyntaxError, ValueError):
             continue
         nodes = list(ast.walk(tree))
-        prose = {id(node.value) for node in nodes if isinstance(node, ast.Expr)}
+        prose = {id(node.value) for node in nodes if isinstance(node, ast.Expr)} | {
+            id(part) for node in nodes if isinstance(node, ast.JoinedStr) for part in node.values}
         if any(isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names
                and id(node) not in prose for node in nodes):
             found.add(path)

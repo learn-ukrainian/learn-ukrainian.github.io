@@ -69,8 +69,8 @@ Some tests read a changed file as text through a computed path (for example a pa
 list of paths that the test parses), which the import scan cannot follow. A test file whose
 parsed source holds a string literal equal to a changed file's repository-relative path, or
 to the dotted module name of a changed Python module that is not a package `__init__.py`, is
-a text reader of that file (#12789). The whole literal must match; comments, docstrings and
-other bare string statements never count, and `conftest.py` files are not scanned. Text
+a text reader of that file (#12789). The whole literal must match; comments, docstrings,
+other bare string statements and f-string pieces never count, and `conftest.py` files are not scanned. Text
 readers fill their own 60-second room after every other selection, cheapest recorded duration
 first, so they never displace a test that would run without them; the rest defer, are listed in
 `text_reading_test_files` and `deferred_files`, and run in merge-group pytest. When text readers
