@@ -22,9 +22,10 @@ from scripts.orchestration import fleet_repos
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.publish.github import read
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 ROOT = Path(__file__).resolve().parents[2]

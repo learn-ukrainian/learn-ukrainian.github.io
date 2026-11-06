@@ -53,10 +53,7 @@ except ModuleNotFoundError as exc:
         raise
     from scripts.secret_redactor import redact_text, redact_value
 
-try:
-    from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
-except ImportError:  # pragma: no cover - package import path
-    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+from learn_ukrainian_v4_runtime.agent_identity import RETIRED_AGENT_ALIASES
 
 try:
     from scripts.common.repo_root import main_checkout_root

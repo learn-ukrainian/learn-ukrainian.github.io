@@ -52,7 +52,6 @@ from typing import Any
 
 from scripts.opsec.prepublish import check_texts, normalize_repository, publication_boundary, publication_cli
 from scripts.review import record_cf_verdict as recorder
-from scripts.review.budget_grant import ISSUERS
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.verdict_parser import MISSING_CAPABILITIES_FIELD, REVIEW_CAPABILITIES, recognized_verdicts
 
@@ -63,7 +62,7 @@ CAPABILITIES = REVIEW_CAPABILITIES
 # The structured reply's own declaration of what it lacked, beside the canonical findings fields.
 DECLARATION_FIELD = MISSING_CAPABILITIES_FIELD
 # Only the CTO seat records a classification.
-AUTHORITIES = ISSUERS
+AUTHORITIES = frozenset({"claude-cto"})
 _EVENT = re.compile(
     r"<!-- review-capability-failure v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>\S+) "
     r"started=(?P<started>\S+) run=(?P<run>[0-9A-Za-z._-]+) result_sha256=(?P<result_sha256>[0-9a-f]{64}) "

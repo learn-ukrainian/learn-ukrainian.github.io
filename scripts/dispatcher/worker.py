@@ -579,7 +579,6 @@ def load_post_start_code(bound_review: bool = False) -> None:
         from scripts.utils import claude_version  # noqa: F401
     with contextlib.suppress(Exception):
         from scripts.review import (  # noqa: F401
-            budget_grant,
             capacity,
             isolation,
             record_cf_verdict,

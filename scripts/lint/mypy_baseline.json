@@ -54,11 +54,6 @@
     },
     {
       "path": "scripts/agent_runtime/acpx_discuss.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\""
-    },
-    {
-      "path": "scripts/agent_runtime/acpx_discuss.py",
       "code": "misc",
       "message": "Generator has incompatible item type \"int | str\"; expected \"bool\""
     },
@@ -583,11 +578,6 @@
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
     },
     {
-      "path": "scripts/agent_runtime/result.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\""
-    },
-    {
       "path": "scripts/agent_runtime/review_mcp.py",
       "code": "arg-type",
       "message": "Argument \"cwd\" has incompatible type \"Path | str\"; expected \"Path\""
@@ -641,21 +631,6 @@
       "path": "scripts/agent_runtime/runner.py",
       "code": "attr-defined",
       "message": "\"BaseException\" has no attribute \"model_identity\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"apply_mcp_capability_to_tool_config\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"inject_sources_capability\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"transported_prompt_bytes\""
     },
     {
       "path": "scripts/agent_runtime/runner.py",
@@ -791,11 +766,6 @@
       "path": "scripts/agent_runtime/trail_isolation.py",
       "code": "arg-type",
       "message": "Argument 1 to \"set\" has incompatible type \"Any | None\"; expected \"Iterable[Any]\""
-    },
-    {
-      "path": "scripts/agent_runtime/usage.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\""
     },
     {
       "path": "scripts/agent_runtime/usage.py",
@@ -1799,16 +1769,6 @@
     },
     {
       "path": "scripts/api/lane_health.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/api/lane_health.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
-    },
-    {
-      "path": "scripts/api/lane_health.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
     },
@@ -2396,16 +2356,6 @@
       "path": "scripts/api/state_router.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"float\", target has type \"None | dict[str, Any] | dict[str, None | bool | str] | str\")"
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
     },
     {
       "path": "scripts/api/state_router.py",
@@ -10375,11 +10325,6 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "call-overload",
-      "message": "No overload variant of \"__getitem__\" of \"list\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "call-overload",
       "message": "No overload variant of \"next\" matches argument type \"list[bytes]\""
     },
     {
@@ -10390,27 +10335,7 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "index",
-      "message": "Invalid index type \"str\" for \"str\"; expected type \"SupportsIndex | slice[None | SupportsIndex, None | SupportsIndex, None | SupportsIndex]\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
       "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
-      "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for < (\"str\" and \"None\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for > (\"list[Any]\" and \"str\")"
     },
     {
       "path": "scripts/ci/pr_size_warning.py",
@@ -29126,86 +29051,6 @@
       "path": "scripts/research/research_quality.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"empty\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument \"model_id\" to \"load_sealed_result\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_withheld_reply\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"finding_entries\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"finding_entries\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"fromisoformat\" of \"date\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"fromisoformat\" of \"date\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"recognized_verdicts\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"findall\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"search\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | bool\", variable has type \"bool\")"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"list[tuple[None | str, str]]\", variable has type \"None | list[tuple[str, str]]\")"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "index",
-      "message": "Value of type \"None | tuple[bool, dict[str, list[None | str]]]\" is not indexable"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "index",
-      "message": "Value of type \"None | tuple[dict[str, Any], tuple[Any, ...]]\" is not indexable"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "misc",
-      "message": "Generator has incompatible item type \"int\"; expected \"bool\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[tuple[str, str]]\" has no attribute \"__iter__\" (not iterable)"
     },
     {
       "path": "scripts/review/capability_failure.py",

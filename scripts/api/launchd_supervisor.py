@@ -55,16 +55,22 @@ GIT_REV_PARSE_TIMEOUT_SECONDS: float = 15.0
 
 def _package_top() -> str:
     """Unresolved name of this file's top package directory."""
-    return Path(__file__).parents[1].name
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+# Checkout-relative directory of this package, from the unresolved file
+# location. Never __package__: a short import spelling would name the wrong tree.
+_HERE = Path(os.path.abspath(__file__))
+_PACKAGE_DIR = f"{_HERE.parents[1].name}/{_HERE.parent.name}"
 
 
 def _self_module() -> str:
-    here = Path(__file__)
+    here = Path(os.path.abspath(__file__))
     return f"{here.parents[1].name}.{here.parent.name}.{here.stem}"
 
 
 def _api_app() -> str:
-    return f"{_package_top()}.{Path(__file__).parent.name}.main:app"
+    return f"{_package_top()}.{Path(os.path.abspath(__file__)).parent.name}.main:app"
 
 
 class LaunchdError(RuntimeError):
@@ -87,8 +93,8 @@ def plist_path(home: Path) -> Path:
 
 
 def wrapper_path(repo_root: Path) -> Path:
-    """Return the stable bash wrapper launchd executes."""
-    return repo_root / "scripts" / "api" / WRAPPER_NAME
+    """Return the stable bash wrapper launchd executes, inside ``repo_root``."""
+    return repo_root / _PACKAGE_DIR / WRAPPER_NAME
 
 
 def _pid_dir(repo_root: Path) -> Path:

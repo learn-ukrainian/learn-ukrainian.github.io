@@ -212,7 +212,7 @@ Related:
         help="List every epic from issue_streams.yaml (manifest authority; no hard-coded subset).",
         description=(
             "Print sorted unique epic numbers and the stream→epic map derived from "
-            "scripts/config/issue_streams.yaml. Optional --register writes inventory and "
+            f"{DEFAULT_STREAMS_YAML.as_posix()}. Optional --register writes inventory and "
             "import receipts into the session-stream DB at mode=inventory without cutover."
         ),
     )
