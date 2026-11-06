@@ -47,9 +47,9 @@ from scripts.storage import topology as storage_topology
 
 
 def _machinery_top() -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return top or Path(__file__).parents[1].name
+    # Name the package from the unresolved file location, never from __package__
+    # (design-v1 amendment 1): a copy loaded without a package must name the same tree.
+    return Path(os.path.abspath(__file__)).parents[1].name
 
 
 def _mod(*parts: str) -> str:
