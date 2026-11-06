@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -58,9 +59,8 @@ from scripts.common.repo_root import machinery_path
 
 
 def _machinery_top() -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return top or Path(__file__).parents[1].name
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
