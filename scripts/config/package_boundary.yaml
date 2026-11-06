@@ -433,9 +433,6 @@ modules:
   path_safety.py:
     reason: Path checks for user-provided values; no learner or fleet policy.
     role: shared
-  paths.py:
-    reason: Repo and scripts directory constants every script may import.
-    role: shared
   pipeline.py:
     reason: Shim for scripts/build, which is product.
     role: product
