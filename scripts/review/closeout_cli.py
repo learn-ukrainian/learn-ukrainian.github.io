@@ -907,8 +907,9 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     return 0
 
 
-# The machinery package's directory name, which its files' checkout paths start with: from this module's unresolved location, so a symlinked package keeps its checkout name
-# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+# The machinery package's directory name, which its files' checkout paths start with, from this module's
+# unresolved location: a symlinked package keeps its checkout name, and a short import spelling
+# (the package directory on ``sys.path``) cannot shorten it.
 _MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 

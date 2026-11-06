@@ -25,8 +25,9 @@ from typing import Any, Literal
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-# The machinery package's directory name, which its files' checkout paths start with: from this module's unresolved location, so a symlinked package keeps its checkout name
-# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+# The machinery package's directory name, which its files' checkout paths start with, from this module's
+# unresolved location: a symlinked package keeps its checkout name, and a short import spelling
+# (the package directory on ``sys.path``) cannot shorten it.
 _MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 # This recorder's checkout-relative path.
 RECORDER_PATH = f"{_MACHINERY}/review/record_cf_verdict.py"
