@@ -25,6 +25,8 @@ import uuid
 from importlib.util import source_from_cache
 from pathlib import Path
 
+# The machinery package name, from this file's unresolved location (design-v1 amendment 1).
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 BACKUP_DIRECTORY = "retired-skills"
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
 
@@ -249,9 +251,9 @@ def main() -> int:
             "Use during agent deployment; never use this to delete custom skills or backups."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/agent_deploy/retire_codex_skills.py verify --target-root . --source-root .
-  .venv/bin/python scripts/agent_deploy/retire_codex_skills.py apply --target-root "$PROJECT" --source-root "$CANONICAL"
+        epilog=f"""Examples:
+  .venv/bin/python {_MACHINERY}/agent_deploy/retire_codex_skills.py verify --target-root . --source-root .
+  .venv/bin/python {_MACHINERY}/agent_deploy/retire_codex_skills.py apply --target-root "$PROJECT" --source-root "$CANONICAL"
 Outputs: apply atomically moves <target>/.codex/skills into
   <target>/.codex/retired-skills/<id>/skills. Each legacy file must match a tracked
   file, or a regular-file blob in the Git history, at the same path under
@@ -260,7 +262,7 @@ Outputs: apply atomically moves <target>/.codex/skills into
   opaque runtime artifacts; their bytes are never executed or authenticated.
   No backup files are deleted. Verify does not move files.
 Exit codes: 0 = absent or accepted mirror; 1 = preserve and reconcile an error.
-Related: scripts/deploy_prompts.sh; agents_extensions/README.md; issue #7964.
+Related: {_MACHINERY}/deploy_prompts.sh; agents_extensions/README.md; issue #7964.
 """,
     )
     parser.add_argument("mode", choices=("verify", "apply"), help="verify only, or apply retained capture (required)")
