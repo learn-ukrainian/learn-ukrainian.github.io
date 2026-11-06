@@ -8,11 +8,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+from tests.helpers import machinery_package
+
 
 def launcher_library_files(repo: Path) -> tuple[Path, ...]:
     """Include every tracked library, including future additions and package data."""
     tracked = subprocess.run(
-        ["git", "ls-files", "-z", "--", "scripts/lib"],
+        ["git", "ls-files", "-z", "--", f"{machinery_package()}/lib"],
         cwd=repo,
         capture_output=True,
         text=True,
@@ -27,6 +29,7 @@ import contextlib, importlib.util, io, json, os, runpy, sys
 from pathlib import Path
 
 root = Path(sys.argv[1]).resolve()
+package = sys.argv[2]
 opened = set()
 
 def record(event, args):
@@ -37,7 +40,7 @@ def record(event, args):
         opened.add(path)
 
 sys.addaudithook(record)
-script = root / "scripts/review/model_catalog.py"
+script = root / package / "review" / "model_catalog.py"
 for arguments in (
     ["--check-retired-model", "gpt-6.1-sol"],
     ["--resolve-kimi-model", "k3"],
@@ -58,9 +61,9 @@ for arguments in (
                 raise
 # The launcher now executes the shared credential policy rather than only
 # printing intermediate drop names. Include that real import closure too.
-if (root / "scripts/agent_runtime/env_sanitize.py").is_file():
-    sys.path[:0] = [str(root), str(root / "scripts")]
-    from agent_runtime.env_sanitize import child_credential_env
+if (root / package / "agent_runtime" / "env_sanitize.py").is_file():
+    sys.path[:0] = [str(root), str(root / package)]
+    child_credential_env = importlib.import_module("agent_runtime.env_sanitize").child_credential_env
     child_credential_env({"HOME": "synthetic-stored-login"}, "kimi")
 sources = set()
 for raw in opened:
@@ -81,7 +84,7 @@ def launcher_catalog_files(repo: Path) -> tuple[Path, ...]:
     Only tracked files are staged; opened Git metadata and local state stay out.
     """
     probe = subprocess.run(
-        [sys.executable, "-I", "-c", _CATALOG_IMPORT_PROBE, str(repo.resolve())],
+        [sys.executable, "-I", "-c", _CATALOG_IMPORT_PROBE, str(repo.resolve()), machinery_package()],
         cwd=repo,
         capture_output=True,
         text=True,

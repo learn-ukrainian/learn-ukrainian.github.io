@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import worktree_claims
+from tests.helpers import machinery_package
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -317,17 +318,25 @@ def test_dispatcher_record_proof_refuses_a_borrowed_or_unproven_checkout(tmp_pat
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("provider", [{"provider_pgid": os.getpgrp()}, {"provider_pgid": ...}])
+@pytest.mark.parametrize("provider", ["live", "unrecorded"])
 def test_dispatcher_record_removal_waits_for_the_provider_tree_to_end(tmp_path, capsys, provider):
     """Live provider processes, or none recorded either way, keep the checkout (#11865 F1)."""
     primary = _primary(tmp_path)
     worktree = _linked(primary, "claude/impl-7")
-    record = {**_DISPATCHER_RECORD, **provider}
-    if provider["provider_pgid"] is ...:
-        del record["provider_pgid"]
-    _record(primary, "impl-7", status="timeout", run_nonce="owner-run-7", worktree_path=str(worktree), **record)
-
-    code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-7")
+    record = dict(_DISPATCHER_RECORD)
+    del record["provider_pgid"]
+    live = None
+    if provider == "live":
+        # A provider group of its own: the test's own group id need not be signalable (a PID namespace).
+        live = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], start_new_session=True)
+        record["provider_pgid"] = os.getpgid(live.pid)
+    try:
+        _record(primary, "impl-7", status="timeout", run_nonce="owner-run-7", worktree_path=str(worktree), **record)
+        code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-7")
+    finally:
+        if live is not None:
+            live.terminate()
+            live.wait(timeout=10)
 
     assert code == worktree_claims.EXIT_REFUSED
     assert "provider processes are live or unknown" in err
@@ -540,10 +549,10 @@ def test_module_help_documents_exit_codes():
 
 
 def _wt_sh_fixture(tmp_path: Path) -> tuple[Path, Path]:
-    """A primary carrying scripts/wt.sh and a shim for its project interpreter."""
+    """A primary carrying the machinery wt.sh and a shim for its project interpreter."""
     primary = _primary(tmp_path)
-    (primary / "scripts").mkdir()
-    shutil.copy2(PROJECT_ROOT / "scripts" / "wt.sh", primary / "scripts" / "wt.sh")
+    (primary / machinery_package()).mkdir()
+    shutil.copy2(PROJECT_ROOT / machinery_package() / "wt.sh", primary / machinery_package() / "wt.sh")
     python = primary / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
     python.write_text(f'#!/bin/sh\nPYTHONPATH="{PROJECT_ROOT}" exec "{sys.executable}" "$@"\n', encoding="utf-8")
@@ -554,7 +563,7 @@ def _wt_sh_fixture(tmp_path: Path) -> tuple[Path, Path]:
 
 def _wt_clean(primary: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ["bash", str(primary / "scripts" / "wt.sh"), "clean", "817"],
+        ["bash", str(primary / machinery_package() / "wt.sh"), "clean", "817"],
         cwd=primary,
         capture_output=True,
         text=True,
@@ -585,9 +594,9 @@ def test_wt_sh_create_from_linked_worktree_targets_primary_sibling(tmp_path):
     python.parent.mkdir(parents=True)
     python.write_text(f'#!/bin/sh\nPYTHONPATH="{PROJECT_ROOT}" exec "{sys.executable}" "$@"\n', encoding="utf-8")
     python.chmod(0o755)
-    linked_script = worktree / "scripts" / "wt.sh"
+    linked_script = worktree / machinery_package() / "wt.sh"
     linked_script.parent.mkdir()
-    shutil.copy2(PROJECT_ROOT / "scripts" / "wt.sh", linked_script)
+    shutil.copy2(PROJECT_ROOT / machinery_package() / "wt.sh", linked_script)
 
     proc = subprocess.run(
         ["bash", str(linked_script), "create", "818", "linked invocation"],
@@ -654,12 +663,35 @@ def test_namespace_owner_exemption_does_not_release_unknown_worker(tmp_path):
     ) == "worktree claimed by active task worker"
 
 
+# The kernel's initial PID namespace (fixed inode PROC_PID_INIT_INO), read from /proc, never configured.
+_INITIAL_PID_NAMESPACE = f"pid:[{0xEFFFFFFC}]"
+
+
+def _in_initial_pid_namespace() -> bool:
+    return os.readlink("/proc/self/ns/pid") == _INITIAL_PID_NAMESPACE
+
+
 def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
     process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     try:
-        record = {"pid": process.pid, "status": "done"}
-        assert worktree_claims._worker_blocks_release(record) is True
-        assert worktree_claims._worker_blocks_release({"pid": os.getpid(), "status": "done"}) is False
+        # Identity records, the shape the dispatcher writes (#10651), decide in any PID namespace:
+        # another live worker keeps its terminal claim, the finishing worker itself may release it.
+        other = {"pid": process.pid, "status": "done", "worker_identity": capture_worker_identity(process.pid)}
+        own = {
+            "pid": os.getpid(),
+            "status": "done",
+            "worker_identity": capture_worker_identity(os.getpid(), self_process=True),
+        }
+        assert worktree_claims._worker_blocks_release(other) is True
+        assert worktree_claims._worker_blocks_release(own) is False
+        # Legacy pid-only records: another live worker always keeps the claim. Only a reader in the
+        # initial PID namespace proves the finishing worker by signal 0; in a nested namespace its
+        # liveness is unknown, which blocks the release (dead_worker_state.worker_liveness).
+        assert worktree_claims._worker_blocks_release({"pid": process.pid, "status": "done"}) is True
+        legacy_own = worktree_claims._worker_blocks_release({"pid": os.getpid(), "status": "done"})
+        assert legacy_own is (not _in_initial_pid_namespace())
     finally:
         process.terminate()
         process.wait(timeout=10)

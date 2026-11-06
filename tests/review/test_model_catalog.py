@@ -22,6 +22,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     require_execution_model,
 )
+from tests.helpers import machinery_package
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
@@ -1088,11 +1089,32 @@ def without_advisory_roles(catalog):
     return catalog
 
 
+def approved_dispatcher_spelling(value):
+    """``value`` with the dispatcher path spelled as the frozen fixtures and approvals spell it.
+
+    They name ``scripts/dispatch.py``; the machinery-move rename rewrites that path to the package's
+    new directory. Only the exact dispatcher path, alone or after the project interpreter, is mapped,
+    so every other byte still has to match.
+    """
+    package = machinery_package()
+    if isinstance(value, dict):
+        return {key: approved_dispatcher_spelling(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [approved_dispatcher_spelling(item) for item in value]
+    if isinstance(value, str):
+        if value == f"{package}/dispatch.py":
+            return "scripts/dispatch.py"
+        moved = f".venv/bin/python {package}/dispatch.py "
+        if value.startswith(moved):
+            return ".venv/bin/python scripts/dispatch.py " + value[len(moved):]
+    return value
+
+
 def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
     for surface in surfaces:
-        value = deepcopy(actual[surface])
+        value = approved_dispatcher_spelling(deepcopy(actual[surface]))
         if surface == "catalog":
             # Assert the entire operator-approved exception before comparing every other field.
             if "red_team_only" in value["models"]["gpt-6-astra"]:

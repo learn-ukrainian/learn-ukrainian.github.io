@@ -32,7 +32,8 @@ from pathlib import Path
 import pytest
 
 from scripts.lib import rules_core
-from tests.rules_core_view import absent_checkout, checkout_view
+from tests.helpers import machinery_package
+from tests.rules_core_view import CORE_FILES, absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -48,11 +49,34 @@ CHECKOUT_CORE_DIR = rules_core.core_dir
 OLD_OVERRIDE_ENV = "LU_RULES_CORE_DIR"
 
 
+_FIXTURE_RULES = pytest.StashKey[Path]()
+
+
+def _rules_dir_with_fixture_core(request: pytest.FixtureRequest) -> Path:
+    """This checkout's rules directory with the fixture core files in place of the core, built once.
+
+    The fixture stands in for the core only, as in ``checkout_view``: every other rules source
+    (``/api/rules`` full and task scopes) is still the checkout's own.
+    """
+    stash = request.config.stash
+    if _FIXTURE_RULES not in stash:
+        rules = request.getfixturevalue("tmp_path_factory").mktemp("rules-fixture-core")
+        if REAL_CORE_DIR.is_dir():
+            for entry in REAL_CORE_DIR.iterdir():
+                if entry.name not in CORE_FILES:
+                    (rules / entry.name).symlink_to(entry)
+        for name in CORE_FILES:
+            (rules / name).symlink_to(FIXTURE_CORE_DIR / name)
+        stash[_FIXTURE_RULES] = rules
+    return stash[_FIXTURE_RULES]
+
+
 @pytest.fixture(autouse=True)
-def _core_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    """In-process code reads CORE_DIR (the fixture stands in for a checkout without the core)."""
+def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+    """In-process code reads the CORE_DIR core (the fixture stands in for a checkout without the core)."""
     if CORE_DIR != REAL_CORE_DIR:
-        monkeypatch.setattr(rules_core, "core_dir", lambda root=None: CORE_DIR)
+        rules = _rules_dir_with_fixture_core(request)
+        monkeypatch.setattr(rules_core, "core_dir", lambda root=None: rules)
 
 
 @pytest.fixture(scope="module")
@@ -192,7 +216,7 @@ def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp
     text = rules_core.core_text("content", core_root)
     assert "HOSTILE" not in text
     assert text.startswith((CORE_DIR / "core.md").read_text(encoding="utf-8").rstrip())
-    script = REPO / "scripts" / "lib" / "rules_core.py"
+    script = REPO / machinery_package() / "lib" / "rules_core.py"
     cli = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "text"],
         capture_output=True,
@@ -215,7 +239,7 @@ def test_toml_and_kimi_forms_round_trip() -> None:
 
 
 def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_root: Path) -> None:
-    script = core_root / "scripts" / "lib" / "rules_core.py"
+    script = core_root / machinery_package() / "lib" / "rules_core.py"
     ok = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "json"],
         capture_output=True,
@@ -228,7 +252,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
     assert (payload["first_anchor"], payload["last_anchor"]) == _anchors("core")
     absent = absent_root
     missing = subprocess.run(
-        [sys.executable, os.fspath(absent / "scripts" / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
+        [sys.executable, os.fspath(absent / machinery_package() / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
         capture_output=True,
         text=True,
         check=False,
