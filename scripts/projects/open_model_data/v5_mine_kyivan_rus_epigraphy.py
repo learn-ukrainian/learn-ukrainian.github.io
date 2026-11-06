@@ -1071,7 +1071,7 @@ def main() -> None:
         description="Kyivan Rus epigraphy mining. Regeneration is deferred to P3b (#8809).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py --help\n"
             "Outputs: none; generation refuses before writing.\n"
             "Exit codes: 0 for help, nonzero for deferred generation.\n"
