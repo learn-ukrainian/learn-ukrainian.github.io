@@ -24,6 +24,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from tests.helpers import machinery_module, machinery_package
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -36,7 +38,7 @@ def copy_launcher_sources(root: Path) -> None:
     """
     root.mkdir(parents=True, exist_ok=True)
     tracked = subprocess.run(
-        ["git", "ls-files", "-z", "--", "start-*.sh", "package.json", "scripts",
+        ["git", "ls-files", "-z", "--", "start-*.sh", "package.json", machinery_package(),
          "agents_extensions", "gemini_extensions", ".gemini/config.yaml",
          "docs/l2-uk-en", "docs/prompts/orchestrators", "curriculum/l2-uk-en/curriculum.yaml"],
         cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
@@ -60,9 +62,9 @@ def copy_launcher_sources(root: Path) -> None:
 
 
 def tracked_launcher_wrappers() -> tuple[str, ...]:
-    """Every tracked public wrapper: ``start-*.sh`` at the root and in ``scripts/``."""
+    """Every tracked public wrapper: ``start-*.sh`` at the root and in the machinery package."""
     listed = subprocess.run(
-        ["git", "ls-files", "-z", "--", "start-*.sh", "scripts/start-*.sh"],
+        ["git", "ls-files", "-z", "--", "start-*.sh", f"{machinery_package()}/start-*.sh"],
         cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
     )
     return tuple(sorted(raw for raw in listed.stdout.split("\0") if raw))
@@ -118,7 +120,7 @@ def _record(event, args):
         opened.add(path)
 
 sys.addaudithook(_record)
-from scripts.orchestration import handoff_slot_registry
+handoff_slot_registry = importlib.import_module(sys.argv[1])
 
 codes = [
     handoff_slot_registry.main(["--slot", "claude-devops"]),
@@ -136,7 +138,7 @@ print(json.dumps(sorted(paths)))
 def slot_registry_sources() -> tuple[Path, ...]:
     """Repo-relative tracked files the launcher's handoff-slot gate needs."""
     probe = subprocess.run(
-        [sys.executable, "-c", _PROBE],
+        [sys.executable, "-c", _PROBE, machinery_module("orchestration.handoff_slot_registry")],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,

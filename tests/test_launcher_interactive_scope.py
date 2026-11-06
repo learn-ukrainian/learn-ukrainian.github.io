@@ -28,6 +28,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers import machinery_package
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry, tracked_launcher_wrappers
 from tests.test_launcher_driver_scope import default_hup as default_hup
@@ -43,6 +44,8 @@ from tests.wait_helpers import wait_until
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 REPO = Path(__file__).resolve().parents[1]
+# The machinery package directory: the rename moves it, so paths are built from it, not spelled.
+MACHINERY = machinery_package()
 UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 PROVIDER_RC = 42
 # A well-formed unit token for forged and parent scopes.
@@ -101,7 +104,7 @@ INTERACTIVE = {
     "start-grok.sh": ("grok", "grok"),
     "start-glm.sh": ("glm", "glm"),
     "start-glmcc.sh": ("glm", "glmcc"),
-    "scripts/start-bio-driver.sh": ("claude", "bio"),
+    f"{MACHINERY}/start-bio-driver.sh": ("claude", "bio"),
 }
 DRIVERS = {
     "start-claude-driver.sh": ("claude", "devops"),
@@ -111,7 +114,7 @@ DRIVERS = {
     "start-grok-driver.sh": ("grok", "devops"),
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
-    "scripts/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
+    f"{MACHINERY}/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
 }
 _EVENT = """lu_test_event() {
   local line cg=""
@@ -173,7 +176,7 @@ done
 _PYTHON = """#!/usr/bin/env bash
 {event}
 case "${{1:-}}:${{2:-}}" in
-  -m:scripts.session_supervisor)
+  -m:{package}.session_supervisor)
     lu_test_event "lease-${{3:-}}"
     if [ "${{3:-}}" = open ]; then
       cat <<'JSON'
@@ -182,9 +185,9 @@ JSON
     fi
     exit 0
     ;;
-  -m:scripts.fleet_comms) lu_test_event publish; exit 0 ;;
+  -m:{package}.fleet_comms) lu_test_event publish; exit 0 ;;
 esac
-case "${{1:-}}" in */scripts/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
+case "${{1:-}}" in */{package}/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
 exec {python} "$@"
 """
 # A job-control shell for one foreground job, as a login shell runs a launcher:
@@ -268,8 +271,8 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     root = tmp_path / "repo"
     for relative in (
         *tracked_launcher_wrappers(),
-        "scripts/config/issue_streams.yaml",
-        "scripts/config/launcher_stream_aliases.tsv",
+        f"{MACHINERY}/config/issue_streams.yaml",
+        f"{MACHINERY}/config/launcher_stream_aliases.tsv",
         *launcher_library_files(REPO),
         *launcher_catalog_files(REPO),
     ):
@@ -282,7 +285,7 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
 
     from scripts.review.model_catalog import validate_catalog
 
-    catalog_path = root / "scripts/config/model_catalog.yaml"
+    catalog_path = root / MACHINERY / "config/model_catalog.yaml"
     catalog = yaml.safe_load(catalog_path.read_text())
     for identity in ("glm-5.3", "glm-5.3-flash"):
         catalog["models"][identity]["lifecycle"] = "active"
@@ -293,22 +296,22 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     # The real helper with only its kernel cgroup read redirected.
     env = scope_sandbox(root, tmp_path)
     _write(
-        root / "scripts/lib/rules_core.sh",
+        root / MACHINERY / "lib/rules_core.sh",
         _EVENT
         + 'rules_core_load() { lu_test_event rules; LC_RULES_CORE=""; LC_RULES_SEAT=core; LC_RULES_CORE_BYTES=0; }\n'
         + "rules_core_prefix() { printf '%s' \"$1\"; }\n",
     )
-    _write(root / "scripts/lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
-    _write(root / "scripts/lib/claude_weekly_used.py", "print('0')\n")
+    _write(root / MACHINERY / "lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
+    _write(root / MACHINERY / "lib/claude_weekly_used.py", "print('0')\n")
     # The interpreter intercepts the rollover import by path; the slot registry
     # may import the real module, so keep it when present.
-    handoff = root / "scripts/orchestration/thread_handoff.py"
+    handoff = root / MACHINERY / "orchestration/thread_handoff.py"
     if not handoff.exists():
         _write(handoff, "raise SystemExit('intercepted by the test interpreter')\n")
-    _write(root / "scripts/ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
+    _write(root / MACHINERY / "ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
     for provider in ("claude", "codex", "cursor", "gemini", "glm", "grok", "kimi"):
-        _write(root / f"scripts/launchers/{provider}.sh", _ADAPTER)
-    _write(root / ".venv/bin/python", _PYTHON.format(event=_EVENT, python=shlex.quote(sys.executable)), 0o755)
+        _write(root / MACHINERY / f"launchers/{provider}.sh", _ADAPTER)
+    _write(root / ".venv/bin/python", _PYTHON.format(event=_EVENT, python=shlex.quote(sys.executable), package=MACHINERY), 0o755)
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
     signal_provider = _write(root / "signal-provider.sh", _SIGNAL_PROVIDER, 0o755)
     subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30)
@@ -383,7 +386,7 @@ def _case_args(wrapper: str) -> tuple[str, ...]:
     if wrapper in INTERACTIVE:
         return ("prompt text", "--", *TRICKY)
     # Lane wrappers fix their own --epic.
-    if wrapper.endswith("-cto.sh") or wrapper == "scripts/start-kube-dojo-driver.sh":
+    if wrapper.endswith("-cto.sh") or wrapper == f"{MACHINERY}/start-kube-dojo-driver.sh":
         return ("--", *TRICKY)
     return ("--epic", "devops", "--", *TRICKY)
 
@@ -391,7 +394,7 @@ def _case_args(wrapper: str) -> tuple[str, ...]:
 def _expected_forward(wrapper: str) -> list[str]:
     if wrapper in INTERACTIVE:
         forward = ["prompt text", *TRICKY]
-        if wrapper == "scripts/start-bio-driver.sh":
+        if wrapper == f"{MACHINERY}/start-bio-driver.sh":
             forward = ["--agent", "curriculum-track-orchestrator", *forward]
         return forward
     return list(TRICKY)
@@ -464,7 +467,7 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
         # The provider-derived name would replay start-glm.sh and export the flag.
         ("start-glmcc.sh", "unset", "claude-code", []),
         ("start-glm.sh", "1", "claude-code", []),
-        ("scripts/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
+        (f"{MACHINERY}/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
     ],
 )
 def test_route_identity_survives_reentry(
@@ -484,7 +487,7 @@ def test_route_identity_survives_reentry(
 @pytest.mark.parametrize(
     ("wrapper", "mode"),
     [
-        ("scripts/start-bio-driver.sh", "interactive"),
+        (f"{MACHINERY}/start-bio-driver.sh", "interactive"),
         ("start-claude-cto.sh", "driver"),
     ],
 )
@@ -496,7 +499,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     argv = run_argv.read_bytes().decode().removesuffix("\0").split("\0")
     command = argv[argv.index("--") + 1 :]
-    assert command[:3] == ["bash", f"{root}/scripts/lib/driver_scope.sh", "--entry"]
+    assert command[:3] == ["bash", f"{root}/{MACHINERY}/lib/driver_scope.sh", "--entry"]
     assert command[3] == mode
     assert re.fullmatch(rf"lu-{mode}-[a-z]+-[a-z]+-{UUID}\.scope", command[4])
     assert command[5:] == ["-" if mode == "interactive" else "219", f"{root}/{wrapper}", "--", *TRICKY]
@@ -514,7 +517,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
         ("start-claude-driver.sh", ("--epic", "devops", "--model", "not-certified"), "0", 4, "not certified"),
         ("start-gemini-driver.sh", ("--epic", "devops", "--model", "gemini-unknown"), "0", 4, "not certified"),
         ("start-claude.sh", ("--model", "opus"), "0", 7, "Opus is blocked"),
-        ("scripts/start-bio-driver.sh", (), "99", 7, "Claude weekly usage is 99%"),
+        (f"{MACHINERY}/start-bio-driver.sh", (), "99", 7, "Claude weekly usage is 99%"),
         ("start-codex-cto.sh", ("--force",), "0", 2, "CTO launchers reject --force"),
     ],
 )
@@ -522,7 +525,7 @@ def test_admission_refusals_keep_their_codes_before_manager_contact(
     tmp_path: Path, wrapper: str, args: tuple[str, ...], weekly: str, code: int, message: str
 ) -> None:
     root, env = _checkout(tmp_path)
-    _write(root / "scripts/lib/claude_weekly_used.py", f"print('{weekly}')\n")
+    _write(root / MACHINERY / "lib/claude_weekly_used.py", f"print('{weekly}')\n")
     result = _launch(root, env, wrapper, *args)
     assert result.returncode == code, result.stdout + result.stderr
     assert message in result.stderr
@@ -573,7 +576,7 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
     alias = tmp_path / "elsewhere" / "start-claude.sh"
     _write(
         alias,
-        f'#!/usr/bin/env bash\nset -euo pipefail\nsource {shlex.quote(str(root))}/scripts/lib/launcher_core.sh\nlauncher_main claude interactive "$@"\n',
+        f'#!/usr/bin/env bash\nset -euo pipefail\nsource {shlex.quote(str(root))}/{MACHINERY}/lib/launcher_core.sh\nlauncher_main claude interactive "$@"\n',
         0o755,
     )
     result = subprocess.run(
@@ -738,7 +741,7 @@ def test_launch_from_a_session_scope_starts_a_sibling_scope(
 
 @pytest.mark.parametrize(
     ("wrapper", "args"),
-    [("start-claude.sh", ()), ("scripts/start-bio-driver.sh", ()), ("start-claude-driver.sh", ("--epic", "devops"))],
+    [("start-claude.sh", ()), (f"{MACHINERY}/start-bio-driver.sh", ()), ("start-claude-driver.sh", ("--epic", "devops"))],
 )
 @pytest.mark.parametrize(
     "cgroup",
@@ -810,7 +813,7 @@ def test_dispatch_from_an_interactive_scope_stays_bounded(
 
 def test_adapter_refusal_inside_the_scope_keeps_its_code(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    adapter = root / "scripts/launchers/grok.sh"
+    adapter = root / MACHINERY / "launchers/grok.sh"
     adapter.write_text(adapter.read_text() + "launcher_adapter_validate() { lu_test_event validate; exit 2; }\n")
     result = _launch(root, env, "start-grok.sh")
     assert result.returncode == 2, result.stdout + result.stderr
@@ -1140,16 +1143,16 @@ def test_driver_relay_during_close_preserves_client_result(
     # trap window; the relay barrier orders the second INT after client start.
     barrier = 'printf "ready\\n" > "$TEST_FORWARD_READY"\nIFS= read -r _ < "$TEST_ENTRY_GATE" || true\n'
     if forward_path == "pending":
-        adapter = root / "scripts/launchers/claude.sh"
+        adapter = root / MACHINERY / "launchers/claude.sh"
         with adapter.open("a") as stream:
             stream.write("\nlauncher_driver_wait_hook() {\n" + barrier + "}\n")
     else:
-        core = root / "scripts/lib/launcher_core.sh"
+        core = root / MACHINERY / "lib/launcher_core.sh"
         body = core.read_text()
         needle = '  if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then\n'
         assert needle in body
         core.write_text(body.replace(needle, barrier + needle, 1))
-    scope = root / "scripts/lib/driver_scope.sh"
+    scope = root / MACHINERY / "lib/driver_scope.sh"
     body = scope.read_text()
     needle = '    kill -"$signal" "$1" 2>/dev/null || true\n'
     assert body.count(needle) == 1
@@ -1298,7 +1301,7 @@ def test_bounded_live_interactive_scope_soak(tmp_path: Path) -> None:
     require_soak_opt_in()
     root, _ = _checkout(tmp_path)
     # The production helper and manager, rather than the fake kernel/manager.
-    shutil.copy2(REPO / "scripts/lib/driver_scope.sh", root / "scripts/lib/driver_scope.sh")
+    shutil.copy2(REPO / MACHINERY / "lib/driver_scope.sh", root / MACHINERY / "lib/driver_scope.sh")
     hog, proof = soak_hog(tmp_path)
     provider = _write(
         root / "provider.sh",
