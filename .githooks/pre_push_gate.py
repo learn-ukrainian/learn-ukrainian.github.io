@@ -1908,9 +1908,14 @@ def message_gate(arguments: list[str]) -> int:
             environment = dict(os.environ)
             repository = git_push.Repository(git_push.real_git(environment), environment)
             hooks = repository.run("rev-parse", "--git-path", "hooks")
+            # The scanner's checkout-relative directory, from its unresolved file location. Never
+            # __name__: a short import spelling would name the wrong directory.
+            scanner_directory = Path(os.path.abspath(git_push.__file__)).parent
             scanner_hooks = {
                 git_push.HOOKS.resolve(),
-                prepublish.primary_root().joinpath(*git_push.__name__.split(".")[:-1], git_push.HOOKS.name).resolve(),
+                prepublish.primary_root()
+                .joinpath(scanner_directory.parent.name, scanner_directory.name, git_push.HOOKS.name)
+                .resolve(),
             }
             # When Git selected the shared scanner's hook, it scanned these
             # updates before chaining here. Scanning twice would consume its
