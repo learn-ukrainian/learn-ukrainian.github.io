@@ -79,3 +79,5 @@ tests/test_review_closeout_cli.py
 tests/test_sibling_git.py
 tests/test_verdict_parser.py
 tests/wait_helpers.py
+tests/fixtures/rules_core/core-curriculum.md
+tests/fixtures/rules_core/core.md

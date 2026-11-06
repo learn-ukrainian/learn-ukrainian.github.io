@@ -30,7 +30,7 @@ import pytest
 
 from tests.helpers import machinery_package
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_slot_registry, tracked_launcher_wrappers
+from tests.launcher_sandbox import copy_slot_registry, launcher_wrapper_source, tracked_launcher_wrappers
 from tests.test_launcher_driver_scope import default_hup as default_hup
 from tests.test_launcher_driver_scope import (
     require_soak_opt_in,
@@ -269,8 +269,11 @@ def _write(path: Path, body: str, mode: int = 0o644) -> Path:
 def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     """Copy every tracked wrapper and the shared core; stub only the edges."""
     root = tmp_path / "repo"
+    for wrapper in tracked_launcher_wrappers():
+        destination = root / wrapper
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(launcher_wrapper_source(wrapper), destination)
     for relative in (
-        *tracked_launcher_wrappers(),
         f"{MACHINERY}/config/issue_streams.yaml",
         f"{MACHINERY}/config/launcher_stream_aliases.tsv",
         *launcher_library_files(REPO),

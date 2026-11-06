@@ -663,12 +663,35 @@ def test_namespace_owner_exemption_does_not_release_unknown_worker(tmp_path):
     ) == "worktree claimed by active task worker"
 
 
+# The kernel's initial PID namespace (fixed inode PROC_PID_INIT_INO), read from /proc, never configured.
+_INITIAL_PID_NAMESPACE = f"pid:[{0xEFFFFFFC}]"
+
+
+def _in_initial_pid_namespace() -> bool:
+    return os.readlink("/proc/self/ns/pid") == _INITIAL_PID_NAMESPACE
+
+
 def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
     process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     try:
-        record = {"pid": process.pid, "status": "done"}
-        assert worktree_claims._worker_blocks_release(record) is True
-        assert worktree_claims._worker_blocks_release({"pid": os.getpid(), "status": "done"}) is False
+        # Identity records, the shape the dispatcher writes (#10651), decide in any PID namespace:
+        # another live worker keeps its terminal claim, the finishing worker itself may release it.
+        other = {"pid": process.pid, "status": "done", "worker_identity": capture_worker_identity(process.pid)}
+        own = {
+            "pid": os.getpid(),
+            "status": "done",
+            "worker_identity": capture_worker_identity(os.getpid(), self_process=True),
+        }
+        assert worktree_claims._worker_blocks_release(other) is True
+        assert worktree_claims._worker_blocks_release(own) is False
+        # Legacy pid-only records: another live worker always keeps the claim. Only a reader in the
+        # initial PID namespace proves the finishing worker by signal 0; in a nested namespace its
+        # liveness is unknown, which blocks the release (dead_worker_state.worker_liveness).
+        assert worktree_claims._worker_blocks_release({"pid": process.pid, "status": "done"}) is True
+        legacy_own = worktree_claims._worker_blocks_release({"pid": os.getpid(), "status": "done"})
+        assert legacy_own is (not _in_initial_pid_namespace())
     finally:
         process.terminate()
         process.wait(timeout=10)

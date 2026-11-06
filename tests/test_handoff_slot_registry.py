@@ -24,11 +24,15 @@ from scripts.agent_runtime.lane_probe import resolve_handoff_agent
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
 from scripts.orchestration.slot_routing import resolve_slot_holder
+from tests.helpers import machinery_package, product_checkout
 
 REPO = Path(__file__).resolve().parents[1]
-HANDOFF_IDENTITY = REPO / "scripts" / "lib" / "handoff_identity.sh"
-ALIASES = REPO / "scripts" / "config" / "launcher_stream_aliases.tsv"
-ISSUE_STREAMS = REPO / "scripts" / "config" / "issue_streams.yaml"
+MACHINERY = REPO / machinery_package()
+# The root start-*.sh wrappers are product files (C-4764): this checkout here, the product root once extracted.
+PRODUCT = product_checkout()
+HANDOFF_IDENTITY = MACHINERY / "lib" / "handoff_identity.sh"
+ALIASES = MACHINERY / "config" / "launcher_stream_aliases.tsv"
+ISSUE_STREAMS = MACHINERY / "config" / "issue_streams.yaml"
 
 # Registry stream keys that no compatibility alias covers and no roster row backs.
 # Each must be refused, never minted (#8303).  Widening the roster or adding an alias
@@ -57,7 +61,7 @@ def _driver_providers() -> tuple[str, ...]:
     providers = sorted(
         {
             match.group(1)
-            for script in REPO.glob("start-*-driver.sh")
+            for script in PRODUCT.glob("start-*-driver.sh")
             for match in re.finditer(r"^launcher_main (\w+) driver\b", script.read_text(encoding="utf-8"), re.M)
         }
     )
@@ -70,7 +74,7 @@ PROVIDERS = _driver_providers()
 
 @pytest.fixture(params=[[], ["muse-monitor"], ["muse-monitor", "codex-monitor"]])
 def mixed_roster(request, tmp_path, monkeypatch):
-    assignments = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text())
+    assignments = yaml.safe_load((MACHINERY / "config/area_assignments.yaml").read_text())
     assignments["assignments"]["monitor"]["slots"] = request.param
     assignments["assignments"]["empty-fixture"] = {"slots": []}
     roster = tmp_path / "area_assignments.yaml"
@@ -160,7 +164,7 @@ def _launcher(*args: str, dry_run: bool = True, env: dict[str, str] | None = Non
     launch_env = {**os.environ, "LAUNCHER_DRY_RUN": "1" if dry_run else "0"}
     launch_env.update(env or {})
     return subprocess.run(
-        [str(REPO / "start-claude-driver.sh"), *args],
+        [str(PRODUCT / "start-claude-driver.sh"), *args],
         cwd=REPO,
         env=launch_env,
         capture_output=True,
@@ -311,7 +315,7 @@ def test_generic_registry_keys_are_registered_or_refused_for_every_provider() ->
 
 def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> None:
     """grok-monitor receives its own inbox; Muse keeps its monitor identity; other monitor names stay legacy."""
-    roster = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
+    roster = yaml.safe_load((MACHINERY / "config/area_assignments.yaml").read_text(encoding="utf-8"))
     assert roster["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
     assert _channels.resolve_recipient_alias("grok-monitor") == "grok-monitor"
     assert _channels.resolve_recipient_alias("muse-monitor") == "muse-monitor"
@@ -338,7 +342,7 @@ REGISTERED_SELECTORS = (
 def test_kube_dojo_wrapper_dry_run_binds_its_claude_lane() -> None:
     """The kube-dojo lane wrapper claims its own stream and slot on Sonnet 5.5 (#12553)."""
     result = subprocess.run(
-        [str(REPO / "scripts" / "start-kube-dojo-driver.sh")],
+        [str(MACHINERY / "start-kube-dojo-driver.sh")],
         cwd=REPO,
         env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
@@ -369,7 +373,7 @@ def test_practice_slots_reach_existing_consumers(provider: str, tmp_path: Path) 
 @pytest.mark.parametrize("provider", ["claude", "codex"])
 def test_practice_launcher_dry_run_uses_the_dedicated_stream(provider: str) -> None:
     result = subprocess.run(
-        [str(REPO / f"start-{provider}-driver.sh"), "--epic", "practice"],
+        [str(PRODUCT / f"start-{provider}-driver.sh"), "--epic", "practice"],
         cwd=REPO,
         env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
@@ -480,7 +484,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curricul
         refused = _gate(provider, "curriculum-upgrade")
         assert refused.returncode == 1
         result = subprocess.run(
-            [str(REPO / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
+            [str(PRODUCT / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
             cwd=REPO,
             env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
             capture_output=True,
@@ -512,7 +516,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curricul
     assert session.stdout.strip() == "curriculum-upgrade|infra|folk"
 
     result = subprocess.run(
-        [str(REPO / f"start-{provider}-driver.sh"), "--epic", "curriculum-upgrade"],
+        [str(PRODUCT / f"start-{provider}-driver.sh"), "--epic", "curriculum-upgrade"],
         cwd=REPO,
         env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
@@ -569,7 +573,7 @@ def test_muse_identity_refuses_other_streams(selector: str) -> None:
 def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...]) -> None:
     """A caller --epic must not move the kube-dojo work onto another lane's lease (#12553)."""
     result = subprocess.run(
-        [str(REPO / "scripts" / "start-kube-dojo-driver.sh"), *caller_epic],
+        [str(MACHINERY / "start-kube-dojo-driver.sh"), *caller_epic],
         cwd=REPO,
         env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,

@@ -24,7 +24,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tests.helpers import machinery_module, machinery_package
+from tests.helpers import machinery_module, machinery_package, product_checkout
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -62,12 +62,28 @@ def copy_launcher_sources(root: Path) -> None:
 
 
 def tracked_launcher_wrappers() -> tuple[str, ...]:
-    """Every tracked public wrapper: ``start-*.sh`` at the root and in the machinery package."""
-    listed = subprocess.run(
-        ["git", "ls-files", "-z", "--", "start-*.sh", f"{machinery_package()}/start-*.sh"],
+    """Every tracked public wrapper: the product's root ``start-*.sh`` and the machinery package's.
+
+    The root wrappers are product files, listed in the product checkout; the machinery package's
+    wrappers are listed here. :func:`launcher_wrapper_source` names the file to copy for each.
+    """
+    product = subprocess.run(
+        ["git", "ls-files", "-z", "--", "start-*.sh"],
+        cwd=product_checkout(), capture_output=True, text=True, check=True, timeout=30,
+    )
+    machinery = subprocess.run(
+        ["git", "ls-files", "-z", "--", f"{machinery_package()}/start-*.sh"],
         cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
     )
-    return tuple(sorted(raw for raw in listed.stdout.split("\0") if raw))
+    listed = {raw for raw in (product.stdout + machinery.stdout).split("\0") if raw}
+    return tuple(sorted(listed))
+
+
+def launcher_wrapper_source(relative: str) -> Path:
+    """The tracked file of the wrapper ``relative``: a product root wrapper or a machinery wrapper."""
+    if "/" not in relative:
+        return product_checkout() / relative
+    return _REPO_ROOT / relative
 
 
 def copy_interactive_launcher_checkout(root: Path) -> None:

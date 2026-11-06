@@ -24,3 +24,16 @@ def machinery_package() -> str:
 def machinery_module(suffix: str) -> str:
     """The dotted name of the machinery module ``suffix`` (for example ``"review.closeout_cli"``)."""
     return f"{machinery_package()}.{suffix}"
+
+
+def product_checkout() -> Path:
+    """The product checkout whose files these tests use, such as the root ``start-*.sh`` wrappers.
+
+    This checkout here (the product checkout holds the machinery today); the configured product
+    root (``LU_PRODUCT_ROOT``) when the machinery runs from its own repository. Product files are
+    read from it through :func:`scripts.common.repo_root.product_root`, never from the machinery
+    checkout (C-4746, C-4764).
+    """
+    from scripts.common import repo_root
+
+    return repo_root.product_root()
