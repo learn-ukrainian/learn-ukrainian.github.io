@@ -13,6 +13,7 @@ Exit code 0 = clean, 1 = violations found.
 """
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -20,7 +21,10 @@ from pathlib import Path
 
 if __package__ and "." in __package__:
     from ..common.repo_root import product_root
-else:  # run by path or imported top-level, with scripts/ on sys.path
+else:  # run by path or imported top-level: the resolver is in the package directory above this file
+    _PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _PACKAGE_DIR not in sys.path:
+        sys.path.insert(0, _PACKAGE_DIR)
     from common.repo_root import product_root  # type: ignore[no-redef]
 
 # Every path below is a product path, relative to the product checkout that

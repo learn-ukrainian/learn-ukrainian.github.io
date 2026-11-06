@@ -326,7 +326,10 @@ def _carries_product_marker(checkout: Path, *, through_primary: bool) -> bool:
         return True
     if not through_primary:
         return False
-    primary = main_checkout_root(checkout)
+    try:
+        primary = main_checkout_root(checkout)
+    except (OSError, ValueError):  # unreadable or malformed Git metadata (UnicodeDecodeError is a ValueError)
+        return False
     return primary != checkout and (primary / PRODUCT_MARKER).is_file()
 
 

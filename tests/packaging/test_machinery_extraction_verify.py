@@ -518,7 +518,9 @@ def test_correct_extraction_passes_every_check_and_reports_denominators(world: W
         env={"STUB_EXPECT_EXTERNAL_NAMES": str(names.resolve())},
     )
     assert code == 0, output
-    assert {name: item["status"] for name, item in checks.items()} == dict.fromkeys(checks, "pass")
+    # PR runs only with --product-root-cases, which this run does not pass.
+    assert {name: item["status"] for name, item in checks.items()} == {**dict.fromkeys(checks, "pass"), "PR": "skipped"}
+    assert checks["PR"]["notes"] == ["not requested (--product-root-cases absent)"]
     assert checks["V1"]["inspected"] == {"manifest_rows": 5, "tree_paths": 5}
     assert checks["V2"]["inspected"]["exclude_entries"] == 3
     assert checks["V2"]["inspected"]["history_commits"] == 4
