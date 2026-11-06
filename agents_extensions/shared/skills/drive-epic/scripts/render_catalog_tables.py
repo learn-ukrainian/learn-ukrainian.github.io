@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 import yaml
@@ -13,9 +14,10 @@ from scripts.review.role_resolution import resolve_routing_reference
 
 ROOT = Path(__file__).resolve().parents[5]
 # The catalog is a machinery file; the tables name it by its checkout-relative path, whose first
-# component is the machinery package's import name.
+# component is the machinery package's directory, taken from the unresolved location of a module
+# inside it (repo_root.py sits in <package>/common/).
 CATALOG = repo_root.machinery_path("config/model_catalog.yaml")
-CATALOG_NAME = f"{repo_root.__name__.partition('.')[0]}/config/model_catalog.yaml"
+CATALOG_NAME = f"{Path(os.path.abspath(repo_root.__file__)).parents[1].name}/config/model_catalog.yaml"
 OUTPUT = ROOT / "agents_extensions/shared/rules/catalog-routing-tables.md"
 
 
