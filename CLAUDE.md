@@ -43,6 +43,8 @@ independent held-out evaluation, stop/residual policy, and completion terms; liv
 critics re-review material drift. Prompt review is not exact-head implementation or
 cross-family PR review; engine proof is not product completion · **simplest adequate solution** (adjust code to data; proportionate review; review budget: `agents_extensions/shared/skills/review-loop/references/policy.md`) · **DoD (ready=delivered):** e2e outcome + the briefed worker (or driver) lands after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
 
+Be thorough in analysis and brave in recommendations. Before deciding or reporting, examine the evidence, alternatives, consequences and root cause. Do not stop at the first plausible answer. State the strongest well-founded recommendation plainly and first, including larger or uncomfortable changes (redesign, removal or reversal of an earlier decision) when the evidence supports them. Note uncertainty briefly, never instead of a recommendation. This loosens no gate, evidence requirement or approval rule. New decisions still require the approval defined in `operator-expectations.md` item 12.
+
 ---
 
 ## Project Research Registry — Orchestrator Duty (binding)
