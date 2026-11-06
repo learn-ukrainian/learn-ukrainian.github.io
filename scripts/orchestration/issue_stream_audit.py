@@ -55,13 +55,18 @@ from scripts.common.repo_root import machinery_path, main_checkout_root
 from scripts.opsec.prepublish import publication_cli
 from scripts.publish.github import Request, request_run
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _PACKAGE_DIR = _PACKAGE.replace(".", "/")
 _MACHINERY = _PACKAGE.partition(".")[0]
 
-ROOT = Path(__file__).resolve().parents[2]
+# The product checkout this module was reached from: the directory that holds the package
+# entry, resolved itself (an immutable release snapshot reached through ``current`` stays
+# that snapshot) without following a symlinked package directory, so that the registry
+# under ``_MACHINERY``, the issues, the docs and the cache all belong to that checkout.
+ROOT = Path(os.path.abspath(__file__)).parents[2].resolve()
 REGISTRY_PATH = machinery_path("config/issue_streams.yaml")
 WORKSTREAMS_PATH = ROOT / "docs" / "WORKSTREAMS.md"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"

@@ -62,9 +62,10 @@ from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import task_state_lock
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _PACKAGE_DIR = _PACKAGE.replace(".", "/")
 _MACHINERY = _PACKAGE.partition(".")[0]
 _MODULE = f"{_PACKAGE}.{Path(__file__).stem}"

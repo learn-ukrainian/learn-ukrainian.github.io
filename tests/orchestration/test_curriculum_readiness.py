@@ -55,21 +55,21 @@ def _gates_document(**changes: object) -> str:
     _gates_document(module=float("-inf")).encode(),
     b"[" * 1500 + b"]" * 1500,
 ])
-def test_readiness_gates_refuse_invalid_json(gates_importer, tmp_path: Path, raw: bytes) -> None:
+def test_readiness_gates_refuse_invalid_json(tmp_path: Path, raw: bytes) -> None:
     path = tmp_path / "readiness_gates.v1.json"
     path.write_bytes(raw)
     with pytest.raises(ImportError, match="readiness gates configuration"):
-        gates_importer._gates_module_name(path)
+        readiness._gates_module_name(path)
 
 
 @pytest.mark.parametrize("field", ["schema", "schema_version", "origin", "module"])
-def test_readiness_gates_refuse_each_missing_field(gates_importer, tmp_path: Path, field: str) -> None:
+def test_readiness_gates_refuse_each_missing_field(tmp_path: Path, field: str) -> None:
     document = json.loads(_gates_document())
     del document[field]
     path = tmp_path / "readiness_gates.v1.json"
     path.write_text(json.dumps(document))
     with pytest.raises(ImportError, match="fields mismatch"):
-        gates_importer._gates_module_name(path)
+        readiness._gates_module_name(path)
 
 
 @pytest.mark.parametrize("name", [
@@ -77,15 +77,15 @@ def test_readiness_gates_refuse_each_missing_field(gates_importer, tmp_path: Pat
     " scripts.curriculum", "scripts.curriculum\n", "scripts.curriculum:main", "scripts.сurriculum",
     "scripts.foo-bar", "scripts./curriculum", "scripts.sqlite3", "scripts._sqlite3",
 ])
-def test_readiness_gates_refuse_malformed_or_sqlite_names(gates_importer, tmp_path: Path, name: str) -> None:
+def test_readiness_gates_refuse_malformed_or_sqlite_names(tmp_path: Path, name: str) -> None:
     path = tmp_path / "readiness_gates.v1.json"
     path.write_text(_gates_document(module=name))
     with pytest.raises(ImportError):
-        gates_importer.load_configured_module(gates_importer._gates_module_name(path))
+        readiness.load_configured_module(readiness._gates_module_name(path))
 
 
 @pytest.mark.parametrize("kind", ["missing", "directory", "symlink", "fifo", "oversized"])
-def test_readiness_gates_refuse_unsafe_data_files(gates_importer, tmp_path: Path, kind: str) -> None:
+def test_readiness_gates_refuse_unsafe_data_files(tmp_path: Path, kind: str) -> None:
     path = tmp_path / "readiness_gates.v1.json"
     if kind == "directory":
         path.mkdir()
@@ -96,12 +96,12 @@ def test_readiness_gates_refuse_unsafe_data_files(gates_importer, tmp_path: Path
     elif kind == "fifo":
         os.mkfifo(path)
     elif kind == "oversized":
-        path.write_bytes(b" " * (gates_importer._GATES_MAX_BYTES + 1))
+        path.write_bytes(b" " * (readiness._GATES_MAX_BYTES + 1))
     with pytest.raises((ImportError, OSError)):
-        gates_importer._gates_module_name(path)
+        readiness._gates_module_name(path)
 
 
-def test_readiness_gates_refuse_replaced_file(gates_importer, tmp_path: Path, monkeypatch) -> None:
+def test_readiness_gates_refuse_replaced_file(tmp_path: Path, monkeypatch) -> None:
     path = tmp_path / "readiness_gates.v1.json"
     path.write_text(_gates_document())
     replacement = tmp_path / "replacement.json"
@@ -112,23 +112,23 @@ def test_readiness_gates_refuse_replaced_file(gates_importer, tmp_path: Path, mo
         replacement.replace(path)
         return real_open(target, flags)
 
-    monkeypatch.setattr(gates_importer.os, "open", replace_before_open)
+    monkeypatch.setattr(readiness.os, "open", replace_before_open)
     with pytest.raises(ImportError, match="changed while opening"):
-        gates_importer._gates_module_name(path)
+        readiness._gates_module_name(path)
 
 
-def test_readiness_gates_refuse_file_growth(gates_importer, tmp_path: Path, monkeypatch) -> None:
+def test_readiness_gates_refuse_file_growth(tmp_path: Path, monkeypatch) -> None:
     path = tmp_path / "readiness_gates.v1.json"
     path.write_text(_gates_document())
     real_open = os.open
 
     def grow_before_open(target, flags):
-        path.write_bytes(b" " * (gates_importer._GATES_MAX_BYTES + 1))
+        path.write_bytes(b" " * (readiness._GATES_MAX_BYTES + 1))
         return real_open(target, flags)
 
-    monkeypatch.setattr(gates_importer.os, "open", grow_before_open)
+    monkeypatch.setattr(readiness.os, "open", grow_before_open)
     with pytest.raises(ImportError, match="too large"):
-        gates_importer._gates_module_name(path)
+        readiness._gates_module_name(path)
 
 
 @pytest.mark.parametrize("origin", [None, "foreign/readiness_gates.py"])
