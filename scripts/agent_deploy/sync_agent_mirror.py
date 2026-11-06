@@ -30,7 +30,14 @@ import stat
 import sys
 from pathlib import Path
 
-from agent_directory import open_agent_directory
+if __package__:
+    from .agent_directory import open_agent_directory
+else:  # run by path: this file's directory is first on sys.path
+    from agent_directory import open_agent_directory  # type: ignore[no-redef]
+
+# The machinery package name, from this file's unresolved location (design-v1 amendment 1),
+# so the help text names the tree it runs from in either checkout layout.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 def _cursor_target_identities(installation: Path) -> set[tuple[int, int]]:
@@ -134,12 +141,12 @@ def main(argv: list[str]) -> int:
         "Used by deploy_prompts.sh; --resolve-rsync only validates the tool, without syncing.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/deploy/sync_agent_mirror.py --resolve-rsync\n"
-        "  .venv/bin/python scripts/deploy/sync_agent_mirror.py "
+        f"  .venv/bin/python {_MACHINERY}/agent_deploy/sync_agent_mirror.py --resolve-rsync\n"
+        f"  .venv/bin/python {_MACHINERY}/agent_deploy/sync_agent_mirror.py "
         "--source-root agents_extensions/shared --agent-root .agent\n"
         "Outputs: validated executable on stdout, or shared files copied into .agent.\n"
         "Exit codes: 0 success; 1 unsafe/missing tool or sync failure; 2 invalid arguments.\n"
-        "Related: scripts/deploy_prompts.sh; #10910.",
+        f"Related: {_MACHINERY}/deploy_prompts.sh; #10910.",
     )
     parser.add_argument("--resolve-rsync", action="store_true", help="print the validated executable for shell syncs")
     parser.add_argument(

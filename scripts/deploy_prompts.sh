@@ -21,7 +21,12 @@
 # ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Machinery code (helpers, sibling shell files, the AGY heredoc import) is found
+# from this script's own directory, never from the product root, an environment
+# setting or the import path; the project being deployed is PROJECT_ROOT.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AGENT_DEPLOY_DIR="$SCRIPT_DIR/agent_deploy"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 PROJECT_PYTHON="$PROJECT_ROOT/.venv/bin/python"
@@ -37,7 +42,7 @@ if [[ ! -x "$PROJECT_PYTHON" ]]; then
 fi
 
 # shellcheck disable=SC1091
-source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
+source "$SCRIPT_DIR/deploy_orphan_paths.sh"
 
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
@@ -166,8 +171,8 @@ reap_retired_shared_agent_paths() {
     # a review reproduced a symlink swapped in between those two steps deleting a file
     # OUTSIDE the repository. The helper walks components with O_NOFOLLOW|O_DIRECTORY
     # and unlinks relative to the resulting directory fd, so the entry removed is the
-    # one inside the directory actually opened. See scripts/deploy/reap_agent_mirrors.py.
-    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/reap_agent_mirrors.py" \
+    # one inside the directory actually opened. See scripts/agent_deploy/reap_agent_mirrors.py.
+    "$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/reap_agent_mirrors.py" \
         --agent-root .agent \
         --manifest "$AGENT_SHARED_MANIFEST" \
         --source-root "$SHARED_EXTENSIONS"
@@ -177,7 +182,7 @@ sync_shared_agent_mirror() {
     # The source is absolute because the helper fchdirs into a descriptor for
     # .agent before it execs rsync.  Passing . as the destination keeps the write
     # bound to that descriptor even if another agent swaps the .agent pathname.
-    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
+    "$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/sync_agent_mirror.py" \
         --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
         --agent-root .agent
 }
@@ -208,8 +213,8 @@ import stat
 import sys
 from pathlib import Path
 
-root, agent_root = Path(sys.argv[1]), Path(sys.argv[2])
-sys.path.insert(0, str(root / "scripts" / "deploy"))
+root, agent_root, agent_deploy = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+sys.path.insert(0, agent_deploy)
 from agent_directory import open_agent_directory
 
 
@@ -351,7 +356,7 @@ try:
 finally:
     os.close(agent_fd)
 PY
-    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent && status=0 || status=$?
+    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent "$AGENT_DEPLOY_DIR" && status=0 || status=$?
     rm -f "$script"
     return "$status"
 }
@@ -457,7 +462,8 @@ check_shared_skill_collisions() {
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
-"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py verify || orphan_fail=true
+"$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/retire_codex_skills.py" verify \
+    --target-root "$PROJECT_ROOT" --source-root "$PROJECT_ROOT" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
 # .agent/ is preserve-by-default (runtime state written by agents/lanes).
 # No orphan check or --delete here — see #4741. Shared source (if any)
@@ -656,8 +662,9 @@ fi
 echo "=== Syncing ==="
 # Resolve before the first shell sync as well as the descriptor-bound helper.
 # Ambient PATH aliases must not execute an installed Cursor target in either.
-RSYNC="$("$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" --resolve-rsync)"
-"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
+RSYNC="$("$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/sync_agent_mirror.py" --resolve-rsync)"
+"$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/retire_codex_skills.py" apply \
+    --target-root "$PROJECT_ROOT" --source-root "$PROJECT_ROOT"
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 "$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only

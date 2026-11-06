@@ -1339,7 +1339,7 @@ DEPLOY_INPUTS = (
     "agents_extensions",
     "gemini_extensions",
     "scripts/check_rules_deployment.sh",
-    "scripts/deploy",
+    "scripts/agent_deploy",
     "scripts/deploy_orphan_paths.sh",
     "scripts/deploy_prompts.sh",
     "scripts/lib",

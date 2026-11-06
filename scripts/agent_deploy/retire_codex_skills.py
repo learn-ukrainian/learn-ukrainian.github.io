@@ -1,5 +1,11 @@
 """Move verified legacy Codex skills into retained storage outside discovery.
 
+Two roots are passed explicitly and never derived from this file's location: the
+deployment target, whose ``.codex/skills`` is captured into ``.codex/retired-skills``,
+and the canonical source checkout, whose tracked ``agents_extensions/shared/skills``
+bytes and Git history prove each legacy file's provenance. They may be the same
+directory (a project that deploys its own checkout) or different ones.
+
 Capture uses an exclusive atomic rename with descriptor-bound parents. No file
 or backup is deleted: writers holding an old file descriptor continue writing
 the retained inode. Inventory drift fails closed with both captured and newly
@@ -19,12 +25,17 @@ import uuid
 from importlib.util import source_from_cache
 from pathlib import Path
 
+# The machinery package name, from this file's unresolved location (design-v1 amendment 1).
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 BACKUP_DIRECTORY = "retired-skills"
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
 
 
 def cache_source_is_tracked(root: Path, relative: str) -> bool:
-    """Classify retained runtime bytes by cache path, without loading bytecode."""
+    """Classify retained runtime bytes by cache path, without loading bytecode.
+
+    ``root`` is the canonical source checkout.
+    """
     cache = Path(relative)
     fields = cache.name.split(".")
     # source_from_cache also accepts wrong suffixes and empty cache tags.
@@ -59,7 +70,10 @@ def cache_source_is_tracked(root: Path, relative: str) -> bool:
 
 
 def source_matches(root: Path, relative: str, payload: bytes) -> bool:
-    """Require tracked current bytes or a regular-file blob at this exact path."""
+    """Require tracked current bytes or a regular-file blob at this exact path.
+
+    ``root`` is the canonical source checkout.
+    """
     source_path = f"agents_extensions/shared/skills/{relative}"
     source = root / source_path
     tracked = subprocess.run(
@@ -96,7 +110,10 @@ def signature(info: os.stat_result) -> tuple[int, ...]:
 
 
 def inventory(root: Path, tree_fd: int, prefix: str = "") -> dict[str, tuple]:
-    """Read a complete inventory without following links at any component."""
+    """Read a complete inventory without following links at any component.
+
+    ``root`` is the canonical source checkout; ``tree_fd`` is the target's legacy tree.
+    """
     result: dict[str, tuple] = {}
     for name in sorted(os.listdir(tree_fd)):
         relative = f"{prefix}/{name}" if prefix else name
@@ -171,7 +188,8 @@ def active_exists(codex_fd: int) -> bool:
     return True
 
 
-def migrate(root: Path, mode: str) -> int:
+def migrate(target_root: Path, mode: str, *, source_root: Path) -> int:
+    """Verify or capture ``target_root``'s ``.codex/skills`` against ``source_root``'s canonical skills."""
     captured = ""
     try:
         with contextlib.ExitStack() as stack:
@@ -180,7 +198,7 @@ def migrate(root: Path, mode: str) -> int:
                 stack.callback(os.close, fd)
                 return fd
 
-            root_fd = open_directory(root)
+            root_fd = open_directory(target_root)
             try:
                 codex_fd = open_directory(".codex", root_fd)
             except FileNotFoundError:
@@ -189,7 +207,7 @@ def migrate(root: Path, mode: str) -> int:
                 source_fd = open_directory("skills", codex_fd)
             except FileNotFoundError:
                 return 0
-            before = inventory(root, source_fd)
+            before = inventory(source_root, source_fd)
             if mode == "verify":
                 return 0
             if not directory_still_bound(root_fd, ".codex", codex_fd) or not directory_still_bound(codex_fd, "skills", source_fd):
@@ -209,7 +227,7 @@ def migrate(root: Path, mode: str) -> int:
             captured_info, source_info = os.fstat(captured_fd), os.fstat(source_fd)
             if (captured_info.st_dev, captured_info.st_ino) != (source_info.st_dev, source_info.st_ino):
                 raise ValueError("Legacy discovery tree replaced during capture; preserve and reconcile")
-            after = inventory(root, captured_fd)
+            after = inventory(source_root, captured_fd)
             if before != after:
                 raise ValueError("Legacy inventory changed during capture; preserve and reconcile")
             if not directory_still_bound(root_fd, ".codex", codex_fd) or not directory_still_bound(codex_fd, BACKUP_DIRECTORY, backup_fd):
@@ -233,20 +251,31 @@ def main() -> int:
             "Use during agent deployment; never use this to delete custom skills or backups."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/deploy/retire_codex_skills.py verify
-  .venv/bin/python scripts/deploy/retire_codex_skills.py apply
-Outputs: apply atomically moves .codex/skills into .codex/retired-skills/<id>/skills.
+        epilog=f"""Examples:
+  .venv/bin/python {_MACHINERY}/agent_deploy/retire_codex_skills.py verify --target-root . --source-root .
+  .venv/bin/python {_MACHINERY}/agent_deploy/retire_codex_skills.py apply --target-root "$PROJECT" --source-root "$CANONICAL"
+Outputs: apply atomically moves <target>/.codex/skills into
+  <target>/.codex/retired-skills/<id>/skills. Each legacy file must match a tracked
+  file, or a regular-file blob in the Git history, at the same path under
+  <source>/agents_extensions/shared/skills.
   Standard __pycache__ files mapped to tracked Python sources are retained as
   opaque runtime artifacts; their bytes are never executed or authenticated.
   No backup files are deleted. Verify does not move files.
 Exit codes: 0 = absent or accepted mirror; 1 = preserve and reconcile an error.
-Related: scripts/deploy_prompts.sh; agents_extensions/README.md; issue #7964.
+Related: {_MACHINERY}/deploy_prompts.sh; agents_extensions/README.md; issue #7964.
 """,
     )
     parser.add_argument("mode", choices=("verify", "apply"), help="verify only, or apply retained capture (required)")
+    parser.add_argument(
+        "--target-root", type=Path, required=True,
+        help="deployment target directory that holds .codex (required)",
+    )
+    parser.add_argument(
+        "--source-root", type=Path, required=True,
+        help="canonical source Git checkout that holds agents_extensions/shared/skills (required)",
+    )
     args = parser.parse_args()
-    return migrate(Path(__file__).resolve().parents[2], args.mode)
+    return migrate(args.target_root.resolve(), args.mode, source_root=args.source_root.resolve())
 
 
 if __name__ == "__main__":
