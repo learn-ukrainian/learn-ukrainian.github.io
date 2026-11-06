@@ -50,8 +50,6 @@ handoff:
   review:
     catalog_risk: low|medium|high|critical
     profile: code|infra
-    budget_tier: default|elevated
-    tier_set_by: "<default, open finding id, or operator request>"
     rounds_used: {full: 0, delta: 0}
     ledger: []
   landing_state: {hold: false, queued: false, auto_merge: false}
@@ -80,7 +78,7 @@ or CI gate. Reuse then requires the corrected policy. See the
 for typed refusals, replay and retained-history checks.
 
 **Public-safe subset.** Only these fields go into the PR body: target, acceptance ids and their
-proof, catalog risk and budget tier, the finding ledger (including any optional DeepSeek
+proof, catalog risk and the rounds used of the review budget, the finding ledger (including any optional DeepSeek
 pre-check dispositions), and credit. Everything else, such as worktree paths, host details and
 private task metadata, stays in the task result (rules core P8).
 

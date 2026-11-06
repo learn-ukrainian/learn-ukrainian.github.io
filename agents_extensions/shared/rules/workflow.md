@@ -225,11 +225,12 @@ then enqueues that head at the front of the queue, while every gate, including t
 merge-group CI Gate, still applies, and a label applied before that head's approval does nothing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
-**Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,
-split a PR above about 400 changed non-test lines or about 8 files, or have the
-driver record a one-line justification in the PR body. Test fixtures, generated
-files and whole-file deletions do not count toward either size measure. A
-reviewer may reject a PR for size alone, even with a justification.
+**Small batches (size signal).** One outcome per PR. About 1000 changed lines,
+excluding tests, test fixtures, generated files and whole-file deletions, is a
+review-size signal, not a rule: above it, split the PR, or record one line in the
+PR body (`Size justification: <reason>`) stating why the change is one outcome.
+The review budget and its frozen round-1 scope are in the
+[`review-loop` policy](../skills/review-loop/references/policy.md#budget).
 
 **Revert first (trial until 2026-11-05).** When a merged change breaks main
 (red CI on main), bypasses a gate, or breaks a deployed service, the owning
@@ -243,10 +244,10 @@ would reopen the hole; a data or schema migration or deployed data change; or a
 ready, smaller fix-forward that lands within the hour. All existing gates stay
 unchanged, including for exceptions.
 
-These trials draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
+The size signal and the revert trial draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
 and [version control](https://dora.dev/capabilities/version-control/) capabilities
 and Google's [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
-The size thresholds and mitigation targets are local trial policy.
+The size signal and the mitigation targets are local policy.
 
 **Red-team exception (operator 2026-10-11, #10437).** For code review
 only, when no independent outside-family reviewer can be obtained, a

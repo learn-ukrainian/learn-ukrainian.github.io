@@ -1,6 +1,6 @@
 # Review brief for a review-loop round
 
-The section layout of every review brief (target, outcome, threat and input model,
+The section layout of every review brief (target, outcome, input contract,
 dispositions, reviewer duties, breakers) is the
 [review brief template](../../drive-epic/references/review-merge-cleanup.md#review-brief-template-10665).
 Use it unchanged. This file lists only what review-loop adds to it.
@@ -9,7 +9,7 @@ Use it unchanged. This file lists only what review-loop adds to it.
 
 Add to the template's **Target** section:
 
-- the review round (`round 1 of <tier>`), the budget tier and who recorded it;
+- the review round (`round 1 of 3`, or of the budget the repository declares);
 - the author model of every commit on the branch, the catalog risk and the review profile;
 - the base ref and merge-base SHA, so the reviewer reviews `merge-base..exact head`;
 - the checks already run, with their results or CI run ids (reviewers do not re-run suites).
@@ -59,11 +59,12 @@ Freeze sections 2 to 4 of the template from round 1; do not edit them. Section 1
 
 - the last reviewed head and the new exact head;
 - the fix diff between them (`git diff <last reviewed head>..<new head>`);
-- the ledger: every open id with its fix evidence, or the author's decline with file:line or
-  test evidence;
-- the budget state (`round 2 of 3`, or `round 4 of 5` with the open blocker id that justifies it).
+- the ledger: every open id with its fix evidence, the author's decline with file:line or
+  test evidence, or the author's `not_applicable` claim with its proof;
+- the budget state (`round 2 of 3`, or of the budget the repository declares).
 
-The reviewer marks every earlier id `resolved` or `still open: <reason>`, reviews only the
+The reviewer marks every earlier id `resolved` or `still open: <reason>`, confirms or contests
+each `not_applicable` claim on its evidence ([severity](policy.md#severity)), reviews only the
 delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format.
 
 ## Commands a read-only reviewer can run
