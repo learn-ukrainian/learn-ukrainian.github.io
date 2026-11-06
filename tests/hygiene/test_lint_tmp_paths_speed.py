@@ -226,7 +226,9 @@ def _load_base_lint(tmp_path: Path) -> object:
             timeout=60,
         ).stdout.strip()
         pytest.skip(f"origin/main scanner is unavailable in this checkout (shallow={shallow or 'unknown'})")
-    target = tmp_path / "base_lint_tmp_paths.py"
+    # Keep the package-shaped location so the base copy names the same package tree.
+    target = tmp_path / BASE_SOURCE
+    target.parent.mkdir(parents=True)
     target.write_text(result.stdout)
     spec = importlib.util.spec_from_file_location("base_lint_tmp_paths_11402", target)
     assert spec is not None and spec.loader is not None
