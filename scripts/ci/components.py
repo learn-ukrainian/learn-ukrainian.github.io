@@ -349,6 +349,8 @@ def dependency_nodes(tree: ast.AST, strings: set[str] | None = None) -> list[ast
         for field in node._fields:
             value = getattr(node, field)
             if isinstance(value, list):
+                if not value:
+                    continue
                 pending.extend(child for child in value
                                if isinstance(child, ast.AST) and child._fields
                                and not isinstance(child, ignored))
