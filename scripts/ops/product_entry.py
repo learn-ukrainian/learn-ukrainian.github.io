@@ -39,8 +39,8 @@ Contract of :func:`load_configured_module`:
   in the root, every other part by the import system in its parent's search
   path, which is checked
   again after the parent's own code has run. The found spec is checked, then
-  the part is imported and checked once more. So no module outside the root
-  runs because of this call, whatever a package's code did to its search path.
+  the part is imported and checked once more. No part of the requested name
+  outside the root runs, even after a package changes its own search path.
 * A scoped, thread-aware :class:`importlib.abc.MetaPathFinder` guards the named
   module and its ancestors. Every resolution, including a retry after another
   thread's failed import, returns a root-checked spec or raises before execution.
@@ -166,15 +166,20 @@ def _preflight(name: str, prefixes: list[str], start: int, scripts_dir: Path) ->
         search = list(spec.submodule_search_locations or [])
 
 
-class _ProductScope:
-    """The names and root guarded by one call."""
+class _ProductFinder(importlib.abc.MetaPathFinder):
+    """One call's names and root, guarded only in its owning thread."""
 
     def __init__(self, name: str, prefixes: list[str], scripts_dir: Path) -> None:
         self.name = name
         self.prefixes = frozenset(prefixes)
         self.scripts_dir = scripts_dir
+        self.thread = threading.current_thread()
 
-    def find_spec(self, fullname: str, path: Iterable[str] | None) -> ModuleSpec:
+    def find_spec(
+        self, fullname: str, path: Iterable[str] | None = None, target: ModuleType | None = None
+    ) -> ModuleSpec | None:
+        if threading.current_thread() is not self.thread or fullname not in self.prefixes:
+            return None
         if fullname == _TOP:
             search = [str(self.scripts_dir.parent)]
         else:
@@ -192,45 +197,17 @@ class _ProductScope:
         return spec
 
 
-class _ThreadScopes(threading.local):
-    def __init__(self) -> None:
-        self.scopes: tuple[_ProductScope, ...] = ()
-
-
-class _ProductFinder(importlib.abc.MetaPathFinder):
-    """One stable registration while any thread has a scope; scopes themselves are thread-local."""
-
-    def __init__(self) -> None:
-        self.local = _ThreadScopes()
-        self.users = 0
-
-    def find_spec(self, fullname: str, path=None, target=None) -> ModuleSpec | None:
-        for scope in reversed(self.local.scopes):
-            if fullname in scope.prefixes:
-                return scope.find_spec(fullname, path)
-        return None
-
-
-_PRODUCT_FINDER = _ProductFinder()
-
-
 @contextmanager
 def _confined_imports(name: str, prefixes: list[str], scripts_dir: Path) -> Iterator[None]:
-    scope = _ProductScope(name, prefixes, scripts_dir)
-    previous = _PRODUCT_FINDER.local.scopes
+    """Replace the list so an import traversing an earlier list cannot skip a finder at cleanup."""
+    finder = _ProductFinder(name, prefixes, scripts_dir)
     with _FINDER_LOCK:
-        if _PRODUCT_FINDER.users == 0:
-            sys.meta_path.insert(0, _PRODUCT_FINDER)
-        _PRODUCT_FINDER.users += 1
-        _PRODUCT_FINDER.local.scopes = (*previous, scope)
+        sys.meta_path = [finder, *sys.meta_path]
     try:
         yield
     finally:
         with _FINDER_LOCK:
-            _PRODUCT_FINDER.local.scopes = previous
-            _PRODUCT_FINDER.users -= 1
-            if _PRODUCT_FINDER.users == 0:
-                sys.meta_path[:] = [registered for registered in sys.meta_path if registered is not _PRODUCT_FINDER]
+            sys.meta_path = [registered for registered in sys.meta_path if registered is not finder]
 
 
 def _load_part(name: str, prefix: str, scripts_dir: Path) -> ModuleType:

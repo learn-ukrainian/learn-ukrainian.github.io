@@ -483,13 +483,13 @@ def test_overlapping_thread_scopes_guard_only_their_own_names_and_remove_only_th
             thread.start()
         assert all(event.wait(10) for event in entered.values())
         active = list(sys.meta_path)
-        assert len(active) == len(before) + 1
+        assert len(active) == len(before) + 2
         assert importlib.util.find_spec(first).origin == "ambient-sentinel"
         assert importlib.util.find_spec(second).origin == "ambient-sentinel"
         release[first].set()
         threads[first].join(timeout=10)
         assert not threads[first].is_alive()
-        assert sys.meta_path == active
+        assert len(sys.meta_path) == len(before) + 1
         assert results[first].VALUE == 31
         # The first scope's exit must not remove the second scope's guard.
         release[second].set()
@@ -530,6 +530,80 @@ def test_guarded_missing_names_raise_without_delegating_to_an_ambient_finder(pro
     with pytest.raises(ModuleNotFoundError):
         load_configured_module(f"scripts.{missing}")
     assert consulted == []
+    assert sys.meta_path == before
+
+
+def test_last_scope_cleanup_does_not_skip_an_unrelated_imports_ambient_finder(product, tmp_path, monkeypatch):
+    """C3: cleanup must not shift the finder list under an unrelated ordinary import already traversing it."""
+    load_configured_module(product.leaf("VALUE = 1\n"))
+    target = product.leaf("VALUE = 41\n")
+    unrelated = f"lu_confined_unrelated_{uuid.uuid4().hex}"
+    source = tmp_path / "not-on-the-import-path" / "ambient.py"
+    source.parent.mkdir()
+    source.write_text(product.recording("ambient", "VALUE = 42\n"), encoding="utf-8")
+    reached_guard = threading.Event()
+    resume_ordinary = threading.Event()
+    entered = threading.Event()
+    resume_configured = threading.Event()
+
+    class AmbientFinder(importlib.abc.MetaPathFinder):
+        def find_spec(self, fullname, path=None, target=None):
+            if fullname == unrelated:
+                return importlib.util.spec_from_file_location(fullname, source)
+            return None
+
+    monkeypatch.setattr(sys, "meta_path", [AmbientFinder(), *sys.meta_path])
+    before = list(sys.meta_path)
+    original_find = product_entry._ProductFinder.find_spec
+    original_import = product_entry._import
+
+    def observed_find(self, fullname, path=None, target=None):
+        if fullname == unrelated:
+            reached_guard.set()
+            assert resume_ordinary.wait(10)
+        return original_find(self, fullname, path, target)
+
+    def observed_import(prefix, scripts_dir):
+        module = original_import(prefix, scripts_dir)
+        if prefix == target:
+            entered.set()
+            assert resume_configured.wait(10)
+        return module
+
+    monkeypatch.setattr(product_entry._ProductFinder, "find_spec", observed_find)
+    monkeypatch.setattr(product_entry, "_import", observed_import)
+    results = {}
+    errors = {}
+
+    def run(label, load, name):
+        try:
+            results[label] = load(name)
+        except BaseException as exc:
+            errors[label] = exc
+
+    configured = threading.Thread(target=run, args=("configured", load_configured_module, target), daemon=True)
+    ordinary = threading.Thread(target=run, args=("ordinary", importlib.import_module, unrelated), daemon=True)
+    configured.start()
+    try:
+        assert entered.wait(10)
+        ordinary.start()
+        assert reached_guard.wait(10)
+        resume_configured.set()
+        configured.join(timeout=10)
+        assert not configured.is_alive()
+        assert results["configured"].VALUE == 41
+        assert sys.meta_path == before
+    finally:
+        resume_configured.set()
+        resume_ordinary.set()
+        configured.join(timeout=10)
+        if ordinary.ident is not None:
+            ordinary.join(timeout=10)
+        sys.modules.pop(unrelated, None)
+    assert not ordinary.is_alive()
+    assert errors == {}
+    assert results["ordinary"].VALUE == 42
+    assert product.ran() == ["scripts", "ambient"]
     assert sys.meta_path == before
 
 
