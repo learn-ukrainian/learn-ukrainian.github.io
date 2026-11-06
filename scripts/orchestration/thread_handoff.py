@@ -57,16 +57,18 @@ try:
     from scripts.orchestration.task_family.storage import advisory_lock as task_family_advisory_lock
 except ImportError as exc:
     # Two fallback-worthy shapes when running script-by-path (issue #6411):
-    #   1. ModuleNotFoundError name="scripts" — repo root not on sys.path.
+    #   1. ModuleNotFoundError naming this package (its directory name, from
+    #      this file's unresolved location, design-v1 amendment 1) — repo root
+    #      not on sys.path.
     #   2. Plain ImportError "cannot import name … from 'scripts'" — a FOREIGN
     #      `scripts` namespace package (e.g. a stray editable install's raw
     #      .pth path) shadows this repo's package. The 2026-08-06 incident
     #      crashed here and the SessionStart hook mislabeled the crash as a
     #      lease conflict.
     # A genuine missing submodule/dependency (ModuleNotFoundError for anything
-    # other than `scripts`) still raises; so does any failure when running as a
+    # other than this package) still raises; so does any failure when running as a
     # real package (-m from repo root).
-    if __package__ or (isinstance(exc, ModuleNotFoundError) and exc.name != "scripts"):
+    if __package__ or (isinstance(exc, ModuleNotFoundError) and exc.name != Path(os.path.abspath(__file__)).parents[1].name):
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import task_identity

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Bootstrap Codex checkouts without copying provider history or the .agent tree.
 
+# The machinery package's directory name in checkout paths, from this file's
+# unresolved location (design-v1 amendment 1).
+_thread_rollover_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || _thread_rollover_lib_dir=''
+THREAD_ROLLOVER_PACKAGE="${_thread_rollover_lib_dir%/*}"
+THREAD_ROLLOVER_PACKAGE="${THREAD_ROLLOVER_PACKAGE##*/}"
+unset _thread_rollover_lib_dir
+
 ensure_thread_rollover_link() {
   local canonical_root="$1"
   local worktree_root="$2"
@@ -259,7 +266,7 @@ bootstrap_codex_checkout() {
   local canonical_root="$1"
   local worktree_root="$2"
   local deploy_failure_policy="${3:-fail}"
-  local deploy_helper="$worktree_root/scripts/lib/deploy_extensions.sh"
+  local deploy_helper="$worktree_root/$THREAD_ROLLOVER_PACKAGE/lib/deploy_extensions.sh"
 
   ensure_codex_venv_link "$canonical_root" "$worktree_root" || return 1
   ensure_thread_rollover_link "$canonical_root" "$worktree_root" || return 1
@@ -285,7 +292,7 @@ bootstrap_codex_checkout() {
 
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then
   if [ "$#" -ne 2 ]; then
-    echo "Usage: bash scripts/lib/thread_rollover_link.sh <canonical-repo-root> <checkout-root>" >&2
+    echo "Usage: bash $THREAD_ROLLOVER_PACKAGE/lib/thread_rollover_link.sh <canonical-repo-root> <checkout-root>" >&2
     exit 2
   fi
   bootstrap_codex_checkout "$1" "$2"
