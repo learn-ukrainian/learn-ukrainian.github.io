@@ -9,8 +9,8 @@
 
   Install (optional, operator):
     cp scripts/config/retention-plan.plist.example ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
-    # replace REPO_ROOT with the checkout path before load; the engine path is
-    # relative to WorkingDirectory
+    # replace REPO_ROOT with the checkout path before load; the command runs
+    # relative to WorkingDirectory, so no checkout path enters the shell source
     launchctl load ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
 -->
 <plist version="1.0">
@@ -23,7 +23,7 @@
     <array>
       <string>/bin/sh</string>
       <string>-c</string>
-      <string>exec REPO_ROOT/.venv/bin/python scripts/hygiene/retention_engine.py plan</string>
+      <string>exec .venv/bin/python scripts/hygiene/retention_engine.py plan</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
