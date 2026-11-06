@@ -29,7 +29,7 @@ from scripts.orchestration.task_record_store import locate_task_record
 
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 # This CLI as it was started: by its import name under ``-m``, else by its file.
 _ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
