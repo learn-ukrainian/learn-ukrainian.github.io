@@ -48,9 +48,10 @@ from scripts.orchestration.integration_sweep import (
 from scripts.publish.github import Request, request_run
 from scripts.review import contract_canary
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 FLOOR = 500

@@ -1102,9 +1102,8 @@ Bounded workers retain the v2 driver-brief and `--advisory-task` admission paths
 Use `--print-advisory-binding` with the exact worker request, and run the
 read-only advisor with `--advisory-role bounded_advisory_envelope
 --advisory-binding <digest>`. `--advisory-role` and `--advisory-binding` serve the
-catalog's `advisory_roles` decisions (`bounded_advisory_envelope`, read by
-`--advisory-task` admission, and `review_budget_elevation`, read by the verdict
-recorder): the read-only task records the role, route and bound digest, and its
+catalog's `advisory_roles` decisions (today only `bounded_advisory_envelope`, read by
+`--advisory-task` admission): the read-only task records the role, route and bound digest, and its
 worker seals the result at finish (`bounded_advisory.seal_advisor_result`). The
 fence and output fields come from the role's catalog entry.
 

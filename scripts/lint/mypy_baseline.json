@@ -10375,11 +10375,6 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "call-overload",
-      "message": "No overload variant of \"__getitem__\" of \"list\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "call-overload",
       "message": "No overload variant of \"next\" matches argument type \"list[bytes]\""
     },
     {
@@ -10390,27 +10385,7 @@
     {
       "path": "scripts/ci/pr_size_warning.py",
       "code": "index",
-      "message": "Invalid index type \"str\" for \"str\"; expected type \"SupportsIndex | slice[None | SupportsIndex, None | SupportsIndex, None | SupportsIndex]\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
       "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
-      "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for < (\"str\" and \"None\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for > (\"list[Any]\" and \"str\")"
     },
     {
       "path": "scripts/ci/pr_size_warning.py",
@@ -29126,86 +29101,6 @@
       "path": "scripts/research/research_quality.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"empty\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument \"model_id\" to \"load_sealed_result\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_withheld_reply\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"finding_entries\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"finding_entries\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"fromisoformat\" of \"date\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"fromisoformat\" of \"date\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"recognized_verdicts\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"findall\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"search\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | bool\", variable has type \"bool\")"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"list[tuple[None | str, str]]\", variable has type \"None | list[tuple[str, str]]\")"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "index",
-      "message": "Value of type \"None | tuple[bool, dict[str, list[None | str]]]\" is not indexable"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "index",
-      "message": "Value of type \"None | tuple[dict[str, Any], tuple[Any, ...]]\" is not indexable"
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "misc",
-      "message": "Generator has incompatible item type \"int\"; expected \"bool\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
-      "path": "scripts/review/budget_grant.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[tuple[str, str]]\" has no attribute \"__iter__\" (not iterable)"
     },
     {
       "path": "scripts/review/capability_failure.py",

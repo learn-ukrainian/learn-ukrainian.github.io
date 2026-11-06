@@ -88,31 +88,9 @@ ADVISOR_OUTPUT_FIELDS = [
 ]
 ADVISORY_ROLES_KEY = "advisory_roles"
 ADVISORY_ROLE_KEYS = frozenset({"effort", "fence", "output_fields"})
-REVIEW_BUDGET_ELEVATION_ROLE = "review_budget_elevation"
 BOUNDED_ADVISORY_ENVELOPE_ROLE = "bounded_advisory_envelope"
 # Role -> (fence label, exact typed-object fields, active holder families) the catalog entry must declare.
 ADVISORY_ROLE_SHAPES = {
-    REVIEW_BUDGET_ELEVATION_ROLE: (
-        "budget-elevation",
-        [
-            "decision",
-            "repository",
-            "pr",
-            "lineage_id",
-            "scope_paths",
-            "finding_id",
-            "blocker_class",
-            "issuer",
-            "issuer_model",
-            "issued_at",
-            "withheld_capability",
-            "p2_fix_verification",
-            "owner_request",
-            "admission_exclusion_attestation",
-            "request_sha256",
-        ],
-        2,
-    ),
     # The envelope has one advisor, the bounded_advisor seat's model, not a non-author pair.
     BOUNDED_ADVISORY_ENVELOPE_ROLE: ("advisory-envelope", ADVISOR_OUTPUT_FIELDS, 1),
 }

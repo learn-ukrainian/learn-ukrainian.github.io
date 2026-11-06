@@ -54,9 +54,10 @@ from scripts.orchestration.task_record_store import iter_task_records, read_task
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _PACKAGE_DIR = _PACKAGE.replace(".", "/")
 
 SCHEMA_VERSION = "scheduled-git-hygiene.v3"

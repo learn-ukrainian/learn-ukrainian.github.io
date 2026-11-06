@@ -69,11 +69,13 @@ PR's CI runs; review the diff, run at most the specific tests that reproduce
 a finding you are checking, and cite CI run ids for suite results.
 
 The review rules bind every round (#10665): the round-1 brief freezes the
-outcome, the threat and input model and the dispositions (checklist Step 2);
-findings are one per input class, each with a reproducer (Step 4); blocking
-follows the stated contract, existing invariants on the change's paths and
-regressions against main, verdicts are proportional, and a missing required
-capability is INCONCLUSIVE, which still blocks (Step 5); exact-head CI that
+outcome, the input contract and the dispositions (checklist Step 2);
+findings are one per input class, each with a reproducer (Step 4); a P0–P2
+finding blocks only when its trigger is reachable under the input contract,
+a demonstrated P0–P2 regression against main blocks, the author may answer
+with `not_applicable` and proof for the reviewer to confirm, verdicts are
+proportional, and a missing required capability is INCONCLUSIVE, which still
+blocks (Step 5); exact-head CI that
 answers the execution questions is valid evidence, a capability note is not a
 verdict, and new tests name their defect class (Step 5). From round 2 on, the
 reviewer brief uses DELTA scope. Step 6 applies the canonical

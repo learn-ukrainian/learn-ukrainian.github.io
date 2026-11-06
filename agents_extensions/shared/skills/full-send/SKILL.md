@@ -253,7 +253,7 @@ head and completed work so a successor can resume.
 ## Report
 
 Lead with the outcome. Then: PR, merge SHA, the proof (commands and run ids), review rounds
-against the tier with reviewer model, family and harness, the decisions you made, follow-ups
+used of the budget with reviewer model, family and harness, the decisions you made, follow-ups
 with owners, how each linked issue was disposed of, the closeout receipt, and the residual
 owner or "none".
 

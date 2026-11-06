@@ -82,7 +82,7 @@ from scripts.orchestration.task_record_store import read_task_record
 
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parent.name
+_MACHINERY = Path(os.path.abspath(__file__)).parents[0].name
 _DISPATCH = f"{_MACHINERY}/dispatch.py"
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"

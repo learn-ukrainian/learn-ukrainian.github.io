@@ -16,15 +16,17 @@ It reuses the backup alert's publisher and state files
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from uuid import uuid4
 
 from scripts.orchestration import backup_failure_alert as alerts
 from scripts.orchestration import dispatch_admission as admission
 
-# This package's import name; its dotted parts are also its directories in checkout-relative
-# paths (from the unresolved file location when this module runs as a file).
-_PACKAGE = __package__ or f"{Path(__file__).parents[1].name}.{Path(__file__).parent.name}"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 
 STATE_NAME = "disk-watermark-alert.json"
 _ABOVE = "above"
