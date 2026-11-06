@@ -120,13 +120,14 @@ def test_bound_label_checkout_setting_that_changes_auth_is_refused(accounts, mon
     assert _calls(accounts, "run") == []
 
 
-def test_bound_label_runs_with_only_the_bound_login_directory(accounts, monkeypatch):  # noqa: F811
+@pytest.mark.parametrize("mode", ["workspace-write", "read-only"])
+def test_bound_label_runs_with_only_the_bound_login_directory(accounts, monkeypatch, mode):  # noqa: F811
     """Ported from tests/agent_runtime/test_claude_account_worker.py::test_bound_label_runs_with_only_the_bound_login_directory.
 
     Label b's worker runs behind the launch guard in the bound login directory, with no user-scope
-    settings and no other credential source.
+    settings and no other credential source, in either mode.
     """
-    spec, invocation = _labelled(accounts, monkeypatch)
+    spec, invocation = _labelled(accounts, monkeypatch, mode=mode)
     launched = admission.claude_launch(spec, invocation)
 
     completed = subprocess.run(
@@ -191,6 +192,7 @@ def test_api_key_label_runs_on_its_bound_key_helper(api_key_accounts, monkeypatc
     ("case", "code"),
     [
         ("checkout_bedrock", "claude_account_auth_method_conflict"),
+        ("login_marker", "claude_account_auth_method_conflict"),
         ("status_endpoint", "claude_account_status_override"),
         ("settings_changed", "claude_account_settings_changed"),
     ],
@@ -204,6 +206,8 @@ def test_api_key_label_launch_refuses_a_competing_source(api_key_accounts, monke
         _private_json(local, {"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}})
     elif case == "status_endpoint":
         fake["LU_FAKE_CLAUDE_STATUS_MODE"] = "text_endpoint"
+    elif case == "login_marker":  # the subscription login's 2.1.319 keys never stand beside a helper
+        fake["LU_FAKE_CLAUDE_STATUS_MODE"] = "login_marker"
     else:  # a checkout settings file the digest binds changes while it is verified
         local.parent.mkdir()
         fake["LU_FAKE_CLAUDE_STATUS_TOUCH"] = str(local)

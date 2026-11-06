@@ -337,11 +337,17 @@ _LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvid
 # Every key the JSON status may carry for that login. Claude Code adds
 # ``apiKeySource``, ``allowedProviders`` or ``forcedLoginMethod`` only when a
 # key, provider policy or login policy is in force; each refuses. Since 2.1.318
-# it also reports the date the stored sign-in ends (``loginExpiresAt``).
+# it also reports the date the stored sign-in ends (``loginExpiresAt``). Since
+# 2.1.319 a ``claude.ai`` login also carries ``storedClaudeAiLogin``, which that
+# branch sets to ``true`` and nothing else, and ``planTier``; the two are always
+# reported together.
 _LABELLED_AUTH_STATUS_KEYS = frozenset(
     {*_LABELLED_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
-    | {"email", "orgId", "orgName", "subscriptionType", "loginExpiresAt"}
+    | {"email", "orgId", "orgName", "subscriptionType", "loginExpiresAt", "storedClaudeAiLogin", "planTier"}
 )
+# The ``planTier`` Claude Code 2.1.319 derives for each consumer ``subscriptionType``
+# (Max also by the login's rate-limit tier); any other plan is reported as ``other``.
+_LABELLED_PLAN_TIERS = {"pro": frozenset({"pro"}), "max": frozenset({"max_5x", "max_20x", "max_other"})}
 # Every line label the text status may print for that login, including the
 # sign-in end date (2.1.318). It prints a line for each endpoint, proxy,
 # certificate, token, key or provider override in effect (JSON reports none of
@@ -1306,8 +1312,9 @@ def _verify_labelled_auth_method(
     files, ``--settings``) is resolved by Claude Code itself. The JSON
     must name the subscription login, the first-party provider, the bound
     directory and a consumer plan (the plan Claude Code itself resolved for
-    the login decides whether it fetches organisational policy), with no key
-    outside the allowlist; the text must carry no line outside its allowlist,
+    the login decides whether it fetches organisational policy) with the plan
+    tier Claude Code derives for that plan, with no key outside the allowlist;
+    the text must carry no line outside its allowlist,
     which is what attests the endpoint. Output is parsed, never logged or
     kept.
     """
@@ -1361,7 +1368,14 @@ def _verify_labelled_auth_method(
         if [line for line in status("--text").splitlines() if line.strip()] != _API_KEY_STATUS_TEXT:
             raise ClaudeAccountRefused("claude_account_status_override")
         return
-    if parsed.get("subscriptionType") not in CLAUDE_CONSUMER_PLANS.values():
+    stored = parsed.get("storedClaudeAiLogin", True)
+    if ("storedClaudeAiLogin" in parsed) != ("planTier" in parsed) or stored is not True:
+        raise ClaudeAccountRefused("claude_account_auth_method_conflict")
+    plan = parsed.get("subscriptionType")
+    if not isinstance(plan, str) or plan not in CLAUDE_CONSUMER_PLANS.values():
+        raise ClaudeAccountRefused("claude_account_plan_unverified")
+    tier = parsed.get("planTier")
+    if "planTier" in parsed and not (isinstance(tier, str) and tier in _LABELLED_PLAN_TIERS.get(plan, frozenset())):
         raise ClaudeAccountRefused("claude_account_plan_unverified")
     lines = [line for line in status("--text").splitlines() if line.strip()]
     labels = [line.partition(": ")[0] if ": " in line else None for line in lines]
