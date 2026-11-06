@@ -30,7 +30,9 @@ Contract of :func:`load_configured_module`:
   own, and then every uncached part that can be found without running product
   code. A refusal there runs no product code and changes no cache entry: a
   cached module from another checkout is refused and left cached, never evicted
-  or rebound.
+  or rebound. An ordinary-imported namespace whose missing ancestor makes its
+  search path uninspectable is refused too, without rebuilding cache entries
+  or reading private namespace metadata.
 * Then the parts are imported one at a time, as an ordinary import imports
   them: a cached module is used as it is, and only the uncached parts at the
   end of the name run, from the one below the deepest cached part (or from the
@@ -157,13 +159,13 @@ def _preflight(name: str, prefixes: list[str], start: int, scripts_dir: Path) ->
     if start == 0:
         search = [str(scripts_dir.parent)]
     else:
-        search = list(getattr(sys.modules.get(prefixes[start - 1]), "__path__", None) or [])
+        parent = prefixes[start - 1]
+        search = _check_search_paths(name, parent, getattr(sys.modules.get(parent), "__path__", None), scripts_dir)
     for prefix in prefixes[start:]:
         spec = _find_spec(prefix, search)
         if spec is None:
             return
-        _check_spec(name, prefix, spec, scripts_dir, is_leaf=prefix == name)
-        search = list(spec.submodule_search_locations or [])
+        search = _check_spec(name, prefix, spec, scripts_dir, is_leaf=prefix == name)
 
 
 class _ProductFinder(importlib.abc.MetaPathFinder):
@@ -188,8 +190,7 @@ class _ProductFinder(importlib.abc.MetaPathFinder):
             if parent is None:
                 raise ConfiguredModuleError(f"{parent_name} is not cached while {self.name} loads", name=self.name)
             _check_module(self.name, parent_name, parent, self.scripts_dir, is_leaf=False)
-            search = list(path or [])
-            _check_search_paths(self.name, parent_name, search, self.scripts_dir)
+            search = _check_search_paths(self.name, parent_name, path, self.scripts_dir)
         spec = _find_spec(fullname, search)
         if spec is None:
             raise ModuleNotFoundError(f"No module named {fullname!r}", name=fullname)
@@ -253,22 +254,29 @@ def _check_module(name: str, prefix: str, module: ModuleType, scripts_dir: Path,
         origin is not None and not (isinstance(origin, str) and _inside(origin, scripts_dir))
     ):
         raise ConfiguredModuleError(_not_here(prefix, origin, scripts_dir), name=name)
-    _check_search_paths(name, prefix, getattr(module, "__path__", None) or [], scripts_dir)
+    _check_search_paths(name, prefix, getattr(module, "__path__", None), scripts_dir)
 
 
-def _check_spec(name: str, prefix: str, spec: ModuleSpec, scripts_dir: Path, *, is_leaf: bool) -> None:
+def _check_spec(name: str, prefix: str, spec: ModuleSpec, scripts_dir: Path, *, is_leaf: bool) -> list[str]:
     origin = spec.origin if spec.has_location else None
     if (origin is None and is_leaf) or (origin is not None and not _inside(origin, scripts_dir)):
         raise ConfiguredModuleError(_not_here(prefix, origin, scripts_dir), name=name)
-    _check_search_paths(name, prefix, spec.submodule_search_locations or [], scripts_dir)
+    return _check_search_paths(name, prefix, spec.submodule_search_locations, scripts_dir)
 
 
-def _check_search_paths(name: str, prefix: str, paths: Iterable[str], scripts_dir: Path) -> None:
-    for entry in paths:
+def _check_search_paths(name: str, prefix: str, paths: Iterable[str] | None, scripts_dir: Path) -> list[str]:
+    try:
+        entries = [] if paths is None else list(paths)
+    except KeyError as exc:
+        raise ConfiguredModuleError(
+            f"{prefix} package search path is unavailable while loading {name}: missing ancestor {exc}", name=name
+        ) from exc
+    for entry in entries:
         if not isinstance(entry, str) or not _inside(entry, scripts_dir):
             raise ConfiguredModuleError(
                 f"{prefix} searches outside this checkout's scripts/ ({scripts_dir}): {entry!r}", name=name
             )
+    return entries
 
 
 def _not_here(prefix: str, origin: object, scripts_dir: Path) -> str:

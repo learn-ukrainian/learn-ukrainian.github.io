@@ -222,6 +222,36 @@ def test_a_cached_module_is_used_without_rerunning_its_missing_ancestors(product
     assert "scripts.pkg" not in sys.modules
 
 
+def test_an_uninspectable_ordinary_namespace_path_refuses_without_cache_mutation(product, tmp_path, monkeypatch):
+    """A dynamic namespace path with a missing ancestor must give a typed refusal, not a raw KeyError."""
+    product.write("pkg/__init__.py", product.recording("pkg"))
+    name = product.leaf(product.recording("leaf", "VALUE = 17\n"), package="pkg.ns")
+    monkeypatch.syspath_prepend(str(product.root))
+    leaf = importlib.import_module(name)
+    namespace = sys.modules["scripts.pkg.ns"]
+    top = sys.modules["scripts"]
+    parent = sys.modules.pop("scripts.pkg")
+    assert importlib.import_module(name) is leaf
+    foreign = Product(tmp_path / "foreign", product.runs)
+    foreign.write("__init__.py", foreign.recording("foreign-scripts"))
+    foreign.write("pkg/__init__.py", foreign.recording("foreign-pkg"))
+    foreign.write("pkg/ns/__init__.py", foreign.recording("foreign-ns"))
+    foreign.write(f"pkg/ns/{name.rpartition('.')[2]}.py", foreign.recording("foreign-leaf"))
+    monkeypatch.syspath_prepend(str(foreign.root))
+
+    with pytest.raises(ConfiguredModuleError, match=r"missing ancestor.*scripts\.pkg") as caught:
+        load_configured_module(name)
+
+    assert caught.value.name == name
+    assert isinstance(caught.value.__cause__, KeyError)
+    assert caught.value.__cause__.args == ("scripts.pkg",)
+    assert sys.modules[name] is leaf
+    assert sys.modules["scripts.pkg.ns"] is namespace
+    assert sys.modules["scripts"] is top and top.pkg is parent
+    assert "scripts.pkg" not in sys.modules
+    assert product.ran() == ["scripts", "pkg", "leaf"]
+
+
 def test_a_load_waiting_on_an_ordinary_import_does_not_deadlock(product, monkeypatch):
     """A product module, imported the ordinary way in one thread, calls the loader while another thread waits for it."""
     load_configured_module(product.leaf("VALUE = 1\n"))
