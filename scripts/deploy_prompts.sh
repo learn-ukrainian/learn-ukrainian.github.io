@@ -470,7 +470,7 @@ check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXT
 # is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
-check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS" "gemini_extensions → .gemini" || orphan_fail=true
+check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $(gemini_shared_skill_overlay_paths "$SHARED_EXTENSIONS/skills")" "gemini_extensions → .gemini" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
 check_shared_skill_collisions || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
@@ -483,7 +483,8 @@ echo ""
 
 # Step 1: Lint prompts (blocks deploy on failure)
 echo "=== Lint prompts ==="
-"$PROJECT_PYTHON" scripts/lint_prompts.py
+# Lint the project being deployed, never the product checkout the resolver selects.
+"$PROJECT_PYTHON" scripts/lint_prompts.py --project-root "$PROJECT_ROOT"
 echo ""
 
 # Verify that all hooks in source directories are executable on disk

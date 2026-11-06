@@ -72,9 +72,9 @@ _SYNTHETIC_SOURCE_DIRS = (
     "agents_extensions/shared/hooks",
     "agents_extensions/codex",
     "gemini_extensions",
-    # Shared skills land in .gemini/skills. The orphan preflight treats that
-    # directory as source-owned only when gemini_extensions/skills exists;
-    # skills/* does not match the directory itself.
+    # Shared skills land in .gemini/skills. Synthetic checkouts carry
+    # gemini_extensions/skills like learn-ukrainian does; a project without it
+    # is test_consumer_without_provider_skills_redeploys_and_passes_checker.
     "gemini_extensions/skills",
 )
 _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
@@ -1323,6 +1323,130 @@ def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None
     combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
     assert deploy_result.returncode != 0
     assert "shared/Gemini skill collision: post-build-review" in combined_output
+
+
+# The machinery resolver a consumer carries with the deploy scripts. The consumer
+# tests below copy it so the linter imports the consumer's own copy, as a real
+# consumer deploy does.
+_CONSUMER_RESOLVER = (Path("scripts/common/__init__.py"), Path("scripts/common/repo_root.py"))
+_CONSUMER_LINT_SOURCE = Path("agents_extensions/shared/phases/consumer-phase.md")
+
+
+def _init_consumer(tmp_path: Path) -> Path:
+    """A project that is not learn-ukrainian: no product marker, no gemini_extensions/skills.
+
+    It has one shared skill, so the Gemini overlay creates .gemini/skills itself. Its
+    interpreter execs the real one: the warm broker would import this checkout's
+    resolver, which finds the product marker, instead of the consumer's own copy.
+    """
+    repo = tmp_path / "consumer"
+    repo.mkdir()
+    _copy_deploy_harness(repo)
+    for relative in _CONSUMER_RESOLVER:
+        (repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / relative, repo / relative)
+    (repo / ".venv/bin/python").write_text(
+        f'#!/usr/bin/env bash\nexec {shlex.quote(str(PROJECT_PYTHON))} "$@"\n', encoding="utf-8"
+    )
+    files = {
+        "agents_extensions/shared/skills/consumer-hello/SKILL.md": (
+            "---\nname: consumer-hello\ndescription: Greet the user of this consumer project.\n---\n\n"
+            "# Consumer hello\n\nGreet the user.\n"
+        ),
+        "agents_extensions/shared/rules/consumer.md": "# Consumer rule\n",
+        str(_CONSUMER_LINT_SOURCE): "# Consumer phase\n\nDo the phase.\n",
+        "agents_extensions/codex/hooks.json": "{}\n",
+        "gemini_extensions/settings.json": "{}\n",
+    }
+    for relative, text in files.items():
+        (repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        (repo / relative).write_text(text, encoding="utf-8")
+    assert not (repo / "curriculum/l2-uk-en/curriculum.yaml").exists()
+    assert not (repo / "gemini_extensions/skills").exists()
+    _init_git_history(repo)
+    return repo
+
+
+def _init_other_product_checkout(tmp_path: Path) -> Path:
+    """Another checkout carrying the product marker, with no prompt files of its own."""
+    other = tmp_path / "other-product"
+    marker = other / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels:\n", encoding="utf-8")
+    return other
+
+
+@pytest.mark.parametrize("product_root_env", ["unset", "other-checkout"])
+def test_consumer_deploy_lints_its_own_prompt_files(tmp_path: Path, monkeypatch, product_root_env: str) -> None:
+    """Defect class: deploy-gate root selection (#12818 fault 1).
+
+    The deploy lint resolved the product checkout instead of the deploying project.
+    Without LU_PRODUCT_ROOT, the old code crashed with ProductRootError in a project
+    with no product marker. With LU_PRODUCT_ROOT naming another checkout, it linted that
+    checkout and let the consumer's own lint error through. The rejected deploy runs
+    first: it stops before any sync, so the repeat-deploy fault cannot mask this one.
+    """
+    repo = _init_consumer(tmp_path)
+    if product_root_env == "unset":
+        monkeypatch.delenv("LU_PRODUCT_ROOT", raising=False)
+    else:
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(_init_other_product_checkout(tmp_path)))
+    lint_source = repo / _CONSUMER_LINT_SOURCE
+    clean_text = lint_source.read_text(encoding="utf-8")
+
+    lint_source.write_text("# Consumer phase\n\nAct as a Helpful Neighbor.\n", encoding="utf-8")
+    # An orchestrator prompt directory with no curriculum level reaches make_violation.
+    orchestrator_dir = repo / "docs/prompts/orchestrators/consumer-track"
+    orchestrator_dir.mkdir(parents=True)
+    rejected = _run(repo, DEPLOY_SCRIPT)
+    output = f"{rejected.stdout}\n{rejected.stderr}"
+    assert "ProductRootError" not in output, output
+    assert rejected.returncode != 0, f"deploy accepted the consumer's lint error:\n{output}"
+    assert f"HELPFUL_NEIGHBOR: {_CONSUMER_LINT_SOURCE}:3" in rejected.stdout, output
+    assert "ORCH_TRACK_NOT_ACTIVE: docs/prompts/orchestrators/consumer-track:1" in rejected.stdout, output
+    assert not (repo / ".claude").exists(), "a rejected deploy synced"
+
+    lint_source.write_text(clean_text, encoding="utf-8")
+    orchestrator_dir.rmdir()
+    for attempt in ("first", "repeat"):
+        clean = _run(repo, DEPLOY_SCRIPT)
+        assert clean.returncode == 0, f"{attempt} clean consumer deploy failed:\n{clean.stdout}\n{clean.stderr}"
+        assert "All prompts clean" in clean.stdout
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, f"checker failed:\n{check.stdout}\n{check.stderr}"
+
+
+def test_consumer_without_provider_skills_redeploys_and_passes_checker(tmp_path: Path, monkeypatch) -> None:
+    """Defect class: deploy idempotency, overlay parent ownership (#12818 fault 2).
+
+    With shared skills and no gemini_extensions/skills, the first deploy creates
+    .gemini/skills. The skills/* overlay entry matches its children but not the
+    directory itself, so the old preflight called it an undeclared orphan and aborted
+    the repeat deploy. LU_PRODUCT_ROOT names a clean product checkout so the old lint
+    passes and the old code fails at that repeat deploy.
+    """
+    repo = _init_consumer(tmp_path)
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(_init_other_product_checkout(tmp_path)))
+
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, f"first deploy failed:\n{first.stdout}\n{first.stderr}"
+    assert (repo / ".gemini/skills/consumer-hello/SKILL.md").exists()
+
+    second = _run(repo, DEPLOY_SCRIPT)
+    assert second.returncode == 0, f"repeat deploy failed:\n{second.stdout}\n{second.stderr}"
+    assert "undeclared orphan" not in second.stdout
+    assert "No changes to deploy." in second.stdout
+
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, f"checker failed after repeat deploy:\n{check.stdout}\n{check.stderr}"
+
+    # The parent directory is owned, its unowned children are not.
+    rogue = repo / ".gemini/skills/rogue-skill/SKILL.md"
+    rogue.parent.mkdir()
+    rogue.write_text("unowned\n", encoding="utf-8")
+    rogue_check = _run(repo, CHECK_SCRIPT)
+    assert rogue_check.returncode != 0
+    assert "Unowned deployed Gemini skill: .gemini/skills/rogue-skill" in rogue_check.stdout
 
 
 def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> None:
