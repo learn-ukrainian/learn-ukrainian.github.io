@@ -3,11 +3,16 @@
 set -euo pipefail
 
 if [[ "${1:-}" == --help ]]; then
-  cat <<'HELP'
+  # This helper's checkout-relative path: its package directory name, from its
+  # unresolved location (design-v1 amendment 1), then lib/.
+  self_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  package="${self_dir%/*}"
+  self="${package##*/}/lib/${BASH_SOURCE[0]##*/}"
+  cat <<HELP
 Verify a detached job's memory containment, then execute its command.
 Use inside a systemd user unit in lu.slice, never as an unbounded fallback.
-Usage: bash scripts/lib/job_memory_scope.sh MAX_BYTES -- COMMAND [ARG...]
-Example: systemd-run --user --scope --slice=lu.slice -p MemoryMax=192M -p MemorySwapMax=0 bash scripts/lib/job_memory_scope.sh 201326592 -- true
+Usage: bash $self MAX_BYTES -- COMMAND [ARG...]
+Example: systemd-run --user --scope --slice=lu.slice -p MemoryMax=192M -p MemorySwapMax=0 bash $self 201326592 -- true
 Outputs: executes COMMAND only after kernel memory/swap readback matches.
 Exit codes: command's status; 2 invalid arguments; 6 containment refused.
 Related: docs/runbooks/driver-memory-scope.md, issue #9624.

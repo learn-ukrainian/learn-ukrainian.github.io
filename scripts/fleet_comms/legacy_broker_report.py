@@ -8,6 +8,7 @@ coverage, or change the evidence it is evaluating.
 
 from __future__ import annotations
 
+import os
 import sqlite3
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
@@ -17,7 +18,9 @@ from typing import Any
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    # Only this package's own absence selects the short spelling; its name comes from this
+    # file's unresolved location (design-v1 amendment 1), never __package__.
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 

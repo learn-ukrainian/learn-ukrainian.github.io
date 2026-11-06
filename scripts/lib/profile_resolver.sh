@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Resolve a validated context profile into allow-listed project-private variables.
 
+# This checkout's context-profile resolver: this file's sibling, selected once
+# from this file's unresolved location (design-v1 amendment 1), whatever the
+# machinery package directory is called.
+_profile_resolver_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || _profile_resolver_lib_dir=''
+PROFILE_RESOLVER_CONTEXT_PY="${_profile_resolver_lib_dir:+$_profile_resolver_lib_dir/context_profiles.py}"
+unset _profile_resolver_lib_dir
+
 # Print ROLLOVER_MODE for <profile> from this checkout's contract resolver.
 # Fails when that resolver is the one that already omitted the field, cannot
 # run, or resolves a different profile than the caller's resolver did.
@@ -27,7 +34,7 @@ resolve_context_profile() {
   local p_id="${1:-}"
   local m_id="${2:-}"
   local project_dir="${PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-  local resolver_py="${CLAUDE_PROFILE_RESOLVER_PY:-$project_dir/scripts/lib/context_profiles.py}"
+  local resolver_py="${CLAUDE_PROFILE_RESOLVER_PY:-$PROFILE_RESOLVER_CONTEXT_PY}"
   local py_bin="${CLAUDE_PROFILE_RESOLVER_PYTHON:-$project_dir/.venv/bin/python}"
   local output_file key value var_name index rollover_mode
   local parse_error=0
@@ -97,7 +104,7 @@ resolve_context_profile() {
           [ "${resolved_keys[index]}" = "PROFILE_ID" ] && value="${resolved_values[index]}"
         done
         if ! rollover_mode=$(_context_profile_contract_rollover_mode \
-          "$py_bin" "$project_dir/scripts/lib/context_profiles.py" "$resolver_py" "$p_id" "$m_id" "$value"); then
+          "$py_bin" "$PROFILE_RESOLVER_CONTEXT_PY" "$resolver_py" "$p_id" "$m_id" "$value"); then
           echo "Error: Context-profile resolver omitted ROLLOVER_MODE and the current contract could not supply it" >&2
           return 1
         fi

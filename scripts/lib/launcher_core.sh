@@ -47,6 +47,32 @@ else
 fi
 unset _lc_machinery_dir _lc_machinery_flags
 
+# The machinery package's import name, which is also its directory name in checkout-relative
+# paths: the name of this file's parent directory, from its unresolved location (design-v1
+# amendment 1), never a resolved path. Module names handed to `python -m` or embedded programs are
+# this name plus the known package-relative suffix. Readonly once set, like LC_MACHINERY_DIR.
+if ! _lc_machinery_package="$(CDPATH='' cd -L -- "$(dirname -- "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd -L)" \
+    || [ -z "${_lc_machinery_package##*/}" ]; then
+  printf 'launcher: cannot resolve the machinery package of %s\n' "${BASH_SOURCE[0]}" >&2
+  unset _lc_machinery_package
+  return 1
+fi
+_lc_machinery_package="${_lc_machinery_package##*/}"
+_lc_machinery_flags="$(declare -p LC_MACHINERY_PACKAGE 2>/dev/null)" || _lc_machinery_flags=''
+_lc_machinery_flags="${_lc_machinery_flags#declare -}"
+_lc_machinery_flags="${_lc_machinery_flags%% *}"
+if [[ "$_lc_machinery_flags" == *r* ]]; then
+  if [ "$LC_MACHINERY_PACKAGE" != "$_lc_machinery_package" ]; then
+    printf 'launcher: LC_MACHINERY_PACKAGE is already %s; refusing a second machinery package %s\n' \
+      "$LC_MACHINERY_PACKAGE" "$_lc_machinery_package" >&2
+    unset _lc_machinery_package _lc_machinery_flags
+    return 1
+  fi
+else
+  readonly LC_MACHINERY_PACKAGE="$_lc_machinery_package"
+fi
+unset _lc_machinery_package _lc_machinery_flags
+
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
     # shellcheck source=scripts/launchers/muse.sh
@@ -223,7 +249,7 @@ launcher_project_python() {
 launcher_drop_unneeded_secrets() {
   local py sanitizer
   LC_CHILD_ENV_COMMAND=(env)
-  sanitizer="${LC_ROOT:-}/scripts/agent_runtime/env_sanitize.py"
+  sanitizer="$LC_MACHINERY_DIR/agent_runtime/env_sanitize.py"
   py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
     return 0
@@ -549,7 +575,7 @@ launcher_normalize_model() {
     claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
   if [ -n "$LC_MODEL" ]; then
-    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
+    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_MACHINERY_DIR/review/model_catalog.py" \
       --check-retired-model "$LC_MODEL" || exit 2
   fi
 }
@@ -835,15 +861,16 @@ launcher_validate_cursor_pin() {
   fi
   local normalized
   if ! normalized="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -c '
+import importlib
 import sys
 sys.path.insert(0, sys.argv[1])
-from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+catalog = importlib.import_module(sys.argv[3])
 try:
-    print(apply_cursor_model_pins(sys.argv[2]) or "")
-except ModelCatalogError as exc:
+    print(catalog.apply_cursor_model_pins(sys.argv[2]) or "")
+except catalog.ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
-' "$LC_ROOT" "$LC_MODEL")"; then
+' "$LC_ROOT" "$LC_MODEL" "$LC_MACHINERY_PACKAGE.review.model_catalog")"; then
     launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN; never Auto, Fast or a previous generation."
     exit 4
   fi
@@ -902,7 +929,7 @@ launcher_seed_driver_state() {
   fi
   local py="${LU_DRIVER_STATE_PYTHON:-$LC_ROOT/.venv/bin/python}"
   [ -x "$py" ] || return 0
-  (cd "$LC_ROOT" && "$py" -m scripts.driver_state init --epic "$LC_EPIC" >/dev/null 2>&1) || true
+  (cd "$LC_ROOT" && "$py" -m "$LC_MACHINERY_PACKAGE.driver_state" init --epic "$LC_EPIC" >/dev/null 2>&1) || true
 }
 
 launcher_import_rollover_bundle() {
@@ -914,7 +941,7 @@ launcher_import_rollover_bundle() {
   esac
   helper_root="$LC_DURABLE_HELPER_ROOT"
   py="$helper_root/.venv/bin/python"
-  script="$helper_root/scripts/orchestration/thread_handoff.py"
+  script="$helper_root/$LC_MACHINERY_PACKAGE/orchestration/thread_handoff.py"
   if [ ! -x "$py" ] || [ ! -f "$script" ]; then
     printf 'WARNING: rollover bundle pre-lease import unavailable; continuing fail-open (helper=%s).\n' "$helper_root" >&2
     return 0
@@ -966,7 +993,7 @@ launcher_cursor_observer_presence() {
   local task_id
   task_id="${SESSION_TASK_ID:-${LC_EPIC:-cursor-driver}}"
   # Linked worktrees carry no venv; the validated durable helper root does.
-  "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
+  "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m "$LC_MACHINERY_PACKAGE.orchestration.observer_heartbeat" \
     --agent cursor \
     --task-id "$task_id" \
     --epic "$LC_EPIC" \
@@ -1069,7 +1096,7 @@ launcher_driver_renew_loop() {
       if ! kill -0 "$launcher_pid" 2>/dev/null || ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
-      if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
+      if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m "$LC_MACHINERY_PACKAGE.session_supervisor" heartbeat --role driver 2>&1 >/dev/null)"; then
         renew_started=$SECONDS
         continue
       fi
@@ -1139,7 +1166,7 @@ launcher_close_driver_lease() {
     # Linked worktrees carry no venv; the validated durable helper root does.
     # Capture stderr per attempt for classification only — it is never echoed.
     if close_stderr="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" \
-        -m scripts.session_supervisor close --role driver 2>&1 >/dev/null)"; then
+        -m "$LC_MACHINERY_PACKAGE.session_supervisor" close --role driver 2>&1 >/dev/null)"; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
@@ -1361,7 +1388,7 @@ launcher_inject_driver_agent() {
   local py="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
   local agent_type=""
   [ -x "$py" ] || return 0
-  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
+  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m "$LC_MACHINERY_PACKAGE.orchestration.driver_agent_type" --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
     printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; no named agent selected; using the launcher model or project settings (Sonnet 5.5)\n' "$LC_EPIC" >&2
     return 0
@@ -1459,14 +1486,14 @@ launcher_bind_drive_epic() {
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
-  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m scripts.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
+  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m ${LC_MACHINERY_PACKAGE}.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
   if [ "${LC_PROVIDER:-}" = codex ]; then
     LC_DRIVER_PROMPT+=" Hand off after the fourth compaction and before the eighth; native automatic compaction remains enabled."
   fi
   if [ "${LC_PROVIDER:-}" = grok ]; then
     # Grok has no SessionStart hook to inject the lane handoff (#10835); the
     # file name is shared with every provider.
-    LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
+    LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m ${LC_MACHINERY_PACKAGE}.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
   fi
   local caller arg index=0 caller_index=0 is_caller value_mode='' post_separator=999999
   if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
@@ -1530,11 +1557,11 @@ launcher_bind_drive_epic() {
 }
 
 launcher_publication_path() {
-  local shim_path="$LC_ROOT/scripts/agent_runtime/shims" real_path="" entry
+  local shim_path="$LC_MACHINERY_DIR/agent_runtime/shims" real_path="" entry
   if [[ -z "${AGENT_REAL_GH:-}" ]]; then
     IFS=':' read -r -a publication_paths <<< "${PATH:-}"
     for entry in "${publication_paths[@]}"; do
-      [[ "$entry" == */scripts/agent_runtime/shims ]] && continue
+      [[ "$entry" == */"$LC_MACHINERY_PACKAGE"/agent_runtime/shims ]] && continue
       if [[ -x "$entry/gh" ]]; then
         real_path="$(cd "$entry" && pwd)/gh"
         break
@@ -1599,7 +1626,7 @@ launcher_claude_cap_guard() {
   local pct
   local -r stop=99
   local py; py="$(launcher_project_python 2>/dev/null || true)"
-  pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
+  pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_MACHINERY_DIR/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
   # Any non-negative decimal is usage; overshoot above 100% still stops.
   if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0)}'; then
     printf 'launcher: warning: Claude weekly usage unknown or invalid; allowing launch without a usage check.\n' >&2
@@ -1607,8 +1634,8 @@ launcher_claude_cap_guard() {
   fi
   if awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
     local handoff=""
-    if [ -n "$py" ] && [ -f "$LC_ROOT/scripts/fleet/routing_policy.py" ]; then
-      handoff="$("$py" -I "$LC_ROOT/scripts/fleet/routing_policy.py" --handoff 2>/dev/null || true)"
+    if [ -n "$py" ] && [ -f "$LC_MACHINERY_DIR/fleet/routing_policy.py" ]; then
+      handoff="$("$py" -I "$LC_MACHINERY_DIR/fleet/routing_policy.py" --handoff 2>/dev/null || true)"
     fi
     if [ -n "$handoff" ]; then
       printf 'launcher: cap-handoff %s branch=%s task=%s\n' "$handoff" "${LC_BRANCH:-}" "${LC_TASK_ID:-}" >&2

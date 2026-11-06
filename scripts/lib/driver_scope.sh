@@ -7,6 +7,18 @@ driver_scope_refuse() {
   return 6
 }
 
+# This file's directory and its machinery package's name (the package's
+# directory name in checkout paths), from this file's unresolved location
+# (design-v1 amendment 1). Scope re-entry runs this file again, and the
+# supervisor helper it sources is its sibling.
+DS_LIB_DIR="$(CDPATH='' cd -L -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && pwd -L)" || DS_LIB_DIR=''
+DS_PACKAGE="${DS_LIB_DIR%/*}"
+DS_PACKAGE="${DS_PACKAGE##*/}"
+if [ -z "$DS_LIB_DIR" ] || [ -z "$DS_PACKAGE" ]; then
+  driver_scope_refuse machinery-location-unavailable
+  return 6 2>/dev/null || exit 6
+fi
+
 # Tracked entry points a scope may replay, each with its provider, mode and
 # interactive unit label (drivers use their lane). Re-entry replays the wrapper
 # the caller invoked, never a name derived from the provider: start-glmcc.sh
@@ -22,8 +34,8 @@ driver_scope_entrypoint() {
     start-kimicc.sh) row='kimi interactive kimicc' ;;
     start-glm.sh) row='glm interactive glm' ;;
     start-glmcc.sh) row='glm interactive glmcc' ;;
-    scripts/start-bio-driver.sh) row='claude interactive bio' ;;
-    start-claude-driver.sh|start-claude-cto.sh|scripts/start-kube-dojo-driver.sh) row='claude driver -' ;;
+    "$DS_PACKAGE/start-bio-driver.sh") row='claude interactive bio' ;;
+    start-claude-driver.sh|start-claude-cto.sh|"$DS_PACKAGE/start-kube-dojo-driver.sh") row='claude driver -' ;;
     start-codex-driver.sh|start-codex-cto.sh) row='codex driver -' ;;
     start-cursor-driver.sh) row='cursor driver -' ;;
     start-gemini-driver.sh) row='gemini driver -' ;;
@@ -36,13 +48,14 @@ driver_scope_entrypoint() {
 
 driver_scope_invoked_entry() {
   # The wrapper this shell runs, as a path relative to the checkout. A copy or
-  # alias outside the checkout's root and scripts/ is not an entry point.
+  # alias outside the checkout's root and its machinery package directory is
+  # not an entry point.
   local dir root
   dir="$(CDPATH='' cd -P -- "$(dirname -- "$0")" 2>/dev/null && pwd)" || return 1
   root="$(CDPATH='' cd -P -- "${LC_ROOT:-}" 2>/dev/null && pwd)" || return 1
   case "$dir" in
     "$root") DS_ENTRY_PATH="${0##*/}" ;;
-    "$root/scripts") DS_ENTRY_PATH="scripts/${0##*/}" ;;
+    "$root/$DS_PACKAGE") DS_ENTRY_PATH="$DS_PACKAGE/${0##*/}" ;;
     *) return 1 ;;
   esac
   driver_scope_entrypoint "$DS_ENTRY_PATH"
@@ -282,7 +295,7 @@ launcher_enter_driver_scope() {
     # verification still runs in the helper before the wrapper is replayed.
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
       --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
-      --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
+      --property=OOMPolicy=continue -- bash "$DS_LIB_DIR/driver_scope.sh" \
       --entry "$LC_MODE" "$unit" - "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
     exit 6
   fi
@@ -306,7 +319,7 @@ launcher_enter_driver_scope() {
     exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
-    --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
+    --property=OOMPolicy=continue -- bash "$DS_LIB_DIR/driver_scope.sh" \
     --entry "$LC_MODE" "$unit" 219 "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
   ) 0<&0 &
   child=$!
@@ -329,7 +342,7 @@ launcher_enter_driver_scope() {
         && [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ] \
         && [ -n "${LC_SUPERVISORY_PREDECESSOR_GENERATION:-}" ]; then
       # shellcheck source=scripts/lib/session_supervisor.sh
-      if source "$LC_ROOT/scripts/lib/session_supervisor.sh"; then
+      if source "$DS_LIB_DIR/session_supervisor.sh"; then
         session_supervisor_publish_start_failure "${SESSION_SUPERVISOR_WAKE_STREAM:-}" \
           "$LC_SUPERVISORY_PREDECESSOR_GENERATION" scope-start-failed
       fi
