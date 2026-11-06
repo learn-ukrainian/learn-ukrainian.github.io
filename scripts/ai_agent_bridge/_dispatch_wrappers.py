@@ -25,6 +25,8 @@ from scripts.common.repo_root import resolve_repo_root, runtime_primary_root
 from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS, recognized_verdicts, unsupported_verdict_tokens
 from scripts.secret_redactor import redact_text
 
+from ._config import DISPATCH_ENTRY, MACHINERY_PACKAGE
+
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
 
@@ -201,7 +203,7 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str, *, pr
     branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
     command = [
         PYTHON,
-        "scripts/dispatch.py",
+        DISPATCH_ENTRY,
         "dispatch",
         "--agent",
         "claude",
@@ -267,10 +269,10 @@ def _run_dispatch(
 def handle_review_deep(args: Any) -> int:
     if not _is_pr_number(args.target):
         print(
-            "review-deep local-path review is retired. Use scripts/dispatch.py dispatch "
+            f"review-deep local-path review is retired. Use {DISPATCH_ENTRY} dispatch "
             "--agent <agent> --model <model> --mode read-only --cwd <dispatch-worktree> "
-            "--prompt-file <brief> for a live checkout, then scripts/dispatch.py wait <task-id>. "
-            "Publish formal verdicts with scripts.review.record_cf_verdict.",
+            f"--prompt-file <brief> for a live checkout, then {DISPATCH_ENTRY} wait <task-id>. "
+            f"Publish formal verdicts with {MACHINERY_PACKAGE}.review.record_cf_verdict.",
             file=sys.stderr,
         )
         return 2
@@ -333,7 +335,7 @@ def build_ask_review_dispatch_command(
         raise ValueError(f"no default dispatch model for {target.recipient!r}")
     cmd = [
         PYTHON,
-        "scripts/dispatch.py",
+        DISPATCH_ENTRY,
         "dispatch",
         "--agent",
         target.recipient,
@@ -368,7 +370,7 @@ def build_ask_review_dispatch_command(
 
 
 def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
-    return [PYTHON, "scripts/dispatch.py", "wait", task_id, "--timeout", str(timeout)]
+    return [PYTHON, DISPATCH_ENTRY, "wait", task_id, "--timeout", str(timeout)]
 
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800

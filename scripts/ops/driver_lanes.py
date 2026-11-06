@@ -40,7 +40,13 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-DATA_FILE = REPO_ROOT / "scripts" / "config" / "driver_lanes.json"
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it. The lane data is found from it rather
+# than through ``common/``: hooks load this module from a minimal copy (its package marker, this
+# file and the lane data).
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+DATA_FILE = REPO_ROOT / _MACHINERY / "config" / "driver_lanes.json"
 LOCAL_ENV = "LU_DRIVER_LANES_LOCAL"
 KINDS = frozenset({"claude", "codex"})
 SESSION_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
@@ -349,19 +355,19 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.driver_lanes\n"
-            "  .venv/bin/python scripts/ops/driver_lanes.py --data scripts/config/driver_lanes.json\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.driver_lanes\n"
+            f"  .venv/bin/python {_MACHINERY}/ops/driver_lanes.py --data {_MACHINERY}/config/driver_lanes.json\n"
             "Outputs: JSON on stdout; nothing is written.\n"
             "Exit codes: 0 valid; 1 invalid lane data; 2 invalid arguments.\n"
-            "Related: scripts/config/driver_lanes.json, scripts/ops/context_guard.py, "
-            "scripts/ops/lane_relaunch.py, issue #10814."
+            f"Related: {_MACHINERY}/config/driver_lanes.json, {_MACHINERY}/ops/context_guard.py, "
+            f"{_MACHINERY}/ops/lane_relaunch.py, issue #10814."
         ),
     )
     parser.add_argument(
         "--data",
         type=Path,
         default=DATA_FILE,
-        help="Lane data file (default: scripts/config/driver_lanes.json).",
+        help=f"Lane data file (default: {_MACHINERY}/config/driver_lanes.json).",
     )
     args = parser.parse_args(argv)
     try:

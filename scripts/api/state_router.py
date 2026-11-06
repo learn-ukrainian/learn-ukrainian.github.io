@@ -35,7 +35,7 @@ except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import machinery_path, main_checkout_root
 from scripts.fleet import capacity_pick, credit_lane
 from scripts.fleet.reset_reserve import (
     codex_is_threatened,
@@ -2266,7 +2266,7 @@ def _routing_budget_compute(
             transport=transport,
             fresh_codexbar=False,
             refresh_requested=refresh_requested,
-            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+            budget_config_path=machinery_path("config/agent_budgets.yaml"),
             tasks_dir=tasks_dir,
             project_root=ctx.roots.project_root,
             curriculum_root=ctx.roots.curriculum_root,

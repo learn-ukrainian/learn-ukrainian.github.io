@@ -8,6 +8,7 @@ import contextlib
 import os
 import signal
 import socket
+from pathlib import Path
 
 
 async def pump(reader, writer, activity):
@@ -101,7 +102,8 @@ def main():
         epilog="Example: $PROJECT_PYTHON attempt_forwarder.py egress.sock /bin/true\n"
                "Outputs: namespace-local listener, proxy environment, child stdout/stderr.\n"
                "Exit codes: child's status, or 125 when relay startup fails.\n"
-               "Related: formal-review-attempt-isolation runbook; #9251; scripts/dispatcher/agy_sandbox.py.",
+               "Related: formal-review-attempt-isolation runbook; #9251; "
+               f"{Path(__file__).absolute().parents[1].name}/dispatcher/agy_sandbox.py.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("endpoint", help="Attempt-local parent Unix socket path, e.g. runtime/egress.sock")

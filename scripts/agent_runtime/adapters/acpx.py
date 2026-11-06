@@ -98,9 +98,9 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 try:
-    from scripts.common.repo_root import project_interpreter
-except ImportError:
-    from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
+    from scripts.common.repo_root import machinery_path, project_interpreter
+except ImportError:  # agent_runtime loaded with scripts/ on path
+    from common.repo_root import machinery_path, project_interpreter  # type: ignore[no-redef]
 
 from ..binary_resolve import resolve_agent_binary
 from ..jsonl import jsonl_lines
@@ -235,7 +235,7 @@ _CLAUDE_ACP_MIN_VERSION = (0, 64, 2)
 _CLAUDE_ACP_MAX_VERSION = (1, 0, 0)
 _CLAUDE_ACP_MANIFEST_LIMIT_BYTES = 64 * 1024
 _STRICT_SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
-_TEXT_AGENT_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "acp_text_agent.mjs"
+_TEXT_AGENT_PATH = machinery_path("agent_runtime/acp_text_agent.mjs")
 _TEXT_AGENT_SHA256 = "9e594e4fc448198f696a6b51162533d30929e70ed0b5e36a21313f0fe3360ced"
 _OPENCODE_DENY_ALL_CONFIG = json.dumps(
     {"permission": {"*": "deny"}, "tools": {"*": False}},
@@ -274,9 +274,9 @@ _GROK_REQUIRED_AGENT_FLAGS: tuple[str, ...] = (
 )
 GROK_SHADOW_MODEL = "grok-4.7"  # operator order 2026-09-22 (#8464)
 GROK_SHADOW_EFFORT = "high"
-_GROK_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-read-only.md"
+_GROK_PROFILE_PATH = machinery_path("agent_runtime/profiles/acpx-grok-read-only.md")
 _GROK_PROFILE_SHA256 = "5831398f7204be279e908371b5f0990d5e5e725a323091232e184083649d7158"
-_GROK_SEALED_REVIEW_PROFILE_PATH = _REPO_ROOT / "scripts" / "agent_runtime" / "profiles" / "acpx-grok-sealed-review.md"
+_GROK_SEALED_REVIEW_PROFILE_PATH = machinery_path("agent_runtime/profiles/acpx-grok-sealed-review.md")
 _GROK_SEALED_REVIEW_PROFILE_SHA256 = "e6527f1f0f4b67f8b52fed9f7ca74f7ecd35e0e76920c54f23639465ddac5605"
 # Non-secret acpx 0.13.0 auth-method selector for a cached native Grok login.
 GROK_AUTH_CACHED_TOKEN_ENV = "ACPX_AUTH_CACHED_TOKEN"
@@ -1617,7 +1617,9 @@ _CLAUDE_ACP_BACKGROUND_TOOL_ENV = {"CLAUDE_CODE_DISABLE_CRON": "1", "CLAUDE_CODE
 # writer running as the same user, who already controls the host binary, the
 # user configuration and the checkout (see docs/agent-runtime-guide.md).
 _CLAUDE_ACP_LAUNCHER_ANCHOR = _REPO_ROOT
-_CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath("scripts/agent_runtime/claude_acp_exec.sh")
+# Checkout-relative: the machinery package directory as this file was imported from it
+# (unresolved, whatever the package is called), then the launcher.
+_CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath(Path(__file__).absolute().parents[2].name, "agent_runtime/claude_acp_exec.sh")
 # Adapter-launcher compatibility pin: the SHA-256 of every repository file the
 # launcher runs, sources or execs. The launcher is self-contained, so the
 # closure is the launcher alone. Launcher bytes and digest change together.

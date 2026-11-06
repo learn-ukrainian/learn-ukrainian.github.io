@@ -60,6 +60,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from scripts.common.repo_root import machinery_path
 from secret_redactor import redact_text, redact_value
 
 from ._config import REPO_ROOT
@@ -96,7 +97,7 @@ VALID_AGENTS = STATIC_VALID_AGENTS
 VALID_POST_AGENTS = (*VALID_AGENTS, "user")
 VALID_RECIPIENT_AGENTS = VALID_AGENTS
 
-ASSIGNMENTS_PATH = REPO_ROOT / "scripts" / "config" / "area_assignments.yaml"
+ASSIGNMENTS_PATH = machinery_path("config/area_assignments.yaml")
 _SLOTS_CACHE: dict[str, Any] = {"key": None, "slots": ()}
 
 
