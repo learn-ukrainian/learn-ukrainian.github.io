@@ -31,8 +31,9 @@ from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
 
 # The repository registry and the verdict recorder, by their checkout-relative paths. Those
-# start with the machinery package's import name, the directory checkout paths use.
-_MACHINERY = __name__.partition(".")[0]
+# start with the machinery package's directory name, taken from this module's unresolved location, so a symlinked package keeps its checkout name
+# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 _FLEET_REPOS = f"{_MACHINERY}/config/fleet_repos.yaml"
 _RECORDER = f"{_MACHINERY}/review/record_cf_verdict.py"
 # This publisher's import name, as ``python -m`` runs it.

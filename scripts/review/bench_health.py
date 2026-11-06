@@ -25,9 +25,9 @@ if _REPO_ROOT not in sys.path:
 
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, REVIEW_LADDERS, ResolverInputs, evaluate_candidate
 
-# The machinery package's import name, which is also the directory its files have in checkout
-# paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# The machinery package's directory name, which its files' checkout paths start with: from this module's unresolved location, so a symlinked package keeps its checkout name
+# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 AUTHOR_FAMILIES = (
     "anthropic",

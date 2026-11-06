@@ -12,9 +12,11 @@ stays on the ordinary author-family ladder.
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal, Protocol
 
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
@@ -22,10 +24,10 @@ from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 
 ClassificationKind = Literal["seat", "ambiguous", "unrelated"]
 
-# Machinery paths below are checkout-relative: they start with the machinery package's import
-# name, which is the directory Git and owned paths name (not the resolved package directory,
-# so a symlinked package keeps its checkout name).
-_MACHINERY = __name__.partition(".")[0]
+# Machinery paths below are checkout-relative: they start with the machinery package's directory
+# name, which Git and owned paths use, taken from this module's unresolved location, so a symlinked package keeps its checkout name
+# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 # Registry and catalog aliases that name one subject seat. Family names are
 # intentionally absent — those belong on --subject-family.
