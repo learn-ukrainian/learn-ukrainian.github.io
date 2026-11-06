@@ -9,11 +9,14 @@ allowlisted here rather than rewritten. New unscoped ``rm -rf`` lines fail.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# Unresolved package directory (design-v1 amendment 1). Never __package__.
+_MACHINERY_DIR = Path(os.path.abspath(__file__)).parents[1].name
 
 # Match ``rm -rf``, ``rm -fr``, and compact flag forms such as ``rm -rfv``.
 _RM_RF_RE = re.compile(r"(?:^|[\s;|&])rm\s+-[A-Za-z]*r[A-Za-z]*f[A-Za-z]*\b")
@@ -37,10 +40,18 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
     ),
 )
 
-_SCAN_GLOBS: tuple[str, ...] = (
-    "scripts/**/*.sh",
-    "scripts/**/*.bash",
-    "services.sh",
+# Shell under the machinery package directory and the product scripts tree
+# (one directory in this checkout), plus services.sh.
+_SCAN_GLOBS: tuple[str, ...] = tuple(
+    dict.fromkeys(
+        (
+            f"{_MACHINERY_DIR}/**/*.sh",
+            f"{_MACHINERY_DIR}/**/*.bash",
+            "scripts/**/*.sh",
+            "scripts/**/*.bash",
+            "services.sh",
+        )
+    )
 )
 
 # Test harnesses may use ``rm -rf`` under their own temp roots.

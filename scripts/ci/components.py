@@ -25,7 +25,7 @@ from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from scripts.ci import deploy_paths, frontend_change_scope
-from scripts.ci._location import checkout_relative, module_name
+from scripts.ci._location import checkout_relative, module_name, package_dir_name
 from scripts.ci.junit_results import parse_junit
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
@@ -97,7 +97,34 @@ def load_manifest(path: Path = MANIFEST) -> dict:
     for edge in data["edges"]:
         if edge["producer"] not in NODE_IDS or edge["consumer"] not in NODE_IDS:
             raise ValueError("edge names an unknown node")
+    data["path_prefixes"] = _with_machinery_prefixes(data["path_prefixes"])
     return data
+
+
+# The manifest spells shared prefixes under the product scripts tree, which keeps
+# this name after the machinery package moves.
+_PRODUCT_TREE = "scripts"
+
+
+def _with_machinery_prefixes(prefixes: list[dict]) -> list[dict]:
+    """Repeat each product-tree prefix under the machinery package directory, same owners.
+
+    The package directory is named from this file's unresolved location
+    (``_location.package_dir_name``). A prefix wholly inside the machinery is
+    already spelled under that directory, so a listed path keeps its own entry.
+    In this checkout the two names are equal and the list is returned as is.
+    """
+    package = package_dir_name()
+    if package == _PRODUCT_TREE:
+        return prefixes
+    listed = {entry["path"] for entry in prefixes}
+    mapped = []
+    for entry in prefixes:
+        head, _, rest = entry["path"].partition("/")
+        path = f"{package}/{rest}"
+        if head == _PRODUCT_TREE and path not in listed:
+            mapped.append({"path": path, "components": list(entry["components"])})
+    return [*prefixes, *mapped]
 
 
 def tracked_paths(root: Path = ROOT) -> list[str]:

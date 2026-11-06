@@ -1,0 +1,240 @@
+{
+  "source": "scripts/lint/mypy_baseline.json at 6986c7b16b",
+  "entries": 6484,
+  "rows": [
+    {
+      "path": "scripts/agent_runtime/env_sanitize.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
+    },
+    {
+      "path": "scripts/agent_runtime/registry.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
+    },
+    {
+      "path": "scripts/agent_runtime/telemetry.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
+    },
+    {
+      "path": "scripts/agent_runtime/telemetry.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
+    },
+    {
+      "path": "scripts/agent_runtime/tool_config.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"NATIVE_GROK_SEAT\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"NATIVE_GROK_SEAT\""
+    },
+    {
+      "path": "scripts/agent_runtime/tool_config.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
+    },
+    {
+      "path": "scripts/agent_runtime/tool_config.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
+    },
+    {
+      "path": "scripts/build/linear_pipeline.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
+    },
+    {
+      "path": "scripts/build/linear_pipeline.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
+    },
+    {
+      "path": "scripts/build/linear_pipeline.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
+    },
+    {
+      "path": "scripts/fleet/capacity_pick.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\""
+    },
+    {
+      "path": "scripts/fleet_comms/__init__.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"AssistantSegment\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"AssistantSegment\""
+    },
+    {
+      "path": "scripts/fleet_comms/__init__.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"CompletionState\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"CompletionState\""
+    },
+    {
+      "path": "scripts/fleet_comms/__init__.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\""
+    },
+    {
+      "path": "scripts/fleet_comms/__init__.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/adapter_conformance.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"AssistantSegment\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"AssistantSegment\""
+    },
+    {
+      "path": "scripts/fleet_comms/adapter_conformance.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"CompletionState\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"CompletionState\""
+    },
+    {
+      "path": "scripts/fleet_comms/adapter_conformance.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\""
+    },
+    {
+      "path": "scripts/fleet_comms/artifacts.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/artifacts.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.pg_schema\" has no attribute \"PG_BLOB_TABLE\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.pg_schema\" has no attribute \"PG_BLOB_TABLE\""
+    },
+    {
+      "path": "scripts/fleet_comms/artifacts.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.pg_schema\" has no attribute \"PgSchemaError\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.pg_schema\" has no attribute \"PgSchemaError\""
+    },
+    {
+      "path": "scripts/fleet_comms/artifacts.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.pg_schema\" has no attribute \"apply_pg_schema\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.pg_schema\" has no attribute \"apply_pg_schema\""
+    },
+    {
+      "path": "scripts/fleet_comms/artifacts.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.pg_schema\" has no attribute \"verify_pg_schema\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.pg_schema\" has no attribute \"verify_pg_schema\""
+    },
+    {
+      "path": "scripts/fleet_comms/authority.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/formal_review_jobs.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"CompletionState\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"CompletionState\""
+    },
+    {
+      "path": "scripts/fleet_comms/formal_review_jobs.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/message_plane.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"CompletionState\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"CompletionState\""
+    },
+    {
+      "path": "scripts/fleet_comms/request_executor.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"CompletionState\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"CompletionState\""
+    },
+    {
+      "path": "scripts/fleet_comms/request_executor.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"ResponseEnvelope\""
+    },
+    {
+      "path": "scripts/fleet_comms/request_executor.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/request_executor.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.pg_schema\" has no attribute \"apply_pg_schema\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.pg_schema\" has no attribute \"apply_pg_schema\""
+    },
+    {
+      "path": "scripts/fleet_comms/review_publisher.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/fleet_comms/routing_reservations.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.fleet_comms.contracts\" has no attribute \"new_id\"",
+      "extracted": "Module \"lu_machinery.fleet_comms.contracts\" has no attribute \"new_id\""
+    },
+    {
+      "path": "scripts/inbox_pending.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
+    },
+    {
+      "path": "scripts/lexicon/published_record_dispositions.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.audit.model_families\" has no attribute \"Family\"",
+      "extracted": "Module \"scripts.audit.model_families\" has no attribute \"Family\""
+    },
+    {
+      "path": "scripts/lexicon/published_record_dispositions.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.audit.model_families\" has no attribute \"normalize_family\"",
+      "extracted": "Module \"scripts.audit.model_families\" has no attribute \"normalize_family\""
+    },
+    {
+      "path": "scripts/orchestration/prompt_contracts.py",
+      "code": "valid-type",
+      "message": "Variable \"scripts.orchestration.prompt_contracts._SafeLoaderBase\" is not valid as a type",
+      "extracted": "Variable \"lu_machinery.orchestration.prompt_contracts._SafeLoaderBase\" is not valid as a type"
+    },
+    {
+      "path": "scripts/review/reviewer_resolver.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"SEAT_ALIASES\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"SEAT_ALIASES\""
+    },
+    {
+      "path": "scripts/review/reviewer_resolver.py",
+      "code": "attr-defined",
+      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"resolve_retired_agent_alias\"",
+      "extracted": "Module \"lu_machinery.agent_runtime.agent_identity\" has no attribute \"resolve_retired_agent_alias\""
+    }
+  ]
+}
