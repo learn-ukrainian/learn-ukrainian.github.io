@@ -39,7 +39,7 @@ _SOURCE_ROOT = Path(__file__).resolve().parents[2]
 _REGISTRY_PATH = machinery_path("config/fleet_repos.yaml")
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 class Refusal(ValueError):

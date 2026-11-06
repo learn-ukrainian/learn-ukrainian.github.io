@@ -25,7 +25,7 @@ from scripts.orchestration.handoff_slot_registry import is_registered_slot, regi
 ROOT = Path(__file__).resolve().parents[1]
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parent.name
+_MACHINERY = Path(os.path.abspath(__file__)).parents[0].name
 _AUTHORITY_HELP = f".venv/bin/python -m {_MACHINERY}.fleet_comms deliveries --help"
 UNKNOWN_LINE = (
     "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
