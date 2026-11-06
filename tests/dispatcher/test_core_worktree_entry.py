@@ -231,7 +231,7 @@ def test_owning_a_lexicon_path_also_owns_the_fingerprint_its_gate_regenerates(sa
 @pytest.mark.parametrize("redirected", [False, True])
 def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redirects(sandbox, monkeypatch, redirected):
     tracked = sandbox.repo / "curriculum/tracked.txt"
-    tracked.parent.mkdir()
+    tracked.parent.mkdir(exist_ok=True)
     tracked.write_text("tracked primary file")
     run_git(sandbox.repo, "add", "curriculum")
     run_git(sandbox.repo, "commit", "-m", "excluded tree")

@@ -6,10 +6,11 @@ data file, ``scripts/curriculum/admission_policy.v1.json``, and this module is t
 only reader. It imports nothing from the product: the file is data, never code.
 
 The file is trusted because of where it is read from, not because of what it says:
-the default path is fixed relative to this module, so a dispatcher that runs the
-primary checkout's code (``scripts/dispatcher/primary.py``) also reads the primary
-checkout's policy. No environment variable or command-line flag redirects it; the
-``path`` argument exists for tests.
+the default path is in the product checkout ``scripts.common.repo_root.product_root``
+selects (C-4746): ``LU_PRODUCT_ROOT`` when the operator sets it, else the checkout
+this package is in, so a dispatcher that runs the primary checkout's code
+(``scripts/dispatcher/primary.py``) also reads the primary checkout's policy. No
+command-line flag redirects it; the ``path`` argument exists for tests.
 
 Fail closed. :func:`load_policy` raises :class:`ProductPolicyError` (a
 ``ValueError``, so admission callers that already refuse on an invalid threshold
@@ -77,10 +78,11 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
+from scripts.common.repo_root import ProductRootError, product_root
+
 SCHEMA = "learn-ukrainian.product-admission-policy"
 SCHEMA_VERSION = 1
 POLICY_REL = "scripts/curriculum/admission_policy.v1.json"
-DEFAULT_POLICY_PATH = Path(__file__).resolve().parents[2] / POLICY_REL
 MAX_POLICY_BYTES = 64 * 1024
 DIGEST_FIELD = "content_sha256"
 
@@ -471,9 +473,17 @@ def parse_policy(document: Any, *, file_name: str | None = None) -> ProductPolic
     )
 
 
+def default_policy_path() -> Path:
+    """:data:`POLICY_REL` in the selected product checkout; refuse (``policy_missing``) without one."""
+    try:
+        return product_root() / POLICY_REL
+    except ProductRootError as exc:
+        raise ProductPolicyError("policy_missing", str(exc)) from None
+
+
 def load_policy(path: Path | None = None) -> ProductPolicy:
     """Read and validate the product policy, or raise :class:`ProductPolicyError`."""
-    target = DEFAULT_POLICY_PATH if path is None else Path(path)
+    target = default_policy_path() if path is None else Path(path)
     return parse_policy(_decode(_read_bytes(target), target), file_name=target.name)
 
 
@@ -482,10 +492,12 @@ def main(argv: list[str] | None = None) -> int:
         description="Validate the product admission policy, or print the content_sha256 to record after an edit.",
         epilog="Exit codes: 0 valid (or digest printed), 2 usage error, 3 policy refused.",
     )
-    parser.add_argument("path", nargs="?", type=Path, default=DEFAULT_POLICY_PATH, help="policy file (default: %(default)s)")
+    parser.add_argument("path", nargs="?", type=Path, default=None, help=f"policy file (default: {POLICY_REL} in the product checkout)")
     parser.add_argument("--digest", action="store_true", help="print the canonical content_sha256 without validating it")
     args = parser.parse_args(argv)
     try:
+        if args.path is None:
+            args.path = default_policy_path()
         if args.digest:
             document = _decode(_read_bytes(args.path), args.path)
             if not isinstance(document, dict):
@@ -508,7 +520,6 @@ if __name__ == "__main__":
 
 
 __all__ = [
-    "DEFAULT_POLICY_PATH",
     "POLICY_REL",
     "SCHEMA",
     "SCHEMA_VERSION",
@@ -516,6 +527,7 @@ __all__ = [
     "ProductPolicyError",
     "ReviewSeat",
     "canonical_digest",
+    "default_policy_path",
     "load_policy",
     "parse_policy",
 ]

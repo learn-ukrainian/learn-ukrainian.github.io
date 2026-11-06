@@ -59,9 +59,10 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import product_root, project_interpreter
 
-V7_BUILD = PROJECT_ROOT / "scripts/build/v7_build.py"
+# The product build command, relative to the product checkout it runs in (C-4746).
+V7_BUILD_REL = Path("scripts/build/v7_build.py")
 
 # Locked matrix per 2026-05-22 handoff §2.3 + Section 9 user direction:
 # "sonnet 4.6 high for claude, gemini 3.1.pro high, gpt-5.5 xhigh,
@@ -224,9 +225,10 @@ def _run_one_cell(
     started = _dt.datetime.now(_dt.UTC).isoformat()
     cell_log = out_dir / "cell-logs" / f"{writer}__{level}__{slug.replace('/', '_')}.log"
     cell_log.parent.mkdir(parents=True, exist_ok=True)
+    product = product_root()
     argv = [
-        str(project_interpreter(PROJECT_ROOT)),
-        str(V7_BUILD),
+        str(project_interpreter(product)),
+        str(product / V7_BUILD_REL),
         level,
         slug,
         "--writer",
@@ -242,7 +244,7 @@ def _run_one_cell(
         with cell_log.open("w", encoding="utf-8") as logf:
             proc = subprocess.run(
                 argv,
-                cwd=PROJECT_ROOT,
+                cwd=product,
                 stdout=logf,
                 stderr=subprocess.STDOUT,
                 check=False,
@@ -267,7 +269,7 @@ def _run_one_cell(
                 worktree_path = line.split("=", 1)[1].strip()
     except OSError:
         pass
-    worktree = Path(worktree_path) if worktree_path else PROJECT_ROOT
+    worktree = Path(worktree_path) if worktree_path else product
 
     phase = _parse_phase_reached(worktree, level, slug, proc.returncode)
     qg = _load_python_qg(worktree, level, slug)

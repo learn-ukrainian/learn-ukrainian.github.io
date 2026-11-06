@@ -63,6 +63,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import ProductRootError
+from scripts.common.repo_root import product_root as resolve_product_root
 from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 
 # The product data file that names the hang-diagnostics module, relative to the product root.
@@ -121,15 +123,20 @@ def hang_diagnostics(*, product_root: Path | None = None) -> ModuleType:
     """The product's hang-diagnostics module, loaded when a dump or state write needs it, never at import.
 
     Its name comes from ``HANG_DIAGNOSTICS_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call; the module must come from that root
+    default: the checkout :func:`scripts.common.repo_root.product_root` selects, C-4746),
+    read strictly at each call; the module must come from that root
     and provide every name in ``_DIAGNOSTICS_EXPORTS``. A missing or invalid configuration, or
     a module without that API, raises (``ImportError`` or ``OSError``); ``main`` and
     ``run_once`` load it before acting, so such a configuration refuses the whole run as before.
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
-    root = PROJECT_ROOT if product_root is None else product_root
-    module = load_configured_module(_gates_module_name(root / HANG_DIAGNOSTICS_FILE), product_root=product_root)
+    if product_root is None:
+        try:
+            product_root = resolve_product_root()
+        except ProductRootError as exc:
+            raise ConfiguredModuleError(str(exc)) from None
+    module = load_configured_module(_gates_module_name(product_root / HANG_DIAGNOSTICS_FILE), product_root=product_root)
     missing = [name for name in _DIAGNOSTICS_EXPORTS if not hasattr(module, name)]
     if missing:
         raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)

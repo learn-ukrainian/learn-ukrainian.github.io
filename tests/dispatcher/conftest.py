@@ -133,9 +133,15 @@ def sandbox(tmp_path, hermetic_monitor):
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
-    # The copied scripts/review loader reads the product's review hooks file next to it.
+    # This checkout is the product checkout of the copied machinery (product_root, C-4746): it
+    # carries the product marker, and the product files the dispatcher reads come from it, with
+    # the review hooks module the hooks file names.
+    marker = repo / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
     (repo / "scripts/curriculum").mkdir()
-    shutil.copy(SOURCE / "scripts/curriculum/review_hooks.v1.json", repo / "scripts/curriculum")
+    for name in ("review_hooks.v1.json", "review_attempt_hooks.py", "admission_policy.v1.json"):
+        shutil.copy(SOURCE / "scripts/curriculum" / name, repo / "scripts/curriculum")
     schema_dir = repo / "schemas"
     schema_dir.mkdir()
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)

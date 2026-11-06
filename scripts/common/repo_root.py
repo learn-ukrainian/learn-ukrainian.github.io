@@ -35,6 +35,24 @@ primary from Git metadata, not from this configuration.
 Machinery code finds its own files through :func:`machinery_root` (the package directory
 this module is in, one level below the runtime root) and :func:`machinery_path` (a
 contained, package-relative path under it), never by spelling the package's name.
+
+Machinery code finds the product's files (curriculum data, product configuration, product
+modules named by product data) through :func:`product_root` (C-4746), never through its
+own location: once the machinery is its own repository, the checkout it runs from is not
+the product. The selection order is an explicit argument, then ``LU_PRODUCT_ROOT``, then
+the checkout that holds this package (from the unresolved module location) when it is a
+product checkout. The first candidate that is given is the only one considered: an
+invalid one raises :class:`ProductRootError` and never falls through to the next. Each
+candidate must be absolute and carry the product marker ``PRODUCT_MARKER``. The marker
+proves the layout only; it is not authorization or completeness: loaders keep their own
+origin checks, and a reader whose required file is missing fails through its own error.
+Machinery-owned resources (shared hooks, guard executables) never come from this root.
+Today every entry point runs from a product checkout, so nothing needs setting. Once the
+machinery runs from its own repository, every service, timer, hook or command that reads
+product files names the product checkout with ``LU_PRODUCT_ROOT`` (a systemd
+``EnvironmentFile=``, a launcher) or an explicit root; without one it refuses. The Monitor
+API selects it at startup (``scripts.api.config.PRODUCT_ROOT``): served from a release
+snapshot, that is the snapshot itself, never the live checkout.
 """
 
 from __future__ import annotations
@@ -88,6 +106,13 @@ DEFAULT_GITHUB_SLUG = "learn-ukrainian/learn-ukrainian.github.io"
 RULES_DIR_REL = "agents_extensions/shared/rules"
 RUNTIME_ROOT = Path(__file__).resolve().parents[2]
 _MACHINERY_ROOT = Path(__file__).resolve().parents[1]
+PRODUCT_ROOT_ENV = "LU_PRODUCT_ROOT"
+# A file only the product repository has (Sol, C-4746): it proves a checkout's layout.
+PRODUCT_MARKER = "curriculum/l2-uk-en/curriculum.yaml"
+# The checkout that holds this package, from the unresolved module location (design-v1
+# amendment 1): with the package directory symlinked into a product checkout, this names
+# the product checkout, not the machinery checkout the link points at.
+_PACKAGE_CHECKOUT = Path(os.path.abspath(__file__)).parents[2]
 # GitHub owner (alphanumerics and inner hyphens) / repository name.
 _GITHUB_SLUG_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}")
 
@@ -279,6 +304,62 @@ def machinery_path(relative: str) -> Path:
     if os.path.commonpath([root, resolved]) != str(root):
         raise ValueError(f"machinery path {relative!r} resolves outside the machinery package: {resolved}")
     return logical
+
+
+class ProductRootError(MachineryConfigError):
+    """No product checkout can be selected; the message names the candidate and the rule it broke."""
+
+
+def _carries_product_marker(checkout: Path, *, through_primary: bool) -> bool:
+    """``checkout`` has ``PRODUCT_MARKER``; with ``through_primary``, or its primary checkout has it.
+
+    Dispatch worktrees are sparse checkouts without ``curriculum/``. For the derived default only,
+    a linked worktree whose primary checkout (found from Git metadata alone, by
+    :func:`main_checkout_root`, never from the configured primary root) has the marker qualifies;
+    the worktree itself stays the selected root, and nothing is read from the primary. A release
+    snapshot has no Git metadata; its marker comes through its declared ``curriculum`` live-data
+    link (``scripts/common/release_layout.py``). Qualifying proves the layout, not that every
+    product file is present: a reader whose required file is missing fails through its own
+    missing-input error.
+    """
+    if (checkout / PRODUCT_MARKER).is_file():
+        return True
+    if not through_primary:
+        return False
+    primary = main_checkout_root(checkout)
+    return primary != checkout and (primary / PRODUCT_MARKER).is_file()
+
+
+def product_root(explicit: Path | str | None = None, *, env: Mapping[str, str] | None = None) -> Path:
+    """The product checkout whose files machinery reads, or raise :class:`ProductRootError`.
+
+    The candidate is ``explicit`` when given, else ``LU_PRODUCT_ROOT`` when set and not
+    empty, else the checkout that holds this package, found from the unresolved module
+    location. Only that one candidate is checked: it must be an absolute path and carry
+    ``PRODUCT_MARKER``; the derived checkout may instead be a linked worktree of a checkout
+    that carries it (see :func:`_carries_product_marker`). A candidate that fails raises at
+    once instead of falling through to a later one. The path is returned as given (symlinks
+    are not resolved), so a release snapshot stays the snapshot.
+
+    Call it when a feature runs or an application starts, never at import, and resolve it
+    before a cache lookup so the cache is keyed by the selected root.
+    """
+    derived = False
+    if explicit is not None:
+        source, value = "the explicit product root", os.fspath(explicit)
+    elif _env(env).get(PRODUCT_ROOT_ENV, ""):
+        source, value = PRODUCT_ROOT_ENV, _env(env)[PRODUCT_ROOT_ENV]
+    else:
+        source, value, derived = "the checkout holding the machinery package", os.fspath(_PACKAGE_CHECKOUT), True
+    if not isinstance(value, str) or "\x00" in value or not os.path.isabs(value):
+        raise ProductRootError(f"{source} must be an absolute path, got {value!r}")
+    candidate = Path(value)
+    if not _carries_product_marker(candidate, through_primary=derived):
+        raise ProductRootError(
+            f"{source} ({candidate}) is not a product checkout: it has no {PRODUCT_MARKER}; "
+            f"name the product checkout with {PRODUCT_ROOT_ENV} or an explicit product root"
+        )
+    return candidate
 
 
 def main_checkout_root(repo_root: Path) -> Path:

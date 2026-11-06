@@ -45,12 +45,17 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def _product_hooks() -> Any:
-    """Load the product hook named by this checkout's bakeoff configuration."""
+    """Load the product hook named by the product checkout's bakeoff configuration.
+
+    The configuration and the module it names come from the one product checkout
+    ``product_root`` selects (C-4746).
+    """
+    from scripts.common.repo_root import product_root
     from scripts.ops.product_entry import load_configured_module
 
-    path = PROJECT_ROOT / "scripts/build/bakeoff_hooks.v1.json"
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return load_configured_module(payload["module"])
+    root = product_root()
+    payload = json.loads((root / "scripts/build/bakeoff_hooks.v1.json").read_text(encoding="utf-8"))
+    return load_configured_module(payload["module"], product_root=root)
 
 
 def main() -> int:
@@ -161,8 +166,10 @@ def main() -> int:
     (out_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
     prompt_chars = len(prompt)
 
-    # 6. Pick cwd (matches v7_build.py:748 — gemini-tools needs PROJECT_ROOT)
-    writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else out_dir
+    # 6. Pick cwd (matches v7_build.py:748 — gemini-tools runs in the product checkout)
+    from scripts.common.repo_root import product_root
+
+    writer_cwd = product_root() if writer == "gemini-tools" else out_dir
 
     # 7. Resolve effort (CLI override falls back to writer default)
     default_config = hooks.WRITER_DEFAULTS[writer]

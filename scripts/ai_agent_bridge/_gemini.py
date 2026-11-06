@@ -265,10 +265,11 @@ def _send_gemini_message(content, task_id, msg_type, data, from_llm, from_model,
 def _extract_and_print(response: str, extract_tags: list):
     """Extract delimited content from response and print it."""
     # The extractor is product code. Load it through the configured product entry point,
-    # from the product checkout this bridge runs in, never by an import of its name.
+    # from the product checkout ``product_root`` selects (C-4746), never by an import of its name.
+    from scripts.common.repo_root import product_root
     from scripts.ops.product_entry import load_configured_module
 
-    gemini_output = load_configured_module("scripts.gemini_output", product_root=Path(__file__).resolve().parents[2])
+    gemini_output = load_configured_module("scripts.gemini_output", product_root=product_root())
     _extract = gemini_output.extract_delimited
 
     tags = extract_tags if extract_tags else gemini_output.find_complete_pairs(response, gemini_output.ALL_TAGS)

@@ -339,10 +339,15 @@ def bakeoff_caller(request: pytest.FixtureRequest) -> ModuleType:
 
 
 def _configure_hooks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caller: ModuleType, payload: str) -> None:
+    from scripts.common import repo_root
+
     path = tmp_path / "scripts/build/bakeoff_hooks.v1.json"
     path.parent.mkdir(parents=True)
     path.write_text(payload, encoding="utf-8")
-    monkeypatch.setattr(caller, "PROJECT_ROOT", tmp_path)
+    marker = tmp_path / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n", encoding="utf-8")
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
 
 
 @pytest.mark.parametrize(

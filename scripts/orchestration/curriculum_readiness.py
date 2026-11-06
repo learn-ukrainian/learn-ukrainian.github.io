@@ -23,6 +23,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import ProductRootError
+from scripts.common.repo_root import product_root as resolve_product_root
 from scripts.common.schema_check import check_schema as check_schema_memoised
 from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from scripts.orchestration import prompt_contracts
@@ -101,7 +103,8 @@ def load_readiness_gates(exports: tuple[str, ...], *, product_root: Path | None 
     """The product's readiness gates module, which must provide every name in ``exports``.
 
     Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
-    default: this checkout), read strictly at each call; the module must come from that root.
+    default: the checkout :func:`scripts.common.repo_root.product_root` selects, C-4746),
+    read strictly at each call; the module must come from that root.
     A missing or invalid configuration, or a module without one of ``exports``, raises
     (``ImportError`` or ``OSError``) and so refuses the operation that asked for the gates.
     Each consumer passes the product API it uses (``_GATE_EXPORTS`` here, the lifecycle
@@ -109,8 +112,12 @@ def load_readiness_gates(exports: tuple[str, ...], *, product_root: Path | None 
     """
     if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
         raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
-    root = PROJECT_ROOT if product_root is None else product_root
-    module = load_configured_module(_gates_module_name(root / READINESS_GATES_FILE), product_root=product_root)
+    if product_root is None:
+        try:
+            product_root = resolve_product_root()
+        except ProductRootError as exc:
+            raise ConfiguredModuleError(str(exc)) from None
+    module = load_configured_module(_gates_module_name(product_root / READINESS_GATES_FILE), product_root=product_root)
     missing = [name for name in exports if not hasattr(module, name)]
     if missing:
         raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
@@ -253,6 +260,16 @@ def _canonical_json(value: Any) -> str:
 
 def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def _product_checkout(repo_root: Path | None) -> Path:
+    """``repo_root`` when a caller names it, else the product checkout ``product_root`` selects (C-4746)."""
+    if repo_root is not None:
+        return repo_root
+    try:
+        return resolve_product_root()
+    except ProductRootError as exc:
+        raise ReadinessError(str(exc)) from None
 
 
 def _repo_file(repo_root: Path, relative: str | Path) -> Path:
@@ -617,9 +634,10 @@ VALIDATORS: dict[str, Validator] = {
 
 def load_config(
     *,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     active_tracks: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
+    repo_root = _product_checkout(repo_root)
     config_path = _repo_file(repo_root, CONFIG_PATH)
     schema = _load_json(_repo_file(repo_root, CONFIG_SCHEMA_PATH))
     try:
@@ -1140,11 +1158,12 @@ def evaluate_preparation(
     slug: str,
     *,
     consumed_preparation_identity: str | None = None,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validators: Mapping[str, Validator] = VALIDATORS,
     active_manifest: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Evaluate one manifest target without reading legacy QG state."""
+    repo_root = _product_checkout(repo_root)
     track = track.lower()
     slug = slug.lower()
     if not _TARGET_RE.fullmatch(track) or not _TARGET_RE.fullmatch(slug):
@@ -1194,11 +1213,11 @@ def evaluate_preparation(
 def validate_result(
     result: Mapping[str, Any],
     *,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validator: Draft202012Validator | None = None,
 ) -> None:
     if validator is None:
-        schema = _load_json(_repo_file(repo_root, RESULT_SCHEMA_PATH))
+        schema = _load_json(_repo_file(_product_checkout(repo_root), RESULT_SCHEMA_PATH))
         _validate(result, schema, "preparation result")
         return
     _validate_with(result, validator, "preparation result")
@@ -1237,10 +1256,11 @@ def evaluate_inventory(
     *,
     mode: str,
     track: str | None = None,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validators: Mapping[str, Validator] = VALIDATORS,
 ) -> dict[str, Any]:
     """Evaluate a deterministic compact view over active manifest results."""
+    repo_root = _product_checkout(repo_root)
     readiness_gates()  # refuse before any work when the product gates are unavailable
     if mode not in {"summary", "missing-only"}:
         raise ReadinessError(f"unsupported readiness inventory mode: {mode}")

@@ -20,6 +20,7 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 import scripts
+from scripts.common import repo_root
 from scripts.hygiene import lint_source_db_writable_connects as lint
 from scripts.ops import product_entry
 
@@ -822,11 +823,14 @@ def test_rebound_reader_alias_still_reports_collection_access():
 
 @pytest.fixture
 def configured_module(tmp_path, monkeypatch):
-    """Write a scripts.* module into a tree bound as this checkout; drop it again afterwards."""
+    """Write a scripts.* module into a tree selected as the product checkout; drop it again afterwards."""
     root = tmp_path / "checkout"
     (root / "scripts").mkdir(parents=True)
+    marker = root / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
     monkeypatch.setattr(scripts, "__path__", [*scripts.__path__, str(root / "scripts")])
-    monkeypatch.setattr(product_entry, "CHECKOUT_ROOT", root)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(root))
     leaves = []
 
     def write(source: str) -> str:
@@ -871,7 +875,7 @@ def test_configured_module_refuses_sqlite_names_before_importing(name, monkeypat
 
 
 def test_configured_module_loads_a_module_of_this_checkout():
-    assert REPO_ROOT.resolve() == product_entry.CHECKOUT_ROOT
+    assert repo_root.product_root().resolve() == REPO_ROOT.resolve()
     real = product_entry.load_configured_module("scripts.lib.readonly_sqlite")
     assert real is sys.modules["scripts.lib.readonly_sqlite"]
 
@@ -903,7 +907,7 @@ def test_configured_module_refuses_a_foreign_cached_module(tmp_path, monkeypatch
 def test_configured_module_refuses_a_module_found_in_another_checkout(configured_module, monkeypatch):
     """The scripts package path reaching another checkout does not rebind the loader."""
     name = configured_module("VALUE = 1\n")
-    monkeypatch.setattr(product_entry, "CHECKOUT_ROOT", REPO_ROOT)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(REPO_ROOT))
     with pytest.raises(product_entry.ConfiguredModuleError, match="not a file in this checkout"):
         product_entry.load_configured_module(name)
 
@@ -941,7 +945,7 @@ def test_configured_module_rolls_back_a_base_exception(configured_module):
         product_entry.load_configured_module(name)
     assert name not in sys.modules
     assert leaf not in vars(scripts)
-    (product_entry.CHECKOUT_ROOT / "scripts" / f"{leaf}.py").write_text("VALUE = 2\n")
+    (repo_root.product_root() / "scripts" / f"{leaf}.py").write_text("VALUE = 2\n")
     importlib.invalidate_caches()
     sys.modules.pop(name, None)
     assert product_entry.load_configured_module(name).VALUE == 2
