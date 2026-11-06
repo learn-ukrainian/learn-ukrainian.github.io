@@ -21,6 +21,7 @@ from scripts.review.model_catalog import (
     validate_catalog,
 )
 from scripts.review.role_resolution import expand_routing_references, resolve_routing_reference
+from tests.helpers import machinery_package
 
 
 def raw_catalog():
@@ -147,11 +148,12 @@ def test_expansion_preserves_inputs_and_explicit_identity_pins():
 @pytest.mark.parametrize("entrypoint", ["file", "module"])
 def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entrypoint):
     root = Path(__file__).resolve().parents[2]
-    review = tmp_path / "scripts/review"
+    package = machinery_package()
+    review = tmp_path / package / "review"
     review.mkdir(parents=True)
     for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "ukrainian_seats.py", "__init__.py"):
-        shutil.copyfile(root / "scripts/review" / name, review / name)
-    config = tmp_path / "scripts/config"
+        shutil.copyfile(root / package / "review" / name, review / name)
+    config = tmp_path / package / "config"
     config.mkdir()
     raw = raw_catalog()
     raw["routing_schema_version"] = bad
