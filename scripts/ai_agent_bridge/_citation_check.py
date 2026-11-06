@@ -56,6 +56,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import sqlite3
 import unicodedata
@@ -68,7 +69,7 @@ from typing import NamedTuple
 try:
     from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 

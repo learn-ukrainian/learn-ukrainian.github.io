@@ -34,14 +34,14 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
 try:
     from scripts.common.repo_root import machinery_path
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from common.repo_root import machinery_path  # type: ignore[no-redef]
 

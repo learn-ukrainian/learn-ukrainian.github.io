@@ -9,6 +9,7 @@ rules (Monitor split, C-4687).
 from __future__ import annotations
 
 import logging
+import os
 import sqlite3
 import time
 from collections.abc import Sequence
@@ -17,7 +18,7 @@ from pathlib import Path
 try:
     from scripts.lib.readonly_sqlite import import_named_module
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 

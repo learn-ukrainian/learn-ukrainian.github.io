@@ -19,6 +19,8 @@ _AUTH = {
     "opencode": ("DEEPSEEK_API_KEY",),
 }
 _NPM_SHIMS = Path(__file__).resolve().parent / "npm_shims"
+# Any checkout's npm shim directory, named by this file's location (design-v1 amendment 1).
+_NPM_SHIM_PARTS = (Path(os.path.abspath(__file__)).parents[1].name, "dispatcher", "npm_shims")
 
 
 def npm_shim_dir() -> Path | None:
@@ -84,8 +86,8 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         original_path = os.pathsep.join(
             entry for entry in env.get("PATH", os.defpath).split(os.pathsep)
             if Path(entry).resolve() != shims
-            and Path(entry).parts[-3:] != ("scripts", "dispatcher", "npm_shims")
-            and Path(entry).resolve().parts[-3:] != ("scripts", "dispatcher", "npm_shims")
+            and Path(entry).parts[-3:] != _NPM_SHIM_PARTS
+            and Path(entry).resolve().parts[-3:] != _NPM_SHIM_PARTS
         )
         env.update(
             PATH=f"{shims}{os.pathsep}{original_path}", AGENT_ORIGINAL_PATH=original_path,

@@ -26,7 +26,7 @@ from scripts.common.repo_root import machinery_path
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly  # type: ignore[no-redef]
 

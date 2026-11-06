@@ -5,9 +5,16 @@
 # from the checkout this file really lives in, never from the reviewed worktree.
 refuse() { echo "claude read-only boundary refused: $1" >&2; exit 125; }
 self=$(readlink -f -- "$0") || refuse claude_review_shell_unresolved
-root=${self%/scripts/dispatcher/claude_review_shell}
-{ [ "$root" != "$self" ] && [ -e "$root/.git" ]; } || refuse claude_review_shell_root_not_checkout
+# This file is <root>/<package>/dispatcher/claude_review_shell, found by directory depth. The package is
+# named by the directory the file really lives in, because that is the directory imported from <root>.
+dispatcher=${self%/*}
+package_dir=${dispatcher%/*}
+package=${package_dir##*/}
+root=${package_dir%/*}
+{ [ "${self##*/}" = claude_review_shell ] && [ "${dispatcher##*/}" = dispatcher ] && [ -n "$root" ] &&
+  [ -e "$root/.git" ]; } || refuse claude_review_shell_root_not_checkout
+case $package in '' | [0-9]* | *[!A-Za-z0-9_]*) refuse claude_review_shell_root_not_checkout ;; esac
 worktree=$(readlink -f -- "${LU_REVIEW_SHELL_WORKTREE:-/}") || refuse claude_review_shell_worktree_unresolved
 case "$root/" in "$worktree"/*) refuse claude_review_shell_root_is_reviewed_worktree ;; esac
 [ -x "${LU_REVIEW_SHELL_PYTHON:-}" ] || refuse claude_review_shell_interpreter_missing
-exec "$LU_REVIEW_SHELL_PYTHON" -I -c 'import sys; sys.path.insert(0, sys.argv[1]); from scripts.dispatcher.agy_sandbox import shell_main; raise SystemExit(shell_main(sys.argv[2:]))' "$root" "$@"
+exec "$LU_REVIEW_SHELL_PYTHON" -I -c 'import importlib, sys; sys.path.insert(0, sys.argv[1]); sandbox = importlib.import_module(sys.argv[2] + ".dispatcher.agy_sandbox"); raise SystemExit(sandbox.shell_main(sys.argv[3:]))' "$root" "$package" "$@"
