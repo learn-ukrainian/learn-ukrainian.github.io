@@ -280,10 +280,11 @@ def _guard_agent_definition(
     payload consumed by the existing guards. ``promptMode`` stays at its
     default (extend), so the body is appended to the base system prompt.
     """
+    from scripts.common.repo_root import machinery_path
+
     from .claude import _worker_guard_settings
 
-    source_root = Path(__file__).resolve().parents[3]
-    wrapper = source_root / "scripts/agent_runtime/grok_hook_bridge.py"
+    wrapper = machinery_path("agent_runtime/grok_hook_bridge.py")
     if not wrapper.is_file():
         raise RuntimeError(f"Grok hook bridge unavailable: {wrapper}")
     groups = json.loads(_worker_guard_settings(publish_guard=publish_guard))["hooks"]["PreToolUse"]
@@ -312,10 +313,10 @@ def _guard_agent_definition(
 
 def _reviewer_agent_definition(cwd: Path) -> str:
     """Read-only reviewer agent: fleet guards plus the publish guard."""
-    from scripts.common.repo_root import project_interpreter
+    from scripts.common.repo_root import machinery_path, project_interpreter
 
     source_root = Path(__file__).resolve().parents[3]
-    guard = source_root / "scripts/agent_runtime/grok_reviewer_permissions.py"
+    guard = machinery_path("agent_runtime/grok_reviewer_permissions.py")
     if not guard.is_file():
         raise RuntimeError("Grok reviewer permission guard unavailable")
     definition = _guard_agent_definition(

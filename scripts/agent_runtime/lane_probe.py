@@ -32,13 +32,13 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
+from scripts.common.repo_root import machinery_root
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registered_slots
 from scripts.utils.claude_version import run_version_probe
 
 from .registry import AGENTS, get_agent_entry
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-_SCRIPTS_DIR = _REPO_ROOT / "scripts"
+_SCRIPTS_DIR = machinery_root()
 # Several legacy adapters retain top-level imports such as ``ai_llm`` and
 # ``ai_agent_bridge``. Delegate adds this same source root before loading them;
 # SessionStart runs this probe as ``scripts.agent_runtime`` and needs the
@@ -202,13 +202,15 @@ def probe_lanes(agents: list[str], *, cwd: Path, timeout_seconds: int) -> dict[s
 
 
 def build_parser() -> argparse.ArgumentParser:
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.lane_probe"
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.agent_runtime.lane_probe --agent claude\n"
-            "  .venv/bin/python -m scripts.agent_runtime.lane_probe --handoff-agent claude-open-model-data\n"
+            f"  .venv/bin/python {entry} --agent claude\n"
+            f"  .venv/bin/python {entry} --handoff-agent claude-open-model-data\n"
             "Outputs: JSON health results; no provider requests or persistent writes.\n"
             "Exit codes: 0 healthy/disabled, 1 unhealthy, 2 invalid arguments.\n"
             "Related: session-setup.sh; issues #4879, #9580."

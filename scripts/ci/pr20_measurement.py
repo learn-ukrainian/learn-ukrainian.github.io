@@ -19,6 +19,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative, module_name
+
 SIZE = 50
 BASELINE_MEMBERSHIP_SHA256 = "83b9115d8f86a96991ef0329d4f68bec2877fb2773b5765b4412e985b42e3272"
 PROTOCOL = Path(__file__).resolve().parents[2] / "docs/best-practices/pr20-measurement.md"
@@ -470,10 +475,10 @@ def main(argv: list[str] | None = None) -> int:
         description="Replay PR latency and safety measurements from saved raw evidence.\n"
                     "Use before and after the declared CI switch; never use this tool to change CI or certify missing data.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.ci.pr20_measurement baseline --inputs saved-last50 --output last50.json
-  .venv/bin/python -m scripts.ci.pr20_measurement anchor --inputs saved-last50 --switch-pr switch-pr.json --observed-at 2026-10-23T20:00:00Z --output declaration.json
-  .venv/bin/python -m scripts.ci.pr20_measurement measure --inputs saved-next50 --baseline saved-last50 --anchor declaration.json --switch-receipt switch-merged.json --output next50.json
+        epilog=f"""Examples:
+  .venv/bin/python -m {module_name(__spec__, __file__)} baseline --inputs saved-last50 --output last50.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} anchor --inputs saved-last50 --switch-pr switch-pr.json --observed-at 2026-10-23T20:00:00Z --output declaration.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} measure --inputs saved-next50 --baseline saved-last50 --anchor declaration.json --switch-receipt switch-merged.json --output next50.json
 Outputs: one new JSON report/ledger or immutable premerge declaration; no network or GitHub writes.
 Exit codes: 0 = artifact written, including UNKNOWN or STOP results; 2 = invalid input or existing output.
 Related: docs/best-practices/pr20-measurement.md. Read the result fields before making a decision.
@@ -510,7 +515,7 @@ Related: docs/best-practices/pr20-measurement.md. Read the result fields before 
             if at is None or at < stamp(pr["createdAt"]):
                 raise InputError("invalid premerge observation timestamp")
             source = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, timeout=30).strip()
-            for relative, path in (("scripts/ci/pr20_measurement.py", Path(__file__)),
+            for relative, path in ((checkout_relative("ci", "pr20_measurement.py").as_posix(), Path(__file__)),
                                    ("docs/best-practices/pr20-measurement.md", PROTOCOL)):
                 committed = subprocess.check_output(["git", "show", f"HEAD:{relative}"], stderr=subprocess.DEVNULL, timeout=30)
                 if committed != path.read_bytes():

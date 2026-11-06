@@ -46,6 +46,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The roots reader, by import name. This hook is outside the machinery package: under its source
+# tree the reader's file is at the same dotted path, and the name's first component is the machinery
+# package's directory.
+_ROOTS_READER_MODULE = "scripts.common.repo_root"
+_MACHINERY = _ROOTS_READER_MODULE.partition(".")[0]
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
@@ -104,7 +110,7 @@ def _git_probe_env() -> dict[str, str]:
     direct = os.pathsep.join(
         entry
         for entry in env.get("PATH", "").split(os.pathsep)
-        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+        if Path(entry).parts[-3:] != (_MACHINERY, "agent_runtime", "shims")
     )
     if shutil.which("git", path=direct):
         env["PATH"] = direct
@@ -145,12 +151,9 @@ def _configured_primary_root() -> Path | None:
     if not os.environ.get("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
         return None
     here = Path(__file__).resolve()
+    reader_file = Path(*_ROOTS_READER_MODULE.split(".")).with_suffix(".py")
     reader = next(
-        (
-            candidate / "scripts" / "common" / "repo_root.py"
-            for candidate in here.parents
-            if (candidate / "scripts" / "common" / "repo_root.py").is_file()
-        ),
+        (candidate / reader_file for candidate in here.parents if (candidate / reader_file).is_file()),
         None,
     )
     if reader is None:

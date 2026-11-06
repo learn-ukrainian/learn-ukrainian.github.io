@@ -98,10 +98,18 @@ if __name__ == "__main__":
         sys.exit(0)
 
 
-for parent in Path(__file__).resolve().parents:
-    if (parent / "scripts/publish").is_dir():
-        sys.path.insert(0, str(parent))
-        break
+# The merge rules' module, by import name; under a checkout its package is the directory of the
+# same dotted path (this hook is outside the machinery package). The publisher is that package.
+_MERGE_GUARD_MODULE = "scripts.publish.merge_guard"
+_PUBLISHER = _MERGE_GUARD_MODULE.rpartition(".")[0]
+
+# The checkout that owns this hook; the machinery imports below come only from it.
+_MACHINERY_ROOT = next(
+    (parent for parent in Path(__file__).resolve().parents if parent.joinpath(*_PUBLISHER.split(".")).is_dir()),
+    None,
+)
+if _MACHINERY_ROOT is not None:
+    sys.path.insert(0, str(_MACHINERY_ROOT))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
@@ -123,6 +131,11 @@ try:
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
+
+if _MACHINERY_ROOT is None:
+    # No owning checkout: never import the merge rules from elsewhere on sys.path.
+    print("guard dependency unavailable: merge readiness", file=sys.stderr)
+    raise SystemExit(2)
 
 try:
     from scripts.ci.advisory_checks import is_advisory as is_advisory
@@ -1412,7 +1425,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             f"PR {pr} is a DRAFT",
             "Draft PRs are never merged or armed — a draft is by definition not review-ready\n"
             "(the #189 incident: a draft was squash-merged before anyone reviewed it). Mark it\n"
-            "ready (`python -m scripts.publish pr-ready --number <N>`) and get the review gate first.",
+            f"ready (`python -m {_PUBLISHER} pr-ready --number <N>`) and get the review gate first.",
         )
     if reason == "check states unverifiable":
         return _block_msg(

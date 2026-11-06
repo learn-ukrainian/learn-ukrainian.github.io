@@ -190,6 +190,24 @@ except Exception as exc:
 # shared containment predicate (issue #4444) — imported, never re-derived
 # ---------------------------------------------------------------------------
 
+# Machinery modules by import name. This hook is outside the machinery package; under the checkout
+# that owns it, a module's file is at the same dotted path.
+_CONTAINMENT_MODULE = "scripts.guardrails.worktree_containment"
+_SIBLING_GIT_MODULE = "scripts.fleet.sibling_git"
+_MACHINERY = _CONTAINMENT_MODULE.partition(".")[0]
+
+
+def _module_file(module: str) -> Path:
+    """The checkout-relative file of a machinery module named by its import name."""
+    return Path(*module.split(".")).with_suffix(".py")
+
+
+def _package_init_files(module: str) -> tuple[str, ...]:
+    """Checkout-relative files Python executes to import ``module``: each package's, then its own."""
+    parts = module.split(".")
+    packages = ["/".join([*parts[:depth], "__init__.py"]) for depth in range(1, len(parts))]
+    return (*packages, _module_file(module).as_posix())
+
 
 def _load_containment():
     """Import ``scripts.guardrails.worktree_containment`` from any launch dir.
@@ -200,11 +218,13 @@ def _load_containment():
     ``sys.path``. The caller blocks if containment cannot be loaded.
     """
     here = Path(__file__).resolve()
-    for candidate in (here.parent, *here.parents):
-        if (candidate / "scripts" / "guardrails" / "worktree_containment.py").exists():
-            if str(candidate) not in sys.path:
-                sys.path.insert(0, str(candidate))
-            break
+    marker = _module_file(_CONTAINMENT_MODULE)
+    root = next((c for c in (here.parent, *here.parents) if (c / marker).exists()), None)
+    if root is None:
+        # No owning checkout: never import containment from elsewhere on sys.path.
+        return None
+    # The owning checkout comes first, even when PYTHONPATH already lists it later.
+    sys.path[:] = [str(root), *(entry for entry in sys.path if entry != str(root))]
     try:
         from scripts.guardrails import worktree_containment as wc
     except Exception:  # pragma: no cover - defensive import failure
@@ -2628,11 +2648,11 @@ def _sibling_git_invocation(command: str, cwd: str) -> bool:
     try:
         words = shlex.split(command)
         root = next(p for p in Path(__file__).resolve().parents
-                    if (p / "scripts/guardrails/worktree_containment.py").is_file())
+                    if (p / _module_file(_CONTAINMENT_MODULE)).is_file())
         execution = Path(cwd)
         if not execution.is_absolute() or execution.resolve(strict=True) != root:
             return False
-        for relative in ("scripts/__init__.py", "scripts/fleet/__init__.py", "scripts/fleet/sibling_git.py"):
+        for relative in _package_init_files(_SIBLING_GIT_MODULE):
             source = root / relative
             if not source.is_file() or source.resolve(strict=True) != source:
                 return False
@@ -2652,7 +2672,7 @@ def _sibling_git_invocation(command: str, cwd: str) -> bool:
         interpreters = {interpreter}
         if root == primary:
             interpreters.add(".venv/bin/python")
-        if len(words) < 4 or words[0] not in interpreters or words[1:3] != ["-m", "scripts.fleet.sibling_git"]:
+        if len(words) < 4 or words[0] not in interpreters or words[1:3] != ["-m", _SIBLING_GIT_MODULE]:
             return False
         if not Path(interpreter).is_file():
             return False
@@ -2677,9 +2697,9 @@ def _sibling_git_refusal() -> int:
         "Set PYTHONDONTWRITEBYTECODE=1 in the session first; use the shared project's absolute interpreter.\n"
         "No interpreter options, PYTHONPATH, prefixes, nested shells, redirects or trailing commands.\n"
         "Copyable examples from the primary root (use the shared absolute interpreter from a dispatch root):\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git status --repo infra-private\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git sync-main --repo infra-private\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} status --repo infra-private\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} sync-main --repo infra-private\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'\n"
     )
     return 2
 
@@ -2713,7 +2733,7 @@ def _main() -> int:
             words = shlex.split(command)
         except ValueError:
             words = []  # The existing shell parser handles malformed commands.
-        if any(words[i : i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
+        if any(words[i : i + 2] == ["-m", _SIBLING_GIT_MODULE] for i in range(len(words) - 1)):
             return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:
@@ -2877,7 +2897,7 @@ def _bypass_agent_shims() -> None:
     direct = os.pathsep.join(
         entry
         for entry in os.environ.get("PATH", "").split(os.pathsep)
-        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+        if Path(entry).parts[-3:] != (_MACHINERY, "agent_runtime", "shims")
     )
     if shutil.which("git", path=direct):
         os.environ["PATH"] = direct

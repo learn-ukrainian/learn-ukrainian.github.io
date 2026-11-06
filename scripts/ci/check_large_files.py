@@ -14,8 +14,13 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative
+
 THRESHOLD_BYTES = 5 * 1024 * 1024  # 5,242,880 bytes (5 MB)
-DEFAULT_ALLOWLIST = "scripts/ci/large_files_allowlist.txt"
+DEFAULT_ALLOWLIST = checkout_relative("ci", "large_files_allowlist.txt").as_posix()
 _HEX_DIGITS = set(string.hexdigits)
 
 
@@ -350,18 +355,21 @@ def build_parser() -> argparse.ArgumentParser:
         "Guard repository against untracked large blobs over 5 MB.\n"
         "Use in CI checks and merge queue; do not use for historical scanning or working-tree file discovery."
     )
+    script = checkout_relative("ci", "check_large_files.py").as_posix()
+    allowlist = DEFAULT_ALLOWLIST
+    artifacts = checkout_relative("storage", "artifacts.py").as_posix()
     epilog = (
         "Examples:\n"
-        "  .venv/bin/python scripts/ci/check_large_files.py --changed-vs-base origin/main\n"
-        "  .venv/bin/python scripts/ci/check_large_files.py --seed-allowlist\n\n"
+        f"  .venv/bin/python {script} --changed-vs-base origin/main\n"
+        f"  .venv/bin/python {script} --seed-allowlist\n\n"
         "Outputs:\n"
-        "  None during verification; updates scripts/ci/large_files_allowlist.txt when seeding.\n\n"
+        f"  None during verification; updates {allowlist} when seeding.\n\n"
         "Exit codes:\n"
         "  0 = all checked blobs pass or are within threshold\n"
         "  1 = oversized unallowlisted blob, Git error, or missing ref\n"
         "  2 = invalid CLI arguments\n\n"
         "Related:\n"
-        "  Issue #8510, scripts/storage/artifacts.py, docs/runbooks/bulk-artifacts.md."
+        f"  Issue #8510, {artifacts}, docs/runbooks/bulk-artifacts.md."
     )
     p = argparse.ArgumentParser(description=desc, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
     g = p.add_mutually_exclusive_group(required=True)
@@ -405,8 +413,8 @@ def main(argv: list[str] | None = None) -> int:
             print(
                 "\nNewly added or modified blobs over 5242880 bytes cannot be tracked directly in Git.\n"
                 "How to proceed:\n"
-                "  1. Move the large file behind artifact storage using 'scripts/storage/artifacts.py'.\n"
-                "  2. If the file must remain tracked in Git, add an entry to 'scripts/ci/large_files_allowlist.txt'\n"
+                f"  1. Move the large file behind artifact storage using '{checkout_relative('storage', 'artifacts.py').as_posix()}'.\n"
+                f"  2. If the file must remain tracked in Git, add an entry to '{DEFAULT_ALLOWLIST}'\n"
                 "     with the exact path, size in bytes, and an explicit reason.",
                 file=sys.stderr,
             )

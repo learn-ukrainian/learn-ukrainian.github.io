@@ -31,6 +31,7 @@ from ._codex import (
     has_codex_headroom,
     process_all_codex,
 )
+from ._config import BRIDGE_ENTRY, DISPATCH_ENTRY, MACHINERY_PACKAGE
 from ._db import get_db
 from ._dispatch_wrappers import (
     REPO_ROOT,
@@ -516,10 +517,10 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for gemini\n"
-            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --from claude --task-id query-123 < prompt.md\n"
-            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --task-id review-123 < prompt.md\n\n"
-            "Authoring: scripts/dispatch.py dispatch --agent <agent> --model <model>\n"
+            f"  .venv/bin/python {BRIDGE_ENTRY} inbox --for gemini\n"
+            f"  .venv/bin/python {BRIDGE_ENTRY} ask-codex - --from claude --task-id query-123 < prompt.md\n"
+            f"  .venv/bin/python {BRIDGE_ENTRY} ask-claude - --type review --task-id review-123 < prompt.md\n\n"
+            f"Authoring: {DISPATCH_ENTRY} dispatch --agent <agent> --model <model>\n"
             "  --mode workspace-write --owned-path <path> --prompt-file <brief>.\n\n"
             "Outputs:\n"
             "  Reads and writes broker messages, may invoke agent CLIs, and can post follow-up data to GitHub.\n\n"
@@ -527,7 +528,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  0 on successful command completion; non-zero on CLI misuse, broker failures, or agent invocation failures.\n\n"
             "Related:\n"
             "  Broker DB: batch_state/agent_comms.db\n"
-            "  Runtime: scripts/agent_runtime/\n"
+            f"  Runtime: {MACHINERY_PACKAGE}/agent_runtime/\n"
             "  Issue: #1379\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1162,15 +1163,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "Example:\n"
             "  ab review-deep 1740 --dry-run\n"
             "  ab review-deep 1740 --effort high --dry-run\n\n"
-            "For authoring, use scripts/dispatch.py dispatch --agent <agent> --model <model>\n"
+            f"For authoring, use {DISPATCH_ENTRY} dispatch --agent <agent> --model <model>\n"
             "  --mode workspace-write --owned-path <path> --prompt-file <brief>.\n"
-            "For a live checkout review, use scripts/dispatch.py dispatch --agent <agent>\n"
+            f"For a live checkout review, use {DISPATCH_ENTRY} dispatch --agent <agent>\n"
             "  --model <model> --mode read-only --cwd <dispatch-worktree> --prompt-file <brief>.\n"
-            "Wait with scripts/dispatch.py wait <task-id>. Publish eligible completed PR reviews\n"
-            "  with .venv/bin/python -m scripts.review.record_cf_verdict after its qualification checks.\n\n"
+            f"Wait with {DISPATCH_ENTRY} wait <task-id>. Publish eligible completed PR reviews\n"
+            f"  with .venv/bin/python -m {MACHINERY_PACKAGE}.review.record_cf_verdict after its qualification checks.\n\n"
             "Outputs: dispatch task record, prompt and worktree; --dry-run writes a preview.\n"
             "Exit codes: 0 success, 2 for a retired local path or unavailable PR head; other non-zero dispatch failure.\n"
-            "Related: scripts/dispatch.py, scripts.review.record_cf_verdict.\n\n"
+            f"Related: {DISPATCH_ENTRY}, {MACHINERY_PACKAGE}.review.record_cf_verdict.\n\n"
             "Prompt wrapper:\n"
             f"{REVIEW_DEEP_INSTRUCTIONS}"
         ),

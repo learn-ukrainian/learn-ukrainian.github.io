@@ -61,17 +61,24 @@ def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> st
 
 
 def main() -> int:
+    if __package__ in (None, ""):
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.ci._location import module_name
+
     parser = argparse.ArgumentParser(
         description="Validate CI event identity and require every result in its tier.\n"
         "Use inside ci.yml with GitHub event variables; this does not run tests or authorize a merge.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.ci.gate\n"
-        "  .venv/bin/python -m scripts.ci.gate --record-queue\n"
+        epilog=(
+            "Examples:\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)}\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} --record-queue\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF; NEEDS_JSON for aggregation.\n"
         "Queue recording also needs QUEUE_RECORD, GITHUB_RUN_ID and GITHUB_RUN_ATTEMPT.\n"
         "Outputs: job results and GITHUB_STEP_SUMMARY, or QUEUE_RECORD JSON; no network or Git writes.\n"
         "Exit codes: 0 valid proof; 1 missing/invalid proof; 2 invalid arguments.\n"
-        "Related: .github/workflows/ci.yml; docs/runbooks/ci-gate.md; OO-98.",
+            "Related: .github/workflows/ci.yml; docs/runbooks/ci-gate.md; OO-98."
+        ),
     )
     parser.add_argument("--record-queue", action="store_true", default=False,
                         help="Write original queue identity to QUEUE_RECORD, e.g. queue-candidate.json; default: validate job results.")

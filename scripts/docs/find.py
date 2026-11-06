@@ -2251,9 +2251,19 @@ def format_text(result: dict) -> str:
     return '\n'.join(lines)
 
 
+def _self_module() -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}.{here.parent.name}.{here.stem}"
+
+
+def _sibling_path(name: str) -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}/{here.parent.name}/{name}"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog='python -m scripts.docs.find',
+        prog=f'python -m {_self_module()}',
         description='Find where a document, data store or resource lives and whether it is current, in one query.\n'
                     'Use it before reporting "no source" or asking where something is, whether it is still current '
                     'and what replaced it, or where a check or step is implemented; it searches the catalogue, '
@@ -2261,11 +2271,11 @@ def main(argv: list[str] | None = None) -> int:
                     'sources MCP tools for language facts.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='Examples:\n'
-               '  .venv/bin/python -m scripts.docs.find "ULP 1-02"\n'
-               '  .venv/bin/python -m scripts.docs.find "vesum database" --json\n'
-               '  .venv/bin/python -m scripts.docs.find "teacher deck" --family practice-specs --limit 5\n'
-               '  .venv/bin/python -m scripts.docs.find "is gpt-6-astra still current"\n'
-               '  .venv/bin/python -m scripts.docs.find "where is resolve-reviewer implemented"\n'
+               f'  .venv/bin/python -m {_self_module()} "ULP 1-02"\n'
+               f'  .venv/bin/python -m {_self_module()} "vesum database" --json\n'
+               f'  .venv/bin/python -m {_self_module()} "teacher deck" --family practice-specs --limit 5\n'
+               f'  .venv/bin/python -m {_self_module()} "is gpt-6-astra still current"\n'
+               f'  .venv/bin/python -m {_self_module()} "where is resolve-reviewer implemented"\n'
                'Outputs: ranked hits on stdout (path, line, excerpt, family, status, replacement, query hint) and '
                'the search coverage; writes nothing and keeps no index.\n'
                'Exit codes: 0 at least one hit; 1 no hit in a complete search; 2 invalid arguments (a limit or budget '
@@ -2274,7 +2284,7 @@ def main(argv: list[str] | None = None) -> int:
                'incomplete (a budget or catalogue problem cut it short, so absence is not proven). Failures print a '
                'typed error (JSON with --json), never a traceback.\n'
                'Related: #9412; GET /api/knowledge/find (same search); docs/README.md; '
-               'docs/knowledge/catalogue.yaml; scripts/docs/catalogue.py.')
+               f'docs/knowledge/catalogue.yaml; {_sibling_path("catalogue.py")}.')
     parser.add_argument('query', help='Words or a phrase to look for, e.g. "ULP 1-02" or "teacher deck rebuild"; '
                                       f'non-printable characters become spaces, at most {MAX_QUERY_CHARS} characters.')
     parser.add_argument('--limit', default=str(DEFAULT_LIMIT),

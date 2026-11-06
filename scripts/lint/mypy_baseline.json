@@ -88,11 +88,6 @@
       "message": "Returning Any from function declared to return \"None | str\""
     },
     {
-      "path": "scripts/agent_runtime/adapters/acpx.py",
-      "code": "no-redef",
-      "message": "Name \"project_interpreter\" already defined (possibly by an import)"
-    },
-    {
       "path": "scripts/agent_runtime/adapters/agy.py",
       "code": "arg-type",
       "message": "Argument \"permission_profile_id\" to \"AgyAttempt\" has incompatible type \"object\"; expected \"None | str\""
@@ -798,11 +793,6 @@
       "message": "Argument 1 to \"set\" has incompatible type \"Any | None\"; expected \"Iterable[Any]\""
     },
     {
-      "path": "scripts/agent_runtime/trail_isolation.py",
-      "code": "no-redef",
-      "message": "Name \"project_interpreter\" already defined (possibly by an import)"
-    },
-    {
       "path": "scripts/agent_runtime/usage.py",
       "code": "attr-defined",
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\""
@@ -1386,16 +1376,6 @@
       "path": "scripts/ai_agent_bridge/openai_proxy.py",
       "code": "no-redef",
       "message": "Name \"run_version_probe\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/ai_llm/agent_runtime_call.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"len\" has incompatible type \"object\"; expected \"Sized\""
-    },
-    {
-      "path": "scripts/ai_llm/agent_runtime_call.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"object\", variable has type \"None | str\")"
     },
     {
       "path": "scripts/analytics/vocab_progression.py",

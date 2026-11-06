@@ -18,7 +18,9 @@ if str(_ROOT) not in sys.path:
 
 import yaml
 
-_DEFAULTS = _ROOT / "scripts" / "config" / "routing_defaults.yaml"
+from scripts.common.repo_root import machinery_path
+
+_DEFAULTS = machinery_path("config/routing_defaults.yaml")
 
 # Fixed. A metric or config edit cannot admit these lanes for language work.
 LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})

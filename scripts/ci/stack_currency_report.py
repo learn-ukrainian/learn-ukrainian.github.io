@@ -16,16 +16,22 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 import urllib.request
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import yaml
 
+from scripts.ci._location import checkout_relative, module_name
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PINS_PATH = REPO_ROOT / "scripts" / "config" / "stack_pins.yaml"
+PINS_PATH = REPO_ROOT / checkout_relative("config", "stack_pins.yaml")
 
 # kind, target. Targets are public package or release identifiers, not host paths.
 # The code CLI's npm package is derived from its pin name so this file does not
@@ -309,8 +315,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ci.stack_currency_report collect --out ci-artifacts/stack-currency.json\n"
-            "  .venv/bin/python -m scripts.ci.stack_currency_report render "
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} collect --out ci-artifacts/stack-currency.json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} render "
             "--report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md\n"
             "\n"
             "Outputs:\n"
@@ -324,7 +330,7 @@ def main(argv: list[str] | None = None) -> int:
             "  or the rendered body is not publishable.\n"
             "\n"
             "Related:\n"
-            "  Pin file: scripts/config/stack_pins.yaml.\n"
+            f"  Pin file: {checkout_relative('config', 'stack_pins.yaml').as_posix()}.\n"
             "  Policy: docs/best-practices/stack-currency.md section 2.\n"
             "  Publisher: the stack-currency job in .github/workflows/security-audit.yml (#10862)."
         ),
@@ -337,7 +343,7 @@ def main(argv: list[str] | None = None) -> int:
         "--pins",
         type=Path,
         default=PINS_PATH,
-        help="pin file path (default: scripts/config/stack_pins.yaml)",
+        help=f"pin file path (default: {checkout_relative('config', 'stack_pins.yaml').as_posix()})",
     )
     collect_parser.add_argument(
         "--out",

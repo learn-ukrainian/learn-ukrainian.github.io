@@ -19,11 +19,10 @@ from typing import Any
 from .kimi_admission import format_refusal
 
 try:
-    from scripts.common.repo_root import project_interpreter
-except ImportError:
-    from common.repo_root import project_interpreter  # agent_runtime loaded with scripts/ on path
+    from scripts.common.repo_root import machinery_path, project_interpreter
+except ImportError:  # agent_runtime loaded with scripts/ on path
+    from common.repo_root import machinery_path, project_interpreter  # type: ignore[no-redef]
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TRAIL_MCP_SERVER_NAME = "trail"
 TRAIL_TOOL_NAMES: tuple[str, ...] = ("trail_status", "trail_step", "trail_summon")
 GROK_TRAIL_TOOLS: tuple[str, ...] = tuple(
@@ -83,7 +82,7 @@ def _profile_for_agent(agent_name: str) -> str:
 def _write_private_mcp_config(root: Path) -> Path:
     """Write the sole admitted stdio MCP server without using ambient config."""
     python_bin = project_interpreter()
-    mcp_server = PROJECT_ROOT / "scripts" / "orchestration" / "trails" / "trail_mcp.py"
+    mcp_server = machinery_path("orchestration/trails/trail_mcp.py")
     if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
         raise TrailIsolationError(f"trail isolation requires executable {python_bin}")
     if not mcp_server.is_file():
@@ -192,7 +191,7 @@ def assert_trail_isolation_config(tool_config: Mapping[str, Any], *, profile: st
     servers = payload.get("mcpServers") if isinstance(payload, dict) else None
     server = servers.get(TRAIL_MCP_SERVER_NAME) if isinstance(servers, dict) else None
     expected_python = project_interpreter()
-    expected_server = PROJECT_ROOT / "scripts" / "orchestration" / "trails" / "trail_mcp.py"
+    expected_server = machinery_path("orchestration/trails/trail_mcp.py")
     if not isinstance(server, dict) or set(servers) != {TRAIL_MCP_SERVER_NAME}:
         raise TrailIsolationError("trail isolation MCP configuration exposes an unexpected server")
     if server.get("command") != str(expected_python) or server.get("args") != [str(expected_server)]:

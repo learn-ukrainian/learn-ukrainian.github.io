@@ -68,6 +68,9 @@ _MODE_ACTIVITIES = {
     BRIDGE_MODE: "bridge messages, channel posts and inbox drains (Kimi is not a bridge recipient)",
 }
 
+# The machinery package directory as the checkout names it (unresolved, whatever it is called).
+_MACHINERY_DIR = Path(__file__).absolute().parents[1].name
+
 # Backend/tooling packages verified to hold no Ukrainian-language data,
 # prompts or grammar. Each admits the package and its tests under tests/<same>/.
 _BACKEND_PACKAGES = {
@@ -93,8 +96,8 @@ KIMI_OWNED_ROOTS: dict[str, str] = {
     "site/src/lib/arc.ts": "arc data types and helpers; no language data",
     "site/src/lib/doc-nav.ts": "docs page route helpers",
     "site/src/lib/readings.ts": "reading visibility predicate",
-    **{f"scripts/{name}/": reason for name, reason in _BACKEND_PACKAGES.items()},
-    **{f"tests/{name}/": f"tests of scripts/{name}/" for name in _BACKEND_PACKAGES},
+    **{f"{_MACHINERY_DIR}/{name}/": reason for name, reason in _BACKEND_PACKAGES.items()},
+    **{f"tests/{name}/": f"tests of {_MACHINERY_DIR}/{name}/" for name in _BACKEND_PACKAGES},
     ".github/workflows/": "CI workflows",
     ".github/actions/": "composite CI actions",
     ".github/codeql/": "CodeQL configuration",
@@ -110,24 +113,24 @@ _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
 # The Monitor's product half (Hramatka, sources lookups, curriculum routers)
 # lives in scripts/project_api/, which is not an allowlisted root (C-4687).
 KIMI_EXCLUDED_PATHS: dict[str, str] = {
-    "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
-    "scripts/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
-    "scripts/agent_runtime/target_admission.py": "target resolution and admission is routing policy",
-    "scripts/agent_runtime/kimi_hooks/": "the Kimi worktree boundary is routing policy",
-    "scripts/agent_runtime/env_sanitize.py": "the agent credential boundary, including Kimi's push block",
-    "scripts/agent_runtime/adapters/kimi.py": "Kimi's own runtime refusal is routing policy",
-    "scripts/agent_runtime/adapters/kimicc.py": "Kimi's own runtime refusal is routing policy",
-    "scripts/agent_runtime/kimicc_headless.sh": "Kimi's own runtime refusal is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/target_admission.py": "target resolution and admission is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/kimi_hooks/": "the Kimi worktree boundary is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/env_sanitize.py": "the agent credential boundary, including Kimi's push block",
+    f"{_MACHINERY_DIR}/agent_runtime/adapters/kimi.py": "Kimi's own runtime refusal is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/adapters/kimicc.py": "Kimi's own runtime refusal is routing policy",
+    f"{_MACHINERY_DIR}/agent_runtime/kimicc_headless.sh": "Kimi's own runtime refusal is routing policy",
     "tests/agent_runtime/adapters/test_kimi_adapter.py": "tests of Kimi's routing policy",
     "tests/agent_runtime/adapters/test_kimicc_headless.py": "tests of Kimi's routing policy",
-    "scripts/agent_runtime/profiles/": "reviewer prompt profiles",
+    f"{_MACHINERY_DIR}/agent_runtime/profiles/": "reviewer prompt profiles",
     "tests/api/test_hramatka_": "Hramatka lesson generation and grammar quality gates",
     "tests/api/test_sources_router": "Ukrainian dictionary and corpus lookups",
-    "scripts/orchestration/curriculum_": "curriculum lifecycle, readiness and preparation",
+    f"{_MACHINERY_DIR}/orchestration/curriculum_": "curriculum lifecycle, readiness and preparation",
     "tests/orchestration/test_curriculum_": "curriculum lifecycle, readiness and preparation",
-    "scripts/orchestration/prompt_contracts.py": "curriculum phase prompt contracts",
+    f"{_MACHINERY_DIR}/orchestration/prompt_contracts.py": "curriculum phase prompt contracts",
     "tests/orchestration/test_prompt_contracts.py": "curriculum phase prompt contracts",
-    "scripts/orchestration/preparation_evidence.py": "curriculum preparation evidence",
+    f"{_MACHINERY_DIR}/orchestration/preparation_evidence.py": "curriculum preparation evidence",
 }
 
 # Fleet repository roles a Kimi seat may target (scripts/config/fleet_repos.yaml).
@@ -813,7 +816,7 @@ def format_refusal(agent: str, reasons: Iterable[Any]) -> str:
     return (
         f"ROUTING REFUSED: {_POLICY}: {POLICY_LINE} {agent} seats take workspace-write implementation of "
         f"allowlisted UI and backend paths holding plain UTF-8 text without Cyrillic only "
-        f"(KIMI_OWNED_ROOTS in scripts/agent_runtime/kimi_admission.py). "
+        f"(KIMI_OWNED_ROOTS in {_MACHINERY_DIR}/agent_runtime/kimi_admission.py). "
         f"Refused: {joined}. Alternative seats: {_alternative_seats()}."
     )
 

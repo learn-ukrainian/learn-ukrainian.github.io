@@ -7,11 +7,15 @@ from pathlib import Path
 
 import yaml
 
+from scripts.common import repo_root
 from scripts.lint.lint_fleet_roster import SEAT_FIELDS, load_orchestrator_seats
 from scripts.review.role_resolution import resolve_routing_reference
 
 ROOT = Path(__file__).resolve().parents[5]
-CATALOG = ROOT / "scripts/config/model_catalog.yaml"
+# The catalog is a machinery file; the tables name it by its checkout-relative path, whose first
+# component is the machinery package's import name.
+CATALOG = repo_root.machinery_path("config/model_catalog.yaml")
+CATALOG_NAME = f"{repo_root.__name__.partition('.')[0]}/config/model_catalog.yaml"
 OUTPUT = ROOT / "agents_extensions/shared/rules/catalog-routing-tables.md"
 
 
@@ -30,7 +34,7 @@ def render(catalog_path: Path = CATALOG) -> str:
     lines = [
         "# Catalog routing tables",
         "",
-        "Generated from `scripts/config/model_catalog.yaml`; do not edit the tables.",
+        f"Generated from `{CATALOG_NAME}`; do not edit the tables.",
         "Regenerate with the task-prescribed interpreter:",
         "",
         "```bash",

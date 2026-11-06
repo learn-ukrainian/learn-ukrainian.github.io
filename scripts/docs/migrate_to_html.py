@@ -320,16 +320,22 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
     return True
 
 
+def _script_path() -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}/{here.parent.name}/{here.name}"
+
+
 def main() -> int:
+    script = _script_path()
     parser = argparse.ArgumentParser(
         description=(
             "Convert a Markdown document to the project's high-fidelity HTML report style.\n"
             "Use for bulk MD->HTML migration; do not overwrite hand-curated HTML unless explicitly approved."
         ),
-        epilog="""Examples:
-  .venv/bin/python scripts/docs/migrate_to_html.py docs/example.md
-  .venv/bin/python scripts/docs/migrate_to_html.py docs/example.md audit/example/REPORT.html
-  .venv/bin/python scripts/docs/migrate_to_html.py --force docs/example.md audit/example/REPORT.html
+        epilog=f"""Examples:
+  .venv/bin/python {script} docs/example.md
+  .venv/bin/python {script} docs/example.md audit/example/REPORT.html
+  .venv/bin/python {script} --force docs/example.md audit/example/REPORT.html
 
 Outputs:
   Writes the destination HTML file. If output is omitted, writes next to the input with a .html suffix.

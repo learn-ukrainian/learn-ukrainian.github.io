@@ -60,6 +60,12 @@ from scripts.fleet import credit_lane
 from scripts.fleet.routing_policy import projected_unused_pct
 from scripts.orchestration import dispatch_admission, task_record_store
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+
 # Subscription + free seats drivers may pick for code implement. "gemini" and
 # "glm" are kept here for budget-row VISIBILITY (their quota/status still
 # shows in the table) but are force-AVOID via RETIRED_AGENT_ALIASES below —
@@ -927,19 +933,19 @@ def format_human(report: dict[str, Any]) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.fleet.capacity_pick",
+        prog=f"python {_ENTRY}",
         description="Print capacity-first lane pick order before implement dispatch.\nUse to compare capacity, not to certify model eligibility.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.capacity_pick --json\n"
-            "  .venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict\n\n"
+            f"  .venv/bin/python {_ENTRY} --json\n"
+            f"  .venv/bin/python {_ENTRY} --transport acp --strict\n\n"
             "Outputs: routing table or JSON; no provider prompts. The last line (JSON: `admission`) says whether\n"
             "a write dispatch would pass host admission now: live write workers vs cap, MemAvailable vs floor,\n"
             "load per CPU vs limit, disk used percent and free GiB of the .worktrees filesystem vs the refuse\n"
-            "and alert levels (thresholds: DISPATCH_* in scripts/config.py, env-overridable). When\n"
+            f"and alert levels (thresholds: DISPATCH_* in {_MACHINERY}/config.py, env-overridable). When\n"
             "lu-dispatch.slice is active the same line adds its memory use against MemoryMax.\n"
-            "Credit lanes (scripts/config/credit_lanes.yaml): a lane near its plan cap with a fresh positive\n"
+            f"Credit lanes ({_MACHINERY}/config/credit_lanes.yaml): a lane near its plan cap with a fresh positive\n"
             "credit balance and no rate limit in the evidence window reads `credit_balance_present` (usable;\n"
             "the router does not verify the provider draws credits; dispatch admits only allowlisted models).\n"
             "A recent rate limit reads `credit_use_unconfirmed`; missing or stale credit data, or an unreadable\n"
@@ -958,7 +964,7 @@ def main(argv: list[str] | None = None) -> int:
             "rank (Codex, Claude, Cursor first). A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
             "(JSON `write_success`). DeepSeek (prepaid API) is eligible for Flash coding through opencode.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
-            "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
+            f"Related: /api/state/routing-budget?transport=acp; {_MACHINERY}/orchestration/dispatch_admission.py;\n"
             "issues #7812, #8645, #9518, #9615, #9740, #10776."
         ),
     )

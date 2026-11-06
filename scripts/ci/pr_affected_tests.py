@@ -18,8 +18,32 @@ from pathlib import Path, PurePosixPath
 
 from scripts.ci.gate import event_tier
 
-GUARDS = Path("scripts/ci/pr-affected-guards.txt")
-DURATIONS = Path("scripts/ci/pytest-file-durations.json")
+# This file is copied alone into a fixture checkout, so its paths come from
+# this file's own directory, with symlinks left unresolved.
+_PACKAGE_DIR = Path(__file__).parents[1]
+
+
+def _checkout_relative(*parts: str) -> Path:
+    return Path(_PACKAGE_DIR.name, *parts)
+
+
+def _module_name() -> str:
+    top = _PACKAGE_DIR.name
+    spec = __spec__
+    if spec is not None and spec.name and spec.name != "__main__":
+        name = spec.name
+        if name == top or name.startswith(f"{top}."):
+            return name
+        return f"{top}.{name}"
+    relative = Path(__file__).relative_to(_PACKAGE_DIR).with_suffix("")
+    parts = [top, *relative.parts]
+    if parts[-1] == "__init__":
+        parts.pop()
+    return ".".join(parts)
+
+
+GUARDS = _checkout_relative("ci", "pr-affected-guards.txt")
+DURATIONS = _checkout_relative("ci", "pytest-file-durations.json")
 INFRA = {
     ".github/workflows/ci.yml",
     "pyproject.toml",
@@ -205,7 +229,11 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     infrastructure = any(
         p in INFRA
         or Path(p).name == "conftest.py"
-        or p.startswith(("scripts/ci/", "scripts/common/flake_quarantine", ".github/actions/python-ci-env/"))
+        or p.startswith((
+            f"{_checkout_relative('ci').as_posix()}/",
+            _checkout_relative("common", "flake_quarantine").as_posix(),
+            ".github/actions/python-ci-env/",
+        ))
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )
@@ -284,11 +312,11 @@ def main() -> int:
         description="Run changed tests, tests that import changed files and guards, or marker-only\n"
         "repository invariants for a PR candidate. PR CI runs no pytest shards; merge-group CI runs the full suite.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
+        epilog=f"Example: .venv/bin/python -m {_module_name()}\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
         "Outputs: ci-artifacts/pr-affected.* or pr-repo-wide.* and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
-        "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
+        f"Related: {GUARDS.as_posix()}; docs/runbooks/ci-gate.md.",
     )
     parser.add_argument("--repo-wide", action="store_true", help="Run only repo_wide marked tests, independent of changed-file deferral.")
     args = parser.parse_args()

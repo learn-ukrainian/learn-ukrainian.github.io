@@ -4,8 +4,8 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from pathlib import Path
 
-from ai_llm.agent_runtime_call import call_agent_with_fallback
-from ai_llm.fallback import CallResult
+from .agent_runtime_call import call_agent_with_fallback
+from .fallback import CallResult
 
 CLAUDE_MODEL_LADDER = ("claude-opus-5-5", "claude-sonnet-5-5")
 

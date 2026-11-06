@@ -364,9 +364,12 @@ _AUTH_STATUS_TIMEOUT_S = 30
 # isolated from the worker's Python environment variables and working
 # directory. That module imports the standard library only, so the guard
 # needs no virtual environment (the runner resolves the interpreter link).
+# The guard is named under the machinery package's canonical import name (the
+# unresolved name of the package directory this file is in), whichever name this
+# module was imported by.
 _LAUNCH_GUARD_CODE = (
     "import sys; sys.path.insert(0, sys.argv.pop(1)); "
-    "from scripts.agent_runtime.env_sanitize import run_claude_launch_guard; "
+    f"from {Path(__file__).absolute().parents[2].name}.agent_runtime.env_sanitize import run_claude_launch_guard; "
     "run_claude_launch_guard(sys.argv[1:])"
 )
 _CODE_ROOT = Path(__file__).resolve().parents[3]

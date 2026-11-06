@@ -25,6 +25,12 @@ from scripts.common.http_status import has_http_status
 from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
 
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+
 
 def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display: bool = False) -> dict[str, Any]:
     """Read routing inputs; only the usage CLI opts into diagnostic display rows."""
@@ -581,14 +587,14 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.usage show\n"
-            "  .venv/bin/python -m scripts.fleet.usage json --fresh\n"
-            "  .venv/bin/python -m scripts.fleet.usage doctor\n"
-            "  .venv/bin/python -m scripts.fleet.usage qa\n\n"
+            f"  .venv/bin/python {_ENTRY} show\n"
+            f"  .venv/bin/python {_ENTRY} json --fresh\n"
+            f"  .venv/bin/python {_ENTRY} doctor\n"
+            f"  .venv/bin/python {_ENTRY} qa\n\n"
             "Default: DELEGATE_MONITOR_API (http://127.0.0.1:8765); offline falls back to blocking probes.\n"
             "Outputs: stdout snapshot or QA result; native refresh updates existing usage caches.\n"
             "Exit codes: 0 ok; 1 read/refresh/qa failed; 2 invalid arguments.\n"
-            "Related: /api/state/routing-budget; scripts.fleet.capacity_pick; issue #8074."
+            f"Related: /api/state/routing-budget; {_MACHINERY}.fleet.capacity_pick; issue #8074."
         ),
     )
     parser.add_argument(

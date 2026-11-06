@@ -16,6 +16,7 @@ posts a redacted, action-required system alert to the ``fleet-comms`` channel.
 
 from __future__ import annotations
 
+import os
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -27,6 +28,11 @@ if str(ROOT) not in sys.path:
 
 from scripts.ai_agent_bridge import _channels
 from scripts.lib import kimi_coding_oauth
+
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 ALERT_CHANNEL = "fleet-comms"
 # Kimi is not a bridge recipient; the infra seat owns credential alerts.
@@ -55,7 +61,7 @@ def post_failure_alert(failure_kind: str) -> bool:
     body = (
         "ACTION REQUIRED: Kimi OAuth refresh canary failed. "
         f"component=kimi_oauth_refresh; failure_kind={failure_kind}. "
-        "Run `.venv/bin/python -m scripts.canary.kimi_oauth_canary`; if credentials are invalid, run `kimi login`."
+        f"Run `.venv/bin/python -m {_MACHINERY}.canary.kimi_oauth_canary`; if credentials are invalid, run `kimi login`."
     )
     try:
         _channels.post(

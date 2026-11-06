@@ -25,7 +25,12 @@ import sys
 from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
 
-DENOMINATOR_REL = "scripts/ci/frontend_change_denominator.json"
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative
+
+DENOMINATOR_REL = checkout_relative("ci", "frontend_change_denominator.json").as_posix()
 PACKAGE_JSON_REL = "site/package.json"
 HYDRATE_ROOT_SCRIPT = "hydrate"
 
