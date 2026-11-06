@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -1545,11 +1546,12 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
 def _checkout_relative(relative: str) -> str:
     """The checkout-relative name of machinery file ``relative``.
 
-    It starts with the package's import name, the directory checkout paths use (its unresolved
-    directory when run as a file). This module does not import ``repo_root``: launchers and
-    standalone catalog copies run it without ``common/``.
+    It starts with the package's directory name, the one checkout paths use, taken from this
+    module's unresolved location, so neither a symlinked package nor a short import spelling
+    changes it. This module does not import ``repo_root``: launchers and standalone catalog
+    copies run it without ``common/``.
     """
-    package = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+    package = Path(os.path.abspath(__file__)).parents[1].name
     return f"{package}/{relative}"
 
 

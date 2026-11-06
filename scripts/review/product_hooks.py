@@ -3,9 +3,12 @@
 The dispatcher, the agent runtime and the review contract are machinery and import no product
 module. The product names the one module that does, ``attempt_hooks`` in
 ``scripts/curriculum/review_hooks.v1.json``, and :func:`attempt_hooks` imports it. The file is
-trusted because of where it is read from: its path is fixed relative to this module, as
+trusted because of where it is read from: the product checkout, a product-repository path that
+stays where it is when the machinery moves. By default that is the checkout this module is in, as
 ``scripts.orchestration.product_policy`` reads its policy file, so code that runs from the primary
-checkout also reads that checkout's hooks. No environment variable or flag redirects it.
+checkout also reads that checkout's hooks; a caller may name the product checkout with
+``product_root``, and the module the file names must then come from that checkout too. No
+environment variable or flag redirects it.
 
 Fail closed: :class:`ProductHooksError` (an ``ImportError``, which is what a caller saw before when
 a product module could not be imported) when the file is missing, a symlink, not a regular file,
@@ -27,7 +30,9 @@ from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.review-hooks"
 SCHEMA_VERSION = 1
+# A product-repository path, relative to the product checkout; it is also the file's ``origin``.
 HOOKS_REL = "scripts/curriculum/review_hooks.v1.json"
+# The hooks file of the default product checkout: the one this module is in.
 HOOKS_PATH = Path(__file__).resolve().parents[2] / HOOKS_REL
 MAX_HOOKS_BYTES = 4096
 
@@ -80,11 +85,17 @@ def _module_name(path: Path) -> str:
 
 
 @functools.cache
-def attempt_hooks() -> ModuleType:
-    """Validate and load the product's review checks once through the configured entry point."""
-    name = _module_name(HOOKS_PATH)
+def attempt_hooks(*, product_root: Path | None = None) -> ModuleType:
+    """Validate and load the product's review checks once through the configured entry point.
+
+    The hooks file is ``HOOKS_REL`` under ``product_root`` (an absolute path; default: this
+    checkout, ``HOOKS_PATH``), and the module it names must come from that root.
+    """
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        raise ProductHooksError("hooks_product_root", f"product root is not an absolute path: {product_root!r}")
+    name = _module_name(HOOKS_PATH if product_root is None else product_root / HOOKS_REL)
     try:
-        return load_configured_module(name)
+        return load_configured_module(name, product_root=product_root)
     except ModuleNotFoundError as exc:
         if exc.name == name and hasattr(sys.modules.get(name.rpartition(".")[0]), "__path__"):
             raise ProductHooksError("hooks_module_missing", f"{HOOKS_REL}: no module {name!r}") from None

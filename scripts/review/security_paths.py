@@ -6,6 +6,7 @@ Git collection disables rename compaction so both names and deletions survive.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from collections.abc import Iterable
@@ -15,11 +16,11 @@ from pathlib import Path
 from scripts.review.target_resolution import TargetResolutionError, _run_git
 
 # Machinery files are matched by their checkout-relative paths, which start with the
-# machinery package's import name: the directory Git, owned paths and the catalog name,
-# taken from this module's name rather than the resolved package directory, so a symlinked
-# package keeps its checkout name. The literal ``scripts/`` entries are product-repository
-# files and stay where they are.
-_MACHINERY = __name__.partition(".")[0]
+# machinery package's directory name: the one Git, owned paths and the catalog use, taken
+# from this module's unresolved location, so a symlinked package keeps its checkout name
+# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+# The literal ``scripts/`` entries are product-repository files and stay where they are.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 SECURITY_SENSITIVE_PATHS = (
     ".githooks/**",

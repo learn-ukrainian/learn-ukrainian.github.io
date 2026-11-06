@@ -31,8 +31,10 @@ from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
 
 # The repository registry and the verdict recorder, by their checkout-relative paths. Those
-# start with the machinery package's import name, the directory checkout paths use.
-_MACHINERY = __name__.partition(".")[0]
+# start with the machinery package's directory name, taken from this module's unresolved
+# location: a symlinked package keeps its checkout name, and a short import spelling (the
+# package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 _FLEET_REPOS = f"{_MACHINERY}/config/fleet_repos.yaml"
 _RECORDER = f"{_MACHINERY}/review/record_cf_verdict.py"
 # This publisher's import name, as ``python -m`` runs it.
@@ -234,15 +236,21 @@ def _workflow_yaml_loader() -> type[yaml.SafeLoader]:
 _WORKFLOW_YAML_LOADER = _workflow_yaml_loader()
 
 
-def _workflow_input_schema(workflow: str) -> dict[str, tuple[object, bool]] | None:
+def _workflow_input_schema(workflow: str, *, product_root: Path | None = None) -> dict[str, tuple[object, bool]] | None:
     """Input schema for an allowlisted workflow, read from its file.
 
-    None refuses every dispatch of that workflow, including an empty input
-    object. A workflow with no declared inputs returns an empty schema.
+    The file is a product-repository workflow, read under ``product_root`` (an
+    absolute path; default: the checkout this module is in), never from the
+    machinery package. None refuses every dispatch of that workflow, including
+    an empty input object. A workflow with no declared inputs returns an empty
+    schema.
     """
     if workflow not in WORKFLOWS or "/" in workflow or workflow.startswith("."):
         return None
-    path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / workflow
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        return None
+    root = Path(__file__).resolve().parents[2] if product_root is None else product_root
+    path = root / ".github" / "workflows" / workflow
     try:
         document = yaml.load(path.read_text(encoding="utf-8"), Loader=_WORKFLOW_YAML_LOADER)
     except (OSError, UnicodeError, yaml.YAMLError):

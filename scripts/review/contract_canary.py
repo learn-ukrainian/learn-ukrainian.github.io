@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from collections.abc import Iterable, Mapping, Sequence
@@ -27,10 +28,10 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-# The machinery package's import name, which is also the directory a change lists its files
-# under: from this module's package, or from its unresolved location when run as a file, so
-# a symlinked package keeps its checkout name.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+# The machinery package's directory name, which a change lists its files under, from this module's
+# unresolved location: a symlinked package keeps its checkout name, and a short import spelling
+# (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 # The one declaration of the review output contract: bound schemas, the receipt gate, the
 # verdict parser, the recorder, settlement, and each reviewer provider's schema or reply handling.

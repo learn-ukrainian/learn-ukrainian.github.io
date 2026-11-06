@@ -31,11 +31,13 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 
 from __future__ import annotations
 
+import os
 import re
 import shlex
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
+from pathlib import Path
 from typing import Literal
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
@@ -60,9 +62,10 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
 # Native AGY and Muse reviews run through the dispatcher, which the catalog names by its
-# checkout-relative path. Its first component is the machinery package's import name, not
-# the resolved package directory, so a symlinked package keeps its checkout name.
-_NATIVE_REVIEW_EXECUTABLE = f"{__name__.partition('.')[0]}/dispatch.py"
+# checkout-relative path. Its first component is the machinery package's directory name, taken
+# from this module's unresolved location, so a symlinked package keeps its checkout name
+# and a short import spelling (the package directory on ``sys.path``) cannot shorten it.
+_NATIVE_REVIEW_EXECUTABLE = f"{Path(os.path.abspath(__file__)).parents[1].name}/dispatch.py"
 
 
 def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
