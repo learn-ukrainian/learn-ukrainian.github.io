@@ -143,7 +143,10 @@ def _gh_issue_observation(issue: IssueRef) -> IssueObservation:
     """
 
     try:
-        proc = read("issue-scope", repo=issue.repository, number=issue.number,
+        proc = read(
+            "issue-scope",
+            repo=issue.repository,
+            number=issue.number,
             cwd=REPO_ROOT,
             capture_output=True,
             check=False,

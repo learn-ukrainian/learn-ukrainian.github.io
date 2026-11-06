@@ -115,8 +115,23 @@ def fetch_open_prs(slug: str) -> list[dict]:
     """Open PRs of one repository; raises RuntimeError when GitHub cannot be read."""
     try:
         proc = github_client.run(
-            ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT + 1), "--json", _PR_FIELDS],
-            capture_output=True, text=True, check=False, timeout=_GH_TIMEOUT_SECONDS,
+            [
+                "gh",
+                "pr",
+                "list",
+                "--repo",
+                slug,
+                "--state",
+                "open",
+                "--limit",
+                str(_PR_LIMIT + 1),
+                "--json",
+                _PR_FIELDS,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GH_TIMEOUT_SECONDS,
         )
     except (subprocess.SubprocessError, OSError) as exc:
         raise RuntimeError(f"cannot list open PRs of {slug}: {type(exc).__name__}") from exc
@@ -151,10 +166,14 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--repo", action="append", metavar="KEY",
+        "--repo",
+        action="append",
+        metavar="KEY",
         help=f"fleet_repos.yaml key to check, repeatable (default: {' and '.join(DEFAULT_REPO_KEYS)})",
     )
-    parser.add_argument("--json", action="store_true", help="print the unowned PRs as a JSON list (default: text lines)")
+    parser.add_argument(
+        "--json", action="store_true", help="print the unowned PRs as a JSON list (default: text lines)"
+    )
     return parser
 
 
