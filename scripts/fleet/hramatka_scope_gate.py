@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
@@ -117,7 +118,7 @@ from scripts.publish.github import read
 
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
-_MACHINERY = __package__.partition(".")[0] if __package__ else Path(__file__).parents[1].name
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 class IssueLookupUnavailable(RuntimeError):

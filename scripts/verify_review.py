@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -64,7 +65,7 @@ from scripts.review.target_resolution import (
 
 # This tool's checkout-relative path, for its help text: the machinery package's import name
 # (the directory checkout paths use), or its unresolved directory when run as a file.
-_THIS_FILE = f"{__package__.partition('.')[0] if __package__ else Path(__file__).parent.name}/verify_review.py"
+_THIS_FILE = f"{Path(os.path.abspath(__file__)).parents[0].name}/verify_review.py"
 
 FORBIDDEN_RECEIPT_MARKERS = (
     "/status/",
