@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -15,9 +16,8 @@ from packaging.version import Version
 
 
 def _mp(relative: str) -> str:
-    package = __package__ or ""
-    top = package.partition(".")[0]
-    return f"{top or Path(__file__).parents[1].name}/{relative}"
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 
 DEFAULT_LOCK = Path(__file__).resolve().parents[2] / "requirements-lock.txt"
