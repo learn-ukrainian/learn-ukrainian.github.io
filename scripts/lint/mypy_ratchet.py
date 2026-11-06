@@ -13,6 +13,10 @@ package on the module path.
 Once ``origin/main`` contains the baseline, the committed multiset may only
 shrink. Before that first landing, the baseline has no predecessor; it must
 still equal the mypy census exactly, so entries mypy does not report fail.
+Where the machinery package directory is not ``scripts`` (after the machinery
+move), the module slot of two exact baseline message forms is respelled with
+the pinned rename map, which that checkout must carry at
+packaging/machinery-move/rename-map.json with a verified .sha256 beside it.
 
 Examples:
   .venv/bin/python -m scripts.lint.mypy_ratchet
@@ -29,6 +33,7 @@ Related: #12642, scripts/hygiene/lint_source_db_writable_connects.py.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import os
@@ -39,18 +44,22 @@ import tomllib
 from collections import Counter
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+
+
+def _package_dir() -> Path:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1]
 
 
 def _mp(relative: str) -> str:
-    # Unresolved package directory (design-v1 amendment 1). Never __package__.
-    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
+    return f"{_package_dir().name}/{relative}"
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name("mypy_baseline.json")
 SCHEMA = "mypy-ratchet-baseline.v1"
-DEFAULT_TARGET = "scripts"
+DEFAULT_TARGET = _package_dir().name
 MYPY_TIMEOUT_SECONDS = 600
 # python-ci-env installs the lock without these wheels. Skipping them makes a
 # laptop venv that has them report the same errors as CI.
@@ -340,6 +349,206 @@ def _normalize_message(message: str) -> str:
     return _KEY_SLOT.sub(lambda slot: slots[int(slot.group(1))], ordered)
 
 
+# -- Baseline spelling after the machinery move (C-4761) ---------------------
+#
+# The committed baseline was censused where the machinery package directory is
+# ``scripts``. Once the machinery directory has another name, mypy names a moved
+# module under it. Exactly two complete diagnostic forms carry such a name in a
+# template slot, and only that slot of a baseline message is respelled; every
+# other message, and all other text, is compared exactly. mypy output is never
+# rewritten. Other mypy forms (``...; maybe "x"?``, explicit-export messages,
+# ``Function``/``Module`` "is not valid as a type") stay outside on purpose.
+
+_SOURCE_PACKAGE = "scripts"  # the census spelling, and the pinned rename's old root
+_MACHINERY = "machinery"
+_PRODUCT = "product"
+_AMBIGUOUS = "ambiguous"
+_IDENT = r"[A-Za-z_][A-Za-z0-9_]*"
+_DOTTED = rf"{_IDENT}(?:\.{_IDENT})*"
+# error code -> (complete message, slot kind). A module slot is a whole module;
+# a variable slot is a module plus the symbol it defines, and keeps the symbol.
+_SLOT_TEMPLATES: dict[str, tuple[re.Pattern[str], str]] = {
+    "attr-defined": (
+        re.compile(rf'Module "(?P<slot>{_DOTTED})" has no attribute "{_IDENT}"'),
+        "module",
+    ),
+    "valid-type": (
+        re.compile(rf'Variable "(?P<slot>{_DOTTED}\.{_IDENT})" is not valid as a type'),
+        "variable",
+    ),
+}
+RENAME_MAP = Path("packaging") / "machinery-move" / "rename-map.json"
+_DIGEST_LINE = re.compile(rf"(?P<digest>[0-9a-f]{{64}})  {re.escape(RENAME_MAP.name)}\n")
+
+
+@dataclass(frozen=True)
+class _MapModule:
+    name: str
+    owner: str
+    bound_file: str | None  # None for a namespace package
+
+
+class _RenameMap:
+    """The pinned rename's ownership map and its module resolution rules.
+
+    A faithful port of ``OwnershipMap`` and ``module_target`` in the freeze's
+    ``rename_python.py``: a slot is respelled only when the rename itself would
+    move that module, never by file existence or a longest-prefix guess alone.
+    """
+
+    def __init__(self, files: dict[str, str]) -> None:
+        self.files = files
+        self.modules: dict[str, _MapModule] = {}
+        self._owners: dict[str, str | None] = {}
+        packages: dict[str, str] = {}
+        plain: dict[str, str] = {}
+        directories: dict[str, set[str]] = {}
+        for path in files:
+            parts = PurePosixPath(path).parts
+            if not parts or parts[0] != _SOURCE_PACKAGE:
+                continue
+            for depth in range(1, len(parts)):
+                if all(part.isidentifier() for part in parts[:depth]):
+                    directories.setdefault(".".join(parts[:depth]), set())
+            if not path.endswith(".py"):
+                continue
+            stem = (*parts[:-1], parts[-1][: -len(".py")])
+            if not all(part.isidentifier() for part in stem):
+                continue
+            for depth in range(1, len(stem)):
+                directories[".".join(stem[:depth])].add(path)
+            if stem[-1] == "__init__":
+                packages[".".join(stem[:-1])] = path
+            else:
+                plain[".".join(stem)] = path
+        names = set(packages) | set(plain) | {name for name, members in directories.items() if members}
+        for name in sorted(names):
+            bound = packages.get(name) or plain.get(name)
+            if bound is not None:
+                self.modules[name] = _MapModule(name, files[bound], bound)
+            else:
+                owners = {files[member] for member in directories[name]}
+                owner = owners.pop() if len(owners) == 1 else _AMBIGUOUS
+                self.modules[name] = _MapModule(name, owner, None)
+
+    def path_owner(self, path: str) -> str | None:
+        if path in self.files:
+            return self.files[path]
+        if path not in self._owners:
+            owners = {owner for key, owner in self.files.items() if key.startswith(path + "/")}
+            self._owners[path] = None if not owners else owners.pop() if len(owners) == 1 else _AMBIGUOUS
+        return self._owners[path]
+
+    def resolve(self, dotted: str) -> tuple[_MapModule, str] | None:
+        """Longest module prefix of a ``scripts`` name and the attribute rest."""
+
+        if dotted != _SOURCE_PACKAGE and not dotted.startswith(_SOURCE_PACKAGE + "."):
+            return None
+        parts = dotted.split(".")
+        for depth in range(len(parts), 0, -1):
+            entry = self.modules.get(".".join(parts[:depth]))
+            if entry is not None:
+                return entry, ".".join(parts[depth:])
+        return None
+
+    def target(self, name: str, kind: str) -> str:
+        """Owner of a module slot (exact module) or a variable slot (module plus symbol)."""
+
+        resolved = self.resolve(name)
+        if resolved is None:
+            return "unknown"
+        entry, rest = resolved
+        if (kind == "module") == bool(rest):
+            return "unknown"  # a module slot names no attribute; a variable slot needs one
+        if entry.name == _SOURCE_PACKAGE:
+            return "unknown" if rest else _AMBIGUOUS
+        if rest and entry.bound_file is None:
+            return "unknown"  # a namespace package has no attributes
+        if not rest:
+            main = self.modules.get(f"{entry.name}.__main__")
+            if main is not None and main.owner != entry.owner:
+                return _AMBIGUOUS
+            mixed_dir = entry.bound_file is None or entry.bound_file.endswith("/__init__.py")
+            if mixed_dir and self.path_owner(entry.name.replace(".", "/")) == _AMBIGUOUS:
+                return _AMBIGUOUS  # a package with files of both owners
+        return entry.owner
+
+
+def _load_rename_map(checkout: Path) -> _RenameMap:
+    """Read and verify the rename map a renamed machinery checkout must carry.
+
+    Contract: ``<checkout>/packaging/machinery-move/rename-map.json`` holds the
+    exact bytes of the ownership map (``path -> machinery|product``) that the
+    extraction's rename tools read; portcheck keeps it as
+    ``runs/<sha12>-all/derive/map.json``. Those tools record the SHA-256 of
+    the bytes as ``map_sha256`` in their reports (``transform/{py,np,st}.json``).
+    ``rename-map.json.sha256`` beside it records that receipt value in
+    ``sha256sum`` format, one line: ``<64 lowercase hex>  rename-map.json``.
+    Both are installed with the first push. A missing, unreadable, malformed
+    or mismatched artifact is an error, never the source layout.
+    """
+
+    path = checkout / RENAME_MAP
+    digest_path = path.with_name(path.name + ".sha256")
+    prefix = f"rename map {path}"
+    try:
+        raw = path.read_bytes()
+        recorded = digest_path.read_bytes().decode("ascii")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise ValueError(f"{prefix}: required in the {checkout.name} layout and unreadable: {exc}") from exc
+    line = _DIGEST_LINE.fullmatch(recorded)
+    if line is None:
+        raise ValueError(f"{digest_path}: expected one line '<sha256>  {RENAME_MAP.name}'")
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != line.group("digest"):
+        raise ValueError(f"{prefix}: sha256 {actual} does not match the recorded {line.group('digest')}")
+    try:
+        data = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"{prefix}: not valid JSON: {exc}") from exc
+    if not isinstance(data, dict) or not data:
+        raise ValueError(f"{prefix}: must be a non-empty JSON object of path -> owner")
+    for key, owner in data.items():
+        if (
+            not key
+            or PurePosixPath(key).is_absolute()
+            or ".." in PurePosixPath(key).parts
+            or key != PurePosixPath(key).as_posix()
+        ):
+            raise ValueError(f"{prefix}: key is not a normalized relative path: {key!r}")
+        if owner not in (_MACHINERY, _PRODUCT):
+            raise ValueError(f"{prefix}: {key!r} has owner {owner!r}")
+    return _RenameMap(data)
+
+
+@dataclass(frozen=True)
+class _BaselineSpelling:
+    """Respell a baseline message into the running layout. Identity in ``scripts``."""
+
+    package: str
+    rename_map: _RenameMap | None
+
+    def message(self, code: str, message: str) -> str:
+        template = _SLOT_TEMPLATES.get(code)
+        if self.rename_map is None or template is None:
+            return message
+        pattern, kind = template
+        match = pattern.fullmatch(message)
+        if match is None or self.rename_map.target(match.group("slot"), kind) != _MACHINERY:
+            return message
+        start, end = match.span("slot")
+        return message[:start] + self.package + message[start + len(_SOURCE_PACKAGE) : end] + message[end:]
+
+
+def _baseline_spelling() -> _BaselineSpelling:
+    """The running layout, from this file's unresolved location (amendment 1)."""
+
+    package_dir = _package_dir()
+    if package_dir.name == _SOURCE_PACKAGE:
+        return _BaselineSpelling(_SOURCE_PACKAGE, None)
+    return _BaselineSpelling(package_dir.name, _load_rename_map(package_dir.parent))
+
+
 def _relative(root: Path, raw: str) -> str | None:
     path = Path(raw)
     if path.is_absolute():
@@ -586,6 +795,7 @@ def compare(current: Sequence[MypyError], baseline: Sequence[MypyError]) -> list
 def _entries_from_rows(rows: object, where: str) -> list[MypyError]:
     if not isinstance(rows, list):
         raise ValueError(f"{where}: entries must be a list")
+    spelling = _baseline_spelling()
     entries: list[MypyError] = []
     for row in rows:
         if not isinstance(row, dict):
@@ -604,7 +814,7 @@ def _entries_from_rows(rows: object, where: str) -> list[MypyError]:
             raise ValueError(f"{where}: an entry needs path, code, and message")
         if rel.startswith(("/", "\\")) or ".." in Path(rel).parts:
             raise ValueError(f"{where}: entry path is not relative: {rel}")
-        entries.append(MypyError(rel, code, _normalize_message(message)))
+        entries.append(MypyError(rel, code, _normalize_message(spelling.message(code, message))))
     return entries
 
 
@@ -729,7 +939,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "paths",
         nargs="*",
-        help="Python files to check (default: scripts/). Other paths recheck scripts/.",
+        help=f"Python files to check (default: {DEFAULT_TARGET}/). Other paths recheck {DEFAULT_TARGET}/.",
     )
     parser.add_argument(
         "--baseline",
