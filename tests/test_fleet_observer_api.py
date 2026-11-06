@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
 import scripts.project_api.batch_progress as product_batch_progress
+from scripts.api import product_contribution
 from scripts.api.monitor_context import MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
@@ -25,6 +26,23 @@ def client(tmp_path: Path) -> TestClient:
     app.state.ctx = fixture_context(tmp_path)
     app.include_router(fleet_router.router, prefix="/api/fleet")
     return TestClient(app)
+
+
+@pytest.fixture()
+def product_fleet_batches(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Install the product's fleet-batches provider for one test.
+
+    ``/operations`` reads curriculum batches through the provider the product
+    contributes, which a process holds only after some earlier test built a full
+    Monitor app. Install it here so these tests pass alone, in any order and in
+    any shard. The hook looks ``fleet_batch_snapshot`` up when called, so the
+    tests that replace it on its module are still seen.
+    """
+    from scripts.project_api.entry import build_api
+
+    provider = build_api(fixture_context(tmp_path)).fleet_batches
+    assert provider is not None
+    monkeypatch.setattr(product_contribution, "_fleet_batches", provider)
 
 
 def _broker_ctx(root: Path, broker_path: Path) -> MonitorContext:
@@ -720,6 +738,7 @@ def test_endpoints_and_migrations_omit_configuration_secrets(
     ]
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_projection_is_bounded_read_only_and_source_blind(
     client: TestClient,
     tmp_path: Path,
@@ -845,6 +864,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
     client: TestClient,
     tmp_path: Path,
@@ -996,6 +1016,7 @@ def test_legacy_batch_snapshot_old_log_stays_dead_when_process_probe_succeeds(
     assert "reason" not in snapshot["tracks"]["hist"]
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_timed_out_process_probe_degrades_batch_section(
     client: TestClient,
     tmp_path: Path,
