@@ -18,8 +18,8 @@ terminal_outcomes:
 steps:
   - step_id: detect_rollover
     intent: >-
-      Detect whether a pending thread-rollover packet exists for this seat's handoff
-      agent. The tool emits JSON whose "status" field is the transition input; its real
+      Detect whether a pending thread-rollover packet exists for the handoff
+      agent of this seat. The tool emits JSON whose "status" field is the transition input; its real
       vocabulary is none / pending_start / resumed / ambiguous. Proceed states: none,
       pending_start, and resumed. Ambiguous or unrecognized status is a hard stop.
     command:
@@ -179,7 +179,7 @@ steps:
 
   - step_id: drain_inbox
     intent: >-
-      Required live-driver inbox check. List this seat's inbox state; the pending count
+      Required live-driver inbox check. List the inbox state of this seat; the pending count
       determines whether inbox processing or git reconciliation is next.
     command:
       adapter: shell
@@ -255,7 +255,7 @@ steps:
 
   - step_id: reconcile_git
     intent: >-
-      Reconcile the handoff's claims against reality: fetch, compare main, list open PRs and worktrees.
+      Reconcile the claims of the handoff against reality: fetch, compare main, list open PRs and worktrees.
       Invariant: primary checkout must sit on main.
     command:
       adapter: shell

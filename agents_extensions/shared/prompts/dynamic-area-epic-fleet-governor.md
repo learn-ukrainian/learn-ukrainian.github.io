@@ -133,7 +133,7 @@ Read `/api/state/routing-budget`, `/api/runtime/agents`, and active-work state
 first. Then query the fleet capacity commands as the local quota and health
 probe (`codexbar usage` is retired, 2026-10-16):
 
-```text
+```bash
 .venv/bin/python -m scripts.fleet.capacity_pick --json
 .venv/bin/python -m scripts.fleet.usage show
 ```
@@ -251,7 +251,7 @@ owned paths, lifecycle, state, evidence, PR, reviewer, and disposition.
 - File handoffs remain authoritative in `off`, `shadow`, and `dual_write`.
   Keep the exact lane diary and session stream current; never flip plane mode,
   retention, eligibility, or authority.
-- Validate the relevant files in `scripts/config/trails/*.trail.yaml` with
+- Validate the relevant `*.trail.yaml` files in `scripts/config/trails/` with
   `.venv/bin/python -m scripts.orchestration.validate_trailspec` and the
   decision tables. Follow RB-1 through RB-6 as procedure specifications:
   orientation, dispatch, PR lifecycle, red-CI triage, session close, and estate

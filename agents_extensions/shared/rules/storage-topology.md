@@ -25,7 +25,7 @@ as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
    ```
 2. **Rebuild / raw JSONL consumers** go through
    `scripts/wiki/config.py` (`GDRIVE_DATA` is the bulk root alias) or
-   `scripts.storage.topology.resolve_bulk_root` — not a second Drive-only path.
+   `resolve_bulk_root` from `scripts.storage.topology` — not a second Drive-only path.
 3. **Never** set active DB tooling to a path under an external mount or
    a network share.
 4. **Never** delete, move, or auto-evict bulk corpus, Drive objects, or SMB
@@ -58,11 +58,11 @@ is the public topology label.
 
 ## Logical read-store bindings (#9945)
 
-New callers use `scripts.storage.topology.resolve_store("sources")`,
+New callers use `scripts.storage.topology`: `resolve_store("sources")`,
 `resolve_store("vesum")` or `resolve_store("lexdata")` at call time; the one
 `STORE_FILES` mapping names each store's file and environment override. A `StoreBinding` contains `store`,
 `path`, `access_mode="read"`, and `provenance`; pass its path to
-`scripts.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only
+`open_readonly` in `scripts.lib.readonly_sqlite`. A `StoreRefusal` contains only
 `store` and `reason`, with no path attribute and no silent fallback.
 
 Precedence is an injected test binding, then the explicit store environment
@@ -82,7 +82,7 @@ file). Generation names are never reused; generations stay WAL and are held
 `0444` at rest. Rules:
 
 1. **Write only under the store writer lock** (`data/.sources-writer.lock`). In
-   Python use `scripts.storage.generations.store_writer`; run any other writer
+   Python use `store_writer` from `scripts.storage.generations`; run any other writer
    as `.venv/bin/python -m scripts.storage write -- <command>`. A writable open
    of the store without the lock, or of a generation the selector does not
    select, is refused.

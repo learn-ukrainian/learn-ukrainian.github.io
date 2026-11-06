@@ -3,13 +3,14 @@
 <!--
   Sol PR-L example launchd job: DRY-RUN retention plan only.
 
-  Gate 5: do NOT enable --apply on a schedule until the operator has
+  Gate 5: do NOT schedule the apply mode until the operator has
   confirmed seven days of stable dry-run plans, archive root, and restore
   drills. This example only runs `retention_engine.py plan`.
 
   Install (optional, operator):
     cp scripts/config/retention-plan.plist.example ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
-    # replace REPO_ROOT with the checkout path before load
+    # replace REPO_ROOT with the checkout path before load; the engine path is
+    # relative to WorkingDirectory
     launchctl load ~/Library/LaunchAgents/com.learn-ukrainian.retention-plan.plist
 -->
 <plist version="1.0">
@@ -20,9 +21,9 @@
     <string>REPO_ROOT</string>
     <key>ProgramArguments</key>
     <array>
-      <string>REPO_ROOT/.venv/bin/python</string>
-      <string>scripts/hygiene/retention_engine.py</string>
-      <string>plan</string>
+      <string>/bin/sh</string>
+      <string>-c</string>
+      <string>exec REPO_ROOT/.venv/bin/python scripts/hygiene/retention_engine.py plan</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>

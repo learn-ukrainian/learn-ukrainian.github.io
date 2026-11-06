@@ -53,14 +53,14 @@ substitutions:
     fallback: "Resolve catalog role routine_mechanical: Haiku 5.5 first, Sonnet 5.5 fallback"
     budget_bucket: "Claude; provider health and quota must admit the selected route"
 
-  - currently_uses: "scripts/dispatch.py dispatch --agent claude (adversarial review)"
+  - currently_uses: scripts/dispatch.py dispatch --agent claude (adversarial review)
     fallback: 'Agent(subagent_type="general-purpose", model="opus")'
     fallback_note: "Agent tool subagents run as children of this session"
     budget_bucket: "interactive (orchestrator session, not programmatic)"
 
-  - currently_uses: "scripts/dispatch.py dispatch --agent claude (code dispatch >50 LOC)"
+  - currently_uses: scripts/dispatch.py dispatch --agent claude (code dispatch >50 LOC)
     fallback: |
-      (a) Routine non-security code: Codex via `scripts/dispatch.py dispatch --agent codex --model gpt-6.1-terra`; reserved work uses explicit Sol 6.1, OR
+      (a) Routine non-security code: Codex via scripts/dispatch.py dispatch --agent codex --model gpt-6.1-terra; reserved work uses explicit Sol 6.1, OR
       (b) inline by orchestrator if context-continuity gives it an edge
     budget_bucket: "codex:b (b-sub) first for new Sol work; codex:a (sub) separately; OR interactive"
 
@@ -72,12 +72,12 @@ substitutions:
 
   - currently_uses: "ab discuss (Codex + Claude adversarial)"
     fallback: |
-      Codex via `scripts/dispatch.py dispatch --agent codex` + Agent subagent for Claude role,
+      Codex via scripts/dispatch.py dispatch --agent codex + Agent subagent for Claude role,
       OR escalate to user for cold-start interactive Claude (highest-stakes
       adversarial dynamic only)
     budget_bucket: "Codex + interactive"
 
-  - currently_uses: "scripts/dispatch.py dispatch --agent codex"
+  - currently_uses: scripts/dispatch.py dispatch --agent codex
     fallback: |
       New Sol work first uses `--agent codex --codex-account b-sub` (C-4606).
       A hot / near_cap / weekly-deficit account a does not shed account b.
@@ -87,21 +87,21 @@ substitutions:
       admits the work. The legacy agent-only codex row remains account a.
     budget_bucket: "codex:b (b-sub) or codex:a (sub), never a shared window"
 
-  - currently_uses: "scripts/dispatch.py dispatch --agent gemini"
+  - currently_uses: scripts/dispatch.py dispatch --agent gemini
     fallback: |
       PERMANENT, always-on (not a budget-status shed): gemini CLI is
       retired and will not be reinstalled (operator 2026-08-18). Resolves
-      to `scripts/dispatch.py dispatch --agent agy` before Popen, via
+      to scripts/dispatch.py dispatch --agent agy before Popen, via
       dispatch_fallbacks.gemini and agent_identity.RETIRED_AGENT_ALIASES.
       Do not tell agents to install `gemini` — the live Gemini-family
       implementer is agy.
     budget_bucket: "Gemini-family quota, tracked under agy"
 
-  - currently_uses: "scripts/dispatch.py dispatch --agent glm"
+  - currently_uses: scripts/dispatch.py dispatch --agent glm
     fallback: |
       PERMANENT, always-on (not a budget-status shed): the z.ai GLM
       subscription is retired (key gone; operator 2026-09-03). Resolves to
-      `scripts/dispatch.py dispatch --agent cursor` before Popen, via dispatch_fallbacks.glm
+      scripts/dispatch.py dispatch --agent cursor before Popen, via dispatch_fallbacks.glm
       and agent_identity.RETIRED_AGENT_ALIASES. GLM is not subscribed (operator 2026-10-23); retired model pins refuse.
       Do not dispatch GLM.
     budget_bucket: "glm quota (retired) → Cursor"

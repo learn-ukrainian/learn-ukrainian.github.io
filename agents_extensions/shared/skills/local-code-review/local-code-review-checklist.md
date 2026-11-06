@@ -160,8 +160,8 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   --owned-path "<each changed per-seat adapter or reviewer hook; repeat the flag>"
 ```
 
-When the frozen diff governs a seat — its adapter under
-`scripts/agent_runtime/adapters/<seat>*.py`, or that seat's reviewer hooks —
+When the frozen diff governs a seat — its adapter `<seat>*.py` under
+`scripts/agent_runtime/adapters/`, or that seat's reviewer hooks —
 pass those paths as repeatable `--owned-path` values, or name the seat with
 repeatable `--subject-seat` / `--subject-family`. The resolver then excludes
 that seat and records why on the trace. An unambiguous path such as

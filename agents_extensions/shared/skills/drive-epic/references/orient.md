@@ -31,7 +31,9 @@ hard-code a mode in prose; always query it fresh.
 Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
 claimed the stream lease — do **not** open or resume it yourself). Establish your
 session-health signal **by seat**: **grok / gemini / kimi** have a canary lane —
-`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane mint --epic <epic>`;
+`.venv/bin/python -m scripts.session_canary.grok_lane mint --epic <epic>`,
+`.venv/bin/python -m scripts.session_canary.gemini_lane mint --epic <epic>` or
+`.venv/bin/python -m scripts.session_canary.kimi_lane mint --epic <epic>`;
 **Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
 hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
 

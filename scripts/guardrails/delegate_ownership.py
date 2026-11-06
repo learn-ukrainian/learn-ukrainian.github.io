@@ -45,15 +45,15 @@ from pathlib import Path
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
-    # Script execution puts the script directory on sys.path, so the
-    # top-level package is absent (exc.name == "scripts"). Any other
-    # import failure must propagate.
-    if exc.name != "scripts":
+    # Script execution puts the script directory on sys.path, so the top-level
+    # package is absent (exc.name is the package name). Any other import failure
+    # must propagate. The package directory and its name come from this file's
+    # unresolved location (guardrails/ sits directly in it), never __package__.
+    _scripts_dir = Path(os.path.abspath(__file__)).parents[1]
+    if exc.name != _scripts_dir.name:
         raise
-    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    # lib.readonly_sqlite lives in the package directory, which file execution
+    # does not put on sys.path.
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]

@@ -46,8 +46,9 @@ fi
 
 # Diagnose quietly if broken; always allow the checkout to complete (Git has
 # already moved it). Repair remains an explicit operator action.
+DOCTOR=scripts/guardrails/assert_primary_on_main.py
 if ! "$PY" "$ROOT/scripts/guardrails/assert_primary_on_main.py" --cwd "$ROOT" --quiet 2>/dev/null; then
-  echo "WARNING: primary is off main/detached. Inspect it, then run the explicit doctor if appropriate: .venv/bin/python scripts/guardrails/assert_primary_on_main.py --heal" >&2
+  echo "WARNING: primary is off main/detached. Inspect it, then run the explicit doctor if appropriate: .venv/bin/python $DOCTOR --heal" >&2
 fi
 
 exit 0

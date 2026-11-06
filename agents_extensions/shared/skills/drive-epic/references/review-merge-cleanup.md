@@ -84,7 +84,7 @@ dispatch_result="$("$PY" scripts/dispatch.py dispatch \
   --pinned-head "$HEAD_SHA" --require-review-verdict \
   --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" \
   --risk "$REVIEW_RISK")"
-mapfile -t dispatch_lines <<<"$dispatch_result"
+mapfile -t dispatch_lines < <(printf '%s\n' "$dispatch_result")
 REVIEW_TASK="${dispatch_lines[0]}"
 REVIEW_NONCE="${dispatch_lines[1]}"
 # Arm in a yielding tool session. Re-arm ONLY wait on client expiry.
@@ -95,7 +95,7 @@ while true; do
   if (( wait_rc == 0 )); then printf '%s\n' "$wait_result"; break; fi
   if (( wait_rc == 124 )); then
     state="$("$PY" scripts/dispatch.py status "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE")"
-    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' <<<"$state"; then continue; fi
+    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' < <(printf '%s\n' "$state"); then continue; fi
     # A terminal state raced expiry: read its same-nonce settlement/exit code.
     "$PY" scripts/dispatch.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1
     exit $?
@@ -273,7 +273,7 @@ interpreter:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE --include='*.py' 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
+"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE --include='*.py' 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|launchers/|\brun_launcher\b' tests/)
 ```
 
 **Diagnose pytest failures from the junit artifact first (#8701, #8705).**

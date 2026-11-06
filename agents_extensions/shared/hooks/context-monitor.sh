@@ -85,7 +85,10 @@ if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
       (if .session_id == $sid then .rollover_mode // "" else "" end)
     ] | join("\u0001")' "$RECORD_FILE" 2>/dev/null || true)
   if [ -n "$RECORD_ROW" ]; then
-    IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS ROLLOVER_MODE <<< "$RECORD_ROW"
+    # A here-string would be read as a heredoc by the machinery-move rename
+    # tool and hide every later path from it; a printf pipe reads the same row.
+    IFS=$'\001' read -r WINDOW WINDOW_PROVENANCE WARNING_TIERS ROLLOVER_MODE \
+      < <(printf '%s\n' "$RECORD_ROW")
   fi
   unset RECORD_ROW
 fi
@@ -118,7 +121,7 @@ case "$WINDOW" in
   ""|*[!0-9]*) exit 0 ;;
 esac
 [ "$WINDOW" -gt 0 ] || exit 0
-read -r TIER1_RAW TIER2_RAW TIER3_RAW <<< "$WARNING_TIERS"
+read -r TIER1_RAW TIER2_RAW TIER3_RAW < <(printf '%s\n' "$WARNING_TIERS")
 [ -n "$TIER1_RAW" ] && [ -n "$TIER2_RAW" ] && [ -n "$TIER3_RAW" ] || exit 0
 TIER1_PCT=$(printf '%.0f' "$TIER1_RAW" 2>/dev/null) || exit 0
 TIER2_PCT=$(printf '%.0f' "$TIER2_RAW" 2>/dev/null) || exit 0
@@ -133,7 +136,8 @@ else
   HANDOFF_AGENT="claude"
 fi
 
-HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$PROJECT_DIR/scripts/lib/handoff_identity.sh}"
+HANDOFF_IDENTITY_DEFAULT="$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$HANDOFF_IDENTITY_DEFAULT}"
 if [ -f "$HANDOFF_IDENTITY_SH" ]; then
   # shellcheck disable=SC1090
   source "$HANDOFF_IDENTITY_SH"
@@ -166,14 +170,15 @@ if [[ "${0:-}" == *"/.gemini/"* ]]; then
 else
   PREPARE_HARNESS="claude-code"
 fi
-PREPARE_CMD="${PREPARE_PY} scripts/orchestration/thread_handoff.py prepare --agent ${HANDOFF_AGENT} --harness ${PREPARE_HARNESS} --active-thread-id $(printf '%q' "$SESSION_ID")"
+PREPARE_SCRIPT=scripts/orchestration/thread_handoff.py
+PREPARE_CMD="${PREPARE_PY} ${PREPARE_SCRIPT} prepare --agent ${HANDOFF_AGENT} --harness ${PREPARE_HARNESS} --active-thread-id $(printf '%q' "$SESSION_ID")"
 if [ -n "$ROLLOVER_STREAM" ]; then
   PREPARE_CMD="$PREPARE_CMD --stream $ROLLOVER_STREAM --stream-epic $ROLLOVER_STREAM_EPIC"
 else
   PREPARE_CMD="$PREPARE_CMD --stream-epic <epic-number>"
 fi
 PREPARE_CMD="$PREPARE_CMD --semantic-title \"<specific semantic task title>\" --task-family <task-family> --role \"<role>\" --terminal-goal <merge|deploy|certify> --context-percent ${PCT} (fill each <placeholder>; add --issue-number <issue-number> when an issue scopes the work)"
-unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC PREPARE_PY PREPARE_HARNESS
+unset HANDOFF_IDENTITY_DEFAULT HANDOFF_IDENTITY_SH PREPARE_SCRIPT ROLLOVER_STREAM ROLLOVER_STREAM_EPIC PREPARE_PY PREPARE_HARNESS
 BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"

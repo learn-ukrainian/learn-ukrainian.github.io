@@ -88,11 +88,13 @@ fi
 # CI can't catch it; only a local canary can. Detect the exact absolute
 # self-link here and leave repair to the explicit doctor command. See
 # docs/bug-autopsies/node-modules-eloop-symlink.md.
+_LU_SYMLINK_DOCTOR=scripts/hygiene/check_self_symlinks.py
 for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/site/node_modules"; do
   if [ -L "$_nm" ] && [ "$(readlink "$_nm" 2>/dev/null)" = "$_nm" ]; then
-    echo "WARNING: self-referential symlink detected at $_nm (npm spawn ELOOP). Inspect it, then run: .venv/bin/python scripts/hygiene/check_self_symlinks.py --fix" >&2
+    echo "WARNING: self-referential symlink detected at $_nm (npm spawn ELOOP). Inspect it, then run: .venv/bin/python $_LU_SYMLINK_DOCTOR --fix" >&2
   fi
 done
+unset _LU_SYMLINK_DOCTOR
 
 # Skip in non-interactive (headless) mode
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
@@ -163,7 +165,8 @@ if [ ! -x "$SHARED_VENV_ROOT/.venv/bin/python" ]; then
 fi
 SHARED_PYTHON="$SHARED_VENV_ROOT/.venv/bin/python"
 BOUNDED_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$SHARED_PYTHON}"
-BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
+BOUNDED_RUNNER_DEFAULT="$PROJECT_DIR/scripts/agent_runtime/bounded_command.py"
+BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$BOUNDED_RUNNER_DEFAULT}"
 SESSION_START_BUDGET_SECONDS="${SESSION_START_BUDGET_SECONDS:-12}"
 if ! [[ "$SESSION_START_BUDGET_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
   SESSION_START_BUDGET_SECONDS=12
@@ -239,7 +242,8 @@ REQUESTED_PROFILE_ID="${LEARN_UKRAINIAN_REQUESTED_PROFILE_ID:-}"
 if [ "$IS_CODEX_SESSION" = "1" ] && [ -z "$REQUESTED_PROFILE_ID" ]; then
   REQUESTED_PROFILE_ID="native_codex"
 fi
-PROFILE_RESOLVER_SH="${CLAUDE_PROFILE_RESOLVER_SH:-$PROJECT_DIR/scripts/lib/profile_resolver.sh}"
+PROFILE_RESOLVER_DEFAULT="$PROJECT_DIR/scripts/lib/profile_resolver.sh"
+PROFILE_RESOLVER_SH="${CLAUDE_PROFILE_RESOLVER_SH:-$PROFILE_RESOLVER_DEFAULT}"
 if [ ! -f "$PROFILE_RESOLVER_SH" ]; then
   echo "Error: context-profile resolver not found." >&2
   exit 1
@@ -267,7 +271,8 @@ fi
 # A supervised Claudex child inherits a random run id and generation. Bind those
 # to Claude Code's official SessionStart id before any rollover can be requested.
 if [ -n "${LEARN_UKRAINIAN_CLAUDEX_RUN_ID:-}" ]; then
-  CLAUDEX_SUPERVISOR_SCRIPT="${CLAUDEX_SUPERVISOR_SCRIPT:-$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py}"
+  CLAUDEX_SUPERVISOR_DEFAULT="$PROJECT_DIR/scripts/orchestration/claudex_supervisor.py"
+  CLAUDEX_SUPERVISOR_SCRIPT="${CLAUDEX_SUPERVISOR_SCRIPT:-$CLAUDEX_SUPERVISOR_DEFAULT}"
   CLAUDEX_SUPERVISOR_PYTHON="${CLAUDEX_SUPERVISOR_PYTHON:-$SHARED_PYTHON}"
   if [ -z "$SESSION_ID" ] || [ ! -f "$CLAUDEX_SUPERVISOR_SCRIPT" ] || [ ! -x "$CLAUDEX_SUPERVISOR_PYTHON" ]; then
     ISSUES+=("CLAUDEX SUPERVISOR BIND FAILED: official session identity or runtime helper is unavailable.")
@@ -382,7 +387,8 @@ else:
         ROOT_GUARD_NAMES=""
       fi
     fi
-    ROOT_GUARD_DETAIL="Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+    ROOT_GUARD_MODULE=scripts.hygiene.root_entry_guard
+    ROOT_GUARD_DETAIL="Detail: .venv/bin/python -m $ROOT_GUARD_MODULE"
     if [ "${CODEX_NORMAL_TASK:-0}" = "1" ]; then
       # Ordinary Codex context is contracted under 500 bytes (#10952): the
       # lane self-test and this notice must fit together, so withheld names
@@ -482,7 +488,8 @@ fi
 # retains its documented environment fallback for non-Claude fixtures.
 CURRENT_THREAD_ID="${SESSION_ID:-${CODEX_THREAD_ID:-${CODEX_SESSION_ID:-}}}"
 ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$SHARED_PYTHON}"  # canonical: worktrees carry no venv (F001 r5)
-ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
+ROLLOVER_SCRIPT_DEFAULT="$PROJECT_DIR/scripts/orchestration/thread_handoff.py"
+ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$ROLLOVER_SCRIPT_DEFAULT}"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
@@ -597,6 +604,7 @@ EOF
 build_handoff_fallback() {
   local warning_text="$1"
   local prefix=""
+  local prepare_script=scripts/orchestration/thread_handoff.py
 
   if [ -n "$warning_text" ]; then
     prefix="$warning_text
@@ -608,14 +616,15 @@ build_handoff_fallback() {
 ${prefix}PREVIOUS-SESSION HANDOFF — legacy git router opt-in could not locate a compact handoff.
 
 Do not dump or rewrite docs/session-state/current.md. For thread rollover, run:
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent $HANDOFF_AGENT
+.venv/bin/python ${prepare_script} prepare --agent $HANDOFF_AGENT
 
 ---
 EOF
 }
 
 # Validate SESSION_EPIC if set against fleet taxonomy selectors.
-HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$PROJECT_DIR/scripts/lib/handoff_identity.sh}"
+HANDOFF_IDENTITY_DEFAULT="$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+HANDOFF_IDENTITY_SH="${CLAUDE_HANDOFF_IDENTITY_SH:-$HANDOFF_IDENTITY_DEFAULT}"
 if [ -f "$HANDOFF_IDENTITY_SH" ]; then
   # shellcheck disable=SC1090
   source "$HANDOFF_IDENTITY_SH"
