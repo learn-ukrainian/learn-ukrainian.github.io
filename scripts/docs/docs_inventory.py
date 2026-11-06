@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import posixpath
 import re
 import subprocess
@@ -18,8 +19,9 @@ from markdown_it import MarkdownIt
 ROOT_FILES = frozenset({'AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'README.md'})
 DOC_SUFFIXES = frozenset({'.md', '.mdx', '.rst', '.txt', '.adoc'})
 # Explicit read boundary: arbitrary tracked data/private corpora are not inputs.
+# The machinery package, named by this file's location, is read too; in this checkout it is 'scripts'.
 READ_ROOTS = frozenset({'docs', 'scripts', 'site', 'tests', 'agents_extensions',
-                        'contracts', 'memory', 'audit'})
+                        'contracts', 'memory', 'audit', Path(os.path.abspath(__file__)).parents[1].name})
 EXCLUDED_PARTS = frozenset({'session-state', 'node_modules', '__pycache__',
                             '.claude', '.codex', '.agent', '.gemini',
                             'private', 'secrets', 'credentials', 'cache', 'caches'})

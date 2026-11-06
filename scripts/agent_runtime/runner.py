@@ -48,7 +48,7 @@ from typing import Any
 try:
     from scripts.lib.readonly_sqlite import import_named_module
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 

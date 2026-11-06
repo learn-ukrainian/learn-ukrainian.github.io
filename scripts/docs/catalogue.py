@@ -886,7 +886,10 @@ def draft_scan(repo: Path, report: Report) -> dict:
 
 # ---------------------------------------------------------------- data-store literals in code
 
-CODE_ROOT = 'scripts/'
+# The machinery package (named by this file's location) and the product's code directory, which are
+# the same directory in this checkout.
+CODE_ROOTS = tuple(dict.fromkeys((f'{_top()}/', 'scripts/')))
+CODE_ROOTS_SHOWN = ' and '.join(CODE_ROOTS)
 STORE_SUFFIXES = ('.db', '.sqlite', '.sqlite3', '.duckdb')
 # One character of a store name. Excluded: whitespace (the quoted dialect re-admits the
 # plain space), controls, quotes, '<>|', the shell terminators ';&()', the expansion and
@@ -1033,7 +1036,7 @@ def store_literals(repo: Path, files: dict[str, IndexEntry] | None = None) -> St
     scan = StoreScan({})
     objects = {}
     for path, entry in files.items():
-        if not path.startswith(CODE_ROOT):
+        if not path.startswith(CODE_ROOTS):
             continue
         if CONTROL_CHARS.search(path) or is_excluded(path):
             scan.withheld.append(path)
@@ -1081,7 +1084,7 @@ def store_literal_errors(catalogue: dict, literals: dict[str, list[str]]) -> lis
                           f'{" and more" if len(paths) > 3 else ""}) has no data_store entry; add its name to a '
                           'data_store entry\'s store list, or a reasoned store_literal_exemptions item')
     for literal in sorted(set(exempt) - set(literals)):
-        errors.append(f'store_literal_exemptions: {literal!r} is no longer named in {CODE_ROOT}; remove it')
+        errors.append(f'store_literal_exemptions: {literal!r} is no longer named in {CODE_ROOTS_SHOWN}; remove it')
     return errors
 
 
@@ -1302,9 +1305,9 @@ def repository_check(repo: Path, catalogue_path: Path | None = None) -> tuple[Re
     files = index_entries(repo)
     scan = store_literals(repo, files)
     report.store_literals, report.store_files_scanned = scan.stores, scan.scanned
-    report.errors.extend(f'{CODE_ROOT}: cannot read tracked file {shown(p)} (not a regular UTF-8 blob), '
+    report.errors.extend(f'{CODE_ROOTS_SHOWN}: cannot read tracked file {shown(p)} (not a regular UTF-8 blob), '
                          'so its store names are unchecked' for p in scan.unread)
-    report.errors.extend(f'{CODE_ROOT}: tracked file {shown(p)} is withheld by the privacy gate (an '
+    report.errors.extend(f'{CODE_ROOTS_SHOWN}: tracked file {shown(p)} is withheld by the privacy gate (an '
                          'inventory-excluded component), so its store names are unchecked; move it'
                          for p in scan.withheld)
     report.errors.extend(store_literal_errors(catalogue, scan.stores))
@@ -1572,7 +1575,7 @@ def _check_command(args: argparse.Namespace) -> int:
         for error in report.errors:
             print(f'ERROR {error}')
         if report.store_literals is not None:
-            print(f'data/ store names in {CODE_ROOT}: {len(report.store_literals)} '
+            print(f'data/ store names in {CODE_ROOTS_SHOWN}: {len(report.store_literals)} '
                   f'(from {report.store_files_scanned} tracked text files)')
         for path in report.uncovered:
             print(f'UNCOVERED {shown(path)}')
@@ -1592,7 +1595,7 @@ def _check_command(args: argparse.Namespace) -> int:
         print(suggest(report, catalogue))
     if args.suggest and report.store_literals:
         for store in unclaimed_stores(catalogue, report.store_literals):
-            print(f'  # data/ store named in {CODE_ROOT} without an entry: {shown(store)}')
+            print(f'  # data/ store named in {CODE_ROOTS_SHOWN} without an entry: {shown(store)}')
             print(store_stub(store), end='')
     store_gaps = bool(stores and stores[1])
     if census_result is not None and not census_result.complete:

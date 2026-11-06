@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -33,7 +34,7 @@ def main() -> int:
         report_path = Path(tmpdir) / "coverage.json"
         cmd = [
             ".venv/bin/pytest",
-            "--cov=scripts",
+            f"--cov={Path(os.path.abspath(__file__)).parents[1].name}",  # the machinery package
             "--cov-report=term-missing",
             f"--cov-report=json:{report_path}",
             "tests/",

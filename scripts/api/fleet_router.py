@@ -11,6 +11,7 @@ import asyncio
 import json
 import logging
 import math
+import os
 import re
 import sqlite3
 from collections import Counter
@@ -27,7 +28,7 @@ from fastapi.responses import JSONResponse
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
 

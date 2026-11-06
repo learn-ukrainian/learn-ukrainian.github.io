@@ -1702,7 +1702,10 @@ def _excerpt(text: str, terms: list[str], phrase: list[str]) -> str:
 # identifiers count (definitions, CLI subcommands and flags, configuration keys and ids, Markdown
 # headings, quoted UPPER_SNAKE codes) and its own summary (comment and docstring-opening lines
 # among the first HEADER_LINES).
-CODE_ROOTS = ('scripts', 'agents_extensions', '.githooks', '.github', '.mcp', 'packages', 'schemas', 'packaging')
+# The machinery package comes first, named by this file's location; in this checkout it is also the
+# product's code directory 'scripts', so the tuple is deduplicated.
+CODE_ROOTS = tuple(dict.fromkeys((Path(os.path.abspath(__file__)).parents[1].name, 'scripts', 'agents_extensions',
+                                  '.githooks', '.github', '.mcp', 'packages', 'schemas', 'packaging')))
 INI_SUFFIXES = frozenset({'.service', '.timer', '.slice', '.socket', '.path', '.target', '.ini', '.cfg', '.conf'})
 CONFIG_SUFFIXES = frozenset({'.yaml', '.yml', '.toml'}) | INI_SUFFIXES
 CODE_SUFFIXES = frozenset({'.py', '.sh', '.bash', '.js', '.mjs', '.cjs', '.ts', '.tsx', '.yaml', '.yml', '.toml',
