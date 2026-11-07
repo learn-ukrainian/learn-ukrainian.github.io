@@ -3,7 +3,7 @@
 **Date run:** 2026-04-21 night → 2026-04-22 early morning (UTC)
 **Fixture:** `curriculum/l1-uk/plans/a1/special-signs.yaml` (Codex fork of v1.3.1 source plan, PASS-verified by 2 independent reviewers)
 **Methodology:** 5-writer UK-native module bakeoff + 20 round-robin cross-reviews, no self-review
-**Status:** publishable draft; raw artifacts preserved on per-writer worktrees and in `experiments/writer-bakeoff-2026-04-22/`
+**Status:** publishable draft. The tracked raw tree `archive/experiments/writer-bakeoff-2026-04-22/` was removed in REMOVE-UNNEEDED-1107; see git history.
 
 ## One-sentence summary
 
@@ -185,14 +185,12 @@ Same 5 writers, same fixture methodology, different system prompt and different 
 
 ## Reproducibility
 
-All artifacts are committed:
+What remains:
 
 - Writer system prompt: `batch_state/briefs/writer-bakeoff-a1-m03.md`
 - Reviewer system prompt: `batch_state/briefs/bakeoff-review.md`
 - Plan fixture: `curriculum/l1-uk/plans/a1/special-signs.yaml` (via branch `codex/fork-l1uk-codex`)
-- 5 writer outputs: branches `writers/bakeoff-<writer>` (see `git worktree list` for paths; each writes `experiments/writer-bakeoff-2026-04-22/<writer>/special-signs.md`)
-- 20 cross-reviews: `experiments/writer-bakeoff-2026-04-22/reviews/<reviewer>-on-<writer>.yaml`
-- Aggregated scores: `experiments/writer-bakeoff-2026-04-22/reviews/_aggregate.json`
+- Raw writer outputs, cross-reviews, and aggregated scores were removed in REMOVE-UNNEEDED-1107; see git history.
 - Aggregation script: `batch_state/aggregate_bakeoff.py`
 
 To re-run: see the brief files for the exact dispatch commands used (all via `scripts/delegate.py dispatch`).
