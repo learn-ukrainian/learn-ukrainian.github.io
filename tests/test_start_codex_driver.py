@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import launcher_environment
+from tests.launcher_sandbox import launcher_environment, launcher_toolchain_path
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
@@ -28,7 +28,7 @@ def run_launcher(*args, env=None, **kwargs):
     # Exercise this checkout's profile rather than an ambient deployed copy.
     return _run_launcher(
         *args,
-        env={"CLAUDE_PROFILE_RESOLVER_PY": str(REPO / "scripts/lib/context_profiles.py"), **(env or {})},
+        env=env,
         **kwargs,
     )
 
@@ -39,7 +39,7 @@ def _would_exec_argv(result: subprocess.CompletedProcess[str]) -> list[str]:
 
 
 def _clean_environ() -> dict[str, str]:
-    return launcher_environment(CLAUDE_PROFILE_RESOLVER_PY=str(REPO / "scripts/lib/context_profiles.py"))
+    return launcher_environment()
 
 
 def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -> None:
@@ -280,7 +280,7 @@ def test_driver_canaries_use_canonical_stream_then_exec_provider(tmp_path: Path,
         env={
             **_clean_environ(),
             "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
-            "PATH": f"{executable_dir}:{os.defpath}",
+            "PATH": f"{executable_dir}:{launcher_toolchain_path()}",
         },
     )
 
@@ -310,7 +310,7 @@ def test_runtime_driver_refuses_unknown_selector_before_canary_or_provider(tmp_p
         env={
             **_clean_environ(),
             "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
-            "PATH": f"{executable_dir}:{os.defpath}",
+            "PATH": f"{executable_dir}:{launcher_toolchain_path()}",
         },
     )
 
@@ -565,7 +565,7 @@ def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
         env={
             **{key: value for key, value in _clean_environ().items() if not key.startswith("SESSION_")},
             "CODEX_CANONICAL_REPO_ROOT": str(root),
-            "PATH": f"{executable_dir}:{os.defpath}",
+            "PATH": f"{executable_dir}:{launcher_toolchain_path()}",
         },
     )
 

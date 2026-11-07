@@ -86,8 +86,6 @@ def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureReques
 @pytest.fixture(scope="module")
 def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The checkout launchers and the CLI run from: this one, or a view carrying the fixture."""
-    if CORE_DIR == REAL_CORE_DIR and (REPO / PRODUCT_MARKER).is_file():
-        return REPO
     view = checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", CORE_DIR)
     marker = view / PRODUCT_MARKER
     if not marker.is_file():
@@ -353,7 +351,7 @@ def _launch(
     expect_launch: bool = True,
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
-    env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
+    env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
     if env_kind == "kimi":
         env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
     elif env_kind == "glm":

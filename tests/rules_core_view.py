@@ -6,8 +6,9 @@ The rules core is read from the rules directory of the checkout the code runs fr
 every launch, dispatch and ask. A launcher test that needs a different core and leaves the
 configuration unset therefore runs the launcher from a different checkout: a view.
 
-Every entry of the real checkout is a symlink in the view, except the paths named in
-``overrides``: a file linked to another file, written from text, or left out. The view is
+Launcher wrappers and machinery are copied so physical root lookup stays in the view.
+Other entries are linked, except paths named in ``overrides``: a file copied from
+another file, written from text, or left out. The view is
 its own fresh git repository (the launcher refuses a symlinked ``.git``) and links the
 running interpreter's venv when the checkout has none (a linked worktree uses the
 primary checkout's).
@@ -28,6 +29,7 @@ checkout, and the root conftest is in every test's import closure.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from collections.abc import Mapping
@@ -79,8 +81,10 @@ def _link_tree(sources: tuple[Path, ...], view: Path, rel: tuple[str, ...], over
         merged = len(found) > 1 and len(directories) == len(found) and not any(e.is_symlink() for e in found)
         if key in overrides:
             _apply(view / name, overrides[key])
-        elif directories and (merged or any(path[: len(key)] == key for path in overrides)):
+        elif directories and (key[0] == machinery_package() or merged or any(path[: len(key)] == key for path in overrides)):
             _link_tree(directories, view / name, key, overrides)
+        elif key[0] == machinery_package() or (len(key) == 1 and name.startswith("start-") and name.endswith(".sh")):
+            shutil.copy2(found[0], view / name)
         else:
             (view / name).symlink_to(found[0])
     missing = {
@@ -115,7 +119,7 @@ def _view_sources() -> tuple[Path, ...]:
 
 def _apply(target: Path, action: Path | str | None) -> None:
     if isinstance(action, Path):
-        target.symlink_to(action)
+        shutil.copy2(action, target)
     elif isinstance(action, str):
         target.write_text(action, encoding="utf-8")
         target.chmod(0o755)
@@ -124,6 +128,12 @@ def _apply(target: Path, action: Path | str | None) -> None:
 def _build_view(view: Path, overrides: Overrides) -> Path:
     sources = _view_sources()
     selected_overrides = dict(overrides)
+    loader = REPO.joinpath(*_LAUNCHER_LOADER)
+    original = (*_LAUNCHER_LOADER[:-1], "rules_core.original.sh")
+    for key, action in overrides.items():
+        if isinstance(action, str) and str(loader) in action:
+            selected_overrides[key] = action.replace(str(loader), str(view.joinpath(*original)))
+            selected_overrides[original] = loader
     marker = Path(PRODUCT_MARKER)
     if marker.parts not in overrides and not any((source / marker).is_file() for source in sources):
         tracked = subprocess.run(
@@ -139,7 +149,7 @@ def _build_view(view: Path, overrides: Overrides) -> Path:
     _link_tree(sources, view, (), selected_overrides)
     if not (view / ".venv").exists():
         (view / ".venv").symlink_to(Path(sys.prefix))
-    subprocess.run(["git", "init", "-q", "-b", "main", str(view)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(view)], env=launcher_environment(), check=True, timeout=30)
     return view
 
 
@@ -147,7 +157,9 @@ def install_loader_bypass(root: Path) -> None:
     """Give a synthetic launcher sandbox ``root`` the bypass loader (it does not test the core)."""
     target = root.joinpath(*_LAUNCHER_LOADER)
     target.parent.mkdir(parents=True, exist_ok=True)
-    _apply(target, _LOADER_STUB.format(real=REPO.joinpath(*_LAUNCHER_LOADER)))
+    original = target.with_name("rules_core.original.sh")
+    shutil.copy2(REPO.joinpath(*_LAUNCHER_LOADER), original)
+    _apply(target, _LOADER_STUB.format(real=original))
 
 
 def checkout_view(view: Path, core_dir: Path | None) -> Path:

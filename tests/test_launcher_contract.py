@@ -31,6 +31,7 @@ from tests.launcher_sandbox import (
     copy_launcher_sources,
     copy_slot_registry,
     launcher_environment,
+    launcher_toolchain_path,
 )
 from tests.rules_core_view import (
     _build_view,
@@ -80,14 +81,11 @@ def run_launcher(
     dry_run: bool = True,
     root: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    if (
-        dry_run
-        and root is None
-        and name in ("start-claude.sh", "start-claude-driver.sh", "start-claude-cto.sh")
-        and not any(arg in ("--help", "-h") for arg in args)
-    ):
+    if dry_run and root is None:
         with TemporaryDirectory(prefix="launcher-usage-", dir=ensure_scratch_root()) as temporary:
-            overrides = {("scripts", "lib", "claude_weekly_used.py"): "print('0')\n"}
+            overrides = {}
+            if name in ("start-claude.sh", "start-claude-driver.sh", "start-claude-cto.sh"):
+                overrides[("scripts", "lib", "claude_weekly_used.py")] = "print('0')\n"
             if LAUNCH_ROOT != REPO:
                 overrides[("scripts", "lib", "rules_core.sh")] = (LAUNCH_ROOT / "scripts/lib/rules_core.sh").read_text()
             checkout = _build_view(Path(temporary) / "checkout", overrides)
@@ -101,7 +99,7 @@ def run_launcher(
             install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
-    launch_env = launcher_environment({PRODUCT_ROOT_ENV: str(launch_root)})
+    launch_env = launcher_environment({PRODUCT_ROOT_ENV: str(launch_root), "CODEX_CANONICAL_REPO_ROOT": str(launch_root)})
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
@@ -110,7 +108,9 @@ def run_launcher(
             # After the directories a test put ahead of the inherited PATH (its
             # fake manager), before the system ones: an unfaked call fails the
             # test rather than reaching this host's real user manager.
-            inherited, path = os.defpath, launch_env.get("PATH", "")
+            inherited, path = launcher_toolchain_path(), launch_env.get("PATH", "")
+            if path.endswith(os.defpath):
+                path = path[:-len(os.defpath)] + inherited
             prefix = path[: -len(inherited)] if inherited and path.endswith(inherited) else ""
             rest = path[len(prefix) :]
             launch_env["PATH"] = f"{prefix}{manager_guard(Path(guard) / 'bin')}{os.pathsep}{rest}"
@@ -139,12 +139,24 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     binary.parent.mkdir()
     binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
     binary.chmod(0o755)
+    toolchain = launcher_toolchain_path()
+    trace = tmp_path / "deployment-toolchain.log"
+    for name in ("node", "npm"):
+        executable = shutil.which(name, path=toolchain)
+        assert executable is not None
+        wrapper = binary.parent / name
+        wrapper.write_text(
+            f"#!/bin/sh\nprintf '%s\\n' {shlex.quote(name + '=' + executable)} >> {shlex.quote(str(trace))}\n"
+            f"exec {shlex.quote(executable)} \"$@\"\n",
+            encoding="utf-8",
+        )
+        wrapper.chmod(0o755)
     result = run_launcher(
         "start-claude.sh",
         dry_run=False,
         root=checkout,
         env={
-            "PATH": f"{binary.parent}{os.pathsep}{os.defpath}",
+            "PATH": f"{binary.parent}{os.pathsep}{launcher_toolchain_path()}",
             "HOME": str(tmp_path / "home"),
             "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
         },
@@ -152,6 +164,10 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Agent extensions deployed (agents:deploy)" in result.stdout
     assert f"provider cwd={checkout}" in result.stdout
+    executed = trace.read_text().splitlines()
+    for name in ("node", "npm"):
+        assert f"{name}={shutil.which(name, path=toolchain)}" in executed
+    print(f"Deployment child toolchain: {executed}", flush=True)
     sources = checkout / "agents_extensions/shared/skills"
     deployed = checkout / ".agents/skills"
     expected = {path.relative_to(sources) for path in sources.rglob("*") if path.is_file()}
@@ -638,7 +654,7 @@ launcher_close_driver_lease() {{
 }}
 launcher_exec_command fixture-cli
 """
-    env = {**launcher_environment(), "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
+    env = {**launcher_environment(), "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{launcher_toolchain_path()}"}
     process = subprocess.Popen(
         ["/bin/bash", "-c", script],
         env=env,
@@ -757,7 +773,7 @@ launcher_exec_command fixture-cli
     env = {
         **launcher_environment(),
         "HOME": str(tmp_path / "home"),
-        "PATH": f"{cli.parent}{os.pathsep}{os.defpath}",
+        "PATH": f"{cli.parent}{os.pathsep}{launcher_toolchain_path()}",
         "FLEET_COMMS_ROOT": str(plane),
     }
     with AuthorityService(root=plane) as service:

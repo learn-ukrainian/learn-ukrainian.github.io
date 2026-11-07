@@ -34,13 +34,38 @@ from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMI
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def launcher_toolchain_path() -> str:
+    """Declare executable directories without inheriting provider or seat state.
+
+    npm may be an agent shim. Select its real executable from the toolchain
+    PATH instead; its Node shebang then resolves from the same declared input.
+    """
+    search = os.environ.get("PATH", os.defpath).split(os.pathsep)
+    search = [entry for entry in search if not entry.rstrip("/").endswith(
+        ("/agent_runtime/shims", "/dispatcher/npm_shims")
+    )]
+    directories = [str(Path(sys.executable).parent)]
+    for name in ("node", "npm", "git"):
+        executable = shutil.which(name, path=os.pathsep.join(search))
+        if executable is None:
+            raise RuntimeError(f"launcher fixture requires declared toolchain executable: {name}")
+        # A user-level node/npm symlink must not admit that user's providers.
+        known = next((directory for directory in directories if (Path(directory) / name).is_file()
+                      and (Path(directory) / name).samefile(executable)), None)
+        directory = known or str(Path(executable).resolve().parent if name != "npm" else Path(executable).parent)
+        directories.append(directory)
+    directories.extend(os.defpath.split(os.pathsep))
+    return os.pathsep.join(dict.fromkeys(directories))
+
+
 def launcher_environment(*inputs: Mapping[str, str], **extra: str) -> dict[str, str]:
     """Build a fresh launcher environment, then overlay deliberate test inputs.
 
     Bash and its utilities need PATH and a UTF-8 locale. HOME and temporary
     files belong to this invocation, so credentials, Git config and seat state
     cannot come from the runner. Monitor calls fail locally unless a fixture
-    supplies a stub endpoint. No ambient variable is copied, including PATH.
+    supplies a stub endpoint. Only executable directories are selected from
+    the caller's declared toolchain; no seat variable is copied.
     """
     # The per-test scratch fixture owns cleanup; its root changes between tests.
     root = Path(tempfile.mkdtemp(prefix="launcher-environment-", dir=ensure_scratch_root()))
@@ -52,7 +77,7 @@ def launcher_environment(*inputs: Mapping[str, str], **extra: str) -> dict[str, 
         binary.write_text(f'#!/bin/sh\nprintf "%s\\n" "{name} $*" >> "$LU_TEST_REAL_MANAGER_CONTACT"\nexit 97\n')
         binary.chmod(0o755)
     env = {
-        "PATH": f"{root / 'guard-bin'}{os.pathsep}{os.defpath}",
+        "PATH": f"{root / 'guard-bin'}{os.pathsep}{launcher_toolchain_path()}",
         "HOME": str(root / "home"),
         "TMPDIR": str(root / "tmp"),
         "LANG": "C.UTF-8",
