@@ -83,6 +83,7 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import threading
 import warnings
 import weakref
@@ -1282,6 +1283,22 @@ def pytest_sessionstart_runtime_scratch(session: pytest.Session) -> None:
     # Collection and higher-scope fixtures run before the per-test override.
     # Each xdist worker has its own factory and session-lifetime patch.
     root = config._tmp_path_factory.mktemp("runtime-scratch-session")
+    # Explicit scratch overrides suppress consumers' own short-path fallback.
+    # Leave space for the PostgreSQL fixture's longest Unix socket name.
+    socket_suffix = Path("pg-XXXXXXXX") / ".s.PGSQL.65535"
+    if len(os.fsencode(root / socket_suffix)) > 103:
+        for base in (Path(f"/run/user/{os.getuid()}"), Path("/dev/shm"), Path("/tmp")):
+            try:
+                candidate = Path(tempfile.mkdtemp(prefix="lu-pytest-", dir=base)).resolve()
+            except OSError:
+                continue
+            if len(os.fsencode(candidate / socket_suffix)) <= 103:
+                root = candidate
+                config.add_cleanup(lambda root=root: shutil.rmtree(root))
+                break
+            shutil.rmtree(candidate)
+        else:
+            raise pytest.UsageError("No writable private scratch root fits the 103-byte Unix socket limit")
     patch = pytest.MonkeyPatch()
     config.add_cleanup(patch.undo)
     patch.setenv("LU_SCRATCH_ROOT", str(root))

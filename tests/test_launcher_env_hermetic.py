@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import ast
+import json
+import os
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -20,6 +24,70 @@ from tests.launcher_sandbox import (
 
 def _child_environment(path: Path) -> dict[str, str]:
     return dict(entry.split("=", 1) for entry in path.read_text().split("\0") if entry)
+
+
+def test_session_scratch_avoids_long_unix_socket_paths_per_worker(tmp_path: Path) -> None:
+    """A long basetemp must not force socket consumers over the AF_UNIX limit."""
+    source = Path(__file__).with_name("conftest.py").read_text()
+    hook = next(
+        node
+        for node in ast.parse(source).body
+        if isinstance(node, ast.FunctionDef) and node.name == "pytest_sessionstart_runtime_scratch"
+    )
+    suite = tmp_path / "socket-probe"
+    suite.mkdir()
+    (suite / "pytest.ini").write_text("[pytest]\n")
+    (suite / "test_empty.py").write_text("")
+    # Load the real seam without the repository's unrelated fixture/guard graph.
+    (suite / "scratch_probe.py").write_text(
+        "import json, os, shutil, stat, tempfile\n"
+        "from pathlib import Path\n"
+        "import pytest\n"
+        '@pytest.hookimpl(specname="pytest_sessionstart", tryfirst=True)\n'
+        + ast.get_source_segment(source, hook)
+        + '\n@pytest.hookimpl(specname="pytest_sessionstart", trylast=True)\n'
+        "def pytest_sessionstart_observe(session):\n"
+        '    root = Path(os.environ["LU_SCRATCH_ROOT"])\n'
+        '    assert os.environ["LU_SCRATCH_SCAN_ROOT"] == str(root)\n'
+        '    worker = os.environ.get("PYTEST_XDIST_WORKER", "controller")\n'
+        '    row = {"root": str(root), "mode": stat.S_IMODE(root.stat().st_mode)}\n'
+        '    Path(worker + ".json").write_text(json.dumps(row))\n'
+    )
+    basetemp = suite / ("long-basetemp-" + "x" * 160)
+    assert len(os.fsencode(basetemp)) > 160
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-c",
+            str(suite / "pytest.ini"),
+            "-p",
+            "xdist.plugin",
+            "-p",
+            "scratch_probe",
+            "-n",
+            "2",
+            "--dist=worksteal",
+            "--basetemp=" + str(basetemp),
+        ],
+        cwd=suite,
+        env=launcher_environment(
+            tmp_path=tmp_path,
+            PYTHONPATH=str(suite),
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+        ),
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == pytest.ExitCode.NO_TESTS_COLLECTED, result.stdout + result.stderr
+    observations = [json.loads((suite / f"{worker}.json").read_text()) for worker in ("controller", "gw0", "gw1")]
+    roots = [Path(row["root"]) for row in observations]
+    assert len(set(roots)) == 3
+    assert all(row["mode"] == 0o700 for row in observations)
+    assert all(len(os.fsencode(root / "pg-XXXXXXXX" / ".s.PGSQL.65535")) <= 103 for root in roots)
+    assert all(not root.exists() for root in roots)
 
 
 def test_environment_builder_isolates_seat_state_and_preserves_explicit_inputs(monkeypatch) -> None:
