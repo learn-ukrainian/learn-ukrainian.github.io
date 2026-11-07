@@ -146,7 +146,6 @@ HISTORICAL_H126 = frozenset(
         "tests/test_vesum_heritage_attestation.py::test_morphology_fallback_does_not_leak_russianism_via_verb_root",
         "tests/test_vesum_heritage_attestation.py::test_derivational_fallback_does_not_leak_adversarial_russianisms",
         "tests/test_vesum_heritage_attestation.py::test_direct_standard_active_participle_calques_stay_existing_behavior",
-        "tests/test_vocab_coverage.py::test_inflection_via_vesum_lemma",
         "tests/test_vocab_gen.py::TestVesumEnrichment::test_noun_gets_pos_and_gender",
         "tests/test_vocab_gen.py::TestVesumEnrichment::test_verb_gets_pos",
         "tests/verification/test_antonenko_patterns.py::test_live_all_checks_clean_corpus",
@@ -241,8 +240,8 @@ NEW_STORE_SELECTIONS = frozenset(
         r"tests/test_check_text.py::test_mcp_round2_no_firm_book_false_positives[\u041f\u043e \u043c\u043e\u0457\u0439 \u0434\u0443\u043c\u0446\u0456 \u0442\u0430\u043a \u043d\u0435 \u043c\u043e\u0436\u043d\u0430 \u0440\u043e\u0431\u0438\u0442\u0438]",
     ]
 )
-PREVIOUS_SELECTION_SHA256 = "9f33687f8c73317ecd9263d819700b024f55ab327eddf990926c04e5f019349d"
-PREVIOUS_SELECTION_FILES_SHA256 = "e9370daea41d82bc7278d31fc137f9461c0e0e720ecde9b219aa362d86c7034c"
+PREVIOUS_SELECTION_SHA256 = "fd1a02c0100d24d08a75b2ed6ce7dd8ca77c0b8476e05e16b70c04cbc4ae1d77"
+PREVIOUS_SELECTION_FILES_SHA256 = "e4bf126f6614b6cb74c4cff625abe652323057d625e0d32d1629f089ff5cac60"
 
 
 def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
@@ -250,10 +249,10 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
     assert selection["source_run"] == 36611889906
     assert selection["source_sha"] == "410da34bb875aca2acfc960da4d8c9b87ae7867b"
     # The audited baseline is preserved; #10021 adds the 16 exact factory omissions.
-    assert selection["class_c_merge_group"] == 558
+    assert selection["class_c_merge_group"] == 557
     assert selection["class_c_nightly"] == 1
-    assert len(selection["nodeids"]) == 558
-    assert len(selection["files"]) == 103
+    assert len(selection["nodeids"]) == 557
+    assert len(selection["files"]) == 102
     assert "tests/test_citation_resolution_invariant.py" in selection["nodeids"]
     assert "tests/test_site_links.py::TestCurriculumSync::test_manifest_modules_have_mdx[a1]" in selection["nodeids"]
     assert len([nodeid for nodeid in selection["nodeids"] if nodeid.startswith("sha256:")]) == 5
@@ -277,12 +276,12 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
 
 def test_real_store_selection_preserves_h126_and_covers_g177_and_overrides() -> None:
     selection = data_tier.load_selection()
-    assert len(HISTORICAL_H126) == 126
-    assert len(CURRENT_G177) == 177
+    assert len(HISTORICAL_H126) == 125
+    assert len(CURRENT_G177) == 176
     assert HISTORICAL_H126 <= CURRENT_G177
     assert len(LOCAL_OVERRIDE_REAL_STORE) == 6
     identified = CURRENT_G177 | LOCAL_OVERRIDE_REAL_STORE
-    assert len(identified) == 183
+    assert len(identified) == 182
 
     selected = set(selection["nodeids"])
     collected_files = set(selection["files"])
@@ -294,17 +293,17 @@ def test_real_store_selection_preserves_h126_and_covers_g177_and_overrides() -> 
     assert selected >= NEW_STORE_SELECTIONS
     assert selection["real_store_audit"] == {
         "issue": 10021,
-        "historical_h126": 126,
-        "current_factory_g177": 177,
-        "identified_real_store_cases": 183,
+        "historical_h126": 125,
+        "current_factory_g177": 176,
+        "identified_real_store_cases": 182,
         "new_selection_entries": 16,
         "new_collection_files": 1,
     }
     previous = selected - NEW_STORE_SELECTIONS
-    assert len(previous) == 542
+    assert len(previous) == 541
     assert hashlib.sha256("\n".join(sorted(previous)).encode()).hexdigest() == PREVIOUS_SELECTION_SHA256
     previous_files = collected_files - {"tests/verification/test_antonenko_patterns.py"}
-    assert len(previous_files) == 102
+    assert len(previous_files) == 101
     assert hashlib.sha256("\n".join(sorted(previous_files)).encode()).hexdigest() == PREVIOUS_SELECTION_FILES_SHA256
 
 

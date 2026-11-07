@@ -255,7 +255,7 @@ accepts `--stdout-only`, which the audit callers retain for that family.
 | `scripts/audit/naturalness_check.py` | One-shot stdout through `ask-agy` and `ask-claude` |
 | `scripts/audit/llm_reviewer_dispatch.py`, `scripts/audit/qg_bakeoff.py` | Existing stdout/output-file contracts; formal review intent uses the separate toolful review path |
 | `scripts/pipeline/dispatch.py`, `scripts/tools/upgrade_activity_hints.py` | `ask-agy` stdout |
-| `scripts/build/build_module_direct.py`, `scripts/build/phases/plan_patch.py` | `ask-gemini` compatibility alias; stdout or explicit output file |
+| `scripts/build/build_module_direct.py` | `ask-gemini` compatibility alias; stdout or explicit output file |
 | `scripts/batch/batch_research.py`, `scripts/batch/batch_fix_review.py` | `ask-gemini` compatibility alias; explicit output file or stdout |
 | `scripts/projects/open_model_data/phase3_source_production_transport.py`, `phase3_rule_author_runner.py`, `phase3_heldout_label_transport.py` | Existing packet-bound stdout/output-file contracts; owning track controls execution |
 | `scripts/batch/batch_otaman.py`, `scripts/run_otaman_serial_12_15.sh` | Historical write-workflow callers; `--allow-write` does not make an ACP conversation a toolful implementation run |

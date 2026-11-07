@@ -34,7 +34,6 @@
     "scripts/build/enrich.py": 2,
     "scripts/build/linear_pipeline.py": 1,
     "scripts/build/module_memory.py": 3,
-    "scripts/build/phases/vocab_coverage.py": 1,
     "scripts/build/textbook_refs.py": 1,
     "scripts/build/v7_build.py": 2,
     "scripts/build/vocab_gen.py": 1,

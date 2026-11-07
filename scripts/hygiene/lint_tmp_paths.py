@@ -1513,11 +1513,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "52af38f6251f9e39cb674f363f5e0652ead9f8bb8f24b4079121eaf28b686d80:1",
     ),
     (
-        _mp("tools/analyze_dead_code.py"),
-        "Legacy literal/default/example; follow-up outside this bounded packet (#9702).",
-        "52652b6d0a20d65322c20815f487b7b711c635229463d4251d6a7b8a9f1e2f03:1",
-    ),
-    (
         "scripts/tools/analyze_textbook_pages.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "c5a34065e28c708b3a82f5dc06a894600feed4833a04fae2b126166246943b43:1",

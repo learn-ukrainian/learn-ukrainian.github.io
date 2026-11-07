@@ -84,7 +84,7 @@ def data_store_factory(request: pytest.FixtureRequest, monkeypatch: pytest.Monke
             monkeypatch.setenv(f"LU_{store.upper()}_DB", str(result.path))
             if store == "vesum":
                 for name in ("scripts.rag.config", "rag.config", "scripts.verification.vesum",
-                             "verification.vesum", "scripts.build.phases.vocab_coverage", "build.phases.vocab_coverage"):
+                             "verification.vesum"):
                     module = sys.modules.get(name)
                     if module is not None and hasattr(module, "VESUM_DB_PATH"):
                         monkeypatch.setattr(module, "VESUM_DB_PATH", result.path)
