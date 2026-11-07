@@ -90,6 +90,22 @@ def check_rules_dependency(dependency: object, prompt_text: str | None = None) -
         raise ReviewContractError("review_rules_core_prompt_mismatch: prompt omits the trusted rules dependency; " + _RERENDER)
 
 
+def recorded_core_context(dependency: object, prompt_text: str) -> tuple[str, dict[str, Any]]:
+    """Verify the core already saved in an admitted prompt, without reading today's rules.
+
+    Historical consumers also bind the complete saved prompt to its dispatch hash and
+    re-render its template body. Admission and launch still use ``check_rules_dependency``.
+    """
+    if not isinstance(dependency, dict) or not isinstance(dependency.get("block_sha256"), str):
+        raise ReviewContractError("review_rules_core_recorded_dependency_missing")
+    provenance = json.dumps(dependency, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    marker = f"\n<trusted-rules-dependency>\n{provenance}\n</trusted-rules-dependency>\n\n"
+    block, found, _body = prompt_text.partition(marker)
+    if not found or hashlib.sha256(block.encode("utf-8")).hexdigest() != dependency["block_sha256"]:
+        raise ReviewContractError("review_rules_core_recorded_prefix_mismatch")
+    return block + marker, dependency
+
+
 @dataclass(frozen=True)
 class _Module:
     files: tuple[Path, ...]  # the file this module executes: an ``__init__.py``, a ``.py`` module, or none

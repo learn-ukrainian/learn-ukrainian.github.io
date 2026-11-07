@@ -210,14 +210,16 @@ def dispatch_prompt_sha256(
 
 
 def _render_prompt_sha256(
-    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated"
+    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated",
+    *, rules_context: tuple[str, dict[str, Any]] | None = None,
 ) -> tuple[str | None, str]:
     """``(sha256, "")`` of this manifest's review prompt rendered with these ids, or ``(None, why it cannot be)``."""
     from scripts.review.prompts.render import RenderError, render
 
     try:
         rendered = render(
-            Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id, review_access=review_access
+            Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id,
+            review_access=review_access, rules_context=rules_context,
         )
     except (RenderError, OSError, ValueError) as error:
         return None, str(error)
@@ -357,8 +359,18 @@ def attested_return(
     )
     path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     task = json.loads(path.read_bytes())
+    from scripts.review.render_contract import recorded_core_context
+
+    try:
+        prompt = Path(task["prompt_file"]).read_bytes()
+        contract = task["review_contract"]
+        if hashlib.sha256(prompt).hexdigest() != sent or contract.get("prompt_sha256") != sent:
+            raise ValueError("saved prompt hash differs")
+        rules_context = recorded_core_context(contract["machinery_dependencies"]["rules_core"], prompt.decode("utf-8"))
+    except (OSError, KeyError, TypeError, ValueError) as exc:
+        raise refuse(f"the dispatch hash {sent} is not the hash of this attempt's recorded prompt ({exc})") from exc
     rendered, why = _render_prompt_sha256(
-        manifest_path, root, review_id, attempt_id, task.get("review_access", "isolated")
+        manifest_path, root, review_id, attempt_id, task.get("review_access", "isolated"), rules_context=rules_context,
     )
     if rendered is None:
         raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")

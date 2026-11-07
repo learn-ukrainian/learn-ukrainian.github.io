@@ -556,6 +556,7 @@ def render(
     review_id: str | None = None,
     attempt_id: str | None = None,
     review_access: str = "full",
+    rules_context: tuple[str, dict[str, Any]] | None = None,
 ) -> Rendering:
     """Render a reviewer prompt from the manifest's pins alone.
 
@@ -567,11 +568,14 @@ def render(
     return template prints (``TEMPLATES_REQUIRING_ATTEMPT_IDS``) so the validator can match the seat's return
     against its own receipt ledger instead of a guess. Rendering one of those templates without both, or with
     either not a valid attempt token, is refused by name before anything is read.
+
+    Historical consumers may supply a context validated by ``recorded_core_context``.
+    Fresh renders use the current core; admission and launch independently require it.
     """
     if review_access not in {"full", "isolated"}:
         raise RenderError("review_access_invalid")
     try:
-        core_prefix, core_dependency = trusted_core_context()
+        core_prefix, core_dependency = trusted_core_context() if rules_context is None else rules_context
     except ReviewContractError as exc:
         raise RenderError(str(exc)) from exc
     root = (repo_root or REPO_ROOT).resolve()
