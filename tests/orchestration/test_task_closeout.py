@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -939,6 +940,120 @@ def test_init_reuse_refuses_changed_ac_policy(tmp_path: Path, monkeypatch: pytes
     assert task_closeout.main([*command, "--reuse"]) == 2
     assert "AC_SNAPSHOT_MISMATCH" in json.loads(capsys.readouterr().err)["error"]
     assert path.read_bytes() == before
+
+
+def _with_option(command: list[str], option: str, value: str) -> list[str]:
+    updated = list(command)
+    updated[updated.index(option) + 1] = value
+    return updated
+
+
+@pytest.mark.parametrize("successor_origin", ["fresh", "inherited"])
+def test_bind_successor_archives_predecessor_bytes_and_records_hash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys, successor_origin: str,
+) -> None:
+    """Defect class: a takeover binding that loses, rewrites or misrecords the predecessor ledger."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = [*_fresh_init_command(tmp_path), "--pr", "77"]
+    assert task_closeout.main(command) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    before = path.read_bytes()
+    predecessor = json.loads(before)
+    assert task_closeout.main(command) == 2
+    refusal = json.loads(capsys.readouterr().err)["error"]
+    assert refusal == f"lifecycle ledger already exists: {path}; use --reuse"
+    assert path.read_bytes() == before
+
+    if successor_origin == "fresh":
+        successor = _with_option(command, "--fresh-task-id", "native-successor-43")
+        successor[successor.index("init")] = "bind-successor"
+    else:
+        identity_path = _write_json(tmp_path / "successor-identity.json", _identity_dict())
+        successor = [
+            "--repo-root", str(tmp_path), "bind-successor", "--identity-file", str(identity_path),
+            *command[command.index("--ac-policy"):],
+        ]
+    assert task_closeout.main(successor) == 0
+    record = json.loads(capsys.readouterr().out)["predecessor_ledger"]
+
+    archive = Path(record["archive_path"])
+    assert archive.parent == path.parent / "predecessors"
+    assert archive.read_bytes() == before
+    assert record["sha256"] == "sha256:" + hashlib.sha256(before).hexdigest()
+    assert sorted(item.name for item in path.parent.glob("issue-*.json")) == [path.name]
+    ledger = task_lifecycle.load_lifecycle(path)
+    assert ledger["predecessor_ledger"] == {**record, "bound_at": NOW}
+    assert ledger["identity"] != predecessor["identity"]
+    expected_task = "native-successor-43" if successor_origin == "fresh" else None
+    assert ledger["identity"].get("task_id") == expected_task
+    for field in ("lifecycle_id", "ac_snapshot", "required_checks", "author_family", "pr", "terminal_goal"):
+        assert ledger[field] == predecessor[field]
+    assert ledger["evidence"] == [] and ledger["observation_receipts"] == []
+
+
+@pytest.mark.parametrize(
+    "mismatch,code",
+    [
+        ("ac-policy", "AC_SNAPSHOT_MISMATCH"),
+        ("required-check", "SUCCESSOR_POLICY_MISMATCH"),
+        ("author-family", "SUCCESSOR_AUTHOR_FAMILY_MISMATCH"),
+        ("repository", "SUCCESSOR_REPOSITORY_MISMATCH"),
+        ("issue", "SUCCESSOR_ISSUE_MISMATCH"),
+        ("stream", "SUCCESSOR_STREAM_MISMATCH"),
+        ("pr", "SUCCESSOR_PR_MISMATCH"),
+        ("unchanged-identity", "SUCCESSOR_IDENTITY_UNCHANGED"),
+        ("lock-held", "LIFECYCLE_LOCK_HELD"),
+        ("missing-predecessor", "PREDECESSOR_LEDGER_MISSING"),
+    ],
+)
+def test_bind_successor_refuses_mismatches_without_touching_ledgers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys, mismatch: str, code: str,
+) -> None:
+    """Defect class: a successor binding that crosses tasks, drifts policy or races the ledger lock."""
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = [*_fresh_init_command(tmp_path), "--pr", "77"]
+    assert task_closeout.main(command) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    before = path.read_bytes()
+    successor = _with_option(command, "--fresh-task-id", "native-successor-43")
+    successor[successor.index("init")] = "bind-successor"
+    pinned = [*successor, "--state-file", str(path)]
+    if mismatch == "ac-policy":
+        _write_json(Path(successor[successor.index("--ac-policy") + 1]), {
+            "AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["document", "review"]},
+        })
+    elif mismatch == "required-check":
+        successor = _with_option(successor, "--required-check", "Other Gate")
+    elif mismatch == "author-family":
+        successor = _with_option(successor, "--author-family", "anthropic")
+    elif mismatch == "repository":
+        successor = _with_option(pinned, "--repository", "org/other")
+    elif mismatch == "issue":
+        successor = _with_option(pinned, "--issue", "43")
+    elif mismatch == "stream":
+        monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=11))
+        monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10, 11])
+        monkeypatch.setattr(
+            task_closeout.GhGitHubAdapter, "read_issue_parent",
+            lambda self, repository, number: {"number": 11, "repository": repository},
+        )
+        successor = _with_option(successor, "--stream-epic", "11")
+        successor = [*successor, "--state-file", str(path)]
+    elif mismatch == "pr":
+        successor = _with_option(successor, "--pr", "78")
+    elif mismatch == "unchanged-identity":
+        successor = _with_option(successor, "--fresh-task-id", "native-driver-42")
+    elif mismatch == "missing-predecessor":
+        successor = [*successor, "--state-file", str(tmp_path / "absent" / "issue-42.json")]
+
+    if mismatch == "lock-held":
+        with task_lifecycle.lifecycle_lock(path):
+            assert task_closeout.main(successor) == 2
+    else:
+        assert task_closeout.main(successor) == 2
+    assert json.loads(capsys.readouterr().err)["error_code"] == code
+    assert path.read_bytes() == before
+    assert not (path.parent / "predecessors").exists()
 
 
 def test_evidence_type_correction_refused_after_criterion_checked(
