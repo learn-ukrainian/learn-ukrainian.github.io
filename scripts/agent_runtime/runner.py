@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import hashlib
 import json
 import logging
 import os
@@ -42,6 +43,7 @@ import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -102,6 +104,8 @@ from .errors import (
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
+    RulesCoreDeliveryError,
+    RulesCoreMissingError,
 )
 from .failover import (
     FailoverChain,
@@ -3539,6 +3543,64 @@ def _invoke_with_runner_failover(
     raise AgentUnavailableError(f"Agent {agent_name!r} has an empty runner failover route set")
 
 
+class RulesCoreDelivery(Enum):
+    """Every invocation injects rules or preserves a durably admitted review prompt."""
+
+    INJECT = "inject"
+    BOUND = "bound"
+
+
+def _prepare_rules_core(
+    prompt: str,
+    *,
+    delivery: RulesCoreDelivery,
+    seat: str | None,
+    task_id: str | None,
+    tool_config: dict | None,
+) -> str:
+    from scripts.lib import rules_core
+
+    if delivery is RulesCoreDelivery.INJECT:
+        try:
+            return rules_core.with_core(prompt, seat)
+        except rules_core.RulesCoreMissing as exc:
+            raise RulesCoreMissingError(f"runtime call refused: {exc}") from exc
+        except rules_core.RulesCoreError as exc:
+            raise RulesCoreDeliveryError(f"runtime rules prefix refused: {exc}") from exc
+    if delivery is not RulesCoreDelivery.BOUND:
+        raise RulesCoreDeliveryError("runtime rules delivery must be INJECT or admitted BOUND")
+
+    from scripts.dispatcher import store
+    from scripts.review.render_contract import check_rules_dependency, recorded_core_context
+
+    try:
+        if not task_id:
+            raise ValueError("BOUND requires an admitted review task")
+        record = store.read(task_id)
+        if record is None:
+            raise ValueError("BOUND requires an admitted review task")
+        binding = record.get("review_attempt")
+        config = tool_config or {}
+        if not isinstance(binding, dict) or not all(
+            binding.get(key) and binding[key] == config.get(key) for key in ("review_id", "attempt_id")
+        ):
+            raise ValueError("BOUND requires the task's admitted review identity")
+        contract = record.get("review_contract")
+        if not isinstance(contract, dict) or not isinstance(contract.get("machinery_dependencies"), dict):
+            raise ValueError("BOUND requires the admitted review contract")
+        dependency = contract["machinery_dependencies"].get("rules_core")
+        if not isinstance(dependency, dict) or dependency.get("seat") != rules_core.resolve_seat(seat):
+            raise ValueError("BOUND rules seat differs from admission")
+        check_rules_dependency(dependency, prompt, seat=rules_core.resolve_seat(seat))
+        recorded_core_context(dependency, prompt)  # checks the complete framed block_sha256
+        digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        if digest != contract.get("prompt_sha256") or digest != record.get("prompt_sha256"):
+            raise ValueError("BOUND complete prompt differs from admission")
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        raise RulesCoreDeliveryError(f"runtime BOUND rules refused: {exc}") from exc
+    return prompt
+
+
 def _invoke_impl(
     agent_name: str,
     prompt: str,
@@ -3563,6 +3625,8 @@ def _invoke_impl(
     allow_direct_only: bool = False,
     allow_runner_failover: bool = True,
     v4_authorization_id: str | None = None,
+    rules_seat: str | None = None,
+    rules_core_delivery: RulesCoreDelivery = RulesCoreDelivery.INJECT,
 ) -> Result:
     """Runner implementation after any parent-owned isolation preparation.
 
@@ -3624,6 +3688,9 @@ def _invoke_impl(
             adapter.parse_response() classified the failure as rate-limited.
         AgentTimeoutError: Wall-clock runtime exceeded hard_timeout.
     """
+    prompt = _prepare_rules_core(
+        prompt, delivery=rules_core_delivery, seat=rules_seat, task_id=task_id, tool_config=tool_config,
+    )
     # ---------- 1. Resolve adapter ----------
     _validate_agent_name(agent_name)
     adapter = _load_adapter(agent_name, allow_direct_only=True) if allow_direct_only else _load_adapter(agent_name)
@@ -3965,8 +4032,15 @@ def invoke(
     initiator: str | None = None,
     v4_authorization_id: str | None = None,
     allow_runner_failover: bool = True,
+    rules_seat: str | None = None,
+    rules_core_delivery: RulesCoreDelivery = RulesCoreDelivery.INJECT,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
+
+    ``rules_seat`` selects the rules core independently of the adapter seat:
+    a valid explicit value wins over ``LU_RULES_SEAT``, then defaults to core.
+    ``BOUND`` references this task's durable admitted review contract. The
+    runtime verifies its provenance and complete prompt hash without rewriting.
 
     ``tool_config={"trail_isolation": ...}`` is handled before adapter
     planning. Unsupported adapters refuse before spawn, while supported
@@ -4029,6 +4103,8 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
+            rules_seat=rules_seat,
+            rules_core_delivery=rules_core_delivery,
             allow_runner_failover=allow_runner_failover
             and agent_name != "muse"
             and attempt is None
@@ -4251,6 +4327,7 @@ def invoke_inter_agent(
     metadata: Mapping[str, object] | None = None,
     sealed_review_mcp_config: Path | None = None,
     hard_timeout: int = 300,
+    rules_seat: str | None = None,
 ) -> Result:
     """Invoke one confined ACP participant through the normal communication seam.
 
@@ -4279,12 +4356,12 @@ def invoke_inter_agent(
     )
     route = resolve_inter_agent_route(agent, model=model, effort=effort)
     # Every ACP ask, discussion leg and sealed review starts with the rules core
-    # (seat from $LU_RULES_SEAT); without it the call is refused as a typed
+    # (explicit rules_seat, then $LU_RULES_SEAT); without it the call is refused as a typed
     # transport error, before any provenance is bound or a process is spawned.
     from scripts.lib import rules_core
 
     try:
-        prompt = rules_core.with_core(prompt)
+        rules_core.require_core(rules_seat)
     except rules_core.RulesCoreMissing as exc:
         raise InterAgentTransportError(f"inter-agent call refused: {exc}; the rules core is required") from exc
     trusted_source = _resolve_trusted_transport_source(
@@ -4319,6 +4396,7 @@ def invoke_inter_agent(
                 hard_timeout=hard_timeout,
                 effort=route.effort,
                 entrypoint="acpx-transport",
+                rules_seat=rules_seat,
                 initiator=trusted_source,
             )
             usage_record = dict(result.usage_record)
@@ -4345,6 +4423,7 @@ def _invoke_direct_only(
     effort: str | None = None,
     entrypoint: str = "acpx-pilot-shadow",
     initiator: str | None = None,
+    rules_seat: str | None = None,
 ) -> Result:
     """Invoke one explicitly marked direct-only, read-only shadow seat.
 
@@ -4380,6 +4459,7 @@ def _invoke_direct_only(
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             effort=effort,
+            rules_seat=rules_seat,
             allow_direct_only=True,
             allow_runner_failover=False,
         )
@@ -4423,6 +4503,7 @@ def _invoke_native_once(
     hard_timeout: int = 300,
     effort: str | None = None,
     initiator: str | None = None,
+    rules_seat: str | None = None,
 ) -> Result:
     """Invoke one native ACPX-pilot authority call without runner failover."""
     if agent_name not in {"codex", "grok"}:
@@ -4450,6 +4531,7 @@ def _invoke_native_once(
             hard_timeout=hard_timeout,
             effort=effort,
             allow_runner_failover=False,
+            rules_seat=rules_seat,
         )
     finally:
         _INVOCATION_ATTRIBUTION.reset(attribution_token)

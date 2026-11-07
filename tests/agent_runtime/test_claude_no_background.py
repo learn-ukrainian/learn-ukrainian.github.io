@@ -292,11 +292,18 @@ def test_native_kimi_runner_launch_gets_neither_control(tmp_path: Path, monkeypa
 
     result = _invoke_kimi(worktree, {"harness": "native"})
 
+    from scripts.lib import rules_core
+
     seen = json.loads(dump.read_text(encoding="utf-8"))
     assert seen["argv"][0] == "-p"
     assert SWITCH not in seen["env"]
     assert not {"--disallowedTools", "--settings"} & set(seen["argv"])
-    assert not any(tool in arg for arg in seen["argv"] for tool in HEADLESS_BACKGROUND_TOOL_DENIES)
+    prompt_index = seen["argv"].index("-p") + 1
+    prompt = seen["argv"][prompt_index]
+    assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nadd a tooltip to the widget"
+    assert prompt.count(rules_core.BLOCK_OPEN) == 1
+    launch_options = seen["argv"][:prompt_index] + seen["argv"][prompt_index + 1:]
+    assert not any(tool in arg for arg in launch_options for tool in HEADLESS_BACKGROUND_TOOL_DENIES)
     assert result.ok is True
     assert result.response == "native kimi done"
 

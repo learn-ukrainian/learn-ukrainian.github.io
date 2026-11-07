@@ -582,6 +582,8 @@ def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
 
 
 def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from types import SimpleNamespace
+
     from scripts.agent_runtime import runner
 
     seen: list[str] = []
@@ -589,12 +591,15 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
     class _Captured(Exception):
         pass
 
-    def fake_direct(seat, prompt, **kwargs):
+    def capture_plan(*, prompt, **kwargs):
         seen.append(prompt)
         raise _Captured
 
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
-    monkeypatch.setattr(runner, "_invoke_direct_only", fake_direct)
+    adapter = SimpleNamespace(default_model="gpt-6.1-sol", supported_modes={"read-only"},
+                              build_invocation=capture_plan)
+    monkeypatch.setattr(runner, "_load_adapter", lambda *a, **kw: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *a: (True, ""))
     with pytest.raises(_Captured):
         runner.invoke_inter_agent(
             "codex",
@@ -607,6 +612,7 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
         )
     assert seen, "invoke_inter_agent did not reach the transport"
     assert seen[0] == rules_core.core_block("core") + "\n\nreview this"
+    assert seen[0].count(rules_core.BLOCK_OPEN) == 1
     _assert_core(seen[0], "core", "acp-inter-agent")
 
 

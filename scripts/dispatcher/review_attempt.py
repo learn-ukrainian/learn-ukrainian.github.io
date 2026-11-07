@@ -171,6 +171,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
             tool_config=dict(tool_config), entrypoint="dispatch", hard_timeout=int(hard) if hard else 86400,
             stdout_silence_timeout=silence or None, initial_response_timeout=initial or None, effort=spec.effort,
             allow_runner_failover=False,
+            rules_core_delivery=runner.RulesCoreDelivery.BOUND,
         )
     except (AgentTimeoutError, AgentStalledError) as exc:
         return Outcome("timeout", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
