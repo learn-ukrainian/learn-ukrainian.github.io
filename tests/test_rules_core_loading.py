@@ -256,9 +256,9 @@ def test_cli_help_paths_follow_relocated_module(tmp_path: Path) -> None:
     machinery = tmp_path / "relocated_machinery"
     script = machinery / "lib" / "rules_core.py"
     script.parent.mkdir(parents=True)
-    shutil.copyfile(REPO / "scripts" / "lib" / "rules_core.py", script)
+    shutil.copyfile(REPO / machinery_package() / "lib" / "rules_core.py", script)
     # Keep the existing scripts.common imports available without rewriting the copied module.
-    (tmp_path / "scripts").symlink_to(REPO / "scripts", target_is_directory=True)
+    (tmp_path / machinery_package()).symlink_to(REPO / machinery_package(), target_is_directory=True)
     result = subprocess.run(
         [sys.executable, os.fspath(script), "--help"],
         cwd=tmp_path,
