@@ -56,7 +56,6 @@ Use local machine-agent review via `scripts/dispatch.py` instead.
 ## References
 
 - **Agent cooperation:** `docs/best-practices/agent-cooperation.md`
-- **Workflow audit:** `docs/dev/GITHUB_WORKFLOWS_AUDIT.md`
 - **Stanza CI autopsy:** `docs/bug-autopsies/stanza-model-md5-flake.md`
 
 ### Issue task quality

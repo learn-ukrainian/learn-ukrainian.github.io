@@ -49,6 +49,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.build.fresh.manifest import pinned_entries
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import RenderError, render, resolve_template_name
+from scripts.review.render_contract import ReviewContractError, check_rules_dependency
 
 #: Jinja statements that make a template read another file; none is allowed in any template.
 EXTERNAL_READ_NODES: tuple[type[jinja2.nodes.Node], ...] = (
@@ -516,6 +517,7 @@ def check_prompt(
     review_id: str | None = None,
     attempt_id: str | None = None,
     review_access: str = "full",
+    machinery_dependencies: dict[str, Any] | None = None,
 ) -> RenderedPromptCheckResult:
     """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates.
 
@@ -547,6 +549,15 @@ def check_prompt(
             files_read=files_read_str,
             verifier_reads=verifier_reads,
         )
+
+    if machinery_dependencies is not None:
+        try:
+            if set(machinery_dependencies) != {"rules_core"}:
+                raise ReviewContractError("review_rules_core_dependency_missing")
+            check_rules_dependency(machinery_dependencies["rules_core"], rendered_prompt)
+        except ReviewContractError as exc:
+            errors.append(str(exc))
+            return result()
 
     # 1. Pin eligibility: which documents may reach the reviewer (nothing is read yet)
     errors.extend(str(refusal) for refusal in pin_refusals(manifest_doc, root))
@@ -759,6 +770,10 @@ def main(argv: list[str] | None = None) -> int:
                 "and a template_sha256 map"
             )
             return 1
+        contract = sidecar.get("render_contract")
+        if not isinstance(contract, dict) or not isinstance(contract.get("machinery_dependencies"), dict):
+            print("FAIL: Missing or malformed trusted machinery dependencies in render_contract")
+            return 1
         files_read_list = [root / p for p in sidecar["files_read"]]
     except Exception as exc:
         print(f"FAIL: Unable to read files_read sidecar {files_read_path}: {exc}")
@@ -776,6 +791,7 @@ def main(argv: list[str] | None = None) -> int:
         attempt_id=args.attempt_id,
         review_access=args.review_access,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
+        machinery_dependencies=contract["machinery_dependencies"],
     )
 
     sidecar["verifier_reads"] = [path for path in result.verifier_reads if path not in sidecar["files_read"]]

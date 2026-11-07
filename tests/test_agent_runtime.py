@@ -1561,6 +1561,8 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     import json as _json
     from unittest.mock import MagicMock
 
+    from scripts.lib import rules_core
+
     # Set up fake Gemini state for the test project. The session file is
     # created by the mocked Popen below, after build_invocation snapshots
     # pre-existing files.
@@ -1603,12 +1605,16 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     mock_kill_tree = MagicMock()
 
     def _popen_after_session_start(*args, **kwargs):
+        prompt = kwargs["stdin"].read()
+        kwargs["stdin"].seek(0)
+        assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nwrite a module"
+        assert prompt.count(rules_core.BLOCK_OPEN) == 1
         (chats_dir / "session-latest.json").write_text(
             _json.dumps(
                 {
                     "sessionId": "x",
                     "messages": [
-                        {"type": "user", "content": [{"text": "write a module"}]},
+                        {"type": "user", "content": [{"text": prompt}]},
                         {"type": "gemini", "content": "### Skeleton\n\n## Section 1\n...full response..."},
                     ],
                 }
@@ -4426,6 +4432,7 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
 
     from agent_runtime import runner, usage
     from scripts.agent_runtime.adapters import muse
+    from scripts.lib import rules_core
     from scripts.secret_redactor import REDACTION
 
     # Delimit the assignment so opaque-token redaction of random tmp/xdist paths
@@ -4477,7 +4484,9 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
     assert plan.metadata["max_model_steps"] == 8
     assert plan.metadata["max_tool_output_bytes"] == 8192
-    assert Path(plan.cmd[-1]).read_text() == "fixture"
+    prompt = Path(plan.cmd[-1]).read_text()
+    assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nfixture"
+    assert prompt.count(rules_core.BLOCK_OPEN) == 1
 
 
 @pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])

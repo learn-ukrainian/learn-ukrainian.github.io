@@ -20,6 +20,14 @@ class AgentRuntimeError(Exception):
     agy_telemetry: AgyTelemetry | None = None
 
 
+class RulesCoreMissingError(AgentRuntimeError):
+    """The required runtime rules core is unavailable before process launch."""
+
+
+class RulesCoreDeliveryError(AgentRuntimeError):
+    """A conflicting prefix or an invalid bound review refuses process launch."""
+
+
 class AgentUnavailableError(AgentRuntimeError):
     """The requested agent is not in the registry or its CLI is not installed.
 

@@ -1144,6 +1144,15 @@ def assert_frozen_surfaces(actual, *, surfaces):
             assert hashlib.sha256(encode(muse_model)).hexdigest() == "72ee5f7017790c3dd0fc3ebfbe47fa40c883010ff444875ad6403ca80fa305e5"
             value["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
             value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
+            # REMOVE-UNNEEDED-1107: prose-only correction of two stale "Gemma retired" policy notes
+            # (Gemma is live for hramatka through OpenCode). No seat, route or ranking moves.
+            for index, digest in (
+                (3, "38c458779792bfdad5dffdf148ff85898322fc1e37c27432e0a43d7cfffd35f4"),
+                (7, "a9a80d7846d275d800b34a5f61d349cb7fabf7fb370b3ac7ff1d0c43862444c1"),
+            ):
+                if value["policy"]["notes"][index] != CURRENT_BASELINE["catalog"]["policy"]["notes"][index]:
+                    assert hashlib.sha256(encode(value["policy"]["notes"][index])).hexdigest() == digest
+                    value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

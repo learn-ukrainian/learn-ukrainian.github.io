@@ -1689,8 +1689,9 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "tests/conftest.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "1b17f851871203e4e6c09dafe5943914264bb6b9c91ee11bd532174b5f781f19:1 e065cf96877cc574f3320f85a481bc4d39e408a72e7db9c40d8c5a90958a9024:1",
+        "Existing producers: #9702. #12832 SOCKET-12836-1107 fixture-only short socket root.",
+        "1b17f851871203e4e6c09dafe5943914264bb6b9c91ee11bd532174b5f781f19:1 e065cf96877cc574f3320f85a481bc4d39e408a72e7db9c40d8c5a90958a9024:1 "
+        "7f9b4516de4c9bc39554108bdb436926b466c5542c45ddbb3fc3d53f3f3cbefa:1 54eda71c4eea1a9c35036037cd56d07f910d0e6a614700ffa243664279f16139:1",
     ),
     (
         "tests/control_plane/test_authority_health_postgres.py",

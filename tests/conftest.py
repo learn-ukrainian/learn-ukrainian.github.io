@@ -83,6 +83,7 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import threading
 import warnings
 import weakref
@@ -453,7 +454,51 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
+        parent = getattr(item, "callspec", None)
+        mode = parent.params.get("_launcher_parent_environment") if parent is not None else None
+        if mode is not None:
+            from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+            # Before fixtures of any scope, including checkout builders.
+            for name, value in SEAT_CONTAMINATION.items():
+                if mode == "polluted":
+                    patch.setenv(name, value)
+                else:
+                    patch.delenv(name, raising=False)
         return (yield)
+
+
+def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+    """Distribute audited launcher regressions normally, including their parameters."""
+    from tests.launcher_sandbox import LAUNCHER_TEST_FILES, POLLUTED_PARENT_TESTS
+
+    if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
+        regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
+        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
+        modes = ("clean", "polluted") if regression else ("clean",)
+        metafunc.parametrize(
+            "_launcher_parent_environment", modes, indirect=True,
+            ids=tuple("parent-" + mode for mode in modes),
+        )
+
+
+@pytest.fixture(autouse=True)
+def _launcher_parent_environment(request: pytest.FixtureRequest) -> dict[str, str]:
+    """Exercise inherited seat leaks before launcher fixtures build child environments.
+
+    The protocol hook has scrubbed live identity and injected the case's input.
+    Verify the effective parent, then let tests supply deliberate child inputs.
+    Tests outside the audited inventory keep their existing environment.
+    """
+    if not hasattr(request, "param"):
+        return {}
+    from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+    effective = {name: os.environ[name] for name in SEAT_CONTAMINATION if name in os.environ}
+    assert effective == (SEAT_CONTAMINATION if request.param == "polluted" else {})
+    request.node.user_properties.append(("launcher_parent", request.param))
+    request.node.user_properties.append(("launcher_parent_verified_variables", len(effective)))
+    return effective
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -1230,6 +1275,34 @@ def _checkout_corpus_db_paths() -> tuple[Path, Path]:
 def _checkout_corpus_db_snapshot() -> frozenset[str]:
     """The corpus databases present in the checkout."""
     return frozenset(path.relative_to(_REPO_ROOT).as_posix() for path in _checkout_corpus_db_paths() if path.exists())
+
+
+@pytest.hookimpl(specname="pytest_sessionstart", tryfirst=True)
+def pytest_sessionstart_runtime_scratch(session: pytest.Session) -> None:
+    config = session.config
+    # Collection and higher-scope fixtures run before the per-test override.
+    # Each xdist worker has its own factory and session-lifetime patch.
+    root = config._tmp_path_factory.mktemp("runtime-scratch-session")
+    # Explicit scratch overrides suppress consumers' own short-path fallback.
+    # Leave space for the PostgreSQL fixture's longest Unix socket name.
+    socket_suffix = Path("pg-XXXXXXXX") / ".s.PGSQL.65535"
+    if len(os.fsencode(root / socket_suffix)) > 103:
+        for base in (Path(f"/run/user/{os.getuid()}"), Path("/dev/shm"), Path("/tmp")):
+            try:
+                candidate = Path(tempfile.mkdtemp(prefix="lu-pytest-", dir=base)).resolve()
+            except OSError:
+                continue
+            if len(os.fsencode(candidate / socket_suffix)) <= 103:
+                root = candidate
+                config.add_cleanup(lambda root=root: shutil.rmtree(root))
+                break
+            shutil.rmtree(candidate)
+        else:
+            raise pytest.UsageError("No writable private scratch root fits the 103-byte Unix socket limit")
+    patch = pytest.MonkeyPatch()
+    config.add_cleanup(patch.undo)
+    patch.setenv("LU_SCRATCH_ROOT", str(root))
+    patch.setenv("LU_SCRATCH_SCAN_ROOT", str(root))
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:

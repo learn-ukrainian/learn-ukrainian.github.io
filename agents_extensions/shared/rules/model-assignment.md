@@ -455,8 +455,9 @@ or count as a formal review.
   `refuse_kimi_if_disallowed` (`scripts/agent_runtime/kimi_admission.py`) is not an executable route.
   The historical bus was the native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **Retired, not subscribed (operator 2026-10-23):** GLM, Pool/Laguna, Composer,
-  Gemini 3.1 Pro, Gemini 4 Argon, Gemma and Qwen. No executable routing, reviewer
-  ladder or substitution may select them. GLM is neither local nor free.
+  Gemini 3.1 Pro, Gemini 4 Argon and Qwen (Gemma is live for hramatka through OpenCode,
+  operator 2026-11-07, REMOVE-UNNEEDED-1107). No executable routing, reviewer
+  ladder or substitution may select the retired ones. GLM is neither local nor free.
 * **Current subscriptions:** Codex Sol 6.1 and Luna, native/ Cursor Grok 4.7,
   AGY Gemini 3.8 Flash High, OpenCode DeepSeek V4.1 Flash on OpenCode credit,
   and native Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5.
@@ -854,7 +855,7 @@ Drive high-judgment work (design, architecture, in-the-loop review, brief author
 
 Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.8-flash-high` (Ukrainian-language review only; implementation routing above is unchanged) · `ask-cursor --model grok-4.7-high` (a review of a Grok author runs the reviewer resolver's non-xAI pick, never `auto` or a Claude model on Cursor) · `ask-grok` (alias `ask-grok-build`; non-Ukrainian work only) · `ask-deepseek` (consult-only for non-language work, LOCAL-ONLY; alias `ask-hermes`; first-party Flash @ high via opencode ACP, #6805) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; Pro is retired; Flash remains active in the catalog, with `ask-deepseek` restricted to consultation; coding uses opencode, and review-of-record needs measured evidence first. Non-review bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`); formal review asks use native dispatch/wait and print reply text (drive-epic §6).
 
-**OpenCode:** DeepSeek V4.1 Flash coding uses OpenCode credit. Retired Pool, GLM and Gemma seats are unavailable for review or consultation.
+**OpenCode:** DeepSeek V4.1 Flash coding uses OpenCode credit. Pool and GLM are not subscribed (operator 2026-10-23), so their seats are unavailable for review or consultation. Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107); it is not a review or consultation seat.
 
 ## Advisor panels — per-area pools · pool-minus-author · size-by-stakes · Opus/Sol anchor (#9394; supersedes #5933 seat defaults)
 
@@ -903,8 +904,8 @@ sign-off on this section approves them):**
    two is available and is NOT the author. In pools lacking both (code/infra, security,
    debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
 
-**Standing constraints:** GLM, Pool, Composer, Gemma and Qwen are retired, not
-subscribed (operator 2026-10-23). Kimi remains retired. Native Grok dispatch is retired; Cursor Grok stays off Ukrainian seats. Designated approval and security final sign-off
+**Standing constraints:** GLM, Pool, Composer and Qwen are retired, not
+subscribed (operator 2026-10-23). Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107). Kimi remains retired. Native Grok dispatch is retired; Cursor Grok stays off Ukrainian seats. Designated approval and security final sign-off
 stay with Opus 5.5 and Sol 6.1. Critical final sign-off also admits Grok 4.7 under the review
 admission limits above (operator 2026-10-25, C-1949).
 

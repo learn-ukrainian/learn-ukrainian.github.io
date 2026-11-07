@@ -12018,11 +12018,6 @@
       "message": "Returning Any from function declared to return \"Invocation\""
     },
     {
-      "path": "scripts/dispatcher/runtime_context.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"Invocation\""
-    },
-    {
       "path": "scripts/dispatcher/site_deps.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"dict[Any, Any]\""
@@ -17103,16 +17098,6 @@
       "message": "Item \"None\" of \"AttributeValueList | None | str\" has no attribute \"strip\""
     },
     {
-      "path": "scripts/ingest/vps_dialect_ingest_standalone.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/ingest/vps_dialect_ingest_standalone.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
       "path": "scripts/ingest/wiktionary_etymology_ingest.py",
       "code": "arg-type",
       "message": "Argument 1 to \"connect\" has incompatible type \"Any | None | str\"; expected \"PathLike[bytes] | PathLike[str] | bytes | str\""
@@ -21291,11 +21276,6 @@
       "path": "scripts/projects/open_model_data/correction_protection_factory.py",
       "code": "return-value",
       "message": "Incompatible return value type (got \"tuple[int, dict[str, Any]]\", expected \"tuple[dict[str, Any], dict[str, Any]]\")"
-    },
-    {
-      "path": "scripts/projects/open_model_data/decolonization_generator_helper.py",
-      "code": "arg-type",
-      "message": "Argument \"key\" to \"max\" has incompatible type overloaded function; expected \"Callable[[str], SupportsDunderGT[Any] | SupportsDunderLT[Any]]\""
     },
     {
       "path": "scripts/projects/open_model_data/dialect_protection_invariants.py",

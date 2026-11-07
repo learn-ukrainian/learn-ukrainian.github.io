@@ -5,6 +5,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from tests.launcher_sandbox import launcher_environment
+
 
 def test_driver_renew_loop_409_stops_provider_with_lease_lost(tmp_path: Path) -> None:
     fake_python = tmp_path / ".venv" / "bin" / "python"
@@ -44,5 +46,6 @@ launcher_stop_driver_renew
         text=True,
         check=False,
         timeout=10,
+        env=launcher_environment(),
     )
     assert "LEASE LOST" in result.stderr

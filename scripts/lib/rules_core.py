@@ -1,8 +1,8 @@
 """The rules core every agent seat loads, read from the local checkout.
 
 One loader for every seat: launchers (``scripts/lib/rules_core.sh``), legacy dispatch
-workers and review dispatches, ACP asks and discussion legs
-(``agent_runtime.runner.invoke_inter_agent``), the legacy bridge prompt builders,
+workers and review dispatches, every runtime invocation
+(``agent_runtime.runner._invoke_impl``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
 configured source trees, never from the working directory or the Monitor API.
 For fleet rules, the operator's
@@ -16,9 +16,9 @@ Seats:
              a product without it refuses a content seat, even if the rules
              directory carries an addendum
 
-An absent, unreadable or empty core file refuses: every entry point raises
-``RulesCoreMissing`` (naming the repo-relative path) before any side effect, and the
-CLI exits 3. Nothing here warns and continues without the core.
+An absent, unreadable or empty core file raises ``RulesCoreMissing``, naming
+the repo-relative path. Runtime entrances translate it to a typed runtime
+refusal before spawn; the loader CLI exits 3. Nothing continues without the core.
 
 A seat is ``content`` when asked for explicitly (``--seat`` / ``LU_RULES_SEAT``) or
 when a driver lane's ``driver_agent_type`` is the curriculum orchestrator;
@@ -237,6 +237,7 @@ def require_core(seat: str | None = None, root: Path | None = None) -> str:
 def with_core(prompt: str, seat: str | None = None, root: Path | None = None) -> str:
     """Prepend the core block to ``prompt``; unchanged if the prompt already starts with it.
 
+    A conflicting leading block is refused rather than doubled.
     Only a leading block counts: a core quoted further down (an attachment, a
     fenced file) does not stand in for the preamble.
 
@@ -246,6 +247,8 @@ def with_core(prompt: str, seat: str | None = None, root: Path | None = None) ->
     block = core_block(resolve_seat(seat), root)
     if prompt.startswith(block):
         return prompt
+    if prompt.lstrip().startswith(BLOCK_OPEN):
+        raise RulesCoreError("conflicting rules core prefix; use the current resolved-seat block")
     return f"{block}\n\n{prompt}"
 
 

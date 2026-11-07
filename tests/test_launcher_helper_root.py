@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment
+
 REPO = Path(__file__).resolve().parents[1]
 
 pytestmark = [pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available"), pytest.mark.usefixtures("hermetic_monitor")]
@@ -71,13 +73,7 @@ _EXPECTED_HONEST = {
 
 
 def _clean_env(**extra: str) -> dict[str, str]:
-    env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(
-            ("GIT_", "LC_", "LEARN_UKRAINIAN_", "KIMI", "MOONSHOT", "CLAUDE_", "SESSION_", "CODEX_")
-        )
-    }
+    env = launcher_environment()
     env["GIT_CONFIG_GLOBAL"] = os.devnull
     env["GIT_CONFIG_NOSYSTEM"] = "1"
     env.update(extra)

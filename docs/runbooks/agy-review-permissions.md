@@ -131,7 +131,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.review.prompts.render import render_prompt
+from scripts.review.prompts.render import render
 from scripts.review.receipts.ledger import records
 from scripts.review.record import attested_return
 from scripts.review.validate import validate_review
@@ -158,11 +158,12 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
     )
     if route == "plan-template":
         # Exact production template, without a forced first command or tool.
-        prompt, prompt_sha, _ = render_prompt(
+        rendering = render(
             manifest, "plan-review.md.j2", repo_root=root,
             review_id=prepared.review_id, attempt_id=prepared.attempt_id,
             review_access=access,
         )
+        prompt, prompt_sha = rendering.prompt, rendering.prompt_sha256
     tc = {
         **prepared.adapter_options,
         "review_id": "canary-9625", "attempt_id": route,
@@ -185,6 +186,8 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
         # record_return, including saved-return and fresh-render hash checks.
         tasks = Path(temp) / "tasks"
         tasks.mkdir()
+        saved_prompt = tasks / f"{task_id}.prompt"
+        saved_prompt.write_bytes(prompt.encode("utf-8"))
         raw = result.response.encode("utf-8")
         saved = tasks / f"{task_id}.result"
         saved.write_bytes(raw)
@@ -192,6 +195,9 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
             "status": "done", "result_file": str(saved),
             "result_sha256": hashlib.sha256(raw).hexdigest(),
             "prompt_sha256": prompt_sha, "review_access": access,
+            "prompt_file": str(saved_prompt),
+            "review_contract": {"prompt_sha256": prompt_sha,
+                                "machinery_dependencies": rendering.machinery_dependencies},
             "review_attempt": {"review_id": prepared.review_id,
                                "attempt_id": prepared.attempt_id,
                                "manifest_sha256": prepared.manifest_sha256},

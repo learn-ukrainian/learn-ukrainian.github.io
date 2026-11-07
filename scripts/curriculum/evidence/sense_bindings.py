@@ -535,6 +535,7 @@ def _check_lexical_packet(task: dict, word: dict, pool: list[dict]) -> None:
 def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict]) -> None:
     """Bind the consumer to the admitted lexical render, not just a result's assertions."""
     from scripts.review.prompts.render import ManifestReader, RenderError, render
+    from scripts.review.render_contract import ReviewContractError, recorded_core_context
 
     try:
         contract = task["review_contract"]
@@ -551,11 +552,14 @@ def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict
         ):
             raise ValueError("review_prompt_unproven")
         root = Path(contract["input_root"])
+        prompt = Path(task["prompt_file"]).read_bytes()
         rendered = render(
             manifest_path, repo_root=root, review_id=attempt["review_id"], attempt_id=attempt["attempt_id"],
             review_access=task.get("review_access") or "isolated",
+            rules_context=recorded_core_context(
+                contract["machinery_dependencies"]["rules_core"], prompt.decode("utf-8")
+            ),
         )
-        prompt = Path(task["prompt_file"]).read_bytes()
         if (
             prompt != rendered.prompt.encode("utf-8")
             or rendered.prompt_sha256 != task.get("prompt_sha256")
@@ -568,7 +572,8 @@ def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict
             "candidates_sha256": digest(pool), "candidates": pool,
         }:
             raise ValueError("review_subject_stale_or_unapproved")
-    except (OSError, KeyError, TypeError, AttributeError, json.JSONDecodeError, yaml.YAMLError, RenderError) as exc:
+    except (OSError, KeyError, TypeError, AttributeError, UnicodeError, json.JSONDecodeError,
+            yaml.YAMLError, RenderError, ReviewContractError) as exc:
         raise ValueError("review_prompt_unproven") from exc
 
 
