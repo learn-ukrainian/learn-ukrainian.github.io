@@ -144,9 +144,14 @@ def _anchors(seat: str) -> tuple[str, ...]:
 
 
 def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None = None) -> None:
+    assert len((CORE_DIR / "core.md").read_bytes()) <= 40_000
     block = rules_core.core_block(seat)
-    # #10959: the framed content-seat block measures 41201 bytes.
-    ceiling = 42_000 if seat == "content" else 40_960
+    # CONTENT-CEILING-1106: curriculum adds its source and separator, within one wrapper.
+    ceiling = 40_960
+    if seat == "content":
+        addendum = (CORE_DIR / "core-curriculum.md").read_text(encoding="utf-8").rstrip() + "\n"
+        ceiling += len(addendum.encode("utf-8")) + len(rules_core.FILE_SEP.encode("utf-8"))
+        ceiling += len("content") - len("core")
     assert len(block.encode("utf-8")) <= ceiling, f"{row}: binding {seat} block exceeds {ceiling} bytes"
     assert block in context, f"{row}: the exact {seat} block is not in the assembled context"
     for anchor in _anchors(seat):
