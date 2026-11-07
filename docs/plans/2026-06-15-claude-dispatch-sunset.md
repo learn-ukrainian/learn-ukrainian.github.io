@@ -158,7 +158,7 @@ Historical records found by grep:
 | `docs/session-state/2026-05-13-late-routing-economics-corpus-expansion-brief.md:73` | Historical source for the routing economics shift; cite, do not edit. |
 | `docs/session-state/current.md:41` | Rolling handoff file; update only through the normal session-state process. |
 | `audit/INDEX-bakeoff-evidence.md:103,113,118` | Evidence index; do not edit for the cutover unless regenerating the index. |
-| `audit/2026-05-17-harness-layered-audit/REPORT.md:23,101` | Historical audit recommending enforcement; do not edit. |
+| removed in REMOVE-UNNEEDED-1107; see git history | Historical audit recommending enforcement; do not edit. |
 | `audit/2026-05-18-docs-gaps-and-reorganization/REPORT.md:157` | Gap audit source; orchestrator will update after this PR merges. |
 
 ---
