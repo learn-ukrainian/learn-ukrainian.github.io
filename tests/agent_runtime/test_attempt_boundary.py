@@ -650,6 +650,68 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         boundary.cleanup()
 
 
+@pytest.mark.parametrize("agent,access", [("codex", "isolated"), ("codex", "full"),
+                                         ("agy", "isolated"), ("agy", "full"), ("claude", "full")])
+def test_native_bound_review_wire_contains_hash_bound_core_without_boot_files(
+    world, tmp_path, monkeypatch, two_accounts, agent, access,
+):
+    """Defect class: isolated native review transports drop the rendered, hash-bound trusted core."""
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.lib import rules_core
+    from scripts.review.prompts.render import render_prompt
+    from tests.review.test_prompts import _setup_lexical_fixture
+
+    root, _ = world
+    manifest_path, doc, _ = _setup_lexical_fixture(root)
+    rendered, sha, _ = render_prompt(manifest_path, repo_root=root, review_id="review", attempt_id="current",
+                                    review_access=access)
+    tc = attempt_config(root, tmp_path, doc, agent, review_access=access)
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+        tc["review_cwd"] = str(root)
+    if agent == "claude":
+        tc["claude_account"] = "b"
+    boundary = AttemptBoundary(agent=agent, tool_config=tc)
+    try:
+        native_which = shutil.which
+        monkeypatch.setattr(shutil, "which", lambda name: "/bin/true" if name in {"agy", "codex", "claude"}
+                            else native_which(name))
+        monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
+        adapter = {"agy": AgyAdapter, "codex": CodexAdapter, "claude": ClaudeAdapter}[agent]()
+        if agent == "agy":
+            monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
+        plan = adapter.build_invocation(prompt=rendered, mode="read-only", cwd=boundary.workspace,
+                                        model=None, task_id="core-boundary-probe", session_id=None,
+                                        tool_config=boundary.tool_config, effort="high")
+        # Replace only the provider executable with a deterministic child; preserve its actual
+        # argv, stdin, files, environment and production OS boundary.
+        child = r'''
+import hashlib,json,pathlib,sys
+payload = sys.stdin.read()
+if "--input-format" in sys.argv:
+    payload = json.loads(payload)["message"]["content"][0]["text"]
+if not payload:
+    payload = sys.argv[-1]
+assert not pathlib.Path("AGENTS.md").exists()
+assert not pathlib.Path("CLAUDE.md").exists()
+print(json.dumps({"argv": sys.argv[1:], "text": payload, "sha256": hashlib.sha256(payload.encode()).hexdigest()}))
+'''
+        cmd, env = boundary.wrap([sys.executable, "-c", child, *plan.cmd[1:]], plan.env_overrides)
+        result = subprocess.run(cmd, cwd=plan.cwd, env=env, input=plan.stdin_payload,
+                                text=True, capture_output=True, timeout=30)
+        assert result.returncode == 0, result.stderr
+        capture = json.loads(result.stdout)
+        assert capture["argv"] == plan.cmd[1:]
+        assert capture["text"] == rendered
+        assert capture["sha256"] == sha
+        assert rules_core.core_text() in capture["text"]
+        assert not list(root.rglob("AGENTS.md")) and not list(root.rglob("CLAUDE.md"))
+    finally:
+        boundary.cleanup()
+
+
 @pytest.mark.parametrize("proxy_mode", ["normal", "cleared", "overridden"])
 @pytest.mark.live_network  # Positive controls target this fixture on enumerated local interfaces only.
 def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_mode):

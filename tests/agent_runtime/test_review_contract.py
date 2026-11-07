@@ -30,7 +30,7 @@ from scripts.review.render_contract import (
 SERVER_FILE = ".mcp/servers/sources/server.py"
 PROMPTS = "scripts/review/prompts"
 LOADED_TEMPLATE = "lesson-review.md.j2"
-PROMPT_TEXT = "Copy the outcome printed beside each receipt.\n"
+PROMPT_TEXT = render_contract.trusted_core_context()[0] + "Copy the outcome printed beside each receipt.\n"
 
 #: A server that imports the way the real one does: a module beside it (a symlink), a package module with a
 #: relative import of its own, a lazily imported module, a git-ignored module and a third-party package (as the
