@@ -17,6 +17,7 @@ from collections import Counter, defaultdict
 from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 ROOT = Path(__file__).resolve().parents[4]
 if str(ROOT) not in sys.path:
@@ -123,13 +124,14 @@ def _matches(assertion: dict, selector: dict) -> bool:
     )
 
 
-def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict]) -> str | None:
+def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict],
+                   scope: Literal["dataset", "site"] = "dataset") -> str | None:
     if assertion["status"] != "active":
         return "inactive"
     if any(_matches(assertion, entry["selector"]) for entry in withdrawals):
         return "withdrawn"
-    if source is None or "dataset" not in source.get("appears_in", []):
-        return "dataset_scope_absent"
+    if source is None or scope not in source.get("appears_in", []):
+        return f"{scope}_scope_absent"
     # Context is retained in the internal card. No Soviet dictionary payload
     # enters this modern-definition dataset, even when its scope says dataset.
     if assertion["source_id"] == _HISTORICAL_SOURCE_ID or assertion["field"] in {
@@ -148,7 +150,7 @@ def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict]
 
 def _register_matches(card: dict, register: dict, register_hash: str) -> bool:
     expected = card["build"]["inputs"]["R"]["register"]["content_sha256"]
-    if expected == register_hash:
+    if expected in {register_hash, foundation.digest(register)}:
         return True
     source_sets = [
         [source["id"] for source in register["sources"]],
@@ -172,8 +174,9 @@ def create_release(
     cards: list[dict], *, release_version: str, register_path: Path | None = None,
     format: str = "jsonl", withdrawals: list[dict] | None = None,
     allow_candidates: bool = False,
+    scope: Literal["dataset", "site"] = "dataset",
 ) -> Release:
-    """Classify inputs, filter assertions and build deterministic release bytes.
+    """Classify inputs, filter assertions for the selected product and build release bytes.
 
     Every included assertion becomes one cited field. Cached resolutions,
     headwords, identity metadata and arbitrary outer properties are never copied.
@@ -183,6 +186,8 @@ def create_release(
         raise ProjectionRefusal("Release version must have form v0.1.0-pilot")
     if format not in {"json", "jsonl"}:
         raise ProjectionRefusal("Dataset format must be json or jsonl")
+    if scope not in {"dataset", "site"}:
+        raise ProjectionRefusal("Release scope must be dataset or site")
     withdrawals = _withdrawals([] if withdrawals is None else withdrawals)
     if not cards or len({c["card_id"] for c in cards}) != len(cards):
         raise ProjectionRefusal("Input cards must be nonempty and unique")
@@ -240,7 +245,7 @@ def create_release(
                 counts["_tombstone"]["inactive"] += 1
                 continue
             source = sources.get(source_id)
-            reason = _filter_reason(assertion, source, withdrawals)
+            reason = _filter_reason(assertion, source, withdrawals, scope)
             row_key = (assertion["snapshot_id"], assertion.get("source_record_id")
                        or assertion.get("source_record_key") or assertion["locator"])
             counts[source_id][reason or "included"] += 1

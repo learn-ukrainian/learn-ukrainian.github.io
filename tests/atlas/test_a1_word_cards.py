@@ -10,10 +10,12 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.atlas import a1_word_cards as cards
 from scripts.atlas import word_card_resolver as resolver
 from scripts.atlas.a1_card_receipts import Refusal, make_receipt, selected_rows
+from scripts.projects.open_model_data.word_cards import dataset_projection
 
 ROOT = Path(__file__).resolve().parents[2]
 TARGET = "wc_6bt62wd6zzzf"
@@ -213,6 +215,141 @@ def approve_example(batch, claim):
         "reviewer_family": "google", "verdict": "APPROVE", "record": "fixture-independent-review",
         "quotation": "An exact cited sentence.", "span": claim["span"][:],
         "source_sense_key": "fixture:sense:1", "sources_sha256": sha(batch["sources"])}
+
+
+def test_frozen_batch_register_pin_projects_without_losing_fields(batch, tmp_path):
+    """A release must consume the batch's register pin and refuse changed terms."""
+    register = batch["register"]
+    for source in register["sources"]:
+        source.update(appears_in=["internal", "site", "dataset"],
+                      citation={"form": "Fixture dictionary attribution"},
+                      terms={"licence": {"name": "Fixture licence"}})
+    register_path = tmp_path / "register.yaml"
+    register_path.write_text(yaml.safe_dump(register))
+    card = target(assemble(batch))
+    original = encoded(card)
+    release = dataset_projection.create_release(
+        [card], release_version="v0.1.1-fixture", register_path=register_path,
+        allow_candidates=True,
+    )
+    row = json.loads(release.dataset)
+    assert row["status"] == "CANDIDATE"
+    assert row["card_id"] == TARGET
+    assert row["card_version"] == card["build"]["card_version"]
+    assert {field["field"]: field["value"] for field in row["fields"]} == {
+        "definition_uk": "A literal definition.",
+        "paradigm": {"slot": "noun:n:v_naz", "forms": ["fixture-form"],
+                     "entry_id": 436914, "tags": "noun:n:v_naz"},
+        "stress": "яйце" + ACUTE,
+    }
+    assert len(row["fields"]) == 3
+    for field in row["fields"]:
+        source = {"definition_uk": VTS, "paradigm": "vesum", "stress": "ulif"}[field["field"]]
+        assertion = next(a for a in card["assertions"] if a["assertion_id"] == field["assertion_id"])
+        assert field["subject"] == assertion["subject"]
+        assert field["citation"] == {
+            "source_id": source, "snapshot_id": assertion["snapshot_id"],
+            "locator": assertion["locator"], "source_record_id": assertion["source_record_id"],
+            "source_record_key": assertion["source_record_key"],
+            "licence_ref": {"register_source_id": source, "register_version": 2,
+                            "appears_in": ["internal", "site", "dataset"]},
+            "attribution": "Fixture dictionary attribution", "licence": {"name": "Fixture licence"},
+            "terms_ref": f"docs/sources/permissions-register.yaml#sources/{source}/terms",
+        }
+    assert encoded(card) == original
+    register["sources"][0]["terms"]["licence"]["name"] = "Changed terms"
+    register_path.write_text(yaml.safe_dump(register))
+    with pytest.raises(dataset_projection.ProjectionRefusal, match="Projection register differs from card register"):
+        dataset_projection.create_release(
+            [card], release_version="v0.1.1-fixture", register_path=register_path,
+            allow_candidates=True,
+        )
+
+
+def test_site_projection_preserves_site_only_fields_without_exporting_them(batch, tmp_path):
+    """Site-authorized definitions must survive preview without entering datasets."""
+    register = batch["register"]
+    for source in register["sources"]:
+        source.update(appears_in=["internal", "site"] if source["id"] == VTS else
+                      ["internal", "site", "dataset"],
+                      citation={"form": "Fixture dictionary attribution"},
+                      terms={"licence": {"name": "Fixture licence"}})
+    register_path = tmp_path / "register.yaml"
+    register_path.write_text(yaml.safe_dump(register))
+    card = target(assemble(batch))
+    options = {"release_version": "v0.1.1-fixture", "register_path": register_path,
+               "allow_candidates": True}
+    dataset = dataset_projection.create_release([card], **options)
+    site = dataset_projection.create_release([card], scope="site", **options)
+    dataset_row, site_row = (json.loads(release.dataset) for release in (dataset, site))
+    assert {f["field"] for f in dataset_row["fields"]} == {"paradigm", "stress"}
+    assert {f["field"] for f in site_row["fields"]} == {"definition_uk", "paradigm", "stress"}
+    meaning = next(f for f in site_row["fields"] if f["field"] == "definition_uk")
+    assert meaning["value"] == "A literal definition."
+    assert meaning["citation"]["source_id"] == VTS
+    assert meaning["citation"]["licence_ref"] == {
+        "register_source_id": VTS, "register_version": 2, "appears_in": ["internal", "site"],
+    }
+    assert {f["field"]: f for f in site_row["fields"] if f["field"] != "definition_uk"} == {
+        f["field"]: f for f in dataset_row["fields"]}
+    assert site_row["card_id"] == dataset_row["card_id"] == TARGET
+    assert site_row["card_version"] == dataset_row["card_version"] == card["build"]["card_version"]
+    assert site_row["status"] == dataset_row["status"] == "CANDIDATE"
+    assert dataset.manifest["source_breakdown"][VTS]["filter_reasons"] == {"dataset_scope_absent": 1}
+    assert site.manifest["source_breakdown"][VTS]["filter_reasons"] == {}
+
+
+def test_reviewed_lesson_links_require_exact_source_row_and_card_version(tmp_path, monkeypatch):
+    """A spelling match cannot replace the frozen source row or a reviewed version."""
+    from scripts.generate_mdx.core import generate_mdx
+
+    relative = "curriculum/l2-uk-en/a1-v1/fixture/vocabulary.yaml"
+    source = tmp_path / relative
+    source.parent.mkdir(parents=True)
+    items = [{"word": "same", "translation": "first"},
+             {"word": "same", "translation": "second"}, {"word": "unresolved"}]
+    original = yaml.safe_dump(items).encode()
+    source.write_bytes(original)
+    version = "cv_" + "1" * 24
+    other = "wc_qpcdgkctp7ne"
+    inventory = {"freeze": {"files": [{"path": relative,
+                    "sha256": hashlib.sha256(original).hexdigest()}]},
+                 "rows": [{"id": f"{relative}#/{i}", "source": item} for i, item in enumerate(items)]}
+    batch = {"cards": [{"card_id": key, "build": {"card_version": version}}
+                       for key in (TARGET, other)],
+             "rows": [{"inventory_row_id": f"{relative}#/{i}", "card_id": key}
+                      for i, key in enumerate((TARGET, other))]}
+    released = tuple({"card_id": key, "card_version": version, "card_kind": "lexeme",
+                      "fields": [{"field": "spelling", "value": "same",
+                                  "subject": {"kind": "card", "id": key}}]}
+                     for key in (TARGET, other))
+    monkeypatch.setattr(cards, "ROOT", tmp_path)
+    links = cards.LessonCardLinks(inventory, (batch,), released, {TARGET: version})
+    hrefs, observations = links.for_vocabulary(source, items)
+    assert hrefs == {0: f"/lexicon-v2/word/same/#entry-{TARGET}"}
+    assert [r["reason"] for r in observations] == [None, "independent_review_pending", "row_card_unresolved"]
+    assert [r["inventory_row_id"] for r in observations] == [f"{relative}#/{i}" for i in range(3)]
+    lesson = "---\ntitle: Fixture\nslug: fixture\n---\n# Fixture\n\nLiteral fixture content.\n"
+    options = {"vocab_items": items, "level": "a1", "vocabulary_source": source}
+    baseline = generate_mdx(lesson, 1, **options)
+    report = []
+    rendered = generate_mdx(lesson, 1, word_card_links=links, word_card_link_report=report, **options)
+    assert f"/lexicon-v2/word/same/#entry-{TARGET}" in rendered
+    assert f"entry-{other}" not in rendered
+    assert report == observations
+    unreviewed = cards.LessonCardLinks(inventory, (batch,), released, {})
+    assert generate_mdx(lesson, 1, word_card_links=unreviewed, **options) == baseline
+    changed = copy.deepcopy(items)
+    changed[0]["translation"] = "different row"
+    assert links.for_vocabulary(source, changed)[0] == {}
+    source.write_bytes(original + b"\n")
+    assert links.for_vocabulary(source, items)[0] == {}
+    source.write_bytes(original)
+    wrong_source = tmp_path / "another.yaml"
+    wrong_source.write_bytes(original)
+    assert links.for_vocabulary(wrong_source, items)[0] == {}
+    stale = cards.LessonCardLinks(inventory, (batch,), released, {TARGET: "cv_" + "2" * 24})
+    assert stale.for_vocabulary(source, items)[0] == {}
 
 
 def test_reconciles_frozen_rows_and_preserves_pilot_identities(batch):

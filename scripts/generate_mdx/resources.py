@@ -544,11 +544,12 @@ def vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary") 
     return '\n'.join(lines)
 
 
-def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary") -> str:
+def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary", *,
+                              atlas_hrefs: dict[int, str] | None = None) -> str:
     """Tier 1/2 (A1/A2): flashcards plus browsable vocabulary cards."""
     cards = []
     words = []
-    for item in items:
+    for index, item in enumerate(items):
         lemma = str(item.get('lemma') or item.get('word') or '').strip()
         translation = str(item.get('translation') or '').strip()
         example = str(item.get('example') or item.get('usage') or '').strip()
@@ -579,6 +580,8 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
             atlas_href = atlas_href_for(preset_slug, **sense) if preset_slug else None
         else:
             atlas_href = atlas_href_for(lemma, **sense)
+        if atlas_hrefs is not None and index in atlas_hrefs:
+            atlas_href = atlas_hrefs[index]
 
         entry = {
             "word": lemma,
