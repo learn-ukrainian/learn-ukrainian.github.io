@@ -33,7 +33,7 @@ EPICS_STREAM = f"epic:{_STREAMS['epics']['epics'][0]}"
 
 
 @pytest.fixture(autouse=True)
-def clean_selection(monkeypatch: pytest.MonkeyPatch) -> None:
+def clean_selection(monkeypatch: pytest.MonkeyPatch, _launcher_parent_environment: dict[str, str]) -> None:
     for key in (
         "LAUNCHER_MODEL",
         "LAUNCHER_EFFORT",
@@ -42,7 +42,8 @@ def clean_selection(monkeypatch: pytest.MonkeyPatch) -> None:
         "SESSION_SUPERVISOR_WAKE_STREAM",
         "LC_DRIVER_LEASE_ENABLED",
     ):
-        monkeypatch.delenv(key, raising=False)
+        if key not in _launcher_parent_environment:
+            monkeypatch.delenv(key, raising=False)
 
 
 @pytest.mark.parametrize("name", WRAPPERS)
