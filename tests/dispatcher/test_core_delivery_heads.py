@@ -2,8 +2,8 @@
 
 import json
 import os
-import shutil
 import signal
+import sys
 from pathlib import Path
 
 import pytest
@@ -183,11 +183,20 @@ def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, 
     assert not sandbox.tasks.exists()
     assert not Path(plan["worktree"]).exists()
 
-    # Exercise persistence and the detached lifecycle without a paid Muse invocation.
-    shutil.copy(Path(__file__).with_name("stub_provider.py"), sandbox.repo / "scripts/dispatcher/providers/muse.py")
-    run_git(sandbox.repo, "add", "scripts/dispatcher/providers/muse.py")
-    run_git(sandbox.repo, "commit", "-m", "fixture Muse transport")
-    run_git(sandbox.repo, "push", "origin", "main")
+    # Keep the real file transport and parser; only the paid executable is replaced.
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir(exist_ok=True)
+    executable = binary_dir / "muse"
+    executable.write_text(f"#!{sys.executable}\n" + r'''
+import json,pathlib,sys
+args = sys.argv[1:]
+prompt = pathlib.Path(args[args.index("--prompt-file") + 1]).read_bytes().decode()
+assert prompt.startswith('<rules-core seat="core"')
+assert "</rules-core>" in prompt and prompt.endswith("public input")
+print(json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": "Finished."}}))
+''')
+    executable.chmod(0o755)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + sandbox.env["PATH"]
     task = sandbox.cli(*args).stdout.splitlines()
     record = sandbox.settle(task)
     assert record["contributor_mode"] == (contributor or "off")
