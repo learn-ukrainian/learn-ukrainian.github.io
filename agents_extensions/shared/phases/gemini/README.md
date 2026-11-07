@@ -37,6 +37,7 @@ callers still use templates here, so registry absence alone is not deletion
 proof. The unused `v6-skeleton.md` and `v6-activities.md` copies were removed in
 #7686. `v6-write.md` and `v6-review.md` are retirement pointers for existing
 documentation links; build-owned templates remain under `scripts/build/phases/`.
+The V6 per-dimension review prompts (`scripts/build/phases/v6-review/`) were removed in REMOVE-UNNEEDED-1107; see git history.
 The retired v3/v4 template archive was removed in REMOVE-UNNEEDED-1107; see git history.
 
 ## Files
