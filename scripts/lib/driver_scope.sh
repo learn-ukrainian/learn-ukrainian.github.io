@@ -326,6 +326,24 @@ launcher_enter_driver_scope() {
   exec 219>&-
   driver_scope_wait_child "$child"
   rc="$DS_CHILD_RC"
+  # Scopes have no main process: orphaned tool shells can outlive the agent.
+  # This waiter is outside the scope and has already collected its child's
+  # status. Signal only its UUID unit's whole cgroup, then stop it to collect
+  # the empty scope. Keep this short grace here, not in unit properties:
+  # external stops of a live agent must retain time for fenced lease cleanup.
+  # Every manager client is bounded; cleanup never replaces the child's status.
+  local scope_state
+  scope_state="$(timeout --signal=KILL 1s systemctl --user show "$unit" -p ActiveState --value 2>/dev/null)" || scope_state=unknown
+  if [ "$scope_state" != inactive ]; then
+    timeout --signal=KILL 1s systemctl --user kill --kill-whom=all --signal=TERM "$unit" 2>/dev/null || true
+    sleep 2
+    timeout --signal=KILL 1s systemctl --user kill --kill-whom=all --signal=KILL "$unit" 2>/dev/null || true
+    timeout --signal=KILL 1s systemctl --user stop "$unit" 2>/dev/null || true
+    scope_state="$(timeout --signal=KILL 1s systemctl --user show "$unit" -p ActiveState --value 2>/dev/null)" || scope_state=unknown
+    if [ "$scope_state" != inactive ]; then
+      (printf 'DRIVER_SCOPE_CLEANUP_FAILED unit=%s state=%s\n' "$unit" "$scope_state" >&2) || true
+    fi
+  fi
   local verified=""
   IFS= read -r verified <&218 || true
   exec 218<&-
