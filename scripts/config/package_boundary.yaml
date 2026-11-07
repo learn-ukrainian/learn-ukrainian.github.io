@@ -84,9 +84,6 @@ packages:
   deploy:
     reason: operator classification
     role: product
-  dev:
-    reason: tokenize-uk smoke for the learner pipeline.
-    role: product
   dispatcher:
     reason: operator classification
     role: machinery
@@ -102,9 +99,6 @@ packages:
   evidence:
     reason: Git-history census of agent repairs.
     role: machinery
-  exercises:
-    reason: operator classification
-    role: product
   fleet:
     reason: operator classification
     role: machinery
