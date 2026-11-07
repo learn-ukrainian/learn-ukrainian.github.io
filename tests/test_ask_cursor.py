@@ -1,5 +1,7 @@
 """Tests for ab ask-cursor bridge subcommand (Phase 1)."""
 
+import json
+import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -43,7 +45,7 @@ def test_ask_cursor_refuses_explicit_auto_before_any_send(monkeypatch):
 
 
 def test_invoke_cursor_constructs_correct_argv():
-    """Cursor subprocess is invoked with -p PROMPT --model MODEL --output-format text --trust."""
+    """Print mode receives the prepared prompt on stdin without a positional."""
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
@@ -51,7 +53,8 @@ def test_invoke_cursor_constructs_correct_argv():
             argv = run_mock.call_args[0][0]
             assert argv[0] == _CURSOR_BIN
             assert "-p" in argv
-            assert argv[argv.index("-p") + 1] == rules_core.with_core("hello")
+            assert argv[argv.index("-p") + 1] == "--model"
+            assert run_mock.call_args.kwargs["input"] == rules_core.with_core("hello")
             assert "--model" in argv
             assert "grok-4.7-high" in argv
             assert "--output-format" in argv
@@ -68,9 +71,29 @@ def test_invoke_cursor_attaches_data_file(tmp_path):
             _invoke_cursor("review this", "grok-4.7-high", data=str(data_file))
             argv = run_mock.call_args[0][0]
             # data should be in the prompt, not as a separate flag
-            prompt_arg = argv[argv.index("-p") + 1]
-            assert "Some content." in prompt_arg
-            assert "review this" in prompt_arg
+            prompt_input = run_mock.call_args.kwargs["input"]
+            assert "Some content." in prompt_input
+            assert "review this" in prompt_input
+            assert prompt_input not in argv
+
+
+def test_large_prepared_prompt_avoids_e2big_and_reaches_non_tty_stdin(tmp_path):
+    """A real child receives every byte of a >128 KiB prompt, including attached data."""
+    binary = tmp_path / "cursor-agent"
+    binary.write_text(
+        f"#!{sys.executable}\nimport json, sys\n"
+        "assert sys.argv[1:] == ['-p', '--model', 'grok-4.7-high', '--output-format', 'text', '--trust']\n"
+        "print(json.dumps([sys.stdin.isatty(), sys.stdin.read()]))\n"
+    )
+    binary.chmod(0o700)
+    data = tmp_path / "context.md"
+    attached = "large transport payload\n" * 7000 + "END-12852"
+    data.write_text(attached)
+    expected = rules_core.with_core(f"- review\n\n## Attached data: context.md\n\n```\n{attached}\n```")
+    assert len(expected.encode("utf-8")) > 128 * 1024
+    with patch(_RESOLVE, return_value=str(binary)):
+        result = _invoke_cursor("- review", "grok-4.7-high", data=str(data))
+    assert json.loads(result) == [False, expected]
 
 
 def test_invoke_cursor_raises_when_binary_missing():

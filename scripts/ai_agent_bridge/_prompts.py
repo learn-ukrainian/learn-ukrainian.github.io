@@ -89,11 +89,13 @@ def require_core_or_exit(who: str) -> None:
 
 
 def with_core_or_exit(prompt: str, who: str) -> str:
-    """Lead ``prompt`` with the rules core, or exit naming the missing path (nothing is sent without it)."""
+    """Lead with the rules core, or refuse a missing source or conflicting prefix."""
     try:
         return rules_core.with_core(prompt)
     except rules_core.RulesCoreMissing as exc:
         raise SystemExit(f"{who}: refused: {exc}; the rules core is required") from exc
+    except rules_core.RulesCoreError as exc:
+        raise SystemExit(f"{who}: refused: {exc}") from exc
 
 
 def bridge_prompt(prompt: str, review: bool, **review_target) -> str:

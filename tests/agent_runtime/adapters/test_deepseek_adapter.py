@@ -9,6 +9,7 @@ First-party DeepSeek is China-hosted → CI refused.
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -55,9 +56,34 @@ def test_default_dispatch_plan_is_opencode_first_party_flash_at_high(tmp_path):
     # transcript to stderr and leaves stdout empty under a TTY).
     assert plan.cmd[plan.cmd.index("--format") + 1] == "json"
     assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
-    assert plan.cmd[-2] == "--"
-    assert plan.cmd[-1] == "Review this diff."
+    assert plan.cmd[-1] == "--"
+    assert plan.stdin_payload == "Review this diff."
     assert plan.env_overrides.get("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX") == "131072"
+
+
+def test_large_prepared_prompt_avoids_e2big_and_reaches_non_tty_stdin(tmp_path):
+    """A core-prefixed prompt above MAX_ARG_STRLEN survives a real child spawn."""
+    from agent_runtime.runner import _prepare_stdin_handle
+    from scripts.lib import rules_core
+
+    prompt = rules_core.with_core("- " + "large transport payload\n" * 7000 + "END-12852")
+    assert len(prompt.encode("utf-8")) > 128 * 1024
+    plan = _build(prompt, tmp_path)
+    assert prompt not in plan.cmd
+    assert "--file" not in plan.cmd
+    assert plan.cmd[-1] == "--"
+    handle, path = _prepare_stdin_handle(plan.stdin_payload, directory=tmp_path)
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", "import json,sys; print(json.dumps([sys.stdin.isatty(), sys.stdin.read()]))",
+             *plan.cmd[1:]],
+            stdin=handle, capture_output=True, text=True, check=True, timeout=10,
+        )
+    finally:
+        handle.close()
+        if path is not None:
+            path.unlink()
+    assert json.loads(result.stdout) == [False, prompt]
 
 
 def _ndjson_events(*events: dict) -> str:
