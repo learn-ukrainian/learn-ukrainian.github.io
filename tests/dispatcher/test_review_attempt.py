@@ -95,6 +95,7 @@ def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prom
     assert trees == [(tmp_path / "manifest.yaml", workspace)]
     [(agent, text, kwargs)] = calls
     assert (agent, text) == ("codex", rendered.decode())  # verbatim: no dispatch-context header
+    assert kwargs["rules_core_delivery"] is runner.RulesCoreDelivery.BOUND
     config = kwargs["tool_config"]
     assert {key: config[key] for key in ("review_id", "attempt_id", "review_access", "review_cwd")} == dict(
         review_id="review", attempt_id="attempt", review_access="full", review_cwd=str(workspace))

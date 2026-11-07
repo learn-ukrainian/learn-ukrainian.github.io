@@ -224,6 +224,7 @@ class AcpxDiscussionController:
         root: Path,
         participant_call: Callable[..., Result] | None = None,
         synthesis_call: Callable[..., Result] = _invoke_native_once,
+        rules_seat: str | None = None,
         clock: Callable[[], float] = time.monotonic,
         cancelled: Callable[[], bool] | None = None,
     ) -> None:
@@ -234,6 +235,7 @@ class AcpxDiscussionController:
         # compatibility seam remains read-only and cannot select a bridge.
         self.participant_call = participant_call
         self.synthesis_call = synthesis_call
+        self.rules_seat = rules_seat
         self.clock = clock
         self.cancelled = cancelled or (lambda: False)
 
@@ -787,6 +789,7 @@ class AcpxDiscussionController:
                         model=model_overrides.get(participant),
                         effort=effort_overrides.get(participant),
                         hard_timeout=timeout,
+                        rules_seat=self.rules_seat,
                     )
                 else:
                     # Preserve the injectable legacy callback contract for
@@ -807,6 +810,7 @@ class AcpxDiscussionController:
                                 "idempotency_key": idempotency_key,
                             },
                             hard_timeout=timeout,
+                            **({"rules_seat": self.rules_seat} if self.rules_seat is not None else {}),
                             effort=effort_overrides.get(participant),
                             entrypoint="acpx-discuss",
                             initiator=source,
@@ -1169,6 +1173,7 @@ class AcpxDiscussionController:
                         min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock())),
                     ),
                     initiator=source,
+                    **({"rules_seat": self.rules_seat} if self.rules_seat is not None else {}),
                 )
                 if synthesis_result.ok:
                     synthesis = synthesis_result.response
