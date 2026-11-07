@@ -72,7 +72,7 @@ mutation parameters. The test and its parameter helpers have identical ASTs to
 
 ### Files
 
-- `apply_selection.py`: the apply script, kept as a record of this one-off run. It is not
+- `apply_selection.py`: removed in REMOVE-UNNEEDED-1107; see git history. It is not
   part of the toolchain. `collect` writes node ids and parameter values, `check-covered`
   verifies the D-COVERED claims, `apply` edits `tests/`, and `verify` diffs the before and
   after collections.
