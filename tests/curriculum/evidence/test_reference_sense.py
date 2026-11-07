@@ -5,6 +5,7 @@ import hashlib
 import json
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -907,7 +908,9 @@ def review_dispatch(tmp_path):
         "prompt_file": str(prompt_file),
         "prompt_sha256": prompt_sha,
         "review_contract": {"input_root": str(tmp_path), "templates": ["lexical-review.md.j2"],
-                            "review_id": "review-test", "attempt_id": "attempt-test", "prompt_sha256": prompt_sha},
+                            "review_id": "review-test", "attempt_id": "attempt-test", "prompt_sha256": prompt_sha,
+                            "machinery_dependencies": json.loads(Path(f"{prompt_file}.files_read.json").read_text())[
+                                "render_contract"]["machinery_dependencies"]},
         "model": "gemini-3.8-flash-high",
         "agent": "agy",
         "finished_at": "2026-10-03T00:00:00Z",
@@ -956,6 +959,40 @@ def test_reviewed_binding_derives_identity_and_approving_subject(review_dispatch
     assert bound["reviewer"]["family"] == "google"
     assert bound["reviewer"]["model"] == task["model"]
     assert bound["span"] == "target"
+
+
+def test_lexical_history_keeps_recorded_core_but_rejects_tampering(review_dispatch, monkeypatch, tmp_path):
+    """Defect class: a rules edit invalidates durable lexical proof, or archived context admits forged bytes."""
+    from scripts.review.prompts.render import REPO_ROOT, render_prompt
+    from scripts.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
+
+    tasks, pool, task_path, _result, task, _verdict = review_dispatch
+    core = tmp_path / "rules" / "core.md"
+    core.parent.mkdir()
+    core.write_text("Original trusted rules\n")
+    monkeypatch.setenv("LEARN_UKRAINIAN_RULES_DIR", str(core.parent))
+    prompt_path = Path(task["prompt_file"])
+    manifest = Path(task["options"]["review_attempt"])
+    original, sha, _ = render_prompt(manifest, repo_root=tmp_path, output_path=prompt_path,
+                                    review_id="review-test", attempt_id="attempt-test", review_access="isolated")
+    task["prompt_sha256"] = task["review_contract"]["prompt_sha256"] = sha
+    task["review_contract"]["machinery_dependencies"] = json.loads(
+        Path(f"{prompt_path}.files_read.json").read_text())["render_contract"]["machinery_dependencies"]
+    task_path.write_text(json.dumps(task))
+    expected = bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
+    core.write_text("Changed trusted rules\n")
+    assert bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol") == expected
+    with pytest.raises(ReviewContractError, match="review_rules_core_changed"):
+        check_render_contract(prompt_path, original, REPO_ROOT)
+    with pytest.raises(ReviewContractError, match="review_rules_core_changed"):
+        check_launch_contract(task["review_contract"], REPO_ROOT, Path(sys.executable))
+    for changed in (original.replace("Original trusted rules", "Tampered trusted rules", 1), original + "\nforged body"):
+        altered = json.loads(json.dumps(task))
+        prompt_path.write_text(changed)
+        altered["prompt_sha256"] = altered["review_contract"]["prompt_sha256"] = hashlib.sha256(changed.encode()).hexdigest()
+        task_path.write_text(json.dumps(altered))
+        with pytest.raises(ValueError, match="review_prompt_unproven"):
+            bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
 
 
 @pytest.mark.parametrize(

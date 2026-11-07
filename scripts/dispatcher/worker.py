@@ -1136,11 +1136,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         while True:
             correcting = pending_correction is not None
             if pending_conversation:
-                from scripts.dispatcher.providers.agy import continuation
-
-                invocation = continuation(runtime_context.build(spec, child_env(spec)), pending_conversation)
+                invocation = runtime_context.build(spec, child_env(spec), conversation=pending_conversation)
             elif correcting:
-                invocation = replace(runtime_context.build(spec, child_env(spec)), stdin=pending_correction)
+                invocation = runtime_context.build(spec, child_env(spec), launch_prompt=pending_correction)
                 pending_correction = None
             # The first launch keeps the timeout the caller passed. Only a continuation
             # spends what remains of that same deadline, and a spent deadline does not

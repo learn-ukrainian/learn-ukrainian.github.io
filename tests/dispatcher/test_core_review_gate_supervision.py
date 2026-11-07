@@ -143,6 +143,8 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     assert int(count.read_text()) == launches
     if launches == 2:
         correction = prompts.read_text().split("\n---\n", 1)[1]
+        assert correction.startswith('<rules-core seat="core"')
+        assert "</rules-core>" in correction
         assert "Keep the same verdict" in correction
         if second == "unconfident":
             assert "REQUEST_CHANGES" in correction

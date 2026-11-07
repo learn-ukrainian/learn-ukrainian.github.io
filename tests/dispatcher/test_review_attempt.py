@@ -10,6 +10,7 @@ import pytest
 from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.record import attested_return, dispatch_prompt_sha256
+from scripts.review.render_contract import trusted_core_context
 
 
 @pytest.fixture
@@ -42,11 +43,13 @@ def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prom
 
     from scripts.agent_runtime import attempt_boundary, review_mcp, runner
     from scripts.dispatcher import headroom
+    from scripts.review.render_contract import trusted_core_context
 
     args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
                                           "--review-access", "full"])
     binding = store.review_binding(vars(args))
-    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
     prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
     prompt.content = rendered
     workspace = tmp_path / "checkout"
@@ -55,7 +58,8 @@ def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prom
                     tmp_path / "tasks" / "task.result", options=dict(review_attempt=str(tmp_path / "manifest.yaml")))
     record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
                               dict(vars(args), research_owned_path=[]), binding=binding)
-    record["review_contract"] = dict(input_root=str(tmp_path))
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
     path = store.create(record, rendered)
 
     for name in ("check_plan", "check_runtime"):
@@ -351,7 +355,8 @@ def _run_manifest_ukrainian_attempt(
         "ukrainian",
     ])
     binding = store.review_binding(vars(args))
-    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
     prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
     prompt.content = rendered
     workspace = tmp_path / "checkout"
@@ -375,7 +380,8 @@ def _run_manifest_ukrainian_attempt(
         dict(vars(args), research_owned_path=[]),
         binding=binding,
     )
-    record["review_contract"] = dict(input_root=str(tmp_path))
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
     path = store.create(record, rendered)
 
     for name in ("check_plan", "check_runtime"):
@@ -1010,7 +1016,8 @@ def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, 
     args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
                                           "--codex-account", "b-sub", "--review-access", "full"])
     binding = store.review_binding(vars(args))
-    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
     prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
     prompt.content = rendered
     workspace = tmp_path / "checkout"
@@ -1021,7 +1028,8 @@ def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, 
     record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
                               dict(vars(args), research_owned_path=[]), binding=binding)
     assert record["codex_account"] == "b-sub"
-    record["review_contract"] = dict(input_root=str(tmp_path))
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
     path = store.create(record, rendered)
     for name in ("check_plan", "check_runtime"):
         monkeypatch.setattr(headroom, name, lambda *_a, **_k: None)
