@@ -249,9 +249,11 @@ launcher_project_python() {
 launcher_drop_unneeded_secrets() {
   local py sanitizer variable
   LC_CHILD_ENV_COMMAND=(/usr/bin/env)
-  for variable in "${!LAUNCHER_@}"; do
-    LC_CHILD_ENV_COMMAND+=(-u "$variable")
-  done
+  while IFS= read -r -d '' variable; do
+    case "$variable" in
+      LAUNCHER_*=*) LC_CHILD_ENV_COMMAND+=(-u "${variable%%=*}") ;;
+    esac
+  done < <(/usr/bin/env -0)
   sanitizer="$LC_MACHINERY_DIR/agent_runtime/env_sanitize.py"
   py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then

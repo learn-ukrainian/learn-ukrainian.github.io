@@ -189,7 +189,11 @@ def test_provider_child_drops_launcher_controls_after_scope_reentry(
     from tests.test_launcher_interactive_scope import _checkout, _identity, _launch, _lines
 
     root, env = _checkout(tmp_path)
-    extra = {"LAUNCHER_SEAT_SENTINEL": "must-not-reach-provider"}
+    extra = {
+        "LAUNCHER_SEAT_SENTINEL": "must-not-reach-provider",
+        "LAUNCHER_INVALID-NAME": "must-not-reach-provider",
+        "LAUNCHER_NEWLINE\nNAME": "must-not-reach-provider",
+    }
     expected_model, expected_effort = default_model, "high"
     if selection != "default":
         extra.update(LAUNCHER_MODEL=override_model, LAUNCHER_EFFORT="medium")
@@ -223,6 +227,7 @@ launcher_exec_command /bin/sh -c 'env -0 > "$TEST_CHILD_ENV"'
     result = subprocess.run(
         ["bash", "-c", script],
         env=launcher_environment(
+            {"LAUNCHER_INVALID-NAME": "sentinel", "LAUNCHER_NEWLINE\nNAME": "sentinel"},
             LAUNCHER_MODEL="claude-sonnet-5-5",
             LAUNCHER_EFFORT="medium",
             LAUNCHER_UNKNOWN="sentinel",
