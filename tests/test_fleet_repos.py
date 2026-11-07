@@ -119,4 +119,4 @@ def test_every_registered_repository_resolves_to_a_sibling_checkout_path(tmp_pat
         assert checkout == expected, key
         assert checkout not in seen, f"{key} and {seen.get(checkout)} share a checkout"
         seen[checkout] = key
-    assert {"kube-dojo", "kubedojo-labs"} <= set(catalog)
+    assert {"kube-dojo", "kubedojo-labs", "machinery"} <= set(catalog)
