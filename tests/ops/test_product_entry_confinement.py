@@ -252,6 +252,195 @@ def test_an_uninspectable_ordinary_namespace_path_refuses_without_cache_mutation
     assert product.ran() == ["scripts", "pkg", "leaf"]
 
 
+@pytest.mark.parametrize("parent", ["scripts", "scripts.pkg"])
+@pytest.mark.parametrize("scenario", ["success", "failed-parent-retry", "import-cycle", "ancestor-inserted-during-snapshot"])
+def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_path, monkeypatch, parent, scenario):
+    """A cached ancestor is still executing when seven independent followers enter."""
+    events = ModuleType(f"lu_confined_events_{uuid.uuid4().hex}")
+    events.parent_entered = threading.Event()
+    events.resume_parent = threading.Event()
+    fail_once = scenario == "failed-parent-retry"
+    events.fail_once = fail_once
+    events.cycle_import = lambda: None
+    events.leaf_parent_states = []
+    events.snapshot_missed = threading.Event()
+    events.resume_snapshot = threading.Event()
+    late_ancestor = scenario == "ancestor-inserted-during-snapshot"
+    monkeypatch.setitem(sys.modules, events.__name__, events)
+    package = "pkg" if parent.endswith(".pkg") else ""
+    if late_ancestor:
+        package = f"{package}.sub" if package else "pkg"
+        product.write(f"{package.replace('.', '/')}/__init__.py")
+    prepare_child = f"import importlib\nimportlib.import_module('scripts.{package}')\n" if late_ancestor else ""
+    relative = "__init__.py" if parent == "scripts" else "pkg/__init__.py"
+    label = parent.rpartition(".")[2]
+    product.write(
+        relative,
+        f"import sys\nevents = sys.modules[{events.__name__!r}]\n"
+        + prepare_child
+        + "events.parent_entered.set()\nassert events.resume_parent.wait(10)\n"
+        "if events.fail_once:\n    events.fail_once = False\n    raise RuntimeError('parent failed')\n"
+        "events.cycle_import()\n"
+        + product.recording(label, "INITIALIZED = True\n"),
+    )
+    name = product.leaf(
+        f"import sys\nparent = sys.modules[{parent!r}]\n"
+        f"sys.modules[{events.__name__!r}].leaf_parent_states.append(\n"
+        "    (getattr(parent, 'INITIALIZED', False), parent.__spec__._initializing))\n"
+        + product.recording("leaf", "VALUE = 42\n"),
+        package=package,
+    )
+    foreign = Product(tmp_path / "foreign", product.runs)
+    foreign.write("__init__.py", foreign.recording("foreign-scripts"))
+    foreign.write("pkg/__init__.py", foreign.recording("foreign-pkg"))
+    foreign.write(name.removeprefix("scripts.").replace(".", "/") + ".py", foreign.recording("foreign-leaf"))
+    monkeypatch.syspath_prepend(str(foreign.root))
+    results = {}
+    errors = {}
+    ready = {f"follower-{index}": threading.Event() for index in range(7)}
+    progressed = {label: threading.Event() for label in ready}
+    release_followers = threading.Event()
+    original_preflight = product_entry._preflight
+    original_import = product_entry._import
+
+    def observed_preflight(*args):
+        original_preflight(*args)
+        label = threading.current_thread().name
+        if label in ready:
+            ready[label].set()
+            assert release_followers.wait(10)
+
+    def observed_import(prefix, scripts_dir):
+        label = threading.current_thread().name
+        if label in progressed and prefix == parent:
+            # The repaired loader attempts the parent's ordinary import, which waits
+            # for initialization. Release the parent independently of leaf completion.
+            progressed[label].set()
+        module = original_import(prefix, scripts_dir)
+        if label in progressed and prefix == name:
+            # The broken loader skips the parent and completes this import first.
+            progressed[label].set()
+        return module
+
+    monkeypatch.setattr(product_entry, "_preflight", observed_preflight)
+    monkeypatch.setattr(product_entry, "_import", observed_import)
+
+    def trace_snapshot(frame, event, arg):
+        if frame.f_code is load_configured_module.__code__:
+            # The loop's next line event follows the absent parent's membership
+            # check, before the next prefix is checked. No product cache is mutated.
+            if (
+                event == "line" and frame.f_locals.get("prefix") == parent
+                and "cached_prefixes" not in frame.f_locals and not events.snapshot_missed.is_set()
+            ):
+                assert parent not in sys.modules
+                events.snapshot_missed.set()
+                assert events.resume_snapshot.wait(10)
+            return trace_snapshot
+        return None
+
+    def run():
+        label = threading.current_thread().name
+        try:
+            if late_ancestor and label == "follower-0":
+                sys.settrace(trace_snapshot)
+            results[label] = load_configured_module(name)
+        except BaseException as exc:
+            errors[label] = exc
+        finally:
+            if late_ancestor and label == "follower-0":
+                sys.settrace(None)
+
+    leader = threading.Thread(target=run, name="leader", daemon=True)
+    followers = [threading.Thread(target=run, name=label, daemon=True) for label in ready]
+    threads = [leader, *followers]
+    if scenario == "import-cycle":
+        # A concurrent ordinary import calls back into the loader while the parent
+        # imports that module. Keep CPython's cycle detection, without a loader lock.
+        from importlib._bootstrap import _DeadlockError
+
+        events.other_entered = threading.Event()
+        events.parent_waiting = threading.Event()
+        events.cycle_detected = threading.Event()
+        events.load = load_configured_module
+        events.deadlock_error = _DeadlockError
+        other = f"lu_confined_cycle_{uuid.uuid4().hex}"
+        (tmp_path / f"{other}.py").write_text(
+            f"import sys\nevents = sys.modules[{events.__name__!r}]\nevents.other_entered.set()\n"
+            "assert events.parent_waiting.wait(10)\n"
+            f"try:\n    LEAF = events.load({name!r})\n"
+            "except events.deadlock_error:\n    events.cycle_detected.set()\nVALUE = 43\n",
+            encoding="utf-8",
+        )
+        monkeypatch.syspath_prepend(str(tmp_path))
+
+        def cycle_import():
+            events.parent_waiting.set()
+            try:
+                importlib.import_module(other)
+            except _DeadlockError:
+                events.cycle_detected.set()
+
+        events.cycle_import = cycle_import
+
+        def run_ordinary():
+            try:
+                importlib.import_module(other)
+            except BaseException as exc:
+                errors["ordinary"] = exc
+
+        ordinary = threading.Thread(target=run_ordinary, name="ordinary-cycle", daemon=True)
+        threads.append(ordinary)
+    before = list(sys.meta_path)
+    try:
+        if scenario == "import-cycle":
+            ordinary.start()
+            assert events.other_entered.wait(10)
+        if late_ancestor:
+            followers[0].start()
+            assert events.snapshot_missed.wait(10)
+        leader.start()
+        assert events.parent_entered.wait(10)
+        initializing = sys.modules[parent]
+        assert initializing.__spec__._initializing
+        for thread in followers:
+            if thread.ident is None:
+                thread.start()
+        events.resume_snapshot.set()
+        assert all(event.wait(10) for event in ready.values())
+        assert not events.resume_parent.is_set()
+        release_followers.set()
+        assert all(event.wait(10) for event in progressed.values())
+    finally:
+        events.resume_snapshot.set()
+        release_followers.set()
+        events.resume_parent.set()
+        if scenario == "import-cycle":
+            events.parent_waiting.set()
+        for thread in threads:
+            if thread.ident is not None:
+                thread.join(timeout=10)
+        if scenario == "import-cycle":
+            sys.modules.pop(other, None)
+
+    assert all(not thread.is_alive() for thread in threads)
+    if fail_once:
+        assert set(errors) == {"leader"} and isinstance(errors["leader"], RuntimeError)
+        assert str(errors["leader"]) == "parent failed"
+    else:
+        assert errors == {}
+    assert len(results) == (7 if fail_once else 8)
+    leaf = results["follower-0"]
+    assert all(module is leaf and module.VALUE == 42 for module in results.values())
+    assert sys.modules[parent].INITIALIZED and not sys.modules[parent].__spec__._initializing
+    assert (sys.modules[parent] is initializing) is (not fail_once)
+    assert product.ran() == (["scripts", "leaf"] if parent == "scripts" else ["scripts", "pkg", "leaf"])
+    assert events.leaf_parent_states == [(True, False)]
+    if scenario == "import-cycle":
+        assert events.cycle_detected.is_set()
+    assert sys.meta_path == before
+
+
 def test_a_load_waiting_on_an_ordinary_import_does_not_deadlock(product, monkeypatch):
     """A product module, imported the ordinary way in one thread, calls the loader while another thread waits for it."""
     load_configured_module(product.leaf("VALUE = 1\n"))
