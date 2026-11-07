@@ -33,6 +33,62 @@ from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMI
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
+# Audited consumers run as native clean and polluted cases in conftest.
+LAUNCHER_TEST_FILES = (
+    "tests/test_launcher_env_hermetic.py",
+    "tests/test_handoff_slot_registry.py",
+    "tests/test_launcher_contract.py",
+    "tests/test_launcher_helper_root.py",
+    "tests/test_launcher_interactive_scope.py",
+    "tests/test_rules_core_loading.py",
+    "tests/test_start_codex_driver.py",
+    "tests/test_start_cto_wrappers.py",
+    "tests/test_start_cursor_launcher.py",
+    "tests/test_start_gemini_launcher.py",
+    "tests/test_start_grok_launcher.py",
+    "tests/test_start_muse_driver.py",
+    "tests/test_start_codex_profiles.py",
+    "tests/test_launcher_driver_scope.py",
+    "tests/orchestration/test_thread_restart_e2e.py",
+    "tests/test_fleet_comms_launcher_awareness.py",
+    "tests/test_fleet_taxonomy_aliases.py",
+    "tests/test_git_identity.py",
+    "tests/test_handoff_identity.py",
+    "tests/test_launcher_canary_honesty.py",
+    "tests/test_launcher_remote_renew.py",
+    "tests/test_session_supervisor.py",
+    "tests/test_session_supervisor_shell.py",
+    "tests/test_claude_cap_guard.py",
+    "tests/test_start_claude_profiles.py",
+    "tests/test_start_claude_supervisor.py",
+    "tests/test_start_codex_claude_code.py",
+    "tests/test_start_codex_launcher.py",
+    "tests/test_start_glm_launcher.py",
+    "tests/test_start_kimi_claude_code.py",
+    "tests/test_start_kimi_launcher.py",
+    "tests/test_launcher_sandbox_closure.py",
+    "tests/test_secret_redaction.py",
+)
+
+
+SEAT_CONTAMINATION = {
+    "LAUNCHER_MODEL": "claude-sonnet-5-5",
+    "LAUNCHER_EFFORT": "medium",
+    "LAUNCHER_DRY_RUN": "0",
+    "LAUNCHER_SEAT_SENTINEL": "polluted-parent",
+    "LU_DRIVER_SCOPE_ACTIVE": "1",
+    "LU_DRIVER_SCOPE_UNIT": "foreign-seat.scope",
+    "LU_DRIVER_MEMORY_MAX": "1",
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+    "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "123",
+    "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "foreign-seat-task",
+    "LEARN_UKRAINIAN_MAIN_MODEL_ID": "claude-opus-5-5",
+    "SESSION_HANDOFF_AGENT": "foreign-seat",
+    "SESSION_EPIC": "foreign-seat",
+    "LC_SUPERVISORY_PREDECESSOR_GENERATION": "999",
+}
+
+
 
 def launcher_toolchain_path() -> str:
     """Declare executable directories without inheriting provider or seat state.

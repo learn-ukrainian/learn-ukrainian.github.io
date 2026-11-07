@@ -2,54 +2,22 @@
 
 from __future__ import annotations
 
-import os
 import shlex
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
 from tests.helpers import machinery_package
-from tests.launcher_sandbox import launcher_environment, tracked_launcher_wrappers
-
-# Freeze the audited consumers. Never include this file: its subprocess runs pytest.
-LAUNCHER_TEST_FILES = (
-    "tests/test_handoff_slot_registry.py",
-    "tests/test_launcher_contract.py",
-    "tests/test_launcher_helper_root.py",
-    "tests/test_launcher_interactive_scope.py",
-    "tests/test_rules_core_loading.py",
-    "tests/test_start_codex_driver.py",
-    "tests/test_start_cto_wrappers.py",
-    "tests/test_start_cursor_launcher.py",
-    "tests/test_start_gemini_launcher.py",
-    "tests/test_start_grok_launcher.py",
-    "tests/test_start_muse_driver.py",
-    "tests/test_start_codex_profiles.py",
-    "tests/test_launcher_driver_scope.py",
-    "tests/orchestration/test_thread_restart_e2e.py",
-    "tests/test_fleet_comms_launcher_awareness.py",
-    "tests/test_fleet_taxonomy_aliases.py",
-    "tests/test_git_identity.py",
-    "tests/test_handoff_identity.py",
-    "tests/test_launcher_canary_honesty.py",
-    "tests/test_launcher_remote_renew.py",
-    "tests/test_session_supervisor.py",
-    "tests/test_session_supervisor_shell.py",
-    "tests/test_claude_cap_guard.py",
-    "tests/test_start_claude_profiles.py",
-    "tests/test_start_claude_supervisor.py",
-    "tests/test_start_codex_claude_code.py",
-    "tests/test_start_codex_launcher.py",
-    "tests/test_start_glm_launcher.py",
-    "tests/test_start_kimi_claude_code.py",
-    "tests/test_start_kimi_launcher.py",
-    "tests/test_launcher_sandbox_closure.py",
-    "tests/test_secret_redaction.py",
+from tests.launcher_sandbox import (
+    LAUNCHER_TEST_FILES,
+    SEAT_CONTAMINATION,
+    launcher_environment,
+    tracked_launcher_wrappers,
 )
 
-# One fixed regression list, mapped to the audited builders and consumers.
+# Retain the original 49 selector groups and their builder/consumer provenance.
+# Native parametrization covers these groups and the rest of each audited file.
 POLLUTED_PARENT_TESTS = {
     "tests/test_handoff_slot_registry.py::test_practice_launcher_dry_run_uses_the_dedicated_stream": "inline wrapper environments; original cross-provider reproduction",
     "tests/test_handoff_slot_registry.py::test_open_model_data_selector_mints_registered_slot": "shared _bash and handoff-slot gate",
@@ -102,46 +70,6 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_secret_redaction.py::test_round5_launcher_preserves_process_paths": "final-agent cleanup preserves explicit PATH, HOME and PWD",
 }
 
-SEAT_CONTAMINATION = {
-    "LAUNCHER_MODEL": "claude-sonnet-5-5",
-    "LAUNCHER_EFFORT": "medium",
-    "LAUNCHER_DRY_RUN": "0",
-    "LAUNCHER_SEAT_SENTINEL": "polluted-parent",
-    "LU_DRIVER_SCOPE_ACTIVE": "1",
-    "LU_DRIVER_SCOPE_UNIT": "foreign-seat.scope",
-    "LU_DRIVER_MEMORY_MAX": "1",
-    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
-    "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "123",
-    "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "foreign-seat-task",
-    "LEARN_UKRAINIAN_MAIN_MODEL_ID": "claude-opus-5-5",
-    "SESSION_HANDOFF_AGENT": "foreign-seat",
-    "SESSION_EPIC": "foreign-seat",
-    "LC_SUPERVISORY_PREDECESSOR_GENERATION": "999",
-}
-
-
-@pytest.mark.timeout(330)
-def test_launcher_tests_pass_with_a_polluted_parent(tmp_path: Path) -> None:
-    """Exercise the same fixed test list from a seat carrying foreign defaults."""
-    assert {node.split("::")[0] for node in POLLUTED_PARENT_TESTS} == set(LAUNCHER_TEST_FILES)
-    assert Path(__file__).name not in {Path(node.split("::")[0]).name for node in POLLUTED_PARENT_TESTS}
-    log = tmp_path / "polluted-parent-pytest.log"
-    print(f"Polluted-parent pytest log: {log}", flush=True)
-    with log.open("w", encoding="utf-8") as output:
-        result = subprocess.run(
-            [sys.executable, "-m", "pytest", "-q", "-n", "2", "--dist=worksteal", "--tb=short", *POLLUTED_PARENT_TESTS],
-            cwd=Path(__file__).resolve().parents[1],
-            # Deliberately inherit and pollute pytest itself. The tested launcher
-            # environment builders, rather than this caller, must isolate children.
-            env={**os.environ, **SEAT_CONTAMINATION},
-            stdout=output,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=300,
-        )
-    report = log.read_text(encoding="utf-8")
-    print(report)
-    assert result.returncode == 0, report
 
 
 def _child_environment(path: Path) -> dict[str, str]:
@@ -307,6 +235,9 @@ exit 75
 def test_tracked_wrapper_coverage_cannot_silently_shrink() -> None:
     from tests.test_launcher_interactive_scope import DRIVERS, INTERACTIVE
 
+    assert {node.split("::")[0] for node in POLLUTED_PARENT_TESTS} | {
+        "tests/test_launcher_env_hermetic.py"
+    } == set(LAUNCHER_TEST_FILES)
     retired = {"start-kimi.sh", "start-kimicc.sh"}
     public_only = {"start-muse-driver.sh"}
     assert set(tracked_launcher_wrappers()) == set(DRIVERS) | set(INTERACTIVE) | retired | public_only
