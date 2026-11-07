@@ -92,354 +92,74 @@ SEAT_CONTAMINATION = {
     "LC_SUPERVISORY_PREDECESSOR_GENERATION": "999",
 }
 
-
-
 # Preserve the original 49 selectors, plus audited lifecycle and failure coverage.
-POLLUTED_PARENT_TESTS = {'tests/test_handoff_slot_registry.py::test_practice_launcher_dry_run_uses_the_dedicated_stream': 'inline '
-                                                                                                  'wrapper '
-                                                                                                  'environments; '
-                                                                                                  'original '
-                                                                                                  'cross-provider '
-                                                                                                  'reproduction',
- 'tests/test_handoff_slot_registry.py::test_open_model_data_selector_mints_registered_slot': 'shared _bash '
-                                                                                             'and '
-                                                                                             'handoff-slot '
-                                                                                             'gate',
- 'tests/test_handoff_slot_registry.py::test_real_launch_of_unregistered_selector_never_execs_the_provider': 'shared '
-                                                                                                            '_launcher '
-                                                                                                            'and '
-                                                                                                            'intentional '
-                                                                                                            'fake '
-                                                                                                            'PATH',
- 'tests/test_handoff_slot_registry.py::test_kube_dojo_wrapper_dry_run_binds_its_claude_lane': 'direct '
-                                                                                              'kube-dojo '
-                                                                                              'wrapper '
-                                                                                              'environment',
- 'tests/test_handoff_slot_registry.py::test_curriculum_upgrade_is_accepted_on_the_core_slot': 'explicit '
-                                                                                              'product '
-                                                                                              'fixture root '
-                                                                                              'for '
-                                                                                              'curriculum '
-                                                                                              'content seats '
-                                                                                              'across '
-                                                                                              'provider '
-                                                                                              'families',
- 'tests/test_launcher_contract.py::test_codex_launchers_pin_roles_and_preserve_explicit_effort': 'shared '
-                                                                                                 'run_launcher '
-                                                                                                 'dry-run '
-                                                                                                 'environment',
- 'tests/test_launcher_contract.py::test_canary_failure_closes_lease_and_refuses_driver_launch': 'direct '
-                                                                                                'lifecycle '
-                                                                                                'environment',
- 'tests/test_launcher_helper_root.py::test_ambient_git_dir_does_not_redirect_any_site': 'shared _clean_env '
-                                                                                        'and intentional '
-                                                                                        'hostile Git inputs',
- 'tests/test_launcher_interactive_scope.py::test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once': 'tracked-wrapper '
-                                                                                                                          'sandbox, '
-                                                                                                                          'scope '
-                                                                                                                          're-entry '
-                                                                                                                          'and '
-                                                                                                                          'actual '
-                                                                                                                          'children '
-                                                                                                                          'across '
-                                                                                                                          'families',
- 'tests/test_rules_core_loading.py::test_launcher_row_carries_the_core': 'rules-core _launch environment '
-                                                                         'across provider families',
- 'tests/test_rules_core_loading.py::test_the_old_env_override_has_no_effect': 'explicit hostile rules '
-                                                                              'override',
- 'tests/test_rules_core_loading.py::test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not': 'explicit '
-                                                                                                             'fixture '
-                                                                                                             'product '
-                                                                                                             'root '
-                                                                                                             'and '
-                                                                                                             'absent-addendum '
-                                                                                                             'refusal',
- 'tests/test_start_codex_driver.py::test_driver_canaries_use_canonical_stream_then_exec_provider': 'runtime '
-                                                                                                   'Codex '
-                                                                                                   '_clean_environ '
-                                                                                                   'and fake '
-                                                                                                   'provider',
- 'tests/test_start_codex_profiles.py::test_launcher_targets_canonical_main_without_creating_worktree': 'profile '
-                                                                                                       '_run '
-                                                                                                       'and '
-                                                                                                       '_launch '
-                                                                                                       'builders',
- 'tests/test_start_cto_wrappers.py::test_scope_reentry_preserves_cto_defaults_and_explicit_opus': 'CTO '
-                                                                                                  'runtime '
-                                                                                                  'checkout '
-                                                                                                  'environment',
- 'tests/test_start_cto_wrappers.py::test_supervisor_successor_reenters_cto_wrapper': 'successor launcher_env '
-                                                                                     'capture and replay',
- 'tests/test_start_cursor_launcher.py::test_cursor_interactive_defaults_to_the_concrete_pin': 'Cursor '
-                                                                                              '_run_interactive '
-                                                                                              'launch_env '
-                                                                                              'builder',
- 'tests/test_start_gemini_launcher.py::test_gemini_driver_default_respects_launcher_model': 'Gemini shared '
-                                                                                            'launcher '
-                                                                                            'consumer',
- 'tests/test_start_gemini_launcher.py::test_gemini_exec_hook_gate_precedes_provider_spawn': 'Gemini direct '
-                                                                                            'exec seam '
-                                                                                            'environment',
- 'tests/test_start_grok_launcher.py::test_grok_interactive_defaults_to_native_harness_and_rejects_epic': 'Grok '
-                                                                                                         'shared '
-                                                                                                         'launcher '
-                                                                                                         'consumer',
- 'tests/test_start_muse_driver.py::test_shared_lease_claim_exec_close_order': 'Muse muse_env, lifecycle '
-                                                                              'fixture, actual provider '
-                                                                              'child and process guard',
- 'tests/test_start_muse_driver.py::test_dry_run_argv_and_capsule_binding': 'Muse launch builder and '
-                                                                           'public-route fakes',
- 'tests/test_launcher_driver_scope.py::test_forwarder_finishes_close_and_reaps_children_after_repeated_signal': 'direct '
-                                                                                                                'forwarder '
-                                                                                                                'environment '
-                                                                                                                'and '
-                                                                                                                'process '
-                                                                                                                'cleanup',
- 'tests/orchestration/test_thread_restart_e2e.py::test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover': 'restart '
-                                                                                                                                 'run '
-                                                                                                                                 'helper '
-                                                                                                                                 'and '
-                                                                                                                                 'direct '
-                                                                                                                                 'launcher '
-                                                                                                                                 'environment',
- 'tests/orchestration/test_thread_restart_e2e.py::test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl': 'provider_environment '
-                                                                                                                            'builder '
-                                                                                                                            'and '
-                                                                                                                            'local '
-                                                                                                                            'Monitor '
-                                                                                                                            'stub',
- 'tests/orchestration/test_thread_restart_e2e.py::test_monitor_outage_and_dirty_replacement_never_unlock_cleanup': 'private '
-                                                                                                                   'GitHub-cache '
-                                                                                                                   'root '
-                                                                                                                   'preserves '
-                                                                                                                   'clean-checkout '
-                                                                                                                   'and '
-                                                                                                                   'cleanup '
-                                                                                                                   'guards',
- 'tests/test_fleet_comms_launcher_awareness.py::test_cold_clause_resolves_live_mode_when_env_unset': 'Fleet '
-                                                                                                     'clause '
-                                                                                                     'and '
-                                                                                                     'fallback '
-                                                                                                     'shell '
-                                                                                                     'consumers',
- 'tests/test_fleet_taxonomy_aliases.py::test_hermetic_launcher_unknown_selector_fails_closed_contract': 'direct '
-                                                                                                        'wrapper '
-                                                                                                        'and '
-                                                                                                        'clean_env '
-                                                                                                        'builder',
- 'tests/test_git_identity.py::test_launcher_export_git_identity': 'launcher identity environment with '
-                                                                  'intentional parent identity',
- 'tests/test_handoff_identity.py::test_new_registry_stream_resolves_without_shell_edit': 'selector shell '
-                                                                                         'environment with '
-                                                                                         'explicit registry '
-                                                                                         'fixture',
- 'tests/test_launcher_canary_honesty.py::test_main_clears_inherited_canary_execution_report': 'canary probe '
-                                                                                              'environment '
-                                                                                              'with '
-                                                                                              'intentional '
-                                                                                              'hostile '
-                                                                                              'report',
- 'tests/test_launcher_remote_renew.py::test_driver_renew_loop_409_stops_provider_with_lease_lost': 'implicit '
-                                                                                                   'lifecycle '
-                                                                                                   'shell '
-                                                                                                   'consumer '
-                                                                                                   'now '
-                                                                                                   'isolated',
- 'tests/test_session_supervisor.py::test_successor_preflight_resolves_executable_with_stripped_pane_path': 'successor '
-                                                                                                           'environment '
-                                                                                                           'and '
-                                                                                                           'executable '
-                                                                                                           'fixtures',
- 'tests/test_session_supervisor_shell.py::test_claim_exports_all_session_stream_variables_and_writes_capsule': 'supervisor '
-                                                                                                               '_clean_environ '
-                                                                                                               'builder',
- 'tests/test_claude_cap_guard.py::test_cto_epics_explicit_cli_opus_is_admitted': 'cap fixture and shared '
-                                                                                 'launcher consumer',
- 'tests/test_start_claude_profiles.py::test_claude_interactive_preserves_advisor_switch': 'Claude '
-                                                                                          'fake-binary PATH '
-                                                                                          'and intentional '
-                                                                                          'advisor settings',
- 'tests/test_start_claude_supervisor.py::test_claude_driver_claims_before_canary_and_drive_epic': 'Claude '
-                                                                                                  'supervisor '
-                                                                                                  'shared '
-                                                                                                  'launcher '
-                                                                                                  'consumer',
- 'tests/test_start_claude_supervisor.py::test_driver_accepts_canonical_and_legacy_lane_selectors[seminars-folk]': 'shared '
-                                                                                                                  'launcher '
-                                                                                                                  'builder '
-                                                                                                                  'supplies '
-                                                                                                                  'the '
-                                                                                                                  'selected '
-                                                                                                                  'product '
-                                                                                                                  'fixture '
-                                                                                                                  'root '
-                                                                                                                  'for '
-                                                                                                                  'a '
-                                                                                                                  'content '
-                                                                                                                  'seat',
- 'tests/test_start_codex_claude_code.py::test_codex_claude_code_clears_foreign_ambient_auth_before_exec': 'Codex '
-                                                                                                          'proxy '
-                                                                                                          'explicit '
-                                                                                                          'fake '
-                                                                                                          'PATH '
-                                                                                                          'and '
-                                                                                                          'hostile '
-                                                                                                          'auth',
- 'tests/test_start_codex_launcher.py::test_codex_native_harness_is_default_and_forwards_arguments_after_separator': 'Codex '
-                                                                                                                    'interactive '
-                                                                                                                    'shared '
-                                                                                                                    'launcher '
-                                                                                                                    'consumer',
- 'tests/test_start_glm_launcher.py::test_glm_retirement_precedes_profile_export': 'retired GLM wrapper and '
-                                                                                  'explicit fake PATH',
- 'tests/test_start_glm_launcher.py::test_claude_route_guard_checks_primary_checkout_settings_for_linked_worktree': 'GLM '
-                                                                                                                   'Git '
-                                                                                                                   'fixture '
-                                                                                                                   'and '
-                                                                                                                   'direct '
-                                                                                                                   'route-guard '
-                                                                                                                   'environments',
- 'tests/test_start_kimi_claude_code.py::test_kimicc_interactive_dry_run_refuses_retired_pins': 'retired Kimi '
-                                                                                               'Claude-Code '
-                                                                                               'shared '
-                                                                                               'launcher '
-                                                                                               'consumer',
- 'tests/test_start_kimi_launcher.py::test_kimi_native_is_default_and_interactive_rejects_epic': 'retired '
-                                                                                                'native Kimi '
-                                                                                                'shared '
-                                                                                                'launcher '
-                                                                                                'consumer',
- 'tests/test_launcher_sandbox_closure.py::test_slot_registry_closure_includes_fleet_comms_contracts_shim': 'shared '
-                                                                                                           'measured '
-                                                                                                           'sandbox '
-                                                                                                           'import '
-                                                                                                           'closure',
- 'tests/test_secret_redaction.py::test_launcher_preserves_parent_api_key_and_fails_closed': 'credential '
-                                                                                            'helper '
-                                                                                            'parent-preservation '
-                                                                                            'and fail-closed '
-                                                                                            'shell '
-                                                                                            'environments',
- 'tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy': 'explicit '
-                                                                                                      'synthetic '
-                                                                                                      'credential '
-                                                                                                      'environments '
-                                                                                                      'across '
-                                                                                                      'active '
-                                                                                                      'and '
-                                                                                                      'retired '
-                                                                                                      'adapters',
- 'tests/test_secret_redaction.py::test_round4_exec_restores_signal_defaults': 'shared _round4_launcher_probe '
-                                                                              'environment builder',
- 'tests/test_secret_redaction.py::test_round5_launcher_preserves_process_paths': 'final-agent cleanup '
-                                                                                 'preserves explicit PATH, '
-                                                                                 'HOME and PWD',
- 'tests/test_rollover_bundles.py::test_launcher_import_is_silent_for_the_typed_none_only': 'direct '
-                                                                                           'launcher-core '
-                                                                                           'rollover import '
-                                                                                           'shell '
-                                                                                           'environment',
- 'tests/orchestration/test_codex_driver_rollover_recovery.py::test_live_pending_packet_is_still_bound': 'real '
-                                                                                                        'rollover '
-                                                                                                        'shell '
-                                                                                                        'detection '
-                                                                                                        'and '
-                                                                                                        'explicit '
-                                                                                                        'stream '
-                                                                                                        'environment',
- 'tests/orchestration/test_exited_successor_registry.py::test_real_detector_and_shell_cold_start_after_exact_disposition': 'shared '
-                                                                                                                           'rollover '
-                                                                                                                           'shell '
-                                                                                                                           'detection '
-                                                                                                                           'consumer',
- 'tests/orchestration/test_imported_rollover_detection.py::test_imported_pending_packet_launcher_binding': 'shared '
-                                                                                                           'rollover '
-                                                                                                           'shell '
-                                                                                                           'detection '
-                                                                                                           'after '
-                                                                                                           'cross-host '
-                                                                                                           'bundle '
-                                                                                                           'import',
- 'tests/test_start_claude_profiles.py::test_native_claude_clears_foreign_route_and_capacity_overrides': 'retained '
-                                                                                                        'launcher '
-                                                                                                        'failure '
-                                                                                                        'from '
-                                                                                                        'the '
-                                                                                                        'historical '
-                                                                                                        'exact-head '
-                                                                                                        'manifest',
- 'tests/test_start_codex_driver.py::test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic': 'retained '
-                                                                                                           'launcher '
-                                                                                                           'failure '
-                                                                                                           'from '
-                                                                                                           'the '
-                                                                                                           'historical '
-                                                                                                           'exact-head '
-                                                                                                           'manifest',
- 'tests/test_start_codex_driver.py::test_driver_launch_with_caller_prompt_passes_one_positional_prompt': 'retained '
-                                                                                                         'launcher '
-                                                                                                         'failure '
-                                                                                                         'from '
-                                                                                                         'the '
-                                                                                                         'historical '
-                                                                                                         'exact-head '
-                                                                                                         'manifest',
- 'tests/test_start_codex_driver.py::test_default_driver_forwards_epic_binding_and_extra_provider_flags': 'retained '
-                                                                                                         'launcher '
-                                                                                                         'failure '
-                                                                                                         'from '
-                                                                                                         'the '
-                                                                                                         'historical '
-                                                                                                         'exact-head '
-                                                                                                         'manifest',
- 'tests/test_start_codex_driver.py::test_sustained_codex_driver_revalidates_certification': 'retained '
-                                                                                            'launcher '
-                                                                                            'failure from '
-                                                                                            'the historical '
-                                                                                            'exact-head '
-                                                                                            'manifest',
- 'tests/test_start_codex_driver.py::test_non_model_passthrough_remains_available': 'retained launcher '
-                                                                                   'failure from the '
-                                                                                   'historical exact-head '
-                                                                                   'manifest',
- 'tests/test_start_codex_driver.py::test_non_driver_workers_are_rejected_for_driver_and_governor': 'retained '
-                                                                                                   'launcher '
-                                                                                                   'failure '
-                                                                                                   'from the '
-                                                                                                   'historical '
-                                                                                                   'exact-head '
-                                                                                                   'manifest',
- 'tests/test_launcher_contract.py::test_real_launcher_deploy_is_confined_to_temporary_checkout': 'retained '
-                                                                                                 'launcher '
-                                                                                                 'failure '
-                                                                                                 'from the '
-                                                                                                 'historical '
-                                                                                                 'exact-head '
-                                                                                                 'manifest',
- 'tests/test_launcher_contract.py::test_codex_driver_preserves_transport_probe_and_lease_guard': 'retained '
-                                                                                                 'launcher '
-                                                                                                 'failure '
-                                                                                                 'from the '
-                                                                                                 'historical '
-                                                                                                 'exact-head '
-                                                                                                 'manifest',
- 'tests/test_launcher_contract.py::test_real_store_driver_close_successor_and_expired_recovery': 'retained '
-                                                                                                 'launcher '
-                                                                                                 'failure '
-                                                                                                 'from the '
-                                                                                                 'historical '
-                                                                                                 'exact-head '
-                                                                                                 'manifest',
- 'tests/orchestration/test_codex_driver_rollover_recovery.py::test_pending_packet_older_than_lane_handoff_is_not_bound': 'audited '
-                                                                                                                         'real '
-                                                                                                                         'rollover-shell '
-                                                                                                                         'helper '
-                                                                                                                         'consumer',
- 'tests/orchestration/test_codex_driver_rollover_recovery.py::test_2026_11_02_relaunch_resumes_the_lane_packet_and_mints_ten_anchors': 'audited '
-                                                                                                                                       'real '
-                                                                                                                                       'rollover-shell '
-                                                                                                                                       'helper '
-                                                                                                                                       'consumer'}
+POLLUTED_PARENT_TESTS = {
+    "tests/test_handoff_slot_registry.py::test_practice_launcher_dry_run_uses_the_dedicated_stream": "inline wrapper environments; original cross-provider reproduction",
+    "tests/test_handoff_slot_registry.py::test_open_model_data_selector_mints_registered_slot": "shared _bash and handoff-slot gate",
+    "tests/test_handoff_slot_registry.py::test_real_launch_of_unregistered_selector_never_execs_the_provider": "shared _launcher and intentional fake PATH",
+    "tests/test_handoff_slot_registry.py::test_kube_dojo_wrapper_dry_run_binds_its_claude_lane": "direct kube-dojo wrapper environment",
+    "tests/test_handoff_slot_registry.py::test_curriculum_upgrade_is_accepted_on_the_core_slot": "explicit product fixture root for curriculum content seats across provider families",
+    "tests/test_launcher_contract.py::test_codex_launchers_pin_roles_and_preserve_explicit_effort": "shared run_launcher dry-run environment",
+    "tests/test_launcher_contract.py::test_canary_failure_closes_lease_and_refuses_driver_launch": "direct lifecycle environment",
+    "tests/test_launcher_helper_root.py::test_ambient_git_dir_does_not_redirect_any_site": "shared _clean_env and intentional hostile Git inputs",
+    "tests/test_launcher_interactive_scope.py::test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once": "tracked-wrapper sandbox, scope re-entry and actual children across families",
+    "tests/test_rules_core_loading.py::test_launcher_row_carries_the_core": "rules-core _launch environment across provider families",
+    "tests/test_rules_core_loading.py::test_the_old_env_override_has_no_effect": "explicit hostile rules override",
+    "tests/test_rules_core_loading.py::test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not": "explicit fixture product root and absent-addendum refusal",
+    "tests/test_start_codex_driver.py::test_driver_canaries_use_canonical_stream_then_exec_provider": "runtime Codex _clean_environ and fake provider",
+    "tests/test_start_codex_profiles.py::test_launcher_targets_canonical_main_without_creating_worktree": "profile _run and _launch builders",
+    "tests/test_start_cto_wrappers.py::test_scope_reentry_preserves_cto_defaults_and_explicit_opus": "CTO runtime checkout environment",
+    "tests/test_start_cto_wrappers.py::test_supervisor_successor_reenters_cto_wrapper": "successor launcher_env capture and replay",
+    "tests/test_start_cursor_launcher.py::test_cursor_interactive_defaults_to_the_concrete_pin": "Cursor _run_interactive launch_env builder",
+    "tests/test_start_gemini_launcher.py::test_gemini_driver_default_respects_launcher_model": "Gemini shared launcher consumer",
+    "tests/test_start_gemini_launcher.py::test_gemini_exec_hook_gate_precedes_provider_spawn": "Gemini direct exec seam environment",
+    "tests/test_start_grok_launcher.py::test_grok_interactive_defaults_to_native_harness_and_rejects_epic": "Grok shared launcher consumer",
+    "tests/test_start_muse_driver.py::test_shared_lease_claim_exec_close_order": "Muse muse_env, lifecycle fixture, actual provider child and process guard",
+    "tests/test_start_muse_driver.py::test_dry_run_argv_and_capsule_binding": "Muse launch builder and public-route fakes",
+    "tests/test_launcher_driver_scope.py::test_forwarder_finishes_close_and_reaps_children_after_repeated_signal": "direct forwarder environment and process cleanup",
+    "tests/orchestration/test_thread_restart_e2e.py::test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover": "restart run helper and direct launcher environment",
+    "tests/orchestration/test_thread_restart_e2e.py::test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl": "provider_environment builder and local Monitor stub",
+    "tests/orchestration/test_thread_restart_e2e.py::test_monitor_outage_and_dirty_replacement_never_unlock_cleanup": "private GitHub-cache root preserves clean-checkout and cleanup guards",
+    "tests/test_fleet_comms_launcher_awareness.py::test_cold_clause_resolves_live_mode_when_env_unset": "Fleet clause and fallback shell consumers",
+    "tests/test_fleet_taxonomy_aliases.py::test_hermetic_launcher_unknown_selector_fails_closed_contract": "direct wrapper and clean_env builder",
+    "tests/test_git_identity.py::test_launcher_export_git_identity": "launcher identity environment with intentional parent identity",
+    "tests/test_handoff_identity.py::test_new_registry_stream_resolves_without_shell_edit": "selector shell environment with explicit registry fixture",
+    "tests/test_launcher_canary_honesty.py::test_main_clears_inherited_canary_execution_report": "canary probe environment with intentional hostile report",
+    "tests/test_launcher_remote_renew.py::test_driver_renew_loop_409_stops_provider_with_lease_lost": "implicit lifecycle shell consumer now isolated",
+    "tests/test_session_supervisor.py::test_successor_preflight_resolves_executable_with_stripped_pane_path": "successor environment and executable fixtures",
+    "tests/test_session_supervisor_shell.py::test_claim_exports_all_session_stream_variables_and_writes_capsule": "supervisor _clean_environ builder",
+    "tests/test_claude_cap_guard.py::test_cto_epics_explicit_cli_opus_is_admitted": "cap fixture and shared launcher consumer",
+    "tests/test_start_claude_profiles.py::test_claude_interactive_preserves_advisor_switch": "Claude fake-binary PATH and intentional advisor settings",
+    "tests/test_start_claude_supervisor.py::test_claude_driver_claims_before_canary_and_drive_epic": "Claude supervisor shared launcher consumer",
+    "tests/test_start_claude_supervisor.py::test_driver_accepts_canonical_and_legacy_lane_selectors[seminars-folk]": "shared launcher builder supplies the selected product fixture root for a content seat",
+    "tests/test_start_codex_claude_code.py::test_codex_claude_code_clears_foreign_ambient_auth_before_exec": "Codex proxy explicit fake PATH and hostile auth",
+    "tests/test_start_codex_launcher.py::test_codex_native_harness_is_default_and_forwards_arguments_after_separator": "Codex interactive shared launcher consumer",
+    "tests/test_start_glm_launcher.py::test_glm_retirement_precedes_profile_export": "retired GLM wrapper and explicit fake PATH",
+    "tests/test_start_glm_launcher.py::test_claude_route_guard_checks_primary_checkout_settings_for_linked_worktree": "GLM Git fixture and direct route-guard environments",
+    "tests/test_start_kimi_claude_code.py::test_kimicc_interactive_dry_run_refuses_retired_pins": "retired Kimi Claude-Code shared launcher consumer",
+    "tests/test_start_kimi_launcher.py::test_kimi_native_is_default_and_interactive_rejects_epic": "retired native Kimi shared launcher consumer",
+    "tests/test_launcher_sandbox_closure.py::test_slot_registry_closure_includes_fleet_comms_contracts_shim": "shared measured sandbox import closure",
+    "tests/test_secret_redaction.py::test_launcher_preserves_parent_api_key_and_fails_closed": "credential helper parent-preservation and fail-closed shell environments",
+    "tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy": "explicit synthetic credential environments across active and retired adapters",
+    "tests/test_secret_redaction.py::test_round4_exec_restores_signal_defaults": "shared _round4_launcher_probe environment builder",
+    "tests/test_secret_redaction.py::test_round5_launcher_preserves_process_paths": "final-agent cleanup preserves explicit PATH, HOME and PWD",
+    "tests/test_rollover_bundles.py::test_launcher_import_is_silent_for_the_typed_none_only": "direct launcher-core rollover import shell environment",
+    "tests/orchestration/test_codex_driver_rollover_recovery.py::test_live_pending_packet_is_still_bound": "real rollover shell detection and explicit stream environment",
+    "tests/orchestration/test_exited_successor_registry.py::test_real_detector_and_shell_cold_start_after_exact_disposition": "shared rollover shell detection consumer",
+    "tests/orchestration/test_imported_rollover_detection.py::test_imported_pending_packet_launcher_binding": "shared rollover shell detection after cross-host bundle import",
+    "tests/test_start_claude_profiles.py::test_native_claude_clears_foreign_route_and_capacity_overrides": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_driver_launch_with_caller_prompt_passes_one_positional_prompt": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_default_driver_forwards_epic_binding_and_extra_provider_flags": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_sustained_codex_driver_revalidates_certification": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_non_model_passthrough_remains_available": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_start_codex_driver.py::test_non_driver_workers_are_rejected_for_driver_and_governor": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_launcher_contract.py::test_real_launcher_deploy_is_confined_to_temporary_checkout": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_launcher_contract.py::test_codex_driver_preserves_transport_probe_and_lease_guard": "retained launcher failure from the historical exact-head manifest",
+    "tests/test_launcher_contract.py::test_real_store_driver_close_successor_and_expired_recovery": "retained launcher failure from the historical exact-head manifest",
+    "tests/orchestration/test_codex_driver_rollover_recovery.py::test_pending_packet_older_than_lane_handoff_is_not_bound": "audited real rollover-shell helper consumer",
+    "tests/orchestration/test_codex_driver_rollover_recovery.py::test_2026_11_02_relaunch_resumes_the_lane_packet_and_mints_ten_anchors": "audited real rollover-shell helper consumer",
+}
 
 
 def launcher_toolchain_path() -> str:
