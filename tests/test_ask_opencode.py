@@ -20,7 +20,8 @@ def test_invoke_opencode_constructs_correct_argv():
             assert argv[1] == "run"
             assert "--model" in argv
             assert "deepseek/deepseek-v4.1-flash" in argv
-            assert argv[-1] == rules_core.with_core("hello")
+            assert argv[-1] == "--"
+            assert run_mock.call_args.kwargs["input"] == rules_core.with_core("hello")
 
 
 def test_invoke_opencode_attaches_file(tmp_path):

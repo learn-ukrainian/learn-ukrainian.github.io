@@ -722,6 +722,36 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
 
 # --------------------------------------------------------------------------- public entries, before any write
 
+
+@pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode", "bridge"])
+def test_conflicting_core_prefix_is_a_typed_bridge_refusal(who: str) -> None:
+    """A stale leading core block must refuse with context instead of a traceback."""
+    from scripts.ai_agent_bridge._prompts import with_core_or_exit
+
+    conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
+        with_core_or_exit(conflict, who)
+    current = rules_core.with_core("hello")
+    assert with_core_or_exit(current, who) == current
+
+
+@pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode"])
+def test_conflicting_core_prefix_refuses_before_transport_spawn(who: str, monkeypatch) -> None:
+    from scripts.ai_agent_bridge import _cursor, _opencode
+
+    def spawn(*_a, **_k):
+        raise AssertionError("a conflicting prefix must refuse before spawning")
+
+    monkeypatch.setattr(_cursor.subprocess, "run", spawn)
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
+    monkeypatch.setattr(_opencode.shutil, "which", lambda _name: "/stub/opencode")
+    conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
+        if who == "ask-cursor":
+            _cursor._invoke_cursor(conflict, "grok-4.7-high")
+        else:
+            _opencode._run_opencode(conflict, "deepseek/deepseek-flash")
+
 # Everything a public ask or discussion entry could write or start: a spy on each
 # records the call instead of doing it, so a refusal must leave every list empty.
 _ASK_SIDE_EFFECTS = (
