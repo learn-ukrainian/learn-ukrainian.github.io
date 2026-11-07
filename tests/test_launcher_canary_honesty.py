@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 from pathlib import Path
 
 import pytest
+
+from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
 PROVIDERS = ("gemini", "cursor", "grok", "claude", "kimi", "glm", "codex")
@@ -38,7 +39,7 @@ def _canary_binding_probe(
             "bash", str(REPO), provider, dry_run, str(tmp_path),
             "1" if inherited else "0",
         ],
-        env={**os.environ, "LC_PROVIDER_CANARY_RAN": "1" if inherited else "0"},
+        env={**launcher_environment(), "LC_PROVIDER_CANARY_RAN": "1" if inherited else "0"},
         capture_output=True, text=True, check=False, timeout=30,
     )
 
@@ -91,5 +92,6 @@ def test_binding_uses_explicit_adapter_execution_report(
             "bash", str(REPO), ran, dry_run, str(tmp_path),
         ],
         capture_output=True, text=True, check=False, timeout=30,
+        env=launcher_environment(),
     )
     assert f"provider canary: {expected}" in _driver_prompt(result)

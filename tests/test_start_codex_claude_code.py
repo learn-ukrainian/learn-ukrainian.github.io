@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment, launcher_toolchain_path
 from tests.test_launcher_contract import run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -60,7 +60,7 @@ def test_codex_claude_code_clears_foreign_ambient_auth_before_exec(tmp_path: Pat
         "--harness",
         "claude-code",
         env={
-            "PATH": f"{bin_dir}:{os.environ['PATH']}",
+            "PATH": f"{bin_dir}:{launcher_toolchain_path()}",
             "ANTHROPIC_AUTH_TOKEN": "foreign-secret",
         },
         dry_run=False,
@@ -99,6 +99,7 @@ def test_direct_codex_proxy_configuration_rejects_old_pin_without_exports():
         ["bash", "-c", 'source "$1"; ANTHROPIC_MODEL=sentinel; codex_cc_configure_route gpt-5.6-sol; rc=$?; '
          '[ "$ANTHROPIC_MODEL" = sentinel ] || exit 99; exit "$rc"', "test", str(route)],
         text=True, capture_output=True, check=False, timeout=10,
+        env=launcher_environment(),
     )
     assert result.returncode == 2
     assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr

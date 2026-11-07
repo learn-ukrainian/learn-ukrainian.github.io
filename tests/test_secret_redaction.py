@@ -18,6 +18,7 @@ from agent_runtime.env_sanitize import (
     unneeded_env_var_names,
     without_unneeded_secrets,
 )
+from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
 HOOK = REPO / "agents_extensions/shared/hooks/guard-secret-print.py"
@@ -72,6 +73,7 @@ def test_no_print_hook_blocks_seeded_echo() -> None:
         capture_output=True,
         text=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert proc.returncode == 0, proc.stderr
     assert SYNTHETIC_KEY not in proc.stdout
@@ -95,7 +97,7 @@ def _run_secret_probe(
     """Load the real suite plugin against an isolated, synthetic child suite."""
     sample = tmp_path / "test_sample.py"
     sample.write_text(source, encoding="utf-8")
-    env = {name: os.environ[name] for name in ("PATH", "TMPDIR", "LANG") if name in os.environ}
+    env = launcher_environment()
     env.update(
         {
             "HOME": str(tmp_path),
@@ -284,12 +286,12 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
     )
     proc = subprocess.run(
         [str(wrapper)],
-        env={
+        env=launcher_environment({
             "PATH": os.defpath,
             "GEMINI_API_KEY": "synthetic-gemini-key-0123456789",
             "CURSOR_API_KEY": SYNTHETIC_KEY,
             "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
-        },
+        }),
         capture_output=True,
         text=True,
         check=False,
@@ -327,6 +329,7 @@ printf 'parent-preserved\\n'
         capture_output=True,
         text=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert cleared.returncode == 0, cleared.stderr
     assert cleared.stdout.strip() == "parent-preserved"
@@ -348,6 +351,7 @@ launcher_exec_command touch {shlex.quote(str(marker))}
         capture_output=True,
         text=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert refused.returncode != 0
     assert not marker.exists()
@@ -568,7 +572,7 @@ def test_interactive_launcher_child_uses_dispatcher_credential_policy(
         "HOME": str(tmp_path),
         **dict.fromkeys(names, "synthetic-launcher-credential-0123456789"),
     }
-    proc = subprocess.run(["bash", "-eu", "-c", command], env=env, capture_output=True, text=True, timeout=30)
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(env), capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout) == {"credential_names": sorted(kept)}
     assert "synthetic-launcher-credential" not in proc.stdout + proc.stderr
@@ -733,7 +737,7 @@ def test_round2_codex_route_child_auth(tmp_path: Path, harness: str) -> None:
         "CODEX_CC_BASE_URL": "http://localhost:8317",
         "CODEX_CC_AUTH_TOKEN": SYNTHETIC_KEY,
     }
-    proc = subprocess.run(["bash", "-eu", "-c", command], env=env, capture_output=True, text=True, timeout=30)
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(env), capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert proc.stdout == "route-auth-ok\n"
 
@@ -820,7 +824,7 @@ def test_round2_redactor_single_line_bound() -> None:
     proc = subprocess.run(
         [sys.executable, "-c", source],
         cwd=REPO,
-        env={name: os.environ[name] for name in ("PATH", "HOME", "TMPDIR") if name in os.environ},
+        env=launcher_environment(),
         capture_output=True,
         text=True,
         timeout=15,
@@ -972,7 +976,7 @@ def test_round3_real_launcher_dispatcher_child_parity(
         f"LC_ROOT={shlex.quote(str(REPO))} LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper_root))}\n"
         f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
     )
-    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(parent), capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0, proc.stderr
     launcher = json.loads(proc.stdout)
     assert launcher == {name: dispatcher[name] for name in names if name in dispatcher}
@@ -1082,7 +1086,7 @@ def test_round3_launcher_resolves_synthetic_github_identity(tmp_path: Path, prov
         f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
         f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
     )
-    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(parent), capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout) == {"GH_TOKEN": dispatcher["GH_TOKEN"]} == {"GH_TOKEN": SYNTHETIC_KEY}
 
@@ -1120,7 +1124,7 @@ def test_round3_launcher_preserves_metadata_without_forwarding_worker_lease(tmp_
         f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
         f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
     )
-    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(parent), capture_output=True, text=True, timeout=30)
     assert proc.returncode == 0, proc.stderr
     expected = dict(metadata)
     if not counter.isdecimal():
@@ -1216,7 +1220,7 @@ def _round4_launcher_probe(
     parent = {"PATH": os.defpath, "HOME": str(tmp_path), **(environment or {})}
     if adapter:
         parent["PATH"] = str(binary.parent) + os.pathsep + os.defpath
-    return subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=60)
+    return subprocess.run(["bash", "-eu", "-c", command], env=launcher_environment(parent), capture_output=True, text=True, timeout=60)
 
 
 @pytest.mark.parametrize("provider", ["glm", "kimi"])

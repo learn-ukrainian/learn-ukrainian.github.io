@@ -34,7 +34,12 @@ def reader_clock(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def launch_with_usage(tmp_path: Path, request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
+def launch_with_usage(
+    tmp_path: Path,
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+    _launcher_parent_environment: dict[str, str],
+):
     """Inject telemetry in a fixture reader, without a production bypass."""
     reader = tmp_path / "weekly_reader.py"
     for variable in (
@@ -46,7 +51,8 @@ def launch_with_usage(tmp_path: Path, request: pytest.FixtureRequest, monkeypatc
         "LU_CLAUDE_SONNET_STOP_PCT",
     ):
         # Keep the policy matrix independent of the operator's shell settings.
-        monkeypatch.delenv(variable, raising=False)
+        if variable not in _launcher_parent_environment:
+            monkeypatch.delenv(variable, raising=False)
     overrides = {("scripts", "lib", "claude_weekly_used.py"): reader}
     if request.node.get_closest_marker("rules_core_absent") is not None:
         overrides[("scripts", "lib", "rules_core.sh")] = _LOADER_STUB.format(real=REPO / "scripts/lib/rules_core.sh")
