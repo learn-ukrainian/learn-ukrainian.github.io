@@ -957,6 +957,10 @@ def test_bind_successor_archives_predecessor_bytes_and_records_hash(
     command = [*_fresh_init_command(tmp_path), "--pr", "77"]
     assert task_closeout.main(command) == 0
     path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    task_lifecycle.write_lifecycle(path, task_lifecycle.set_remaining_scope(
+        task_lifecycle.load_lifecycle(path), status="open", summary="Docs follow-up remains.",
+        follow_up_issue=None, follow_up_stream_epic=None, evidence_ids=None, now=NOW,
+    ))
     before = path.read_bytes()
     predecessor = json.loads(before)
     assert task_closeout.main(command) == 2
@@ -986,7 +990,7 @@ def test_bind_successor_archives_predecessor_bytes_and_records_hash(
     assert ledger["identity"] != predecessor["identity"]
     expected_task = "native-successor-43" if successor_origin == "fresh" else None
     assert ledger["identity"].get("task_id") == expected_task
-    for field in ("lifecycle_id", "ac_snapshot", "required_checks", "author_family", "pr", "terminal_goal"):
+    for field in ("lifecycle_id", "ac_snapshot", "required_checks", "author_family", "pr", "terminal_goal", "remaining_scope"):
         assert ledger[field] == predecessor[field]
     assert ledger["evidence"] == [] and ledger["observation_receipts"] == []
 
@@ -1004,6 +1008,7 @@ def test_bind_successor_archives_predecessor_bytes_and_records_hash(
         ("unchanged-identity", "SUCCESSOR_IDENTITY_UNCHANGED"),
         ("lock-held", "LIFECYCLE_LOCK_HELD"),
         ("missing-predecessor", "PREDECESSOR_LEDGER_MISSING"),
+        ("remaining-scope", "SUCCESSOR_REMAINING_SCOPE_RECORDED"),
     ],
 )
 def test_bind_successor_refuses_mismatches_without_touching_ledgers(
@@ -1014,6 +1019,15 @@ def test_bind_successor_refuses_mismatches_without_touching_ledgers(
     command = [*_fresh_init_command(tmp_path), "--pr", "77"]
     assert task_closeout.main(command) == 0
     path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    if mismatch == "remaining-scope":
+        ledger, record = task_lifecycle.add_evidence(
+            task_lifecycle.load_lifecycle(path), ac_id="AC-IMPL", evidence_type="follow_up",
+            summary="Scope moved to #43.", url=None, commit=None, details={}, recorded_at=NOW,
+        )
+        task_lifecycle.write_lifecycle(path, task_lifecycle.set_remaining_scope(
+            ledger, status="transferred", summary="Docs move to #43.", follow_up_issue=43,
+            follow_up_stream_epic=10, evidence_ids=[record["id"]], now=NOW,
+        ))
     before = path.read_bytes()
     successor = _with_option(command, "--fresh-task-id", "native-successor-43")
     successor[successor.index("init")] = "bind-successor"

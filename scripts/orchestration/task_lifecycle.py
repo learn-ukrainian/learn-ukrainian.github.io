@@ -1194,7 +1194,8 @@ def bind_successor(
 
     The successor starts with no evidence or receipts; the archived predecessor
     keeps them. Only the thread identity changes, plus an optional PR binding
-    when the predecessor had none.
+    when the predecessor had none. A remaining-scope disposition is carried
+    unchanged so closure still sees it, unless it cites predecessor evidence.
     """
     prior = validate_lifecycle(predecessor)
     successor = task_identity.validate_identity(identity)
@@ -1226,6 +1227,12 @@ def bind_successor(
         raise EvidencePolicyError(
             "SUCCESSOR_POLICY_MISMATCH", "successor terminal goal and required checks must equal the predecessor's"
         )
+    if prior["remaining_scope"]["evidence_ids"]:
+        raise EvidencePolicyError(
+            "SUCCESSOR_REMAINING_SCOPE_RECORDED",
+            "the predecessor's remaining scope cites predecessor evidence the successor ledger does not hold; "
+            "the predecessor ledger is unchanged; escalate this refusal to claude-cto for a decision",
+        )
     if " ".join(str(author_family or "").split()) != prior["author_family"]:
         raise EvidencePolicyError(
             "SUCCESSOR_AUTHOR_FAMILY_MISMATCH",
@@ -1240,6 +1247,7 @@ def bind_successor(
         now=now,
         pr_number=bound_pr if bound_pr is not None else pr_number,
     )
+    ledger["remaining_scope"] = deepcopy(prior["remaining_scope"])
     if prior.get("evidence_type_corrections"):
         ledger["evidence_type_corrections"] = deepcopy(prior["evidence_type_corrections"])
     ledger["predecessor_ledger"] = {

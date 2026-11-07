@@ -210,8 +210,8 @@ binds itself explicitly, with the same identity and policy arguments as `init`:
 Under a non-blocking ledger lock the command copies the predecessor's exact bytes
 to `predecessors/issue-<N>.<first 16 hex of sha256>.json` beside the ledger, then
 writes a successor ledger with the predecessor's AC snapshot, evidence-type
-correction history, required checks, terminal goal, author family and PR binding
-(a `--pr` binds only an unbound predecessor). The optional `predecessor_ledger`
+correction history, required checks, terminal goal, author family, remaining
+scope and PR binding (a `--pr` binds only an unbound predecessor). The optional `predecessor_ledger`
 object records `archive_path`, `sha256` (`sha256:<hex>` of the archived bytes) and
 `bound_at`. Evidence and receipts start empty; re-record them for the current head.
 Nothing is deleted, and `init` and `init --reuse` are unchanged.
@@ -222,6 +222,9 @@ It exits 2 without writing either file on `LIFECYCLE_LOCK_HELD`,
 `SUCCESSOR_STREAM_MISMATCH`, `SUCCESSOR_PR_MISMATCH`, `AC_SNAPSHOT_MISMATCH`,
 `SUCCESSOR_POLICY_MISMATCH` (terminal goal or required checks) or
 `SUCCESSOR_AUTHOR_FAMILY_MISMATCH`; a cross-family takeover needs a CTO decision.
+`SUCCESSOR_REMAINING_SCOPE_RECORDED` refuses a predecessor whose remaining scope
+cites evidence IDs, because the successor ledger does not hold that evidence;
+escalate it to claude-cto.
 `PREDECESSOR_ARCHIVE_CONFLICT` means an archive at that path holds other bytes.
 
 ## Reconciliation and mutation

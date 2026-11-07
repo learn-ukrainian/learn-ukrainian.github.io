@@ -1377,7 +1377,8 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
 Outputs: The predecessor archive, the successor ledger and its carrier as JSON.
 Exit codes: 0 = bound; 2 = typed refusal (LIFECYCLE_LOCK_HELD, PREDECESSOR_LEDGER_MISSING,
   SUCCESSOR_{{REPOSITORY,ISSUE,STREAM,PR,POLICY,AUTHOR_FAMILY}}_MISMATCH, AC_SNAPSHOT_MISMATCH,
-  SUCCESSOR_IDENTITY_UNCHANGED, PREDECESSOR_ARCHIVE_CONFLICT), ledger unchanged.
+  SUCCESSOR_IDENTITY_UNCHANGED, SUCCESSOR_REMAINING_SCOPE_RECORDED, PREDECESSOR_ARCHIVE_CONFLICT),
+  ledger unchanged.
 Related: task-lifecycle-closeout.md; takeover skill; #12844.
 """,
     )
