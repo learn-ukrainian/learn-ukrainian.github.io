@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +11,7 @@ import pytest
 
 from scripts.agent_runtime import env_sanitize
 from scripts.lib.git_identity import git_identity_env
+from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
 CASES = [
@@ -106,7 +106,7 @@ def test_identity_recreated_after_sanitization(monkeypatch, provider, model, nam
 @pytest.mark.parametrize("provider,model,name", CASES)
 def test_launcher_export_git_identity(provider, model, name):
     env = (
-        os.environ
+        launcher_environment()
         | expected_identity("Parent")
         | {
             "TEST_PROVIDER": provider,
@@ -154,5 +154,6 @@ launcher_export_git_identity
         text=True,
         capture_output=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 3

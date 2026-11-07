@@ -244,11 +244,16 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
-# Apply the final CLI credential policy only inside the child process.
-# Direct exec test seams without the project helper retain their environment.
+# Apply launcher-control and credential cleanup only inside the child process.
+# The supervisor keeps its inputs for scope re-entry and successor replay.
 launcher_drop_unneeded_secrets() {
-  local py sanitizer
-  LC_CHILD_ENV_COMMAND=(env)
+  local py sanitizer variable
+  LC_CHILD_ENV_COMMAND=(/usr/bin/env)
+  while IFS= read -r -d '' variable; do
+    case "$variable" in
+      LAUNCHER_*=*) LC_CHILD_ENV_COMMAND+=(-u "${variable%%=*}") ;;
+    esac
+  done < <(/usr/bin/env -0)
   sanitizer="$LC_MACHINERY_DIR/agent_runtime/env_sanitize.py"
   py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
@@ -258,10 +263,11 @@ launcher_drop_unneeded_secrets() {
     launcher_error "could not drop unneeded API keys"
     return 1
   fi
-  LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --exec)
+  LC_CHILD_ENV_COMMAND+=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}")
   if [ "${LC_MODE:-}" = driver ]; then
-    LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --driver-launcher --exec)
+    LC_CHILD_ENV_COMMAND+=(--driver-launcher)
   fi
+  LC_CHILD_ENV_COMMAND+=(--exec)
 }
 
 launcher_require_binary() {

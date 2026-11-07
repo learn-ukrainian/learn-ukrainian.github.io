@@ -30,7 +30,12 @@ import pytest
 
 from tests.helpers import machinery_package
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_slot_registry, launcher_wrapper_source, tracked_launcher_wrappers
+from tests.launcher_sandbox import (
+    copy_slot_registry,
+    launcher_environment,
+    launcher_wrapper_source,
+    tracked_launcher_wrappers,
+)
 from tests.test_launcher_driver_scope import default_hup as default_hup
 from tests.test_launcher_driver_scope import (
     require_soak_opt_in,
@@ -135,6 +140,7 @@ launcher_adapter_exec() {
       "${0##*/}" "$LC_PROVIDER" "$LC_MODE" "$LC_HARNESS" "${LC_EPIC:-}"
     printf 'glm_flash=%s\\nunit=%s\\nscope_pid=%s\\npid=%s\\n' \\
       "${GLM_OPENCODE_FLASH-unset}" "${LU_DRIVER_SCOPE_UNIT:-}" "${LU_DRIVER_SCOPE_PID:-}" "$$"
+    printf 'model=%s\\neffort=%s\\n' "$LC_MODEL" "$LC_EFFORT"
   } > "$TEST_IDENTITY"
   launcher_exec_command "$TEST_PROVIDER" ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}
 }
@@ -145,6 +151,7 @@ _PROVIDER = (
     + _EVENT
     + """lu_test_event "provider xdist=${PYTEST_XDIST_AUTO_NUM_WORKERS-unset}"
 printf '%s\\0' "$@" > "$TEST_ARGV"
+env -0 > "$TEST_PROVIDER_ENV"
 exit "${TEST_PROVIDER_RC:-42}"
 """
 )
@@ -317,13 +324,8 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     _write(root / ".venv/bin/python", _PYTHON.format(event=_EVENT, python=shlex.quote(sys.executable), package=MACHINERY), 0o755)
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
     signal_provider = _write(root / "signal-provider.sh", _SIGNAL_PROVIDER, 0o755)
-    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30)
-    base = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(("GIT_", "LAUNCHER_", "SESSION_", "LC_", "LU_DRIVER_"))
-        and key not in {"PYTEST_XDIST_AUTO_NUM_WORKERS", "GLM_OPENCODE_FLASH", "LU_RULES_SEAT"}
-    }
+    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30, env=launcher_environment())
+    base = launcher_environment()
     env = {
         **base,
         **env,
@@ -332,6 +334,7 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
         "TEST_EVENTS": str(tmp_path / "events"),
         "TEST_IDENTITY": str(tmp_path / "identity"),
         "TEST_ARGV": str(tmp_path / "argv"),
+        "TEST_PROVIDER_ENV": str(tmp_path / "provider-env"),
         "TEST_PROVIDER": str(provider),
         "TEST_SIGNAL_PROVIDER": str(signal_provider),
         "TEST_SIGNAL_LOG": str(tmp_path / "signal-log"),
@@ -427,6 +430,8 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     assert (identity["provider"], identity["mode"], identity["unit"]) == (provider, mode, unit)
     # Same-PID re-entry: the replayed wrapper is the process systemd-run started.
     assert identity["scope_pid"] == identity["pid"]
+    child_names = Path(env["TEST_PROVIDER_ENV"]).read_bytes().split(b"\0")
+    assert not [entry for entry in child_names if entry.startswith(b"LAUNCHER_")]
     if mode == "driver":
         assert identity["epic"] == label
     else:

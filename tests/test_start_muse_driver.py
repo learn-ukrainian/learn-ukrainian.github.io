@@ -14,6 +14,7 @@ from typing import Any
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment
 from tests.test_launcher_contract import (
     _LAUNCHER_READY_TIMEOUT_S,
     _blocking_signal_provider,
@@ -42,14 +43,10 @@ def muse_env(tmp_path: Path) -> dict[str, str]:
         binary = bindir / name
         binary.write_text(f"#!/bin/bash\n{body}\n")
         binary.chmod(0o755)
-    env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(("LAUNCHER_", "GIT_", "SESSION_", "LC_")) and key != "LU_RULES_SEAT"
-    }
+    env = launcher_environment()
     env.update(
-        PATH=f"{bindir}:{os.environ['PATH']}",
-        AGENT_ORIGINAL_PATH=f"{bindir}:{os.environ['PATH']}",
+        PATH=f"{bindir}:{os.defpath}",
+        AGENT_ORIGINAL_PATH=f"{bindir}:{os.defpath}",
         AGENT_REAL_GH=str(bindir / "gh"),
         MUSE_TEST_CALLS=str(tmp_path / "muse-calls"),
     )
@@ -232,7 +229,7 @@ def test_killing_only_the_launcher_orphans_the_stub_and_group_reap_removes_it(tm
     group = start_launcher_group(
         ["bash", "-c", f'bash -c \'echo $$ > "$1"; {_LOOPING_STUB}\' stub "$1" & wait', "launcher", str(pid_file)],
         cwd=tmp_path,
-        env=dict(os.environ),
+        env=launcher_environment(),
     )
     try:
         stub_pid = _wait_for_pid_file(pid_file)
@@ -280,7 +277,7 @@ def _assert_signalled_before_reaped(events: list[tuple[str, int, bool]], pid: in
 def test_run_launcher_signals_the_group_before_reaping_the_leader(
     tmp_path: Path, signal_reap_order: list[tuple[str, int, bool]]
 ) -> None:
-    result = run_launcher(["bash", "-c", "exit 3"], cwd=tmp_path, env=dict(os.environ))
+    result = run_launcher(["bash", "-c", "exit 3"], cwd=tmp_path, env=launcher_environment())
 
     assert result.returncode == 3
     reaped = {pid for kind, pid, _reserved in signal_reap_order if kind == "reaped"}
@@ -294,7 +291,7 @@ def test_run_launcher_timeout_reaps_the_group_and_raises(tmp_path: Path) -> None
         run_launcher(
             ["bash", "-c", f'echo $$ > "$1"; {_LOOPING_STUB}', "launcher", str(pid_file)],
             cwd=tmp_path,
-            env=dict(os.environ),
+            env=launcher_environment(),
             timeout=1,
         )
     assert not _pid_running(_wait_for_pid_file(pid_file))
@@ -543,12 +540,15 @@ def lifecycle_fixture(tmp_path: Path, body: str, ready: Path | None = None) -> t
 def test_shared_lease_claim_exec_close_order(muse_env: dict[str, str], tmp_path: Path, exit_code: int) -> None:
     fixture_dir = tmp_path / "lifecycle"
     fixture_dir.mkdir()
-    launcher, attempts, closed = lifecycle_fixture(fixture_dir, f"exit {exit_code}")
+    launcher, attempts, closed = lifecycle_fixture(fixture_dir, f'env -0 > "$MUSE_TEST_ENV"; exit {exit_code}')
     events = tmp_path / "events"
+    capture = tmp_path / "provider-env"
     result = run_launcher(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
-        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
+        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events),
+             "MUSE_TEST_ENV": str(capture), "LAUNCHER_MODEL": "muse-wonder-full-1.0",
+             "LAUNCHER_EFFORT": "medium", "LAUNCHER_UNKNOWN": "sentinel"},
         timeout=60,
     )
     assert result.returncode == exit_code, result.stdout + result.stderr
@@ -556,6 +556,7 @@ def test_shared_lease_claim_exec_close_order(muse_env: dict[str, str], tmp_path:
     assert attempts.read_text().strip() == "1"
     assert closed.is_file()
 
+    assert not [entry for entry in capture.read_bytes().split(b"\0") if entry.startswith(b"LAUNCHER_")]
 
 @pytest.mark.parametrize(("sig", "exit_code"), [(signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)])
 def test_shared_signal_closes_muse_lease(

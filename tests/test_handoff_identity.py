@@ -19,6 +19,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.launcher_sandbox import launcher_environment
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_handoff_identity.sh"
 _HANDOFF_IDENTITY = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
@@ -49,6 +51,7 @@ def test_handoff_identity_fixtures() -> None:
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, (
         f"identity fixtures failed (rc={result.returncode})\n"
@@ -74,6 +77,7 @@ def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
@@ -100,6 +104,7 @@ def test_open_model_data_resolves_to_dedicated_provider_slot(resolver: str, expe
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
@@ -146,6 +151,7 @@ def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: 
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == expected
@@ -197,6 +203,7 @@ def test_dot_notation_selector_resolves_stream_and_provider_handoff(
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == f"{lane}|{stream}|{claude_slot}|{gemini_slot}|{grok_slot}|{codex_slot}"
@@ -218,6 +225,7 @@ def test_legacy_epic_suffix_normalizes_before_selector_resolution(arguments: lis
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "atlas|atlas"
@@ -231,6 +239,7 @@ def test_unknown_selector_fails_closed() -> None:
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == 1
     assert result.stdout == ""
@@ -254,6 +263,7 @@ def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[s
         capture_output=True,
         text=True,
         timeout=60,
+        env=launcher_environment(),
     )
     assert result.returncode == expected_code
     assert "unknown lane selector 'unknown'" in result.stderr
@@ -280,7 +290,7 @@ def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None
         ),
         encoding="utf-8",
     )
-    env = os.environ.copy()
+    env = launcher_environment()
     env["HANDOFF_ISSUE_STREAMS_YAML"] = str(fixture)
 
     for selector in (fresh_key, f"infra.{fresh_key}"):

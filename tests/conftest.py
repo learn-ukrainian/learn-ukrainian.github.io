@@ -453,7 +453,51 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
+        parent = getattr(item, "callspec", None)
+        mode = parent.params.get("_launcher_parent_environment") if parent is not None else None
+        if mode is not None:
+            from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+            # Before fixtures of any scope, including checkout builders.
+            for name, value in SEAT_CONTAMINATION.items():
+                if mode == "polluted":
+                    patch.setenv(name, value)
+                else:
+                    patch.delenv(name, raising=False)
         return (yield)
+
+
+def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+    """Distribute audited launcher regressions normally, including their parameters."""
+    from tests.launcher_sandbox import LAUNCHER_TEST_FILES, POLLUTED_PARENT_TESTS
+
+    if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
+        regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
+        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
+        modes = ("clean", "polluted") if regression else ("clean",)
+        metafunc.parametrize(
+            "_launcher_parent_environment", modes, indirect=True,
+            ids=tuple("parent-" + mode for mode in modes),
+        )
+
+
+@pytest.fixture(autouse=True)
+def _launcher_parent_environment(request: pytest.FixtureRequest) -> dict[str, str]:
+    """Exercise inherited seat leaks before launcher fixtures build child environments.
+
+    The protocol hook has scrubbed live identity and injected the case's input.
+    Verify the effective parent, then let tests supply deliberate child inputs.
+    Tests outside the audited inventory keep their existing environment.
+    """
+    if not hasattr(request, "param"):
+        return {}
+    from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+    effective = {name: os.environ[name] for name in SEAT_CONTAMINATION if name in os.environ}
+    assert effective == (SEAT_CONTAMINATION if request.param == "polluted" else {})
+    request.node.user_properties.append(("launcher_parent", request.param))
+    request.node.user_properties.append(("launcher_parent_verified_variables", len(effective)))
+    return effective
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)

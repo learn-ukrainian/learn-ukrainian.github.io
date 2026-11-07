@@ -15,6 +15,7 @@ import pytest
 
 from scripts.hooks import session_start_gate as gate
 from scripts.orchestration import thread_handoff as th
+from tests.launcher_sandbox import launcher_environment
 from tests.orchestration.test_thread_handoff import sample_snapshot
 
 REPO = Path(__file__).resolve().parents[2]
@@ -63,8 +64,7 @@ def _launcher_detection(packet):
         canonical_handoff.write_bytes(packet.handoff.read_bytes())
         stamp = packet.handoff.stat().st_mtime
         os.utime(canonical_handoff, (stamp, stamp))
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    env["SESSION_STREAM_ID"] = "epic:1234"
+    env = launcher_environment(SESSION_STREAM_ID="epic:1234")
     return subprocess.run(
         ["bash", "-c", 'source "$1"; resolve_codex_pending_rollover "$2" "$3"; '
          'rc=$?; printf "BOUND=%s\\n" "${CODEX_LAUNCHER_ROLLOVER_ID:-}"; exit "$rc"',
@@ -114,7 +114,7 @@ def test_clean_tracked_handoff_uses_commit_time_instead_of_checkout_mtime(tmp_pa
     handoff = tmp_path / "docs/session-state/current.codex-infra.md"
     handoff.parent.mkdir(parents=True)
     handoff.write_text("Durable role handoff\n")
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env.update(GIT_AUTHOR_DATE="2026-01-01T00:00:00Z", GIT_COMMITTER_DATE="2026-01-01T00:00:00Z")
     for command in (
         ["git", "init", "-q"],
@@ -188,7 +188,7 @@ def _launcher_prelease(root, slot, stream):
         "from scripts.orchestration.thread_handoff import main\n"
         "raise SystemExit(main())\n"
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith(("GIT_", "SESSION_"))}
+    env = launcher_environment()
     return subprocess.run(
         ["bash", "-c", 'source "$1"; resolve_codex_pending_rollover "$2" "$3" "$4"; rc=$?; '
          'printf "BOUND=%s %s %s\\n" "${CODEX_LAUNCHER_ROLLOVER_AGENT:-}" '

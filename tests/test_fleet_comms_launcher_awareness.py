@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 from pathlib import Path
+
+from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
 HELPER = REPO / "scripts/lib/fleet_comms_cold_start.sh"
@@ -12,7 +13,7 @@ HELPER = REPO / "scripts/lib/fleet_comms_cold_start.sh"
 
 def test_cold_clause_resolves_live_mode_when_env_unset() -> None:
     """Unset FLEET_COMMS_PLANE_MODE must not hardcode mode=off when live is authority."""
-    env = os.environ.copy()
+    env = launcher_environment()
     env.pop("FLEET_COMMS_PLANE_MODE", None)
     env.pop("FLEET_COMMS_MESSAGE_PLANE", None)
     env["PROJECT_DIR"] = str(REPO)

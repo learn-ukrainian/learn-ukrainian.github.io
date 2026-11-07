@@ -15,26 +15,12 @@ import pytest
 
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.session_canary import codex_lane, gemini_lane
+from tests.launcher_sandbox import launcher_environment
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# Git redirection variables inherited from the outer test runner (e.g. a git
-# hook) must not leak into the temporary repos created by these tests.
-_GIT_REDIRECT_VARS = frozenset(
-    {
-        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-        "GIT_COMMON_DIR",
-        "GIT_DIR",
-        "GIT_INDEX_FILE",
-        "GIT_OBJECT_DIRECTORY",
-        "GIT_PREFIX",
-        "GIT_WORK_TREE",
-    }
-)
-
-
 def _clean_environ() -> dict[str, str]:
-    return {k: v for k, v in os.environ.items() if k not in _GIT_REDIRECT_VARS}
+    return launcher_environment()
 
 
 def _write_executable(path: Path, body: str) -> None:

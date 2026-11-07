@@ -35,6 +35,7 @@ import pytest
 from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
 from scripts.lib import rules_core
 from tests.helpers import machinery_package
+from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import CORE_FILES, absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO
 
@@ -85,8 +86,6 @@ def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureReques
 @pytest.fixture(scope="module")
 def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The checkout launchers and the CLI run from: this one, or a view carrying the fixture."""
-    if CORE_DIR == REAL_CORE_DIR and (REPO / PRODUCT_MARKER).is_file():
-        return REPO
     view = checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", CORE_DIR)
     marker = view / PRODUCT_MARKER
     if not marker.is_file():
@@ -226,7 +225,8 @@ def test_a_core_quoted_in_an_attachment_does_not_replace_the_preamble() -> None:
 
 
 def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, core_root: Path) -> None:
-    monkeypatch.setenv(OLD_OVERRIDE_ENV, str(_hostile_core_dir(tmp_path)))
+    hostile = str(_hostile_core_dir(tmp_path))
+    monkeypatch.setenv(OLD_OVERRIDE_ENV, hostile)
     monkeypatch.chdir(tmp_path)
     assert CHECKOUT_CORE_DIR() == REPO / rules_core.RULES_DIR_REL
     assert CHECKOUT_CORE_DIR(core_root) == core_root / rules_core.RULES_DIR_REL
@@ -241,6 +241,7 @@ def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment({OLD_OVERRIDE_ENV: hostile}),
     )
     assert cli.returncode == 0, cli.stderr
     assert cli.stdout == rules_core.core_text("core", core_root)
@@ -267,7 +268,7 @@ def test_cli_help_paths_follow_relocated_module(tmp_path: Path) -> None:
     result = subprocess.run(
         [sys.executable, os.fspath(script), "--help"],
         cwd=tmp_path,
-        env={**os.environ, "PYTHONPATH": os.fspath(tmp_path), "COLUMNS": "100"},
+        env={**launcher_environment(), "PYTHONPATH": os.fspath(tmp_path), "COLUMNS": "100"},
         capture_output=True,
         text=True,
         check=False,
@@ -296,6 +297,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment(),
     )
     assert ok.returncode == 0, ok.stderr
     payload = json.loads(ok.stdout)
@@ -307,6 +309,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment(),
     )
     assert missing.returncode == 3
     assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
@@ -353,7 +356,7 @@ def _launch(
     expect_launch: bool = True,
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
-    env = {**os.environ, "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
+    env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
     if env_kind == "kimi":
         env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
     elif env_kind == "glm":

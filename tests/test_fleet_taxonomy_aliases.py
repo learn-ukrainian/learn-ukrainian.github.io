@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import shutil
 import subprocess
 import sys
@@ -22,6 +21,7 @@ from scripts.orchestration.fleet_taxonomy import (
     resolve_area_by_epic,
 )
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
+from tests.launcher_sandbox import launcher_environment
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
@@ -203,6 +203,7 @@ def test_handoff_identity_shell_selector_contract(
         capture_output=True,
         text=True,
         timeout=10,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, f"Failed for selector '{selector}': {result.stderr}"
     assert result.stdout.strip() == f"{expected_lane}\t{expected_stream}"
@@ -234,6 +235,7 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
         capture_output=True,
         text=True,
         timeout=10,
+        env=launcher_environment(),
     )
     assert result.returncode != 0, f"Expected non-zero returncode for unknown selector '{unknown_selector}'"
     assert result.stdout.strip() == ""
@@ -253,6 +255,7 @@ def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path
         capture_output=True,
         text=True,
         timeout=10,
+        env=launcher_environment(),
     )
     assert result.returncode == 1
     assert result.stdout == ""
@@ -280,7 +283,7 @@ def test_hermetic_launcher_unknown_selector_fails_closed_contract(
     script_path = _REPO_ROOT / launcher
     assert script_path.is_file(), f"Launcher missing: {launcher}"
 
-    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    clean_env = launcher_environment()
 
     result = subprocess.run(
         ["bash", str(script_path), unknown_arg],

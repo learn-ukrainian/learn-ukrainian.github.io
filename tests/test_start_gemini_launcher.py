@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
@@ -126,6 +127,7 @@ def test_shared_core_refuses_uncertified_gemini_driver_before_any_startup(
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 4, result.stderr
     assert message in result.stderr
@@ -158,6 +160,7 @@ def test_gemini_adapter_never_emits_skip_permissions(mode: str) -> None:
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert "would exec agy --model gemini-3.8-flash-high --sandbox read-only" in result.stdout
@@ -234,7 +237,6 @@ def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
 )
 def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, condition):
     import json
-    import os
     import sys
 
     from scripts.agent_runtime import agy_hook_config as hooks
@@ -289,7 +291,7 @@ def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, conditi
             str(workspace),
             sys.executable,
         ],
-        env={**os.environ, "HOME": str(home), "PATH": f"{fake_bin}:/usr/bin:/bin", "PROVIDER_CALLED": str(called)},
+        env={**launcher_environment(), "HOME": str(home), "PATH": f"{fake_bin}:/usr/bin:/bin", "PROVIDER_CALLED": str(called)},
         cwd=caller,
         text=True,
         capture_output=True,
