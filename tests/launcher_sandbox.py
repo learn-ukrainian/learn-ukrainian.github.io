@@ -186,7 +186,9 @@ def launcher_toolchain_path() -> str:
     return os.pathsep.join(dict.fromkeys(directories))
 
 
-def launcher_environment(*inputs: Mapping[str, str], **extra: str) -> dict[str, str]:
+def launcher_environment(
+    *inputs: Mapping[str, str], tmp_path: Path | None = None, **extra: str
+) -> dict[str, str]:
     """Build a fresh launcher environment, then overlay deliberate test inputs.
 
     Bash and its utilities need PATH and a UTF-8 locale. HOME and temporary
@@ -195,8 +197,10 @@ def launcher_environment(*inputs: Mapping[str, str], **extra: str) -> dict[str, 
     supplies a stub endpoint. Only executable directories are selected from
     the caller's declared toolchain; no seat variable is copied.
     """
-    # The per-test scratch fixture owns cleanup; its root changes between tests.
-    root = Path(tempfile.mkdtemp(prefix="launcher-environment-", dir=ensure_scratch_root()))
+    # Higher-scope fixtures supply their own pytest-owned allocation directory.
+    if tmp_path is None:
+        tmp_path = ensure_scratch_root()
+    root = Path(tempfile.mkdtemp(prefix="launcher-environment-", dir=tmp_path))
     for name in ("home", "tmp", "scratch", "guard-bin"):
         (root / name).mkdir()
     contact = root / "unexpected-manager-call"

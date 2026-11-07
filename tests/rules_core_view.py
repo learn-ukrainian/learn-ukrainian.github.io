@@ -131,6 +131,8 @@ def _apply(target: Path, action: Path | str | None) -> None:
 
 def _build_view(view: Path, overrides: Overrides) -> Path:
     sources = _view_sources()
+    view.parent.mkdir(parents=True, exist_ok=True)
+    env = launcher_environment(tmp_path=view.parent)
     selected_overrides = dict(overrides)
     loader = REPO.joinpath(*_LAUNCHER_LOADER)
     original = (*_LAUNCHER_LOADER[:-1], "rules_core.original.sh")
@@ -141,7 +143,7 @@ def _build_view(view: Path, overrides: Overrides) -> Path:
         tracked = subprocess.run(
             ["git", "show", f"HEAD:{marker.as_posix()}"],
             cwd=sources[0],
-            env=launcher_environment(),
+            env=env,
             capture_output=True,
             check=False,
             timeout=30,
@@ -151,7 +153,7 @@ def _build_view(view: Path, overrides: Overrides) -> Path:
     _link_tree(sources, view, (), selected_overrides)
     if not (view / ".venv").exists():
         (view / ".venv").symlink_to(Path(sys.prefix))
-    subprocess.run(["git", "init", "-q", "-b", "main", str(view)], env=launcher_environment(), check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(view)], env=env, check=True, timeout=30)
     return view
 
 
