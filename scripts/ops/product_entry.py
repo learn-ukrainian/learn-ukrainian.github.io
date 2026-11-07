@@ -34,9 +34,10 @@ Contract of :func:`load_configured_module`:
   search path uninspectable is refused too, without rebuilding cache entries
   or reading private namespace metadata.
 * Then the parts are imported one at a time, as an ordinary import imports
-  them: a cached module is used as it is, and only the uncached parts at the
-  end of the name run, from the one below the deepest cached part (or from the
-  top-level package). Missing ancestors of a cached part are never run again.
+  them: cached ancestors are imported first to wait for concurrent initialization,
+  and only the uncached parts at the end of the name run, from the one below
+  the deepest cached part (or from the top-level package). Missing ancestors
+  of a cached part are never run again.
   Each part is found before it runs: the top-level package by the file finder
   in the root, every other part by the import system in its parent's search
   path, which is checked
@@ -116,20 +117,19 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
     scripts_dir = _scripts_dir(name, product_root)
     parts = name.split(".")
     prefixes = [".".join(parts[:index]) for index in range(1, len(parts) + 1)]
-    for prefix in prefixes:
+    cached_prefixes = [prefix for prefix in prefixes if prefix in sys.modules]
+    for prefix in cached_prefixes:
         cached = sys.modules.get(prefix)
         if cached is not None:
             _check_module(name, prefix, cached, scripts_dir, is_leaf=prefix == name)
-    # As an ordinary import: only the uncached parts at the end of the name run, starting below the
-    # deepest cached one; a cached module is used as it is, never rebuilt from its missing ancestors.
-    start = len(prefixes)
-    while start > 0 and prefixes[start - 1] not in sys.modules:
-        start -= 1
+    # Missing ancestors of a cached part stay missing. Present ancestors still need an ordinary
+    # import: sys.modules contains packages before their initialization has finished.
+    start = prefixes.index(cached_prefixes[-1]) + 1 if cached_prefixes else 0
     _preflight(name, prefixes, start, scripts_dir)
     with _confined_imports(name, prefixes, scripts_dir):
-        if start == len(prefixes):
-            return _load_part(name, name, scripts_dir)
-        for prefix in prefixes[start:]:
+        # Keep cached imports inside the guard too: failure cleanup can remove a cached part
+        # before its import lock is acquired, causing import_module to resolve it again.
+        for prefix in [*cached_prefixes, *prefixes[start:]]:
             module = _load_part(name, prefix, scripts_dir)
     return module
 
