@@ -51,12 +51,12 @@ _LAUNCHER_LOADER = (machinery_package(), "lib", "rules_core.sh")
 # What the stub does in place of the launcher loader: no core, no seat, launch as before.
 _LOADER_STUB = """#!/usr/bin/env bash
 # Test-only: the real helpers with the loader replaced by one that loads nothing.
-source "$(dirname -- "${BASH_SOURCE[0]}")/rules_core.original.sh"
-rules_core_load() {
+source "$(dirname -- "${{BASH_SOURCE[0]}}")/rules_core.original.sh"
+rules_core_load() {{
   LC_RULES_SEAT=""
   LC_RULES_CORE=""
   LC_RULES_CORE_BYTES=0
-}
+}}
 """
 
 # A path maps to a file to link, text to write, or None to leave the entry out.
@@ -130,7 +130,7 @@ def _build_view(view: Path, overrides: Overrides) -> Path:
     selected_overrides = dict(overrides)
     loader = REPO.joinpath(*_LAUNCHER_LOADER)
     original = (*_LAUNCHER_LOADER[:-1], "rules_core.original.sh")
-    if overrides.get(_LAUNCHER_LOADER) == _LOADER_STUB:
+    if overrides.get(_LAUNCHER_LOADER) == _LOADER_STUB.format():
         selected_overrides[original] = loader
     marker = Path(PRODUCT_MARKER)
     if marker.parts not in overrides and not any((source / marker).is_file() for source in sources):
@@ -157,7 +157,7 @@ def install_loader_bypass(root: Path) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     original = target.with_name("rules_core.original.sh")
     shutil.copy2(REPO.joinpath(*_LAUNCHER_LOADER), original)
-    _apply(target, _LOADER_STUB)
+    _apply(target, _LOADER_STUB.format())
 
 
 def checkout_view(view: Path, core_dir: Path | None) -> Path:
@@ -194,7 +194,7 @@ def bypass_checkout(request: pytest.FixtureRequest) -> Path:
     stash = request.config.stash
     if _BYPASS_VIEW not in stash:
         factory = request.getfixturevalue("tmp_path_factory")
-        stash[_BYPASS_VIEW] = _build_view(factory.mktemp("rules-core-bypass") / "checkout", {_LAUNCHER_LOADER: _LOADER_STUB})
+        stash[_BYPASS_VIEW] = _build_view(factory.mktemp("rules-core-bypass") / "checkout", {_LAUNCHER_LOADER: _LOADER_STUB.format()})
     return stash[_BYPASS_VIEW]
 
 
