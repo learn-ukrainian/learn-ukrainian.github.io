@@ -55,9 +55,9 @@
 | `scripts/build/v6_build.py` | Reference for what the V6 pipeline DID. Not the implementation that ships. New pipeline borrows working pieces (notably the `{IMMERSION_RULE}` injection at writer + reviewer, lines 4695 / 7996). |
 | `scripts/build/phases/v6-write.md` | Reference for what NOT to do (latent кіт example, missing North Star preamble, mixing structural + pedagogical rules). New writer prompt re-authored from scratch with North Star preamble. |
 | `scripts/build/phases/v6-activities.md` | Same — reference for what to avoid. New activity prompt: stripped, lemma-whitelist constrained. |
-| `scripts/build/phases/v6-review/*.md` | Reference for the 9-dim breakdown. New reviewer architecture: tiered (Python QG + LLM QG with no overlap). |
+| `scripts/build/phases/v6-review/*.md` | Reference for the 9-dim breakdown. New reviewer architecture: tiered (Python QG + LLM QG with no overlap). Removed in REMOVE-UNNEEDED-1107; see git history. |
 | Existing curriculum `*.md` modules in `curriculum/l2-uk-en/{level}/` | Reference for the published-style output. Re-generated through new pipeline. User's manual a1/1 patches preserved as quality reference. |
-| `docs/archive/pipeline-v6-design.md` | Historical design doc. |
+| `docs/archive/pipeline-v6-design.md` | Historical design doc. Removed in REMOVE-UNNEEDED-1107; see git history. |
 | Bug autopsies in `docs/bug-autopsies/` | Lessons learned. Read before similar bugs. |
 
 ### DISCARD (rotten architectural layers — replaced wholesale)
