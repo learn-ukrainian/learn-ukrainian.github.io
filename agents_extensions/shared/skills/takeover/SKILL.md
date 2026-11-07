@@ -59,6 +59,18 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    (`git cherry-pick` keeps their authors) and adds your fixes as separate commits. Do not
    overwrite unrelated work. The finding ledger and review budget carry over either way.
    A takeover or any worker pushing to an existing PR branch is dispatched with `--branch <PR head branch>`.
+   When the issue already has a task-lifecycle ledger from another identity (`init` refuses it
+   and `init --reuse` refuses the identity), bind your own identity with the same arguments as
+   `init`; never move or edit a ledger by hand:
+
+   ```bash
+   "$PY" -m scripts.orchestration.task_closeout bind-successor --identity-file identity.json \
+     --ac-policy ac-policy.json --author-family "$FAMILY" --required-check 'CI Gate'
+   ```
+
+   It archives the predecessor byte for byte under `predecessors/`, records the archive path
+   and sha256 in the new ledger, and refuses any AC, policy, author-family, issue, PR or stream
+   difference, or a held lock. Evidence starts empty: re-record it for the current head.
 5. **Preserve credit.** Keep Git authorship and existing `Co-authored-by` trailers; use verified
    identities from the commits, never guessed emails:
 
