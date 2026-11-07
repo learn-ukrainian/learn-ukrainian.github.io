@@ -954,7 +954,7 @@ class AcpxDiscussionController:
         # Every discussion leg starts with the rules core: refuse before a
         # reservation is admitted, not one failed leg at a time.
         try:
-            rules_core.require_core()
+            rules_core.require_core(self.rules_seat)
         except rules_core.RulesCoreMissing as exc:
             raise AcpxDiscussionError(f"discussion refused: {exc}; the rules core is required") from exc
         idempotency_digest = _digest(idempotency_key)

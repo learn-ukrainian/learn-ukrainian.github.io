@@ -345,7 +345,11 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
         )
 
     assert result.ok is True
-    assert spy_adapter.build_invocation.call_args.kwargs["prompt"] == "hi"
+    from scripts.lib import rules_core
+
+    prompt = spy_adapter.build_invocation.call_args.kwargs["prompt"]
+    assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nhi"
+    assert prompt.count(rules_core.BLOCK_OPEN) == 1
     assert captured_records == [result.usage_record]
     record = captured_records[0]
     assert record["run_id"] == "run-123"

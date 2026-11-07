@@ -60,10 +60,10 @@ class ReviewContractError(ValueError):
     """A review attempt's prompt cannot be tied to the code it was rendered against, or that code differs (#9163)."""
 
 
-def trusted_core_context() -> tuple[str, dict[str, Any]]:
+def trusted_core_context(*, seat: str | None = None) -> tuple[str, dict[str, Any]]:
     """Load machinery rules independently of learner pins and template-produced text."""
     try:
-        seat = rules_core.resolve_seat()
+        seat = rules_core.resolve_seat(seat)
         relative_paths = rules_core.seat_sources(seat)
         paths = [rules_core.source_path(rel).resolve() for rel in relative_paths]
         before = [path.read_bytes() for path in paths]
@@ -82,9 +82,11 @@ def trusted_core_context() -> tuple[str, dict[str, Any]]:
     return f"{block}\n<trusted-rules-dependency>\n{provenance}\n</trusted-rules-dependency>\n\n", dependency
 
 
-def check_rules_dependency(dependency: object, prompt_text: str | None = None) -> None:
+def check_rules_dependency(
+    dependency: object, prompt_text: str | None = None, *, seat: str | None = None,
+) -> None:
     """Refuse stale or substituted machinery rules; never repair validated prompt bytes."""
-    prefix, current = trusted_core_context()
+    prefix, current = trusted_core_context(seat=seat)
     if dependency != current:
         raise ReviewContractError("review_rules_core_changed: trusted rules provenance differs; " + _RERENDER)
     if prompt_text is not None and not prompt_text.startswith(prefix):

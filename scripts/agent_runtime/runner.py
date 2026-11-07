@@ -3591,7 +3591,7 @@ def _prepare_rules_core(
         dependency = contract["machinery_dependencies"].get("rules_core")
         if not isinstance(dependency, dict) or dependency.get("seat") != rules_core.resolve_seat(seat):
             raise ValueError("BOUND rules seat differs from admission")
-        check_rules_dependency(dependency, prompt)
+        check_rules_dependency(dependency, prompt, seat=rules_core.resolve_seat(seat))
         recorded_core_context(dependency, prompt)  # checks the complete framed block_sha256
         digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         if digest != contract.get("prompt_sha256") or digest != record.get("prompt_sha256"):

@@ -58,7 +58,7 @@ def boundary(tmp_path, monkeypatch):
     return captured
 
 
-@pytest.fixture(params=[("content", "core", "content"), (None, "content", "content"), (None, None, "core")],
+@pytest.fixture(params=[("core", "content", "core"), (None, "content", "content"), (None, None, "core")],
                 ids=["explicit-over-env", "environment", "default"])
 def seat(request, monkeypatch):
     explicit, environment, expected = request.param
@@ -139,6 +139,17 @@ def test_real_controller_synthesis_cannot_spawn_without_exactly_one_core(boundar
 
     monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *a, **kw: "dispatch_worktree")
     kwargs = _kwargs(acpx_discuss.AcpxDiscussionController, seat, monkeypatch)
+    if seat[0] == "core":
+        # A missing source for the non-selected environment seat must not block
+        # explicit core admission or synthesis.
+        source_path = rules_core.source_path
+
+        def selected_source(relative, *args, **kwargs):
+            if relative == rules_core.CONTENT_ADDENDUM_REL:
+                return tmp_path / "unavailable-content-addendum.md"
+            return source_path(relative, *args, **kwargs)
+
+        monkeypatch.setattr(rules_core, "source_path", selected_source)
     controller = acpx_discuss.AcpxDiscussionController(
         root=tmp_path / "plane", participant_call=lambda agent, *a, **kw: _result(agent, "Evidence"), **kwargs)
     try:
@@ -168,12 +179,14 @@ def _bound_kwargs():
     return {"rules_core_delivery": runner.RulesCoreDelivery.BOUND} if hasattr(runner, "RulesCoreDelivery") else {}
 
 
-def test_admitted_bound_prompt_bytes_are_unchanged(boundary, tmp_path):
+def test_admitted_bound_prompt_bytes_are_unchanged(boundary, tmp_path, monkeypatch):
     """Defect class: runtime reconstructs or replaces the admitted review bytes."""
     prompt, record = _admitted(tmp_path)
+    monkeypatch.setenv("LU_RULES_SEAT", "content")
+    seat_kwargs = _kwargs(runner.invoke, ("core", "core"), monkeypatch)
     with pytest.raises(SpawnObserved):
         runner.invoke("codex", prompt, cwd=tmp_path, task_id="rules-bound", initiator="claude-cto",
-                      tool_config=record["review_attempt"], **_bound_kwargs())
+                      tool_config=record["review_attempt"], **_bound_kwargs(), **seat_kwargs)
     assert len(boundary) == 1
     assert hashlib.sha256(boundary[0].encode()).hexdigest() == record["prompt_sha256"]
     assert boundary[0] == prompt
