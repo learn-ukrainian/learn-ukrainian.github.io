@@ -248,7 +248,7 @@ launcher_project_python() {
 # The supervisor keeps its inputs for scope re-entry and successor replay.
 launcher_drop_unneeded_secrets() {
   local py sanitizer variable
-  LC_CHILD_ENV_COMMAND=(env)
+  LC_CHILD_ENV_COMMAND=(/usr/bin/env)
   for variable in "${!LAUNCHER_@}"; do
     LC_CHILD_ENV_COMMAND+=(-u "$variable")
   done

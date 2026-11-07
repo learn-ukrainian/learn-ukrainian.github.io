@@ -97,6 +97,7 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_secret_redaction.py::test_launcher_preserves_parent_api_key_and_fails_closed": "credential helper parent-preservation and fail-closed shell environments",
     "tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy": "explicit synthetic credential environments across active and retired adapters",
     "tests/test_secret_redaction.py::test_round4_exec_restores_signal_defaults": "shared _round4_launcher_probe environment builder",
+    "tests/test_secret_redaction.py::test_round5_launcher_preserves_process_paths": "final-agent cleanup preserves explicit PATH, HOME and PWD",
 }
 
 SEAT_CONTAMINATION = {
