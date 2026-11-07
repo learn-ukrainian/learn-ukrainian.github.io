@@ -6,6 +6,7 @@ import ast
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -541,3 +542,51 @@ def test_invalid_yaml_scalar_is_typed_malformed_refusal():
             validate_ukrainian_reply_claims(f"VERDICT: APPROVE\n```yaml\n{body}\n```\n")
         reply = f"VERDICT: APPROVE\n{body}\n"
         assert validate_ukrainian_reply_claims(reply)[0] == reply
+
+
+def _cited_fact_rows() -> list[tuple[str, bool]]:
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+    tools = sorted(
+        name for name in (*sources_tool_sets()[0], *sources_tool_sets()[1])
+        if re.fullmatch(r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+", name)
+    )
+    assert tools
+    # The 50 alternations of the cited-fact pattern, one uncited example each (the tool branch once per tool).
+    cited = [
+        *(f"{name} lists this form." for name in (
+            "VESUM", "ULIF", "PULS", "SUM-20", "Pravopys", "Zabolotnyi", "Bolshakova", "Prystinska",
+            "Antonenko", "Grinchenko", "ESUM", "GRAC", "CEFR", "Wikipedia", "The dictionary", "slovnyk",
+        )),
+        *(f"{name} returned this form." for name in tools),
+        "verify_stress_result returned this form.", "The rule forbids the apostrophe here.",
+        "The tag is feminine nominative.", "The paradigm shows this ending.", "According to the norm, it is right.",
+        "The reviewer cites a form.", "noun:inanim:f:v_naz is the parse.", "source: x", "mcp__sources__verify_word",
+        "page 7 shows this.", "This is the soft group.", "This is the hard group.", "p12 shows this.",
+        "pp 3-4 show this.", "p. 12 shows this.", "pp. 3 shows this.", "p0 shows this.", "p1 shows this.",
+        "p2 shows this.", "p3 shows this.", "See § 12.", "Правопис дозволяє це.", "ВЕСУМ подає цю форму.",
+        "УЛІФ подає цю форму.", "СУМ подає цю форму.", "сум-20 подає цю форму.", "ЕСУМ подає цю форму.",
+        "ВТС подає цю форму.", "Вікіпедія подає це.", "Грінченко подає цю форму.", "Антоненко радить це.",
+        "Заболотний радить це.", "Большакова радить це.", "Пристінська радить це.", "Горох подає цю форму.",
+        "Караванський радить це.", "Словник подає цю форму.", "сторінка 5 подає це.", "Правило забороняє це.",
+        "Тег вказує рід.", "Див. с. 5.", "Див. стор. 5.",
+    ]
+    uncited = [
+        "Residual owner claude-cto. Follow-up is P3.", "Finding severity P2: none.", "P0 and P1 blockers: none.",
+        "See audit/x/verify_pilot.py for details.",
+    ]
+    return [(text, True) for text in cited] + [(text, False) for text in uncited]
+
+
+@pytest.mark.parametrize(("text", "cites"), _cited_fact_rows())
+def test_severity_labels_and_non_tool_identifiers_are_not_cited_source_facts(text: str, cites: bool):
+    """Defect class: false cited-fact claims (#12855). Severity labels P0-P3 and identifiers that only share a
+    Sources tool prefix are not source citations, while every real citation branch still needs captured support."""
+    from scripts.review.review_contract import validate_ukrainian_reply_claims
+
+    _, checked = validate_ukrainian_reply_claims(f"VERDICT: APPROVE\n{text}\n")
+    if cites:
+        assert checked.claims_total >= 1
+        assert checked.claims_unsupported == checked.claims_total
+    else:
+        assert (checked.claims_total, checked.claims_unsupported) == (0, 0)
