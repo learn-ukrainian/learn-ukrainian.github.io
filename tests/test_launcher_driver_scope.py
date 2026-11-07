@@ -11,6 +11,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -188,6 +189,19 @@ exec "$@"
     exe.write_text("""#!/usr/bin/env bash
 printf 'systemctl %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
 [ "${FAKE_BUS_FAIL:-0}" = 0 ] || exit 1
+if [ "${2:-}" = stop ]; then
+  [ -n "${FAKE_SCOPE_ORPHAN:-}" ] || exit 0
+  IFS= read -r cgroup < "$FAKE_CGROUP"
+  [ "$3" = "${cgroup##*/}" ] || exit 97
+  IFS= read -r orphan < "$FAKE_SCOPE_ORPHAN"
+  printf 'TERM\\n' >> "$FAKE_SCOPE_SIGNALS"
+  kill -TERM "$orphan" || exit 97
+  sleep 2
+  printf 'KILL\\n' >> "$FAKE_SCOPE_SIGNALS"
+  kill -KILL "$orphan" || exit 97
+  printf 'inactive\\n' > "$FAKE_SCOPE_STATE"
+  exit 0
+fi
 if [[ "$*" == *lu-driver.slice* ]]; then
   printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
   exit
@@ -398,6 +412,56 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     result = _run(launcher, env, TEST_RC=str(rc), TZ="Pacific/Honolulu")
     assert result.returncode == rc, result.stderr
     _assert_exit_line(result.stderr, env, rc)
+
+
+@pytest.mark.parametrize(("provider_exit", "expected"), [("exit 0", 0), ("exit 23", 23), ("kill -KILL $$", 137)])
+def test_driver_scope_outlives_agent_until_remaining_children_are_stopped(
+    tmp_path: Path, provider_exit: str, expected: int
+) -> None:
+    """Scope outlives its agent: an orphan ignoring TERM must die without replacing the agent status."""
+    launcher, env = _launcher(tmp_path)
+    orphan = tmp_path / "orphan"
+    state = tmp_path / "scope-state"
+    state.write_text("active\n")
+    ready = tmp_path / "orphan-ready"
+    os.mkfifo(ready)
+    env.update(
+        FAKE_SCOPE_ORPHAN=str(orphan), FAKE_SCOPE_STATE=str(state),
+        FAKE_SCOPE_SIGNALS=str(tmp_path / "scope-signals"), FAKE_RUN_ARGV=str(tmp_path / "scope-argv"),
+        TEST_ORPHAN_READY=str(ready),
+    )
+    adapter = launcher.parent / "scripts/launchers/claude.sh"
+    adapter.write_text(adapter.read_text() + """
+launcher_adapter_exec() {
+  bash -c 'trap "" TERM; printf "%s\\n" "$$" > "$FAKE_SCOPE_ORPHAN";
+    printf "ready\\n" > "$TEST_ORPHAN_READY"; exec sleep 300' </dev/null >/dev/null 2>&1 &
+  IFS= read -r _ < "$TEST_ORPHAN_READY"
+""" + provider_exit + "\n}\n")
+    started = time.monotonic()
+    try:
+        result = _run(launcher, env)
+        assert result.returncode == expected, result.stderr
+        _assert_exit_line(result.stderr, env, expected)
+        assert state.read_text() == "inactive\n", result.stderr
+        assert time.monotonic() - started < 6
+        pid = int(orphan.read_text())
+
+        def orphan_finished() -> bool:
+            try:
+                return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] in {"Z", "X"}
+            except (FileNotFoundError, ProcessLookupError):
+                return True
+
+        wait_until(orphan_finished, timeout=2, message="scope orphan killed")
+        assert Path(env["FAKE_SCOPE_SIGNALS"]).read_text().splitlines() == ["TERM", "KILL"]
+        argv = Path(env["FAKE_RUN_ARGV"]).read_bytes().split(b"\0")
+        assert b"--property=KillMode=control-group" in argv
+        assert b"--property=TimeoutStopSec=2s" in argv
+        assert b"--property=SendSIGKILL=yes" in argv
+    finally:
+        if orphan.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(orphan.read_text()), signal.SIGKILL)
 
 
 @pytest.mark.parametrize("rc", [0, 130])
@@ -822,7 +886,7 @@ def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
     bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
     (bindir / "logger").unlink()
     # Keep the sandbox utilities available without falling back to host logger.
-    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk"):
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk", "timeout"):
         executable = shutil.which(name)
         assert executable is not None
         (bindir / name).symlink_to(executable)
