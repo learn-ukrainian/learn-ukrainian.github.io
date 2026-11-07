@@ -16,7 +16,7 @@ from tests.launcher_sandbox import (
     tracked_launcher_wrappers,
 )
 
-# Retain the original 49 selector groups and their builder/consumer provenance.
+# Retain the original 49 selector groups and add audited lifecycle consumers.
 # Native parametrization covers these groups and the rest of each audited file.
 POLLUTED_PARENT_TESTS = {
     "tests/test_handoff_slot_registry.py::test_practice_launcher_dry_run_uses_the_dedicated_stream": "inline wrapper environments; original cross-provider reproduction",
@@ -68,6 +68,10 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy": "explicit synthetic credential environments across active and retired adapters",
     "tests/test_secret_redaction.py::test_round4_exec_restores_signal_defaults": "shared _round4_launcher_probe environment builder",
     "tests/test_secret_redaction.py::test_round5_launcher_preserves_process_paths": "final-agent cleanup preserves explicit PATH, HOME and PWD",
+    "tests/test_rollover_bundles.py::test_launcher_import_is_silent_for_the_typed_none_only": "direct launcher-core rollover import shell environment",
+    "tests/orchestration/test_codex_driver_rollover_recovery.py::test_live_pending_packet_is_still_bound": "real rollover shell detection and explicit stream environment",
+    "tests/orchestration/test_exited_successor_registry.py::test_real_detector_and_shell_cold_start_after_exact_disposition": "shared rollover shell detection consumer",
+    "tests/orchestration/test_imported_rollover_detection.py::test_imported_pending_packet_launcher_binding": "shared rollover shell detection after cross-host bundle import",
 }
 
 

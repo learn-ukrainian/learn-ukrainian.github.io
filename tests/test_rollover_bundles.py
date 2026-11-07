@@ -22,6 +22,7 @@ import pytest
 from agents_extensions.shared.session_streams.inventory import stream_anchor_id
 from agents_extensions.shared.session_streams.store import ContentRejectedError, validate_entry_body
 from scripts.orchestration import thread_handoff as th
+from tests.launcher_sandbox import launcher_environment
 
 HANDOFF_PATH = ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md"
 AGENT = "claude-infra"
@@ -1165,6 +1166,7 @@ def test_launcher_import_is_silent_for_the_typed_none_only(tmp_path: Path, paylo
     )
     result = subprocess.run(
         ["bash", "-c", harness, "bash", str(REPO_ROOT), str(helper)],
+        env=launcher_environment(),
         capture_output=True,
         text=True,
         check=False,

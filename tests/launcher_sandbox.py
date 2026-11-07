@@ -68,6 +68,10 @@ LAUNCHER_TEST_FILES = (
     "tests/test_start_kimi_launcher.py",
     "tests/test_launcher_sandbox_closure.py",
     "tests/test_secret_redaction.py",
+    "tests/test_rollover_bundles.py",
+    "tests/orchestration/test_codex_driver_rollover_recovery.py",
+    "tests/orchestration/test_exited_successor_registry.py",
+    "tests/orchestration/test_imported_rollover_detection.py",
 )
 
 
