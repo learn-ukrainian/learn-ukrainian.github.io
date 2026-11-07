@@ -150,6 +150,11 @@ SINGLE_INSTANCE_RC = 3
 SINGLE_INSTANCE_REFUSAL_RE = re.compile(r"refused: .*process is still running")
 RELAUNCH_TAIL_LINES = 6
 ALERT_DETAIL_CHARS = 600
+# Fleet Comms message kinds, one per send. Only the launcher watcher consumes a supervisory
+# request, so it carries only the handoff request to a driver seat. An alert to claude-cto or
+# epics is an ordinary request that the CTO seat claims and acknowledges (#12837).
+HANDOFF_REQUEST = "supervisory-request"
+ALERT = "request"
 # A lead lane (the CTO) whose session is missing alerts claude-cto after this long, then hourly.
 LEAD_MISSING_ALERT_SECONDS = 900
 LEAD_MISSING_REALERT_SECONDS = 3600
@@ -477,7 +482,7 @@ class Guard:
     repo_root: Path
     tmux: Tmux
     log: Callable[[str], None]
-    send: Callable[[str, str, str], None]
+    send: Callable[[str, str, str, str], None]  # (recipient, body, key, kind)
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
@@ -527,7 +532,7 @@ class Guard:
         body = self._prompt(lane, self._reason(lane, s, pct), reminder)
         self.tmux.type_into(lane.target, body)
         stamp = iso(self.now())
-        self.send(lane.sender, body, f"{lane.kind}-handoff-{lane.name}-{stamp}")
+        self.send(lane.sender, body, f"{lane.kind}-handoff-{lane.name}-{stamp}", HANDOFF_REQUEST)
         s.update(nudges=reminder, last_nudge=stamp)
 
     def _seconds_since(self, value: str | None) -> float:
@@ -628,7 +633,7 @@ class Guard:
         phase start (``since``) so a later phase is a new occurrence.
         """
         phase = s.get("since") or iso(self.now())
-        self.send("epics", body, f"{key}-{phase}")
+        self.send("epics", body, f"{key}-{phase}", ALERT)
         alerts = s.setdefault("anchor_alerts", [])
         if key not in alerts:
             alerts.append(key)
@@ -761,6 +766,7 @@ class Guard:
             f"(since {s['missing_since']}); the guard cannot hand it off or relaunch it. "
             f"{self.tmux.server_diagnosis(error)}",
             f"lead-missing-{lane.name}-{stamp}",
+            ALERT,
         )
 
     def _watch(
@@ -896,6 +902,7 @@ class Guard:
             # Keyed on the relaunch occurrence: a fixed key makes the Fleet plane
             # refuse the next, differently timestamped alert for the same lane and rc.
             f"launcher-exit-{lane.name}-{rc}-{occurrence}",
+            ALERT,
         )
 
     def _idle(self, lane: Lane, text: str) -> bool:
@@ -1000,6 +1007,7 @@ class Guard:
                         f"HANDOFF-DONE; idle agent ended through the relaunch path. "
                         f"Pane tail: {tail or '(none captured)'}",
                         f"failed-exit-{lane.name}-{s['since']}",
+                        ALERT,
                     )
                 else:
                     self._stall_alert(lane, s, waited)
@@ -1060,6 +1068,7 @@ class Guard:
                 f"CTO-ALERT {iso(self.now())}: {lane.name} handoff still incomplete {waited}s after HANDOFF NOW; "
                 f"no forced kill. Check tmux session {lane.session}",
                 f"handoff-alert-{lane.name}-{iso(self.now())}",
+                ALERT,
             )
             s["alerted"] = True
 
@@ -1116,6 +1125,7 @@ class Guard:
             f"CTO-ALERT {stamp}: {lane.name} relaunch held, nothing respawned: {reason}. The successor's "
             f"single-instance check would refuse while the predecessor runs. Check tmux session {lane.session}",
             f"relaunch-held-{lane.name}-{s.get('since') or stamp}",
+            ALERT,
         )
 
     def _end_predecessor(
@@ -1338,19 +1348,30 @@ def comms_reader(db: Path | None, log: Callable[[str], None]) -> Callable[[str, 
     return handoff_posted
 
 
-def fleet_sender(identity: str, log: Callable[[str], None]) -> Callable[[str, str, str], None]:
-    def send(recipient: str, body: str, key: str) -> None:
+def fleet_sender(identity: str, log: Callable[[str], None]) -> Callable[[str, str, str, str], None]:
+    """Publish one guard message as ``identity``; ``kind`` is ``HANDOFF_REQUEST`` or ``ALERT``."""
+
+    def send(recipient: str, body: str, key: str, kind: str) -> None:
         try:
             from scripts.fleet_comms.authority import AuthorityService
 
-            message_id = (
-                AuthorityService(root=None)
-                .enqueue_supervisory_request(
+            service = AuthorityService(root=None)
+            if kind == HANDOFF_REQUEST:
+                message = service.enqueue_supervisory_request(
                     sender=identity, recipient=recipient, body=body, correlation_id=key, idempotency_key=key
                 )
-                .message_id
-            )
-            log(f"send {recipient} ok {message_id}")
+            elif kind == ALERT:
+                message = service.publish_message(
+                    sender=identity,
+                    recipients=(recipient,),
+                    body=body,
+                    kind=ALERT,
+                    correlation_id=key,
+                    idempotency_key=key,
+                )
+            else:
+                raise ValueError(f"unknown guard message kind {kind!r}")
+            log(f"send {recipient} ok {message.message_id}")
         except Exception as exc:  # a Fleet outage must not stop the pane-side handoff
             log(f"send {recipient} failed {type(exc).__name__}: {exc}")
 

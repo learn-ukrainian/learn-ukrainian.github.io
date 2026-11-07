@@ -12,7 +12,7 @@ by default, or another allowlisted pin via ``--model``. Auto is refused before
 any provider call, and a queued ask with no stored model is refused rather than
 defaulted (operator decision 2026-09-30, #9274).
 
-Under the hood: cursor-agent -p PROMPT --model MODEL --output-format text --trust
+Under the hood: cursor-agent -p --model MODEL --output-format text --trust, prompt on stdin
 """
 
 from __future__ import annotations
@@ -198,7 +198,6 @@ def _invoke_cursor(
     argv = [
         agent_bin,
         "-p",
-        prompt,
         "--model",
         model,
         "--output-format",
@@ -210,6 +209,7 @@ def _invoke_cursor(
     try:
         result = subprocess.run(
             argv,
+            input=prompt,
             capture_output=True,
             text=True,
             timeout=timeout,

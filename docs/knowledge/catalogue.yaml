@@ -491,15 +491,13 @@ entries:
   - id: test-prune-selections
     kind: doc_family
     paths: [docs/test-prune/**]
-    purpose: Low-signal test prune (#11226) rubric, swarm selection of tests to delete with per-test reasons and votes, the final selection, R1/R2/R3 restore manifest, and phase reports with counts and verification.
+    purpose: Low-signal test prune (#11226) rubric and phase report. The 2026-10-21 selection ledgers and apply script were removed in REMOVE-UNNEEDED-1107; see git history.
     keywords: [test prune, low-signal tests, t3code rubric, test selection, haiku swarm, restore pass]
     lifecycle: active
     owner: infra-harness
     entrypoints:
       - {topic: phase report and restores, path: docs/test-prune/README.md}
       - {topic: classification rubric, path: docs/test-prune/rubric.md}
-      - {topic: final deletion selection, path: docs/test-prune/2026-10-21-public-selection-final.jsonl}
-      - {topic: R1 R2 R3 restore manifest, path: docs/test-prune/2026-10-21-restore-r2.jsonl}
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<test name>' -- docs/test-prune"}
     content_searchable: true
@@ -1345,7 +1343,7 @@ entries:
   - id: resources-external-links
     kind: resource_catalogue
     paths: [docs/resources/external_resources*, docs/resources/EXTERNAL_RESOURCES_SCHEMA.md]
-    purpose: Per-module external resource links (articles, videos) read by the audit gate and wiki enrichment, with its schema and two stray copies.
+    purpose: Per-module external resource links (articles, videos) read by the audit gate and wiki enrichment, with its schema.
     keywords: [external resources, module links, ukrainianlessons articles, videos per module]
     lifecycle: active
     owner: curriculum-upgrade
@@ -1356,8 +1354,6 @@ entries:
       - {surface: cli, how: ".venv/bin/python scripts/audit/audit_external_resources.py --help"}
     content_searchable: true
     overrides:
-      - {path: docs/resources/external_resources.yaml.backup, lifecycle: superseded, superseded_by: docs/resources/external_resources.yaml, evidence: "Stray backup copy; no consumer."}
-      - {path: docs/resources/external_resources.yaml.truncated, lifecycle: superseded, superseded_by: docs/resources/external_resources.yaml, evidence: "Stray truncated copy; no consumer."}
       - {path: docs/resources/EXTERNAL_RESOURCES_SCHEMA.md, lifecycle: draft, evidence: "Own status: Draft (v1.1, 2026-03-10; issues #353 and #816)."}
 
   - id: resources-curated-link-maps

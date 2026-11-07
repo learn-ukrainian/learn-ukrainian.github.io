@@ -164,7 +164,7 @@ the configuration silently does nothing.
   `docs/dev/`, `docs/issues/`, `docs/proposals/`, `docs/l2-uk-en/MODULE-*`,
   `docs/resources/ukrainianlessons/`), plus
   `agents_extensions/shared/_archive/commands/module-stage-4.md` and
-  `archive/tasks/`. Whether `docs/dev/` and `docs/issues/` move under an archive
+  removed in REMOVE-UNNEEDED-1107; see git history. Whether `docs/dev/` and `docs/issues/` move under an archive
   tree is a #5539/#5540 lifecycle question.
 - Generated evidence, never hand-edited:
   `curriculum/l2-uk-en/a1/{things-have-gender,what-is-it-like}/**/llm-qg-*-prompt.md`

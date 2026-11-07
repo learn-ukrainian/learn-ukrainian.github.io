@@ -832,7 +832,7 @@ of a second server:
 | `agents_extensions/shared/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
 | `agents_extensions/shared/phases/gemini/README.md` | Gemini phase map |
 | `agents_extensions/shared/phases/gemini/v6-write.md` | Current write phase reference |
-| `agents_extensions/shared/phases/gemini/v6-review.md` | Current review phase reference |
+| `agents_extensions/shared/phases/gemini/v6-review.md` | Retirement pointer; the V6 review prompt set was removed in REMOVE-UNNEEDED-1107, see git history |
 | `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md` | Activity schema quick reference |
 | `docs/agent-runtime-guide.md` | Agent runtime architecture |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Module richness requirements |

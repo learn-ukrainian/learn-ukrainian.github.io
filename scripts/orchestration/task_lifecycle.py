@@ -19,7 +19,7 @@ import shutil
 import subprocess
 import tempfile
 from collections.abc import Callable, Iterator, Mapping, Sequence
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
@@ -1131,15 +1131,131 @@ def write_lifecycle(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 @contextmanager
-def lifecycle_lock(path: Path) -> Iterator[None]:
+def lifecycle_lock(path: Path, *, blocking: bool = True) -> Iterator[None]:
+    """Hold the ledger's exclusive lock; non-blocking callers refuse a held lock."""
     lock_path = path.with_suffix(path.suffix + ".lock")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle, fcntl.LOCK_EX)
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX if blocking else fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise EvidencePolicyError(
+                "LIFECYCLE_LOCK_HELD", f"another process holds the lifecycle lock: {lock_path}"
+            ) from exc
         try:
             yield
         finally:
             fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def predecessor_archive_path(path: Path, raw: bytes) -> tuple[Path, str]:
+    """Return the content-addressed archive path and digest for predecessor bytes.
+
+    Archives live in a ``predecessors/`` subdirectory so the ``issue-*.json``
+    scans of the canonical ledger directory never mistake one for a live ledger.
+    """
+    hexdigest = hashlib.sha256(raw).hexdigest()
+    return path.parent / "predecessors" / f"{path.stem}.{hexdigest[:16]}.json", "sha256:" + hexdigest
+
+
+def archive_predecessor(raw: bytes, archive_path: Path, archive_sha256: str) -> None:
+    """Store predecessor bytes once, never overwriting a different archive."""
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = archive_path.with_name(archive_path.name + f".tmp.{os.getpid()}")
+    try:
+        with tmp.open("wb") as handle:
+            handle.write(raw)
+            handle.flush()
+            os.fsync(handle.fileno())
+        with suppress(FileExistsError):
+            os.link(tmp, archive_path)
+    finally:
+        tmp.unlink(missing_ok=True)
+    stored = archive_path.read_bytes()
+    if stored != raw or "sha256:" + hashlib.sha256(stored).hexdigest() != archive_sha256:
+        raise EvidencePolicyError(
+            "PREDECESSOR_ARCHIVE_CONFLICT", f"archive {archive_path} does not hold the predecessor bytes"
+        )
+
+
+def bind_successor(
+    predecessor: Mapping[str, Any],
+    *,
+    identity: Mapping[str, Any],
+    author_family: str,
+    ac_snapshot: Mapping[str, Any],
+    required_checks: list[str],
+    pr_number: int | None,
+    archive_path: Path,
+    archive_sha256: str,
+    now: str,
+) -> dict[str, Any]:
+    """Build a successor ledger for the same issue task, refusing any policy drift.
+
+    The successor starts with no evidence or receipts; the archived predecessor
+    keeps them. Only the thread identity changes, plus an optional PR binding
+    when the predecessor had none. A remaining-scope disposition is carried
+    unchanged so closure still sees it, unless it cites predecessor evidence.
+    """
+    prior = validate_lifecycle(predecessor)
+    successor = task_identity.validate_identity(identity)
+    previous = prior["identity"]
+    for field, code in (
+        ("repository", "SUCCESSOR_REPOSITORY_MISMATCH"),
+        ("github_issue_number", "SUCCESSOR_ISSUE_MISMATCH"),
+        ("stream_epic", "SUCCESSOR_STREAM_MISMATCH"),
+    ):
+        if successor.get(field) != previous.get(field):
+            raise EvidencePolicyError(
+                code, f"successor {field} {successor.get(field)!r} differs from the predecessor's {previous.get(field)!r}"
+            )
+    if successor == previous:
+        raise EvidencePolicyError(
+            "SUCCESSOR_IDENTITY_UNCHANGED", "the successor identity equals the predecessor's; use init --reuse"
+        )
+    bound_pr = prior["pr"]["number"]
+    if pr_number is not None and bound_pr is not None and pr_number != bound_pr:
+        raise EvidencePolicyError(
+            "SUCCESSOR_PR_MISMATCH", f"successor PR #{pr_number} differs from the predecessor's PR #{bound_pr}"
+        )
+    if ac_snapshot["content_hash"] != prior["ac_snapshot"]["content_hash"]:
+        raise EvidencePolicyError(
+            "AC_SNAPSHOT_MISMATCH", "successor binding requires the stored AC snapshot and effective policy"
+        )
+    checks = sorted(_clean_text(value, "required check", maximum=200) for value in required_checks)
+    if successor["terminal_goal"] != prior["terminal_goal"] or checks != sorted(prior["required_checks"]):
+        raise EvidencePolicyError(
+            "SUCCESSOR_POLICY_MISMATCH", "successor terminal goal and required checks must equal the predecessor's"
+        )
+    if prior["remaining_scope"]["evidence_ids"]:
+        raise EvidencePolicyError(
+            "SUCCESSOR_REMAINING_SCOPE_RECORDED",
+            "the predecessor's remaining scope cites predecessor evidence the successor ledger does not hold; "
+            "the predecessor ledger is unchanged; escalate this refusal to claude-cto for a decision",
+        )
+    if " ".join(str(author_family or "").split()) != prior["author_family"]:
+        raise EvidencePolicyError(
+            "SUCCESSOR_AUTHOR_FAMILY_MISMATCH",
+            f"successor author family must equal the predecessor's {prior['author_family']!r}; "
+            "a cross-family takeover needs a CTO decision",
+        )
+    ledger = build_lifecycle(
+        successor,
+        author_family=prior["author_family"],
+        ac_snapshot=prior["ac_snapshot"],
+        required_checks=list(prior["required_checks"]),
+        now=now,
+        pr_number=bound_pr if bound_pr is not None else pr_number,
+    )
+    ledger["remaining_scope"] = deepcopy(prior["remaining_scope"])
+    if prior.get("evidence_type_corrections"):
+        ledger["evidence_type_corrections"] = deepcopy(prior["evidence_type_corrections"])
+    ledger["predecessor_ledger"] = {
+        "archive_path": str(archive_path),
+        "sha256": archive_sha256,
+        "bound_at": now,
+    }
+    return validate_lifecycle(ledger)
 
 
 def carrier_projection(payload: Mapping[str, Any], *, state_file: str | None = None) -> dict[str, Any]:

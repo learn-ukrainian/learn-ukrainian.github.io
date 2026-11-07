@@ -460,13 +460,15 @@ class FleetPlane:
         self.delivered: list[tuple[str, str, str]] = []
         self.refused: list[str] = []
 
-    def __call__(self, recipient: str, body: str, key: str) -> None:
+    def __call__(self, recipient: str, body: str, key: str, kind: str) -> None:
         try:
-            self.send(recipient, body, key)
+            self.send(recipient, body, key, kind)
         except IdempotencyKeyReuse as exc:  # mirrors fleet_sender: log, never deliver
             self.log.append(f"send {recipient} failed {type(exc).__name__}: {exc}")
 
-    def send(self, recipient: str, body: str, key: str) -> None:
+    def send(self, recipient: str, body: str, key: str, kind: str) -> None:
+        expected = cg.ALERT if recipient in {"claude-cto", "epics"} else cg.HANDOFF_REQUEST
+        assert kind == expected, (recipient, kind, key)
         payload = hashlib.sha256(body.encode("utf-8")).hexdigest()
         stored = self.payloads.get(key)
         if stored is None:

@@ -305,7 +305,7 @@ semantic_expansions = {
 | `scripts/generate_mdx.py` | Code | Updated resource sorting (priority → relevance → title) |
 | `scripts/generate_json.py` | Code | Updated resource sorting (priority → relevance → title) |
 
-**Backup created:** `docs/resources/external_resources.yaml.backup`
+The stray backup copy was removed in REMOVE-UNNEEDED-1107; see git history.
 
 ---
 
