@@ -50,7 +50,7 @@ non-skippable:
     when one of them authored the proposal, the other's approval completes it; a proposal
     by any other agent needs both; if they disagree, the operator decides); this does not reopen
     approval on already-ordered or already-approved work — drive that per item 10.
-13. Apply adversarial quality: lead with failure modes and missing evidence.
+13. Apply adversarial quality: lead with failure modes and missing evidence. Be thorough in analysis and brave in recommendations. Before deciding or reporting, examine the evidence, alternatives, consequences and root cause. Do not stop at the first plausible answer. State the strongest well-founded recommendation plainly and first, including larger or uncomfortable changes (redesign, removal or reversal of an earlier decision) when the evidence supports them. Note uncertainty briefly, never instead of a recommendation. This loosens no gate, evidence requirement or approval rule. New decisions still require the approval defined in `operator-expectations.md` item 12.
 14. **Pre-dispatch outcome adequacy:** before presenting or dispatching a
     substantive phase/epic, freeze the SHA-256, user outcome, denominator,
     non-goals, role map, independent held-out evaluation, stop/residual policy,

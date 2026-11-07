@@ -19,10 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "agents_extensions/shared/rules"
 MANIFEST = RULES / "core-manifest.yaml"
 EXPECTED_IDS = RULES / "core-expected-ids.txt"
-# The frozen denominator: the 344 units (344 inventory units plus Q18, #9618, minus A28, the Entire intake rule retired
-# with the integration, C-2928) whose destination is P0-P9, an unconditional invariant or the content addendum.
+# The frozen denominator: the 345 units (344 inventory units plus Q18, #9618, minus A28, C-2928,
+# plus O41, #12830) whose destination is P0-P9, an unconditional invariant or the content addendum.
 # Changing the list must be deliberate and reviewed.
-EXPECTED_IDS_SHA256 = "896a4a5fb7711eab99a55afb6fd4e3112dd33c685534d52be145227769639784"
+EXPECTED_IDS_SHA256 = "c592564f69b5e745c0aa2bdbe5833abda20a3af6926c74648a552132f3ec2e35"
 SECTIONS = ("core", "content_addendum")
 UNIT_ID = re.compile(r"^[A-Z][a-z]?\d{2}$")
 ANCHOR_COMMENT = re.compile(r"<!-- ([a-z0-9]+(?:-[a-z0-9]+)*): ([A-Z][a-z]?\d{2}) -->")
