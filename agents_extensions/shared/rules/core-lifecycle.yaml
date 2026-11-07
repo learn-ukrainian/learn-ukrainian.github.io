@@ -40,6 +40,12 @@ p0-gates:
   enforcement: {kind: checklist}
   review_by: '2026-11-22'
 
+p0-thorough-brave:
+  origin: '#12830'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
 p0-challenge:
   origin: 'unknown'
   tier: core

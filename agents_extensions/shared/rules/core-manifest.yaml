@@ -48,6 +48,8 @@ core:
   C15: p0-gates
   C24: p0-gates
   C25: p0-gates
+  # p0-thorough-brave
+  O41: p0-thorough-brave
   # p0-challenge
   C07: p0-challenge
   # p1-role

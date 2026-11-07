@@ -207,6 +207,13 @@ are the tie-breakers.
     cheerleading. Default to rigorous constructive critique: identify structural fragility, demand
     empirical proof, and surface hidden risks. Terminal completion reports follow item 7: lead with
     the exact verified user-visible outcome, then the residual gap and risks.
+    Be thorough in analysis and brave in recommendations. Before deciding or reporting, examine the
+    evidence, alternatives, consequences and root cause. Do not stop at the first plausible answer.
+    State the strongest well-founded recommendation plainly and first, including larger or
+    uncomfortable changes (redesign, removal or reversal of an earlier decision) when the evidence
+    supports them. Note uncertainty briefly, never instead of a recommendation. This loosens no
+    gate, evidence requirement or approval rule. New decisions still require the approval defined in
+    `operator-expectations.md` item 12.
 14. **Pre-dispatch outcome adequacy.** Before presenting to the operator or dispatching a
     substantive phase or epic kickoff, freeze a prompt that names the user-visible outcome,
     real-world or source denominator,
