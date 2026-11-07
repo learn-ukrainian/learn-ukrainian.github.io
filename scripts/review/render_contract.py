@@ -64,7 +64,8 @@ def trusted_core_context() -> tuple[str, dict[str, Any]]:
     """Load machinery rules independently of learner pins and template-produced text."""
     try:
         seat = rules_core.resolve_seat()
-        paths = [rules_core.source_path(rel).resolve() for rel in rules_core.seat_sources(seat)]
+        relative_paths = rules_core.seat_sources(seat)
+        paths = [rules_core.source_path(rel).resolve() for rel in relative_paths]
         before = [path.read_bytes() for path in paths]
         block = rules_core.core_block(seat)
         if before != [path.read_bytes() for path in paths]:
@@ -73,8 +74,8 @@ def trusted_core_context() -> tuple[str, dict[str, Any]]:
         raise ReviewContractError(f"review_rules_core_unavailable: {exc}; {_RERENDER}") from exc
     dependency = {
         "seat": seat,
-        "sources": [{"path": str(path), "sha256": hashlib.sha256(data).hexdigest()}
-                    for path, data in zip(paths, before, strict=True)],
+        "sources": [{"path": relative, "sha256": hashlib.sha256(data).hexdigest()}
+                    for relative, data in zip(relative_paths, before, strict=True)],
         "block_sha256": hashlib.sha256(block.encode("utf-8")).hexdigest(),
     }
     provenance = json.dumps(dependency, sort_keys=True, ensure_ascii=False, separators=(",", ":"))

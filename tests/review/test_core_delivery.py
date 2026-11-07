@@ -2,6 +2,9 @@
 
 import hashlib
 import json
+import os
+import subprocess
+import sys
 from unittest.mock import Mock
 
 import pytest
@@ -34,7 +37,7 @@ def test_core_provenance_is_hashed_machinery_and_not_a_learner_pin(tmp_path, mon
     contract = render_contract.check_render_contract(output, text, REPO_ROOT, review_id="review", attempt_id="attempt")
     dependency = contract["machinery_dependencies"]["rules_core"]
     assert dependency["seat"] == "core"
-    assert dependency["sources"] == [{"path": str(source.resolve()),
+    assert dependency["sources"] == [{"path": "agents_extensions/shared/rules/core.md",
                                        "sha256": hashlib.sha256(source.read_bytes()).hexdigest()}]
     assert dependency["block_sha256"] == hashlib.sha256(rules_core.core_block().encode()).hexdigest()
     assert source not in reads
@@ -45,6 +48,66 @@ def test_core_provenance_is_hashed_machinery_and_not_a_learner_pin(tmp_path, mon
     checked = check_prompt(text, manifest, repo_root=tmp_path, files_read=reads, review_access=access,
                            machinery_dependencies=contract["machinery_dependencies"])
     assert checked.passed, checked.errors
+
+
+def test_bound_core_provenance_admits_identical_bytes_across_machinery_checkouts(tmp_path):
+    """Defect class: a committed bound render refuses identical machinery at another checkout path."""
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True, timeout=30).strip()
+    checkouts = [tmp_path / "machinery-a", tmp_path / "machinery-b"]
+    for checkout in checkouts:
+        subprocess.run(["git", "clone", "--shared", "--no-checkout", "--quiet", str(REPO_ROOT), str(checkout)],
+                       check=True, capture_output=True, timeout=60)
+        subprocess.run(["git", "sparse-checkout", "set", "--no-cone", "/scripts/",
+                        "/agents_extensions/shared/rules/", "/schemas/", "/.mcp/", "/requirements-lock.txt"],
+                       cwd=checkout, check=True, capture_output=True, timeout=60)
+        subprocess.run(["git", "checkout", "--quiet", "--detach", head], cwd=checkout,
+                       check=True, capture_output=True, timeout=60)
+        assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=checkout,
+                                       text=True, timeout=30).strip() == head
+        assert subprocess.check_output(["git", "status", "--porcelain"], cwd=checkout,
+                                       text=True, timeout=30) == ""
+    learner = tmp_path / "learner"
+    learner.mkdir()
+    manifest, _, _ = _setup_lexical_fixture(learner)
+    output = tmp_path / "review.prompt"
+    environment = dict(os.environ)
+    for name in ("PYTHONPATH", "LEARN_UKRAINIAN_RULES_DIR"):
+        environment.pop(name, None)
+    rendered = subprocess.run(
+        [sys.executable, "-m", "scripts.review.prompts.render", str(manifest), "--repo-root", str(learner),
+         "--output", str(output), "--review-id", "review", "--attempt-id", "attempt", "--review-access", "isolated"],
+        cwd=checkouts[0], env=environment, capture_output=True, text=True, timeout=60,
+    )
+    assert rendered.returncode == 0, rendered.stdout + rendered.stderr
+    admission = """
+import json, sys
+from pathlib import Path
+from scripts.review.render_contract import (
+    ReviewContractError, check_launch_contract, check_render_contract, trusted_core_context,
+)
+prompt = Path(sys.argv[1])
+try:
+    contract = check_render_contract(prompt, prompt.read_text(), Path.cwd(), interpreter=Path(sys.executable),
+                                     review_id="review", attempt_id="attempt")
+    check_launch_contract(contract, Path.cwd(), Path(sys.executable))
+    result = {"admission": "pass", "recorded_dependency": contract["machinery_dependencies"]["rules_core"]}
+except ReviewContractError as error:
+    result = {"admission": "refused", "error": str(error)}
+result["current_dependency"] = trusted_core_context()[1]
+print(json.dumps(result))
+"""
+    outcomes = []
+    for checkout in checkouts:
+        admitted = subprocess.run([sys.executable, "-c", admission, str(output)], cwd=checkout,
+                                  env=environment, capture_output=True, text=True, timeout=60)
+        assert admitted.returncode == 0, admitted.stdout + admitted.stderr
+        outcomes.append(json.loads(admitted.stdout))
+    assert [outcome["admission"] for outcome in outcomes] == ["pass", "pass"], outcomes
+    dependency = outcomes[0]["recorded_dependency"]
+    assert dependency["seat"] == "core"
+    assert dependency["sources"] == [{"path": "agents_extensions/shared/rules/core.md",
+                                      "sha256": hashlib.sha256((checkouts[0] / rules_core.CORE_REL).read_bytes()).hexdigest()}]
+    assert all(outcome["current_dependency"] == outcome["recorded_dependency"] == dependency for outcome in outcomes)
 
 
 @pytest.mark.parametrize("field", ("seat", "path", "sha256", "block_sha256", "missing"))
