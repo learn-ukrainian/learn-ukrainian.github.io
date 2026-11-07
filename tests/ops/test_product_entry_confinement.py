@@ -253,7 +253,7 @@ def test_an_uninspectable_ordinary_namespace_path_refuses_without_cache_mutation
 
 
 @pytest.mark.parametrize("parent", ["scripts", "scripts.pkg"])
-@pytest.mark.parametrize("scenario", ["success", "failed-parent-retry", "import-cycle"])
+@pytest.mark.parametrize("scenario", ["success", "failed-parent-retry", "import-cycle", "ancestor-inserted-during-snapshot"])
 def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_path, monkeypatch, parent, scenario):
     """A cached ancestor is still executing when seven independent followers enter."""
     events = ModuleType(f"lu_confined_events_{uuid.uuid4().hex}")
@@ -263,13 +263,22 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
     events.fail_once = fail_once
     events.cycle_import = lambda: None
     events.leaf_parent_states = []
+    events.snapshot_missed = threading.Event()
+    events.resume_snapshot = threading.Event()
+    late_ancestor = scenario == "ancestor-inserted-during-snapshot"
     monkeypatch.setitem(sys.modules, events.__name__, events)
+    package = "pkg" if parent.endswith(".pkg") else ""
+    if late_ancestor:
+        package = f"{package}.sub" if package else "pkg"
+        product.write(f"{package.replace('.', '/')}/__init__.py")
+    prepare_child = f"import importlib\nimportlib.import_module('scripts.{package}')\n" if late_ancestor else ""
     relative = "__init__.py" if parent == "scripts" else "pkg/__init__.py"
     label = parent.rpartition(".")[2]
     product.write(
         relative,
         f"import sys\nevents = sys.modules[{events.__name__!r}]\n"
-        "events.parent_entered.set()\nassert events.resume_parent.wait(10)\n"
+        + prepare_child
+        + "events.parent_entered.set()\nassert events.resume_parent.wait(10)\n"
         "if events.fail_once:\n    events.fail_once = False\n    raise RuntimeError('parent failed')\n"
         "events.cycle_import()\n"
         + product.recording(label, "INITIALIZED = True\n"),
@@ -279,7 +288,7 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
         f"sys.modules[{events.__name__!r}].leaf_parent_states.append(\n"
         "    (getattr(parent, 'INITIALIZED', False), parent.__spec__._initializing))\n"
         + product.recording("leaf", "VALUE = 42\n"),
-        package="pkg" if parent.endswith(".pkg") else "",
+        package=package,
     )
     foreign = Product(tmp_path / "foreign", product.runs)
     foreign.write("__init__.py", foreign.recording("foreign-scripts"))
@@ -316,12 +325,31 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
     monkeypatch.setattr(product_entry, "_preflight", observed_preflight)
     monkeypatch.setattr(product_entry, "_import", observed_import)
 
+    def trace_snapshot(frame, event, arg):
+        if frame.f_code is load_configured_module.__code__:
+            # The loop's next line event follows the absent parent's membership
+            # check, before the next prefix is checked. No product cache is mutated.
+            if (
+                event == "line" and frame.f_locals.get("prefix") == parent
+                and "cached_prefixes" not in frame.f_locals and not events.snapshot_missed.is_set()
+            ):
+                assert parent not in sys.modules
+                events.snapshot_missed.set()
+                assert events.resume_snapshot.wait(10)
+            return trace_snapshot
+        return None
+
     def run():
         label = threading.current_thread().name
         try:
+            if late_ancestor and label == "follower-0":
+                sys.settrace(trace_snapshot)
             results[label] = load_configured_module(name)
         except BaseException as exc:
             errors[label] = exc
+        finally:
+            if late_ancestor and label == "follower-0":
+                sys.settrace(None)
 
     leader = threading.Thread(target=run, name="leader", daemon=True)
     followers = [threading.Thread(target=run, name=label, daemon=True) for label in ready]
@@ -368,17 +396,23 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
         if scenario == "import-cycle":
             ordinary.start()
             assert events.other_entered.wait(10)
+        if late_ancestor:
+            followers[0].start()
+            assert events.snapshot_missed.wait(10)
         leader.start()
         assert events.parent_entered.wait(10)
         initializing = sys.modules[parent]
         assert initializing.__spec__._initializing
         for thread in followers:
-            thread.start()
+            if thread.ident is None:
+                thread.start()
+        events.resume_snapshot.set()
         assert all(event.wait(10) for event in ready.values())
         assert not events.resume_parent.is_set()
         release_followers.set()
         assert all(event.wait(10) for event in progressed.values())
     finally:
+        events.resume_snapshot.set()
         release_followers.set()
         events.resume_parent.set()
         if scenario == "import-cycle":

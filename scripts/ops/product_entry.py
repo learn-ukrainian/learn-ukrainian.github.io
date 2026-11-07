@@ -129,8 +129,10 @@ def load_configured_module(name: str, *, product_root: Path | None = None) -> Mo
     with _confined_imports(name, prefixes, scripts_dir):
         # Keep cached imports inside the guard too: failure cleanup can remove a cached part
         # before its import lock is acquired, causing import_module to resolve it again.
-        for prefix in [*cached_prefixes, *prefixes[start:]]:
-            module = _load_part(name, prefix, scripts_dir)
+        # Recheck present ancestors: one can appear between the snapshot's prefix lookups.
+        for index, prefix in enumerate(prefixes):
+            if index >= start or prefix in cached_prefixes or prefix in sys.modules:
+                module = _load_part(name, prefix, scripts_dir)
     return module
 
 
