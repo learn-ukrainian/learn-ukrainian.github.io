@@ -319,8 +319,7 @@ launcher_enter_driver_scope() {
     exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
-    --property=OOMPolicy=continue --property=KillMode=control-group --property=TimeoutStopSec=2s \
-    --property=SendSIGKILL=yes -- bash "$DS_LIB_DIR/driver_scope.sh" \
+    --property=OOMPolicy=continue -- bash "$DS_LIB_DIR/driver_scope.sh" \
     --entry "$LC_MODE" "$unit" 219 "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
   ) 0<&0 &
   child=$!
@@ -329,12 +328,17 @@ launcher_enter_driver_scope() {
   rc="$DS_CHILD_RC"
   # Scopes have no main process: orphaned tool shells can outlive the agent.
   # This waiter is outside the scope and has already collected its child's
-  # status. Stop only the UUID unit it created; systemd sends TERM to the whole
-  # cgroup, then KILL after two seconds, including descendants in other groups.
-  # Bound a wedged bus as well. A collected, empty scope is already inactive;
-  # any other stop failure is reported without replacing the child's status.
-  if ! timeout --signal=KILL 6s systemctl --user stop "$unit" 2>/dev/null; then
-    local scope_state
+  # status. Signal only its UUID unit's whole cgroup, then stop it to collect
+  # the empty scope. Keep this short grace here, not in unit properties:
+  # external stops of a live agent must retain time for fenced lease cleanup.
+  # Every manager client is bounded; cleanup never replaces the child's status.
+  local scope_state
+  scope_state="$(timeout --signal=KILL 1s systemctl --user show "$unit" -p ActiveState --value 2>/dev/null)" || scope_state=unknown
+  if [ "$scope_state" != inactive ]; then
+    timeout --signal=KILL 1s systemctl --user kill --kill-whom=all --signal=TERM "$unit" 2>/dev/null || true
+    sleep 2
+    timeout --signal=KILL 1s systemctl --user kill --kill-whom=all --signal=KILL "$unit" 2>/dev/null || true
+    timeout --signal=KILL 1s systemctl --user stop "$unit" 2>/dev/null || true
     scope_state="$(timeout --signal=KILL 1s systemctl --user show "$unit" -p ActiveState --value 2>/dev/null)" || scope_state=unknown
     if [ "$scope_state" != inactive ]; then
       (printf 'DRIVER_SCOPE_CLEANUP_FAILED unit=%s state=%s\n' "$unit" "$scope_state" >&2) || true

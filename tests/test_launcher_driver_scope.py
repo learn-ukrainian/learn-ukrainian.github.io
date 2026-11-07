@@ -189,19 +189,24 @@ exec "$@"
     exe.write_text("""#!/usr/bin/env bash
 printf 'systemctl %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
 [ "${FAKE_BUS_FAIL:-0}" = 0 ] || exit 1
-if [ "${2:-}" = stop ]; then
-  [ -n "${FAKE_SCOPE_ORPHAN:-}" ] || exit 0
-  IFS= read -r cgroup < "$FAKE_CGROUP"
-  [ "$3" = "${cgroup##*/}" ] || exit 97
-  IFS= read -r orphan < "$FAKE_SCOPE_ORPHAN"
-  printf 'TERM\\n' >> "$FAKE_SCOPE_SIGNALS"
-  kill -TERM "$orphan" || exit 97
-  sleep 2
-  printf 'KILL\\n' >> "$FAKE_SCOPE_SIGNALS"
-  kill -KILL "$orphan" || exit 97
-  printf 'inactive\\n' > "$FAKE_SCOPE_STATE"
+if [[ "$*" == *--value* ]]; then
+  if [ -n "${FAKE_SCOPE_STATE:-}" ]; then /bin/cat "$FAKE_SCOPE_STATE"; else printf 'inactive\\n'; fi
   exit 0
 fi
+if [ "${2:-}" = kill ]; then
+  [ -n "${FAKE_SCOPE_ORPHAN:-}" ] || exit 0
+  IFS= read -r cgroup < "$FAKE_CGROUP"
+  [ "${@: -1}" = "${cgroup##*/}" ] || exit 97
+  IFS= read -r orphan < "$FAKE_SCOPE_ORPHAN"
+  case "$*" in
+    *--signal=TERM*) printf 'TERM\\n' >> "$FAKE_SCOPE_SIGNALS"; kill -TERM "$orphan" || exit 97 ;;
+    *--signal=KILL*) printf 'KILL\\n' >> "$FAKE_SCOPE_SIGNALS"; kill -KILL "$orphan" || exit 97
+      printf 'inactive\\n' > "$FAKE_SCOPE_STATE" ;;
+    *) exit 97 ;;
+  esac
+  exit 0
+fi
+[ "${2:-}" != stop ] || exit 0
 if [[ "$*" == *lu-driver.slice* ]]; then
   printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
   exit
@@ -455,9 +460,9 @@ launcher_adapter_exec() {
         wait_until(orphan_finished, timeout=2, message="scope orphan killed")
         assert Path(env["FAKE_SCOPE_SIGNALS"]).read_text().splitlines() == ["TERM", "KILL"]
         argv = Path(env["FAKE_RUN_ARGV"]).read_bytes().split(b"\0")
-        assert b"--property=KillMode=control-group" in argv
-        assert b"--property=TimeoutStopSec=2s" in argv
-        assert b"--property=SendSIGKILL=yes" in argv
+        # Live-agent external stops must keep the manager's original grace.
+        assert b"--property=TimeoutStopSec=2s" not in argv
+        assert b"--property=SendSIGKILL=yes" not in argv
     finally:
         if orphan.exists():
             with contextlib.suppress(ProcessLookupError):

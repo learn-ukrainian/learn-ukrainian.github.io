@@ -425,8 +425,8 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     assert sum(call.startswith("systemd-run ") for call in calls) == 1
     scope_start = next(c for c in calls if c.startswith("systemd-run "))
     assert f"--slice=lu-driver.slice --unit={unit} " in scope_start
-    assert ("--property=TimeoutStopSec=2s" in scope_start) == (mode == "driver")
-    assert (f"systemctl --user stop {unit}" in calls) == (mode == "driver")
+    assert "--property=TimeoutStopSec=2s" not in scope_start
+    assert (f"systemctl --user show {unit} -p ActiveState --value" in calls) == (mode == "driver")
 
     identity = _identity(env)
     assert identity["wrapper"] == Path(wrapper).name

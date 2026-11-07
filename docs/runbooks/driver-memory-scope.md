@@ -34,9 +34,12 @@ supervises the provider, renewal and lease cleanup. Both paths preserve the
 terminal, stdin, process group and replay arguments.
 
 After collecting the driver's child status, the outside waiter synchronously
-stops its own UUID scope. Driver scopes use `KillMode=control-group`,
-`TimeoutStopSec=2s` and `SendSIGKILL=yes`: systemd sends TERM to every remaining
-process in that cgroup, then KILL after a two-second grace. Background tool
+cleans its own UUID scope. If it is still active, the waiter uses bounded
+`systemctl --user kill --kill-whom=all` calls to send TERM to that scope's
+remaining processes, then KILL after a two-second grace, and stops the scope.
+The short grace applies only after the child exits. Unit stop properties stay
+unchanged, so external stops of a live agent retain the manager's existing
+grace for the launcher's fenced lease close. Background tool
 shells cannot keep the old scope active and hold a context_guard relaunch
 (#12845). Children that change process groups remain covered. Jobs launched
 in separate `systemd-run --user` units belong to those units and keep running.
@@ -45,9 +48,9 @@ Interactive scopes retain their direct-execution lifetime.
 The waiter's existing INT, TERM and HUP traps collect and forward signals, so
 those exits reach the same cleanup after the child is reaped. Cleanup preserves
 the collected status and the existing forwarded-signal status rules. The stop
-client has a six-second hard timeout; a failed stop gets one bounded one-second
-state query. An already collected, inactive scope needs no further cleanup.
-Any other failure emits `DRIVER_SCOPE_CLEANUP_FAILED` without changing the
+clients and the initial/final state queries each have a one-second hard timeout.
+An already collected, inactive scope needs no further cleanup. A final state
+other than inactive emits `DRIVER_SCOPE_CLEANUP_FAILED` without changing the
 child's status. Such a failure does not prove the scope empty; context_guard
 continues to hold a relaunch while the predecessor scope is active or unreadable.
 
