@@ -262,6 +262,7 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
     fail_once = scenario == "failed-parent-retry"
     events.fail_once = fail_once
     events.cycle_import = lambda: None
+    events.leaf_parent_states = []
     monkeypatch.setitem(sys.modules, events.__name__, events)
     relative = "__init__.py" if parent == "scripts" else "pkg/__init__.py"
     label = parent.rpartition(".")[2]
@@ -273,7 +274,13 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
         "events.cycle_import()\n"
         + product.recording(label, "INITIALIZED = True\n"),
     )
-    name = product.leaf(product.recording("leaf", "VALUE = 42\n"), package="pkg" if parent.endswith(".pkg") else "")
+    name = product.leaf(
+        f"import sys\nparent = sys.modules[{parent!r}]\n"
+        f"sys.modules[{events.__name__!r}].leaf_parent_states.append(\n"
+        "    (getattr(parent, 'INITIALIZED', False), parent.__spec__._initializing))\n"
+        + product.recording("leaf", "VALUE = 42\n"),
+        package="pkg" if parent.endswith(".pkg") else "",
+    )
     foreign = Product(tmp_path / "foreign", product.runs)
     foreign.write("__init__.py", foreign.recording("foreign-scripts"))
     foreign.write("pkg/__init__.py", foreign.recording("foreign-pkg"))
@@ -394,6 +401,7 @@ def test_concurrent_loads_wait_for_cached_ancestor_initialization(product, tmp_p
     assert sys.modules[parent].INITIALIZED and not sys.modules[parent].__spec__._initializing
     assert (sys.modules[parent] is initializing) is (not fail_once)
     assert product.ran() == (["scripts", "leaf"] if parent == "scripts" else ["scripts", "pkg", "leaf"])
+    assert events.leaf_parent_states == [(True, False)]
     if scenario == "import-cycle":
         assert events.cycle_detected.is_set()
     assert sys.meta_path == before
