@@ -131,14 +131,16 @@ def test_assert_glm_egress_allowed_raises_on_empty_ci_value(monkeypatch):
 
 
 def test_invoke_opencode_always_separates_content_with_dashdash():
-    # content starting with '-' must be positional (after --), never a flag.
+    # A leading-dash prompt arrives on stdin and can never be parsed as a flag.
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
         with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
             _invoke_opencode("--- a/tricky diff line", "deepseek/deepseek-v4.1-flash", output_format="default")
             argv = run_mock.call_args[0][0]
-            assert argv[-2] == "--"
-            assert argv[-1] == rules_core.with_core("--- a/tricky diff line")
+            assert argv[-1] == "--"
+            prompt = rules_core.with_core("--- a/tricky diff line")
+            assert prompt not in argv
+            assert run_mock.call_args.kwargs["input"] == prompt
 
 
 # --- model override (churn-resistance; tags drift per model-assignment.md) --
