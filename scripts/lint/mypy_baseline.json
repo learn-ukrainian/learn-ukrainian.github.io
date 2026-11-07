@@ -8933,11 +8933,6 @@
       "message": "Item \"str\" of \"Any | str\" has no attribute \"get\""
     },
     {
-      "path": "scripts/build/phases/plan_patch.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"apply_plan_patch_response\" has incompatible type \"None | dict[Any, Any]\"; expected \"dict[Any, Any]\""
-    },
-    {
       "path": "scripts/build/phases/wiki_compressor.py",
       "code": "attr-defined",
       "message": "\"Collection[Any]\" has no attribute \"append\""

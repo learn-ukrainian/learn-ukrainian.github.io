@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 372,
-    "probe_count": 744,
+    "cli_count": 369,
+    "probe_count": 738,
     "cli_paths": [
       "scripts/analytics/vocab_progression.py",
       "scripts/atlas/a1_slice3_inputs.py",
@@ -115,13 +115,10 @@
       "scripts/audit/lint_opsec_leaks.py",
       "scripts/audit/lint_pr_closing_references.py",
       "scripts/audit/lint_session_state.py",
-      "scripts/audit/lint_timing_sleep.py",
       "scripts/audit/lint_word_atlas.py",
-      "scripts/audit/lint_workaround_comments.py",
       "scripts/audit/literary_year_inventory.py",
       "scripts/audit/llm_qg_canaries.py",
       "scripts/audit/llm_qg_store.py",
-      "scripts/audit/measure_curated_membership.py",
       "scripts/audit/measure_russicism_recall.py",
       "scripts/audit/measure_wiki_coverage.py",
       "scripts/audit/module_quality_audit.py",
@@ -377,7 +374,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "35525a7b16153d5d0a79b743581edd8d49398daf50e06efb40ae0dcacab06838"
+    "cli_paths_sha256": "796e71391f97cd88e7a99bb6d27341154117fed2aa582c1402a129c305d9255e"
   },
   "failures": [
     {
