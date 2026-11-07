@@ -353,7 +353,7 @@ def _launch(
     expect_launch: bool = True,
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
-    env = {**launcher_environment(), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
+    env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
     if env_kind == "kimi":
         env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
     elif env_kind == "glm":

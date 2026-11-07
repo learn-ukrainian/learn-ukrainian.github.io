@@ -61,6 +61,7 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_launcher_interactive_scope.py::test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once": "tracked-wrapper sandbox, scope re-entry and actual children across families",
     "tests/test_rules_core_loading.py::test_launcher_row_carries_the_core": "rules-core _launch environment across provider families",
     "tests/test_rules_core_loading.py::test_the_old_env_override_has_no_effect": "explicit hostile rules override",
+    "tests/test_rules_core_loading.py::test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not": "explicit fixture product root and absent-addendum refusal",
     "tests/test_start_codex_driver.py::test_driver_canaries_use_canonical_stream_then_exec_provider": "runtime Codex _clean_environ and fake provider",
     "tests/test_start_codex_profiles.py::test_launcher_targets_canonical_main_without_creating_worktree": "profile _run and _launch builders",
     "tests/test_start_cto_wrappers.py::test_scope_reentry_preserves_cto_defaults_and_explicit_opus": "CTO runtime checkout environment",
