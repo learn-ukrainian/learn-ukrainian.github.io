@@ -35,8 +35,10 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.repo_root import PRODUCT_MARKER
 from scripts.lib import rules_core
 from tests.helpers import machinery_package, product_checkout
+from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
 CORE_FILES = (Path(rules_core.CORE_REL).name, Path(rules_core.CONTENT_ADDENDUM_REL).name)
@@ -81,9 +83,17 @@ def _link_tree(sources: tuple[Path, ...], view: Path, rel: tuple[str, ...], over
             _link_tree(directories, view / name, key, overrides)
         else:
             (view / name).symlink_to(found[0])
-    for key, action in overrides.items():
-        if key[:-1] == rel and key[-1] not in entries:
-            _apply(view / key[-1], action)
+    missing = {
+        path[len(rel)]
+        for path in overrides
+        if path[: len(rel)] == rel and len(path) > len(rel)
+    } - entries.keys()
+    for name in sorted(missing):
+        key = (*rel, name)
+        if key in overrides:
+            _apply(view / name, overrides[key])
+        else:
+            _link_tree((), view / name, key, overrides)
 
 
 def _view_sources() -> tuple[Path, ...]:
@@ -112,7 +122,21 @@ def _apply(target: Path, action: Path | str | None) -> None:
 
 
 def _build_view(view: Path, overrides: Overrides) -> Path:
-    _link_tree(_view_sources(), view, (), overrides)
+    sources = _view_sources()
+    selected_overrides = dict(overrides)
+    marker = Path(PRODUCT_MARKER)
+    if marker.parts not in overrides and not any((source / marker).is_file() for source in sources):
+        tracked = subprocess.run(
+            ["git", "show", f"HEAD:{marker.as_posix()}"],
+            cwd=sources[0],
+            env=launcher_environment(),
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        if tracked.returncode == 0:
+            selected_overrides[marker.parts] = tracked.stdout.decode("utf-8")
+    _link_tree(sources, view, (), selected_overrides)
     if not (view / ".venv").exists():
         (view / ".venv").symlink_to(Path(sys.prefix))
     subprocess.run(["git", "init", "-q", "-b", "main", str(view)], check=True, timeout=30)

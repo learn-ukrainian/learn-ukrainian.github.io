@@ -22,6 +22,7 @@ import yaml
 from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
 from scripts.agent_runtime.lane_probe import resolve_handoff_agent
 from scripts.ai_agent_bridge import _channels
+from scripts.common.repo_root import PRODUCT_ROOT_ENV
 from scripts.orchestration import handoff_slot_registry as registry
 from scripts.orchestration.slot_routing import resolve_slot_holder
 from tests.helpers import machinery_package, product_checkout
@@ -490,6 +491,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
     provider: str, curriculum_upgrade_stream: str, launch_root: Path
 ) -> None:
     """curriculum-upgrade mints <provider>-core and its registry anchor stream, and keeps its handoff directory."""
+    launch_env = launcher_environment({PRODUCT_ROOT_ENV: str(launch_root)}, LAUNCHER_DRY_RUN="1")
     lanes, gate = _gate_matrix()
     assert lanes["curriculum-upgrade"] == "core"
     if provider == "muse":
@@ -499,7 +501,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
         result = subprocess.run(
             [str(launch_root / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
             cwd=launch_root,
-            env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
+            env=launch_env,
             capture_output=True,
             text=True,
             timeout=60,
@@ -531,7 +533,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
     result = subprocess.run(
         [str(launch_root / f"start-{provider}-driver.sh"), "--epic", "curriculum-upgrade"],
         cwd=launch_root,
-        env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
+        env=launch_env,
         capture_output=True,
         text=True,
         timeout=60,

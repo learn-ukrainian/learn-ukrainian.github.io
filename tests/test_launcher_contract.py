@@ -21,6 +21,7 @@ import pytest
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.common.repo_root import PRODUCT_ROOT_ENV
 from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
@@ -100,7 +101,7 @@ def run_launcher(
             install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
-    launch_env = launcher_environment()
+    launch_env = launcher_environment({PRODUCT_ROOT_ENV: str(launch_root)})
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
