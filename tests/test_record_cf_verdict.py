@@ -1985,6 +1985,7 @@ def test_model_trailer_preserves_effort_and_context_forms(
 def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
     """#8625: a review archived before its verdict was recorded can still be published."""
     from scripts.review import record
+    from scripts.review.render_contract import trusted_core_context
 
     tasks = tmp_path / "tasks"
     write_task(tasks / "archive", task_id="review-old", reply="VERDICT: APPROVE")
@@ -1999,9 +2000,12 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
     hot = tasks / f"{task_id}.json"
     cold = tasks / "archive" / hot.name
     binding = {"review_id": "review-one", "attempt_id": "attempt-one", "manifest_sha256": "a" * 64}
-    prompt_hash = "b" * 64
+    prefix, dependency = trusted_core_context()
+    prompt = tmp_path / "review-attempt.prompt"
+    prompt.write_text(prefix + "archived fixture template body\n")
+    prompt_hash = hashlib.sha256(prompt.read_bytes()).hexdigest()
     identity = {"agent": "claude", "model": "claude-opus-5-5"}
-    monkeypatch.setattr(record, "_render_prompt_sha256", lambda *args: (prompt_hash, ""))
+    monkeypatch.setattr(record, "_render_prompt_sha256", lambda *args, **kwargs: (prompt_hash, ""))
     for digest in (prompt_hash, "<prompt_sha256>"):
         data = f'reviewer:\n  prompt_sha256: "{digest}"\n'.encode()
         task = {
@@ -2010,6 +2014,8 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
             "status": "done",
             "review_attempt": binding,
             "prompt_sha256": prompt_hash,
+            "prompt_file": str(prompt),
+            "review_contract": {"prompt_sha256": prompt_hash, "machinery_dependencies": {"rules_core": dependency}},
             "result_file": str(hot.with_suffix(".result")),
             "result_sha256": hashlib.sha256(data).hexdigest(),
         }

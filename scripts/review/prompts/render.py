@@ -35,7 +35,7 @@ from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts.ledger import review_tools
-from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record
+from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record, trusted_core_context
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
@@ -543,6 +543,8 @@ class Rendering:
     root: Path
     #: sha256 of the bytes of every template the render used, by resolved path.
     template_sha256: dict[Path, str]
+    #: Trusted machinery dependencies are neither learner pins nor template text.
+    machinery_dependencies: dict[str, Any]
 
 
 def render(
@@ -554,6 +556,7 @@ def render(
     review_id: str | None = None,
     attempt_id: str | None = None,
     review_access: str = "full",
+    rules_context: tuple[str, dict[str, Any]] | None = None,
 ) -> Rendering:
     """Render a reviewer prompt from the manifest's pins alone.
 
@@ -565,9 +568,16 @@ def render(
     return template prints (``TEMPLATES_REQUIRING_ATTEMPT_IDS``) so the validator can match the seat's return
     against its own receipt ledger instead of a guess. Rendering one of those templates without both, or with
     either not a valid attempt token, is refused by name before anything is read.
+
+    Historical consumers may supply a context validated by ``recorded_core_context``.
+    Fresh renders use the current core; admission and launch independently require it.
     """
     if review_access not in {"full", "isolated"}:
         raise RenderError("review_access_invalid")
+    try:
+        core_prefix, core_dependency = trusted_core_context() if rules_context is None else rules_context
+    except ReviewContractError as exc:
+        raise RenderError(str(exc)) from exc
     root = (repo_root or REPO_ROOT).resolve()
     p_dir = (prompts_dir or PROMPTS_DIR).resolve()
 
@@ -626,7 +636,7 @@ def render(
         manifest_doc, manifest_sha256, reader, review_id=review_id, attempt_id=attempt_id, review_access=review_access
     )
     try:
-        rendered = tmpl.render(**context)
+        rendered = core_prefix + tmpl.render(**context)
         template_text = tmpl.render(**sentinel_context(context))
     except jinja2.TemplateNotFound as exc:
         raise TemplateReadError(
@@ -642,6 +652,7 @@ def render(
         files_read=[*reader.files_read, *template_sha256],
         root=root,
         template_sha256=template_sha256,
+        machinery_dependencies={"rules_core": core_dependency},
     )
 
 
@@ -698,6 +709,7 @@ def render_prompt(
                 review_id=review_id,
                 attempt_id=attempt_id,
                 input_root=root,
+                machinery_dependencies=rendering.machinery_dependencies,
             )
         except ReviewContractError as exc:
             raise RenderError(str(exc)) from exc

@@ -66,6 +66,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
             template_sha256=contract["recorded_template_sha256"],
             recorded_templates=contract["recorded_templates"],
             review_access=access,
+            machinery_dependencies=contract["machinery_dependencies"],
             **ids,
         )
     except ReviewContractError as exc:
@@ -138,6 +139,12 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         record.setdefault("unknown_items", 0)
         record.setdefault("dropped_claims", [])
     try:
+        from scripts.review.render_contract import check_rules_dependency
+
+        contract = record.get("review_contract") or {}
+        check_rules_dependency((contract.get("machinery_dependencies") or {}).get("rules_core"), prompt)
+        if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != contract.get("prompt_sha256"):
+            raise ValueError("review_render_record_stale: prompt changed after admission; re-render")
         if access == "full":
             verify_full_review_tree(manifest, workspace)
         _bind_codex_account(spec)  # before the claim, so a refused account leaves the attempt id unspent
