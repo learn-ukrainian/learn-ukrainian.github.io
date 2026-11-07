@@ -119,7 +119,11 @@ def _view_sources() -> tuple[Path, ...]:
 
 def _apply(target: Path, action: Path | str | None) -> None:
     if isinstance(action, Path):
-        shutil.copy2(action, target)
+        if action.is_file():
+            shutil.copy2(action, target)
+        else:
+            # Some fixtures create their telemetry reader after the view.
+            target.symlink_to(action)
     elif isinstance(action, str):
         target.write_text(action, encoding="utf-8")
         target.chmod(0o755)
