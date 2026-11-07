@@ -197,8 +197,9 @@ def launcher_environment(
     supplies a stub endpoint. Only executable directories are selected from
     the caller's declared toolchain; no seat variable is copied.
     """
-    # Higher-scope fixtures supply their own pytest-owned allocation directory.
     if tmp_path is None:
+        if not os.environ.get("LU_SCRATCH_ROOT", "").strip():
+            raise RuntimeError("launcher_environment requires pytest scratch setup or an explicit tmp_path")
         tmp_path = ensure_scratch_root()
     root = Path(tempfile.mkdtemp(prefix="launcher-environment-", dir=tmp_path))
     for name in ("home", "tmp", "scratch", "guard-bin"):

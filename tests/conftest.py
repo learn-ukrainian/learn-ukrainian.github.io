@@ -1276,6 +1276,18 @@ def _checkout_corpus_db_snapshot() -> frozenset[str]:
     return frozenset(path.relative_to(_REPO_ROOT).as_posix() for path in _checkout_corpus_db_paths() if path.exists())
 
 
+@pytest.hookimpl(specname="pytest_sessionstart", tryfirst=True)
+def pytest_sessionstart_runtime_scratch(session: pytest.Session) -> None:
+    config = session.config
+    # Collection and higher-scope fixtures run before the per-test override.
+    # Each xdist worker has its own factory and session-lifetime patch.
+    root = config._tmp_path_factory.mktemp("runtime-scratch-session")
+    patch = pytest.MonkeyPatch()
+    config.add_cleanup(patch.undo)
+    patch.setenv("LU_SCRATCH_ROOT", str(root))
+    patch.setenv("LU_SCRATCH_SCAN_ROOT", str(root))
+
+
 def pytest_sessionstart(session: pytest.Session) -> None:
     config = session.config
     if hasattr(config, "workerinput"):
