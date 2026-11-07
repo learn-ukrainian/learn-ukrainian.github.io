@@ -153,6 +153,7 @@ class Harness:
         self.moment = START
         self.logs: list[str] = []
         self.sent: list[tuple[str, str]] = []
+        self.kinds: list[tuple[str, str, str]] = []  # (recipient, key, kind) per send
         self.posted: dict[str, str] = {}  # sender -> created_at of a HANDOFF-DONE post
         self.state: dict = {}
         self.proc_root = tmp_path / "proc"
@@ -171,11 +172,18 @@ class Harness:
                 monotonic=self.fake.monotonic,
             ),
             log=self.logs.append,
-            send=lambda recipient, body, key: self.sent.append((recipient, body)),
+            send=self.send,
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
             now=lambda: self.moment,
         )
         self.guard.tmux.proc_root = self.proc_root
+
+    def send(self, recipient: str, body: str, key: str, kind: str) -> None:
+        # Only the handoff request to a lane's own seat is supervisory; every alert is ordinary (#12837).
+        lane_seats = {lane.sender for lane in self.guard.registry.lanes}
+        assert kind == (cg.HANDOFF_REQUEST if recipient in lane_seats else cg.ALERT), (recipient, kind, key)
+        self.kinds.append((recipient, key, kind))
+        self.sent.append((recipient, body))
 
     def tick(self, *only: str) -> None:
         self.guard.run(self.state, list(only))
@@ -698,7 +706,7 @@ def test_the_wait_is_bounded_by_the_clock_including_slow_telemetry(tmp_path: Pat
     h = stuck_exit_harness(tmp_path, exit_after_stop=None)
     h.fake.call_cost = 5
     alerted_at: list[float] = []
-    h.guard.send = lambda recipient, body, key: alerted_at.append(h.fake.mono)
+    h.guard.send = lambda recipient, body, key, kind: alerted_at.append(h.fake.mono)
     h.tick("cto")
     assert respawns(h) == [] and len(alerted_at) == 1
     polling_pass = 5 * 5 + 1  # the snapshot (3 reads), the scope state and the process table, plus the sleep
@@ -1169,13 +1177,105 @@ def test_fleet_sender_uses_the_data_file_identity_and_never_raises(monkeypatch: 
                 raise RuntimeError("store unavailable")
             return type("Msg", (), {"message_id": "m-1"})()
 
+        def publish_message(self, **kwargs):
+            calls.append(kwargs)
+            if kwargs["recipients"] == ("down",):
+                raise RuntimeError("store unavailable")
+            return type("Msg", (), {"message_id": "m-2"})()
+
     monkeypatch.setattr(authority, "AuthorityService", FakeAuthority)
     logs: list[str] = []
     send = cg.fleet_sender(load_registry().guard_sender, logs.append)
-    send("epics", "body", "key-1")
-    send("down", "body", "key-2")
-    assert calls[0]["sender"] == load_registry().guard_sender and calls[0]["idempotency_key"] == "key-1"
-    assert logs == ["send epics ok m-1", "send down failed RuntimeError: store unavailable"]
+    send("claude-infra", "body", "key-1", cg.HANDOFF_REQUEST)
+    send("down", "body", "key-2", cg.HANDOFF_REQUEST)
+    send("epics", "body", "key-3", cg.ALERT)
+    send("down", "body", "key-4", cg.ALERT)
+    send("epics", "body", "key-5", "status")
+    assert all(call["sender"] == load_registry().guard_sender for call in calls)
+    assert [call["idempotency_key"] for call in calls] == ["key-1", "key-2", "key-3", "key-4"]
+    assert logs == [
+        "send claude-infra ok m-1",
+        "send down failed RuntimeError: store unavailable",
+        "send epics ok m-2",
+        "send down failed RuntimeError: store unavailable",
+        "send epics failed ValueError: unknown guard message kind 'status'",
+    ]
+
+
+@pytest.fixture
+def temp_plane(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A temporary Fleet Comms authority store; fleet_sender resolves it through FLEET_COMMS_ROOT."""
+    root = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    monkeypatch.setenv("AB_DB_PATH", str(tmp_path / "unused-legacy.db"))
+    return root
+
+
+def guard_sends(root: Path) -> dict[str, str]:
+    """Send one handoff and the two alert recipients through fleet_sender; recipient -> message id."""
+    logs: list[str] = []
+    send = cg.fleet_sender(load_registry().guard_sender, logs.append)
+    send("claude-infra", "HANDOFF NOW body", "claude-handoff-infra-1", cg.HANDOFF_REQUEST)
+    send("claude-cto", "CTO-ALERT relaunch held", "relaunch-held-infra-1", cg.ALERT)
+    send("epics", "CTO-ALERT handoff incomplete", "handoff-alert-infra-1", cg.ALERT)
+    assert all(" ok message_" in line for line in logs), logs
+    return {line.split()[1]: line.split()[3] for line in logs}
+
+
+def test_fleet_sender_stores_the_handoff_as_supervisory_and_alerts_as_ordinary_messages(temp_plane: Path) -> None:
+    """Defect class (#12837): an alert stored as a supervisory request, which no agent seat may acknowledge."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    sent = guard_sends(temp_plane)
+    keys = {
+        "claude-infra": "claude-handoff-infra-1",
+        "claude-cto": "relaunch-held-infra-1",
+        "epics": "handoff-alert-infra-1",
+    }
+    with AuthorityService(root=temp_plane) as service:
+        stored = {recipient: service.get_message(message_id) for recipient, message_id in sent.items()}
+        keyed = dict(
+            service.store.connection.execute(
+                "SELECT idempotency_key, subject_id FROM authority_idempotency WHERE namespace = 'message'"
+            ).fetchall()
+        )
+    assert {recipient: message.kind for recipient, message in stored.items()} == {
+        "claude-infra": "supervisory-request",
+        "claude-cto": "request",
+        "epics": "request",
+    }
+    for recipient, message in stored.items():
+        assert (message.sender, message.recipient, message.correlation_id) == (
+            load_registry().guard_sender,
+            recipient,
+            keys[recipient],
+        )
+        assert keyed[keys[recipient]] == message.message_id
+
+
+def test_an_alert_delivery_is_claimed_and_acked_by_an_agent_seat(
+    temp_plane: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Defect class (#12837): the CTO's ack of a guard alert refused with supervisory_consumption_required."""
+    from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, main
+
+    sent = guard_sends(temp_plane)
+    capsys.readouterr()
+
+    def deliveries(*args: str, expected: int) -> dict:
+        assert main(["deliveries", *args]) == expected
+        payload: dict = json.loads(capsys.readouterr().out)
+        return payload
+
+    def claim_and_ack(recipient: str, expected: int) -> dict:
+        lease = deliveries("claim", "--recipient", recipient, "--worker-id", recipient, expected=EXIT_OK)
+        assert lease["message_id"] == sent[recipient]
+        fence = ["--worker-id", recipient, "--fence-token", str(lease["fence_token"])]
+        return deliveries("ack", lease["delivery_id"], *fence, expected=expected)
+
+    assert claim_and_ack("claude-cto", EXIT_OK)["state"] == "acknowledged"
+    assert claim_and_ack("epics", EXIT_OK)["state"] == "acknowledged"
+    assert claim_and_ack("claude-infra", EXIT_ERROR)["error"] == "supervisory_consumption_required"
 
 
 def test_stuck_handoff_alerts_epics_once_without_killing(tmp_path: Path) -> None:
