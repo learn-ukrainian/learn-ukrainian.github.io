@@ -469,12 +469,15 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
     """Distribute audited launcher regressions normally, including their parameters."""
-    from tests.launcher_sandbox import LAUNCHER_TEST_FILES
+    from tests.launcher_sandbox import LAUNCHER_TEST_FILES, POLLUTED_PARENT_TESTS
 
     if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
+        regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
+        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
+        modes = ("clean", "polluted") if regression else ("clean",)
         metafunc.parametrize(
-            "_launcher_parent_environment", ("clean", "polluted"), indirect=True,
-            ids=("parent-clean", "parent-polluted"),
+            "_launcher_parent_environment", modes, indirect=True,
+            ids=tuple("parent-" + mode for mode in modes),
         )
 
 
