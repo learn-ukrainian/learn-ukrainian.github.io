@@ -91,11 +91,11 @@ Each turn corresponds to a phase template. **Read and execute ALL instructions i
 
 | Turn | Phase | Template |
 |------|-------|----------|
-| 1 | Research | `agents_extensions/shared/phases/gemini/phase-0-research-core.md` |
-| 2 | Meta (if requested) | `agents_extensions/shared/phases/gemini/phase-1-meta.md` |
+| 1 | Research | `agents_extensions/shared/phases/gemini/research-core.md` |
+| 2 | Meta (if requested) | (removed — meta generation retired; REMOVE-UNNEEDED-1107, see git history) |
 | 3 | Content | `agents_extensions/shared/phases/gemini/phase-2-content.md` |
 | 4 | Activities + Vocabulary | `agents_extensions/shared/phases/gemini/phase-3-activities.md` |
-| 5 | Review (NEW session) | `agents_extensions/shared/phases/gemini/phase-6-review.md` |
+| 5 | Review (NEW session) | `agents_extensions/shared/phases/gemini/gemini-review-pass2.md` |
 
 **Turn 3 notes:**
 - Adopt your assigned PERSONA_FLAVOR throughout
