@@ -14,6 +14,7 @@ import pytest
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import launcher_environment, launcher_toolchain_path
 from tests.rules_core_view import (
+    _build_view,
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
@@ -332,9 +333,11 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
 
 def test_driver_launch_with_caller_prompt_passes_one_positional_prompt(tmp_path: Path) -> None:
     argv_path = tmp_path / "argv"
+    root = _build_view(tmp_path / "checkout", {})
     baseline = run_launcher(
         "start-codex-driver.sh", "--epic", "devops",
         env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+        root=root,
     )
     assert baseline.returncode == 0, baseline.stderr
     baseline_argv = argv_path.read_bytes().decode().split("\0")[:-1]
@@ -342,6 +345,7 @@ def test_driver_launch_with_caller_prompt_passes_one_positional_prompt(tmp_path:
     result = run_launcher(
         "start-codex-driver.sh", "--epic", "devops", caller,
         env={"LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
+        root=root,
     )
     assert result.returncode == 0, result.stderr
     argv = argv_path.read_bytes().decode().split("\0")[:-1]
