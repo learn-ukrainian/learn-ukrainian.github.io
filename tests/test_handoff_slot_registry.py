@@ -25,6 +25,7 @@ from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
 from scripts.orchestration.slot_routing import resolve_slot_holder
 from tests.helpers import machinery_package, product_checkout
+from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import launch_checkout
 
 REPO = Path(__file__).resolve().parents[1]
@@ -149,7 +150,7 @@ def _helper_root() -> Path:
 
 
 def _bash(script: str, *args: str) -> subprocess.CompletedProcess[str]:
-    env = {**os.environ, "LC_DURABLE_HELPER_ROOT": str(_helper_root())}
+    env = {**launcher_environment(), "LC_DURABLE_HELPER_ROOT": str(_helper_root())}
     return subprocess.run(
         ["bash", "-c", script, "bash", *args],
         cwd=REPO,
@@ -170,7 +171,7 @@ def launch_root(request: pytest.FixtureRequest) -> Path:
 def _launcher(
     root: Path, *args: str, dry_run: bool = True, env: dict[str, str] | None = None
 ) -> subprocess.CompletedProcess[str]:
-    launch_env = {**os.environ, "LAUNCHER_DRY_RUN": "1" if dry_run else "0"}
+    launch_env = {**launcher_environment(), "LAUNCHER_DRY_RUN": "1" if dry_run else "0"}
     launch_env.update(env or {})
     return subprocess.run(
         [str(root / "start-claude-driver.sh"), *args],
@@ -353,7 +354,7 @@ def test_kube_dojo_wrapper_dry_run_binds_its_claude_lane(launch_root: Path) -> N
     result = subprocess.run(
         [str(launch_root / MACHINERY.name / "start-kube-dojo-driver.sh")],
         cwd=launch_root,
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
         text=True,
         timeout=60,
@@ -384,7 +385,7 @@ def test_practice_launcher_dry_run_uses_the_dedicated_stream(provider: str, laun
     result = subprocess.run(
         [str(launch_root / f"start-{provider}-driver.sh"), "--epic", "practice"],
         cwd=launch_root,
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
         text=True,
         timeout=60,
@@ -433,7 +434,7 @@ def test_real_launch_of_unregistered_selector_never_execs_the_provider(tmp_path:
     stub.chmod(0o755)
     result = _launcher(
         launch_root,
-        "--epic", "docs-knowledge", dry_run=False, env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"}
+        "--epic", "docs-knowledge", dry_run=False, env={"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"}
     )
     assert result.returncode == 2, result.stdout + result.stderr
     assert "not registered" in result.stderr
@@ -498,7 +499,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
         result = subprocess.run(
             [str(launch_root / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
             cwd=launch_root,
-            env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+            env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
             capture_output=True,
             text=True,
             timeout=60,
@@ -530,7 +531,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
     result = subprocess.run(
         [str(launch_root / f"start-{provider}-driver.sh"), "--epic", "curriculum-upgrade"],
         cwd=launch_root,
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
         text=True,
         timeout=60,
@@ -587,7 +588,7 @@ def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...], l
     result = subprocess.run(
         [str(launch_root / MACHINERY.name / "start-kube-dojo-driver.sh"), *caller_epic],
         cwd=launch_root,
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        env={**launcher_environment(), "LAUNCHER_DRY_RUN": "1"},
         capture_output=True,
         text=True,
         timeout=60,

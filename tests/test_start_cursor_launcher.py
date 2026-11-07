@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.review.model_catalog import load_model_catalog
+from tests.launcher_sandbox import launcher_environment
 from tests.test_launcher_contract import REPO, run_launcher
 from tests.test_launcher_driver_scope import manager_guard
 
@@ -147,6 +148,7 @@ def test_cursor_launcher_pin_list_matches_python_admission() -> None:
             ["bash", "-c", 'source "$1"; launcher_cursor_model_certified "$2"', "pin-check",
              str(REPO / "scripts/lib/launcher_core.sh"), pin],
             capture_output=True, text=True, check=False, timeout=10,
+            env=launcher_environment(),
         )
         assert result.returncode == 0, (pin, result.stderr)
         assert apply_cursor_model_pins(pin) == pin
@@ -272,7 +274,7 @@ def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = No
     mock.chmod(0o755)
     guard = manager_guard(tmp_path / "manager-guard-bin")
     contact = tmp_path / "real-manager-contact"
-    launch_env = os.environ.copy()
+    launch_env = launcher_environment()
     launch_env.update(
         {
             "LAUNCHER_DRY_RUN": "1" if dry_run else "0",
@@ -379,7 +381,7 @@ def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None
     binary.chmod(0o755)
     result = run_launcher(
         DRIVER, "--epic", "infra", "--model", model,
-        env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
+        env={"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"},
     )
     assert result.returncode == 4, result.stderr
     assert "CURSOR_CLAUDE_REFUSED" in result.stderr
@@ -395,7 +397,7 @@ def test_cursor_driver_refuses_retired_fable_5_before_the_claude_gate(tmp_path: 
     binary.chmod(0o755)
     result = run_launcher(
         DRIVER, "--epic", "infra", "--model", "claude-fable-5",
-        env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
+        env={"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"},
     )
     assert result.returncode == 2, result.stderr
     assert "is retired in the model catalog" in result.stderr

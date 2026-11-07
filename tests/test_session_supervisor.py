@@ -28,6 +28,7 @@ from scripts.session_supervisor import (
 )
 from tests.helpers import machinery_module, machinery_package
 from tests.helpers.restore_import_state import restore_import_state
+from tests.launcher_sandbox import launcher_environment
 
 
 @pytest.mark.parametrize("resolution", ["recorded", "local-bin", "path", "missing", "non-executable", "directory"])
@@ -51,7 +52,7 @@ LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli)) if resolution != 'local-bin
 session_supervisor_preflight_successor || exit $?
 fixture-cli
 """
-    env = {**os.environ, "HOME": str(home), "PATH": os.defpath}
+    env = {**launcher_environment(), "HOME": str(home), "PATH": os.defpath}
     if resolution == "path":
         env["PATH"] = f"{cli.parent}{os.pathsep}{os.defpath}"
         script = script.replace(f"LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli))}", "LC_DRIVER_PROVIDER_EXECUTABLE=/missing/cli")
@@ -116,7 +117,7 @@ LC_DRIVER_LEASE_CLOSED=1
 session_supervisor_exec_successor
 exit 36
 """
-    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
+    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines() == ["--epic", "fixture", "literal $(false) argument"]
 
@@ -142,7 +143,7 @@ session_supervisor_exec_successor
 exit 36
 """
     wrapper = str(tmp_path / machinery_package() / "start-kube-dojo-driver.sh")
-    result = subprocess.run(["bash", "-c", script, wrapper], capture_output=True, text=True, timeout=15)
+    result = subprocess.run(["bash", "-c", script, wrapper], capture_output=True, text=True, timeout=15, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines() == ["lane", "caller text"]
 
@@ -243,8 +244,8 @@ def test_worker_env_default_is_sorted_safe_session_metadata_without_secret_env(t
         "OPENAI_API_KEY": "fake-openai-key-value",
     }
     child_env = {
-        "PATH": os.environ["PATH"],
-        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "PATH": os.defpath,
+        "HOME": str(tmp_path / "home"),
         "SESSION_STREAM_ID": "epic:test",
         "SESSION_STREAM_LEASE_ID": "lease-test",
         "SESSION_STREAM_FENCING_TOKEN": "fencing-test",
@@ -280,8 +281,8 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
         "EXAMPLE_AUTH": "fake-example-auth-value",
     }
     child_env = {
-        "PATH": os.environ["PATH"],
-        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "PATH": os.defpath,
+        "HOME": str(tmp_path / "home"),
         "UNRELATED_RUNTIME_FLAG": "visible-in-full-mode",
         **fake_secrets,
     }
@@ -316,6 +317,7 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
 

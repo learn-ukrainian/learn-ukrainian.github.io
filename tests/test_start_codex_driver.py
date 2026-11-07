@@ -12,21 +12,25 @@ from pathlib import Path
 import pytest
 
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
+from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
-from tests.test_launcher_contract import REPO, run_launcher
+from tests.test_launcher_contract import REPO
+from tests.test_launcher_contract import run_launcher as _run_launcher
 from tests.test_launcher_driver_scope import install_scope_sandbox
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 
-@pytest.fixture(autouse=True)
-def _use_checkout_context_profile(monkeypatch):
-    # The launcher resolves the human checkout as canonical; exercise this
-    # checkout's profile contract without depending on its deployed version.
-    monkeypatch.setenv("CLAUDE_PROFILE_RESOLVER_PY", str(REPO / "scripts/lib/context_profiles.py"))
+def run_launcher(*args, env=None, **kwargs):
+    # Exercise this checkout's profile rather than an ambient deployed copy.
+    return _run_launcher(
+        *args,
+        env={"CLAUDE_PROFILE_RESOLVER_PY": str(REPO / "scripts/lib/context_profiles.py"), **(env or {})},
+        **kwargs,
+    )
 
 
 def _would_exec_argv(result: subprocess.CompletedProcess[str]) -> list[str]:
@@ -35,16 +39,16 @@ def _would_exec_argv(result: subprocess.CompletedProcess[str]) -> list[str]:
 
 
 def _clean_environ() -> dict[str, str]:
-    return {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    return launcher_environment(CLAUDE_PROFILE_RESOLVER_PY=str(REPO / "scripts/lib/context_profiles.py"))
 
 
 def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -> None:
-    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30, env=launcher_environment())
     library = tmp_path / "scripts/lib/new/nested-library.sh"
     library.parent.mkdir(parents=True)
     library.write_text("# Future launcher dependency\n")
     library.with_name("untracked.sh").write_text("# Local scratch\n")
-    subprocess.run(["git", "add", "scripts/lib/new/nested-library.sh"], cwd=tmp_path, check=True, timeout=30)
+    subprocess.run(["git", "add", "scripts/lib/new/nested-library.sh"], cwd=tmp_path, check=True, timeout=30, env=launcher_environment())
     assert launcher_library_files(tmp_path) == (Path("scripts/lib/new/nested-library.sh"),)
     assert Path("scripts/lib/driver_scope.sh") in launcher_library_files(REPO)
 
@@ -75,8 +79,8 @@ def test_launcher_catalog_inventory_follows_transitive_imports(tmp_path: Path) -
         target = tmp_path / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(body, encoding="utf-8")
-    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
-    subprocess.run(["git", "add", *files], cwd=tmp_path, check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30, env=launcher_environment())
+    subprocess.run(["git", "add", *files], cwd=tmp_path, check=True, timeout=30, env=launcher_environment())
     (tmp_path / "local-state.txt").write_text("untracked local state\n", encoding="utf-8")
     unrelated = tmp_path / "scripts/review/unrelated.py"
     unrelated.write_text("raise RuntimeError('do not import repository code')\n", encoding="utf-8")
@@ -135,6 +139,7 @@ printf 'CODEX_EXEC %s\\n' "$*"
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-codex-driver.sh", executable_dir
@@ -275,7 +280,7 @@ def test_driver_canaries_use_canonical_stream_then_exec_provider(tmp_path: Path,
         env={
             **_clean_environ(),
             "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
-            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+            "PATH": f"{executable_dir}:{os.defpath}",
         },
     )
 
@@ -305,7 +310,7 @@ def test_runtime_driver_refuses_unknown_selector_before_canary_or_provider(tmp_p
         env={
             **_clean_environ(),
             "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
-            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+            "PATH": f"{executable_dir}:{os.defpath}",
         },
     )
 
@@ -460,6 +465,7 @@ def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 2
     assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
@@ -540,6 +546,7 @@ def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
         ["bash", "-c", 'source "$1" && launcher_selector_stream "$2"', "stream",
          str(REPO / "scripts/lib/handoff_identity.sh"), "curriculum-upgrade"],
         capture_output=True, text=True, check=True, timeout=60,
+        env=launcher_environment(),
     ).stdout.strip()
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-core")  # The lane's own environment.
     assert th.main([
@@ -558,7 +565,7 @@ def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
         env={
             **{key: value for key, value in _clean_environ().items() if not key.startswith("SESSION_")},
             "CODEX_CANONICAL_REPO_ROOT": str(root),
-            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+            "PATH": f"{executable_dir}:{os.defpath}",
         },
     )
 

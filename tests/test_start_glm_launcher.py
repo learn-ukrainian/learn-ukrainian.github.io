@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from tests.helpers.python import project_python
+from tests.launcher_sandbox import launcher_environment
 from tests.test_launcher_contract import REPO, run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -185,6 +186,7 @@ assert_claude_settings_route_clean "GLM" "{project}"
         capture_output=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 1, result.stdout + result.stderr
     assert "GLM refuses to launch" in result.stderr
@@ -218,6 +220,7 @@ assert_claude_settings_route_clean "GLM" "{tmp_path / 'empty-project'}"
         capture_output=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 1, result.stdout + result.stderr
     assert "CLAUDE_CODE_USE_BEDROCK" in result.stderr
@@ -230,17 +233,18 @@ def test_claude_route_guard_checks_primary_checkout_settings_for_linked_worktree
     primary = tmp_path / "primary"
     worktree = tmp_path / "worktree"
     primary.mkdir()
-    subprocess.run(["git", "init", "--quiet", str(primary)], check=True, timeout=30)
+    subprocess.run(["git", "init", "--quiet", str(primary)], check=True, timeout=30, env=launcher_environment())
     subprocess.run(
         ["git", "-C", str(primary), "commit", "--allow-empty", "--quiet", "-m", "init"],
         check=True,
         timeout=30,
-        env={**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"},
+        env=launcher_environment({"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}),
     )
     subprocess.run(
         ["git", "-C", str(primary), "worktree", "add", "--quiet", str(worktree), "HEAD"],
         check=True,
         timeout=30,
+        env=launcher_environment(),
     )
     primary_settings = primary / ".claude" / "settings.local.json"
     primary_settings.parent.mkdir(parents=True)
@@ -267,13 +271,14 @@ assert_claude_settings_route_clean "GLM" "{worktree}"
         capture_output=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 1, result.stdout + result.stderr
     assert "ANTHROPIC_BASE_URL" in result.stderr
     assert "settings.local.json" in result.stderr
 
 
-def test_glm_clears_ambient_provider_selector_before_route(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_glm_clears_ambient_provider_selector_before_route(tmp_path: Path) -> None:
     """Sol P2 r6: stub Claude must observe all five selectors unset."""
     home = tmp_path / "home"
     bin_dir = tmp_path / "bin"
@@ -292,13 +297,13 @@ def test_glm_clears_ambient_provider_selector_before_route(tmp_path: Path, monke
         encoding="utf-8",
     )
     binary.chmod(0o755)
-    monkeypatch.setenv("PATH", f"{bin_dir}:{os.environ['PATH']}")
     result = run_launcher(
         "start-glmcc.sh",
         env={
             **_GLM_CREDENTIALS,
             "ZAI_API_KEY": "test-key",
             "HOME": str(home),
+            "PATH": f"{bin_dir}:{os.defpath}",
             "CLAUDE_CODE_USE_BEDROCK": "1",
             "CLAUDE_CODE_USE_VERTEX": "1",
             "CLAUDE_CODE_USE_FOUNDRY": "1",
@@ -312,12 +317,11 @@ def test_glm_clears_ambient_provider_selector_before_route(tmp_path: Path, monke
     assert "would exec" not in result.stdout
 
 
-def test_glm_retirement_precedes_profile_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_glm_retirement_precedes_profile_export(tmp_path: Path) -> None:
     bin_dir = _stub_claude(tmp_path)
-    monkeypatch.setenv("PATH", f"{bin_dir}:{os.environ['PATH']}")
     result = run_launcher(
         "start-glmcc.sh",
-        env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
+        env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home"), "PATH": f"{bin_dir}:{os.defpath}"},
         dry_run=False,
     )
     assert result.returncode == 2, result.stderr

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from tests.helpers import machinery_package
+from tests.launcher_sandbox import launcher_environment
 from tests.wait_helpers import wait_until
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -86,7 +87,7 @@ trap 'launcher_forward_driver_signal {name} {expected}' {name}
 printf 'armed\\n' > armed
 IFS= read -r _ < "$TEST_GATE"
 """)
-    env = {**os.environ, "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
+    env = {**launcher_environment(), "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
            "TEST_CLOSED": str(closed), "TEST_CLIENT_PID": str(client_pid)}
     process = subprocess.Popen(["bash", str(launcher)], cwd=tmp_path, env=env, start_new_session=True,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -217,7 +218,7 @@ exit "${FAKE_LOGGER_RC:-0}"
     cgroup.write_text("0::/test/outside.scope\n")
     guard = manager_guard(tmp_path / "manager-guard-bin")
     return {
-        "PATH": f"{bindir}:{guard}:{os.environ['PATH']}",
+        "PATH": f"{bindir}:{guard}:{os.defpath}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
         "FAKE_MANAGER_CALLS": str(tmp_path / "manager-calls"),
@@ -305,23 +306,11 @@ launcher_adapter_exec() {
     return launcher, env
 
 
-_INHERITED_HOLDS = ("LU_DRIVER_", "PYTEST_XDIST_AUTO_NUM_WORKERS")
-
-
-def _inherited_environ() -> dict[str, str]:
-    """The process environment minus holds the pre-push gate or a driver scope exports.
-
-    The gate sets PYTEST_XDIST_AUTO_NUM_WORKERS and a driver scope sets the
-    LU_DRIVER_* limits; each test supplies the ones it asserts on explicitly.
-    """
-    return {k: v for k, v in os.environ.items() if not k.startswith(_INHERITED_HOLDS)}
-
-
 def _run(launcher: Path, env: dict[str, str], **extra: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**_inherited_environ(), **env, **extra},
+        env={**launcher_environment(), **env, **extra},
         input="stdin survives\n",
         capture_output=True,
         text=True,
@@ -417,7 +406,7 @@ def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> No
     with subprocess.Popen(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**_inherited_environ(), **env, "TEST_RC": str(rc)},
+        env={**launcher_environment(), **env, "TEST_RC": str(rc)},
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -542,6 +531,7 @@ read() {{
         timeout=30,
         # No controlling terminal: the waiter is never in a foreground group.
         start_new_session=True,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == expected, result.stderr
@@ -567,6 +557,7 @@ printf 'reaped child; waiter alive\\n'
         capture_output=True,
         text=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "reaped child; waiter alive\n"
@@ -583,6 +574,7 @@ raise SystemExit(0 if ctypes.CDLL(None).prctl(15, sys.argv[1].encode(), 0, 0, 0)
 """, name],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
+        env=launcher_environment(),
     )
     stat = Path(f"/proc/{child.pid}/stat")
     try:
@@ -600,6 +592,7 @@ if driver_scope_child_running "$2"; then echo running; else echo exited; fi
             capture_output=True,
             text=True,
             timeout=10,
+            env=launcher_environment(),
         )
         assert result.returncode == 0, result.stderr
         assert result.stdout == "exited\n"
@@ -707,7 +700,7 @@ launcher_adapter_exec() {
         ["bash", str(launcher)],
         cwd=launcher.parent,
         env={
-            **_inherited_environ(), **env,
+            **launcher_environment(), **env,
             "TEST_CHILD_READY": str(child_ready), "TEST_RECEIVED": str(received),
             "TEST_READ_ENTERING": str(read_entering), "TEST_READ_FINISHED": str(read_finished),
             "TEST_TRAP_IN_READ": str(trap_in_read), "TEST_RELAY_FINISHED": str(relay_finished),
@@ -810,6 +803,7 @@ def test_recorded_signal_is_forwarded_only_to_a_running_child(tmp_path: Path, se
         text=True,
         timeout=30,
         start_new_session=True,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == expected, result.stderr
@@ -1029,7 +1023,7 @@ def _direct_entry(
     )
     result = subprocess.run(
         ["bash", str(entry)],
-        env={**_inherited_environ(), **env},
+        env={**launcher_environment(), **env},
         capture_output=True,
         text=True,
         timeout=15,
@@ -1078,9 +1072,11 @@ def require_soak_opt_in() -> None:
 
 
 def soak_environment() -> dict[str, str]:
-    """The caller's environment against the real manager, with the soak limits."""
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    """An isolated environment with explicit access to the real user manager."""
+    env = launcher_environment()
+    env["PATH"] = os.defpath
     env["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
+    env["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={env['XDG_RUNTIME_DIR']}/bus"
     env.update(LU_DRIVER_MEMORY_HIGH=str(SOAK_HIGH), LU_DRIVER_MEMORY_MAX=str(SOAK_MAX), LU_DRIVER_MEMORY_SWAP_MAX="0")
     return env
 

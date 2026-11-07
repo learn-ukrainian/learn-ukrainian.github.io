@@ -25,7 +25,7 @@ from agents_extensions.shared.session_streams.model import EntryType, HolderKind
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_slot_registry
+from tests.launcher_sandbox import copy_slot_registry, launcher_environment
 from tests.project_python import project_python
 from tests.rules_core_view import install_loader_bypass
 from tests.test_launcher_driver_scope import _launcher, install_scope_sandbox
@@ -58,7 +58,7 @@ def run(
     env: dict[str, str] | None = None,
     check: bool = False,
 ) -> subprocess.CompletedProcess[str]:
-    command_env = (os.environ if env is None else env).copy()
+    command_env = (launcher_environment() if env is None else env).copy()
     for key in tuple(command_env):
         if key.startswith("GIT_"):
             command_env.pop(key)
@@ -407,7 +407,7 @@ def load_lease(primary: Path, packet: dict) -> dict:
     return json.loads((primary / packet["state_file"]).read_text(encoding="utf-8"))
 
 
-def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str], dict[str, Path]]:
+def provider_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str], dict[str, Path]]:
     """Return an isolated launcher environment with observable provider stubs."""
     fake_bin = tmp_path / "bin"
     fake_home_bin = tmp_path / "home" / ".local" / "bin"
@@ -433,12 +433,12 @@ def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str
         executable = fake_home_bin / executable_names.get(provider, provider)
         executable.write_text(
             f"#!/bin/bash\ntouch {os.fspath(marker)!r}\n"
-            'if [ "${LAUNCHER_TEST_HOLD_PROVIDER:-0}" = 1 ]; then read -r; fi\n',
+            'if [ "${TEST_HOLD_PROVIDER:-0}" = 1 ]; then read -r; fi\n',
             encoding="utf-8",
         )
         executable.chmod(0o755)
 
-    env = os.environ.copy()
+    env = launcher_environment()
     for key in tuple(env):
         if key.startswith(("SESSION_", "LEARN_UKRAINIAN_", "CODEX_LAUNCHER_ROLLOVER_")) or key in {
             "CODEX_CANONICAL_REPO_ROOT",
@@ -1076,7 +1076,7 @@ def test_app_style_worktree_bootstrap_deploys_hook_and_discovers_canonical_packe
     fake_gh.chmod(0o755)
     jq = shutil.which("jq")
     assert jq is not None
-    env = os.environ.copy()
+    env = launcher_environment()
     env["PATH"] = f"{fake_bin}:{Path(jq).parent}:/usr/bin:/bin"
 
     for _ in range(2):
@@ -1153,7 +1153,7 @@ launcher_adapter_exec() {
     result = subprocess.run(
         [str(launcher)],
         cwd=launcher.parent,
-        env={**os.environ, **scope_env, "TEST_PHASES": str(phases)},
+        env={**launcher_environment(), **scope_env, "TEST_PHASES": str(phases)},
         input="stdin survives\n",
         capture_output=True,
         text=True,
@@ -1221,7 +1221,7 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
     )
     fake_codex.chmod(0o755)
 
-    env = os.environ.copy()
+    env = launcher_environment()
     for key in tuple(env):
         if (
             key.startswith("SESSION_")
@@ -1302,7 +1302,7 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
     )
     fake_codex.chmod(0o755)
 
-    env = os.environ.copy()
+    env = launcher_environment()
     for key in tuple(env):
         if (
             key.startswith("SESSION_")
@@ -1353,8 +1353,8 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
     if second_provider == "codex":
         prepare_cli_driver_rollover(primary, active_thread_id=SOURCE_THREAD_ID)
     store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
-    env, started = launcher_environment(tmp_path, first_provider, second_provider)
-    env["LAUNCHER_TEST_HOLD_PROVIDER"] = "1"
+    env, started = provider_environment(tmp_path, first_provider, second_provider)
+    env["TEST_HOLD_PROVIDER"] = "1"
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         first = subprocess.Popen(
@@ -1403,7 +1403,7 @@ def test_real_grok_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path:
         instance_id="dead-holder",
         process_id=99999999,
     )
-    env, started = launcher_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "grok")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
@@ -1465,7 +1465,7 @@ def test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl(
         now=observed_at,
         app_proof=proof,
     )
-    env, started = launcher_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "grok")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
@@ -1484,10 +1484,10 @@ def test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl(
 def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
-    env, started = launcher_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "grok")
     env.update(
         {
-            "LAUNCHER_TEST_HOLD_PROVIDER": "1",
+            "TEST_HOLD_PROVIDER": "1",
             "SESSION_STREAM_RENEW_INTERVAL_SECONDS": "1",
             "SESSION_STREAM_RENEW_JITTER_SECONDS": "0",
         }
@@ -1527,7 +1527,7 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
 def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_path: Path, failure: str) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = seed_driver_stream(primary, stream_id="epic:5703", close=True)
-    env, started = launcher_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "grok")
     provider = Path(env["HOME"]) / ".local/bin/grok"
     command = [primary / "start-grok-driver.sh", "devops"]
     if failure == "approval-required":

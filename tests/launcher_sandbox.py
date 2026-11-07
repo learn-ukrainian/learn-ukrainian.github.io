@@ -19,14 +19,59 @@ from __future__ import annotations
 import functools
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
+import tempfile
+from collections.abc import Mapping
 from pathlib import Path
 
+from scripts.common.scratch import ensure_scratch_root
 from tests.helpers import machinery_module, machinery_package, product_checkout
+from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def launcher_environment(*inputs: Mapping[str, str], **extra: str) -> dict[str, str]:
+    """Build a fresh launcher environment, then overlay deliberate test inputs.
+
+    Bash and its utilities need PATH and a UTF-8 locale. HOME and temporary
+    files belong to this invocation, so credentials, Git config and seat state
+    cannot come from the runner. Monitor calls fail locally unless a fixture
+    supplies a stub endpoint. No ambient variable is copied, including PATH.
+    """
+    # The per-test scratch fixture owns cleanup; its root changes between tests.
+    root = Path(tempfile.mkdtemp(prefix="launcher-environment-", dir=ensure_scratch_root()))
+    for name in ("home", "tmp", "scratch", "guard-bin"):
+        (root / name).mkdir()
+    contact = root / "unexpected-manager-call"
+    for name in ("systemd-run", "systemctl"):
+        binary = root / "guard-bin" / name
+        binary.write_text(f'#!/bin/sh\nprintf "%s\\n" "{name} $*" >> "$LU_TEST_REAL_MANAGER_CONTACT"\nexit 97\n')
+        binary.chmod(0o755)
+    env = {
+        "PATH": f"{root / 'guard-bin'}{os.pathsep}{os.defpath}",
+        "HOME": str(root / "home"),
+        "TMPDIR": str(root / "tmp"),
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "TERM": "dumb",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "LU_MONITOR_LOOPBACK": UNREACHABLE_MONITOR_URL,
+        "TOOL_TIMING_API_URL": UNREACHABLE_TOOL_TIMING_URL,
+        "DELEGATE_MONITOR_API": UNREACHABLE_MONITOR_URL,
+        "FLEET_COMMS_ROOT": str(root / "fleet-plane"),
+        "LU_SCRATCH_ROOT": str(root / "scratch"),
+        "LU_DRIVER_SCOPE_CONFIG": str(root / "no-driver-scope.env"),
+        "LU_TEST_REAL_MANAGER_CONTACT": str(contact),
+    }
+    for values in inputs:
+        env.update(values)
+    env.update(extra)
+    return env
 
 
 def copy_launcher_sources(root: Path) -> None:
@@ -38,10 +83,27 @@ def copy_launcher_sources(root: Path) -> None:
     """
     root.mkdir(parents=True, exist_ok=True)
     tracked = subprocess.run(
-        ["git", "ls-files", "-z", "--", "start-*.sh", "package.json", machinery_package(),
-         "agents_extensions", "gemini_extensions", ".gemini/config.yaml",
-         "docs/l2-uk-en", "docs/prompts/orchestrators", "curriculum/l2-uk-en/curriculum.yaml"],
-        cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
+        [
+            "git",
+            "ls-files",
+            "-z",
+            "--",
+            "start-*.sh",
+            "package.json",
+            machinery_package(),
+            "agents_extensions",
+            "gemini_extensions",
+            ".gemini/config.yaml",
+            "docs/l2-uk-en",
+            "docs/prompts/orchestrators",
+            "curriculum/l2-uk-en/curriculum.yaml",
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env=launcher_environment(),
     )
     for raw in tracked.stdout.split("\0"):
         if not raw:
@@ -55,8 +117,12 @@ def copy_launcher_sources(root: Path) -> None:
         else:
             # The real curriculum manifest may be sparse; use its tracked bytes.
             blob = subprocess.run(
-                ["git", "show", f"HEAD:{relative.as_posix()}"], cwd=_REPO_ROOT,
-                capture_output=True, check=True, timeout=30,
+                ["git", "show", f"HEAD:{relative.as_posix()}"],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                check=True,
+                timeout=30,
+                env=launcher_environment(),
             )
             destination.write_bytes(blob.stdout)
 
@@ -69,11 +135,21 @@ def tracked_launcher_wrappers() -> tuple[str, ...]:
     """
     product = subprocess.run(
         ["git", "ls-files", "-z", "--", "start-*.sh"],
-        cwd=product_checkout(), capture_output=True, text=True, check=True, timeout=30,
+        cwd=product_checkout(),
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env=launcher_environment(),
     )
     machinery = subprocess.run(
         ["git", "ls-files", "-z", "--", f"{machinery_package()}/start-*.sh"],
-        cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+        env=launcher_environment(),
     )
     listed = {raw for raw in (product.stdout + machinery.stdout).split("\0") if raw}
     return tuple(sorted(listed))
@@ -91,12 +167,27 @@ def copy_interactive_launcher_checkout(root: Path) -> None:
     copy_launcher_sources(root)
     # This is a temporary standalone fixture, not a dispatch worktree.
     (root / ".venv").symlink_to(Path(sys.prefix))
-    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=30, env=launcher_environment())
     subprocess.run(
-        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
-         "commit", "--allow-empty", "-q", "-m", "Initial launcher fixture"],
-        cwd=root, capture_output=True, check=True, timeout=30,
+        [
+            "git",
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.com",
+            "commit",
+            "--allow-empty",
+            "-q",
+            "-m",
+            "Initial launcher fixture",
+        ],
+        cwd=root,
+        capture_output=True,
+        check=True,
+        timeout=30,
+        env=launcher_environment(),
     )
+
 
 # Runs the gate's own calls (a registered slot, an unregistered slot and the
 # per-provider listing used in the refusal message) and prints the repo files
@@ -160,6 +251,7 @@ def slot_registry_sources() -> tuple[Path, ...]:
         text=True,
         check=True,
         timeout=120,
+        env=launcher_environment(),
     )
     tracked = set(
         subprocess.run(
@@ -169,6 +261,7 @@ def slot_registry_sources() -> tuple[Path, ...]:
             text=True,
             check=True,
             timeout=30,
+            env=launcher_environment(),
         ).stdout.split("\0")
     )
     sources: set[Path] = set()

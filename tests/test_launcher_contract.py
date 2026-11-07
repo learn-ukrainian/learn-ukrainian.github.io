@@ -25,7 +25,12 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_launcher_sources, copy_slot_registry
+from tests.launcher_sandbox import (
+    copy_interactive_launcher_checkout,
+    copy_launcher_sources,
+    copy_slot_registry,
+    launcher_environment,
+)
 from tests.rules_core_view import (
     _build_view,
     install_loader_bypass,
@@ -95,7 +100,7 @@ def run_launcher(
             install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
-    launch_env = os.environ.copy()
+    launch_env = launcher_environment()
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
@@ -104,7 +109,7 @@ def run_launcher(
             # After the directories a test put ahead of the inherited PATH (its
             # fake manager), before the system ones: an unfaked call fails the
             # test rather than reaching this host's real user manager.
-            inherited, path = os.environ.get("PATH", ""), launch_env.get("PATH", "")
+            inherited, path = os.defpath, launch_env.get("PATH", "")
             prefix = path[: -len(inherited)] if inherited and path.endswith(inherited) else ""
             rest = path[len(prefix) :]
             launch_env["PATH"] = f"{prefix}{manager_guard(Path(guard) / 'bin')}{os.pathsep}{rest}"
@@ -138,7 +143,7 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
         dry_run=False,
         root=checkout,
         env={
-            "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+            "PATH": f"{binary.parent}{os.pathsep}{os.defpath}",
             "HOME": str(tmp_path / "home"),
             "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
         },
@@ -378,6 +383,7 @@ launcher_adapter_exec() { printf 'PROVIDER_EXEC\\n'; }
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-claude-driver.sh", claim_marker, close_marker
@@ -385,7 +391,7 @@ launcher_adapter_exec() { printf 'PROVIDER_EXEC\\n'; }
 
 def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -> None:
     launcher, claim_marker, close_marker = _core_canary_failure_fixture(tmp_path)
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -552,6 +558,7 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-claude-driver.sh", close_attempts, close_marker, child_started
@@ -630,7 +637,7 @@ launcher_close_driver_lease() {{
 }}
 launcher_exec_command fixture-cli
 """
-    env = {**os.environ, "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
+    env = {**launcher_environment(), "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
     process = subprocess.Popen(
         ["/bin/bash", "-c", script],
         env=env,
@@ -747,7 +754,7 @@ launcher_close_driver_lease() {{
 launcher_exec_command fixture-cli
 """
     env = {
-        **os.environ,
+        **launcher_environment(),
         "HOME": str(tmp_path / "home"),
         "PATH": f"{cli.parent}{os.pathsep}{os.defpath}",
         "FLEET_COMMS_ROOT": str(plane),
@@ -801,7 +808,7 @@ def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path)
         provider_body=f"touch {os.fspath(tmp_path / 'child-started')!r}\nexit 7",
         failed_close_attempts=1,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -835,7 +842,7 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         provider_body=_blocking_signal_provider(signal_marker, child_ready),
         forward_ready=forward_ready,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
     try:
         process = subprocess.Popen(
@@ -875,7 +882,7 @@ def test_missing_close_environment_fails_fast_without_raw_stderr(
         failed_close_attempts=2,
         close_stderr=hostile_stderr,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -907,7 +914,7 @@ def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
         failed_close_attempts=2,
         close_stderr=hostile_stderr,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -947,7 +954,7 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
         close_stderr=hostile_stderr,
         forward_ready=forward_ready,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env["LC_DRIVER_CLOSE_RETRY_SECONDS"] = "1"
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
     try:
@@ -1015,7 +1022,7 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
         ),
         encoding="utf-8",
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     process = subprocess.Popen(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -1070,7 +1077,7 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         encoding="utf-8",
     )
     adapter.chmod(0o755)
-    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30, env=launcher_environment())
     subprocess.run(
         [
             "git",
@@ -1088,8 +1095,9 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         capture_output=True,
         check=True,
         timeout=30,
+        env=launcher_environment(),
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env["PYTHONPATH"] = os.fspath(REPO)
     env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
     store = SessionStreamStore(SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3"))
@@ -1231,7 +1239,7 @@ source {REPO / "scripts" / "lib" / "launcher_core.sh"}
 launcher_cursor_observer_presence
 launcher_close_driver_lease
 """
-    result = subprocess.run(["bash", "-c", script], text=True, capture_output=True, check=False, timeout=30)
+    result = subprocess.run(["bash", "-c", script], text=True, capture_output=True, check=False, timeout=30, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     body = log.read_text(encoding="utf-8")
     assert "-m\nscripts.orchestration.observer_heartbeat\n" in body
@@ -1280,7 +1288,7 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     )
     result = subprocess.run(
         ["bash", "-c", script, "bash", str(REPO / "scripts/lib/fleet_comms_cold_start.sh")],
-        env={**os.environ, "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
+        env={**launcher_environment(), "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
         capture_output=True,
         text=True,
         check=False,
@@ -1364,7 +1372,7 @@ SECONDS=0
 sleep() {{ printf 'delay=%s\n' "$1"; SECONDS=$((SECONDS + $1)); }}
 launcher_close_driver_lease
 """
-    result = subprocess.run(["bash", "-c", script], cwd=REPO, capture_output=True, text=True, timeout=10)
+    result = subprocess.run(["bash", "-c", script], cwd=REPO, capture_output=True, text=True, timeout=10, env=launcher_environment())
     assert result.returncode == (0 if recover else 1), result.stderr
     delays = [int(line.split("=")[1]) for line in result.stdout.splitlines()]
     assert delays[:6] == [1, 2, 4, 8, 16, 30]
@@ -1410,7 +1418,7 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
         capture_output=True,
         text=True,
         timeout=10,
-        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        env=launcher_environment(),
     )
     # Even 75 without a delivery is not a valid prepared wake.
     assert result.returncode == (0 if watcher_exit == 76 else 1), result.stdout + result.stderr
@@ -1441,7 +1449,7 @@ fi
 """
         + rest
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env.update(SESSION_STREAM_RENEW_INTERVAL_SECONDS="1", SESSION_STREAM_RENEW_JITTER_SECONDS="0")
     process = subprocess.Popen(
         ["bash", str(launcher), "--epic", "devops"],

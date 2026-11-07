@@ -136,7 +136,7 @@ def test_claude_driver_disables_advisor_in_provider_environment(tmp_path: Path, 
     )
     bin_dir = _stub_claude(tmp_path)
     env = {
-        "PATH": f"{bin_dir}:{os.environ['PATH']}",
+        "PATH": f"{bin_dir}:{os.defpath}",
         "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": inherited,
     }
     result = run_launcher(
@@ -158,7 +158,7 @@ def test_claude_interactive_preserves_advisor_switch(tmp_path: Path, inherited: 
     result = run_launcher(
         "start-claude.sh",
         env={
-            "PATH": f"{bin_dir}:{os.environ['PATH']}",
+            "PATH": f"{bin_dir}:{os.defpath}",
             "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": inherited,
         },
         dry_run=False,
@@ -203,7 +203,7 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
     result = run_launcher(
         "start-claude.sh",
         env={
-            "PATH": f"{bin_dir}:{os.environ['PATH']}",
+            "PATH": f"{bin_dir}:{os.defpath}",
             "ANTHROPIC_BASE_URL": "https://foreign.invalid",
             "ANTHROPIC_AUTH_TOKEN": "foreign-secret",
             "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "123",

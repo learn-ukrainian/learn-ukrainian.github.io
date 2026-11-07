@@ -18,6 +18,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import _build_view
 from tests.test_claude_cap_guard import launch_with_usage as _usage_fixture
 from tests.test_launcher_contract import REPO, _core_canary_failure_fixture, run_launcher
@@ -123,7 +124,7 @@ def test_epics_stream_key_is_distinct_from_nested_epics_and_duplicate_keys(tmp_p
         registry.write_text(valid + suffix)
         result = subprocess.run(
             ["bash", "-c", script, "fixture", str(REPO / "scripts/lib/handoff_identity.sh")],
-            env={**os.environ, "HANDOFF_ISSUE_STREAMS_YAML": str(registry)},
+            env={**launcher_environment(), "HANDOFF_ISSUE_STREAMS_YAML": str(registry)},
             capture_output=True,
             text=True,
             timeout=15,
@@ -521,7 +522,7 @@ session_supervisor_exec_successor
 """
     scratch_root = tmp_path / "runtime scratch"
     for capture_tmpdir in (None, tmp_path / "ambient temp"):
-        launcher_env = dict(os.environ)
+        launcher_env = launcher_environment()
         launcher_env["LU_SCRATCH_ROOT"] = str(scratch_root)
         if capture_tmpdir is None:
             launcher_env.pop("TMPDIR", None)
