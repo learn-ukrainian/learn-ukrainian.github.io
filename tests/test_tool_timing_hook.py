@@ -10,8 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
-
-from scripts.api.telemetry_router import ToolTimingIngest
+from lu_machinery.api.telemetry_router import ToolTimingIngest
 
 _ROOT = Path(__file__).resolve().parents[1]
 _HOOK = _ROOT / "agents_extensions" / "shared" / "hooks" / "tool-timing.sh"

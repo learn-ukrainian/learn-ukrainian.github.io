@@ -9,11 +9,10 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.api import subscription_usage as usage
-from scripts.dispatcher import checks, cli, git, store, worker
-from scripts.dispatcher.providers import opencode
-from scripts.dispatcher.types import TaskSpec
+from lu_machinery.api import subscription_usage as usage
+from lu_machinery.dispatcher import checks, cli, git, store, worker
+from lu_machinery.dispatcher.providers import opencode
+from lu_machinery.dispatcher.types import TaskSpec
 
 OPENROUTER_MODEL = "openrouter/deepseek/deepseek-v4.1-flash"
 US_PROVIDERS = ["fireworks/us", "baseten/us", "inference-net/us"]  # CTO allow-list, model-assignment.md

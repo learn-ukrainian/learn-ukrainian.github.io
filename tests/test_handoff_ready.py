@@ -6,7 +6,7 @@ no network, no repo state, and no gh auth.
 
 from __future__ import annotations
 
-import scripts.orchestration.handoff_ready as hr
+import lu_machinery.orchestration.handoff_ready as hr
 
 
 def _all_ok(monkeypatch):

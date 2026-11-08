@@ -85,7 +85,7 @@ def test_recorded_audit_findings_scoring_before_after():
 
 def test_direct_mechanical_record_verdict_before_after(tmp_path, monkeypatch, capsys):
     """Direct has no numeric score; compare phase decisions on identical data."""
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     payload = mechanical_payload("direct")
     raw = json.dumps(payload)

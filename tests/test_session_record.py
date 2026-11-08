@@ -8,9 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.lib.session_record import (
-    PROJECT_ROOT,
+from lu_machinery.lib.session_record import (
     SCHEMA_VERSION,
     SessionRecordError,
     append_to_env_file,
@@ -22,6 +20,8 @@ from scripts.lib.session_record import (
     validate_transcript_path,
     write_record,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_canonical_state_root_uses_git_common_directory() -> None:

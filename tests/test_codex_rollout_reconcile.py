@@ -7,8 +7,7 @@ import uuid
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import codex_rollout_reconcile as reconcile
+from lu_machinery.hygiene import codex_rollout_reconcile as reconcile
 
 NOW = 1_800_000_000
 OLD = NOW - 3 * 24 * 60 * 60

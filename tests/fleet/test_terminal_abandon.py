@@ -7,9 +7,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration import worktree_git as rw
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import worktree_git as rw
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
 from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
@@ -37,7 +37,7 @@ def writer_fixture(abandon_cohort, monkeypatch):
 
 
 def invoke(fixture, **overrides):
-    from scripts.fleet import terminal_abandon
+    from lu_machinery.fleet import terminal_abandon
 
     _, _, _, creator, _, bundle, head = fixture
     values = dict(task_id=creator["task_id"], head_sha=head, reason="superseded implementation", bundle=bundle)
@@ -335,8 +335,8 @@ def _set_lease_env(monkeypatch, **overrides):
 @pytest.fixture
 def succession(writer_fixture, monkeypatch):
     """A retired monitor seat's tree; the current Muse monitor driver holds custody."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
-    from scripts.session_supervisor import remote
+    from lu_machinery.session_streams.hooks import lease_from_environment
+    from lu_machinery.session_supervisor import remote
 
     _, tree, tasks, creator, successor, _, _ = writer_fixture
     # Unmerged abandonment uses terminal done records. needs_finalize now
@@ -484,7 +484,7 @@ def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
         monitor["streams"][MONITOR] = None
         return lambda: monitor["streams"].__setitem__(MONITOR, lease)
     if failure == "authority_unknown":
-        from scripts.session_supervisor.remote import RemoteUnreachableError
+        from lu_machinery.session_supervisor.remote import RemoteUnreachableError
 
         monitor["error"] = RemoteUnreachableError("unreachable")
         return lambda: monitor.__setitem__("error", None)
@@ -653,7 +653,7 @@ def _refused_removal(fixture, reason):
     ],
 )
 def test_successor_current_custody_rechecked_at_removal(succession, capsys, drift, code):
-    from scripts.session_supervisor.remote import RemoteSupervisorError
+    from lu_machinery.session_supervisor.remote import RemoteSupervisorError
 
     fixture, monitor = succession
     assert invoke(fixture) == 0
@@ -698,7 +698,7 @@ def test_successor_current_output_rechecked_at_removal(succession, capsys):
 
 
 def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, monkeypatch, capsys):
-    from scripts.session_supervisor import remote
+    from lu_machinery.session_supervisor import remote
 
     def forbidden(*_args, **_kwargs):
         raise AssertionError("creator path must not use succession machinery")

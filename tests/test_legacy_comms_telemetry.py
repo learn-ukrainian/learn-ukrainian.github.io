@@ -12,10 +12,9 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api import comms_router, telemetry_router
-from scripts.api.monitor_context import fixture_context
-from scripts.api.telemetry import legacy_comms
+from lu_machinery.api import comms_router, telemetry_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.telemetry import legacy_comms
 
 
 @pytest.fixture()

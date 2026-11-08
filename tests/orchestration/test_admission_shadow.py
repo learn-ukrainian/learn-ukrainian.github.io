@@ -7,10 +7,9 @@ import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.orchestration import admission_shadow as shadow
-from scripts.orchestration import dispatch_admission as adm
-from scripts.orchestration.pool_headroom import PoolCheck, SliceMemory
+from lu_machinery.orchestration import admission_shadow as shadow
+from lu_machinery.orchestration import dispatch_admission as adm
+from lu_machinery.orchestration.pool_headroom import PoolCheck, SliceMemory
 
 NOW = datetime(2026, 10, 20, tzinfo=UTC)
 LIMITS = adm.Thresholds(2, 3.5, 1.5)

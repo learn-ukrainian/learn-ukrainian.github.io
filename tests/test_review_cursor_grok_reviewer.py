@@ -7,16 +7,16 @@ import json
 from dataclasses import replace
 
 import pytest
-
-from scripts.review import closeout_cli
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, validate_catalog
-from scripts.review.reviewer_resolver import (
+from lu_machinery.review import closeout_cli
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.model_catalog import ModelCatalogError, load_model_catalog, validate_catalog
+from lu_machinery.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
     evaluate_candidate,
     resolve_reviewer,
 )
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 GROK_SEAT = "grok-4.7-cursor-fallback"
@@ -197,7 +197,7 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
     comments: list[dict] = []
 
     def fake_json(args, *, input_text=None):
-        from scripts.publish.github import Request
+        from lu_machinery.publish.github import Request
 
         if isinstance(args, Request) and args.verb == "issue-comment-json":
             item = {

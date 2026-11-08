@@ -42,8 +42,9 @@ def _load_wiki_completeness_gate() -> None:
 
 
 _load_wiki_completeness_gate()
+from lu_machinery.common.repo_root import project_interpreter
+
 from scripts.build import promote_quality_gate
-from scripts.common.repo_root import project_interpreter
 
 CURRICULUM_ROOT = Path("curriculum") / "l2-uk-en"
 DOCS_ROOT = Path("site") / "src" / "content" / "docs"

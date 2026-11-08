@@ -24,7 +24,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _judge_git_below_tmp_path(tmp_path, monkeypatch):
-    from scripts.api import claude_account_usage
+    from lu_machinery.api import claude_account_usage
 
     boundary = tmp_path.resolve()
 
@@ -39,15 +39,15 @@ def _judge_git_below_tmp_path(tmp_path, monkeypatch):
 
 
 def _no_provider(directory: int, account: str) -> None:
-    from scripts.api.claude_account_usage import ClaudeAccountRefused
+    from lu_machinery.api.claude_account_usage import ClaudeAccountRefused
 
     raise ClaudeAccountRefused("claude_account_identity_unavailable")
 
 
 @pytest.fixture(autouse=True)
 def _isolate_status_ttl_cache(monkeypatch):
-    from scripts.api import claude_account_usage
-    from scripts.api.state_helpers import cache_invalidate
+    from lu_machinery.api import claude_account_usage
+    from lu_machinery.api.state_helpers import cache_invalidate
 
     cache_invalidate()
     claude_account_usage._reset_for_tests()

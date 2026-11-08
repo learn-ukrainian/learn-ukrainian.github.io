@@ -13,8 +13,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _cli
-from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
+from lu_machinery.ai_agent_bridge import _cli
+from lu_machinery.ai_agent_bridge import _dispatch_wrappers as wrappers
 
 
 def _option(command: list[str], name: str) -> str:
@@ -77,7 +77,7 @@ def _capture_native_review(
 
 @pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
 def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp_path, verdict):
-    from scripts.review.verdict_parser import recognized_verdicts
+    from lu_machinery.review.verdict_parser import recognized_verdicts
 
     assert recognized_verdicts(wrappers._NATIVE_CODE_REVIEW_OUTPUT) == []
     content = "Return code-review-findings.v1 JSON."
@@ -95,8 +95,8 @@ def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp
 @pytest.fixture
 def native_exact_target(tmp_path):
     """Committed target with whitespace-sensitive changes and an unchanged consumer."""
-    from scripts.common.git_context import sanitized_git_env
-    from scripts.review.target_resolution import resolve_commit_target
+    from lu_machinery.common.git_context import sanitized_git_env
+    from lu_machinery.review.target_resolution import resolve_commit_target
 
     repo = tmp_path / "target"
     repo.mkdir()
@@ -133,9 +133,9 @@ def native_exact_target(tmp_path):
 
 @pytest.mark.parametrize("profile", ["code", "infra", None])
 def test_native_first_reply_exact_target_evidence_controls(monkeypatch, tmp_path, native_exact_target, profile):
-    from scripts.review.evidence import changed_lines_map, verify_finding_evidence
-    from scripts.review.review_contract import validate_reviewer_payload
-    from scripts.review.verdict_parser import recognized_verdicts
+    from lu_machinery.review.evidence import changed_lines_map, verify_finding_evidence
+    from lu_machinery.review.review_contract import validate_reviewer_payload
+    from lu_machinery.review.verdict_parser import recognized_verdicts
 
     repo, target, quote = native_exact_target
     finding = {
@@ -249,7 +249,7 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert _option(command, "--model") == "claude-opus-5-5"
     assert _option(command, "--effort") == "xhigh"
     assert _option(command, "--task-id").startswith("review-1740-")
-    from scripts.dispatcher.cli import build_parser
+    from lu_machinery.dispatcher.cli import build_parser
 
     assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
     parsed = build_parser().parse_args(command[2:])
@@ -261,8 +261,8 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert parsed.branch == "codex/pr-under-review"
     assert parsed.cwd is None
     prompt_path = Path(state["prompt_file"])
-    from scripts.dispatcher.store import new_record
-    from scripts.dispatcher.types import TaskSpec
+    from lu_machinery.dispatcher.store import new_record
+    from lu_machinery.dispatcher.types import TaskSpec
 
     spec = TaskSpec(
         parsed.task_id, parsed.agent, parsed.model, parsed.effort, parsed.mode,
@@ -321,8 +321,8 @@ def test_retired_local_review_refuses_before_running_commands(monkeypatch, tmp_p
 
 
 def _admitted_reviewer(agent: str, model: str | None = None):
-    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from lu_machinery.agent_runtime.kimi_admission import REVIEW_MODE
+    from lu_machinery.agent_runtime.target_admission import resolve_and_admit
 
     (target,) = resolve_and_admit((agent,), mode=REVIEW_MODE, model=model, review=True)
     return target
@@ -420,7 +420,7 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path, r
     assert dispatch[dispatch.index("--branch") + 1] == "agy/impl-8419-stall-clock"
     assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-seat"] == ["codex", "cursor"]
     assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-family"] == ["openai", "xai", "openai"]
-    from scripts.dispatcher.cli import build_parser
+    from lu_machinery.dispatcher.cli import build_parser
 
     args = build_parser().parse_args(dispatch[2:])
     assert args.repo == repo
@@ -634,7 +634,7 @@ def test_run_ask_review_dispatch_ignores_quoted_verdict_example(monkeypatch, tmp
 @pytest.mark.parametrize("target", ["curriculum/" + "long-path/" * 20, "#1740"])
 def test_review_task_ids_fit_v2_store_without_truncation_collisions(target):
     """Long review targets must fit v2's limit and retain a target-specific digest."""
-    from scripts.dispatcher.store import record_path
+    from lu_machinery.dispatcher.store import record_path
 
     task_id = wrappers._review_task_id(target)
     assert len(task_id) <= 128

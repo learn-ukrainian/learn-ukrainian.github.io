@@ -7,9 +7,8 @@ from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.dispatcher import cli
-from scripts.dispatcher import pool_selector as s
+from lu_machinery.dispatcher import cli
+from lu_machinery.dispatcher import pool_selector as s
 
 NOW = datetime(2026, 1, 1, tzinfo=UTC)
 SOON = NOW + timedelta(hours=1)
@@ -139,7 +138,7 @@ def test_selector_acceptance_table(case, expected, chosen, rejection):
 
 def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch):
     """A different shadow account reaches storage but cannot enter the launch spec."""
-    from scripts.dispatcher import store
+    from lu_machinery.dispatcher import store
 
     record = {"task_id": "shadow-hook", "status": "spawning", "agent": "claude", "model": "approved-model",
               "provider": None, "claude_account": "live-login", "prompt_file": str(tmp_path / "task.prompt")}

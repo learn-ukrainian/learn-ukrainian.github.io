@@ -10,8 +10,7 @@ import uuid
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+from lu_machinery.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
 
 _PG_DSN_ENV = "LEARN_UKRAINIAN_CP_PG_DSN"
 
@@ -101,7 +100,7 @@ def test_constructor_closes_connection_on_partial_init(
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     closed: list[object] = []
 
-    import scripts.fleet_comms.artifacts as artifacts_mod
+    import lu_machinery.fleet_comms.artifacts as artifacts_mod
 
     real_apply = artifacts_mod.apply_pg_schema
 

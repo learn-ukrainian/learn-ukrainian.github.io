@@ -17,13 +17,13 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from lu_machinery.common.repo_root import PRODUCT_ROOT_ENV
+from lu_machinery.common.scratch import ensure_scratch_root
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder, utc_now
+from lu_machinery.session_streams.store import SessionStreamStore
+from lu_machinery.session_supervisor import LaunchRole, SessionSupervisor
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.common.repo_root import PRODUCT_ROOT_ENV
-from scripts.common.scratch import ensure_scratch_root
-from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import (
@@ -365,14 +365,14 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.session_supervisor" && "${{3:-}}" == "open" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.session_supervisor" && "${{3:-}}" == "close" ]]; then
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
@@ -526,13 +526,13 @@ def _core_driver_exit_fixture(
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.session_supervisor" && "${{3:-}}" == "open" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
 JSON
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "close" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.session_supervisor" && "${{3:-}}" == "close" ]]; then
   count=0
   if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
   count=$((count + 1))
@@ -684,7 +684,7 @@ launcher_exec_command fixture-cli
 
 def test_restarted_watcher_retains_same_delivery_until_successor_cli_recovers(tmp_path: Path) -> None:
     """Use real delivery claims and watcher ticks after a post-preparation CLI loss."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     events = tmp_path / "events"
     ready = tmp_path / "ready"
@@ -1319,7 +1319,7 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     # #12671: the closeout sentence names the proof that still exists.
     closeout = (
         "Closeout: use the task-prescribed interpreter with "
-        "`-m scripts.orchestration.merge_closeout <N> --apply`; "
+        "`-m lu_machinery.orchestration.merge_closeout <N> --apply`; "
         "the cleanup proof is that command exiting 0 after the worker's task has settled "
         "(its worktree removed by the dispatcher). "
     )
@@ -1459,7 +1459,7 @@ def test_launcher_death_stops_renewal_with_live_provider(tmp_path: Path) -> None
         first
         + "\n"
         + f"""
-if [[ "${{1:-}}" == -m && "${{2:-}}" == scripts.session_supervisor && "${{3:-}}" == heartbeat ]]; then
+if [[ "${{1:-}}" == -m && "${{2:-}}" == lu_machinery.session_supervisor && "${{3:-}}" == heartbeat ]]; then
   printf 'renew\\n' >> {shlex.quote(str(heartbeats))}
   exit 0
 fi

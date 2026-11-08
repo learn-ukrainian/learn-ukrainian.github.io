@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from scripts.ci import junit_results
-from scripts.ci.pg_skip_guard import _PG_FILE_MARKERS, DSN_ENV, check, main
-from scripts.ci.pg_skip_guard import postgres_test_files as find_pg_files
+from lu_machinery.ci import junit_results
+from lu_machinery.ci.pg_skip_guard import _PG_FILE_MARKERS, DSN_ENV, check, main
+from lu_machinery.ci.pg_skip_guard import postgres_test_files as find_pg_files
 
 _PG_FILE = "tests/fleet_comms/test_sample_pg.py"
 
@@ -25,7 +25,7 @@ def _skip() -> str:
 
 
 def test_main_reports_counts_and_exit_code(tmp_path: Path, capsys, monkeypatch):
-    monkeypatch.setattr("scripts.ci.pg_skip_guard.postgres_test_files", lambda root: {_PG_FILE})
+    monkeypatch.setattr("lu_machinery.ci.pg_skip_guard.postgres_test_files", lambda root: {_PG_FILE})
     clean = _junit(tmp_path, _case("test_a"), _case("test_b"))
     assert main([str(clean), "--title", "shard 1"]) == 0
     assert "passed=2 skipped=0" in capsys.readouterr().out

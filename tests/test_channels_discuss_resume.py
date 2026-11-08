@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
 
-from scripts.ai_agent_bridge import _channels, _channels_cli
+from lu_machinery.ai_agent_bridge import _channels, _channels_cli
 
 
 def test_discuss_uses_acp_and_durable_authority_only(
@@ -40,9 +40,9 @@ def test_discuss_uses_acp_and_durable_authority_only(
             "synthesis": "done",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_discussion)
     monkeypatch.setattr(
-        "agent_runtime.runner.invoke",
+        "lu_machinery.agent_runtime.runner.invoke",
         lambda *_a, **_k: (_ for _ in ()).throw(
             AssertionError("retired bridge runtime must not execute")
         ),
@@ -74,7 +74,7 @@ def test_partial_discussion_reports_zero_completed_rounds_not_requested_rounds(
         lambda _channel: {"body": "", "revs": {}, "missing": []},
     )
     monkeypatch.setattr(
-        "agent_runtime.acpx_discuss.run_discussion",
+        "lu_machinery.agent_runtime.acpx_discuss.run_discussion",
         lambda **_kwargs: {
             "conversation_id": "conversation_" + "d" * 32,
             "state": "PARTIAL_COMPLETE",

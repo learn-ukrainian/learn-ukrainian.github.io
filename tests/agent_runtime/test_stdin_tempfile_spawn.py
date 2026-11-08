@@ -15,11 +15,12 @@ import pytest
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from agent_runtime.runner import (
+from lu_machinery.agent_runtime.runner import (
     _cleanup_stdin_temp,
     _prepare_stdin_handle,
     _spawn_subprocess,
 )
+
 from tests.helpers.python import project_python
 
 _TEST_PYTHON = project_python()

@@ -9,10 +9,10 @@ import json
 import subprocess
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration import worktree_claims as claims
+from lu_machinery.orchestration import worktree_git as wg
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import worktree_claims as claims
-from scripts.orchestration import worktree_git as wg
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 from tests.test_reused_worktree_retention import cohort as cohort

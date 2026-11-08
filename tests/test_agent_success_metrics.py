@@ -11,9 +11,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet.agent_success import main
-from scripts.fleet_comms.agent_success_metrics import collect_agent_success
+from lu_machinery.fleet.agent_success import main
+from lu_machinery.fleet_comms.agent_success_metrics import collect_agent_success
 
 NOW = datetime(2026, 10, 28, 12, tzinfo=UTC)
 FIXTURE = Path(__file__).parent / "fixtures/fleet/agent_success.json"
@@ -267,7 +266,7 @@ def test_archived_review_cannot_borrow_newer_run_result_or_follow_symlink(tmp_pa
 def test_fresh_process_cli_resolves_primary_store_override(ledger):
     """A linked-worktree CLI must honor LU_TASKS_DIR instead of reading a relative checkout path."""
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.fleet.agent_success", "--json", "--until", NOW.isoformat()],
+        [sys.executable, "-m", "lu_machinery.fleet.agent_success", "--json", "--until", NOW.isoformat()],
         env={**os.environ, "LU_TASKS_DIR": str(ledger)},
         capture_output=True,
         text=True,
@@ -281,9 +280,8 @@ def test_fresh_process_cli_resolves_primary_store_override(ledger):
 def test_metrics_api_uses_context_ledger_even_when_comms_store_is_missing(tmp_path, monkeypatch):
     """An opt-in metrics field must use its fixture context, without scanning the live ledger."""
     from fastapi.testclient import TestClient
-
-    from scripts.api.main import create_app
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api.main import create_app
+    from lu_machinery.api.monitor_context import fixture_context
 
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "batch_state/fleet-comms/v1"))

@@ -9,8 +9,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.review.model_catalog import load_model_catalog
 
-from scripts.review.model_catalog import load_model_catalog
 from tests.launcher_sandbox import launcher_environment
 from tests.test_launcher_contract import REPO, run_launcher
 from tests.test_launcher_driver_scope import manager_guard
@@ -132,7 +132,11 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
 
 
 def test_cursor_launcher_pin_list_matches_python_admission() -> None:
-    from scripts.review.model_catalog import CURSOR_APPROVED_WIRE_PINS, apply_cursor_model_pins, cursor_pinned_models
+    from lu_machinery.review.model_catalog import (
+        CURSOR_APPROVED_WIRE_PINS,
+        apply_cursor_model_pins,
+        cursor_pinned_models,
+    )
 
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     function = re.search(r"launcher_cursor_model_certified\(\) \{(.*?)\n\}", core, re.DOTALL)

@@ -20,7 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import agent_runtime.runner as runner
+import lu_machinery.agent_runtime.runner as runner
 
 # ---------------------------------------------------------------------------
 # #8516: read-only dispatch must not be able to write into the checkout

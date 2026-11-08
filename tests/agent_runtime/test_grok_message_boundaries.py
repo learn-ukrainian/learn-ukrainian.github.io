@@ -10,9 +10,9 @@ import json
 import re
 from pathlib import Path
 
-from scripts.agent_runtime.adapters.acpx import AcpxAdapter
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.review.verdict_parser import recognized_verdicts
+from lu_machinery.agent_runtime.adapters.acpx import AcpxAdapter
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.review.verdict_parser import recognized_verdicts
 
 # Grok 1.0.46 streaming-messages-json, 2026-10-07. A read_file turn then a
 # second assistant message. Session id, event ids, the thinking signature,

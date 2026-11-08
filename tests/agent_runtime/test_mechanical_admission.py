@@ -11,18 +11,18 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import mechanical_admission as admission
-from scripts.agent_runtime.adapters import claude
-from scripts.agent_runtime.target_admission import resolve_and_admit
-from scripts.review.model_catalog import (
+from lu_machinery.agent_runtime import mechanical_admission as admission
+from lu_machinery.agent_runtime.adapters import claude
+from lu_machinery.agent_runtime.target_admission import resolve_and_admit
+from lu_machinery.review.model_catalog import (
     ModelCatalogError,
     activity_role_refusal,
     load_model_catalog,
     resolve_role,
     validate_catalog,
 )
-from scripts.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
+from lu_machinery.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 HAIKU = "claude-haiku-5-5"
@@ -58,7 +58,7 @@ def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, ent
     config = tmp_path / "scripts/config"
     config.mkdir()
     shutil.copyfile(ROOT / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
-    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "scripts.review.model_catalog"]
+    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "lu_machinery.review.model_catalog"]
     result = subprocess.run(
         [sys.executable, *command, "--resolve-role", "mechanical_classification"],
         cwd=tmp_path, env={"PATH": os.defpath}, capture_output=True, text=True, timeout=30,
@@ -208,7 +208,7 @@ def test_catalog_driver_and_launcher_refuse_haiku():
     catalog["orchestrator_seats"]["claude"]["model_id"] = HAIKU
     with pytest.raises(ModelCatalogError, match="driver"):
         validate_catalog(catalog)
-    proc = subprocess.run([sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", HAIKU],
+    proc = subprocess.run([sys.executable, "-m", "lu_machinery.review.model_catalog", "--check-retired-model", HAIKU],
                           cwd=ROOT, capture_output=True, text=True, timeout=20)
     assert proc.returncode == 2
     assert "driver/interactive seats" in proc.stderr
@@ -250,7 +250,7 @@ def test_malformed_catalog_fields_keep_typed_validation(field, value):
 
 
 def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypatch, tmp_path):
-    from scripts.lib.rules_core import core_block
+    from lu_machinery.lib.rules_core import core_block
 
     prompt = core_block("core") + "\nInspect the lockfile."
     admission.refuse_mechanical_task((HAIKU,), **scope(task_prompt=prompt))

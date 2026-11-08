@@ -13,10 +13,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import NotFoundError, SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import _build_view
@@ -154,7 +154,7 @@ launcher_adapter_exec() { printf 'PROVIDER_STARTED\\n'; }
     # The fixture interpreter forwards the real remote supervisor against an
     # owned loopback service. No production stream or provider is contacted.
     runner = root / ".venv/bin/python"
-    module = f"import sys; sys.path.insert(0, {str(REPO)!r}); from scripts.session_supervisor import main; raise SystemExit(main(sys.argv[1:]))"
+    module = f"import sys; sys.path.insert(0, {str(REPO)!r}); from lu_machinery.session_supervisor import main; raise SystemExit(main(sys.argv[1:]))"
     runner.write_text(f"""#!/usr/bin/env bash
 if [ "${{1:-}}" = -m ] && [ "${{2:-}}" = scripts.session_supervisor ]; then
   shift 2
@@ -367,7 +367,7 @@ echo "started; attach with: tmux attach -t cto"
     supported = name == WRAPPERS[0] and bool(args)
     captured = generated if supported else args
     if name == WRAPPERS[0]:
-        from scripts.session_supervisor import SupervisorError, cto_wrapper_signature
+        from lu_machinery.session_supervisor import SupervisorError, cto_wrapper_signature
 
         with pytest.MonkeyPatch.context() as patch:
             patch.chdir(root)

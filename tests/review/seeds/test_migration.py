@@ -8,8 +8,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.review import findings_db as db
+from lu_machinery.review import findings_db as db
 
 OLD_TABLES = ("attempts", "findings", "budgets", "settle_items", "agreement")
 NEW_TABLES = ("seed_results", "clean_results", "seed_identities")

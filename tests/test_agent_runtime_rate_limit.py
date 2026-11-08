@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter
-from agent_runtime.usage import _iter_usage_records
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.usage import _iter_usage_records
 
 
 def test_claude_success_text_with_rate_limited_phrase_is_not_rate_limited():

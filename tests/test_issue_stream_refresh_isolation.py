@@ -9,7 +9,7 @@ from pathlib import Path
 
 from tests.helpers.restore_import_state import restore_import_state
 
-_AUDIT = "scripts.orchestration.issue_stream_audit"
+_AUDIT = "lu_machinery.orchestration.issue_stream_audit"
 
 
 def test_cold_import_redirects_refresh_sidecars(_write_ownership_base: Path) -> None:

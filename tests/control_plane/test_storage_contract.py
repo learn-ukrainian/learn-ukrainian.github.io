@@ -8,8 +8,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
-
-from scripts.control_plane.storage import (
+from lu_machinery.control_plane.storage import (
     StoreId,
     connect,
 )

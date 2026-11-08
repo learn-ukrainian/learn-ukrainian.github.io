@@ -8,8 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.common.repo_root import main_checkout_root, project_interpreter
+from lu_machinery.common.repo_root import main_checkout_root, project_interpreter
 
 
 def test_main_checkout_root_resolves_primary_checkout_from_worktree(tmp_path):
@@ -72,7 +71,7 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
     main_repo, worktree = wt_layout
 
     # Run subprocess to check DB_PATH and PID_DIR
-    script = "from scripts.ai_agent_bridge._config import DB_PATH, PID_DIR; print(f'{DB_PATH};{PID_DIR}')"
+    script = "from lu_machinery.ai_agent_bridge._config import DB_PATH, PID_DIR; print(f'{DB_PATH};{PID_DIR}')"
     env = os.environ.copy()
     env.pop("AB_DB_PATH", None)  # Exercise the default path, not the suite's isolated override.
     proc = subprocess.run(

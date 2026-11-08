@@ -6,7 +6,7 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-from scripts.bench import writer_matrix
+from lu_machinery.bench import writer_matrix
 
 
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

@@ -5,9 +5,8 @@ import sys
 from unittest.mock import patch
 
 import pytest
-
-from scripts.ai_agent_bridge._opencode import _run_opencode
-from scripts.lib import rules_core
+from lu_machinery.ai_agent_bridge._opencode import _run_opencode
+from lu_machinery.lib import rules_core
 
 
 @pytest.mark.parametrize("attachment", [False, True], ids=["prompt-only", "with-attachment"])
@@ -28,7 +27,7 @@ def test_large_prepared_prompt_avoids_e2big_and_reaches_non_tty_stdin(tmp_path, 
     assert len(expected.encode("utf-8")) > 128 * 1024
     data = tmp_path / "context.md"
     data.write_text("attachment stays separate")
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value=str(binary)):
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value=str(binary)):
         result = _run_opencode(
             content, "deepseek/deepseek-flash", variant="high", output_format="json",
             data=str(data) if attachment else None,

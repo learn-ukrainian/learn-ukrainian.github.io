@@ -19,14 +19,14 @@ import pytest
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from hygiene.check_primary_integrity import (
+from lu_machinery.common.safe_unit_install import InstallError
+from lu_machinery.hygiene.check_primary_integrity import (
     _append_event,
     _save_state,
     check_primary_integrity,
     main,
     worktree_origin_points_at_remote,
 )
-from scripts.common.safe_unit_install import InstallError
 
 
 @pytest.mark.parametrize("writer", ["state", "event"])

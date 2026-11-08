@@ -11,16 +11,17 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from agent_runtime.adapters.cursor import CursorAdapter
-from agent_runtime.adapters.deepseek import DeepSeekAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
-from agent_runtime.adapters.glm import GlmAdapter
-from agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters import agy as agy_module
-from scripts.agent_runtime.adapters.acpx import AcpxGemmaShadowAdapter
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.adapters.kimi import KimiAdapter
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters import agy as agy_module
+from lu_machinery.agent_runtime.adapters.acpx import AcpxGemmaShadowAdapter
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.cursor import CursorAdapter
+from lu_machinery.agent_runtime.adapters.deepseek import DeepSeekAdapter
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
+from lu_machinery.agent_runtime.adapters.glm import GlmAdapter
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.adapters.kimi import KimiAdapter
+
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 

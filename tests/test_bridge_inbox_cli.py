@@ -11,8 +11,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _inbox_watch, _messaging
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
@@ -22,7 +22,7 @@ def isolate_db(tmp_path, monkeypatch):
     # historical writer behavior. Production authority mode refuses writers.
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -138,9 +138,9 @@ def _delivery_detail(delivery_id: str) -> sqlite3.Row:
 
 
 def _install_fake_inbox_module(monkeypatch, run_inbox) -> None:
-    fake_inbox_module = ModuleType("scripts.ai_agent_bridge._inbox")
+    fake_inbox_module = ModuleType("lu_machinery.ai_agent_bridge._inbox")
     fake_inbox_module.run_inbox = run_inbox
-    monkeypatch.setitem(sys.modules, "scripts.ai_agent_bridge._inbox", fake_inbox_module)
+    monkeypatch.setitem(sys.modules, "lu_machinery.ai_agent_bridge._inbox", fake_inbox_module)
 
 
 def _reply_deliveries() -> list[sqlite3.Row]:
@@ -685,7 +685,7 @@ def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeyp
     assert parser.parse_args(["inbox", "run", alias, "--once"]).agent == provider
 
     if provider == "kimi":
-        from agent_runtime.kimi_admission import KimiAdmissionRefused
+        from lu_machinery.agent_runtime.kimi_admission import KimiAdmissionRefused
 
         for recipient in (provider, alias):
             with pytest.raises(KimiAdmissionRefused):
@@ -742,17 +742,17 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
 
 def test_legacy_inbox_points_to_authority_deliveries_in_authority_mode(monkeypatch, capsys):
     """Defect class: a legacy read path stays silent about its replacement."""
-    from scripts.ai_agent_bridge import _channels_cli
+    from lu_machinery.ai_agent_bridge import _channels_cli
 
     monkeypatch.setattr(_channels_cli, "queued_authority_delivery_count", lambda recipient: 3, raising=False)
     assert _run_cli(["inbox", "--for", "codex"]) == 0
     shadow_out = capsys.readouterr().out
-    assert "scripts.fleet_comms deliveries receive" not in shadow_out
+    assert "lu_machinery.fleet_comms deliveries receive" not in shadow_out
 
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
     assert _run_cli(["inbox", "--for", "codex"]) == 0
     first, *rest = capsys.readouterr().out.splitlines()
-    assert ".venv/bin/python -m scripts.fleet_comms deliveries receive --recipient codex" in first
+    assert ".venv/bin/python -m lu_machinery.fleet_comms deliveries receive --recipient codex" in first
     assert "queued authority deliveries: 3" in first
     assert any("No messages for codex" in line for line in rest)
 

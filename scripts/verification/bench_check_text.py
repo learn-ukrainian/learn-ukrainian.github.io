@@ -28,11 +28,11 @@ for p in (PROJECT_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(p))
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS

@@ -5,12 +5,11 @@ import json
 from decimal import Decimal
 
 import pytest
-
-from scripts.agent_runtime.codex_accounts import CodexAccountRefused
-from scripts.dispatcher import admission, cli, store, worker
-from scripts.dispatcher.codex_meter import estimate, task_cost
-from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import TaskSpec
+from lu_machinery.agent_runtime.codex_accounts import CodexAccountRefused
+from lu_machinery.dispatcher import admission, cli, store, worker
+from lu_machinery.dispatcher.codex_meter import estimate, task_cost
+from lu_machinery.dispatcher.environment import child_env
+from lu_machinery.dispatcher.types import TaskSpec
 
 
 def test_label_selection_and_ambient_conflict(tmp_path, monkeypatch):

@@ -7,9 +7,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.publish import github as pub
 
-from scripts.opsec import prepublish as gate
-from scripts.publish import github as pub
 from tests.opsec_fixtures import CATALOG, TOKEN, recorded_approval
 
 HEAD = "a" * 40

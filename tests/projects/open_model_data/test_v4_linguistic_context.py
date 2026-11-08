@@ -11,10 +11,9 @@ from learn_ukrainian_v4_runtime import semantic_inputs as semantic
 from learn_ukrainian_v4_runtime.child_runtime import CapturedChild, parse_child
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonical_bytes, digest, parse_request
 from learn_ukrainian_v4_runtime.v4_execution_origin import load_review_rubric_sha256
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import claim, role_connection
 from test_v4_protected_parent_mechanism import _run_real_pair
-
-from scripts.fleet_comms.request_executor import RequestExecutor
 
 
 def _assignment(pg, tmp_path, monkeypatch):

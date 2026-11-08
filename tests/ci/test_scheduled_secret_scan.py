@@ -15,8 +15,7 @@ import subprocess
 from pathlib import Path
 
 import yaml
-
-from scripts.ci.secret_scan_scope import resolve_scan_scope
+from lu_machinery.ci.secret_scan_scope import resolve_scan_scope
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
@@ -39,7 +38,7 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     assert triggers["schedule"]
     secret_scan = workflow["jobs"]["secret-scan"]
     scope_step = next(step for step in secret_scan["steps"] if step.get("id") == "secret-scan-scope")
-    assert "python3 -m scripts.ci.secret_scan_scope" in scope_step["run"]
+    assert "python3 -m lu_machinery.ci.secret_scan_scope" in scope_step["run"]
     assert scope_step["env"]["EVENT_NAME"] == "${{ github.event_name }}"
     assert scope_step["env"]["DISPATCH_HEAD_SHA"] == "${{ github.sha }}"
     assert scope_step["env"]["DISPATCH_REF"] == "${{ github.ref }}"

@@ -9,7 +9,7 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "research"))
 
-from scripts.research.research_quality import (
+from lu_machinery.research.research_quality import (
     _parse_discovery,
     find_research_path,
 )
@@ -66,8 +66,6 @@ class TestParseDiscovery:
 
 class TestFindResearchPath:
     def test_prefers_curriculum_research_file(self, tmp_path, monkeypatch):
-        import scripts.research.research_quality as research_quality
-
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "bio"
         research_dir = track_dir / "research"
         docs_dir = tmp_path / "docs" / "research" / "bio"
@@ -78,13 +76,11 @@ class TestFindResearchPath:
         curriculum_file.write_text("curriculum research", encoding="utf-8")
         docs_file.write_text("docs dossier", encoding="utf-8")
 
-        monkeypatch.setattr(research_quality, "DOCS_RESEARCH_ROOT", tmp_path / "docs" / "research")
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
 
         assert find_research_path(track_dir, "ivan-franko") == curriculum_file
 
     def test_falls_back_to_docs_research_dossier(self, tmp_path, monkeypatch):
-        import scripts.research.research_quality as research_quality
-
         track_dir = tmp_path / "curriculum" / "l2-uk-en" / "bio"
         docs_dir = tmp_path / "docs" / "research" / "bio"
         track_dir.mkdir(parents=True)
@@ -92,7 +88,7 @@ class TestFindResearchPath:
         docs_file = docs_dir / "ivan-franko.md"
         docs_file.write_text("docs dossier", encoding="utf-8")
 
-        monkeypatch.setattr(research_quality, "DOCS_RESEARCH_ROOT", tmp_path / "docs" / "research")
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
 
         assert find_research_path(track_dir, "ivan-franko") == docs_file
 

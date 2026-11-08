@@ -10,7 +10,7 @@ import json
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from scripts.hygiene import lint_source_db_writable_connects as lint
+from lu_machinery.hygiene import lint_source_db_writable_connects as lint
 
 DB_TARGET = "data/sources@@db".replace("@@", ".")
 

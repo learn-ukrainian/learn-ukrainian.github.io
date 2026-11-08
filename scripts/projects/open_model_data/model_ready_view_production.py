@@ -31,11 +31,11 @@ from jsonschema import Draft202012Validator, FormatChecker
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 from referencing import Registry, Resource
 from tokenizers import Tokenizer
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import silver_evidence_factory as silver
 from scripts.projects.open_model_data import validate_source_records as source_record_contract

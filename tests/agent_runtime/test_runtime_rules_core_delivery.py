@@ -8,13 +8,12 @@ import json
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.agent_runtime import acpx_discuss, runner
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.errors import AgentRuntimeError
-from scripts.agent_runtime.failover import FailoverChain, FailoverRoute
-from scripts.lib import rules_core
-from scripts.review.render_contract import trusted_core_context
+from lu_machinery.agent_runtime import acpx_discuss, runner
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.errors import AgentRuntimeError
+from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
+from lu_machinery.lib import rules_core
+from lu_machinery.review.render_contract import trusted_core_context
 
 
 class SpawnObserved(Exception):
@@ -24,7 +23,7 @@ class SpawnObserved(Exception):
 @pytest.fixture
 def boundary(tmp_path, monkeypatch):
     captured = []
-    from scripts.agent_runtime import attempt_boundary
+    from lu_machinery.agent_runtime import attempt_boundary
     monkeypatch.setattr(attempt_boundary, "prepare_attempt_boundary", lambda *a, **kw: None)
 
     class Adapter:
@@ -162,7 +161,7 @@ def test_real_controller_synthesis_cannot_spawn_without_exactly_one_core(boundar
 
 
 def _admitted(tmp_path):
-    from scripts.dispatcher import store
+    from lu_machinery.dispatcher import store
 
     prefix, dependency = trusted_core_context()
     prompt = prefix + "Review the admitted task body.\n"
@@ -223,7 +222,7 @@ def test_missing_core_refuses_with_typed_runtime_error_before_spawn(boundary, tm
 @pytest.mark.parametrize("tampering", ["framed-block", "provenance", "complete-body", "unadmitted-hash"])
 def test_invalid_bound_refuses_with_typed_runtime_error_before_spawn(boundary, tmp_path, tampering):
     """Defect class: hash-only BOUND bypass accepts a substituted block, provenance or task body."""
-    from scripts.dispatcher import store
+    from lu_machinery.dispatcher import store
 
     prompt, record = _admitted(tmp_path)
     task_id = "rules-bound"

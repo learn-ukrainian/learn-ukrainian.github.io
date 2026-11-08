@@ -26,7 +26,8 @@ import yaml
 from bs4 import BeautifulSoup
 
 try:
-    from scripts.storage.topology import resolve_bulk_root
+    from lu_machinery.storage.topology import resolve_bulk_root
+
     from scripts.wiki.textbook_subjects import (
         AUTHOR_UK_BY_TRANSLIT,
         normalize_subject_slug,
@@ -35,7 +36,8 @@ try:
 except ModuleNotFoundError:
     # Preserve the documented direct-script entry point as well as ``-m``.
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.storage.topology import resolve_bulk_root
+    from lu_machinery.storage.topology import resolve_bulk_root
+
     from scripts.wiki.textbook_subjects import (
         AUTHOR_UK_BY_TRANSLIT,
         normalize_subject_slug,

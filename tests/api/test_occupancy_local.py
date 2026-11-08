@@ -7,11 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api.occupancy_local import (
+from lu_machinery.api.occupancy_local import (
     clear_marker,
     driver_seat_host_id,
     occupancy_marker_scope,
@@ -21,6 +17,9 @@ from scripts.api.occupancy_local import (
     resolve_launcher_host_id,
     write_marker,
 )
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
 
 def _open_lease(
@@ -77,7 +76,7 @@ def test_darwin_empty_map_does_not_attach_session_stream_drivers_to_mac_operator
     _open_lease(db_path)
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "darwin")
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.sys.platform", "darwin")
     mapping: dict[str, str] = {}
     selected: dict[str, str | None] = {"host-teacher": None, "mac-operator": None}
 
@@ -108,7 +107,7 @@ def test_linux_empty_map_attaches_session_stream_drivers_to_host_teacher(
     _open_lease(db_path)
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "linux")
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.sys.platform", "linux")
     mapping: dict[str, str] = {}
     selected: dict[str, str | None] = {"host-teacher": None, "mac-operator": None}
 
@@ -150,7 +149,7 @@ def test_resolve_launcher_host_id_uses_occupancy_mapping_and_fallbacks(
 
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "linux")
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.sys.platform", "linux")
     assert resolve_launcher_host_id() == "host-teacher"
 
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
@@ -281,7 +280,7 @@ def test_read_session_streams_preserves_distinct_session_identity(
             return _FakeCursor()
 
     monkeypatch.setattr(
-        "scripts.api.occupancy_local.SessionStreamDatabase.connect",
+        "lu_machinery.api.occupancy_local.SessionStreamDatabase.connect",
         lambda self, read_only=True: _FakeConn(),
     )
 

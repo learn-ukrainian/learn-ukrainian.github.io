@@ -12,9 +12,8 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.fleet_comms import cli as comms_cli
-from scripts.fleet_comms.cli import (
+from lu_machinery.fleet_comms import cli as comms_cli
+from lu_machinery.fleet_comms.cli import (
     EXIT_ERROR,
     EXIT_NOT_FOUND,
     EXIT_OK,
@@ -22,8 +21,8 @@ from scripts.fleet_comms.cli import (
     get_formal_review_job,
     main,
 )
-from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
-from scripts.fleet_comms.paths import PlaneRootAnchorError
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from lu_machinery.fleet_comms.paths import PlaneRootAnchorError
 
 
 def _seed_plane_db(root: Path) -> Path:
@@ -133,7 +132,7 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     for argv, handler_name in entrypoints:
         handler = Mock(side_effect=AssertionError("unsafe root reached command handler"))
         with monkeypatch.context() as guard:
-            guard.setattr(f"scripts.fleet_comms.cli.{handler_name}", handler)
+            guard.setattr(f"lu_machinery.fleet_comms.cli.{handler_name}", handler)
             assert main([*argv, "--root", str(checkout)]) == EXIT_ERROR
         output = capsys.readouterr()
         assert output.out == ""
@@ -167,7 +166,7 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     monkeypatch.chdir(checkout)
     connect = Mock(side_effect=AssertionError("unresolvable root reached backend"))
     monkeypatch.setattr(comms_cli, "cp_connect", connect)
-    monkeypatch.setattr("scripts.fleet_comms.message_plane.cp_connect", connect)
+    monkeypatch.setattr("lu_machinery.fleet_comms.message_plane.cp_connect", connect)
     for env_root in (str(loop), None):
         if env_root is not None:
             monkeypatch.setenv("FLEET_COMMS_ROOT", env_root)
@@ -197,7 +196,7 @@ def test_get_formal_review_job_helper(tmp_path: Path, monkeypatch: pytest.Monkey
     (root / ".git").mkdir()
     before = (root / "comms.sqlite3").read_bytes()
     connect = Mock(side_effect=AssertionError("checkout root reached a connection"))
-    monkeypatch.setattr("scripts.fleet_comms.cli.cp_connect", connect)
+    monkeypatch.setattr("lu_machinery.fleet_comms.cli.cp_connect", connect)
     with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
         get_formal_review_job("rev-abc", root=root)
     connect.assert_not_called()
@@ -235,7 +234,7 @@ def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(
     monkeypatch: pytest.MonkeyPatch,
     capsys,
 ) -> None:
-    from scripts.agent_runtime import acpx_discuss
+    from lu_machinery.agent_runtime import acpx_discuss
 
     observed: list[str | None] = []
 
@@ -275,13 +274,13 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     monkeypatch: pytest.MonkeyPatch,
     capsys,
 ) -> None:
-    from scripts.ai_agent_bridge import _channels, _channels_cli, _config, _db
+    from lu_machinery.ai_agent_bridge import _channels, _channels_cli, _config, _db
 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
     monkeypatch.setattr(_db, "DB_PATH", db_path)
     monkeypatch.setattr(
-        "scripts.fleet_comms.artifacts.default_plane_root",
+        "lu_machinery.fleet_comms.artifacts.default_plane_root",
         lambda **_kwargs: tmp_path / "authority-plane",
     )
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
@@ -317,9 +316,9 @@ def test_supported_bridge_command_defaults_to_durable_acp(
             "synthesis": "ACP synthesis",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_run_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_run_discussion)
     monkeypatch.setattr(
-        "agent_runtime.runner.invoke",
+        "lu_machinery.agent_runtime.runner.invoke",
         lambda *_a, **_k: pytest.fail("eligible ACP discussion must not call bridge runtime"),
     )
     args = SimpleNamespace(
@@ -339,7 +338,7 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     output = capsys.readouterr().out
     assert "transport: ACP (cursor, pool)" in output
     assert "/fleet.html?conversation=conversation_" in output
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "authority-plane") as authority:
         result = authority.store.connection.execute(
@@ -354,7 +353,7 @@ def test_acp_discuss_cli_busy_is_body_free_no_queue_json(
     monkeypatch: pytest.MonkeyPatch,
     capsys,
 ) -> None:
-    from scripts.agent_runtime import acpx_discuss
+    from lu_machinery.agent_runtime import acpx_discuss
 
     def refuse_busy(**_kwargs):
         raise acpx_discuss.AcpxDiscussionBusyError("private holder details")
@@ -394,7 +393,7 @@ def test_acp_verify_cli_exit_codes_and_compact_receipt(
     monkeypatch: pytest.MonkeyPatch,
     capsys,
 ) -> None:
-    from scripts.agent_runtime import acpx_discuss
+    from lu_machinery.agent_runtime import acpx_discuss
 
     conversation_id = "conversation_" + ("a" * 32)
     monkeypatch.setattr(

@@ -7,8 +7,8 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import github_client as gh
 
-from scripts.common import github_client as gh
 from tests.common.github_cache_isolation import isolate_github_client_cache, production_github_cache_directory
 
 
@@ -101,7 +101,7 @@ def test_implausible_reset_already_stored_does_not_refuse(tmp_path, reset, caplo
     gh._IMPLAUSIBLE_RESET_LOGGED = False
     with store._db() as db:
         db.execute("INSERT INTO budget VALUES (?,?,?,?)", (store.scope, "core", 77, reset))
-    with caplog.at_level(logging.DEBUG, logger="scripts.common.github_client"):
+    with caplog.at_level(logging.DEBUG, logger="lu_machinery.common.github_client"):
         result = store.request("GET", "user")
     assert result.error is None and calls == ["user"]
     assert any("ignoring implausible GitHub budget reset" in record.message for record in caplog.records)

@@ -6,8 +6,7 @@ import threading
 import time
 
 from fastapi.testclient import TestClient
-
-from scripts.ai_agent_bridge import openai_proxy as proxy
+from lu_machinery.ai_agent_bridge import openai_proxy as proxy
 
 
 def _clear_cache() -> None:

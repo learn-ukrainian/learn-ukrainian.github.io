@@ -13,7 +13,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from scripts.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
 
 _SECRET_COPY = "launch-secret12"
 _SECRET_LABEL = "secret-looking-adapter-label"

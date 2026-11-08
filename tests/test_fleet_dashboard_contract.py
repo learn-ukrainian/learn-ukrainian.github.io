@@ -6,10 +6,9 @@ import subprocess
 from pathlib import Path
 
 from fastapi import FastAPI
-
-from scripts.api.fleet_router import router as fleet_router
-from scripts.api.monitor_context import production_context
-from scripts.api.route_contracts import contract_for_page, contract_for_route
+from lu_machinery.api.fleet_router import router as fleet_router
+from lu_machinery.api.monitor_context import production_context
+from lu_machinery.api.route_contracts import contract_for_page, contract_for_route
 
 ROOT = Path(__file__).resolve().parents[1]
 def test_fleet_routes_are_registered_get_only_and_contracted() -> None:

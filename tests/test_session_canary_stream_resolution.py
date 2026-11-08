@@ -8,8 +8,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.session_canary import codex_lane, gemini_lane, glm_lane, grok_lane
+from lu_machinery.session_canary import codex_lane, gemini_lane, glm_lane, grok_lane
 
 ROOT = Path(__file__).resolve().parents[1]
 LANES = (codex_lane, gemini_lane, glm_lane, grok_lane)

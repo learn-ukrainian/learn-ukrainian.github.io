@@ -18,13 +18,13 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.agent_runtime.lane_probe import resolve_handoff_agent
+from lu_machinery.ai_agent_bridge import _channels
+from lu_machinery.common.repo_root import PRODUCT_ROOT_ENV
+from lu_machinery.orchestration import handoff_slot_registry as registry
+from lu_machinery.orchestration.slot_routing import resolve_slot_holder
+from lu_machinery.session_streams.inventory import stream_anchor_id, stream_map
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
-from scripts.agent_runtime.lane_probe import resolve_handoff_agent
-from scripts.ai_agent_bridge import _channels
-from scripts.common.repo_root import PRODUCT_ROOT_ENV
-from scripts.orchestration import handoff_slot_registry as registry
-from scripts.orchestration.slot_routing import resolve_slot_holder
 from tests.helpers import machinery_package, product_checkout
 from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import launch_checkout
@@ -118,7 +118,7 @@ def test_mixed_roster_never_invents_launcher_only_or_unknown_aliases(mixed_roste
 def test_monitor_hydration_consumes_mixed_roster_without_crossing_provider(
     mixed_roster, monkeypatch, capsys, provider, identity_provider
 ):
-    from scripts.session_canary import codex_lane, gemini_lane
+    from lu_machinery.session_canary import codex_lane, gemini_lane
 
     lane = {"codex": codex_lane, "gemini": gemini_lane}[provider]
     identity = f"{identity_provider or provider}-monitor"

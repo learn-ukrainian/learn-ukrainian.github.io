@@ -22,8 +22,8 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 

@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from telemetry import emit as emit_mod
+from lu_machinery.telemetry import emit as emit_mod
 
 
 def _use_event_dir(monkeypatch, root: Path) -> Path:
@@ -69,7 +69,7 @@ def test_redirect_is_inherited_by_subprocess_and_package_import(tmp_path, monkey
     event_dir = tmp_path / "child-events"
     monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
     result = subprocess.run(
-        [sys.executable, "-c", "from scripts.telemetry.emit import emit_event; emit_event('child', {'ok': True})"],
+        [sys.executable, "-c", "from lu_machinery.telemetry.emit import emit_event; emit_event('child', {'ok': True})"],
         check=False,
         capture_output=True,
         text=True,

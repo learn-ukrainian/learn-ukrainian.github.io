@@ -84,19 +84,20 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 import yaml
+from lu_machinery.orchestration.task_record_store import locate_task_record, relocated_result_file, task_record_path
+from lu_machinery.review import findings_db, second_seat
+from lu_machinery.review.seeds import manifest as seed_manifest
 
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.orchestration.task_record_store import locate_task_record, relocated_result_file, task_record_path
-from scripts.review import findings_db, fixloop, second_seat
-from scripts.review.seeds import manifest as seed_manifest
+from scripts.review import fixloop
 from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -359,7 +360,7 @@ def attested_return(
     )
     path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     task = json.loads(path.read_bytes())
-    from scripts.review.render_contract import recorded_core_context
+    from lu_machinery.review.render_contract import recorded_core_context
 
     try:
         prompt = Path(task["prompt_file"]).read_bytes()

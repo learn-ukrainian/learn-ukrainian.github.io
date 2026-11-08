@@ -12,11 +12,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from scripts.common.git_context import sanitized_git_env
-from scripts.common.repo_root import main_checkout_root
-from scripts.orchestration import fleet_repos
-from scripts.orchestration.fleet_repos import load_fleet_repos
-from scripts.review import target_resolution
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.orchestration import fleet_repos
+from lu_machinery.orchestration.fleet_repos import load_fleet_repos
+from lu_machinery.review import target_resolution
+
 from tests.test_review_closeout_cli import _run_cli
 
 # Fallbacks let this module collect on a tree that does not have the fix yet.
@@ -475,7 +476,7 @@ def test_missing_or_unparsable_origin_is_not_kept(review_repositories, tmp_path)
 
 
 def test_same_repo_pr_head_pins_catalog_repository(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import _agy
+    from lu_machinery.ai_agent_bridge import _agy
 
     repo = tmp_path / "public"
     catalog = load_fleet_repos()["public"].github

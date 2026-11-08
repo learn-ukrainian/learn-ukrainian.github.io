@@ -18,9 +18,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
-
-from scripts.common.scratch import ensure_scratch_root
-from scripts.guardrails import worktree_containment as wc
+from lu_machinery.common.scratch import ensure_scratch_root
+from lu_machinery.guardrails import worktree_containment as wc
 
 
 def _clean_env() -> dict[str, str]:

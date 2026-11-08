@@ -9,8 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter, _agy_version
 
-from scripts.agent_runtime.adapters.agy import AgyAdapter, _agy_version
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 # Placeholder per key delegate.py assigns. An unmapped key still gets a

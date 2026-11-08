@@ -9,7 +9,7 @@ from tests.agent_runtime.test_agy_transient_fault import API_503, ELIGIBILITY_50
 
 
 def _module():
-    return importlib.import_module("scripts.fleet.agy_failure_tally")
+    return importlib.import_module("lu_machinery.fleet.agy_failure_tally")
 
 
 @pytest.mark.parametrize(

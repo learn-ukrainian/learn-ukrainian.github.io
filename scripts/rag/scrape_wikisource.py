@@ -56,10 +56,10 @@ from rag.scrape_ukrlib import (
 from wiki.sources import build_literary_row, work_to_id
 
 try:
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 
 API = "https://uk.wikisource.org/w/api.php"
 WIKI_BASE_URL = "https://uk.wikisource.org/wiki"
@@ -106,8 +106,8 @@ SESSION.headers.update({
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

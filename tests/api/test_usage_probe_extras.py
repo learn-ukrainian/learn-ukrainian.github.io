@@ -12,11 +12,11 @@ from types import SimpleNamespace
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api import state_router
+from lu_machinery.api import subscription_usage as probes
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.fleet import capacity_pick, usage
 
-from scripts.api import state_router
-from scripts.api import subscription_usage as probes
-from scripts.api.monitor_context import fixture_context
-from scripts.fleet import capacity_pick, usage
 from tests.api.test_routing_budget_endpoint import _configure
 
 FIXTURES = Path(__file__).parents[1] / "fixtures" / "usage_9270"

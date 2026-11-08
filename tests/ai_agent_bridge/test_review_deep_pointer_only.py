@@ -6,9 +6,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.ai_agent_bridge import _review_safety as safety
-from scripts.ai_agent_bridge._dispatch_wrappers import _write_review_deep_pr_prompt
+from lu_machinery.ai_agent_bridge import _review_safety as safety
+from lu_machinery.ai_agent_bridge._dispatch_wrappers import _write_review_deep_pr_prompt
 
 
 def test_pr_prompt_is_pointer_only(tmp_path: Path) -> None:
@@ -19,7 +18,7 @@ def test_pr_prompt_is_pointer_only(tmp_path: Path) -> None:
         "files": [{"path": "a.py", "additions": 1, "deletions": 0}],
     }
     with patch(
-        "scripts.ai_agent_bridge._dispatch_wrappers._run_json_command",
+        "lu_machinery.ai_agent_bridge._dispatch_wrappers._run_json_command",
         return_value=fake,
     ):
         out = _write_review_deep_pr_prompt("1", tmp_path)
@@ -82,7 +81,7 @@ def test_real_builders_preserve_baseline_budget_and_reject_overflow(
         "headRefOid": "abc123",
         "files": [{"path": "a.py", "additions": 1, "deletions": 0}],
     }
-    monkeypatch.setattr("scripts.ai_agent_bridge._dispatch_wrappers._run_json_command", lambda _: pr)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._dispatch_wrappers._run_json_command", lambda _: pr)
     builder = _write_review_deep_pr_prompt
     argument = "1"
     # Accepted cases size the unchanged external input against the baseline.

@@ -14,8 +14,7 @@ from types import SimpleNamespace
 
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
-
-from scripts.session_canary import shared_hydration as hydration
+from lu_machinery.session_canary import shared_hydration as hydration
 
 
 def _evidence() -> dict[str, object]:

@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -31,7 +31,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
@@ -40,18 +40,19 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from scripts.rag.vesum_reingest import (
-    DEFAULT_LOCK_PATH,
-    _canonical_jsonl_sha256,
-    load_lock,
-    sha256_file,
-)
-from scripts.storage.topology import (
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreBinding,
     StoreRefusal,
     resolve_store,
     resolve_store_for_write,
+)
+
+from scripts.rag.vesum_reingest import (
+    DEFAULT_LOCK_PATH,
+    _canonical_jsonl_sha256,
+    load_lock,
+    sha256_file,
 )
 from scripts.verification.vesum import (
     InspectionStatus,

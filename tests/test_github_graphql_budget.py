@@ -10,8 +10,8 @@ from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery import github_graphql_budget as probe
 
-from scripts import github_graphql_budget as probe
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 
@@ -173,7 +173,7 @@ def test_main_json_output(monkeypatch: pytest.MonkeyPatch, capsys: pytest.Captur
 
 
 def test_ttl_cache_and_single_flight(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.api import state_helpers
+    from lu_machinery.api import state_helpers
 
     now = [100.0]
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: now[0])

@@ -8,8 +8,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.review import findings_db as db
+from lu_machinery.review import findings_db as db
 
 FINDING = {
     "id": "F-01",

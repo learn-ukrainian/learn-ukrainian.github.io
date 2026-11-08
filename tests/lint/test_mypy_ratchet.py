@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.lint.mypy_ratchet import MypyError, collect_errors, evaluate, write_baseline
+from lu_machinery.lint.mypy_ratchet import MypyError, collect_errors, evaluate, write_baseline
 
 _CONFIG = """\
 [tool.mypy]

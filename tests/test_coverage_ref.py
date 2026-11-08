@@ -13,10 +13,9 @@ from types import SimpleNamespace
 
 import coverage
 import pytest
-
-from scripts.ci.coverage_ref import CollectionRecorder, combine, main, versions
-from scripts.ci.coverage_ref_environment import TracebackWatchdog
-from scripts.ci.coverage_ref_environment import main as install_environment
+from lu_machinery.ci.coverage_ref import CollectionRecorder, combine, main, versions
+from lu_machinery.ci.coverage_ref_environment import TracebackWatchdog
+from lu_machinery.ci.coverage_ref_environment import main as install_environment
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "scripts/ci/coverage-ref.ini"
@@ -169,7 +168,7 @@ def test_recorder_distinguishes_teardown_failures_and_worker_crashes():
 
 def test_environment_installation_uses_only_disposable_interpreter_site(tmp_path, monkeypatch):
     """The copied startup module must load through .pth without relying on PYTHONPATH."""
-    monkeypatch.setattr("scripts.ci.coverage_ref_environment.sysconfig.get_paths", lambda: {"purelib": str(tmp_path)})
+    monkeypatch.setattr("lu_machinery.ci.coverage_ref_environment.sysconfig.get_paths", lambda: {"purelib": str(tmp_path)})
     install_environment([])
     env = {key: value for key, value in os.environ.items() if not key.startswith("COVERAGE_")}
     env["COVERAGE_FILE"] = str(tmp_path / ".coverage")
@@ -250,10 +249,10 @@ def test_traceback_replacement_repeat_and_cancel_never_dump_a_stale_test(tmp_pat
             current[0] = self
             self.callback()
 
-    monkeypatch.setattr("scripts.ci.coverage_ref_environment.threading.Timer", Timer)
-    monkeypatch.setattr("scripts.ci.coverage_ref_environment.threading.current_thread", lambda: current[0])
+    monkeypatch.setattr("lu_machinery.ci.coverage_ref_environment.threading.Timer", Timer)
+    monkeypatch.setattr("lu_machinery.ci.coverage_ref_environment.threading.current_thread", lambda: current[0])
     monkeypatch.setattr(
-        "scripts.ci.coverage_ref_environment.faulthandler.dump_traceback",
+        "lu_machinery.ci.coverage_ref_environment.faulthandler.dump_traceback",
         lambda file, all_threads: os.write(file, b"all thread stacks\n"),
     )
     watchdog = TracebackWatchdog()
@@ -583,7 +582,7 @@ def test_prepare_or_dependency_failure_still_writes_incomplete_manifest(measurem
 
                 raise PackageNotFoundError(name)
 
-            monkeypatch.setattr("scripts.ci.coverage_ref.importlib.metadata.version", missing_version)
+            monkeypatch.setattr("lu_machinery.ci.coverage_ref.importlib.metadata.version", missing_version)
         else:
             monkeypatch.setenv("COVERAGE_RCFILE", "missing.ini")
         assert combine(raw, output, SHA, 2, "skipped") == 1

@@ -15,9 +15,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.ci import data_tier
-from scripts.common import scratch
+from lu_machinery.ci import data_tier
+from lu_machinery.common import scratch
 
 pytestmark = pytest.mark.reads_content
 
@@ -699,7 +698,7 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleN
 
     def execute(argv: list[str], **kwargs: object) -> int:
         assert kwargs["cwd"] == checkout
-        assert "scripts.ci.data_tier" in argv
+        assert "lu_machinery.ci.data_tier" in argv
         assert "-m" in argv
         assert 0 < kwargs["timeout"] <= data_tier.RUN_BUDGET_SECONDS
         Path(argv[argv.index("--junit") + 1]).write_text('<testsuite><testcase name="test_ok"/></testsuite>')
@@ -1211,7 +1210,7 @@ def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, monkeypatch,
     junit = tmp_path / "result.xml"
     code = (
         f"import sys\nsys.path.insert(0, {str(root)!r})\n"
-        "from scripts.ci import data_tier\nfrom types import SimpleNamespace\n"
+        "from lu_machinery.ci import data_tier\nfrom types import SimpleNamespace\n"
         "data_tier.load_selection = lambda: {'files': ['tests/test_input.py'], "
         "'nodeids': ['tests/test_input.py'], 'bulk_nodeids': []}\n"
         f"raise SystemExit(data_tier.pytest_child(SimpleNamespace(junit={str(junit)!r}, "

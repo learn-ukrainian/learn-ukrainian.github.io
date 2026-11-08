@@ -10,10 +10,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.fleet_comms.cli import EXIT_OK
-from scripts.fleet_comms.cli import main as cli_main
-from scripts.fleet_comms.efficiency_metrics import (
+from lu_machinery.fleet_comms.cli import EXIT_OK
+from lu_machinery.fleet_comms.cli import main as cli_main
+from lu_machinery.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
     collect_dead_letters_authority,
     collect_delivery_backlog,
@@ -22,7 +21,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_efficiency_metrics_authority,
     resolve_metrics_source,
 )
-from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
+from lu_machinery.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 
 
 def _seed_broker(db: Path) -> None:
@@ -297,10 +296,9 @@ def authority_db(request, tmp_path, monkeypatch):
             seed.close()
         return
 
+    import lu_machinery.fleet_comms.efficiency_metrics as metrics_mod
     import psycopg
     from psycopg import sql
-
-    import scripts.fleet_comms.efficiency_metrics as metrics_mod
 
     schema = sql.Identifier(f"metrics_{uuid.uuid4().hex}")
     with psycopg.connect(dsn, autocommit=True) as writer:
@@ -402,7 +400,7 @@ def test_authority_no_completed_latency(authority_db):
 
 
 def test_authority_connections_are_readonly_and_closed(authority_db):
-    from scripts.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError, _connect_ro
+    from lu_machinery.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError, _connect_ro
 
     plane_db, _ = authority_db
     with pytest.raises((sqlite3.OperationalError, EfficiencyMetricsReadError)):
@@ -421,7 +419,7 @@ def test_authority_connections_are_readonly_and_closed(authority_db):
 def test_pg_missing_dsn_never_returns_stale_or_empty_sqlite(
     collector, local_file, tmp_path, monkeypatch,
 ):
-    from scripts.control_plane.storage import ControlPlanePgDsnMissingError
+    from lu_machinery.control_plane.storage import ControlPlanePgDsnMissingError
 
     plane_db = _seed_authority_plane(tmp_path / "plane") if local_file else tmp_path / "missing.db"
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
@@ -434,9 +432,8 @@ def test_pg_missing_dsn_never_returns_stale_or_empty_sqlite(
 
 @pytest.mark.parametrize("collector", _AUTHORITY_COLLECTORS)
 def test_pg_query_errors_are_typed_and_redacted(collector, tmp_path, monkeypatch):
+    import lu_machinery.fleet_comms.efficiency_metrics as metrics_mod
     import psycopg
-
-    import scripts.fleet_comms.efficiency_metrics as metrics_mod
 
     class BrokenConnection:
         closed = False
@@ -469,7 +466,7 @@ def test_sqlite_missing_authority_file_stays_empty(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("collector", _AUTHORITY_COLLECTORS)
 def test_missing_pg_schema_fails_closed(authority_db, collector):
-    from scripts.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError
+    from lu_machinery.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError
 
     plane_db, writer = authority_db
     writer.execute("DROP TABLE authority_deliveries")
@@ -490,7 +487,7 @@ def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path, sche
     """Mixed-version active records must not be counted as completed dispatches."""
     from datetime import UTC, datetime
 
-    from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
+    from lu_machinery.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
     plane_db, writer = authority_db
     writer.execute(

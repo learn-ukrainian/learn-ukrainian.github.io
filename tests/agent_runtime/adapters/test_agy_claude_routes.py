@@ -7,10 +7,10 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 
-from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.claude_route_accounts import HOST_ACCOUNT
 
@@ -499,7 +499,7 @@ def test_adapter_substitution_uses_invocation_pin_instead_of_metadata(tmp_path, 
 
 @pytest.mark.parametrize("model", SLUGS)
 def test_claude_worker_keeps_the_real_shell_output_hook_gate(tmp_path, model):
-    from scripts.agent_runtime.agy_hook_config import AgyHookConfigError
+    from lu_machinery.agent_runtime.agy_hook_config import AgyHookConfigError
 
     hooks = tmp_path / ".agents" / "hooks.json"
     hooks.parent.mkdir()
@@ -540,7 +540,7 @@ def test_opus_security_worker_keeps_its_existing_catalog_role(tmp_path, monkeypa
 def test_duplicate_init_members_never_qualify(
     tmp_path, monkeypatch, slug, reverse, member, first, last, nested, entrypoint,
 ):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     if reverse:
         first, last = last, first
@@ -587,7 +587,7 @@ def test_duplicate_init_members_never_qualify(
 @pytest.mark.parametrize("slug", SLUGS)
 @pytest.mark.parametrize("entrypoint", ["parser", "runner", "cancel", "exception"])
 def test_duplicate_later_event_revokes_matching_identity(tmp_path, monkeypatch, slug, entrypoint):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     plan, terminal = _identity_stream_plan(tmp_path, slug)
     stdout = "\n".join([

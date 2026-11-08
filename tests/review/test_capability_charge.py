@@ -10,10 +10,10 @@ import hashlib
 import json
 
 import pytest
+from lu_machinery.review import capability_failure as cf
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.review_lineage import ReviewRun, capability_exemption, dispatched_rounds
 
-from scripts.review import capability_failure as cf
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.review_lineage import ReviewRun, capability_exemption, dispatched_rounds
 from tests.test_record_cf_verdict import (
     BRANCH,
     REPOSITORY,

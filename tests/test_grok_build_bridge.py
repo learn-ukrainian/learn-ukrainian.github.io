@@ -4,8 +4,8 @@ import json
 from contextlib import contextmanager
 from types import SimpleNamespace
 
-from scripts.ai_agent_bridge import _cli, _grok_build
-from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+from lu_machinery.ai_agent_bridge import _cli, _grok_build
+from lu_machinery.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 def _grok_bridge_message() -> dict[str, str]:
@@ -138,7 +138,7 @@ def test_ask_grok_build_review_flag_runs_as_normal_ask(monkeypatch):
     # Direct one-round review regime (operator order 2026-08-06): review=True is
     # a normal ask, never a sealed-path refusal. Mutation guard: re-adding the
     # formal_review_requires_sealed_snapshot raise fails this test.
-    from scripts.ai_agent_bridge import _acp_compat
+    from lu_machinery.ai_agent_bridge import _acp_compat
 
     sentinel = object()
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)

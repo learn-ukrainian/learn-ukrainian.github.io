@@ -12,14 +12,13 @@ import os
 from pathlib import Path
 
 import pytest
-
-from scripts.control_plane.storage import (
+from lu_machinery.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
 )
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.message_plane import MessagePlane
-from scripts.fleet_comms.request_executor import (
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.message_plane import MessagePlane
+from lu_machinery.fleet_comms.request_executor import (
     RequestExecutor,
     RequestExecutorError,
 )

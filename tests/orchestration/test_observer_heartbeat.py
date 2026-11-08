@@ -6,8 +6,7 @@ import json
 from urllib.error import URLError
 
 import pytest
-
-from scripts.orchestration.observer_heartbeat import (
+from lu_machinery.orchestration.observer_heartbeat import (
     HeartbeatError,
     main,
     post_observer_presence,
@@ -117,7 +116,7 @@ def test_post_observer_presence_rejects_unknown_agent_fail_closed() -> None:
 
 
 def test_detect_mac_gui_session_cursor_and_codex() -> None:
-    from scripts.orchestration.observer_heartbeat import (
+    from lu_machinery.orchestration.observer_heartbeat import (
         detect_live_gui_agents,
         detect_mac_gui_session,
         is_gui_process_for_agent,
@@ -158,7 +157,7 @@ def test_detect_mac_gui_session_cursor_and_codex() -> None:
 
 
 def test_sweep_mac_gui_presence() -> None:
-    from scripts.orchestration.observer_heartbeat import sweep_mac_gui_presence
+    from lu_machinery.orchestration.observer_heartbeat import sweep_mac_gui_presence
 
     posted_bodies: list[dict[str, object]] = []
 

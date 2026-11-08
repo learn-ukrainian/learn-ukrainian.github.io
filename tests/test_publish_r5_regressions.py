@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.opsec.gh_snapshot import admit
+from lu_machinery.publish import github as pub
 
-from scripts.opsec import prepublish as gate
-from scripts.opsec.gh_snapshot import admit
-from scripts.publish import github as pub
 from tests.opsec_fixtures import CATALOG, ROOT, recorded_approval
 
 
@@ -207,7 +207,7 @@ def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path
         "issue-reopen": [("PATCH", "repos/unit/public/issues/1", {"state": "open"})],
     }
     if verb in expected_requests:
-        from scripts.common.github_client import Response
+        from lu_machinery.common.github_client import Response
 
         def transport(method, endpoint, headers, body, timeout):
             return Response(200, {}, b"{}")
@@ -343,7 +343,7 @@ def test_hook_recognises_typed_merge(monkeypatch):
     guard = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(guard)
     for prefix in (sys.executable, "/fixture/bin/python"):
-        args = guard._merge_args([prefix, "-m", "scripts.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
+        args = guard._merge_args([prefix, "-m", "lu_machinery.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
         assert guard._pr_selector(args) == "1" and guard._repo_option(args) == "unit/private"
 
 
@@ -414,7 +414,7 @@ def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
     spec = importlib.util.spec_from_file_location("r5_hook", ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")
     guard = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(guard)
-    monkeypatch.setattr(guard, "_read_payload", lambda: {"tool_input": {"command": f".venv/bin/python -m scripts.publish pr-merge --repo {repo} --number 1"}})
+    monkeypatch.setattr(guard, "_read_payload", lambda: {"tool_input": {"command": f".venv/bin/python -m lu_machinery.publish pr-merge --repo {repo} --number 1"}})
     reads = []
     def snapshot(pr, target, cwd=None):
         reads.append((pr, target))
@@ -425,7 +425,7 @@ def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
 
 
 def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_path, monkeypatch):
-    from scripts.fleet_comms import review_publisher
+    from lu_machinery.fleet_comms import review_publisher
     calls = []
     executable = tmp_path / "real-gh"
     executable.write_text("#!/bin/sh\nexit 0\n")

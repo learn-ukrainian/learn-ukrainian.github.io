@@ -10,9 +10,8 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
-from scripts.fleet_comms.routing_reservations import (
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from lu_machinery.fleet_comms.routing_reservations import (
     RoutingReservationError,
     RoutingReservationLedger,
     RoutingReservationRequest,

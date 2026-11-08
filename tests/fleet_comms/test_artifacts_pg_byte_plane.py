@@ -16,8 +16,7 @@ import uuid
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.artifacts import _PG_BLOB_TABLE, ArtifactStore, ArtifactStoreError
+from lu_machinery.fleet_comms.artifacts import _PG_BLOB_TABLE, ArtifactStore, ArtifactStoreError
 
 pytestmark = pytest.mark.repo_invariant
 

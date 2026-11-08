@@ -8,9 +8,8 @@ from typing import get_args
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.monitor_context import fixture_context
-from scripts.api.route_contracts import (
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.route_contracts import (
     RouteLocality,
     router,
 )

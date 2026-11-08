@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from scripts.lib.redacted_environ import RedactedEnvDict, install_redacted_environ_repr
+from lu_machinery.lib.redacted_environ import RedactedEnvDict, install_redacted_environ_repr
 
 _CANARY = "LU_REPR_CANARY"
 _SECRET = "canary-secret-value-9f3a"

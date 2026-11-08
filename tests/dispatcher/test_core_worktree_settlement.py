@@ -7,8 +7,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import git, worker
 
-from scripts.dispatcher import git, worker
 from tests.dispatcher.conftest import await_file, in_process_repo, local_branches, run_git
 
 
@@ -135,7 +135,7 @@ def test_settlement_after_a_dispatcher_module_changes_on_disk_removes_the_worktr
     with (sandbox.repo / "scripts/dispatcher/store.py").open("a") as stream:
         stream.write("\n\ndef added_after_the_worker_started():\n    return None\n")
     consumer = sandbox.repo / "scripts/fleet/ignored_task_output.py"
-    consumer.write_text("from scripts.dispatcher.store import added_after_the_worker_started\n" + consumer.read_text())
+    consumer.write_text("from lu_machinery.dispatcher.store import added_after_the_worker_started\n" + consumer.read_text())
     (sandbox.tasks / f"{task[0]}.release").touch()
     record = sandbox.settle(task)
     assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean"), (
@@ -315,7 +315,7 @@ def test_settlement_ignores_setup_links_and_regenerable_caches_and_records_unkno
 @pytest.mark.parametrize("output", ["dependencies", "unique-output", "missing-lockfile"])
 def test_scheduled_settlement_does_not_retain_regenerable_dependencies_as_unique_output(sandbox, monkeypatch, output):
     """Defect class: hourly settlement counts lockfile-backed dependencies as unique ignored output."""
-    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+    from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
     (sandbox.repo / ".gitignore").write_text("site/node_modules/\n.cache/\n")
     if output != "missing-lockfile":

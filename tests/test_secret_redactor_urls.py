@@ -9,8 +9,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.secret_redactor import REDACTION, iter_url_matches, redact_text, redact_url_authority, redact_value
+from lu_machinery.secret_redactor import REDACTION, iter_url_matches, redact_text, redact_url_authority, redact_value
 
 PASSWORDS = (
     "Ab3dE/fG",

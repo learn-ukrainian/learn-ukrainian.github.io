@@ -30,7 +30,7 @@ def _scripts_on_path():
 
 
 def test_resolve_retired_agent_alias_maps_gemini_to_agy():
-    from agent_runtime.agent_identity import (
+    from lu_machinery.agent_runtime.agent_identity import (
         RETIRED_AGENT_ALIASES,
         resolve_retired_agent_alias,
     )
@@ -42,7 +42,7 @@ def test_resolve_retired_agent_alias_maps_gemini_to_agy():
 
 
 def test_resolve_retired_agent_alias_passthrough_for_live_agents():
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from lu_machinery.agent_runtime.agent_identity import resolve_retired_agent_alias
 
     assert resolve_retired_agent_alias("agy") is None
     assert resolve_retired_agent_alias("codex") is None
@@ -52,7 +52,7 @@ def test_resolve_retired_agent_alias_passthrough_for_live_agents():
 
 
 def test_capacity_pick_never_recommends_gemini_as_pick():
-    from scripts.fleet import capacity_pick
+    from lu_machinery.fleet import capacity_pick
 
     budget = {
         "generated_at": "2026-08-18T00:00:00Z",

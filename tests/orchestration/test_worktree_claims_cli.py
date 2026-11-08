@@ -1,4 +1,4 @@
-"""``python -m scripts.orchestration.worktree_claims remove`` and its shell callers (#8610 r5)."""
+"""``python -m lu_machinery.orchestration.worktree_claims remove`` and its shell callers (#8610 r5)."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.orchestration import worktree_claims
 
-from scripts.orchestration import worktree_claims
 from tests.helpers import machinery_package
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -101,7 +101,7 @@ def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
 
 def test_remove_accepts_helper_creator_record_when_borrowers_terminal(tmp_path, capsys):
     """A helper-created tree with only terminal borrowers must not be retained forever."""
-    from scripts.dispatcher.git import create_worktree
+    from lu_machinery.dispatcher.git import create_worktree
 
     primary = _primary(tmp_path)
     worktree = primary / ".worktrees/dispatch/claude/helper-created"
@@ -131,7 +131,7 @@ def test_remove_accepts_helper_creator_record_when_borrowers_terminal(tmp_path, 
 
 def test_remove_refuses_helper_tree_with_live_borrower(tmp_path, capsys):
     """Creator attribution must never release a helper tree with a running borrower."""
-    from scripts.dispatcher.git import create_worktree
+    from lu_machinery.dispatcher.git import create_worktree
 
     primary = _primary(tmp_path)
     worktree = primary / ".worktrees/dispatch/claude/helper-live"
@@ -181,7 +181,7 @@ def test_control_plane_root_is_the_public_primary_only_for_fleet_siblings(tmp_pa
 
 def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
-    from scripts.orchestration import fleet_repos
+    from lu_machinery.orchestration import fleet_repos
 
     bad = tmp_path / "malformed_fleet_repos.yaml"
     bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
@@ -535,7 +535,7 @@ def test_json_output_reports_every_outcome(tmp_path, capsys):
 def test_module_help_documents_exit_codes():
     for command, argument in (("remove", "--owner-task-id"), ("attribute-helper", "--actor")):
         proc = subprocess.run(
-            [sys.executable, "-m", "scripts.orchestration.worktree_claims", command, "--help"],
+            [sys.executable, "-m", "lu_machinery.orchestration.worktree_claims", command, "--help"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -622,7 +622,7 @@ def test_claim_prefilter_skips_terminal_legacy_pid_records():
 
 @pytest.mark.parametrize("status", ["crashed", "done", "failed"])
 def test_namespace_unknown_worker_keeps_terminal_worktree_claim(tmp_path, status):
-    from scripts.orchestration import worktree_claims
+    from lu_machinery.orchestration import worktree_claims
 
     target = tmp_path / "checkout"
     target.mkdir()
@@ -646,7 +646,7 @@ def test_namespace_unknown_worker_keeps_terminal_worktree_claim(tmp_path, status
 
 
 def test_namespace_owner_exemption_does_not_release_unknown_worker(tmp_path):
-    from scripts.orchestration import worktree_claims
+    from lu_machinery.orchestration import worktree_claims
 
     target = tmp_path / "checkout"
     target.mkdir()
@@ -672,7 +672,7 @@ def _in_initial_pid_namespace() -> bool:
 
 
 def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):
-    from scripts.orchestration.dead_worker_state import capture_worker_identity
+    from lu_machinery.orchestration.dead_worker_state import capture_worker_identity
 
     process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     try:

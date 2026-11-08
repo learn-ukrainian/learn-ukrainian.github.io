@@ -10,28 +10,28 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api.main import app
-from scripts.api.observer_presence import (
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
     PresenceRequest,
     reset_observer_presence,
     upsert_presence,
 )
-from scripts.api.occupancy import (
+from lu_machinery.api.occupancy import (
     MAC_OPERATOR_HOST_ID,
     _in_process_api_host_load,
     _merge_occupants,
     parse_host_id_map,
 )
-from scripts.api.occupancy_local import write_marker
-from scripts.api.occupancy_sanitize import occupant as _occupant
-from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
-from scripts.api.occupancy_sanitize import safe_field as _safe_field
-from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
+from lu_machinery.api.occupancy_local import write_marker
+from lu_machinery.api.occupancy_sanitize import occupant as _occupant
+from lu_machinery.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from lu_machinery.api.occupancy_sanitize import safe_field as _safe_field
+from lu_machinery.api.occupancy_sanitize import safe_summary as _safe_summary
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
+
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import atlas_jobs_router as load_mod
 from tests import _host_path_guard as guard
@@ -65,7 +65,7 @@ def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.delenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
     monkeypatch.setattr(
-        "scripts.api.occupancy_local.session_streams_db_path",
+        "lu_machinery.api.occupancy_local.session_streams_db_path",
         lambda: tmp_path / "missing-session-streams.sqlite3",
     )
 
@@ -142,7 +142,7 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
     (tmp_path / "run-root").mkdir()
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    monkeypatch.setattr("lu_machinery.api.occupancy.sys.platform", "linux")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -674,7 +674,7 @@ def test_occupancy_active_driver_lease_wins_at_low_hardware_load(tmp_path, monke
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-worker")
     db_path = tmp_path / "session-streams.sqlite3"
     _open_lease(db_path)
-    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: db_path)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -742,7 +742,7 @@ def test_occupancy_glance_shows_every_epic_driver(tmp_path: Path, monkeypatch: p
         task_id="launcher-grok-driver",
         process_id=3172701,
     )
-    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: db_path)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -859,7 +859,7 @@ def test_occupancy_corrupt_driver_db_is_unknown_and_not_idle(tmp_path, monkeypat
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-worker")
     db_path = tmp_path / "broken-session-streams.sqlite3"
     db_path.write_text("not-a-database", encoding="utf-8")
-    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: db_path)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -924,7 +924,7 @@ def test_occupancy_empty_map_host_teacher_fresh_without_atlas_run_root(
     monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    monkeypatch.setattr("lu_machinery.api.occupancy.sys.platform", "linux")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -947,7 +947,7 @@ def test_occupancy_empty_map_in_process_load_failure_atlas_job_unknown(
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    monkeypatch.setattr("lu_machinery.api.occupancy.sys.platform", "linux")
 
     def _boom(*_args, **_kwargs):
         raise OSError("collect_host_load failed")
@@ -1030,8 +1030,8 @@ def test_cloud_observer_presence_age_uses_freshness_window(
 
 @pytest.mark.parametrize("case", ["match", "unreadable", "stale", "wrong-instance", "duplicate-lease", "old-presence"])
 def test_observer_binding_requires_one_fresh_canonical_holder(case):
-    from scripts.api.occupancy import _bind_observer_sessions
-    from scripts.api.occupancy_local import OccupancyRead
+    from lu_machinery.api.occupancy import _bind_observer_sessions
+    from lu_machinery.api.occupancy_local import OccupancyRead
     observer = {"kind": "observer", "agent": "codex", "instance_id": "instance-one", "status": "working"}
     lease = {"kind": "driver", "agent": "codex", "instance_id": "instance-one", "session_id": "session-one"}
     if case == "wrong-instance":
@@ -1046,5 +1046,5 @@ def test_observer_binding_requires_one_fresh_canonical_holder(case):
 
 @pytest.mark.parametrize("value", [None, "", " spaced", 123, True, "path/value", "name.example"])
 def test_producer_identity_rejects_coercion_and_unsafe_tokens(value):
-    from scripts.api.occupancy_sanitize import producer_identity
+    from lu_machinery.api.occupancy_sanitize import producer_identity
     assert producer_identity(value) is None

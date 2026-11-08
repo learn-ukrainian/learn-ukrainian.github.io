@@ -3,9 +3,9 @@
 import subprocess
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.publish import github as pub
 
-from scripts.opsec import prepublish as gate
-from scripts.publish import github as pub
 from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG
 

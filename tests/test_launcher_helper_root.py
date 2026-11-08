@@ -62,11 +62,11 @@ _SITES = (
 )
 _EXPECTED_HONEST = {
     "import_bundle": "scripts/orchestration/thread_handoff.py",
-    "observer_heartbeat": "scripts.orchestration.observer_heartbeat",
-    "renew_heartbeat": "scripts.session_supervisor heartbeat",
-    "lease_close": "scripts.session_supervisor close",
-    "driver_agent_type": "scripts.orchestration.driver_agent_type",
-    "slot_registry": "scripts.orchestration.handoff_slot_registry",
+    "observer_heartbeat": "lu_machinery.orchestration.observer_heartbeat",
+    "renew_heartbeat": "lu_machinery.session_supervisor heartbeat",
+    "lease_close": "lu_machinery.session_supervisor close",
+    "driver_agent_type": "lu_machinery.orchestration.driver_agent_type",
+    "slot_registry": "lu_machinery.orchestration.handoff_slot_registry",
     "claude_profile": "scripts/lib/context_profiles.py",
     "kimi_route": "scripts/lib/kimi_coding_oauth.py",
 }
@@ -556,7 +556,7 @@ LC_DRY_RUN=1 LC_MODEL=gpt-6.1-sol launcher_codex_transport_probe
     assert result.returncode == 0, result.stderr
     assert f"canonical={sgd.primary}" in result.stdout
     assert f"python={sgd.primary}/.venv/bin/python" in result.stdout
-    assert f"would probe {sgd.primary}/.venv/bin/python -m scripts.orchestration.codex_transport_health" in (
+    assert f"would probe {sgd.primary}/.venv/bin/python -m lu_machinery.orchestration.codex_transport_health" in (
         result.stdout
     )
 

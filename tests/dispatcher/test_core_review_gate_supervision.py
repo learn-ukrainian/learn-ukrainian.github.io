@@ -15,9 +15,9 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import store, worker
+from lu_machinery.dispatcher.types import TaskSpec
 
-from scripts.dispatcher import store, worker
-from scripts.dispatcher.types import TaskSpec
 from tests.dispatcher.conftest import SOURCE, await_file, run_git
 
 _SCHEMA_REJECTED = "structured_output_invalid: structured output is not valid JSON"
@@ -247,7 +247,7 @@ def test_fallback_survivor_recorded_by_a_failed_stop_keeps_the_tree_until_it_exi
 
 def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypatch):
     """Defect (#12520): a scan that could not be completed was read as no descendant, and the tree went."""
-    from scripts.orchestration import worker_leftovers
+    from lu_machinery.orchestration import worker_leftovers
 
     monkeypatch.setattr(worker, "_end_own_scope", lambda _record: worker_leftovers.StopResult(ok=False, error="x"))
     monkeypatch.setattr(worker.git, "settle_worktree", Mock(side_effect=AssertionError("settled under a live scan")))
@@ -260,7 +260,8 @@ def test_failed_fallback_stop_retains_the_worktree_without_settling_it(monkeypat
 def test_stop_never_signals_a_marked_non_descendant_that_appears_mid_stop():
     """Defect (#12520, review F1): the sweep takes the task's marker for ownership, so an unrelated client that
     inherits it, and appears after an earlier ownership scan, must still be left alone."""
-    from scripts.orchestration import worker_leftovers
+    from lu_machinery.orchestration import worker_leftovers
+
     from tests.worker_leftovers_fakes import FAKE_PID_BASE, TASK_ID, FakeProc, FakeProcs, scope_of, stop_kwargs
 
     class LateClient(FakeProcs):
@@ -287,7 +288,7 @@ def test_stop_never_signals_a_marked_non_descendant_that_appears_mid_stop():
 def test_unresolved_ancestry_is_unknown_never_a_non_descendant(monkeypatch):
     """Defect (#12520, review F5): an ancestor that exits mid-walk, or an unreadable ancestry, hid a live
     descendant from the sweep as if it were a stranger."""
-    from scripts.orchestration import worker_leftovers
+    from lu_machinery.orchestration import worker_leftovers
 
     me = os.getpid()
     parents = {5_000_001: 5_000_002, 5_000_002: me}  # a sleeper whose parent is a provider the supervisor adopts
@@ -375,7 +376,7 @@ def test_supervisor_crash_is_reconciled_without_claiming_success(sandbox):
 
 def _killed_review_supervisor(sandbox, tmp_path, model):
     """Dispatch a held Codex read-only review on ``model``, SIGKILL its supervisor once gone; the provider pid."""
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     for name in (test_slots.HOLDER_ENV, test_slots.SESSION_ENV, "CI"):
         sandbox.env.pop(name, None)
@@ -400,7 +401,7 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
 
 
 def _pool_report(sandbox):
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     report = test_slots.status(sandbox.env)
     assert report["error"] is None, report
@@ -409,7 +410,7 @@ def _pool_report(sandbox):
 
 def _provider_environment(pid, sandbox):
     """The provider's own environment, on the test's pool (the provider environment carries no override)."""
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     entries = Path(f"/proc/{pid}/environ").read_bytes().split(b"\0")
     environment = dict(entry.decode().split("=", 1) for entry in entries if b"=" in entry)
@@ -424,7 +425,7 @@ def test_a_slot_holding_preload_starts_no_thread_pool_that_keeps_the_review_hold
     supervisor runs is ``load_post_start_code(False)``: a bound review attempt is the only run that passes True,
     and that run does not take review slots.
     """
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     pool = tmp_path / "pool"
     ready = tmp_path / "ready"
@@ -478,7 +479,7 @@ time.sleep(30)
 
 def test_a_killed_supervisors_review_hold_ends_with_it_and_its_provider_holds_no_pool_descriptor(sandbox, tmp_path):
     """Defect class: a provider that outlives its supervisor keeps the review hold, so slots strand without bound."""
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     task, child = _killed_review_supervisor(sandbox, tmp_path, "blocked")
     try:
@@ -499,7 +500,7 @@ def test_a_killed_supervisors_review_hold_ends_with_it_and_its_provider_holds_no
 
 def test_a_governed_turn_in_flight_keeps_its_slots_past_a_killed_supervisor_and_nothing_new_joins(sandbox, tmp_path):
     """Defect class: a killed supervisor frees slots a running test still uses, or lets a new run join its hold."""
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     task, child = _killed_review_supervisor(sandbox, tmp_path, "governed")
     try:

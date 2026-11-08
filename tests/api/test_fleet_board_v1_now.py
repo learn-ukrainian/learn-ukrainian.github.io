@@ -8,13 +8,12 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
-
-from scripts.api import main as api_main
-from scripts.api.fleet_board import activity as activity_mod
-from scripts.api.fleet_board import router as router_mod
-from scripts.api.fleet_board import sources as sources_mod
-from scripts.api.fleet_board import view as view_mod
-from scripts.api.fleet_board.sources import report
+from lu_machinery.api import main as api_main
+from lu_machinery.api.fleet_board import activity as activity_mod
+from lu_machinery.api.fleet_board import router as router_mod
+from lu_machinery.api.fleet_board import sources as sources_mod
+from lu_machinery.api.fleet_board import view as view_mod
+from lu_machinery.api.fleet_board.sources import report
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 FROZEN = datetime(2026, 10, 9, 12, 0, 0, tzinfo=UTC)
@@ -453,7 +452,7 @@ def test_harness_health_projects_known_metrics_and_keeps_missing_null(monkeypatc
     health = client.get("/api/fleet/v1/epics/alpha").json()["data"]["health"]
     assert health == {"agent_id": "codex", "status": "ok", "measured_at": FRESH,
                       "context_pct": 0, "compactions": 0, "stop_count": 0, "ask_count": 2.5, "idle_min": 0}
-    from scripts.api.fleet_board.file_sources import unknown_health
+    from lu_machinery.api.fleet_board.file_sources import unknown_health
     assert client.get("/api/fleet/v1/epics/beta").json()["data"]["health"] == unknown_health()
 
 
@@ -769,7 +768,7 @@ def test_stale_occupancy_does_not_override_idle(monkeypatch: pytest.MonkeyPatch,
 def test_occupancy_host_health_matrix(
     monkeypatch: pytest.MonkeyPatch, tmp_path, host_states, expected_status, expected_age
 ) -> None:
-    from scripts.api.occupancy import _shape_host
+    from lu_machinery.api.occupancy import _shape_host
 
     hosts = {}
     for index, status in enumerate(host_states):
@@ -1032,11 +1031,11 @@ def test_delegate_identity_coincidences_do_not_change_any_role(
 
 @pytest.mark.parametrize("case", ["matching", "wrong-session", "wrong-instance", "wrong-host", "no-observer", "duplicate", "expired", "closed", "unknown-pid"])
 def test_canonical_lease_presence_chain_controls_driver_activity(monkeypatch, tmp_path, case):
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import LeaseHolder
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.api import occupancy as occ
-    from scripts.api.observer_presence import ObserverPresence
+    from lu_machinery.api import occupancy as occ
+    from lu_machinery.api.observer_presence import ObserverPresence
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import LeaseHolder
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     database = SessionStreamDatabase(tmp_path / "sessions.sqlite3")
     store = SessionStreamStore(database)
@@ -1060,7 +1059,7 @@ def test_canonical_lease_presence_chain_controls_driver_activity(monkeypatch, tm
                                     () if case == "no-observer" else (observer,), 100, datetime.now(UTC) + (timedelta(seconds=601) if case == "expired" else timedelta()))
     monkeypatch.setattr(occ, "_build_snapshot", lambda **kwargs: snapshot)
     monkeypatch.setattr(occ, "_load_entry_for_selected", lambda *args, **kwargs: {"status": "fresh", "age_seconds": 0})
-    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: database.path)
+    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: database.path)
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "sample-host")
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(tmp_path / "no-markers"))
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "no-jobs"))
@@ -1637,8 +1636,8 @@ def test_canonical_health_input_boundaries_matrix(
     extractor,
     schema_name,
 ) -> None:
-    from scripts.api.fleet_board.cache import CACHE
-    from scripts.api.fleet_board.envelope import endpoint_schema
+    from lu_machinery.api.fleet_board.cache import CACHE
+    from lu_machinery.api.fleet_board.envelope import endpoint_schema
 
     CACHE.clear()
     roster = _roster()

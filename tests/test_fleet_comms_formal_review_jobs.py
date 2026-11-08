@@ -5,10 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.contracts import CompletionState
-from scripts.fleet_comms.formal_review_jobs import (
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.contracts import CompletionState
+from lu_machinery.fleet_comms.formal_review_jobs import (
     FormalReviewJobsError,
     FormalReviewJobService,
 )
@@ -282,7 +281,7 @@ def test_accept_sealed_verdict_refuses_overwrite(tmp_path: Path) -> None:
 def test_migrations_retain_sealed_column_after_acpx_v3(tmp_path: Path) -> None:
     import sqlite3
 
-    from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
+    from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
     db = tmp_path / "c.sqlite3"
     conn = sqlite3.connect(str(db))

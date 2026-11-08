@@ -9,14 +9,13 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet import usage
+from lu_machinery.fleet import usage
 
 
 @pytest.fixture(autouse=True)
 def _isolate_agy_quota_observation():
     """AGY quota state is process-global; keep one test's probe off the next."""
-    from scripts.api import subscription_usage
+    from lu_machinery.api import subscription_usage
 
     subscription_usage._reset_agy_quota_observation_for_tests()
     yield
@@ -157,8 +156,8 @@ def test_json_uses_monitor_and_preserves_payload(monkeypatch, capsys, budget):
 
     monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
     monkeypatch.setattr(usage.urllib.request, "urlopen", http)
-    from scripts.api import state_router, subscription_usage
-    from scripts.api.state_helpers import cache_invalidate
+    from lu_machinery.api import state_router, subscription_usage
+    from lu_machinery.api.state_helpers import cache_invalidate
 
     cache_invalidate("codexbar_usage:muse")
     subscription_usage._last_good_data.pop("muse", None)
@@ -185,7 +184,7 @@ def test_json_uses_monitor_and_preserves_payload(monkeypatch, capsys, budget):
 
 @pytest.mark.parametrize("argv", [["refresh"], ["show", "--fresh"], ["--fresh", "json"]])
 def test_fresh_blocks_for_both_probes(monkeypatch, capsys, budget, argv):
-    from scripts.api import state_router, subscription_usage
+    from lu_machinery.api import state_router, subscription_usage
 
     calls = []
     monkeypatch.setattr(usage.urllib.request, "urlopen", lambda *a, **kw: pytest.fail("fresh must bypass HTTP"))
@@ -205,7 +204,7 @@ def test_fresh_blocks_for_both_probes(monkeypatch, capsys, budget, argv):
 
 
 def test_offline_falls_back_with_explicit_source(monkeypatch, budget, capsys):
-    from scripts.api import state_router, subscription_usage
+    from lu_machinery.api import state_router, subscription_usage
 
     monkeypatch.setattr(usage.urllib.request, "urlopen", lambda *a, **kw: (_ for _ in ()).throw(OSError("offline")))
     monkeypatch.setattr(subscription_usage, "refresh_provider_usage_data", lambda providers: {})
@@ -365,7 +364,7 @@ def test_qa_fails_when_only_null_quota_windows(monkeypatch, capsys):
 
 
 def test_prepaid_rejects_non_usd_deepseek():
-    from scripts.fleet.prepaid_status import api_lane_status_from_account
+    from lu_machinery.fleet.prepaid_status import api_lane_status_from_account
 
     account = {
         "probe_state": "ok",
@@ -383,7 +382,7 @@ def test_prepaid_rejects_non_usd_deepseek():
 def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, capsys):
     from types import SimpleNamespace
 
-    from scripts.api import subscription_usage
+    from lu_machinery.api import subscription_usage
 
     monkeypatch.setattr(
         subscription_usage,
@@ -556,7 +555,7 @@ def test_muse_boundary_reaches_literal_json_and_human_output(
     code,
     window,
 ):
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import subscription_usage as su
 
     record = su._muse_record_from_codexbar_payload(payload)
     record.update(freshness="fresh", age_s=0.0)
@@ -742,7 +741,7 @@ def test_agy_boundary_reaches_literal_json_and_human_output(
 ):
     import subprocess
 
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import subscription_usage as su
 
     payload = {
         **envelope,
@@ -848,8 +847,8 @@ def test_agy_boundary_reaches_literal_json_and_human_output(
 
 
 def _clear_muse_observation() -> None:
-    from scripts.api import subscription_usage
-    from scripts.api.state_helpers import cache_invalidate
+    from lu_machinery.api import subscription_usage
+    from lu_machinery.api.state_helpers import cache_invalidate
 
     cache_invalidate("codexbar_usage:muse")
     subscription_usage._last_good_data.pop("muse", None)
@@ -860,7 +859,7 @@ def _clear_muse_observation() -> None:
 @pytest.mark.parametrize("command", ["show", "json"])
 @pytest.mark.parametrize("attempt_failed_fetch", [False, True], ids=["cold", "failed-fetch"])
 def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, command, attempt_failed_fetch):
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import subscription_usage as su
 
     _clear_muse_observation()
     calls = []
@@ -973,7 +972,7 @@ def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, 
 
 
 def test_usage_cli_stale_and_rate_limit_muse_hide_headroom():
-    from scripts.api import subscription_usage
+    from lu_machinery.api import subscription_usage
 
     known = subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
     known["freshness"] = "stale_last_good"
@@ -1040,7 +1039,7 @@ def _agy_split_payload() -> dict:
 def test_usage_cli_shows_agy_groups_beside_muse_cursor_and_grok(monkeypatch, capsys):
     import subprocess
 
-    from scripts.api import state_router, subscription_usage
+    from lu_machinery.api import state_router, subscription_usage
 
     _clear_muse_observation()
     subscription_usage._reset_agy_quota_observation_for_tests()
@@ -1126,7 +1125,7 @@ def test_usage_cli_shows_agy_groups_beside_muse_cursor_and_grok(monkeypatch, cap
 def test_usage_cli_shows_agy_missing_fraction_as_unknown(monkeypatch, capsys):
     import subprocess
 
-    from scripts.api import state_router, subscription_usage
+    from lu_machinery.api import state_router, subscription_usage
 
     _clear_muse_observation()
     subscription_usage._reset_agy_quota_observation_for_tests()
@@ -1189,7 +1188,7 @@ def test_usage_cli_shows_agy_missing_fraction_as_unknown(monkeypatch, capsys):
 
 
 def test_usage_cli_stale_and_rate_limit_agy_hide_headroom():
-    from scripts.api import subscription_usage
+    from lu_machinery.api import subscription_usage
 
     groups = subscription_usage._agy_quota_groups_from_payload(_agy_split_payload())
     stale = usage.format_human(
@@ -1242,8 +1241,8 @@ def test_usage_cli_stale_and_rate_limit_agy_hide_headroom():
 @pytest.mark.parametrize("known_lane", [None, "claude", "codex", "gemini", "grok", "cursor", "kimi"])
 @pytest.mark.parametrize("command", ["qa", "show", "refresh"])
 def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, fresh, diagnostic, known_lane, command):
-    from scripts.api import state_router
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import state_router
+    from lu_machinery.api import subscription_usage as su
 
     _clear_muse_observation()
     routing = {
@@ -1352,7 +1351,7 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
 
 @pytest.mark.parametrize("agents", [{}, {"codex": "malformed"}])
 def test_cli_qa_rejects_missing_or_malformed_routing_despite_fresh_diagnostics(monkeypatch, capsys, agents):
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import subscription_usage as su
 
     monkeypatch.setattr(
         usage.urllib.request,
@@ -1374,7 +1373,7 @@ def test_cli_qa_rejects_missing_or_malformed_routing_despite_fresh_diagnostics(m
 
 
 def test_doctor_absent_private_binding_reports_unavailable(monkeypatch, capsys):
-    from scripts.api import subscription_usage
+    from lu_machinery.api import subscription_usage
 
     monkeypatch.setattr(subscription_usage, "_private_usage", lambda: None)
     assert usage.main(["doctor"]) == 0

@@ -22,10 +22,10 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
+from lu_machinery.agent_runtime import agent_github_identity as identity
+from lu_machinery.fleet import sibling_git as sg
+from lu_machinery.orchestration.fleet_repos import FleetRepo, load_fleet_repos
 
-from scripts.agent_runtime import agent_github_identity as identity
-from scripts.fleet import sibling_git as sg
-from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos
 from tests.test_sibling_git import advance, git, snapshot
 from tests.test_sibling_git import world as world_fixture
 

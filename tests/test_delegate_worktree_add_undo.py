@@ -25,8 +25,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.orchestration import worktree_prep
+from lu_machinery.orchestration import worktree_prep
 
 # --- the real ``git`` Popen path -------------------------------------------------------------
 

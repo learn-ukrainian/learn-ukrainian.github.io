@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter, _extract_stream_json_response
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter, _extract_stream_json_response
 
 
 def test_claude_stream_single_turn_byte_identical() -> None:

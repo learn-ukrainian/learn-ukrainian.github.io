@@ -12,13 +12,12 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+import lu_machinery.api.fleet_router as fleet_router
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-import scripts.api.fleet_router as fleet_router
-from scripts.api.monitor_context import production_context
-from scripts.fleet_comms.migrations import apply_migrations
+from lu_machinery.api.monitor_context import production_context
+from lu_machinery.fleet_comms.migrations import apply_migrations
 
 
 @pytest.fixture()

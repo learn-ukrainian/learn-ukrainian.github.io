@@ -7,9 +7,8 @@ import sqlite3
 from unittest.mock import patch
 
 import pytest
-
-from scripts.ai_agent_bridge import _reply_sidecar
-from scripts.ai_agent_bridge._ask_lifecycle import assert_ask_content_present
+from lu_machinery.ai_agent_bridge import _reply_sidecar
+from lu_machinery.ai_agent_bridge._ask_lifecycle import assert_ask_content_present
 
 
 def test_looks_truncated_detects_mid_diff_tail():
@@ -67,7 +66,7 @@ def test_ask_query_never_sidecared(tmp_path, monkeypatch):
 
 
 def test_send_message_large_response_records_sidecar_metadata(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import _messaging
+    from lu_machinery.ai_agent_bridge import _messaging
 
     monkeypatch.setattr(_reply_sidecar, "_SIDECAR_ROOT", tmp_path / "asks")
     monkeypatch.setenv("AB_REPLY_INLINE_MAX_BYTES", "100")
@@ -92,7 +91,7 @@ def test_send_message_large_response_records_sidecar_metadata(tmp_path, monkeypa
 
     body = "B" * 400
     with (
-        patch("scripts.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn),
+        patch("lu_machinery.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn),
         patch("subprocess.run"),
     ):
         msg_id = _messaging.send_message(
@@ -136,7 +135,7 @@ def test_assert_ask_content_present_empty_raises_transport(tmp_path):
     def _fresh_conn():
         return sqlite3.connect(str(db_path))
 
-    with patch("scripts.ai_agent_bridge._ask_lifecycle.get_db", side_effect=_fresh_conn):
+    with patch("lu_machinery.ai_agent_bridge._ask_lifecycle.get_db", side_effect=_fresh_conn):
         with pytest.raises(ValueError, match="transport empty-ask-body"):
             assert_ask_content_present({"content": ""}, message_id=mid, target="grok")
 
@@ -149,7 +148,7 @@ def test_assert_ask_content_present_empty_raises_transport(tmp_path):
 
 def test_pending_backlog_skips_dead_lane(monkeypatch):
     """#5113: warnings must not nag retired gemini deliveries."""
-    from scripts.ai_agent_bridge import _channels_cli
+    from lu_machinery.ai_agent_bridge import _channels_cli
 
     monkeypatch.setenv("AB_DEAD_LANES", "gemini")
 
@@ -174,7 +173,7 @@ def test_pending_backlog_skips_dead_lane(monkeypatch):
             return None
 
     # The banner reads live_pending_by_agent query-only via _channels.connect_readonly (#6864).
-    with patch("scripts.ai_agent_bridge._channels.connect_readonly", return_value=_Conn()):
+    with patch("lu_machinery.ai_agent_bridge._channels.connect_readonly", return_value=_Conn()):
         rows = _channels_cli._pending_backlog_rows()
     agents = {r["agent"] for r in rows}
     assert "gemini" not in agents

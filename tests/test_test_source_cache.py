@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.ci.test_source_cache import read_test_source
+from lu_machinery.ci.test_source_cache import read_test_source
 
 
 def test_read_test_source_refreshes_after_path_replacement(tmp_path: Path) -> None:

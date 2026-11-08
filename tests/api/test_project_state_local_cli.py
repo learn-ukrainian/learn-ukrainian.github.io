@@ -37,7 +37,7 @@ def unresolvable_api_listener(tmp_path: Path) -> Iterator[subprocess.Popen[bytes
     unborn.mkdir()
     _git(unborn, "init", "-b", "main")
     process = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(60)", "scripts.api.main:app"],
+        [sys.executable, "-c", "import time; time.sleep(60)", "lu_machinery.api.main:app"],
         cwd=unborn,
     )
     try:

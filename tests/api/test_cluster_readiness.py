@@ -19,12 +19,11 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import main as api_main
-from scripts.api.cluster_router import check_cluster_readiness
-from scripts.api.monitor_context import fixture_context
-from scripts.control_plane import storage
-from scripts.control_plane.storage import StoreId
+from lu_machinery.api import main as api_main
+from lu_machinery.api.cluster_router import check_cluster_readiness
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.control_plane import storage
+from lu_machinery.control_plane.storage import StoreId
 
 pytestmark = pytest.mark.repo_invariant
 

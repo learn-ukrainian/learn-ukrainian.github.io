@@ -12,11 +12,11 @@ from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.dispatcher import admission, cli, git, host_admission, providers, store, worker
+from lu_machinery.dispatcher.environment import child_env
+from lu_machinery.dispatcher.types import Invocation, ParsedResult, TaskSpec
+from lu_machinery.lib import rules_core
 
-from scripts.dispatcher import admission, cli, git, host_admission, providers, store, worker
-from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
-from scripts.lib import rules_core
 from tests.agent_runtime.test_attempt_boundary import CLAUDE_AMBIENT_AUTH, _private_json, bind_api_key_label
 from tests.agent_runtime.test_claude_account_worker import _calls, _run, accounts  # noqa: F401  (fixture)
 from tests.test_rules_core_loading import core_without_addendum, missing_core  # noqa: F401  (fixtures)
@@ -162,7 +162,7 @@ def test_api_key_label_runs_on_its_bound_key_helper(api_key_accounts, monkeypatc
     No ambient CLAUDE_CONFIG_DIR is needed: the binding supplies the directory, the run's one
     --settings is that directory's helper-only file, and the receipt names the helper.
     """
-    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+    from lu_machinery.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
 
     reset_claude_account_receipts()
     spec, invocation = _labelled(api_key_accounts, monkeypatch, label, mode)
@@ -243,7 +243,7 @@ _HELPER_DOCTOR = (
 
 def test_api_key_label_read_only_policy_check_admits_a_helper_directory(api_key_accounts, monkeypatch):
     """The managed-policy check reads only the remote-settings line, which a helper directory reports as not fetched."""
-    from scripts.dispatcher.providers import claude as claude_provider
+    from lu_machinery.dispatcher.providers import claude as claude_provider
 
     monkeypatch.setattr(claude_provider.subprocess, "run", lambda *_a, **_k: SimpleNamespace(stdout=_HELPER_DOCTOR))
     env = {"PATH": os.environ["PATH"], "CLAUDE_CONFIG_DIR": str(api_key_accounts.api_dirs["kk"])}
@@ -285,7 +285,7 @@ def test_delegate_content_seat_without_the_addendum_refuses(
 
 @pytest.fixture
 def headroom_box(tmp_path, monkeypatch):
-    from scripts.agent_runtime import model_pause, usage
+    from lu_machinery.agent_runtime import model_pause, usage
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -434,7 +434,7 @@ def test_worker_admission_reads_the_records_claude_account(headroom_box, label, 
 
 def test_invoke_rate_limit_short_circuit(headroom_box, monkeypatch):
     """Ported from tests/test_agent_runtime.py::test_invoke_rate_limit_short_circuit."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     headroom_box.policy({})
     monkeypatch.setattr(usage, "has_headroom", lambda *_a, **_k: (False, "cached rate limit"))
@@ -447,9 +447,9 @@ def test_invoke_rate_limit_short_circuit(headroom_box, monkeypatch):
 
 def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys, monkeypatch):
     """Ported from tests/test_model_pause.py::test_headroom_stop_refuses_matching_models_only."""
-    from scripts.agent_runtime import model_pause, target_admission
-    from scripts.dispatcher import headroom
-    from scripts.fleet.claude_account_lane import no_claude_account
+    from lu_machinery.agent_runtime import model_pause, target_admission
+    from lu_machinery.dispatcher import headroom
+    from lu_machinery.fleet.claude_account_lane import no_claude_account
 
     assert headroom_box.dispatch(model="claude-sonnet-5-5") == 2
     assert "MODEL_HEADROOM: claude-sonnet-5-5" in capsys.readouterr().err
@@ -498,7 +498,7 @@ def test_pause_lifts_by_itself_after_until(headroom_box):
 
 @pytest.mark.parametrize("defect", [None, "missing_pair", "trial_pair", "input", "head", "role", "label", "write"])
 def test_trial_shadow_requires_qualified_matching_task(headroom_box, monkeypatch, capsys, defect):
-    from scripts.dispatcher import headroom
+    from lu_machinery.dispatcher import headroom
 
     box = headroom_box
     box.policy({})

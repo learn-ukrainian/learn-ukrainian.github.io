@@ -5,9 +5,8 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage import topology as storage
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage import topology as storage
 
 STORES = ['sources', 'vesum', 'lexdata']
 

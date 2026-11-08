@@ -17,8 +17,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.wiki import sources_db
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -205,7 +205,7 @@ def test_shared_sqlite_connections_route_through_open_readonly() -> None:
                 else:
                     violations.append(f"{rel}:{line} ({scope or '<module>'})")
     assert not violations, (
-        "check_same_thread=False connections must use scripts.lib.readonly_sqlite.open_readonly "
+        "check_same_thread=False connections must use lu_machinery.lib.readonly_sqlite.open_readonly "
         f"(cached_statements=0), or be allowlisted with a reason: {violations}"
     )
     assert seen == set(ALLOWED_SHARED_CONNECTS), "stale allowlist entries: " + str(
@@ -450,7 +450,7 @@ def _selector_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A bootstrapped generation store with ``t`` = v0..v49, cached by ``sources_db``."""
     from contextlib import closing
 
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     monkeypatch.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", "0")
     monkeypatch.setenv("LU_EVIDENCE_WAL_CEILING_BYTES", "0")
@@ -478,7 +478,7 @@ def _publish_new(selector: Path) -> None:
     """Publish a generation whose ``t`` rows read new0..new49."""
     from contextlib import closing
 
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     with generations.writer_lock(selector) as held:
         stage = selector.with_name("stage.db")

@@ -4,8 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import yaml
-
-from scripts.ci.audit_dependencies import (
+from lu_machinery.ci.audit_dependencies import (
     audit_node,
     audit_python,
     filter_npm_audit_vulnerabilities,

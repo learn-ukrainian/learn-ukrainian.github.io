@@ -8,8 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.ci.check_large_files import (
+from lu_machinery.ci.check_large_files import (
     DEFAULT_ALLOWLIST,
     THRESHOLD_BYTES,
     batch_check_blob_sizes,
@@ -75,7 +74,7 @@ def test_new_oversized_blob_fails(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -114,7 +113,7 @@ def test_allowlisted_oversized_blob_passes(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -154,7 +153,7 @@ def test_renamed_oversized_blob_to_unallowlisted_destination_fails(tmp_path: Pat
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -190,7 +189,7 @@ def test_deleted_blob_ignored(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -223,7 +222,7 @@ def test_exact_threshold_boundary(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -250,7 +249,7 @@ def test_exact_threshold_boundary(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -279,7 +278,7 @@ def test_missing_base_ref_fails(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "non_existent_ref_12345",
             "--repo-root",
@@ -317,7 +316,7 @@ def test_sparse_checkout_independence(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -352,7 +351,7 @@ def test_filenames_containing_spaces(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -377,7 +376,7 @@ def test_filenames_containing_spaces(tmp_path: Path) -> None:
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--changed-vs-base",
             "main",
             "--repo-root",
@@ -426,7 +425,7 @@ def test_seed_allowlist_deterministic_excludes_branch_only(tmp_path: Path) -> No
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--seed-allowlist",
             "--seed-ref",
             "main",
@@ -528,7 +527,7 @@ def test_seed_allowlist_reasons_and_only_class_a_leaves_git(tmp_path: Path) -> N
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--seed-allowlist",
             "--seed-ref",
             "main",
@@ -595,7 +594,7 @@ def test_seed_reads_from_seed_commit_ignoring_worktree_and_branch(tmp_path: Path
         [
             _PYTHON,
             "-m",
-            "scripts.ci.check_large_files",
+            "lu_machinery.ci.check_large_files",
             "--seed-allowlist",
             "--seed-ref",
             "main",
@@ -626,7 +625,7 @@ def test_seed_fails_and_preserves_allowlist_on_missing_or_malformed_table(tmp_pa
             [
                 _PYTHON,
                 "-m",
-                "scripts.ci.check_large_files",
+                "lu_machinery.ci.check_large_files",
                 "--seed-allowlist",
                 "--seed-ref",
                 "main",

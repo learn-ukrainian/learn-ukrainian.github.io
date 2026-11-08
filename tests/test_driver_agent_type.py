@@ -1,12 +1,11 @@
-"""Tests for scripts.orchestration.driver_agent_type."""
+"""Tests for lu_machinery.orchestration.driver_agent_type."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration.driver_agent_type import (
+from lu_machinery.orchestration.driver_agent_type import (
     DEFAULT_TAXONOMY_PATH,
     main,
     resolve_driver_agent_type,

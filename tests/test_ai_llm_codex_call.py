@@ -8,8 +8,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.result import Result
-from ai_llm.codex_call import call_codex_with_fallback
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_llm.codex_call import call_codex_with_fallback
 
 
 def _result(
@@ -36,7 +36,7 @@ def _result(
 
 def test_happy_path_returns_callresult(tmp_path):
     with patch(
-        "ai_llm.agent_runtime_call.runner.invoke",
+        "lu_machinery.ai_llm.agent_runtime_call.runner.invoke",
         return_value=_result(ok=True, response="done"),
     ) as invoke:
         result = call_codex_with_fallback(
@@ -54,7 +54,7 @@ def test_happy_path_returns_callresult(tmp_path):
 
 def test_returns_error_on_runner_failure(tmp_path):
     with patch(
-        "ai_llm.agent_runtime_call.runner.invoke",
+        "lu_machinery.ai_llm.agent_runtime_call.runner.invoke",
         return_value=_result(ok=False, stderr_excerpt="broken"),
     ):
         result = call_codex_with_fallback(
@@ -77,7 +77,7 @@ def test_respects_max_retries(tmp_path):
         _result(ok=True, response="done"),
     ]
 
-    with patch("ai_llm.agent_runtime_call.runner.invoke", side_effect=responses):
+    with patch("lu_machinery.ai_llm.agent_runtime_call.runner.invoke", side_effect=responses):
         result = call_codex_with_fallback(
             "prompt",
             task_name="unit-test",
@@ -97,7 +97,7 @@ def test_respects_max_retries(tmp_path):
 
 def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
     with patch(
-        "ai_llm.agent_runtime_call.runner.invoke", return_value=_result(ok=False, stderr_excerpt="broken")
+        "lu_machinery.ai_llm.agent_runtime_call.runner.invoke", return_value=_result(ok=False, stderr_excerpt="broken")
     ) as invoke:
         result = call_codex_with_fallback(
             "prompt", task_name="test", cwd=tmp_path, max_retries=2, logger=lambda _: None, sleep_fn=lambda *_: None
@@ -109,7 +109,7 @@ def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
 
 
 def test_unapproved_preference_never_calls_runner(tmp_path):
-    with patch("ai_llm.agent_runtime_call.runner.invoke") as invoke:
+    with patch("lu_machinery.ai_llm.agent_runtime_call.runner.invoke") as invoke:
         with pytest.raises(ValueError, match="rejected"):
             call_codex_with_fallback("prompt", task_name="test", preferred_model="gpt-5.5", cwd=tmp_path)
     invoke.assert_not_called()

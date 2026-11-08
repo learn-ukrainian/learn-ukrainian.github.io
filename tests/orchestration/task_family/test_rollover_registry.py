@@ -5,10 +5,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import rollover_registry_cli, task_identity
-from scripts.orchestration.task_family import rollover
-from scripts.orchestration.task_family import rollover_registry as registry
+from lu_machinery.orchestration import rollover_registry_cli, task_identity
+from lu_machinery.orchestration.task_family import rollover
+from lu_machinery.orchestration.task_family import rollover_registry as registry
 
 
 def _write_json(path: Path, payload: dict) -> None:

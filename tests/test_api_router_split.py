@@ -10,8 +10,7 @@ Validates:
 """
 
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 client = TestClient(app)
 
@@ -28,7 +27,7 @@ class TestStaticServing:
 
     def test_static_path_traversal_is_rejected(self, tmp_path, monkeypatch):
 
-        import scripts.api.main as api_main
+        import lu_machinery.api.main as api_main
 
         dashboards_dir = tmp_path / "dashboards"
         dashboards_dir.mkdir()

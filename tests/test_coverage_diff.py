@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-
-from scripts.ci.coverage_diff import main
+from lu_machinery.ci.coverage_diff import main
 
 
 @pytest.fixture

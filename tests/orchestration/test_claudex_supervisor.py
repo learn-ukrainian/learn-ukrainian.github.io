@@ -15,9 +15,8 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-
-from scripts.orchestration import thread_handoff as th
-from scripts.orchestration.claudex_supervisor import (
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.orchestration.claudex_supervisor import (
     ClaudexSupervisor,
     SupervisorError,
     _request_path,
@@ -28,6 +27,7 @@ from scripts.orchestration.claudex_supervisor import (
     load_runtime,
     resolve_relaunch_python,
 )
+
 from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]

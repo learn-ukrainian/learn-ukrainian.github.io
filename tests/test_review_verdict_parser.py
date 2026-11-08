@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-
-from scripts.review.verdict_parser import recognized_verdicts
+from lu_machinery.review.verdict_parser import recognized_verdicts
 
 
 @pytest.mark.parametrize("reply,expected", [
@@ -85,7 +84,7 @@ def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
 def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_recorder(
     correctness, verdict, preamble, newline, indent,
 ):
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+    from lu_machinery.review.record_cf_verdict import RecordError, normalize_verdict
 
     response = json.dumps({
         "schema_version": "code-review-findings.v1",
@@ -124,6 +123,6 @@ def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_reco
     pytest.param("> SCORE: 8/10", None, id="quoted-example"),
 ])
 def test_review_score_is_tolerant_and_never_raises(reply, expected):
-    from scripts.review.verdict_parser import review_score
+    from lu_machinery.review.verdict_parser import review_score
 
     assert review_score(reply) == expected

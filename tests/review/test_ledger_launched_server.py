@@ -3,10 +3,12 @@
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import review_mcp
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
 
-from scripts.agent_runtime import review_mcp
-from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
 from scripts.review.receipts import ledger
+
+SERVER_PATH = Path(__file__).resolve().parents[2] / SERVER_RELATIVE_PATH
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])

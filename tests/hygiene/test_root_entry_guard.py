@@ -12,10 +12,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails.worktree_containment import NotAGitRepositoryError, _resolve_main_root_or_none
-from scripts.hygiene import root_entry_guard
-from scripts.hygiene.root_entry_guard import main, scan_unexpected_root_entries
+from lu_machinery.guardrails.worktree_containment import NotAGitRepositoryError, _resolve_main_root_or_none
+from lu_machinery.hygiene import root_entry_guard
+from lu_machinery.hygiene.root_entry_guard import main, scan_unexpected_root_entries
 
 
 def _git(root: Path, *args: str) -> None:
@@ -174,7 +173,7 @@ def test_session_start_hook_wires_the_guard() -> None:
         / "session-setup.sh"
     )
     text = hook.read_text(encoding="utf-8")
-    assert '-m scripts.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json' in text
+    assert '-m lu_machinery.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json' in text
     assert "ROOT HYGIENE" in text
     # Evidence preservation: the hook must not turn the guard into a deleter.
     guard_block = text[text.index("Root-hygiene canary"):]

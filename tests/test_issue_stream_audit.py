@@ -13,8 +13,8 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-from scripts.orchestration import issue_stream_audit
-from scripts.orchestration.issue_stream_audit import (
+from lu_machinery.orchestration import issue_stream_audit
+from lu_machinery.orchestration.issue_stream_audit import (
     _MAX_SUBISSUE_PAGES,
     _paginate_subissues,
     _tree_membership,
@@ -890,7 +890,7 @@ def test_spawn_worker_uses_live_interpreter_and_snapshot_code(tmp_path, monkeypa
     assert captured["argv"] == [
         str(live_root / ".venv" / "bin" / "python"),
         "-m",
-        "scripts.orchestration.issue_stream_audit",
+        "lu_machinery.orchestration.issue_stream_audit",
         "--refresh-worker",
         "run-1",
     ]
@@ -1579,7 +1579,7 @@ def test_run_audit_incomplete_node_refuses_membership(tmp_path, monkeypatch):
     that were read make #500 look uniquely owned by #10. ``resolve_membership``
     must refuse.
     """
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
     root = tmp_path / "repo"
@@ -1704,7 +1704,7 @@ def _run_deep_chain_audit(tmp_path, monkeypatch, chain: list[int], *, body_refs:
 
 
 def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, monkeypatch):
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN)
 
@@ -1755,7 +1755,7 @@ def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, 
 def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
     """The body path consumes the same completeness contract: epic 10's body
     names #500, and the unread depth frontier under epic 20 could claim it too."""
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN, body_refs={10: "Tracked: #500"})
 
@@ -1837,7 +1837,7 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 @pytest.fixture(autouse=True)
 def _typed_audit_command_boundary(monkeypatch):
     """Consumer tests inject projected named reads; HTTP proofs live in client tests."""
-    from scripts.publish.github import Request
+    from lu_machinery.publish.github import Request
 
     original = issue_stream_audit.request_run
     def execute(request, **kwargs):
@@ -1856,7 +1856,7 @@ def _inspect_frozen_query(args):
 
 @pytest.mark.parametrize("code", [[], {}, None, 1, True])
 def test_9794_malformed_warning_code_is_typed_membership_refusal(code):
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     report = {
         "generated_at": time.time(), "membership_complete": True,

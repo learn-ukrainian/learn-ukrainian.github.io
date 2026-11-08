@@ -13,12 +13,11 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.maintenance import batch_state_retention as retention
-from scripts.maintenance.batch_state_retention import DEFAULT_ONE_OFF_MIN_BYTES, plan_retention
-from scripts.maintenance.claude_session_scratch import sweep_sessions
-from scripts.orchestration import scheduled_worktree_cleanup, stale_task_records
-from scripts.orchestration.scheduled_worktree_cleanup import batch_state_retention_reports
+from lu_machinery.maintenance import batch_state_retention as retention
+from lu_machinery.maintenance.batch_state_retention import DEFAULT_ONE_OFF_MIN_BYTES, plan_retention
+from lu_machinery.maintenance.claude_session_scratch import sweep_sessions
+from lu_machinery.orchestration import scheduled_worktree_cleanup, stale_task_records
+from lu_machinery.orchestration.scheduled_worktree_cleanup import batch_state_retention_reports
 
 NOW = datetime(2026, 9, 25, 12, 0, tzinfo=UTC)
 

@@ -9,8 +9,7 @@ import os
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.hygiene import preserved_retention as retention
+from lu_machinery.hygiene import preserved_retention as retention
 
 
 @pytest.fixture

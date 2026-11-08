@@ -12,14 +12,14 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.lib import session_record
+from lu_machinery.orchestration import claudex_supervisor as cs
+from lu_machinery.orchestration import task_identity
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.orchestration.task_family import rollover, rollover_registry
+from lu_machinery.orchestration.task_family.storage import TaskFamilyStorage
 
-from scripts.lib import session_record
-from scripts.orchestration import claudex_supervisor as cs
-from scripts.orchestration import task_identity
-from scripts.orchestration import thread_handoff as th
 from scripts.orchestration import thread_handoff_canary as canary
-from scripts.orchestration.task_family import rollover, rollover_registry
-from scripts.orchestration.task_family.storage import TaskFamilyStorage
 from tests.project_python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -3058,7 +3058,7 @@ def test_inspect_codex_home_reports_thread_metadata(tmp_path: Path):
         [
             sys.executable,
             "-m",
-            "scripts.orchestration.thread_handoff",
+            "lu_machinery.orchestration.thread_handoff",
             "--repo-root",
             str(tmp_path),
             "audit",
@@ -4092,7 +4092,7 @@ def _run_rendered(tmp_path: Path, line: str, **substitutions: str) -> int:
 
 def test_session_start_delivers_provider_fallback_packet_when_api_has_no_row(tmp_path: Path, capsys, monkeypatch):
     """#11259 AC-01: seat codex-atlas, packet under codex, empty bundle list."""
-    from scripts.hooks import session_start_gate as gate
+    from lu_machinery.hooks import session_start_gate as gate
 
     monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -4124,7 +4124,7 @@ def test_session_start_delivers_provider_fallback_packet_when_api_has_no_row(tmp
 
 def test_session_start_lists_multiple_pending_without_formatting_failure(tmp_path: Path, capsys, monkeypatch):
     """#11259 AC-02: two live packets for one seat render, not 'Formatting lookup failed'."""
-    from scripts.hooks import session_start_gate as gate
+    from lu_machinery.hooks import session_start_gate as gate
 
     monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -5121,7 +5121,7 @@ def test_script_by_path_parses_git_log_without_common_jsonl():
         "import importlib.abc, runpy, sys\n"
         "class Block(importlib.abc.MetaPathFinder):\n"
         "    def find_spec(self, name, path=None, target=None):\n"
-        "        if name == 'scripts.common.jsonl':\n"
+        "        if name == 'lu_machinery.common.jsonl':\n"
         "            raise ModuleNotFoundError(f'No module named {name!r}', name=name)\n"
         "sys.meta_path.insert(0, Block())\n"
         "module = runpy.run_path(sys.argv[1], run_name='thread_handoff_by_path')\n"

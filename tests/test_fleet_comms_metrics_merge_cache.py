@@ -9,8 +9,8 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
-from scripts.common.github_client import Response
-from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
+from lu_machinery.common.github_client import Response
+from lu_machinery.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
 REPO = "acme/widgets"

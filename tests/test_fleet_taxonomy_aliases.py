@@ -9,17 +9,17 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from agents_extensions.shared.session_streams.inventory import (
-    _handoff_candidates_for,
-)
-from scripts.orchestration.fleet_taxonomy import (
+from lu_machinery.orchestration.fleet_taxonomy import (
     EpicInfo,
     ResolvedArea,
     UnknownAreaError,
     resolve_area,
     resolve_area_by_epic,
 )
+from lu_machinery.session_streams.inventory import (
+    _handoff_candidates_for,
+)
+
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL
 from tests.launcher_sandbox import launcher_environment
 
@@ -312,9 +312,9 @@ def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
     """
     import sys
 
-    from agents_extensions.shared.session_streams import inventory
+    from lu_machinery.session_streams import inventory
 
-    monkeypatch.setitem(sys.modules, "scripts.orchestration.fleet_taxonomy", None)
+    monkeypatch.setitem(sys.modules, "lu_machinery.orchestration.fleet_taxonomy", None)
     candidates = inventory._handoff_candidates_for("infra-harness", 99999)
     # Legacy-map answer ('harness'); the resolver would give 'infra' — so a hoisted
     # module-level import makes this assertion fail, keeping the mutation detectable.

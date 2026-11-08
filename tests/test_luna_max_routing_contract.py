@@ -7,7 +7,7 @@ formal reviewer. Large structural assertions stay in ``test_model_catalog.py``.
 
 from __future__ import annotations
 
-from scripts.review.model_catalog import load_model_catalog
+from lu_machinery.review.model_catalog import load_model_catalog
 
 
 def test_catalog_routes_bounded_codex_workers_to_luna_high() -> None:

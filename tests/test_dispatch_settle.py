@@ -1,4 +1,4 @@
-"""Tests for scripts.orchestration.dispatch_settle."""
+"""Tests for lu_machinery.orchestration.dispatch_settle."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def test_push_settle_preserves_interrupted_record_and_outputs(interrupted_checko
 def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer, status, keep):
     import hashlib
 
-    from scripts.orchestration.dead_worker_state import mark_missing_worktree_failed
+    from lu_machinery.orchestration.dead_worker_state import mark_missing_worktree_failed
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -73,9 +73,9 @@ def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer, sta
         assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)] == before
 
 
-from scripts.fleet import idle_settle
-from scripts.guardrails.delegate_ownership import OwnershipLedger
-from scripts.orchestration import dispatch_settle as ds
+from lu_machinery.fleet import idle_settle
+from lu_machinery.guardrails.delegate_ownership import OwnershipLedger
+from lu_machinery.orchestration import dispatch_settle as ds
 
 
 def test_heal_zombie_task_marks_failed_and_releases(tmp_path: Path) -> None:
@@ -230,7 +230,7 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
     actions = ds.push_and_maybe_open_pr(tmp_path, "codex/t1", open_pr=parsed.open_pr, title=None, body=None)
 
     assert calls[0] == ["git", "push", "-u", "origin", "HEAD"]
-    from scripts.publish.github import Request
+    from lu_machinery.publish.github import Request
 
     creates = [call for call in calls if isinstance(call, Request)]
     assert len(creates) == int(open_pr)

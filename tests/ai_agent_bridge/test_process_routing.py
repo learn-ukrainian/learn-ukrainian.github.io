@@ -20,22 +20,22 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.runner import InterAgentTransportError, resolve_inter_agent_route
-from scripts.ai_agent_bridge import _process
-from scripts.ai_agent_bridge._acp_compat import (
+from lu_machinery.agent_runtime.runner import InterAgentTransportError, resolve_inter_agent_route
+from lu_machinery.ai_agent_bridge import _process
+from lu_machinery.ai_agent_bridge._acp_compat import (
     registered_participant_model,
     require_compat_target,
     resolve_compat_model,
 )
-from scripts.ai_agent_bridge._db import get_db, init_db
-from scripts.ai_agent_bridge._messaging import acknowledge, send_message
+from lu_machinery.ai_agent_bridge._db import get_db, init_db
+from lu_machinery.ai_agent_bridge._messaging import acknowledge, send_message
 
 
 @pytest.fixture
 def bridge_db(tmp_path, monkeypatch):
     db_path = tmp_path / "messages.db"
-    monkeypatch.setattr("scripts.ai_agent_bridge._config.DB_PATH", db_path)
-    monkeypatch.setattr("scripts.ai_agent_bridge._db.DB_PATH", db_path)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._config.DB_PATH", db_path)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path)
     conn = init_db()
     conn.close()
     return db_path
@@ -278,7 +278,7 @@ def test_process_already_acknowledged_message_skips(bridge_db, monkeypatch):
 
 def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
     """A bare ask-gemini carries no model slug; the route applies the pin."""
-    from scripts.ai_agent_bridge import _cli
+    from lu_machinery.ai_agent_bridge import _cli
 
     parser = _cli._build_parser()
     args = parser.parse_args(["ask-gemini", "hello", "--task-id", "t-1"])
@@ -291,7 +291,7 @@ def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
 
 def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin updates the accepted pin and its display alias."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     monkeypatch.setitem(
         ACPX_SUPPORTED_PARTICIPANTS,
@@ -314,8 +314,8 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
 
 def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin moves converse's default with it (#6929)."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._gemini import converse_gemini
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._gemini import converse_gemini
 
     monkeypatch.setitem(
         ACPX_SUPPORTED_PARTICIPANTS,
@@ -328,9 +328,9 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
         captured.update(kwargs)
         return 1
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._gemini.get_conversation_context",
+        "lu_machinery.ai_agent_bridge._gemini.get_conversation_context",
         lambda _task_id: ("", 0),
     )
 
@@ -348,8 +348,8 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
 
 def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> None:
     """#6959: missing registry pin fails loudly instead of falling back to stale literal."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._config import default_gemini_model
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._config import default_gemini_model
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
     monkeypatch.setitem(
@@ -363,8 +363,8 @@ def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> 
 
 def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> None:
     """#6959: ask_gemini resolves default from registry and remaps legacy slugs."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._gemini import ask_gemini
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._gemini import ask_gemini
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
     monkeypatch.setitem(
@@ -375,11 +375,11 @@ def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> No
     captured: dict[str, object] = {}
 
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._gemini._send_gemini_message",
+        "lu_machinery.ai_agent_bridge._gemini._send_gemini_message",
         lambda *args: 101,
     )
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._gemini.process_and_respond",
+        "lu_machinery.ai_agent_bridge._gemini.process_and_respond",
         lambda _msg_id, model=None, **kwargs: captured.update(model=model) or "resp",
     )
 
@@ -403,7 +403,7 @@ def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> No
 
 def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bridge_db, monkeypatch) -> None:
     """#6959: AB_GEMINI_MODEL override survives through ask_gemini -> process_and_respond -> _run_gemini_sync."""
-    from scripts.ai_agent_bridge._gemini import ask_gemini
+    from lu_machinery.ai_agent_bridge._gemini import ask_gemini
 
     monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-3.1-pro-high")
     captured: dict[str, object] = {}
@@ -412,7 +412,7 @@ def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bri
         captured["model"] = model
         return "response text"
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._gemini._run_gemini_sync", _fake_run_sync)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._gemini._run_gemini_sync", _fake_run_sync)
 
     ask_gemini("hello", task_id="issue-6959")
     assert captured["model"] == "gemini-3.1-pro-high"
@@ -422,7 +422,7 @@ def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bri
 
 
 def test_legacy_gemini_error_handler_never_acks(bridge_db):
-    from scripts.ai_agent_bridge import _gemini
+    from lu_machinery.ai_agent_bridge import _gemini
 
     message_id = _send("gemini")
     _gemini._send_gemini_error({"task_id": "task-6915", "from": "qa-engineer"}, message_id)
@@ -435,7 +435,7 @@ def test_legacy_gemini_error_handler_never_acks(bridge_db):
 @pytest.mark.parametrize("seat", ["claude", "codex", "grok", "agy"])
 def test_native_error_handlers_never_ack(bridge_db, seat):
     """Mutation check: removing the no-ack guard turns every one of these red."""
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build
+    from lu_machinery.ai_agent_bridge import _agy, _claude, _codex, _grok_build
 
     message_id = _send(seat)
     msg = {
@@ -463,7 +463,7 @@ def test_native_error_handlers_never_ack(bridge_db, seat):
 
 
 def test_claude_fallback_error_never_acks(bridge_db):
-    from scripts.ai_agent_bridge import _claude
+    from lu_machinery.ai_agent_bridge import _claude
 
     message_id = _send("claude")
     _claude._send_claude_fallback_error({"task_id": "task-6915", "from": "qa-engineer"}, message_id)
@@ -473,7 +473,7 @@ def test_claude_fallback_error_never_acks(bridge_db):
 
 
 def test_grok_incomplete_turn_never_acks(bridge_db):
-    from scripts.ai_agent_bridge import _grok_build
+    from lu_machinery.ai_agent_bridge import _grok_build
 
     message_id = _send("grok")
     msg = {
@@ -499,7 +499,7 @@ def test_grok_incomplete_turn_never_acks(bridge_db):
 
 
 def test_opencode_incomplete_turn_never_acks(bridge_db):
-    from scripts.ai_agent_bridge import _opencode
+    from lu_machinery.ai_agent_bridge import _opencode
 
     message_id = _send("glm")
     msg = {
@@ -527,7 +527,7 @@ def test_opencode_incomplete_turn_never_acks(bridge_db):
 
 def test_process_all_gemini_counts_failures_without_consuming(bridge_db, monkeypatch, capsys):
     """Batch drain: a failed message stays in the inbox and is counted failed."""
-    from scripts.ai_agent_bridge import _cli
+    from lu_machinery.ai_agent_bridge import _cli
 
     ok_id = _send("gemini", task_id="task-ok")
     bad_id = _send("gemini", task_id="task-bad")
@@ -555,7 +555,7 @@ def forbid_legacy_processors(monkeypatch):
         ("_opencode", "process_for_opencode"),
     ]:
         monkeypatch.setattr(
-            f"scripts.ai_agent_bridge.{module}.{name}",
+            f"lu_machinery.ai_agent_bridge.{module}.{name}",
             Mock(side_effect=AssertionError("ordinary ask reached legacy provider processor")),
         )
 
@@ -572,7 +572,7 @@ def forbid_legacy_processors(monkeypatch):
 def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _cli
+    from lu_machinery.ai_agent_bridge import _cli
 
     target = command.removeprefix("process-")
     message_id = _send(target, sender="agy")
@@ -611,7 +611,7 @@ def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch
     exactly as it was: no reply, no failure record, no acknowledgement."""
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _cli
 
     acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
     monkeypatch.setattr(_process, "run_compat_ask", acp)
@@ -639,7 +639,7 @@ def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
 ):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _ask_lifecycle
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle
 
     message_id = _send(target, sender="agy" if target != "agy" else "codex")
     acp = Mock(side_effect=RuntimeError("ACP unavailable"))
@@ -658,7 +658,7 @@ def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
 def test_queued_review_keeps_toolful_processor(bridge_db, monkeypatch, review_intent):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _ask_lifecycle, _claude
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _claude
 
     message_id = send_message(
         "Review the exact branch head.",
@@ -704,7 +704,7 @@ def test_batch_ordinary_drains_use_acp_and_report_failures(
 ):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _cli, _codex
+    from lu_machinery.ai_agent_bridge import _cli, _codex
 
     message_id = _send(target, sender="agy")
     acp = Mock(return_value=_ok_result(response=""))
@@ -719,7 +719,7 @@ def test_batch_ordinary_drains_use_acp_and_report_failures(
 def test_ordinary_process_failure_is_nonzero(bridge_db, monkeypatch):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _cli
+    from lu_machinery.ai_agent_bridge import _cli
 
     message_id = _send("codex", sender="agy")
     monkeypatch.setattr(_process, "run_compat_ask", Mock(return_value=_ok_result(response="")))
@@ -732,7 +732,7 @@ def test_ordinary_process_failure_is_nonzero(bridge_db, monkeypatch):
 def test_ordinary_async_process_refuses_before_acp(bridge_db, monkeypatch):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _cli
+    from lu_machinery.ai_agent_bridge import _cli
 
     message_id = _send("claude", sender="agy")
     acp = Mock(side_effect=AssertionError("async must fail before provider execution"))
@@ -765,7 +765,7 @@ def cursor_provider(monkeypatch):
     import subprocess
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge import _cursor
+    from lu_machinery.ai_agent_bridge import _cursor
 
     run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout="LGTM\n", stderr=""))
     # Scoped to the Cursor bridge: the broker's own notifications also use subprocess.
@@ -787,7 +787,7 @@ def cursor_provider(monkeypatch):
     ],
 )
 def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cursor_provider, to_model, code):
-    from scripts.ai_agent_bridge import _ask_lifecycle
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle
 
     message_id = _cursor_review(to_model)
     expected = (
@@ -804,7 +804,7 @@ def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cu
 
 
 def test_detached_cursor_review_records_the_typed_refusal(bridge_db, cursor_provider, monkeypatch, tmp_path):
-    from scripts.ai_agent_bridge import _ask_lifecycle
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle
 
     message_id = _cursor_review(None)
     monkeypatch.setattr(_ask_lifecycle, "REPO_ROOT", tmp_path)
@@ -819,7 +819,7 @@ def test_detached_cursor_review_records_the_typed_refusal(bridge_db, cursor_prov
 
 @pytest.mark.parametrize("to_model", ["grok-4.7", "grok-4.7-high"])
 def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, to_model):
-    from scripts.ai_agent_bridge import _ask_lifecycle
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle
 
     message_id = _cursor_review(to_model)
     _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})

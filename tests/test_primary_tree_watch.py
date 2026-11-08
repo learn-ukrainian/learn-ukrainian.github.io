@@ -28,11 +28,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime import primary_tree_watch as ptw
-from agent_runtime import runner as runner_mod
-from agent_runtime.primary_tree_watch import PrimaryTreeWatch
-from agent_runtime.result import ParseResult
-from agent_runtime.runner import (
+from lu_machinery.agent_runtime import primary_tree_watch as ptw
+from lu_machinery.agent_runtime import runner as runner_mod
+from lu_machinery.agent_runtime.primary_tree_watch import PrimaryTreeWatch
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.runner import (
     PrimaryTreeWriteError,
     _execute_invocation_plan,
     _raise_for_kill_reason,
@@ -236,7 +236,7 @@ def test_runner_kills_on_escape_only_when_enforced(monkeypatch, tmp_path):
 def test_end_to_end_runner_detects_primary_write(monkeypatch, repo):
     """THE guard test: a child that writes a tracked primary file mid-dispatch
     is detected and attributed, without being killed (enforce off)."""
-    monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", repo.main)
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(repo.main))
     monkeypatch.setattr(runner_mod, "_POLL_INTERVAL_S", 0.05)
     monkeypatch.setenv("LU_PRIMARY_TREE_WATCH_INTERVAL_S", "0.05")
     monkeypatch.delenv("LU_PRIMARY_TREE_WATCH_ENFORCE", raising=False)
@@ -259,7 +259,7 @@ def test_end_to_end_runner_detects_primary_write(monkeypatch, repo):
 
 
 def test_end_to_end_clean_child_records_nothing(monkeypatch, repo):
-    monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", repo.main)
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(repo.main))
     monkeypatch.setenv("LU_PRIMARY_TREE_WATCH_INTERVAL_S", "0.05")
     # The child edits its own worktree — the sanctioned flow must stay silent.
     target = repo.dispatch_wt / "tracked.txt"

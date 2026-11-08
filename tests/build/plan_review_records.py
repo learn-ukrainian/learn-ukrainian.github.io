@@ -15,9 +15,9 @@ import json
 from pathlib import Path
 
 import yaml
+from lu_machinery.common.task_store_paths import tasks_dir
 
 from scripts.build.fresh import plan_manifest
-from scripts.common.task_store_paths import tasks_dir
 from scripts.review import record
 from scripts.review.receipts.ledger import create_empty_ledger
 from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _record, _review

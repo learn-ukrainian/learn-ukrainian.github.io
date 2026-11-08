@@ -3,9 +3,8 @@ from __future__ import annotations
 import json
 
 import pytest
-
-from scripts.orchestration.task_family.graph import discover_task_family, rename_mapping
-from scripts.orchestration.task_family.model import (
+from lu_machinery.orchestration.task_family.graph import discover_task_family, rename_mapping
+from lu_machinery.orchestration.task_family.model import (
     ArchiveSelection,
     LifecycleEvent,
     LifecycleState,
@@ -17,8 +16,8 @@ from scripts.orchestration.task_family.model import (
     TaskNode,
     TaskRelation,
 )
-from scripts.orchestration.task_family.planner import TaskFamilyPlan, build_plan
-from scripts.orchestration.task_family.storage import TaskFamilyStorage, atomic_write_json
+from lu_machinery.orchestration.task_family.planner import TaskFamilyPlan, build_plan
+from lu_machinery.orchestration.task_family.storage import TaskFamilyStorage, atomic_write_json
 
 
 def _node(task_id: str, title: str, **resources: str) -> TaskNode:

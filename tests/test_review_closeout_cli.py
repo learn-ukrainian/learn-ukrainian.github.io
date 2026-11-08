@@ -15,13 +15,14 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.common.git_context import sanitized_git_env
+from lu_machinery.common.git_context import sanitized_git_env
+
 from tests.project_python import project_python
 
 
 @pytest.fixture(autouse=True)
 def isolated_live_snapshot(monkeypatch):
-    from scripts.fleet import credit_lane
+    from lu_machinery.fleet import credit_lane
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
 
@@ -49,7 +50,7 @@ def _init_repo(tmp_path: Path) -> Path:
 
 def _run_cli(state_file: Path, *args: str, real_process: bool = False) -> subprocess.CompletedProcess[str]:
     project_root = Path(__file__).resolve().parent.parent
-    command = [str(project_python()), "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args]
+    command = [str(project_python()), "-m", "lu_machinery.review.closeout_cli", "--state-file", str(state_file), *args]
     if real_process:
         if args[0] == "resolve-reviewer" and "--routing-snapshot-file" not in args:
             pytest.fail("real-process reviewer tests must inject --routing-snapshot-file")
@@ -57,7 +58,7 @@ def _run_cli(state_file: Path, *args: str, real_process: bool = False) -> subpro
 
     # Every command still enters the CLI parser and checks its own result and
     # state file. Keep a real process case below for the launch boundary.
-    from scripts.review import closeout_cli
+    from lu_machinery.review import closeout_cli
 
     stdout, stderr = io.StringIO(), io.StringIO()
     with chdir(project_root), redirect_stdout(stdout), redirect_stderr(stderr):
@@ -246,7 +247,7 @@ def test_state_file_sha_validation_precedes_git(tmp_path, monkeypatch, field):
     def unexpected(*_args):
         pytest.fail("invalid state-file SHA must refuse before git")
 
-    monkeypatch.setattr("scripts.review.closeout_cli.git_changed_paths", unexpected)
+    monkeypatch.setattr("lu_machinery.review.closeout_cli.git_changed_paths", unexpected)
     proc = _run_cli(state, "resolve-reviewer", "--author-model", "gpt-6.1-sol")
     assert proc.returncode == 1
     assert json.loads(proc.stderr)["error"] == "target_sha_invalid"
@@ -283,7 +284,7 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 
 @pytest.mark.parametrize("injected_grok", [False, True])
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
-    from scripts.review import reviewer_resolver
+    from lu_machinery.review import reviewer_resolver
 
     # The adapter path raises either requested risk to critical, so inject
     # Grok into the effective ladder that the resolver actually walks.
@@ -385,7 +386,7 @@ def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
         "--status",
         "pass",
         "--command",
-        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        ".venv/bin/python -m lu_machinery.review.closeout_cli --help",
         "--cwd",
         str(repo),
         "--exit-code",
@@ -770,7 +771,8 @@ def test_target_and_freeze_are_immutable_once_baseline_frozen(tmp_path):
 
 
 def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recorder(tmp_path, monkeypatch):
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.review import record_cf_verdict as recorder
+
     from tests.test_authoring_review_feasibility import GROK, OPUS, REPOSITORY, SOL, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
@@ -1029,7 +1031,8 @@ def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_ma
 @pytest.mark.parametrize("base_name,excluded", [("main", True), ("release", False)])
 def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, monkeypatch, base_name, excluded):
     """A frozen PR target must exclude default-branch authors, and only those."""
-    from scripts.review import target_resolution as resolution
+    from lu_machinery.review import target_resolution as resolution
+
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
@@ -1182,8 +1185,8 @@ def test_load_pull_request_comments_reads_identity_and_flattens_pages(tmp_path, 
     """The live fetch fails closed on identity and comments, and flattens paged comments."""
     from types import SimpleNamespace
 
-    from scripts.publish import github
-    from scripts.review.closeout_cli import CloseoutStateError, load_pull_request_comments
+    from lu_machinery.publish import github
+    from lu_machinery.review.closeout_cli import CloseoutStateError, load_pull_request_comments
 
     seen: list[str] = []
 

@@ -9,8 +9,7 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.red_ci_known_failures import (
+from lu_machinery.orchestration.red_ci_known_failures import (
     RedCIKnownFailuresValidationError,
     load_and_validate_registry,
 )

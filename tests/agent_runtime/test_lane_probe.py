@@ -8,10 +8,9 @@ from types import SimpleNamespace
 
 import pytest
 import yaml
-
-from scripts.agent_runtime import lane_probe
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.orchestration import handoff_slot_registry
+from lu_machinery.agent_runtime import lane_probe
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.orchestration import handoff_slot_registry
 
 
 class _FakeAdapter:

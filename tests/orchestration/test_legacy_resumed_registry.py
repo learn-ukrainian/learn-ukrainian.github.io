@@ -13,10 +13,10 @@ from types import SimpleNamespace
 
 import psutil
 import pytest
+from lu_machinery.orchestration import rollover_registry_cli as cli
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.orchestration.task_family import rollover_registry as registry
 
-from scripts.orchestration import rollover_registry_cli as cli
-from scripts.orchestration import thread_handoff as th
-from scripts.orchestration.task_family import rollover_registry as registry
 from tests.orchestration.task_family.test_rollover_registry import _lease, _sync, _write_json
 
 ACTION = registry.MaintenanceAction.DISPOSE_LEGACY_RESUMED

@@ -8,8 +8,7 @@ import stat
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.binary_resolve import resolve_agent_binary
+from lu_machinery.agent_runtime.binary_resolve import resolve_agent_binary
 
 
 def _write_executable(path: Path) -> None:
@@ -41,7 +40,7 @@ def test_resolve_returns_none_when_binary_genuinely_absent(tmp_path: Path, monke
 
 
 def test_prepare_spawn_command_resolves_argv0(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.agent_runtime.runner import _prepare_spawn_command
+    from lu_machinery.agent_runtime.runner import _prepare_spawn_command
 
     fake_home = tmp_path / "home"
     local_bin = fake_home / ".local" / "bin"

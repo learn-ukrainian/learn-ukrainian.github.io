@@ -1,9 +1,9 @@
 """No live Sources binding may escape lock or exact-selector checks."""
 
 import pytest
+from lu_machinery.storage import generations as g
+from lu_machinery.storage import topology as t
 
-from scripts.storage import generations as g
-from scripts.storage import topology as t
 from tests.storage_callers.test_write_contract import stores as store_fixture
 
 stores = store_fixture
@@ -56,7 +56,7 @@ def test_request_freezes_environment_before_acquisition(stores, tmp_path, monkey
 
 
 def test_registered_holder_must_name_the_same_frozen_selector(stores):
-    from scripts.lib.readonly_sqlite import register_store_writer, unregister_store_writer
+    from lu_machinery.lib.readonly_sqlite import register_store_writer, unregister_store_writer
 
     request = t._prepare_store_write_target("sources", stores, intent="update", env={})
     other = stores / "data" / "different.db"
@@ -102,7 +102,7 @@ def test_inherited_lock_is_reused_without_nested_acquisition(stores):
     import subprocess
     import sys
 
-    from scripts.lib.readonly_sqlite import ENV_STORE_WRITER_FD, ENV_STORE_WRITER_SELECTOR
+    from lu_machinery.lib.readonly_sqlite import ENV_STORE_WRITER_FD, ENV_STORE_WRITER_SELECTOR
 
     directory = stores / "data" / t.GENERATIONS_DIRNAME
     directory.mkdir()

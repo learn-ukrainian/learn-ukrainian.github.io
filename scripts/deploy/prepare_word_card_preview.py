@@ -38,7 +38,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common import github_client
+from lu_machinery.common import github_client
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PIN = ROOT / "site" / "src" / "data" / "word-card-preview-release.pointer.json"

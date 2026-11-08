@@ -18,16 +18,16 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters import claude as claude_module
-from scripts.agent_runtime.adapters.acpx import (
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters import claude as claude_module
+from lu_machinery.agent_runtime.adapters.acpx import (
     AcpxClaudeShadowAdapter,
     AcpxShadowRefusalError,
     ClaudeCodeExecutableRefusal,
 )
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+
 from tests.agent_runtime import test_acpx_adapter as _acpx_tests
 from tests.agent_runtime.test_acpx_adapter import _stub_binary
 from tests.wait_helpers import wait_until
@@ -128,7 +128,7 @@ def test_failing_or_hanging_probe_is_typed(host, monkeypatch):
     def hang(*_args, **_kwargs):
         raise subprocess.TimeoutExpired(cmd="claude --version", timeout=10)
 
-    monkeypatch.setattr("scripts.utils.claude_version.run_version_probe", hang)
+    monkeypatch.setattr("lu_machinery.utils.claude_version.run_version_probe", hang)
     assert _refusal(model=None).reason == "probe_failed"
 
 
@@ -141,7 +141,7 @@ def test_probe_uses_the_pinned_path_with_a_minimal_env(host, monkeypatch):
         return subprocess.CompletedProcess(cmd_prefix, 0, stdout="2.1.296 (Claude Code)\n", stderr="")
 
     monkeypatch.setenv("ANTHROPIC_API_KEY", "fixture-secret")
-    monkeypatch.setattr("scripts.utils.claude_version.run_version_probe", probe)
+    monkeypatch.setattr("lu_machinery.utils.claude_version.run_version_probe", probe)
     acpx_module._require_host_claude_code(model=None, adapter_label="X")
     assert seen["cmd_prefix"] == [str(executable.resolve())]
     assert set(seen["env"]) == {"PATH", "HOME"}
@@ -185,7 +185,7 @@ def test_executable_removed_during_probe_is_typed_vanished(host, monkeypatch):
         executable.unlink()
         raise FileNotFoundError(cmd_prefix[0])
 
-    monkeypatch.setattr("scripts.utils.claude_version.run_version_probe", remove_then_spawn)
+    monkeypatch.setattr("lu_machinery.utils.claude_version.run_version_probe", remove_then_spawn)
     refusal = _refusal(model=None)
     assert refusal.reason == "vanished"
     assert refusal.failure_code == "acp_adapter_missing"
@@ -198,7 +198,7 @@ def test_executable_replaced_during_probe_is_typed_vanished(host, monkeypatch):
         executable.write_text("#!/bin/sh\necho replaced-binary-with-other-bytes\n", encoding="utf-8")
         return subprocess.CompletedProcess(cmd_prefix, 0, stdout="2.1.296 (Claude Code)\n", stderr="")
 
-    monkeypatch.setattr("scripts.utils.claude_version.run_version_probe", replace_then_answer)
+    monkeypatch.setattr("lu_machinery.utils.claude_version.run_version_probe", replace_then_answer)
     refusal = _refusal(model=None)
     assert refusal.reason == "vanished"
     assert "changed during its version probe" in str(refusal)
@@ -542,8 +542,8 @@ def test_unrelated_failure_with_intact_executable_is_unchanged(host):
 @pytest.mark.parametrize("access", ["isolated", "full"])
 def test_claude_acp_never_launches_inside_the_attempt_boundary(access):
     """No Claude ACP path enters the bwrap boundary, so no runtime_reads entry is needed."""
-    from scripts.agent_runtime.attempt_boundary import prepare_attempt_boundary
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.agent_runtime.attempt_boundary import prepare_attempt_boundary
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     tool_config = {
         "review_id": "r",
@@ -623,7 +623,7 @@ def _run_launcher(tmp_path: Path, *, host: str | None, identity: str | None):
 
 
 def test_launcher_deny_list_equals_the_headless_background_denies():
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_TOOL_DENIES
+    from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_TOOL_DENIES
 
     text = _LAUNCHER.read_text(encoding="utf-8")
     exec_lines = [line for line in text.splitlines() if line.startswith("exec ")]
@@ -669,7 +669,7 @@ _REAL_LAUNCHER_GATE = acpx_module._require_claude_acp_launcher
 
 
 def _git(cwd: Path, *args: str) -> None:
-    from scripts.common.git_context import sanitized_git_env
+    from lu_machinery.common.git_context import sanitized_git_env
 
     env = {**sanitized_git_env(), "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
     subprocess.run(
@@ -1612,7 +1612,7 @@ def test_host_refusals_and_post_run_text_name_no_absolute_host_path(host, tmp_pa
         Path(argv[0]).unlink()
         raise FileNotFoundError(argv[0])
 
-    monkeypatch.setattr("scripts.utils.claude_version.run_version_probe", remove_then_spawn)
+    monkeypatch.setattr("lu_machinery.utils.claude_version.run_version_probe", remove_then_spawn)
     messages.append(str(_refusal(model=None)))
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: str(tmp_path / "gone" / "claude"))
     messages.append(str(_refusal(model=None)))

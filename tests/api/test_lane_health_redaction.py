@@ -15,18 +15,18 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from test_routing_budget_endpoint import _configure
-
-from scripts.api import state_router
-from scripts.api.lane_health import (
+from lu_machinery.api import state_router
+from lu_machinery.api.lane_health import (
     MAX_ERROR_EXCERPT_CHARS,
     LaneHealthScan,
     redact_lane_health_text,
     sanitize_error_excerpt,
 )
-from scripts.api.lane_health_redaction import redact_lane_health_diagnostics
-from scripts.api.monitor_context import fixture_context
-from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware
+from lu_machinery.api.lane_health_redaction import redact_lane_health_diagnostics
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.opsec_sanitize import opsec_path_sanitizer_middleware
+from test_routing_budget_endpoint import _configure
+
 from tests._host_path_guard import FIXTURE_HOME
 
 _HOST_USER = "deploy-bot@prod-bastion-7"

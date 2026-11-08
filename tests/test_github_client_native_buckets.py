@@ -6,8 +6,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.common import github_client as gh
 
-from scripts.common import github_client as gh
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 NOW = 1000

@@ -28,10 +28,10 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+from lu_machinery.review import findings_db
+from lu_machinery.review.seeds import manifest as sm
+from lu_machinery.review.seeds import score
 
-from scripts.review import findings_db
-from scripts.review.seeds import manifest as sm
-from scripts.review.seeds import score
 from tests.review.seeds.fixtures import SEATS, Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 TODAY = date(2026, 9, 25)

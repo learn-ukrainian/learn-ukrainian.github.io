@@ -11,9 +11,9 @@ import json
 import sqlite3
 from pathlib import Path
 
-from scripts.api import claude_account_usage
-from scripts.api.fleet_router import _message_item
-from scripts.api.route_contracts import contract_for_route
+from lu_machinery.api import claude_account_usage
+from lu_machinery.api.fleet_router import _message_item
+from lu_machinery.api.route_contracts import contract_for_route
 
 HOME_JS = Path(__file__).resolve().parents[2] / "dashboards" / "fleet-board.js"
 

@@ -26,7 +26,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
+
 from curriculum.quality.thresholds import STYLE_REVIEW_TARGET
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
@@ -273,7 +274,7 @@ def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     )
     result = subprocess.run(
         [
-            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+            str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,
@@ -296,7 +297,7 @@ def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     full_prompt = f"{prompt_content}\n\nWrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters."
     result = subprocess.run(
         [
-            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+            str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,

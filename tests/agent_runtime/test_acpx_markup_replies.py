@@ -14,9 +14,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.agent_runtime.adapters import acpx
-from scripts.agent_runtime.result import Result
+from lu_machinery.agent_runtime.adapters import acpx
+from lu_machinery.agent_runtime.result import Result
 
 MARKUP_REPLIES = (
     pytest.param(
@@ -216,9 +215,9 @@ def test_every_acp_adapter_rejects_markup_only(adapter_class) -> None:
 
 def test_markup_failure_reaches_durable_ask_outcome_and_replay(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Use the real ask controller/store, with no external provider invocation."""
-    from agent_runtime.runner import _privacy_safe_failure_code
-    from scripts.ai_agent_bridge import _acp_compat
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.agent_runtime.runner import _privacy_safe_failure_code
+    from lu_machinery.ai_agent_bridge import _acp_compat
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     parsed = _parse_reply('<｜DSML｜function_calls><｜DSML｜invoke name="search"/></｜DSML｜function_calls>')
     code = _privacy_safe_failure_code(
@@ -245,14 +244,14 @@ def test_markup_failure_reaches_durable_ask_outcome_and_replay(tmp_path: Path, m
     )
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
     invoke = Mock(return_value=result)
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr(acpx, "probe_participant_reachability", Mock(return_value=None))
 
     @contextmanager
     def execution_cwd(*_args, **_kwargs):
         yield tmp_path
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
     live = _acp_compat.run_compat_ask("grok", "question", task_id="markup-9671", source="codex")
     replay = _acp_compat.run_compat_ask("grok", "question", task_id="markup-9671", source="codex")
     assert live.ok is False

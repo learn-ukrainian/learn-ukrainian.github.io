@@ -11,19 +11,19 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.ai_agent_bridge import _ask_lifecycle as lifecycle
-from scripts.ai_agent_bridge._agy import ask_agy
-from scripts.ai_agent_bridge._db import get_db, init_db
-from scripts.ai_agent_bridge._messaging import send_message
+from lu_machinery.ai_agent_bridge import _ask_lifecycle as lifecycle
+from lu_machinery.ai_agent_bridge._agy import ask_agy
+from lu_machinery.ai_agent_bridge._db import get_db, init_db
+from lu_machinery.ai_agent_bridge._messaging import send_message
 
 
 @pytest.fixture
 def bridge_db(tmp_path, monkeypatch):
     db_path = tmp_path / "messages.db"
-    monkeypatch.setattr("scripts.ai_agent_bridge._config.DB_PATH", db_path)
-    monkeypatch.setattr("scripts.ai_agent_bridge._db.DB_PATH", db_path)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._config.DB_PATH", db_path)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path)
     monkeypatch.setattr(lifecycle, "PID_DIR", tmp_path / "pids")
-    monkeypatch.setattr("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path / "pids")
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._broker.PID_DIR", tmp_path / "pids")
     conn = init_db()
     conn.close()
     return db_path
@@ -54,7 +54,7 @@ def _status(message_id: int) -> str:
 
 def test_background_ask_sends_immediately_and_mocks_detached_spawn(bridge_db, monkeypatch):
     spawn = Mock(return_value=4321)
-    monkeypatch.setattr("scripts.ai_agent_bridge._agy.launch_background_ask", spawn)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._agy.launch_background_ask", spawn)
 
     message_id = ask_agy("Read one file", task_id="task-4837", background=True)
 
@@ -74,7 +74,7 @@ def test_background_ask_sends_immediately_and_mocks_detached_spawn(bridge_db, mo
 def test_background_branch_review_agy_refuses_sealed_cf(bridge_db, monkeypatch):
     """AGY sealed formal review is fail-closed before send (#5553 / #5555)."""
     spawn = Mock(return_value=4321)
-    monkeypatch.setattr("scripts.ai_agent_bridge._agy.launch_background_ask", spawn)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._agy.launch_background_ask", spawn)
 
     with pytest.raises(ValueError, match="agy_isolated_review_unsupported"):
         ask_agy(
@@ -361,9 +361,9 @@ def test_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
         effort=None,
     )
     mock_invoke = Mock(return_value=mock_result)
-    monkeypatch.setattr("scripts.ai_agent_bridge._claude.runtime_invoke", mock_invoke)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._claude.runtime_invoke", mock_invoke)
 
-    from scripts.ai_agent_bridge._claude import process_for_claude
+    from lu_machinery.ai_agent_bridge._claude import process_for_claude
 
     process_for_claude(ask_id)
     assert mock_invoke.call_args.kwargs["tool_config"]["reviewer_tools"] is True
@@ -632,7 +632,7 @@ def test_atomic_retry_claim_prevents_concurrent_refire(bridge_db, monkeypatch, t
 
 def test_cancel_and_retell_native_grok_permission_cancelled(bridge_db, monkeypatch, tmp_path):
     """A native Grok turn ending in permission_cancelled auto-retries once with refusal reason (#5893)."""
-    from scripts.ai_agent_bridge import _grok_build
+    from lu_machinery.ai_agent_bridge import _grok_build
 
     monkeypatch.setattr(_grok_build, "REPO_ROOT", tmp_path)
     monkeypatch.setattr(lifecycle, "REPO_ROOT", tmp_path)
@@ -678,8 +678,8 @@ def test_cancel_and_retell_native_grok_permission_cancelled(bridge_db, monkeypat
 
 def test_cancel_and_retell_composes_with_watchdog_within_bound(bridge_db, monkeypatch, tmp_path):
     """Total automatic re-fires for one ask never exceed MAX_TOTAL_ASK_RETRIES = 2 (#5893)."""
-    from scripts.ai_agent_bridge import _grok_build
-    from scripts.ai_agent_bridge._ask_contract import MAX_TOTAL_ASK_RETRIES
+    from lu_machinery.ai_agent_bridge import _grok_build
+    from lu_machinery.ai_agent_bridge._ask_contract import MAX_TOTAL_ASK_RETRIES
 
     assert MAX_TOTAL_ASK_RETRIES == 2
 

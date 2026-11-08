@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import json
 
+import lu_machinery.api.work_router as work_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.work_router as work_router
-from scripts.api.main import app
-from scripts.api.state_helpers import cache_invalidate
-from scripts.work.normalize import build_projection
-from scripts.work.sources_public import SectionResult
+from lu_machinery.api.main import app
+from lu_machinery.api.state_helpers import cache_invalidate
+from lu_machinery.work.normalize import build_projection
+from lu_machinery.work.sources_public import SectionResult
 
 client = TestClient(app, raise_server_exceptions=False)
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -190,7 +189,7 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
 
 def test_projection_rejects_oversized_repeated_filters(monkeypatch):
     """Endpoint 400 when raw multivalue exceeds the finite per-key domain bound."""
-    from scripts.work.schema import FILTER_MAX_RAW_ITEMS
+    from lu_machinery.work.schema import FILTER_MAX_RAW_ITEMS
 
     cache_invalidate("work:v1:projection")
 
@@ -252,7 +251,7 @@ NEXT_STREAMS = ["atlas-practice", "devops", "infra-harness"]
 
 
 def _wid(number: int) -> str:
-    from scripts.work.relations import issue_work_id
+    from lu_machinery.work.relations import issue_work_id
 
     return issue_work_id(REPO, number)
 
@@ -347,8 +346,8 @@ def _next_sections() -> dict[str, SectionResult]:
 
 def _warm_next_cache(target_lifecycle_lookup: dict[str | int, str] | None = None) -> dict:
     """Build the fixture projection and install it as the unfiltered warm cache."""
-    from scripts.api.state_helpers import cache_set
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import cache_set
+    from lu_machinery.api.work_router import projection_cache_key
 
     cache_invalidate("work:v1:projection")
     payload = build_projection(
@@ -421,8 +420,8 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
     import time
     from datetime import timedelta
 
-    from scripts import github_rest_cache
-    from scripts.work import normalize, sources_public
+    from lu_machinery import github_rest_cache
+    from lu_machinery.work import normalize, sources_public
 
     started = threading.Event()
     release = threading.Event()
@@ -463,7 +462,7 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
     warm = client.get("/api/work/v1/projection?fresh=true&stream=infra-harness")
     assert warm.status_code == 200
     assert warm.json()["denominator"]["prs_open"] == 40
-    from scripts.api.state_helpers import cache_get_with_age
+    from lu_machinery.api.state_helpers import cache_get_with_age
 
     warm_cached, _age = cache_get_with_age(work_router.projection_cache_key({}), float("inf"))
     assert {i["safe_next_action"]["code"] for i in warm_cached["items"]} == {"REQUEST_CF_REVIEW"}
@@ -525,8 +524,8 @@ def test_next_stale_cache_served_with_background_refresh(monkeypatch):
     """Expired-but-present cache is served honestly and kicks the single-flight refresh."""
     import time
 
-    from scripts.api.state_helpers import _ttl_cache
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import _ttl_cache
+    from lu_machinery.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
     payload = _warm_next_cache()
@@ -554,8 +553,8 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     """Cache older than NEXT_MAX_STALE_S fails closed with 503 stale (#6890 #3)."""
     import time
 
-    from scripts.api.state_helpers import _ttl_cache
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import _ttl_cache
+    from lu_machinery.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
     payload = _warm_next_cache()
@@ -587,7 +586,7 @@ def test_next_refresh_completion_after_registry_clear(monkeypatch, drain_before_
     import threading
     import time
 
-    from scripts.api.state_helpers import _ttl_cache
+    from lu_machinery.api.state_helpers import _ttl_cache
 
     _patch_known_streams(monkeypatch)
     payload = _warm_next_cache()
@@ -701,7 +700,7 @@ def test_projection_membership_and_epic_status():
 
 def test_streams_loader_derives_public_membership_and_strips_private_index():
     """fetch_streams_projection derives open-issue→stream names, drops the raw index."""
-    from scripts.work.sources_public import fetch_streams_projection
+    from lu_machinery.work.sources_public import fetch_streams_projection
 
     def loader():
         return {
@@ -748,7 +747,7 @@ def test_streams_loader_derives_public_membership_and_strips_private_index():
 
 def test_streams_loader_allowlists_derived_and_preset_membership():
     """Unknown stream names are dropped at derive time and on pre-set maps (#6890)."""
-    from scripts.work.sources_public import fetch_streams_projection
+    from lu_machinery.work.sources_public import fetch_streams_projection
 
     def loader_with_typo():
         return {
@@ -847,8 +846,8 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
 
 def test_streams_default_loader_drops_membership_from_incomplete_or_unflagged_audit(monkeypatch):
     """An incomplete or pre-flag audit keeps ``ok`` visible and publishes no membership map."""
-    from scripts.orchestration import issue_stream_audit as audit
-    from scripts.work.sources_public import fetch_streams_projection
+    from lu_machinery.orchestration import issue_stream_audit as audit
+    from lu_machinery.work.sources_public import fetch_streams_projection
 
     incomplete = {
         "generated_at": 1,
@@ -934,8 +933,8 @@ def _next_sections_pending(*, membership: bool) -> dict[str, SectionResult]:
 
 
 def _warm_cache_from(sections: dict[str, SectionResult]) -> dict:
-    from scripts.api.state_helpers import cache_set
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import cache_set
+    from lu_machinery.api.work_router import projection_cache_key
 
     cache_invalidate("work:v1:projection")
     payload = build_projection(sections, repository_id=REPO)
@@ -990,7 +989,7 @@ def test_next_pending_native_without_membership_is_named_in_digest(monkeypatch):
 
 def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
     """Launcher selectors select the same stream in /next, including harness."""
-    from scripts.orchestration.issue_stream_audit import load_registry
+    from lu_machinery.orchestration.issue_stream_audit import load_registry
 
     monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
     _warm_next_cache()
@@ -1051,7 +1050,7 @@ def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
 
 @pytest.mark.parametrize("alias_file_state", ["missing", "malformed"])
 def test_next_diagnoses_broken_launcher_alias_file(monkeypatch, tmp_path, request, caplog, alias_file_state):
-    from scripts.orchestration import launcher_aliases
+    from lu_machinery.orchestration import launcher_aliases
 
     alias_file = tmp_path / "launcher_stream_aliases.tsv"
     if alias_file_state == "malformed":
@@ -1083,8 +1082,8 @@ def test_next_successful_background_refresh_resets_age(monkeypatch):
     """#6984: a kicked refresh that finishes re-warms the cache; the retry is 200."""
     import time
 
-    from scripts.api.state_helpers import _ttl_cache
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import _ttl_cache
+    from lu_machinery.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
     payload = _warm_next_cache()
@@ -1119,8 +1118,8 @@ def test_next_hung_refresh_keeps_single_flight_until_the_thread_finishes(monkeyp
     import threading
     import time
 
-    from scripts.api.state_helpers import _ttl_cache
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import _ttl_cache
+    from lu_machinery.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
     payload = _warm_next_cache()
@@ -1183,7 +1182,7 @@ def test_overlapping_rebuild_after_wait_timeout_discards_late_result(monkeypatch
     import threading
     import time
 
-    from scripts.api.state_helpers import cache_get_with_age
+    from lu_machinery.api.state_helpers import cache_get_with_age
 
     ctx = app.state.ctx
     key = work_router.projection_cache_key({}, ctx)
@@ -1241,9 +1240,9 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     import time
     from unittest.mock import Mock
 
-    import scripts.api.main as api_main
-    import scripts.api.state_helpers as state_helpers
-    from scripts.api.monitor_context import fixture_context
+    import lu_machinery.api.main as api_main
+    import lu_machinery.api.state_helpers as state_helpers
+    from lu_machinery.api.monitor_context import fixture_context
 
     class ManualClock:
         def __init__(self) -> None:
@@ -1432,7 +1431,7 @@ def _qualify_sections(**overrides) -> dict[str, SectionResult]:
 
 def _serve(monkeypatch, sections: dict[str, SectionResult], **build_kwargs) -> dict:
     """Install one projection as the warm cache and as the builder result."""
-    from scripts.api.state_helpers import cache_set
+    from lu_machinery.api.state_helpers import cache_set
 
     payload = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[], **build_kwargs)
     cache_set(work_router.projection_cache_key({}), payload)
@@ -1463,7 +1462,7 @@ def _projection_and_next(monkeypatch, sections, **build_kwargs):
 
 def test_state_ready_names_next_action_without_admission(monkeypatch):
     """A live task names CONTINUE_DISPATCH. That is not admission."""
-    from scripts.fleet.idle_settle import items_from_work_next_queue
+    from lu_machinery.fleet.idle_settle import items_from_work_next_queue
 
     sections = _qualify_sections(
         delegate_tasks=SectionResult(
@@ -1517,7 +1516,7 @@ def test_state_dependency_waiting_until_confirmed_closure(monkeypatch):
     assert row["safe_next_action"]["reason_codes"] == ["blocked_by"]
     assert row["health"] == "AT_RISK"
     assert [item["remote_id"] for item in nxt["queue"]] == ["6001"]
-    from scripts.fleet.idle_settle import items_from_work_next_queue
+    from lu_machinery.fleet.idle_settle import items_from_work_next_queue
 
     settled = items_from_work_next_queue(nxt["queue"])
     assert settled[0].dependency_blocked is True
@@ -1547,7 +1546,7 @@ def test_state_missing_owner_stays_unknown(monkeypatch):
     assert row["safe_next_action"]["code"] == "OPEN_GITHUB"
     assert row["safe_next_action"]["state"] == "none"
     assert nxt["queue"] == []
-    from scripts.fleet.idle_settle import items_from_work_next_queue
+    from lu_machinery.fleet.idle_settle import items_from_work_next_queue
 
     assert items_from_work_next_queue([row])[0].is_fillable() is False
 
@@ -1640,7 +1639,7 @@ def test_work_next_counts_in_stream_unknown_source(monkeypatch):
 def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
     import time
 
-    from scripts.api.state_helpers import cache_get_with_age, cache_set
+    from lu_machinery.api.state_helpers import cache_get_with_age, cache_set
 
     key = work_router.projection_cache_key({})
     stored = {
@@ -1740,7 +1739,7 @@ def test_ledger_contents_never_reach_projection_or_next(monkeypatch):
     assert "observation_receipts" not in blob
     assert "/repo/" not in blob
 
-    from scripts.api.state_helpers import cache_set
+    from lu_machinery.api.state_helpers import cache_set
 
     cache_set(work_router.projection_cache_key({}), payload)
     _patch_known_streams(monkeypatch)
@@ -1766,12 +1765,12 @@ def test_merge_qualification_adds_no_network_and_keeps_timeouts(monkeypatch):
     def boom(*_args, **_kwargs):
         raise AssertionError("refresh opened a network or observer seam")
 
-    from scripts.orchestration.task_closeout import GhGitHubAdapter
+    from lu_machinery.orchestration.task_closeout import GhGitHubAdapter
 
     monkeypatch.setattr(socket, "create_connection", boom)
-    monkeypatch.setattr("scripts.orchestration.task_lifecycle.observe_local_git", boom)
-    monkeypatch.setattr("scripts.orchestration.task_lifecycle.reconcile", boom)
-    monkeypatch.setattr("scripts.orchestration.task_lifecycle.write_lifecycle", boom)
+    monkeypatch.setattr("lu_machinery.orchestration.task_lifecycle.observe_local_git", boom)
+    monkeypatch.setattr("lu_machinery.orchestration.task_lifecycle.reconcile", boom)
+    monkeypatch.setattr("lu_machinery.orchestration.task_lifecycle.write_lifecycle", boom)
     monkeypatch.setattr(GhGitHubAdapter, "observe", boom)
     projection = build_projection(
         _empty_sections_9741(prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1)),

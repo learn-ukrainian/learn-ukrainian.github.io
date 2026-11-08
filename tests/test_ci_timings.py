@@ -19,8 +19,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
-
-from scripts.ci.ci_timings import (
+from lu_machinery.ci.ci_timings import (
     DEFAULT_REPO,
     analyze_timings,
     extract_pr_number,
@@ -125,7 +124,7 @@ def test_fetch_workflow_runs_passes_query_params(monkeypatch: pytest.MonkeyPatch
         captured_paths.append(path)
         return {"workflow_runs": [{"id": 1}]}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
 
     # 1. Event + branch + default status
     fetch_workflow_runs_from_api(
@@ -172,7 +171,7 @@ def test_fetch_workflow_runs_out_of_order_page_does_not_stop_pagination(
         assert "event" not in query
         return {"total_count": 101, "workflow_runs": pages[int(query["page"][0])]}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
     runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml", since_dt=cutoff, event="all")
 
     assert [run["id"] for run in runs] == list(range(1, 101))
@@ -194,7 +193,7 @@ def test_fetch_workflow_runs_stops_when_page_ends_before_since(monkeypatch: pyte
             ],
         }
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
     runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml", since_dt=cutoff, event="all")
     assert len(runs) == 50
     assert len(paths) == 1
@@ -207,7 +206,7 @@ def test_fetch_workflow_runs_stops_at_total_count_on_full_page(monkeypatch: pyte
         paths.append(path)
         return {"total_count": 100, "workflow_runs": [{"id": i} for i in range(100)]}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
     assert len(fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")) == 100
     assert len(paths) == 1
 
@@ -234,7 +233,7 @@ def test_cli_main_api_event_limit_matching_runs(
         # Unfiltered returns all runs (the top ones are non-push)
         return {"workflow_runs": runs}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
 
     exit_code = main(["--event", "push", "--limit", "2"])
     assert exit_code == 0
@@ -264,7 +263,7 @@ def test_fetch_run_jobs_pagination(monkeypatch: pytest.MonkeyPatch) -> None:
             }
         return {"total_count": 125, "jobs": []}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
 
     jobs = fetch_run_jobs_from_api(
         repo="learn-ukrainian/learn-ukrainian.github.io",
@@ -288,7 +287,7 @@ def test_fetch_run_jobs_pagination_max_pages_warning(
             "jobs": [{"id": i, "name": f"job-{i}", "status": "completed"} for i in range(100)],
         }
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_gh_api_get)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_gh_api_get)
 
     jobs = fetch_run_jobs_from_api(
         repo="learn-ukrainian/learn-ukrainian.github.io",
@@ -340,7 +339,7 @@ def test_empty_workflow_page_retries_then_fails(monkeypatch: pytest.MonkeyPatch)
         calls += 1
         return {"total_count": 80, "workflow_runs": []}
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", empty_page)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", empty_page)
     with pytest.raises(RuntimeError, match="stayed empty after 3 attempts despite total_count=80"):
         fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")
     assert calls == 3
@@ -356,7 +355,7 @@ def test_empty_workflow_page_recovers(monkeypatch: pytest.MonkeyPatch) -> None:
             {"total_count": 1, "workflow_runs": [{"id": 1, "created_at": "2026-09-28T00:00:00Z"}]},
         ]
     )
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", lambda *_a, **_kw: next(pages))
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", lambda *_a, **_kw: next(pages))
     runs = fetch_workflow_runs_from_api(DEFAULT_REPO, "ci.yml")
     assert [run["id"] for run in runs] == [1]
 
@@ -376,7 +375,7 @@ def test_cli_all_limit_fetches_each_event_separately(monkeypatch: pytest.MonkeyP
             ],
         }
 
-    monkeypatch.setattr("scripts.ci.ci_timings.gh_api_get", fake_api)
+    monkeypatch.setattr("lu_machinery.ci.ci_timings.gh_api_get", fake_api)
     assert main(["--event", "all", "--limit", "1", "--json"]) == 0
     run_paths = [path for path in paths if "/workflows/" in path]
     assert len(run_paths) == 3

@@ -5,9 +5,8 @@ import shlex
 from pathlib import Path
 
 import pytest
-
-from scripts.dispatcher.cli import build_parser as build_dispatch_parser
-from scripts.orchestration import orchestrator_control as oc
+from lu_machinery.dispatcher.cli import build_parser as build_dispatch_parser
+from lu_machinery.orchestration import orchestrator_control as oc
 
 
 def _option(command: list[str], name: str) -> str:

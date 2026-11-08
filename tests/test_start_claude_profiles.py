@@ -6,8 +6,8 @@ import shutil
 from pathlib import Path
 
 import pytest
+from lu_machinery.review.model_catalog import load_model_catalog
 
-from scripts.review.model_catalog import load_model_catalog
 from tests.launcher_sandbox import launcher_toolchain_path
 from tests.test_launcher_contract import REPO, _core_driver_exit_fixture, run_launcher
 

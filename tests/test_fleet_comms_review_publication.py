@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-
-from scripts.fleet_comms.review_publication import (
+from lu_machinery.fleet_comms.review_publication import (
     DEFAULT_GATE_KIND,
     DEFAULT_STATUS_CONTEXT,
     STATUS_ERROR,

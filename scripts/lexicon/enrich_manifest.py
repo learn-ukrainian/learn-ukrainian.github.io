@@ -74,6 +74,10 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.lexicon.atlas_wikipedia_intro import atlas_wikipedia_ok_as_intro
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
@@ -124,10 +128,7 @@ from scripts.lexicon.source_attribution import (
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
-from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import normalize_word, primary_synonym_sense_text
 
@@ -144,12 +145,12 @@ def _resolve_primary_checkout() -> Path | None:
     outside a git repo so callers fall back honestly.
     """
     try:
-        from scripts.guardrails.worktree_containment import (
+        from lu_machinery.guardrails.worktree_containment import (
             NotAGitRepositoryError,
             resolve_main_root,
         )
     except ImportError:  # scripts/ stripped from sys.path
-        from guardrails.worktree_containment import (  # type: ignore[no-redef]
+        from lu_machinery.guardrails.worktree_containment import (  # type: ignore[no-redef]
             NotAGitRepositoryError,
             resolve_main_root,
         )

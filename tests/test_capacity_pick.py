@@ -1,4 +1,4 @@
-"""Unit tests for scripts.fleet.capacity_pick pure formatting (no live CodexBar)."""
+"""Unit tests for lu_machinery.fleet.capacity_pick pure formatting (no live CodexBar)."""
 
 from __future__ import annotations
 
@@ -7,9 +7,8 @@ import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.fleet import capacity_pick, credit_lane
-from scripts.fleet.reset_reserve import codex_reset_reserve_eligible
+from lu_machinery.fleet import capacity_pick, credit_lane
+from lu_machinery.fleet.reset_reserve import codex_reset_reserve_eligible
 
 
 def _fixture_budget() -> dict:
@@ -239,7 +238,7 @@ def test_reset_reserve_never_lifts_the_owner_avoid():
 
 
 def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp_path):
-    from scripts.fleet import reset_reserve
+    from lu_machinery.fleet import reset_reserve
 
     now = datetime.now(UTC)
     budget = _fixture_budget()
@@ -331,7 +330,7 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
         "diagnostics": {"stale": False},
         "recommendation": {"primary_agent_for_code": None, "warnings": []},
     }
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: only_codex)
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
@@ -363,7 +362,7 @@ def test_main_strict_no_cool(monkeypatch, capsys):
         "recommendation": {"primary_agent_for_code": None, "rationale": "", "warnings": []},
         "diagnostics": {},
     }
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: hot_only)
     assert capacity_pick.main(["--strict"]) == 2
@@ -686,7 +685,7 @@ def _credit_codex(**overrides) -> dict:
 
 
 def _credit_rows(codex: dict) -> list[dict]:
-    from scripts.fleet.reset_reserve import unavailable_reserve
+    from lu_machinery.fleet.reset_reserve import unavailable_reserve
 
     budget = {
         "agents": {
@@ -795,7 +794,7 @@ def test_stale_unknown_never_ranks_ahead_of_verified_capacity():
 
 
 def test_strict_fails_when_the_only_capacity_is_stale_advisory(monkeypatch, capsys):
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     budget = {
         "agents": {
@@ -823,8 +822,8 @@ def test_strict_fails_when_the_only_capacity_is_stale_advisory(monkeypatch, caps
 
 @pytest.mark.parametrize("refused", [False, True])
 def test_admission_status_does_not_write_shadow_journal(tmp_path, monkeypatch, refused):
-    from scripts.orchestration import admission_shadow as shadow
-    from scripts.orchestration import dispatch_admission as adm
+    from lu_machinery.orchestration import admission_shadow as shadow
+    from lu_machinery.orchestration import dispatch_admission as adm
 
     journal = tmp_path / "journal"
     monkeypatch.setenv(shadow.DIRECTORY_ENV, str(journal))

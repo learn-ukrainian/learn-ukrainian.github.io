@@ -14,8 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.ai_agent_bridge import _channels, _channels_cli
+from lu_machinery.ai_agent_bridge import _channels, _channels_cli
 
 
 @pytest.fixture
@@ -40,7 +39,7 @@ def discuss_plane(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
             "synthesis": "done",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_discussion)
     return tmp_path / "fleet"
 
 
@@ -135,7 +134,7 @@ def test_failed_discussion_can_retry_same_channel_with_new_idempotency_key(
             "synthesis": "partial" if attempts == 1 else "done",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fail_once)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fail_once)
 
     assert (
         _channels_cli._handle_discuss(

@@ -23,11 +23,12 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.atlas.teacher_vesum_attest import content_tokens
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.grow_lexicon_from_content import _vesum_pos
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.sync.promote_module import _write_atomically
 
 PRACTICE_SCHEMA = "curated-v5-practice-seed-v1"

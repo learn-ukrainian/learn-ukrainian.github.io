@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.review_lineage import LineageRefused, ReviewRun, check_lineage, superseded_runs
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.review_lineage import LineageRefused, ReviewRun, check_lineage, superseded_runs
 
 EARLY = "1" * 40
 APPROVED = "2" * 40

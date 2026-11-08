@@ -12,8 +12,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.maintenance import claude_session_scratch as scratch
+from lu_machinery.maintenance import claude_session_scratch as scratch
 
 SESSION = "12345678-1234-1234-1234-123456789abc"
 REPLACEMENT = "87654321-4321-4321-4321-cba987654321"
@@ -530,7 +529,7 @@ def test_cli_counts_only_and_error_exit(registry, tmp_path: Path, monkeypatch, c
     assert scratch.main(["--temp-root", str(tmp_path)]) == 1
     assert scratch.sweep_sessions(tmp_path / "missing", probe=lambda: DEAD)["summary"]["errors"] == 0
     help_result = subprocess.run(
-        [sys.executable, "-m", "scripts.maintenance.claude_session_scratch", "--help"],
+        [sys.executable, "-m", "lu_machinery.maintenance.claude_session_scratch", "--help"],
         capture_output=True,
         text=True,
         check=True,

@@ -17,10 +17,9 @@ from typing import Any, Protocol, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.ops.product_entry import load_configured_module
 from pydantic import BaseModel
-
-from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from scripts.ops.product_entry import load_configured_module
 
 
 class _MonitorJobs(Protocol):

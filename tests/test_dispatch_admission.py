@@ -12,9 +12,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import dispatch_admission as adm
-from scripts.orchestration import worktree_prep
+from lu_machinery.orchestration import dispatch_admission as adm
+from lu_machinery.orchestration import worktree_prep
 
 _GIB = 1024**3
 _LIMITS = adm.Thresholds(max_live_write_workers=2, min_mem_available_gib=3.5, max_load_per_cpu=1.5)
@@ -244,7 +243,7 @@ def test_probe_host_marks_invalid_cpu_steal_unknown(tmp_path, stat_text):
 
 
 def test_thresholds_default_to_config_and_honour_env_overrides():
-    from scripts import config
+    from lu_machinery import config
 
     defaults = adm.load_thresholds({})
     assert defaults == adm.Thresholds(
@@ -555,7 +554,7 @@ def test_invalid_env_file_value_is_refused(tmp_path):
 @pytest.fixture
 def slot_pool(tmp_path, monkeypatch):
     """A private one-slot pool; an outer governed run's holder marker must not leak in."""
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
     monkeypatch.setenv(test_slots.DIR_ENV, str(tmp_path / "test-slots"))
@@ -602,7 +601,7 @@ def test_the_real_test_slot_queue_is_counted(tmp_path, probe, slot_pool):
         env["PYTHONPATH"] = str(repo)
         with log.open("w", encoding="utf-8") as stderr:
             waiter = subprocess.Popen(
-                [sys.executable, "-m", "scripts.common.test_slots", "run", "--", sys.executable, "-c", "pass"],
+                [sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--", sys.executable, "-c", "pass"],
                 cwd=repo,
                 env=env,
                 stderr=stderr,
@@ -635,7 +634,7 @@ def test_a_disabled_or_unreadable_pool_skips_the_queue_check_and_says_why(tmp_pa
 
 
 def test_test_slot_queue_threshold_defaults_to_config_and_rejects_invalid_values():
-    from scripts import config
+    from lu_machinery import config
 
     assert adm.load_thresholds({}).max_test_slot_queue == config.DISPATCH_MAX_TEST_SLOT_QUEUE == 4
     assert adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "2"}).max_test_slot_queue == 2

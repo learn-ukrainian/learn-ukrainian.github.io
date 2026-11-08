@@ -7,9 +7,8 @@ from types import SimpleNamespace
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api import state_router
-from scripts.fleet import capacity_pick
+from lu_machinery.api import state_router
+from lu_machinery.fleet import capacity_pick
 
 
 @pytest.fixture
@@ -108,7 +107,7 @@ def test_acp_capacity_cli_selects_transport(monkeypatch, budget, capsys):
     monkeypatch.setattr(
         state_router, "probe_acp_health", lambda _cwd: {lane: _health(False) for lane in budget["agents"]}
     )
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     monkeypatch.setattr(
         usage,

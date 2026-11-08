@@ -6,10 +6,9 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import lu_machinery.api.delegate_router as delegate_router
 from fastapi.testclient import TestClient
-
-import scripts.api.delegate_router as delegate_router
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -22,7 +21,7 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
     monkeypatch.setattr(app.state, "ctx", ctx)
     # Patch the canonical factory (used by shared resolve_context) and the
     # router re-export kept for monkeypatch compatibility after #7496.
-    import scripts.api.monitor_context as monitor_context
+    import lu_machinery.api.monitor_context as monitor_context
 
     monkeypatch.setattr(monitor_context, "production_context", lambda: ctx)
     monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)

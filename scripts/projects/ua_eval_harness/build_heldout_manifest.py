@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import physical_lines
+from lu_machinery.common.jsonl import physical_lines
 
 DEFAULT_CONFIG = ROOT / "data/projects/ua_eval_harness/heldout_manifest_config.json"
 DEFAULT_OUTPUT = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"

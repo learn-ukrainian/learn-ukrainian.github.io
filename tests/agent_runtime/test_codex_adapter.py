@@ -4,14 +4,14 @@ from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.codex import CodexAdapter
 from tests.helpers.codex_exec_stream import completed_stream, failed_stream, jsonl, thread_started, turn_started
 
 
 def test_codex_build_invocation_sends_prompt_via_stdin(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
     adapter = CodexAdapter()
 
     plan = adapter.build_invocation(
@@ -31,7 +31,7 @@ def test_codex_build_invocation_sends_prompt_via_stdin(tmp_path: Path, monkeypat
 
 
 def test_codex_build_invocation_honors_scoped_home(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
     adapter = CodexAdapter()
     scoped_home = tmp_path / "codex-home"
 
@@ -72,7 +72,7 @@ def test_codex_rejects_unapproved_model_before_invocation_preparation(tmp_path, 
     def unexpected_preparation(*_args, **_kwargs):
         pytest.fail("unapproved model reached invocation preparation")
 
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.validate_read_only_tmp_root", unexpected_preparation)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.codex.validate_read_only_tmp_root", unexpected_preparation)
     with pytest.raises(ValueError, match=r"model=.*rejected"):
         adapter.build_invocation(
             prompt="test", mode="read-only", cwd=tmp_path, model=model, task_id=None, session_id=None, tool_config=None
@@ -82,7 +82,7 @@ def test_codex_rejects_unapproved_model_before_invocation_preparation(tmp_path, 
 @pytest.mark.parametrize("model,expected_model", [(None, "gpt-6.1-sol"), ("gpt-6-luna", "gpt-6-luna")])
 @pytest.mark.parametrize("effort,expected", [(None, "high"), ("xhigh", "xhigh")])
 def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, expected_model, effort, expected):
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
     plan = CodexAdapter().build_invocation(
         prompt="test",
         mode="read-only",

@@ -21,11 +21,11 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration import reaper_lifecycle, worktree_claims
+from lu_machinery.orchestration import worktree_git as wg
+from lu_machinery.orchestration.task_record_store import task_record_path
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import reaper_lifecycle, worktree_claims
-from scripts.orchestration import worktree_git as wg
-from scripts.orchestration.task_record_store import task_record_path
 from tests.worktree_prep_helpers import exited_process_identity
 
 _REAL_RUN = subprocess.run
@@ -182,7 +182,7 @@ def _fleet_layout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path
 
 def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
-    from scripts.orchestration import fleet_repos
+    from lu_machinery.orchestration import fleet_repos
 
     bad = tmp_path / "malformed_fleet_repos.yaml"
     bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
@@ -666,7 +666,7 @@ def test_parse_rest_pr_item_maps_merged_at_to_merged() -> None:
 
 @pytest.mark.parametrize("claim_state", ["live", "dead", "unknown"])
 def test_write_claim_pid_replacement_ignores_stale_task_identity(tmp_path, monkeypatch, claim_state):
-    from scripts.orchestration import dead_worker_state
+    from lu_machinery.orchestration import dead_worker_state
 
     repo = init_repo(tmp_path)
     task_id = "replacement-claim"

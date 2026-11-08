@@ -18,10 +18,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.orchestration import fleet_repos
-from scripts.orchestration.fleet_repos import FleetRepo
-from scripts.review import record_cf_verdict as recorder
-from scripts.review import target_resolution
+from lu_machinery.orchestration import fleet_repos
+from lu_machinery.orchestration.fleet_repos import FleetRepo
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review import target_resolution
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
@@ -265,7 +266,7 @@ def record_verdict(
     comments = [] if comments is None else comments
 
     def fake_json(args, *, input_text=None):
-        from scripts.publish.github import Request
+        from lu_machinery.publish.github import Request
 
         if isinstance(args, Request):
             if args.verb == "issue-comment-json":
@@ -907,7 +908,7 @@ def test_closeout_unknown_history_preview_preserves_default_refusal(repo, tasks,
     historical = repo.commit(None, message="historical conflict resolution")
     repo.commit(SOL, message="validated current author")
     state = tmp_path / "resolution.json"
-    from scripts.review.closeout_cli import main
+    from lu_machinery.review.closeout_cli import main
 
     assert (
         main(
@@ -1005,7 +1006,7 @@ def serve_github_commits(monkeypatch, commits: dict[str, dict] | None) -> list[s
 
     Returns the SHAs read, in order.
     """
-    from scripts.publish.github import Request
+    from lu_machinery.publish.github import Request
 
     requested: list[str] = []
     original = recorder._run_json

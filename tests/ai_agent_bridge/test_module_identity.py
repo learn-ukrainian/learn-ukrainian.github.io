@@ -61,6 +61,6 @@ def test_no_noncanonical_bridge_imports_in_test_suite() -> None:
                 line = text.count("\n", 0, match.start()) + 1
                 violations.append(f"{path.relative_to(_REPO_ROOT)}:{line}: {kind}: {match.group()!r}")
     assert not violations, (
-        "Non-canonical `ai_agent_bridge` module identity found; use `scripts.ai_agent_bridge` "
+        "Non-canonical `ai_agent_bridge` module identity found; use `lu_machinery.ai_agent_bridge` "
         "everywhere (#6812):\n" + "\n".join(violations)
     )

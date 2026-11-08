@@ -18,7 +18,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.api.resilience import connect_sqlite
+from lu_machinery.api.resilience import connect_sqlite
+
 from scripts.audit import llm_qg_store, qg_workflow
 
 E0_SENTINEL_MODEL_ID = "llm-reviewer-disabled-until-4370"

@@ -1,8 +1,7 @@
 """Regression checks for the census's path labels and commit counting."""
 
 import pytest
-
-from scripts.evidence import agent_pitfall_census as census
+from lu_machinery.evidence import agent_pitfall_census as census
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

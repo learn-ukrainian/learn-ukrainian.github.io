@@ -8,9 +8,9 @@ from datetime import UTC, datetime
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.session_streams.inventory import stream_anchor_id
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
-from scripts.orchestration import thread_handoff as th
 from tests.orchestration.test_codex_driver_rollover_recovery import _launcher_detection
 from tests.orchestration.test_thread_handoff import sample_snapshot
 from tests.test_rollover_bundles import _export_args, _import_args

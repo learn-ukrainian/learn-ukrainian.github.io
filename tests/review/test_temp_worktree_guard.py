@@ -7,9 +7,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
-from scripts.review import isolation
+from lu_machinery.common.git_context import GIT_REDIRECT_ENV_KEYS
+from lu_machinery.review import isolation
 
 
 def _git(repo: Path, *args: str) -> str:

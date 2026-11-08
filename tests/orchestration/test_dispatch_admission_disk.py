@@ -13,8 +13,7 @@ import logging
 from collections import namedtuple
 
 import pytest
-
-from scripts.orchestration import dispatch_admission as adm
+from lu_machinery.orchestration import dispatch_admission as adm
 
 _GIB = 1024**3
 _LIMITS = adm.Thresholds(max_live_write_workers=2, min_mem_available_gib=3.5, max_load_per_cpu=1.5)
@@ -267,7 +266,7 @@ def test_publish_runs_the_fleet_comms_channel_publish_command(monkeypatch, tmp_p
     assert seen["kwargs"]["cwd"] == tmp_path
     assert seen["command"][1:] == [
         "-m",
-        "scripts.fleet_comms",
+        "lu_machinery.fleet_comms",
         "channel",
         "publish",
         "epics",

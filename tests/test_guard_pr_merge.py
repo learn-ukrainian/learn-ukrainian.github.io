@@ -45,7 +45,7 @@ _GH_246_CHECKS_JSON_GAP = (
 @pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch):
     """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
-    from scripts.ci import advisory_checks
+    from lu_machinery.ci import advisory_checks
 
     monkeypatch.setattr(
         advisory_checks,
@@ -65,7 +65,7 @@ guard = _load_hook()
 
 _ISSUE_9461_MERGES = [
     "gh pr merge 5",
-    "python -m scripts.publish pr-merge --number 5 --match-head " + "a" * 40,
+    "python -m lu_machinery.publish pr-merge --number 5 --match-head " + "a" * 40,
 ]
 _ISSUE_9461_SUFFIXES = [
     "",
@@ -77,7 +77,7 @@ _ISSUE_9461_SUFFIXES = [
 ]
 
 
-@pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
+@pytest.mark.parametrize("dependency", ["lu_machinery.publish.merge_guard", "shell_shlex"])
 @pytest.mark.parametrize(
     "command,expected",
     [
@@ -412,7 +412,7 @@ def test_issue_9461_literal_redirect_target_is_not_dynamic(monkeypatch, command,
         "printf 5 | xargs gh pr merge",
         "gh pr merge -F -",
         "gh pr merge $(cat f)",
-        "python -m scripts.publish pr-merge --number $(cat f)",
+        "python -m lu_machinery.publish pr-merge --number $(cat f)",
     ],
 )
 def test_issue_9461_redirect_cannot_launder_unreadable_target(monkeypatch, command, suffix):
@@ -470,11 +470,11 @@ def test_issue_9461_no_merge_text_redirects_do_not_create_merges(monkeypatch, co
         "gh pr merge $(cat f) 2>&1",
         "gh pr merge 5 > $(cmd)",
         "gh pr merge 5 <<< $(cmd)",
-        "python -m scripts.publish pr-merge --number 5 <(cmd)",
-        "python -m scripts.publish pr-merge --number <(echo 5)",
-        "python -m scripts.publish pr-merge --number $(cat f) 2>&1",
-        "python -m scripts.publish pr-merge --number 5 > $(cmd)",
-        "python -m scripts.publish pr-merge --number 5 <<< $(cmd)",
+        "python -m lu_machinery.publish pr-merge --number 5 <(cmd)",
+        "python -m lu_machinery.publish pr-merge --number <(echo 5)",
+        "python -m lu_machinery.publish pr-merge --number $(cat f) 2>&1",
+        "python -m lu_machinery.publish pr-merge --number 5 > $(cmd)",
+        "python -m lu_machinery.publish pr-merge --number 5 <<< $(cmd)",
         # The raw command mentions merge: round 1's conservative refusal applies
         # to the whole command, including the preceding non-merge substitution.
         "diff <(a) <(b); gh pr merge 5",
@@ -2150,7 +2150,7 @@ def test_issue_9480_target_argv_matches_bash(monkeypatch, tmp_path, command, exp
         "eval -- 'gh pr merge 5'",
         "eval '{gh,} pr merge 5'",
         'A=ghx; eval "${A%x} pr merge 5"',
-        'P=scripts.publish; eval "python -m $P pr-merge --number 5"',
+        'P=lu_machinery.publish; eval "python -m $P pr-merge --number 5"',
     ],
 )
 def test_issue_9480_eval_merge_is_refused(monkeypatch, capsys, command, suffix):

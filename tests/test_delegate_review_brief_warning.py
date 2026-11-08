@@ -14,7 +14,7 @@ def _section(relative: str, start: str, end: str) -> str:
 
 
 def _shared_review_texts() -> dict[str, str]:
-    from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
+    from lu_machinery.ai_agent_bridge import _dispatch_wrappers as wrappers
 
     references = "agents_extensions/shared/skills/drive-epic/references"
     return {

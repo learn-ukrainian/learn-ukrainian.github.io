@@ -13,15 +13,15 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _channels, _db
+from lu_machinery.ai_agent_bridge import _channels, _db
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     """Ensure every test runs against a clean, isolated SQLite database."""
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), \
+         patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -260,7 +260,7 @@ def test_mark_delivery_dispatched_sets_timestamp():
 
 def test_post_to_slots_with_shared_live_holder_delivers_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Live slots sharing a holder create one delivery row in that holder's inbox."""
-    from scripts.orchestration import slot_routing
+    from lu_machinery.orchestration import slot_routing
 
     session_db_path = tmp_path / "session-streams.sqlite3"
     conn = sqlite3.connect(session_db_path)
@@ -342,7 +342,7 @@ def test_post_skips_self_fanout_when_sender_and_recipient_slots_share_holder(
     monkeypatch: pytest.MonkeyPatch,
 ):
     """Sender and recipient slots sharing a holder create no self-delivery."""
-    from scripts.orchestration import slot_routing
+    from lu_machinery.orchestration import slot_routing
 
     def resolve_shared_holder(slot: str) -> slot_routing.SlotHolderResult:
         return slot_routing.SlotHolderResult(
@@ -1109,7 +1109,7 @@ def test_add_column_racesafe_swallows_duplicate_and_reraises_others(tmp_path):
     must re-raise. (review-4897 F1 — concurrent migration race.)"""
     import sqlite3
 
-    from scripts.ai_agent_bridge._db import _add_column_racesafe
+    from lu_machinery.ai_agent_bridge._db import _add_column_racesafe
 
     conn = sqlite3.connect(str(tmp_path / "race.db"))
     conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY)")

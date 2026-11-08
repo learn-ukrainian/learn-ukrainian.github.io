@@ -6,9 +6,9 @@ import os
 import subprocess
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import terminal_abandon as writer
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import terminal_abandon as writer
 from tests.fleet.test_terminal_abandon import _recorded, invoke
 from tests.fleet.test_terminal_abandon import succession as succession
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture

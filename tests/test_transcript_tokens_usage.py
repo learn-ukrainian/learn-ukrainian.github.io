@@ -13,8 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.api.telemetry.transcript_tokens import (
+from lu_machinery.api.telemetry.transcript_tokens import (
     parse_transcript_tokens,
     usage_input_tokens,
 )

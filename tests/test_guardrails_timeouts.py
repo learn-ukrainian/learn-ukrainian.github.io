@@ -19,10 +19,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.guardrails import assert_primary_on_main as apom
-from scripts.guardrails import primary_write_guard as pwg
-from scripts.guardrails import worktree_containment as wc
+from lu_machinery.guardrails import assert_primary_on_main as apom
+from lu_machinery.guardrails import primary_write_guard as pwg
+from lu_machinery.guardrails import worktree_containment as wc
 
 GIT_TIMEOUT_S = 30
 HOOK_INSTALL_TIMEOUT_S = 60

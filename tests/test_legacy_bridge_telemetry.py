@@ -13,12 +13,11 @@ from types import SimpleNamespace
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.ai_agent_bridge import _acp_compat
-from scripts.api import telemetry_router
-from scripts.api.monitor_context import fixture_context
-from scripts.api.telemetry import legacy_comms
-from scripts.telemetry import legacy_bridge
+from lu_machinery.ai_agent_bridge import _acp_compat
+from lu_machinery.api import telemetry_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.telemetry import legacy_comms
+from lu_machinery.telemetry import legacy_bridge
 
 
 @pytest.fixture()
@@ -385,7 +384,7 @@ def test_normalize_target_maps_adapter_identities(raw: str, expected: str) -> No
 
 def test_compat_and_acpx_shadow_identities_are_allowlisted() -> None:
     """Sibling sweep: every live ACP route must map onto a telemetry seat (#6852)."""
-    from scripts.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     for command, participant in _acp_compat._TARGETS.items():
         assert legacy_bridge.normalize_target(command) == (

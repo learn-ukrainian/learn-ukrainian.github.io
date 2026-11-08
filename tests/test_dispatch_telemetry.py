@@ -11,10 +11,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.result import ParseResult
-from agent_runtime.runner import invoke
-from agent_runtime.telemetry import (
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.runner import invoke
+from lu_machinery.agent_runtime.telemetry import (
     _reset_version_cache_for_tests,
     resolve_dispatch_start_telemetry,
     resolve_invocation_telemetry,
@@ -42,16 +42,16 @@ def test_resolve_dispatch_start_telemetry_codex_model_from_registry_effort_from_
         'model = "gpt-5.6-sol"\nmodel_reasoning_effort = "high"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr("agent_runtime.telemetry.Path.home", lambda: home)
+    monkeypatch.setattr("lu_machinery.agent_runtime.telemetry.Path.home", lambda: home)
 
-    with patch("agent_runtime.telemetry.codex_cli_version", return_value="0.123.0"):
+    with patch("lu_machinery.agent_runtime.telemetry.codex_cli_version", return_value="0.123.0"):
         telemetry = resolve_dispatch_start_telemetry(
             agent_name="codex",
             requested_model=None,
             requested_effort=None,
         )
 
-    from agent_runtime.registry import AGENTS
+    from lu_machinery.agent_runtime.registry import AGENTS
 
     assert telemetry.model == AGENTS["codex"]["default_model"]  # what -m actually sends
     assert telemetry.model != "gpt-5.6-sol"  # never the config.toml value
@@ -63,9 +63,9 @@ def test_resolve_dispatch_start_telemetry_codex_explicit_model_wins(tmp_path, mo
     home = tmp_path / "home"
     (home / ".codex").mkdir(parents=True)
     (home / ".codex" / "config.toml").write_text('model = "gpt-5.6-sol"\n', encoding="utf-8")
-    monkeypatch.setattr("agent_runtime.telemetry.Path.home", lambda: home)
+    monkeypatch.setattr("lu_machinery.agent_runtime.telemetry.Path.home", lambda: home)
 
-    with patch("agent_runtime.telemetry.codex_cli_version", return_value="0.123.0"):
+    with patch("lu_machinery.agent_runtime.telemetry.codex_cli_version", return_value="0.123.0"):
         telemetry = resolve_dispatch_start_telemetry(
             agent_name="codex",
             requested_model="gpt-5.6-luna",
@@ -90,7 +90,7 @@ def test_resolve_invocation_telemetry_reads_claude_plan_flags():
         cwd=Path("."),
     )
 
-    with patch("agent_runtime.telemetry._probe_version", return_value="2.1.89"):
+    with patch("lu_machinery.agent_runtime.telemetry._probe_version", return_value="2.1.89"):
         telemetry = resolve_invocation_telemetry(
             agent_name="claude",
             plan=plan,
@@ -114,7 +114,7 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
             cmd=["opencode", "run", "--model", route, "--variant", "high"],
             cwd=tmp_path,
         )
-        with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
+        with patch("lu_machinery.agent_runtime.telemetry._probe_version", return_value="1.18.0"):
             telemetry = resolve_invocation_telemetry(
                 agent_name="deepseek",
                 plan=plan,
@@ -138,12 +138,12 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
             "opencode": "1.18.0",
         }.get(Path(prefix[0]).name)
 
-    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    caplog.set_level(logging.WARNING, logger="lu_machinery.agent_runtime.telemetry")
     monkeypatch.setattr(
-        "agent_runtime.adapters.cursor.resolve_cursor_agent_binary",
+        "lu_machinery.agent_runtime.adapters.cursor.resolve_cursor_agent_binary",
         lambda: "/usr/local/bin/cursor-agent",
     )
-    with patch("agent_runtime.telemetry._probe_version", side_effect=probe):
+    with patch("lu_machinery.agent_runtime.telemetry._probe_version", side_effect=probe):
         agy = resolve_dispatch_start_telemetry(
             agent_name="agy",
             requested_model=None,
@@ -170,8 +170,8 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
 
 def test_unexpected_version_probe_failure_still_warns(caplog):
     """Only a genuine resolution failure may produce an unknown warning."""
-    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
-    with patch("agent_runtime.telemetry._probe_version", return_value=None):
+    caplog.set_level(logging.WARNING, logger="lu_machinery.agent_runtime.telemetry")
+    with patch("lu_machinery.agent_runtime.telemetry._probe_version", return_value=None):
         telemetry = resolve_dispatch_start_telemetry(
             agent_name="agy",
             requested_model=None,
@@ -186,7 +186,7 @@ def test_unexpected_version_probe_failure_still_warns(caplog):
 
 
 def test_runner_invoke_preserves_observed_terminal_returncode_and_telemetry(tmp_path):
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     spy_adapter = MagicMock()
     spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
@@ -220,23 +220,23 @@ def test_runner_invoke_preserves_observed_terminal_returncode_and_telemetry(tmp_
     fake_proc.__exit__.return_value = False
 
     with (
-        patch("agent_runtime.runner._load_adapter", return_value=spy_adapter),
+        patch("lu_machinery.agent_runtime.runner._load_adapter", return_value=spy_adapter),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
-        patch("agent_runtime.runner.write_record"),
+        patch("lu_machinery.agent_runtime.runner.write_record"),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             return_value=fake_proc,
         ),
         patch(
-            "agent_runtime.runner.start_watchdog",
+            "lu_machinery.agent_runtime.runner.start_watchdog",
             return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
         ),
-        patch("agent_runtime.runner.stop_watchdog"),
+        patch("lu_machinery.agent_runtime.runner.stop_watchdog"),
         patch(
-            "agent_runtime.runner.resolve_invocation_telemetry",
+            "lu_machinery.agent_runtime.runner.resolve_invocation_telemetry",
             return_value=runner_mod.InvocationTelemetry(
                 model="gpt-5.5",
                 effort="high",
@@ -271,7 +271,7 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
     tmp_path,
     monkeypatch,
 ):
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     monkeypatch.setenv("LU_RUN_ID", "run-123")
     monkeypatch.setenv("LU_SESSION_ID", "session-456")
@@ -311,23 +311,23 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
         return fake_proc
 
     with (
-        patch("agent_runtime.runner._load_adapter", return_value=spy_adapter),
+        patch("lu_machinery.agent_runtime.runner._load_adapter", return_value=spy_adapter),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
-        patch("agent_runtime.runner.write_record", side_effect=captured_records.append),
+        patch("lu_machinery.agent_runtime.runner.write_record", side_effect=captured_records.append),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             side_effect=fake_popen,
         ),
         patch(
-            "agent_runtime.runner.start_watchdog",
+            "lu_machinery.agent_runtime.runner.start_watchdog",
             return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
         ),
-        patch("agent_runtime.runner.stop_watchdog"),
+        patch("lu_machinery.agent_runtime.runner.stop_watchdog"),
         patch(
-            "agent_runtime.runner.resolve_invocation_telemetry",
+            "lu_machinery.agent_runtime.runner.resolve_invocation_telemetry",
             return_value=runner_mod.InvocationTelemetry(
                 model="gpt-5.5",
                 effort="high",
@@ -345,7 +345,7 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
         )
 
     assert result.ok is True
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     prompt = spy_adapter.build_invocation.call_args.kwargs["prompt"]
     assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nhi"
@@ -404,7 +404,7 @@ def test_acp_gemma_shadow_reads_stamped_plan_metadata(tmp_path, caplog):
             "provider_cli_version": "1.2.3",
         },
     )
-    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    caplog.set_level(logging.WARNING, logger="lu_machinery.agent_runtime.telemetry")
     telemetry = resolve_invocation_telemetry(
         agent_name="acpx-gemma-shadow",
         plan=plan,
@@ -419,12 +419,12 @@ def test_acp_gemma_shadow_reads_stamped_plan_metadata(tmp_path, caplog):
 
 def test_acp_shadow_adapters_resolve_effort_and_cli_version_from_identity(tmp_path, caplog):
     """Sibling sweep: every ACP shadow seat maps identity, never warns unknown."""
-    from scripts.agent_runtime.adapters.acpx import (
+    from lu_machinery.agent_runtime.adapters.acpx import (
         ACPX_PARTICIPANT_EFFORTS,
         ACPX_SUPPORTED_PARTICIPANTS,
     )
 
-    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    caplog.set_level(logging.WARNING, logger="lu_machinery.agent_runtime.telemetry")
     for seat, spec in ACPX_SUPPORTED_PARTICIPANTS.items():
         adapter = str(spec["seat"])
         stamped_effort = ACPX_PARTICIPANT_EFFORTS.get(seat)
@@ -464,7 +464,7 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
         metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
     )
 
-    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+    with patch("lu_machinery.agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
         at_dispatch = resolve_dispatch_start_telemetry(
             agent_name="kimi",
             requested_model="k3",
@@ -502,7 +502,7 @@ def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_p
         metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
     )
 
-    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+    with patch("lu_machinery.agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
         at_dispatch = resolve_dispatch_start_telemetry(
             agent_name="kimi",
             requested_model=None,
@@ -532,7 +532,7 @@ def test_kimicc_telemetry_prefers_explicit_effort_and_does_not_default_k2_7(tmp_
         metadata={"harness": "kimicc", "kimicc_alias": "k2.7", "claude_bin": "claude"},
     )
 
-    with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
+    with patch("lu_machinery.agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
         at_dispatch = resolve_dispatch_start_telemetry(
             agent_name="kimi",
             requested_model="k3",

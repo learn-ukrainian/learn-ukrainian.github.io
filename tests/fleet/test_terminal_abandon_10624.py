@@ -5,10 +5,10 @@ import json
 import tarfile
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import terminal_abandon
+from lu_machinery.orchestration import worktree_git as rw
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import terminal_abandon
-from scripts.orchestration import worktree_git as rw
 from tests.fleet.test_terminal_abandon import _recorded, _refused_removal, invoke
 from tests.fleet.test_terminal_abandon import succession as succession
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture

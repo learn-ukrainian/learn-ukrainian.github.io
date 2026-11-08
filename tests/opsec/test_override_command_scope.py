@@ -21,9 +21,9 @@ import subprocess
 import sys
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.publish import github as pub
 
-from scripts.opsec import prepublish as gate
-from scripts.publish import github as pub
 from tests.opsec.test_git_push_scan import REAL_GIT, _env, _git, _remote_has, push_sandbox  # noqa: F401
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, recorded_approval
 

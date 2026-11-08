@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest import incremental_dmklinger_ingest as ingest
 from scripts.wiki import build_sources_db as builder
 

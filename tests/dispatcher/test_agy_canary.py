@@ -2,9 +2,9 @@
 
 from dataclasses import asdict
 
-from scripts.dispatcher.agy_canary import StoreReadResult, _attempt, _read_store
-from scripts.dispatcher.agy_sandbox import _probe_passed
-from scripts.storage import topology
+from lu_machinery.dispatcher.agy_canary import StoreReadResult, _attempt, _read_store
+from lu_machinery.dispatcher.agy_sandbox import _probe_passed
+from lu_machinery.storage import topology
 
 
 def test_store_read_refusal_never_echoes_input_path(tmp_path, monkeypatch):

@@ -22,12 +22,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _channels
-from scripts.ai_agent_bridge import _config as ab_config
-from scripts.ai_agent_bridge import _db as ab_db
-from scripts.api import comms_router
-from scripts.api.monitor_context import MonitorContext, fixture_context
-from scripts.api.state_helpers import cache_invalidate
+from lu_machinery.ai_agent_bridge import _channels
+from lu_machinery.ai_agent_bridge import _config as ab_config
+from lu_machinery.ai_agent_bridge import _db as ab_db
+from lu_machinery.api import comms_router
+from lu_machinery.api.monitor_context import MonitorContext, fixture_context
+from lu_machinery.api.state_helpers import cache_invalidate
 
 
 def _message_ctx(root: Path, message_db: Path) -> MonitorContext:

@@ -8,16 +8,15 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
-from scripts.agent_runtime.read_only_tmp import dispatch_lease
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
-from scripts.common.repo_root import project_interpreter
-from scripts.dispatcher import agy_sandbox, runtime_context
-from scripts.dispatcher.providers import PROVIDERS, load
-from scripts.dispatcher.runtime_context import read_roots
-from scripts.dispatcher.types import ParsedResult, TaskSpec
-from scripts.lib import rules_core
+from lu_machinery.agent_runtime.adapters.codex import _read_only_tmp_flags
+from lu_machinery.agent_runtime.read_only_tmp import dispatch_lease
+from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.dispatcher import agy_sandbox, runtime_context
+from lu_machinery.dispatcher.providers import PROVIDERS, load
+from lu_machinery.dispatcher.runtime_context import read_roots
+from lu_machinery.dispatcher.types import ParsedResult, TaskSpec
+from lu_machinery.lib import rules_core
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
@@ -25,7 +24,7 @@ from scripts.lib import rules_core
 @pytest.mark.parametrize("correction", (False, True))
 def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, provider, mode, correction):
     """Defect class: provider transports omit the trusted core in instruction-free checkouts."""
-    from scripts.dispatcher.environment import child_env
+    from lu_machinery.dispatcher.environment import child_env
 
     checkout = tmp_path / "empty checkout"
     checkout.mkdir()
@@ -133,8 +132,8 @@ sys.stdout.write(os.environ["STUB_STREAM"])
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 def test_private_repo_workers_can_load_shared_skills_and_task_records(tmp_path, monkeypatch, provider, mode):
     """Regression: retargeting Git must not strand workers without shared skills or task records."""
-    from scripts.dispatcher import agy_sandbox
-    from scripts.dispatcher.environment import child_env
+    from lu_machinery.dispatcher import agy_sandbox
+    from lu_machinery.dispatcher.environment import child_env
 
     primary, private = tmp_path / "control plane", tmp_path / "private checkout"
     private.mkdir()
@@ -752,8 +751,8 @@ def _agy_canary_streams(field, returncode):
 ])
 def test_agy_provider_text_never_reaches_the_task_record(tmp_path, field, returncode, schema):
     """Defect class: provider-controlled text copied into a record that is published (#12408)."""
-    from scripts.dispatcher import worker
-    from scripts.review.review_contract import load_schema
+    from lu_machinery.dispatcher import worker
+    from lu_machinery.review.review_contract import load_schema
 
     agy = load("agy")
     stdout, stderr = _agy_canary_streams(field, returncode)
@@ -864,7 +863,7 @@ def test_agy_sources_relay_forwards_only_read_only_tools_and_counts_matched_resu
     """C-3027: writers, unknown methods, batches and reused ids never reach the server; only matched results count."""
     import socket
 
-    from scripts.dispatcher.agy_sandbox import SourcesRelay
+    from lu_machinery.dispatcher.agy_sandbox import SourcesRelay
 
     server, seen = tmp_path / "server.py", tmp_path / "seen.jsonl"
     server.write_text(_RELAY_SERVER)
@@ -912,7 +911,7 @@ def test_agy_sources_relay_forwards_only_read_only_tools_and_counts_matched_resu
 
 def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
     """C-3027 F1/F4: removing scratch changes no permission outside it, whatever modes the sandbox left."""
-    from scripts.dispatcher.agy_sandbox import _remove
+    from lu_machinery.dispatcher.agy_sandbox import _remove
 
     outside = tmp_path / "outside"
     outside.mkdir()
@@ -944,7 +943,7 @@ def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
 
 def test_agy_database_mount_admits_only_the_dispatchers_own_link(tmp_path):
     """The primary is readable with no link; every worktree entry refuses."""
-    from scripts.dispatcher.agy_sandbox import Refused, _trusted_database
+    from lu_machinery.dispatcher.agy_sandbox import Refused, _trusted_database
 
     repository, worktree = tmp_path / "repo", tmp_path / "worktree"
     (repository / "data").mkdir(parents=True)
@@ -996,7 +995,7 @@ def _receipt(**changes):
 ])
 def test_agy_boundary_receipt_gates_the_run(tmp_path, receipt, record, refusal):
     """C-3027: only a verified receipt for this task, canary and unchanged head included, yields a run and a count."""
-    from scripts.dispatcher import agy_sandbox
+    from lu_machinery.dispatcher import agy_sandbox
 
     final = tmp_path / "agy-ro.result"
     if receipt is not None:
@@ -1041,7 +1040,7 @@ def _linked_worktree(tmp_path):
 
 
 def _bwrap_usable():
-    from scripts.dispatcher.agy_sandbox import unavailable
+    from lu_machinery.dispatcher.agy_sandbox import unavailable
 
     if unavailable():
         return False
@@ -1051,7 +1050,7 @@ def _bwrap_usable():
 
 
 def _launch(tmp_path, worktree, task_id, command, **popen):
-    from scripts.dispatcher import agy_sandbox
+    from lu_machinery.dispatcher import agy_sandbox
 
     argv = [sys.executable, "-I", "-c", agy_sandbox._BOOTSTRAP, str(agy_sandbox.ROOT), "--task-id", task_id,
             "--worktree", str(worktree), "--scratch", str(tmp_path / f"scratch-{task_id}"),
@@ -1065,7 +1064,7 @@ def _launch(tmp_path, worktree, task_id, command, **popen):
 
 def test_agy_read_only_launcher_refuses_without_bubblewrap_and_never_runs_agy(tmp_path, monkeypatch):
     """C-3027: no boundary means no run; the command never starts unsandboxed."""
-    from scripts.dispatcher import agy_sandbox
+    from lu_machinery.dispatcher import agy_sandbox
 
     worktree, _head = _linked_worktree(tmp_path)
     marker = tmp_path / "ran"
@@ -1151,7 +1150,7 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
     finally:
         if launcher.poll() is None:
             os.killpg(launcher.pid, signal.SIGKILL)
-        from scripts.dispatcher.agy_sandbox import _remove
+        from lu_machinery.dispatcher.agy_sandbox import _remove
 
         _remove(tmp_path / "scratch-killed")
 

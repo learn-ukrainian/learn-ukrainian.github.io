@@ -350,9 +350,9 @@ def test_acp_redirect_is_only_the_primary_checkout_itself() -> None:
     ``resolve_main_root`` maps that worktree to the primary, which used to
     redirect both branches.
     """
-    from scripts.ai_agent_bridge import _acp_execution
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.guardrails.worktree_containment import resolve_main_root
+    from lu_machinery.ai_agent_bridge import _acp_execution
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
     primary = main_checkout_root(worktree_guard._REPO_ROOT).resolve()
     dispatch = primary / ".worktrees" / "dispatch" / "cursor" / "acp-branch-8523"
@@ -400,8 +400,8 @@ raise SystemExit(pytest.main(
 
 def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:
     """Discuss/ask tests must not leave ``.worktrees/dispatch`` on the real checkout."""
-    from scripts.ai_agent_bridge import _acp_execution
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.ai_agent_bridge import _acp_execution
+    from lu_machinery.common.repo_root import main_checkout_root
 
     root = main_checkout_root(worktree_guard._REPO_ROOT).resolve()
     dispatch = root / ".worktrees" / "dispatch"

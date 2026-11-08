@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import agy_sandbox, git, store, worker
+from lu_machinery.dispatcher.types import TaskSpec
 
-from scripts.dispatcher import agy_sandbox, git, store, worker
-from scripts.dispatcher.types import TaskSpec
 from tests.dispatcher.conftest import await_file, prior_worktree, run_git
 
 
@@ -273,7 +273,7 @@ def linked_entry(sandbox, tree, *command):
                           capture_output=True, timeout=30)
 
 
-@pytest.mark.parametrize("entry", [("scripts/dispatch.py",), ("-m", "scripts.dispatcher.cli")])
+@pytest.mark.parametrize("entry", [("scripts/dispatch.py",), ("-m", "lu_machinery.dispatcher.cli")])
 def test_linked_worktree_entry_runs_the_primary_checkout_dispatcher(sandbox, entry):
     """Defect: a worktree on an older branch supervised its tasks with its own stale dispatcher (FR-43)."""
     tree = prior_worktree(sandbox, "older-branch")

@@ -7,16 +7,16 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.validate_trailspec import (
+from lu_machinery.orchestration.validate_trailspec import (
     DEFAULT_ESTATE_REGISTRY_PATH,
-    PROJECT_ROOT,
     TrailSpecValidationError,
     validate_estate_registry,
     validate_estate_registry_data,
     validate_trailspec,
     validate_trailspec_data,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RB1_TRAIL_PATH = PROJECT_ROOT / "scripts/config/trails/rb1-cold-start.trail.yaml"
 RB6_TRAIL_PATH = PROJECT_ROOT / "scripts/config/trails/rb6-estate-probes.trail.yaml"
@@ -222,7 +222,7 @@ def test_rb1_action_honesty_pin() -> None:
 
 def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
     """Mutation negative: refused list drifting from per-surface policy fails validation."""
-    from scripts.orchestration.validate_trailspec import (
+    from lu_machinery.orchestration.validate_trailspec import (
         TrailSpecValidationError,
     )
 
@@ -235,7 +235,7 @@ def test_negative_estate_refused_surfaces_drift_fails_validation() -> None:
 
 def test_negative_estate_surface_id_keyed_refusal_is_not_skipped() -> None:
     """Mutation negative: a surface_id-keyed group declaring refused is cross-checked too."""
-    from scripts.orchestration.validate_trailspec import (
+    from lu_machinery.orchestration.validate_trailspec import (
         TrailSpecValidationError,
     )
 

@@ -18,10 +18,10 @@ from types import SimpleNamespace
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.session_streams.inventory import stream_anchor_id
+from lu_machinery.session_streams.store import ContentRejectedError, validate_entry_body
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
-from agents_extensions.shared.session_streams.store import ContentRejectedError, validate_entry_body
-from scripts.orchestration import thread_handoff as th
 from tests.launcher_sandbox import launcher_environment
 
 HANDOFF_PATH = ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md"
@@ -185,9 +185,9 @@ def _with_registry(root: Path) -> None:
 
 
 def _store(tmp_path: Path, *, stream: str = REGISTERED_STREAM, holder: str = "claude"):
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import LeaseHolder
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import LeaseHolder
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
     lease = store.open_session(
@@ -1059,7 +1059,7 @@ def test_from_api_unavailable_still_fails_open_with_the_warning(
 
 
 def _gate_import(monkeypatch: pytest.MonkeyPatch, target: Path, client: object, *, agent: str = AGENT) -> dict:
-    from scripts.hooks import session_start_gate as gate
+    from lu_machinery.hooks import session_start_gate as gate
 
     monkeypatch.setattr(gate, "_import_thread_handoff", lambda: th)
     monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: client)
@@ -1478,7 +1478,7 @@ def test_non_regular_tar_members_are_refused_by_importer_and_store(tmp_path: Pat
     ],
 )
 def test_absolute_and_parent_member_paths_are_refused_by_importer_and_store(tmp_path: Path, name: str) -> None:
-    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
+    from lu_machinery.session_streams.store import validate_rollover_bundle_members
 
     with pytest.raises(ValueError):
         th._bundle_member_path(name)
@@ -1560,9 +1560,9 @@ def test_direct_store_upload_and_http_route_refuse_the_same_bundle_for_the_same_
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str, reason: str
 ) -> None:
     from fastapi.testclient import TestClient
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.store import SessionStreamStore
 
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
     from tests.epics_monitor_stub import epics_app_for_store
 
     manifest, blob = _parity_case(case)
@@ -1637,9 +1637,9 @@ def test_export_upload_import_round_trip_creates_only_lineage_handoff_and_receip
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from fastapi.testclient import TestClient
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.store import SessionStreamStore
 
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
     from tests.epics_monitor_stub import epics_app_for_store
 
     api_root = tmp_path / "api"

@@ -7,9 +7,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _claude
-from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge import _claude
+from lu_machinery.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_path):

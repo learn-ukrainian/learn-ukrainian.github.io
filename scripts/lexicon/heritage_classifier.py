@@ -29,16 +29,16 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # File execution puts only scripts/ on sys.path, so the top-level package
     # is absent (exc.name == "scripts"). A failure inside readonly_sqlite
     # carries another name, or is not ModuleNotFoundError, and must propagate.
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "registry" / "lt_replacements.json"
@@ -984,12 +984,12 @@ def _resolve_primary_checkout() -> Path | None:
     Returns None outside a git repo so callers fall back honestly.
     """
     try:
-        from guardrails.worktree_containment import (
+        from lu_machinery.guardrails.worktree_containment import (
             NotAGitRepositoryError,
             resolve_main_root,
         )
     except ImportError:  # repo root on sys.path instead of scripts/
-        from scripts.guardrails.worktree_containment import (  # type: ignore[no-redef]
+        from lu_machinery.guardrails.worktree_containment import (  # type: ignore[no-redef]
             NotAGitRepositoryError,
             resolve_main_root,
         )

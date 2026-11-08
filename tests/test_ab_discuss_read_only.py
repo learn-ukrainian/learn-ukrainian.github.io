@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from scripts.ai_agent_bridge import _channels_cli
+from lu_machinery.ai_agent_bridge import _channels_cli
 
 
 def _args() -> SimpleNamespace:
@@ -30,7 +30,7 @@ def test_discuss_rejects_single_participant_before_provider_call(monkeypatch) ->
         called = True
         raise AssertionError("provider must not be called")
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fail_provider)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fail_provider)
     assert _channels_cli._handle_discuss(args) == 1
     assert called is False
 

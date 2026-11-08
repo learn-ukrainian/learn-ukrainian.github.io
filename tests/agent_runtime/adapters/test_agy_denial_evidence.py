@@ -12,9 +12,9 @@ from pathlib import Path
 from urllib.parse import urlunsplit
 
 import pytest
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.result import AgyTelemetry
 
-from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.result import AgyTelemetry
 from tests.agent_runtime.adapters.test_agy_adapter import _FINISHED_CONVERSATION_ID, _background_plan
 from tests.agent_runtime.adapters.test_agy_cancel_recovery import _explicit_denial
 from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial

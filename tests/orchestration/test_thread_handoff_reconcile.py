@@ -15,9 +15,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.hooks import session_start_gate as gate
+from lu_machinery.orchestration import thread_handoff as th
 
-from scripts.hooks import session_start_gate as gate
-from scripts.orchestration import thread_handoff as th
 from tests.test_rollover_bundles import AGENT, HANDOFF_PATH, STREAM, _import_args, _seed_state
 
 

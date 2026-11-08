@@ -10,10 +10,9 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import main as api_main
-from scripts.api import work_router
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api import main as api_main
+from lu_machinery.api import work_router
+from lu_machinery.api.monitor_context import fixture_context
 
 pytestmark = pytest.mark.reads_content
 

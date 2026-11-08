@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 
-from scripts.orchestration.trail_predicates import (
+from lu_machinery.orchestration.trail_predicates import (
     STOP_UNKNOWN,
     evaluate_named_table,
     evaluate_table,

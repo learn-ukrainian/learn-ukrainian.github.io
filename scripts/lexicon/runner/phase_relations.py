@@ -18,8 +18,9 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 from scripts.lexicon.runner.contracts import RELATION_CLOSURE_VERSION, PhaseSeal, canonical_json
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 RelationKind = str  # synonym | antonym | homonym | paronym | corpus_synonym | …
 

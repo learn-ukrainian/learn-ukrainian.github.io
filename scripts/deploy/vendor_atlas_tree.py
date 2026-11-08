@@ -51,6 +51,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.common import github_client
+
 from scripts.atlas.normalization import normalize_atlas_text
 from scripts.audit.generate_search_index import (
     _gerund_parent,
@@ -64,7 +66,6 @@ from scripts.audit.generate_search_index import (
     write_index,
     write_search_shards,
 )
-from scripts.common import github_client
 
 # ---------------------------------------------------------------------------
 # Scale gates (R7) — fail before the 1 GiB GitHub Pages hard cap is at risk.

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from unittest.mock import patch
 
-from scripts.fleet_comms.github_pr_metrics import collect_github_pr_metrics
+from lu_machinery.fleet_comms.github_pr_metrics import collect_github_pr_metrics
 
 
 def test_github_metrics_no_content(monkeypatch=None) -> None:
@@ -24,7 +24,7 @@ def test_github_metrics_no_content(monkeypatch=None) -> None:
         stdout = json.dumps([payload])
         stderr = ""
 
-    with patch("scripts.fleet_comms.github_pr_metrics.github_client.run", return_value=Proc()):
+    with patch("lu_machinery.fleet_comms.github_pr_metrics.github_client.run", return_value=Proc()):
         out = collect_github_pr_metrics(limit=5)
     assert out["ok"] is True
     assert out["content_included"] is False

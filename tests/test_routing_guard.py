@@ -5,8 +5,7 @@ from __future__ import annotations
 import sys
 
 import pytest
-
-from scripts.ai_agent_bridge.routing_guard import (
+from lu_machinery.ai_agent_bridge.routing_guard import (
     RoutingGuardError,
     assert_agent_routing_allowed,
     assert_model_routing_allowed,
@@ -149,7 +148,7 @@ def test_opencode_transport_is_wired() -> None:
     """The guard must sit at the single opencode subprocess choke point."""
     import inspect
 
-    from scripts.ai_agent_bridge import _opencode
+    from lu_machinery.ai_agent_bridge import _opencode
 
     src = inspect.getsource(_opencode._run_opencode)
     assert "assert_model_routing_allowed" in src

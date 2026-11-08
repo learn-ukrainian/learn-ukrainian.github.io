@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-
-from scripts.session_canary import diary, grok_lane, muse_lane
+from lu_machinery.session_canary import diary, grok_lane, muse_lane
 
 REPO = Path(__file__).resolve().parents[1]
 

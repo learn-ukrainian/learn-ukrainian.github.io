@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.result import Result
-from ai_llm.claude_call import call_claude_with_fallback
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_llm.claude_call import call_claude_with_fallback
 
 
 def _result(
@@ -34,7 +34,7 @@ def _result(
 
 def test_happy_path_returns_callresult(tmp_path):
     with patch(
-        "ai_llm.agent_runtime_call.runner.invoke",
+        "lu_machinery.ai_llm.agent_runtime_call.runner.invoke",
         return_value=_result(ok=True, response="done"),
     ) as invoke:
         result = call_claude_with_fallback(
@@ -53,7 +53,7 @@ def test_happy_path_returns_callresult(tmp_path):
 
 def test_returns_error_on_runner_failure(tmp_path):
     with patch(
-        "ai_llm.agent_runtime_call.runner.invoke",
+        "lu_machinery.ai_llm.agent_runtime_call.runner.invoke",
         return_value=_result(ok=False, stderr_excerpt="broken"),
     ):
         result = call_claude_with_fallback(
@@ -76,7 +76,7 @@ def test_respects_max_retries(tmp_path):
         _result(ok=True, response="done"),
     ]
 
-    with patch("ai_llm.agent_runtime_call.runner.invoke", side_effect=responses):
+    with patch("lu_machinery.ai_llm.agent_runtime_call.runner.invoke", side_effect=responses):
         result = call_claude_with_fallback(
             "prompt",
             task_name="unit-test",

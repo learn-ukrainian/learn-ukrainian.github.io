@@ -7,8 +7,8 @@ import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from lu_machinery.agent_runtime import model_pause as mp
 
-from scripts.agent_runtime import model_pause as mp
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 
 NOW = datetime(2026, 10, 10, 12, 0, tzinfo=UTC)
@@ -87,7 +87,7 @@ def test_policy_file_is_read(tmp_path, monkeypatch) -> None:
 
 
 def test_admission_refuses_a_paused_seat_default(tmp_path, monkeypatch) -> None:
-    from scripts.agent_runtime import target_admission as ta
+    from lu_machinery.agent_runtime import target_admission as ta
 
     path = tmp_path / "pause.json"
     future = (datetime.now(UTC) + timedelta(days=1)).isoformat()
@@ -99,7 +99,7 @@ def test_admission_refuses_a_paused_seat_default(tmp_path, monkeypatch) -> None:
 
 
 def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) -> None:
-    from scripts.review import reviewer_resolver as rr
+    from lu_machinery.review import reviewer_resolver as rr
 
     candidate = next(iter(rr.REVIEW_CANDIDATES.values()))
     model = rr.candidate_dispatch_model(candidate)
@@ -125,7 +125,7 @@ def test_malformed_usage_is_unreadable(monkeypatch) -> None:
 
 
 def test_messaging_admission_ignores_pauses(tmp_path, monkeypatch) -> None:
-    from scripts.agent_runtime import target_admission as ta
+    from lu_machinery.agent_runtime import target_admission as ta
 
     called: list = []
     monkeypatch.setattr(ta, "_refuse_paused", lambda models: called.append(list(models)))
@@ -292,7 +292,7 @@ def test_native_claude_alias_is_paused_with_its_family() -> None:
 
 
 def test_native_alias_matches_a_concrete_pause(monkeypatch) -> None:
-    from scripts.review import model_catalog
+    from lu_machinery.review import model_catalog
 
     catalog = {
         "models": {

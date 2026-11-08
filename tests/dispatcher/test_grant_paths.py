@@ -9,8 +9,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import cli, ownership, store, worker
 
-from scripts.dispatcher import cli, ownership, store, worker
 from tests.dispatcher.conftest import MERGED, run_git
 
 
@@ -96,7 +96,7 @@ class TestHooksAndSettlementShareScope:
         task_env = {**sandbox.env, ownership.TASK_ID_ENV: task_id}
 
         def hook(stage, updates=None):
-            return subprocess.run([sys.executable, "-m", "scripts.dispatcher.ownership", "--worktree", str(tree), stage],
+            return subprocess.run([sys.executable, "-m", "lu_machinery.dispatcher.ownership", "--worktree", str(tree), stage],
                                   cwd=tree, env=task_env, input=updates, capture_output=True, text=True, timeout=30)
 
         (tree / "extra.txt").write_text("approved change\n")

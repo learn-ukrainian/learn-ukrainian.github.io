@@ -6,11 +6,11 @@ from threading import Barrier
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import checks, cli, git, store, worker
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.review.render_contract import trusted_core_context
 
-from scripts.dispatcher import checks, cli, git, store, worker
-from scripts.dispatcher.types import TaskSpec
 from scripts.review.record import attested_return, dispatch_prompt_sha256
-from scripts.review.render_contract import trusted_core_context
 
 
 @pytest.fixture
@@ -41,9 +41,9 @@ def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prom
     """
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import attempt_boundary, review_mcp, runner
-    from scripts.dispatcher import headroom
-    from scripts.review.render_contract import trusted_core_context
+    from lu_machinery.agent_runtime import attempt_boundary, review_mcp, runner
+    from lu_machinery.dispatcher import headroom
+    from lu_machinery.review.render_contract import trusted_core_context
 
     args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
                                           "--review-access", "full"])
@@ -132,8 +132,9 @@ def test_lexical_render_admission_rejects_tampering(tmp_path, monkeypatch):
     from functools import partial
     from pathlib import Path
 
-    from scripts.agent_runtime import attempt_boundary, review_mcp
-    from scripts.dispatcher import review_attempt
+    from lu_machinery.agent_runtime import attempt_boundary, review_mcp
+    from lu_machinery.dispatcher import review_attempt
+
     from scripts.review.prompts.render import render_prompt
     from tests.review.test_prompts import _setup_lexical_fixture
 
@@ -176,8 +177,8 @@ def test_lexical_render_admission_rejects_tampering(tmp_path, monkeypatch):
 
 def test_bound_attempt_cannot_spend_an_exhausted_branch_pr_budget(attempt, tmp_path, monkeypatch, capsys):
     """Defect class: a bound attempt is charged to a branch's ordinary PR review budget (#12216)."""
-    from scripts.dispatcher import review_attempt
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.dispatcher import review_attempt
+    from lu_machinery.review import record_cf_verdict as recorder
 
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -311,7 +312,7 @@ def test_strict_listing_skips_evidence_append_beside_task_records(tmp_path, monk
 
 
 def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_path, monkeypatch):
-    from scripts.agent_runtime import review_mcp
+    from lu_machinery.agent_runtime import review_mcp
 
     binding = dict(review_id="review", attempt_id="attempt", manifest_sha256="a" * 64)
     barrier, create = Barrier(2), review_mcp._create_file
@@ -341,8 +342,9 @@ def _run_manifest_ukrainian_attempt(
 ):
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import attempt_boundary, review_mcp, runner
-    from scripts.dispatcher import headroom
+    from lu_machinery.agent_runtime import attempt_boundary, review_mcp, runner
+    from lu_machinery.dispatcher import headroom
+
     from scripts.review.receipts.ledger import dumps
 
     args = cli.build_parser().parse_args([
@@ -568,7 +570,7 @@ def test_manifest_bound_ukrainian_review_unknown_item_leaves_denominator_incompl
     attempt, tmp_path, monkeypatch
 ):
     """An item marked unknown is counted in unknown_items and leaves denominator coverage incomplete."""
-    from scripts.review.review_contract import build_item_packet, judge_item_reply
+    from lu_machinery.review.review_contract import build_item_packet, judge_item_reply
 
     reply = (
         "VERDICT: APPROVE\n"
@@ -656,7 +658,7 @@ def test_manifest_bound_ukrainian_review_two_items_one_void_preserves_valid_item
     attempt, tmp_path, monkeypatch
 ):
     """An unsupported claim on one item voids only that item, preserving unrelated valid items."""
-    from scripts.review.review_contract import build_item_packet, judge_item_reply
+    from lu_machinery.review.review_contract import build_item_packet, judge_item_reply
 
     manifest_sha = store.digest(b"inputs: []\n")
     rec = {
@@ -811,7 +813,7 @@ def test_manifest_bound_ukrainian_review_per_item_receipt_only_rejected_as_malfo
     attempt, tmp_path, monkeypatch
 ):
     """Per-item evidence containing only receipt without quote is rejected as malformed_claim."""
-    from scripts.review.review_contract import build_item_packet, judge_item_reply
+    from lu_machinery.review.review_contract import build_item_packet, judge_item_reply
 
     manifest_sha = store.digest(b"inputs: []\n")
     rec = {
@@ -929,7 +931,7 @@ def test_bound_attempt_admits_only_subscription_codex_accounts(label, admitted):
     """Defect class: a bound attempt refuses account b, or runs on an API-billed route with no spending cap."""
     from types import SimpleNamespace
 
-    from scripts.dispatcher import review_attempt
+    from lu_machinery.dispatcher import review_attempt
 
     args = SimpleNamespace(review_access=None, full_checkout=False, output_schema=None, codex_account=label,
                            prompt_file=None)
@@ -950,8 +952,8 @@ def test_unknown_codex_account_refuses_a_bound_attempt_before_it_is_spent(attemp
 
 @pytest.mark.parametrize("label", ["c-sub", "API", ""])
 def test_attempt_boundary_refuses_an_unknown_codex_account_without_staging(codex_accounts_ab, tmp_path, label):
-    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     with pytest.raises(ReviewIsolationError, match="attempt_codex_account_unknown"):
         stage_codex_account_auth(label, tmp_path / "staged")
@@ -960,7 +962,7 @@ def test_attempt_boundary_refuses_an_unknown_codex_account_without_staging(codex
 
 def test_attempt_boundary_stages_each_codex_account_own_login(codex_accounts_ab, tmp_path):
     """Defect class: a b-sub attempt authenticates with account a's login, or the default account changes source."""
-    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from lu_machinery.agent_runtime.attempt_boundary import stage_codex_account_auth
 
     a, b = codex_accounts_ab
     for label, own in ((None, a), ("sub", a), ("b-sub", b), ("b", b)):
@@ -979,8 +981,8 @@ def test_attempt_boundary_stages_each_codex_account_own_login(codex_accounts_ab,
 ])
 def test_attempt_boundary_never_substitutes_account_a_for_b(codex_accounts_ab, tmp_path, monkeypatch, case, code):
     """Defect class: when account b's login cannot be staged, account a's (or an ambient credential) is used."""
-    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     a, b = codex_accounts_ab
     if case == "ambient_home":
@@ -1010,8 +1012,8 @@ def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, 
     import os
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import attempt_boundary, review_mcp, runner, usage
-    from scripts.dispatcher import headroom
+    from lu_machinery.agent_runtime import attempt_boundary, review_mcp, runner, usage
+    from lu_machinery.dispatcher import headroom
 
     a, b = codex_accounts_ab
     args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
@@ -1075,8 +1077,8 @@ def test_attempt_boundary_refuses_a_bound_home_that_staging_would_rename(codex_a
     Defect class: staging normalizes the bound CODEX_HOME (``str.strip``) into another directory and copies
     account a's login for b.
     """
-    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     a, b = codex_accounts_ab
     twin = a.parent / f".codex{suffix}"

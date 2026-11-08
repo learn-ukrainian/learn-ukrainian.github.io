@@ -12,9 +12,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
+from lu_machinery.ops import context_guard as cg
+from lu_machinery.ops.driver_lanes import EXIT_MARKER, PANE_SCRIPT, START_MARKER, load_registry
 
-from scripts.ops import context_guard as cg
-from scripts.ops.driver_lanes import EXIT_MARKER, PANE_SCRIPT, START_MARKER, load_registry
 from tests.ops._fake_tmux import BOOT, FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
@@ -1163,7 +1163,7 @@ def test_comms_reader_counts_only_standalone_posts_from_the_lane(tmp_path: Path)
 
 
 def test_fleet_sender_uses_the_data_file_identity_and_never_raises(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.fleet_comms import authority
+    from lu_machinery.fleet_comms import authority
 
     calls: list[dict] = []
 
@@ -1224,7 +1224,7 @@ def guard_sends(root: Path) -> dict[str, str]:
 
 def test_fleet_sender_stores_the_handoff_as_supervisory_and_alerts_as_ordinary_messages(temp_plane: Path) -> None:
     """Defect class (#12837): an alert stored as a supervisory request, which no agent seat may acknowledge."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     sent = guard_sends(temp_plane)
     keys = {
@@ -1257,7 +1257,7 @@ def test_an_alert_delivery_is_claimed_and_acked_by_an_agent_seat(
     temp_plane: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """Defect class (#12837): the CTO's ack of a guard alert refused with supervisory_consumption_required."""
-    from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, main
+    from lu_machinery.fleet_comms.cli import EXIT_ERROR, EXIT_OK, main
 
     sent = guard_sends(temp_plane)
     capsys.readouterr()
@@ -1501,7 +1501,7 @@ def test_client_telemetry_timeout_counts_as_a_human() -> None:
 
 
 def test_refused_local_wrapper_blocks_only_that_relaunch(tmp_path: Path) -> None:
-    from scripts.ops.driver_lanes import load_local_config
+    from lu_machinery.ops.driver_lanes import load_local_config
 
     local = tmp_path / "local.json"
     local.write_text(json.dumps({"lanes": {"harness": {"wrapper": "printf expected; printf INJECTED"}}}))

@@ -14,12 +14,11 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.claude import ClaudeAdapter
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.review.isolation import (
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.review.isolation import (
     ISOLATION_POLICY_VERSION,
     ReviewIsolationError,
     SandboxCapability,
@@ -51,7 +50,7 @@ from scripts.review.isolation import (
     sweep_review_temp_orphans,
     wrap_argv_with_sandbox,
 )
-from scripts.review.snapshot import (
+from lu_machinery.review.snapshot import (
     DIAG_BINARY,
     DIAG_CHANGED_SECRET,
     DIAG_DRIFT,
@@ -83,8 +82,8 @@ def _fixture_review_tmp_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, re
     import shutil
     import tempfile
 
-    from scripts.ai_agent_bridge import _review_worktree
-    from scripts.review import isolation, snapshot
+    from lu_machinery.ai_agent_bridge import _review_worktree
+    from lu_machinery.review import isolation, snapshot
 
     review_tmp = tmp_path / "review-tmp"
     review_tmp.mkdir()
@@ -231,7 +230,7 @@ def test_review_temp_orphan_sweep_reaps_only_old_loose_and_task_roots(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from scripts.review import isolation
+    from lu_machinery.review import isolation
 
     loose_old = tmp_path / "lu-review-git-old"
     task_old = tmp_path / "learn-ukrainian" / "task" / "lu-review-view-old"
@@ -565,7 +564,7 @@ def test_linux_wrapper_uses_blank_root_exact_binds_and_pid_isolation(
 def test_linux_roots_preserve_trusted_merged_usr_and_network_aliases(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    from scripts.review import isolation as isolation_module
+    from lu_machinery.review import isolation as isolation_module
 
     snapshot = tmp_path / "snapshot"
     write = tmp_path / "write"
@@ -642,7 +641,7 @@ def test_linux_roots_preserve_trusted_merged_usr_and_network_aliases(
 
 
 def test_system_read_roots_never_grant_all_usr_or_usr_local() -> None:
-    from scripts.review import isolation as isolation_module
+    from lu_machinery.review import isolation as isolation_module
 
     assert "/usr" not in isolation_module._SYSTEM_READ_SUBPATHS
     assert not any(
@@ -1072,7 +1071,7 @@ def test_claude_adapter_exposes_only_snapshot_read_tools(monkeypatch: pytest.Mon
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
     fake.chmod(fake.stat().st_mode | stat.S_IXUSR)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        "lu_machinery.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
         lambda _prefix: (_ for _ in ()).throw(AssertionError("review version probe must run only inside sandbox")),
     )
     snapshot = tmp_path / "snapshot"
@@ -1197,7 +1196,7 @@ def test_claude_parser_prefers_native_structured_output_over_model_preamble() ->
 
 
 def test_claude_transport_schema_does_not_expand_with_changed_paths() -> None:
-    from scripts.agent_runtime.adapters.claude import _isolated_review_response_schema
+    from lu_machinery.agent_runtime.adapters.claude import _isolated_review_response_schema
 
     one = _isolated_review_response_schema({"review_changed_paths": ["one.py"]})
     many = _isolated_review_response_schema(
@@ -1250,8 +1249,9 @@ def test_codex_config_probe_uses_final_signed_in_launch_home(
     """Signed-in-only layers refuse, and probe refreshes survive until launch."""
     import sys
 
-    from scripts.agent_runtime.adapters import codex
-    from scripts.review import isolation
+    from lu_machinery.agent_runtime.adapters import codex
+    from lu_machinery.review import isolation
+
     from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
 
     snapshot = tmp_path / "snapshot"
@@ -1379,7 +1379,7 @@ def test_claude_adapter_accepts_canonical_private_mcp_path_through_ancestor_alia
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
     fake.chmod(fake.stat().st_mode | stat.S_IXUSR)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        "lu_machinery.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
         lambda _prefix: (_ for _ in ()).throw(AssertionError("review version probe must run only inside sandbox")),
     )
     real_parent = tmp_path / "real"
@@ -1425,7 +1425,7 @@ def test_review_roots_reject_overlap_before_adapter_write(tmp_path: Path) -> Non
     fake = tmp_path / "codex"
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
     fake.chmod(0o755)
-    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
     with pytest.raises(ReviewIsolationError, match="overlap"):
         CodexAdapter().build_invocation(
@@ -1539,7 +1539,7 @@ def test_runner_skips_generic_cli_version_probe_before_review_sandbox(
     scripts_root = str(Path(__file__).resolve().parents[1] / "scripts")
     if scripts_root not in sys.path:
         sys.path.insert(0, scripts_root)
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     monkeypatch.setattr(
         runner,
@@ -1575,14 +1575,14 @@ def test_claude_keychain_auth_stages_only_fresh_access_token(monkeypatch: pytest
             }
         )
 
-    monkeypatch.setattr("scripts.review.isolation.platform.system", lambda: "Darwin")
+    monkeypatch.setattr("lu_machinery.review.isolation.platform.system", lambda: "Darwin")
     monkeypatch.setattr(
         Path,
         "is_file",
         lambda self: self == Path("/usr/bin/security") or real_is_file(self),
     )
     monkeypatch.setattr(
-        "scripts.review.isolation.subprocess.run",
+        "lu_machinery.review.isolation.subprocess.run",
         lambda *_args, **_kwargs: Completed(),
     )
     staged = stage_engine_auth(
@@ -1665,7 +1665,7 @@ def test_local_capture_rejects_head_move_after_content_reads(monkeypatch: pytest
     (repo / "src/app.py").write_text("VALUE = dirty\n", encoding="utf-8")
     observed = iter((expected, "f" * 40))
     monkeypatch.setattr(
-        "scripts.review.snapshot.resolve_head_identity",
+        "lu_machinery.review.snapshot.resolve_head_identity",
         lambda *_args, **_kwargs: next(observed),
     )
     with pytest.raises(ReviewSnapshotError, match="local_head_after_capture"):
@@ -2100,7 +2100,7 @@ def test_capability_probe_has_no_auth_and_no_network(monkeypatch: pytest.MonkeyP
         observed.update(binary=binary, sandbox=sandbox, env=dict(env), cwd=cwd)
         return "2.1.116 (Claude Code)\n--bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema"
 
-    monkeypatch.setattr("scripts.review.isolation.probe_engine_help", fake_probe)
+    monkeypatch.setattr("lu_machinery.review.isolation.probe_engine_help", fake_probe)
     token = _secret_ant_env()
     launch = prepare_isolated_review_launch(
         engine="claude",
@@ -2139,7 +2139,7 @@ def test_prompt_file_is_pinned_into_read_only_exec_root(monkeypatch: pytest.Monk
     original_prompt = write / "tmp" / "claude-prompt.txt"
     original_prompt.write_text("sealed dossier", encoding="utf-8")
     monkeypatch.setattr(
-        "scripts.review.isolation.probe_engine_help",
+        "lu_machinery.review.isolation.probe_engine_help",
         lambda *_args, **_kwargs: (
             "2.1.116 --bare --safe-mode --setting-sources --strict-mcp-config --disallowedTools --tools --json-schema"
         ),
@@ -2204,7 +2204,7 @@ def test_launch_never_creates_an_implicit_write_root(monkeypatch: pytest.MonkeyP
     fake.write_text("#!/bin/sh\n", encoding="utf-8")
     fake.chmod(0o755)
     monkeypatch.setattr(
-        "scripts.review.isolation.tempfile.mkdtemp",
+        "lu_machinery.review.isolation.tempfile.mkdtemp",
         lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("implicit root created")),
     )
     with pytest.raises(ReviewIsolationError, match="parent_owned"):
@@ -2443,7 +2443,7 @@ def test_f8_real_codex_and_claude_version_inside_sandbox(tmp_path: Path) -> None
         assert "claude" in out2.lower() or any(ch.isdigit() for ch in out2)
         assert launch2.capabilities.binary.is_relative_to(claude_exec)
 
-        from scripts.agent_runtime.adapters.codex import CodexAdapter
+        from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
         adapter = CodexAdapter()
         plan = adapter.build_invocation(
@@ -2476,7 +2476,7 @@ def _valid_capability_fields(engine: str = "claude") -> dict:
     """Build a syntactically valid capability proof + digest for acceptance tests."""
     import hashlib
 
-    from scripts.review.isolation import required_capabilities_for
+    from lu_machinery.review.isolation import required_capabilities_for
 
     caps = sorted(required_capabilities_for(engine))
     true_bin = str(Path("/usr/bin/true").resolve())
@@ -2672,7 +2672,7 @@ def test_f10_runner_propagates_isolation_evidence(tmp_path: Path) -> None:
 
 def test_f11_no_target_review_uses_sealed_local_not_primary(tmp_path: Path) -> None:
     """allow_local_fallback seals local state; never yields the primary checkout."""
-    from scripts.ai_agent_bridge import _review_worktree as rw
+    from lu_machinery.ai_agent_bridge import _review_worktree as rw
 
     repo = tmp_path / "primary"
     repo.mkdir()
@@ -2861,7 +2861,7 @@ def test_f14_malformed_minimal_fake_evidence_denied(tmp_path: Path) -> None:
 
 def test_f15_local_patch_and_delete_rename_fidelity(tmp_path: Path) -> None:
     """Local sealed target must match dirty/untracked/delete/rename state."""
-    from scripts.review.snapshot import capture_local_review_state
+    from lu_machinery.review.snapshot import capture_local_review_state
 
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -3104,7 +3104,7 @@ def test_local_staged_delete_with_same_path_untracked_replacement(tmp_path: Path
 
 def test_f16_dirty_one_to_dirty_two_content_drift_denied(tmp_path: Path) -> None:
     """Content drift with unchanged porcelain status invalidates acceptance."""
-    from scripts.review.snapshot import capture_local_review_state
+    from lu_machinery.review.snapshot import capture_local_review_state
 
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -3212,7 +3212,7 @@ def test_descriptor_pinned_read_does_not_follow_swapped_path(
             swapped = True
         return fd
 
-    monkeypatch.setattr("scripts.review.snapshot.os.open", swapping_open)
+    monkeypatch.setattr("lu_machinery.review.snapshot.os.open", swapping_open)
     data, mode = _read_regular_file_stable(repo, "target.txt")
     assert swapped
     assert data == b"sealed bytes\n"
@@ -3541,7 +3541,7 @@ class TestExecRootAcceptsSentinel:
     bridge formal review with review_exec_root_not_empty)."""
 
     def _validate(self, exec_root, tmp_path):
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         snapshot_root = tmp_path / "snap"
         write_root = tmp_path / "write"
@@ -3555,7 +3555,7 @@ class TestExecRootAcceptsSentinel:
         )
 
     def test_factory_created_root_with_sentinel_validates(self, tmp_path, monkeypatch):
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         monkeypatch.setenv("TMPDIR", str(tmp_path / "t"))
         (tmp_path / "t").mkdir()
@@ -3566,8 +3566,7 @@ class TestExecRootAcceptsSentinel:
 
     def test_root_with_extra_entry_still_refuses(self, tmp_path, monkeypatch):
         import pytest
-
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         monkeypatch.setenv("TMPDIR", str(tmp_path / "t"))
         (tmp_path / "t").mkdir()
@@ -3579,8 +3578,7 @@ class TestExecRootAcceptsSentinel:
 
     def test_symlinked_marker_refuses(self, tmp_path):
         import pytest
-
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         root = tmp_path / "exec"
         root.mkdir(mode=0o700)
@@ -3596,8 +3594,7 @@ class TestExecRootAcceptsSentinel:
         import os
 
         import pytest
-
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         root = tmp_path / "exec"
         root.mkdir(mode=0o700)
@@ -3611,8 +3608,7 @@ class TestExecRootAcceptsSentinel:
         """#5849: a regular-file sentinel whose bytes do not fullmatch the marker
         pattern is a forgery — refuse with the content-specific error."""
         import pytest
-
-        from scripts.review import isolation
+        from lu_machinery.review import isolation
 
         root = tmp_path / "exec"
         root.mkdir(mode=0o700)
@@ -3665,9 +3661,9 @@ def test_sealed_reader_probe_preserves_unicode_separators(tmp_path, monkeypatch,
     responses = [{"note": f"a{sep}b", "result": payloads[0]}, {"result": payloads[1]}]
     responses.extend({"result": {"content": [{"text": json.dumps(payload)}]}} for payload in payloads[2:])
     stdout = "\n".join(json.dumps(row, ensure_ascii=False) for row in responses) + "\n"
-    monkeypatch.setattr("scripts.review.isolation.wrap_argv_with_sandbox", lambda argv, sandbox: argv)
+    monkeypatch.setattr("lu_machinery.review.isolation.wrap_argv_with_sandbox", lambda argv, sandbox: argv)
     monkeypatch.setattr(
-        "scripts.review.isolation.subprocess.run", lambda *a, **k: subprocess.CompletedProcess(a[0], 0, stdout, "")
+        "lu_machinery.review.isolation.subprocess.run", lambda *a, **k: subprocess.CompletedProcess(a[0], 0, stdout, "")
     )
     from types import SimpleNamespace
 

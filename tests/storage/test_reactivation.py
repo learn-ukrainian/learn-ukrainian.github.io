@@ -13,8 +13,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.storage import artifacts, paths
 
-from scripts.storage import artifacts, paths
 from tests.storage.test_publish_set import _git, _repo
 
 

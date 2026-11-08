@@ -19,10 +19,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.common import safe_unit_install
-from scripts.common.safe_unit_install import InstallError
-from scripts.orchestration import (
+from lu_machinery.common import safe_unit_install
+from lu_machinery.common.safe_unit_install import InstallError
+from lu_machinery.orchestration import (
     install_archived_thread_cleanup_launchd,
     install_backup_timer,
     install_data_tier_timer,
@@ -31,6 +30,7 @@ from scripts.orchestration import (
     install_tmp_sweep_timer,
     install_worktree_cleanup_launchd,
 )
+
 from scripts.storage import install_data_volume_dropins
 
 MODES = ("check", "apply")

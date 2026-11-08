@@ -10,8 +10,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.lib import claude_weekly_used
 
-from scripts.lib import claude_weekly_used
 from tests.rules_core_view import (
     _LOADER_STUB,
     _build_view,

@@ -8,8 +8,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.guardrails.assert_primary_on_main import heal_primary_to_main, primary_head_state
 
-from scripts.guardrails.assert_primary_on_main import heal_primary_to_main, primary_head_state
 from tests.helpers.python import project_python
 
 

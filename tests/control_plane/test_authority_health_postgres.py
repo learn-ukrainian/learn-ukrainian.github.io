@@ -15,14 +15,14 @@ import psycopg
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api import fleet_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.control_plane import storage
+from lu_machinery.fleet_comms import pg_schema
+from lu_machinery.fleet_comms.cli import _short_plane_health
+from lu_machinery.fleet_comms.message_plane import read_plane_status
 from psycopg.conninfo import make_conninfo
 
-from scripts.api import fleet_router
-from scripts.api.monitor_context import fixture_context
-from scripts.control_plane import storage
-from scripts.fleet_comms import pg_schema
-from scripts.fleet_comms.cli import _short_plane_health
-from scripts.fleet_comms.message_plane import read_plane_status
 from tests.epics_monitor_stub import epics_monitor_stub
 
 pytestmark = pytest.mark.repo_invariant
@@ -150,8 +150,8 @@ def test_real_pg_adapter_api_and_cli_agree_without_sqlite(isolated_pg, tmp_path,
         assert legacy["availability"] == "authority_unsupported_component"
 
     # The overview stub owns a separate synthetic session store.
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     database = SessionStreamDatabase(tmp_path / "epics" / "sessions.sqlite3")
     database.connect().close()
@@ -164,7 +164,7 @@ def test_real_pg_adapter_api_and_cli_agree_without_sqlite(isolated_pg, tmp_path,
             ["dead-letters"],
         ):
             result = subprocess.run(
-                [sys.executable, "-m", "scripts.fleet_comms", *args, "--root", str(root)],
+                [sys.executable, "-m", "lu_machinery.fleet_comms", *args, "--root", str(root)],
                 capture_output=True,
                 text=True,
                 timeout=20,
@@ -199,7 +199,7 @@ def test_real_pg_adapter_api_and_cli_agree_without_sqlite(isolated_pg, tmp_path,
                     [
                         sys.executable,
                         "-m",
-                        "scripts.fleet_comms",
+                        "lu_machinery.fleet_comms",
                         "fleet",
                         "status",
                         "--root",

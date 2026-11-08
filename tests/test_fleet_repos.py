@@ -6,8 +6,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.orchestration.fleet_repos import (
+from lu_machinery.orchestration.fleet_repos import (
     FleetRepoError,
     load_fleet_repos,
     resolve_fleet_repo,

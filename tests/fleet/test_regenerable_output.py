@@ -5,10 +5,10 @@ import os
 import subprocess
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import regenerable_output as patterns
+from lu_machinery.orchestration import worktree_claims
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import regenerable_output as patterns
-from scripts.orchestration import worktree_claims
 from tests.orchestration import test_worktree_artifacts as fixtures
 from tests.orchestration import test_worktree_git as repo_fixtures
 

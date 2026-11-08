@@ -13,17 +13,16 @@ from typing import cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import FileResponse
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
 
 from .config import LEVELS
 from .context import product_roots
 from .curriculum_state import load_phase_labels
 
 try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
+    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
 
 router = APIRouter()
 

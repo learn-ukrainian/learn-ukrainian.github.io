@@ -7,10 +7,9 @@ import re
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.agent_runtime.runner import classify_failover_trigger
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.runner import classify_failover_trigger
 
 
 def _parse(envelope, *, stderr="", returncode=0, plan=None, call_start_time=None):
@@ -168,8 +167,8 @@ def test_end_turn_still_completes(tmp_path, structured):
 ])
 @pytest.mark.parametrize("returncode", [0, 1])
 def test_permission_cancelled_is_distinct_and_does_not_fail_over(tmp_path, structured, key, category, returncode):
-    from scripts.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
-    from scripts.agent_runtime.runner import _privacy_safe_failure_code
+    from lu_machinery.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+    from lu_machinery.agent_runtime.runner import _privacy_safe_failure_code
 
     plan = InvocationPlan(
         cmd=["grok"], cwd=tmp_path,
@@ -193,7 +192,7 @@ def test_permission_cancelled_is_distinct_and_does_not_fail_over(tmp_path, struc
 
 
 def _session_plan(tmp_path, events, *, sid="11111111-1111-4111-8111-111111111111", snapshot=()):
-    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
+    from lu_machinery.agent_runtime.adapters.grok_build import grok_session_dir
 
     home = tmp_path / "grok-home"
     plan = InvocationPlan(
@@ -236,7 +235,7 @@ def test_untrusted_or_superseded_trace_does_not_classify_permission(tmp_path, tr
 
 @pytest.mark.parametrize("case", ["missing", "preexisting", "peer", "stale", "bad_timestamp", "naive_timestamp", "traversal"])
 def test_permission_trace_requires_current_bound_session(tmp_path, case):
-    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
+    from lu_machinery.agent_runtime.adapters.grok_build import grok_session_dir
 
     event = {"type": "turn_ended", "outcome": "cancelled", "cancellation_category": "permission_cancelled",
              "ts": "2026-10-07T18:00:00Z"}

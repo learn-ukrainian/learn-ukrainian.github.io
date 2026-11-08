@@ -6,9 +6,8 @@ import os
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import lint_raw_rm_rf
-from scripts.path_safety import assert_delete_target
+from lu_machinery.hygiene import lint_raw_rm_rf
+from lu_machinery.path_safety import assert_delete_target
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -300,7 +299,7 @@ def test_directory_under_home_stays_approvable(
     home = tmp_path / "home"
     session = home / ".codex" / "sessions"
     payload = session / "old.json"
-    monkeypatch.setattr("scripts.path_safety.Path.home", lambda: home)
+    monkeypatch.setattr("lu_machinery.path_safety.Path.home", lambda: home)
     repo_root = tmp_path / "repo"
 
     for tmpdir in (None, tmp_path / "process-tmp"):
@@ -374,7 +373,7 @@ def test_raw_rm_rf_lint_allowlist_keyed_by_content_not_line(tmp_path: Path) -> N
 
 
 def test_control_plane_sqlite_lint_allowlists_remaining_direct_opens() -> None:
-    from scripts.hygiene import lint_control_plane_sqlite
+    from lu_machinery.hygiene import lint_control_plane_sqlite
 
     violations = lint_control_plane_sqlite.find_unallowlisted_connects()
     assert violations == [], f"unallowlisted control-plane sqlite opens: {violations}"

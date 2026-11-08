@@ -21,8 +21,7 @@ from contextlib import suppress
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import dispatch_isolation as iso
+from lu_machinery.orchestration import dispatch_isolation as iso
 
 # These tests exercise the real probe; tests/conftest.py stubs it everywhere else.
 pytestmark = pytest.mark.host_dispatch_probe

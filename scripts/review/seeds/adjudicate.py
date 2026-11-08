@@ -55,19 +55,20 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.repo_root import machinery_path, main_checkout_root, project_interpreter
+from lu_machinery.orchestration.task_record_store import locate_task_record
+from lu_machinery.review import findings_db, second_seat
+from lu_machinery.review.seeds import manifest as seed_manifest
 
-from scripts.common.repo_root import main_checkout_root, project_interpreter
-from scripts.orchestration.task_record_store import locate_task_record
-from scripts.review import findings_db, record, second_seat
-from scripts.review.seeds import manifest as seed_manifest
+from scripts.review import record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMAS = {
@@ -75,7 +76,7 @@ SCHEMAS = {
     "clean": REPO_ROOT / "schemas" / "clean-adjudication-v1.schema.json",
 }
 TASKS_SUBDIR = "adjudication"
-DISPATCH = REPO_ROOT / "scripts" / "dispatch.py"
+DISPATCH = machinery_path("dispatch.py")
 READ_ONLY_MODE = "read-only"
 
 

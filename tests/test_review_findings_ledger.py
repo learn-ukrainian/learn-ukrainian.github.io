@@ -13,7 +13,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.review.findings import FindingsLedger, FindingsLedgerError
+from lu_machinery.review.findings import FindingsLedger, FindingsLedgerError
 
 
 def test_duplicate_raise_rejected():

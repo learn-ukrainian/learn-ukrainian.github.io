@@ -4,8 +4,7 @@ import subprocess
 from dataclasses import replace
 
 from fastapi.testclient import TestClient
-
-from scripts.ai_agent_bridge import openai_proxy as proxy
+from lu_machinery.ai_agent_bridge import openai_proxy as proxy
 
 
 def _client() -> TestClient:
@@ -220,7 +219,7 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
 
 def test_claude_backend_runs_without_background_work(monkeypatch):
     """The headless Claude backend carries the #9690 controls from the adapter (#9750)."""
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
 
     seen = []
 

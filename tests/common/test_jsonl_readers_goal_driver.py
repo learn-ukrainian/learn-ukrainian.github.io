@@ -7,7 +7,7 @@ from jsonl_reader_cases import reader_case
 @pytest.mark.parametrize(
     "module, function, site",
     [
-        ("scripts.goal_driver.stop_hook", "_last_status_from_transcript", 169),
+        ("lu_machinery.goal_driver.stop_hook", "_last_status_from_transcript", 169),
     ],
     ids=lambda value: str(value),
 )

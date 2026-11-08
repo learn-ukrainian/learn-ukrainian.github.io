@@ -8,15 +8,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.agent_runtime import acpx_pilot
-from scripts.agent_runtime.errors import AgentUnavailableError
-from scripts.agent_runtime.result import Result
+from lu_machinery.agent_runtime import acpx_pilot
+from lu_machinery.agent_runtime.errors import AgentUnavailableError
+from lu_machinery.agent_runtime.result import Result
 
 PILOT_ENTRYPOINT = acpx_pilot.PILOT_ENTRYPOINT
 PilotResult = acpx_pilot.PilotResult
 run_pilot = acpx_pilot.run_pilot
-runner = importlib.import_module("scripts.agent_runtime.runner")
+runner = importlib.import_module("lu_machinery.agent_runtime.runner")
 
 
 def _result(agent: str, *, ok: bool = True, response: str = "READY", tokens: int = 7) -> Result:

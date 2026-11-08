@@ -18,10 +18,9 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.dispatcher import store
-from scripts.orchestration import dead_worker_state, task_record_store, worktree_claims
-from scripts.orchestration import stale_task_records as str_mod
+from lu_machinery.dispatcher import store
+from lu_machinery.orchestration import dead_worker_state, task_record_store, worktree_claims
+from lu_machinery.orchestration import stale_task_records as str_mod
 
 SLUG = "owner/repo"
 NOW = datetime(2026, 9, 24, 12, 0, tzinfo=UTC)

@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.ai_agent_bridge import _review_safety as safety
+from lu_machinery.ai_agent_bridge import _review_safety as safety
 
 
 def test_primary_checkout_root_rev_parse_timeout_returns_root(tmp_path: Path) -> None:

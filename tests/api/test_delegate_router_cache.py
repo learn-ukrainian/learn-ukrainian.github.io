@@ -9,15 +9,14 @@ import sqlite3
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api import delegate_router, state_router
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api import delegate_router, state_router
+from lu_machinery.api.monitor_context import fixture_context
 
 
 @pytest.mark.parametrize("pid", ["unknown", "²", 2**64, -1, True, {}])
 def test_mixed_records_survive_http_and_worker_collection(tmp_path, monkeypatch, pid):
     """Malformed PIDs must not crash mixed-version listings or worker scans."""
-    from scripts.api.fleet_workers_collect import collect_delegate_workers
+    from lu_machinery.api.fleet_workers_collect import collect_delegate_workers
 
     monkeypatch.setattr(delegate_router, "_TASK_STATE_CACHE", {})
     monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")

@@ -8,9 +8,8 @@ from itertools import count
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.api import state_router, subscription_usage
-from scripts.fleet import capacity_pick, usage
+from lu_machinery.api import state_router, subscription_usage
+from lu_machinery.fleet import capacity_pick, usage
 
 
 @pytest.mark.parametrize("fresh", [True, False], ids=["fresh", "monitor"])

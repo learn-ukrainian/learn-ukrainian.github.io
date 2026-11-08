@@ -32,14 +32,14 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
+from lu_machinery.agent_runtime import model_pause, target_admission
+from lu_machinery.fleet import claude_account_lane, credit_lane
+from lu_machinery.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
+from lu_machinery.lib import claude_weekly_used
+from lu_machinery.orchestration import curriculum_coordinator as coordinator
+from lu_machinery.review import bench_health, closeout_cli, reviewer_resolver, reviewer_scheduler
+from lu_machinery.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 
-from scripts.agent_runtime import model_pause, target_admission
-from scripts.fleet import claude_account_lane, credit_lane
-from scripts.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
-from scripts.lib import claude_weekly_used
-from scripts.orchestration import curriculum_coordinator as coordinator
-from scripts.review import bench_health, closeout_cli, reviewer_resolver, reviewer_scheduler
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, bound, unresolved
 from tests.helpers.claude_account_fixtures import account_row as _account_row
 from tests.test_claude_account_route_key import _agreement_snapshot, _route_key_for
@@ -506,7 +506,7 @@ def test_reviewer_inventory_binds_injected_and_produced_snapshots(monkeypatch, t
     def contract_failure(**_k):
         raise AccountRequired("unbound read")
 
-    monkeypatch.setattr("scripts.api.state_router.compute_routing_budget", contract_failure)
+    monkeypatch.setattr("lu_machinery.api.state_router.compute_routing_budget", contract_failure)
     with pytest.raises(AccountRequired):  # the producer's ``except Exception`` does not absorb it
         bench_health._bench_inventory(
             None, data_egress_policy="local_interactive", review_profile="code", risk="medium"

@@ -11,8 +11,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
-
-from scripts.common import scratch
+from lu_machinery.common import scratch
 
 # The host constant, bound before any per-test patch of the module attribute.
 _HOST_DEFAULT_SCRATCH_ROOT = scratch.DEFAULT_SCRATCH_ROOT
@@ -83,7 +82,7 @@ def test_review_root_deletion_stays_inside_the_per_test_root(
     target and asserts it is inside ``tmp_path`` before the real remove.
     The scan guard checks the scan result before that deletion.
     """
-    from scripts.review import isolation
+    from lu_machinery.review import isolation
 
     boundary = _resolved(tmp_path)
     host_temp = _resolved(Path(tempfile.gettempdir()))
@@ -144,7 +143,7 @@ def test_review_sweep_refuses_an_outside_review_root_before_deletion(
     directory. The deletion guard raises on the resolved target, and the
     sentinel directory is still there afterwards.
     """
-    from scripts.review import isolation
+    from lu_machinery.review import isolation
 
     boundary = _resolved(tmp_path)
     sentinel = tmp_path.parent / f"lu-review-snap-outside-{tmp_path.name}"
@@ -281,7 +280,7 @@ def test_review_sweep_refuses_a_misconfigured_scan_root(
     tmp_path: Path,
 ) -> None:
     """Review orphan sweep fails closed before it can delete a review root."""
-    from scripts.review import isolation
+    from lu_machinery.review import isolation
 
     _keep_misconfigured_scans_inside_tmp(monkeypatch, tmp_path)
     review_root = tmp_path / "lu-review-snap-misconfigured"

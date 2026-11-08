@@ -3,8 +3,7 @@
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.review.verdict_parser import (
+from lu_machinery.review.verdict_parser import (
     _code_fence_spans,
     _without_code_fences,
     recognized_verdicts,

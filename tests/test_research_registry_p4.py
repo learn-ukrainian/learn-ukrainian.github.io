@@ -25,16 +25,16 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.orchestration import issue_stream_audit as isa
+from lu_machinery.research import consumption
+from lu_machinery.research import observability as obs
+from lu_machinery.research import registry as reg
 
-import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
-from scripts.orchestration import issue_stream_audit as isa
-from scripts.research import consumption
-from scripts.research import observability as obs
-from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -867,7 +867,7 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router
 
     calls = []
     monkeypatch.setattr(
@@ -899,9 +899,9 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     """#10793: a cache published by either writer (the strict checker's validated
     publication or a Monitor ``run_audit`` refresh) leaks no private key through
     the route or the Work projection, and keeps run_audit's warnings."""
-    from scripts.api import issues_router
-    from scripts.ci import check_issue_task_quality as checker
-    from scripts.work import sources_public
+    from lu_machinery.api import issues_router
+    from lu_machinery.ci import check_issue_task_quality as checker
+    from lu_machinery.work import sources_public
 
     repo = "learn-ukrainian/learn-ukrainian.github.io"
     registry = {"devops": [5703], "harness": [6943]}
@@ -993,7 +993,7 @@ def test_strict_adoption_gate_runs_as_bare_script():
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router
 
     def _fake_read_cache(max_age_s):
         if max_age_s == 3600:
@@ -1017,7 +1017,7 @@ def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monke
 
 
 def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router
 
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
     monkeypatch.setattr(
@@ -1046,7 +1046,7 @@ def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch
 
 
 def test_issues_streams_no_cache_schedules_once_and_returns_immediately(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router
 
     calls = []
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)

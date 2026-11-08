@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.ops import driver_lanes as dl
 
-from scripts.ops import driver_lanes as dl
 from tests._host_path_guard import assert_no_host_facts
 
 REPO = Path(__file__).resolve().parents[2]
@@ -33,7 +33,7 @@ def test_registry_holds_the_nine_lanes_with_generic_launchers() -> None:
 
 
 def test_lane_models_are_active_catalog_models() -> None:
-    from scripts.review.model_catalog import canonical_model_id, load_model_catalog, retired_model_refusal
+    from lu_machinery.review.model_catalog import canonical_model_id, load_model_catalog, retired_model_refusal
 
     catalog = load_model_catalog()
     for lane in dl.load_registry().lanes:
@@ -149,7 +149,7 @@ def test_invalid_lane_data_is_rejected(mutate, message: str) -> None:
 
 @pytest.mark.parametrize("style", ["file", "module"])
 def test_cli_prints_the_registry_both_ways(style: str) -> None:
-    argv = [str(REPO / "scripts/ops/driver_lanes.py")] if style == "file" else ["-m", "scripts.ops.driver_lanes"]
+    argv = [str(REPO / "scripts/ops/driver_lanes.py")] if style == "file" else ["-m", "lu_machinery.ops.driver_lanes"]
     result = subprocess.run(
         [sys.executable, *argv], cwd=REPO, capture_output=True, text=True, check=True, timeout=60,
         env={**os.environ, "PYTHONPATH": ""},

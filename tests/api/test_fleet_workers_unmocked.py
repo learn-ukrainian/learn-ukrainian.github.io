@@ -9,13 +9,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi.testclient import TestClient
-
-from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, reset_workers_payload_cache
-from scripts.api.main import app
-from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
-from scripts.api.occupancy_local import write_marker
-from scripts.api.project_state_router import reset_local_document_cache
-from scripts.api.project_state_store import reset_project_state_store
+from lu_machinery.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, reset_workers_payload_cache
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
+from lu_machinery.api.occupancy_local import write_marker
+from lu_machinery.api.project_state_router import reset_local_document_cache
+from lu_machinery.api.project_state_store import reset_project_state_store
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -62,7 +61,7 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,worker-box=host-worker")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
-    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    monkeypatch.setattr("lu_machinery.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
 
     response = client.get("/api/fleet/workers/v1?host_id=host-worker")
     assert response.status_code == 200
@@ -135,7 +134,7 @@ def test_unmocked_local_host_driver_lease_in_unattributed_bucket(tmp_path: Path,
 
     db = tmp_path / "session_streams.db"
     _seed_local_driver_lease(db)
-    monkeypatch.setattr("scripts.api.fleet_workers_collect.session_streams_db_path", lambda: db)
+    monkeypatch.setattr("lu_machinery.api.fleet_workers_collect.session_streams_db_path", lambda: db)
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,worker-box=host-worker")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-teacher")
 

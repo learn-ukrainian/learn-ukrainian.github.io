@@ -8,9 +8,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS, GlmEgressForbiddenError
-from scripts.session_canary import glm_lane
+from lu_machinery.agent_runtime.adapters.glm import _CI_ENV_VARS, GlmEgressForbiddenError
+from lu_machinery.session_canary import glm_lane
 
 _REPO = Path(__file__).resolve().parents[1]
 
@@ -27,7 +26,7 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
         [
             sys.executable,
             "-m",
-            "scripts.session_canary.glm_lane",
+            "lu_machinery.session_canary.glm_lane",
             "--repo",
             str(repo),
             command,

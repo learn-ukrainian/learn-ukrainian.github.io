@@ -6,10 +6,10 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.agent_runtime import runner
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.result import AgyAttempt, ParseResult
 
-from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.result import AgyAttempt, ParseResult
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 ELIGIBILITY_503 = "Eligibility check failed: UNAVAILABLE (code 503)"
@@ -30,7 +30,7 @@ READ_FILE_AUTO_DENIAL = (
 )
 @pytest.mark.parametrize("profile", ["ukrainian", "code"])
 def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_path, monkeypatch, reference, profile):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     workspace = tmp_path / "workspace"
     workspace.mkdir()
@@ -89,7 +89,7 @@ def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_p
 
 @pytest.mark.parametrize("marker", ["review_access", "review_id", "attempt_id", "reviewer_tools", "strict_mcp_config"])
 def test_agy_every_scoped_review_route_checks_file_requirements(tmp_path, monkeypatch, marker):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     monkeypatch.setattr(agy, "_require_background_wait_support", Mock())
     config = {marker: "isolated", "agy_home_override": str(tmp_path / "home")}
@@ -102,7 +102,7 @@ def test_agy_every_scoped_review_route_checks_file_requirements(tmp_path, monkey
 
 @pytest.mark.parametrize("override", ["repo_read_root", "review_snapshot_root"])
 def test_agy_add_dir_cannot_substitute_for_a_read_grant(tmp_path, monkeypatch, override):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     home = tmp_path / "home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
@@ -118,7 +118,7 @@ def test_agy_add_dir_cannot_substitute_for_a_read_grant(tmp_path, monkeypatch, o
 
 @pytest.mark.parametrize("reference", ["./unsafe\u202efile.txt", "./loop.txt"])
 def test_agy_unverifiable_literal_path_refuses_with_no_private_target(tmp_path, monkeypatch, reference):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     (tmp_path / "loop.txt").symlink_to("loop.txt")
     home = tmp_path / "home"
@@ -134,7 +134,7 @@ def test_agy_unverifiable_literal_path_refuses_with_no_private_target(tmp_path, 
 
 
 def test_agy_read_requirement_refuses_before_runner_headroom_or_failover(tmp_path, monkeypatch):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     adapter = SimpleNamespace(default_model="gemini-3.8-flash-high", supported_modes={"read-only"})
     monkeypatch.setattr(runner, "_load_adapter", lambda *_: adapter)
@@ -371,7 +371,7 @@ def test_usage_record_validates_optional_retry_fields_for_every_agent(
 @pytest.mark.parametrize("ok", [True, False])
 @pytest.mark.parametrize("has_kills", [True, False], ids=["kills", "no-kills"])
 def test_agy_killed_commands_survive_gemini_ladder_result(tmp_path, monkeypatch, ok, has_kills):
-    from ai_llm.fallback import PRIMARY_GEMINI_MODEL
+    from lu_machinery.ai_llm.fallback import PRIMARY_GEMINI_MODEL
 
     adapter = SimpleNamespace(build_invocation=lambda **_: InvocationPlan(cmd=["fake-cli"], cwd=tmp_path))
     commands = (["git grep needle"] if ok else ["pytest -q"]) if has_kills else []
@@ -627,7 +627,7 @@ def test_process_group_confirmation_fails_closed(monkeypatch, error, expected):
 
 
 def test_gemini_ladder_cannot_launch_agy_a_third_time(tmp_path, monkeypatch):
-    from ai_llm.fallback import CallResult, GeminiRung
+    from lu_machinery.ai_llm.fallback import CallResult, GeminiRung
 
     adapter = SimpleNamespace(build_invocation=Mock(return_value=InvocationPlan(cmd=["agy"], cwd=tmp_path)))
     outcomes = Mock(side_effect=[_outcome(stderr="error"), _outcome(stderr="error")])
@@ -699,7 +699,7 @@ def test_retry_preparation_failure_preserves_first_attempt(tmp_path, monkeypatch
 
 
 def test_second_attempt_timeout_retains_both_attempts(tmp_path, monkeypatch):
-    from scripts.agent_runtime.errors import AgentTimeoutError
+    from lu_machinery.agent_runtime.errors import AgentTimeoutError
 
     monkeypatch.setattr(runner, "_agy_git_state", lambda _: (b"head", b"clean"))
     execution, *_ = _execute(tmp_path, monkeypatch, [_cancel(), _cancel(kill="hard_timeout")])
@@ -726,7 +726,7 @@ def test_second_attempt_timeout_retains_both_attempts(tmp_path, monkeypatch):
 
 
 def test_telemetry_rejects_third_attempt_and_invalid_acceptance():
-    from scripts.agent_runtime.result import AgyTelemetry
+    from lu_machinery.agent_runtime.result import AgyTelemetry
 
     with pytest.raises(ValueError, match="launch_cap"):
         AgyTelemetry(attempts=(AgyAttempt(),) * 3)
@@ -736,7 +736,7 @@ def test_telemetry_rejects_third_attempt_and_invalid_acceptance():
 
 @pytest.mark.parametrize("new_counts", [False, True])
 def test_older_attempt_records_load_without_a_permission_target(new_counts):
-    from scripts.agent_runtime.result import AgyTelemetry
+    from lu_machinery.agent_runtime.result import AgyTelemetry
 
     record = {"completion_reason": "completed", "permission_profile_id": "ukrainian-review-command-denial-v2"}
     if new_counts:

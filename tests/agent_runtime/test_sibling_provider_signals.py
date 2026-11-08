@@ -6,17 +6,16 @@ import json
 from pathlib import Path
 
 import pytest
-
-from agent_runtime.adapters.agy import AgyAdapter, _brain_transcript_path
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.adapters.cursor import CursorAdapter
-from agent_runtime.adapters.deepseek import DeepSeekAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
-from agent_runtime.adapters.glm import GlmAdapter
-from agent_runtime.adapters.grok_build import GrokBuildAdapter
-from agent_runtime.adapters.kimi import KimiAdapter
-from agent_runtime.failover import classify_failover_trigger
-from agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter, _brain_transcript_path
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.cursor import CursorAdapter
+from lu_machinery.agent_runtime.adapters.deepseek import DeepSeekAdapter
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
+from lu_machinery.agent_runtime.adapters.glm import GlmAdapter
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.adapters.kimi import KimiAdapter
+from lu_machinery.agent_runtime.failover import classify_failover_trigger
+from lu_machinery.agent_runtime.result import ParseResult
 
 CONTENT = "Investigated rate limit / 429. HTTP 429: too many requests; RESOURCE_EXHAUSTED."
 
@@ -208,7 +207,7 @@ def test_kimi_retry_notice_and_nested_tool_error_are_not_terminal(stdout):
     ],
 )
 def test_provider_failure_classifier(message, status, expected):
-    from agent_runtime.failure_codes import provider_failure_code
+    from lu_machinery.agent_runtime.failure_codes import provider_failure_code
 
     assert provider_failure_code(message, status) == expected
 
@@ -225,7 +224,7 @@ def test_provider_failure_classifier(message, status, expected):
     ],
 )
 def test_opencode_unknown_or_missing_errors_stay_unknown(stdout):
-    from agent_runtime.failure_codes import opencode_provider_error
+    from lu_machinery.agent_runtime.failure_codes import opencode_provider_error
 
     message, code = opencode_provider_error(stdout)
     assert message == ""
@@ -233,7 +232,7 @@ def test_opencode_unknown_or_missing_errors_stay_unknown(stdout):
 
 
 def test_opencode_conflicting_provider_errors_stay_unknown():
-    from agent_runtime.failure_codes import opencode_provider_error
+    from lu_machinery.agent_runtime.failure_codes import opencode_provider_error
 
     stdout = "\n".join(
         json.dumps({"type": "error", "error": {"data": {"message": str(status), "statusCode": status}}})
@@ -244,7 +243,7 @@ def test_opencode_conflicting_provider_errors_stay_unknown():
 
 @pytest.mark.parametrize("status", [400, 401, 503])
 def test_status_outranks_rate_limit_words_in_provider_error(status):
-    from agent_runtime.failure_codes import provider_failure_code
+    from lu_machinery.agent_runtime.failure_codes import provider_failure_code
 
     expected = {400: "provider_error", 401: "provider_auth", 503: "provider_overloaded"}[status]
     assert provider_failure_code(f"HTTP {status}: invalid rate limit configuration, value 429") == expected
@@ -281,7 +280,7 @@ def test_failed_turn_generic_error_tool_text_never_triggers_provider_failover(ad
 
 
 def test_provider_rate_limit_error_class_is_authoritative():
-    from agent_runtime.failure_codes import provider_failure_code, provider_stderr_error
+    from lu_machinery.agent_runtime.failure_codes import provider_failure_code, provider_stderr_error
 
     text = "RateLimitError: request rejected"
     assert provider_stderr_error(text) == text

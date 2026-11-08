@@ -9,22 +9,23 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.errors import RateLimitedError
-from agent_runtime.result import Result
+from lu_machinery.agent_runtime.errors import RateLimitedError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge._acp_compat import registered_participant_model
+from lu_machinery.ai_agent_bridge._cli import _handle_ask_gemini
+from lu_machinery.ai_agent_bridge._db import get_db, init_db
+from lu_machinery.ai_agent_bridge._gemini import _run_gemini_sync
+from lu_machinery.ai_agent_bridge._messaging import send_message
+
 from batch_gemini_config import PRO_MODEL
-from scripts.ai_agent_bridge._acp_compat import registered_participant_model
-from scripts.ai_agent_bridge._cli import _handle_ask_gemini
-from scripts.ai_agent_bridge._db import get_db, init_db
-from scripts.ai_agent_bridge._gemini import _run_gemini_sync
-from scripts.ai_agent_bridge._messaging import send_message
 
 
 @pytest.fixture
 def bridge_db(tmp_path):
     db_path = tmp_path / "messages.db"
     with (
-        patch("scripts.ai_agent_bridge._config.DB_PATH", db_path),
-        patch("scripts.ai_agent_bridge._db.DB_PATH", db_path),
+        patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_path),
+        patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path),
     ):
         conn = init_db()
         conn.close()
@@ -44,9 +45,9 @@ def _message_to_model(message_id: int) -> str | None:
         conn.close()
 
 
-@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
-@patch("scripts.ai_agent_bridge._gemini.acknowledge")
-@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._gemini._route_gemini_response")
+@patch("lu_machinery.ai_agent_bridge._gemini.acknowledge")
+@patch("lu_machinery.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_429_retries_same_model_then_fails_loudly(
     mock_invoke,
     mock_acknowledge,
@@ -78,10 +79,10 @@ def test_run_gemini_sync_429_retries_same_model_then_fails_loudly(
     ]
 
     with (
-        patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False),
-        patch("scripts.ai_agent_bridge._gemini._write_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini._remove_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini.atexit.register"),
+        patch("lu_machinery.ai_agent_bridge._gemini._is_task_locked", return_value=False),
+        patch("lu_machinery.ai_agent_bridge._gemini._write_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini._remove_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini.atexit.register"),
     ):
         with pytest.raises(RateLimitedError) as error:
             _run_gemini_sync(
@@ -105,9 +106,9 @@ def test_run_gemini_sync_429_retries_same_model_then_fails_loudly(
     mock_acknowledge.assert_not_called()
 
 
-@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
-@patch("scripts.ai_agent_bridge._gemini.acknowledge")
-@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._gemini._route_gemini_response")
+@patch("lu_machinery.ai_agent_bridge._gemini.acknowledge")
+@patch("lu_machinery.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_passes_auth_mode_to_runtime(
     mock_invoke,
     _mock_acknowledge,
@@ -148,10 +149,10 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
     )
 
     with (
-        patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False),
-        patch("scripts.ai_agent_bridge._gemini._write_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini._remove_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini.atexit.register"),
+        patch("lu_machinery.ai_agent_bridge._gemini._is_task_locked", return_value=False),
+        patch("lu_machinery.ai_agent_bridge._gemini._write_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini._remove_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini.atexit.register"),
     ):
         _run_gemini_sync(
             msg,
@@ -190,9 +191,9 @@ def _ok_result() -> Result:
     "allow_write, expected_mode",
     [(False, "read-only"), (True, "workspace-write")],
 )
-@patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
-@patch("scripts.ai_agent_bridge._gemini.acknowledge")
-@patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._gemini._route_gemini_response")
+@patch("lu_machinery.ai_agent_bridge._gemini.acknowledge")
+@patch("lu_machinery.ai_agent_bridge._gemini.runtime_invoke")
 def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
     mock_invoke,
     _ack,
@@ -225,10 +226,10 @@ def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
     mock_invoke.return_value = _ok_result()
 
     with (
-        patch("scripts.ai_agent_bridge._gemini._is_task_locked", return_value=False),
-        patch("scripts.ai_agent_bridge._gemini._write_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini._remove_pid_file"),
-        patch("scripts.ai_agent_bridge._gemini.atexit.register"),
+        patch("lu_machinery.ai_agent_bridge._gemini._is_task_locked", return_value=False),
+        patch("lu_machinery.ai_agent_bridge._gemini._write_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini._remove_pid_file"),
+        patch("lu_machinery.ai_agent_bridge._gemini.atexit.register"),
     ):
         _run_gemini_sync(
             msg,
@@ -255,7 +256,7 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
         captured["kwargs"] = kwargs
         return SimpleNamespace(ok=True)
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._acp_compat.run_compat_ask", _fake_ask_agy)
 
     class _Args:
         content = "hello"
@@ -287,8 +288,8 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
 
 def test_converse_gemini_default_tracks_pin_rotation(monkeypatch) -> None:
     """#6929: rotating the AGY pin moves converse's default with it."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._gemini import converse_gemini
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._gemini import converse_gemini
 
     monkeypatch.setitem(
         ACPX_SUPPORTED_PARTICIPANTS,
@@ -301,9 +302,9 @@ def test_converse_gemini_default_tracks_pin_rotation(monkeypatch) -> None:
         captured.update(kwargs)
         return 1
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._gemini.ask_gemini", _fake_ask_gemini)
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._gemini.get_conversation_context",
+        "lu_machinery.ai_agent_bridge._gemini.get_conversation_context",
         lambda _task_id: ("", 0),
     )
 
@@ -319,9 +320,9 @@ def test_converse_gemini_default_tracks_pin_rotation(monkeypatch) -> None:
 
 def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:
     """#6959: default_gemini_model resolves from the live ACP registry pin."""
-    import scripts.ai_agent_bridge as bridge
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._config import default_gemini_model
+    import lu_machinery.ai_agent_bridge as bridge
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._config import default_gemini_model
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
     assert default_gemini_model() == registered_participant_model("agy")

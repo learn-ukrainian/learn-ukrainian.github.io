@@ -12,7 +12,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.ai_agent_bridge import _channels, _db, _inbox_watch, _messaging
+from lu_machinery.ai_agent_bridge import _channels, _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
@@ -20,8 +20,8 @@ def isolate_db(tmp_path: Path):
     """Create an isolated broker database with the current messages schema."""
     db_path = tmp_path / "messages.db"
     with (
-        patch("scripts.ai_agent_bridge._config.DB_PATH", db_path),
-        patch("scripts.ai_agent_bridge._db.DB_PATH", db_path),
+        patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_path),
+        patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path),
     ):
         _db.init_db().close()
         yield db_path
@@ -151,7 +151,7 @@ def test_cursor_does_not_advance_when_stdout_flush_fails(isolate_db: Path):
 
 def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """The persistent inbox watcher loop invokes run_ask_watchdog on each tick (#5893)."""
-    watchdog_mock = patch("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog").start()
+    watchdog_mock = patch("lu_machinery.ai_agent_bridge._ask_lifecycle.run_ask_watchdog").start()
     try:
         _inbox_watch.run_watcher(
             "grok",
@@ -170,7 +170,7 @@ def test_inbox_watcher_watchdog_failure_warns_and_continues(
 ):
     """A raising ask watchdog emits a stderr warning and does not crash the watcher loop (#5893)."""
     watchdog_mock = patch(
-        "scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")
+        "lu_machinery.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")
     ).start()
     try:
         cursor = _inbox_watch.run_watcher(
@@ -218,13 +218,13 @@ def test_recipients_for_registered_grok_monitor_slot_is_dedicated():
 
 
 def test_live_supervisory_retries_outages_until_prepared(capsys):
-    from scripts.session_supervisor.remote import RemoteUnavailableError, RemoteUnreachableError
+    from lu_machinery.session_supervisor.remote import RemoteUnavailableError, RemoteUnreachableError
 
     request = _inbox_watch.SupervisoryRequest("delivery-test", "epic:9999", "restart", 1)
     with (
-        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment"),
-        patch("scripts.fleet_comms.authority.AuthorityService"),
-        patch("scripts.session_supervisor.SessionSupervisor"),
+        patch("lu_machinery.session_streams.hooks.lease_from_environment"),
+        patch("lu_machinery.fleet_comms.authority.AuthorityService"),
+        patch("lu_machinery.session_supervisor.SessionSupervisor"),
         patch.object(_inbox_watch, "consume_supervisory_event", side_effect=[
             RemoteUnreachableError("hostile $(secret)"),
             RemoteUnavailableError("hostile $(secret)"),
@@ -258,7 +258,7 @@ def test_empty_local_queue_does_not_call_monitor():
 
 
 def test_idle_tick_does_not_clear_a_monitor_outage(capsys):
-    from scripts.session_supervisor.remote import RemoteUnavailableError
+    from lu_machinery.session_supervisor.remote import RemoteUnavailableError
 
     def stop_after_idle(_seconds):
         stop_after_idle.calls += 1
@@ -267,9 +267,9 @@ def test_idle_tick_does_not_clear_a_monitor_outage(capsys):
 
     stop_after_idle.calls = 0
     with (
-        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment"),
-        patch("scripts.fleet_comms.authority.AuthorityService"),
-        patch("scripts.session_supervisor.SessionSupervisor"),
+        patch("lu_machinery.session_streams.hooks.lease_from_environment"),
+        patch("lu_machinery.fleet_comms.authority.AuthorityService"),
+        patch("lu_machinery.session_supervisor.SessionSupervisor"),
         patch.object(_inbox_watch, "consume_supervisory_event", side_effect=[
             RemoteUnavailableError("down"),
             _inbox_watch.MONITOR_NOT_CONTACTED,
@@ -285,7 +285,7 @@ def test_idle_tick_does_not_clear_a_monitor_outage(capsys):
 
 @pytest.mark.parametrize("result", [75, 2, 76, "permanent", "transient"])
 def test_live_supervisory_notifies_only_prepared_wake(result):
-    from scripts.session_supervisor.remote import RemoteUnreachableError
+    from lu_machinery.session_supervisor.remote import RemoteUnreachableError
 
     error = None
     if result == "permanent":
@@ -293,7 +293,7 @@ def test_live_supervisory_notifies_only_prepared_wake(result):
     elif result == "transient":
         error = RemoteUnreachableError("unreachable")
     with (
-        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment") as lease,
+        patch("lu_machinery.session_streams.hooks.lease_from_environment") as lease,
         patch.object(_inbox_watch.os, "getppid", return_value=12345),
         patch.object(_inbox_watch.os, "kill") as kill,
         patch.object(_inbox_watch, "run_live_supervisory_watcher", return_value=result, side_effect=error),
@@ -309,7 +309,7 @@ def test_live_supervisory_notifies_only_prepared_wake(result):
 
 def test_live_supervisory_rejects_wrong_parent_without_notification():
     with (
-        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment") as lease,
+        patch("lu_machinery.session_streams.hooks.lease_from_environment") as lease,
         patch.object(_inbox_watch.os, "getppid", return_value=12345),
         patch.object(_inbox_watch.os, "kill") as kill,
         patch.object(_inbox_watch, "run_live_supervisory_watcher") as run,
@@ -325,7 +325,7 @@ def test_monitor_server_failure_is_retryable_without_remote_diagnostics(http_err
     import urllib.error
     from unittest.mock import MagicMock
 
-    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteUnavailableError
+    from lu_machinery.session_supervisor.remote import RemoteEpicClient, RemoteUnavailableError
 
     response = MagicMock()
     response.__enter__.return_value = response

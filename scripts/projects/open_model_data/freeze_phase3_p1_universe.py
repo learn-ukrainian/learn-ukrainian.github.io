@@ -18,9 +18,10 @@ ROOT = Path(__file__).resolve().parents[3]
 if __package__ in {None, ""}:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.storage.paths import ArtifactSet, artifact_set
+
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.paths import ArtifactSet, artifact_set
 
 DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 ADMISSION = DATA / "admission"

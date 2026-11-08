@@ -11,16 +11,15 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.errors import (
+from lu_machinery.agent_runtime.errors import (
     AgentRuntimeError,
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from scripts.agent_runtime.result import Result
-from scripts.orchestration.codex_transport_health import (
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.orchestration.codex_transport_health import (
     DEFAULT_EFFORT,
     DEFAULT_MODEL,
     DEGRADED,

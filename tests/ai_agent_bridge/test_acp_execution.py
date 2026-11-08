@@ -12,15 +12,15 @@ import threading
 from pathlib import Path
 
 import pytest
-
-import scripts
-from scripts.ai_agent_bridge import _acp_execution
-from scripts.ai_agent_bridge._acp_execution import (
+from lu_machinery.ai_agent_bridge import _acp_execution
+from lu_machinery.ai_agent_bridge._acp_execution import (
     AcpExecutionWorkspaceError,
     acp_execution_cwd,
 )
-from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
-from scripts.guardrails.worktree_containment import classify_repo_path
+from lu_machinery.common.acp_runtime_lock import build_lock_reason, process_start_time
+from lu_machinery.guardrails.worktree_containment import classify_repo_path
+
+import scripts
 from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 PROJECT_ROOT = Path(scripts.__file__).resolve().parents[1]
@@ -182,7 +182,7 @@ def test_transport_fragment_task_id_is_rejected_before_directory_creation(
 _ASK_BODY = (
     "import os, signal, sys\n"
     "from pathlib import Path\n"
-    "from scripts.ai_agent_bridge._acp_execution import acp_execution_cwd\n"
+    "from lu_machinery.ai_agent_bridge._acp_execution import acp_execution_cwd\n"
     # Keep SIGTERM readable even if it arrives just before the blocking read.
     # A signal received just before time.sleep enters its syscall can otherwise
     # leave CPython's handler pending for the entire sleep.

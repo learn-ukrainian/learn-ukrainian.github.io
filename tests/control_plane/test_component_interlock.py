@@ -10,8 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.control_plane.storage import (
+from lu_machinery.control_plane.storage import (
     Authority,
     ControlPlaneError,
     ControlPlaneUnsupportedComponentError,
@@ -52,8 +51,8 @@ def test_assert_component_supported_unknown_component_fails_closed() -> None:
 def test_request_executor_pg_unreachable_fails_closed(tmp_path: Path) -> None:
     """#605: pg construction is allowed; an unreachable DSN fails closed with
     a typed, OPSEC-safe error instead of an interlock refusal."""
-    from scripts.control_plane.storage import ControlPlanePgConnectError
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from lu_machinery.control_plane.storage import ControlPlanePgConnectError
+    from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
     with pytest.raises(ControlPlanePgConnectError) as exc:
         RequestExecutor(root=tmp_path)
@@ -65,7 +64,7 @@ def test_request_executor_pg_unreachable_fails_closed(tmp_path: Path) -> None:
 def test_message_plane_authority_mode_still_refuses_pg(tmp_path: Path) -> None:
     """#605: live traffic is NOT flipped — authority mode keeps refusing pg
     at the verify_authority_cutover gate."""
-    from scripts.fleet_comms.message_plane import (
+    from lu_machinery.fleet_comms.message_plane import (
         AuthorityCutoverRefusedError,
         MessagePlane,
     )
@@ -80,7 +79,7 @@ def test_session_streams_refuses_pg_cleanly(
 ) -> None:
     """#605: session_streams is sqlite-only; the interlock refuses pg at the
     seam before any connection attempt (no DSN required)."""
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.db import SessionStreamDatabase
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
     monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN", raising=False)
@@ -93,7 +92,7 @@ def test_session_streams_refuses_pg_cleanly(
 
 
 def test_plane_status_reports_real_pg_failure_not_component_refusal(tmp_path: Path) -> None:
-    from scripts.fleet_comms.message_plane import read_plane_status
+    from lu_machinery.fleet_comms.message_plane import read_plane_status
 
     # A stale local sqlite file must NOT be probed as if it were the plane.
     (tmp_path / "comms.sqlite3").write_bytes(b"")
@@ -106,7 +105,7 @@ def test_plane_status_reports_real_pg_failure_not_component_refusal(tmp_path: Pa
 
 
 def test_apply_migrations_refuses_non_sqlite_connection() -> None:
-    from scripts.fleet_comms.migrations import apply_migrations
+    from lu_machinery.fleet_comms.migrations import apply_migrations
 
     class FakePgConnection:  # duck-typed psycopg stand-in
         pass
@@ -117,7 +116,7 @@ def test_apply_migrations_refuses_non_sqlite_connection() -> None:
 
 def test_sqlite_authority_still_constructs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv(_ENV, "sqlite")
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
     with RequestExecutor(root=tmp_path) as executor:
         assert executor.store.authority is Authority.SQLITE
@@ -128,8 +127,8 @@ def test_injected_sqlite_store_does_not_bypass_executor_interlock(
 ) -> None:
     """CF r1 (PR #7498): a store OPENED under sqlite must not smuggle sqlite
     SQL into a pg-configured plane via injection."""
-    from scripts.fleet_comms.artifacts import ArtifactStore
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from lu_machinery.fleet_comms.artifacts import ArtifactStore
+    from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
     monkeypatch.setenv(_ENV, "sqlite")
     store = ArtifactStore(root=tmp_path)
@@ -144,8 +143,8 @@ def test_injected_sqlite_store_does_not_bypass_executor_interlock(
 def test_injected_executor_does_not_bypass_message_plane_interlock(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    from scripts.fleet_comms.message_plane import MessagePlane
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from lu_machinery.fleet_comms.message_plane import MessagePlane
+    from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
     monkeypatch.setenv(_ENV, "sqlite")
     executor = RequestExecutor(root=tmp_path)

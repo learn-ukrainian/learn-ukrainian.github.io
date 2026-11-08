@@ -3,8 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.ci import slot_inventory
+from lu_machinery.ci import slot_inventory
 
 
 def _write_workflow(directory: Path, name: str, text: str) -> None:

@@ -7,13 +7,10 @@ from typing import Any
 
 import pytest
 import yaml
+from lu_machinery.orchestration.trail_predicates import evaluate_named_table, load_decision_tables
+from lu_machinery.orchestration.validate_trailspec import DEFAULT_DECISION_TABLES_V1_PATH, validate_trailspec
 
-from scripts.orchestration.trail_predicates import evaluate_named_table, load_decision_tables
-from scripts.orchestration.validate_trailspec import (
-    DEFAULT_DECISION_TABLES_V1_PATH,
-    PROJECT_ROOT,
-    validate_trailspec,
-)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RB3_PATH = PROJECT_ROOT / "scripts/config/trails/rb3-pr-lifecycle.trail.yaml"
 RB4_PATH = PROJECT_ROOT / "scripts/config/trails/rb4-red-ci-triage.trail.yaml"

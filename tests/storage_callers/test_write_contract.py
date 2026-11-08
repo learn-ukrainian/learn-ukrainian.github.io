@@ -3,8 +3,7 @@
 from pathlib import Path
 
 import pytest
-
-from scripts.storage import topology as t
+from lu_machinery.storage import topology as t
 
 
 @pytest.fixture
@@ -146,7 +145,7 @@ def test_shadow_replacement_is_distinct_from_staging(stores, tmp_path):
 def test_sqlite_uri_encodes_filename_without_query_injection(stores, tmp_path, name):
     import sqlite3
 
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 
     path = tmp_path / name
     result = t.resolve_store_for_write("vesum", stores, intent="create", target=t.ExplicitStoreWriteTarget(path, "staging"), env={})

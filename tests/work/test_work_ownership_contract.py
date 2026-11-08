@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from scripts.work.normalize import build_projection
-from scripts.work.schema import validate_projection
-from scripts.work.sources_public import SectionResult
+from lu_machinery.work.normalize import build_projection
+from lu_machinery.work.schema import validate_projection
+from lu_machinery.work.sources_public import SectionResult
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 

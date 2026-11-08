@@ -11,9 +11,8 @@ import json
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails import worktree_containment
-from scripts.orchestration import worktree_claims
+from lu_machinery.guardrails import worktree_containment
+from lu_machinery.orchestration import worktree_claims
 
 
 @pytest.fixture

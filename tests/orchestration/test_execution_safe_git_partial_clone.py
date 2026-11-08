@@ -14,8 +14,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import execution_safe_git as safe
+from lu_machinery.orchestration import execution_safe_git as safe
 
 
 def _git(cwd: Path, *args: str) -> str:

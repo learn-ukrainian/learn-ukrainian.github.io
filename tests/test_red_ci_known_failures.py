@@ -10,8 +10,7 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.red_ci_known_failures import (
+from lu_machinery.orchestration.red_ci_known_failures import (
     RedCIKnownFailuresValidationError,
     aggregate_lookup_results,
     compute_signature_digest,
@@ -20,6 +19,7 @@ from scripts.orchestration.red_ci_known_failures import (
     load_and_validate_registry,
     main,
 )
+
 from tests.project_python import project_python
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

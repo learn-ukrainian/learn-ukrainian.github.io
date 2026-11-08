@@ -10,11 +10,11 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api import project_state_router as router_mod
+from lu_machinery.api.main import app
+from lu_machinery.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
+from lu_machinery.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
 
-from scripts.api import project_state_router as router_mod
-from scripts.api.main import app
-from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
-from scripts.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
 from tests import _host_path_guard as guard
 
 loop_client = TestClient(

@@ -18,7 +18,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.ci.deploy_paths import AutoDeployDecision, decide_auto_deploy
+from lu_machinery.ci.deploy_paths import AutoDeployDecision, decide_auto_deploy
 
 
 def read_nul_delimited_paths(path: Path) -> tuple[str, ...]:

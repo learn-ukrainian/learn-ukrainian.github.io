@@ -14,10 +14,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.ci import pytest_dispatch_cap
-from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, GOVERNED_PYTEST
-from scripts.common import test_slots
+from lu_machinery.ci import pytest_dispatch_cap
+from lu_machinery.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, GOVERNED_PYTEST
+from lu_machinery.common import test_slots
 
 _REPO = Path(__file__).resolve().parents[2]
 _PY = sys.executable
@@ -73,7 +72,7 @@ def _project(tmp_path: Path, *, conftest: str = _CONFTEST) -> Path:
         "[tool.pytest.ini_options]\n"
         "testpaths = ['tests']\n"
         f"pythonpath = ['{scripts}']\n"
-        "addopts = '-p ci.pytest_dispatch_cap'\n",
+        "addopts = '-p lu_machinery.ci.pytest_dispatch_cap'\n",
         encoding="utf-8",
     )
     (root / "conftest.py").write_text(conftest, encoding="utf-8")

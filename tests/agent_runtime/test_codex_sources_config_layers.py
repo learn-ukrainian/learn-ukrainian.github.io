@@ -14,8 +14,7 @@ import shutil
 import sys
 
 import pytest
-
-from scripts.agent_runtime.adapters import codex
+from lu_machinery.agent_runtime.adapters import codex
 
 
 def write_config_probe_binary(path, *, signed_in_layer=None, refresh_auth=False, unavailable_when_signed_in=False):
@@ -162,7 +161,8 @@ def test_native_probe_failure_is_typed(tmp_path):
 
 
 def test_sealed_adapter_defers_config_layer_probe_until_auth_staging(tmp_path, monkeypatch):
-    from scripts.review.isolation import review_isolation_tool_config
+    from lu_machinery.review.isolation import review_isolation_tool_config
+
     from tests.test_review_isolation import _private_review_roots
 
     monkeypatch.setattr(
@@ -207,7 +207,8 @@ def test_config_layer_probe_forwards_only_codex_environment(tmp_path, monkeypatc
 
 
 def test_sealed_adapter_refuses_a_symlinked_scoped_home_before_probing(tmp_path, monkeypatch):
-    from scripts.review.isolation import review_isolation_tool_config
+    from lu_machinery.review.isolation import review_isolation_tool_config
+
     from tests.test_review_isolation import _private_review_roots
 
     snapshot = tmp_path / "snapshot"

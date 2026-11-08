@@ -6,10 +6,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.api import codexbar_usage as codexbar_usage_mod
-from scripts.api import state_helpers, state_router
-from scripts.api.lane_health import (
+from lu_machinery.api import codexbar_usage as codexbar_usage_mod
+from lu_machinery.api import state_helpers, state_router
+from lu_machinery.api.lane_health import (
     BASIS_RECENT_TASKS,
     BASIS_SCAN_OBSERVED_IDLE,
     BASIS_SCAN_UNAVAILABLE,
@@ -18,7 +17,7 @@ from scripts.api.lane_health import (
     sanitize_error_excerpt,
     scan_lane_health,
 )
-from scripts.telemetry.cost_report import CostRecord
+from lu_machinery.telemetry.cost_report import CostRecord
 
 
 def test_is_spawn_phase_failure():

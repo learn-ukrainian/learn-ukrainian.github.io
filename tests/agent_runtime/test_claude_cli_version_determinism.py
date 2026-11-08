@@ -23,8 +23,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 OLD_VERSION = "2.1.50"
-ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
-KIMICC_ALIASES = ("scripts.agent_runtime.adapters.kimicc", "agent_runtime.adapters.kimicc")
+ALIASES = ("lu_machinery.agent_runtime.adapters.claude", "lu_machinery.agent_runtime.adapters.claude")
+KIMICC_ALIASES = ("lu_machinery.agent_runtime.adapters.kimicc", "lu_machinery.agent_runtime.adapters.kimicc")
 _MISSING = object()
 
 

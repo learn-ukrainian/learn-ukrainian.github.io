@@ -3,8 +3,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails import worktree_containment as wc
+from lu_machinery.guardrails import worktree_containment as wc
 
 
 def _clean_env() -> dict[str, str]:

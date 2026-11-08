@@ -1,8 +1,7 @@
 """Cursor leads only with stronger resource evidence (#10263)."""
 
 import pytest
-
-from scripts.fleet.capacity_pick import build_pick_order
+from lu_machinery.fleet.capacity_pick import build_pick_order
 
 
 @pytest.mark.parametrize(

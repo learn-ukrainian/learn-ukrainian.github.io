@@ -25,7 +25,7 @@ def _patch_usage_batch_state_dir(monkeypatch, runtime_router, batch_state_dir: P
     ``resolve_context`` (#7324 step 6 / #7496). Patch that factory (and the
     router re-export) rather than a since-removed ``USAGE_DIR`` module global.
     """
-    import scripts.api.monitor_context as monitor_context
+    import lu_machinery.api.monitor_context as monitor_context
 
     base_ctx = monitor_context.production_context()
     patched_ctx = base_ctx.with_roots(batch_state_dir=Path(batch_state_dir))
@@ -45,8 +45,8 @@ def test_orient_collector_emits_per_agent_outcomes_from_real_usage(tmp_path: Pat
     """#7089: _collect_runtime_orient_data() populates by_agent from real usage records."""
     from datetime import UTC, datetime, timedelta
 
-    import scripts.api.main as api_main
-    import scripts.api.runtime_router as runtime_router
+    import lu_machinery.api.main as api_main
+    import lu_machinery.api.runtime_router as runtime_router
 
     usage_dir = tmp_path / "api_usage"
     today = datetime.now(UTC)

@@ -17,7 +17,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _dispatch_wrappers
+from lu_machinery.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _dispatch_wrappers
 
 
 @pytest.fixture(autouse=True)
@@ -26,7 +26,7 @@ def isolate_db(tmp_path, monkeypatch):
     # Authority-mode retirement is covered in test_bridge_inbox_cli.py.
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 

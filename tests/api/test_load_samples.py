@@ -10,12 +10,11 @@ import psutil
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api import load_samples as sampler
-from scripts.api import work_router
-from scripts.api.monitor_context import fixture_context
-from scripts.api.ops_router import router
-from scripts.api.route_contracts import contract_for_route
+from lu_machinery.api import load_samples as sampler
+from lu_machinery.api import work_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.ops_router import router
+from lu_machinery.api.route_contracts import contract_for_route
 
 ROUTE = "/api/ops/v1/load-samples"
 

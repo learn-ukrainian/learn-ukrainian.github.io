@@ -10,16 +10,9 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.session_canary import codex_lane, diary, gemini_lane, glm_lane, grok_lane, handoff_select
 
-from scripts.session_canary import (
-    codex_lane,
-    diary,
-    gemini_lane,
-    glm_lane,
-    grok_lane,
-    handoff_select,
-    kimi_lane,
-)
+from scripts.session_canary import kimi_lane
 
 _STREAM = [
     {"type": "binding_order", "body": f"Binding order {i} forbids shortcuts in this lane."} for i in range(1, 5)
@@ -857,11 +850,11 @@ def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
             return None
 
     db_mod = __import__(
-        "agents_extensions.shared.session_streams.db",
+        "lu_machinery.session_streams.db",
         fromlist=["SessionStreamDatabase"],
     )
     store_mod = __import__(
-        "agents_extensions.shared.session_streams.store",
+        "lu_machinery.session_streams.store",
         fromlist=["SessionStreamStore"],
     )
     monkeypatch.setattr(db_mod, "SessionStreamDatabase", _Database)

@@ -11,8 +11,7 @@ from types import ModuleType
 
 import pytest
 import yaml
-
-from scripts.orchestration import curriculum_readiness as readiness
+from lu_machinery.orchestration import curriculum_readiness as readiness
 
 pytestmark = pytest.mark.reads_content
 
@@ -22,7 +21,7 @@ BIO_SLUG = "borys-hrinchenko"
 
 @pytest.fixture(params=["readiness", "pilot"])
 def gates_importer(request):
-    from scripts.orchestration import curriculum_lifecycle_pilot
+    from lu_machinery.orchestration import curriculum_lifecycle_pilot
 
     return {
         "readiness": readiness,

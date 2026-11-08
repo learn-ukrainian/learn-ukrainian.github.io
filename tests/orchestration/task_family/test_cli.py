@@ -10,16 +10,15 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
-
-from scripts.orchestration.task_family import cli, git_safety
-from scripts.orchestration.task_family.model import (
+from lu_machinery.orchestration.task_family import cli, git_safety
+from lu_machinery.orchestration.task_family.model import (
     LifecycleState,
     RelationType,
     TaskFamilyManifest,
     TaskNode,
     TaskRelation,
 )
-from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from lu_machinery.orchestration.task_family.storage import TaskFamilyStorage
 
 
 def _git_env() -> dict[str, str]:

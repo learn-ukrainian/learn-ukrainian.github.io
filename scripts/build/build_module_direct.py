@@ -430,7 +430,8 @@ def phase_validate(ctx: DirectModuleContext) -> bool:
 # ── Phase: Review ─────────────────────────────────────────────────────────────
 def parse_direct_review_response(response: dict[str, Any] | str) -> dict[str, Any]:
     """Consume a review object, retaining the legacy unsupported-CLI dialect."""
-    from scripts.agent_runtime.adapters._output_schema import validate_output
+    from lu_machinery.agent_runtime.adapters._output_schema import validate_output
+
     from scripts.audit.qg_schema import reviewer_output_schema
 
     if isinstance(response, str):

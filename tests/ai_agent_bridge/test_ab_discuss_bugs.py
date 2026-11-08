@@ -8,9 +8,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter
-from scripts.ai_agent_bridge import _channels, _channels_cli, _db
-from scripts.ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.ai_agent_bridge import _channels, _channels_cli, _db
+from lu_machinery.ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
 
 
 def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
@@ -29,7 +29,7 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
     """
     # Patch both bindings — ``_db`` imports DB_PATH from ``_config`` by
     # name, so they are independent (#5247 xdist leak class).
-    from scripts.ai_agent_bridge import _config
+    from lu_machinery.ai_agent_bridge import _config
 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
@@ -66,7 +66,7 @@ def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
             "synthesis": "bounded ACP result",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     root_body = "ROOT QUESTION: preserve this exact discussion brief."
     args = SimpleNamespace(
@@ -144,9 +144,8 @@ def test_acp_result_preserves_only_closed_failure_code(code, expected) -> None:
 def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None:
     """The AGY compatibility route never silently downgrades an explicit model."""
     import pytest
-
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.ai_agent_bridge._acp_compat import resolve_compat_model
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
     assert resolve_compat_model("gemini", pin) == pin

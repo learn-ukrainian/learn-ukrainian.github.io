@@ -3,9 +3,9 @@
 import json
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration import worktree_claims as claims
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import worktree_claims as claims
 from tests.orchestration.test_worktree_artifacts import assert_record_only
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree

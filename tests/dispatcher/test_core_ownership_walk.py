@@ -7,9 +7,9 @@ from unittest.mock import Mock
 
 import pytest
 import yaml
+from lu_machinery.dispatcher import git, worker
+from lu_machinery.dispatcher.types import TaskSpec
 
-from scripts.dispatcher import git, worker
-from scripts.dispatcher.types import TaskSpec
 from tests.dispatcher.conftest import run_git
 
 
@@ -125,8 +125,8 @@ def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_
     """
     import shlex
 
-    from scripts.common import git_credentials
-    from scripts.orchestration import merge_closeout
+    from lu_machinery.common import git_credentials
+    from lu_machinery.orchestration import merge_closeout
 
     record, settle = delivery_settle
     record = settle("pushed")

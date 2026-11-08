@@ -10,8 +10,7 @@ from __future__ import annotations
 import hashlib
 
 import pytest
-
-from scripts.ai_agent_bridge import _monitor_cache as cache
+from lu_machinery.ai_agent_bridge import _monitor_cache as cache
 
 
 @pytest.fixture

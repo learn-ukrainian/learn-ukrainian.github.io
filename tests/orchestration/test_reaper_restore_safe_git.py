@@ -7,9 +7,9 @@ import shlex
 import subprocess
 
 import pytest
+from lu_machinery.orchestration import execution_safe_git as safe
+from lu_machinery.orchestration import reaper_lifecycle as lifecycle
 
-from scripts.orchestration import execution_safe_git as safe
-from scripts.orchestration import reaper_lifecycle as lifecycle
 from tests.orchestration.test_worktree_claims_cli import _git, _primary
 
 

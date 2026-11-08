@@ -9,8 +9,8 @@ from copy import deepcopy
 from pathlib import Path
 
 import pytest
+from lu_machinery.orchestration import issue_stream_audit, task_closeout, task_identity, task_lifecycle
 
-from scripts.orchestration import issue_stream_audit, task_closeout, task_identity, task_lifecycle
 from tests.orchestration import test_closeout_run_evidence as run_evidence
 
 bound_case = run_evidence.bound_case
@@ -214,7 +214,7 @@ def test_cli_append_correction_and_reconcile_mistyped_url(tmp_path: Path, replac
     original = deepcopy(ledger)
     observation_path = tmp_path / "observation.json"
     observation_path.write_text(json.dumps(_observation()), encoding="utf-8")
-    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    command = [sys.executable, "-m", "lu_machinery.orchestration.task_closeout"]
     reconcile_args = ["reconcile", "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW]
     before = subprocess.run([*command, *reconcile_args], capture_output=True, text=True, timeout=60, check=True)
     assert json.loads(before.stdout)["receipt"]["state"] == "BLOCKED_WITH_RECEIPT"
@@ -263,7 +263,7 @@ def test_cli_refuses_backdated_correction_without_rewriting_ledger(
     old = ledger["evidence"][-1]
     observation_path = tmp_path / "observation.json"
     observation_path.write_text(json.dumps(_observation()), encoding="utf-8")
-    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    command = [sys.executable, "-m", "lu_machinery.orchestration.task_closeout"]
     subprocess.run([
         *command, "reconcile", "--state-file", str(path),
         "--observation-file", str(observation_path), "--now", prior_update,
@@ -294,7 +294,7 @@ def test_cli_refuses_backdated_correction_without_rewriting_ledger(
 def test_cli_review_correction_timing_controls(tmp_path: Path, recorded_at: str, blocked: bool) -> None:
     path, ledger = _ledger(tmp_path)
     old = ledger["evidence"][-1]
-    command = [sys.executable, "-m", "scripts.orchestration.task_closeout"]
+    command = [sys.executable, "-m", "lu_machinery.orchestration.task_closeout"]
     append_command = [
         *command, "add-evidence", "--state-file", str(path), "--ac-id", "AC-REVIEW", "--type", "review",
         "--summary", "late correction", "--url", REVIEW_URL, "--commit", HEAD,
@@ -354,7 +354,7 @@ def test_cli_invalid_arming_timestamp_refuses_reconcile_without_mutation(
     observation_path = tmp_path / "observation.json"
     observation_path.write_text(json.dumps(observation), encoding="utf-8")
     original = path.read_bytes()
-    command = [sys.executable, "-m", "scripts.orchestration.task_closeout", "reconcile",
+    command = [sys.executable, "-m", "lu_machinery.orchestration.task_closeout", "reconcile",
                "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW]
     refused = subprocess.run(command, capture_output=True, text=True, timeout=60, check=False)
     assert refused.returncode == 2
@@ -595,7 +595,7 @@ def test_membership_audit_report_forwards_adapter_repo_root(tmp_path: Path, monk
 
 
 def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Path, github_transport) -> None:
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     def transport(method, endpoint, headers, body, timeout):
         assert timeout == 60
@@ -682,7 +682,7 @@ def test_12209_older_opt_in_failure_does_not_override_a_later_pr_run(
     tmp_path: Path, github_transport, later_pr_run, opt_in_workflow, expected_ok, expected_failed
 ) -> None:
     """Same-name CI Gate rows: the latest run of one workflow decides; workflows stay apart."""
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     def check(run_id: int, suite: int, conclusion: str, started_at: str) -> dict:
         return {
@@ -1341,7 +1341,7 @@ def test_9852_init_binds_registry_to_identity_repository(tmp_path, monkeypatch, 
 
 
 def test_9852_registry_repository_resolution_failure_is_typed(tmp_path, github_transport):
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
     github_transport(lambda *args: Response(503, {}, b'{"message":"repository could not be resolved"}'))
     adapter = task_closeout.GhGitHubAdapter(tmp_path)
     with pytest.raises(task_lifecycle.LifecycleError, match="failed"):
@@ -1895,7 +1895,7 @@ def test_9794_init_revalidates_live_ancestry_at_ledger_write(tmp_path, monkeypat
 
 
 def _rest_parent_transport(github_transport, *, issue=None, parent=None, issue_status=200):
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     if issue is None:
         issue = {"number": 42, "state": "open", "html_url": "https://github.com/org/repo/issues/42",
@@ -2159,7 +2159,7 @@ def test_9794_null_parent_requires_typed_target_identity(tmp_path, number, githu
 @pytest.fixture
 def merged_mutation(bound_case, tmp_path, monkeypatch):
     """Exercise the real fresh collector with named GitHub response fixtures."""
-    from scripts.orchestration import merge_closeout as mc
+    from lu_machinery.orchestration import merge_closeout as mc
 
     ledger, observation, pull, run, jobs = bound_case
     path = tmp_path / "merged.json"
@@ -2227,7 +2227,7 @@ def test_mapped_merged_criterion_syncs_then_closes(merged_mutation):
 @pytest.mark.parametrize("failure", ["unreadable", "missing_run", "stale_attempt", "skipped_job", "skipped_step", "wrong_pr", "wrong_merge"])
 @pytest.mark.parametrize("action", ["sync-acs", "close-issue"])
 def test_fresh_execution_failure_never_writes(merged_mutation, monkeypatch, failure, action):
-    from scripts.orchestration import merge_closeout as mc
+    from lu_machinery.orchestration import merge_closeout as mc
 
     path, adapter, case = merged_mutation
     _, _, pull, run, jobs = case
@@ -2257,7 +2257,8 @@ def test_fresh_execution_failure_never_writes(merged_mutation, monkeypatch, fail
 
 @pytest.mark.parametrize("failure", ["missing", "unreadable", "timestamp", "digest", "pr", "head_sha", "merge_sha", "run_id", "run_attempt", "execution_attempt", "execution_step"])
 def test_mutation_consumers_reject_invalid_receipt(bound_case, failure):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
+
     from tests.orchestration.test_closeout_run_evidence import derive
 
     ledger, observation, *_ = bound_case

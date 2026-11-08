@@ -6,9 +6,9 @@ import json
 from dataclasses import replace
 
 import pytest
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
 
-from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.adapters.agy import AgyAdapter
 from tests.agent_runtime.adapters.test_agy_adapter import (
     _FINISHED_CONVERSATION_ID,
     _TASK_2,
@@ -178,7 +178,7 @@ def _explicit_denial(kind, target):
     ],
 )
 def test_native_explicit_denials_count_separately_and_keep_completion(tmp_path, tool, kind, target):
-    from scripts.agent_runtime.result import AgyTelemetry
+    from lu_machinery.agent_runtime.result import AgyTelemetry
 
     result = _parse(
         tmp_path,
@@ -234,7 +234,8 @@ def test_read_denial_requires_a_bound_file_tool_result(tmp_path, tool):
 
 @pytest.mark.parametrize("readable", [True, False])
 def test_file_auto_denial_target_survives_attempt_evidence_and_record(tmp_path, readable):
-    from scripts.agent_runtime.result import AgyTelemetry
+    from lu_machinery.agent_runtime.result import AgyTelemetry
+
     from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
 
     events = [_prompt(), _reply("Complete reply.")] if readable else ["unreadable"]
@@ -603,7 +604,7 @@ def test_agy_parsed_composition_rejects_writers_and_other_shell_syntax(command):
 
 @pytest.mark.parametrize("events", [[], [_prompt()], [_reply("reply")]])
 def test_agy_pre_model_proof_requires_no_prompt_or_model_event(tmp_path, events):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     if events:
         plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, events)
@@ -631,7 +632,7 @@ def test_agy_pre_model_proof_requires_no_prompt_or_model_event(tmp_path, events)
     ],
 )
 def test_agy_pre_model_proof_rejects_started_or_unknown_stream(tmp_path, stdout):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     plan = InvocationPlan(
         cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
@@ -647,7 +648,7 @@ def test_agy_pre_model_proof_rejects_started_or_unknown_stream(tmp_path, stdout)
 
 
 def test_agy_pre_model_proof_accepts_lone_provider_error(tmp_path):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     plan = InvocationPlan(
         cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
@@ -670,7 +671,7 @@ def test_agy_pre_model_proof_accepts_lone_provider_error(tmp_path):
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
 @pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_agy_pre_model_proof_preserves_unicode_separators_in_json_strings(tmp_path, separator, line_ending):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     plan = InvocationPlan(
         cmd=["agy", "stream-json"], cwd=tmp_path, env_overrides={agy._AGY_LOG_ENV: str(tmp_path / "missing.log")}
@@ -701,7 +702,7 @@ def test_agy_killed_non_read_command_stays_rejected_if_finish_races_with_kill(tm
     "case", ["unsafe-log", "missing-transcript", "unreadable-slice", "unknown-resume", "truncated-log"]
 )
 def test_agy_pre_model_proof_rejects_unknown_transcript_evidence(tmp_path, case):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     log = tmp_path / "attempt.log"
     metadata = {}

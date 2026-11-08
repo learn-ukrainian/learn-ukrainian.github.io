@@ -5,8 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.ai_agent_bridge._dispatch_wrappers import _prompt_directory
+from lu_machinery.ai_agent_bridge._dispatch_wrappers import _prompt_directory
 
 
 def test_prompt_directory_uses_runtime_tmp_lease(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

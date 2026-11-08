@@ -4,8 +4,7 @@ import json
 from copy import deepcopy
 
 import pytest
-
-from scripts.orchestration import task_identity
+from lu_machinery.orchestration import task_identity
 
 
 def _identity(*, issue: int | None = 5295) -> dict:

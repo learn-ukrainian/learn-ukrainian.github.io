@@ -298,7 +298,7 @@ def test_first_turn_shapes_equal_usage_input_tokens(
     usage: dict[str, object],
     expected: int,
 ) -> None:
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
+    from lu_machinery.api.telemetry.transcript_tokens import usage_input_tokens
 
     transcript = _write_rows(tmp_path / f"{label}.jsonl", usage)
 
@@ -312,7 +312,7 @@ def test_first_turn_shapes_equal_usage_input_tokens(
 def test_message_iteration_without_input_fields_is_zero_and_skipped(
     tmp_path: Path,
 ) -> None:
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
+    from lu_machinery.api.telemetry.transcript_tokens import usage_input_tokens
 
     empty_message = _top_level(
         iterations=[

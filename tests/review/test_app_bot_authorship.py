@@ -5,16 +5,16 @@ from __future__ import annotations
 import copy
 
 import pytest
-
-from scripts.publish.github import Request
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.app_bot_authorship import (
+from lu_machinery.publish.github import Request
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.app_bot_authorship import (
     APP_BOT_ALLOWLIST,
     VERIFIED_APP_BOT,
     listing_app_bot_login,
     verified_app_bot_login,
 )
-from scripts.review.reviewer_resolver import ResolverInputs, complete_author_families, resolve_reviewer
+from lu_machinery.review.reviewer_resolver import ResolverInputs, complete_author_families, resolve_reviewer
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 SHA = "a" * 40

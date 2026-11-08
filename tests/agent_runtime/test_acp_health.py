@@ -3,9 +3,8 @@
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import acp_health
-from scripts.agent_runtime.adapters import acpx
+from lu_machinery.agent_runtime import acp_health
+from lu_machinery.agent_runtime.adapters import acpx
 
 _HELP = "codex kimi cursor claude pool --file " + " ".join(acpx._ACPX_REQUIRED_GLOBAL_FLAGS)
 

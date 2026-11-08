@@ -5,10 +5,9 @@ from __future__ import annotations
 import subprocess
 from datetime import UTC, datetime, timedelta
 
+import lu_machinery.api.main as api_main
+import lu_machinery.api.state_helpers as state_helpers
 import pytest
-
-import scripts.api.main as api_main
-import scripts.api.state_helpers as state_helpers
 
 NOW = datetime(2026, 8, 13, 12, tzinfo=UTC)
 

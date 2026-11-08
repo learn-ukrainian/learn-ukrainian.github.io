@@ -9,10 +9,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder, utc_now
-from agents_extensions.shared.session_streams.store import (
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import EntryType, LeaseHolder, utc_now
+from lu_machinery.session_streams.store import (
     ContentRejectedError,
     LeaseConflictError,
     SessionStreamStore,
@@ -24,13 +23,14 @@ def _store(tmp_path: Path) -> SessionStreamStore:
 
 
 def test_monitor_ttl_successor_fences_predecessor_heartbeat_and_write(tmp_path: Path, monkeypatch) -> None:
-    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteLeaseLostError, RemoteSupervisorError
+    from lu_machinery.session_supervisor.remote import RemoteEpicClient, RemoteLeaseLostError, RemoteSupervisorError
+
     from tests.epics_monitor_stub import epics_monitor_stub
 
     store = _store(tmp_path)
     clock = utc_now()
-    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: clock)
-    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: clock)
+    monkeypatch.setattr("lu_machinery.session_streams.store.utc_now", lambda: clock)
+    monkeypatch.setattr("lu_machinery.api.epics_router.utc_now", lambda: clock)
 
     def forbidden_probe(_process_id: int) -> bool:
         pytest.fail("Monitor TTL/CAS recovery must not probe the holder process")
@@ -81,7 +81,7 @@ def _holder(agent: str, instance: str, host: str) -> LeaseHolder:
 
 @pytest.mark.parametrize("expired", [False, True])
 def test_remote_supervisor_recovery_reports_monitor_expiry(tmp_path: Path, monkeypatch, expired: bool) -> None:
-    from scripts.session_supervisor import SessionSupervisor, SupervisorError
+    from lu_machinery.session_supervisor import SessionSupervisor, SupervisorError
 
     store = _store(tmp_path)
     now = utc_now()
@@ -92,7 +92,7 @@ def test_remote_supervisor_recovery_reports_monitor_expiry(tmp_path: Path, monke
         session_id="diagnosis-session", lease_id="diagnosis-lease", now=now,
     )
     observed = now + timedelta(seconds=30 if expired else 29)
-    monkeypatch.setattr("agents_extensions.shared.session_streams.handoff.utc_now", lambda: observed)
+    monkeypatch.setattr("lu_machinery.session_streams.handoff.utc_now", lambda: observed)
     reads = []
 
     def read_stream(stream_id):
@@ -291,7 +291,7 @@ def test_holder_host_is_part_of_the_fence(tmp_path: Path) -> None:
 @pytest.mark.parametrize("host_id", [None, "synthetic-host"])
 @pytest.mark.parametrize("expired", [False, True])
 def test_local_pid_recovery_cannot_close_remote_lease(tmp_path: Path, host_id, expired) -> None:
-    from agents_extensions.shared.session_streams.handoff import diagnose_handoff
+    from lu_machinery.session_streams.handoff import diagnose_handoff
 
     store = _store(tmp_path)
     now = utc_now()
@@ -321,7 +321,7 @@ def test_dead_local_process_recovers_but_same_dead_pid_is_not_remote_authority(t
     import subprocess
     import sys
 
-    from scripts.session_supervisor import SessionSupervisor
+    from lu_machinery.session_supervisor import SessionSupervisor
 
     store = _store(tmp_path)
     supervisor = SessionSupervisor(store, repo_root=tmp_path)

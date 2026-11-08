@@ -10,9 +10,8 @@ import subprocess
 import sys
 
 import pytest
-
-from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
-from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_NOT_FOUND, EXIT_OK, main
+from lu_machinery.fleet_comms.authority import AuthorityService, AuthorityServiceError
+from lu_machinery.fleet_comms.cli import EXIT_ERROR, EXIT_NOT_FOUND, EXIT_OK, main
 
 
 @pytest.fixture
@@ -232,12 +231,12 @@ def test_delivery_consume_rejects_ordinary_message(plane, capsys):
 
 
 def test_delivery_control_plane_refusal_is_sanitized(plane, monkeypatch, capsys):
-    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+    from lu_machinery.control_plane.storage import ControlPlaneUnsupportedComponentError
 
     def refuse(*_args, **_kwargs):
         raise ControlPlaneUnsupportedComponentError("private storage configuration")
 
-    monkeypatch.setattr("scripts.fleet_comms.authority.assert_component_supported", refuse)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.assert_component_supported", refuse)
     result = invoke(capsys, "status", "missing", expected=EXIT_ERROR)
     assert result["error"] == "delivery_store_unavailable"
     assert "private storage" not in json.dumps(result)
@@ -274,7 +273,7 @@ def test_delivery_storage_error_does_not_leak_path(tmp_path, capsys):
 
 @pytest.mark.parametrize("operation", [None, "claim", "status", "consume", "ack"])
 def test_delivery_cli_help(operation):
-    args = [sys.executable, "-m", "scripts.fleet_comms", "deliveries"]
+    args = [sys.executable, "-m", "lu_machinery.fleet_comms", "deliveries"]
     if operation:
         args.append(operation)
     result = subprocess.run([*args, "--help"], capture_output=True, text=True, check=False, timeout=30)
@@ -286,7 +285,7 @@ def test_delivery_cli_help(operation):
 
 def test_delivery_cli_subprocess_claim_ack_and_usage(plane):
     message = publish(plane)
-    command = [sys.executable, "-m", "scripts.fleet_comms", "deliveries"]
+    command = [sys.executable, "-m", "lu_machinery.fleet_comms", "deliveries"]
     env = {**os.environ, "FLEET_COMMS_ROOT": str(plane.parent / "wrong-root")}
     result = subprocess.run(
         [*command, "claim", "--recipient", "codex", "--worker-id", "seat-1", "--root", str(plane)],

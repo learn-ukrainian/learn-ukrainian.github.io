@@ -17,7 +17,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
-from agent_runtime.adapters.glm import GlmAdapter
+from lu_machinery.agent_runtime.adapters.glm import GlmAdapter
 
 FAKE_OPENCODE = "/usr/local/bin/opencode"
 
@@ -28,7 +28,7 @@ def _build(prompt: str, tmp_path: Path, monkeypatch, **kw):
     # the routing-guard/CI-refusal test suite).
     for var in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
         monkeypatch.delenv(var, raising=False)
-    with patch("agent_runtime.adapters.glm.shutil.which", return_value=FAKE_OPENCODE):
+    with patch("lu_machinery.agent_runtime.adapters.glm.shutil.which", return_value=FAKE_OPENCODE):
         return GlmAdapter().build_invocation(
             prompt=prompt,
             mode=kw.pop("mode", "read-only"),

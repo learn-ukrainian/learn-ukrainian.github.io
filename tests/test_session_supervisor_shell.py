@@ -12,9 +12,9 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.fleet_comms.authority import AuthorityService
+from lu_machinery.session_canary import codex_lane, gemini_lane
 
-from scripts.fleet_comms.authority import AuthorityService
-from scripts.session_canary import codex_lane, gemini_lane
 from tests.launcher_sandbox import launcher_environment
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -68,7 +68,7 @@ rm -f "$replacement"
 
 def _supervisor_ok_body(capture: Path) -> str:
     return f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
   if [[ "${{FAKE_RESOLVER_FAILURE:-0}}" == "1" ]]; then
     echo "resolver unavailable" >&2
     exit 1
@@ -76,7 +76,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.api.occupancy_local" && "${{3
   printf '%s\\n' "${{FAKE_RESOLVED_HOST_ID:-local}}"
   exit 0
 fi
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.session_supervisor" && "${{3:-}}" == "open" ]]; then
   {{
     printf '%s\\n' "$@" > "{capture}"
     cat <<'JSON'
@@ -204,7 +204,7 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     assert supervisor_args[supervisor_args.index("--instance-id") + 1] == "test-instance"
     assert supervisor_args[supervisor_args.index("--task-id") + 1] == "test-task"
     assert supervisor_args[supervisor_args.index("--role") + 1] == "driver"
-    assert "scripts.session_supervisor" in supervisor_args
+    assert "lu_machinery.session_supervisor" in supervisor_args
     assert "open" in supervisor_args
 
     receipt_path = project / ".claude" / "hramatka-epic" / "session-lease.env"
@@ -284,7 +284,7 @@ def _live_session_fake_python(capture: Path, counter: Path) -> str:
         '"dual_write":{},"diagnostics":{}}'
     )
     return f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "lu_machinery.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
   printf '%s\\n' "host-job"
   exit 0
 fi
@@ -665,7 +665,7 @@ def _assert_failure_publication(env: dict[str, str], reason: str, *, published: 
     """Assert exact body, identity, key and one attempt, including failed sends."""
     calls = Path(env["TEST_PUBLISH_ARGS"]).read_text().splitlines()
     assert calls == [
-        "-m scripts.fleet_comms channel publish cto - --sender fixture-driver --kind status "
+        "-m lu_machinery.fleet_comms channel publish cto - --sender fixture-driver --kind status "
         f"--idempotency-key epic:9999-30-{reason}"
     ]
     with AuthorityService(root=Path(env["FLEET_COMMS_ROOT"])) as service:

@@ -9,10 +9,9 @@ import sys
 from dataclasses import replace
 
 import pytest
-
-from scripts.dispatcher.providers import cursor, load, muse, opencode
-from scripts.dispatcher.types import TaskSpec
-from scripts.review.verdict_parser import recognized_verdicts
+from lu_machinery.dispatcher.providers import cursor, load, muse, opencode
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.review.verdict_parser import recognized_verdicts
 
 MODELS = ("muse-spark-1.3", "muse-wonder-1.0", "muse-wonder-full-1.0")
 PROMPT = '--leading-option "quoted" $literal\nReply with exactly: ready\n'
@@ -243,7 +242,7 @@ def test_unknown_events_are_not_a_response(provider):
 
 @pytest.mark.parametrize("name", ("muse", "opencode"))
 def test_registry(name):
-    assert load(name).__name__ == f"scripts.dispatcher.providers.{name}"
+    assert load(name).__name__ == f"lu_machinery.dispatcher.providers.{name}"
 
 
 @pytest.mark.parametrize("payload", (None, "failure", []))

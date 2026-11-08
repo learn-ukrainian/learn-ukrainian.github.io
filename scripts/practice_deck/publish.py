@@ -20,10 +20,11 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from scripts.common import github_client
-from scripts.opsec.prepublish import publication_boundary, publication_cli
-from scripts.publish.github import Asset, Request, request_run
-from scripts.storage.paths import REGISTRY_ROOT
+from lu_machinery.common import github_client
+from lu_machinery.opsec.prepublish import publication_boundary, publication_cli
+from lu_machinery.publish.github import Asset, Request, request_run
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"

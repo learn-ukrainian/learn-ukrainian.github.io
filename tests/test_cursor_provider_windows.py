@@ -7,7 +7,7 @@ import io
 import json
 from urllib.error import URLError
 
-from scripts.agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
 
 
 def test_probe_cursor_provider_windows_includes_grok_bot(monkeypatch):

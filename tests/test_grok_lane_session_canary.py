@@ -8,9 +8,8 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.session_canary import diary
-from scripts.session_canary import grok_lane as gl
+from lu_machinery.session_canary import diary
+from lu_machinery.session_canary import grok_lane as gl
 
 _REPO = Path(__file__).resolve().parents[1]
 
@@ -27,7 +26,7 @@ def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, comma
         [
             sys.executable,
             "-m",
-            "scripts.session_canary.grok_lane",
+            "lu_machinery.session_canary.grok_lane",
             "--repo",
             str(repo),
             command,

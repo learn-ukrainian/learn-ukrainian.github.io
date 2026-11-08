@@ -17,19 +17,20 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.errors import AgentStalledError, RateLimitedError
-from agent_runtime.result import Result
-from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-from scripts.ai_agent_bridge._cli import _dispatch_command
-from scripts.ai_agent_bridge._codex import (
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.errors import AgentStalledError, RateLimitedError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.agent_runtime.usage import _reset_rate_limit_cache_for_tests
+from lu_machinery.ai_agent_bridge._cli import _dispatch_command
+from lu_machinery.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
     ask_codex,
     process_for_codex,
 )
-from scripts.ai_agent_bridge._db import get_db, init_db
-from scripts.ai_agent_bridge._messaging import send_message
-from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+from lu_machinery.ai_agent_bridge._db import get_db, init_db
+from lu_machinery.ai_agent_bridge._messaging import send_message
+from lu_machinery.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
+
 from tests.helpers.codex_exec_stream import completed_stream
 
 
@@ -37,7 +38,7 @@ from tests.helpers.codex_exec_stream import completed_stream
 def _isolate_usage_log(tmp_path):
     """Ensure no test writes to the real batch_state/api_usage/ log."""
     _reset_rate_limit_cache_for_tests()
-    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+    with patch("lu_machinery.agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
     _reset_rate_limit_cache_for_tests()
 
@@ -46,7 +47,7 @@ def _isolate_usage_log(tmp_path):
 def bridge_db(tmp_path):
     """Use a temporary broker DB for bridge tests."""
     db_path = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path):
         conn = init_db()
         conn.close()
         yield db_path
@@ -96,13 +97,13 @@ def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
         assert _codex_bridge_runtime_mode() == "read-only"
 
 
-@patch("scripts.ai_agent_bridge._codex.acknowledge")
-@patch("scripts.ai_agent_bridge._codex.send_message", return_value=99)
-@patch("scripts.ai_agent_bridge._codex.set_session")
-@patch("scripts.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
-@patch("scripts.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
+@patch("lu_machinery.ai_agent_bridge._codex.acknowledge")
+@patch("lu_machinery.ai_agent_bridge._codex.send_message", return_value=99)
+@patch("lu_machinery.ai_agent_bridge._codex.set_session")
+@patch("lu_machinery.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
+@patch("lu_machinery.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
-    "scripts.ai_agent_bridge._codex._fetch_codex_message",
+    "lu_machinery.ai_agent_bridge._codex._fetch_codex_message",
     return_value={
         "id": 7,
         "task_id": "issue-1177",
@@ -114,7 +115,7 @@ def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
         "timestamp": "2026-04-10T12:00:00Z",
     },
 )
-@patch("agent_runtime.runner.invoke")
+@patch("lu_machinery.agent_runtime.runner.invoke")
 def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_invoke,
     mock_fetch_message,
@@ -178,13 +179,13 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_acknowledge.assert_called_once_with(7)
 
 
-@patch("scripts.ai_agent_bridge._codex.acknowledge")
-@patch("scripts.ai_agent_bridge._codex.send_message", return_value=100)
-@patch("scripts.ai_agent_bridge._codex.set_session")
-@patch("scripts.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
-@patch("scripts.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
+@patch("lu_machinery.ai_agent_bridge._codex.acknowledge")
+@patch("lu_machinery.ai_agent_bridge._codex.send_message", return_value=100)
+@patch("lu_machinery.ai_agent_bridge._codex.set_session")
+@patch("lu_machinery.ai_agent_bridge._codex.get_session", return_value={"codex": "session-existing"})
+@patch("lu_machinery.ai_agent_bridge._codex.build_codex_prompt", return_value="bridge prompt")
 @patch(
-    "scripts.ai_agent_bridge._codex._fetch_codex_message",
+    "lu_machinery.ai_agent_bridge._codex._fetch_codex_message",
     return_value={
         "id": 8,
         "task_id": "issue-1178",
@@ -196,7 +197,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
         "timestamp": "2026-04-10T12:00:00Z",
     },
 )
-@patch("agent_runtime.runner.invoke")
+@patch("lu_machinery.agent_runtime.runner.invoke")
 def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     mock_invoke,
     mock_fetch_message,
@@ -365,7 +366,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
         yield checkout
 
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._codex._fetch_codex_message",
+        "lu_machinery.ai_agent_bridge._codex._fetch_codex_message",
         lambda _id: {
             "id": 9,
             "task_id": "branch-review",
@@ -376,9 +377,9 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
             "data": json.dumps({"review_target": {"branch": "feature/review"}}),
         },
     )
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": "session-existing"})
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": "session-existing"})
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.provision_review_worktree", fake_checkout)
     monkeypatch.setattr(
         ProvisionedReviewWorktree,
         "review_prompt_evidence",
@@ -394,12 +395,12 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
         "bind_review_result",
         lambda self, result, engine: None,
     )
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.set_session", lambda *_args: None)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.send_message", lambda **_kwargs: 10)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._codex.set_session", lambda *_args: None)
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._codex.agent_runner.invoke",
+        "lu_machinery.ai_agent_bridge._codex.agent_runner.invoke",
         lambda *args, **kwargs: (
             captured.update({"prompt": args[1], **kwargs})
             or Result(
@@ -439,14 +440,14 @@ def test_process_for_codex_short_circuits_when_no_headroom(bridge_db):
 
     with (
         patch(
-            "scripts.ai_agent_bridge._codex.has_codex_headroom",
+            "lu_machinery.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(False, "rate_limited 30s ago"),
         ),
         patch(
-            "scripts.ai_agent_bridge._codex.build_codex_prompt",
+            "lu_machinery.ai_agent_bridge._codex.build_codex_prompt",
         ) as mock_prompt,
         patch(
-            "agent_runtime.runner.invoke",
+            "lu_machinery.agent_runtime.runner.invoke",
         ) as mock_invoke,
     ):
         process_for_codex(message_id)
@@ -479,15 +480,15 @@ def test_rate_limit_error_defers_message(bridge_db):
 
     with (
         patch(
-            "scripts.ai_agent_bridge._codex.has_codex_headroom",
+            "lu_machinery.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "scripts.ai_agent_bridge._codex.build_codex_prompt",
+            "lu_machinery.ai_agent_bridge._codex.build_codex_prompt",
             return_value="bridge prompt",
         ),
         patch(
-            "agent_runtime.runner.invoke",
+            "lu_machinery.agent_runtime.runner.invoke",
             side_effect=RateLimitedError("codex", "gpt-6.1-sol", "quota exceeded"),
         ),
     ):
@@ -519,15 +520,15 @@ def test_other_errors_leave_inbound_unconsumed(bridge_db):
 
     with (
         patch(
-            "scripts.ai_agent_bridge._codex.has_codex_headroom",
+            "lu_machinery.ai_agent_bridge._codex.has_codex_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "scripts.ai_agent_bridge._codex.build_codex_prompt",
+            "lu_machinery.ai_agent_bridge._codex.build_codex_prompt",
             return_value="bridge prompt",
         ),
         patch(
-            "agent_runtime.runner.invoke",
+            "lu_machinery.agent_runtime.runner.invoke",
             side_effect=AgentStalledError("codex", 600, 601.0),
         ),
     ):
@@ -609,7 +610,7 @@ def test_codex_usage_cli_reports_counts(capsys, tmp_path):
 
 @pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra"])
 def test_legacy_callable_rejects_old_model_before_message_creation(model):
-    with patch("scripts.ai_agent_bridge._codex.send_message") as send:
+    with patch("lu_machinery.ai_agent_bridge._codex.send_message") as send:
         expected = (
             r"approved models are gpt-6-luna, gpt-6\.1-sol" if model == "gpt-5.5"
             else "restricted to red-team code review|red-team exception expired" if model == "gpt-6-astra"
@@ -623,10 +624,10 @@ def test_legacy_callable_rejects_old_model_before_message_creation(model):
 def test_stale_queued_model_returns_error_before_headroom_or_invoke():
     msg = {"id": 91, "task_id": None, "data": json.dumps({"to_model": "gpt-5.6-sol"})}
     with (
-        patch("scripts.ai_agent_bridge._codex._fetch_codex_message", return_value=msg),
-        patch("scripts.ai_agent_bridge._codex._handle_codex_error") as error,
-        patch("scripts.ai_agent_bridge._codex.has_codex_headroom") as headroom,
-        patch("agent_runtime.runner.invoke") as invoke,
+        patch("lu_machinery.ai_agent_bridge._codex._fetch_codex_message", return_value=msg),
+        patch("lu_machinery.ai_agent_bridge._codex._handle_codex_error") as error,
+        patch("lu_machinery.ai_agent_bridge._codex.has_codex_headroom") as headroom,
+        patch("lu_machinery.agent_runtime.runner.invoke") as invoke,
     ):
         process_for_codex(91)
     error.assert_called_once()

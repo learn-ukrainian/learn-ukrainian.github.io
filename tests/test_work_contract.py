@@ -7,21 +7,25 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.work.attention import _pr_check_state, apply_health_and_actions, derive_health, derive_safe_next_action
-from scripts.work.normalize import _build_pr_item, _dispatch_from_tasks, _match_dispatch, build_projection
-from scripts.work.relations import (
+from lu_machinery.work.attention import (
+    _pr_check_state,
+    apply_health_and_actions,
+    derive_health,
+    derive_safe_next_action,
+)
+from lu_machinery.work.normalize import _build_pr_item, _dispatch_from_tasks, _match_dispatch, build_projection
+from lu_machinery.work.relations import (
     detect_dependency_cycles,
     extract_body_relations,
     issue_work_id,
     resolve_live_blockers,
 )
-from scripts.work.schema import (
+from lu_machinery.work.schema import (
     SchemaValidationError,
     parse_saved_view_params,
     validate_projection,
 )
-from scripts.work.sources_public import (
+from lu_machinery.work.sources_public import (
     SectionResult,
     fetch_fleet_reviews,
 )
@@ -193,11 +197,10 @@ def test_saved_view_rejects_free_text_and_private_keys():
 def test_public_repository_identity_ignores_env_override(monkeypatch):
     """WORK_PUBLIC_REPOSITORY must not repoint source, query, cache, or projection."""
     from fastapi.testclient import TestClient
-
-    from scripts.api.main import app
-    from scripts.api.state_helpers import cache_invalidate
-    from scripts.api.work_router import projection_cache_key
-    from scripts.work.sources_public import (
+    from lu_machinery.api.main import app
+    from lu_machinery.api.state_helpers import cache_invalidate
+    from lu_machinery.api.work_router import projection_cache_key
+    from lu_machinery.work.sources_public import (
         DEFAULT_PUBLIC_REPOSITORY,
         admit_public_repository_id,
         collect_public_sections,
@@ -309,9 +312,9 @@ def test_collector_entry_points_fail_closed_before_runner():
     must not touch issues, PRs, reviews, normalization, cache keys, filters, or
     emitted projection payloads.
     """
-    from scripts.api.work_router import projection_cache_key
-    from scripts.work.normalize import build_projection, build_public_projection
-    from scripts.work.sources_public import (
+    from lu_machinery.api.work_router import projection_cache_key
+    from lu_machinery.work.normalize import build_projection, build_public_projection
+    from lu_machinery.work.sources_public import (
         admit_public_repository_id,
         collect_public_sections,
         fetch_fleet_reviews,
@@ -664,7 +667,7 @@ def test_delegate_requires_authoritative_public_repository():
     same-number public issue/PR. A public row attaches to an issue only through
     ``linked_issues``. Totals are public-admitted only.
     """
-    from scripts.work.sources_public import (
+    from lu_machinery.work.sources_public import (
         DELEGATE_TASK_LIMIT,
         fetch_delegate_active,
         fetch_delegate_tasks,
@@ -877,7 +880,7 @@ def test_delegate_injected_loader_is_untrusted_without_public_claim():
     admitted repository singleton on the summary (raw claim fields are not
     re-emitted as repository_id).
     """
-    from scripts.work.sources_public import fetch_delegate_active, fetch_delegate_tasks
+    from lu_machinery.work.sources_public import fetch_delegate_active, fetch_delegate_tasks
 
     private_repo = "other-org/other-private-repo"
     suffix_cousin = "evil-org/learn-ukrainian.github.io"
@@ -1017,8 +1020,8 @@ def test_delegate_injected_loader_is_untrusted_without_public_claim():
 
 def test_delegate_production_loader_scopes_before_page(tmp_path, monkeypatch):
     """End-to-end: production list/active loaders filter by public repo before limit."""
-    import scripts.api.delegate_router as delegate_router
-    from scripts.work.sources_public import (
+    import lu_machinery.api.delegate_router as delegate_router
+    from lu_machinery.work.sources_public import (
         DELEGATE_TASK_LIMIT,
         fetch_delegate_active,
         fetch_delegate_tasks,
@@ -1241,7 +1244,7 @@ def test_resolve_live_blockers_absent_target_cleared_by_lifecycle_map():
 
 def test_fetch_issue_states_batched_runner_handling():
     """fetch_issue_states_batched handles empty, foreign, success, not-found, and timeout."""
-    from scripts.work.sources_public import fetch_issue_states_batched
+    from lu_machinery.work.sources_public import fetch_issue_states_batched
 
     # 1. Empty numbers -> zero calls
     assert fetch_issue_states_batched([], repository_id=REPO) == {}
@@ -1463,11 +1466,10 @@ def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
     import asyncio
     import time
 
+    import lu_machinery.api.main as api_main
+    import lu_machinery.api.work_router as work_router
     from httpx import ASGITransport, AsyncClient
-
-    import scripts.api.main as api_main
-    import scripts.api.work_router as work_router
-    from scripts.api.state_helpers import cache_invalidate
+    from lu_machinery.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
     api_main.app.state.ctx.stores.work_in_flight.clear()
@@ -1518,7 +1520,7 @@ _AC_BODY_9741 = (
 
 def _ci_passed_ledger(observed_at: str, *, canary: str = "") -> dict:
     """Persisted-receipt fixture. Production refresh must not call reconcile."""
-    from scripts.orchestration import task_identity, task_lifecycle
+    from lu_machinery.orchestration import task_identity, task_lifecycle
 
     policy = {
         "AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]},
@@ -1670,7 +1672,7 @@ def test_state_current_head_merge_advice_requires_receipt():
     """Positive merge advice needs a fresh same-head CI_PASSED receipt. BLOCKED is allowed."""
     from datetime import UTC, datetime
 
-    from scripts.work.attention import qualify_merge_advice
+    from lu_machinery.work.attention import qualify_merge_advice
 
     observed = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     ledger = _ci_passed_ledger(observed)
@@ -1784,7 +1786,7 @@ def test_contradictory_checks_do_not_advise_merge():
 
 
 def test_future_dated_receipt_is_not_fresh():
-    from scripts.work.attention import LEDGER_RECEIPT_FUTURE_TOLERANCE_S, qualify_merge_advice
+    from lu_machinery.work.attention import LEDGER_RECEIPT_FUTURE_TOLERANCE_S, qualify_merge_advice
 
     now = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
     allowance = -LEDGER_RECEIPT_FUTURE_TOLERANCE_S
@@ -2051,12 +2053,12 @@ def _boom(*_args, **_kwargs):
 @pytest.mark.parametrize(
     ("test_name", "target"),
     [
-        ("record_cf_verdict", "scripts.review.record_cf_verdict.main"),
-        ("lease_mutation", "agents_extensions.shared.session_streams.handoff.claim_stream"),
-        ("closeout_observer", "scripts.orchestration.task_closeout.GhGitHubAdapter.observe"),
-        ("reconcile", "scripts.orchestration.task_lifecycle.reconcile"),
-        ("write_lifecycle", "scripts.orchestration.task_lifecycle.write_lifecycle"),
-        ("observe_local_git", "scripts.orchestration.task_lifecycle.observe_local_git"),
+        ("record_cf_verdict", "lu_machinery.review.record_cf_verdict.main"),
+        ("lease_mutation", "lu_machinery.session_streams.handoff.claim_stream"),
+        ("closeout_observer", "lu_machinery.orchestration.task_closeout.GhGitHubAdapter.observe"),
+        ("reconcile", "lu_machinery.orchestration.task_lifecycle.reconcile"),
+        ("write_lifecycle", "lu_machinery.orchestration.task_lifecycle.write_lifecycle"),
+        ("observe_local_git", "lu_machinery.orchestration.task_lifecycle.observe_local_git"),
     ],
 )
 def test_refresh_does_not_call_authority_seam(monkeypatch, test_name, target):
@@ -2064,13 +2066,13 @@ def test_refresh_does_not_call_authority_seam(monkeypatch, test_name, target):
     if test_name == "closeout_observer":
         # task_closeout is a module, so a dotted class path is not importable.
         # The live observer is GhGitHubAdapter.observe.
-        from scripts.orchestration.task_closeout import GhGitHubAdapter
+        from lu_machinery.orchestration.task_closeout import GhGitHubAdapter
 
         monkeypatch.setattr(GhGitHubAdapter, "observe", _boom)
     else:
         monkeypatch.setattr(target, _boom)
     if test_name == "lease_mutation":
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         monkeypatch.setattr(SessionStreamStore, "claim_remote_session", _boom)
         monkeypatch.setattr(SessionStreamStore, "release_remote_session", _boom)

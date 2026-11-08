@@ -11,8 +11,7 @@ from itertools import pairwise
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import install_tmp_sweep_timer as installer
+from lu_machinery.orchestration import install_tmp_sweep_timer as installer
 
 
 def test_service_and_timer_contract() -> None:
@@ -22,9 +21,9 @@ def test_service_and_timer_contract() -> None:
     assert "WorkingDirectory=@REPO_ROOT@" in service
     starts = [line for line in service.splitlines() if line.startswith("ExecStart=")]
     assert starts == [
-        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.batch_state_retention",
-        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary",
-        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --apply --summary",
+        "ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.hygiene.batch_state_retention",
+        "ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.hygiene.tmp_sweep --unattributed-scratch --apply --summary",
+        "ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.hygiene.tmp_sweep --batch-state --apply --summary",
     ]
     dropin = (installer.TEMPLATE_DIR / "dropins/learn-ukrainian-tmp-sweep.service.d/data-volume.conf").read_text()
     guarded = [line for line in dropin.splitlines() if line.startswith("ExecStart=") and line != "ExecStart="]
@@ -152,7 +151,7 @@ def test_help_names_project_interpreter_and_exit_codes(capsys: pytest.CaptureFix
         installer.main(["--help"])
     out = capsys.readouterr().out
     assert exc.value.code == 0 and "<project-python>" not in out
-    assert ".venv/bin/python -m scripts.orchestration.install_tmp_sweep_timer --check" in out
+    assert ".venv/bin/python -m lu_machinery.orchestration.install_tmp_sweep_timer --check" in out
     assert "2 = invalid usage" in out
 
 

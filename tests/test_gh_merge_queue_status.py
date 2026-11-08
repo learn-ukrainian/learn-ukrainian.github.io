@@ -18,9 +18,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.ci.ci_timings import main as ci_timings_main
-from scripts.gh_merge_queue_status import (
+from lu_machinery.ci.ci_timings import main as ci_timings_main
+from lu_machinery.gh_merge_queue_status import (
     build_summary_line,
     evaluate_status_data,
     fetch_live_status,
@@ -561,7 +560,7 @@ def test_fetch_live_status_null_data_with_errors(monkeypatch: pytest.MonkeyPatch
             )
         return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="{}", stderr="")
 
-    monkeypatch.setattr("scripts.gh_merge_queue_status.read", lambda *a, **kw: fake_subprocess_run(["gh", "api", "graphql"]))
+    monkeypatch.setattr("lu_machinery.gh_merge_queue_status.read", lambda *a, **kw: fake_subprocess_run(["gh", "api", "graphql"]))
 
     with pytest.raises(RuntimeError, match="GraphQL error: API rate limit exceeded"):
         fetch_live_status(7814, "learn-ukrainian/learn-ukrainian.github.io")

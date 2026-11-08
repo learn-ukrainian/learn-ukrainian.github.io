@@ -4,8 +4,7 @@ import os
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails import delegate_ownership as ownership
+from lu_machinery.guardrails import delegate_ownership as ownership
 
 
 @pytest.mark.parametrize("layout", ["primary", "relative", "absolute", "symlink", "gitdir-symlink"])

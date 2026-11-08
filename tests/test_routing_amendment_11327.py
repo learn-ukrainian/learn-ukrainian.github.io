@@ -10,11 +10,11 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.agent_runtime.registry import AGENTS
+from lu_machinery.fleet import capacity_pick, credit_lane
+from lu_machinery.review.model_catalog import ModelCatalogError, load_model_catalog, require_execution_model
+from lu_machinery.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 
-from scripts.agent_runtime.registry import AGENTS
-from scripts.fleet import capacity_pick, credit_lane
-from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, require_execution_model
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 FABLE = "claude-fable-5-1"
@@ -33,7 +33,7 @@ def snapshot(grok=1, cursor=95):
 
 
 def test_budget_recommendation_uses_an_unparked_default():
-    from scripts.api.state_router import _recommend_agent
+    from lu_machinery.api.state_router import _recommend_agent
 
     budget = snapshot(1, 1)
     budget["agents"]["codex"].update(status="near_cap", remaining_pct=1)
@@ -44,8 +44,8 @@ def test_budget_recommendation_uses_an_unparked_default():
 
 
 def test_substitution_ladder_has_no_fable_or_kimi_route():
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-    from scripts.review.model_catalog import budget_substitution_table, substitution_default_model
+    from lu_machinery.common.fallback_substitutions import load_dispatch_fallbacks
+    from lu_machinery.review.model_catalog import budget_substitution_table, substitution_default_model
 
     table = budget_substitution_table()
     for mappings in table.values():
@@ -90,8 +90,8 @@ def test_explicit_fable_pin_requires_native_claude_transport(transport):
 
 
 def test_reviewer_capacity_and_ranking_read_shared_allowance():
-    from scripts.review.capacity import review_capacity
-    from scripts.review.reviewer_scheduler import _route_record, metrics_for
+    from lu_machinery.review.capacity import review_capacity
+    from lu_machinery.review.reviewer_scheduler import _route_record, metrics_for
 
     budget = snapshot()
     candidate = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
@@ -113,7 +113,7 @@ def test_pool_mirroring_preserves_route_health_and_does_not_mutate_snapshot():
 
 
 def test_retired_kimi_cannot_win_budget_recommendation_or_capacity_pick():
-    from scripts.api.state_router import _recommend_agent
+    from lu_machinery.api.state_router import _recommend_agent
 
     budget = snapshot(50, 50)
     budget["agents"]["kimi"] = {"status": "cool", "remaining_pct": 100, "health": {"healthy": True}}
@@ -150,7 +150,7 @@ def test_missing_transport_meter_uses_shared_allowance_without_inventing_health(
 
 @pytest.mark.parametrize("agent", ["kimi", "acpx-kimicc-shadow"])
 def test_kimi_registry_defaults_refuse_before_runtime_attribution(agent):
-    from scripts.agent_runtime.runner import _refuse_retired_launch_model
+    from lu_machinery.agent_runtime.runner import _refuse_retired_launch_model
 
     with pytest.raises(ValueError, match="retired in the model catalog"):
         _refuse_retired_launch_model(agent, None, None)

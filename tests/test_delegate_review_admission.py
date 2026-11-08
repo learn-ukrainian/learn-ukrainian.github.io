@@ -9,8 +9,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from scripts.agent_runtime import target_admission
-from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+from lu_machinery.agent_runtime import target_admission
+from lu_machinery.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -138,7 +139,7 @@ NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalo
 @pytest.mark.parametrize("seat,model", FABLE_PINS)
 def test_bridge_review_mode_refuses_a_fable_pin(seat, model):
     """``ask-* --review`` admits in ``REVIEW_MODE`` before any prompt or dispatch is written."""
-    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from lu_machinery.agent_runtime.kimi_admission import REVIEW_MODE
 
     with pytest.raises(ReviewAdmissionRefused, match=NO_REVIEW_ROLE):
         resolve_and_admit((seat,), mode=REVIEW_MODE, model=model, review=True)
@@ -180,7 +181,7 @@ def test_budget_blocked_codex_seat_excludes_account_a_quota_bucket(monkeypatch):
     """
     import contextlib
 
-    from scripts.review import capacity, reviewer_resolver
+    from lu_machinery.review import capacity, reviewer_resolver
 
     excluded = []
     real = reviewer_resolver.resolve_reviewer

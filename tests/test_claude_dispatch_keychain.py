@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="Claude OAuth keychain access is macOS-specific")

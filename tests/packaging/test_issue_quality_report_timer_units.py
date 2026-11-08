@@ -1,9 +1,8 @@
 """Daily timer renders, verifies and installs safely without live activation."""
 
 import pytest
-
-from scripts.common.safe_unit_install import InstallError
-from scripts.orchestration import install_issue_quality_report_timer as installer
+from lu_machinery.common.safe_unit_install import InstallError
+from lu_machinery.orchestration import install_issue_quality_report_timer as installer
 
 
 def test_install_preview_apply_idempotence_and_symlink_refusal(tmp_path, monkeypatch):

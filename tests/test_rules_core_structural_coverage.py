@@ -98,7 +98,7 @@ def test_a_missing_anchor_is_caught() -> None:
 
 
 def test_review_admission_preserves_anchor_manifest_and_dynamic_digest():
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     text = (RULES / "core.md").read_text(encoding="utf-8")
     sentence = next(line for line in text.splitlines() if "<!-- p2-review: M30 -->" in line)

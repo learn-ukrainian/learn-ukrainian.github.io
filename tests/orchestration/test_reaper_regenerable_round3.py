@@ -3,9 +3,9 @@
 import os
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import regenerable_output as classifier
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import regenerable_output as classifier
 from tests.fleet.test_reaper_regenerable_cap import prepare, put
 from tests.fleet.test_reaper_regenerable_cap import proof_repo as proof_repo
 from tests.orchestration.test_worktree_git import _add_dispatch_worktree, _run

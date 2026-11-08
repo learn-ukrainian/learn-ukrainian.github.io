@@ -9,9 +9,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.api import coordination_router
-from scripts.api.monitor_context import fixture_context
-from scripts.orchestration import agent_ledger, orchestrator_control, task_identity, task_lifecycle
+from lu_machinery.api import coordination_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.orchestration import agent_ledger, orchestrator_control, task_identity, task_lifecycle
 
 NOW = "2026-07-16T10:00:00Z"
 

@@ -10,14 +10,14 @@ import threading
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import acpx_discuss
+from lu_machinery.agent_runtime.errors import AgentTimeoutError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.fleet_comms import migrations
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.authority import AuthorityService
+from lu_machinery.fleet_comms.message_plane import default_plane_root
 
-from scripts.agent_runtime import acpx_discuss
-from scripts.agent_runtime.errors import AgentTimeoutError
-from scripts.agent_runtime.result import Result
-from scripts.fleet_comms import migrations
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.authority import AuthorityService
-from scripts.fleet_comms.message_plane import default_plane_root
 from tests.helpers.python import project_python
 
 

@@ -18,9 +18,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.hygiene import tmp_sweep as sweep
-from scripts.hygiene import tmp_sweep_ledger as ledger_mod
+from lu_machinery.hygiene import tmp_sweep as sweep
+from lu_machinery.hygiene import tmp_sweep_ledger as ledger_mod
 
 DAY = 86400
 OLD = time.time() - 3 * DAY

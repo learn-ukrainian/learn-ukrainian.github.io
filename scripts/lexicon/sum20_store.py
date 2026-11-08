@@ -10,9 +10,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, main_checkout_root, resolve_store
+
 from scripts.lexdata.generation import Unavailable, open_generation
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage.topology import StoreBinding, StoreRefusal, main_checkout_root, resolve_store
 from scripts.wiki.sum20_official import normalize_sum20_lookup, sum20_live_article_where
 
 

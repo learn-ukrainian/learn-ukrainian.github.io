@@ -9,10 +9,9 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.fleet_comms.cli import EXIT_OK
-from scripts.fleet_comms.cli import main as cli_main
-from scripts.fleet_comms.cold_start_board import (
+from lu_machinery.fleet_comms.cli import EXIT_OK
+from lu_machinery.fleet_comms.cli import main as cli_main
+from lu_machinery.fleet_comms.cold_start_board import (
     MAX_BOARD_BYTES,
     ProbeResult,
     _probe_backlog_and_dead_letters,
@@ -38,7 +37,7 @@ def _stub_monitor_orient_api():
     mock_resp.__enter__.return_value = mock_resp
     mock_resp.__exit__.return_value = False
     with patch(
-        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        "lu_machinery.fleet_comms.cold_start_board.urllib.request.urlopen",
         return_value=mock_resp,
     ):
         yield
@@ -186,7 +185,7 @@ def test_probe_failure_degrades():
 
     # Test full board building with a patched broken probe
     with patch(
-        "scripts.fleet_comms.cold_start_board._probe_plane_status",
+        "lu_machinery.fleet_comms.cold_start_board._probe_plane_status",
         side_effect=RuntimeError("plane crash"),
     ):
         board = build_cold_start_board(stream_id="epic:123")
@@ -246,7 +245,7 @@ def test_size_cap():
 def test_no_claim_or_write_calls(monkeypatch):
     """Verify that building cold start board makes no session lease claim or write calls."""
     try:
-        from agents_extensions.shared.session_streams import handoff
+        from lu_machinery.session_streams import handoff
 
         def forbidden_claim(*args, **kwargs):
             pytest.fail("claim_stream must never be called during cold-start-board generation")
@@ -265,19 +264,19 @@ def test_orient_timeout_skipped_does_not_degrade_board():
 
     with (
         patch(
-            "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+            "lu_machinery.fleet_comms.cold_start_board.urllib.request.urlopen",
             side_effect=TimeoutError("monitor slow"),
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_plane_status",
+            "lu_machinery.fleet_comms.cold_start_board._probe_plane_status",
             return_value=ok_payload,
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+            "lu_machinery.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
             return_value={"backlog_total": 0, "dead_letters_total": 0},
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_inbox",
+            "lu_machinery.fleet_comms.cold_start_board._probe_inbox",
             return_value=ProbeResult(
                 status="ok",
                 elapsed_ms=1.0,
@@ -285,7 +284,7 @@ def test_orient_timeout_skipped_does_not_degrade_board():
             ),
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+            "lu_machinery.fleet_comms.cold_start_board._probe_gh_pr_list",
             return_value=ProbeResult(
                 status="degraded",
                 elapsed_ms=1.0,
@@ -294,7 +293,7 @@ def test_orient_timeout_skipped_does_not_degrade_board():
             ),
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_session_streams_and_handoff",
+            "lu_machinery.fleet_comms.cold_start_board._probe_session_streams_and_handoff",
             return_value=ProbeResult(
                 status="skipped",
                 elapsed_ms=1.0,
@@ -302,7 +301,7 @@ def test_orient_timeout_skipped_does_not_degrade_board():
             ),
         ),
         patch(
-            "scripts.fleet_comms.cold_start_board._probe_bottleneck_slice",
+            "lu_machinery.fleet_comms.cold_start_board._probe_bottleneck_slice",
             return_value={"total_streams": 0, "slice": {}},
         ),
     ):
@@ -350,7 +349,7 @@ def test_compute_board_status_load_bearing_only():
 
 def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
     """Dispatch worktree cwd must not make session-streams look missing."""
-    from scripts.fleet_comms import cold_start_board as board_mod
+    from lu_machinery.fleet_comms import cold_start_board as board_mod
 
     primary = tmp_path / "primary"
     worktree = tmp_path / "worktree"
@@ -369,7 +368,7 @@ def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
     with (
         patch.object(board_mod, "HAS_SESSION_STREAMS", False),
         patch.object(board_mod, "default_database_path", None),
-        patch("scripts.fleet_comms.cold_start_board.subprocess.run", return_value=completed),
+        patch("lu_machinery.fleet_comms.cold_start_board.subprocess.run", return_value=completed),
     ):
         resolved = board_mod._resolve_session_streams_db(worktree)
     assert resolved == db
@@ -482,7 +481,7 @@ def test_board_oversized_probe_applies_final_fallback(
     }
 
     with patch(
-        "scripts.fleet_comms.cold_start_board._probe_plane_status",
+        "lu_machinery.fleet_comms.cold_start_board._probe_plane_status",
         return_value=huge_payload,
     ):
         board = build_cold_start_board(
@@ -500,11 +499,11 @@ def test_board_oversized_probe_applies_final_fallback(
         assert "data" not in probe
 
     with patch(
-        "scripts.fleet_comms.cold_start_board._probe_plane_status",
+        "lu_machinery.fleet_comms.cold_start_board._probe_plane_status",
         return_value=huge_payload,
     ):
         with patch(
-            "scripts.fleet_comms.cold_start_board._apply_oversized_fallback",
+            "lu_machinery.fleet_comms.cold_start_board._apply_oversized_fallback",
             lambda board, probes: board,
         ):
             with pytest.raises(ValueError, match="after oversized fallback"):
@@ -533,7 +532,7 @@ def test_orient_lean_requests_lean_true():
     mock_resp.__exit__.return_value = False
 
     with patch(
-        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        "lu_machinery.fleet_comms.cold_start_board.urllib.request.urlopen",
         return_value=mock_resp,
     ) as urlopen:
         result = _probe_orient_lean()
@@ -571,7 +570,7 @@ def test_orient_lean_projects_large_payload(tmp_path: Path, monkeypatch: pytest.
     assert len(raw_bytes) > MAX_BOARD_BYTES
 
     with patch(
-        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        "lu_machinery.fleet_comms.cold_start_board.urllib.request.urlopen",
         return_value=_orient_response(payload),
     ):
         probe = _probe_orient_lean()
@@ -603,7 +602,7 @@ def test_orient_lean_payload_without_issues_key() -> None:
     payload = {"generated_at": "2026-09-24T01:00:00Z", "other": "v" * 30000}
 
     with patch(
-        "scripts.fleet_comms.cold_start_board.urllib.request.urlopen",
+        "lu_machinery.fleet_comms.cold_start_board.urllib.request.urlopen",
         return_value=_orient_response(payload),
     ):
         probe = _probe_orient_lean()
@@ -627,7 +626,7 @@ def test_board_sheds_bloated_optional_probe_before_fallback(
     huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
 
     with patch(
-        "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+        "lu_machinery.fleet_comms.cold_start_board._probe_gh_pr_list",
         return_value=ProbeResult(status="ok", elapsed_ms=1.0, data=huge_payload),
     ):
         board = build_cold_start_board(repo_root=tmp_path, agent="claude")

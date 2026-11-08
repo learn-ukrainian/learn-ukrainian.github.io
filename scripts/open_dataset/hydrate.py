@@ -17,7 +17,7 @@ from urllib.request import Request
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common import github_client
+from lu_machinery.common import github_client
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"

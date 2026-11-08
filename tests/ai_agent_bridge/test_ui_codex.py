@@ -4,7 +4,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from scripts.ai_agent_bridge import _ui_codex as ui_codex
+from lu_machinery.ai_agent_bridge import _ui_codex as ui_codex
 
 THREAD_ID = "019e6063-c3da-78d1-acaa-4cd684a08786"
 

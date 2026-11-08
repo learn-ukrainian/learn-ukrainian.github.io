@@ -189,7 +189,7 @@ def test_native_cli_decisions(harness, case):
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 def test_native_timeout(harness, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, "env"))))
     code = hook.main(["--harness", harness, "--timeout", "0.000001"])
@@ -201,8 +201,8 @@ def test_native_timeout(harness, monkeypatch, capsys):
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 @pytest.mark.parametrize("failure", ["missing_guard", "launch", "crash", "stdout", "stderr"])
 def test_native_guard_failures(harness, failure, monkeypatch, capsys, tmp_path):
-    from scripts.agent_runtime import codex_hook_policy
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import codex_hook_policy
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     if failure == "missing_guard":
         monkeypatch.setattr(hook, "GUARD_PATH", tmp_path / "absent.py")
@@ -227,8 +227,8 @@ def test_native_guard_failures(harness, failure, monkeypatch, capsys, tmp_path):
 
 @pytest.mark.parametrize("timed_out", [False, True])
 def test_shared_runner_pins_guard_and_sanitizes_timeout(timed_out, monkeypatch):
-    from scripts.agent_runtime import codex_hook_policy
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import codex_hook_policy
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     calls = []
     command = f'echo "{SENTINEL}"'
@@ -269,7 +269,7 @@ def test_shared_runner_pins_guard_and_sanitizes_timeout(timed_out, monkeypatch):
     ],
 )
 def test_invalid_options_fail_closed(argv, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     monkeypatch.setattr(sys, "stdin", io.StringIO("{}"))
     assert hook.main(argv) == (0 if "agy" in argv else 2)
@@ -287,7 +287,7 @@ def test_cli_help():
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 def test_actual_guard_stderr_is_forwarded(harness, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     command = 'echo "$ARBITRARY_TOKEN"'
     guard = subprocess.run(
@@ -320,7 +320,7 @@ def test_denial_never_includes_candidate_filename(harness):
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 @pytest.mark.parametrize("payload", [None, [], {"tool_input": None}, {"command": ""}, {"tool_input": {"command": ""}}])
 def test_malformed_event_objects(harness, payload, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
     code = hook.main(["--harness", harness])
@@ -330,7 +330,7 @@ def test_malformed_event_objects(harness, payload, monkeypatch, capsys):
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 def test_unexpected_adapter_failure_denies(harness, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
+    from lu_machinery.agent_runtime import secret_print_hook as hook
 
     def broken_guard(*args, **kwargs):
         raise ImportError(SENTINEL)
@@ -387,7 +387,7 @@ def test_agy_native_precedence_and_legacy(payload, allowed):
 
 @pytest.mark.parametrize("harness", [name for name in HARNESS_NAMES if name != "agy"])
 def test_non_agy_oversized_metadata_keeps_base_allow(harness):
-    from scripts.agent_runtime.secret_print_hook import MAX_STDIN_BYTES
+    from lu_machinery.agent_runtime.secret_print_hook import MAX_STDIN_BYTES
 
     payload = {**event(harness, "printf OK"), "metadata": "x" * (MAX_STDIN_BYTES + 1)}
     result = subprocess.run(
@@ -428,7 +428,7 @@ def test_agy_detector_failure_real_subprocess(tmp_path, failure):
     wrapper.write_text(
         "import sys\nfrom pathlib import Path\n"
         f"sys.path.insert(0, {str(ROOT)!r})\n"
-        "from scripts.agent_runtime import secret_print_hook as hook\n"
+        "from lu_machinery.agent_runtime import secret_print_hook as hook\n"
         f"hook.GUARD_PATH = Path({str(guard)!r})\n"
         "raise SystemExit(hook.main(['--harness', 'agy']))\n"
     )

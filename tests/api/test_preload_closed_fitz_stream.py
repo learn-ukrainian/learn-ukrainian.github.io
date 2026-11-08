@@ -16,7 +16,7 @@ import pytest
 
 def test_preload_all_completes_when_pymupdf_message_stream_is_closed(monkeypatch):
     pymupdf = pytest.importorskip("pymupdf")
-    from scripts.api.preload import OPTIONAL_MODULES, preload_all
+    from lu_machinery.api.preload import OPTIONAL_MODULES, preload_all
 
     closed = io.StringIO()
     closed.close()

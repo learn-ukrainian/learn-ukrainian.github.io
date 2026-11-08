@@ -9,9 +9,8 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.fleet import credit_lane
-from scripts.review import reviewer_scheduler as scheduler
+from lu_machinery.fleet import credit_lane
+from lu_machinery.review import reviewer_scheduler as scheduler
 
 
 def _candidate(name: str = "openai-frontier", route: str = "codex") -> SimpleNamespace:

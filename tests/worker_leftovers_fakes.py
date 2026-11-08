@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import dispatch_isolation, worker_leftovers
+from lu_machinery.orchestration import dispatch_isolation, worker_leftovers
 
 FAKE_PID_BASE = 5_000_000
 TASK_ID = "t1"

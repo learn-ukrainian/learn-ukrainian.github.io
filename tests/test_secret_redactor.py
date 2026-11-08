@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from secret_redactor import REDACTION, redact_text, redact_value
+from lu_machinery.secret_redactor import REDACTION, redact_text, redact_value
 
 
 @pytest.fixture
@@ -28,7 +28,7 @@ def msg_db(tmp_path):
     def _fresh_conn():
         return sqlite3.connect(str(db_path))
 
-    with patch("scripts.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn):
+    with patch("lu_machinery.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn):
         yield db_path
 
 
@@ -315,8 +315,8 @@ def test_redact_text_handles_quoted_and_spaced_assignments():
 
 
 def test_github_comment_redacts_body_before_subprocess(monkeypatch):
-    from scripts.ai_agent_bridge import _github
-    from scripts.publish.github import request_run
+    from lu_machinery.ai_agent_bridge import _github
+    from lu_machinery.publish.github import request_run
 
     posted = []
     def send(args, **kwargs):
@@ -339,7 +339,7 @@ def test_github_comment_redacts_body_before_subprocess(monkeypatch):
 
 
 def test_send_message_redacts_content_and_data(msg_db):
-    from scripts.ai_agent_bridge._messaging import send_message
+    from lu_machinery.ai_agent_bridge._messaging import send_message
 
     with patch("subprocess.run"):
         msg_id = send_message(
@@ -372,7 +372,7 @@ def test_send_message_redacts_content_and_data(msg_db):
     *("".join(("beforeCanary", delimiter, "https", "://", "afterCanary")) for delimiter in (":", "/", "?", "#", ",", ";")),
 ])
 def test_send_message_redacts_malformed_url_password_before_storage(msg_db, password):
-    from scripts.ai_agent_bridge._messaging import send_message
+    from lu_machinery.ai_agent_bridge._messaging import send_message
 
     raw = "".join(("https", "://", "u:", password, "@", "host.invalid", "/api"))
     expected = "".join(("https", "://", "u:", REDACTION, "@", "host.invalid", "/api"))
@@ -385,7 +385,7 @@ def test_send_message_redacts_malformed_url_password_before_storage(msg_db, pass
 
 
 def test_read_message_redacts_existing_unredacted_rows(msg_db):
-    from scripts.ai_agent_bridge._messaging import read_message
+    from lu_machinery.ai_agent_bridge._messaging import read_message
 
     conn = sqlite3.connect(str(msg_db))
     conn.execute(

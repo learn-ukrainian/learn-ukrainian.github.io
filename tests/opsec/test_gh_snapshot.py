@@ -1,9 +1,8 @@
 """Raw-gh read forwarding and retained exposure controls; synthetic inputs only."""
 
 import pytest
-
-from scripts.opsec.gh_snapshot import admit
-from scripts.opsec.prepublish import PublishBlocked
+from lu_machinery.opsec.gh_snapshot import admit
+from lu_machinery.opsec.prepublish import PublishBlocked
 
 
 def read_api(*args):

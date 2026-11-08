@@ -6,8 +6,7 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.validate_fleet_taxonomy import (
+from lu_machinery.orchestration.validate_fleet_taxonomy import (
     ASSIGNMENTS_PATH,
     ASSIGNMENTS_SCHEMA_PATH,
     TAXONOMY_PATH,

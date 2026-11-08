@@ -6,9 +6,8 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import fixture_context
 
 pytestmark = pytest.mark.repo_invariant
 

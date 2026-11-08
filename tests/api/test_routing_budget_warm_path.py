@@ -5,10 +5,9 @@ import threading
 
 import httpx
 from fastapi import FastAPI
-
-from scripts.api import state_helpers, state_router
-from scripts.api.lane_health import LaneHealthScan
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api import state_helpers, state_router
+from lu_machinery.api.lane_health import LaneHealthScan
+from lu_machinery.api.monitor_context import fixture_context
 
 
 def _app(monkeypatch, tmp_path, compute):

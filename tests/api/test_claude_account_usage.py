@@ -22,11 +22,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.agent_runtime import attempt_boundary, env_sanitize
-from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
-from scripts.api import claude_account_usage as cau
-from scripts.api import subscription_usage
+from lu_machinery.agent_runtime import attempt_boundary, env_sanitize
+from lu_machinery.agent_runtime.attempt_boundary import ClaudeAccountBinding
+from lu_machinery.api import claude_account_usage as cau
+from lu_machinery.api import subscription_usage
 
 # Shape of ``codexbar usage --json --provider claude``; identity values are synthetic.
 # Each label's fixture reports its own email, as two distinct accounts would.
@@ -348,8 +347,8 @@ def test_failed_or_timed_out_account_is_unknown_and_the_other_still_published(fa
 
 def test_failure_after_a_fresh_reading_keeps_it_usable_within_ttl(fake_probe):
     """A probe failure records itself beside a reading that is still inside its TTL."""
-    from scripts.agent_runtime.model_pause import refusal_reason
-    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+    from lu_machinery.agent_runtime.model_pause import refusal_reason
+    from lu_machinery.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
 
     outputs, _ = fake_probe
     cau.refresh_claude_account_usage()
@@ -382,8 +381,8 @@ def test_sample_past_the_ttl_is_stale(fake_probe):
 
 def test_past_ttl_reading_is_unknown(fake_probe):
     """A reading past its own TTL is not a headroom reading."""
-    from scripts.agent_runtime.model_pause import refusal_reason
-    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+    from lu_machinery.agent_runtime.model_pause import refusal_reason
+    from lu_machinery.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
 
     cau.refresh_claude_account_usage()
     rows = cau.claude_accounts_snapshot(ttl_s=0.0)
@@ -397,8 +396,8 @@ def test_past_ttl_reading_is_unknown(fake_probe):
 
 def test_rate_limit_failure_backs_off_the_next_probe(fake_probe, account_dirs, tmp_path):
     """A rate-limited probe is classified from its output and is not retried until the backoff ends."""
-    from scripts.agent_runtime.model_pause import refusal_reason
-    from scripts.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
+    from lu_machinery.agent_runtime.model_pause import refusal_reason
+    from lu_machinery.fleet.claude_account_lane import ClaudeAccount, account_weekly_used_pct
 
     message = "Claude OAuth usage endpoint is rate limited by Anthropic right now"
     for body in (
@@ -867,7 +866,7 @@ def test_probe_sandbox_turns_an_unusable_override_into_a_typed_failure(tmp_path,
 
 @pytest.mark.exercises_default_scratch_root
 def test_probe_sandbox_never_falls_back_to_the_system_temp(tmp_path, monkeypatch):
-    from scripts.common import scratch
+    from lu_machinery.common import scratch
 
     system_temp = tmp_path / "system-temp"
     system_temp.mkdir()
@@ -879,7 +878,7 @@ def test_probe_sandbox_never_falls_back_to_the_system_temp(tmp_path, monkeypatch
 
 @pytest.mark.exercises_default_scratch_root
 def test_probe_sandbox_uses_the_default_root_when_no_override(tmp_path, monkeypatch):
-    from scripts.common import scratch
+    from lu_machinery.common import scratch
 
     with cau._probe_sandbox() as sandbox:
         assert sandbox.parent == scratch.DEFAULT_SCRATCH_ROOT / cau._SANDBOX_PARENT
@@ -1798,7 +1797,7 @@ class _NoRead:
 def _forbid_reads(monkeypatch) -> _NoRead:
     import builtins
 
-    from scripts.agent_runtime import attempt_boundary
+    from lu_machinery.agent_runtime import attempt_boundary
 
     guard = _NoRead()
     for module, name in (
@@ -1863,7 +1862,7 @@ def test_revalidation_rearms_a_same_account_rewrite_without_asking_the_provider(
 
 def test_routine_login_rewrite_preserves_in_ttl_usage(bound, provider, monkeypatch):
     """A same-account metadata rewrite must keep a known admission reading."""
-    from scripts.fleet.claude_account_lane import account_from_record, account_weekly_used_pct
+    from lu_machinery.fleet.claude_account_lane import account_from_record, account_weekly_used_pct
 
     cau.refresh_claude_account_usage()
     before = _row(cau.claude_accounts_snapshot(), "a")

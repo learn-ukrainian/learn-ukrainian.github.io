@@ -10,9 +10,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _channels, _cli, _db, _inbox
-from scripts.ai_agent_bridge._channels_watch import (
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge import _channels, _cli, _db, _inbox
+from lu_machinery.ai_agent_bridge._channels_watch import (
     emit_reply_complete,
     emit_reply_started,
     read_channel_events,
@@ -22,8 +22,8 @@ from scripts.ai_agent_bridge._channels_watch import (
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), \
+         patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -101,7 +101,7 @@ def test_channel_watch_auto_migrates_missing_table():
     assert events[0]["event"] == "reply_started"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_emits_watch_events_with_heartbeat(mock_invoke, monkeypatch):
     thread = _make_thread("claude")
     thread_id = str(thread["thread_id"])

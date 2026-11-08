@@ -14,8 +14,9 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
-from scripts.common import github_client
-from scripts.storage.paths import REGISTRY_ROOT
+from lu_machinery.common import github_client
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"

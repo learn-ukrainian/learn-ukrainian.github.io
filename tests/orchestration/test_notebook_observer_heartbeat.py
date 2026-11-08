@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 
-from scripts.api.telemetry.transcript_tokens import TranscriptTelemetry
-from scripts.orchestration import observer_heartbeat
-from scripts.orchestration.session_markers import write_session_marker
+from lu_machinery.api.telemetry.transcript_tokens import TranscriptTelemetry
+from lu_machinery.orchestration import observer_heartbeat
+from lu_machinery.orchestration.session_markers import write_session_marker
 
 
 class _Response:

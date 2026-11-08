@@ -5,15 +5,14 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.opsec.prepublish import PublishBlocked
-from scripts.publish.merge_guard import ensure_merge_ready
+from lu_machinery.opsec.prepublish import PublishBlocked
+from lu_machinery.publish.merge_guard import ensure_merge_ready
 
 
 @pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch):
     """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
-    from scripts.ci import advisory_checks
+    from lu_machinery.ci import advisory_checks
 
     monkeypatch.setattr(
         advisory_checks,
@@ -244,7 +243,7 @@ def test_oo48_exemption_never_waives_the_reviewed_head():
 
 
 def test_oo48_rate_limit_during_provenance_is_not_masked():
-    from scripts.common.github_client import GitHubRateLimited
+    from lu_machinery.common.github_client import GitHubRateLimited
 
     limited = GitHubRateLimited(None, "fixture")
     runner = entire_runner({"id": 2626939, "slug": "entire"}, [], error=limited)
@@ -292,8 +291,8 @@ def _multi_page_head(runs, *, second_total=None):
 
 def _publisher_transport(tmp_path, monkeypatch, documents, checks):
     """merge_readiness_runner over a real GitHubClient whose HTTP and native gh are fixtures."""
-    from scripts.common import github_client as gh
-    from scripts.publish.github import merge_readiness_runner
+    from lu_machinery.common import github_client as gh
+    from lu_machinery.publish.github import merge_readiness_runner
 
     real_client, requested = gh.GitHubClient, []
 

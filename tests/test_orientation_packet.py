@@ -7,13 +7,12 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-from scripts.api.work_router import projection_cache_key
-from scripts.orchestration.issue_stream_audit import load_registry
-from scripts.orientation_packet import PACKET_MAX_BYTES, build_packet, cap_projection, json_bytes
-from scripts.work.normalize import build_projection
-from scripts.work.sources_public import SectionResult
+from lu_machinery.api.main import app
+from lu_machinery.api.work_router import projection_cache_key
+from lu_machinery.orchestration.issue_stream_audit import load_registry
+from lu_machinery.orientation_packet import PACKET_MAX_BYTES, build_packet, cap_projection, json_bytes
+from lu_machinery.work.normalize import build_projection
+from lu_machinery.work.sources_public import SectionResult
 
 CLIENT = TestClient(app)
 
@@ -120,7 +119,7 @@ def _public_projection():
 
 
 def test_projection_records_unassigned_pr(monkeypatch):
-    import scripts.api.work_router as work_router
+    import lu_machinery.api.work_router as work_router
 
     payload = _public_projection()
     item = payload["items"][0]
@@ -166,7 +165,7 @@ def test_cap_projection_keeps_attention_prefix_and_does_not_mutate():
 
 
 def test_projection_lane_filter_caps_and_leaves_the_cache(monkeypatch):
-    import scripts.api.work_router as work_router
+    import lu_machinery.api.work_router as work_router
 
     items = []
     attention = []

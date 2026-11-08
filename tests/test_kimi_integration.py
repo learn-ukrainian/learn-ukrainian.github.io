@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 
 def test_kimi_background_worker_refuses_before_any_processor(monkeypatch):
-    from scripts.ai_agent_bridge import _ask_lifecycle, _messaging
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _messaging
 
     monkeypatch.setattr(_messaging, "read_message", lambda *_a, **_k: None)
     with pytest.raises(ValueError, match="KIMI CODING-ONLY"):

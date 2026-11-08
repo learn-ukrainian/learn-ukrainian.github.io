@@ -8,11 +8,11 @@ import sys
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import review_attempt, store
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.lib import rules_core
+from lu_machinery.review import render_contract
 
-from scripts.dispatcher import review_attempt, store
-from scripts.dispatcher.types import TaskSpec
-from scripts.lib import rules_core
-from scripts.review import render_contract
 from scripts.review.prompts.check import check_prompt
 from scripts.review.prompts.render import REPO_ROOT, render, render_prompt
 from tests.review.test_prompts import _setup_lexical_fixture
@@ -131,7 +131,7 @@ def test_admission_refuses_tampered_core_provenance(tmp_path, monkeypatch, field
 @pytest.mark.parametrize("change", ("changed", "missing", "prompt", "provenance"))
 def test_launch_refuses_core_drift_before_attempt_claim_or_provisioning(tmp_path, monkeypatch, change):
     """Defect class: stale, missing or altered rules spend an attempt before launch refusal."""
-    from scripts.agent_runtime import review_mcp, runner
+    from lu_machinery.agent_runtime import review_mcp, runner
 
     source, manifest, output, text, _, _ = rendered_at(tmp_path, monkeypatch)
     contract = render_contract.check_render_contract(output, text, REPO_ROOT)

@@ -6,11 +6,10 @@ from contextlib import contextmanager
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters import acpx
-from scripts.agent_runtime.env_sanitize import build_agent_env
-from scripts.ai_agent_bridge import _acp_compat, _cli
+from lu_machinery.agent_runtime import runner
+from lu_machinery.agent_runtime.adapters import acpx
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.ai_agent_bridge import _acp_compat, _cli
 
 ERROR_BODY = json.dumps(
     {
@@ -114,7 +113,7 @@ def test_provider_error_wrappers_fail_even_with_success_terminal(meta):
 )
 def test_failover_classifies_real_acpx_provider_error_after_diagnostic_noise(provider_line, expected):
     """#9532 leaves acpx unchanged: provider evidence past the 500-char excerpt still counts."""
-    from scripts.agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     stderr = "\n".join([*(f"[acpx] diagnostic {index}: loading session state" for index in range(30)), provider_line])
     meta = {"codex": {"threadStatus": {"type": "systemError"}}}
@@ -279,7 +278,7 @@ def test_structural_failure_makes_ask_exit_nonzero(monkeypatch):
 
 
 def test_provider_failure_terminalizes_and_replays_through_real_store(tmp_path, monkeypatch):
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     parsed = parse(
         stream(
@@ -313,14 +312,14 @@ def test_provider_failure_terminalizes_and_replays_through_real_store(tmp_path, 
         calls.append(kwargs)
         return result
 
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr(acpx, "probe_participant_reachability", lambda participant: None)
 
     @contextmanager
     def execution_cwd(*args, **kwargs):
         yield tmp_path
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
     for _ in range(2):
         returned = _acp_compat._run_compat_ask_impl(
             "codex",

@@ -10,9 +10,8 @@ import threading
 from pathlib import Path
 
 import pytest
-
-from scripts.session_canary import diary as d
-from scripts.session_canary import grok_lane as gl
+from lu_machinery.session_canary import diary as d
+from lu_machinery.session_canary import grok_lane as gl
 
 
 def test_append_diary_stamp_and_next_drive(tmp_path: Path) -> None:
@@ -82,7 +81,7 @@ def test_score_fail_writes_handback(tmp_path: Path, monkeypatch) -> None:
 
     monkeypatch.setattr(gl.subprocess, "run", run_scorer)
     monkeypatch.setattr(
-        "scripts.session_canary.diary.resolve_handoff_path",
+        "lu_machinery.session_canary.diary.resolve_handoff_path",
         lambda repo, epic, override=None, preferred=None: handoff,
     )
     rc = gl.main(

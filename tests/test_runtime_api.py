@@ -9,14 +9,13 @@ import types
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import lu_machinery.api.fleet_router as fleet_router
+import lu_machinery.api.runtime_router as runtime_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.fleet_router as fleet_router
-import scripts.api.runtime_router as runtime_router
-from scripts.agent_runtime.acpx_discuss import AcpxDiscussionController
-from scripts.api.main import app
-from scripts.control_plane import storage
+from lu_machinery.agent_runtime.acpx_discuss import AcpxDiscussionController
+from lu_machinery.api.main import app
+from lu_machinery.control_plane import storage
 
 client = TestClient(app, raise_server_exceptions=False)
 def _ctx_with_batch_state_dir(batch_state_dir: Path):
@@ -222,7 +221,7 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch, tmp_pat
             },
         ]
     )
-    monkeypatch.setitem(sys.modules, "scripts.fleet_comms.routing_reservations", ledger)
+    monkeypatch.setitem(sys.modules, "lu_machinery.fleet_comms.routing_reservations", ledger)
     monkeypatch.setattr(
         runtime_router,
         "_routing_plane_status",

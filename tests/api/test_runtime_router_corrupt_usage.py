@@ -19,10 +19,9 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from agent_runtime import usage as usage_mod
-from scripts.api import runtime_router
-from scripts.api.main import app
+from lu_machinery.agent_runtime import usage as usage_mod
+from lu_machinery.api import runtime_router
+from lu_machinery.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 

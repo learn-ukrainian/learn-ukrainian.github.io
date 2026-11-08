@@ -1,7 +1,6 @@
 
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 
 def test_api_readiness_probe_contract_for_dashboard():

@@ -9,7 +9,7 @@ SKILLS = ROOT / "agents_extensions/shared/skills"
 
 
 def test_documented_archive_failure_command_parses_with_real_cli() -> None:
-    from scripts.orchestration.thread_handoff import build_parser
+    from lu_machinery.orchestration.thread_handoff import build_parser
 
     text = (SKILLS / "thread-rollover/references/archive.md").read_text()
     blocks = re.findall(r"```bash\n(.*?)```", text, re.DOTALL)

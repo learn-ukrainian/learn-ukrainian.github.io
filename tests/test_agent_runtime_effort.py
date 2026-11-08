@@ -23,16 +23,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter
-from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
-from agent_runtime.usage import _reset_rate_limit_cache_for_tests
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
+from lu_machinery.agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
 
 @pytest.fixture(autouse=True)
 def _isolate_usage_log(tmp_path):
     """Never write to the real batch_state/api_usage/ log during tests."""
-    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+    with patch("lu_machinery.agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
 
@@ -40,7 +40,7 @@ def _isolate_usage_log(tmp_path):
 def _clear_state():
     """Reset runtime in-process caches before every test."""
     _reset_rate_limit_cache_for_tests()
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     runner._ADAPTER_CACHE.clear()
     yield
@@ -54,7 +54,7 @@ def _stub_primary_integrity_sweep(monkeypatch):
     post-worker sweep runs real git against delegate._REPO_ROOT; a detached
     CI workspace reads as drift and leaks dispatch events / repair attempts).
     Covered for real in tests/test_delegate_primary_integrity.py."""
-    import scripts.hygiene.check_primary_integrity as cpi
+    import lu_machinery.hygiene.check_primary_integrity as cpi
 
     monkeypatch.setattr(
         cpi,
@@ -81,7 +81,7 @@ def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
     """runner.invoke(..., effort="xhigh") must pass effort="xhigh" into the
     adapter's build_invocation call. Stub has_headroom + Popen so no real
     process runs; assert the adapter spy captured effort."""
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     spy_adapter = MagicMock()
     spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
@@ -132,18 +132,18 @@ def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
         return fake_proc
 
     with patch(
-        "agent_runtime.runner._load_adapter", return_value=spy_adapter,
+        "lu_machinery.agent_runtime.runner._load_adapter", return_value=spy_adapter,
     ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+        "lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, ""),
     ), patch(
-        "agent_runtime.runner.write_record",
+        "lu_machinery.agent_runtime.runner.write_record",
     ), patch(
-        "agent_runtime.runner.subprocess.Popen", side_effect=_agent_only_popen,
+        "lu_machinery.agent_runtime.runner.subprocess.Popen", side_effect=_agent_only_popen,
     ), patch(
-        "agent_runtime.runner.start_watchdog",
+        "lu_machinery.agent_runtime.runner.start_watchdog",
         return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
     ), patch(
-        "agent_runtime.runner.stop_watchdog",
+        "lu_machinery.agent_runtime.runner.stop_watchdog",
     ):
         runner_mod.invoke(
             "claude",
@@ -170,9 +170,9 @@ def test_runner_invoke_forwards_effort_to_adapter_build_invocation(tmp_path):
 def test_claude_adapter_emits_effort_when_supported(tmp_path):
     adapter = ClaudeAdapter()
     with patch(
-        "utils.claude_version.supports_effort", return_value=True,
+        "lu_machinery.utils.claude_version.supports_effort", return_value=True,
     ), patch(
-        "utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
+        "lu_machinery.utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
         return_value=False,  # keep the OTHER gated flag off so we isolate --effort
     ):
         plan = adapter.build_invocation(
@@ -199,11 +199,11 @@ def test_claude_adapter_emits_effort_when_supported(tmp_path):
 def test_claude_adapter_skips_effort_when_unsupported(tmp_path, caplog):
     adapter = ClaudeAdapter()
     with patch(
-        "utils.claude_version.supports_effort", return_value=False,
+        "lu_machinery.utils.claude_version.supports_effort", return_value=False,
     ), patch(
-        "utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
+        "lu_machinery.utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
         return_value=False,
-    ), caplog.at_level(logging.WARNING, logger="agent_runtime.adapters.claude"):
+    ), caplog.at_level(logging.WARNING, logger="lu_machinery.agent_runtime.adapters.claude"):
         plan = adapter.build_invocation(
             prompt="hi",
             mode="read-only",
@@ -234,7 +234,7 @@ def test_claude_adapter_no_effort_arg_means_default_high(tmp_path):
     when the CLI supports it (operator 2026-08-13)."""
     adapter = ClaudeAdapter()
     with patch(
-        "utils.claude_version.supports_effort", return_value=True,
+        "lu_machinery.utils.claude_version.supports_effort", return_value=True,
     ):
         plan = adapter.build_invocation(
             prompt="hi",
@@ -311,7 +311,7 @@ def test_codex_adapter_no_effort_means_default_high_override(tmp_path):
 
 def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
     adapter = GeminiAdapter()
-    with caplog.at_level(logging.DEBUG, logger="agent_runtime.adapters.gemini"):
+    with caplog.at_level(logging.DEBUG, logger="lu_machinery.agent_runtime.adapters.gemini"):
         plan = adapter.build_invocation(
             prompt="hi",
             mode="read-only",
@@ -344,7 +344,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
     attempt must call adapter.build_invocation with effort= propagated.
     Drive two rungs by returning rate_limited on the first, success on
     the second, and assert both build_invocation calls saw the kwarg."""
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     spy_adapter = MagicMock()
     spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
@@ -362,7 +362,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
     spy_adapter.liveness_signal_paths.return_value = ()
 
     # Drive the ladder: rung 1 → rate_limited, rung 2 → success.
-    from ai_llm.fallback import CallResult
+    from lu_machinery.ai_llm.fallback import CallResult
     fake_call_result = CallResult(
         response_text="pong",
         model_used="gemini-fixture-native",
@@ -371,18 +371,18 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
     )
 
     with patch(
-        "agent_runtime.runner._load_adapter", return_value=spy_adapter,
+        "lu_machinery.agent_runtime.runner._load_adapter", return_value=spy_adapter,
     ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+        "lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, ""),
     ), patch(
-        "agent_runtime.runner.write_record",
+        "lu_machinery.agent_runtime.runner.write_record",
     ), patch(
-        "agent_runtime.runner.run_gemini_fallback_ladder",
+        "lu_machinery.agent_runtime.runner.run_gemini_fallback_ladder",
     ) as mock_ladder:
         def _run_ladder(*, attempt_runner, **_kwargs):
             # Invoke the runner's attempt callback twice with different rungs
             # to prove effort gets forwarded on each call.
-            from ai_llm.fallback import GeminiRung
+            from lu_machinery.ai_llm.fallback import GeminiRung
             rung_a = GeminiRung(
                 index=0, total=2,
                 model="gemini-fixture-native", auth_mode="oauth",
@@ -395,7 +395,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
             # We patch _execute_invocation_plan to a no-op success so the runner
             # returns an AttemptOutcome without running a real subprocess.
             with patch(
-                "agent_runtime.runner._execute_invocation_plan",
+                "lu_machinery.agent_runtime.runner._execute_invocation_plan",
                 return_value=MagicMock(
                     parse=MagicMock(
                         ok=True,

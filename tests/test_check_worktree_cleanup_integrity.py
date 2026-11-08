@@ -11,15 +11,14 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene.check_worktree_cleanup_integrity import (
+from lu_machinery.hygiene.check_worktree_cleanup_integrity import (
     STALE_AFTER,
     check_worktree_cleanup_integrity,
     latest_receipt_observed_at,
     main,
     parse_launchd_snapshot,
 )
-from scripts.orchestration import install_worktree_cleanup_launchd as launchd
+from lu_machinery.orchestration import install_worktree_cleanup_launchd as launchd
 
 ROOT = Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "scripts" / "orchestration" / "run_scheduled_worktree_cleanup.sh"

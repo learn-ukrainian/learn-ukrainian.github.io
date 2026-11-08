@@ -20,7 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
 
 
 def _fake_run(payload: dict) -> SimpleNamespace:

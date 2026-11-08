@@ -21,9 +21,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.fleet import capacity_pick, credit_lane, reset_reserve
-from scripts.fleet.reset_reserve import unavailable_reserve
-from scripts.fleet.routing_policy import projected_unused_pct
+from lu_machinery.fleet import capacity_pick, credit_lane, reset_reserve
+from lu_machinery.fleet.reset_reserve import unavailable_reserve
+from lu_machinery.fleet.routing_policy import projected_unused_pct
 
 NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
 POLICY = credit_lane.load_policy()
@@ -94,7 +94,7 @@ def test_policy_reads_codex_allowlist_from_config():
 
 
 def test_policy_allowlist_names_active_catalog_models():
-    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+    from lu_machinery.review.model_catalog import canonical_model_id, load_model_catalog
 
     catalog = load_model_catalog()
     for models in POLICY.allowed_models.values():
@@ -348,7 +348,7 @@ def test_unreadable_runtime_records_fail_closed(monkeypatch):
 
 
 def test_real_reader_counts_rate_limits_inside_the_window_only(monkeypatch, tmp_path):
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
@@ -379,7 +379,7 @@ def test_real_reader_counts_rate_limits_inside_the_window_only(monkeypatch, tmp_
 
 def _real_reader_state(monkeypatch, tmp_path, files: dict[str, bytes | None]) -> dict:
     """Credit state of the fresh near-cap Codex record with the real usage reader over ``files``."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
@@ -436,7 +436,7 @@ def test_real_reader_evidence_states(monkeypatch, tmp_path, scenario):
 
 def test_missing_file_and_missing_directory_are_the_empty_case(monkeypatch, tmp_path):
     assert _real_reader_state(monkeypatch, tmp_path, {})["state"] == _PRESENT
-    monkeypatch.setattr("scripts.agent_runtime.usage._usage_dir", lambda: tmp_path / "absent")
+    monkeypatch.setattr("lu_machinery.agent_runtime.usage._usage_dir", lambda: tmp_path / "absent")
     assert credit_lane.lane_credit_state("codex", _codex(), POLICY, now=NOW)["state"] == _PRESENT
 
 
@@ -483,7 +483,7 @@ def test_symlink_to_a_file_with_a_utc_rate_limit_is_counted(monkeypatch, tmp_pat
 
 
 def test_regular_file_removed_between_listing_and_open_is_ignored(monkeypatch, tmp_path):
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     path = tmp_path / _LANE_FILE
     path.write_bytes(_line())  # would be unreadable evidence if it were still read
@@ -518,7 +518,7 @@ def test_mode_000_lane_file_is_unreadable_evidence(monkeypatch, tmp_path):
 
 
 def test_unreadable_evidence_keeps_the_allowlist_and_the_near_cap_router_row(monkeypatch, tmp_path):
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
@@ -531,7 +531,7 @@ def test_unreadable_evidence_keeps_the_allowlist_and_the_near_cap_router_row(mon
 
 
 def test_summary_unreadable_is_zero_for_other_callers_with_healthy_records(tmp_path):
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     (tmp_path / _LANE_FILE).write_bytes(
@@ -672,7 +672,7 @@ def test_credit_balance_lane_ranks_after_plan_backed_seats_and_counts_as_usable(
 
 
 def test_main_json_carries_credit_fields(monkeypatch, capsys):
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     budget = _budget()
     budget["agents"]["codex"]["reset_credits"]["fetched_at"] = datetime.now(UTC).isoformat()
@@ -1028,7 +1028,7 @@ def test_allowlist_gate_table(snapshot, monkeypatch, tmp_path, scenario, lane, m
 
 
 def test_explicit_usage_dir_is_read_instead_of_the_shared_one(monkeypatch, tmp_path):
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     shared = tmp_path / "shared"
@@ -1103,7 +1103,7 @@ def test_published_credit_relief_rechecks_freshness_now(fetched_at):
 
 def test_published_credit_relief_rechecks_current_rate_limits_in_the_shared_log(monkeypatch, tmp_path):
     """A snapshot published before a rate limit no longer grants relief (real reader, shared log)."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     published = _published()  # conftest reader: no rate limits when the snapshot was published
     assert published["state"] == _PRESENT
@@ -1354,7 +1354,7 @@ def test_hidden_pace_with_unknown_allowance_is_unknown_not_cool():
 
 def test_conflicting_pace_aliases_have_one_meaning():
     """F3 key order: expected_pct, expectedUsedPercent, weekly_expected_pct, then the reset fallback."""
-    from scripts.api.subscription_usage import PACE_EXPECTED_PCT_ALIASES, pace_expected_pct, pace_is_deficit
+    from lu_machinery.api.subscription_usage import PACE_EXPECTED_PCT_ALIASES, pace_expected_pct, pace_is_deficit
 
     pace = {
         "expectedUsedPercent": 0.1,

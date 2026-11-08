@@ -10,8 +10,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.ops import host_stack_drift as drift
 
-from scripts.ops import host_stack_drift as drift
 from tests._host_path_guard import FIXTURE_HOME, assert_no_host_facts, assert_no_host_paths
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]

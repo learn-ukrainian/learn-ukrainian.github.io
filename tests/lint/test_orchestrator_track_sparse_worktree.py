@@ -6,7 +6,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from scripts.lint.lint_prompts import scan_orchestrator_suites
+from lu_machinery.lint.lint_prompts import scan_orchestrator_suites
 
 _MANIFEST = """\
 levels:

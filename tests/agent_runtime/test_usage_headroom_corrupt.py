@@ -15,8 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from agent_runtime import usage as usage_mod
+from lu_machinery.agent_runtime import usage as usage_mod
 
 AGENT = "codex"
 MODEL = "gpt-6.1-sol"

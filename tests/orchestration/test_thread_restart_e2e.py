@@ -18,11 +18,11 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from lu_machinery.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry, launcher_environment
@@ -1216,7 +1216,7 @@ def test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover
         '"source":"startup","model":"gpt-6.1-sol",'
         '"agent_type":"orchestrator"}\' | '
         f'CLAUDE_PROJECT_DIR="$PWD" bash .codex/hooks/session-setup.sh > {os.fspath(hook_capture)!r}\n'
-        ".venv/bin/python -m agents_extensions.shared.session_streams hook close >/dev/null\n",
+        ".venv/bin/python -m lu_machinery.session_streams hook close >/dev/null\n",
         encoding="utf-8",
     )
     fake_codex.chmod(0o755)

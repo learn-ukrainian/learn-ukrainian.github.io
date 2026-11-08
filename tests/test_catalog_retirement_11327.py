@@ -12,8 +12,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+from lu_machinery.review.model_catalog import load_model_catalog, retired_model_refusal
 
 # The five ids this issue retires. claude-fable-5 was already retired.
 RETIRED_IDS = (

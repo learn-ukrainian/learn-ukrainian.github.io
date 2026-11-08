@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-import context_canary
+from lu_machinery import context_canary
 
 FACTS = [
     {"id": "safe_env_sha", "q": "SHA of the safe_env commit", "a": "5cd67954ab"},

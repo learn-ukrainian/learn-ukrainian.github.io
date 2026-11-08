@@ -8,11 +8,10 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import backup_failure_alert as alerts
-from scripts.orchestration import disk_watermark_alert as watermark
-from scripts.orchestration import dispatch_admission as adm
-from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+from lu_machinery.orchestration import backup_failure_alert as alerts
+from lu_machinery.orchestration import disk_watermark_alert as watermark
+from lu_machinery.orchestration import dispatch_admission as adm
+from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
 _GIB = 1024**3
 _LIMITS = adm.Thresholds(max_live_write_workers=2, min_mem_available_gib=3.5, max_load_per_cpu=1.5)
@@ -142,7 +141,7 @@ def test_oserror_after_publish_preserves_hygiene_receipt_and_retries_same_delive
     tmp_path, monkeypatch, capsys, fault
 ):
     """A failed state replacement after Fleet commit must not lose the pending publication."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root = tmp_path / "authority"
     with AuthorityService(root=root) as service:

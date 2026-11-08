@@ -8,10 +8,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.api import state_router
-from scripts.fleet import capacity_pick, credit_lane
-from scripts.telemetry import cost_report
+from lu_machinery.api import state_router
+from lu_machinery.fleet import capacity_pick, credit_lane
+from lu_machinery.telemetry import cost_report
 
 # Captured at import, before the conftest autouse fixture stubs the reader.
 REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
@@ -567,7 +566,7 @@ def test_near_cap_codex_without_usable_credits_is_unchanged(monkeypatch, tmp_pat
 
 
 def test_recent_rate_limit_keeps_the_credit_lane_out(monkeypatch, tmp_path):
-    from scripts.fleet import credit_lane
+    from lu_machinery.fleet import credit_lane
 
     monkeypatch.setattr(
         credit_lane,
@@ -581,7 +580,7 @@ def test_recent_rate_limit_keeps_the_credit_lane_out(monkeypatch, tmp_path):
 
 def test_worktree_caller_reads_rate_limits_from_the_shared_runtime_log(monkeypatch, tmp_path):
     """A linked-worktree caller without ``batch_state_dir`` sees the shared checkout's rate limits."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(credit_lane, "read_recent_rate_limits", REAL_RATE_LIMIT_READER)
@@ -614,7 +613,7 @@ def test_worktree_caller_reads_rate_limits_from_the_shared_runtime_log(monkeypat
 
 
 def test_unreadable_credit_policy_publishes_policy_error_and_keeps_near_cap(monkeypatch, tmp_path):
-    from scripts.fleet import credit_lane
+    from lu_machinery.fleet import credit_lane
 
     def broken(path=None):
         raise ValueError("unreadable")

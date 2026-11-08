@@ -7,8 +7,7 @@ import re
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import task_record_store as store
+from lu_machinery.orchestration import task_record_store as store
 
 
 def test_iter_task_records_yields_hot_then_archive(tmp_path):

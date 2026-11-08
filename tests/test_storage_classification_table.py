@@ -12,8 +12,7 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-
-from scripts.storage import build_classification_table as classification
+from lu_machinery.storage import build_classification_table as classification
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "10b39479b1ca8f97c3f7cf7547e71d58141947b1"

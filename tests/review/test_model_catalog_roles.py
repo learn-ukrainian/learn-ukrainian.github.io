@@ -12,9 +12,8 @@ from functools import partial
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet import credit_lane
-from scripts.review.model_catalog import (
+from lu_machinery.fleet import credit_lane
+from lu_machinery.review.model_catalog import (
     ModelCatalogError,
     canonical_model_id,
     load_model_catalog,
@@ -22,8 +21,9 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     validate_catalog,
 )
-from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
-from scripts.review.role_resolution import expanded_legacy_view
+from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+from lu_machinery.review.role_resolution import expanded_legacy_view
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.review.test_model_catalog import (
     CURRENT_BASELINE as APPROVED_BASELINE,
@@ -373,7 +373,7 @@ def test_qualification_is_identity_and_capability_bound(catalog):
 
 
 def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
-    argv = [sys.executable, "-m", "scripts.review.model_catalog"]
+    argv = [sys.executable, "-m", "lu_machinery.review.model_catalog"]
     result = subprocess.run([*argv, "--resolve-role", "bounded_advisor"], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["candidates"][0]["model_id"] == "gpt-6.1-sol"

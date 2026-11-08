@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.api.opsec_scan import scan_response, scan_text
+from lu_machinery.api.opsec_scan import scan_response, scan_text
 
 pytestmark = pytest.mark.repo_invariant
 

@@ -57,23 +57,23 @@ def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -
 def test_launcher_catalog_inventory_follows_transitive_imports(tmp_path: Path) -> None:
     files = {
         "scripts/__init__.py": "",
-        "scripts/review/__init__.py": "from scripts.common import package_helper\n",
+        "scripts/review/__init__.py": "from lu_machinery.common import package_helper\n",
         "scripts/review/model_catalog.py": (
             "import sys\nfrom pathlib import Path\n"
             "sys.path.insert(0, str(Path(__file__).resolve().parents[2]))\n"
             "Path(__file__).resolve().parents[2].joinpath('.git/HEAD').read_text()\n"
             "Path(__file__).resolve().parents[2].joinpath('local-state.txt').read_text()\n"
-            "def load():\n    from scripts.review.future_route import resolve\n    resolve()\n"
+            "def load():\n    from lu_machinery.review.future_route import resolve\n    resolve()\n"
             "load()\n"
         ),
         "scripts/review/future_route.py": (
             "import importlib\nfrom pathlib import Path\n"
-            "importlib.import_module('scripts.common.transitive')\n"
+            "importlib.import_module('lu_machinery.common.transitive')\n"
             "def resolve():\n"
             "    Path(__file__).resolve().parents[1].joinpath('config/model_catalog.yaml').read_text()\n"
         ),
         "scripts/common/package_helper.py": "import sys\n",
-        "scripts/common/transitive.py": "from scripts.review import future_route\n",
+        "scripts/common/transitive.py": "from lu_machinery.review import future_route\n",
         "scripts/config/model_catalog.yaml": "schema_version: fixture\n",
     }
     for relative, body in files.items():
@@ -292,7 +292,7 @@ def test_driver_canaries_use_canonical_stream_then_exec_provider(tmp_path: Path,
         if line.startswith("CANARY_EXEC ")
     ]
     assert canaries == [
-        ["-m", "scripts.session_canary.codex_lane", operation, "--epic", selector, "--stream", stream]
+        ["-m", "lu_machinery.session_canary.codex_lane", operation, "--epic", selector, "--stream", stream]
         for operation in ("mint", "bootstrap")
     ]
     assert f"LEASE_STUB {stream}" in result.stdout
@@ -529,7 +529,8 @@ def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
     """#12567: a packet prepared from inside the lane is found before the lease is claimed."""
     import json
 
-    from scripts.orchestration import thread_handoff as th
+    from lu_machinery.orchestration import thread_handoff as th
+
     from tests.orchestration.test_thread_handoff import sample_snapshot
 
     launcher, executable_dir = _runtime_driver_launcher(tmp_path)
@@ -539,7 +540,7 @@ def test_dry_run_reports_the_lane_packet_a_relaunch_would_bind(
     shim.parent.mkdir(parents=True, exist_ok=True)
     shim.write_text(
         f"import sys\nsys.path.insert(0, {str(REPO)!r})\n"
-        "from scripts.orchestration.thread_handoff import main\nraise SystemExit(main())\n",
+        "from lu_machinery.orchestration.thread_handoff import main\nraise SystemExit(main())\n",
         encoding="utf-8",
     )
     monkeypatch.setattr(th, "gather_snapshot", lambda r, _url: sample_snapshot(r))

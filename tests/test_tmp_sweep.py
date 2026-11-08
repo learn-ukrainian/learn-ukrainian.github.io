@@ -12,9 +12,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.hygiene import tmp_sweep as sweep
-from scripts.hygiene.retention_engine import reap_attributed_temp
+from lu_machinery.hygiene import tmp_sweep as sweep
+from lu_machinery.hygiene.retention_engine import reap_attributed_temp
 
 # Literal containment expectations: task, process, bidirectional protection.
 RELATIONSHIPS = [
@@ -591,7 +590,7 @@ def test_tree_read_error_is_unknown(inventory, monkeypatch):
 
 
 def test_common_reaper_refuses_unknown_mounts(inventory, monkeypatch):
-    from scripts.common import task_scratch
+    from lu_machinery.common import task_scratch
 
     path = inventory.make()
     info = path.stat()
@@ -706,6 +705,6 @@ def test_unreadable_listener_table_keeps_a_socket_tree_held(inventory, monkeypat
     with endpoint:
         endpoint.bind("endpoint")
         endpoint.listen()
-        monkeypatch.setattr("scripts.orchestration.tmp_leak_sweep._NET_UNIX", tmp_path / "missing")
+        monkeypatch.setattr("lu_machinery.orchestration.tmp_leak_sweep._NET_UNIX", tmp_path / "missing")
         report = inventory.run(apply=True)
         assert path.exists() and report["rows"][0]["reason"] == "special_file"

@@ -16,7 +16,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime import usage as usage_mod
+from lu_machinery.agent_runtime import usage as usage_mod
 
 
 def _write_line(path: Path, record: dict) -> None:
@@ -100,7 +100,7 @@ def _stamp(now: float, age_s: float, *, utc: bool = True) -> str:
 
 def test_gemini_runtime_counts_agy_and_legacy_records_once(tmp_path: Path) -> None:
     """AC-01/AC-02: both prefixes, all outcome categories, faults, and one copy."""
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from lu_machinery.agent_runtime.agent_identity import resolve_retired_agent_alias
 
     usage_mod._reset_rate_limit_cache_for_tests()
     assert resolve_retired_agent_alias("gemini") == "agy"

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from scripts.api.telemetry.transcript_tokens import (
+from lu_machinery.api.telemetry.transcript_tokens import (
     current_context_telemetry,
     parse_transcript_tokens,
 )

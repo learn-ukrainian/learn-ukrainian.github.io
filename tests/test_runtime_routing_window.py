@@ -12,7 +12,7 @@ import sys
 import types
 from datetime import UTC, datetime, timedelta
 
-import scripts.api.runtime_router as runtime_router
+import lu_machinery.api.runtime_router as runtime_router
 
 _NOW = datetime.now(UTC)
 
@@ -53,7 +53,7 @@ def _decision_row(
 
 def _stub_ledger(monkeypatch, rows: list[dict]) -> None:
     ledger = types.SimpleNamespace(list_routing_decisions=lambda **_kwargs: rows)
-    monkeypatch.setitem(sys.modules, "scripts.fleet_comms.routing_reservations", ledger)
+    monkeypatch.setitem(sys.modules, "lu_machinery.fleet_comms.routing_reservations", ledger)
     monkeypatch.setattr(
         runtime_router,
         "_routing_plane_status",

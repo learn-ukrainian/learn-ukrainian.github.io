@@ -7,10 +7,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import git, worker
+from lu_machinery.dispatcher.cli import ALIASES
+from lu_machinery.review.record_cf_verdict import _review_branch
 
-from scripts.dispatcher import git, worker
-from scripts.dispatcher.cli import ALIASES
-from scripts.review.record_cf_verdict import _review_branch
 from tests.dispatcher.conftest import await_file, run_git
 
 

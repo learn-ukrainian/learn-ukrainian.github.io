@@ -8,9 +8,8 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import work_router
-from scripts.api.main import app
+from lu_machinery.api import work_router
+from lu_machinery.api.main import app
 
 ROOT = Path(__file__).resolve().parents[2]
 

@@ -11,10 +11,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.env_sanitize import build_agent_env
-from agent_runtime.registry import AGENTS
-from agent_runtime.result import ParseResult
-from agent_runtime.runner import _execute_invocation_plan
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.registry import AGENTS
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.runner import _execute_invocation_plan
+
 from tests.helpers.python import project_python
 
 _TEST_PYTHON = project_python()
@@ -351,7 +352,7 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
     with (
         patch.dict("os.environ", parent_env, clear=True),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):
@@ -401,7 +402,7 @@ def test_runner_codex_subprocess_gets_gh_token_for_gh_auth_status(tmp_path):
     with (
         patch.dict("os.environ", parent_env, clear=True),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):
@@ -441,7 +442,7 @@ def test_runner_gemini_subprocess_gets_only_resolved_agent_identity(tmp_path):
     with (
         patch.dict("os.environ", parent_env, clear=True),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):

@@ -10,9 +10,9 @@ import threading
 from pathlib import Path
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration import worktree_artifacts as wa
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import worktree_artifacts as wa
 from tests import _worktree_artifact_links as links
 
 
@@ -537,7 +537,7 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
     write = output._classified_inventory
 
     def concurrent_writer(*args, **kwargs):
-        from scripts.orchestration.dead_worker_state import task_state_lock
+        from lu_machinery.orchestration.dead_worker_state import task_state_lock
 
         with task_state_lock(path):
             path.write_text(json.dumps({**initial, "status": "failed", "response": "new", "other_writer": True}))
@@ -598,7 +598,7 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
 
 def test_record_update_waits_for_the_shared_writer_lock(checkout):
     """Removing ``task_state_lock`` from the update lets it race and lose the other writer's fields."""
-    from scripts.orchestration.dead_worker_state import task_state_lock
+    from lu_machinery.orchestration.dead_worker_state import task_state_lock
 
     path = checkout[2] / "artifact-task.json"
     initial = bound_record(checkout, {"status": "running"})

@@ -6,9 +6,9 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
 
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.gemini import GeminiAdapter
 from scripts.build import linear_pipeline
 
 
@@ -188,4 +188,3 @@ def test_invoke_writer_persists_gemini_jsonl_mcp_calls_to_writer_tool_calls(
     calls = json.loads(trace_path.read_text(encoding="utf-8"))
     assert [call["name"] for call in calls] == ["mcp__sources__verify_words"]
     assert calls[0]["arguments"] == {"words": ["кіт"]}
-

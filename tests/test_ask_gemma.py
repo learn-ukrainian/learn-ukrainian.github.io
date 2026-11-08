@@ -3,8 +3,7 @@
 from unittest.mock import patch
 
 import pytest
-
-from scripts.ai_agent_bridge._opencode import (
+from lu_machinery.ai_agent_bridge._opencode import (
     ask_gemma,
 )
 
@@ -15,8 +14,8 @@ from scripts.ai_agent_bridge._opencode import (
 
 
 def test_retired_gemma_is_refused_before_message_or_provider_access():
-    with patch("scripts.ai_agent_bridge._opencode.send_message") as send:
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run:
+    with patch("lu_machinery.ai_agent_bridge._opencode.send_message") as send:
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run:
             with pytest.raises(ValueError, match="is retired in the model catalog"):
                 ask_gemma("review this", task_id="t")
             send.assert_not_called()
@@ -31,7 +30,7 @@ def test_retired_gemma_is_refused_before_message_or_provider_access():
 
 def test_retired_gemma_remains_refused_under_ci(monkeypatch):
     monkeypatch.setenv("CI", "true")
-    with patch("scripts.ai_agent_bridge._opencode.send_message") as send:
+    with patch("lu_machinery.ai_agent_bridge._opencode.send_message") as send:
         with pytest.raises(ValueError, match="is retired in the model catalog"):
             ask_gemma("audit this", task_id="t")
         send.assert_not_called()

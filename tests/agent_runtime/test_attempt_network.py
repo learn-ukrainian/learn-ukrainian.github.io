@@ -12,8 +12,7 @@ import time
 from dataclasses import replace
 
 import pytest
-
-from scripts.agent_runtime.attempt_network import (
+from lu_machinery.agent_runtime.attempt_network import (
     AttemptEgress,
     Limits,
     canonical_host,
@@ -274,7 +273,7 @@ def test_proxy_start_failure_and_forwarder_help(tmp_path, monkeypatch):
     import sys
     from pathlib import Path
 
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     bad = tmp_path / "missing" / "egress.sock"
     with pytest.raises(ReviewIsolationError, match="start_failed"):
@@ -289,7 +288,7 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
     import subprocess
     import sys
 
-    from scripts.agent_runtime.attempt_forwarder import run
+    from lu_machinery.agent_runtime.attempt_forwarder import run
 
     # The child opens the local TCP relay and exercises denial through the
     # actual parent Unix endpoint. No provider request is made here.
@@ -311,7 +310,7 @@ def test_projected_forwarder_run_replaces_environment_and_preserves_exit(proxy, 
     with pytest.raises(OSError):
         asyncio.run(run(str(missing), [sys.executable, "-c", "raise SystemExit(99)"]))
     # Internal launcher main must refuse before child startup on missing proxy.
-    module = __import__("scripts.agent_runtime.attempt_forwarder", fromlist=["main"])
+    module = __import__("lu_machinery.agent_runtime.attempt_forwarder", fromlist=["main"])
     result = subprocess.run([sys.executable, module.__file__, str(missing), "/bin/true"],
                             capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert result.returncode == 125 and "attempt_forwarder_start_failed" in result.stderr
@@ -335,7 +334,7 @@ def test_dns_oversized_response_is_bounded_and_reaped(proxy, monkeypatch):
 def test_forwarder_cli_success_refusal_and_argument_contract(proxy, tmp_path, monkeypatch):
     import sys
 
-    from scripts.agent_runtime import attempt_forwarder
+    from lu_machinery.agent_runtime import attempt_forwarder
 
     monkeypatch.setattr(sys, "argv", [attempt_forwarder.__file__, str(proxy.endpoint), "/bin/true"])
     assert attempt_forwarder.main() == 0

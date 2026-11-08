@@ -8,9 +8,9 @@ from datetime import UTC, datetime
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.orchestration import issue_quality_report as report
+from lu_machinery.orchestration.fleet_repos import FleetRepo
 
-from scripts.orchestration import issue_quality_report as report
-from scripts.orchestration.fleet_repos import FleetRepo
 from tests.test_check_issue_task_quality import COMPLETE, HYGIENE, REGISTRY, REPO, audit_report
 
 PUBLIC = FleetRepo("public", REPO, "public", "public-monorepo", True)

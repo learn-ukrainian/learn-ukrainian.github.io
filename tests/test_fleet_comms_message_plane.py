@@ -7,9 +7,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.fleet_comms.contracts import CompletionState
-from scripts.fleet_comms.message_plane import (
+from lu_machinery.fleet_comms.contracts import CompletionState
+from lu_machinery.fleet_comms.message_plane import (
     MAX_CONTINUATIONS,
     MessagePlane,
     default_plane_root,
@@ -18,7 +17,7 @@ from scripts.fleet_comms.message_plane import (
     resolve_plane_mode,
     verify_authority_cutover,
 )
-from scripts.fleet_comms.paths import PlaneRootAnchorError
+from lu_machinery.fleet_comms.paths import PlaneRootAnchorError
 
 
 def test_resolve_plane_mode_env_unset_uses_configured_default(
@@ -58,7 +57,7 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     alias.symlink_to(worktree, target_is_directory=True)
     before = sorted(tmp_path.rglob("*"))
     connect = Mock(side_effect=AssertionError("checkout root reached a connection"))
-    monkeypatch.setattr("scripts.fleet_comms.message_plane.cp_connect", connect)
+    monkeypatch.setattr("lu_machinery.fleet_comms.message_plane.cp_connect", connect)
     for candidate in (primary, worktree, alias):
         with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
             read_plane_status(root=candidate)
@@ -77,7 +76,7 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     before = sorted(tmp_path.rglob("*"))
     retired = Mock(side_effect=AssertionError("checkout default reached retired-marker lookup"))
     with monkeypatch.context() as guard:
-        guard.setattr("scripts.fleet_comms.paths._refuse_retired_local_plane", retired)
+        guard.setattr("lu_machinery.fleet_comms.paths._refuse_retired_local_plane", retired)
         with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
             default_plane_root(repo_root=default_primary)
     retired.assert_not_called()
@@ -90,8 +89,8 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     expected.symlink_to(loop)
     before = sorted(tmp_path.rglob("*"))
     prepare = Mock(side_effect=AssertionError("unresolvable root reached mkdir/chmod"))
-    monkeypatch.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
-    monkeypatch.setattr("scripts.fleet_comms.artifacts.ArtifactStore._prepare_private_dir", prepare)
+    monkeypatch.setattr("lu_machinery.fleet_comms.artifacts.cp_connect", connect)
+    monkeypatch.setattr("lu_machinery.fleet_comms.artifacts.ArtifactStore._prepare_private_dir", prepare)
     for env_root in (str(loop), None):
         if env_root is not None:
             monkeypatch.setenv("FLEET_COMMS_ROOT", env_root)
@@ -112,7 +111,7 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
 def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.fleet_comms.paths import PlaneRootAnchorError
+    from lu_machinery.fleet_comms.paths import PlaneRootAnchorError
 
     isolated = tmp_path / "isolated"
     isolated.mkdir()
@@ -135,7 +134,7 @@ def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
 def test_default_plane_root_refuses_retired_local_marker(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER, PlaneRootAnchorError
+    from lu_machinery.fleet_comms.paths import RETIRED_LOCAL_MARKER, PlaneRootAnchorError
 
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
@@ -169,7 +168,7 @@ def test_configured_default_fail_open_on_malformed_yaml(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Malformed fleet_communications.yaml must not crash resolve (CF #5666 F001)."""
-    import scripts.fleet_comms.message_plane as mp
+    import lu_machinery.fleet_comms.message_plane as mp
 
     checkout = tmp_path / "repo"
     cfg_dir = checkout / "scripts" / "config"

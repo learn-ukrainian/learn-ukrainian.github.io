@@ -7,10 +7,9 @@ import sys
 import tomllib
 
 import pytest
-
-from scripts.agent_runtime.adapters import codex as codex_adapter
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.common.github_client import GitHubClient, Response
+from lu_machinery.agent_runtime.adapters import codex as codex_adapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.common.github_client import GitHubClient, Response
 
 
 @pytest.fixture(autouse=True)
@@ -85,7 +84,7 @@ def test_review_gh_shim_refuses_raw_comment_without_calling_backend(tmp_path, gh
     )
     assert result.returncode != 0
     assert "raw public write refused" in result.stderr
-    assert "scripts.publish pr-comment" in result.stderr
+    assert "lu_machinery.publish pr-comment" in result.stderr
     assert not marker.exists()
     assert not list(lease.glob("agent-gh.*"))
 
@@ -197,8 +196,8 @@ def test_review_gh_shim_read_only_with_readonly_cache(tmp_path, gh_shim_sandbox)
 @pytest.mark.parametrize("stage", ["resolution", "admission", "transport"])
 def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypatch, capsys, stage):
     """Unresolved admission and native read errors must not be labelled publishing failures."""
-    from scripts.common import github_client
-    from scripts.opsec import gh_entry
+    from lu_machinery.common import github_client
+    from lu_machinery.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
     executable.write_text("#!/bin/sh\nexit 0\n")

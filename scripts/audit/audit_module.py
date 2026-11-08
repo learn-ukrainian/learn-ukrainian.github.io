@@ -30,7 +30,7 @@ def auto_fix_ipa(file_path: str) -> tuple[int, list[str]]:
     """
     from pathlib import Path
 
-    from lint_ipa import apply_fixes
+    from lu_machinery.lint_ipa import apply_fixes
 
     md_path = Path(file_path)
     slug = md_path.stem

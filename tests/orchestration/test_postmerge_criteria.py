@@ -5,8 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.orchestration import postmerge_criteria as pc
+from lu_machinery.orchestration import postmerge_criteria as pc
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
@@ -94,7 +93,7 @@ def test_repeat_is_idempotent(transport):
 
 
 def test_real_authority_deduplicates_across_retries(transport, monkeypatch, tmp_path):
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root = tmp_path / "plane"
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))

@@ -21,7 +21,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.agent_runtime.errors import AgentStalledError
+from lu_machinery.agent_runtime.errors import AgentStalledError
+from lu_machinery.orchestration import worktree_git
+
 from scripts.audit.llm_qg_store import (
     current_payload_for_module,
     prompt_hash_for_text,
@@ -37,7 +39,6 @@ from scripts.build.phases.implementation_map import (
     write_implementation_map,
 )
 from scripts.curriculum.quality.thresholds import QG_DIMS, terminal_dims_for
-from scripts.orchestration import worktree_git
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 
@@ -1222,7 +1223,7 @@ def _run_combined_llm_qg(
     stdout_silence_timeout: int | None,
     profile: str | None,
 ) -> dict[str, Any]:
-    from scripts.agent_runtime.runner import invoke
+    from lu_machinery.agent_runtime.runner import invoke
 
     prompt = "\n\n".join(
         part for part in (review_context, _COMBINED_QG_INSTRUCTIONS, generated_content) if part
@@ -1301,7 +1302,7 @@ def _run_llm_qg(
     effort_override: str | None = None,
     combined: bool = False,
 ) -> dict[str, Any]:
-    from scripts.agent_runtime.runner import invoke
+    from lu_machinery.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
@@ -1532,7 +1533,7 @@ def _run_wiki_coverage_review(
     wiki_coverage_gate: Mapping[str, Any],
     stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any]:
-    from scripts.agent_runtime.runner import invoke
+    from lu_machinery.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
@@ -2283,7 +2284,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
         if writer == "claude-tools":
             writer = "agy-tools"
         independent_reviewer = _normalize_writer(args.reviewer) if args.reviewer else UPGRADE_INDEPENDENT_REVIEWER
-        from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+        from lu_machinery.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
 
         writer_family = resolve_family(linear_pipeline.WRITER_DEFAULTS[writer]["model"])
         independent_family = resolve_family(linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"])

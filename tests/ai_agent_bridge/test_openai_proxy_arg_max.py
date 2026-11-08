@@ -4,8 +4,7 @@ import subprocess
 from collections.abc import Callable
 
 import pytest
-
-from scripts.ai_agent_bridge import openai_proxy as proxy
+from lu_machinery.ai_agent_bridge import openai_proxy as proxy
 
 
 @pytest.mark.parametrize(

@@ -7,8 +7,7 @@ glm  = Zhipu glm-5.3 (code + review; ⚠️ China-hosted → LOCAL-ONLY, no CI).
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.ai_agent_bridge._opencode import (
+from lu_machinery.ai_agent_bridge._opencode import (
     _CI_ENV_VARS,
     GLM_MODEL,
     POOL_MODEL,
@@ -18,7 +17,7 @@ from scripts.ai_agent_bridge._opencode import (
     ask_glm,
     ask_pool,
 )
-from scripts.lib import rules_core
+from lu_machinery.lib import rules_core
 
 # --- constants ------------------------------------------------------------
 
@@ -27,8 +26,8 @@ from scripts.lib import rules_core
 
 
 def test_invoke_opencode_passes_variant_and_json_format():
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(
                 returncode=0,
                 stdout='{"type":"text","part":{"type":"text","text":"hi"}}',
@@ -113,8 +112,8 @@ def test_ask_glm_refuses_under_ci_before_any_egress(monkeypatch):
     for other in _CI_ENV_VARS:
         monkeypatch.delenv(other, raising=False)
     monkeypatch.setenv("CI", "true")
-    with patch("scripts.ai_agent_bridge._opencode.send_message") as send_mock:
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.send_message") as send_mock:
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             with pytest.raises(SystemExit, match="LOCAL-ONLY"):
                 ask_glm("audit this", task_id="t")
             send_mock.assert_not_called()
@@ -132,8 +131,8 @@ def test_assert_glm_egress_allowed_raises_on_empty_ci_value(monkeypatch):
 
 def test_invoke_opencode_always_separates_content_with_dashdash():
     # A leading-dash prompt arrives on stdin and can never be parsed as a flag.
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
             _invoke_opencode("--- a/tricky diff line", "deepseek/deepseek-v4.1-flash", output_format="default")
             argv = run_mock.call_args[0][0]
@@ -147,7 +146,7 @@ def test_invoke_opencode_always_separates_content_with_dashdash():
 
 
 def test_retired_pool_override_is_refused_before_message_creation():
-    with patch("scripts.ai_agent_bridge._opencode.send_message") as send:
+    with patch("lu_machinery.ai_agent_bridge._opencode.send_message") as send:
         with pytest.raises(ValueError, match="is retired in the model catalog"):
             ask_pool("hi", task_id="t", model="openrouter/poolside/laguna-s-2.1")
         send.assert_not_called()
@@ -158,10 +157,10 @@ def test_ask_glm_refuses_openrouter_glm_before_subprocess(monkeypatch):
     for var in _CI_ENV_VARS:
         monkeypatch.delenv(var, raising=False)
     with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
+        patch("lu_machinery.ai_agent_bridge._opencode.send_message", return_value=1),
+        patch("lu_machinery.ai_agent_bridge._opencode.acknowledge"),
         patch(
-            "scripts.ai_agent_bridge._opencode.subprocess.run",
+            "lu_machinery.ai_agent_bridge._opencode.subprocess.run",
             side_effect=AssertionError("subprocess must not run for refused GLM route"),
         ),
     ):
@@ -200,7 +199,7 @@ def test_parse_ndjson_multi_message_stream_yields_last_substantive_message():
 
 def test_get_max_output_tokens_defaults_for_glm_pool():
     """Sane defaults kick in for the lanes that exhibited reasoning=length."""
-    from scripts.ai_agent_bridge._opencode import (
+    from lu_machinery.ai_agent_bridge._opencode import (
         GLM_DEFAULT_MAX_OUTPUT_TOKENS,
         GLM_MODEL,
         POOL_DEFAULT_MAX_OUTPUT_TOKENS,
@@ -216,9 +215,9 @@ def test_get_max_output_tokens_defaults_for_glm_pool():
 
 
 def test_retired_glm_pool_cannot_spawn_with_default_token_budget(monkeypatch):
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
-    with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run:
+    with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run:
         for model in (GLM_MODEL, POOL_MODEL):
             with pytest.raises(RoutingGuardError, match="is retired in the model catalog"):
                 _invoke_opencode("review code", model, output_format="json")
@@ -226,11 +225,11 @@ def test_retired_glm_pool_cannot_spawn_with_default_token_budget(monkeypatch):
 
 
 def test_retired_glm_pool_cannot_spawn_with_token_budget_overrides(monkeypatch):
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
     for key in ("AB_OPENCODE_MAX_OUTPUT_TOKENS", "AB_GLM_MAX_OUTPUT_TOKENS", "AB_POOL_MAX_OUTPUT_TOKENS"):
         monkeypatch.setenv(key, "262144")
-    with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run:
+    with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run:
         for model in (GLM_MODEL, POOL_MODEL):
             with pytest.raises(RoutingGuardError, match="is retired in the model catalog"):
                 _invoke_opencode("review code", model, output_format="json")
@@ -245,7 +244,7 @@ def test_retired_glm_and_pool_create_no_messages_or_callbacks(monkeypatch):
         monkeypatch.delenv(var, raising=False)
     for fn in (ask_glm, ask_pool):
         seen = []
-        with patch("scripts.ai_agent_bridge._opencode.send_message") as send:
+        with patch("lu_machinery.ai_agent_bridge._opencode.send_message") as send:
             with pytest.raises(ValueError, match="is retired in the model catalog"):
                 fn("hi", task_id="t", on_message_created=seen.append)
             send.assert_not_called()

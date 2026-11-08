@@ -6,17 +6,17 @@ import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api import work_router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.observer_presence import _STORE as PRODUCTION_PRESENCE_STORE
+from lu_machinery.api.observer_presence import list_live, reset_observer_presence
+from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
+from lu_machinery.api.project_state_store import reset_project_state_store
+from lu_machinery.api.state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 
-import scripts.api.main as api_main
-from scripts.api import work_router
-from scripts.api.monitor_context import fixture_context
-from scripts.api.observer_presence import _STORE as PRODUCTION_PRESENCE_STORE
-from scripts.api.observer_presence import list_live, reset_observer_presence
-from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from scripts.api.project_state_store import reset_project_state_store
-from scripts.api.state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from tests.epics_monitor_stub import epics_app_for_store
 
 pytestmark = pytest.mark.repo_invariant

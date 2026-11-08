@@ -11,8 +11,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.api import launchd_supervisor as supervisor
+from lu_machinery.api import launchd_supervisor as supervisor
 
 
 def test_supervisor_help_describes_outputs_and_exit_codes():
@@ -493,7 +492,7 @@ def test_wrapper_execs_primary_interpreter(tmp_path: Path) -> None:
     )
     assert proc.returncode == 0
     assert "-m" in proc.stdout
-    assert "scripts.api.launchd_supervisor" in proc.stdout
+    assert "lu_machinery.api.launchd_supervisor" in proc.stdout
     assert "run" in proc.stdout
     assert str(primary) in proc.stdout
 

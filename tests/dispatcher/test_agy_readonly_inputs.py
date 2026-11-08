@@ -12,9 +12,8 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.dispatcher import agy_sandbox, cli, git, store, worker
-from scripts.dispatcher.providers import agy as agy_provider
+from lu_machinery.dispatcher import agy_sandbox, cli, git, store, worker
+from lu_machinery.dispatcher.providers import agy as agy_provider
 
 
 def _git(cwd: Path, *args: str) -> str:

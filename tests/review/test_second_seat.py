@@ -8,9 +8,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.review import findings_db as db
-from scripts.review import second_seat as ss
+from lu_machinery.review import findings_db as db
+from lu_machinery.review import second_seat as ss
 
 PARAMS = {"second_seat_divisor": 10}
 

@@ -10,8 +10,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime import tool_config as tool_config_mod
-from agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
+from lu_machinery.agent_runtime import tool_config as tool_config_mod
+from lu_machinery.agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
 
 
 @pytest.fixture(autouse=True)

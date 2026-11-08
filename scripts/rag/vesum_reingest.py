@@ -23,14 +23,14 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common import github_client
+from lu_machinery.common import github_client
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 
 from scripts.rag.word_identity import normalize_evidence_form
@@ -491,7 +491,7 @@ def build_shadow_database(asset_path: Path, output_path: Path) -> BuildSummary:
     can feed it synthetic block samples.  Operator-facing callers must use
     :func:`build_from_lock`.
     """
-    from scripts.storage.topology import ExplicitStoreWriteTarget, StoreRefusal, resolve_store_for_write
+    from lu_machinery.storage.topology import ExplicitStoreWriteTarget, StoreRefusal, resolve_store_for_write
 
     if PRODUCTION_DB_PATH is not None and output_path.resolve() == PRODUCTION_DB_PATH.resolve():
         raise VesumReingestError(

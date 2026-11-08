@@ -5,9 +5,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.dispatcher import cli, git, store
-from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+from lu_machinery.dispatcher import cli, git, store
+from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
 
 def test_clear_invalid_retention_hold_removes_disposition(tmp_path, monkeypatch, capsys):

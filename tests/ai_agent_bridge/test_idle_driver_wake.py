@@ -13,9 +13,8 @@ from unittest.mock import Mock, call
 
 import psutil
 import pytest
-
-from scripts.ai_agent_bridge import _inbox_watch as watch
-from scripts.ai_agent_bridge import _ui_codex as ui
+from lu_machinery.ai_agent_bridge import _inbox_watch as watch
+from lu_machinery.ai_agent_bridge import _ui_codex as ui
 
 THREAD = "019e6063-c3da-78d1-acaa-4cd684a08786"
 
@@ -170,7 +169,7 @@ def test_wake_mode_off_only_notifies(inbox_db, tmp_path, monkeypatch):
     launch = Mock(side_effect=AssertionError("notification mode cannot launch"))
     monkeypatch.setattr(ui, "send", send)
     monkeypatch.setattr(watch, "wake_driver_once", launch)
-    monkeypatch.setattr("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", lambda: None)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", lambda: None)
     assert watch.run_watcher("codex", db_path=inbox_db, lock_dir=tmp_path / "locks", output=output, once=True) == 7
     assert "id=7" in output.getvalue()
     assert "id=8" not in output.getvalue() and "id=9" not in output.getvalue()
@@ -187,8 +186,8 @@ def test_explicit_wake_watcher_delivers_once_without_ack(inbox_db, live_driver, 
     service.store.connection.execute.return_value.fetchall.return_value = []
     service.__enter__ = Mock(return_value=service)
     service.__exit__ = Mock(return_value=False)
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
-    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("lu_machinery.session_supervisor.remote.RemoteEpicClient", lambda: remote)
     lock = Mock()
     monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: lock)
     send = Mock(side_effect=_completed_resume(rollout))
@@ -379,8 +378,8 @@ def test_watcher_survives_any_wake_exception_and_repolls_unread(inbox_db, monkey
     service = Mock()
     service.__enter__ = Mock(return_value=service)
     service.__exit__ = Mock(return_value=False)
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
-    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", Mock())
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("lu_machinery.session_supervisor.remote.RemoteEpicClient", Mock())
     lock = Mock()
     monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: lock)
     monkeypatch.setattr(watch.subprocess, "run", Mock(return_value=SimpleNamespace(stdout="epic:123\n")))
@@ -420,8 +419,8 @@ def test_once_cli_resume_spawn_failure_exits_nonzero_and_retains_inbox(
     service = Mock()
     service.__enter__ = Mock(return_value=service)
     service.__exit__ = Mock(return_value=False)
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
-    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("lu_machinery.session_supervisor.remote.RemoteEpicClient", lambda: remote)
     lock = Mock()
     monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: lock)
     monkeypatch.setattr(ui, "find_session_file", lambda _: None)

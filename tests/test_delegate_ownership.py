@@ -9,8 +9,7 @@ import unicodedata
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails.delegate_ownership import (
+from lu_machinery.guardrails.delegate_ownership import (
     ClaimKind,
     GuardMode,
     OwnershipLedger,
@@ -288,8 +287,8 @@ def test_stale_claim_reconciled(tmp_path: Path):
 def test_dispatcher_identity_protects_write_claim_after_grace(tmp_path, monkeypatch, block, identity_case, kept):
     import time
 
-    from scripts.guardrails import delegate_ownership as ownership
-    from scripts.orchestration import dead_worker_state as dead
+    from lu_machinery.guardrails import delegate_ownership as ownership
+    from lu_machinery.orchestration import dead_worker_state as dead
 
     pid = 999_999_998
     namespace = dead.INITIAL_PID_NAMESPACE
@@ -339,8 +338,8 @@ def test_namespace_claim_reconciliation(tmp_path, monkeypatch, case, remaining):
     import sqlite3
     import time
 
-    from scripts.guardrails import delegate_ownership as ownership
-    from scripts.orchestration import dead_worker_state as dead
+    from lu_machinery.guardrails import delegate_ownership as ownership
+    from lu_machinery.orchestration import dead_worker_state as dead
 
     pid = 999_999_998
     namespace = dead.INITIAL_PID_NAMESPACE
@@ -389,7 +388,7 @@ def test_namespace_claim_reconciliation(tmp_path, monkeypatch, case, remaining):
 def test_namespace_duplicate_admission_preserves_unknown_claim(tmp_path, mode, same_pid, text_pid):
     import time
 
-    from scripts.guardrails.delegate_ownership import ADMISSION_PID_GRACE_S
+    from lu_machinery.guardrails.delegate_ownership import ADMISSION_PID_GRACE_S
 
     pid = os.getpid() if same_pid else 999_999_998
     record = {
@@ -415,7 +414,7 @@ def test_namespace_duplicate_admission_preserves_unknown_claim(tmp_path, mode, s
 
 @pytest.mark.parametrize("foreign", [False, True])
 def test_pidless_release_preserves_unknown_worker_claim(tmp_path, foreign):
-    from scripts.orchestration.dead_worker_state import INITIAL_PID_NAMESPACE
+    from lu_machinery.orchestration.dead_worker_state import INITIAL_PID_NAMESPACE
 
     pid = 999_999_998
     record = {"task_id": "worker", "status": "running", "pid": pid, "worker_identity": {
@@ -670,7 +669,7 @@ def test_live_ledger_pid_keeps_claim_despite_terminal_state(tmp_path: Path):
 
 def test_same_task_id_live_pid_does_not_replace_claims(tmp_path: Path, monkeypatch):
     """Concurrent same task_id: second admission must not clobber first claims (CF r7)."""
-    import scripts.guardrails.delegate_ownership as own_mod
+    import lu_machinery.guardrails.delegate_ownership as own_mod
 
     ledger = tmp_path / "own.sqlite3"
     state_dir = tmp_path / "tasks"
@@ -1326,7 +1325,7 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
     import sqlite3
     import time
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "real-worker-task"
     spawned: list = []
@@ -1519,7 +1518,7 @@ def test_pid_matches_task_empty_exec_window_is_unknown(tmp_path: Path):
     unless another probe matches. Populated non-matching evidence is still
     a confirmed mismatch (``False``).
     """
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "exec-window-9808"
     pid = os.getpid()
@@ -1590,7 +1589,7 @@ def test_pid_matches_task_before_exec_is_parent_image(tmp_path: Path):
     import subprocess
     import sys
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "before-exec-9808"
     clean_env = {key: value for key, value in os.environ.items() if "TASK_ID" not in key}
@@ -1642,7 +1641,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     import time
     from unittest.mock import patch
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "unknown-proc-task"
 
@@ -1709,7 +1708,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
             assert _pid_matches_task(worker.pid, "other-task") is None
 
         # 6. Confirmed death: if process is dead, FileNotFoundError on probe returns False
-        with patch("scripts.guardrails.delegate_ownership._pid_alive", return_value=False):
+        with patch("lu_machinery.guardrails.delegate_ownership._pid_alive", return_value=False):
             assert _pid_matches_task(worker.pid, task_id) is False
     finally:
         worker.terminate()
@@ -1721,7 +1720,7 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
     import sqlite3
     import time
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "target-task-8659"
 
@@ -1822,7 +1821,7 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
     import sqlite3
     import time
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "deleted-cwd-task"
 
@@ -1890,7 +1889,7 @@ def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Pa
     import time
     from unittest.mock import patch
 
-    from scripts.guardrails.delegate_ownership import _pid_matches_task
+    from lu_machinery.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "wt-res-task"
     cwd_dir = tmp_path / "generic_cwd"

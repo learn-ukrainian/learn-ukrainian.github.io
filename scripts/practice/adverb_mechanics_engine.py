@@ -37,8 +37,8 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -49,12 +49,12 @@ except ModuleNotFoundError as exc:
     _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
     _repo_root = _scripts_dir.parent
     if str(_repo_root) not in sys.path:
         sys.path.insert(0, str(_repo_root))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store  # type: ignore[no-redef]
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 

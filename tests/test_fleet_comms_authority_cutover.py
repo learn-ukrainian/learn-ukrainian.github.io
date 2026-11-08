@@ -10,22 +10,21 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-
-from scripts.control_plane.storage import Authority
-from scripts.fleet_comms.authority import (
+from lu_machinery.control_plane.storage import Authority
+from lu_machinery.fleet_comms.authority import (
     AuthorityService,
     AuthorityServiceError,
     AuthorityStaleLeaseError,
 )
-from scripts.fleet_comms.cli import main
-from scripts.fleet_comms.message_plane import (
+from lu_machinery.fleet_comms.cli import main
+from lu_machinery.fleet_comms.message_plane import (
     AuthorityCutoverRefusedError,
     MessagePlane,
     resolve_plane_mode,
 )
-from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
-from scripts.fleet_comms.review_publisher import record_publication_receipt
-from scripts.fleet_comms.routing_reservations import (
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from lu_machinery.fleet_comms.review_publisher import record_publication_receipt
+from lu_machinery.fleet_comms.routing_reservations import (
     RoutingReservationError,
     RoutingReservationLedger,
     RoutingReservationRequest,
@@ -142,7 +141,7 @@ def test_authority_flip_refuses_missing_required_capability(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """M5: every authority-serving capability is checked before the flip."""
-    import scripts.control_plane.storage as storage
+    import lu_machinery.control_plane.storage as storage
 
     root = _root(tmp_path)
     root.mkdir(parents=True)
@@ -1370,7 +1369,7 @@ def test_concurrent_substitution_requests_do_not_fork_authority_or_reservation(t
 def test_authority_write_transaction_retains_atomicity_with_subservice_stores(
     tmp_path: Path,
 ) -> None:
-    from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
+    from lu_machinery.fleet_comms.formal_review_jobs import FormalReviewJobService
 
     root = _root(tmp_path)
     with AuthorityService(root=root) as service:

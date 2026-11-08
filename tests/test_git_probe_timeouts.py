@@ -16,8 +16,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.session_canary import grok_lane
+from lu_machinery.session_canary import grok_lane
 
 
 def _raise_timeout(calls: list[dict[str, Any]]) -> Any:

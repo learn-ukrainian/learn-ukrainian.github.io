@@ -7,13 +7,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.formal_review_finalize import (
+from lu_machinery.fleet_comms.formal_review_finalize import (
     FormalReviewFinalizeError,
     finalize_formal_review_verdict,
     resolve_verdict_token,
 )
-from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
+from lu_machinery.fleet_comms.formal_review_jobs import FormalReviewJobService
 
 _SHA = "a" * 40
 _REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -200,7 +199,7 @@ def test_finalize_publish_dry_run_and_live(tmp_path: Path) -> None:
 
 
 def test_finalize_publish_refuses_missing_matcher_before_write(tmp_path: Path, monkeypatch) -> None:
-    from scripts.opsec import prepublish
+    from lu_machinery.opsec import prepublish
 
     monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "missing-tooling")
     gh = FakeGh()

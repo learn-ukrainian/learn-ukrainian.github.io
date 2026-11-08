@@ -19,12 +19,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters import cursor as cursor_mod
-from agent_runtime.adapters.cursor import (
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters.cursor import (
     CursorAdapter,
     _load_cursor_api_key_from_env_file,
 )
-from agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 
 
 @pytest.fixture

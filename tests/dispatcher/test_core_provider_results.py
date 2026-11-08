@@ -9,8 +9,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import worker
 
-from scripts.dispatcher import worker
 from tests.dispatcher.conftest import await_file, run_git
 
 
@@ -54,7 +54,7 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 @pytest.mark.parametrize("models", [[], ["Grok 4.7 256K High"], ["Grok 4.7 256K High", "different"]])
 def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, models, mode):
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.review import record_cf_verdict as recorder
 
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir()

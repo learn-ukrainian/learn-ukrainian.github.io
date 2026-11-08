@@ -4,8 +4,7 @@ import json
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.ai_agent_bridge import _ui_codex as ui
+from lu_machinery.ai_agent_bridge import _ui_codex as ui
 
 
 def event(kind, **fields):

@@ -11,8 +11,8 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Protocol
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 from .contract import Citation, canonical, digest
 from .errors import require

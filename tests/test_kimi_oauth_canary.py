@@ -9,8 +9,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
+from lu_machinery.lib import kimi_coding_oauth
+
 from scripts.canary import kimi_oauth_canary as canary
-from scripts.lib import kimi_coding_oauth
 
 
 class _RefreshServer:

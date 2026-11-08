@@ -5,9 +5,9 @@ import sqlite3
 from datetime import timedelta
 from pathlib import Path
 
-from agents_extensions.shared.session_streams import store as session_stream_store
-from agents_extensions.shared.session_streams.model import isoformat_z, utc_now
-from scripts.orchestration import gui_session_lease
+from lu_machinery.orchestration import gui_session_lease
+from lu_machinery.session_streams import store as session_stream_store
+from lu_machinery.session_streams.model import isoformat_z, utc_now
 
 TASK_ID = "019fb7a7-5e56-7760-8f53-0980ec7f0d0b"
 PREDECESSOR_ID = "219fb7a7-5e56-7760-8f53-0980ec7f0d0b"

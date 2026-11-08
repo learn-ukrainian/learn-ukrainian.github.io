@@ -8,9 +8,8 @@ import stat
 from pathlib import Path
 
 import pytest
-
-from scripts.dispatcher import store
-from scripts.orchestration import dead_worker_state, dispatch_settle, task_record_causes, task_record_store
+from lu_machinery.dispatcher import store
+from lu_machinery.orchestration import dead_worker_state, dispatch_settle, task_record_causes, task_record_store
 
 RAW_REASON = "synthetic settle diagnostic at private-worker.example.invalid"
 DEFAULT_REASONS = {

@@ -12,15 +12,14 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.lane_health import redact_lane_health_text
-from scripts.api.opsec_sanitize import (
+from lu_machinery.api.lane_health import redact_lane_health_text
+from lu_machinery.api.opsec_sanitize import (
     REDACTED_ABSOLUTE_PATH,
     opsec_path_sanitizer_middleware,
     sanitize_document,
     sanitize_text,
 )
-from scripts.api.opsec_scan import scan_body, scan_text
+from lu_machinery.api.opsec_scan import scan_body, scan_text
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -40,9 +39,9 @@ def test_path_tokens_stop_at_backticks(path):
 
 @pytest.mark.parametrize("scope", [None, "core", "content", "task:cli", "full"])
 def test_real_app_rules_json_preserves_source_bytes(scope):
-    from scripts.api.main import create_app
-    from scripts.api.monitor_context import fixture_context
-    from scripts.api.rules_router import _assemble_scope
+    from lu_machinery.api.main import create_app
+    from lu_machinery.api.monitor_context import fixture_context
+    from lu_machinery.api.rules_router import _assemble_scope
 
     root = Path(__file__).resolve().parents[3]
     expected, sources, digest = _assemble_scope(root, scope or "core")
@@ -121,7 +120,7 @@ def test_middleware_strips_paths_that_a_bare_route_would_leak() -> None:
 
 def test_repeated_strings_scan_once_without_cross_document_cache(monkeypatch):
     """Large projections repeat values; memoization must remain request-local."""
-    from scripts.api import opsec_sanitize
+    from lu_machinery.api import opsec_sanitize
 
     original = opsec_sanitize.scan_text
     calls = []
@@ -143,7 +142,7 @@ def test_repeated_strings_scan_once_without_cross_document_cache(monkeypatch):
 
 
 def test_memo_preserves_equal_distinct_unchanged_values():
-    from scripts.api.opsec_sanitize import sanitize_document
+    from lu_machinery.api.opsec_sanitize import sanitize_document
 
     first = "".join(["public", "-monitor"])
     second = "".join(["public-", "monitor"])

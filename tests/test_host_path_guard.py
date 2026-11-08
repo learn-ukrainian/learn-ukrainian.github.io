@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.api.occupancy_sanitize import _CANONICAL_ALIASES
+from lu_machinery.opsec import needles as nd
 
-from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
-from scripts.opsec import needles as nd
 from tests import _host_path_guard as guard
 
 # Fictional deployment home outside the generic roots; only its shape matters.

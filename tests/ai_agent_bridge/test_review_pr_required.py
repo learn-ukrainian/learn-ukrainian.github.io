@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.ai_agent_bridge import _review_safety as safety
+from lu_machinery.ai_agent_bridge import _review_safety as safety
 
 
 def test_assert_pr_cf_review_warns_without_target(capsys: pytest.CaptureFixture[str]) -> None:

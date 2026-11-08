@@ -42,12 +42,12 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 _TEST_PYTHON = project_python()
 
-from agent_runtime.runner import (
+from lu_machinery.agent_runtime.runner import (
     _pty_disabled_via_env,
     _spawn_pty_subprocess,
     _spawn_subprocess,
 )
-from agent_runtime.watchdog import (
+from lu_machinery.agent_runtime.watchdog import (
     WatchdogState,
     start_watchdog,
     stop_watchdog,
@@ -200,7 +200,7 @@ def test_pty_breaks_block_buffering_for_unflushed_child(clean_env, tmp_path):
 def test_pty_streamer_handles_utf8_split_across_read_boundary():
     import socket
 
-    from agent_runtime.watchdog import _pty_line_streamer
+    from lu_machinery.agent_runtime.watchdog import _pty_line_streamer
 
     # Use socketpair as a stand-in for the master_fd. os.read() works
     # the same way on a socket fd, so this isolates the streamer logic
@@ -241,7 +241,7 @@ def test_pty_streamer_handles_utf8_split_across_read_boundary():
 def test_pty_streamer_strips_ansi_sgr_codes():
     import socket
 
-    from agent_runtime.watchdog import _pty_line_streamer
+    from lu_machinery.agent_runtime.watchdog import _pty_line_streamer
 
     parent, child = socket.socketpair()
     parent.setblocking(True)
@@ -341,7 +341,7 @@ def test_stop_watchdog_closes_pty_master_fds(clean_env, tmp_path):
 def test_pty_streamer_splits_multiple_lines_per_read():
     import socket
 
-    from agent_runtime.watchdog import _pty_line_streamer
+    from lu_machinery.agent_runtime.watchdog import _pty_line_streamer
 
     parent, child = socket.socketpair()
     state = WatchdogState(start_time=time.monotonic(), last_activity=time.monotonic())
@@ -370,7 +370,7 @@ def test_pty_streamer_flushes_trailing_fragment_on_eof():
     """If the child writes a partial last line then exits, capture it."""
     import socket
 
-    from agent_runtime.watchdog import _pty_line_streamer
+    from lu_machinery.agent_runtime.watchdog import _pty_line_streamer
 
     parent, child = socket.socketpair()
     state = WatchdogState(start_time=time.monotonic(), last_activity=time.monotonic())

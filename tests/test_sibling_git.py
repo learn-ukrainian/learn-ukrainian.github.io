@@ -16,10 +16,9 @@ from pathlib import Path
 from threading import Thread
 
 import pytest
-
-from scripts.fleet import sibling_git as sg
-from scripts.orchestration import worktree_claims as wc
-from scripts.orchestration.fleet_repos import FleetRepo
+from lu_machinery.fleet import sibling_git as sg
+from lu_machinery.orchestration import worktree_claims as wc
+from lu_machinery.orchestration.fleet_repos import FleetRepo
 
 ROOT = Path(__file__).resolve().parents[1]
 HOOK = ROOT / "agents_extensions/shared/hooks/guard-primary-checkout-write.py"
@@ -559,7 +558,7 @@ def test_malformed_pointer_refuses_without_traceback_or_paths(world, content):
     code, out, err = invoke("status")
     assert code == 2 and not out
     assert "Traceback" not in err and str(sibling) not in err
-    assert "scripts.fleet.sibling_git status" in err
+    assert "lu_machinery.fleet.sibling_git status" in err
 
 
 @pytest.mark.parametrize(
@@ -1015,7 +1014,7 @@ def test_documented_verbs_through_deployed_hook(world, managed, tmp_path, monkey
     primary, _, _ = world
     hook = fixture_hook(primary, monkeypatch, deployed=True)
     advance(world, tmp_path)
-    command = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m scripts.fleet.sibling_git {verb} --repo test"
+    command = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m lu_machinery.fleet.sibling_git {verb} --repo test"
     if verb == "worktree-remove":
         command += " " + shlex.quote(str(managed))
     before = snapshot(primary)
@@ -1068,8 +1067,8 @@ ATTACKS = [
     "f() {{ {cmd}; }}; f",
     "{cmd} --force",
     "{cmd} --repo public",
-    "{interpreter} -I -m scripts.fleet.sibling_git sync-main --repo test",
-    "python -m scripts.fleet.sibling_git sync-main --repo test",
+    "{interpreter} -I -m lu_machinery.fleet.sibling_git sync-main --repo test",
+    "python -m lu_machinery.fleet.sibling_git sync-main --repo test",
 ]
 
 
@@ -1078,7 +1077,7 @@ def test_invocation_attacks_refused(world, monkeypatch, shape):
     primary, _, _ = world
     hook = fixture_hook(primary, monkeypatch)
     interpreter = shlex.quote(str(primary / ".venv/bin/python"))
-    cmd = f"{interpreter} -m scripts.fleet.sibling_git sync-main --repo test"
+    cmd = f"{interpreter} -m lu_machinery.fleet.sibling_git sync-main --repo test"
     command = shape.format(cmd=cmd, quoted=shlex.quote(cmd), interpreter=interpreter)
     before = snapshot(primary)
     assert decide(hook, command, primary) == 2
@@ -1090,19 +1089,19 @@ def test_invocation_attacks_refused(world, monkeypatch, shape):
 @pytest.mark.parametrize(
     "shape",
     [
-        "rg scripts.fleet.sibling_git scripts",
-        "{interpreter} -m pytest -k scripts.fleet.sibling_git",
+        "rg lu_machinery.fleet.sibling_git scripts",
+        "{interpreter} -m pytest -k lu_machinery.fleet.sibling_git",
         "bash -c {quoted}",
         "eval {quoted}",
-        "{interpreter} -c 'import scripts.fleet.sibling_git'",
-        "{interpreter} -m scripts.fleet.sibling_gitx sync-main --repo test",
+        "{interpreter} -c 'import lu_machinery.fleet.sibling_git'",
+        "{interpreter} -m lu_machinery.fleet.sibling_gitx sync-main --repo test",
     ],
 )
 def test_module_mentions_without_word_pair_keep_existing_behavior(world, monkeypatch, shape):
     primary = world[0]
     hook = fixture_hook(primary, monkeypatch)
     interpreter = shlex.quote(str(primary / ".venv/bin/python"))
-    cmd = f"{interpreter} -m scripts.fleet.sibling_git sync-main --repo test"
+    cmd = f"{interpreter} -m lu_machinery.fleet.sibling_git sync-main --repo test"
     command = shape.format(interpreter=interpreter, quoted=shlex.quote(cmd))
     before = snapshot(primary)
     try:
@@ -1140,7 +1139,7 @@ def test_module_context_attacks(world, tmp_path, monkeypatch, kind):
         cwd.mkdir()
         (cwd / "scripts").mkdir()
         (cwd / "scripts/__init__.py").write_text("raise RuntimeError('shadow')\n")
-    cmd = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m scripts.fleet.sibling_git status --repo test"
+    cmd = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m lu_machinery.fleet.sibling_git status --repo test"
     before = snapshot(primary)
     assert decide(hook, cmd, cwd) == 2
     assert snapshot(primary) == before
@@ -1288,9 +1287,9 @@ def test_status_reports_registered_locked_worktree(world, managed):
 def test_relative_interpreter_and_help_literal(world, monkeypatch):
     primary, _, _ = world
     hook = fixture_hook(primary, monkeypatch)
-    assert decide(hook, ".venv/bin/python -m scripts.fleet.sibling_git --help", primary) == 0
+    assert decide(hook, ".venv/bin/python -m lu_machinery.fleet.sibling_git --help", primary) == 0
     absolute = str(primary / ".venv/bin/python")
-    assert decide(hook, f'"{absolute}" -m scripts.fleet.sibling_git status --repo test', primary) == 0
+    assert decide(hook, f'"{absolute}" -m lu_machinery.fleet.sibling_git status --repo test', primary) == 0
     shutil.rmtree(primary / "scripts")
     shutil.rmtree(primary / "agents_extensions")
 
@@ -1298,7 +1297,7 @@ def test_relative_interpreter_and_help_literal(world, monkeypatch):
 def test_guard_tool_workdir_overrides_session_cwd(world, monkeypatch):
     primary, _, _ = world
     hook = fixture_hook(primary, monkeypatch)
-    command = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m scripts.fleet.sibling_git status --repo test"
+    command = f"{shlex.quote(str(primary / '.venv/bin/python'))} -m lu_machinery.fleet.sibling_git status --repo test"
     payload = {
         "tool_name": "Bash",
         "cwd": str(primary.parent),

@@ -12,9 +12,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.hooks import session_start_gate as gate
+from lu_machinery.orchestration import thread_handoff as th
 
-from scripts.hooks import session_start_gate as gate
-from scripts.orchestration import thread_handoff as th
 from tests.launcher_sandbox import launcher_environment
 from tests.orchestration.test_thread_handoff import sample_snapshot
 
@@ -54,7 +54,7 @@ def _launcher_detection(packet):
     script.write_text(
         "import sys\n"
         f"sys.path.insert(0, {str(REPO)!r})\n"
-        "from scripts.orchestration.thread_handoff import main\n"
+        "from lu_machinery.orchestration.thread_handoff import main\n"
         "raise SystemExit(main())\n"
     )
     # The real detector uses this agent-specific canonical role handoff path.
@@ -185,7 +185,7 @@ def _launcher_prelease(root, slot, stream):
     script.write_text(
         "import sys\n"
         f"sys.path.insert(0, {str(REPO)!r})\n"
-        "from scripts.orchestration.thread_handoff import main\n"
+        "from lu_machinery.orchestration.thread_handoff import main\n"
         "raise SystemExit(main())\n"
     )
     env = launcher_environment()
@@ -219,7 +219,7 @@ def test_bare_codex_prepare_inside_a_lane_uses_the_launcher_slot(tmp_path, monke
 
 def test_2026_11_02_relaunch_resumes_the_lane_packet_and_mints_ten_anchors(tmp_path, monkeypatch, capsys):
     """Packet under the lane slot, older bare-namespace packets, empty markdown, DB handoff present."""
-    from scripts.session_canary import codex_lane, grok_lane, handoff_select
+    from lu_machinery.session_canary import codex_lane, grok_lane, handoff_select
 
     _rollover_fixture(monkeypatch)
     for index in range(5):  # The lane's earlier, never-resumed packets under `codex`.

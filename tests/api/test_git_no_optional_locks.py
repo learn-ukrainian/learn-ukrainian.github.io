@@ -14,8 +14,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.api import project_state_collect
+from lu_machinery.api import project_state_collect
 
 _GIT_ENV_DROP = (
     "GIT_DIR",

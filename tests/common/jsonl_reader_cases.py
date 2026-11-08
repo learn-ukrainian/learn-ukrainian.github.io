@@ -139,7 +139,7 @@ def reader_case(module_name, function, site, ending, tmp_path, monkeypatch):
     elif function == "_parse_stream_json":
         args = [text, {}, set(), 0]
     elif function == "cmd_authority_import":
-        authority = importlib.import_module("scripts.fleet_comms.authority")
+        authority = importlib.import_module("lu_machinery.fleet_comms.authority")
         service = MagicMock()
         monkeypatch.setattr(authority, "AuthorityService", service)
         args = [SimpleNamespace(root=str(tmp_path), legacy_db=None, records_jsonl=str(path), source="fixture")]

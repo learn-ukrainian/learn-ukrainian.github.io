@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.orchestration.dead_worker_state import capture_worker_identity, worker_liveness
+from lu_machinery.orchestration.dead_worker_state import capture_worker_identity, worker_liveness
 
 
 def _fake_worker_pid() -> int:

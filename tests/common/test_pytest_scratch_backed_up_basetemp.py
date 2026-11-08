@@ -15,7 +15,7 @@ def _run_nested(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch, base
     """Run a one-test session that loads the real scratch plugin with an explicit base temp."""
     monkeypatch.setenv("PYTHONPATH", str(_REPO_ROOT))
     pytester.makepyfile(test_probe="def test_probe(tmp_path):\n    assert tmp_path.is_dir()\n")
-    return pytester.runpytest_subprocess("-q", "-p", "scripts.common.pytest_scratch", "--basetemp", str(basetemp))
+    return pytester.runpytest_subprocess("-q", "-p", "lu_machinery.common.pytest_scratch", "--basetemp", str(basetemp))
 
 
 def test_basetemp_under_a_checkouts_agent_dir_is_refused_before_anything_is_created(

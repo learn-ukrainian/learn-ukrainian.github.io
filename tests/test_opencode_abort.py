@@ -3,10 +3,9 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.agent_runtime.adapters.glm import GlmAdapter
-from scripts.ai_agent_bridge._db import get_db
-from scripts.ai_agent_bridge._opencode import (
+from lu_machinery.agent_runtime.adapters.glm import GlmAdapter
+from lu_machinery.ai_agent_bridge._db import get_db
+from lu_machinery.ai_agent_bridge._opencode import (
     STANDING_TOOLLESS_NOTICE,
     _run_opencode,
     ask_opencode,
@@ -77,8 +76,8 @@ def test_read_opencode_turn_status_null_error_key_is_benign():
 
 
 def test_run_opencode_attaches_standing_notice_when_agent_chat():
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout='{"type":"text","part":{"text":"hi"}}', stderr="")
             _run_opencode("hello", "deepseek/deepseek-v4.1-flash", agent="chat")
             argv = run_mock.call_args[0][0]
@@ -101,8 +100,8 @@ def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(
         '{"type":"tool","part":{"tool":"bash","state":{"status":"rejected"}}}\n'
     )
 
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout=permission_rejected_ndjson, stderr="")
             with pytest.raises(SystemExit, match=r"\[Bridge Error\] opencode turn aborted"):
                 ask_opencode("Run a script", "t-5932", from_llm="claude", model="deepseek/deepseek-v4.1-flash")
@@ -127,7 +126,7 @@ def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(
     assert len(response_msgs) == 0
     assert "[Bridge Error]" in error_msgs[0][1]
 
-    from scripts.ai_agent_bridge._ask_lifecycle import _is_clean_terminal_record
+    from lu_machinery.ai_agent_bridge._ask_lifecycle import _is_clean_terminal_record
     assert _is_clean_terminal_record(ask_id) is False
 
 

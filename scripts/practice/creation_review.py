@@ -18,7 +18,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.storage.paths import REGISTRY_ROOT
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 DEFAULT_LEDGER = REGISTRY_ROOT / "lexicon/practice-creation-review.json"
 _SHA = re.compile(r"[0-9a-f]{64}")

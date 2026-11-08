@@ -5,12 +5,12 @@ import signal
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.dispatcher import store, worker
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.orchestration.task_record_store import read_task_record
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review import review_lineage
 
-from scripts.dispatcher import store, worker
-from scripts.dispatcher.types import TaskSpec
-from scripts.orchestration.task_record_store import read_task_record
-from scripts.review import record_cf_verdict as recorder
-from scripts.review import review_lineage
 from tests.dispatcher.conftest import run_git
 
 HEAD = "a" * 40

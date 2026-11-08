@@ -24,14 +24,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.storage.artifacts import write_artifact
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.audit.audit_atlas_poc_richness import audit_manifest
 from scripts.lexicon.backfill_course_usage import (
     _fingerprint_path_for,
     _refresh_manifest_fingerprint,
 )
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest, write_manifest
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path
 
 DEFAULT_PARKED_DIR = PROJECT_ROOT / "data" / "lexicon" / "parked"
 DEFAULT_PARKED_OUT = DEFAULT_PARKED_DIR / f"parked-thin-entries-{datetime.now(UTC).date().isoformat()}.json"

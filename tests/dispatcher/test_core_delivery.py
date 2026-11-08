@@ -9,11 +9,10 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.dispatcher import runtime_context
-from scripts.dispatcher.providers import PROVIDERS, agy
-from scripts.dispatcher.types import TaskSpec
-from scripts.lib import rules_core
+from lu_machinery.dispatcher import runtime_context
+from lu_machinery.dispatcher.providers import PROVIDERS, agy
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.lib import rules_core
 
 
 def spec_at(tmp_path, provider):
@@ -108,8 +107,8 @@ def test_launch_reads_current_core_instead_of_preflight_snapshot(tmp_path, monke
 
 def test_dispatch_uses_preflight_content_seat_despite_sanitized_child_environment(tmp_path, monkeypatch):
     """Defect class: sanitizing provider env silently downgrades the preflight's content seat."""
-    from scripts.common.repo_root import PRODUCT_MARKER
-    from scripts.dispatcher.environment import child_env
+    from lu_machinery.common.repo_root import PRODUCT_MARKER
+    from lu_machinery.dispatcher.environment import child_env
 
     spec = spec_at(tmp_path, "cursor")
     marker = tmp_path / PRODUCT_MARKER

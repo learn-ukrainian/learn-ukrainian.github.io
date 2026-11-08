@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.json_parse import extract_json_object
+from lu_machinery.agent_runtime.json_parse import extract_json_object
 
 
 def test_extracts_bare_json_object():

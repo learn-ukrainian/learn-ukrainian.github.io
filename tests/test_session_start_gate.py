@@ -22,7 +22,8 @@ SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "ses
 
 sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.hooks import session_start_gate as gate
+from lu_machinery.hooks import session_start_gate as gate
+
 from tests._host_path_guard import FIXTURE_HOME, assert_no_host_facts, assert_no_host_paths
 
 _REAL_PHASE_STACK_DRIFT = gate.phase_stack_drift
@@ -71,7 +72,7 @@ def test_session_record_uses_record_session_id_not_thread_id(monkeypatch: pytest
     id (record_session_id), not the durable thread-lease/rollover identity
     (session_id) — context-monitor.sh still reads records back by the former
     (CF review on #6414 finding 1)."""
-    from scripts.lib import session_record
+    from lu_machinery.lib import session_record
 
     captured: dict[str, object] = {}
 
@@ -88,7 +89,7 @@ def test_session_record_uses_record_session_id_not_thread_id(monkeypatch: pytest
 
 def test_session_record_falls_back_to_session_id_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
     """Direct/test invocations that omit --record-session-id still work."""
-    from scripts.lib import session_record
+    from lu_machinery.lib import session_record
 
     captured: dict[str, object] = {}
 
@@ -282,7 +283,7 @@ def _write_held_live_lease(repo: Path, agent: str = "claude-testlane") -> Path:
     id), so a non-exempt claim against it must conflict with a live owner —
     never a silent takeover.
     """
-    from scripts.orchestration import thread_handoff
+    from lu_machinery.orchestration import thread_handoff
 
     snapshot = thread_handoff._default_process_snapshot(os.getpid())
     record: dict[str, object] = {
@@ -719,7 +720,7 @@ def test_drift_report_stays_off_the_session_context(
         )
         return destination
 
-    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", write_report)
+    monkeypatch.setattr("lu_machinery.ops.host_stack_drift.write_report", write_report)
     rc = gate.main(
         [
             "--repo-root",
@@ -855,7 +856,7 @@ def test_drift_exception_is_status_only(monkeypatch: pytest.MonkeyPatch, capsys:
         print("PUBLICATION_CANARY", file=sys.stderr)
         raise RuntimeError(f"{FIXTURE_HOME}/PUBLICATION_CANARY")
 
-    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", crash)
+    monkeypatch.setattr("lu_machinery.ops.host_stack_drift.write_report", crash)
     assert _REAL_PHASE_STACK_DRIFT(_args()) == {"status": "crashed"}
     captured = capsys.readouterr()
     assert captured.out == ""

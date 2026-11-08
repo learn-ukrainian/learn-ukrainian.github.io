@@ -6,9 +6,8 @@ import io
 import json
 
 import pytest
-
-from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
-from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_NOT_FOUND, EXIT_OK, main
+from lu_machinery.fleet_comms.authority import AuthorityService, AuthorityServiceError
+from lu_machinery.fleet_comms.cli import EXIT_ERROR, EXIT_NOT_FOUND, EXIT_OK, main
 
 SESSION = "claude-cto-27b21508"
 LEGACY = "claude-cto-d465aa4b"

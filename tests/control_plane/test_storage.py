@@ -7,9 +7,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from scripts.control_plane.storage import (
+from lu_machinery.control_plane.storage import (
     ControlPlanePgConnectError,
     ControlPlanePgDsnMissingError,
     ControlPlaneStoreUnavailableError,
@@ -18,9 +16,10 @@ from scripts.control_plane.storage import (
     resolve_authority,
     sqlite_path,
 )
-from scripts.guardrails.delegate_ownership import OwnershipLedger
-from scripts.hygiene import lint_control_plane_sqlite
-from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused
+from lu_machinery.guardrails.delegate_ownership import OwnershipLedger
+from lu_machinery.hygiene import lint_control_plane_sqlite
+from lu_machinery.lib.readonly_sqlite import CorpusDatabaseWriteRefused
+from lu_machinery.session_streams.db import SessionStreamDatabase
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -84,7 +83,7 @@ def test_connect_refuses_corpus_database_names(tmp_path: Path) -> None:
 def test_connect_refuses_corpus_names_even_for_a_declared_writer(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.lib import readonly_sqlite
+    from lu_machinery.lib import readonly_sqlite
 
     monkeypatch.setattr(
         readonly_sqlite,
@@ -169,7 +168,7 @@ def test_session_streams_db_pg_refused_by_interlock_no_sqlite(
 ) -> None:
     """#605: session_streams is sqlite-only; the #7482 interlock refuses pg
     at the seam (before any Postgres connect is even attempted)."""
-    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+    from lu_machinery.control_plane.storage import ControlPlaneUnsupportedComponentError
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)

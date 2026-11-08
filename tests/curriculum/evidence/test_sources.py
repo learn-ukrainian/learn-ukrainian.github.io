@@ -397,7 +397,7 @@ def test_snapshot_stops_when_free_disk_falls_below_the_floor(synthetic_sources):
 
 
 def test_snapshot_limits_come_from_config_and_environment(monkeypatch, synthetic_sources):
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     assert generations.WAL_CEILING_BYTES == 4 * 1024**3
     assert generations.FREE_DISK_FLOOR_BYTES == 10 * 1024**3

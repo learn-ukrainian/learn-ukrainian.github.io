@@ -12,11 +12,10 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters.acpx import InvocationPlan as AcpxInvocationPlan
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.kimi_admission import CommitTree
-from scripts.agent_runtime.redacted_env import RedactedEnv
+from lu_machinery.agent_runtime.adapters.acpx import InvocationPlan as AcpxInvocationPlan
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.kimi_admission import CommitTree
+from lu_machinery.agent_runtime.redacted_env import RedactedEnv
 
 SENTINEL = "sentinel-not-a-real-value-XYZ"
 PLAN_TYPES = (InvocationPlan, AcpxInvocationPlan, CommitTree)

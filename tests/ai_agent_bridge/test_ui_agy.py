@@ -4,7 +4,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from scripts.ai_agent_bridge import _ui_agy as ui_agy
+from lu_machinery.ai_agent_bridge import _ui_agy as ui_agy
 
 THREAD_ID = "48fd721e-a259-438c-9eb9-53b0fd271c11"
 

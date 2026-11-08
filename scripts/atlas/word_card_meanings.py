@@ -12,9 +12,10 @@ import json
 import re
 from pathlib import Path
 
+from lu_machinery.storage.topology import store_locality
+
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
-from scripts.storage.topology import store_locality
 from scripts.wiki import sum20_mirror
 
 SOURCES = ("sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")

@@ -6,12 +6,11 @@ import os
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import acpx_discuss, runner
-from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters.acpx import AcpxKimiShadowAdapter
-from scripts.agent_runtime.env_sanitize import build_agent_env
-from scripts.agent_runtime.result import Result
+from lu_machinery.agent_runtime import acpx_discuss, runner
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters.acpx import AcpxKimiShadowAdapter
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.result import Result
 
 
 def _result(agent: str, response: str = "bounded response") -> Result:

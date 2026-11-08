@@ -31,9 +31,9 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
+from lu_machinery.lib import rules_core
 
-from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
-from scripts.lib import rules_core
 from tests.helpers import machinery_package
 from tests.launcher_sandbox import launcher_environment
 from tests.rules_core_view import CORE_FILES, absent_checkout, checkout_view
@@ -587,7 +587,7 @@ def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
 def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     seen: list[str] = []
 
@@ -622,7 +622,7 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
 def test_acp_inter_agent_call_without_the_core_is_a_typed_refusal(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     def _spawn(*_a, **_k):
         raise AssertionError("an ACP call without the rules core must not reach the transport")
@@ -644,7 +644,7 @@ def test_acp_inter_agent_call_without_the_core_is_a_typed_refusal(
 def test_acp_discussion_without_the_core_refuses_before_admission(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from scripts.agent_runtime import acpx_discuss
+    from lu_machinery.agent_runtime import acpx_discuss
 
     def _leg(*_a, **_k):
         raise AssertionError("a discussion without the rules core must not call a participant")
@@ -677,7 +677,7 @@ def _msg() -> dict:
 
 
 def _legacy_rows():
-    from scripts.ai_agent_bridge import _grok_build, _prompts
+    from lu_machinery.ai_agent_bridge import _grok_build, _prompts
 
     return (
         ("bridge-claude", lambda: _prompts.build_claude_prompt(_msg())),
@@ -707,7 +707,7 @@ def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core
 def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from scripts.ai_agent_bridge import _cursor, _opencode
+    from lu_machinery.ai_agent_bridge import _cursor, _opencode
 
     def _spawn(*_a, **_k):
         raise AssertionError("an ask without the rules core must not spawn a process")
@@ -729,7 +729,7 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
 @pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode", "bridge"])
 def test_conflicting_core_prefix_is_a_typed_bridge_refusal(who: str) -> None:
     """A stale leading core block must refuse with context instead of a traceback."""
-    from scripts.ai_agent_bridge._prompts import with_core_or_exit
+    from lu_machinery.ai_agent_bridge._prompts import with_core_or_exit
 
     conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
     with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
@@ -740,7 +740,7 @@ def test_conflicting_core_prefix_is_a_typed_bridge_refusal(who: str) -> None:
 
 @pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode"])
 def test_conflicting_core_prefix_refuses_before_transport_spawn(who: str, monkeypatch) -> None:
-    from scripts.ai_agent_bridge import _cursor, _opencode
+    from lu_machinery.ai_agent_bridge import _cursor, _opencode
 
     def spawn(*_a, **_k):
         raise AssertionError("a conflicting prefix must refuse before spawning")
@@ -777,7 +777,7 @@ def _spy_side_effects(monkeypatch: pytest.MonkeyPatch, modules, names) -> list[s
 
 def _bridge_asks():
     # No ask-kimi: Kimi is not a bridge recipient and is refused before any rules-core step.
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _opencode
+    from lu_machinery.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _opencode
 
     return (
         ("ask-cursor", _cursor, "ask_cursor"),
@@ -798,7 +798,7 @@ def _bridge_asks():
 def test_bridge_ask_without_the_core_refuses_before_any_send(
     index: int, background: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from scripts.ai_agent_bridge import _ask_lifecycle, _messaging
+    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _messaging
 
     who, module, name = _bridge_asks()[index]
     calls = _spy_side_effects(monkeypatch, (module, _messaging, _ask_lifecycle), _ASK_SIDE_EFFECTS)
@@ -811,10 +811,10 @@ def test_bridge_ask_without_the_core_refuses_before_any_send(
 def test_acp_ask_without_the_core_refuses_before_forward_or_enqueue(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
-    from agent_runtime.runner import InterAgentTransportError
-    from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
-    from scripts.fleet_comms import authority
-    from scripts.telemetry import legacy_bridge
+    from lu_machinery.agent_runtime.runner import InterAgentTransportError
+    from lu_machinery.ai_agent_bridge import _acp_compat, _job_host_forward
+    from lu_machinery.fleet_comms import authority
+    from lu_machinery.telemetry import legacy_bridge
 
     calls = _spy_side_effects(
         monkeypatch,
@@ -832,7 +832,7 @@ def test_ask_cli_without_the_core_refuses_before_dispatch(
 ) -> None:
     import argparse
 
-    from scripts.ai_agent_bridge import _acp_compat, _cli
+    from lu_machinery.ai_agent_bridge import _acp_compat, _cli
 
     calls = _spy_side_effects(
         monkeypatch,
@@ -852,8 +852,8 @@ def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
 ) -> None:
     import argparse
 
-    from scripts.ai_agent_bridge import _channels_cli
-    from scripts.fleet_comms import authority
+    from lu_machinery.ai_agent_bridge import _channels_cli
+    from lu_machinery.fleet_comms import authority
 
     calls = _spy_side_effects(monkeypatch, (authority,), ("AuthorityService",))
     monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
@@ -878,9 +878,8 @@ def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
 
 @pytest.fixture
 def api_client():
+    import lu_machinery.api.main as api_main
     from fastapi.testclient import TestClient
-
-    import scripts.api.main as api_main
 
     return TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -899,7 +898,7 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
 
 
 def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get("/api/rules?scope=full&format=json").json()
     assert set(body) >= {"hash", "bytes", "sources", "markdown"}
@@ -919,7 +918,7 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
 
 @pytest.mark.parametrize("scope", ("core", "content"))
 def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get(f"/api/rules?scope={scope}&format=json").json()
     offline = rules_core.core_text(scope)

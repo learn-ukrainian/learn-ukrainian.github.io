@@ -7,16 +7,15 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.review_publication import (
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
     STATUS_ERROR,
     STATUS_FAILURE,
     STATUS_SUCCESS,
     plan_publication,
 )
-from scripts.fleet_comms.review_publisher import (
+from lu_machinery.fleet_comms.review_publisher import (
     ReviewPublisherError,
     execute_publication,
     fetch_pr_head_sha,
@@ -237,7 +236,7 @@ def test_require_receipt_without_conn_refuses_live() -> None:
     sealed = _sealed(verdict="BLOCKED")
     plan = plan_publication(
         __import__(
-            "scripts.fleet_comms.review_publication", fromlist=["parse_sealed_verdict_payload"]
+            "lu_machinery.fleet_comms.review_publication", fromlist=["parse_sealed_verdict_payload"]
         ).parse_sealed_verdict_payload(sealed),
         current_head_sha=_SHA_A,
         mutate=True,
@@ -247,7 +246,7 @@ def test_require_receipt_without_conn_refuses_live() -> None:
 
 
 def test_sealed_matches_job_fail_closed() -> None:
-    from scripts.fleet_comms.review_publication import parse_sealed_verdict_payload
+    from lu_machinery.fleet_comms.review_publication import parse_sealed_verdict_payload
 
     sealed = parse_sealed_verdict_payload(_sealed())
     with pytest.raises(ReviewPublisherError, match="sealed_job_mismatch"):
@@ -296,7 +295,7 @@ def test_publish_refuses_evidence_free_approved_without_github_mutation(
 
 def test_publish_from_review_id_via_accept_sealed(tmp_path: Path) -> None:
     """Sol milestone 2: publish without CLI-supplied provenance after accept."""
-    from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
+    from lu_machinery.fleet_comms.formal_review_jobs import FormalReviewJobService
 
     root = tmp_path / "plane"
     gh = FakeGh(head=_SHA_A)

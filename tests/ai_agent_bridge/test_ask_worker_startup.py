@@ -21,7 +21,7 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from scripts.ai_agent_bridge import _ask_lifecycle as lifecycle
+from lu_machinery.ai_agent_bridge import _ask_lifecycle as lifecycle
 
 pytestmark = pytest.mark.usefixtures("isolated_bridge_db")
 

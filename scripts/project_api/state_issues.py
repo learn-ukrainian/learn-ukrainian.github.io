@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import Any, cast
 
 try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
+    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
 
-from scripts.api import config
+from lu_machinery.api import config
 
 from .config import LEVELS
 from .curriculum_state import V6_PHASE_ORDER as V6_PHASES

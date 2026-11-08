@@ -10,12 +10,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.glm import (
+from lu_machinery.agent_runtime.adapters.glm import (
     _CI_ENV_VARS,
     GlmAdapter,
     GlmEgressForbiddenError,
 )
-from agent_runtime.runner import invoke
+from lu_machinery.agent_runtime.runner import invoke
 
 FAKE_OPENCODE = "/usr/local/bin/opencode"
 
@@ -27,7 +27,7 @@ def _clear_ci_env(monkeypatch):
 
 
 def _build(prompt: str, tmp_path: Path, **kw):
-    with patch("agent_runtime.adapters.glm.shutil.which", return_value=FAKE_OPENCODE):
+    with patch("lu_machinery.agent_runtime.adapters.glm.shutil.which", return_value=FAKE_OPENCODE):
         return GlmAdapter().build_invocation(
             prompt=prompt,
             mode=kw.pop("mode", "read-only"),

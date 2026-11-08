@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from scripts.hygiene import home_session_retention_check as check
-from scripts.hygiene.inventory_home_sessions import SessionCandidate, SessionRootReport
+from lu_machinery.hygiene import home_session_retention_check as check
+from lu_machinery.hygiene.inventory_home_sessions import SessionCandidate, SessionRootReport
 
 
 def test_build_report_measures_each_lane_and_flags_stale_bytes(monkeypatch) -> None:

@@ -8,8 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.agent_runtime import agent_github_identity, env_sanitize
+from lu_machinery.agent_runtime import agent_github_identity, env_sanitize
 
 
 def _raise_timeout(calls: list[dict[str, Any]]):

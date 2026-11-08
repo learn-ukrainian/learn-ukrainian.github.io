@@ -4,13 +4,12 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+import lu_machinery.api.rollover_router as rollover_router
 from fastapi.testclient import TestClient
-
-import scripts.api.rollover_router as rollover_router
-from scripts.api.main import app
-from scripts.api.monitor_context import fixture_context
-from scripts.orchestration import task_identity
-from scripts.orchestration.task_family import rollover_registry as registry
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.orchestration import task_identity
+from lu_machinery.orchestration.task_family import rollover_registry as registry
 
 client = TestClient(app, raise_server_exceptions=False)
 

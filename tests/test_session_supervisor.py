@@ -14,18 +14,18 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import LeaseConflictError, SessionStreamStore
-from scripts.secret_redactor import REDACTION
-from scripts.session_supervisor import (
+from lu_machinery.secret_redactor import REDACTION
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import LeaseConflictError, SessionStreamStore
+from lu_machinery.session_supervisor import (
     LaunchRole,
     SessionSupervisor,
     SupervisorError,
     main,
     strip_lease_credentials,
 )
+
 from tests.helpers import machinery_module, machinery_package
 from tests.helpers.restore_import_state import restore_import_state
 from tests.launcher_sandbox import launcher_environment
@@ -66,7 +66,7 @@ fixture-cli
         assert result.returncode == 0, result.stderr
         assert result.stdout == "provider-found\n"
 
-    from scripts.ai_agent_bridge._inbox_watch import preflight_supervisory_successor
+    from lu_machinery.ai_agent_bridge._inbox_watch import preflight_supervisory_successor
 
     for key in ("HOME", "PATH"):
         monkeypatch.setenv(key, env[key])
@@ -77,7 +77,7 @@ fixture-cli
 
 @pytest.mark.parametrize("failure", [OSError("unavailable"), subprocess.TimeoutExpired("bash", 30)])
 def test_watcher_preflight_probe_failure_retains_restart(monkeypatch, capsys, failure) -> None:
-    from scripts.ai_agent_bridge import _inbox_watch
+    from lu_machinery.ai_agent_bridge import _inbox_watch
 
     def fail(*args, **kwargs):
         raise failure
@@ -253,7 +253,7 @@ def test_worker_env_default_is_sorted_safe_session_metadata_without_secret_env(t
         **fake_secret_values,
     }
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.session_supervisor", "worker-env"],
+        [sys.executable, "-m", "lu_machinery.session_supervisor", "worker-env"],
         cwd=_REPO_ROOT,
         env=child_env,
         capture_output=True,
@@ -287,7 +287,7 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
         **fake_secrets,
     }
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.session_supervisor", "worker-env", "--all"],
+        [sys.executable, "-m", "lu_machinery.session_supervisor", "worker-env", "--all"],
         cwd=_REPO_ROOT,
         env=child_env,
         capture_output=True,
@@ -321,10 +321,10 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
     )
     assert result.returncode == 0, result.stderr
 
-    with restore_import_state("scripts.secret_redactor", "scripts.session_supervisor"):
-        monkeypatch.setitem(sys.modules, "scripts.secret_redactor", None)
-        monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
-        supervisor_mod = importlib.import_module("scripts.session_supervisor")
+    with restore_import_state("lu_machinery.secret_redactor", "lu_machinery.session_supervisor"):
+        monkeypatch.setitem(sys.modules, "lu_machinery.secret_redactor", None)
+        monkeypatch.delitem(sys.modules, "lu_machinery.session_supervisor", raising=False)
+        supervisor_mod = importlib.import_module("lu_machinery.session_supervisor")
         assert hasattr(supervisor_mod, "SessionSupervisor")
 
         with pytest.raises(ModuleNotFoundError):
@@ -332,9 +332,9 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
 
         monkeypatch.undo()
 
-    with restore_import_state("scripts.session_supervisor"):
-        monkeypatch.delitem(sys.modules, "scripts.session_supervisor", raising=False)
-        restored_mod = importlib.import_module("scripts.session_supervisor")
+    with restore_import_state("lu_machinery.session_supervisor"):
+        monkeypatch.delitem(sys.modules, "lu_machinery.session_supervisor", raising=False)
+        restored_mod = importlib.import_module("lu_machinery.session_supervisor")
         env = {
             "CLAUDE_CODE_MESSAGING_TOKEN": "real-secret-token",
             "UNRELATED_RUNTIME_FLAG": "visible",
@@ -348,7 +348,7 @@ def test_open_driver_auto_recovers_expired_dead_holder(tmp_path: Path) -> None:
     """Launcher open must recover claimable crashed sessions without a manual step."""
     from datetime import timedelta
 
-    from agents_extensions.shared.session_streams.model import utc_now
+    from lu_machinery.session_streams.model import utc_now
 
     supervisor = _supervisor(tmp_path)
     dead_pid = 999_999_001
@@ -389,7 +389,7 @@ def test_open_driver_auto_recovers_unexpired_dead_holder(tmp_path: Path) -> None
     """Dead PID with remaining TTL must not block relaunch for hours (user-visible #5630 gap)."""
     from datetime import timedelta
 
-    from agents_extensions.shared.session_streams.model import utc_now
+    from lu_machinery.session_streams.model import utc_now
 
     supervisor = _supervisor(tmp_path)
     dead_pid = 999_999_003
@@ -453,7 +453,7 @@ def test_open_driver_refuses_live_unexpired_holder(tmp_path: Path) -> None:
 def test_recover_expired_driver_force_closes_claimable(tmp_path: Path) -> None:
     from datetime import timedelta
 
-    from agents_extensions.shared.session_streams.model import utc_now
+    from lu_machinery.session_streams.model import utc_now
 
     supervisor = _supervisor(tmp_path)
     dead_pid = 999_999_002
@@ -498,7 +498,7 @@ def _pid_alive(pid: int) -> bool:
 def test_local_capsule_cli_reconciles_environment_read_only(tmp_path, monkeypatch, capsys, case) -> None:
     from datetime import UTC, datetime
 
-    from scripts import session_supervisor
+    from lu_machinery import session_supervisor
 
     supervisor = _supervisor(tmp_path)
     store = supervisor.store

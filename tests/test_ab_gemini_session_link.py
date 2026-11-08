@@ -11,15 +11,15 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.errors import AgentTimeoutError
-from scripts.ai_agent_bridge import _channels, _db, _gemini_session_link, _inbox
+from lu_machinery.agent_runtime.errors import AgentTimeoutError
+from lu_machinery.ai_agent_bridge import _channels, _db, _gemini_session_link, _inbox
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch(
-        "scripts.ai_agent_bridge._db.DB_PATH", db_file
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), patch(
+        "lu_machinery.ai_agent_bridge._db.DB_PATH", db_file
     ):
         _db.init_db()
         yield
@@ -190,7 +190,7 @@ def test_find_session_recovery_prefers_brief_match_when_windows_overlap(tmp_path
     assert recovery.text == "right reply"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_timeout_recovers_session_reply(mock_invoke, tmp_path):
     thread = _make_thread("gemini", body="please review this carefully")
     started_at = datetime.now(UTC)
@@ -210,7 +210,7 @@ def test_run_inbox_gemini_timeout_recovers_session_reply(mock_invoke, tmp_path):
     )
     mock_invoke.side_effect = AgentTimeoutError("gemini", 900)
 
-    with patch("scripts.ai_agent_bridge._gemini_session_link._GEMINI_TMP_ROOT", tmp_path):
+    with patch("lu_machinery.ai_agent_bridge._gemini_session_link._GEMINI_TMP_ROOT", tmp_path):
         summary = _inbox.run_inbox("gemini")
 
     row = _delivery_row(str(thread["message_id"]))
@@ -225,12 +225,12 @@ def test_run_inbox_gemini_timeout_recovers_session_reply(mock_invoke, tmp_path):
     assert "Recovered from session file." in messages[-1]["body"]
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_timeout_without_session_keeps_delivery_pending(mock_invoke, tmp_path):
     thread = _make_thread("gemini", body="please review this carefully")
     mock_invoke.side_effect = AgentTimeoutError("gemini", 900)
 
-    with patch("scripts.ai_agent_bridge._gemini_session_link._GEMINI_TMP_ROOT", tmp_path):
+    with patch("lu_machinery.ai_agent_bridge._gemini_session_link._GEMINI_TMP_ROOT", tmp_path):
         summary = _inbox.run_inbox("gemini")
 
     row = _delivery_row(str(thread["message_id"]))

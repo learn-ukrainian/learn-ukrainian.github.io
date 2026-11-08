@@ -10,9 +10,9 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery import inbox_pending
+from lu_machinery.fleet_comms.authority import AuthorityService
 
-from scripts import inbox_pending
-from scripts.fleet_comms.authority import AuthorityService
 from tests.helpers.agy_inbox_fixtures import (
     BODY_MARKER,
     CLI_BOOTSTRAP,
@@ -27,7 +27,7 @@ pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_UNKNOWN_NOTICE = (
     "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
-    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+    "authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
 )
 
 
@@ -92,7 +92,7 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
         expected_notice = {
             "injectSteps": [
                 {
-                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {message.message_id}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {message.message_id}); authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
                 }
             ]
         }
@@ -292,7 +292,7 @@ def test_imported_authority_identifier(stores):
 def test_cli_returns_only_metadata(stores):
     add_legacy(stores[0])
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.inbox_pending", "--recipient", "gemini-infra"],
+        [sys.executable, "-m", "lu_machinery.inbox_pending", "--recipient", "gemini-infra"],
         cwd=ROOT,
         capture_output=True,
         text=True,

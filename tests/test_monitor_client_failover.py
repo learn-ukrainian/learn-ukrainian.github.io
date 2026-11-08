@@ -11,13 +11,13 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.ai_agent_bridge import monitor_client
+from lu_machinery.ai_agent_bridge.monitor_client import MonitorClient, _normalize_base_urls
+from lu_machinery.api import epics_router
+from lu_machinery.api.config import LIVE_REPO_ROOT
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.route_contracts import ROUTE_CONTRACTS
 
-from scripts.ai_agent_bridge import monitor_client
-from scripts.ai_agent_bridge.monitor_client import MonitorClient, _normalize_base_urls
-from scripts.api import epics_router
-from scripts.api.config import LIVE_REPO_ROOT
-from scripts.api.monitor_context import fixture_context
-from scripts.api.route_contracts import ROUTE_CONTRACTS
 from tests.epics_monitor_stub import epics_app_for_store
 
 pytestmark = pytest.mark.repo_invariant

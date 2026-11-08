@@ -7,8 +7,8 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import cli, git, worker
 
-from scripts.dispatcher import cli, git, worker
 from tests.dispatcher.conftest import MERGED, await_file, prior_worktree, run_git
 
 
@@ -55,7 +55,7 @@ def test_merged_pr_outside_owned_paths_is_still_refused(merged_delivery_world):
 ])
 def test_unpushed_change_without_a_provable_merged_delivery_is_still_refused(merged_delivery_world, fault):
     """Control: unpushed work, even beside a merged, stale or foreign PR or a failed lookup, keeps its exact refusal."""
-    from scripts.orchestration import pr_ownership
+    from lu_machinery.orchestration import pr_ownership
 
     world = merged_delivery_world
     world.accept(80)

@@ -5,8 +5,7 @@ from __future__ import annotations
 import argparse
 
 import pytest
-
-from scripts.hygiene import retention_engine
+from lu_machinery.hygiene import retention_engine
 
 
 def _help(argv: list[str], capsys: pytest.CaptureFixture[str]) -> str:

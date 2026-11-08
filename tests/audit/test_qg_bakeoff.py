@@ -274,7 +274,7 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
 
 
 def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() -> None:
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+    from lu_machinery.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
     for pin in qg_bakeoff.DEEPSEEK_DIRECT_PINS:
         route = qg_bakeoff.bakeoff_route_for_model(pin)
@@ -290,7 +290,7 @@ def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() 
     # user order 2026-07-07: OpenRouter deepseek pins are guard-REFUSED by
     # default (historical baselines; transport-comparison runs use the
     # override env — billing-safe under the user's OR BYOK).
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
     for pin in qg_bakeoff.DEEPSEEK_OPENROUTER_PINS:
         with pytest.raises(RoutingGuardError):
@@ -1089,7 +1089,7 @@ def test_subscription_runtime_bare_invokes_agent_runtime_with_bare_claude_config
             tool_calls_total=0,
         )
 
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", fake_invoke)
 
     result = qg_bakeoff.invoke_subscription_bare_route(route, "bare prompt", "task-1")
 
@@ -1145,7 +1145,7 @@ def test_subscription_runtime_bare_cwd_is_outside_the_repo(
             tool_calls_total=0,
         )
 
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", fake_invoke)
     for pin in (
         qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
         qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
@@ -1267,7 +1267,7 @@ def test_subscription_runtime_tooled_invokes_agent_runtime_with_mcp(
         )
 
     monkeypatch.setattr(qg_bakeoff, "_subscription_tooled_tool_config", fake_tool_config)
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", fake_invoke)
 
     result = qg_bakeoff.invoke_subscription_tooled_route(route, "tooled prompt", "task-1")
 
@@ -1767,7 +1767,7 @@ def test_run_matrix_preflights_pins_against_routing_guard(
 ) -> None:
     """A subscription-family pin must fail the matrix at config time — before
     any cell runs (codex review, PR #4500 finding 2)."""
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.delenv("LU_ROUTING_GUARD_OVERRIDE", raising=False)
@@ -1795,7 +1795,7 @@ def test_run_matrix_preflights_pins_against_routing_guard(
 def test_reviewer_opencode_transport_is_guarded(monkeypatch: pytest.MonkeyPatch) -> None:
     """The reviewer dispatch runs its OWN opencode invocation (not the bridge's
     guarded _run_opencode) — the guard must sit at this transport too."""
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
     monkeypatch.delenv("LU_ROUTING_GUARD_OVERRIDE", raising=False)
     route = qg_bakeoff.bakeoff_route_for_model("openrouter/openai/gpt-5.5")
@@ -2219,7 +2219,7 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
     """#4642: bakeoff cells must not persist reviewer markdown under curriculum/."""
     from unittest.mock import patch
 
-    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+    from lu_machinery.ai_agent_bridge._opencode import OpencodeStreamParse
 
     repo = tmp_path / "repo"
     (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
@@ -2241,7 +2241,7 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ),
     ):
@@ -2276,7 +2276,7 @@ def test_offline_bakeoff_tooled_run_firewalls_stray_reviewer_write(
     """
     from unittest.mock import patch
 
-    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+    from lu_machinery.ai_agent_bridge._opencode import OpencodeStreamParse
 
     repo = tmp_path / "repo"
     (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
@@ -2314,7 +2314,7 @@ def test_offline_bakeoff_tooled_run_firewalls_stray_reviewer_write(
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
             side_effect=fake_detailed,
         ),
     ):

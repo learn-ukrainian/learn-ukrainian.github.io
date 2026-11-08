@@ -9,11 +9,11 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api import epics_router
+from lu_machinery.api.config import LIVE_REPO_ROOT
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.session_streams.store import LifecycleError
 
-from agents_extensions.shared.session_streams.store import LifecycleError
-from scripts.api import epics_router
-from scripts.api.config import LIVE_REPO_ROOT
-from scripts.api.monitor_context import fixture_context
 from tests.epics_monitor_stub import epics_app_for_store
 
 
@@ -510,9 +510,9 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
 
 def test_epic_listing_ignores_history_on_other_streams(tmp_path: Path) -> None:
     """Latest typed entries are an index lookup per epic, not a rank of every row."""
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import EntryType, LeaseHolder
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     store = SessionStreamStore(
         SessionStreamDatabase(tmp_path / "streams.sqlite3"),

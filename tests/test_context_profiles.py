@@ -8,8 +8,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.lib.context_profiles import (
+from lu_machinery.lib.context_profiles import (
     CONFIG_PATH,
     ContextProfileError,
     load_registry,

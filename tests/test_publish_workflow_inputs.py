@@ -4,9 +4,8 @@ import json
 import subprocess
 
 import pytest
-
-from scripts.opsec import prepublish as gate
-from scripts.publish import github as pub
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.publish import github as pub
 
 SHA = "0123456789abcdefABCDEF0123456789abcdef01"
 

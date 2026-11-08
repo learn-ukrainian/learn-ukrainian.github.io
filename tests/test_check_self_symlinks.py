@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from scripts.hygiene.check_self_symlinks import (
+from lu_machinery.hygiene.check_self_symlinks import (
     check_self_symlinks,
     find_looping_symlinks,
 )

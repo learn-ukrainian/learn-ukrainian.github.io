@@ -35,7 +35,7 @@ class TestConfig:
     """Tests for scripts/ai_agent_bridge/_config.py constants."""
 
     def test_cli_paths_are_correct_types(self):
-        from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
+        from lu_machinery.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
         assert isinstance(CLAUDE_CMD, list)
         # #4875: prefers a native `claude` binary on PATH (single-element
         # command) and only falls back to the npx shim when none is found —
@@ -60,11 +60,11 @@ class TestDb:
     def tmp_db(self, tmp_path):
         """Patch DB_PATH to use a temp directory."""
         db_path = tmp_path / "test.db"
-        with patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
+        with patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path):
             yield db_path
 
     def test_init_db_creates_tables(self, tmp_db):
-        from scripts.ai_agent_bridge._db import init_db
+        from lu_machinery.ai_agent_bridge._db import init_db
         conn = init_db()
         cursor = conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -74,7 +74,7 @@ class TestDb:
         conn.close()
 
     def test_get_db_creates_if_not_exists(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_db
+        from lu_machinery.ai_agent_bridge._db import get_db
         assert not tmp_db.exists()
         conn = get_db()
         assert tmp_db.exists()
@@ -82,7 +82,7 @@ class TestDb:
 
     def test_get_db_migration_adds_status(self, tmp_db):
         """If DB exists without status column, migration adds it."""
-        from scripts.ai_agent_bridge._db import get_db
+        from lu_machinery.ai_agent_bridge._db import get_db
         # Create a DB without status column
         tmp_db.parent.mkdir(parents=True, exist_ok=True)
         conn = sqlite3.connect(str(tmp_db))
@@ -103,7 +103,7 @@ class TestDb:
         conn.close()
 
     def test_set_session_and_get_session_claude(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_session, init_db, set_session
+        from lu_machinery.ai_agent_bridge._db import get_session, init_db, set_session
         init_db()
         set_session("task-1", "claude", "sess-abc123")
         result = get_session("task-1")
@@ -111,7 +111,7 @@ class TestDb:
         assert result["gemini"] is None
 
     def test_set_session_update_existing(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_session, init_db, set_session
+        from lu_machinery.ai_agent_bridge._db import get_session, init_db, set_session
         init_db()
         set_session("task-1", "claude", "old-session")
         set_session("task-1", "claude", "new-session")
@@ -127,26 +127,27 @@ class TestBroker:
     """Tests for scripts/ai_agent_bridge/_broker.py."""
 
     def test_validate_file_writes_with_unauthorized(self):
-        from scripts.ai_agent_bridge._broker import _validate_file_writes
+        from lu_machinery.ai_agent_bridge._broker import _validate_file_writes
         pre = {"M file.txt"}
         post = {"M file.txt", " M sneaky.py"}
-        with patch("scripts.ai_agent_bridge._broker._git_status_snapshot", return_value=post):
+        with patch("lu_machinery.ai_agent_bridge._broker._git_status_snapshot", return_value=post):
             violations = _validate_file_writes(pre, "allowed/file.txt")
         assert len(violations) == 1
         assert "unauthorized" in violations[0]
 
     def test_validate_file_writes_allowed_path(self):
-        from scripts.ai_agent_bridge._broker import REPO_ROOT, _validate_file_writes
+        from lu_machinery.ai_agent_bridge._broker import _validate_file_writes
+        from lu_machinery.ai_agent_bridge._config import REPO_ROOT
         pre = set()
         allowed = "scripts/test.py"
         post = {f" M {allowed}"}
-        with patch("scripts.ai_agent_bridge._broker._git_status_snapshot", return_value=post):
+        with patch("lu_machinery.ai_agent_bridge._broker._git_status_snapshot", return_value=post):
             violations = _validate_file_writes(pre, str(REPO_ROOT / allowed))
         assert violations == []
 
     def test_write_pid_file(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _write_pid_file
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
+        from lu_machinery.ai_agent_bridge._broker import _write_pid_file
+        with patch("lu_machinery.ai_agent_bridge._broker.PID_DIR", tmp_path):
             _write_pid_file("gemini", "task-1", {"model": "flash"}, pid=12345)
         pid_file = tmp_path / "gemini-task-1.json"
         assert pid_file.exists()
@@ -156,42 +157,42 @@ class TestBroker:
         assert data["model"] == "flash"
 
     def test_remove_pid_file(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _remove_pid_file
+        from lu_machinery.ai_agent_bridge._broker import _remove_pid_file
         pid_file = tmp_path / "claude-task-1.json"
         pid_file.write_text("{}")
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.PID_DIR", tmp_path):
             _remove_pid_file("claude", "task-1")
         assert not pid_file.exists()
 
     def test_is_task_locked_own_pid(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _is_task_locked
+        from lu_machinery.ai_agent_bridge._broker import _is_task_locked
         pid_file = tmp_path / "gemini-task-1.json"
         pid_file.write_text(json.dumps({"pid": os.getpid(), "started": datetime.now(UTC).isoformat()}))
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.PID_DIR", tmp_path):
             assert _is_task_locked("gemini", "task-1") is False
 
     def test_is_task_locked_dead_process(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _is_task_locked
+        from lu_machinery.ai_agent_bridge._broker import _is_task_locked
         pid_file = tmp_path / "gemini-task-1.json"
         pid_file.write_text(json.dumps({"pid": 99999999, "started": datetime.now(UTC).isoformat()}))
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.PID_DIR", tmp_path):
             result = _is_task_locked("gemini", "task-1")
         assert result is False
         assert not pid_file.exists()  # Cleaned up
 
     def test_check_stale_lock_no_started(self):
-        from scripts.ai_agent_bridge._broker import _check_stale_lock
+        from lu_machinery.ai_agent_bridge._broker import _check_stale_lock
         result = _check_stale_lock({}, 12345, Path("/tmp/fake.json"))
         assert result is True  # Assumes locked
 
     def test_check_stale_lock_young(self):
-        from scripts.ai_agent_bridge._broker import _check_stale_lock
+        from lu_machinery.ai_agent_bridge._broker import _check_stale_lock
         data = {"started": datetime.now(UTC).isoformat()}
         result = _check_stale_lock(data, 12345, Path("/tmp/fake.json"))
         assert result is True  # Young lock
 
     def test_check_stale_lock_old_python_process(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _check_stale_lock
+        from lu_machinery.ai_agent_bridge._broker import _check_stale_lock
         old_time = (datetime.now(UTC) - timedelta(minutes=45)).isoformat()
         pid_file = tmp_path / "test.json"
         pid_file.write_text("{}")
@@ -202,7 +203,7 @@ class TestBroker:
         assert result is True  # Our process, still locked
 
     def test_check_stale_lock_old_unknown_process(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _check_stale_lock
+        from lu_machinery.ai_agent_bridge._broker import _check_stale_lock
         old_time = (datetime.now(UTC) - timedelta(minutes=45)).isoformat()
         pid_file = tmp_path / "test.json"
         pid_file.write_text("{}")
@@ -213,7 +214,7 @@ class TestBroker:
         assert result is False  # Stale, cleaned up
 
     def test_cleanup_ancient_messages_old_messages(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _cleanup_ancient_messages
+        from lu_machinery.ai_agent_bridge._broker import _cleanup_ancient_messages
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
@@ -225,12 +226,12 @@ class TestBroker:
                      ("task-1", "claude", "gemini", old_ts))
         conn.commit()
         conn.close()
-        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.DB_PATH", db_path):
             result = _cleanup_ancient_messages("Cleaning", 24, False)
         assert result == 1
 
     def test_cleanup_ancient_messages_dry_run(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _cleanup_ancient_messages
+        from lu_machinery.ai_agent_bridge._broker import _cleanup_ancient_messages
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
@@ -242,7 +243,7 @@ class TestBroker:
                      ("task-1", "claude", "gemini", old_ts))
         conn.commit()
         conn.close()
-        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.DB_PATH", db_path):
             result = _cleanup_ancient_messages("Would clean", 24, True)
         assert result == 1
         # Verify not actually updated
@@ -252,7 +253,7 @@ class TestBroker:
         conn.close()
 
     def test_broker_retention_cleanup_deletes_acknowledged_rows(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import broker_retention_cleanup
+        from lu_machinery.ai_agent_bridge._broker import broker_retention_cleanup
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(str(db_path))
         conn.executescript("""
@@ -286,7 +287,7 @@ class TestBroker:
         )
         conn.commit()
         conn.close()
-        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.DB_PATH", db_path):
             result = broker_retention_cleanup("30d", False)
         assert result == 3
         conn = sqlite3.connect(str(db_path))
@@ -296,7 +297,7 @@ class TestBroker:
         conn.close()
 
     def test_broker_retention_cleanup_dry_run(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import broker_retention_cleanup
+        from lu_machinery.ai_agent_bridge._broker import broker_retention_cleanup
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
@@ -309,7 +310,7 @@ class TestBroker:
         )
         conn.commit()
         conn.close()
-        with patch("scripts.ai_agent_bridge._broker.DB_PATH", db_path):
+        with patch("lu_machinery.ai_agent_bridge._broker.DB_PATH", db_path):
             result = broker_retention_cleanup("30d", True)
         assert result == 1
         conn = sqlite3.connect(str(db_path))
@@ -317,7 +318,7 @@ class TestBroker:
         conn.close()
 
     def test_categorize_pid_files_dead(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _categorize_pid_files
+        from lu_machinery.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "gemini-task-1.json"
         pf.write_text(json.dumps({"pid": 99999999}))
         _alive, stale = _categorize_pid_files([pf])
@@ -325,14 +326,14 @@ class TestBroker:
         assert len(stale) == 1
 
     def test_categorize_pid_files_corrupt(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _categorize_pid_files
+        from lu_machinery.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "bad.json"
         pf.write_text("not json")
         _alive, stale = _categorize_pid_files([pf])
         assert len(stale) == 1
 
     def test_git_status_snapshot_error(self):
-        from scripts.ai_agent_bridge._broker import _git_status_snapshot
+        from lu_machinery.ai_agent_bridge._broker import _git_status_snapshot
         with patch("subprocess.run", side_effect=Exception("fail")):
             result = _git_status_snapshot()
         assert result == set()
@@ -362,13 +363,13 @@ class TestMessaging:
         conn.close()
 
         def _fresh_conn():
-            from scripts.ai_agent_bridge._db import register_kimi_row_functions
+            from lu_machinery.ai_agent_bridge._db import register_kimi_row_functions
 
             c = sqlite3.connect(str(db_path))
             register_kimi_row_functions(c)  # as get_db does
             return c
 
-        with patch("scripts.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn):
+        with patch("lu_machinery.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn):
             yield db_path
 
     def _query(self, db_path, sql, params=()):
@@ -379,7 +380,7 @@ class TestMessaging:
         return row
 
     def test_send_message_basic(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import send_message
+        from lu_machinery.ai_agent_bridge._messaging import send_message
         with patch("subprocess.run"):
             msg_id = send_message("hello", task_id="t1", quiet=True)
         assert msg_id is not None
@@ -387,14 +388,14 @@ class TestMessaging:
         assert row[0] == "hello"
 
     def test_send_message_self_addressed_auto_ack(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import send_message
+        from lu_machinery.ai_agent_bridge._messaging import send_message
         with patch("subprocess.run"):
             msg_id = send_message("self", from_llm="claude", to_llm="claude", quiet=True)
         row = self._query(msg_db, "SELECT acknowledged FROM messages WHERE id=?", (msg_id,))
         assert row[0] == 1
 
     def test_send_message_with_json_data(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import send_message
+        from lu_machinery.ai_agent_bridge._messaging import send_message
         with patch("subprocess.run"):
             msg_id = send_message("hi", data='{"key": "val"}', quiet=True)
         row = self._query(msg_db, "SELECT data FROM messages WHERE id=?", (msg_id,))
@@ -412,7 +413,7 @@ class TestMessaging:
         conn.close()
 
     def test_acknowledge_single(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import acknowledge
+        from lu_machinery.ai_agent_bridge._messaging import acknowledge
         self._insert(msg_db, "t1", "claude", "gemini", "hi")
         acknowledge(1, quiet=True)
         row = self._query(msg_db, "SELECT acknowledged FROM messages WHERE id=1")
@@ -431,10 +432,10 @@ class TestModel:
     @pytest.fixture(autouse=True)
     def supported_agy_version(self, monkeypatch):
         # Probe-result mocks must not also replace the adapter's version check.
-        monkeypatch.setattr("agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
+        monkeypatch.setattr("lu_machinery.agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
 
     def test_detect_model_error_not_found(self):
-        from scripts.ai_agent_bridge._model import _detect_model_error
+        from lu_machinery.ai_agent_bridge._model import _detect_model_error
         result = _detect_model_error("Error: model not found", "test-model")
         assert result is not None
         assert "not available" in result
@@ -442,8 +443,8 @@ class TestModel:
     def test_check_model_cached(self, capsys):
         import time
 
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
+        from lu_machinery.ai_agent_bridge._config import _MODEL_CACHE
+        from lu_machinery.ai_agent_bridge._model import check_model
         _MODEL_CACHE["cached-model"] = (True, time.time())
         try:
             result = check_model("cached-model")
@@ -457,11 +458,11 @@ class TestModel:
         monkeypatch.chdir(tmp_path)
         monkeypatch.setenv("HOME", str(home))
         register_agy_hooks(tmp_path, home=home)
-        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
         import subprocess
 
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
+        from lu_machinery.ai_agent_bridge._config import _MODEL_CACHE
+        from lu_machinery.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 90)):
             result = check_model("gemini-3.8-flash-high")
@@ -474,9 +475,9 @@ class TestModel:
         monkeypatch.chdir(tmp_path)
         monkeypatch.setenv("HOME", str(home))
         register_agy_hooks(tmp_path, home=home)
-        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
+        from lu_machinery.ai_agent_bridge._config import _MODEL_CACHE
+        from lu_machinery.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=FileNotFoundError):
             result = check_model("gemini-3.8-flash-high")
@@ -485,8 +486,8 @@ class TestModel:
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_unknown_slug(self, capsys):
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
+        from lu_machinery.ai_agent_bridge._config import _MODEL_CACHE
+        from lu_machinery.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("not-a-real-model", None)
         result = check_model("not-a-real-model")
         assert result is False
@@ -498,9 +499,9 @@ class TestModel:
         monkeypatch.chdir(tmp_path)
         monkeypatch.setenv("HOME", str(home))
         register_agy_hooks(tmp_path, home=home)
-        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
+        from lu_machinery.ai_agent_bridge._config import _MODEL_CACHE
+        from lu_machinery.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         mock_result = MagicMock(returncode=0, stdout="MODEL_OK", stderr="")
         with patch("subprocess.run", return_value=mock_result) as run:
@@ -526,8 +527,8 @@ class TestGitHub:
     """Tests for scripts/ai_agent_bridge/_github.py."""
 
     def test_gh_comment_refuses_missing_matcher_before_transport(self, tmp_path, monkeypatch, capsys):
-        from scripts.ai_agent_bridge._github import _gh_comment
-        from scripts.opsec import prepublish
+        from lu_machinery.ai_agent_bridge._github import _gh_comment
+        from lu_machinery.opsec import prepublish
 
         monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "missing-tooling")
         with patch("subprocess.run") as transport:
@@ -536,20 +537,20 @@ class TestGitHub:
         assert "private matcher or rules unavailable/incompatible; write refused" in capsys.readouterr().out
 
     def test_split_content_no_newline(self):
-        from scripts.ai_agent_bridge._github import _split_content
+        from lu_machinery.ai_agent_bridge._github import _split_content
         content = "a" * 20
         result = _split_content(content, limit=10)
         assert len(result) == 2
 
     def test_gh_comment_success(self):
-        from scripts.ai_agent_bridge._github import _gh_comment
+        from lu_machinery.ai_agent_bridge._github import _gh_comment
         mock_result = MagicMock()
         mock_result.returncode = 0
         with patch("subprocess.run", return_value=mock_result):
             assert _gh_comment(123, "body") is True
 
     def test_gh_comment_failure(self, capsys):
-        from scripts.ai_agent_bridge._github import _gh_comment
+        from lu_machinery.ai_agent_bridge._github import _gh_comment
         mock_result = MagicMock()
         mock_result.returncode = 1
         mock_result.stderr = "auth error"
@@ -557,7 +558,7 @@ class TestGitHub:
             assert _gh_comment(123, "body") is False
 
     def test_post_review_to_github_existing_issue(self):
-        from scripts.ai_agent_bridge._github import _post_review_to_github
+        from lu_machinery.ai_agent_bridge._github import _post_review_to_github
         mock_result = MagicMock()
         mock_result.returncode = 0
         with patch("subprocess.run", return_value=mock_result):
@@ -566,7 +567,7 @@ class TestGitHub:
 
     def test_post_review_to_github_no_issue_skips(self):
         """When task_id doesn't map to an issue, don't create a new one (#970)."""
-        from scripts.ai_agent_bridge._github import _post_review_to_github
+        from lu_machinery.ai_agent_bridge._github import _post_review_to_github
         # No subprocess should be called — we skip GH posting entirely
         with patch("subprocess.run") as mock_run:
             result = _post_review_to_github("random-task", "review text", "opus")
@@ -574,7 +575,7 @@ class TestGitHub:
         mock_run.assert_not_called()
 
     def test_post_review_to_github_gh_not_found(self):
-        from scripts.ai_agent_bridge._github import _post_review_to_github
+        from lu_machinery.ai_agent_bridge._github import _post_review_to_github
         with patch("subprocess.run", side_effect=FileNotFoundError):
             result = _post_review_to_github("issue-1", "text", "model")
         assert result is None
@@ -666,7 +667,7 @@ class TestNaturalnessCheck:
     def _unit_test_interpreter(self, monkeypatch):
         """These file helpers do not spawn providers or require a checkout venv."""
         monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
-        from common import repo_root
+        from lu_machinery.common import repo_root
 
         monkeypatch.setattr(repo_root, "project_interpreter", lambda root=None: Path(sys.executable))
 

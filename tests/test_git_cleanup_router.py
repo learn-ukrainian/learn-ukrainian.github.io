@@ -5,8 +5,8 @@ import os
 import subprocess
 from pathlib import Path
 
-from scripts.api import git_hygiene_router
-from scripts.api.main import app
+from lu_machinery.api import git_hygiene_router
+from lu_machinery.api.main import app
 
 
 def _git(repo: Path, *args: str) -> str:

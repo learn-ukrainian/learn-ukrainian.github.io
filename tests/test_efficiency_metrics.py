@@ -5,7 +5,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-from scripts.fleet_comms.efficiency_metrics import (
+from lu_machinery.fleet_comms.efficiency_metrics import (
     _fetch_merge_facts,
     collect_dead_letters,
     collect_delivery_backlog,
@@ -126,7 +126,7 @@ def test_legacy_collectors_stay_on_broker_when_authority_is_pg(tmp_path, monkeyp
 
 
 def test_merge_fact_query_uses_production_rest_transport(github_transport) -> None:
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     def transport(method, endpoint, headers, body, timeout):
         assert method == "GET" and body is None

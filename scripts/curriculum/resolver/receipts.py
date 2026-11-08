@@ -256,7 +256,7 @@ LANGUAGE_LANES = frozenset({"agy", "claude", "codex"})
 
 def language_seat_family(seat: str, *, what: str) -> str:
     """Return the family of a language-lane seat whose lane and model both resolve to it."""
-    from scripts.review.second_seat import IdentityError, concrete_family
+    from lu_machinery.review.second_seat import IdentityError, concrete_family
 
     _check_seat(seat)
     lane, separator, model = seat.partition("@")
@@ -276,8 +276,8 @@ def language_seat_family(seat: str, *, what: str) -> str:
 
 def _seat_family(seat: str, *, what: str) -> str:
     """Resolve both parts of a writer seat and refuse contradictory identities."""
-    from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
-    from scripts.review.second_seat import IdentityError, concrete_family
+    from lu_machinery.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
+    from lu_machinery.review.second_seat import IdentityError, concrete_family
 
     _check_seat(seat)
     lane, separator, model = seat.partition("@")
@@ -466,7 +466,7 @@ def requirement_status(
     if doc is None:
         return "requires_receipt_missing"
     validate_requirement_receipts(doc, sources=sources)
-    from scripts.review.second_seat import IdentityError, writer_family
+    from lu_machinery.review.second_seat import IdentityError, writer_family
 
     try:
         actual_writer_family = writer_family(state_dir, lesson["n"])

@@ -18,8 +18,7 @@ import subprocess
 import sys
 
 import pytest
-
-from scripts.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
+from lu_machinery.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
 
 _HEAD_SHA = "a" * 40
 _MOVED_SHA = "b" * 40
@@ -263,8 +262,9 @@ def test_ask_review_refuses_a_fable_pin_before_any_dispatch(monkeypatch, target,
 
 @pytest.fixture()
 def registered_histories(tmp_path, monkeypatch):
-    from scripts.dispatcher import git as dispatch_git
-    from scripts.orchestration import fleet_repos
+    from lu_machinery.dispatcher import git as dispatch_git
+    from lu_machinery.orchestration import fleet_repos
+
     from tests.test_review_target_resolution import _git, _init_repo, _publish_pr_branch
 
     roots, heads = {}, {}
@@ -303,8 +303,8 @@ def test_registered_review_targets_use_selected_history(
 ):
     from pathlib import Path
 
-    from scripts.dispatcher import git as dispatch_git
-    from scripts.dispatcher.cli import build_parser
+    from lu_machinery.dispatcher import git as dispatch_git
+    from lu_machinery.dispatcher.cli import build_parser
 
     roots, heads = registered_histories
     key = selector.strip().lower() if selector else "public"
@@ -354,7 +354,7 @@ def test_registered_review_targets_use_selected_history(
 
 @pytest.mark.parametrize("selector", ["unknown", "infra-private"])
 def test_invalid_repository_refuses_before_provider(registered_histories, monkeypatch, selector, capsys):
-    from scripts.orchestration import fleet_repos
+    from lu_machinery.orchestration import fleet_repos
 
     if selector == "infra-private":
         original = fleet_repos.load_fleet_repos
@@ -365,7 +365,7 @@ def test_invalid_repository_refuses_before_provider(registered_histories, monkey
             for key, repo in original().items()
         })
         # The resolver imports this function, so use the same test catalog there.
-        monkeypatch.setattr("scripts.review.target_resolution.load_fleet_repos", fleet_repos.load_fleet_repos)
+        monkeypatch.setattr("lu_machinery.review.target_resolution.load_fleet_repos", fleet_repos.load_fleet_repos)
     monkeypatch.setattr(_cli.github_client, "run", lambda *_a, **_k: pytest.fail("forge/provider reached"))
     monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", lambda *_a, **_k: pytest.fail("provider reached"))
     args = _cli._build_parser().parse_args([

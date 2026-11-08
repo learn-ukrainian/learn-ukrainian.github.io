@@ -11,16 +11,16 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.review.family_exclusions import family_exclusion
-from scripts.review.model_catalog import (
+from lu_machinery.review.family_exclusions import family_exclusion
+from lu_machinery.review.model_catalog import (
     CATALOG_PATH,
     ModelCatalogError,
     bounded_execution_policy,
     cursor_pinned_models,
     validate_catalog,
 )
-from scripts.review.role_resolution import expand_routing_references, resolve_routing_reference
+from lu_machinery.review.role_resolution import expand_routing_references, resolve_routing_reference
+
 from tests.helpers import machinery_package
 
 
@@ -158,7 +158,7 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
     raw = raw_catalog()
     raw["routing_schema_version"] = bad
     (config / "model_catalog.yaml").write_text(yaml.safe_dump(raw))
-    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "scripts.review.model_catalog"]
+    command = [str(review / "model_catalog.py")] if entrypoint == "file" else ["-m", "lu_machinery.review.model_catalog"]
     result = subprocess.run(
         [sys.executable, *command, "--check-retired-model", "gpt-6.1-sol"],
         cwd=tmp_path,
@@ -190,7 +190,7 @@ def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
 
 
 def test_verdict_recorder_follows_rotated_holder_and_own_runtime_ids(monkeypatch):
-    from scripts.review import model_catalog, record_cf_verdict
+    from lu_machinery.review import model_catalog, record_cf_verdict
 
     raw = raw_catalog()
     new_id = "grok-99"
@@ -252,7 +252,7 @@ def test_shared_author_independence_and_advisory_outcomes():
     ],
 )
 def test_shared_cursor_author_policy_preserves_main_family_separation(family, route, transport, excluded):
-    from scripts.review.reviewer_resolver import CURSOR_AUTO_UNION_FAMILIES, CURSOR_AUTO_UNION_FAMILY
+    from lu_machinery.review.reviewer_resolver import CURSOR_AUTO_UNION_FAMILIES, CURSOR_AUTO_UNION_FAMILY
 
     result = family_exclusion(
         family=family,
@@ -268,7 +268,8 @@ def test_shared_cursor_author_policy_preserves_main_family_separation(family, ro
 
 
 def test_legacy_adapter_expands_raw_authored_references():
-    from scripts.review.role_resolution import expanded_legacy_view
+    from lu_machinery.review.role_resolution import expanded_legacy_view
+
     from tests.review.test_model_catalog import assert_frozen_surfaces
 
     assert_frozen_surfaces({"catalog": expanded_legacy_view(raw_catalog())}, surfaces=("catalog",))

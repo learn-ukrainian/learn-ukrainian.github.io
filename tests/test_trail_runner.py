@@ -11,16 +11,15 @@ from pathlib import Path
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
-
-from scripts.orchestration.trail_runner import main as trail_runner_main
-from scripts.orchestration.trails.executor import TrailExecutor, redact_and_bound_output
-from scripts.orchestration.trails.models import (
+from lu_machinery.orchestration.trail_runner import main as trail_runner_main
+from lu_machinery.orchestration.trails.executor import TrailExecutor, redact_and_bound_output
+from lu_machinery.orchestration.trails.models import (
     CommandExecution,
     ExitClass,
     InjectedCrash,
     TrailRunResult,
 )
-from scripts.orchestration.trails.store import TrailStore
+from lu_machinery.orchestration.trails.store import TrailStore
 
 
 def _trail(

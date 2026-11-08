@@ -11,11 +11,10 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import lu_machinery.api.runtime_router as runtime_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.runtime_router as runtime_router
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 
@@ -110,7 +109,7 @@ def test_unrecognized_attribution_source_falls_back_to_unknown(
 
 
 def _runtime_emittable_failure_codes() -> list[str]:
-    from scripts.agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
+    from lu_machinery.agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
 
     return sorted(_SAFE_ACP_FAILURE_CODES)
 

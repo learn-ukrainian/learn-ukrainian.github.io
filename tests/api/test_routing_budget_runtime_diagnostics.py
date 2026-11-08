@@ -14,9 +14,8 @@ from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import usage as usage_mod
-from scripts.api import state_router
+from lu_machinery.agent_runtime import usage as usage_mod
+from lu_machinery.api import state_router
 
 
 def _write_budget_config(tmp_path: Path) -> Path:

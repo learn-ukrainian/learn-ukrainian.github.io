@@ -6,7 +6,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from scripts.guardrails import worktree_containment as wc
+from lu_machinery.guardrails import worktree_containment as wc
 
 _GIT_REDIRECT = frozenset(
     {

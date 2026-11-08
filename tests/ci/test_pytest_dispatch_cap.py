@@ -10,8 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV, is_full_suite
+from lu_machinery.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV, is_full_suite
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -64,7 +63,7 @@ def test_selection_while_another_full_suite_holds_lock(tmp_path: Path, args: lis
         "[tool.pytest.ini_options]\n"
         "testpaths = ['tests']\n"
         f"pythonpath = ['{scripts}']\n"
-        "addopts = '-p ci.pytest_dispatch_cap'\n"
+        "addopts = '-p lu_machinery.ci.pytest_dispatch_cap'\n"
         "markers = ['repo_wide', 'slow']\n",
         encoding="utf-8",
     )
@@ -102,7 +101,7 @@ def test_selection_while_another_full_suite_holds_lock(tmp_path: Path, args: lis
             DISPATCH_TASK_ENV: "impl-9670-probe",
             LOCK_ENV: str(lock_path),
             "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
-            "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+            "PYTEST_PLUGINS": "lu_machinery.ci.pytest_dispatch_cap",
         }
     )
     for name in ("PYTEST_ADDOPTS", "PYTEST_XDIST_WORKER", "PYTEST_XDIST_WORKER_COUNT", "PYTEST_XDIST_TESTRUNUID"):
@@ -147,7 +146,7 @@ def test_session_exception_is_not_attributed_to_the_cap(tmp_path: Path) -> None:
     for name in (DISPATCH_TASK_ENV, "PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_XDIST_WORKER"):
         env.pop(name, None)
     completed = subprocess.run(
-        [sys.executable, "-m", "pytest", "-p", "ci.pytest_dispatch_cap", "-p", "boom_plugin", "-q"],
+        [sys.executable, "-m", "pytest", "-p", "lu_machinery.ci.pytest_dispatch_cap", "-p", "boom_plugin", "-q"],
         cwd=tmp_path,
         env=env,
         capture_output=True,

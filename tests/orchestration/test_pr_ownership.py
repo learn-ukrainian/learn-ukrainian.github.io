@@ -5,12 +5,11 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.authority import AuthorityService
-from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.orchestration import pr_ownership as own
-from scripts.orchestration.fleet_repos import FleetRepo
-from scripts.publish import recovery
+from lu_machinery.fleet_comms.authority import AuthorityService
+from lu_machinery.orchestration import merge_queue_keeper as keeper
+from lu_machinery.orchestration import pr_ownership as own
+from lu_machinery.orchestration.fleet_repos import FleetRepo
+from lu_machinery.publish import recovery
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 KEY = own.pr_key(REPO, 42)
@@ -404,8 +403,8 @@ def test_queue_exit_allowed_only_under_live_custody_with_the_alert_running():
 
 @pytest.fixture
 def world(tmp_path, monkeypatch):
-    from scripts.dispatcher import store
-    from scripts.orchestration import fleet_repos
+    from lu_machinery.dispatcher import store
+    from lu_machinery.orchestration import fleet_repos
 
     path = tmp_path / "pr_ownership" / "state.json"
     monkeypatch.setattr(own, "state_path", lambda: path)
@@ -440,7 +439,7 @@ def test_documented_module_invocation_shows_help():
     import subprocess
     import sys
 
-    proc = subprocess.run([sys.executable, "-m", "scripts.orchestration.pr_ownership", "--help"],
+    proc = subprocess.run([sys.executable, "-m", "lu_machinery.orchestration.pr_ownership", "--help"],
                           capture_output=True, text=True, timeout=60, check=False,
                           cwd=Path(__file__).resolve().parents[2])
     assert proc.returncode == 0 and "Exit codes:" in proc.stdout
@@ -486,7 +485,7 @@ def test_custody_predecessor_must_own_this_pr_by_the_owner_check():
 
 
 def test_queue_membership_is_bound_to_the_custody_head(monkeypatch):
-    from scripts.orchestration import integration_sweep
+    from lu_machinery.orchestration import integration_sweep
 
     def membership(self, repo, pr):
         if pr["headRefOid"] != "b" * 40:  # the same observation shows the head moved to B
@@ -522,7 +521,7 @@ def test_keeper_keeps_its_queue_result_when_the_ownership_tick_raises(tmp_path, 
 
 
 def test_rate_limit_is_a_skip_for_the_ownership_tick(tmp_path):
-    from scripts.common.github_client import GitHubRateLimited
+    from lu_machinery.common.github_client import GitHubRateLimited
 
     def limited(handoffs):
         raise GitHubRateLimited("2026-10-28T13:00:00Z")

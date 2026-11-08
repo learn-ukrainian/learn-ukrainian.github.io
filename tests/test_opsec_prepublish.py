@@ -16,7 +16,8 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-from scripts.opsec import prepublish as gate
+from lu_machinery.opsec import prepublish as gate
+
 from tests.helpers import machinery_package
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, install_override, synthetic_rules
 
@@ -89,7 +90,7 @@ def test_catalog_reference_uses_same_normalization(form, monkeypatch):
 @pytest.mark.parametrize("form", REPOSITORY_FORMS)
 @pytest.mark.parametrize("uppercase", [False, True])
 def test_private_reference_in_public_text_still_blocks(form, uppercase, synthetic_opsec):
-    from scripts.publish import github as publisher
+    from lu_machinery.publish import github as publisher
 
     reference = form.format(repo=CATALOG["infra-private"]["github"])
     if uppercase:
@@ -319,7 +320,7 @@ def test_an_override_refusal_becomes_publish_blocked(synthetic_opsec, tmp_path):
 
 
 def test_direct_review_publisher_blocks_before_send(synthetic_opsec):
-    from scripts.fleet_comms.review_publisher import post_commit_status, post_pr_comment
+    from lu_machinery.fleet_comms.review_publisher import post_commit_status, post_pr_comment
 
     for call in [
         lambda: post_pr_comment(repository="unit/public", pr_number=1, body=TOKEN, runner=send),
@@ -332,7 +333,7 @@ def test_direct_review_publisher_blocks_before_send(synthetic_opsec):
             pytest.fail("outbound call")
 
         with pytest.raises(
-            __import__("scripts.fleet_comms.review_publisher", fromlist=["ReviewPublisherError"]).ReviewPublisherError,
+            __import__("lu_machinery.fleet_comms.review_publisher", fromlist=["ReviewPublisherError"]).ReviewPublisherError,
             match="publish_blocked",
         ):
             call()
@@ -433,7 +434,7 @@ def test_clean_publish_with_override_needs_no_log(synthetic_opsec, tmp_path):
 
 
 def test_internal_lookups_receive_no_override(monkeypatch, tmp_path):
-    from scripts.opsec import gh_snapshot
+    from lu_machinery.opsec import gh_snapshot
 
     monkeypatch.setenv(gate.OVERRIDE, "reason")
     seen = []
@@ -585,7 +586,7 @@ def test_cli_block_is_typed_without_traceback(capsys):
     assert capsys.readouterr().err == "publish_blocked: synthetic refusal\n"
 
 
-@pytest.mark.parametrize('module,function,args,error_type', [('scripts.orchestration.dispatch_settle', '_run', (['gh', 'pr', 'merge', '1'],), ValueError), ('scripts.review.record_cf_verdict', '_run_json', (['gh', 'pr', 'merge', '1'],), RuntimeError), ('scripts.practice_deck.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError), ('scripts.open_dataset.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError)])
+@pytest.mark.parametrize('module,function,args,error_type', [('lu_machinery.orchestration.dispatch_settle', '_run', (['gh', 'pr', 'merge', '1'],), ValueError), ('lu_machinery.review.record_cf_verdict', '_run_json', (['gh', 'pr', 'merge', '1'],), RuntimeError), ('scripts.practice_deck.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError), ('scripts.open_dataset.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError)])
 def test_publishers_translate_policy_refusals(module, function, args, error_type, monkeypatch, tmp_path):
     import importlib
     publisher = importlib.import_module(module)
@@ -602,9 +603,9 @@ def test_publishers_translate_policy_refusals(module, function, args, error_type
 
 
 def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path, github_transport):
-    from scripts.orchestration import merge_queue_keeper as keeper
-    from scripts.orchestration import task_closeout as closeout
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import merge_queue_keeper as keeper
+    from lu_machinery.orchestration import task_closeout as closeout
+    from lu_machinery.orchestration import task_lifecycle
 
     def refuse(*args, **kwargs):
         raise gate.PublishBlocked("synthetic refusal")
@@ -620,7 +621,7 @@ def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path, github_
 
 
 def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsys):
-    from scripts.ai_agent_bridge import _github
+    from lu_machinery.ai_agent_bridge import _github
 
     def refuse(*args, **kwargs):
         raise gate.PublishBlocked("synthetic refusal")
@@ -804,7 +805,7 @@ def test_prior_round_raw_writes_never_send(args, tmp_path, synthetic_opsec):
         assert result.returncode == oracle.returncode and result.stderr == oracle.stderr
         return
     if args == ["api", "graphql", "-f", "query=unresolved"]:
-        from scripts.common import github_client
+        from lu_machinery.common import github_client
 
         call = github_client._gh_api_call(args[1:], stdin=None, cwd=tmp_path)
         assert call.method == "POST"

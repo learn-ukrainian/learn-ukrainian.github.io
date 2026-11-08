@@ -8,9 +8,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.common.git_context import sanitized_git_env
-from scripts.review import contract_canary as canary
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.review import contract_canary as canary
 
 CONTRACT_FILE = "scripts/review/review_contract.py"
 RECEIPT = json.dumps({
@@ -206,7 +205,7 @@ def test_a_receipt_must_still_match_its_settled_task(repo, tasks) -> None:
 
 def test_a_reply_with_carriage_returns_keeps_its_byte_digest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # The dispatcher digests the result file's bytes; reading it must not translate newlines.
-    from scripts.dispatcher import store
+    from lu_machinery.dispatcher import store
 
     reply = RECEIPT.replace(",", ",\r\n")
     result = tmp_path / "t.result"

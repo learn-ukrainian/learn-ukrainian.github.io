@@ -2,8 +2,8 @@
 
 from datetime import date, timedelta
 
-from scripts.ci import flake_ledger
-from scripts.ci.flake_ledger import make_ledger, update_issues
+from lu_machinery.ci import flake_ledger
+from lu_machinery.ci.flake_ledger import make_ledger, update_issues
 
 
 def test_ledger_counts_distinct_queue_runs_and_expiry(tmp_path, monkeypatch):

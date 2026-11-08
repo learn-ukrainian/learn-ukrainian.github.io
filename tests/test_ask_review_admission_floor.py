@@ -23,7 +23,7 @@ def test_uninjected_routing_snapshot_fails_before_network(as_request):
 
 
 def test_admission_does_not_call_a_ukrainian_path_collector():
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from lu_machinery.agent_runtime.target_admission import resolve_and_admit
 
     def unexpected_paths():
         raise AssertionError("Ukrainian admission must not read code/infra scope")

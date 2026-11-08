@@ -5,8 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.request_executor import (
+from lu_machinery.fleet_comms.request_executor import (
     RequestExecutor,
     RequestExecutorError,
 )

@@ -103,14 +103,22 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importing repo_root installs the env formatter before any test runs.
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
-from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
-from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
+from lu_machinery.common.repo_root import main_checkout_root, resolve_repo_root
+
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
+# The installed lu_machinery derives no roots (lu_machinery.common.repo_root). This session's
+# product is this checkout; shared state stays anchored on its primary checkout, as the
+# in-tree copy derived it. Explicit configuration from the caller wins.
+_PRODUCT_CHECKOUT = Path(__file__).resolve().parents[1]
+os.environ.setdefault("LU_PRODUCT_ROOT", str(_PRODUCT_CHECKOUT))
+os.environ.setdefault("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(_PRODUCT_CHECKOUT)))
+
 pytest_plugins = [
-    "scripts.common.pytest_scratch",
+    "lu_machinery.common.pytest_scratch",
     "tests.helpers.github_command_boundary",
     "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
@@ -146,7 +154,7 @@ def _patch_sources_free_disk(module: Any) -> None:
     current = sources_cls.free_disk_bytes
     if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
         return
-    evidence_config = sys.modules["scripts.storage.generations"]
+    evidence_config = sys.modules["lu_machinery.storage.generations"]
     if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
         raise RuntimeError(
             f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"
@@ -299,7 +307,7 @@ class _TelemetryIsolation:
         frame = sys._getframe(1)
         try:
             while frame is not None:
-                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                if frame.f_globals.get("__name__") in {"telemetry.emit", "lu_machinery.telemetry.emit"}:
                     self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
                     # emit_event swallows ordinary write errors. Retain the
                     # attempt for sessionfinish as well as preventing the write.
@@ -906,14 +914,14 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     driver scope; detector tests restore the returned production function,
     while refusal tests can replace the same seam with an inside result.
     """
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.orchestration import dispatch_isolation
 
     detector = dispatch_isolation._caller_in_driver_scope
     monkeypatch.setattr(dispatch_isolation, "_caller_in_driver_scope", lambda: False)
     return detector
 
 
-_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_CLAUDE_ADAPTER_ALIASES = ("lu_machinery.agent_runtime.adapters.claude", "lu_machinery.agent_runtime.adapters.claude")
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
 # Bridge package the rules-workflow venv does not install. The Claude adapter
 # reaches it through fleet_comms contracts; its absence is not an alias typo.
@@ -1016,7 +1024,7 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
     state: dict[str, Any] = {"ready": False, "reason": "test stub: host slice probe disabled"}
     if request.node.get_closest_marker("host_dispatch_probe") is not None:
         return state
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.orchestration import dispatch_isolation
 
     monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
@@ -1540,7 +1548,7 @@ def _require_data_artifact(
     artifact = _REPO_ROOT / relative_path
     if not artifact.is_file():
         try:
-            from scripts.guardrails.worktree_containment import resolve_main_root
+            from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
             fallback = resolve_main_root(_REPO_ROOT) / relative_path
             if fallback.is_file():
@@ -1685,7 +1693,7 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     records hold real rate limits. Credit-lane tests monkeypatch both readers
     themselves.
     """
-    from scripts.fleet import credit_lane
+    from lu_machinery.fleet import credit_lane
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
     monkeypatch.setattr(
@@ -1767,7 +1775,7 @@ class _RedirectRefreshSidecarLoader:
 class _IssueStreamRefreshImportHook:
     """Redirect refresh sidecars on the audit module's first import (#10519)."""
 
-    _MODULE = "scripts.orchestration.issue_stream_audit"
+    _MODULE = "lu_machinery.orchestration.issue_stream_audit"
 
     def __init__(self, state: Path, lock: Path) -> None:
         self._state = state
@@ -2095,7 +2103,7 @@ def _isolate_runtime_scratch_root(
     private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
     Scans stay inside ``tmp_path`` for those tests too.
     """
-    from scripts.common import scratch
+    from lu_machinery.common import scratch
 
     monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
 
@@ -3053,7 +3061,9 @@ def pytest_runtest_setup(item: pytest.Item) -> None:
     if marker is not None:
         if len(marker.args) != 2 or marker.kwargs:
             raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
-        from scripts.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+        from lu_machinery.storage.paths import MissingArtifactError, find_entry, verify_file
+
+        DATA_ROOT = Path(__file__).resolve().parents[1] / "data"
 
         group, rel = marker.args
         try:
@@ -3433,7 +3443,7 @@ def _init_real_worktrees_dir() -> str:
     global _REAL_WORKTREES_DIR, _REAL_WORKTREES_PREFIX
     if _REAL_WORKTREES_DIR:
         return _REAL_WORKTREES_DIR
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
 
     worktrees = main_checkout_root(_REPO_ROOT) / ".worktrees"
     _REAL_WORKTREES_DIR = os.path.realpath(worktrees)
@@ -3822,7 +3832,7 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     if not is_shim and os.path.realpath(executable_path) != os.path.realpath(_REAL_GH_BINARY):
         return
 
-    from scripts.secret_redactor import redact_value
+    from lu_machinery.secret_redactor import redact_value
 
     rendered = redact_value(argv)
     pytest.fail(
@@ -4043,7 +4053,7 @@ def _hermetic_agy_claude_window(monkeypatch):
     which catalog seat those tests select. The default reading is a fresh
     empty window. A test of the real reader restores ``__wrapped__``.
     """
-    from scripts.agent_runtime import model_pause as mp
+    from lu_machinery.agent_runtime import model_pause as mp
 
     real = mp.routing_budget_used_pct
 

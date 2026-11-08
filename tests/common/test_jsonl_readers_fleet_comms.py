@@ -7,9 +7,9 @@ from jsonl_reader_cases import reader_case
 @pytest.mark.parametrize(
     "module, function, site",
     [
-        ("scripts.fleet_comms.adapter_conformance", "_parse_jsonl", 93),
-        ("scripts.fleet_comms.cli", "cmd_authority_import", 765),
-        ("scripts.fleet_comms.message_plane", "_summarize_parity_telemetry", 709),
+        ("lu_machinery.fleet_comms.adapter_conformance", "_parse_jsonl", 93),
+        ("lu_machinery.fleet_comms.cli", "cmd_authority_import", 765),
+        ("lu_machinery.fleet_comms.message_plane", "_summarize_parity_telemetry", 709),
     ],
     ids=lambda value: str(value),
 )

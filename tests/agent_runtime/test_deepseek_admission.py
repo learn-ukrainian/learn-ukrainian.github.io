@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.agent_runtime.deepseek_admission import (
+from lu_machinery.agent_runtime.deepseek_admission import (
     DeepSeekAdmissionRefused,
     refuse_deepseek_if_disallowed,
 )
-from scripts.agent_runtime.kimi_admission import refuse_kimi_if_disallowed
-from scripts.agent_runtime.target_admission import resolve_and_admit
+from lu_machinery.agent_runtime.kimi_admission import refuse_kimi_if_disallowed
+from lu_machinery.agent_runtime.target_admission import resolve_and_admit
 
 
 @pytest.mark.parametrize("repo", ["synthetic-private-role", "synthetic-other-role"])

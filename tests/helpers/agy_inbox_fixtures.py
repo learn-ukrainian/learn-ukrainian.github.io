@@ -10,8 +10,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.migrations import apply_migrations
+from lu_machinery.fleet_comms.migrations import apply_migrations
 
 BODY_MARKER = "UNIQUE_PRIVATE_BODY_MUST_NEVER_LEAVE_STORE_10558"
 MESSAGE_ID = "authority-message_" + "a" * 32
@@ -19,16 +18,16 @@ MONITOR_PROVIDERS = ("claude", "codex", "gemini", "agy", "grok", "cursor")
 ROOT = Path(__file__).resolve().parents[2]
 CLI_BOOTSTRAP = (
     "import os, runpy; from pathlib import Path; "
-    "from scripts.ai_agent_bridge import _channels; "
+    "from lu_machinery.ai_agent_bridge import _channels; "
     "_channels.ASSIGNMENTS_PATH = Path(os.environ['TEST_INBOX_ROSTER']); "
-    "runpy.run_module('scripts.inbox_pending', run_name='__main__')"
+    "runpy.run_module('lu_machinery.inbox_pending', run_name='__main__')"
 )
 
 
 @pytest.fixture
 def roster(tmp_path, monkeypatch):
     """Replace only the roster file and executable boundary, never alias logic."""
-    from scripts.ai_agent_bridge import _channels
+    from lu_machinery.ai_agent_bridge import _channels
 
     path = tmp_path / "assignments.yaml"
     path.write_text("assignments:\n  infra:\n    slots: [gemini-infra, codex-core]\n  monitor:\n    slots: []\n")
@@ -37,7 +36,7 @@ def roster(tmp_path, monkeypatch):
     interpreter = tmp_path / "roster-interpreter"
     interpreter.write_text(
         f"#!{sys.executable}\nimport os, sys\n"
-        f"if sys.argv[1:3] == ['-m', 'scripts.inbox_pending']:\n"
+        f"if sys.argv[1:3] == ['-m', 'lu_machinery.inbox_pending']:\n"
         f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {CLI_BOOTSTRAP!r}, *sys.argv[3:]])\n"
         f"os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n"
     )
@@ -50,7 +49,7 @@ def run_cli(recipient):
     command = (
         [sys.executable, "-c", CLI_BOOTSTRAP]
         if "TEST_INBOX_ROSTER" in os.environ
-        else [sys.executable, "-m", "scripts.inbox_pending"]
+        else [sys.executable, "-m", "lu_machinery.inbox_pending"]
     )
     proc = subprocess.run([*command, "--recipient", recipient], cwd=ROOT, capture_output=True, text=True, timeout=20)
     assert proc.returncode == 0

@@ -11,11 +11,11 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
+from lu_machinery.orchestration import task_identity
+from lu_machinery.orchestration.task_family import codex_state, rollover
+from lu_machinery.orchestration.task_family.model import RelationType
+from lu_machinery.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
 
-from scripts.orchestration import task_identity
-from scripts.orchestration.task_family import codex_state, rollover
-from scripts.orchestration.task_family.model import RelationType
-from scripts.orchestration.task_family.storage import TaskFamilyStorage, advisory_lock
 from tests.project_python import project_python
 
 
@@ -182,7 +182,7 @@ def test_advisory_lock_blocks_a_second_process_until_release(tmp_path: Path) -> 
     code = (
         "import sys\n"
         "from pathlib import Path\n"
-        "from scripts.orchestration.task_family.storage import advisory_lock\n"
+        "from lu_machinery.orchestration.task_family.storage import advisory_lock\n"
         "lock_path, ready_path, acquired_path = map(Path, sys.argv[1:])\n"
         "ready_path.write_text('ready', encoding='utf-8')\n"
         "with advisory_lock(lock_path):\n"
@@ -211,7 +211,7 @@ def test_advisory_lock_honors_hook_deadline(tmp_path: Path, monkeypatch: pytest.
     code = (
         "import sys,time\n"
         "from pathlib import Path\n"
-        "from scripts.orchestration.task_family.storage import advisory_lock\n"
+        "from lu_machinery.orchestration.task_family.storage import advisory_lock\n"
         "lock_path, ready_path = map(Path, sys.argv[1:])\n"
         "with advisory_lock(lock_path):\n"
         "    ready_path.write_text('ready', encoding='utf-8')\n"

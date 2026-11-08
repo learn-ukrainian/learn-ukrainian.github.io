@@ -3,8 +3,7 @@
 import json
 
 import pytest
-
-from scripts.agent_runtime.usage import _iter_usage_records
+from lu_machinery.agent_runtime.usage import _iter_usage_records
 
 
 @pytest.mark.parametrize("ending", ["\n", "\r\n", ""], ids=["LF", "CRLF", "unterminated"])

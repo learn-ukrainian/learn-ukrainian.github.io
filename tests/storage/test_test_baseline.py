@@ -5,8 +5,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.storage.test_baseline import (
+from lu_machinery.storage.test_baseline import (
     BaselineError,
     _pack_baseline,
     _safe_json,

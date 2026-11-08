@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime, timedelta
 
-from scripts.orchestration.session_markers import (
+from lu_machinery.orchestration.session_markers import (
     MARKER_SCHEMA,
     iter_session_markers,
     remove_session_marker,

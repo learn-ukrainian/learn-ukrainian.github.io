@@ -19,11 +19,11 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+from lu_machinery.common import repo_root
+from lu_machinery.hygiene import lint_source_db_writable_connects as lint
+from lu_machinery.ops import product_entry
 
 import scripts
-from scripts.common import repo_root
-from scripts.hygiene import lint_source_db_writable_connects as lint
-from scripts.ops import product_entry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -108,7 +108,7 @@ FORBIDDEN = (
         'import sqlite3\nmodules = [sqlite3]\nmodules[0].connect("other.db")',
         'import sqlite3\nAlias = sqlite3\nAlias.connect("other.db")',
         "from sqlite3 import *",
-        "from scripts.lib.readonly_sqlite import sqlite3 as db; db.connect(path)",
+        "from lu_machinery.lib.readonly_sqlite import sqlite3 as db; db.connect(path)",
         "import anywhere as m; m.sqlite3.connect(path)",
         "import anywhere as m; db = m.sqlite3; db.connect(path)",
         'import sys; sys.modules["sqlite3"].connect(path)',
@@ -138,11 +138,11 @@ FORBIDDEN = (
     ]
     + [
         # The configured-entry-point helper, plain, aliased or qualified, with a constant SQLite name.
-        'from scripts.ops.product_entry import load_configured_module\nload_configured_module("sqlite3:connect")',
-        'from scripts.ops.product_entry import load_configured_module as load\nload("scripts.lib.sqlite3")',
-        'import scripts.ops.product_entry as entry\nentry.load_configured_module(name="sqlite3.dbapi2")',
+        'from lu_machinery.ops.product_entry import load_configured_module\nload_configured_module("sqlite3:connect")',
+        'from lu_machinery.ops.product_entry import load_configured_module as load\nload("scripts.lib.sqlite3")',
+        'import lu_machinery.ops.product_entry as entry\nentry.load_configured_module(name="sqlite3.dbapi2")',
         'from scripts.ops import product_entry\ndb = product_entry.load_configured_module("_sqlite3")\ndb.connect(path)',
-        'from scripts.ops.product_entry import load_configured_module as load\ndb = load("sqlite3:x")\ndb.Connection',
+        'from lu_machinery.ops.product_entry import load_configured_module as load\ndb = load("sqlite3:x")\ndb.Connection',
     ]
 )
 
@@ -162,14 +162,14 @@ def test_any_constructor_reference_fails_in_injected_scripts(source, tmp_path):
     [
         "import sqlite3\nrow = sqlite3.Row\nraise sqlite3.OperationalError()",
         'import importlib\nmodule = importlib.import_module("json")',
-        "from scripts.lib.readonly_sqlite import open_readonly\nconn = open_readonly(path)",
+        "from lu_machinery.lib.readonly_sqlite import open_readonly\nconn = open_readonly(path)",
         'def connect(path): pass\nconnect("cache.db")',
         '# sqlite3.connect(path)\nexample = "sqlite3.Connection"',
         # The helper refuses SQLite names, so a configured name is not a finding.
-        "from scripts.ops.product_entry import load_configured_module\nhooks = load_configured_module(name)\nhooks.connect(path)",
-        "from scripts.ops.product_entry import load_configured_module as load\nhooks = load(name=config['module'])",
-        "import scripts.ops.product_entry as entry\nhooks = entry.load_configured_module(name)",
-        "from scripts.ops import product_entry\nproduct_entry.load_configured_module('scripts.review.hooks')",
+        "from lu_machinery.ops.product_entry import load_configured_module\nhooks = load_configured_module(name)\nhooks.connect(path)",
+        "from lu_machinery.ops.product_entry import load_configured_module as load\nhooks = load(name=config['module'])",
+        "import lu_machinery.ops.product_entry as entry\nhooks = entry.load_configured_module(name)",
+        "from scripts.ops import product_entry\nproduct_entry.load_configured_module('lu_machinery.review.hooks')",
     ],
 )
 def test_unrelated_syntax_passes(source):
@@ -392,9 +392,9 @@ def test_raw_store_constructor_forms(source):
 
 @pytest.mark.parametrize("source", [
     "import sqlite3\nconn = sqlite3.connect('fixture.db')",
-    "from scripts.lib.readonly_sqlite import open_readonly as ro\nconn = ro(db)",
-    "from scripts.storage.topology import resolve_store as resolve\ndef present(): return resolve('sources')\npytestmark = pytest.mark.skipif(not present(), reason='missing')",
-    "from scripts.lib.readonly_sqlite import open_readonly\ndef present(): return open_readonly(db)\n@pytest.mark.skipif(present(), reason='missing')\ndef test_x(): pass",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly as ro\nconn = ro(db)",
+    "from lu_machinery.storage.topology import resolve_store as resolve\ndef present(): return resolve('sources')\npytestmark = pytest.mark.skipif(not present(), reason='missing')",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly\ndef present(): return open_readonly(db)\n@pytest.mark.skipif(present(), reason='missing')\ndef test_x(): pass",
 ])
 def test_import_access_forms_and_helper_calls(source):
     assert any(f.kind == 'test_import_access' for f in lint.classify_store_source(source, 'tests/new.py'))
@@ -565,7 +565,7 @@ def test_base_blob_ids_include_tracked_sparse_paths(tmp_path):
 
 @pytest.mark.parametrize('source', [
     "from scripts.rag.config import DATA_DIR\nDB = DATA_DIR / 'sources.db'",
-    "from scripts.storage.paths import DATA_ROOT\nDB = DATA_ROOT / 'vesum.db'",
+    "from lu_machinery.storage.paths import DATA_ROOT\nDB = DATA_ROOT / 'vesum.db'",
     "import os\nDB = os.path.join(DATA_DIR, 'vesum.db')",
     "DB = config.DATA_DIR / 'vesum.db'",
     "DB = helper('data', 'sources.db')",
@@ -749,7 +749,7 @@ def test_text_joins_preserve_nested_store_builders(tmp_path, source, expression,
     "from pathlib import Path\nimport os\nDB = Path(os.environ.get('LU_SOURCES_DB', 'data/sources.db'))",
     "from sqlite3 import connect as c\nc('data/sources.db')",
     "import sqlite3 as s\nDB = REPO_ROOT / 'data' / 'sources.db'\ns.connect(DB)",
-    "from scripts.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
     "import sqlite3\nCONN = sqlite3.connect(REPO / 'data' / 'vesum.db')",
 ])
 @pytest.mark.parametrize('tree', ['scripts', 'tests'])
@@ -807,8 +807,8 @@ def test_literal_prefilter_has_no_false_negatives_for_concatenations():
 
 def test_rebound_reader_alias_still_reports_collection_access():
     source = (
-        'from scripts.lib.readonly_sqlite import open_readonly as ro\n'
-        'from scripts.storage.topology import resolve_store as resolve\n'
+        'from lu_machinery.lib.readonly_sqlite import open_readonly as ro\n'
+        'from lu_machinery.storage.topology import resolve_store as resolve\n'
         'def first():\n    lookup = ro\n'
         'def second():\n    lookup = resolve\n'
         'binding = lookup("sources")'
@@ -869,7 +869,7 @@ def _no_import(monkeypatch):
     "name",
     [None, 7, b"scripts.lib", "", "scripts", "scripts.", ".scripts.lib", "scripts..lib", "Scripts.lib",
      "scripts.Lib", "scripts.lib-x", "scripts.1lib", "os.path", "json", "scripts.lib\n", " scripts.lib",
-     "scripts.lib.readonly_sqlite:import_named_module", "scripts/lib", "scriptsx.lib", "scripts.lib.é"],
+     "lu_machinery.lib.readonly_sqlite:import_named_module", "scripts/lib", "scriptsx.lib", "scripts.lib.é"],
 )
 def test_configured_module_refuses_malformed_names_before_importing(name, monkeypatch):
     _no_import(monkeypatch)
@@ -888,8 +888,8 @@ def test_configured_module_refuses_sqlite_names_before_importing(name, monkeypat
 
 def test_configured_module_loads_a_module_of_this_checkout():
     assert repo_root.product_root().resolve() == REPO_ROOT.resolve()
-    real = product_entry.load_configured_module("scripts.lib.readonly_sqlite")
-    assert real is sys.modules["scripts.lib.readonly_sqlite"]
+    real = product_entry.load_configured_module("lu_machinery.lib.readonly_sqlite")
+    assert real is sys.modules["lu_machinery.lib.readonly_sqlite"]
 
 
 def test_configured_module_loads_and_binds_the_parent(configured_module):

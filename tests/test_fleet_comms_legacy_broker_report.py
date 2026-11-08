@@ -8,8 +8,8 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from scripts.fleet_comms.cli import EXIT_OK, main
-from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
+from lu_machinery.fleet_comms.cli import EXIT_OK, main
+from lu_machinery.fleet_comms.legacy_broker_report import build_legacy_broker_report
 
 
 def _seed_telemetry(path: Path, *, coverage_started_at: datetime) -> None:

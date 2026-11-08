@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 def build(spec, env):
-    from scripts.dispatcher.types import Invocation
+    from lu_machinery.dispatcher.types import Invocation
 
     stdin = spec.prompt_file.read_bytes()
     if spec.agent == "agy":
@@ -26,7 +26,7 @@ def build(spec, env):
 
 
 def parse(stdout, stderr, returncode, final_text):
-    from scripts.dispatcher.types import ParsedResult
+    from lu_machinery.dispatcher.types import ParsedResult
 
     return ParsedResult(
         final_text if final_text is not None else stdout.strip(),

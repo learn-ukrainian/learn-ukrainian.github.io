@@ -66,7 +66,7 @@ def test_dispatched_worktree_is_registered_before_creation_and_archived_at_remov
 
 
 def test_register_confirms_branch_and_head_and_a_malformed_registry_is_refused(sandbox):
-    from scripts.dispatcher import git
+    from lu_machinery.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
     tree = primary / ".worktrees/dispatch/codex/direct"
@@ -90,7 +90,7 @@ def test_register_confirms_branch_and_head_and_a_malformed_registry_is_refused(s
 
 
 def test_a_creation_that_fails_after_git_made_the_tree_leaves_the_record_active(sandbox, monkeypatch):
-    from scripts.dispatcher import git
+    from lu_machinery.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
     sha = run_git(primary, "rev-parse", "HEAD")
@@ -116,7 +116,7 @@ def test_a_creation_that_fails_after_git_made_the_tree_leaves_the_record_active(
 
 
 def test_noncanonical_spelling_and_live_path(sandbox):
-    from scripts.dispatcher import git
+    from lu_machinery.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
     sha = run_git(primary, "rev-parse", "HEAD")
@@ -139,7 +139,7 @@ def test_noncanonical_spelling_and_live_path(sandbox):
 
 
 def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(sandbox, monkeypatch):
-    from scripts.dispatcher import git, store
+    from lu_machinery.dispatcher import git, store
 
     monkeypatch.setattr(store, "retention_hold_disposition", lambda _record: None)  # no on-disk task record here
 
@@ -187,7 +187,7 @@ def test_a_commit_refreshes_the_record_and_a_retained_tree_keeps_its_final_head(
 def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, monkeypatch):
     import fcntl
 
-    from scripts.dispatcher import git, store
+    from lu_machinery.dispatcher import git, store
 
     primary, registry, _ = declared_repo(sandbox)
     monkeypatch.setattr(store, "retention_hold_disposition", lambda _record: None)
@@ -233,7 +233,7 @@ def test_refresh_keeps_configured_hooks_and_contains_registry_trouble(sandbox, m
 
 
 def test_a_home_relative_hooks_path_keeps_its_guards(sandbox, monkeypatch, tmp_path):
-    from scripts.dispatcher import git
+    from lu_machinery.dispatcher import git
 
     primary, registry, _ = declared_repo(sandbox)
     home = tmp_path / "home"

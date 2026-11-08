@@ -7,8 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 from jsonschema import validate
-
-from scripts.docs.docs_inventory import build, canonical, digest, main, metadata
+from lu_machinery.docs.docs_inventory import build, canonical, digest, main, metadata
 
 pytestmark = pytest.mark.reads_content
 

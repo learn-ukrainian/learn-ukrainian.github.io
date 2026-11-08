@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.session_canary import gemini_lane
+from lu_machinery.session_canary import gemini_lane
 
 
 @pytest.mark.parametrize("subcommand", ["bootstrap", "protocol", "status"])

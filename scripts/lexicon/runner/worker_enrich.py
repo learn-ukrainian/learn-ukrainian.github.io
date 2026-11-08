@@ -7,9 +7,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.runner.contracts import canonical_json
 from scripts.lexicon.runner.side_db import KaikkiSideDb
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def enrich_chunk_payload(payload: dict[str, Any]) -> dict[str, str]:

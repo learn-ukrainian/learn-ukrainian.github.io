@@ -8,21 +8,20 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import yaml
-
-from agents_extensions.shared.session_streams.cli import main
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.dual_write import mirror_handoff_file
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.projection import (
+from lu_machinery.session_streams.cli import main
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.dual_write import mirror_handoff_file
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.projection import (
     classify_file_projection,
     list_projection_receipts,
     project_inventory_streams,
 )
-from agents_extensions.shared.session_streams.receipts import (
+from lu_machinery.session_streams.receipts import (
     inventory_registration_summary,
     register_manifest_inventory,
 )
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from lu_machinery.session_streams.store import SessionStreamStore
 
 NOW = datetime(2026, 7, 20, 15, 0, tzinfo=UTC)
 
@@ -260,8 +259,8 @@ def test_remote_epic_status_has_no_per_request_connection_fan_out(tmp_path: Path
     GIL back, so under CPU-bound API work the read stalled for seconds. One
     status read now opens exactly one read-only connection.
     """
-    from agents_extensions.shared.session_streams.model import EntryType
-    from scripts.api import epics_router
+    from lu_machinery.api import epics_router
+    from lu_machinery.session_streams.model import EntryType
 
     stream_id = "epic:4707"  # allow-hardcoded-epic: fixture stream, not a live epic
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"), _process_probe=lambda _pid: True)

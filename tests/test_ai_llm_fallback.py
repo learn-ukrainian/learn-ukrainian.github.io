@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_llm.fallback import (
+from lu_machinery.ai_llm.fallback import (
     AGY_GEMINI_MODEL,
     FINAL_GEMINI_MODEL,
     FLASH_GEMINI_MODEL,
@@ -65,7 +65,7 @@ def test_frozen_gemini_cli_is_terminal_before_any_provider_call(model, tmp_path)
         raise AssertionError("a refused route must not call a provider or fallback")
 
     with patch("subprocess.Popen", forbidden), patch(
-        "ai_llm.fallback._run_agy_via_runtime", forbidden,
+        "lu_machinery.ai_llm.fallback._run_agy_via_runtime", forbidden,
     ):
         result = call_gemini_with_fallback(
             "prompt", task_name="refusal", preferred_model=model,

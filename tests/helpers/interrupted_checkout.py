@@ -41,7 +41,7 @@ def make_interrupted_checkout(tmp_path, monkeypatch):
     tasks = repo / "batch_state/tasks"
     tasks.mkdir(parents=True)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    from scripts.common import task_store_paths
+    from lu_machinery.common import task_store_paths
 
     monkeypatch.setattr(task_store_paths, "tasks_dir", lambda: tasks)
     record = tasks / "interrupted.json"
@@ -50,7 +50,7 @@ def make_interrupted_checkout(tmp_path, monkeypatch):
     output = tree / ".cache/output.bin"
     output.parent.mkdir()
     output.write_bytes(b"ignored output\x00\xff")
-    from scripts.orchestration import worktree_git as rw
+    from lu_machinery.orchestration import worktree_git as rw
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())

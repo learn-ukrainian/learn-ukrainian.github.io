@@ -13,13 +13,13 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.orchestration import merge_queue_keeper as keeper
+from lu_machinery.orchestration.integration_sweep import Verdict
+from lu_machinery.publish import github as publisher
+from lu_machinery.publish import recovery
+from lu_machinery.review.record_cf_verdict import build_comment
 
-from scripts.opsec import prepublish as gate
-from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.orchestration.integration_sweep import Verdict
-from scripts.publish import github as publisher
-from scripts.publish import recovery
-from scripts.review.record_cf_verdict import build_comment
 from tests.opsec_fixtures import CATALOG, TOKEN
 
 HEAD_A = "a" * 40
@@ -1059,7 +1059,7 @@ def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: p
 
 
 def test_fresh_rejection_overrides_later_same_head_approval_in_keeper(tmp_path: Path) -> None:
-    from scripts.review.record_cf_verdict import build_comment
+    from lu_machinery.review.record_cf_verdict import build_comment
 
     fake = FakeGitHub()
 

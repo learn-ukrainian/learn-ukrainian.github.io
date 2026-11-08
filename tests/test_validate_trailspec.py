@@ -8,8 +8,7 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.validate_trailspec import (
+from lu_machinery.orchestration.validate_trailspec import (
     DEFAULT_DECISION_TABLES_PATH,
     DEFAULT_DECISION_TABLES_V1_PATH,
     DEFAULT_EXAMPLE_TRAIL_PATH,
@@ -738,7 +737,7 @@ def test_negative_unbound_table_ref() -> None:
 def test_cli_tables_flag_runs_cross_check(tmp_path, capsys) -> None:
     """r3 review finding: the CLI --tables path must run the cross-document check, not
     just the two independent validators — an unbound reference must fail the COMMAND."""
-    from scripts.orchestration.validate_trailspec import main
+    from lu_machinery.orchestration.validate_trailspec import main
 
     spec = _get_v1_table_lookup_data()
     for step in spec["steps"]:
@@ -790,7 +789,7 @@ def test_hash_stability() -> None:
 
 def test_cli_registry_flag_runs_validation(tmp_path, capsys) -> None:
     """CLI --registry mode validates red-CI known-failures registry."""
-    from scripts.orchestration.validate_trailspec import main
+    from lu_machinery.orchestration.validate_trailspec import main
 
     reg_data = {
         "schema_version": "red-ci-known-failures.v1",

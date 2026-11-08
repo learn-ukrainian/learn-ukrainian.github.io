@@ -23,7 +23,7 @@ def __getattr__(name: str) -> Path:
     mounts, and most of this module's importers never need the PDFs.
     """
     if name == "VESUM_DB_PATH":
-        from scripts.storage.topology import StoreRefusal, resolve_store, unavailable_store_path
+        from lu_machinery.storage.topology import StoreRefusal, resolve_store, unavailable_store_path
 
         result = resolve_store("vesum", PROJECT_ROOT)
         return unavailable_store_path("vesum") if isinstance(result, StoreRefusal) else result.path

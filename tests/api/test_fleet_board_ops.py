@@ -6,16 +6,15 @@ import time
 import urllib.parse
 import urllib.request
 
+import lu_machinery.api.fleet_board.router as board_routes
 import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
-
-import scripts.api.fleet_board.router as board_routes
-from scripts.api import main as api_main
-from scripts.api.fleet_board import http_sources, values
-from scripts.api.fleet_board import sources as sources_mod
-from scripts.api.fleet_board.cache import CACHE
-from scripts.api.fleet_board.fetch import _DeadlineRedirect, fetch_json
+from lu_machinery.api import main as api_main
+from lu_machinery.api.fleet_board import http_sources, values
+from lu_machinery.api.fleet_board import sources as sources_mod
+from lu_machinery.api.fleet_board.cache import CACHE
+from lu_machinery.api.fleet_board.fetch import _DeadlineRedirect, fetch_json
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

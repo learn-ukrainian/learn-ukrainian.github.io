@@ -22,15 +22,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.ci.cursor_cloud_pytest_verify import (
+from lu_machinery.ci.cursor_cloud_pytest_verify import (
     VerificationOutcome,
     verify_cloud_artifacts,
 )
-from scripts.ci.cursor_cloud_pytest_verify import (
+from lu_machinery.ci.cursor_cloud_pytest_verify import (
     main as verifier_main,
 )
-from scripts.ci.pytest_shards import REQUIRED_MARKEXPR, SERIAL_TESTS
+from lu_machinery.ci.pytest_shards import REQUIRED_MARKEXPR, SERIAL_TESTS
 
 TEST_SHA = "0123456789abcdef0123456789abcdef01234567"
 TEST_RUNNER_SHA = "a" * 64
@@ -649,7 +648,7 @@ def test_omitted_test_self_consistent_plans_rejected_by_anchoring(
         p_path.write_text(json.dumps(p_data, indent=2), encoding="utf-8")
 
     # 3. Confirm that self-reported verify_artifacts() without anchor passes this self-consistent omitted test!
-    from scripts.ci.pytest_shards import verify_artifacts
+    from lu_machinery.ci.pytest_shards import verify_artifacts
     verify_artifacts(bundle, 4)  # Passes because plans and JUnits are self-consistent!
 
     # 4. Controller anchored verification with expected_nodeids rejects with UNKNOWN/INFRA

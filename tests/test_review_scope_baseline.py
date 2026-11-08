@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.review.scope_baseline import (
+from lu_machinery.review.scope_baseline import (
     ScopeBaseline,
     check_contract_boundary_breaker,
     check_cycle_convergence_breaker,
@@ -16,7 +16,7 @@ from scripts.review.scope_baseline import (
     classify_finding,
     critical_override_applies,
 )
-from scripts.review.target_resolution import ReviewTarget
+from lu_machinery.review.target_resolution import ReviewTarget
 
 
 def _target(*, changed_paths=("a.py", "b.py"), non_test_loc=40, mode="branch", clean_tree=False):

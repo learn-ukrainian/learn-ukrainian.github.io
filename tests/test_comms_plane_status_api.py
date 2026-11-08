@@ -9,10 +9,9 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.monitor_context import MonitorContext, fixture_context, production_context
-from scripts.fleet_comms.message_plane import read_plane_status
-from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from lu_machinery.api.monitor_context import MonitorContext, fixture_context, production_context
+from lu_machinery.fleet_comms.message_plane import read_plane_status
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
 def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
@@ -22,7 +21,7 @@ def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
 
 
 def _client(ctx: MonitorContext | None = None) -> TestClient:
-    from scripts.api.comms_router import router
+    from lu_machinery.api.comms_router import router
 
     app = FastAPI()
     # comms_router resolves all roots/stores from the app context (#7269
@@ -176,7 +175,7 @@ def test_comms_v1_collectors_with_seeded_broker(tmp_path: Path, monkeypatch: pyt
 
 def _stub_api_startup(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep lifespan tests on the authority guard, not warmup side effects."""
-    from scripts.api import main as api_main
+    from lu_machinery.api import main as api_main
 
     async def _idle(*_args, **_kwargs):
         return None
@@ -205,8 +204,8 @@ def test_lifespan_authority_matches_plane_status(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, authority: str
 ) -> None:
     """A clean or shadow environment starts, and plane-status names that store."""
-    from scripts.api import main as api_main
-    from scripts.control_plane.storage import StoreId, resolve_authority
+    from lu_machinery.api import main as api_main
+    from lu_machinery.control_plane.storage import StoreId, resolve_authority
 
     _clear_fleet_comms_authority(monkeypatch)
     if authority == "shadow":
@@ -225,8 +224,8 @@ def test_lifespan_authority_matches_plane_status(
 
 def test_lifespan_refuses_pg_authority_the_seats_cannot_write(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Postgres is outside the authority-service interlock, so startup stops."""
-    from scripts.api import main as api_main
-    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+    from lu_machinery.api import main as api_main
+    from lu_machinery.control_plane.storage import ControlPlaneUnsupportedComponentError
 
     _clear_fleet_comms_authority(monkeypatch)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")

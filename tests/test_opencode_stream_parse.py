@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts.ai_agent_bridge._opencode import (
+from lu_machinery.ai_agent_bridge._opencode import (
     OpencodeStreamParse,
     _parse_opencode_ndjson,
     _parse_opencode_stream,

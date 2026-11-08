@@ -12,13 +12,12 @@ import logging
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.agent_runtime import acpx_pilot, codex_hook_probe
-from scripts.agent_runtime.adapters.acpx import AcpxAdapter
-from scripts.agent_runtime.adapters.claude import ClaudeAdapter, _tool_calls_from_claude_session_jsonl
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.agent_runtime.jsonl import jsonl_lines
-from scripts.agent_runtime.tool_calls import parse_json_events
+from lu_machinery.agent_runtime import acpx_pilot, codex_hook_probe
+from lu_machinery.agent_runtime.adapters.acpx import AcpxAdapter
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter, _tool_calls_from_claude_session_jsonl
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.jsonl import jsonl_lines
+from lu_machinery.agent_runtime.tool_calls import parse_json_events
 
 UNICODE_LINE_BREAKS = pytest.mark.parametrize("sep", ["\u0085", " ", " "], ids=["NEL", "LS", "PS"])
 

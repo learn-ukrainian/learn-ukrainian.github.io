@@ -18,10 +18,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.ci import pytest_dispatch_cap
+from lu_machinery.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV
+from lu_machinery.common import test_slots
 
-from scripts.ci import pytest_dispatch_cap
-from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV
-from scripts.common import test_slots
 from tests.wait_helpers import wait_for_line
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -62,7 +62,7 @@ def project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         "[tool.pytest.ini_options]\n"
         "testpaths = ['tests']\n"
         f"pythonpath = ['{scripts}']\n"
-        "addopts = '-p ci.pytest_dispatch_cap'\n",
+        "addopts = '-p lu_machinery.ci.pytest_dispatch_cap'\n",
         encoding="utf-8",
     )
     (root / "tests" / "test_sample.py").write_text(_SAMPLE, encoding="utf-8")
@@ -398,7 +398,7 @@ def test_slots_stay_taken_until_the_last_xdist_worker_of_a_killed_controller_exi
         report = test_slots.status()
         assert (report["slots_in_use"], report["slots_draining"], report["slots_free"]) == (0, 2, 0), report
         stamp = project / "replacement"
-        governor = [sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "2", "--"]
+        governor = [sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--slots", "2", "--"]
         replacement = subprocess.run(
             [*governor, sys.executable, "-c", _STAMP, str(stamp)],
             cwd=_REPO_ROOT,
@@ -495,7 +495,7 @@ def test_a_worker_that_cannot_join_its_controllers_hold_runs_no_test(
             os.kill(controller.pid, signal.SIGKILL)  # the controller dies while any worker it started still runs
         controller.wait(timeout=30)
         stamp = project / "replacement"
-        governor = [sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "2", "--"]
+        governor = [sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--slots", "2", "--"]
         replacement = subprocess.run(
             [*governor, sys.executable, "-c", _STAMP, str(stamp)],
             cwd=_REPO_ROOT,

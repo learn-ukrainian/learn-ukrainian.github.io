@@ -50,7 +50,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import import_named_module, open_readonly
+from lu_machinery.storage import topology
+
 from scripts.lexdata import generation as gen_reader
 from scripts.lexdata import transforms, verify
 from scripts.lexdata.canonical import canonical_json, sha256_canonical, sha256_text
@@ -58,8 +61,6 @@ from scripts.lexdata.derive import derive_leaf
 from scripts.lexdata.l2_stage import L2Stage, PendingResolverStage
 from scripts.lexdata.records import ParsedUnit, SourceAdapter, UnitInput
 from scripts.lexdata.schema import FULL_DDL, GENERATION_SCHEMA_VERSION, L1_SCHEMA_VERSION
-from scripts.lib.readonly_sqlite import import_named_module, open_readonly
-from scripts.storage import topology
 
 STORE_NAME = "lexdata.db"
 WORK_DIR = "lexdata"

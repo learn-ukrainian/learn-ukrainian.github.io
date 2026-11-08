@@ -7,11 +7,11 @@ from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from lu_machinery.api import state_router
+from lu_machinery.fleet import capacity_pick, credit_lane, idle_settle
+from lu_machinery.fleet.reset_reserve import unavailable_reserve
+from lu_machinery.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
 
-from scripts.api import state_router
-from scripts.fleet import capacity_pick, credit_lane, idle_settle
-from scripts.fleet.reset_reserve import unavailable_reserve
-from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.api.test_routing_budget import _configure_base
 from tests.api.test_routing_budget_endpoint import _record
 from tests.claude_route_accounts import HOST_ACCOUNT

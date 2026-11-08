@@ -12,11 +12,11 @@ from threading import Barrier
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.orchestration import merge_queue_keeper as keeper
+from lu_machinery.publish import github as pub
+from lu_machinery.review.record_cf_verdict import build_comment
 
-from scripts.opsec import prepublish as gate
-from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.publish import github as pub
-from scripts.review.record_cf_verdict import build_comment
 from tests.opsec_fixtures import CATALOG
 
 HEAD = "a" * 40

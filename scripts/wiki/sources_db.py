@@ -43,6 +43,19 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     __package__ = "scripts.wiki"
 
+from lu_machinery.lib.readonly_sqlite import (
+    SQLiteConnection,
+    open_readonly,
+    refuse_writable_corpus_database,
+)
+from lu_machinery.storage.generations import (
+    GENERATIONS_DIRNAME,
+    one_generation,
+    reader_pin,
+    store_writer,
+    track_connection,
+)
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,
@@ -53,18 +66,6 @@ from scripts.lexicon.esum_garbled import (
 from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
-)
-from scripts.lib.readonly_sqlite import (
-    SQLiteConnection,
-    open_readonly,
-    refuse_writable_corpus_database,
-)
-from scripts.storage.generations import (
-    GENERATIONS_DIRNAME,
-    one_generation,
-    reader_pin,
-    store_writer,
-    track_connection,
 )
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
@@ -1860,8 +1861,8 @@ def _read_db_path() -> Path:
     if SOURCES_DB_PATH != PROJECT_ROOT / "data" / "sources.db":
         return SOURCES_DB_PATH.resolve()
 
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.storage.topology import require_local_active_sources_db
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.storage.topology import require_local_active_sources_db
 
     if os.environ.get("LU_SOURCES_DB"):
         return require_local_active_sources_db(PROJECT_ROOT).resolve()

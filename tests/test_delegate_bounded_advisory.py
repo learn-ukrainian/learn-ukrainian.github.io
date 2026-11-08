@@ -14,7 +14,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.agent_runtime import bounded_advisory
+from lu_machinery.agent_runtime import bounded_advisory
 
 # Delivery is proven against the driver-bound destination, never the worker's
 # tracking refs (#10931); workers built by _bounded_worktree push to its origin.git.

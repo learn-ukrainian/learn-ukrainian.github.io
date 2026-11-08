@@ -29,17 +29,17 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
-from scripts.agent_runtime.adapters import claude
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.claude import LABELLED_ACCOUNT_SETTING_SOURCES, ClaudeAdapter
-from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, ClaudeAccountRefused
-from scripts.agent_runtime.env_sanitize import (
+from lu_machinery.agent_runtime import attempt_boundary, env_sanitize, runner
+from lu_machinery.agent_runtime.adapters import claude
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.claude import LABELLED_ACCOUNT_SETTING_SOURCES, ClaudeAdapter
+from lu_machinery.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, ClaudeAccountRefused
+from lu_machinery.agent_runtime.env_sanitize import (
     CLAUDE_LAUNCH_GUARD_EXIT,
     build_agent_env,
     claude_labelled_inputs_digest,
 )
+
 from tests.agent_runtime.test_attempt_boundary import (
     ACCOUNT_ORG_UUIDS,
     AUTO_MODE_LISTS,
@@ -240,7 +240,7 @@ def _relocated_guard_code(root: Path) -> str:
     call = "run_claude_launch_guard(sys.argv[1:])"
     assert claude._LAUNCH_GUARD_CODE.endswith(call)
     relocate = (
-        f"import scripts.agent_runtime.env_sanitize as e; e._CLAUDE_MANAGED_SETTINGS_DIR = e.Path({str(root)!r}); "
+        f"import lu_machinery.agent_runtime.env_sanitize as e; e._CLAUDE_MANAGED_SETTINGS_DIR = e.Path({str(root)!r}); "
     )
     return claude._LAUNCH_GUARD_CODE.removesuffix(call) + relocate + call
 
@@ -920,7 +920,7 @@ def test_worker_plan_never_reads_the_default_account_file(accounts, monkeypatch,
 
 def test_verified_labelled_run_leaves_a_value_free_receipt(accounts):
     """AC-01 (#10619 PR1c): the auth-status check that admits label b is the run's receipt; it holds no value."""
-    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+    from lu_machinery.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
 
     reset_claude_account_receipts()
     result, _ = _invoke(accounts, claude_account="b")
@@ -933,7 +933,7 @@ def test_verified_labelled_run_leaves_a_value_free_receipt(accounts):
 
 
 def test_refused_labelled_run_leaves_an_unverified_receipt(accounts):
-    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+    from lu_machinery.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
 
     reset_claude_account_receipts()
     _private_json(accounts.workdir / ".claude" / "settings.local.json", {"apiKeyHelper": "fixture-helper-command"})
@@ -978,7 +978,7 @@ def _late_refusal(accounts: SimpleNamespace, monkeypatch: pytest.MonkeyPatch, ca
 )
 def test_receipt_needs_every_launch_check_not_only_the_status_probes(accounts, monkeypatch, case, code):
     """The receipt is noted only once the launch is bound: a refusal after passing status probes leaves it unverified."""
-    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+    from lu_machinery.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
 
     reset_claude_account_receipts()
     _late_refusal(accounts, monkeypatch, case)

@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters import agy
 
 
 @pytest.fixture

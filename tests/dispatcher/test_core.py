@@ -13,13 +13,13 @@ from unittest.mock import Mock
 
 import pytest
 import yaml
+from lu_machinery.dispatcher import agy_sandbox, checks, cli, git, providers, store, worker
+from lu_machinery.dispatcher.cli import ALIASES, build_parser
+from lu_machinery.dispatcher.environment import child_env
+from lu_machinery.dispatcher.providers import muse
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.lib import rules_core
 
-from scripts.dispatcher import agy_sandbox, checks, cli, git, providers, store, worker
-from scripts.dispatcher.cli import ALIASES, build_parser
-from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.providers import muse
-from scripts.dispatcher.types import TaskSpec
-from scripts.lib import rules_core
 from tests.dispatcher.conftest import await_file, run_git
 
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
@@ -333,7 +333,7 @@ def test_environment_contains_only_context_and_selected_auth(spec, monkeypatch, 
 
 def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypatch):
     loader = Mock(return_value="stub-file-key")
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
     monkeypatch.setenv("CURSOR_API_KEY", "stub-process-key")
 
     env = child_env(dataclasses.replace(spec, agent="cursor"))
@@ -345,7 +345,7 @@ def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypat
 @pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
 def test_cursor_child_env_missing_or_blank_process_key_falls_back_to_env_file(spec, monkeypatch, process_key):
     loader = Mock(return_value="stub-file-key")
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
     if process_key is None:
         monkeypatch.delenv("CURSOR_API_KEY", raising=False)
     else:
@@ -361,7 +361,7 @@ def test_cursor_child_env_missing_or_blank_process_key_falls_back_to_env_file(sp
 @pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
 def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing(spec, monkeypatch, process_key):
     loader = Mock(return_value=None)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
     if process_key is None:
         monkeypatch.delenv("CURSOR_API_KEY", raising=False)
     else:
@@ -375,7 +375,7 @@ def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing
 @pytest.mark.parametrize("process_key", [None, "stub-process-key", "", " \t\n"])
 def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
     loader = Mock(return_value="stub-file-key")
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
     if process_key is None:
         monkeypatch.delenv("CURSOR_API_KEY", raising=False)
     else:
@@ -389,7 +389,7 @@ def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_rais
     key_file = tmp_path / "api.key.env"
     key_file.write_bytes(b"CURSOR_API_KEY=stub-\xff-key\n")
     monkeypatch.delenv("CURSOR_API_KEY", raising=False)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
 
     assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
     assert capsys.readouterr() == ("", "")
@@ -422,10 +422,10 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     if agent == "agy":
         # AGY has no write lock of its own: read-only is refused where its bubblewrap boundary cannot
         # start, and otherwise every build returns that boundary, never a bare agy (C-3027).
-        monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: "bubblewrap (bwrap) is not installed")
+        monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: "bubblewrap (bwrap) is not installed")
         with pytest.raises(ValueError, match="read_only_unenforceable: agy cannot run --mode read-only: bubblewrap"):
             providers.load(agent).build(spec, {})
-        monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: None)
+        monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: None)
     invocation = providers.load(agent).build(spec, {})
     argv = invocation.argv
     if agent == "agy":
@@ -454,7 +454,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         policy = json.dumps({"permissions": {"allow": [write_rule]}})
         # --restricted still loads managed settings (Sol F5): a managed file or a server-managed cache refuses.
         managed, config = tmp_path / "etc-claude-code", tmp_path / "config"
-        monkeypatch.setattr("scripts.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
+        monkeypatch.setattr("lu_machinery.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
         config.mkdir()
         run_env = {"PATH": os.environ["PATH"], "HOME": str(tmp_path), "CLAUDE_CONFIG_DIR": str(config)}
         for source, expected in ((managed / "managed-settings.json", "managed policy in /etc/claude-code is present"),
@@ -560,9 +560,9 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     bound of 3. The hard timeout is 60s and the bound is 15s: above that run, and below a run
     that stays open until the timeout.
     """
-    from scripts.dispatcher import watchdog
-    from scripts.dispatcher.providers import agy
-    from scripts.dispatcher.types import Invocation
+    from lu_machinery.dispatcher import watchdog
+    from lu_machinery.dispatcher.providers import agy
+    from lu_machinery.dispatcher.types import Invocation
 
     monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
     monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
@@ -651,8 +651,8 @@ def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monke
     seconds above that. The bound is 15s: above that deadline on a loaded runner, and below
     a run held to the 30s terminal grace or the default hard timeout.
     """
-    from scripts.dispatcher.providers import agy
-    from scripts.dispatcher.types import Invocation
+    from lu_machinery.dispatcher.providers import agy
+    from lu_machinery.dispatcher.types import Invocation
 
     monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
     monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
@@ -904,7 +904,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch
 
 
 def _slot_pool(tmp_path, monkeypatch):
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     path = tmp_path / "pool"
     monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
@@ -918,7 +918,7 @@ def _slot_pool(tmp_path, monkeypatch):
 
 
 def _review_slot_hold(**overrides):
-    from scripts.dispatcher import admission
+    from lu_machinery.dispatcher import admission
 
     arguments = {"agent": "codex", "mode": "read-only", "review_typed": True, "sealed_attempt": False,
                  "task_id": "review-11230-worker-fixture"}
@@ -927,8 +927,8 @@ def _review_slot_hold(**overrides):
 
 
 def test_a_codex_read_only_review_holds_review_slots_for_its_task(tmp_path, monkeypatch) -> None:
-    from scripts.common import test_slots
-    from scripts.dispatcher import admission
+    from lu_machinery.common import test_slots
+    from lu_machinery.dispatcher import admission
 
     _slot_pool(tmp_path, monkeypatch)
     hold, record = _review_slot_hold()
@@ -965,7 +965,7 @@ def test_every_other_route_takes_its_own_slots_or_none(tmp_path, monkeypatch, ov
 
 
 def test_a_disabled_pool_holds_nothing(tmp_path, monkeypatch) -> None:
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     pool = _slot_pool(tmp_path, monkeypatch)
     monkeypatch.setenv(test_slots.ENABLE_ENV, "off")
@@ -974,7 +974,7 @@ def test_a_disabled_pool_holds_nothing(tmp_path, monkeypatch) -> None:
 
 
 def test_a_refused_hold_is_recorded_and_the_review_runs_on(tmp_path, monkeypatch, capsys) -> None:
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     _slot_pool(tmp_path, monkeypatch)
     shared = tmp_path / "shared"
@@ -988,7 +988,7 @@ def test_a_refused_hold_is_recorded_and_the_review_runs_on(tmp_path, monkeypatch
 
 
 def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeypatch) -> None:
-    from scripts.common import test_slots
+    from lu_machinery.common import test_slots
 
     monkeypatch.setenv(test_slots.HOLDER_ENV, "2:/elsewhere/holders/x.ticket")
     monkeypatch.setenv(test_slots.SESSION_ENV, "/s")

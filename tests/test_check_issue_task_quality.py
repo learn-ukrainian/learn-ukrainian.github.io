@@ -13,8 +13,8 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-from scripts.ci.check_issue_task_quality import main, score_body
-from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
+from lu_machinery.ci.check_issue_task_quality import main, score_body
+from lu_machinery.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
 COMPLETE = """
 ## User-visible outcome
@@ -185,7 +185,7 @@ def test_first_line_trivial_exemption(first_line: str) -> None:
 def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "Correct spelling", "labels": [{"name": label}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.github_client.check_output",
+        "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert (
@@ -198,7 +198,7 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
 def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
     payload = {"title": "trivial:", "body": "Correct spelling", "labels": [{"name": "task"}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.github_client.check_output",
+        "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert (
@@ -267,7 +267,7 @@ def test_dor_workflow_comment_lists_missing_fields_and_updates_one() -> None:
 
 
 def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     assert score_body(COMPLETE)["verdict"] == "PASS"
     policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]} for key in ("AC-01", "AC-02")}
@@ -279,9 +279,9 @@ def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
 
 
 # #10565: supplied observations exercise the real lifecycle ancestry validator.
-from scripts.ci import check_issue_task_quality as checker
-from scripts.ci import comment_issue_task_quality as commenter
-from scripts.orchestration import issue_stream_audit as audit
+from lu_machinery.ci import check_issue_task_quality as checker
+from lu_machinery.ci import comment_issue_task_quality as commenter
+from lu_machinery.orchestration import issue_stream_audit as audit
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 REGISTRY = {"devops": [5703], "harness": [6943]}
@@ -309,7 +309,7 @@ def hygiene_lookup(monkeypatch):
 
 
 def test_dod_structure_uses_canonical_grammar():
-    from scripts.orchestration.task_lifecycle import parse_issue_acceptance_criteria
+    from lu_machinery.orchestration.task_lifecycle import parse_issue_acceptance_criteria
 
     for body in [COMPLETE, COMPLETE.replace("[ ]", "[x]")]:
         assert parse_issue_acceptance_criteria(body)

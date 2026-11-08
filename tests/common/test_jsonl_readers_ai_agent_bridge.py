@@ -7,12 +7,12 @@ from jsonl_reader_cases import reader_case
 @pytest.mark.parametrize(
     "module, function, site",
     [
-        ("scripts.ai_agent_bridge._grok_build", "_native_grok_turn_status", 449),
-        ("scripts.ai_agent_bridge._opencode", "read_opencode_turn_status", 263),
-        ("scripts.ai_agent_bridge._opencode", "_parse_opencode_stream", 1419),
-        ("scripts.ai_agent_bridge._ui_agy", "_read_transcript_events", 118),
-        ("scripts.ai_agent_bridge._ui_agy", "_parse_stdout_events", 138),
-        ("scripts.ai_agent_bridge._ui_codex", "send", 159),
+        ("lu_machinery.ai_agent_bridge._grok_build", "_native_grok_turn_status", 449),
+        ("lu_machinery.ai_agent_bridge._opencode", "read_opencode_turn_status", 263),
+        ("lu_machinery.ai_agent_bridge._opencode", "_parse_opencode_stream", 1419),
+        ("lu_machinery.ai_agent_bridge._ui_agy", "_read_transcript_events", 118),
+        ("lu_machinery.ai_agent_bridge._ui_agy", "_parse_stdout_events", 138),
+        ("lu_machinery.ai_agent_bridge._ui_codex", "send", 159),
     ],
     ids=lambda value: str(value),
 )

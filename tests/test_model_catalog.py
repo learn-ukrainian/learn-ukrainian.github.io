@@ -9,9 +9,8 @@ from copy import deepcopy
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.registry import AGENTS
-from scripts.review.model_catalog import (
+from lu_machinery.agent_runtime.registry import AGENTS
+from lu_machinery.review.model_catalog import (
     ModelCatalogError,
     activity_role_refusal,
     advisory_role_policy,
@@ -34,6 +33,7 @@ from scripts.review.model_catalog import (
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
 )
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -54,7 +54,7 @@ def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, laun
     if effort:
         expected += ["--effort", effort]
     assert argv == expected
-    from scripts.dispatcher.cli import build_parser
+    from lu_machinery.dispatcher.cli import build_parser
 
     args = build_parser().parse_args([*argv[2:],
         "--worktree", "--mode", "read-only", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
@@ -855,8 +855,8 @@ def test_reviewer_invocation_accepts_matching_catalog_aliases(flag):
 
 
 @pytest.mark.parametrize("prefix", [
-    ".venv/bin/python -m scripts.dispatcher.cli dispatch",
-    ".venv/bin/python -u -m scripts.dispatcher.cli dispatch",
+    ".venv/bin/python -m lu_machinery.dispatcher.cli dispatch",
+    ".venv/bin/python -u -m lu_machinery.dispatcher.cli dispatch",
     ".venv/bin/python scripts/dispatch.py dispatch",
 ])
 @pytest.mark.parametrize("flag", ["--model", "-m"])
@@ -889,7 +889,7 @@ def test_orchestrator_seat_rejects_unroutable_fallback_model(model):
 
 
 def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
-    from scripts.review.model_catalog import _main
+    from lu_machinery.review.model_catalog import _main
 
     monkeypatch.setattr("sys.argv", ["model_catalog", "--help"])
     with pytest.raises(SystemExit) as exc:
@@ -908,7 +908,7 @@ def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
 ])
 def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, successor):
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        [sys.executable, "-m", "lu_machinery.review.model_catalog", "--check-retired-model", model],
         cwd=Path(__file__).resolve().parents[1],
         capture_output=True, text=True, check=False, timeout=10,
     )
@@ -922,7 +922,7 @@ def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, succes
 @pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-opus-5-5", "unknown-model"])
 def test_catalog_cli_non_retired_model_exits_silently(model):
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        [sys.executable, "-m", "lu_machinery.review.model_catalog", "--check-retired-model", model],
         cwd=Path(__file__).resolve().parents[1],
         capture_output=True, text=True, check=False, timeout=10,
     )
@@ -1006,7 +1006,7 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
-    from scripts.agent_runtime import target_admission
+    from lu_machinery.agent_runtime import target_admission
 
     def forbidden(*args, **kwargs):
         pytest.fail("Argon formal review must refuse before routing or provider launch")
@@ -1047,8 +1047,8 @@ def test_sol_defaults_and_escalations_use_high_across_catalog():
 
 
 def test_live_claude_caller_defaults_are_active_catalog_models():
-    from scripts.ai_agent_bridge._claude import CLAUDE_ADVISORY_MODEL, CLAUDE_DEFAULT_ASK_MODEL
-    from scripts.ai_llm.claude_call import CLAUDE_MODEL_LADDER
+    from lu_machinery.ai_agent_bridge._claude import CLAUDE_ADVISORY_MODEL, CLAUDE_DEFAULT_ASK_MODEL
+    from lu_machinery.ai_llm.claude_call import CLAUDE_MODEL_LADDER
     catalog = load_model_catalog()
     for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
         assert catalog["models"][model]["lifecycle"] == "active"
@@ -1072,7 +1072,7 @@ def test_grok_cannot_repeat_in_any_code_review_ladder(risk):
 
 
 def test_driver_brief_population_follows_catalog_capabilities():
-    from scripts.review.model_catalog import driver_brief_models
+    from lu_machinery.review.model_catalog import driver_brief_models
 
     catalog = deepcopy(load_model_catalog())
     assert driver_brief_models(catalog) == {"gpt-6-luna", "claude-haiku-5-5"}

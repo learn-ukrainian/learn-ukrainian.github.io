@@ -3,8 +3,7 @@
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts import driver_blockers as blockers
+from lu_machinery import driver_blockers as blockers
 
 
 @pytest.mark.parametrize(("minutes", "expected"), [(29, False), (30, False), (31, True)])

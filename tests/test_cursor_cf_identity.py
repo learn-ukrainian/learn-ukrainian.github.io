@@ -25,8 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from scripts.review import reviewer_resolver
-from scripts.review.reviewer_resolver import (
+from lu_machinery.review import reviewer_resolver
+from lu_machinery.review.reviewer_resolver import (
     CURSOR_AUTO_MODEL_TOKENS,
     CURSOR_AUTO_UNION_FAMILY,
     OPENAI_FRONTIER,
@@ -37,6 +37,7 @@ from scripts.review.reviewer_resolver import (
     resolve_author_family,
     resolve_reviewer,
 )
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 _EXACT_HEAD = "6957cf" + "a" * 34  # 40-hex exact PR head

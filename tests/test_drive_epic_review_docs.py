@@ -16,13 +16,12 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
-
-from scripts.ai_agent_bridge import _cli
-from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
-from scripts.dispatcher import cli as dispatch_cli
-from scripts.dispatcher import git as dispatch_git
-from scripts.dispatcher import store, worker
-from scripts.review import record_cf_verdict as recorder
+from lu_machinery.ai_agent_bridge import _cli
+from lu_machinery.ai_agent_bridge import _dispatch_wrappers as wrappers
+from lu_machinery.dispatcher import cli as dispatch_cli
+from lu_machinery.dispatcher import git as dispatch_git
+from lu_machinery.dispatcher import store, worker
+from lu_machinery.review import record_cf_verdict as recorder
 
 REFERENCE = (
     Path(__file__).resolve().parents[1]

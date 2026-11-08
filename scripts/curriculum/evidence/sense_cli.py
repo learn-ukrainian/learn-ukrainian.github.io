@@ -11,10 +11,9 @@ from collections import Counter
 from pathlib import Path
 
 import yaml
-
-from scripts.common import github_client
-from scripts.common.jsonl import jsonl_lines
-from scripts.common.task_store_paths import tasks_dir
+from lu_machinery.common import github_client
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.task_store_paths import tasks_dir
 
 from . import lock, registry, sources
 from . import reference_sense_v1 as matcher

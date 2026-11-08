@@ -8,8 +8,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import tmp_leak_sweep as tls
+from lu_machinery.orchestration import tmp_leak_sweep as tls
 
 
 def _touch_old(path: Path, *, age_s: float, as_file: bool = False) -> None:
@@ -92,7 +91,7 @@ def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch, case) -> None:
     if case == "hardlink":
         os.link(target, tmp_path / "retained")
     if case == "mount_unknown":
-        from scripts.common import task_scratch
+        from lu_machinery.common import task_scratch
 
         monkeypatch.setattr(task_scratch, "mount_points", lambda: None)
     real_run = tls.subprocess.run

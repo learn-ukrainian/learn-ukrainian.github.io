@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.orchestration import execution_safe_git as safe
+from lu_machinery.orchestration import worktree_artifacts, worktree_git
 
-from scripts.orchestration import execution_safe_git as safe
-from scripts.orchestration import worktree_artifacts, worktree_git
 from tests.orchestration.test_worktree_claims_cli import _git, _primary
 
 
@@ -74,8 +74,8 @@ def test_worktree_git_text_and_artifact_binary_inventory_callers(tmp_path):
 
 @pytest.mark.parametrize("failure", [None, "add", "commit", "index-moved", "ref-moved"])
 def test_scoped_commit_keeps_unowned_index_and_admits_only_closed_operations(tmp_path, monkeypatch, failure):
-    from scripts.lib.git_identity import git_identity_env
-    from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
+    from lu_machinery.lib.git_identity import git_identity_env
+    from lu_machinery.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
 
     repo = _primary(tmp_path)
     _git(repo, "branch", "codex/scoped")
@@ -167,8 +167,8 @@ def _restat_index_entry(index: Path, name: bytes, stat: os.stat_result) -> None:
 
 def test_scoped_commit_sees_same_size_edit_in_the_index_timestamp(tmp_path):
     """A racily clean entry stays racy in the private index copy (#10931)."""
-    from scripts.lib.git_identity import git_identity_env
-    from scripts.orchestration.safe_git_context import SafeGitContext
+    from lu_machinery.lib.git_identity import git_identity_env
+    from lu_machinery.orchestration.safe_git_context import SafeGitContext
 
     repo = _primary(tmp_path)
     _git(repo, "branch", "codex/scoped")
@@ -221,8 +221,8 @@ def test_scoped_commit_sees_same_size_edit_in_the_index_timestamp(tmp_path):
     ],
 )
 def test_scoped_preparation_rejects_unbounded_inputs_before_mutation(tmp_path, override):
-    from scripts.lib.git_identity import git_identity_env
-    from scripts.orchestration.safe_git_context import SafeGitContext
+    from lu_machinery.lib.git_identity import git_identity_env
+    from lu_machinery.orchestration.safe_git_context import SafeGitContext
 
     repo = _primary(tmp_path)
     head = _git(repo, "rev-parse", "HEAD")

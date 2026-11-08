@@ -15,10 +15,10 @@ import hashlib
 import json
 from pathlib import Path
 
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.contracts import CompletionState
-from scripts.fleet_comms.message_plane import MessagePlane
-from scripts.fleet_comms.request_executor import RequestExecutor
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.contracts import CompletionState
+from lu_machinery.fleet_comms.message_plane import MessagePlane
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
 
 def _codex_complete_jsonl() -> str:

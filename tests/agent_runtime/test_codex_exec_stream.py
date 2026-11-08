@@ -14,11 +14,11 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters import codex_events
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.codex_events import classify_provider_message
+from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
-from scripts.agent_runtime.adapters import codex_events
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.adapters.codex_events import classify_provider_message
-from scripts.agent_runtime.failover import classify_failover_trigger
 from tests.helpers.codex_exec_stream import (
     OTHER_THREAD_ID,
     THREAD_ID,

@@ -6,9 +6,8 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.monitor_context import fixture_context
-from scripts.api.route_contracts import router
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.route_contracts import router
 
 
 def _client_for(root: Path) -> TestClient:

@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.projects.open_model_data import document_signal_manifest as phase1
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import profile_corpus as profile

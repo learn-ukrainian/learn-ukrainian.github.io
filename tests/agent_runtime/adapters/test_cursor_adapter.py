@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.agent_runtime.adapters.cursor import (
+from lu_machinery.agent_runtime.adapters.cursor import (
     CURSOR_AUTO_ADMITTED_KEY,
     CursorAdapter,
     _load_cursor_api_key_from_env_file,
@@ -33,7 +33,7 @@ def test_cursor_adapter_missing_or_blank_process_key_falls_back_to_file(
         monkeypatch.setenv("CURSOR_API_KEY", process_key)
     key_file = tmp_path / "api.key.env"
     key_file.write_text(f"CURSOR_API_KEY={file_key or ''}\n", encoding="utf-8")
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
 
     plan = adapter.build_invocation(
         prompt="Review",
@@ -101,7 +101,7 @@ def test_cursor_adapter_does_not_disguise_unexpected_pin_errors(adapter, tmp_pat
     def fail_pin(_model):
         raise RuntimeError("unexpected catalog failure")
 
-    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor.apply_cursor_model_pins", fail_pin)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.cursor.apply_cursor_model_pins", fail_pin)
     with pytest.raises(RuntimeError, match="unexpected catalog failure"):
         adapter.build_invocation(
             prompt="review",

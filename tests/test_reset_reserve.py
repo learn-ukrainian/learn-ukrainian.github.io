@@ -7,15 +7,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet import reset_reserve
-from scripts.fleet.credit_lane import (
+from lu_machinery.fleet import reset_reserve
+from lu_machinery.fleet.credit_lane import (
     CAPACITY_AVOID,
     CAPACITY_UNKNOWN,
     CAPACITY_UNKNOWN_STALE,
     CAPACITY_VERIFIED,
 )
-from scripts.fleet.reset_reserve import (
+from lu_machinery.fleet.reset_reserve import (
     SCHEMA_VERSION,
     codex_is_threatened,
     codex_reset_reserve_eligible,

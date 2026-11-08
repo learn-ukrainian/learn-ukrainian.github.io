@@ -7,10 +7,9 @@ Covers:
 
 from __future__ import annotations
 
+import lu_machinery.api.issues_router as issues_router
+import lu_machinery.api.main as api_main
 from fastapi.testclient import TestClient
-
-import scripts.api.issues_router as issues_router
-import scripts.api.main as api_main
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

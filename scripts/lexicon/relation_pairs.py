@@ -6,8 +6,9 @@ import re
 import unicodedata
 from collections.abc import Callable
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
 from scripts.lexicon.lemma_normalization import strip_acute_stress
-from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.verification.vesum import verify_word
 
 RELATION_TYPES = frozenset({"synonym", "antonym", "paronym", "homonym"})

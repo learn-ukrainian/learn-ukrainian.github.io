@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.ai_agent_bridge._claude import (
+from lu_machinery.ai_agent_bridge._claude import (
     CLAUDE_ADVISORY_MODEL,
     CLAUDE_DEFAULT_ASK_MODEL,
     resolve_claude_ask_model,

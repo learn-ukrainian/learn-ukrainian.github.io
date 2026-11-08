@@ -21,8 +21,8 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "registry/projects/open_model_data"

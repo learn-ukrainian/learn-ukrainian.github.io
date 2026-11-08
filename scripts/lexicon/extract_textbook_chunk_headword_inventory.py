@@ -31,6 +31,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.storage.artifacts import write_artifact
+
 from scripts.lexicon.extract_book_headword_inventory import (
     _UKRAINIAN_TOKEN_RE,
     MAX_UNKNOWN_FORM_RATE,
@@ -40,7 +42,6 @@ from scripts.lexicon.extract_book_headword_inventory import (
     _lookup_in_batches,
     normalize_text,
 )
-from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words
 
 DEFAULT_BATCH_SIZE = 500

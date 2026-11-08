@@ -11,7 +11,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
 
 
 @pytest.mark.parametrize("prefix_kind", ["native", "wrapper", "string"])
@@ -26,8 +26,8 @@ def test_claude_unsupported_effort_logs_constant_message_without_command_values(
         executable = str(tmp_path / "private-executable-location" / "npx")
         prefix = [executable, "--config", secret, "@anthropic-ai/claude-code"]
     with (
-        patch("agent_runtime.adapters.claude._ensure_supported_claude_cli_version", return_value=(2, 1, 116)),
-        patch("utils.claude_version.supports_effort", return_value=False),
+        patch("lu_machinery.agent_runtime.adapters.claude._ensure_supported_claude_cli_version", return_value=(2, 1, 116)),
+        patch("lu_machinery.utils.claude_version.supports_effort", return_value=False),
         caplog.at_level(logging.DEBUG),
     ):
         plan = ClaudeAdapter().build_invocation(
@@ -43,7 +43,7 @@ def test_claude_unsupported_effort_logs_constant_message_without_command_values(
 
     assert secret in plan.cmd
     assert "--effort" not in plan.cmd
-    records = [record for record in caplog.records if record.name == "agent_runtime.adapters.claude"]
+    records = [record for record in caplog.records if record.name == "lu_machinery.agent_runtime.adapters.claude"]
     assert len(records) == 1
     assert records[0].getMessage() == (
         "Claude CLI does not support effort selection; "

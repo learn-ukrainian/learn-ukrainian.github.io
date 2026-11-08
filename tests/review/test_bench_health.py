@@ -11,15 +11,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from scripts.review import bench_health
-from scripts.review.bench_health import AUTHOR_FAMILIES, check_bench_health, main
-from scripts.review.reviewer_resolver import (
+from lu_machinery.review import bench_health
+from lu_machinery.review.bench_health import AUTHOR_FAMILIES, check_bench_health, main
+from lu_machinery.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     ResolverInputs,
     evaluate_candidate,
     resolve_reviewer,
 )
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 # The runtime-attested Cursor Grok seat excludes xAI and Moonshot authors.

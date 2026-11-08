@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.fleet_comms.cli import (
+from lu_machinery.fleet_comms.cli import (
     fleet_progress_payload,
 )
 

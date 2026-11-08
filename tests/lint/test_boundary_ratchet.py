@@ -8,8 +8,7 @@ import sys
 from pathlib import Path
 
 import yaml
-
-from scripts.lint.boundary_ratchet import (
+from lu_machinery.lint.boundary_ratchet import (
     collect_import_counts,
     evaluate,
     load_config,
@@ -115,13 +114,13 @@ def test_population_report_counts_each_edge_kind(tmp_path: Path) -> None:
                 "except ImportError:\n"
                 "    guarded = None\n"
                 "\n"
-                "import scripts.common.helper\n"
+                "import lu_machinery.common.helper\n"
             ),
             "prod/__init__.py": "",
             "prod/only_alias.py": "VALUE = 1\n",
             "prod/guarded.py": "GUARDED = 1\n",
             "prod/loaded.py": "LOADED = 1\n",
-            "prod/callback.py": "import scripts.mach.a\nimport scripts.common.helper\n",
+            "prod/callback.py": "import scripts.mach.a\nimport lu_machinery.common.helper\n",
             "side/__init__.py": "",
             "side/leaf.py": "LEAF = 1\n",
             "common/__init__.py": "",
@@ -174,18 +173,18 @@ def test_population_report_counts_each_configured_caller_once(tmp_path: Path) ->
         {
             "ops/product_entry.py": helper,
             "mach/hooks.py": (
-                "from scripts.ops.product_entry import load_configured_module as load\n"
-                "import scripts.ops.product_entry as entry\n"
+                "from lu_machinery.ops.product_entry import load_configured_module as load\n"
+                "import lu_machinery.ops.product_entry as entry\n"
                 "\n"
                 "first = load(config['first'])\n"
                 "second = entry.load_configured_module(name=config['second'])\n"
             ),
-            "mach/plain.py": "from scripts.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
+            "mach/plain.py": "from lu_machinery.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
             "mach/other.py": "import importlib\n\nimportlib.import_module(a)\nimportlib.import_module(b)\n",
             "mach/literal.py": "from scripts.ops import product_entry\nproduct_entry.load_configured_module('scripts.prod.widget')\n",
             "prod/__init__.py": "",
             "prod/widget.py": "W = 1\n",
-            "prod/caller.py": "from scripts.ops.product_entry import load_configured_module as load\nload(x)\nload(y)\n",
+            "prod/caller.py": "from lu_machinery.ops.product_entry import load_configured_module as load\nload(x)\nload(y)\n",
         },
         {"mach": "machinery", "ops": "machinery", "prod": "product"},
     )
@@ -207,11 +206,11 @@ def test_configured_alias_keeps_scanner_parity(tmp_path: Path) -> None:
         {
             "mach/mixed.py": (
                 "def run():\n    from runpy import run_path as load\n    load('scripts/prod/runner.py')\n\n"
-                "def hooks():\n    from scripts.ops.product_entry import load_configured_module as load\n"
+                "def hooks():\n    from lu_machinery.ops.product_entry import load_configured_module as load\n"
                 "    load('scripts.prod.widget')\n"
             ),
             "mach/renamed.py": (
-                "from scripts.ops.product_entry import load_configured_module as run_module\n"
+                "from lu_machinery.ops.product_entry import load_configured_module as run_module\n"
                 "run_module(name='scripts.prod.widget')\n"
             ),
             "prod/__init__.py": "",
@@ -284,7 +283,7 @@ def _ratchet(root: Path, baseline: Path, config: Path) -> subprocess.CompletedPr
         [
             sys.executable,
             "-m",
-            "scripts.lint.boundary_ratchet",
+            "lu_machinery.lint.boundary_ratchet",
             "--root",
             str(root),
             "--baseline",

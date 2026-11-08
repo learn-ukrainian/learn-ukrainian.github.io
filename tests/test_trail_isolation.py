@@ -13,15 +13,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime import trail_isolation
-from agent_runtime.adapters.glm import GlmAdapter
-from agent_runtime.adapters.grok_build import GrokBuildAdapter
-from agent_runtime.adapters.kimi import KimiAdapter
-from agent_runtime.adapters.kimicc import KimiccHarness
-from agent_runtime.runner import invoke
-from agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
-from scripts.common.repo_root import project_interpreter
-from scripts.orchestration.trails import trail_mcp
+from lu_machinery.agent_runtime import trail_isolation
+from lu_machinery.agent_runtime.adapters.glm import GlmAdapter
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.adapters.kimi import KimiAdapter
+from lu_machinery.agent_runtime.adapters.kimicc import KimiccHarness
+from lu_machinery.agent_runtime.runner import invoke
+from lu_machinery.agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.orchestration.trails import trail_mcp
+
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 FAKE_GROK = "/usr/local/bin/grok"
@@ -59,7 +60,7 @@ def test_mcp_tools_only_call_fixed_p3_runner_verbs() -> None:
         "error": None,
     }
     completed = subprocess.CompletedProcess([], 0, stdout=json.dumps(payload), stderr="")
-    with patch("scripts.orchestration.trails.trail_mcp.subprocess.run", return_value=completed) as run:
+    with patch("lu_machinery.orchestration.trails.trail_mcp.subprocess.run", return_value=completed) as run:
         assert trail_mcp.trail_status("run-123") == payload
         assert trail_mcp.trail_step("run-123", "check") == payload
         assert trail_mcp.trail_summon("run-123") == payload
@@ -82,7 +83,7 @@ def test_grok_profile_has_one_private_server_and_exact_allowlist() -> None:
         assert config["mcpServers"]["trail"]["command"] == str(project_interpreter())
         assert launch.tool_config["allowed_tools"].split(",") == list(trail_isolation.GROK_TRAIL_TOOLS)
 
-        with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+        with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
             plan = GrokBuildAdapter().build_invocation(
                 prompt="Run the trail.",
                 mode="read-only",
@@ -133,7 +134,7 @@ def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harne
     extra = {"harness": harness} if harness else {}
     with pytest.raises(TrailIsolationError, match="KIMI CODING-ONLY"):
         _prepared_profile("kimi", **extra)
-    with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
+    with patch("lu_machinery.agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
             invoke("kimi", "Run the trail.", tool_config={"trail_isolation": True, **extra})
     # Admitted coding work (owned, Cyrillic-free paths) still refuses a trail session.
@@ -154,7 +155,7 @@ def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harne
 
 @pytest.mark.parametrize("adapter", ["glm", "claude"])
 def test_unproven_adapters_refuse_before_runner_loads_them(adapter: str) -> None:
-    with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
+    with patch("lu_machinery.agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(TrailIsolationError, match="trail isolation refused"):
             invoke(adapter, "Run the trail.", tool_config={"trail_isolation": True})
 

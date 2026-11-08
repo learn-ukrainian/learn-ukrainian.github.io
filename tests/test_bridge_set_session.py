@@ -15,7 +15,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge._db import (
+from lu_machinery.ai_agent_bridge._db import (
     get_session,
     init_db,
     set_session,
@@ -26,7 +26,7 @@ from scripts.ai_agent_bridge._db import (
 def bridge_db(tmp_path):
     """Use a temporary broker DB so tests never touch the real one."""
     db_path = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
+    with patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_path):
         conn = init_db()
         conn.close()
         yield db_path

@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 
 def _write_transcript(path: Path) -> None:

@@ -16,11 +16,10 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.common import repo_root as rr
-from scripts.dispatcher import primary as dispatcher_primary
-from scripts.lib import rules_core
-from scripts.orchestration import worktree_claims, worktree_git
+from lu_machinery.common import repo_root as rr
+from lu_machinery.dispatcher import primary as dispatcher_primary
+from lu_machinery.lib import rules_core
+from lu_machinery.orchestration import worktree_claims, worktree_git
 
 REPO = Path(__file__).resolve().parents[2]
 UNIT = REPO / "packaging" / "systemd" / "learn-ukrainian-project-state-reporter.service"
@@ -54,11 +53,11 @@ def _import_time_roots(env: dict[str, str]) -> dict[str, str]:
     """Roots that consumers bind at import time, read in a fresh interpreter."""
     code = (
         "import json\n"
-        "from scripts.ai_agent_bridge import _dispatch_wrappers as bridge\n"
-        "from scripts.common.task_store_paths import tasks_dir\n"
-        "from scripts.dispatcher import git\n"
-        "from scripts.orchestration.task_identity import DEFAULT_REPOSITORY\n"
-        "from scripts.review import integration_check\n"
+        "from lu_machinery.ai_agent_bridge import _dispatch_wrappers as bridge\n"
+        "from lu_machinery.common.task_store_paths import tasks_dir\n"
+        "from lu_machinery.dispatcher import git\n"
+        "from lu_machinery.orchestration.task_identity import DEFAULT_REPOSITORY\n"
+        "from lu_machinery.review import integration_check\n"
         "repos = {key: git.resolve_repo(key) for key in ('public', 'kube-dojo')}\n"
         "print(json.dumps({**{key: str(path) for key, (path, _) in repos.items()},\n"
         "                  'github': {key: item['github'] for key, (_, item) in repos.items()},\n"
@@ -194,9 +193,8 @@ def _systemd_home(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def api_client():
+    import lu_machinery.api.main as api_main
     from fastapi.testclient import TestClient
-
-    import scripts.api.main as api_main
 
     return TestClient(api_main.app, raise_server_exceptions=False)
 

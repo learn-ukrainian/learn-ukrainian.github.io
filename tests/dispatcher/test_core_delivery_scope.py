@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import git, worker
+from lu_machinery.dispatcher.types import TaskSpec
 
-from scripts.dispatcher import git, worker
-from scripts.dispatcher.types import TaskSpec
 from tests.dispatcher.conftest import run_git
 
 

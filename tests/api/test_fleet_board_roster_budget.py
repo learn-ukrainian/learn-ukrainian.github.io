@@ -9,13 +9,12 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
-
-from scripts.api import state_router
-from scripts.api.fleet_board import budget as budget_mod
-from scripts.api.fleet_board import roster as roster_mod
-from scripts.api.fleet_board import router as board_routes
-from scripts.api.monitor_context import fixture_context
-from scripts.api.subscription_usage import compute_usage_pace
+from lu_machinery.api import state_router
+from lu_machinery.api.fleet_board import budget as budget_mod
+from lu_machinery.api.fleet_board import roster as roster_mod
+from lu_machinery.api.fleet_board import router as board_routes
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.subscription_usage import compute_usage_pace
 
 NOW = datetime(2026, 10, 9, 9, 0, tzinfo=UTC)
 STAMP = "2026-10-09T09:00:00Z"

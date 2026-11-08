@@ -18,11 +18,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import yaml
+from lu_machinery.common.scratch import ensure_scratch_root
 
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_verify as verifier
-from scripts.common.scratch import ensure_scratch_root
 
 W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
 # Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.

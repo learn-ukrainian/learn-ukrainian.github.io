@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from scripts.orchestration import plane_tunnel_gate as gate
+from lu_machinery.orchestration import plane_tunnel_gate as gate
 
 
 class _Resp:

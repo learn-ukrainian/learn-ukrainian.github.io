@@ -15,10 +15,11 @@ from contextlib import closing
 from contextvars import Context
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+
 from scripts.atlas import word_card_certification as cert
 from scripts.atlas import word_card_golden_set as gold
 from scripts.atlas.word_card_assembly import require_host_only
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 IMPLEMENTATION_PATHS = cert.IMPLEMENTATION_PATHS

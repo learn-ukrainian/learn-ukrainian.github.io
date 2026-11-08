@@ -24,9 +24,9 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.adapters.claude import popen_headless_claude
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.agent_runtime.adapters.claude import popen_headless_claude
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.repo_root import project_interpreter
 
 from .mcp_proxy import REFERENCE_TOOLS
 

@@ -7,13 +7,12 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
-from scripts.api.resilience import (
+from lu_machinery.api.resilience import (
     connect_sqlite,
     get_resilience_snapshot,
     reset_resilience_stats_for_tests,
 )
-from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused
+from lu_machinery.lib.readonly_sqlite import CorpusDatabaseWriteRefused
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,7 +54,7 @@ def test_connect_sqlite_refuses_writable_corpus_databases(tmp_path):
 
 
 def test_declared_writer_may_open_sources_db_through_connect_sqlite(tmp_path, monkeypatch):
-    from scripts.lib import readonly_sqlite
+    from lu_machinery.lib import readonly_sqlite
 
     monkeypatch.setattr(
         readonly_sqlite,

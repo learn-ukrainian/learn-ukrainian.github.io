@@ -8,8 +8,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.tools import detach_session_task
+from lu_machinery.tools import detach_session_task
 
 
 def _wait_for_text(path: Path, expected: str) -> None:

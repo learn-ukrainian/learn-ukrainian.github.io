@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 
 
 @pytest.mark.parametrize("slug", ["infra-10420-task-summary-finalize", "ask-codex-review", "risk-review-1", "plain"])
@@ -231,8 +231,8 @@ def test_short_glued_prefix_fragments_keep_process_path(prefix, body, override):
 @pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])
 @pytest.mark.parametrize("override", [False, True])
 def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, provider, override):
-    import agent_runtime.agent_github_identity as identity
-    import agent_runtime.env_sanitize as env_sanitize
+    import lu_machinery.agent_runtime.agent_github_identity as identity
+    import lu_machinery.agent_runtime.env_sanitize as env_sanitize
 
     monkeypatch.setattr(env_sanitize, "_isolated_git_env", lambda *args, **kwargs: {})
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
@@ -504,29 +504,29 @@ def test_build_agent_env_keeps_only_the_dispatch_cap_plugin() -> None:
         "PATH": "/usr/bin",
         "HOME": "/Users/example",
         "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "impl-8645-b",
-        "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+        "PYTEST_PLUGINS": "lu_machinery.ci.pytest_dispatch_cap",
     }
     with patch.dict("os.environ", parent, clear=True):
         kept = build_agent_env(provider="codex")
 
-    assert kept["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+    assert kept["PYTEST_PLUGINS"] == "lu_machinery.ci.pytest_dispatch_cap"
     assert kept["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "impl-8645-b"
 
     with patch.dict(
         "os.environ",
-        {**parent, "PYTEST_PLUGINS": "already.loaded,ci.pytest_dispatch_cap,evil.inject"},
+        {**parent, "PYTEST_PLUGINS": "already.loaded,lu_machinery.ci.pytest_dispatch_cap,evil.inject"},
         clear=True,
     ):
         stripped = build_agent_env(provider="claude")
 
-    assert stripped["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+    assert stripped["PYTEST_PLUGINS"] == "lu_machinery.ci.pytest_dispatch_cap"
 
     with patch.dict(
         "os.environ",
         {
             "PATH": "/usr/bin",
             "HOME": "/Users/example",
-            "PYTEST_PLUGINS": "ci.pytest_dispatch_cap,evil.inject",
+            "PYTEST_PLUGINS": "lu_machinery.ci.pytest_dispatch_cap,evil.inject",
         },
         clear=True,
     ):
@@ -554,7 +554,7 @@ def test_build_agent_env_keeps_only_the_cap_plugins_scripts_dir(tmp_path) -> Non
         "PATH": "/usr/bin",
         "HOME": "/Users/example",
         "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "impl-8795-b",
-        "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+        "PYTEST_PLUGINS": "lu_machinery.ci.pytest_dispatch_cap",
         "PYTHONPATH": os.pathsep.join([str(unrelated), str(real_scripts)]),
     }
     with patch.dict("os.environ", parent, clear=True):
@@ -572,7 +572,7 @@ def test_build_agent_env_keeps_only_the_cap_plugins_scripts_dir(tmp_path) -> Non
         {
             "PATH": "/usr/bin",
             "HOME": "/Users/example",
-            "PYTEST_PLUGINS": "ci.pytest_dispatch_cap",
+            "PYTEST_PLUGINS": "lu_machinery.ci.pytest_dispatch_cap",
             "PYTHONPATH": str(real_scripts),
         },
         clear=True,
@@ -653,7 +653,7 @@ def _fail_unset(key: str, original):
 )
 def test_a_kimi_seat_is_refused_when_credential_isolation_cannot_be_established(tmp_path, monkeypatch, failure):
     """Kimi never gets a partially isolated environment: no temp GH_CONFIG_DIR or config reset, no launch."""
-    import agent_runtime.env_sanitize as env_sanitize
+    import lu_machinery.agent_runtime.env_sanitize as env_sanitize
 
     made: list[str] = []
     real_mkdtemp = env_sanitize.tempfile.mkdtemp
@@ -678,7 +678,7 @@ def test_a_kimi_seat_is_refused_when_credential_isolation_cannot_be_established(
 
 
 def test_other_seats_keep_the_isolation_fallback(tmp_path, monkeypatch):
-    import agent_runtime.env_sanitize as env_sanitize
+    import lu_machinery.agent_runtime.env_sanitize as env_sanitize
 
     monkeypatch.setattr(env_sanitize.tempfile, "mkdtemp", _fail_mkdtemp)
     with patch.dict("os.environ", _kimi_isolation_env(tmp_path), clear=True):

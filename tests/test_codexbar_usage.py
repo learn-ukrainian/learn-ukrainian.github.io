@@ -11,19 +11,18 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.api import codexbar_usage as codexbar_usage_mod
-from scripts.api import state_router
-from scripts.api import subscription_usage as subscription_usage_mod
-from scripts.api.codexbar_usage import _normalize_provider_data
-from scripts.api.state_helpers import cache_invalidate
-from scripts.api.subscription_usage import (
+from lu_machinery.api import codexbar_usage as codexbar_usage_mod
+from lu_machinery.api import state_router
+from lu_machinery.api import subscription_usage as subscription_usage_mod
+from lu_machinery.api.codexbar_usage import _normalize_provider_data
+from lu_machinery.api.state_helpers import cache_invalidate
+from lu_machinery.api.subscription_usage import (
     compute_usage_pace,
     format_usage_pace_summary,
     pace_is_deficit,
     pace_is_visible,
 )
-from scripts.telemetry.cost_report import CostRecord
+from lu_machinery.telemetry.cost_report import CostRecord
 
 
 def _fake_private(monkeypatch, outcome=None, *, api_account=None):
@@ -971,7 +970,7 @@ def test_timeout_failure_kind_maps_to_fail_open_reviewer_status():
     operator note 2026-08-03: 'red probe must not ban CF lanes'): a CLI timeout
     must produce status='unavailable', which reviewer_resolver treats as missing
     evidence, never as a dead/unhealthy lane."""
-    from scripts.review.reviewer_resolver import _HEALTH_ALIASES
+    from lu_machinery.review.reviewer_resolver import _HEALTH_ALIASES
 
     timeout_result = codexbar_usage_mod._normalize_provider_error(
         "claude",
@@ -1201,7 +1200,7 @@ def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
 def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
     """NEED_LOGIN must re-probe quickly, not squat as "fresh" for the full
     10-minute CURSOR_CACHE_TTL_S — and a later successful probe replaces it."""
-    from scripts.api import state_helpers as state_helpers_mod
+    from lu_machinery.api import state_helpers as state_helpers_mod
 
     subscription_usage_mod._reset_cursor_usage_state_for_tests()
     monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
@@ -1654,7 +1653,7 @@ def test_codex_private_weekly_window_keeps_weekly_pace(monkeypatch):
 
 
 def test_agy_nonzero_exit_does_not_leak_stdout_stderr(monkeypatch, tmp_path):
-    from scripts.api import subscription_usage as su
+    from lu_machinery.api import subscription_usage as su
 
     marker = "PRIVATE_TOKEN_SHOULD_NOT_ESCAPE"
     fake_bin = tmp_path / "agy"
@@ -1681,7 +1680,7 @@ def test_agy_nonzero_exit_does_not_leak_stdout_stderr(monkeypatch, tmp_path):
 def test_compute_usage_pace_rejects_expired_and_out_of_window():
     from datetime import UTC, datetime, timedelta
 
-    from scripts.api.subscription_usage import compute_usage_pace
+    from lu_machinery.api.subscription_usage import compute_usage_pace
 
     now = datetime(2026, 9, 15, 12, 0, 0, tzinfo=UTC)
     assert compute_usage_pace(25.0, (now - timedelta(seconds=1)).isoformat(), window_minutes=300, now=now) is None
@@ -2915,7 +2914,7 @@ def test_expired_codex_token_marks_only_that_account_unavailable(two_codex_accou
 
 @pytest.fixture
 def private_binding(tmp_path, monkeypatch):
-    from scripts.opsec import prepublish
+    from lu_machinery.opsec import prepublish
 
     monkeypatch.setattr(prepublish, "primary_root", lambda: tmp_path / "public")
     monkeypatch.setattr(prepublish, "catalog", lambda: {"infra-private": {"local_name": "private"}})

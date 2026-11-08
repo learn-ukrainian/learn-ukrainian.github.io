@@ -47,8 +47,8 @@ def test_publisher_sandbox_imports_merge_guard_in_isolation(gh_shim_sandbox):
         [
             sys.executable,
             "-c",
-            "from scripts.publish.merge_guard import ensure_merge_ready; "
-            "from scripts.ci.advisory_checks import load_advisory_checks; "
+            "from lu_machinery.publish.merge_guard import ensure_merge_ready; "
+            "from lu_machinery.ci.advisory_checks import load_advisory_checks; "
             "assert load_advisory_checks().reason is None",
         ],
         cwd=root,

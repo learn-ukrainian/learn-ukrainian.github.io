@@ -7,11 +7,11 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.publish import github as pub
+from lu_machinery.review.record_cf_verdict import build_comment
 
-from scripts.opsec import prepublish as gate
-from scripts.orchestration import integration_sweep as sweep
-from scripts.publish import github as pub
-from scripts.review.record_cf_verdict import build_comment
 from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG
 

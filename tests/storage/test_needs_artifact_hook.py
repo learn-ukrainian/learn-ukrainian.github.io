@@ -5,8 +5,8 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.storage import paths
 
-from scripts.storage import paths
 from tests import conftest
 
 

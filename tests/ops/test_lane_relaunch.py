@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.ops import context_guard as cg
+from lu_machinery.ops import lane_relaunch as lr
+from lu_machinery.ops.driver_lanes import PANE_SCRIPT, Registry, load_local_config, load_registry
 
-from scripts.ops import context_guard as cg
-from scripts.ops import lane_relaunch as lr
-from scripts.ops.driver_lanes import PANE_SCRIPT, Registry, load_local_config, load_registry
 from tests.ops._fake_tmux import FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]

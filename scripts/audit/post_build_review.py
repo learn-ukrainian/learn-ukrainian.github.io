@@ -33,15 +33,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.jsonl import physical_lines
-from scripts.common.repo_root import main_checkout_root
-from scripts.level_config import base_level, resolve_content_track
-from scripts.orchestration.prompt_contracts import (
+from lu_machinery.common.jsonl import physical_lines
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
     reject_stale_track_keys,
     resolve_profile_selectors,
 )
+
+from scripts.level_config import base_level, resolve_content_track
 from scripts.verification.vesum import verify_words
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -110,7 +111,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

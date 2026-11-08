@@ -18,8 +18,8 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 import yaml
+from lu_machinery.hygiene import remote_branch_cleanup as m
 
-from scripts.hygiene import remote_branch_cleanup as m
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -1048,5 +1048,5 @@ def test_workflow_default_source_shared_entrypoint_and_permissions():
     assert invocations[0]["run"].splitlines() == [
         'git remote set-url origin "https://github.com/$REPO.git"',
         'git remote set-url --push origin "https://github.com/$REPO.git"',
-        'python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"',
+        'python -m lu_machinery.hygiene.remote_branch_cleanup --repo "$REPO"',
     ]

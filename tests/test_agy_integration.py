@@ -39,13 +39,13 @@ def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     siblings — inherits isolation without reintroducing the leak.
     """
     _ensure_scripts_path()
-    from scripts.ai_agent_bridge import _config, _db
+    from lu_machinery.ai_agent_bridge import _config, _db
 
     db_path = tmp_path / "bridge.db"
     monkeypatch.setattr(_config, "DB_PATH", db_path)
     monkeypatch.setattr(_db, "DB_PATH", db_path)
     monkeypatch.setattr(
-        "scripts.fleet_comms.artifacts.default_plane_root",
+        "lu_machinery.fleet_comms.artifacts.default_plane_root",
         lambda **_kwargs: tmp_path / "authority-plane",
     )
     return db_path
@@ -55,7 +55,7 @@ def _isolate_bridge_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
 def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
     """Stub channel I/O for discuss tests; relies on ``_isolate_bridge_db_path``."""
     _ensure_scripts_path()
-    from scripts.ai_agent_bridge import _channels
+    from lu_machinery.ai_agent_bridge import _channels
 
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
@@ -70,7 +70,7 @@ def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_delegate_dispatch_accepts_agy_agent(tmp_path, monkeypatch, capsys):
     """The v2 parser and dry-run accept AGY regardless of checkout refs."""
-    from scripts.dispatcher import cli, git
+    from lu_machinery.dispatcher import cli, git
 
     task_id = f"test-agy-argparse-probe-{uuid.uuid4().hex}"
     monkeypatch.setattr(
@@ -108,7 +108,7 @@ def test_delegate_dispatch_accepts_agy_agent(tmp_path, monkeypatch, capsys):
 def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkeypatch):
     """ACP discussion accepts Agy as one member of a bounded participant set."""
     _ensure_scripts_path()
-    from scripts.ai_agent_bridge import _channels_cli
+    from lu_machinery.ai_agent_bridge import _channels_cli
 
     observed: dict[str, object] = {}
 
@@ -121,7 +121,7 @@ def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkey
             "synthesis": "ACP synthesis",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     args = SimpleNamespace(
         channel="agy-topic",
@@ -141,7 +141,7 @@ def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkey
 def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch):
     """The registered Agy ACP model pin reaches the durable controller."""
     _ensure_scripts_path()
-    from scripts.ai_agent_bridge import _channels_cli
+    from lu_machinery.ai_agent_bridge import _channels_cli
 
     observed: dict[str, object] = {}
 
@@ -154,7 +154,7 @@ def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch)
             "synthesis": "ACP synthesis",
         }
 
-    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fake_discussion)
+    monkeypatch.setattr("lu_machinery.agent_runtime.acpx_discuss.run_discussion", fake_discussion)
 
     args = SimpleNamespace(
         channel="agy-topic",

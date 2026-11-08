@@ -1,8 +1,7 @@
 """Literal status-token corpus, including identifiers, decimals and markers."""
 
 import pytest
-
-from scripts.common.http_status import has_http_status
+from lu_machinery.common.http_status import has_http_status
 
 CODES = (401, 403, 404, 429, 500, 502, 503, 504, 599)
 NONCES = (
@@ -69,7 +68,7 @@ def test_tail_keeps_original_token_context(text, start, expected):
 
 
 def test_both_helper_import_styles():
-    from common.http_status import has_http_status as cli_match
+    from lu_machinery.common.http_status import has_http_status as cli_match
 
     assert cli_match("HTTP503", (503,)) is True
     assert cli_match("ab503cd", (503,)) is False

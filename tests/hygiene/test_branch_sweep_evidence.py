@@ -9,9 +9,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import branch_sweep as sweep
-from scripts.orchestration.worktree_git import PullRequestState
+from lu_machinery.hygiene import branch_sweep as sweep
+from lu_machinery.orchestration.worktree_git import PullRequestState
 
 
 def git(repo: Path, *args: str) -> str:
@@ -751,7 +750,7 @@ def test_timeline_parser_refuses_unreadable_payloads() -> None:
 
 
 def test_issue_read_disables_forced_color(monkeypatch: pytest.MonkeyPatch, github_transport) -> None:
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     monkeypatch.setenv("CLICOLOR_FORCE", "1")
     monkeypatch.setenv("FORCE_COLOR", "1")

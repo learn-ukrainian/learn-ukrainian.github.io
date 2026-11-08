@@ -8,10 +8,9 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-
-from scripts.api import state_router
-from scripts.api import subscription_usage as probes
-from scripts.fleet import usage
+from lu_machinery.api import state_router
+from lu_machinery.api import subscription_usage as probes
+from lu_machinery.fleet import usage
 
 CREDIT = 37.5
 _MISSING = object()

@@ -8,12 +8,13 @@ from typing import Any
 
 import pytest
 import yaml
+from lu_machinery.orchestration.trails.closure import TrailClosureGate
+from lu_machinery.orchestration.trails.executor import TrailExecutor
+from lu_machinery.orchestration.trails.models import CommandExecution, ExitClass
+from lu_machinery.orchestration.trails.store import TrailStore
+from lu_machinery.orchestration.validate_trailspec import validate_trailspec
 
-from scripts.orchestration.trails.closure import TrailClosureGate
-from scripts.orchestration.trails.executor import TrailExecutor
-from scripts.orchestration.trails.models import CommandExecution, ExitClass
-from scripts.orchestration.trails.store import TrailStore
-from scripts.orchestration.validate_trailspec import PROJECT_ROOT, validate_trailspec
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RB5_PATH = PROJECT_ROOT / "scripts/config/trails/rb5-session-close.trail.yaml"
 

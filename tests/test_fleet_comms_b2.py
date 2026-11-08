@@ -11,13 +11,12 @@ import json
 from typing import Any
 
 import pytest
-
-from scripts.fleet_comms.adapter_conformance import (
+from lu_machinery.fleet_comms.adapter_conformance import (
     CaptureInput,
     conform,
     raw_capture_matches,
 )
-from scripts.fleet_comms.contracts import CompletionState
+from lu_machinery.fleet_comms.contracts import CompletionState
 
 B2_ADAPTERS = ("grok", "kimi", "cursor", "opencode")
 

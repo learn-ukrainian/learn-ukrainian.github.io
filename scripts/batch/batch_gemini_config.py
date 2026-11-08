@@ -11,9 +11,9 @@ from pathlib import Path
 import yaml
 
 try:
-    from common.repo_root import project_interpreter
+    from lu_machinery.common.repo_root import project_interpreter
 except ImportError:  # repo root on path, scripts/ is not
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.common.repo_root import project_interpreter
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug

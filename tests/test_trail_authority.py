@@ -8,15 +8,14 @@ from typing import Any
 
 import pytest
 import yaml
-
-from scripts.orchestration.trails import authority as authority_module
-from scripts.orchestration.trails.authority import (
+from lu_machinery.orchestration.trails import authority as authority_module
+from lu_machinery.orchestration.trails.authority import (
     ApprovedAuthorityReceiptResolver,
     AuthorityReceiptError,
 )
-from scripts.orchestration.trails.executor import TrailExecutor, TrailPredicatesDecisionTableEvaluator
-from scripts.orchestration.trails.models import CommandExecution, DeviationRefusedError, ExitClass
-from scripts.orchestration.trails.store import TrailStore
+from lu_machinery.orchestration.trails.executor import TrailExecutor, TrailPredicatesDecisionTableEvaluator
+from lu_machinery.orchestration.trails.models import CommandExecution, DeviationRefusedError, ExitClass
+from lu_machinery.orchestration.trails.store import TrailStore
 
 
 def _trail(*, terminal: bool = False) -> dict[str, Any]:

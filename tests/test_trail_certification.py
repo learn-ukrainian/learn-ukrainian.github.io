@@ -8,10 +8,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration.trails import trail_certification as certification_module
-from scripts.orchestration.trails.models import CommandExecution, ExitClass
-from scripts.orchestration.trails.trail_certification import (
+from lu_machinery.orchestration.trails import trail_certification as certification_module
+from lu_machinery.orchestration.trails.models import CommandExecution, ExitClass
+from lu_machinery.orchestration.trails.trail_certification import (
     CaseExpectation,
     CertificationCase,
     CertificationSubject,

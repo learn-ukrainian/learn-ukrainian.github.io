@@ -15,8 +15,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import test_slots
 
-from scripts.common import test_slots
 from tests.wait_helpers import wait_for_line
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -101,7 +101,7 @@ def _start(tmp_path: Path, name: str, requested: int, *, ending: str = "release"
 
 def _launch(*command: str, timeout: float = 60, **env: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "scripts.common.test_slots", *command],
+        [sys.executable, "-m", "lu_machinery.common.test_slots", *command],
         cwd=REPO_ROOT,
         env=_child_env(**env),
         capture_output=True,
@@ -555,7 +555,7 @@ def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch:
     elif case == "ci":
         monkeypatch.delenv(test_slots.ENABLE_ENV)
         extra["CI"] = "true"
-    entry = [str(REPO_ROOT / "scripts/common/test_slots.py")] if direct else ["-m", "scripts.common.test_slots"]
+    entry = [str(REPO_ROOT / "scripts/common/test_slots.py")] if direct else ["-m", "lu_machinery.common.test_slots"]
     result = subprocess.run(
         [sys.executable, *entry, "run", "--", sys.executable, "-c", source],
         cwd=REPO_ROOT,
@@ -620,7 +620,7 @@ def test_launcher_never_raises_an_existing_auto_worker_cap(
 
 def test_launcher_holds_slots_for_the_command_and_passes_its_exit_code() -> None:
     probe = (
-        "import sys; from scripts.common import test_slots; report = test_slots.status(); "
+        "import sys; from lu_machinery.common import test_slots; report = test_slots.status(); "
         "print(report['slots_in_use'], report['holders'][0]['kind']); sys.exit(3)"
     )
     result = _launch("run", "--slots", "2", "--", sys.executable, "-c", probe)
@@ -652,7 +652,7 @@ def test_two_concurrent_wrapped_runs_never_exceed_the_pool(tmp_path: Path, size:
         """
     )
     first, second = tmp_path / "first", tmp_path / "second"
-    wrapped = [sys.executable, "-m", "scripts.common.test_slots", "run", "--", sys.executable, "-c", probe]
+    wrapped = [sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--", sys.executable, "-c", probe]
     runs = [
         subprocess.Popen(
             [*wrapped, str(own), str(other), "-n", "2"],
@@ -678,7 +678,7 @@ def test_a_nested_launch_runs_inside_its_holders_slots() -> None:
     nested = [
         sys.executable,
         "-m",
-        "scripts.common.test_slots",
+        "lu_machinery.common.test_slots",
         "run",
         "--",
         sys.executable,

@@ -5,8 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import pool_headroom
+from lu_machinery.orchestration import pool_headroom
 
 _GIB = 1024**3
 

@@ -13,8 +13,8 @@ from unittest.mock import Mock
 
 import pytest
 import yaml
+from lu_machinery.dispatcher import git, worker
 
-from scripts.dispatcher import git, worker
 from tests.dispatcher.worker_reap import Reaper, reap_root
 
 DOCTOR_NOT_FETCHED = "Managed settings (remote): not fetched — requires an Enterprise or Team subscription"
@@ -191,7 +191,7 @@ def sandbox(tmp_path, hermetic_monitor):
 
     def sweep():
         result = subprocess.run(
-            [sys.executable, "-c", "from scripts.dispatcher.worker import settle_left_worktrees; settle_left_worktrees()"],
+            [sys.executable, "-c", "from lu_machinery.dispatcher.worker import settle_left_worktrees; settle_left_worktrees()"],
             cwd=repo, env=env, text=True, capture_output=True, timeout=30,
         )
         assert result.returncode == 0, (result.stdout, result.stderr)
@@ -265,7 +265,7 @@ def delivery_settle(sandbox):
         path.write_text(json.dumps(record))
         subprocess.run([
             sys.executable, "-c", "import sys; from pathlib import Path; "
-            "from scripts.dispatcher.worker import supervise; "
+            "from lu_machinery.dispatcher.worker import supervise; "
             "supervise(Path(sys.argv[1]), {}, 0.2 if sys.argv[2] == 'blocked' else 10)", str(path), model,
         ], cwd=sandbox.repo, env=sandbox.env, check=True, timeout=30)
         return json.loads(path.read_text())
@@ -275,8 +275,8 @@ def delivery_settle(sandbox):
 @pytest.fixture
 def merged_delivery_world(tmp_path, monkeypatch):
     """A write task whose branch cannot show its delivery, with a scripted GitHub and ownership ledger."""
-    from scripts.common import github_client
-    from scripts.orchestration import pr_ownership
+    from lu_machinery.common import github_client
+    from lu_machinery.orchestration import pr_ownership
 
     world = SimpleNamespace(
         prs={}, files={}, listed=[], published=(None, True), lookup_error=None,

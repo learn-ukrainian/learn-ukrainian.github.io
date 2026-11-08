@@ -4,7 +4,7 @@ import plistlib
 from pathlib import Path
 from types import SimpleNamespace
 
-from scripts.orchestration import install_worktree_cleanup_launchd as launchd
+from lu_machinery.orchestration import install_worktree_cleanup_launchd as launchd
 
 
 def test_rendered_plist_runs_both_repositories_every_four_hours(

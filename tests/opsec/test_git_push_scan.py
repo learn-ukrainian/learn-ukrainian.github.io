@@ -21,9 +21,9 @@ import zlib
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import git_push
+from lu_machinery.opsec import prepublish as gate
 
-from scripts.opsec import git_push
-from scripts.opsec import prepublish as gate
 from tests.opsec_fixtures import (
     CATALOG,
     MATCHER,

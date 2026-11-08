@@ -6,9 +6,8 @@ from copy import deepcopy
 from datetime import UTC, datetime
 
 import pytest
-
-from scripts.api import state_router
-from scripts.fleet import capacity_pick
+from lu_machinery.api import state_router
+from lu_machinery.fleet import capacity_pick
 
 NOW = datetime(2026, 10, 9, 12, tzinfo=UTC)
 

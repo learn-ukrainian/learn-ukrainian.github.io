@@ -1,4 +1,4 @@
-"""Tests for scripts.fleet.driver_breadth_report."""
+"""Tests for lu_machinery.fleet.driver_breadth_report."""
 
 from __future__ import annotations
 
@@ -7,8 +7,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet.driver_breadth_report import (
+from lu_machinery.fleet.driver_breadth_report import (
     _parse_ts,
     _tier_for,
     build_report,

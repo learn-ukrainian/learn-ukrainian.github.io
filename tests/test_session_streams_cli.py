@@ -4,10 +4,10 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from agents_extensions.shared.session_streams.cli import build_parser, main
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from lu_machinery.session_streams.cli import build_parser, main
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import EntryType, LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
 NOW = datetime(2026, 7, 18, 12, 0, tzinfo=UTC)
 

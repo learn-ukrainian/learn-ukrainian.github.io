@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-
-from scripts.fleet import hramatka_scope_gate as gate
+from lu_machinery.fleet import hramatka_scope_gate as gate
 
 PUBLIC = gate.PUBLIC_REPOSITORY
 PRIVATE = gate.PRIVATE_REPOSITORY
@@ -257,7 +256,7 @@ def test_issue_refs_reject_unqualified_or_nonpositive_identifiers() -> None:
 
 
 def test_gh_reader_uses_the_repo_qualified_rest_target(github_transport) -> None:
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     def transport(method, endpoint, headers, body, timeout):
         assert method == "GET" and body is None
@@ -281,7 +280,7 @@ def test_gh_reader_uses_the_repo_qualified_rest_target(github_transport) -> None
 
 
 def test_gh_reader_hides_private_api_errors_and_treats_malformed_output_as_unknown(github_transport) -> None:
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     github_transport(lambda *args: Response(503, {}, b'{"message":"private issue title: sensitive"}'))
     with pytest.raises(gate.IssueLookupUnavailable) as nonzero_error:

@@ -10,8 +10,8 @@ import subprocess
 import time
 
 import pytest
+from lu_machinery.guardrails import delegate_ownership as ownership
 
-from scripts.guardrails import delegate_ownership as ownership
 from tests.test_delegate_ownership_relaxation import FakeTime
 
 PID = os.getpid()

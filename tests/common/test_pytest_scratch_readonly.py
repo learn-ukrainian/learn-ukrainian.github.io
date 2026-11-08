@@ -22,9 +22,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.common import pytest_scratch, task_scratch
-from scripts.common.task_scratch import TaskScratchError
+from lu_machinery.common import pytest_scratch, task_scratch
+from lu_machinery.common.task_scratch import TaskScratchError
 
 REPO = Path(__file__).resolve().parents[2]
 _WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
@@ -1005,9 +1004,9 @@ def test_real_pytest_on_readonly_shared_root_runs_to_completion(tmp_path):
     )
     (suite / "conftest.py").write_text(
         f"import sys\nfrom pathlib import Path\nsys.path.insert(0, {str(REPO)!r})\n{shim}"
-        "import scripts.common.pytest_scratch as plugin\n"
+        "import lu_machinery.common.pytest_scratch as plugin\n"
         f"plugin.SHARED_MEMORY_TEMP = Path({str(shm)!r})\n"
-        'pytest_plugins = ["scripts.common.pytest_scratch"]\n'
+        'pytest_plugins = ["lu_machinery.common.pytest_scratch"]\n'
     )
     (suite / "test_child.py").write_text(f"""
 import os

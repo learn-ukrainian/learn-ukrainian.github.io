@@ -7,11 +7,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.formal_review_finalize import (
+from lu_machinery.fleet_comms.formal_review_finalize import (
     finalize_formal_review_verdict,
 )
-from scripts.fleet_comms.review_ground_truth import (
+from lu_machinery.fleet_comms.review_ground_truth import (
     ReviewGroundTruthError,
     fetch_pr_change_inventory,
     format_ground_truth_brief,
@@ -19,7 +18,7 @@ from scripts.fleet_comms.review_ground_truth import (
     parse_pr_change_inventory,
     validate_findings_against_inventory,
 )
-from scripts.fleet_comms.review_publication import (
+from lu_machinery.fleet_comms.review_publication import (
     ReviewEvidence,
     ReviewFinding,
     ReviewPublicationError,

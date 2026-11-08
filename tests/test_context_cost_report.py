@@ -7,8 +7,7 @@ import os
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.ops import context_cost_report as c
+from lu_machinery.ops import context_cost_report as c
 
 
 def transcript(tmp_path, harness, records, name="synthetic.jsonl"):

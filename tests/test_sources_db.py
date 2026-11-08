@@ -107,7 +107,7 @@ def test_ulif_cache_uses_active_override_for_reads_writes_and_raw_response(tmp_p
 
 
 def test_network_sources_override_refused_without_creating_database(tmp_path: Path, monkeypatch) -> None:
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
 
     worktree_db = tmp_path / "data" / "sources.db"
     monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)

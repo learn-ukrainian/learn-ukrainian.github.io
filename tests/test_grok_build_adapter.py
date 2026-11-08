@@ -16,9 +16,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime import registry
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.adapters.grok_build import (
+from lu_machinery.agent_runtime import registry
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.grok_build import (
     _MCP_REVIEW_DENY_RULES,
     _READ_ONLY_DENY_RULES,
     GROK_BUILD_DEFAULT_EFFORT,
@@ -33,7 +33,7 @@ FAKE_GROK = "/usr/local/bin/grok"
 
 
 def _build(prompt: str, tmp_path: Path, **kw):
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         return GrokBuildAdapter().build_invocation(
             prompt=prompt,
             mode=kw.pop("mode", "danger"),
@@ -79,7 +79,7 @@ def test_basic_headless_invocation(tmp_path):
 
 def test_json_schema_keeps_json_output_format(tmp_path):
     schema = {"type": "object", "properties": {"verdict": {"type": "string"}}}
-    with patch("agent_runtime.adapters.grok_build.load_output_schema", return_value=schema):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.load_output_schema", return_value=schema):
         plan = _build("review", tmp_path)
     try:
         assert _val(plan.cmd, "--output-format") == "json"
@@ -268,7 +268,7 @@ def test_trail_isolation_does_not_inherit_write_approval(tmp_path):
         "trail_isolation_cwd": str(tmp_path),
     }
     with patch(
-        "agent_runtime.adapters.grok_build.assert_trail_isolation_config",
+        "lu_machinery.agent_runtime.adapters.grok_build.assert_trail_isolation_config",
         return_value=tmp_path,
     ):
         plan = _build("inspect trail", tmp_path, mode="read-only", tool_config=tool_config)
@@ -287,7 +287,7 @@ def test_review_isolation_keeps_its_existing_approval_and_denies(tmp_path):
         "review_engine_binary": "/usr/bin/true",
     }
     with patch(
-        "scripts.review.isolation.validated_review_write_root",
+        "lu_machinery.review.isolation.validated_review_write_root",
         return_value=review_root,
     ):
         plan = _build("review evidence", tmp_path, mode="read-only", tool_config=tool_config)
@@ -313,7 +313,7 @@ def test_review_isolation_rejects_unsupported_or_weak_deny_overrides(tmp_path, r
         "review_engine_binary": "/usr/bin/true",
         "review_deny_tools": review_deny_tools,
     }
-    with patch("scripts.review.isolation.validated_review_write_root", return_value=review_root):
+    with patch("lu_machinery.review.isolation.validated_review_write_root", return_value=review_root):
         with pytest.raises(ValueError, match="review_deny_tools"):
             _build("review evidence", tmp_path, mode="read-only", tool_config=tool_config)
 
@@ -385,7 +385,7 @@ def recorded_cancelled_turn():
     "cancelled", "max_tokens", "tool_use", "error", "EndTurn", "", None, 0, [], {},
 ])
 def test_plain_reply_requires_exact_end_turn(stop_reason):
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     partial = "Opening narration mentions HTTP 429: too many requests."
     stdout = json.dumps({"text": partial, "stopReason": stop_reason})
@@ -510,7 +510,7 @@ def test_liveness_signal_paths_ignore_peer_session_and_shared_home(tmp_path, mon
     (grok_home / "active_sessions.json").write_text("[]\n", encoding="utf-8")
 
     adapter = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="do the work",
             mode="danger",
@@ -592,7 +592,7 @@ def test_liveness_newest_post_snapshot_cannot_steal_bound_session(tmp_path, monk
     grok_home = resolve_grok_home()
 
     adapter = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="supervised",
             mode="danger",
@@ -645,7 +645,7 @@ def test_liveness_split_instance_non_resume_uses_plan_snapshot(tmp_path, monkeyp
     (peer / "events.jsonl").write_text("{}\n", encoding="utf-8")
 
     builder = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = builder.build_invocation(
             prompt="supervised",
             mode="danger",
@@ -699,7 +699,7 @@ def test_liveness_respects_grok_home_override(tmp_path, monkeypatch):
 
     monkeypatch.setenv("GROK_HOME", str(custom))
     adapter = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="env home",
             mode="danger",
@@ -750,7 +750,7 @@ def test_liveness_shared_adapter_two_plans_no_cross_pin(tmp_path, monkeypatch):
     sessions_root = grok_home / "sessions" / quote(str(project.resolve()), safe="")
 
     adapter = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan_a = adapter.build_invocation(
             prompt="plan A",
             mode="danger",
@@ -820,7 +820,7 @@ def test_liveness_pinned_dir_deleted_mid_run_stays_bound(tmp_path, monkeypatch):
     grok_home = resolve_grok_home()
 
     adapter = GrokBuildAdapter()
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="supervised",
             mode="danger",

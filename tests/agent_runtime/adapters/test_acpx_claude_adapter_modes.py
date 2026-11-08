@@ -1,8 +1,8 @@
 
 import pytest
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters.acpx import AcpxShadowRefusalError
 
-from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters.acpx import AcpxShadowRefusalError
 from tests.agent_runtime.test_acpx_adapter import _fake_installed_claude_adapter
 
 

@@ -38,7 +38,7 @@ def test_deploy_lock_step_lists_include_contract() -> None:
     assert "deploy_orphan_paths.sh" in session_setup, "session-setup hook does not source the shared lists"
 
     # #12830: the complete order must reach both rendered seats and boot digests.
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     clause = (
         "Be thorough in analysis and brave in recommendations. "
@@ -85,7 +85,7 @@ def test_offline_fallback_list_equals_rule_sources() -> None:
     import sys
 
     sys.path.insert(0, str(REPO / "scripts"))
-    from api.rules_router import RULE_SOURCES
+    from lu_machinery.api.rules_router import RULE_SOURCES
 
     body = (REPO / "agents_extensions/shared/rules/_load-via-api.md").read_text(encoding="utf-8")
     assert tuple(_offline_fallback_list(body)) == RULE_SOURCES

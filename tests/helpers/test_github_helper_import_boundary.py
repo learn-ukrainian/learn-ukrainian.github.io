@@ -1,4 +1,4 @@
-"""Verify helper imports do not eagerly load scripts.common.github_client at collection time (#8506)."""
+"""Verify helper imports do not eagerly load lu_machinery.common.github_client at collection time (#8506)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from tests.helpers.restore_import_state import restore_import_state
 
 
 def test_github_helper_imports_do_not_load_github_client() -> None:
-    client = "scripts.common.github_client"
+    client = "lu_machinery.common.github_client"
     helpers = (
         "tests.helpers.github_command_boundary",
         "tests.helpers.github_transport",

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 def test_server_ssot_deny_list_preserves_open_github():
     """#6850 deny-list still includes OPEN_GITHUB and maintains expected truth table."""
-    from scripts.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
+    from lu_machinery.work.attention import NON_ACTIONABLE_ACTION_CODES, is_actionable
 
     assert "OPEN_GITHUB" in NON_ACTIONABLE_ACTION_CODES
     assert "INSPECT_UNKNOWN" in NON_ACTIONABLE_ACTION_CODES

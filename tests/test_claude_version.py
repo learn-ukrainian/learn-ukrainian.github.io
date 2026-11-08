@@ -18,7 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from utils.claude_version import (
+from lu_machinery.utils.claude_version import (
     _parse_claude_semver,
     _reset_cache_for_tests,
     remember_support,
@@ -88,7 +88,7 @@ def test_supports_reads_stderr_when_stdout_is_just_newline():
     result.stderr' would short-circuit because '\\n' is truthy.
     """
     with patch(
-        "utils.claude_version.subprocess.run",
+        "lu_machinery.utils.claude_version.subprocess.run",
         return_value=_mock_run(stdout="\n", stderr="2.1.98"),
     ):
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
@@ -103,7 +103,7 @@ def test_supports_handles_bare_string_prefix():
     must NOT unpack into individual characters and try to exec binary 'c'.
     """
     with patch(
-        "utils.claude_version.subprocess.run",
+        "lu_machinery.utils.claude_version.subprocess.run",
         return_value=_mock_run(stdout="2.1.98"),
     ) as mock:
         result = supports_exclude_dynamic_system_prompt_sections("claude")
@@ -127,14 +127,14 @@ def test_timeout_failure_not_cached():
     for the lifetime of the process. A later call should be able to retry.
     """
     timeout_mock = MagicMock(side_effect=subprocess.TimeoutExpired(cmd="claude", timeout=5))
-    with patch("utils.claude_version.subprocess.run", timeout_mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", timeout_mock):
         result1 = supports_exclude_dynamic_system_prompt_sections(["claude"])
         assert result1 is False
 
     # Now the network is back. A retry should re-probe, not return the
     # cached False from the timeout.
     success_mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", success_mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", success_mock):
         result2 = supports_exclude_dynamic_system_prompt_sections(["claude"])
         assert result2 is True, "timeout should not poison cache permanently"
         assert success_mock.call_count == 1
@@ -144,7 +144,7 @@ def test_file_not_found_is_cached():
     """FileNotFoundError (binary genuinely missing) IS a definitive outcome
     and should be cached to avoid re-probing repeatedly."""
     missing_mock = MagicMock(side_effect=FileNotFoundError("claude not found"))
-    with patch("utils.claude_version.subprocess.run", missing_mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", missing_mock):
         supports_exclude_dynamic_system_prompt_sections(["claude"])
         supports_exclude_dynamic_system_prompt_sections(["claude"])
     assert missing_mock.call_count == 1, "FileNotFoundError should be cached"
@@ -165,25 +165,25 @@ def _mock_run(stdout: str = "", stderr: str = "", returncode: int = 0):
 
 def test_supports_true_on_minimum_version():
     """Exactly 2.1.98 returns True."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.1.98")):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.1.98")):
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is True
 
 
 def test_supports_false_old_version():
     """Versions < 2.1.98 return False (no flag appended)."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.1.97")):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", return_value=_mock_run(stdout="2.1.97")):
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
 
 
 def test_supports_false_exception():
     """Any exception from subprocess.run falls back to False safely."""
-    with patch("utils.claude_version.subprocess.run", side_effect=FileNotFoundError("claude not found")):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", side_effect=FileNotFoundError("claude not found")):
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
 
 
 def test_supports_false_unparsable_output():
     """Version output that can't be parsed falls back to False."""
-    with patch("utils.claude_version.subprocess.run", return_value=_mock_run(stdout="garbage output")):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", return_value=_mock_run(stdout="garbage output")):
         assert supports_exclude_dynamic_system_prompt_sections(["claude"]) is False
 
 
@@ -194,7 +194,7 @@ def test_supports_false_unparsable_output():
 def test_cache_hits_on_repeat():
     """Second call with same prefix does NOT re-invoke subprocess.run."""
     mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", mock):
         supports_exclude_dynamic_system_prompt_sections(["claude"])
         supports_exclude_dynamic_system_prompt_sections(["claude"])
         supports_exclude_dynamic_system_prompt_sections(["claude"])
@@ -204,7 +204,7 @@ def test_cache_hits_on_repeat():
 def test_cache_scoped_by_prefix():
     """Different prefixes get independent cache entries — each probed once."""
     mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", mock):
         supports_exclude_dynamic_system_prompt_sections(["claude"])
         supports_exclude_dynamic_system_prompt_sections(["npx", "@anthropic-ai/claude-code@latest"])
         supports_exclude_dynamic_system_prompt_sections(["/usr/local/bin/claude"])
@@ -214,7 +214,7 @@ def test_cache_scoped_by_prefix():
 def test_remember_support_overwrites_cached_verdict():
     """remember_support overwrites a cached entry (tests simulate old CLIs)."""
     mock = MagicMock(return_value=_mock_run(stdout="2.1.98"))
-    with patch("utils.claude_version.subprocess.run", mock):
+    with patch("lu_machinery.utils.claude_version.subprocess.run", mock):
         supports_exclude_dynamic_system_prompt_sections(["claude"])
         assert mock.call_count == 1
         remember_support(["claude"], False)

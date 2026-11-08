@@ -19,10 +19,10 @@ from __future__ import annotations
 import json
 
 import pytest
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.failover import classify_failover_trigger
+from lu_machinery.agent_runtime.failure_codes import provider_failure_code, provider_stderr_error
 
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.failover import classify_failover_trigger
-from agent_runtime.failure_codes import provider_failure_code, provider_stderr_error
 from tests.agent_runtime.test_sibling_provider_signals import ADAPTERS, CONTENT, _agy_plan, _stdout
 
 # These are repository captures or diagnostics from the identified CLI/SDK
@@ -127,7 +127,7 @@ def test_generic_prefix_does_not_search_for_typed_markers_or_peel_nested_prefixe
 
 @pytest.mark.parametrize("diagnostic", LIMIT_DIAGNOSTICS)
 def test_gemini_real_terminal_limit_sets_api_cooldown(diagnostic, tmp_path, monkeypatch):
-    from ai_llm import cooldown
+    from lu_machinery.ai_llm import cooldown
 
     cooldowns = []
     monkeypatch.setattr(cooldown, "set_api_cooldown", lambda: cooldowns.append(True))

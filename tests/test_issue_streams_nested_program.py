@@ -12,15 +12,15 @@ import subprocess
 import time
 from pathlib import Path
 
-from scripts.orchestration import task_lifecycle
-from scripts.orchestration.issue_stream_audit import (
+from lu_machinery.orchestration import task_lifecycle
+from lu_machinery.orchestration.issue_stream_audit import (
     _tree_membership,
     classify,
     load_registry,
     make_issue_resolver,
     make_membership_resolver,
 )
-from scripts.orchestration.task_closeout import GhGitHubAdapter
+from lu_machinery.orchestration.task_closeout import GhGitHubAdapter
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"

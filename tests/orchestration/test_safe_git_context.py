@@ -9,8 +9,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, GIT, SafeGitContext, SnapshotRefusal
+from lu_machinery.orchestration.safe_git_context import CANONICAL_ORIGIN, GIT, SafeGitContext, SnapshotRefusal
 
 
 def git(repo: Path, *args: str) -> str:
@@ -275,7 +274,7 @@ def test_sparse_capture_preserves_absent_skip_worktree_entries(source, tmp_path)
 def test_noncanonical_destination_refused(source, tmp_path, url):
     from dataclasses import replace
 
-    from scripts.orchestration.fleet_repos import load_fleet_repos
+    from lu_machinery.orchestration.fleet_repos import load_fleet_repos
 
     repo, _remote, _head = source
     with pytest.raises(SnapshotRefusal, match="rescue_push_url_unavailable"):
@@ -293,7 +292,7 @@ def test_noncanonical_destination_refused(source, tmp_path, url):
 
 
 def test_default_destination_is_driver_pinned(source, tmp_path):
-    from scripts.orchestration.fleet_repos import load_fleet_repos
+    from lu_machinery.orchestration.fleet_repos import load_fleet_repos
 
     repo, _remote, _head = source
     with SafeGitContext(objects=repo / ".git/objects", temp_root=tmp_path) as safe:

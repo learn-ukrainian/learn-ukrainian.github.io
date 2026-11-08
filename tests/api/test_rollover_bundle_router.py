@@ -11,12 +11,12 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.orchestration import thread_handoff as th
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.inventory import stream_anchor_id
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.orchestration import thread_handoff as th
 from tests.epics_monitor_stub import epics_app_for_store
 
 # Uploads bind the bundle agent to the lease holder's handoff slot, so they use a

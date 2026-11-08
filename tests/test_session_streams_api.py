@@ -7,15 +7,14 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from scripts.api import main as api_main
-from scripts.api.monitor_context import (
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import (
     MonitorContext,
     fixture_context,
     production_context,
 )
-from scripts.api.session_streams_router import router
+from lu_machinery.api.session_streams_router import router
+from lu_machinery.session_streams.db import SessionStreamDatabase
 
 
 def _client(ctx: MonitorContext | None = None) -> TestClient:
@@ -90,11 +89,11 @@ def test_session_streams_repo_root_uses_live_primary_under_release(
     release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
     release.mkdir(parents=True)
 
-    from scripts.api import config
+    from lu_machinery.api import config
     monkeypatch.setattr(config, "PROJECT_ROOT", release)
     monkeypatch.setattr(config, "LIVE_REPO_ROOT", live)
     monkeypatch.setattr(
-        "agents_extensions.shared.session_streams.db.canonical_state_root",
+        "lu_machinery.session_streams.db.canonical_state_root",
         lambda root=None: live,
     )
 

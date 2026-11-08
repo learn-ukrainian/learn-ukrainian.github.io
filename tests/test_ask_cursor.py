@@ -5,13 +5,12 @@ import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
+from lu_machinery.agent_runtime.adapters.cursor import CursorAgentMissingError
+from lu_machinery.ai_agent_bridge import _cursor
+from lu_machinery.ai_agent_bridge._cursor import _invoke_cursor
+from lu_machinery.lib import rules_core
 
-from scripts.agent_runtime.adapters.cursor import CursorAgentMissingError
-from scripts.ai_agent_bridge import _cursor
-from scripts.ai_agent_bridge._cursor import _invoke_cursor
-from scripts.lib import rules_core
-
-_RESOLVE = "scripts.ai_agent_bridge._cursor.resolve_cursor_agent_binary"
+_RESOLVE = "lu_machinery.ai_agent_bridge._cursor.resolve_cursor_agent_binary"
 _CURSOR_BIN = "/usr/local/bin/cursor-agent"
 
 
@@ -47,7 +46,7 @@ def test_ask_cursor_refuses_explicit_auto_before_any_send(monkeypatch):
 def test_invoke_cursor_constructs_correct_argv():
     """Print mode receives the prepared prompt on stdin without a positional."""
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
-        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+        with patch("lu_machinery.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
             _invoke_cursor("hello", "grok-4.7-high")
             argv = run_mock.call_args[0][0]
@@ -66,7 +65,7 @@ def test_invoke_cursor_attaches_data_file(tmp_path):
     data_file = tmp_path / "context.md"
     data_file.write_text("# Context\nSome content.")
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
-        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+        with patch("lu_machinery.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
             _invoke_cursor("review this", "grok-4.7-high", data=str(data_file))
             argv = run_mock.call_args[0][0]
@@ -98,14 +97,14 @@ def test_large_prepared_prompt_avoids_e2big_and_reaches_non_tty_stdin(tmp_path):
 
 def test_invoke_cursor_raises_when_binary_missing():
     with patch(_RESOLVE, side_effect=CursorAgentMissingError()):
-        with patch("scripts.ai_agent_bridge._cursor.subprocess.run", side_effect=AssertionError("spawned")):
+        with patch("lu_machinery.ai_agent_bridge._cursor.subprocess.run", side_effect=AssertionError("spawned")):
             with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
                 _invoke_cursor("hello", "grok-4.7-high")
 
 
 def test_invoke_cursor_raises_on_nonzero_exit():
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
-        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+        with patch("lu_machinery.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=1, stdout="", stderr="auth failed")
             with pytest.raises(SystemExit, match="cursor-agent exited 1"):
                 _invoke_cursor("hello", "grok-4.7-high")
@@ -120,7 +119,7 @@ def test_ask_cursor_regression_wire_normalization(monkeypatch):
 
     # Mock the subprocess inside _invoke_cursor
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
-        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+        with patch("lu_machinery.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
 
             for m in [None, "grok-4.7", "grok-4.7-high"]:
@@ -131,7 +130,7 @@ def test_ask_cursor_regression_wire_normalization(monkeypatch):
                 assert argv[model_idx + 1] == "grok-4.7-high"
 
     # Refusals
-    with patch("scripts.agent_runtime.adapters.claude._default_claude_bin", return_value="/bin/claude"):
+    with patch("lu_machinery.agent_runtime.adapters.claude._default_claude_bin", return_value="/bin/claude"):
         for m, code in [
             ("grok-4.7[fast=false]", "CURSOR_UNATTESTED_GROK_VARIANT"),
             ("grok-4.7-low", "CURSOR_UNATTESTED_GROK_VARIANT"),

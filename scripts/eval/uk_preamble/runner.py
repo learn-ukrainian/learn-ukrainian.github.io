@@ -33,7 +33,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.lib import rules_core
+from lu_machinery.lib import rules_core
 
 from .common import (
     BASELINE_VARIANT,

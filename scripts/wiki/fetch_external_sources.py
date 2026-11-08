@@ -47,8 +47,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
-from common.http_status import has_http_status
-from common.repo_root import project_interpreter
+from lu_machinery.common.http_status import has_http_status
+from lu_machinery.common.repo_root import project_interpreter
 
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"

@@ -7,13 +7,13 @@ from dataclasses import asdict
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.accounting import model_accounting_fields, recorded_model_accounting_fields
+from lu_machinery.agent_runtime.accounting import model_accounting_fields, recorded_model_accounting_fields
 
 
 def test_non_agy_plain_failure_matches_frozen_accounting_control(tmp_path, monkeypatch):
-    from agent_runtime import runner
-    from agent_runtime.result import ParseResult
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.result import ParseResult
+
     from tests.agent_runtime.test_runner_failover import _install_fake_runtime
 
     expected_row, = [row for row in json.loads(
@@ -92,8 +92,9 @@ def test_conflicting_serialized_projection_is_unknown(override):
 @pytest.mark.parametrize("substituted", [False, True])
 @pytest.mark.parametrize("agent", ["failover-test", "codex"])
 def test_non_agy_normal_execution_serializes_unknown_observation(tmp_path, monkeypatch, substituted, agent):
-    from agent_runtime import runner
-    from agent_runtime.result import ParseResult
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.result import ParseResult
+
     from tests.agent_runtime.test_runner_failover import _install_fake_runtime
 
     adapter, _, _ = _install_fake_runtime(monkeypatch, tmp_path, {})
@@ -120,8 +121,9 @@ def test_non_agy_normal_execution_serializes_unknown_observation(tmp_path, monke
 
 @pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 def test_observation_requires_current_task_and_nonce(tmp_path, pin):
-    from scripts.agent_runtime import runner
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream
 
     token = runner._AGY_OBSERVED_IDENTITY.set(None)
@@ -158,9 +160,10 @@ def test_observation_requires_current_task_and_nonce(tmp_path, pin):
 def test_agy_real_route_failover_keeps_original_selector_and_attempt_provenance(tmp_path, monkeypatch, pin, other):
     from dataclasses import replace
 
-    from agent_runtime import runner
-    from agent_runtime.failover import FAILOVER_COOLDOWN_DB_ENV, FailoverChain, FailoverRoute
-    from agent_runtime.result import ParseResult
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.failover import FAILOVER_COOLDOWN_DB_ENV, FailoverChain, FailoverRoute
+    from lu_machinery.agent_runtime.result import ParseResult
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, "matched"))

@@ -8,13 +8,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+from lu_machinery.ai_agent_bridge import _acp_execution
+from lu_machinery.ci import data_tier
+from lu_machinery.fleet import ignored_task_output, sibling_git
+from lu_machinery.orchestration import worktree_claims, worktree_git
+from lu_machinery.orchestration.fleet_repos import FleetRepo
+from lu_machinery.orchestration.task_family import git_safety
 
-from scripts.ai_agent_bridge import _acp_execution
-from scripts.ci import data_tier
-from scripts.fleet import ignored_task_output, sibling_git
-from scripts.orchestration import worktree_claims, worktree_git
-from scripts.orchestration.fleet_repos import FleetRepo
-from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary, _record
 
 BOUNDARIES = ['claims', 'claims-force']

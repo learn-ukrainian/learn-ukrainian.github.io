@@ -19,7 +19,8 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.audit import grow_lexicon_from_sources as grow
 from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
     REGISTRY_ROOT / "lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",

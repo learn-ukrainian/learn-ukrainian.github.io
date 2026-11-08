@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import sqlite3
 
-from scripts.ai_agent_bridge import _db
-from scripts.fleet_comms import migrations
-from scripts.fleet_comms.migrations import MIGRATIONS
+from lu_machinery.ai_agent_bridge import _db
+from lu_machinery.fleet_comms import migrations
+from lu_machinery.fleet_comms.migrations import MIGRATIONS
 
 
 def test_bridge_upgrades_legacy_copy_without_mutating_legacy_rows(tmp_path, monkeypatch) -> None:

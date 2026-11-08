@@ -15,8 +15,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.fleet import capacity_pick
-from scripts.orchestration import dispatch_admission
+from lu_machinery.fleet import capacity_pick
+from lu_machinery.orchestration import dispatch_admission
 
 _GIB = 1024**3
 
@@ -48,7 +48,7 @@ def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspa
 
 
 def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     tasks = tmp_path / "tasks"
     _running_record(tasks, "busy", pid=515151)
@@ -102,7 +102,7 @@ def _full_disk(monkeypatch, *readings: float) -> dict[str, list]:
 
 
 def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeypatch, capsys):
-    from scripts.fleet import usage
+    from lu_machinery.fleet import usage
 
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)

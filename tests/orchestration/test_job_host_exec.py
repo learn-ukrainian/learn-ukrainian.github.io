@@ -9,8 +9,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import job_host_exec as jh
+from lu_machinery.orchestration import job_host_exec as jh
 
 pytestmark = pytest.mark.reads_content
 

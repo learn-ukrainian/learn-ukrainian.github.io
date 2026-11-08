@@ -9,10 +9,9 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.monitor_context import fixture_context
-from scripts.api.ops_router import router
-from scripts.common import test_slots
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.ops_router import router
+from lu_machinery.common import test_slots
 
 ROUTE = "/api/ops/v1/test-slots"
 

@@ -26,9 +26,8 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-
-from scripts.docs import catalogue as cat
-from scripts.docs import store_census as sc
+from lu_machinery.docs import catalogue as cat
+from lu_machinery.docs import store_census as sc
 
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)

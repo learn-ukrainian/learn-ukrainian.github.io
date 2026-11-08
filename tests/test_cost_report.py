@@ -7,9 +7,8 @@ import os
 from datetime import datetime
 from pathlib import Path
 
+import lu_machinery.telemetry.cost_report as cost_report
 import pytest
-
-import scripts.telemetry.cost_report as cost_report
 
 pytestmark = pytest.mark.reads_content
 

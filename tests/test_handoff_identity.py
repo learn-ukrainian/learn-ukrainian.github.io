@@ -342,11 +342,11 @@ def test_launch_path_does_not_literal_mint_infra_epic() -> None:
 
 def test_fresh_infra_stream_capsule_is_registered(tmp_path: Path) -> None:
     """A successor infra epic gets registered dual-write + non-empty handoff paths."""
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import LeaseHolder
-    from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.session_supervisor import LaunchRole, SessionSupervisor
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import LeaseHolder
+    from lu_machinery.session_streams.receipts import register_manifest_inventory
+    from lu_machinery.session_streams.store import SessionStreamStore
+    from lu_machinery.session_supervisor import LaunchRole, SessionSupervisor
 
     fresh_epic = 888001
     stream_id = f"epic:{fresh_epic}"

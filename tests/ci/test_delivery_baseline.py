@@ -6,8 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-
-from scripts.ci import delivery_baseline as db
+from lu_machinery.ci import delivery_baseline as db
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "delivery_baseline"
 
@@ -346,5 +345,5 @@ def test_help_documents_examples_outputs_exit_codes_and_related(capsys: pytest.C
     text = capsys.readouterr().out
     for section in ("Examples:", "Outputs:", "Side effects: none", "Exit codes:", "Related:"):
         assert section in text
-    assert ".venv/bin/python -m scripts.ci.delivery_baseline cohort.json" in text
+    assert ".venv/bin/python -m lu_machinery.ci.delivery_baseline cohort.json" in text
     assert "docs/design/agent-friendly-delivery-baseline.md" in text

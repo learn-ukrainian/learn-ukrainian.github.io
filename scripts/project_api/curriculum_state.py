@@ -31,22 +31,22 @@ from typing import Any, cast
 import yaml
 
 try:
-    from path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
+    from lu_machinery.path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join, trusted_join  # scripts.project_api package import (production)
+    from lu_machinery.path_safety import safe_join, trusted_join  # scripts.project_api package import (production)
 
-from scripts.api import config
+from lu_machinery.api import config
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from research_quality import assess_research_compat, find_research_path
+from lu_machinery.research_quality import assess_research_compat, find_research_path
 
 try:
-    from scripts.ops.product_entry import load_configured_module
+    from lu_machinery.ops.product_entry import load_configured_module
 except ImportError:
-    from ops.product_entry import load_configured_module  # type: ignore[no-redef]
+    from lu_machinery.ops.product_entry import load_configured_module  # type: ignore[no-redef]
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}

@@ -9,29 +9,28 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     curriculum_lifecycle_pilot as clp,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     dispatch_settle as ds,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     handoff_ready as hr,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     job_host_exec as jhe,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     orchestrator_control as oc,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     reaper_lifecycle as rl,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     task_closeout as tc,
 )
-from scripts.orchestration import (
+from lu_machinery.orchestration import (
     task_lifecycle as tl,
 )
 
@@ -73,7 +72,7 @@ def test_reaper_lifecycle_create_recovery_ref_timeout(tmp_path: Path) -> None:
     assert calls[0]["timeout"] == rl.DEFAULT_GIT_TIMEOUT_SECONDS
 
     with patch(
-        "scripts.orchestration.reaper_lifecycle.safe_git",
+        "lu_machinery.orchestration.reaper_lifecycle.safe_git",
         side_effect=subprocess.TimeoutExpired(["git", "update-ref"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ref, err = rl.create_recovery_ref(tmp_path, branch="feature", head="a" * 40)
@@ -91,7 +90,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     # 1. Timeout on rev-parse recovery_ref
     with patch(
-        "scripts.orchestration.reaper_lifecycle.safe_git",
+        "lu_machinery.orchestration.reaper_lifecycle.safe_git",
         side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ok, err = rl.restore_worktree(
@@ -105,7 +104,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     # 2. Timeout on rev-parse branch
     with patch(
-        "scripts.orchestration.reaper_lifecycle.safe_git",
+        "lu_machinery.orchestration.reaper_lifecycle.safe_git",
         side_effect=[
             _completed(stdout="a" * 40 + "\n"),
             subprocess.TimeoutExpired(["git", "rev-parse"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
@@ -122,7 +121,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     # 3. Timeout on worktree add
     with patch(
-        "scripts.orchestration.reaper_lifecycle.safe_git",
+        "lu_machinery.orchestration.reaper_lifecycle.safe_git",
         side_effect=[
             _completed(stdout="a" * 40 + "\n"),
             _completed(returncode=0, stdout="a" * 40 + "\n"),

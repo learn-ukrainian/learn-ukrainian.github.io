@@ -10,8 +10,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import git, store, worker
 
-from scripts.dispatcher import git, store, worker
 from tests.dispatcher.conftest import await_file, in_process_repo, local_branches, run_git
 
 
@@ -19,8 +19,9 @@ from tests.dispatcher.conftest import await_file, in_process_repo, local_branche
 def test_salvage_release_pins_remove_published_tracked_work_but_retain_unique_output(
         sandbox, monkeypatch, synthetic_opsec, unique_output):
     """Defect class: salvage ignores committed release pins and retains published tracked work."""
-    from scripts.common import github_client
-    from scripts.fleet.regenerable_output import committed_release_pins
+    from lu_machinery.common import github_client
+    from lu_machinery.fleet.regenerable_output import committed_release_pins
+
     from tests.fleet.test_regenerable_release_output import pinned_checkout
 
     pinned_checkout((sandbox.repo, sandbox.repo, sandbox.tasks))
@@ -104,7 +105,8 @@ def _salvage_ref(record):
 
 def test_salvage_keeps_a_tree_when_the_push_scan_refuses(sandbox, monkeypatch, synthetic_opsec):
     """Defect class: salvage pushes a range the OPSEC push scan would refuse because hooksPath is /dev/null."""
-    from scripts.orchestration.scheduled_worktree_cleanup import SAFETY_STOP_REASONS
+    from lu_machinery.orchestration.scheduled_worktree_cleanup import SAFETY_STOP_REASONS
+
     from tests.opsec_fixtures import TOKEN
 
     record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
@@ -212,7 +214,7 @@ def test_retention_refuses_non_boolean_hold(tmp_path, monkeypatch, value, source
 
 def test_retention_hold_blocks_settlement_salvage_and_cleanup(sandbox, monkeypatch, synthetic_opsec):
     """Defect class: an unpublished tree has no owner hold, so salvage retries it."""
-    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+    from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
     record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
     assert record["worktree_disposition_reason"] == "unpublished"
@@ -266,7 +268,7 @@ def test_retention_hold_survives_a_stale_record_write_and_skips_inspection(sandb
     """Defect: a supervisor write from an older copy drops the hold, and the old-tree report still reads Git."""
     from datetime import UTC, datetime, timedelta
 
-    from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+    from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
     record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
     tree = Path(record["worktree_path"])

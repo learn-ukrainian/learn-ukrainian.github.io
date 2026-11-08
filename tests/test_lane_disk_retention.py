@@ -5,7 +5,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
-from scripts.hygiene.lane_disk_retention import scan_dispatch_worktrees
+from lu_machinery.hygiene.lane_disk_retention import scan_dispatch_worktrees
 
 
 def test_scan_dispatch_worktrees_reports_stale(tmp_path: Path, monkeypatch) -> None:
@@ -22,7 +22,7 @@ def test_scan_dispatch_worktrees_reports_stale(tmp_path: Path, monkeypatch) -> N
             return "0\t2"
         return ""
 
-    monkeypatch.setattr("scripts.hygiene.lane_disk_retention._git", fake_git)
+    monkeypatch.setattr("lu_machinery.hygiene.lane_disk_retention._git", fake_git)
     old = time.time() - (80 * 3600)
     # set mtime via os.utime
     import os

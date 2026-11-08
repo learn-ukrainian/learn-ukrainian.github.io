@@ -14,9 +14,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.ops import context_guard as cg
+from lu_machinery.session_canary import grok_lane, handoff_select
 
-from scripts.ops import context_guard as cg
-from scripts.session_canary import grok_lane, handoff_select
 from tests.ops.test_context_guard import Harness, codex_pane, codex_text
 
 REPO = Path(__file__).resolve().parents[2]

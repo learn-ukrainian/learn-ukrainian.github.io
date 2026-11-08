@@ -15,12 +15,17 @@ Three properties, each against the real code paths:
 from __future__ import annotations
 
 import pytest
+from lu_machinery.agent_runtime import target_admission
+from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+from lu_machinery.fleet import claude_account_lane
+from lu_machinery.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccount
+from lu_machinery.review.reviewer_resolver import (
+    REVIEW_CANDIDATES,
+    ResolverInputs,
+    evaluate_candidate,
+    resolve_reviewer,
+)
 
-from scripts.agent_runtime import target_admission
-from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
-from scripts.fleet import claude_account_lane
-from scripts.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccount
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.helpers.claude_account_fixtures import UNVERIFIED_ROW as _UNVERIFIED_ROW
 from tests.helpers.claude_account_fixtures import account_row as _account_row

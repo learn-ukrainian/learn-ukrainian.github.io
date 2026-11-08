@@ -7,8 +7,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import inventory_home_sessions as inventory
+from lu_machinery.hygiene import inventory_home_sessions as inventory
 
 
 def _old_file(path: Path, *, age_days: float = 15.0) -> Path:

@@ -19,8 +19,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.fleet import hramatka_hygiene_check as hygiene
-from scripts.fleet import pr_identity
+from lu_machinery.fleet import hramatka_hygiene_check as hygiene
+from lu_machinery.fleet import pr_identity
 
 BRANCH = "kimi/some-task"
 REPO = "octo/fleet"

@@ -14,8 +14,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.ai_agent_bridge import _acp_compat, _cli
-from scripts.ai_agent_bridge._ask_contract import (
+from lu_machinery.ai_agent_bridge import _acp_compat, _cli
+from lu_machinery.ai_agent_bridge._ask_contract import (
     failed_response_provenance,
     resolve_model_selection,
     response_provenance,
@@ -85,12 +85,12 @@ def test_terminal_failure_replays_without_invoking_provider_again(
 ) -> None:
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
     invoke = Mock(side_effect=RuntimeError("protected primary refused"))
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     # Hermetic from host PATH state: the reachability probe is stubbed, and
     # the replay path must never call it — only the real invocation may.
     probe = Mock(return_value=None)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability", probe
     )
 
     with pytest.raises(RuntimeError, match="protected primary refused"):
@@ -133,7 +133,7 @@ def test_terminalization_conflict_preserves_completed_provider_response(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """A bookkeeping collision must not hide the completed provider response."""
-    from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+    from lu_machinery.fleet_comms.authority import AuthorityStaleLeaseError
 
     claim_state = {"claimed": False}
 
@@ -180,11 +180,11 @@ def test_terminalization_conflict_preserves_completed_provider_response(
     )
     invoke = Mock(return_value=provider_result)
     output_path = tmp_path / "response.txt"
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability",
         probe_after_claim,
     )
 
@@ -209,7 +209,7 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A terminal race after enqueue must replay instead of spending a provider call."""
-    from scripts.fleet_comms.authority import AuthorityServiceError
+    from lu_machinery.fleet_comms.authority import AuthorityServiceError
 
     replay_result = SimpleNamespace(
         ok=True,
@@ -247,10 +247,10 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
     # Hermetic from host PATH state, and order-sensitive: a claim-race replay
     # must never reach the reachability probe at all.
     probe = Mock(return_value="probe fired on a terminal-replay path")
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", ConcurrentTerminalAuthority)
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", ConcurrentTerminalAuthority)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability", probe
     )
 
     result = _acp_compat._run_compat_ask_impl(
@@ -312,7 +312,7 @@ def test_review_outcome_failure_accepts_grounded_verdicts(response: str) -> None
 
 
 def _make_ok_result(response: str) -> object:
-    from agent_runtime.result import Result
+    from lu_machinery.agent_runtime.result import Result
 
     return Result(
         ok=True,
@@ -342,14 +342,14 @@ def _stub_live_invocation(
 
     invoke = Mock(return_value=result)
     monkeypatch.setattr(
-        "scripts.fleet_comms.authority.AuthorityService", lambda: authority
+        "lu_machinery.fleet_comms.authority.AuthorityService", lambda: authority
     )
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+        "lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
     )
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability",
         Mock(return_value=None),
     )
     return invoke
@@ -420,13 +420,13 @@ def test_non_evidentiary_review_ask_terminalizes_through_real_authority_store(
     finish_job AFTER the provider replied and stranded the claimed lease.
     Run the gate through the real store: the job must terminalize
     failed:non_evidentiary with the lease released and no exception."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
     invoke = Mock(return_value=_make_ok_result(DSML_TOOLCALL_GARBLE))
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability",
         Mock(return_value=None),
     )
 
@@ -435,7 +435,7 @@ def test_non_evidentiary_review_ask_terminalizes_through_real_authority_store(
         yield tmp_path
 
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+        "lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
     )
 
     result = _acp_compat._run_compat_ask_impl(
@@ -496,7 +496,7 @@ def test_review_intent_never_reaches_the_toolless_acp_shim(
     monkeypatch.setattr(_acp_compat, "run_compat_ask", fail_if_called)
 
     captured: dict[str, object] = {}
-    from scripts.ai_agent_bridge import _dispatch_wrappers
+    from lu_machinery.ai_agent_bridge import _dispatch_wrappers
 
     def fake_dispatch(agent, content, **kwargs):
         captured["agent"] = agent
@@ -522,7 +522,7 @@ def _capture_review_dispatch_argv(
     tmp_path: Path,
 ) -> list[str]:
     """Drive one review ask and return the headless dispatch argv it built."""
-    from scripts.ai_agent_bridge import _dispatch_wrappers
+    from lu_machinery.ai_agent_bridge import _dispatch_wrappers
 
     result_file = tmp_path / f"{command}.md"
     result_file.write_text("Findings: none.\nVERDICT: APPROVED\n", encoding="utf-8")
@@ -618,14 +618,14 @@ def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_mis
     actionable remediation and documented route — not mid-review at spawn.
     The authority job is enqueued and claimed first: terminal-replay paths
     must stay reachable even when the provider CLI is absent."""
-    from scripts.agent_runtime import binary_resolve as binary_resolve_module
+    from lu_machinery.agent_runtime import binary_resolve as binary_resolve_module
 
     invoke = Mock(side_effect=AssertionError("dead seat invoked the provider"))
     monkeypatch.setattr(binary_resolve_module, "_which", lambda _name, *_a, **_k: None)
     monkeypatch.setattr(
-        "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
+        "lu_machinery.fleet_comms.authority.AuthorityService", _RecordingAuthority
     )
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
 
     with pytest.raises(ValueError) as exc_info:
         _acp_compat._run_compat_ask_impl("deepseek", "question", task_id="dead-seat")

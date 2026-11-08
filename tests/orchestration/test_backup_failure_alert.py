@@ -10,8 +10,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import backup_failure_alert as alert
+from lu_machinery.orchestration import backup_failure_alert as alert
 
 BACKUP = "learn-ukrainian-backup.service"
 RETENTION = "learn-ukrainian-backup-retention.service"
@@ -153,7 +152,7 @@ def test_cli_publishes_through_fleet_comms_to_the_cto_channel(tmp_path: Path, mo
     assert seen["command"] == [
         ".venv/bin/python",
         "-m",
-        "scripts.fleet_comms",
+        "lu_machinery.fleet_comms",
         "channel",
         "publish",
         "cto",
@@ -305,7 +304,7 @@ def test_publisher_transport_failure_is_sanitized(
 @pytest.fixture
 def authority_publisher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Real CLI/authority with all storage redirected before any publication."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root = tmp_path / "authority"
     with AuthorityService(root=root) as service:
@@ -315,7 +314,7 @@ def authority_publisher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
 
     def isolated_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
         assert command[0] == ".venv/bin/python"
-        assert command[1:3] == ["-m", "scripts.fleet_comms"]
+        assert command[1:3] == ["-m", "lu_machinery.fleet_comms"]
         # Only the test child uses sys.executable; no worktree venv is created.
         return run(
             [sys.executable, *command[1:], "--root", str(root)],
@@ -331,7 +330,7 @@ def authority_publisher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
 
 
 def test_real_authority_failure_recovery_retry_and_idempotency(tmp_path: Path, authority_publisher) -> None:
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root, publish = authority_publisher
     _handle(tmp_path, "failed", BACKUP, publish, "failed-at", MONITOR_INVOCATION_ID="failure-1")
@@ -366,7 +365,7 @@ def test_real_authority_committed_publication_inspection_or_oserror_retries_same
     event: str,
     fault: str,
 ) -> None:
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root, publish = authority_publisher
     if event == "recovered":
@@ -448,7 +447,7 @@ def test_legacy_zero_delivery_key_cannot_be_upgraded_and_reconciliation_is_retry
     tmp_path: Path,
     authority_publisher,
 ) -> None:
-    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+    from lu_machinery.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     root, publish = authority_publisher
     key = f"lu-backup-alert:{BACKUP}:failed:old-invocation"

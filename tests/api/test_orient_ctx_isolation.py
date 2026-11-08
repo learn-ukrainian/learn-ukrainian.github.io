@@ -4,11 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api.monitor_context import fixture_context
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -40,7 +39,7 @@ def test_no_router_owns_a_private_resolve_context_copy() -> None:
     import importlib
     import pkgutil
 
-    import scripts.api as api_pkg
+    import lu_machinery.api as api_pkg
 
     offenders: list[str] = []
     for mod in pkgutil.iter_modules(api_pkg.__path__, api_pkg.__name__ + "."):

@@ -20,11 +20,11 @@ from fastapi.testclient import TestClient
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-import scripts.api.main as api_main
-from scripts.ai_agent_bridge import _monitor_cache as cache
-from scripts.ai_agent_bridge import monitor_client
-from scripts.api.monitor_context import fixture_context
-from scripts.lib import rules_core
+import lu_machinery.api.main as api_main
+from lu_machinery.ai_agent_bridge import _monitor_cache as cache
+from lu_machinery.ai_agent_bridge import monitor_client
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.lib import rules_core
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

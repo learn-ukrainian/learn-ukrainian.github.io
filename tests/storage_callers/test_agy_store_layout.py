@@ -6,11 +6,11 @@ import sqlite3
 import subprocess
 
 import pytest
+from lu_machinery.dispatcher import agy_sandbox
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage import generations
+from lu_machinery.storage.wal_permissions import hold_database
 
-from scripts.dispatcher import agy_sandbox
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage import generations
-from scripts.storage.wal_permissions import hold_database
 from tests.dispatcher.test_providers_b import _launch, _linked_worktree
 
 

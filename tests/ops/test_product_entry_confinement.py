@@ -18,10 +18,9 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-
-from scripts.common import repo_root
-from scripts.ops import product_entry
-from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
+from lu_machinery.common import repo_root
+from lu_machinery.ops import product_entry
+from lu_machinery.ops.product_entry import ConfiguredModuleError, load_configured_module
 
 
 class Product:
@@ -942,8 +941,8 @@ def test_concurrent_loads_run_the_product_code_once(product):
 def test_this_checkout_still_loads_its_own_modules():
     """In the product checkout the machinery's own ``scripts`` package is the product's."""
     assert repo_root.product_root().resolve() == Path(product_entry.__file__).resolve().parents[2]
-    module = load_configured_module("scripts.lib.readonly_sqlite")
-    assert module is sys.modules["scripts.lib.readonly_sqlite"]
+    module = load_configured_module("lu_machinery.lib.readonly_sqlite")
+    assert module is sys.modules["lu_machinery.lib.readonly_sqlite"]
     assert Path(module.__file__).resolve().is_relative_to(repo_root.product_root().resolve() / "scripts")
 
 

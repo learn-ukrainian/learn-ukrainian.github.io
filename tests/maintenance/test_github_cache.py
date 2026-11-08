@@ -11,10 +11,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import github_client as owner
+from lu_machinery.hygiene import lint_source_db_writable_connects as sqlite_lint
+from lu_machinery.maintenance import github_cache as maintenance
 
-from scripts.common import github_client as owner
-from scripts.hygiene import lint_source_db_writable_connects as sqlite_lint
-from scripts.maintenance import github_cache as maintenance
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 
@@ -513,7 +513,7 @@ def test_sqlite_io_failure_never_unlinks_or_falls_back(cache, monkeypatch):
 
 
 def test_json_cli_defaults_and_help_never_leak_private_values(cache):
-    command = [sys.executable, "-m", "scripts.maintenance.github_cache"]
+    command = [sys.executable, "-m", "lu_machinery.maintenance.github_cache"]
     before = cache.read_bytes()
     report = subprocess.run(command, capture_output=True, text=True, check=False, timeout=30)
     assert report.returncode == 0 and json.loads(report.stdout)["outcome"] == "report"
@@ -550,7 +550,7 @@ def test_cli_refusal_and_sigterm_are_typed_and_restore_handlers(cache, monkeypat
 @pytest.mark.parametrize("arguments", [["--timeout-seconds", "private-input"], ["--unknown", "private-input"]])
 def test_cli_invalid_arguments_do_not_echo_private_inputs(arguments):
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.maintenance.github_cache", *arguments],
+        [sys.executable, "-m", "lu_machinery.maintenance.github_cache", *arguments],
         capture_output=True,
         text=True,
         check=False,

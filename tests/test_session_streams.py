@@ -12,12 +12,11 @@ from threading import Barrier, Event
 from typing import Any
 
 import pytest
-
-from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
-from agents_extensions.shared.session_streams.db import MigrationError, SessionStreamDatabase, load_migrations
-from agents_extensions.shared.session_streams.dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
-from agents_extensions.shared.session_streams.hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
-from agents_extensions.shared.session_streams.model import (
+from lu_machinery.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
+from lu_machinery.session_streams.db import MigrationError, SessionStreamDatabase, load_migrations
+from lu_machinery.session_streams.dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
+from lu_machinery.session_streams.hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
+from lu_machinery.session_streams.model import (
     EntryRef,
     EntryType,
     HolderKind,
@@ -26,7 +25,7 @@ from agents_extensions.shared.session_streams.model import (
     isoformat_z,
     parse_timestamp,
 )
-from agents_extensions.shared.session_streams.store import (
+from lu_machinery.session_streams.store import (
     _EMBEDDED_HOST_SUFFIXES,
     _FILE_EXTENSIONS,
     _PUBLIC_SUFFIX_TLDS,

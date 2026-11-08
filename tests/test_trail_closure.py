@@ -6,11 +6,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
-from scripts.orchestration.trails.closure import ClosureError, TrailClosureGate
-from scripts.orchestration.trails.executor import TrailExecutor
-from scripts.orchestration.trails.models import CommandExecution, ExitClass
-from scripts.orchestration.trails.store import TrailStore
+from lu_machinery.orchestration.trails.closure import ClosureError, TrailClosureGate
+from lu_machinery.orchestration.trails.executor import TrailExecutor
+from lu_machinery.orchestration.trails.models import CommandExecution, ExitClass
+from lu_machinery.orchestration.trails.store import TrailStore
 
 
 def _trail(*, pr_bound: bool = False) -> dict[str, Any]:

@@ -17,10 +17,9 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from agent_runtime import usage as usage_mod
-from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.agent_runtime import usage as usage_mod
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import fixture_context
 
 
 def _record(agent: str, outcome: str) -> dict:

@@ -7,23 +7,22 @@ import sqlite3
 from pathlib import Path
 
 import yaml
-
-from agents_extensions.shared.session_streams.cli import main
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase, load_migrations
-from agents_extensions.shared.session_streams.inventory import (
+from lu_machinery.session_streams.cli import main
+from lu_machinery.session_streams.db import SessionStreamDatabase, load_migrations
+from lu_machinery.session_streams.inventory import (
     inventory_snapshot,
     load_stream_epic_inventory,
     sorted_epic_numbers,
     stream_anchor_id,
     stream_map,
 )
-from agents_extensions.shared.session_streams.receipts import (
+from lu_machinery.session_streams.receipts import (
     inventory_registration_summary,
     list_migration_state,
     record_projection_receipt,
     register_manifest_inventory,
 )
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from lu_machinery.session_streams.store import SessionStreamStore
 
 
 def _fixture_repo(tmp_path: Path) -> Path:

@@ -14,10 +14,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.common import task_scratch
-from scripts.maintenance.claude_session_scratch import ProcessEvidence, sweep_sessions
-from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+from lu_machinery.common import task_scratch
+from lu_machinery.maintenance.claude_session_scratch import ProcessEvidence, sweep_sessions
+from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
 
 @pytest.fixture(autouse=True)
@@ -1626,7 +1625,7 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_base))
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_base))
 
-    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, _write_review_temp_root_marker
+    from lu_machinery.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, _write_review_temp_root_marker
 
     root = Path(tempfile.mkdtemp(prefix="lu-review-snap-", dir=tmp_base))
     _write_review_temp_root_marker(root, prefix="lu-review-snap-")

@@ -10,10 +10,10 @@ import shutil
 import subprocess
 
 import pytest
+from lu_machinery.agent_runtime.attempt_network import load_allowlist
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.dispatcher import agy_sandbox
 
-from scripts.agent_runtime.attempt_network import load_allowlist
-from scripts.common.repo_root import project_interpreter
-from scripts.dispatcher import agy_sandbox
 from tests.dispatcher.test_providers_b import _bwrap_usable, _launch, _linked_worktree
 
 

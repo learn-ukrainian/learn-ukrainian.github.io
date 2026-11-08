@@ -8,8 +8,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.ops import clear_stale_git_lock as tool
+from lu_machinery.ops import clear_stale_git_lock as tool
 
 
 @pytest.fixture

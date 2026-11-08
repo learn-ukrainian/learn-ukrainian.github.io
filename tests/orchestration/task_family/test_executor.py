@@ -52,8 +52,9 @@ def test_family_cleanup_interrupted_work_preserves_bytes(interrupted_checkout, s
             assert not (repo / "batch_state/preserved").exists()
 
 
-from scripts.orchestration.task_family import codex_state, executor, git_safety
-from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from lu_machinery.orchestration.task_family import codex_state, executor, git_safety
+from lu_machinery.orchestration.task_family.storage import TaskFamilyStorage
+
 from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 

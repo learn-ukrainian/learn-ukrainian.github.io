@@ -74,10 +74,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.api import state_router
+from lu_machinery.fleet import credit_lane, reset_reserve
+from lu_machinery.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION
 
-from scripts.api import state_router
-from scripts.fleet import credit_lane, reset_reserve
-from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION
 from tests.api.test_routing_budget import _configure_base
 
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)

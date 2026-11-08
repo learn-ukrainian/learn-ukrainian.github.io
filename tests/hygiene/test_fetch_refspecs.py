@@ -12,9 +12,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import fetch_refspecs
-from scripts.orchestration import scheduled_worktree_cleanup as cleanup
+from lu_machinery.hygiene import fetch_refspecs
+from lu_machinery.orchestration import scheduled_worktree_cleanup as cleanup
 
 
 def _git_env() -> dict[str, str]:

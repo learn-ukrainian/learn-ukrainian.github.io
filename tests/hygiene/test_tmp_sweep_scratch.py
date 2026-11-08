@@ -12,10 +12,9 @@ import time
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.common import task_scratch
-from scripts.hygiene import tmp_sweep as sweep
-from scripts.hygiene.retention_engine import reap_attributed_temp
+from lu_machinery.common import task_scratch
+from lu_machinery.hygiene import tmp_sweep as sweep
+from lu_machinery.hygiene.retention_engine import reap_attributed_temp
 
 DAY = 86400
 OLD = time.time() - 3 * DAY

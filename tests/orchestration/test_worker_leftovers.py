@@ -12,9 +12,9 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.orchestration import dispatch_isolation
+from lu_machinery.orchestration import worker_leftovers as wl
 
-from scripts.orchestration import dispatch_isolation
-from scripts.orchestration import worker_leftovers as wl
 from tests.worker_leftovers_fakes import (
     FAKE_PID_BASE,
     RUN_NONCE,

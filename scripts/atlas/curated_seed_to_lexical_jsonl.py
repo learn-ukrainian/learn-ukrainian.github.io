@@ -22,11 +22,12 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.atlas.lexical_projection import (
     canonical_json,
     deterministic_attestation_id,
 )
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[2]
 UA_SLUG_RE = re.compile(r"[^а-яіїєґa-z0-9]+", re.IGNORECASE)

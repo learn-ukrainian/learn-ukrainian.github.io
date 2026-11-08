@@ -5,10 +5,10 @@ import json
 from copy import deepcopy
 
 import pytest
+from lu_machinery.orchestration import lifecycle_observation as lo
+from lu_machinery.orchestration import task_identity
+from lu_machinery.orchestration import task_lifecycle as tl
 
-from scripts.orchestration import lifecycle_observation as lo
-from scripts.orchestration import task_identity
-from scripts.orchestration import task_lifecycle as tl
 from tests.orchestration.test_lifecycle_observation import observation_case  # noqa: F401
 from tests.orchestration.test_merge_closeout import git
 from tests.orchestration.test_task_lifecycle import NOW
@@ -195,7 +195,7 @@ def _cli_args(repo, kwargs):
 
 
 def test_child_cli_reads_exact_authoritative_pr(child_case, monkeypatch, capsys):
-    from scripts.orchestration import task_closeout as tc
+    from lu_machinery.orchestration import task_closeout as tc
 
     repo, kwargs, pr, _, _ = child_case
     calls = []
@@ -217,7 +217,7 @@ def test_child_cli_reads_exact_authoritative_pr(child_case, monkeypatch, capsys)
 
 
 def test_child_cli_authority_failure_does_not_append(child_case, monkeypatch, capsys):
-    from scripts.orchestration import task_closeout as tc
+    from lu_machinery.orchestration import task_closeout as tc
 
     repo, kwargs, _, _, _ = child_case
 

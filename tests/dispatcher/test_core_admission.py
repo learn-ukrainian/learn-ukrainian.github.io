@@ -9,9 +9,9 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import git, providers, store, worker
+from lu_machinery.dispatcher.types import Invocation, TaskSpec
 
-from scripts.dispatcher import git, providers, store, worker
-from scripts.dispatcher.types import Invocation, TaskSpec
 from tests.dispatcher.conftest import run_git
 
 
@@ -31,7 +31,7 @@ from tests.dispatcher.conftest import run_git
     ],
 )
 def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
-    from scripts.dispatcher import cli
+    from lu_machinery.dispatcher import cli
 
     tasks = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
@@ -51,7 +51,7 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkey
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp_path, mode):
     """An uncapped paid run is the defect: only an API-key label carries ``--max-budget-usd``."""
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_API_KEY_BUDGET_USD
+    from lu_machinery.agent_runtime.attempt_boundary import CLAUDE_API_KEY_BUDGET_USD
 
     spec = TaskSpec("cap", "claude", "m", None, mode, tmp_path, tmp_path / "p", tmp_path / "f")
     spec.prompt_file.write_bytes(b"prompt")
@@ -69,7 +69,7 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
 
 
 def _plan_headroom_policy(tmp_path, monkeypatch, used, **extra):
-    from scripts.dispatcher import headroom
+    from lu_machinery.dispatcher import headroom
 
     path = tmp_path / "model-pause.json"
     policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 90}], **extra}
@@ -133,7 +133,7 @@ def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, m
 
 def test_advised_claude_run_on_another_executor_model_settles_as_a_failure(sandbox, monkeypatch):
     """Defect: an advised run silently executing on an unapproved model settled done."""
-    from scripts.dispatcher.providers import claude
+    from lu_machinery.dispatcher.providers import claude
 
     result = {"type": "result", "subtype": "success", "is_error": False, "result": "done", "usage": {},
               "modelUsage": {"claude-sonnet-4-6": {"canonicalModel": "claude-sonnet-4-6"},
@@ -174,8 +174,8 @@ def _spawn_refused_record(tmp_path, monkeypatch, task_id):
 
 
 def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_path, monkeypatch) -> None:
-    from scripts.dispatcher import admission
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.dispatcher import admission
+    from lu_machinery.orchestration import dispatch_isolation
 
     spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "ambiguous-scope")
 
@@ -201,8 +201,8 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_path, monkeypatch)
     ["inside-driver-scope; systemd-run unavailable", "caller-cgroup-unavailable", "caller-cgroup-unverifiable"],
 )
 def test_dispatch_fallback_refusal_records_no_worker_started(tmp_path, monkeypatch, reason) -> None:
-    from scripts.dispatcher import admission
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.dispatcher import admission
+    from lu_machinery.orchestration import dispatch_isolation
 
     spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "fallback-refusal")
     refusal = f"fallback-refused: {reason}"
@@ -228,8 +228,8 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_path, monkeypatch) -> 
 
     v2 records the worktree head (``head_sha``) when the record is created; a failed spawn keeps it.
     """
-    from scripts.dispatcher import admission
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.dispatcher import admission
+    from lu_machinery.orchestration import dispatch_isolation
 
     spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "popen-head")
     record["head_sha"] = "a" * 40
@@ -258,7 +258,7 @@ def _fake_pool(directory, *, current, file_cache, high=21 * 1024**3):
 
 def _full_disk(monkeypatch, *readings):
     """Ported from tests/test_delegate_admission.py::_full_disk."""
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.orchestration import dispatch_admission
 
     seen = {"readings": list(readings), "alerts": []}
 
@@ -299,7 +299,7 @@ def _credit_balance_snapshot():
 @pytest.fixture
 def admission_dispatch(sandbox, monkeypatch):
     """Ported setup from test_delegate_admission::_stub_worktree and credit_lane::dispatch_env."""
-    from scripts.dispatcher import cli
+    from lu_machinery.dispatcher import cli
 
     monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
     monkeypatch.setattr(git, "ROOT", sandbox.repo)
@@ -376,8 +376,8 @@ def test_file_cache_does_not_count_against_the_pool(admission_dispatch, tmp_path
 
 def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_locked_recheck_refuses_a_dispatch_that_lost_the_race."""
-    from scripts.dispatcher import host_admission as admission
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.dispatcher import host_admission as admission
+    from lu_machinery.orchestration import dispatch_admission
 
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
     real_evaluate = admission.evaluate
@@ -403,8 +403,8 @@ def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(admission_dispatch
 
 def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(admission_dispatch, monkeypatch):
     """Ported from tests/test_delegate_admission.py::test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created."""
-    from scripts.guardrails.delegate_ownership import _task_still_active
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.guardrails.delegate_ownership import _task_still_active
+    from lu_machinery.orchestration import dispatch_admission
 
     seen = {}
     create = git.create_worktree
@@ -445,8 +445,9 @@ def test_dispatch_that_stops_after_admission_drops_its_hold(admission_dispatch, 
 
 def test_admission_marks_a_record_whose_dispatcher_died_crashed(admission_dispatch):
     """Ported from tests/test_delegate_admission.py::test_admission_marks_a_record_whose_dispatcher_died_crashed."""
-    from scripts.dispatcher import host_admission as admission
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.dispatcher import host_admission as admission
+    from lu_machinery.orchestration import dispatch_admission
+
     from tests.worktree_prep_helpers import exited_process_identity
 
     pid, start = exited_process_identity()
@@ -468,7 +469,7 @@ def test_admission_marks_a_record_whose_dispatcher_died_crashed(admission_dispat
 @pytest.mark.parametrize("model", ["gpt-6-astra", "gpt-5-codex", "claude-opus-5-5"])
 def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(admission_dispatch, monkeypatch, capsys, model):
     """Ported from tests/test_credit_lane.py::test_admission_refuses_off_allowlist_model_on_credit_balance_lane."""
-    from scripts.fleet import credit_lane
+    from lu_machinery.fleet import credit_lane
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", _credit_balance_snapshot)
     assert admission_dispatch.dispatch(model=model, mode="read-only") == 2
@@ -484,8 +485,8 @@ def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(admission_
 @pytest.mark.parametrize("model", ["gpt-6.1-sol", "gpt-6-luna", "codex:gpt-6-luna", "GPT-6.1-Sol", None])
 def test_admission_accepts_allowlisted_and_default_models_without_reading_state(monkeypatch, model):
     """Ported from tests/test_credit_lane.py::test_admission_accepts_allowlisted_and_default_models_without_reading_state."""
-    from scripts.dispatcher import host_admission as admission
-    from scripts.fleet import credit_lane
+    from lu_machinery.dispatcher import host_admission as admission
+    from lu_machinery.fleet import credit_lane
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: pytest.fail("must not read state"))
     assert admission.credit_period_refusal("codex", model) is None
@@ -537,7 +538,7 @@ def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_di
 
 def test_force_admission_skips_the_early_refusal(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_force_admission_skips_the_early_refusal."""
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.orchestration import dispatch_admission
 
     overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
     monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
@@ -556,7 +557,7 @@ def test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request(admiss
 
 def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_on_an_overloaded_host_is_exempt."""
-    from scripts.orchestration import dispatch_admission
+    from lu_machinery.orchestration import dispatch_admission
 
     overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
     monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
@@ -631,7 +632,7 @@ def test_cli_recovers_old_spawn_without_process(sandbox, command):
 
 @pytest.mark.parametrize("case", ["recent", "live-owner", "unknown-owner", "pid", "terminal", "legacy"])
 def test_stale_spawn_recovery_preserves_unproven_or_live_records(tmp_path, monkeypatch, case):
-    from scripts.orchestration.dispatch_admission import new_admission_hold
+    from lu_machinery.orchestration.dispatch_admission import new_admission_hold
 
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
     record = dict(schema_version=2, task_id="preserved", run_nonce="same-run", status="spawning",
@@ -687,7 +688,7 @@ def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mod
 def _write_rate_limits(usage_dir, agent, model, account):
     from datetime import UTC, datetime
 
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     for path in usage_dir.glob("usage_*.jsonl"):
@@ -707,9 +708,9 @@ def test_runtime_headroom_gates_each_codex_account_on_its_own_events(tmp_path, m
 
     The supervisor asked for runtime headroom without the record's Codex account.
     """
-    from scripts.agent_runtime import usage
-    from scripts.agent_runtime.errors import RateLimitedError
-    from scripts.dispatcher import git, headroom
+    from lu_machinery.agent_runtime import usage
+    from lu_machinery.agent_runtime.errors import RateLimitedError
+    from lu_machinery.dispatcher import git, headroom
 
     usage_dir = tmp_path / "usage"
     tasks = tmp_path / "tasks"

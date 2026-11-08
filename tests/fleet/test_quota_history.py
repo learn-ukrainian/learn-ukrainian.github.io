@@ -15,8 +15,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.fleet import quota_history as qh
+from lu_machinery.fleet import quota_history as qh
 
 NOW = dt.datetime(2026, 10, 20, 8, 0, tzinfo=dt.UTC)
 # Distinctive values: each must never appear in a persisted or printed record.
@@ -515,7 +514,7 @@ def test_without_a_usable_published_threshold_the_monitors_own_bound_applies(dia
 
 
 def test_fallback_bound_is_the_monitors_routing_budget_max_age() -> None:
-    from scripts.api import state_router
+    from lu_machinery.api import state_router
 
     assert qh.ROUTING_BUDGET_MAX_AGE_S == state_router.ROUTING_BUDGET_MAX_AGE_S
 
@@ -729,7 +728,7 @@ def test_a_directory_that_vanishes_during_the_walk_is_refused(tmp_path: Path, mo
 def test_concurrent_appending_processes_each_land_whole_records(tmp_path: Path) -> None:
     store = tmp_path / "history" / "samples.jsonl"
     script = (
-        "import json, sys\nfrom pathlib import Path\nfrom scripts.fleet import quota_history as qh\n"
+        "import json, sys\nfrom pathlib import Path\nfrom lu_machinery.fleet import quota_history as qh\n"
         "rows = json.loads(sys.argv[2])\nfor _ in range(20):\n    qh.append(Path(sys.argv[1]), rows)\n"
     )
     repo = Path(__file__).resolve().parents[2]

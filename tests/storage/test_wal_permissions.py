@@ -12,15 +12,14 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-
-from scripts.storage import (
+from lu_machinery.storage import (
     get_companion_paths,
     hold_database,
     inspect_database_permissions,
     lift_database,
     wal_permissions,
 )
-from scripts.storage.cli import main
+from lu_machinery.storage.cli import main
 
 
 @pytest.fixture
@@ -234,7 +233,7 @@ def test_cli_reports_rollback_failures(tmp_path, monkeypatch, capsys):
     def fail(_):
         raise ExceptionGroup("Permission change and rollback failed", [PermissionError("cannot restore")])
 
-    monkeypatch.setattr("scripts.storage.cli.hold_database", fail)
+    monkeypatch.setattr("lu_machinery.storage.cli.hold_database", fail)
     assert main(["hold", str(tmp_path / "example.db")]) == 1
     assert "cannot restore" in capsys.readouterr().err
 
@@ -243,7 +242,7 @@ def test_module_entrypoint(tmp_path):
     db = tmp_path / "example.db"
     db.touch()
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.storage", "hold", str(db), "--json"],
+        [sys.executable, "-m", "lu_machinery.storage", "hold", str(db), "--json"],
         capture_output=True,
         text=True,
         check=True,

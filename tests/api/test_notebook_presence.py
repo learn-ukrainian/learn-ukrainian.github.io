@@ -7,17 +7,16 @@ from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import observer_presence
-from scripts.api.main import app
-from scripts.api.observer_presence import (
+from lu_machinery.api import observer_presence
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
     PresenceRequest,
     list_live,
     reset_observer_presence,
     upsert_presence,
 )
-from scripts.api.telemetry import response as telemetry_response
+from lu_machinery.api.telemetry import response as telemetry_response
 
 loop_client = TestClient(
     app,

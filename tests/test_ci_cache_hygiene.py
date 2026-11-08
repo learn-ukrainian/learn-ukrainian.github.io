@@ -8,9 +8,8 @@ import subprocess
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
-from scripts.ci import cache_hygiene
-from scripts.ci.cache_hygiene import (
+from lu_machinery.ci import cache_hygiene
+from lu_machinery.ci.cache_hygiene import (
     CacheEntry,
     IncompleteListingError,
     delete_entries,

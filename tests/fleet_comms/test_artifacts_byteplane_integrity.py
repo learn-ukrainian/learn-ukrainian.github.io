@@ -16,9 +16,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms import artifacts as artifacts_module
-from scripts.fleet_comms.artifacts import (
+from lu_machinery.fleet_comms import artifacts as artifacts_module
+from lu_machinery.fleet_comms.artifacts import (
     MAX_ARTIFACT_BYTES,
     ArtifactExpiredError,
     ArtifactStore,
@@ -201,8 +200,8 @@ def test_referenced_blob_of_open_delivery_is_never_removed(tmp_path: Path) -> No
     control loses only its blob, never its message row or digest."""
     from datetime import UTC, datetime, timedelta
 
-    from scripts.fleet_comms.artifacts import ArtifactExpiredError
-    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+    from lu_machinery.fleet_comms.artifacts import ArtifactExpiredError
+    from lu_machinery.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     with ArtifactStore(root=tmp_path / "plane") as store:
         service = AuthorityService(store=store)
@@ -239,7 +238,7 @@ def test_acknowledgment_racing_retention_refuses_expired_marker(tmp_path: Path, 
     not revive an expired artifact or terminalize its delivery."""
     from datetime import UTC, datetime, timedelta
 
-    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+    from lu_machinery.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     root = tmp_path / "plane"
     with ArtifactStore(root=root) as store, AuthorityService(root=root) as service:
@@ -433,7 +432,7 @@ def _sources(
 
 def test_artifact_cited_only_in_export_file_is_held(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """#12611: retention must not expire an artifact cited only in an export file."""
-    from scripts.fleet_comms.cli import build_parser, cmd_retention
+    from lu_machinery.fleet_comms.cli import build_parser, cmd_retention
 
     root = tmp_path / "batch_state" / "fleet-comms" / "v1"
     with ArtifactStore(root=root) as store:

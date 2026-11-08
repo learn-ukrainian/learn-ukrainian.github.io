@@ -4,9 +4,9 @@ import json
 import os
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.orchestration.task_record_store import archived_task_record_path, task_record_path
 
-from scripts.fleet import ignored_task_output as output
-from scripts.orchestration.task_record_store import archived_task_record_path, task_record_path
 from tests.orchestration.test_worktree_git import _reuse_cohort
 from tests.orchestration.test_worktree_git import hermetic_repo as hermetic_repo
 

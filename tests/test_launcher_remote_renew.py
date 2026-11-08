@@ -13,7 +13,7 @@ def test_driver_renew_loop_409_stops_provider_with_lease_lost(tmp_path: Path) ->
     fake_python.parent.mkdir(parents=True)
     fake_python.write_text(
         "#!/usr/bin/env bash\n"
-        'if [[ "${1:-}" == "-m" && "${2:-}" == "scripts.session_supervisor" ]]; then\n'
+        'if [[ "${1:-}" == "-m" && "${2:-}" == "lu_machinery.session_supervisor" ]]; then\n'
         "  echo 'session-supervisor: LEASE LOST' >&2\n"
         "  exit 4\n"
         "fi\n"

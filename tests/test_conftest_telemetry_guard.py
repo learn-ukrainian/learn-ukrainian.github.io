@@ -11,8 +11,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.common.repo_root import main_checkout_root
 
-from scripts.common.repo_root import main_checkout_root
 from tests.conftest import _TelemetryIsolation
 
 
@@ -234,7 +234,7 @@ def test_guard_accepts_unchanged_existing_events(tmp_path: Path) -> None:
 
 
 def test_guard_is_disabled_after_session_cleanup(tmp_path: Path, tmp_path_factory, monkeypatch) -> None:
-    from scripts.telemetry import emit
+    from lu_machinery.telemetry import emit
 
     production = tmp_path / "batch_state/telemetry/events"
     guard = _TelemetryIsolation((production,))

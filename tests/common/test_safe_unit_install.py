@@ -7,9 +7,8 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
-
-from scripts.common import safe_unit_install as safe
-from scripts.common.safe_unit_install import InstallError
+from lu_machinery.common import safe_unit_install as safe
+from lu_machinery.common.safe_unit_install import InstallError
 
 
 @pytest.fixture

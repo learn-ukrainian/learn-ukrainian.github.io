@@ -11,9 +11,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms import efficiency_metrics
-from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
+from lu_machinery.fleet_comms import efficiency_metrics
+from lu_machinery.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
 

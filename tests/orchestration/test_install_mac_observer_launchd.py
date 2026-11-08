@@ -5,8 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.orchestration import install_mac_observer_launchd as launchd
+from lu_machinery.orchestration import install_mac_observer_launchd as launchd
 
 
 def test_rendered_plist_runs_mac_observer_periodically(

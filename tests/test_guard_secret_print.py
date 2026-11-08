@@ -816,7 +816,7 @@ def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
         "jq keys",
         'git commit -m "notes: gh pr merge --admin and echo $GH_TOKEN"',
         'git commit -m "ref guard-secret-print.py"',
-        'git commit -m "document scripts.session_supervisor worker-env"',
+        'git commit -m "document lu_machinery.session_supervisor worker-env"',
         "git commit -F - <<EOF\nref guard-secret-print\nEOF",
         "tail -3 <<EOF\n.env\nEOF",
         "LEARN_UK_SECRETS_OK=1 env",
@@ -846,10 +846,10 @@ def test_echo_of_exported_secret_still_blocked(monkeypatch):
 @pytest.mark.parametrize(
     "cmd",
     [
-        "scripts.session_supervisor worker-env",
-        "python -m scripts.session_supervisor worker-env",
-        ".venv/bin/python -m scripts.session_supervisor worker-env --all",
-        "python3 -m scripts.session_supervisor --all worker-env",
+        "lu_machinery.session_supervisor worker-env",
+        "python -m lu_machinery.session_supervisor worker-env",
+        ".venv/bin/python -m lu_machinery.session_supervisor worker-env --all",
+        "python3 -m lu_machinery.session_supervisor --all worker-env",
     ],
 )
 def test_worker_env_commands_are_blocked(monkeypatch, capsys, cmd):

@@ -5,8 +5,7 @@ from __future__ import annotations
 import os
 
 import pytest
-
-from scripts.orchestration import dead_worker_state as d
+from lu_machinery.orchestration import dead_worker_state as d
 
 
 def _stat(pid, start, state="S"):
@@ -35,7 +34,7 @@ def _record():
 
 @pytest.mark.parametrize("schema", [None, 1, 2])
 def test_matching_start_time_proves_alive_even_when_signal_probe_reports_absent(proc, monkeypatch, schema):
-    from scripts.dispatcher import worker
+    from lu_machinery.dispatcher import worker
 
     monkeypatch.setattr(worker, "_identity", lambda pid: "boot:100")
     record = _record() if schema != 2 else {"pid": 123, "process_start": "boot:100"}
@@ -56,7 +55,7 @@ def test_unreadable_start_time_is_unknown(proc, bad_stat):
 
 @pytest.mark.parametrize("schema", [None, 1, 2])
 def test_pid_reuse_is_dead(proc, monkeypatch, schema):
-    from scripts.dispatcher import worker
+    from lu_machinery.dispatcher import worker
 
     (proc / "123" / "stat").write_text(_stat(123, 101))
     monkeypatch.setattr(worker, "_identity", lambda pid: "boot:101")
@@ -93,7 +92,7 @@ def test_zombie_supervisor_unreadable_stat_fails_closed(proc, monkeypatch, ident
 
 @pytest.mark.parametrize("identity_case,gone", [("foreign", False), ("reused", True), ("alive", False), ("invalid", False)])
 def test_dispatcher_owner_uses_namespace_and_start_time(proc, identity_case, gone):
-    from scripts.orchestration.worktree_prep import owner_gone
+    from lu_machinery.orchestration.worktree_prep import owner_gone
 
     identity = _record()["worker_identity"]
     if identity_case == "foreign":
@@ -167,7 +166,7 @@ def test_marker_rechecks_identity_before_writing_or_releasing_claim(
     import json
     from unittest.mock import Mock
 
-    from scripts.dispatcher import store, worker
+    from lu_machinery.dispatcher import store, worker
 
     record = {**_record(), "task_id": "worker", "status": "running", "run_nonce": "run",
               "worktree_path": str(tmp_path / "missing"), "worktree_prep": {}, "admission_hold": {}}

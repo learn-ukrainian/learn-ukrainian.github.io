@@ -15,8 +15,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import uv_cache_status as uv
+from lu_machinery.hygiene import uv_cache_status as uv
 
 GIB = 1024**3
 HOUR = 3600
@@ -294,7 +293,7 @@ def test_cli_with_a_held_history_lock_finishes_within_both_deadlines(tmp_path: P
     with _held_history_lock(state):
         started = time.monotonic()
         result = subprocess.run(
-            [sys.executable, "-m", "scripts.hygiene.uv_cache_status", "--record-history"],
+            [sys.executable, "-m", "lu_machinery.hygiene.uv_cache_status", "--record-history"],
             cwd=repo,
             env=env,
             capture_output=True,

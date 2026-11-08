@@ -10,14 +10,14 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from scripts.ai_agent_bridge._worktree_brief import write_worktree_brief
+from lu_machinery.ai_agent_bridge._worktree_brief import write_worktree_brief
 
 
 def test_write_worktree_brief_writes_expected_yaml(tmp_path):
     fixed_now = datetime(2026, 4, 12, 9, 30, 0, tzinfo=UTC)
 
-    with patch("scripts.ai_agent_bridge._worktree_brief._run_git") as run_git_mock, patch(
-        "scripts.ai_agent_bridge._worktree_brief._utcnow", return_value=fixed_now
+    with patch("lu_machinery.ai_agent_bridge._worktree_brief._run_git") as run_git_mock, patch(
+        "lu_machinery.ai_agent_bridge._worktree_brief._utcnow", return_value=fixed_now
     ):
         run_git_mock.side_effect = [
             "abc123def456",

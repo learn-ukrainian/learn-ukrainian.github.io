@@ -5,13 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from scripts.ai_agent_bridge import _claude, _codex, _opencode
-from scripts.ai_agent_bridge import _review_safety as safety
+from lu_machinery.ai_agent_bridge import _claude, _codex, _opencode
+from lu_machinery.ai_agent_bridge import _review_safety as safety
 
 
 def test_review_contract_preamble_states_exact_accepted_tokens_without_own_verdict():
-    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+    from lu_machinery.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
 
     prompt = safety.prepend_read_only_contract("Review this change.")
     assert "APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in prompt

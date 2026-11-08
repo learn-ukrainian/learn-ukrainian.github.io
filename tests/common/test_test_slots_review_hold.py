@@ -25,8 +25,8 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import test_slots
 
-from scripts.common import test_slots
 from tests.common.test_test_slots import UNSAFE_POOL_PATHS, _unsafe_pool_path
 from tests.wait_helpers import wait_for_line
 
@@ -105,7 +105,7 @@ def _child_env(**extra: str) -> dict[str, str]:
 
 def _launch(*command: str, timeout: float = 60, **env: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "scripts.common.test_slots", *command],
+        [sys.executable, "-m", "lu_machinery.common.test_slots", *command],
         cwd=REPO_ROOT,
         env=_child_env(**env),
         capture_output=True,
@@ -355,7 +355,7 @@ INTERVAL = "import sys, time; start = time.monotonic(); time.sleep(0.6); print(s
 
 
 def test_concurrent_governed_runs_of_one_review_never_overlap(read_only_pool: Path, review: test_slots.Hold) -> None:
-    command = [sys.executable, "-m", "scripts.common.test_slots", "run", "--", sys.executable, "-c", INTERVAL]
+    command = [sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--", sys.executable, "-c", INTERVAL]
     runs = [
         subprocess.Popen(
             command,
@@ -485,7 +485,7 @@ def _record_path(hold: test_slots.Hold) -> Path:
 
 def _governed(out: Path, seconds: float, *slots: str, **env: str) -> subprocess.Popen[str]:
     """A real governed test run (``test_slots run``) whose command records when it ran."""
-    command = [sys.executable, "-m", "scripts.common.test_slots", "run", *slots, "--"]
+    command = [sys.executable, "-m", "lu_machinery.common.test_slots", "run", *slots, "--"]
     return subprocess.Popen(
         [*command, sys.executable, "-c", RECORDER, str(out), str(seconds)],
         cwd=REPO_ROOT,
@@ -737,7 +737,7 @@ def _sandboxed(prefix: list[str], *command: str, **env: str) -> subprocess.Compl
     """Run ``test_slots run -- <command>`` in ``prefix`` with no pool override unless ``env`` sets one."""
     base = {key: value for key, value in _child_env().items() if key not in _POOL_SELECTORS}
     return subprocess.run(
-        [*prefix, sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "1", "--", *command],
+        [*prefix, sys.executable, "-m", "lu_machinery.common.test_slots", "run", "--slots", "1", "--", *command],
         cwd=REPO_ROOT,
         env={**base, test_slots.WAIT_ENV: "1", **env},
         capture_output=True,
@@ -791,7 +791,7 @@ def test_a_sandboxed_turn_serves_its_own_descendants_but_not_a_sibling_holding_i
         pytest.skip("no unprivileged user-namespace sandbox (bwrap) on this host")
     marker = {test_slots.HOLDER_ENV: _inside_marker(review)}
     # A real child of the turn (subprocess closes the turn's descriptors), not the turn's own exec'd command.
-    nested = "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'scripts.common.test_slots', 'run', '--', sys.executable, '-c', 'print(\"nested\")']))"
+    nested = "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'lu_machinery.common.test_slots', 'run', '--', sys.executable, '-c', 'print(\"nested\")']))"
     joined = _sandboxed(sandbox, sys.executable, "-c", nested, **marker)
     assert joined.returncode == 0, joined.stderr
     assert joined.stdout.strip() == "nested"
@@ -805,7 +805,7 @@ def test_a_sandboxed_turn_serves_its_own_descendants_but_not_a_sibling_holding_i
             str(tmp_path),
             sys.executable,
             "-m",
-            "scripts.common.test_slots",
+            "lu_machinery.common.test_slots",
             "run",
             "--",
             sys.executable,
@@ -834,7 +834,7 @@ def test_a_sandboxed_turn_serves_its_own_descendants_but_not_a_sibling_holding_i
 
 # A governed run whose command starts a governed child run, the shape of a test that starts pytest.
 NESTED_RUN = (
-    "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'scripts.common.test_slots', 'run', "
+    "import subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'lu_machinery.common.test_slots', 'run', "
     "'--', sys.executable, '-c', 'print(\"nested ran\")']))"
 )
 

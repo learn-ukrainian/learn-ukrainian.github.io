@@ -7,11 +7,10 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-from scripts.api.telemetry import response as telemetry_response
-from scripts.api.telemetry import transcript_tokens
-from scripts.lib.session_record import update_session
+from lu_machinery.api.main import app
+from lu_machinery.api.telemetry import response as telemetry_response
+from lu_machinery.api.telemetry import transcript_tokens
+from lu_machinery.lib.session_record import update_session
 
 
 def _write_transcript(path: Path, *, tokens: int = 187_000, prev: int = 125_000) -> None:

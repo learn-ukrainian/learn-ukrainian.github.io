@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.api.fleet_workers_sanitize import validate_worker_row_dict, validate_workers_list
-from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
+from lu_machinery.api.fleet_workers_sanitize import validate_worker_row_dict, validate_workers_list
+from lu_machinery.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 
 
 def _row(**overrides: object) -> dict[str, object]:

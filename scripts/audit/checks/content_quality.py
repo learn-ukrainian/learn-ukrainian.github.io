@@ -560,7 +560,7 @@ def extract_module_metadata(content: str) -> dict:
 
 def call_gemini_api(lesson_content: str, metadata: dict) -> dict | None:
     """Call Gemini API to evaluate content quality."""
-    from scripts.review.model_catalog import require_execution_model
+    from lu_machinery.review.model_catalog import require_execution_model
 
     require_execution_model("gemini-2.0-flash-exp", transport="google_api")
     try:
@@ -686,7 +686,7 @@ def check_content_quality(
         })
         return violations
 
-    from scripts.review.model_catalog import ModelCatalogError
+    from lu_machinery.review.model_catalog import ModelCatalogError
 
     try:
         evaluation = call_gemini_api(lesson_content, metadata)

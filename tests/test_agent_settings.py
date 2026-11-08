@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-
-from scripts.agent_runtime.adapters.claude import _headless_worker_settings
+from lu_machinery.agent_runtime.adapters.claude import _headless_worker_settings
 
 
 @pytest.mark.parametrize("publish_guard", [False, True])

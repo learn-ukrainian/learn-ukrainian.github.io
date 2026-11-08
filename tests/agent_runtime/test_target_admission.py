@@ -6,9 +6,8 @@ import hashlib
 from copy import deepcopy
 
 import pytest
-
-from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
-from scripts.agent_runtime.target_admission import mechanical_scope_digest, mechanical_worker_scope
+from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+from lu_machinery.agent_runtime.target_admission import mechanical_scope_digest, mechanical_worker_scope
 
 
 def record(**changes):

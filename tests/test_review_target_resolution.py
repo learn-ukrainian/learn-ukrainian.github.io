@@ -12,8 +12,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
-from scripts.review.target_resolution import (
+from lu_machinery.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
+from lu_machinery.review.target_resolution import (
     TargetResolutionError,
     resolve_branch_target,
     resolve_commit_target,
@@ -66,7 +66,7 @@ def test_config_injection_variables_cannot_override_user_identity(monkeypatch, t
 
 
 def test_default_sanitized_env_preserves_runtime_read_only_push_block(monkeypatch, tmp_path):
-    from scripts.agent_runtime.env_sanitize import _append_push_rewrite
+    from lu_machinery.agent_runtime.env_sanitize import _append_push_rewrite
 
     repo = _init_repo(tmp_path)
     remote = tmp_path / "remote.git"
@@ -246,7 +246,7 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     _git(repo, "commit", "-q", "-m", "pr change")
     head_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
 
-    import scripts.review.target_resolution as tr
+    import lu_machinery.review.target_resolution as tr
 
     _publish_pr_branch(repo, "feature-branch", head_sha)
     assert _git(repo, "ls-remote", "origin", "refs/heads/feature-branch").stdout == (
@@ -309,7 +309,7 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
     base_tip_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
     assert base_tip_sha != merge_base_sha
 
-    import scripts.review.target_resolution as tr
+    import lu_machinery.review.target_resolution as tr
 
     _publish_pr_branch(repo, "feature", head_sha)
     payload = {
@@ -345,7 +345,7 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
 def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path)
     _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
-    import scripts.review.target_resolution as tr
+    import lu_machinery.review.target_resolution as tr
 
     def fake_run_gh(args, cwd, timeout=30.0):
         return subprocess.CompletedProcess(args, 0, stdout=json.dumps({"number": 1}), stderr="")
@@ -356,8 +356,8 @@ def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
 
 
 def test_merged_pr_deleted_branch_resolves_recorded_final_head(tmp_path, monkeypatch, capsys):
-    from scripts.review import closeout_cli
-    from scripts.review import target_resolution as tr
+    from lu_machinery.review import closeout_cli
+    from lu_machinery.review import target_resolution as tr
 
     repo = _init_repo(tmp_path)
     _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
@@ -400,8 +400,8 @@ def test_merged_pr_deleted_branch_resolves_recorded_final_head(tmp_path, monkeyp
 
 
 def test_closed_unmerged_pr_or_recorded_head_mismatch_is_refused(tmp_path, monkeypatch, capsys):
-    from scripts.review import closeout_cli
-    from scripts.review import target_resolution as tr
+    from lu_machinery.review import closeout_cli
+    from lu_machinery.review import target_resolution as tr
 
     repo = _init_repo(tmp_path)
     _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
@@ -438,7 +438,7 @@ def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_
     repo = _init_repo(tmp_path)
     _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
-    import scripts.review.target_resolution as tr
+    import lu_machinery.review.target_resolution as tr
 
     payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": base_name, "isCrossRepository": False}
 

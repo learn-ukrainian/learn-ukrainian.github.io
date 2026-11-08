@@ -6,7 +6,7 @@ import stat
 import subprocess
 from pathlib import Path
 
-from scripts.orchestration import install_archived_thread_cleanup_launchd as launchd
+from lu_machinery.orchestration import install_archived_thread_cleanup_launchd as launchd
 
 _WRAPPER = (
     Path(__file__).resolve().parents[2]

@@ -12,9 +12,9 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api.comms_router import router as comms_router
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api.comms_router import router as comms_router
-from scripts.api.monitor_context import fixture_context
 from scripts.project_api.batch_progress import router as batch_progress_router
 
 pytestmark = pytest.mark.reads_content
@@ -38,7 +38,7 @@ def test_corrupt_pid_file_is_surfaced_and_dead_pid_is_not(
     # In-range but unused: a dead pid is not a load error. 2**31-1 is above the probe cap.
     (pid_dir / "dead.json").write_text(json.dumps({"pid": 2**22}), encoding="utf-8")
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+    with caplog.at_level(logging.WARNING, logger="lu_machinery.api.comms_router"):
         resp = comms_client.get("/api/comms/health")
 
     assert resp.status_code == 200
@@ -73,7 +73,7 @@ def test_broker_db_probe_failure_is_named(
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.mkdir()
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+    with caplog.at_level(logging.WARNING, logger="lu_machinery.api.comms_router"):
         resp = comms_client.get("/api/comms/health")
 
     assert resp.status_code == 200

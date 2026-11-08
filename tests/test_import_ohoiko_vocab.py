@@ -25,6 +25,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.storage import topology
 
 from scripts.lexdata import build_store, transforms
 from scripts.lexdata import records as rec
@@ -36,7 +37,6 @@ from scripts.lexicon.ohoiko_quality_enrichment import (
     iter_1000_words_examples,
     normalize_chunk_lines,
 )
-from scripts.storage import topology
 
 WORDS = "anna-ohoiko-1000-words-2nd-ed"
 VERBS = "anna-ohoiko-500-verbs"

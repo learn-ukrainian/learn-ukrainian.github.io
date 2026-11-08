@@ -1,4 +1,4 @@
-"""Tests for scripts.orchestration.reconcile_sweep."""
+"""Tests for lu_machinery.orchestration.reconcile_sweep."""
 
 from __future__ import annotations
 
@@ -10,9 +10,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.guardrails.delegate_ownership import OwnershipLedger
-from scripts.orchestration import dead_worker_state, reconcile_sweep
+from lu_machinery.guardrails.delegate_ownership import OwnershipLedger
+from lu_machinery.orchestration import dead_worker_state, reconcile_sweep
 
 
 @pytest.fixture(autouse=True)

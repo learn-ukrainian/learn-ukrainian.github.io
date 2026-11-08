@@ -18,8 +18,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.hygiene import lint_tmp_paths as lint
+from lu_machinery.hygiene import lint_tmp_paths as lint
 
 LITERAL = "/" + "tmp/fixture"
 TMP_ROOT = "/" + "tmp"

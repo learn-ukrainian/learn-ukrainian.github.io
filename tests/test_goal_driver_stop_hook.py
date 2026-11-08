@@ -9,8 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.goal_driver import stop_hook
+from lu_machinery.goal_driver import stop_hook
 
 
 def _write_transcript(path: Path, assistant_chunks: list[str]) -> None:

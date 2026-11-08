@@ -10,16 +10,15 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.fleet_comms.adapter_conformance import (
+from lu_machinery.fleet_comms.adapter_conformance import (
     CaptureInput,
     conform,
     raw_capture_matches,
 )
-from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
-from scripts.fleet_comms.contracts import CompletionState
-from scripts.fleet_comms.paths import PlaneRootAnchorError
-from scripts.fleet_comms.request_executor import RequestExecutor
+from lu_machinery.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+from lu_machinery.fleet_comms.contracts import CompletionState
+from lu_machinery.fleet_comms.paths import PlaneRootAnchorError
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
 # ── PR-C: artifact store ────────────────────────────────────────────────────
 
@@ -74,7 +73,7 @@ def test_artifact_store_uses_durable_sqlite_and_private_modes(
     connect = Mock(side_effect=AssertionError("checkout root reached backend"))
     prepare = Mock(side_effect=AssertionError("checkout root reached mkdir/chmod"))
     with monkeypatch.context() as guard:
-        guard.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
+        guard.setattr("lu_machinery.fleet_comms.artifacts.cp_connect", connect)
         guard.setattr(ArtifactStore, "_prepare_private_dir", prepare)
         for candidate in (primary, linked, alias, primary / "absent" / ".."):
             for readonly in (False, True):
@@ -94,7 +93,7 @@ def test_artifact_store_uses_durable_sqlite_and_private_modes(
     default_root.symlink_to(loop)
     before = sorted(tmp_path.rglob("*"))
     with monkeypatch.context() as guard:
-        guard.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
+        guard.setattr("lu_machinery.fleet_comms.artifacts.cp_connect", connect)
         guard.setattr(ArtifactStore, "_prepare_private_dir", prepare)
         for selection in ({"root": loop}, {}, {"repo_root": loop}, {"repo_root": primary}):
             if selection:
@@ -127,9 +126,9 @@ def test_artifact_store_wal_setup_retries_fast_lock_failures(monkeypatch) -> Non
     connection = RacingConnection()
     store = ArtifactStore.__new__(ArtifactStore)
     store._conn = connection
-    monkeypatch.setattr("scripts.fleet_comms.artifacts.time.monotonic", lambda: 0.0)
+    monkeypatch.setattr("lu_machinery.fleet_comms.artifacts.time.monotonic", lambda: 0.0)
     monkeypatch.setattr(
-        "scripts.fleet_comms.artifacts.time.sleep",
+        "lu_machinery.fleet_comms.artifacts.time.sleep",
         lambda seconds: sleeps.append(seconds),
     )
 

@@ -11,10 +11,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.fleet_comms.authority import AuthorityService
-from scripts.orchestration import stalled_work as mod
-from scripts.review.record_cf_verdict import build_comment
+from lu_machinery.fleet_comms.authority import AuthorityService
+from lu_machinery.orchestration import stalled_work as mod
+from lu_machinery.review.record_cf_verdict import build_comment
 
 NOW = datetime(2026, 10, 20, 18, tzinfo=UTC)
 SLUG = "example/public"
@@ -394,7 +393,7 @@ def test_unknown_pr_verdict_routes_to_cto_without_blocking_other_work(host):
 def test_keeper_post_step_failure_does_not_fail_the_keeper_unit():
     unit = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.service"
     post = [line for line in unit.read_text().splitlines() if line.startswith("ExecStartPost=")]
-    assert post == ["ExecStartPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.stalled_work stalled --tick"]
+    assert post == ["ExecStartPost=-@REPO_ROOT@/.venv/bin/python -m lu_machinery.orchestration.stalled_work stalled --tick"]
 
 
 def test_malformed_record_is_visible(host):

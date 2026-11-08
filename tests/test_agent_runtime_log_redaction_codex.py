@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
 _NO_CI_VARIABLES = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 _BUDGET_MESSAGE = "non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead"

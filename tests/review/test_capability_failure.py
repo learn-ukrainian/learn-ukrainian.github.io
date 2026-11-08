@@ -7,13 +7,13 @@ import json
 from dataclasses import replace
 
 import pytest
+from lu_machinery.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.review import capability_failure as cf
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.review_lineage import LineageRefused, ReviewRun, check_lineage
+from lu_machinery.review.verdict_parser import recognized_verdicts
 
-from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
-from scripts.orchestration import integration_sweep as sweep
-from scripts.review import capability_failure as cf
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.review_lineage import LineageRefused, ReviewRun, check_lineage
-from scripts.review.verdict_parser import recognized_verdicts
 from tests.test_record_cf_verdict import BRANCH, OTHER, SHA, recorded_verdict, setup_record
 
 EARLIER = "c" * 40

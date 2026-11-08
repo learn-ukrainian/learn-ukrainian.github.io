@@ -1,4 +1,4 @@
-"""Tests for scripts.fleet.idle_settle (#6976 reminder + #6998 admission / enforce codes)."""
+"""Tests for lu_machinery.fleet.idle_settle (#6976 reminder + #6998 admission / enforce codes)."""
 
 from __future__ import annotations
 
@@ -7,8 +7,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet import idle_settle as idle
+from lu_machinery.fleet import idle_settle as idle
 
 
 def _snapshot(
@@ -438,8 +437,8 @@ def test_missing_quota_or_load_is_not_available(row) -> None:
 
 def test_owner_established_capacity_row_counts_as_quota_permission() -> None:
     """A5: a capacity_pick row whose capacity the owner established is quota permission; stale is not."""
-    from scripts.fleet import capacity_pick
-    from scripts.fleet.reset_reserve import unavailable_reserve
+    from lu_machinery.fleet import capacity_pick
+    from lu_machinery.fleet.reset_reserve import unavailable_reserve
 
     budget = {
         "agents": {
@@ -463,8 +462,8 @@ def test_owner_established_capacity_row_counts_as_quota_permission() -> None:
 
 def test_idle_lane_with_no_recent_tasks_counts() -> None:
     """A1 control: an idle, scan-observed lane (healthy, basis scan_observed_idle) is available."""
-    from scripts.fleet import capacity_pick
-    from scripts.fleet.reset_reserve import unavailable_reserve
+    from lu_machinery.fleet import capacity_pick
+    from lu_machinery.fleet.reset_reserve import unavailable_reserve
 
     budget = {
         "agents": {

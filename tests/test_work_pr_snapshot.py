@@ -6,11 +6,10 @@ import threading
 from datetime import timedelta
 
 import pytest
-
-from scripts import github_rest_cache as github_rest
-from scripts.work import sources_public as sources
-from scripts.work.normalize import build_projection, qualify_pr_snapshot_age
-from scripts.work.schema import validate_projection
+from lu_machinery import github_rest_cache as github_rest
+from lu_machinery.work import sources_public as sources
+from lu_machinery.work.normalize import build_projection, qualify_pr_snapshot_age
+from lu_machinery.work.schema import validate_projection
 
 REPO = sources.DEFAULT_PUBLIC_REPOSITORY
 
@@ -92,7 +91,7 @@ def test_snapshot_age_is_requalified_inside_warm_projection(monkeypatch):
     raw = [{"number": 1, "statusCheckRollup": [{"name": "CI Gate", "conclusion": "SUCCESS"}]}]
     section = sources.SectionResult("prs", "ok", payload=raw, count=1, age_s=25, observed_at=observed.isoformat())
     payload = build_projection(_sections(section), lifecycle_ledgers=[])
-    from scripts.work import normalize
+    from lu_machinery.work import normalize
 
     class Clock:
         @staticmethod

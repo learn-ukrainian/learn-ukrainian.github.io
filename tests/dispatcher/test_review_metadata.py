@@ -8,10 +8,9 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.dispatcher import checks, cli, git, store, worker
-from scripts.review import record_cf_verdict as cf
-from scripts.review.subject_seat import classify_owned_path
+from lu_machinery.dispatcher import checks, cli, git, store, worker
+from lu_machinery.review import record_cf_verdict as cf
+from lu_machinery.review.subject_seat import classify_owned_path
 
 BRANCH_AUTHOR_FAMILIES = checks.check_branch_author_families
 
@@ -102,7 +101,7 @@ def test_effective_identity_does_not_overexclude_cursor_without_matching_subject
 
 
 def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatch, capsys):
-    from scripts.review import model_catalog
+    from lu_machinery.review import model_catalog
 
     monkeypatch.setattr(model_catalog, "substitution_default_model", lambda _: "unknown-model")
     dispatch("--subject-seat", "claude", agent="cursor", expected=2)

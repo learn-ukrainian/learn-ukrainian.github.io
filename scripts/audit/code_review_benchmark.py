@@ -23,9 +23,9 @@ except ModuleNotFoundError:
     from scripts.audit._judge_eval_lib import PROJECT_ROOT, utc_timestamp
 
 try:
-    from agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
+    from lu_machinery.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
 except ModuleNotFoundError:
-    from scripts.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
+    from lu_machinery.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude
 
 REQUEST_TIMEOUT_S = 480
 DEFAULT_CORPUS_DIR = PROJECT_ROOT / "audit" / "code-review-benchmark" / "corpus"
@@ -449,7 +449,7 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
 def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
     """Invoke a native provider CLI for one benchmark prompt."""
     cmd = build_native_command(cell, prompt)
-    from scripts.review.model_catalog import require_execution_model
+    from lu_machinery.review.model_catalog import require_execution_model
 
     transport = {"anthropic": "native_claude", "openai": "native_codex", "google": "native_gemini", "xai": "native_grok"}[cell.family]
     require_execution_model(cell.model, transport=transport)

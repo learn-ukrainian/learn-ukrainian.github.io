@@ -12,14 +12,13 @@ from __future__ import annotations
 import hashlib
 import sqlite3
 
+import lu_machinery.api.main as api_main
+import lu_machinery.api.rules_router as rules_router
+import lu_machinery.api.state_router as state_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-import scripts.api.rules_router as rules_router
-import scripts.api.state_router as state_router
-from scripts.api.monitor_context import fixture_context
-from scripts.lib import rules_core
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.lib import rules_core
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -350,8 +349,8 @@ def test_manifest_omits_research_when_flag_off(monkeypatch):
 
 def test_inbox_returns_pending_deliveries(monkeypatch):
     """The inbox endpoint surfaces pending channel deliveries for an agent."""
-    import scripts.api.comms_router as comms_router  # noqa: F401 — ensure mounted
-    from scripts.ai_agent_bridge import _channels
+    import lu_machinery.api.comms_router as comms_router  # noqa: F401 — ensure mounted
+    from lu_machinery.ai_agent_bridge import _channels
 
     fake_rows = [
         {
@@ -391,7 +390,7 @@ def test_inbox_returns_pending_deliveries(monkeypatch):
 
 
 def test_inbox_respects_limit_and_marks_truncated(monkeypatch):
-    from scripts.ai_agent_bridge import _channels
+    from lu_machinery.ai_agent_bridge import _channels
 
     fake_rows = [
         {
@@ -416,7 +415,7 @@ def test_inbox_respects_limit_and_marks_truncated(monkeypatch):
 
 
 def test_inbox_400_on_invalid_agent(monkeypatch):
-    from scripts.ai_agent_bridge import _channels
+    from lu_machinery.ai_agent_bridge import _channels
 
     def raises(_agent):
         raise ValueError("unknown agent: foobar")

@@ -17,7 +17,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.grok_build import (
+from lu_machinery.agent_runtime.adapters.grok_build import (
     _ISOLATED_PROMPT_FILENAME,
     _PROMPT_FILE_SUFFIX,
     GrokBuildAdapter,
@@ -28,7 +28,7 @@ FAKE_GROK = "/usr/local/bin/grok"
 # cannot be exec'd. An argv element must stay strictly below this.
 _MAX_ARG_STRLEN = 131_072
 def _inline_limit() -> int:
-    from agent_runtime.adapters import grok_build
+    from lu_machinery.agent_runtime.adapters import grok_build
 
     limit = getattr(grok_build, "_INLINE_PROMPT_LIMIT_BYTES", None)
     if not isinstance(limit, int):
@@ -42,7 +42,7 @@ def _build(prompt: str, tmp_path: Path, **kw):
     previous_tempdir = tempfile.tempdir
     try:
         with (
-            patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK),
+            patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK),
             patch.dict("os.environ", {"TMPDIR": str(tmp_path)}),
         ):
             # NamedTemporaryFile caches the first temp directory it sees.
@@ -73,7 +73,7 @@ def _isolated(prompt: str, tmp_path: Path, **kw):
         **extra,
     }
     with patch(
-        "scripts.review.isolation.validated_review_write_root",
+        "lu_machinery.review.isolation.validated_review_write_root",
         return_value=review_root,
     ):
         return _build(prompt, tmp_path, mode="read-only", tool_config=tool_config, **kw), review_root

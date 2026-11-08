@@ -11,11 +11,11 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.orchestration import dispatch_settle as ds
+from lu_machinery.orchestration import stale_task_records as stale
+from lu_machinery.orchestration import worktree_claims as wc
+from lu_machinery.orchestration.task_family import git_safety
 
-from scripts.orchestration import dispatch_settle as ds
-from scripts.orchestration import stale_task_records as stale
-from scripts.orchestration import worktree_claims as wc
-from scripts.orchestration.task_family import git_safety
 from tests.helpers.interrupted_checkout import hashes
 from tests.helpers.interrupted_checkout import interrupted_checkout as interrupted_checkout
 from tests.orchestration.test_worktree_artifacts import assert_record_only
@@ -68,7 +68,7 @@ def test_guarded_remove_non_utf8_result_retains_and_reports(interrupted_checkout
     "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
 )
 def test_missing_tree_caller_matrix(interrupted_checkout, monkeypatch, writer, case):
-    from scripts.orchestration.dead_worker_state import mark_missing_worktree_failed
+    from lu_machinery.orchestration.dead_worker_state import mark_missing_worktree_failed
 
     repo, tree, tasks, record, result, output = interrupted_checkout
     # Move, rather than destroy, the registered tree. The caller sees its old

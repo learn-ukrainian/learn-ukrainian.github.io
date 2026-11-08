@@ -6,7 +6,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from scripts.api import main as api_main
+from lu_machinery.api import main as api_main
 
 
 def test_backup_health_reports_failure_and_timestamp(tmp_path: Path) -> None:

@@ -9,10 +9,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from agents_extensions.shared.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
-from scripts.ai_agent_bridge import _channels, _db
-from scripts.fleet_comms.bottleneck_alerts import scan_bottlenecks_at_inbox_checkpoint
+from lu_machinery.ai_agent_bridge import _channels, _db
+from lu_machinery.fleet_comms.bottleneck_alerts import scan_bottlenecks_at_inbox_checkpoint
+from lu_machinery.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
 
@@ -26,8 +25,8 @@ def isolate_broker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     # default hard-fails there, so they use the explicit operator override.
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
     with (
-        patch("scripts.ai_agent_bridge._config.DB_PATH", broker_db),
-        patch("scripts.ai_agent_bridge._db.DB_PATH", broker_db),
+        patch("lu_machinery.ai_agent_bridge._config.DB_PATH", broker_db),
+        patch("lu_machinery.ai_agent_bridge._db.DB_PATH", broker_db),
     ):
         _db.init_db()
         yield broker_db

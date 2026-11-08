@@ -5,9 +5,9 @@ import json
 import shutil
 
 import pytest
+from lu_machinery.orchestration import merge_closeout as mc
+from lu_machinery.orchestration import task_lifecycle as tl
 
-from scripts.orchestration import merge_closeout as mc
-from scripts.orchestration import task_lifecycle as tl
 from tests.orchestration.test_merge_closeout import add_worktree, git, init_repo
 from tests.orchestration.test_task_lifecycle import NOW, _body, _ledger, _observation
 
@@ -102,7 +102,7 @@ def test_closeout_records_local_and_keeps_the_worktree(observation_case, monkeyp
 
 
 def test_recovery_appends_and_is_idempotent(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, state_file, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -171,7 +171,7 @@ def test_recovery_appends_and_is_idempotent(observation_case):
     ],
 )
 def test_recovery_refuses_without_append(observation_case, mutation, reason):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task_file, manifest, push_file, _ = observation_case
     if mutation != "present_worktree":
@@ -220,7 +220,7 @@ def test_recovery_refuses_without_append(observation_case, mutation, reason):
 
 @pytest.mark.parametrize("source", ["task", "manifest", "push", "bundle"])
 def test_recovered_receipt_rechecks_all_digests(observation_case, source):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task, manifest, push, _ = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -243,8 +243,8 @@ def test_recovered_receipt_rechecks_all_digests(observation_case, source):
 
 @pytest.mark.parametrize("closeout_shape", ["current", "before_fr01b"])
 def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observation_case, monkeypatch, closeout_shape):
-    from scripts.orchestration import lifecycle_observation as lo
-    from scripts.orchestration.task_closeout import GhGitHubAdapter
+    from lu_machinery.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration.task_closeout import GhGitHubAdapter
 
     repo, worktree, ledger, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -302,7 +302,7 @@ def test_closeout_retains_everything_when_observation_write_fails(observation_ca
 
 
 def test_capture_replays_without_changing_ledger(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, *_ = observation_case
     assert lo.before_reap(repo, worktree)[0]["status"] == "recorded"
@@ -312,7 +312,7 @@ def test_capture_replays_without_changing_ledger(observation_case):
 
 
 def test_capture_after_fast_forward_merge_keeps_commits(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, *_, head = observation_case
     git(repo, "merge", "--ff-only", head)
@@ -322,7 +322,7 @@ def test_capture_after_fast_forward_merge_keeps_commits(observation_case):
 
 
 def test_recovery_cli_appends_without_network(observation_case, capsys):
-    from scripts.orchestration import task_closeout
+    from lu_machinery.orchestration import task_closeout
 
     repo, worktree, ledger, task, manifest, push, _ = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -346,7 +346,7 @@ def test_recovery_cli_appends_without_network(observation_case, capsys):
 
 
 def test_no_ledger_keeps_existing_reap_path(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, _, task_file, *_ = observation_case
     task = json.loads(task_file.read_bytes())
@@ -356,7 +356,7 @@ def test_no_ledger_keeps_existing_reap_path(observation_case):
 
 
 def test_missing_claimed_ledger_refuses_reap(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, *_ = observation_case
     ledger.unlink()
@@ -365,7 +365,7 @@ def test_missing_claimed_ledger_refuses_reap(observation_case):
 
 
 def test_capture_wrong_branch_refuses_reap(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, _, task_file, *_ = observation_case
     task = json.loads(task_file.read_bytes())
@@ -376,7 +376,7 @@ def test_capture_wrong_branch_refuses_reap(observation_case):
 
 
 def test_blank_bypass_reason_refuses(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, *_ = observation_case
     with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_OBSERVATION_BYPASS_REASON_REQUIRED"):
@@ -384,7 +384,7 @@ def test_blank_bypass_reason_refuses(observation_case):
 
 
 def test_missing_bundle_cli_returns_typed_refusal(observation_case, capsys):
-    from scripts.orchestration import task_closeout
+    from lu_machinery.orchestration import task_closeout
 
     repo, worktree, ledger, task, manifest, push, _ = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -411,7 +411,7 @@ def test_missing_bundle_cli_returns_typed_refusal(observation_case, capsys):
 
 
 def test_capture_uses_explicit_lifecycle_locator(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task_file, *_ = observation_case
     custom = repo / ".agent/custom-ledger.json"
@@ -436,7 +436,7 @@ def _assert_no_host_paths(value, repo):
 
 
 def test_capture_receipt_has_no_host_paths(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, *_ = observation_case
     lo.before_reap(repo, worktree)
@@ -447,7 +447,7 @@ def test_capture_receipt_has_no_host_paths(observation_case):
 
 
 def test_recovery_receipt_and_cli_have_no_host_paths(observation_case, capsys, monkeypatch):
-    from scripts.orchestration import task_closeout
+    from lu_machinery.orchestration import task_closeout
 
     repo, worktree, ledger, task, manifest, push, _ = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -464,7 +464,7 @@ def test_recovery_receipt_and_cli_have_no_host_paths(observation_case, capsys, m
 @pytest.mark.parametrize("name", ["manifest", "task", "push"])
 @pytest.mark.parametrize("locator", ["../outside.json", "/outside.json", "link/outside.json"])
 def test_recovery_refuses_escaping_locators(observation_case, tmp_path, name, locator):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task, manifest, push, _ = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -477,7 +477,7 @@ def test_recovery_refuses_escaping_locators(observation_case, tmp_path, name, lo
 
 
 def test_relocated_recovery_receipt_still_verifies(observation_case, tmp_path, monkeypatch):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
@@ -501,7 +501,7 @@ def test_relocated_recovery_receipt_still_verifies(observation_case, tmp_path, m
 
 
 def test_existing_absolute_observation_still_reads_without_rewrite(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, *_, head = observation_case
     local = tl.observe_local_git(repo, head_sha=head, branch="codex/42-closeout", worktree=str(worktree))
@@ -520,7 +520,7 @@ def test_existing_absolute_observation_still_reads_without_rewrite(observation_c
 @pytest.mark.parametrize("operation", ["capture", "recover"])
 @pytest.mark.parametrize("history", ["unchanged_main", "advanced_main", "merged_main", "fast_forward"])
 def test_observation_counts_only_task_history(observation_case, operation, history):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, state_file, task_file, manifest, push_file, first = observation_case
     if history in {"advanced_main", "merged_main"}:
@@ -569,7 +569,7 @@ def test_observation_counts_only_task_history(observation_case, operation, histo
 
 
 def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
-    from scripts.orchestration import lifecycle_observation as lo
+    from lu_machinery.orchestration import lifecycle_observation as lo
 
     repo, worktree, ledger, task_file, *_ = observation_case
     base = json.loads(task_file.read_bytes())["worktree_base_sha"]

@@ -30,11 +30,11 @@ from dataclasses import asdict
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import tokenize
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
@@ -1090,7 +1090,7 @@ def test_ua_gec_only_missing_vesum_is_source_unavailable(monkeypatch):
 
 
 def test_ua_gec_network_sources_path_returns_source_unavailable(monkeypatch):
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
 
     def raise_network() -> Path:
         raise ActiveDatabaseNetworkError(

@@ -7,13 +7,12 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.fleet import ignored_task_output as output
+from lu_machinery.fleet import ignored_task_output as output
 
 
 def legacy_record_matches_worktree(record, worktree, *, repo_root):
     """Keep the replay oracle independent of the optimized matcher."""
-    from scripts.orchestration.worktree_claims import resolve_claim_path
+    from lu_machinery.orchestration.worktree_claims import resolve_claim_path
 
     locations = [record.get("worktree_path") or record.get("cwd")]
     runtime_paths = record.get("acp_runtime_paths")
@@ -38,7 +37,7 @@ def legacy_resolve_worktree_record(
     Inspect hot and archived records: a different filename, renamed tree, or
     optional task argument cannot hide a retention claim. Ambiguity fails closed.
     """
-    from scripts.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
+    from lu_machinery.orchestration.worktree_claims import record_may_claim_worktree, worktree_claim_needles
 
     matches = []
     needles = worktree_claim_needles(worktree, worktree.resolve())
@@ -488,7 +487,7 @@ def test_preservation_decides_publication_from_actual_ownership(
 
 
 def test_unknown_public_primary_disables_cache_publication(store, monkeypatch):
-    from scripts.orchestration import worktree_claims
+    from lu_machinery.orchestration import worktree_claims
 
     def unavailable():
         raise OSError("unavailable metadata")

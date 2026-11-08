@@ -11,9 +11,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.claude import ClaudeAdapter
-from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
+
 from tests.helpers.codex_exec_stream import completed_stream, mcp_call, reasoning
 
 

@@ -32,7 +32,8 @@ import requests
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
+
 from scripts.ingest.acquisition_log import (
     DEFAULT_INTERVAL_SECONDS,
     PROGRESS_FILE,

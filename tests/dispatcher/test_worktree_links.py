@@ -9,11 +9,10 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.dispatcher import agy_sandbox, environment, git
-from scripts.dispatcher.types import TaskSpec
-from scripts.orchestration.worktree_artifacts import is_disposable_path
-from scripts.storage.topology import STORE_FILES
+from lu_machinery.dispatcher import agy_sandbox, environment, git
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.orchestration.worktree_artifacts import is_disposable_path
+from lu_machinery.storage.topology import STORE_FILES
 
 LINKS = (*(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum")), "node_modules", "site/node_modules")
 SOURCES_LINK = LINKS[0]
@@ -129,7 +128,7 @@ def test_creation_and_recreation_provision_clean_reapable_links(layout, full_che
 ])
 def test_branch_content_cannot_choose_agy_host_database_mount(layout, case):
     """#12174: only the primary's selected generation or legacy file may become a host mount."""
-    from scripts.dispatcher.agy_sandbox import Refused, _trusted_database
+    from lu_machinery.dispatcher.agy_sandbox import Refused, _trusted_database
 
     primary, worktree = layout
     run_git(worktree, "init", "-b", "main")

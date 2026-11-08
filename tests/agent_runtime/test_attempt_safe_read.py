@@ -6,15 +6,15 @@ import os
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import attempt_boundary as boundary
+from lu_machinery.agent_runtime import runner
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.watchdog import tail_liveness_file_for_debug
 
-from scripts.agent_runtime import attempt_boundary as boundary
-from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
-from scripts.agent_runtime.result import ParseResult
-from scripts.agent_runtime.watchdog import tail_liveness_file_for_debug
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.helpers.codex_exec_stream import completed_stream
 
@@ -401,7 +401,7 @@ def test_runner_v4_origin_finalizes_refusal_without_unsafe_output(files, monkeyp
         target = root / "output\0.txt"
     else:
         target.symlink_to(forbidden)
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
     recorded = []
     monkeypatch.setattr(RequestExecutor, "__init__", lambda *a, **k: None)
@@ -556,7 +556,7 @@ def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch)
     home = alias / "home"
     home.mkdir()
     adapter = CodexAdapter()
-    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.tempfile.gettempdir", lambda: str(alias))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.codex.tempfile.gettempdir", lambda: str(alias))
     plan = adapter.build_invocation(
         prompt="prompt",
         mode="workspace-write",

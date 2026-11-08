@@ -7,8 +7,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_deploy import retire_codex_skills as migration
+from lu_machinery.agent_deploy import retire_codex_skills as migration
 
 PAYLOAD = b"---\nname: example\ndescription: Example skill.\n---\nCanonical content.\n"
 

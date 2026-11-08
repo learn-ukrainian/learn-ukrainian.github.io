@@ -7,17 +7,16 @@ import threading
 import time
 from datetime import UTC, datetime, timedelta
 
+import lu_machinery.api.main as api_main
+import lu_machinery.api.state_helpers as state_helpers
+import lu_machinery.github_rest_cache as github_rest
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-import scripts.api.state_helpers as state_helpers
-import scripts.github_rest_cache as github_rest
-from scripts.api.main import app
-from scripts.api.state_helpers import cache_invalidate
-from scripts.work.attention import _pr_check_state, derive_health
-from scripts.work.normalize import _assignee_logins, _label_names
-from scripts.work.sources_public import (
+from lu_machinery.api.main import app
+from lu_machinery.api.state_helpers import cache_invalidate
+from lu_machinery.work.attention import _pr_check_state, derive_health
+from lu_machinery.work.normalize import _assignee_logins, _label_names
+from lu_machinery.work.sources_public import (
     SectionResult,
     fetch_issue_states_batched,
     fetch_open_issues,
@@ -515,7 +514,7 @@ def test_fetch_issue_states_rest_contract(monkeypatch):
 
     states = fetch_issue_states_batched([9, 1], repository_id=REPO)
 
-    from scripts.work.relations import issue_work_id
+    from lu_machinery.work.relations import issue_work_id
 
     assert states[issue_work_id(REPO, 9)] == "open"
     assert states[issue_work_id(REPO, 1)] == "closed"
@@ -636,7 +635,7 @@ def test_work_projection_endpoint_contract(monkeypatch):
         lambda *args, **kwargs: {1: "closed"},
     )
 
-    from scripts.work import sources_public
+    from lu_machinery.work import sources_public
 
     snapshot = sources_public._PRSnapshot(REPO, 1000)
     snapshot._refresh(sources_public._iso_now())
@@ -694,8 +693,8 @@ def test_work_projection_endpoint_contract(monkeypatch):
     assert issue["urls"]["html"].endswith("/issues/9")
     assert "body" not in issue
     assert all(item["resource_kind"] != "pr" for item in items)
-    from scripts.api.state_helpers import cache_get_with_age
-    from scripts.api.work_router import projection_cache_key
+    from lu_machinery.api.state_helpers import cache_get_with_age
+    from lu_machinery.api.work_router import projection_cache_key
 
     cached, _age = cache_get_with_age(projection_cache_key({}), float("inf"))
     pull = next(item for item in cached["items"] if item["resource_kind"] == "pr")

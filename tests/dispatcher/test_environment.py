@@ -1,9 +1,8 @@
 """The provider environment carries the sense-proof directory and nothing else that is ambient."""
 
 import pytest
-
-from scripts.dispatcher import environment
-from scripts.dispatcher.types import TaskSpec
+from lu_machinery.dispatcher import environment
+from lu_machinery.dispatcher.types import TaskSpec
 
 PROOF_DIR = "LU_SENSE_PROOF_DIR"
 SENTINEL = "/fixture/sense-proofs"

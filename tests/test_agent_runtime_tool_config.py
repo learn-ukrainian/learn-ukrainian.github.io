@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.tool_config import (
+from lu_machinery.agent_runtime.tool_config import (
     _codex_sanitize_server_config,
     _load_mcp_config,
     build_mcp_tool_config,

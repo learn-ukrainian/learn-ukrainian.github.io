@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.storage.artifacts import write_artifact
+from lu_machinery.storage.artifacts import write_artifact
 
 # Abbreviations used as MiyKlas qualifiers, including observed spelling errors
 # (``спрт.``) and label stems which previously leaked into the artifact.  This

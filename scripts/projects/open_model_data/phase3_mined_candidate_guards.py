@@ -16,12 +16,12 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_uagec_heldout_doc,
 )
-from scripts.storage.paths import artifact_set
 
 DEFAULT_CUSTODY_FILE = REGISTRY_OPEN_MODEL_DATA_DIR / "decolonization/partitions/train_source_custody.json"
 

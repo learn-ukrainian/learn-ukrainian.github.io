@@ -3,8 +3,7 @@ import subprocess
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime import codex_hook_probe as probe
+from lu_machinery.agent_runtime import codex_hook_probe as probe
 
 
 @pytest.mark.parametrize("model", [None, "gpt-6.1-sol"])

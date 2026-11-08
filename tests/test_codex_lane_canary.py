@@ -6,8 +6,7 @@ import argparse
 from pathlib import Path
 
 import pytest
-
-from scripts.session_canary import codex_lane
+from lu_machinery.session_canary import codex_lane
 
 
 @pytest.fixture(autouse=True)
@@ -90,7 +89,7 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
     assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", " HARNESS "]) == 0
 
     board = (tmp_path / ".claude" / "harness-epic" / "CODEX-COLD-START.md").read_text(encoding="utf-8")
-    from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+    from lu_machinery.session_streams.inventory import stream_anchor_id
 
     infra_stream = stream_anchor_id("infra-harness", Path(__file__).resolve().parents[1])
     assert f"**Stream:** `{infra_stream}`" in board
@@ -147,7 +146,7 @@ def test_bootstrap_rejects_partial_rollover_environment(tmp_path: Path, monkeypa
 def test_hydrate_reports_retry_count_without_changing_capsule(monkeypatch, capsys, lane_name) -> None:
     import json
 
-    from scripts.session_canary import gemini_lane, glm_lane
+    from lu_machinery.session_canary import gemini_lane, glm_lane
 
     lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[lane_name]
     capsule = {"execution_allowed": True}
@@ -183,8 +182,8 @@ def test_hydrate_preserves_launcher_codex_identity(monkeypatch, capsys, identity
 @pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
 @pytest.mark.parametrize("registration", ["registered", "removed", "prefix", "foreign", "empty"])
 def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tmp_path, provider, registration) -> None:
-    from scripts.orchestration import handoff_slot_registry
-    from scripts.session_canary import gemini_lane, glm_lane
+    from lu_machinery.orchestration import handoff_slot_registry
+    from lu_machinery.session_canary import gemini_lane, glm_lane
 
     lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
     # A local roster exercises GLM slots without changing live eligibility.
@@ -220,8 +219,8 @@ def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tm
 
 @pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
 def test_hydrate_refuses_slot_when_registry_unavailable(monkeypatch, capsys, tmp_path, provider) -> None:
-    from scripts.orchestration import handoff_slot_registry
-    from scripts.session_canary import gemini_lane, glm_lane
+    from lu_machinery.orchestration import handoff_slot_registry
+    from lu_machinery.session_canary import gemini_lane, glm_lane
 
     lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
     monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", tmp_path / "missing.yaml")

@@ -4,9 +4,9 @@ import json
 import os
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import regenerable_output as classifier
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import regenerable_output as classifier
 from tests.orchestration.test_worktree_git import _add_dispatch_worktree, _run, _write_task_state
 from tests.orchestration.test_worktree_git import hermetic_repo as hermetic_repo
 

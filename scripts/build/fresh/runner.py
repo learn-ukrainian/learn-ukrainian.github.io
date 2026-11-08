@@ -63,6 +63,8 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.repo_root import machinery_path
 
 from scripts.build.fresh.assemble import (
     check_5_assembly,
@@ -84,7 +86,6 @@ from scripts.build.fresh.regeneration import (
     record_success,
 )
 from scripts.build.fresh.writer import strip_markdown_fence
-from scripts.common.jsonl import jsonl_lines
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.tags import to_oracle
 from scripts.curriculum.evidence.word_records import printed
@@ -637,7 +638,7 @@ def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
 
 def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: int) -> bool:
     """A question receipt counts only when its language seat differs from the writer's family."""
-    from scripts.review.second_seat import IdentityError, writer_family
+    from lu_machinery.review.second_seat import IdentityError, writer_family
 
     if not isinstance(provenance, str):
         return False
@@ -1385,7 +1386,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     lock.atomic_write(prompt, instruction.encode("utf-8") + lock.yaml_bytes(batch))
     cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "dispatch.py"),
+        str(machinery_path("dispatch.py")),
         "dispatch",
         "--agent",
         agent,
@@ -1420,7 +1421,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     done = subprocess.run(
         [
             sys.executable,
-            str(repo_root / "scripts" / "dispatch.py"),
+            str(machinery_path("dispatch.py")),
             "wait",
             task_id,
             "--run-nonce",

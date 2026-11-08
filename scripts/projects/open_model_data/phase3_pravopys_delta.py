@@ -20,8 +20,8 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, ValidationError
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]

@@ -8,16 +8,16 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
-from scripts.agent_runtime.adapters.kimi import (
+from lu_machinery.agent_runtime.adapters import kimicc as kimicc_adapter
+from lu_machinery.agent_runtime.adapters.kimi import (
     _MODE_FLAGS,
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
     KimiAdapter,
 )
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-from scripts.agent_runtime.tool_config import build_mcp_tool_config
+from lu_machinery.agent_runtime.adapters.kimicc import KimiccHarness
+from lu_machinery.agent_runtime.tool_config import build_mcp_tool_config
+
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 
@@ -48,7 +48,7 @@ def _build(
 
 def test_retired_default_refuses_before_a_command_or_skills_dir(tmp_path, monkeypatch):
     """OO-58: the historical k3-256k default is retired and must not assemble argv."""
-    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+    from lu_machinery.agent_runtime.adapters import kimi as kimi_adapter
 
     with (
         patch.object(kimi_adapter, "_resolve_kimi_binary") as resolve_binary,
@@ -67,10 +67,10 @@ def test_kimicc_harness_opt_in_refuses_the_retired_historical_pin(tmp_path, monk
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     probed: list[str] = []
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        "lu_machinery.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
         lambda _: probed.append("probed"),
     )
 
@@ -92,7 +92,7 @@ def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monk
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
             prompt="Inspect the target.",
@@ -111,7 +111,7 @@ def test_kimicc_effort_overrides_never_build_a_retired_model(tmp_path, monkeypat
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     assert KIMI_DEFAULT_EFFORT is None
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
@@ -129,7 +129,7 @@ def test_kimicc_effort_overrides_never_build_a_retired_model(tmp_path, monkeypat
 def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
     """The parser still reads a kimicc plan. Building one from a retired id is refused."""
     del monkeypatch
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
@@ -159,8 +159,8 @@ def _kimicc_ready(tmp_path, monkeypatch):
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
 
 
 def test_kimicc_delegate_attempt_keys_do_not_launch_a_retired_model(tmp_path, monkeypatch):
@@ -220,7 +220,7 @@ def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypa
     _kimicc_ready(tmp_path, monkeypatch)
     probed: list[str] = []
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        "lu_machinery.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
         lambda _: probed.append("probed"),
     )
     with pytest.raises(ValueError, match="KIMI CODING-ONLY"):

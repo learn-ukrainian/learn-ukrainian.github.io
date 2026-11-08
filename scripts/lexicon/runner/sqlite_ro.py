@@ -6,8 +6,8 @@ import hashlib
 import sqlite3
 from pathlib import Path
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def file_sha256(path: Path, *, chunk_size: int = 1024 * 1024) -> str:

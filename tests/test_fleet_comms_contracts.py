@@ -4,10 +4,9 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
-from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope
-from scripts.fleet_comms.endpoints import load_endpoint_registry
-from scripts.fleet_comms.migrations import MIGRATIONS, CommsMigrationError, apply_migrations
+from lu_machinery.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope
+from lu_machinery.fleet_comms.endpoints import load_endpoint_registry
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, CommsMigrationError, apply_migrations
 
 
 def test_response_envelope_round_trips_every_completion_state() -> None:

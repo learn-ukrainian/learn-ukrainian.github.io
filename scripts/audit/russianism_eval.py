@@ -24,11 +24,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
-from scripts.audit.checks.russicism_detection import check_russicisms
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
+from lu_machinery.common.repo_root import project_interpreter
 
-PYTHON, BRIDGE = project_interpreter(), Path("scripts/ai_agent_bridge/__main__.py")
+from scripts.audit.checks.russicism_detection import check_russicisms
+
+PYTHON, BRIDGE_MODULE = project_interpreter(), "lu_machinery.ai_agent_bridge"
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_MODELS = "claude-opus-5-5,claude-sonnet-5-5,gpt-6.1-sol,gpt-6-luna,gemini-3.8-flash-high"
 FROM_AGENT = "russianism-eval"
@@ -150,7 +151,7 @@ class BridgeCaller:
     def plan(self, prompt: PromptCase, model: str) -> BridgeCall:
         family = _family_for_model(model)
         task_id = f"{self.run_id}-{_slug(prompt.id)}-{_slug(model)}"
-        base = [str(PYTHON), str(BRIDGE)]
+        base = [str(PYTHON), "-m", BRIDGE_MODULE]
         target = "agy" if family == "gemini" else family
         argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model]
         if target == "agy":

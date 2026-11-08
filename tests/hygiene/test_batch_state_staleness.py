@@ -11,9 +11,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.hygiene import batch_state_retention as retention
-from scripts.hygiene import tmp_sweep
+from lu_machinery.hygiene import batch_state_retention as retention
+from lu_machinery.hygiene import tmp_sweep
 
 DAY = 86400
 
@@ -322,7 +321,7 @@ def test_new_hold_during_quarantine_rename_restores_scratch(expiry_box, monkeypa
 
 
 def test_temp_pass_cannot_purge_batch_quarantine_or_run_pytest_twice(expiry_box, monkeypatch):
-    from scripts.hygiene import pytest_retention
+    from lu_machinery.hygiene import pytest_retention
 
     b = expiry_box
     monkeypatch.setattr(pytest_retention, "sweep_pytest_runs", lambda **kw: pytest.fail("batch mode ran pytest cleanup"))

@@ -5,8 +5,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.dispatcher import git, worker
 
-from scripts.dispatcher import git, worker
 from tests.dispatcher.conftest import run_git
 
 

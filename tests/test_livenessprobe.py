@@ -7,8 +7,7 @@ from __future__ import annotations
 import os
 
 import pytest
-
-from scripts.agent_runtime.livenessprobe import (
+from lu_machinery.agent_runtime.livenessprobe import (
     CompositeProbe,
     FileMTimeSignal,
     FileSizeGrowthSignal,

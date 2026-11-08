@@ -5,12 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
-
-from agents_extensions.shared.session_streams.dual_write import (
+from lu_machinery.session_streams.dual_write import (
     list_handoff_candidates,
     resolve_handoff_path,
 )
-from agents_extensions.shared.session_streams.inventory import (
+from lu_machinery.session_streams.inventory import (
     epic_handoff_map,
 )
 

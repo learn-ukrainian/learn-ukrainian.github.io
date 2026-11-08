@@ -7,8 +7,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import install_data_tier_timer
+from lu_machinery.orchestration import install_data_tier_timer
 
 
 def test_installer_check_apply_and_enable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

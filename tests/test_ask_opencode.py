@@ -3,16 +3,15 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.ai_agent_bridge._opencode import _invoke_opencode
-from scripts.lib import rules_core
+from lu_machinery.ai_agent_bridge._opencode import _invoke_opencode
+from lu_machinery.lib import rules_core
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 
 def test_invoke_opencode_constructs_correct_argv():
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response", stderr="")
             _invoke_opencode("hello", "deepseek/deepseek-v4.1-flash")
             argv = run_mock.call_args[0][0]
@@ -27,8 +26,8 @@ def test_invoke_opencode_constructs_correct_argv():
 def test_invoke_opencode_attaches_file(tmp_path):
     data_file = tmp_path / "report.html"
     data_file.write_text("<html><body>data</body></html>")
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
-        with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
+        with patch("lu_machinery.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
             _invoke_opencode("review", "deepseek/deepseek-v4.1-flash", data=str(data_file))
             argv = run_mock.call_args[0][0]
@@ -40,7 +39,7 @@ def test_invoke_opencode_attaches_file(tmp_path):
 
 
 def test_invoke_opencode_raises_when_binary_missing():
-    with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value=None):
+    with patch("lu_machinery.ai_agent_bridge._opencode.shutil.which", return_value=None):
         with pytest.raises(SystemExit, match="opencode CLI not found"):
             _invoke_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
@@ -79,7 +78,7 @@ def test_run_opencode_lazy_import_resolves_under_script_path_invocation():
 
 
 def test_strip_gemma_thought_keeps_answer_after_block():
-    from scripts.ai_agent_bridge._opencode import _strip_gemma_thought
+    from lu_machinery.ai_agent_bridge._opencode import _strip_gemma_thought
 
     raw = "<thought>reasoning here</thought>- приймають участь → беруть участь"
     assert _strip_gemma_thought(raw) == "- приймають участь → беруть участь"
@@ -87,7 +86,7 @@ def test_strip_gemma_thought_keeps_answer_after_block():
 
 def test_strip_gemma_thought_never_returns_empty():
     """Live burn 2026-07-07: a run that closed inside <thought> arrived blank."""
-    from scripts.ai_agent_bridge._opencode import _strip_gemma_thought
+    from lu_machinery.ai_agent_bridge._opencode import _strip_gemma_thought
 
     raw = "<thought>the whole answer lives in here: беруть участь</thought>"
     assert _strip_gemma_thought(raw) == raw

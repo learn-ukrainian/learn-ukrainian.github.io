@@ -1,6 +1,6 @@
 """Scanner corrections must not hide real store paths or aliased writer calls."""
 
-from scripts.hygiene import lint_source_db_writable_connects as lint
+from lu_machinery.hygiene import lint_source_db_writable_connects as lint
 
 
 def test_diagnostic_and_logical_label_are_not_store_constructions(tmp_path):

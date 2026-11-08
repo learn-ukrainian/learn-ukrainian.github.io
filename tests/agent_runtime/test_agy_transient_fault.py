@@ -14,11 +14,11 @@ from dataclasses import replace
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.agent_runtime import runner
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
-from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.adapters.base import InvocationPlan
 from tests.agent_runtime.adapters.test_agy_adapter import (
     _FINISHED_CONVERSATION_ID,
     _TASK_2,

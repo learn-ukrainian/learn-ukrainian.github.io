@@ -12,9 +12,8 @@ from types import SimpleNamespace
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.common import repo_root
-from scripts.lib import rules_core
+from lu_machinery.common import repo_root
+from lu_machinery.lib import rules_core
 
 CORE = "## P0 — FLEET CORE\n"
 ADDENDUM = "# PRODUCT CURRICULUM\n"
@@ -75,8 +74,8 @@ def _shell(machinery: Path, form: str):
 
 
 def _client(machinery: Path):
-    from scripts.api import rules_router
-    from scripts.api.monitor_context import get_ctx
+    from lu_machinery.api import rules_router
+    from lu_machinery.api.monitor_context import get_ctx
 
     app = FastAPI()
     app.include_router(rules_router.router, prefix="/api/rules")

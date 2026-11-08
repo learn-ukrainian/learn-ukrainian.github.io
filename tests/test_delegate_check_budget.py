@@ -10,8 +10,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import pytest
+from lu_machinery.fleet import claude_account_lane
 
-from scripts.fleet import claude_account_lane
 from tests.claude_route_accounts import HOST_ACCOUNT, account
 from tests.helpers.claude_account_fixtures import (
     UNVERIFIED_ROW as _UNVERIFIED_ROW,
@@ -132,7 +132,7 @@ def _unattributed_rate_limited_lane(tmp_path: Path) -> dict:
     ``summarize_lane_runtime`` reads two records that carry no account label;
     the producer then marks a cool meter hot.
     """
-    from scripts.agent_runtime.usage import summarize_lane_runtime
+    from lu_machinery.agent_runtime.usage import summarize_lane_runtime
 
     now = datetime.now(UTC)
     records = [

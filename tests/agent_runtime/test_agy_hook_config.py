@@ -9,9 +9,8 @@ import shlex
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import agy_hook_config as config
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.agent_runtime import agy_hook_config as config
+from lu_machinery.common.repo_root import project_interpreter
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -438,7 +437,7 @@ def test_scoped_home_must_be_absolute(tmp_path):
 def test_review_provisioner_writes_absolute_guard_and_keeps_command_denial(tmp_path):
     import os
 
-    from scripts.agent_runtime.review_mcp import _populate_agy_review_home, agy_review_settings
+    from lu_machinery.agent_runtime.review_mcp import _populate_agy_review_home, agy_review_settings
 
     home = tmp_path / "attempt-home"
     home.mkdir(mode=0o700)
@@ -462,7 +461,7 @@ def test_review_provisioner_writes_absolute_guard_and_keeps_command_denial(tmp_p
 def test_review_registration_pass_does_not_certify_hook_execution(tmp_path, access):
     from dataclasses import asdict
 
-    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
+    from lu_machinery.agent_runtime.review_mcp import _populate_agy_review_home
 
     home = tmp_path / "attempt-home"
     home.mkdir(mode=0o700)

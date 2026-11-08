@@ -16,12 +16,11 @@ import httpx
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api import claude_account_usage, state_helpers, state_router
-from scripts.api import subscription_usage as subscription_usage_mod
-from scripts.api.monitor_context import fixture_context
-from scripts.fleet import reset_reserve
-from scripts.telemetry.cost_report import CostRecord
+from lu_machinery.api import claude_account_usage, state_helpers, state_router
+from lu_machinery.api import subscription_usage as subscription_usage_mod
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.fleet import reset_reserve
+from lu_machinery.telemetry.cost_report import CostRecord
 
 
 @pytest.fixture(autouse=True)

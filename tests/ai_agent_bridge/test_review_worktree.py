@@ -14,14 +14,14 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.agent_runtime.adapters.acpx import (
+from lu_machinery.agent_runtime.adapters.acpx import (
     AcpxShadowRefusalError,
     _validate_sealed_review_mcp_config,
 )
-from scripts.ai_agent_bridge import _agy, _claude, _cli
-from scripts.ai_agent_bridge import _review_worktree as review_worktree
-from scripts.review.isolation import create_review_temp_root
-from scripts.review.snapshot import (
+from lu_machinery.ai_agent_bridge import _agy, _claude, _cli
+from lu_machinery.ai_agent_bridge import _review_worktree as review_worktree
+from lu_machinery.review.isolation import create_review_temp_root
+from lu_machinery.review.snapshot import (
     ReviewSnapshot,
     _SnapshotState,
     cleanup_snapshot_state,
@@ -42,8 +42,8 @@ def _allow_isolated_review_worktree_for_unit_tests(monkeypatch: pytest.MonkeyPat
     import shutil
     import tempfile
 
-    from scripts.ai_agent_bridge import _review_worktree
-    from scripts.review import isolation, snapshot
+    from lu_machinery.ai_agent_bridge import _review_worktree
+    from lu_machinery.review import isolation, snapshot
 
     orig_create = isolation.create_review_temp_root
 
@@ -2358,7 +2358,7 @@ def test_source_drift_raises_after_yield(monkeypatch: pytest.MonkeyPatch, tmp_pa
     )
 
     def boom(_s, **_k):
-        from scripts.review.snapshot import ReviewSnapshotError
+        from lu_machinery.review.snapshot import ReviewSnapshotError
 
         raise ReviewSnapshotError("source_drift_invalidated:expected=fp:actual=other")
 

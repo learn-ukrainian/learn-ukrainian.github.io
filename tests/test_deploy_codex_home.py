@@ -6,8 +6,7 @@ import tomllib
 from pathlib import Path
 
 import pytest
-
-from scripts import deploy_codex_home as deployer
+from lu_machinery import deploy_codex_home as deployer
 
 
 @pytest.fixture

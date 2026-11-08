@@ -963,8 +963,9 @@ def test_reviewed_binding_derives_identity_and_approving_subject(review_dispatch
 
 def test_lexical_history_keeps_recorded_core_but_rejects_tampering(review_dispatch, monkeypatch, tmp_path):
     """Defect class: a rules edit invalidates durable lexical proof, or archived context admits forged bytes."""
+    from lu_machinery.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
+
     from scripts.review.prompts.render import REPO_ROOT, render_prompt
-    from scripts.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
 
     tasks, pool, task_path, _result, task, _verdict = review_dispatch
     core = tmp_path / "rules" / "core.md"

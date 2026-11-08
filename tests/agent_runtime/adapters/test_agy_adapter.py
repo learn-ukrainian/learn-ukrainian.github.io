@@ -6,13 +6,13 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters import agy as agy_module
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.attempt_safe_read import AttemptReadError
+from lu_machinery.review.review_contract import captured_sources_events
 
-from scripts.agent_runtime.adapters import agy as agy_module
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
-from scripts.review.review_contract import captured_sources_events
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
@@ -21,7 +21,7 @@ CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
 @pytest.fixture(autouse=True)
 def valid_hook_files_for_existing_adapter_fixtures(tmp_path, monkeypatch, request):
     """Existing adapter cases now include real valid wiring in disposable homes."""
-    from scripts.agent_runtime import agy_hook_config as hooks
+    from lu_machinery.agent_runtime import agy_hook_config as hooks
 
     if request.node.name.startswith("test_hook_gate_"):
         return
@@ -2233,7 +2233,7 @@ def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape
     ["missing_workspace", "missing_home", "missing_both", "unguarded_workspace", "relative_home", "disabled", "pass"],
 )
 def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
-    from scripts.agent_runtime import agy_hook_config as hooks
+    from lu_machinery.agent_runtime import agy_hook_config as hooks
 
     cwd = tmp_path / "worker"
     cwd.mkdir()

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
-from scripts.work.normalize import build_projection, qualify_pr_snapshot_age
-from scripts.work.schema import validate_projection
-from scripts.work.sources_public import SectionResult
+from lu_machinery.work.normalize import build_projection, qualify_pr_snapshot_age
+from lu_machinery.work.schema import validate_projection
+from lu_machinery.work.sources_public import SectionResult
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
@@ -115,7 +115,7 @@ def test_stale_history_section_marks_history_rows_unknown() -> None:
 
 
 def test_merged_runner_keeps_only_github_merge_evidence() -> None:
-    from scripts.work.sources_public import fetch_merged_prs
+    from lu_machinery.work.sources_public import fetch_merged_prs
 
     calls: list[list[str]] = []
 
@@ -137,7 +137,7 @@ def test_merged_runner_keeps_only_github_merge_evidence() -> None:
 
 
 def test_merged_runner_failure_is_typed_and_never_an_empty_success() -> None:
-    from scripts.work.sources_public import fetch_merged_prs
+    from lu_machinery.work.sources_public import fetch_merged_prs
 
     section = fetch_merged_prs(runner=lambda _args, _timeout: (124, "", "timeout"))
     assert section.name == "prs_merged"

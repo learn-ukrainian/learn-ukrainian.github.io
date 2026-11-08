@@ -1,8 +1,7 @@
 """Incomplete review replies cannot authorize a merge (#12254)."""
 
 import pytest
-
-from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+from lu_machinery.review.record_cf_verdict import RecordError, normalize_verdict
 
 
 def test_truncated_findings_block_beside_approve_is_inconclusive():

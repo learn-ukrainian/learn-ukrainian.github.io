@@ -19,12 +19,12 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+from lu_machinery.fleet_comms.cli import EXIT_OK, fleet_status_payload, main
+from lu_machinery.fleet_comms.fleet_overview import build_fleet_overview
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.fleet_comms.cli import EXIT_OK, fleet_status_payload, main
-from scripts.fleet_comms.fleet_overview import build_fleet_overview
 from tests.epics_monitor_stub import epics_monitor_stub
 
 
@@ -331,7 +331,7 @@ def test_fleet_status_cli_emits_overview(
 
 def test_fleet_facade_status_router(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Monitor API fleet facade status uses injected epic store, not local DB."""
-    from scripts.api.fleet_router import fleet_facade_status
+    from lu_machinery.api.fleet_router import fleet_facade_status
 
     plane_root = tmp_path / "plane"
     plane_root.mkdir()

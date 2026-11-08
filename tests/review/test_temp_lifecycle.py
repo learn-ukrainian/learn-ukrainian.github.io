@@ -9,11 +9,10 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from scripts.ai_agent_bridge._review_worktree import _hardened_review_signal_handler
-from scripts.orchestration import scheduled_worktree_cleanup
-from scripts.review import isolation
-from scripts.review.isolation import (
+from lu_machinery.ai_agent_bridge._review_worktree import _hardened_review_signal_handler
+from lu_machinery.orchestration import scheduled_worktree_cleanup
+from lu_machinery.review import isolation
+from lu_machinery.review.isolation import (
     REVIEW_TEMP_ROOT_MANIFEST_NAME,
     REVIEW_TEMP_ROOT_MARKER_NAME,
     create_review_temp_root,
@@ -126,7 +125,7 @@ def test_signal_handler_cleanup(tmp_path: Path) -> None:
     def get_cleanup_args():
         return state_mock, (root_mock,)
 
-    with patch("scripts.ai_agent_bridge._review_worktree._cleanup_review_resources", side_effect=fake_cleanup):
+    with patch("lu_machinery.ai_agent_bridge._review_worktree._cleanup_review_resources", side_effect=fake_cleanup):
         with pytest.raises(SystemExit) as exc_info:
             with _hardened_review_signal_handler(get_cleanup_args):
                 handler = signal.getsignal(signal.SIGTERM)
@@ -238,8 +237,8 @@ def test_review_resource_cleanup_is_idempotent(tmp_path: Path) -> None:
 
     root_mock = _make_review_temp_root(dir=tmp_path, prefix="lu-review-exec-")
 
-    with patch("scripts.ai_agent_bridge._review_worktree.cleanup_snapshot_state", side_effect=fake_cleanup_state):
-        from scripts.ai_agent_bridge._review_worktree import _cleanup_review_resources
+    with patch("lu_machinery.ai_agent_bridge._review_worktree.cleanup_snapshot_state", side_effect=fake_cleanup_state):
+        from lu_machinery.ai_agent_bridge._review_worktree import _cleanup_review_resources
 
         _cleanup_review_resources(state=state_mock, roots=(root_mock,))
         assert not root_mock.exists()

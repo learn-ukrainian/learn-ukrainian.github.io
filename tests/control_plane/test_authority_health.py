@@ -8,9 +8,8 @@ from pathlib import Path
 
 import psycopg
 import pytest
-
-from scripts.fleet_comms import message_plane, migrations, pg_schema
-from scripts.fleet_comms.cli import _short_plane_health
+from lu_machinery.fleet_comms import message_plane, migrations, pg_schema
+from lu_machinery.fleet_comms.cli import _short_plane_health
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -126,8 +125,8 @@ def test_existing_sqlite_file_is_not_proof_of_healthy_schema(tmp_path, state):
 
 def test_pg_privilege_denial_is_not_a_probe_failure(monkeypatch, tmp_path):
     """SQLSTATE 42501 is its own code. The driver text stays off the payload."""
-    from scripts.control_plane.health import read_failure_code
-    from scripts.control_plane.storage import Authority
+    from lu_machinery.control_plane.health import read_failure_code
+    from lu_machinery.control_plane.storage import Authority
 
     class PrivilegeDenied(Exception):
         sqlstate = "42501"
@@ -241,8 +240,8 @@ def test_connect_time_cause_cycle_does_not_hang(monkeypatch, tmp_path):
 
 def test_sqlstate_walk_stops_at_the_chain_limit():
     """Privilege past the walk cap stays a probe failure; one inside the cap does not."""
-    from scripts.control_plane.health import _SQLSTATE_CHAIN_LIMIT, read_failure_code
-    from scripts.control_plane.storage import Authority
+    from lu_machinery.control_plane.health import _SQLSTATE_CHAIN_LIMIT, read_failure_code
+    from lu_machinery.control_plane.storage import Authority
 
     def chain(depth: int) -> Exception:
         head: Exception = RuntimeError("synthetic")
@@ -328,7 +327,7 @@ def test_pg_never_stats_or_opens_local_sqlite(monkeypatch, tmp_path):
 
 
 def test_unsupported_probe_is_not_database_absence(monkeypatch, tmp_path):
-    from scripts.control_plane.storage import COMPONENT_AUTHORITIES, Authority
+    from lu_machinery.control_plane.storage import COMPONENT_AUTHORITIES, Authority
 
     conn = PgRead()
     install_pg(monkeypatch, conn)
@@ -344,11 +343,11 @@ def test_unsupported_probe_is_not_database_absence(monkeypatch, tmp_path):
 @pytest.mark.parametrize("command", ["metrics", "backlog", "dead-letters"])
 @pytest.mark.parametrize("outcome", ["success", "connect_failure", "query_failure", "missing_dsn"])
 def test_pg_sibling_cli_and_facade_collectors_agree(monkeypatch, tmp_path, capsys, command, outcome):
-    from scripts.api import fleet_router
-    from scripts.api.monitor_context import fixture_context
-    from scripts.control_plane.storage import ControlPlanePgConnectError, ControlPlanePgDsnMissingError
-    from scripts.fleet_comms import cli
-    from scripts.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError
+    from lu_machinery.api import fleet_router
+    from lu_machinery.api.monitor_context import fixture_context
+    from lu_machinery.control_plane.storage import ControlPlanePgConnectError, ControlPlanePgDsnMissingError
+    from lu_machinery.fleet_comms import cli
+    from lu_machinery.fleet_comms.efficiency_metrics import EfficiencyMetricsReadError
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     names = {
@@ -401,10 +400,9 @@ def test_api_and_cli_status_fail_closed_without_driver_details(monkeypatch, tmp_
 
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
-
-    from scripts.api import fleet_router
-    from scripts.api.monitor_context import fixture_context
-    from scripts.fleet_comms import cli, fleet_overview
+    from lu_machinery.api import fleet_router
+    from lu_machinery.api.monitor_context import fixture_context
+    from lu_machinery.fleet_comms import cli, fleet_overview
 
     marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
     install_pg(monkeypatch, PgRead(error=psycopg.errors.SyntaxError(marker)))

@@ -8,8 +8,8 @@ Alternate-harness adapters must not appear as separate fleet agents.
 
 from __future__ import annotations
 
-from scripts.api.monitor_context import production_context
-from scripts.api.runtime_router import list_runtime_agents
+from lu_machinery.api.monitor_context import production_context
+from lu_machinery.api.runtime_router import list_runtime_agents
 
 
 def test_list_runtime_agents_names_are_unique():

@@ -15,10 +15,9 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.common import pytest_scratch, task_scratch
-from scripts.common.scratch import scratch_scan_roots
-from scripts.hygiene import pytest_retention, tmp_sweep
+from lu_machinery.common import pytest_scratch, task_scratch
+from lu_machinery.common.scratch import scratch_scan_roots
+from lu_machinery.hygiene import pytest_retention, tmp_sweep
 
 pytest_plugins = ("pytester",)
 REPO = Path(__file__).resolve().parents[2]
@@ -118,7 +117,7 @@ def later(monkeypatch, seconds: float, *, base: float | None = None) -> float:
 
 def reaped_pid() -> tuple[int, int]:
     """A real pid and start time that are provably dead once the child exits (#11409)."""
-    from scripts.common.acp_runtime_lock import process_start_time
+    from lu_machinery.common.acp_runtime_lock import process_start_time
 
     # The child stays alive until communicate() closes its stdin, so its start time is always readable.
     child = subprocess.Popen(
@@ -137,7 +136,7 @@ def reaped_pid() -> tuple[int, int]:
 
 def live_pid() -> tuple[subprocess.Popen, int, int]:
     """A real live child with its recorded start time; the caller stops it."""
-    from scripts.common.acp_runtime_lock import process_start_time
+    from lu_machinery.common.acp_runtime_lock import process_start_time
 
     child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     start = process_start_time(child.pid)
@@ -1846,7 +1845,7 @@ def test_fixture_git_custody_and_safety_preserve(area, monkeypatch, tmp_path, ns
             write_lease(run, pid=os.getpid(), start_time=None, boot_id=current_boot())
             use_real_proc(monkeypatch)
             if case == "live_owner":
-                from scripts.common.acp_runtime_lock import process_start_time
+                from lu_machinery.common.acp_runtime_lock import process_start_time
 
                 write_lease(run, pid=os.getpid(), start_time=process_start_time(os.getpid()), boot_id=current_boot())
         elif case == "probe_failure":

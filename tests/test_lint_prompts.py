@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "lint"))
 
-from lint_prompts import (
+from lu_machinery.lint_prompts import (
     extract_curriculum_level_keys,
     extract_curriculum_level_types,
 )

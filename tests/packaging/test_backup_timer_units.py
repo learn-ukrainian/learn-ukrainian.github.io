@@ -8,8 +8,7 @@ from pathlib import Path
 from unittest.mock import Mock, call
 
 import pytest
-
-from scripts.orchestration import install_backup_timer
+from lu_machinery.orchestration import install_backup_timer
 
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (

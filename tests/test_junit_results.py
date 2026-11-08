@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.ci.junit_results import parse_junit, render_failure_summary
+from lu_machinery.ci.junit_results import parse_junit, render_failure_summary
 
 
 def _child_test_path(directory: Path, parameter_id: str) -> Path:

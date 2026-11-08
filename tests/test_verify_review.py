@@ -16,10 +16,10 @@ pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import scripts.verify_review as verify_review_cli
-from scripts.common.git_context import sanitized_git_env
-from scripts.orchestration import task_lifecycle
-from scripts.review.evidence import (
+import lu_machinery.verify_review as verify_review_cli
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.orchestration import task_lifecycle
+from lu_machinery.review.evidence import (
     CANONICAL_DIFF_ARGS,
     OUTCOME_LINE_MISMATCH,
     OUTCOME_OUT_OF_SCOPE,
@@ -34,7 +34,7 @@ from scripts.review.evidence import (
     resolve_safe_path,
     verify_finding_evidence,
 )
-from scripts.review.review_contract import (
+from lu_machinery.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
     EXIT_ACTIONABLE,
     EXIT_CLEAN,
@@ -52,7 +52,7 @@ from scripts.review.review_contract import (
     validate_reviewer_payload,
     verify_review,
 )
-from scripts.review.target_resolution import (
+from lu_machinery.review.target_resolution import (
     resolve_branch_target,
     resolve_commit_target,
     resolve_local_target,
@@ -836,7 +836,7 @@ def test_pr_target(tmp_path, monkeypatch):
         return R()
 
     monkeypatch.setattr(
-        "scripts.review.target_resolution._run_gh",
+        "lu_machinery.review.target_resolution._run_gh",
         fake_gh,
     )
     target = resolve_pr_target(repo, 99)
@@ -1238,7 +1238,7 @@ def test_decode_failure_is_fail_closed_evidence(tmp_path, monkeypatch):
     def boom(*_a, **_k):
         raise UnicodeDecodeError("utf-8", b"\xff", 0, 1, "bad")
 
-    monkeypatch.setattr("scripts.review.evidence.load_file_text", boom)
+    monkeypatch.setattr("lu_machinery.review.evidence.load_file_text", boom)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "overall": {
@@ -1813,7 +1813,7 @@ def test_load_schema_invalid_json_is_contract_error(tmp_path, monkeypatch):
     schema_file = bad / "code-review-findings.v1.schema.json"
     schema_file.write_text("{not-json", encoding="utf-8")
     monkeypatch.setattr(
-        "scripts.review.review_contract.package_repo_root",
+        "lu_machinery.review.review_contract.package_repo_root",
         lambda: tmp_path,
     )
     with pytest.raises(ContractError, match="schema_invalid_json") as exc:
@@ -1823,7 +1823,7 @@ def test_load_schema_invalid_json_is_contract_error(tmp_path, monkeypatch):
 
 def test_load_schema_unreadable_is_contract_error(tmp_path, monkeypatch):
     monkeypatch.setattr(
-        "scripts.review.review_contract.package_repo_root",
+        "lu_machinery.review.review_contract.package_repo_root",
         lambda: tmp_path / "missing-root",
     )
     with pytest.raises(ContractError, match="schema_unavailable") as exc:
@@ -1959,7 +1959,7 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 
 
 def _ukrainian_comments(head: str, *, author_models: list[str], seats: list[tuple[str, str, tuple[str, ...]]]):
-    from scripts.review.record_cf_verdict import build_comment
+    from lu_machinery.review.record_cf_verdict import build_comment
 
     comments = []
     for index, (family, model, coverage) in enumerate(seats):
@@ -2008,9 +2008,10 @@ def _ukrainian_comments(head: str, *, author_models: list[str], seats: list[tupl
 )
 def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, capsys):
     """A clean receipt comes from the recorded chunked seat quorum, not caller identity."""
-    from scripts.orchestration.integration_sweep import lookup_verdict
-    from scripts.review.closeout_cli import main as closeout_main
-    from scripts.review.review_contract import ContractError, build_ukrainian_behavior_receipt
+    from lu_machinery.orchestration.integration_sweep import lookup_verdict
+    from lu_machinery.review.closeout_cli import main as closeout_main
+    from lu_machinery.review.review_contract import ContractError, build_ukrainian_behavior_receipt
+
     from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
 
     repo = _init_repo(tmp_path)
@@ -2029,7 +2030,7 @@ def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, cap
         "--status",
         "pass",
         "--command",
-        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        ".venv/bin/python -m lu_machinery.review.closeout_cli --help",
         "--cwd",
         str(repo),
         "--exit-code",
@@ -2074,7 +2075,7 @@ def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, cap
         ]
     comments = _ukrainian_comments(head, author_models=author_models, seats=seats)
     if case == "red_team_chunk_excluded":
-        from scripts.review.record_cf_verdict import build_comment
+        from lu_machinery.review.record_cf_verdict import build_comment
 
         red_body = build_comment(
             sha=head,
@@ -2100,7 +2101,7 @@ def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, cap
             }
         )
     elif case == "conflicting_denominators_refused":
-        from scripts.review.record_cf_verdict import build_comment
+        from lu_machinery.review.record_cf_verdict import build_comment
 
         comments = []
         for index, denominator in enumerate((("card-a",), ("card-b",))):
@@ -2178,7 +2179,7 @@ def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, cap
         with pytest.raises(ContractError):
             build()
         if case == "conflicting_denominators_refused":
-            from scripts.orchestration.integration_sweep import contributing_ukrainian_chunks
+            from lu_machinery.orchestration.integration_sweep import contributing_ukrainian_chunks
 
             refused = contributing_ukrainian_chunks(comments, head, "fleet", learner_content=True)["refused"]
             assert refused in {"unknown", "denominator-mismatch"}
@@ -2212,7 +2213,8 @@ def test_ukrainian_seat_verdicts_bind_behavior_proof_receipt(tmp_path, case, cap
 
 def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, monkeypatch):
     """The closeout command writes the receipt from live PR comments, not a caller file."""
-    from scripts.review.closeout_cli import main as closeout_main
+    from lu_machinery.review.closeout_cli import main as closeout_main
+
     from tests.test_review_closeout_cli import _freeze_kwargs, _git, _init_repo
 
     repo = _init_repo(tmp_path)
@@ -2232,7 +2234,7 @@ def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, 
         "--status",
         "pass",
         "--command",
-        ".venv/bin/python -m scripts.review.closeout_cli --help",
+        ".venv/bin/python -m lu_machinery.review.closeout_cli --help",
         "--cwd",
         str(repo),
         "--exit-code",
@@ -2262,7 +2264,7 @@ def test_ukrainian_behavior_proof_cli_writes_receipt_from_pr_comments(tmp_path, 
         assert repository == "org/repo"
         return comments, "fleet"
 
-    monkeypatch.setattr("scripts.review.closeout_cli.load_pull_request_comments", fake_comments)
+    monkeypatch.setattr("lu_machinery.review.closeout_cli.load_pull_request_comments", fake_comments)
     monkeypatch.chdir(tmp_path)
     printed_out = StringIO()
     with redirect_stdout(printed_out):
@@ -2299,7 +2301,8 @@ def test_pr_merged_base_commits_without_trailers_attribute_only_own_commits(tmp_
     landed on the default branch and that tip would otherwise exclude the
     whole range.
     """
-    from scripts.review.closeout_cli import CloseoutStateError, _proof_author_attributions
+    from lu_machinery.review.closeout_cli import CloseoutStateError, _proof_author_attributions
+
     from tests.test_review_closeout_cli import _git, _init_repo
 
     repo = _init_repo(tmp_path)

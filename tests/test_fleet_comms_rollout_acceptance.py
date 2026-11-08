@@ -8,15 +8,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
-
-from scripts.ai_agent_bridge import _ask_lifecycle as lifecycle
-from scripts.ai_agent_bridge import _claude, _codex, _config, _db, _gemini
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.formal_review_finalize import finalize_formal_review_verdict
-from scripts.fleet_comms.formal_review_jobs import FormalReviewJobService
-from scripts.fleet_comms.message_plane import MessagePlane, read_plane_status
-from scripts.fleet_comms.migrations import MIGRATIONS
-from scripts.fleet_comms.request_executor import RequestExecutor
+from lu_machinery.ai_agent_bridge import _ask_lifecycle as lifecycle
+from lu_machinery.ai_agent_bridge import _claude, _codex, _config, _db, _gemini
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.formal_review_finalize import finalize_formal_review_verdict
+from lu_machinery.fleet_comms.formal_review_jobs import FormalReviewJobService
+from lu_machinery.fleet_comms.message_plane import MessagePlane, read_plane_status
+from lu_machinery.fleet_comms.migrations import MIGRATIONS
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 
 _REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
 _HEAD_SHA = "a" * 40

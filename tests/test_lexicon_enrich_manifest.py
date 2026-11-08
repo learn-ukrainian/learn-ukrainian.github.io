@@ -6148,7 +6148,7 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     point at a directory owning the shared ``.git`` store. The source must not
     embed a /Users/... operator path (the runtime value legitimately reflects
     wherever this checkout lives)."""
-    from scripts.guardrails.worktree_containment import (
+    from lu_machinery.guardrails.worktree_containment import (
         NotAGitRepositoryError,
         resolve_main_root,
     )

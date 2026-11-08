@@ -5,9 +5,8 @@ from __future__ import annotations
 import threading
 
 import pytest
-
-from scripts.api import claude_account_usage as cau
-from scripts.api import subscription_usage
+from lu_machinery.api import claude_account_usage as cau
+from lu_machinery.api import subscription_usage
 
 
 @pytest.fixture

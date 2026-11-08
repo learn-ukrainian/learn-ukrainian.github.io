@@ -27,11 +27,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime.adapters.acpx import AcpxAdapter
-from agent_runtime.errors import RateLimitedError
-from agent_runtime.result import ParseResult, Result
-from agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
-from scripts.ai_agent_bridge import _acp_compat, _cli
+from lu_machinery.agent_runtime.adapters.acpx import AcpxAdapter
+from lu_machinery.agent_runtime.errors import RateLimitedError
+from lu_machinery.agent_runtime.result import ParseResult, Result
+from lu_machinery.agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
+from lu_machinery.ai_agent_bridge import _acp_compat, _cli
 
 _FALLBACKS_YAML = """\
 dispatch_fallbacks:
@@ -239,25 +239,25 @@ def _wire(
     def execution_cwd(*_args, **_kwargs):
         yield Path.cwd()
 
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: authority)
-    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: authority)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
     monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        "lu_machinery.agent_runtime.adapters.acpx.probe_participant_reachability",
         Mock(return_value=None),
     )
     monkeypatch.setattr(
-        "scripts.ai_agent_bridge._job_host_forward.local_plane_is_retired",
+        "lu_machinery.ai_agent_bridge._job_host_forward.local_plane_is_retired",
         lambda *_args, **_kwargs: False,
     )
     # Import the dispatch module before guarding provider subprocesses.
-    monkeypatch.setattr("scripts.dispatcher.cli._dispatch", _forbidden_acp_bypass("scripts.dispatcher.cli._dispatch"))
+    monkeypatch.setattr("lu_machinery.dispatcher.cli._dispatch", _forbidden_acp_bypass("lu_machinery.dispatcher.cli._dispatch"))
     monkeypatch.setattr(
         _cli,
         "_dispatch_headless_review",
         _forbidden_acp_bypass("_cli._dispatch_headless_review"),
     )
-    monkeypatch.setattr("agent_runtime.runner.invoke", _forbidden_acp_bypass("runner.invoke"))
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", _forbidden_acp_bypass("runner.invoke"))
     monkeypatch.setattr(subprocess, "run", _forbidden_acp_bypass("subprocess.run"))
     monkeypatch.setattr(subprocess, "Popen", _forbidden_acp_bypass("subprocess.Popen"))
     if fallbacks_yaml is not None:
@@ -853,7 +853,7 @@ class _DurableAuthority:
         if existing is not None:
             job = jobs[existing]
             if job["payload"] != payload:
-                from scripts.fleet_comms.authority import AuthorityServiceError
+                from lu_machinery.fleet_comms.authority import AuthorityServiceError
 
                 raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
             return SimpleNamespace(job_id=job["job_id"], state=job["state"])
@@ -940,7 +940,7 @@ def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch
     """Fresh authority connections replay both terminal seats from SQLite, without a provider call."""
     import hashlib
 
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root = tmp_path / "fleet-comms"
     with AuthorityService(root=root):
@@ -951,7 +951,7 @@ def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch
         {"codex": _capacity_result("codex"), "cursor": _ok_result("cursor", "durable answer")},
         tmp_path=tmp_path,
     )
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: AuthorityService(root=root))
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: AuthorityService(root=root))
     first = _acp_compat._run_compat_ask_impl("codex", "question", task_id="durable-9742")
     assert first.ok and first.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
     assert [c.args[0] for c in invoke.call_args_list] == ["codex", "cursor"]

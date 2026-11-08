@@ -161,7 +161,7 @@ def test_each_action_routes_to_systemd(harness, service: str, action: str) -> No
 
 
 @pytest.mark.parametrize("name,argv", [
-    ("api", "scripts.api.main:app --host 127.0.0.1 --port 8765"),
+    ("api", "lu_machinery.api.main:app --host 127.0.0.1 --port 8765"),
     ("astro", "{root}/site/node_modules/astro/bin/astro.mjs preview --port 4321"),
 ])
 def test_owned_stray_is_cleared_before_start(harness, name: str, argv: str) -> None:
@@ -236,7 +236,7 @@ def test_outside_cgroup_listener_after_start_fails(harness) -> None:
 def test_stray_cleared_when_stopped_unit_has_no_control_group(harness) -> None:
     _, env, files, process, run = harness
     parent = process("unit-main", in_unit=True)
-    stray = process("scripts.api.main:app --host 127.0.0.1 --port 8765")
+    stray = process("lu_machinery.api.main:app --host 127.0.0.1 --port 8765")
     files["main"].write_text(f"{parent.pid}\n")
     files["listeners"].write_text(f"{stray.pid}\n")
     env["FAKE_EMPTY_CGROUP_AFTER_STOP"] = "1"
@@ -248,7 +248,7 @@ def test_stray_cleared_when_stopped_unit_has_no_control_group(harness) -> None:
 
 def test_unreadable_cgroup_membership_refuses_to_signal(harness) -> None:
     _, env, files, process, run = harness
-    stray = process("scripts.api.main:app --host 127.0.0.1 --port 8765")
+    stray = process("lu_machinery.api.main:app --host 127.0.0.1 --port 8765")
     (Path(env["SVC_PROC_ROOT"]) / str(stray.pid) / "cgroup").write_text("1:name=systemd:/outside.scope\n")
     files["listeners"].write_text(f"{stray.pid}\n")
     result = run("start", "api")

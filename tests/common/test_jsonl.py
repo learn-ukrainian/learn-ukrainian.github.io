@@ -3,8 +3,7 @@
 import json
 
 import pytest
-
-from scripts.common.jsonl import jsonl_lines, physical_lines
+from lu_machinery.common.jsonl import jsonl_lines, physical_lines
 
 
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

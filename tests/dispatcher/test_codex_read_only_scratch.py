@@ -8,11 +8,10 @@ import tomllib
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease, dispatch_lease
-from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.providers import load
-from scripts.dispatcher.types import TaskSpec
+from lu_machinery.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease, dispatch_lease
+from lu_machinery.dispatcher.environment import child_env
+from lu_machinery.dispatcher.providers import load
+from lu_machinery.dispatcher.types import TaskSpec
 
 TASK_ID = "review-demo-r1"
 

@@ -22,8 +22,8 @@ from jsonschema import Draft202012Validator
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_university_reconciliation_v3.schema.json"

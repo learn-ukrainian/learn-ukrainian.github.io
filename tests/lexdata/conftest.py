@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import pytest
+from lu_machinery.storage import topology
 
-from scripts.storage import topology
 from tests.lexdata._support import Harness, make_sources
 
 WORDS = {1: "м’ята", 2: "Бува́й!", 3: "шуба", 4: "у, в", 5: "Cпасибі!"}

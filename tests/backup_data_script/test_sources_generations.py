@@ -12,8 +12,8 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
+from lu_machinery.storage import generations
 
-from scripts.storage import generations
 from tests.backup_data_script._support import REPO_ROOT, _run, _use_local_restic
 
 # Publishes one new generation under the writer lock, built from the selected

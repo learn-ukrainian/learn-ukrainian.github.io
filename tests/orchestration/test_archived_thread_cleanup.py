@@ -8,9 +8,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import archived_thread_cleanup as cleanup
-from scripts.orchestration import task_identity
+from lu_machinery.orchestration import archived_thread_cleanup as cleanup
+from lu_machinery.orchestration import task_identity
 
 NOW = datetime(2026, 7, 16, 18, 0, tzinfo=UTC)
 THREAD_A = "00000000-0000-4000-8000-000000000001"

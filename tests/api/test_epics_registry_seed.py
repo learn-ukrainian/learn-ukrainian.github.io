@@ -9,13 +9,13 @@ from pathlib import Path
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.api import epics_router
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.inventory import scan_stream_epic_inventory
+from lu_machinery.session_streams.model import isoformat_z
+from lu_machinery.session_streams.receipts import register_manifest_inventory
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.inventory import scan_stream_epic_inventory
-from agents_extensions.shared.session_streams.model import isoformat_z
-from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
-from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api import epics_router
 from tests.epics_monitor_stub import epics_app_for_store
 
 ROOT = Path(__file__).resolve().parents[2]

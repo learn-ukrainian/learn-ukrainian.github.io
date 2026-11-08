@@ -8,8 +8,7 @@ from textwrap import dedent
 
 import pytest
 import yaml
-
-from scripts.lint.lint_fleet_roster import (
+from lu_machinery.lint.lint_fleet_roster import (
     CATALOG_PATH,
     SEAT_FIELDS,
     format_eligible_table,
@@ -417,7 +416,7 @@ def test_duplicate_normalized_orchestrator_seat_names_fail(tmp_path: Path):
         ),
         encoding="utf-8",
     )
-    from scripts.lint.lint_fleet_roster import load_orchestrator_seats
+    from lu_machinery.lint.lint_fleet_roster import load_orchestrator_seats
 
     try:
         load_orchestrator_seats(catalog)

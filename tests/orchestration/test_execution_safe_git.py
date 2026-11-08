@@ -13,10 +13,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.fleet import sibling_git
+from lu_machinery.orchestration import worktree_claims
+from lu_machinery.orchestration.task_family import git_safety
 
-from scripts.fleet import sibling_git
-from scripts.orchestration import worktree_claims
-from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_merge_closeout import _REAL_RUN
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import (
@@ -28,8 +28,8 @@ from tests.orchestration.test_worktree_output_chokepoint import (
 @pytest.mark.parametrize("operation", ["fetch", "ls-remote"])
 def test_transport_config_toctou_never_delivers_credential(boundary_tree, tmp_path, monkeypatch, scope, operation):
     """A config swap immediately before transfer must not redirect a credential."""
-    from scripts.common import git_credentials
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.common import git_credentials
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     local_origin = _git(repo, "remote", "get-url", "origin")
@@ -94,7 +94,7 @@ def test_transport_config_toctou_never_delivers_credential(boundary_tree, tmp_pa
 @pytest.mark.parametrize("case", ["refs", "redirect", "nonfastforward", "objects"])
 def test_local_file_import_ref_and_transport_substitution(boundary_tree, tmp_path, monkeypatch, case):
     """Local imports must pin objects/refs and refuse a rewrite to a network transport."""
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     expected = _git(repo, "rev-parse", "main")
@@ -153,7 +153,7 @@ def test_local_file_import_ref_and_transport_substitution(boundary_tree, tmp_pat
 @pytest.mark.parametrize("key", ["uploadpack", "vcs"])
 def test_local_import_remote_command_injection(boundary_tree, tmp_path, monkeypatch, key):
     """An import-boundary remote command must never execute in the runner."""
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     upstream = tmp_path / "upstream"
@@ -198,7 +198,7 @@ def _real_git_observations(boundary_tree, monkeypatch):
     Restore the standard subprocess implementation before any marker setup
     or production call here, and move those observations to their API seams.
     """
-    from scripts.orchestration import merge_closeout, worktree_git
+    from lu_machinery.orchestration import merge_closeout, worktree_git
 
     monkeypatch.setattr(subprocess, "run", _REAL_RUN)
     _repo, tree, _tasks, _record = boundary_tree
@@ -243,8 +243,8 @@ def install_markers(repo: Path, tree: Path, root: Path) -> Path:
     "command", [["status", "--porcelain"], ["diff", "HEAD"], ["ls-files", "-z"], ["rev-list", "--all"]]
 )
 def test_shared_invocation_blocks_named_drivers_and_inherited_config(boundary_tree, tmp_path, monkeypatch, command):
-    from scripts.fleet import ignored_task_output
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.fleet import ignored_task_output
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     (tree / "probe.txt").write_text("base\n")
@@ -284,7 +284,7 @@ def test_shared_invocation_blocks_named_drivers_and_inherited_config(boundary_tr
 
 
 def test_runner_injection_cannot_replace_execution_controls(boundary_tree, tmp_path):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     marker = install_markers(repo, tree, tmp_path)
@@ -340,7 +340,7 @@ def test_default_removal_preserves_unborn_branch_report(boundary_tree):
 
 
 def test_raw_removal_disables_target_local_filter(boundary_tree, tmp_path):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     (tree / "probe.txt").write_text("base\n")
@@ -364,7 +364,8 @@ def test_raw_removal_disables_target_local_filter(boundary_tree, tmp_path):
 
 
 def test_status_disables_initialized_submodule_filter(boundary_tree, tmp_path):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
+
     from tests.orchestration.test_worktree_claims_cli import _primary
 
     repo, tree, _tasks, _record = boundary_tree
@@ -393,7 +394,8 @@ def test_status_disables_initialized_submodule_filter(boundary_tree, tmp_path):
 
 
 def test_status_disables_redirected_submodule_filter(boundary_tree, tmp_path):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
+
     from tests.orchestration.test_worktree_claims_cli import _primary
 
     repo, tree, _tasks, _record = boundary_tree
@@ -486,9 +488,9 @@ def install_full_markers(repo, tree, root, scope):
 
 @pytest.mark.parametrize("scope", ["common", "worker", "both"])
 def test_scoped_preparation_never_imports_execution_inventory(boundary_tree, tmp_path, scope):
-    from scripts.lib.git_identity import git_identity_env
-    from scripts.orchestration import execution_safe_git as safe
-    from scripts.orchestration.safe_git_context import SafeGitContext
+    from lu_machinery.lib.git_identity import git_identity_env
+    from lu_machinery.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration.safe_git_context import SafeGitContext
 
     repo, tree, _tasks, _record = boundary_tree
     head = _git(tree, "rev-parse", "HEAD")
@@ -523,7 +525,7 @@ PROOF_CALLERS = ["closeout-fetch"]
 
 
 def proof_call(caller, fixture):
-    from scripts.orchestration import merge_closeout as mc
+    from lu_machinery.orchestration import merge_closeout as mc
 
     _repo, tree, _tasks, _record = fixture
     assert caller == "closeout-fetch"
@@ -566,7 +568,7 @@ def test_remote_ssh_failure_never_executes_config(boundary_tree, tmp_path, calle
 
 @pytest.mark.parametrize("source", ["worktree", "cached", "info", "external"])
 def test_preserve_refuses_filter_before_staging(boundary_tree, tmp_path, source):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     (tree / "payload.bin").write_bytes(b"original\r\n")
@@ -598,7 +600,7 @@ def test_preserve_refuses_filter_before_staging(boundary_tree, tmp_path, source)
 
 
 def test_profiles_are_explicit_and_task_family_has_no_fallback(boundary_tree):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     assert safe.primary_repository(tree) == repo
@@ -632,7 +634,7 @@ def test_sibling_attribute_probe_uses_shared_controls(boundary_tree, tmp_path):
 
 
 def test_restore_refuses_worker_cwd_before_raw_checkout(boundary_tree):
-    from scripts.orchestration import reaper_lifecycle
+    from lu_machinery.orchestration import reaper_lifecycle
 
     _repo, tree, _tasks, _record = boundary_tree
     assert reaper_lifecycle.restore_worktree(
@@ -644,7 +646,7 @@ def test_restore_refuses_worker_cwd_before_raw_checkout(boundary_tree):
 
 
 def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_path):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     markers = install_full_markers(repo, tree, tmp_path, "both")
@@ -687,7 +689,7 @@ def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_p
     ],
 )
 def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_path, source, attribute):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     attrs = f"payload.bin {attribute}\n"
@@ -721,7 +723,7 @@ def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_pa
 )
 @pytest.mark.parametrize("macro", ["custom", "binary"])
 def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribute, macro):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     _repo, tree, _tasks, _record = boundary_tree
     (tree / ".gitattributes").write_text(f"[attr]{macro} {attribute}\n[attr]nested {macro}\npayload.bin nested\n")
@@ -743,7 +745,7 @@ def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribu
 
 @pytest.mark.parametrize("attribute", ["-crlf", "!crlf", "-text", "binary", "custom"])
 def test_round_c_preserve_nontransforming_attributes_are_byte_exact(boundary_tree, attribute):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     _repo, tree, _tasks, _record = boundary_tree
     (tree / ".gitattributes").write_text(f"[attr]custom -text -crlf\npayload.bin {attribute}\n")
@@ -758,7 +760,7 @@ def test_round_c_preserve_nontransforming_attributes_are_byte_exact(boundary_tre
 @pytest.mark.parametrize("caller", PROOF_CALLERS)
 @pytest.mark.parametrize("remote", ["mirror", "origin"])
 def test_round_c_remote_helper_proof_scope(boundary_tree, caller, remote):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     head = _git(tree, "rev-parse", "HEAD")
@@ -783,7 +785,7 @@ def test_round_c_remote_helper_proof_scope(boundary_tree, caller, remote):
 
 @pytest.mark.parametrize("text", [False, True])
 def test_round_c_remote_helper_refusal_check_contract(boundary_tree, text):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     _git(repo, "config", "remote.origin.vcs", "hg")
@@ -802,7 +804,7 @@ def test_round_c_remote_helper_refusal_check_contract(boundary_tree, text):
     ],
 )
 def test_round_c_remote_ref_pattern_is_not_a_remote(boundary_tree, command):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     _git(repo, "config", "remote.mirror.vcs", "hg")
@@ -815,7 +817,8 @@ def test_round_c_remote_ref_pattern_is_not_a_remote(boundary_tree, command):
 
 @pytest.mark.parametrize("command", [["add", "-A"], ["commit", "--no-verify", "-m", "preserve fixture"]])
 def test_preserve_disables_initialized_submodule_filter(boundary_tree, tmp_path, command):
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
+
     from tests.orchestration.test_worktree_claims_cli import _primary
 
     _repo, tree, _tasks, _record = boundary_tree
@@ -855,7 +858,7 @@ def test_preserve_disables_initialized_submodule_filter(boundary_tree, tmp_path,
     ],
 )
 def test_safe_git_admits_only_a_plain_absolute_worktree_move(tmp_path: Path, args: list[str]) -> None:
-    from scripts.orchestration import execution_safe_git as safe
+    from lu_machinery.orchestration import execution_safe_git as safe
 
     with pytest.raises(ValueError, match="unsupported worktree move operation"):
         safe.run_git(args, cwd=tmp_path)

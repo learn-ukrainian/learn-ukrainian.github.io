@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.fleet.routing_policy import (
+from lu_machinery.fleet.routing_policy import (
     HardRuleRefused,
     _filter_handoff,
     log_overrides,
@@ -36,9 +35,9 @@ def test_hard_rule_rejects_a_metric_that_puts_grok_on_language_work() -> None:
 
 
 def test_removed_subscription_lane_does_not_suppress_later_api_key_lane(monkeypatch) -> None:
-    monkeypatch.setattr("scripts.fleet.routing_policy.API_KEY_LANES", frozenset({"metered"}))
+    monkeypatch.setattr("lu_machinery.fleet.routing_policy.API_KEY_LANES", frozenset({"metered"}))
     monkeypatch.setattr(
-        "scripts.fleet.routing_policy.LANGUAGE_LANES",
+        "lu_machinery.fleet.routing_policy.LANGUAGE_LANES",
         frozenset({"claude", "codex", "agy", "metered"}),
     )
     assert _filter_handoff(["grok", "metered"], language=True) == ["metered"]

@@ -7,15 +7,15 @@ import re
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-from scripts.api.observer_presence import (
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import (
     PRESENCE_TTL_SECONDS,
     PresenceRequest,
     list_live,
     reset_observer_presence,
     upsert_presence,
 )
+
 from tests import _host_path_guard as guard
 
 loop_client = TestClient(

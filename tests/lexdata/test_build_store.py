@@ -9,11 +9,11 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage import topology
 
 from scripts.lexdata import build_store, generation, verify
 from scripts.lexdata.canonical import sha256_file
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage import topology
 from tests.lexdata._support import (
     FIXTURE_SOURCE,
     FixtureAdapter,

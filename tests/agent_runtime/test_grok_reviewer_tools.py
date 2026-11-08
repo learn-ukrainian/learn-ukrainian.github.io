@@ -11,15 +11,14 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
-from scripts.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.adapters.grok_build import GrokBuildAdapter
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 def _plan(tmp_path: Path, config: dict | None):
-    with patch("scripts.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
         return GrokBuildAdapter().build_invocation(
             prompt="inspect",
             mode="read-only",
@@ -65,7 +64,7 @@ def test_reviewer_opt_in_denies_bash_and_guards_all_tracked_reads(tmp_path: Path
         assert "using tracked-file reads only" in definition
         assert "Report any execution evidence you could not obtain" in definition
         assert "literal read commands" not in definition
-        from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS
+        from lu_machinery.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS
 
         assert all(command not in definition for command in GROK_REVIEWER_READ_COMMANDS)
         assert "--no-subagents" in reviewer.cmd and "--disable-web-search" in reviewer.cmd
@@ -90,9 +89,9 @@ def test_reviewer_opt_in_denies_bash_and_guards_all_tracked_reads(tmp_path: Path
     [
         ("gh pr view 8912 --json number", False),
         ("git push --dry-run", True),
-        ("python -m scripts.publish issue-comment --number 1 --body unit", True),
-        ("python -m scripts.publish --help", False),
-        ("python -m scripts.publish pr-comment --help", False),
+        ("python -m lu_machinery.publish issue-comment --number 1 --body unit", True),
+        ("python -m lu_machinery.publish --help", False),
+        ("python -m lu_machinery.publish pr-comment --help", False),
         ("gh pr comment 8912 --body test", True),
     ],
 )
@@ -137,7 +136,7 @@ _HOOKS = ROOT / "agents_extensions/shared/hooks"
 
 
 def _pinned(name: str) -> str:
-    from scripts.agent_runtime.adapters.claude import _worker_guard_invocation
+    from lu_machinery.agent_runtime.adapters.claude import _worker_guard_invocation
 
     command = _worker_guard_invocation(
         f'bash "$CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh" {name}', ROOT
@@ -164,8 +163,8 @@ def _bridge(guard_command: str, shell_command: str) -> subprocess.CompletedProce
 
 @pytest.mark.parametrize("name", _PINNED_GUARDS)
 def test_grok_bridge_runs_the_adapters_pinned_invocation(name: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import guard_argv
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.agent_runtime.grok_hook_bridge import guard_argv
+    from lu_machinery.common.repo_root import project_interpreter
 
     command = _pinned(name)
     assert guard_argv(command) == [str(project_interpreter(ROOT)), str(_HOOKS / name)]
@@ -180,7 +179,7 @@ def test_grok_bridge_pinned_guard_still_blocks() -> None:
 
 @pytest.mark.parametrize("name", ["guard-pr-merge.py", "guard-secret-print.py", "enforce-venv.sh"])
 def test_grok_bridge_keeps_the_plain_guard_path(name: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import guard_argv
+    from lu_machinery.agent_runtime.grok_hook_bridge import guard_argv
 
     guard = str(_HOOKS / name)
     assert guard_argv(guard) == [guard]
@@ -195,8 +194,8 @@ def test_grok_bridge_keeps_the_plain_guard_path(name: str) -> None:
     ],
 )
 def test_grok_bridge_classifies_the_pinned_invocation_after_tokenization(command: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import guard_argv
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.agent_runtime.grok_hook_bridge import guard_argv
+    from lu_machinery.common.repo_root import project_interpreter
 
     python = project_interpreter(ROOT)
     assert guard_argv(command.format(python=python, hooks=_HOOKS)) == [str(python), str(_HOOKS / "guard-pr-merge.py")]
@@ -221,8 +220,8 @@ def test_grok_bridge_classifies_the_pinned_invocation_after_tokenization(command
     ],
 )
 def test_grok_bridge_refuses_noncanonical_spellings(command: str, reason: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+    from lu_machinery.common.repo_root import project_interpreter
 
     command = command.format(python=project_interpreter(ROOT), hooks=_HOOKS)
     with pytest.raises(GuardInvocationError, match=reason):
@@ -244,8 +243,8 @@ def test_grok_bridge_refuses_noncanonical_spellings(command: str, reason: str) -
     ],
 )
 def test_grok_bridge_refuses_other_invocations(argv: list[str], reason: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+    from lu_machinery.common.repo_root import project_interpreter
 
     command = shlex.join(arg.format(python=project_interpreter(ROOT), hooks=_HOOKS) for arg in argv)
     with pytest.raises(GuardInvocationError, match=reason):
@@ -256,7 +255,7 @@ def test_grok_bridge_refuses_other_invocations(argv: list[str], reason: str) -> 
 
 
 def test_grok_bridge_refuses_an_unreadable_invocation() -> None:
-    from scripts.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
+    from lu_machinery.agent_runtime.grok_hook_bridge import GuardInvocationError, guard_argv
 
     with pytest.raises(GuardInvocationError, match="unreadable"):
         guard_argv(f"python '{_HOOKS / 'guard-pr-merge.py'}")
@@ -264,7 +263,7 @@ def test_grok_bridge_refuses_an_unreadable_invocation() -> None:
 
 @pytest.mark.parametrize("pinned", [True, False])
 def test_grok_bridge_refuses_a_missing_guard(tmp_path: Path, monkeypatch, pinned: bool) -> None:
-    from scripts.agent_runtime import grok_hook_bridge
+    from lu_machinery.agent_runtime import grok_hook_bridge
 
     hooks = tmp_path / "agents_extensions/shared/hooks"
     hooks.mkdir(parents=True)
@@ -298,7 +297,7 @@ def test_write_mode_installs_fleet_guards_without_reviewer_publish_or_push_rewri
     """
     adapter = GrokBuildAdapter()
     agent_path: Path | None = None
-    with patch("scripts.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
+    with patch("lu_machinery.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
         write_plan = adapter.build_invocation(
             prompt="push the dispatch branch",
             mode=mode,
@@ -424,7 +423,10 @@ def test_grok_hook_bridge_primary_checkout_write_guard() -> None:
 
 @pytest.mark.parametrize("tool", ["run_terminal_command", "run_terminal_cmd", "Bash"])
 def test_literal_read_commands_pass_guard_but_keep_native_bash_backstop(tmp_path, tool):
-    from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, reviewer_command_allowed
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import (
+        GROK_REVIEWER_READ_COMMANDS,
+        reviewer_command_allowed,
+    )
 
     plan = _plan(tmp_path, {"reviewer_tools": True})
     try:
@@ -447,7 +449,7 @@ def test_literal_read_commands_pass_guard_but_keep_native_bash_backstop(tmp_path
     "git diff --textconv", "env git diff", "git diff; touch output.txt",
 ])
 def test_disallowed_shell_actions_return_typed_refusal_before_native_permissions(command):
-    from scripts.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
 
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--review-root", str(ROOT)],
@@ -470,13 +472,16 @@ def test_disallowed_shell_actions_return_typed_refusal_before_native_permissions
     {"hook_event_name": "PostToolUse", "toolName": "Bash", "toolInput": {"command": "pwd"}},
 ])
 def test_permission_guard_fails_closed_on_unreadable_or_unknown_tools(payload):
-    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_command_allowed
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import reviewer_command_allowed
 
     assert not reviewer_command_allowed(payload)
 
 
 def test_literal_permissions_cannot_be_extended_or_wrapped():
-    from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, reviewer_command_allowed
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import (
+        GROK_REVIEWER_READ_COMMANDS,
+        reviewer_command_allowed,
+    )
 
     for command in GROK_REVIEWER_READ_COMMANDS:
         for altered in (command + " > out", command + " && touch out", "env " + command,
@@ -487,7 +492,7 @@ def test_literal_permissions_cannot_be_extended_or_wrapped():
 
 
 def test_permission_guard_cli_admits_read_command_and_denies_bad_json():
-    from scripts.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import REFUSAL_CODE
 
     for event, expected in [(json.dumps({
         "hook_event_name": "PreToolUse", "toolName": "run_terminal_command", "toolInput": {"command": "pwd"},
@@ -531,7 +536,7 @@ def tracked_review_root(tmp_path):
     ([], {}, False),
 ])
 def test_review_reads_remain_within_tracked_checkout(tracked_review_root, tool, inputs, allowed):
-    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
 
     assert reviewer_tool_allowed({
         "hook_event_name": "PreToolUse", "toolName": tool, "toolInput": inputs,
@@ -539,7 +544,7 @@ def test_review_reads_remain_within_tracked_checkout(tracked_review_root, tool, 
 
 
 def test_read_guard_denies_absolute_and_symlink_escape(tracked_review_root):
-    from scripts.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
+    from lu_machinery.agent_runtime.grok_reviewer_permissions import reviewer_tool_allowed
 
     outside = tracked_review_root.parent / "outside.txt"
     outside.write_text("private fixture", encoding="utf-8")
@@ -552,7 +557,7 @@ def test_read_guard_denies_absolute_and_symlink_escape(tracked_review_root):
 
 
 def test_read_guard_denies_unavailable_git(tracked_review_root, monkeypatch):
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     def unavailable(*args, **kwargs):
         raise OSError("unavailable")
@@ -570,7 +575,7 @@ def test_read_guard_denies_unavailable_git(tracked_review_root, monkeypatch):
 def test_permission_cli_main_returns_typed_disposition(monkeypatch, capsys, tracked_review_root, event, expected):
     import io
 
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
     monkeypatch.setattr(sys, "stdin", io.StringIO(event))
@@ -580,7 +585,7 @@ def test_permission_cli_main_returns_typed_disposition(monkeypatch, capsys, trac
 
 
 def test_tracked_symlink_loop_is_a_typed_denial(tracked_review_root):
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     (tracked_review_root / "loop").symlink_to("loop")
     subprocess.run(["git", "add", "loop"], cwd=tracked_review_root, check=True, timeout=30)
@@ -600,7 +605,7 @@ def test_tracked_symlink_loop_is_a_typed_denial(tracked_review_root):
 def test_permission_boundary_denies_every_evaluation_exception(tracked_review_root, monkeypatch, capsys, error):
     import io
 
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     def fail(*args, **kwargs):
         raise error("private error detail")
@@ -618,7 +623,7 @@ def test_permission_boundary_denies_every_evaluation_exception(tracked_review_ro
 
 @pytest.mark.parametrize("error", [RuntimeError, PermissionError, MemoryError, KeyboardInterrupt])
 def test_main_denies_interpreter_level_input_errors(tracked_review_root, monkeypatch, capsys, error):
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     def fail(*args, **kwargs):
         raise error("private input error")
@@ -630,7 +635,7 @@ def test_main_denies_interpreter_level_input_errors(tracked_review_root, monkeyp
 
 
 def test_guard_git_never_lazily_fetches(tracked_review_root, monkeypatch):
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     calls = []
     real_run = policy.subprocess.run
@@ -648,7 +653,7 @@ def test_guard_git_never_lazily_fetches(tracked_review_root, monkeypatch):
 
 
 def test_unreadable_tracked_file_is_denied(tracked_review_root):
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
+    from lu_machinery.agent_runtime import grok_reviewer_permissions as policy
 
     target = tracked_review_root / "tracked.txt"
     target.chmod(0)

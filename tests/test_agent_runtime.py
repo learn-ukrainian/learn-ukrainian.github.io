@@ -50,19 +50,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 _TEST_PYTHON = project_python()
 
-from agent_runtime.adapters.agy import AgyAdapter
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.adapters.claude import ClaudeAdapter
-from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
+from lu_machinery.agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.registry import available_agents
-from agent_runtime.result import ParseResult
-from agent_runtime.runner import (
+from lu_machinery.agent_runtime.registry import available_agents
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.runner import (
     AgentOutputLimitError,
     _build_usage_record,
     _enforce_resume_policy,
@@ -74,8 +74,8 @@ from agent_runtime.runner import (
     _raise_for_kill_reason,
     invoke,
 )
-from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-from agent_runtime.watchdog import (
+from lu_machinery.agent_runtime.usage import _reset_rate_limit_cache_for_tests
+from lu_machinery.agent_runtime.watchdog import (
     WatchdogState,
     _process_activity_poller,
     _process_tree_has_activity,
@@ -89,7 +89,7 @@ from agent_runtime.watchdog import (
 @pytest.fixture(autouse=True)
 def _isolate_usage_log(tmp_path):
     """Ensure no test writes to the real batch_state/api_usage/ log."""
-    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+    with patch("lu_machinery.agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
 
@@ -98,7 +98,7 @@ def _clear_state():
     """Reset runtime in-process caches before every test."""
     _reset_rate_limit_cache_for_tests()
     # Clear adapter cache by reaching into runner module
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     runner._ADAPTER_CACHE.clear()
     yield
@@ -164,7 +164,7 @@ def test_acpx_pilot_usage_records_strip_sensitive_context(
 
 @pytest.fixture
 def valid_agy_hook_files(tmp_path, monkeypatch):
-    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+    from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
 
     home = tmp_path / "ordinary-home"
     monkeypatch.setenv("HOME", str(home))
@@ -180,8 +180,8 @@ def valid_agy_hook_files(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("candidate", ["absent_home", "valid_home", "invalid_home", "invalid_workspace", "no_guard"])
 def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
-    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, AgyHookConfigError, guard_registration
-    from scripts.ai_agent_bridge import _agy as bridge
+    from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, AgyHookConfigError, guard_registration
+    from lu_machinery.ai_agent_bridge import _agy as bridge
 
     home = tmp_path / "home"
     monkeypatch.setenv("HOME", str(home))
@@ -208,7 +208,7 @@ def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
         assert hooks.read_text() == "{}"
     elif candidate == "no_guard":
         hooks.unlink()
-    from agent_runtime.adapters import agy as adapter_module
+    from lu_machinery.agent_runtime.adapters import agy as adapter_module
 
     adapter_module._agy_version.cache_clear()
     calls = []
@@ -348,7 +348,7 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert "test-task" in plan.output_file.name
     # Read-only keeps lane effort and grants only individually approved readers.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags
+    from lu_machinery.agent_runtime.adapters.codex import _sources_read_only_flags
 
     assert config_values == ["model_reasoning_effort=high", *_sources_read_only_flags()[1::2]]
     # Liveness paths should include the output file
@@ -1136,9 +1136,9 @@ def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_n
         return real_popen(argv, *args, **kwargs)
 
     with (
-        patch("agent_runtime.runner.has_headroom") as mock_headroom,
+        patch("lu_machinery.agent_runtime.runner.has_headroom") as mock_headroom,
         patch.object(type(adapter), "build_invocation") as mock_build,
-        patch("agent_runtime.runner.subprocess.Popen", side_effect=_git_only) as mock_popen,
+        patch("lu_machinery.agent_runtime.runner.subprocess.Popen", side_effect=_git_only) as mock_popen,
         pytest.raises(
             ValueError,
             match=(re.escape(f"Agent {agent_name!r}: model {model!r}") + r" (is restricted to red-team code review|red-team exception expired)"
@@ -1157,8 +1157,8 @@ def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_n
 
 def test_invoke_admits_active_explicit_model_past_retirement_gate(tmp_path):
     with (
-        patch("agent_runtime.runner.has_headroom", return_value=(False, "probe")),
-        patch("agent_runtime.runner.write_record"),
+        patch("lu_machinery.agent_runtime.runner.has_headroom", return_value=(False, "probe")),
+        patch("lu_machinery.agent_runtime.runner.write_record"),
         pytest.raises(RateLimitedError, match="probe"),
     ):
         invoke("cursor", "hello", mode="read-only", cwd=tmp_path, model="grok-4.7")
@@ -1218,9 +1218,7 @@ def write_guard_repo(tmp_path, monkeypatch):
     dispatch_wt = main / ".worktrees" / "dispatch" / "codex" / "task-1"
     _git_wt(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
 
-    from agent_runtime import runner as runner_mod
-
-    monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", main.resolve())
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(main.resolve()))
     return SimpleNamespace(main=main.resolve(), dispatch_wt=dispatch_wt.resolve())
 
 
@@ -1251,7 +1249,7 @@ def test_write_guard_allows_out_of_tree_cwd(tmp_path):
 
 
 def test_write_guard_fails_closed_when_containment_unavailable(tmp_path, monkeypatch):
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     monkeypatch.setattr(runner_mod, "_load_worktree_containment", lambda: None)
     with pytest.raises(ValueError, match="failed to import"):
@@ -1265,7 +1263,7 @@ def test_invoke_codex_write_lane_rejects_primary_checkout_cwd(write_guard_repo):
     ``_spawn_subprocess`` is the seam (not ``subprocess.Popen``) so the guard's
     real git classify runs while the agent spawn stays observable.
     """
-    with patch("agent_runtime.runner._spawn_subprocess") as mock_spawn:
+    with patch("lu_machinery.agent_runtime.runner._spawn_subprocess") as mock_spawn:
         with pytest.raises(ValueError, match="primary checkout on a protected branch"):
             invoke("codex", "hello", mode="danger", cwd=write_guard_repo.main)
     mock_spawn.assert_not_called()
@@ -1277,10 +1275,10 @@ def test_invoke_codex_write_lane_spawns_in_dispatch_worktree(write_guard_repo):
     checkout)."""
 
     with (
-        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("agent_runtime.runner.write_record"),
+        patch("lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, "")),
+        patch("lu_machinery.agent_runtime.runner.write_record"),
         patch(
-            "agent_runtime.runner._spawn_subprocess",
+            "lu_machinery.agent_runtime.runner._spawn_subprocess",
             side_effect=FileNotFoundError("no codex binary"),
         ) as mock_spawn,
         pytest.raises(AgentUnavailableError),
@@ -1300,14 +1298,14 @@ def test_invoke_rate_limit_short_circuit(tmp_path):
     # during test runs (would poison has_headroom for subsequent real calls).
     with (
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(False, "cached rate limit"),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
         ) as mock_popen,
         pytest.raises(RateLimitedError, match="cached rate limit"),
     ):
@@ -1327,14 +1325,14 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
     # is missing. Also patch has_headroom so we reach Popen.
     with (
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ) as mock_write,
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
         ),
         pytest.raises(AgentUnavailableError, match="Popen failed"),
@@ -1402,8 +1400,8 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, re
     from threading import get_ident
     from unittest.mock import MagicMock
 
-    from agent_runtime import telemetry
-    from agent_runtime.watchdog import _stdout_streamer
+    from lu_machinery.agent_runtime import telemetry
+    from lu_machinery.agent_runtime.watchdog import _stdout_streamer
 
     # subprocess.communicate(timeout=...) polls using the shared time module.
     # A real --version probe therefore consumes the runner's simulated ticks
@@ -1494,30 +1492,30 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, re
 
     with (
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(MagicMock(side_effect=agent_popen)),
         ),
         patch(
-            "agent_runtime.runner.start_watchdog",
+            "lu_machinery.agent_runtime.runner.start_watchdog",
             side_effect=fake_start_watchdog,
         ),
         patch(
-            "agent_runtime.runner.time.sleep",
+            "lu_machinery.agent_runtime.runner.time.sleep",
             side_effect=poll_tick,
         ),
         patch(
-            "agent_runtime.runner.time.monotonic",
+            "lu_machinery.agent_runtime.runner.time.monotonic",
             side_effect=fake_monotonic,
         ),
         patch(
-            "agent_runtime.runner._kill_process_tree",
+            "lu_machinery.agent_runtime.runner._kill_process_tree",
             mock_kill_tree,
         ),
     ):
@@ -1561,7 +1559,7 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     import json as _json
     from unittest.mock import MagicMock
 
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     # Set up fake Gemini state for the test project. The session file is
     # created by the mocked Popen below, after build_invocation snapshots
@@ -1627,31 +1625,31 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     # should_kill mock: fire hard_timeout on every call.
     # Preserve the native harness controller contract with explicit fixture rungs;
     # the production default now selects only AGY Flash.
-    from ai_llm.fallback import GeminiRung
+    from lu_machinery.ai_llm.fallback import GeminiRung
 
     with (
-        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
+        patch("lu_machinery.ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(_popen_after_session_start),
         ),
         patch(
-            "agent_runtime.runner.should_kill",
+            "lu_machinery.agent_runtime.runner.should_kill",
             side_effect=lambda *a, **kw: "hard_timeout",
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
         patch(
-            "agent_runtime.runner._kill_process_tree",
+            "lu_machinery.agent_runtime.runner._kill_process_tree",
             mock_kill_tree,
         ),
     ):
@@ -1708,10 +1706,10 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
 
     # Preserve the native harness controller contract with explicit fixture rungs;
     # the production default now selects only AGY Flash.
-    from ai_llm.fallback import GeminiRung
+    from lu_machinery.ai_llm.fallback import GeminiRung
 
     with (
-        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 2, "gemini-3.8-flash-high", "api"), GeminiRung(2, 2, "gemini-3.8-flash-high", "oauth")]),
+        patch("lu_machinery.ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 2, "gemini-3.8-flash-high", "api"), GeminiRung(2, 2, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1728,22 +1726,22 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
             clear=False,
         ),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(mock_popen),
         ),
         patch(
-            "agent_runtime.runner._resolve_gemini_ladder_auth_modes",
+            "lu_machinery.agent_runtime.runner._resolve_gemini_ladder_auth_modes",
             return_value=("api", "oauth"),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):
@@ -1768,8 +1766,8 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
 
 def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monkeypatch):
     """The current Flash default attributes both result and usage to AGY."""
-    from agent_runtime import runner
-    from ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
 
     attempts = []
     adapter = SimpleNamespace(
@@ -1809,7 +1807,7 @@ def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monke
         ),
     )
     monkeypatch.setattr(runner, "_resolve_gemini_ladder_auth_modes", lambda config: ("oauth",))
-    with patch("agent_runtime.runner.write_record") as write_record:
+    with patch("lu_machinery.agent_runtime.runner.write_record") as write_record:
         result = runner._invoke_gemini_with_fallback(
             agent_name="gemini",
             adapter=adapter,
@@ -1859,10 +1857,10 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
 
     # Preserve the native harness controller contract with explicit fixture rungs;
     # the production default now selects only AGY Flash.
-    from ai_llm.fallback import GeminiRung
+    from lu_machinery.ai_llm.fallback import GeminiRung
 
     with (
-        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
+        patch("lu_machinery.ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1875,18 +1873,18 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
             clear=False,
         ),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ) as mock_write,
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(mock_popen),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
         pytest.raises(RateLimitedError),
@@ -1926,10 +1924,10 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 
     # Preserve the native harness controller contract with explicit fixture rungs;
     # the production default now selects only AGY Flash.
-    from ai_llm.fallback import GeminiRung
+    from lu_machinery.ai_llm.fallback import GeminiRung
 
     with (
-        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
+        patch("lu_machinery.ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -1940,26 +1938,26 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
             clear=False,
         ),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ) as mock_write,
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(MagicMock(return_value=timed_out_proc)),
         ),
         patch(
-            "agent_runtime.runner.should_kill",
+            "lu_machinery.agent_runtime.runner.should_kill",
             side_effect=lambda *a, **kw: "hard_timeout",
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
         patch(
-            "agent_runtime.runner._kill_process_tree",
+            "lu_machinery.agent_runtime.runner._kill_process_tree",
         ),
         pytest.raises(AgentTimeoutError),
     ):
@@ -2081,7 +2079,7 @@ def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
             assert recursive is True
             return list(self._children)
 
-    import agent_runtime.watchdog as watchdog_module
+    import lu_machinery.agent_runtime.watchdog as watchdog_module
 
     samples = iter([(0.0, 0.0), (0.0, 1.5)])
 
@@ -2126,7 +2124,7 @@ def test_process_tree_has_activity_ignores_idle_cpu_noise(monkeypatch):
             assert recursive is True
             return []
 
-    import agent_runtime.watchdog as watchdog_module
+    import lu_machinery.agent_runtime.watchdog as watchdog_module
 
     samples = iter([0.0, 0.06, 0.12, 2.12])
     monkeypatch.setattr(
@@ -2153,7 +2151,7 @@ def test_process_tree_has_activity_ignores_idle_cpu_noise(monkeypatch):
 
 def test_process_activity_poller_counts_work_as_startup_activity(monkeypatch):
     """CPU/disk work satisfies the startup probe as well as a silence probe."""
-    import agent_runtime.watchdog as watchdog_module
+    import lu_machinery.agent_runtime.watchdog as watchdog_module
 
     state = WatchdogState(start_time=time.monotonic(), last_activity=time.monotonic())
     proc = SimpleNamespace(poll=lambda: None)
@@ -2849,12 +2847,12 @@ def test_claude_adapter_keeps_hooks_when_api_key_set(tmp_path, monkeypatch):
 
 @pytest.mark.real_claude_cli_gate
 def test_claude_adapter_rejects_old_cli_version(tmp_path):
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     claude_adapter_mod._probe_claude_cli_version.cache_clear()
     adapter = ClaudeAdapter()
     with patch(
-        "agent_runtime.adapters.claude.subprocess.run",
+        "lu_machinery.agent_runtime.adapters.claude.subprocess.run",
         return_value=subprocess.CompletedProcess(
             args=["claude", "--version"],
             returncode=0,
@@ -2886,7 +2884,7 @@ def test_claude_adapter_default_prefix_prefers_local_binary_over_npx(tmp_path, m
     self-updates, so the #1684 version-drift rationale for npx-first no
     longer applies; the min-version gate still rejects stale binaries.
     """
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
         # Both npx and a local claude exist. The #4875 bug was preferring npx.
@@ -2919,7 +2917,7 @@ def test_claude_adapter_default_prefix_falls_back_to_npx_when_local_missing(tmp_
     """When no local `claude` binary is installed, ``npx @latest`` remains the
     documented fallback (it works on machines where the npm package still
     resolves to a runnable CLI). #4875."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
         return {"npx": "/usr/local/bin/npx"}.get(name)
@@ -2946,7 +2944,7 @@ def test_claude_adapter_default_prefix_falls_back_to_npx_when_local_missing(tmp_
 def test_claude_adapter_default_prefix_raises_when_neither_present(tmp_path, monkeypatch):
     """If neither claude nor npx is on PATH, fail loudly with a clear error
     instead of silently producing an empty/broken cmd. #1684/#4875."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
     # Hermetic: the dev machine may have a real ~/.local/bin/claude.
@@ -2970,7 +2968,7 @@ def test_claude_adapter_default_bin_probes_home_install_dir(tmp_path, monkeypatc
     install target ``~/.local/bin/claude`` is used if present (mirrors
     ai_agent_bridge._config + start-claude.sh:33). Reviewer follow-up on
     #4875 (review-4881)."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
     monkeypatch.setattr(claude_adapter_mod.Path, "home", staticmethod(lambda: tmp_path))
@@ -2989,7 +2987,7 @@ def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeyp
     """The ``tool_config={"cmd_prefix": [...]}`` override path must remain
     intact — callers that pass an explicit prefix get it verbatim, regardless
     of what shutil.which returns. #1684 (preserve existing behavior)."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
 
     # Even if shutil.which would return npx, an explicit override wins.
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: "/usr/local/bin/npx")
@@ -3106,10 +3104,10 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
 
     # Preserve the native harness controller contract with explicit fixture rungs;
     # the production default now selects only AGY Flash.
-    from ai_llm.fallback import GeminiRung
+    from lu_machinery.ai_llm.fallback import GeminiRung
 
     with (
-        patch("ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
+        patch("lu_machinery.ai_llm.fallback.build_gemini_ladder", return_value=[GeminiRung(1, 1, "gemini-3.8-flash-high", "oauth")]),
         patch.dict(
             "os.environ",
             {
@@ -3120,23 +3118,23 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
             clear=False,
         ),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(mock_popen),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
         # This case checks the spawned environment, not retry delays. Keep
         # the real fallback path while advancing past its visible wait.
-        patch("ai_llm.fallback.visible_sleep"),
+        patch("lu_machinery.ai_llm.fallback.visible_sleep"),
     ):
         invoke(
             "gemini",
@@ -3159,7 +3157,7 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
     """Danger-mode subprocesses must get the gh/git merge guard by default."""
     from unittest.mock import MagicMock
 
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     mock_proc = MagicMock()
     mock_proc.poll = MagicMock(return_value=0)
@@ -3178,18 +3176,18 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
 
     with (
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(mock_popen),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):
@@ -3211,7 +3209,7 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
 
 def test_merge_guard_nested_env_ignores_existing_shim_paths(tmp_path):
     """Nested guarded invocations must not recurse through the guard shims."""
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
@@ -3240,7 +3238,7 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
     """Explicit AGENT_ALLOW_MERGE=1 must disable the default danger guard."""
     from unittest.mock import MagicMock
 
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     mock_proc = MagicMock()
     mock_proc.poll = MagicMock(return_value=0)
@@ -3260,18 +3258,18 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
     with (
         patch.dict("os.environ", {"AGENT_ALLOW_MERGE": "1"}, clear=False),
         patch(
-            "agent_runtime.runner.has_headroom",
+            "lu_machinery.agent_runtime.runner.has_headroom",
             return_value=(True, ""),
         ),
         patch(
-            "agent_runtime.runner.write_record",
+            "lu_machinery.agent_runtime.runner.write_record",
         ),
         patch(
-            "agent_runtime.runner.subprocess.Popen",
+            "lu_machinery.agent_runtime.runner.subprocess.Popen",
             _agent_only_popen(mock_popen),
         ),
         patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
+            "lu_machinery.agent_runtime.runner._POLL_INTERVAL_S",
             0.01,
         ),
     ):
@@ -3337,7 +3335,7 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandb
 
     assert proc.returncode != 0
     assert "cannot merge or approve PRs" in proc.stderr
-    assert "scripts.publish pr-comment" in proc.stderr
+    assert "lu_machinery.publish pr-comment" in proc.stderr
     assert "resolved_model" in proc.stderr
     assert "real-gh" not in proc.stdout
 
@@ -3357,7 +3355,7 @@ def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sand
     )
     fake_gh.chmod(0o755)
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.publish", "pr-comment", "--number", "1234", "--body", "VERDICT: APPROVE"],
+        [sys.executable, "-m", "lu_machinery.publish", "pr-comment", "--number", "1234", "--body", "VERDICT: APPROVE"],
         cwd=root,
         capture_output=True,
         text=True,
@@ -3451,7 +3449,7 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.publish", "pr-merge", "--number", "1234"],
+        [sys.executable, "-m", "lu_machinery.publish", "pr-merge", "--number", "1234"],
         cwd=root,
         capture_output=True,
         text=True,
@@ -3524,7 +3522,7 @@ def test_typed_publisher_secondary_rate_limit_is_one_typed_attempt(tmp_path, gh_
         ["--head", "unit-branch", "--base", "main", "--title", "clean"] if verb == "pr-create" else ["--number", "5146"]
     )
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.publish", verb, *args, "--body-file", "-"],
+        [sys.executable, "-m", "lu_machinery.publish", verb, *args, "--body-file", "-"],
         input="preserved comment body\n",
         cwd=root,
         capture_output=True,
@@ -3562,7 +3560,7 @@ def test_typed_publisher_cleans_snapshots_and_child_on_sigterm(tmp_path, gh_shim
     )
     binary.chmod(0o755)
     proc = subprocess.Popen(
-        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
+        [sys.executable, "-m", "lu_machinery.publish", "issue-comment", "--number", "5146", "--body", "clean"],
         cwd=root,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
@@ -3693,7 +3691,7 @@ def test_git_shim_refuses_when_guard_interpreter_is_absent(tmp_path, verb):
 
 
 def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(tmp_path, monkeypatch):
-    from agent_runtime import runner as runtime_runner
+    from lu_machinery.agent_runtime import runner as runtime_runner
 
     class AcpxFixtureAdapter:
         def parse_response(self, *, returncode: int, **_kwargs):
@@ -3752,8 +3750,8 @@ def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(tmp_p
 
 
 def test_acpx_over_cap_progress_is_dropped_while_answer_and_terminal_survive(tmp_path, monkeypatch):
-    from agent_runtime import runner as runtime_runner
-    from agent_runtime.adapters.acpx import AcpxAdapter
+    from lu_machinery.agent_runtime import runner as runtime_runner
+    from lu_machinery.agent_runtime.adapters.acpx import AcpxAdapter
 
     monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
     monkeypatch.setattr(runtime_runner, "_ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES", 1024)
@@ -3808,8 +3806,8 @@ def test_acpx_over_cap_progress_is_dropped_while_answer_and_terminal_survive(tmp
 
 
 def test_acpx_under_cap_progress_is_retained_with_answer_and_terminal(tmp_path, monkeypatch):
-    from agent_runtime import runner as runtime_runner
-    from agent_runtime.adapters.acpx import AcpxAdapter
+    from lu_machinery.agent_runtime import runner as runtime_runner
+    from lu_machinery.agent_runtime.adapters.acpx import AcpxAdapter
 
     monkeypatch.setattr(runtime_runner, "_ACPX_DIRECT_OUTPUT_LIMIT_BYTES", 4 * 1024)
     monkeypatch.setattr(runtime_runner, "_ACPX_INTERMEDIATE_PROGRESS_LIMIT_BYTES", 1024)
@@ -3847,7 +3845,7 @@ def test_acpx_under_cap_progress_is_retained_with_answer_and_terminal(tmp_path, 
 
 
 def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
-    from agent_runtime import runner as runtime_runner
+    from lu_machinery.agent_runtime import runner as runtime_runner
 
     class FixtureAdapter:
         def parse_response(self, *, returncode: int, **_kwargs):
@@ -3910,7 +3908,7 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
 def test_privacy_safe_acp_failure_code_is_closed_and_body_free(
     outcome, rate_limited, stalled, explicit, returncode, expected
 ):
-    from agent_runtime import runner as runtime_runner
+    from lu_machinery.agent_runtime import runner as runtime_runner
 
     assert (
         runtime_runner._privacy_safe_failure_code(
@@ -3979,8 +3977,9 @@ def test_agy_claude_public_runtime_preserves_provider_init_custody(
     import hashlib
     from dataclasses import asdict
 
-    from agent_runtime import runner
-    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
 
     provider_dir = tmp_path / "provider"
@@ -4021,7 +4020,8 @@ def test_agy_claude_public_runtime_preserves_provider_init_custody(
 
 @pytest.mark.parametrize("missing", ["version", "artifact", "init"])
 def test_agy_runtime_missing_origin_evidence_never_acquires_custody(tmp_path, monkeypatch, missing):
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
 
     model = "claude-opus-5-5-high"
@@ -4041,7 +4041,8 @@ def test_agy_runtime_missing_origin_evidence_never_acquires_custody(tmp_path, mo
 
 
 def test_agy_init_custody_survives_cleanup_exception(tmp_path, monkeypatch):
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
 
     model = "claude-opus-5-5-high"
@@ -4068,7 +4069,8 @@ def test_agy_init_custody_survives_cleanup_exception(tmp_path, monkeypatch):
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 @pytest.mark.parametrize("binding", ["none", "task-only", "nonce-only", "bound"])
 def test_agy_direct_runtime_requires_real_context_for_every_projection(tmp_path, monkeypatch, model, binding):
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(model, "exact"))
@@ -4086,8 +4088,8 @@ def test_agy_direct_runtime_requires_real_context_for_every_projection(tmp_path,
 
 
 def test_agy_observer_revocation_clears_prior_context(tmp_path):
-    from agent_runtime import runner
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     model = "claude-opus-5-5-high"
     kwargs = dict(plan=InvocationPlan(cmd=["fixture", "--model", model], cwd=tmp_path), task_id="same-task",
@@ -4100,7 +4102,8 @@ def test_agy_observer_revocation_clears_prior_context(tmp_path):
 @pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 @pytest.mark.parametrize("case,known", [("exact", True), ("terminal-session", False)])
 def test_agy_watchdog_cleanup_failure_retains_only_valid_observation(tmp_path, monkeypatch, pin, case, known):
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
@@ -4119,7 +4122,8 @@ def test_agy_watchdog_cleanup_failure_retains_only_valid_observation(tmp_path, m
 
 @pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, monkeypatch, pin):
-    from agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     kwargs = dict(model=pin, mode="workspace-write", cwd=tmp_path,
@@ -4142,7 +4146,7 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
 
 def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
     """Native envelope shared only by the granted Muse protocol cases."""
-    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 
     session = "11111111-1111-4111-8111-111111111111"
     command = "22222222-2222-4222-8222-222222222222"
@@ -4194,7 +4198,7 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
     """M01: completed answers retain bound usage without promoting backend identity."""
     import hashlib
 
-    from scripts.agent_runtime.adapters.muse import MuseAdapter
+    from lu_machinery.agent_runtime.adapters.muse import MuseAdapter
 
     plan, records = _muse_stream_fixture(tmp_path, model)
     result = MuseAdapter().parse_response(
@@ -4240,9 +4244,9 @@ def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch
     import io
     from unittest.mock import MagicMock
 
-    from agent_runtime import runner, usage
-    from agent_runtime.adapters import muse as runtime_muse
-    from scripts.agent_runtime.adapters.muse import MuseAdapter
+    from lu_machinery.agent_runtime import runner, usage
+    from lu_machinery.agent_runtime.adapters import muse as runtime_muse
+    from lu_machinery.agent_runtime.adapters.muse import MuseAdapter
 
     plan, records = _muse_stream_fixture(tmp_path)
     adapter = MuseAdapter()
@@ -4316,7 +4320,7 @@ def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch
 ])
 def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
     """M02: foreign, duplicated or incomplete accounting must remain unknown."""
-    from scripts.agent_runtime.adapters.muse import MuseAdapter
+    from lu_machinery.agent_runtime.adapters.muse import MuseAdapter
 
     plan, records = _muse_stream_fixture(tmp_path)
     usage = records[-2]["payload"]
@@ -4402,7 +4406,7 @@ def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
 
 
 def _muse_planning_fixture(tmp_path, monkeypatch, version):
-    from scripts.agent_runtime.adapters import muse
+    from lu_machinery.agent_runtime.adapters import muse
 
     subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
     workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
@@ -4430,10 +4434,10 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     import io
     from unittest.mock import MagicMock
 
-    from agent_runtime import runner, usage
-    from scripts.agent_runtime.adapters import muse
-    from scripts.lib import rules_core
-    from scripts.secret_redactor import REDACTION
+    from lu_machinery.agent_runtime import runner, usage
+    from lu_machinery.agent_runtime.adapters import muse
+    from lu_machinery.lib import rules_core
+    from lu_machinery.secret_redactor import REDACTION
 
     # Delimit the assignment so opaque-token redaction of random tmp/xdist paths
     # cannot consume the password key that this test checks below.

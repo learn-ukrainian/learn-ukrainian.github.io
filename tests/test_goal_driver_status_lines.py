@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.goal_driver.status_lines import (
+from lu_machinery.goal_driver.status_lines import (
     ABORT_KIND,
     DONE_KIND,
     STATUS_KIND,

@@ -1,6 +1,5 @@
 import pytest
-
-from scripts.ai_agent_bridge._cli import _build_parser, _dispatch_command
+from lu_machinery.ai_agent_bridge._cli import _build_parser, _dispatch_command
 
 
 def test_serve_rejects_non_localhost_without_flag():

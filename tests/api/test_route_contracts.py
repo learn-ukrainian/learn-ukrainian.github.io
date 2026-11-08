@@ -1,10 +1,9 @@
 """Fleet board contracts stay distinct from the fleet-comms observer."""
 
 import pytest
-
-from scripts.api.fleet_board.router import endpoint_index
-from scripts.api.main import app
-from scripts.api.route_contracts import contract_for_route
+from lu_machinery.api.fleet_board.router import endpoint_index
+from lu_machinery.api.main import app
+from lu_machinery.api.route_contracts import contract_for_route
 
 
 @pytest.mark.parametrize("path", [row["path"] for row in endpoint_index(app)])

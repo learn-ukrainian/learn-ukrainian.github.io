@@ -29,10 +29,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
-
-from scripts.agent_runtime import binary_resolve as binary_resolve_module
-from scripts.agent_runtime.adapters import acpx as acpx_module
-from scripts.agent_runtime.adapters.acpx import (
+from lu_machinery.agent_runtime import binary_resolve as binary_resolve_module
+from lu_machinery.agent_runtime.adapters import acpx as acpx_module
+from lu_machinery.agent_runtime.adapters.acpx import (
     ACPX_EXIT_PERMISSION_DENIED,
     ACPX_PARSED_RESPONSE_LIMIT_BYTES,
     AcpxAdapter,
@@ -47,9 +46,9 @@ from scripts.agent_runtime.adapters.acpx import (
     AcpxPoolShadowAdapter,
     AcpxShadowRefusalError,
 )
-from scripts.agent_runtime.env_sanitize import build_agent_env
-from scripts.agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
-from scripts.common.git_context import sanitized_git_env
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
+from lu_machinery.common.git_context import sanitized_git_env
 
 _SUCCESS_NDJSON = (
     '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":1,'
@@ -781,7 +780,7 @@ def test_build_invocation_non_git_snapshot_uses_module_checkout_primary(tmp_path
     module_root = tmp_path / "primary" / ".worktrees" / "dispatch" / "codex" / "acp"
     module_candidate = module_root / "node_modules" / ".bin" / "acpx"
     _set_default_binary_candidate(monkeypatch, module_candidate)
-    monkeypatch.setattr(acpx_module, "_REPO_ROOT", module_root)
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(module_root))
     primary = tmp_path / "primary"
     primary_binary = primary / "node_modules" / ".bin" / "acpx"
     primary_binary.parent.mkdir(parents=True)
@@ -1916,7 +1915,7 @@ def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, mode
 
 
 def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     records = []
     monkeypatch.setattr(runner, "resolve_and_admit", lambda *_args, **_kwargs: None)
@@ -2037,7 +2036,7 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
 )
 def test_acp_consult_route_refuses_a_fable_pin_before_dispatch(participant, model):
     """#9583: Fable lacks consult roles; its native-only transport also bars Cursor."""
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     reason = (
         "does not implement catalog transport 'cursor'"
@@ -2053,7 +2052,7 @@ def test_acp_consult_route_refuses_a_fable_pin_before_dispatch(participant, mode
     [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-luna"), ("cursor", "grok-4.7")],
 )
 def test_acp_consult_route_still_admits_opus_sol_and_recon_pins(participant, model):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     assert runner.resolve_inter_agent_route(participant, model=model).model == model
 

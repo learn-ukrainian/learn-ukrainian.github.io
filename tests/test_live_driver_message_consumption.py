@@ -11,14 +11,14 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _ask_lifecycle, _cli, _db, _messaging
+from lu_machinery.ai_agent_bridge import _ask_lifecycle, _cli, _db, _messaging
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path: Path):
     """Keep legacy-message rows isolated for each consumption-state test."""
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file), patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db().close()
         yield db_file
 
@@ -70,7 +70,7 @@ def test_legacy_messages_migrate_live_driver_consumption_columns(tmp_path: Path)
     finally:
         conn.close()
 
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", legacy_db), patch("scripts.ai_agent_bridge._db.DB_PATH", legacy_db):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", legacy_db), patch("lu_machinery.ai_agent_bridge._db.DB_PATH", legacy_db):
         migrated = _db.get_db()
         try:
             columns = {row[1] for row in migrated.execute("PRAGMA table_info(messages)").fetchall()}

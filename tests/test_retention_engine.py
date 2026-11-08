@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.hygiene.retention_engine import (
+from lu_machinery.hygiene.retention_engine import (
     build_plan,
     plan_digest,
     record_gate5_observation,
@@ -15,9 +15,9 @@ from scripts.hygiene.retention_engine import (
 
 def test_plan_digest_is_stable_and_plan_never_mutates(tmp_path: Path) -> None:
     with (
-        patch("scripts.hygiene.retention_engine.scan_dispatch_worktrees", return_value=[]),
+        patch("lu_machinery.hygiene.retention_engine.scan_dispatch_worktrees", return_value=[]),
         patch(
-            "scripts.hygiene.retention_engine.primary_checkout_root",
+            "lu_machinery.hygiene.retention_engine.primary_checkout_root",
             side_effect=lambda p: Path(p),
         ),
     ):
@@ -40,7 +40,7 @@ def test_plan_digest_is_stable_and_plan_never_mutates(tmp_path: Path) -> None:
 
 
 def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> None:
-    from scripts.hygiene.retention_engine import _gate5_ready_for_apply_go
+    from lu_machinery.hygiene.retention_engine import _gate5_ready_for_apply_go
 
     plan_dir = tmp_path / "retention"
     plan = {
@@ -73,7 +73,7 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
     plan3["digest"] = "ghi789"
     path3 = write_plan(plan3, plan_dir)
     with patch(
-        "scripts.hygiene.retention_engine._utc_now",
+        "lu_machinery.hygiene.retention_engine._utc_now",
         return_value="2026-07-25T02:00:00Z",
     ):
         log3 = record_gate5_observation(
@@ -107,7 +107,7 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
 
     # Stale latest day → not ready even if day count is high
     with patch(
-        "scripts.hygiene.retention_engine._utc_now",
+        "lu_machinery.hygiene.retention_engine._utc_now",
         return_value="2026-08-10T00:00:00Z",
     ):
         log4 = record_gate5_observation(

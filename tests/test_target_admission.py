@@ -16,17 +16,18 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.agent_runtime import kimi_admission, target_admission
-from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, REVIEW_MODE, KimiAdmissionRefused
-from scripts.agent_runtime.target_admission import (
+from lu_machinery.agent_runtime import kimi_admission, target_admission
+from lu_machinery.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, REVIEW_MODE, KimiAdmissionRefused
+from lu_machinery.agent_runtime.target_admission import (
     AdmittedTarget,
     ReviewAdmissionRefused,
     SubstituteUnavailable,
     require_admitted,
     resolve_and_admit,
 )
-from scripts.ai_agent_bridge import _channels, _db
-from scripts.orchestration import slot_routing
+from lu_machinery.ai_agent_bridge import _channels, _db
+from lu_machinery.orchestration import slot_routing
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 _TOKEN = "KIMI CODING-ONLY"
@@ -53,8 +54,8 @@ def channel_db(tmp_path, monkeypatch):
     db_file = tmp_path / "messages.db"
     monkeypatch.setattr(_channels, "WAKE_ROOT", tmp_path / "wake")
     with (
-        patch("scripts.ai_agent_bridge._config.DB_PATH", db_file),
-        patch("scripts.ai_agent_bridge._db.DB_PATH", db_file),
+        patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file),
+        patch("lu_machinery.ai_agent_bridge._db.DB_PATH", db_file),
     ):
         _db.init_db()
         _channels.create_channel("topic")
@@ -292,7 +293,8 @@ def test_explicit_review_risk_dispatch_refuses_before_target_reads(seat, model, 
 @pytest.mark.parametrize("branch_facts", [False, True])
 def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, monkeypatch, model, risk, branch_facts):
     """D1: neither legacy inputs nor complete facts may infer AGY's risk."""
-    from scripts.review.record_cf_verdict import collect_branch_review_facts
+    from lu_machinery.review.record_cf_verdict import collect_branch_review_facts
+
     from tests.test_authoring_review_feasibility import REPOSITORY, SOL, mini_repo
 
     facts = None
@@ -428,7 +430,7 @@ def test_sinks_refuse_raw_names():
 
 
 def test_a_target_from_either_import_path_is_accepted_by_either_sink_check():
-    import agent_runtime.target_admission as bridge_path
+    import lu_machinery.agent_runtime.target_admission as bridge_path
 
     assert bridge_path is not target_admission  # two module copies, one contract
     (target,) = bridge_path.resolve_and_admit(("claude",), mode=BRIDGE_MODE)
@@ -447,8 +449,8 @@ def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
     """
     from pathlib import Path
 
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-    from scripts.review.model_catalog import budget_substitution_table, substitution_default_model
+    from lu_machinery.common.fallback_substitutions import load_dispatch_fallbacks
+    from lu_machinery.review.model_catalog import budget_substitution_table, substitution_default_model
 
     fallbacks = load_dispatch_fallbacks(Path("scripts/config/agent_fallback_substitutions.yaml"))
     assert fallbacks, "dispatch_fallbacks did not load; this guard would pass vacuously"
@@ -476,8 +478,9 @@ def test_the_fallback_guard_detects_a_kimi_destination():
 
 
 def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_path, monkeypatch):
-    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.agent_runtime.target_admission import ReviewAdmissionRefused
+    from lu_machinery.review import record_cf_verdict as recorder
+
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
@@ -544,8 +547,9 @@ def test_red_team_mode_alone_cannot_type_a_non_review_dispatch():
 )
 @pytest.mark.parametrize("author_id", ["author-one", " AUTHOR-ONE ", "codex/author-one"])
 def test_red_team_author_identity_refused_before_qualification(monkeypatch, reviewer_id, author_id):
-    from scripts.review import capacity
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.review import capacity
+    from lu_machinery.review import record_cf_verdict as recorder
+
     from tests.test_record_cf_verdict import facts_for
 
     facts = dataclasses.replace(
@@ -568,7 +572,8 @@ def test_red_team_author_identity_refused_before_qualification(monkeypatch, revi
 
 
 def test_red_team_different_same_family_model_keeps_qualification_floor(monkeypatch):
-    from scripts.review import capacity
+    from lu_machinery.review import capacity
+
     from tests.test_record_cf_verdict import facts_for
 
     reached = []
@@ -603,7 +608,8 @@ def test_red_team_different_same_family_model_keeps_qualification_floor(monkeypa
     ],
 )
 def test_red_team_cross_seat_author_identity_refused(monkeypatch, seat, reviewer_id, author_id):
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.review import record_cf_verdict as recorder
+
     from tests.test_record_cf_verdict import facts_for
 
     facts = dataclasses.replace(
@@ -647,7 +653,8 @@ def test_red_team_language_lane_refused(scope):
 def test_red_team_author_record_own_id_refused(tmp_path, monkeypatch, archived):
     import json
 
-    from scripts.review import record_cf_verdict as recorder
+    from lu_machinery.review import record_cf_verdict as recorder
+
     from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
@@ -709,7 +716,8 @@ def test_red_team_same_model_any_harness_refused(seat, model):
 
 
 def test_red_team_no_validated_author_refused_without_comparison_model():
-    from scripts.review.record_cf_verdict import CommitAttribution
+    from lu_machinery.review.record_cf_verdict import CommitAttribution
+
     from tests.test_record_cf_verdict import facts_for
 
     facts = dataclasses.replace(facts_for({"openai"}), commits=(CommitAttribution(None, "openai", "task-record"),))
@@ -730,7 +738,8 @@ def test_red_team_no_validated_author_refused_without_comparison_model():
 
 @pytest.mark.parametrize("explicit", [None, "gpt-6-luna", "claude-opus-5-5", "unlisted-model"])
 def test_red_team_admission_known_author_with_unknown_history(monkeypatch, explicit):
-    from scripts.review.record_cf_verdict import CommitAttribution
+    from lu_machinery.review.record_cf_verdict import CommitAttribution
+
     from tests.test_record_cf_verdict import SHA, facts_for
 
     facts = dataclasses.replace(

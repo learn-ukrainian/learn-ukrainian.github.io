@@ -10,8 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.ci.pytest_dispatch_cap import (
+from lu_machinery.ci.pytest_dispatch_cap import (
     CAP_LINE,
     DISPATCH_TASK_ENV,
     FULL_SUITE_BUSY,
@@ -26,7 +25,7 @@ from scripts.ci.pytest_dispatch_cap import (
     repository_root,
     tx_spec_worker_count,
 )
-from scripts.common import test_slots
+from lu_machinery.common import test_slots
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PYTEST = sys.executable
@@ -55,7 +54,7 @@ def _write_probe(directory: Path) -> None:
         "[tool.pytest.ini_options]\n"
         "testpaths = ['tests']\n"
         f"pythonpath = ['{scripts}']\n"
-        "addopts = '-p ci.pytest_dispatch_cap'\n",
+        "addopts = '-p lu_machinery.ci.pytest_dispatch_cap'\n",
         encoding="utf-8",
     )
     tests = directory / "tests"
@@ -130,7 +129,7 @@ def test_explicit_maxprocesses_is_clamped(tmp_path: Path, maxprocesses: str, exp
 def test_override_ini_addopts_still_caps_when_pytest_plugins_is_set(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     env = _child_env(tmp_path, marker="impl-8645-b")
-    env["PYTEST_PLUGINS"] = "ci.pytest_dispatch_cap"
+    env["PYTEST_PLUGINS"] = "lu_machinery.ci.pytest_dispatch_cap"
     completed = _run_pytest(
         tmp_path,
         ["-n", "8", "-q", "tests/test_sample.py", "--override-ini", "addopts=-v"],
@@ -142,7 +141,7 @@ def test_override_ini_addopts_still_caps_when_pytest_plugins_is_set(tmp_path: Pa
 def test_plugin_loaded_from_addopts_and_pytest_plugins_is_idempotent(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     env = _child_env(tmp_path, marker="impl-8645-b")
-    env["PYTEST_PLUGINS"] = "ci.pytest_dispatch_cap"
+    env["PYTEST_PLUGINS"] = "lu_machinery.ci.pytest_dispatch_cap"
     completed = _run_pytest(tmp_path, ["-n", "8", "-q", "tests/test_sample.py"], env)
     _assert_workers(completed, 2)
     assert completed.stdout.count(CAP_LINE) == 1

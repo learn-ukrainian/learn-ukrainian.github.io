@@ -7,8 +7,7 @@ import stat
 from pathlib import Path
 
 import pytest
-
-from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component, open_leaf_descriptor
+from lu_machinery.common.nofollow_walk import ComponentOpenError, open_directory_component, open_leaf_descriptor
 
 
 def _fd_count() -> int:

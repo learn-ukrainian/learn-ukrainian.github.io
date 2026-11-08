@@ -11,9 +11,8 @@ from __future__ import annotations
 
 import pytest
 from fastapi import HTTPException
-
-from scripts.api.config import PROJECT_ROOT
-from scripts.api.session_router import _read_session_file, _safe_project_path
+from lu_machinery.api.config import PROJECT_ROOT
+from lu_machinery.api.session_router import _read_session_file, _safe_project_path
 
 
 def test_safe_path_accepts_in_root():

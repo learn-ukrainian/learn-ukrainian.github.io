@@ -7,10 +7,9 @@ import urllib.error
 from pathlib import Path
 
 import pytest
-
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from scripts.session_supervisor import main
-from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_supervisor import main
+from lu_machinery.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
 
 
 class _Response:
@@ -194,8 +193,8 @@ def test_local_flag_warns_and_keeps_stdout_as_one_json_document(tmp_path: Path, 
 
 @pytest.mark.parametrize("mismatch", ["fencing_token", "session_id", "released", "missing"])
 def test_successor_capsule_refuses_lost_live_authority(tmp_path: Path, mismatch) -> None:
-    from scripts.session_supervisor import SessionSupervisor
-    from scripts.session_supervisor.remote import RemoteLeaseLostError
+    from lu_machinery.session_supervisor import SessionSupervisor
+    from lu_machinery.session_supervisor.remote import RemoteLeaseLostError
 
     original = _lease_payload()
     current = _lease_payload()
@@ -222,10 +221,11 @@ def test_successor_capsule_refuses_lost_live_authority(tmp_path: Path, mismatch)
 
 
 def test_remote_successor_real_api_cycle_preserves_handoff_and_fences_predecessor(tmp_path: Path) -> None:
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.session_supervisor import SessionSupervisor, SupervisorError
-    from scripts.session_supervisor.remote import RemoteLeaseLostError
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.store import SessionStreamStore
+    from lu_machinery.session_supervisor import SessionSupervisor, SupervisorError
+    from lu_machinery.session_supervisor.remote import RemoteLeaseLostError
+
     from tests.epics_monitor_stub import epics_monitor_stub
 
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "cycle.sqlite3"))
@@ -267,10 +267,11 @@ def test_remote_successor_real_api_cycle_preserves_handoff_and_fences_predecesso
 
 @pytest.fixture
 def supervisory_cycle(tmp_path):
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.fleet_comms.authority import AuthorityService
-    from scripts.session_supervisor import SessionSupervisor
+    from lu_machinery.fleet_comms.authority import AuthorityService
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.store import SessionStreamStore
+    from lu_machinery.session_supervisor import SessionSupervisor
+
     from tests.epics_monitor_stub import epics_monitor_stub
 
     store = SessionStreamStore(SessionStreamDatabase(tmp_path / "wake.sqlite3"))
@@ -280,7 +281,7 @@ def supervisory_cycle(tmp_path):
 
 
 def _supervisory_event(service, *, action="restart", generation=1, key="restart-event"):
-    from scripts.ai_agent_bridge._inbox_watch import supervisory_recipient
+    from lu_machinery.ai_agent_bridge._inbox_watch import supervisory_recipient
 
     return service.publish_message(
         sender="fixture-operator",
@@ -308,7 +309,7 @@ def _open_supervisory_driver(supervisor, *, instance="predecessor", session_id=N
 def test_supervisory_duplicate_wake_never_starts_second_live_driver(supervisory_cycle):
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
+    from lu_machinery.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -335,12 +336,12 @@ def test_supervisory_duplicate_wake_never_starts_second_live_driver(supervisory_
 def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tmp_path, monkeypatch):
     from unittest.mock import Mock
 
-    from agents_extensions.shared.session_streams.model import utc_now
-    from scripts.ai_agent_bridge import _ui_codex
-    from scripts.ai_agent_bridge._inbox_watch import InboxEvent, wake_driver_once
+    from lu_machinery.ai_agent_bridge import _ui_codex
+    from lu_machinery.ai_agent_bridge._inbox_watch import InboxEvent, wake_driver_once
+    from lu_machinery.session_streams.model import utc_now
 
     now = utc_now()
-    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: now)
+    monkeypatch.setattr("lu_machinery.api.epics_router.utc_now", lambda: now)
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
     before = supervisor.remote.stream(lease.stream_id)
@@ -380,7 +381,7 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
 def test_unavailable_restart_cli_does_not_claim_or_replay_delivery(supervisory_cycle, already_prepared):
     from datetime import UTC, datetime, timedelta
 
-    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
+    from lu_machinery.ai_agent_bridge._inbox_watch import consume_supervisory_event
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -410,7 +411,7 @@ def test_supervisory_consumed_released_generation_starts_exactly_one_successor(s
     from datetime import UTC, datetime, timedelta
     from types import SimpleNamespace
 
-    from scripts.ai_agent_bridge._inbox_watch import (
+    from lu_machinery.ai_agent_bridge._inbox_watch import (
         consume_supervisory_event,
         supervisory_launch_plan,
         wake_driver_once,
@@ -479,7 +480,7 @@ def test_supervisory_consumed_released_generation_starts_exactly_one_successor(s
 
 
 def test_supervisory_clean_release_without_preparation_cannot_restart(supervisory_cycle):
-    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan
+    from lu_machinery.ai_agent_bridge._inbox_watch import supervisory_launch_plan
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -489,8 +490,8 @@ def test_supervisory_clean_release_without_preparation_cannot_restart(supervisor
 
 
 def test_supervisory_stale_envelope_cannot_consume_or_prepare(supervisory_cycle):
-    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
-    from scripts.session_supervisor.remote import RemoteLeaseLostError
+    from lu_machinery.ai_agent_bridge._inbox_watch import consume_supervisory_event
+    from lu_machinery.session_supervisor.remote import RemoteLeaseLostError
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -512,17 +513,18 @@ def test_prepared_restart_survives_process_loss_without_early_takeover(
     from datetime import timedelta
     from types import SimpleNamespace
 
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import utc_now
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
-    from scripts.fleet_comms.authority import AuthorityService
-    from scripts.session_supervisor import SessionSupervisor
+    from lu_machinery.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
+    from lu_machinery.fleet_comms.authority import AuthorityService
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import utc_now
+    from lu_machinery.session_streams.store import SessionStreamStore
+    from lu_machinery.session_supervisor import SessionSupervisor
+
     from tests.epics_monitor_stub import epics_monitor_stub
 
     now = utc_now()
-    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: now)
-    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: now)
+    monkeypatch.setattr("lu_machinery.api.epics_router.utc_now", lambda: now)
+    monkeypatch.setattr("lu_machinery.session_streams.store.utc_now", lambda: now)
     database = tmp_path / "restart.sqlite3"
     fleet_root = tmp_path / "fleet"
     store = SessionStreamStore(SessionStreamDatabase(database))
@@ -596,15 +598,15 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
     from datetime import timedelta
     from unittest.mock import Mock
 
-    from agents_extensions.shared.session_streams.model import utc_now
-    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
-    from scripts.fleet_comms.artifacts import ArtifactStoreError
+    from lu_machinery.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
+    from lu_machinery.fleet_comms.artifacts import ArtifactStoreError
+    from lu_machinery.session_streams.model import utc_now
 
     now = utc_now()
-    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: now)
+    monkeypatch.setattr("lu_machinery.session_streams.store.utc_now", lambda: now)
     # The API runs in-process. Pin its projection clock for whole-payload equality,
     # including lease.age_seconds and the time-derived active/expired state.
-    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda now=now: now)
+    monkeypatch.setattr("lu_machinery.api.epics_router.utc_now", lambda now=now: now)
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -645,8 +647,8 @@ def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cyc
     from types import SimpleNamespace
     from unittest.mock import Mock
 
-    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     service, supervisor = supervisory_cycle
     predecessor = _open_supervisory_driver(supervisor)
@@ -694,7 +696,7 @@ def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cyc
 
 @pytest.mark.parametrize("case", ["matching", "mismatch", "expired", "malformed-expiry", "missing-expiry", "worker"])
 def test_capsule_cli_uses_environment_lease_read_only(monkeypatch, capsys, case) -> None:
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from lu_machinery.session_streams.hooks import lease_from_environment
 
     values = {
         "SESSION_STREAM_ID": "epic:7178",
@@ -759,7 +761,7 @@ def test_capsule_cli_uses_environment_lease_read_only(monkeypatch, capsys, case)
             pytest.fail("capsule must not release")
 
     remote = FakeRemote()
-    monkeypatch.setattr("scripts.session_supervisor.RemoteEpicClient", lambda: remote)
+    monkeypatch.setattr("lu_machinery.session_supervisor.RemoteEpicClient", lambda: remote)
     before = lease_from_environment()
     role = "worker" if case == "worker" else "driver"
     rc = main(["capsule", "--role", role, "--stream", "epic:7178"])

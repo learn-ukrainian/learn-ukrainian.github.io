@@ -19,11 +19,11 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.orchestration import merge_queue_keeper as keeper
+from lu_machinery.publish import github as publisher
+from lu_machinery.publish import recovery
+from lu_machinery.review.record_cf_verdict import build_comment
 
-from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.publish import github as publisher
-from scripts.publish import recovery
-from scripts.review.record_cf_verdict import build_comment
 from tests.opsec_fixtures import CATALOG
 
 HEAD = "a" * 40

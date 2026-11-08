@@ -6,9 +6,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.api import project_state_collect as collect_mod
-from scripts.api.project_state_collect import (
+from lu_machinery.api import project_state_collect as collect_mod
+from lu_machinery.api.project_state_collect import (
     SERVICE_DEFINITIONS,
     classify_serving_root,
     collect_local_document,
@@ -16,8 +15,8 @@ from scripts.api.project_state_collect import (
     collect_service_row,
     resolve_primary_repo_root,
 )
-from scripts.api.project_state_sanitize import validate_report_document
-from scripts.common.release_layout import MANIFEST_NAME
+from lu_machinery.api.project_state_sanitize import validate_report_document
+from lu_machinery.common.release_layout import MANIFEST_NAME
 
 SHA_MAIN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 SHA_HEAD = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"

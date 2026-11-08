@@ -7,10 +7,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.orchestration import merge_closeout as mc
+from lu_machinery.orchestration import task_lifecycle as tl
+from lu_machinery.orchestration import worktree_git as rw
 
-from scripts.orchestration import merge_closeout as mc
-from scripts.orchestration import task_lifecycle as tl
-from scripts.orchestration import worktree_git as rw
 from tests.orchestration.test_task_lifecycle import NOW, _identity
 
 _REAL_RUN = subprocess.run
@@ -1069,7 +1069,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
                 assert own_pr.repository == repository and own_pr.head_sha == head
 
     # A foreign row also invalidates the entire batched branch snapshot.
-    from scripts.hygiene import branch_sweep
+    from lu_machinery.hygiene import branch_sweep
 
     with monkeypatch.context() as scoped:
         scoped.setattr(
@@ -1083,7 +1083,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
         states, error = branch_sweep._archive_pr_snapshot(repo, [branch], rw._query_pr_states)[branch]
         assert states == [] and "repository does not match" in (error or "")
 
-    from scripts.orchestration.task_family import git_safety
+    from lu_machinery.orchestration.task_family import git_safety
 
     for pr_number in (None, 42):
         with monkeypatch.context() as scoped:

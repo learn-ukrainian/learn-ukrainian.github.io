@@ -8,9 +8,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from scripts.ai_agent_bridge import _channels, _inbox
-from scripts.orchestration.slot_routing import resolve_slot_holder
+from lu_machinery.ai_agent_bridge import _channels, _inbox
+from lu_machinery.orchestration.slot_routing import resolve_slot_holder
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _AREA_ASSIGNMENTS_YAML = _REPO_ROOT / "scripts" / "config" / "area_assignments.yaml"
@@ -110,8 +109,8 @@ def test_registry_absent_or_unreadable_fallback_to_static_tuple(tmp_path: Path) 
 
 def test_bottleneck_alerts_accepts_roster_slot_holder(tmp_path: Path) -> None:
     """Verify bottleneck_alerts._active_lease_holder accepts a registry roster slot as holder (R2 site 2)."""
-    from agents_extensions.shared.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
-    from scripts.fleet_comms.bottleneck_alerts import _active_lease_holder
+    from lu_machinery.fleet_comms.bottleneck_alerts import _active_lease_holder
+    from lu_machinery.session_streams import LeaseHolder, SessionStreamDatabase, SessionStreamStore
 
     db_path = tmp_path / "session-streams.sqlite3"
     db = SessionStreamDatabase(db_path)
@@ -293,8 +292,8 @@ def test_post_bounce_warning_in_return_dict_hermetic(
     post()'s return dict, the ``in result`` and content assertions fail —
     the warning would only reach stderr and be unreachable to callers.
     """
-    from scripts.orchestration import slot_routing
-    from scripts.orchestration.slot_routing import SlotHolderResult
+    from lu_machinery.orchestration import slot_routing
+    from lu_machinery.orchestration.slot_routing import SlotHolderResult
 
     def _no_holder(slot: str, **kwargs: object) -> SlotHolderResult:
         return SlotHolderResult(
@@ -343,7 +342,7 @@ def test_post_resolver_failure_surfaces_warning_not_silent(
     agent`` swallow is restored, ``result['warnings']`` stays empty (the
     failure is silent-dropped) and every warning assertion below fails.
     """
-    from scripts.orchestration import slot_routing
+    from lu_machinery.orchestration import slot_routing
 
     def _boom(slot: str, **kwargs: object) -> None:
         raise RuntimeError("simulated resolver/import failure")
@@ -383,8 +382,8 @@ def test_post_no_warnings_key_is_empty_list_when_all_held(
     MUTATION-CHECK (revert→fail): if the ``warnings`` key is dropped from the
     return dict, ``result['warnings']`` raises KeyError / ``in`` is False.
     """
-    from scripts.orchestration import slot_routing
-    from scripts.orchestration.slot_routing import SlotHolderResult
+    from lu_machinery.orchestration import slot_routing
+    from lu_machinery.orchestration.slot_routing import SlotHolderResult
 
     def _held(slot: str, **kwargs: object) -> SlotHolderResult:
         return SlotHolderResult(

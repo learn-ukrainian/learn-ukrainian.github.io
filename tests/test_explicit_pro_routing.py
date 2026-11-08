@@ -7,15 +7,15 @@ explicitly asks for it. An explicit --model / model= value must always win.
 
 from unittest.mock import MagicMock, patch
 
-from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+from lu_machinery.ai_agent_bridge._acp_compat import resolve_compat_model
+
 from scripts.batch.batch_otaman import dispatch_otaman
 
 
 def test_resolve_compat_model_legacy_flash_maps_to_pin():
     """Compatibility aliases follow the pin; retired generations are refused (#9301)."""
     import pytest
-
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
     assert resolve_compat_model("gemini", "gemini-3-flash-preview") == pin

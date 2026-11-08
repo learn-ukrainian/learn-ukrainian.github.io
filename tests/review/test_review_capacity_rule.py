@@ -6,11 +6,11 @@ import json
 from dataclasses import replace
 
 import pytest
+from lu_machinery.fleet import credit_lane
+from lu_machinery.review import closeout_cli
+from lu_machinery.review.capacity import review_capacity, review_capacity_action
+from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
-from scripts.fleet import credit_lane
-from scripts.review import closeout_cli
-from scripts.review.capacity import review_capacity, review_capacity_action
-from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -252,7 +252,7 @@ def test_unreadable_policy_dispatch_keeps_retained_reserve(monkeypatch, remainin
 
 
 def test_legacy_normalization_keeps_writer_policy_but_review_ignores_hot():
-    from scripts.review.reviewer_resolver import normalize_routing_snapshot
+    from lu_machinery.review.reviewer_resolver import normalize_routing_snapshot
 
     data = {"claude": "hot", "codex": "healthy"}
     assert normalize_routing_snapshot(data) == {"claude": "near_cap", "codex": "healthy"}
@@ -278,7 +278,7 @@ def test_existing_admission_hard_blocks(record, reason):
 
 
 def test_sole_pace_only_reviewer_cannot_exceed_durable_reservation_limits(tmp_path):
-    from scripts.fleet_comms.routing_reservations import (
+    from lu_machinery.fleet_comms.routing_reservations import (
         RoutingReservationLedger,
         RoutingReservationRequest,
         RoutingReservationUnavailable,

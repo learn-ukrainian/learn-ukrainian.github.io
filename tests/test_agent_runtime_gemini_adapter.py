@@ -10,8 +10,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
-from ai_llm.fallback import GEMINI_AUTH_ENV_VARS
+from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
+from lu_machinery.ai_llm.fallback import GEMINI_AUTH_ENV_VARS
 
 
 def _build(prompt: str, tmp_path: Path, **kwargs):

@@ -6,9 +6,8 @@ import subprocess
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.agent_runtime import bounded_advisory as advisory
-from scripts.dispatcher import checks, cli, git, store, worker
+from lu_machinery.agent_runtime import bounded_advisory as advisory
+from lu_machinery.dispatcher import checks, cli, git, store, worker
 
 
 @pytest.fixture

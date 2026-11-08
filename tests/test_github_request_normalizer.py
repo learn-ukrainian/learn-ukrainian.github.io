@@ -26,8 +26,7 @@ from typing import Any
 from urllib.request import Request
 
 import pytest
-
-from scripts.common import github_client as gh
+from lu_machinery.common import github_client as gh
 
 NOW = int(time.time())
 OPEN = NOW + 3600  # a reset in the future: the window is open
@@ -885,7 +884,7 @@ def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkey
 
 def test_landing_flow_never_reads_a_body(context):
     """Inside a vetted landing flow the class is landing: a non-replayable body is sent unread."""
-    from scripts.orchestration import merge_queue_keeper as keeper
+    from lu_machinery.orchestration import merge_queue_keeper as keeper
 
     seed(context, budget_rows("graphql", "0"))
     stream = Unseekable(envelope(R))
@@ -1538,7 +1537,7 @@ def in_keeper_run(call):
     """Make ``call`` from inside the merge-queue keeper's real ``run``: a vetted landing flow."""
 
     def run(context):
-        from scripts.orchestration import merge_queue_keeper as keeper
+        from lu_machinery.orchestration import merge_queue_keeper as keeper
 
         class Done(Exception):
             pass

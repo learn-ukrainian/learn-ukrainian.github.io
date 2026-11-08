@@ -30,17 +30,17 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.agent_runtime import runner
-from scripts.agent_runtime.adapters import claude, kimi, kimicc
-from scripts.agent_runtime.adapters.claude import (
+from lu_machinery.agent_runtime import runner
+from lu_machinery.agent_runtime.adapters import claude, kimi, kimicc
+from lu_machinery.agent_runtime.adapters.claude import (
     HEADLESS_BACKGROUND_ENV,
     HEADLESS_BACKGROUND_TOOL_DENIES,
     ClaudeAdapter,
 )
-from scripts.agent_runtime.adapters.kimi import KimiAdapter
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-from scripts.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.adapters.kimi import KimiAdapter
+from lu_machinery.agent_runtime.adapters.kimicc import KimiccHarness
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 SWITCH = "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"
@@ -220,7 +220,7 @@ def test_kimicc_runner_launch_carries_switch_and_denies(
     retired launch is proved by
     ``test_the_runtime_refuses_a_retired_kimi_even_when_ownership_is_admitted``.
     """
-    from scripts.agent_runtime import env_sanitize
+    from lu_machinery.agent_runtime import env_sanitize
 
     binary, dump = fake_claude
     route_python = tmp_path / "route_python.py"
@@ -245,7 +245,7 @@ def test_kimicc_runner_launch_carries_switch_and_denies(
     )
     monkeypatch.setenv("KIMICC_ROUTE_PYTHON", str(route_python))
     monkeypatch.setattr(kimicc, "_default_claude_bin", lambda: str(binary))
-    monkeypatch.setattr("scripts.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
+    monkeypatch.setattr("lu_machinery.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
     monkeypatch.setattr(
         kimicc,
         "resolve_kimi_model",
@@ -286,13 +286,13 @@ def test_native_kimi_runner_launch_gets_neither_control(tmp_path: Path, monkeypa
     monkeypatch.setenv("LU_FAKE_CLAUDE_DUMP", str(dump))
     monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
     monkeypatch.setenv(SWITCH, "1")
-    monkeypatch.setattr("scripts.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
+    monkeypatch.setattr("lu_machinery.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
     monkeypatch.setattr(kimi, "resolve_kimi_model", lambda model=None: "k3-256k")
     worktree = _admitted_worktree(tmp_path)
 
     result = _invoke_kimi(worktree, {"harness": "native"})
 
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     seen = json.loads(dump.read_text(encoding="utf-8"))
     assert seen["argv"][0] == "-p"
@@ -385,7 +385,7 @@ def _acpx_claude_launch(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPat
     never covers tools that run without asking, such as Monitor and
     ScheduleWakeup (#10500).
     """
-    from scripts.agent_runtime.adapters import acpx
+    from lu_machinery.agent_runtime.adapters import acpx
 
     script = tmp_path / "fake_claude.py"
     script.write_text(_FAKE_CLAUDE, encoding="utf-8")

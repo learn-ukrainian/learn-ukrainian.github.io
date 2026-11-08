@@ -31,9 +31,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.guardrails.worktree_containment import resolve_main_root
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
-from scripts.guardrails.worktree_containment import resolve_main_root
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
 
@@ -52,13 +53,14 @@ def _resolve_repo_path(path: Path) -> Path:
     return path
 
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.storage.artifacts import write_artifact
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.lexicon import curated_ohoiko_ulp_repromote as promo
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.lemma_normalization import strip_acute_stress
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_word
 
 DEFAULT_INVENTORY = _resolve_repo_path(

@@ -7,9 +7,9 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters.kimicc import KimiccHarness
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config, install_historical_kimi_catalog
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -65,8 +65,8 @@ def _adapter_plan(
     install_historical_kimi_catalog(tmp_path, monkeypatch)
     claude = tmp_path / "claude"
     _fake_claude(claude)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
     return KimiccHarness().build_invocation(
         prompt="say hi",
         mode=mode,
@@ -272,7 +272,7 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
     """Formerly the review grant named the trusted .mcp.json; now no bare MCP grant is forwarded at all."""
     import json
 
-    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+    from lu_machinery.agent_runtime.adapters.kimicc import KimiccHarness
 
     worktree = tmp_path / "worktree"
     worktree.mkdir()
@@ -281,8 +281,8 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("lu_machinery.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
     with pytest.raises(ValueError, match="is retired in the model catalog") as refusal:
         KimiccHarness().build_invocation(
             prompt="Implement the helper.",

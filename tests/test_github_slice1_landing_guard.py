@@ -18,8 +18,8 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import github_client as gh
 
-from scripts.common import github_client as gh
 from tests.opsec_fixtures import CATALOG, recorded_approval
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -104,7 +104,7 @@ def _in_keeper_run(call):
     """Issue ``call`` from inside the merge-queue keeper's real ``run`` (a vetted landing flow)."""
 
     def issue(client):
-        from scripts.orchestration import merge_queue_keeper as keeper
+        from lu_machinery.orchestration import merge_queue_keeper as keeper
 
         class Done(Exception):
             pass
@@ -562,7 +562,7 @@ def _pull_reply(method, endpoint, body):
 
 
 def test_verdict_publication_entry_point_is_landing_only_while_it_runs(tmp_path, monkeypatch):
-    from scripts.fleet_comms import review_publisher
+    from lu_machinery.fleet_comms import review_publisher
 
     wire = Wire(_pull_reply)
     client = store(tmp_path, wire, [("core", 0, OPEN), ("secondary", 0, OPEN)])
@@ -681,7 +681,7 @@ def test_no_caller_outside_the_client_can_open_a_landing_operation(tmp_path):
 
 @pytest.fixture
 def publisher(tmp_path, monkeypatch, synthetic_opsec):
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     monkeypatch.setattr(pub.gate, "catalog", lambda: CATALOG)
     monkeypatch.setattr(pub.gate, "real_gh", lambda env: "gh")
@@ -1216,7 +1216,7 @@ def test_rest_read_never_takes_an_unrelated_failure_for_a_refusal():
 
 
 def test_rest_cache_adapter_keeps_reason_and_reset(tmp_path, monkeypatch):
-    from scripts import github_rest_cache as rest
+    from lu_machinery import github_rest_cache as rest
 
     wire = Wire()
     client = store(tmp_path, wire, [("core", 0, OPEN)])
@@ -1253,7 +1253,7 @@ def refusing_runner():
 
 @pytest.mark.parametrize("check", [False, True])
 def test_publisher_recovery_lookup_keeps_a_refusal(tmp_path, monkeypatch, synthetic_opsec, refusing_runner, check):
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     monkeypatch.setattr(pub.gate, "catalog", lambda: CATALOG)
     monkeypatch.setattr(pub.recovery, "ledger_path", lambda cwd: tmp_path / "recovery.sqlite3")
@@ -1273,7 +1273,7 @@ def test_publisher_recovery_lookup_keeps_a_refusal(tmp_path, monkeypatch, synthe
 
 
 def test_publisher_readiness_keeps_a_serialized_refusal(tmp_path, monkeypatch, synthetic_opsec, refusing_runner):
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     monkeypatch.setattr(pub.gate, "catalog", lambda: CATALOG)
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)

@@ -6,9 +6,8 @@ import sys
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.fleet import pr_owner_check as check
-from scripts.orchestration.fleet_repos import FleetRepo
+from lu_machinery.fleet import pr_owner_check as check
+from lu_machinery.orchestration.fleet_repos import FleetRepo
 
 PUBLIC = "learn-ukrainian/learn-ukrainian.github.io"
 PRIVATE = "learn-ukrainian/learn-ukrainian-infra-private"
@@ -100,7 +99,7 @@ def test_legacy_record_without_repository_belongs_to_default_repo():
     ],
 )
 def test_real_liveness_needs_positive_supervisor_identity(monkeypatch, extra):
-    from scripts.dispatcher import worker
+    from lu_machinery.dispatcher import worker
 
     monkeypatch.setattr(worker, "_identity", lambda pid: None)
     for status in ("running", "spawning"):
@@ -109,7 +108,7 @@ def test_real_liveness_needs_positive_supervisor_identity(monkeypatch, extra):
 
 
 def test_real_liveness_accepts_matching_identity(monkeypatch):
-    from scripts.dispatcher import worker
+    from lu_machinery.dispatcher import worker
 
     monkeypatch.setattr(worker, "_identity", lambda pid: "boot:1" if pid == 4242 else None)
     live = task("t", "x", "running", pid=4242, process_start="boot:1")
@@ -123,12 +122,12 @@ def live(task_id, branch, repository=PUBLIC):
 
 
 def patch_world(monkeypatch, prs, records, repos=REPOS):
-    from scripts.dispatcher import worker
+    from lu_machinery.dispatcher import worker
 
     monkeypatch.setattr(worker, "_identity", lambda pid: "boot:1")
     monkeypatch.setattr(check, "load_fleet_repos", lambda: repos)
     monkeypatch.setattr(check, "fetch_open_prs", lambda slug: prs[slug])
-    from scripts.dispatcher import store
+    from lu_machinery.dispatcher import store
 
     monkeypatch.setattr(store, "list_tasks", lambda *a, **k: records)
 
@@ -196,7 +195,7 @@ def test_main_returns_unknown_for_a_record_without_task_id_and_for_timeouts(monk
 
 def test_documented_module_invocation_shows_help():
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.fleet.pr_owner_check", "--help"],
+        [sys.executable, "-m", "lu_machinery.fleet.pr_owner_check", "--help"],
         capture_output=True, text=True, timeout=60, check=False,
     )
     assert proc.returncode == 0 and "Exit codes:" in proc.stdout

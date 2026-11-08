@@ -7,11 +7,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.handoff import claim_stream, diagnose_handoff, remote_lease_reason
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.handoff import claim_stream, diagnose_handoff, remote_lease_reason
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
 NOW = datetime(2026, 7, 20, 12, 0, tzinfo=UTC)
 

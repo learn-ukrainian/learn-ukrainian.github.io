@@ -104,7 +104,7 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
 
 
 def test_git_maintenance_limits_and_schedule() -> None:
-    from scripts.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
+    from lu_machinery.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
 
     service = (PACKAGING / "learn-ukrainian-git-maintenance.service").read_text()
     assert GC_MEMORY_MAX == 2 * 1024**3

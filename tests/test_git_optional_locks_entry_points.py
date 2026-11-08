@@ -17,9 +17,8 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails.delegate_ownership import OwnershipLedger
-from scripts.orchestration import reconcile_sweep
+from lu_machinery.guardrails.delegate_ownership import OwnershipLedger
+from lu_machinery.orchestration import reconcile_sweep
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _VAR = "GIT_OPTIONAL_LOCKS"
@@ -81,7 +80,7 @@ def test_monitor_api_import_disables_optional_locks_for_children(
 ) -> None:
     script = (
         "import os, subprocess, sys\n"
-        "import scripts.api.main\n"
+        "import lu_machinery.api.main\n"
         "print(os.environ.get('GIT_OPTIONAL_LOCKS'))\n"
         "subprocess.run(['git', 'status', '--porcelain'], cwd=sys.argv[1], check=True, timeout=30)\n"
     )

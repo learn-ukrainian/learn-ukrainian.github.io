@@ -8,9 +8,8 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-
-from scripts.ai_agent_bridge import _inbox_watch as watch
-from scripts.ai_agent_bridge import _ui_codex as ui
+from lu_machinery.ai_agent_bridge import _inbox_watch as watch
+from lu_machinery.ai_agent_bridge import _ui_codex as ui
 
 THREAD = "019e6063-c3da-78d1-acaa-4cd684a08786"
 ARGS = ["codex", "--wake-driver", "codex", "--epic", "fixture", "--once"]
@@ -43,8 +42,8 @@ def wake(tmp_path, monkeypatch):
     service.store.connection.execute.return_value.fetchall.return_value = []
     service.__enter__ = Mock(return_value=service)
     service.__exit__ = Mock(return_value=False)
-    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
-    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
+    monkeypatch.setattr("lu_machinery.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("lu_machinery.session_supervisor.remote.RemoteEpicClient", lambda: remote)
     lock = Mock()
     monkeypatch.setattr(watch, "acquire_watcher_lock", lambda *args: lock)
     state = SimpleNamespace(db=db, rollout=rollout, remote=remote, service=service, lock=lock, sends=0, action=lambda: None)
@@ -197,7 +196,7 @@ def test_kept_receipt_survives_new_watcher_and_refuses_silent_replay(wake, capsy
 def test_notification_mode_surfaces_kept_row_without_resume(wake, monkeypatch):
     event = {"schema": "codex-wake.v1", "status": "OVERLAP", "reason": "concurrent_turn_starts"}
     watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], event)
-    monkeypatch.setattr("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", lambda: None)
+    monkeypatch.setattr("lu_machinery.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", lambda: None)
     output = io.StringIO()
     assert watch.run_watcher("codex", db_path=wake.db, lock_dir=wake.db.parent / "locks", output=output, once=True) == 7
     assert "id=7" in output.getvalue()
@@ -285,7 +284,7 @@ def test_daemon_stops_if_receipt_cannot_be_persisted(wake, monkeypatch, capsys):
         append(wake.rollout, "task_complete", "resume")
         with sqlite3.connect(wake.db) as conn:
             conn.execute("UPDATE messages SET data = '[1,2]' WHERE id=7")
-        monkeypatch.setattr("scripts.ai_agent_bridge._monitor_cache._atomic_write", Mock(side_effect=OSError("fixture write failure")))
+        monkeypatch.setattr("lu_machinery.ai_agent_bridge._monitor_cache._atomic_write", Mock(side_effect=OSError("fixture write failure")))
     wake.action = race
     sleep = Mock(side_effect=AssertionError("must stop rather than repeat"))
     monkeypatch.setattr(watch.time, "sleep", sleep)
@@ -430,8 +429,8 @@ def test_plain_text_after_retained_receipt_is_held_only_by_receipt(wake, capsys)
 
 @pytest.mark.parametrize("data", ['{"raw": "sender attachment"}', '{"attachment": "preserved"}', 'plain attachment\nwith "quotes" and a backslash \\', '', '[1,2]', '"attachment"', '17', 'true', 'null', '{broken}'])
 def test_retained_receipt_preserves_attachment_for_reader(wake, data, monkeypatch, capsys):
-    from scripts.ai_agent_bridge import _messaging
-    from scripts.ai_agent_bridge._ask_lifecycle import ask_attachment
+    from lu_machinery.ai_agent_bridge import _messaging
+    from lu_machinery.ai_agent_bridge._ask_lifecycle import ask_attachment
 
     with sqlite3.connect(wake.db) as conn:
         conn.execute("UPDATE messages SET data = ? WHERE id=7", (data,))
@@ -524,7 +523,7 @@ def test_sender_supplied_wake_key_has_no_effect(wake, capsys, forged, attachment
 @pytest.mark.parametrize("status", ["OVERLAP", "UNKNOWN"])
 @pytest.mark.parametrize("disposition", ["ack", "deleted"])
 def test_stale_watcher_receipt_is_collected_before_newer_wake(wake, monkeypatch, status, disposition):
-    from scripts.ai_agent_bridge import _messaging
+    from lu_machinery.ai_agent_bridge import _messaging
 
     report = {"schema": "codex-wake.v1", "status": status, "reason": "open_turns"}
     watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
