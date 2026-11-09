@@ -96,7 +96,7 @@
     "@agentclientprotocol/claude-agent-acp": ">=0.64.2 <1",
     "@agentclientprotocol/sdk": "1.8.0",
     "@eslint/js": "^10.0.1",
-    "@types/better-sqlite3": "^7.6.13",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.6",
     "@typescript-eslint/eslint-plugin": "^8.72.1",
