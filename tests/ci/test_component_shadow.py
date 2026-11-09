@@ -9,9 +9,10 @@ import subprocess
 import xml.etree.ElementTree as ET
 
 import pytest
-from lu_machinery.ci import component_shadow as s
-from lu_machinery.ci import components as c
-from lu_machinery.ci import pytest_report
+
+from scripts.ci import component_shadow as s
+from scripts.ci import components as c
+from scripts.ci import pytest_report
 
 
 def git(root, *args):
@@ -475,7 +476,7 @@ def test_registration_cli_refuses_overwrite(repo, static_graph, tmp_path):
 
 
 def test_gh_pages_refuses_incomplete_census(github_transport):
-    from lu_machinery.common.github_client import Response
+    from scripts.common.github_client import Response
 
     github_transport(lambda *args: Response(200, {}, b'{"total_count":2,"jobs":[{"id":1}]}'))
     with pytest.raises(ValueError, match="incomplete GitHub census"):
@@ -483,7 +484,7 @@ def test_gh_pages_refuses_incomplete_census(github_transport):
 
 
 def test_live_inventory_uses_first_attempt_even_after_rerun(github_transport):
-    from lu_machinery.common.github_client import Response
+    from scripts.common.github_client import Response
 
     run = {"id": 42, "event": "pull_request", "status": "completed", "conclusion": "success",
            "run_attempt": 2, "created_at": "2026-10-08T00:00:00Z", "updated_at": "2026-10-09T00:00:00Z", "head_sha": "head"}
