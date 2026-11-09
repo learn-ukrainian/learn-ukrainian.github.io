@@ -515,14 +515,35 @@ def _rmdir_held(dir_fd: int, name: str, *, held_fd: int, held_st: os.stat_result
         raise ContainmentError(f"rmdir removed a different directory in place of {name!r}")
 
 
+def grant_owner_rwx(dir_fd: int, name: str, expected: os.stat_result, *, device: int, mount_id: int) -> None:
+    """Give owner rwx to the directory ``name`` below ``dir_fd``, pinned before its mode changes.
+
+    The name is held through an ``O_PATH`` descriptor, which needs no access to
+    the directory and refuses a symlink or any non-directory. Its identity,
+    owner, device and mount id are proven on that descriptor, and the mode is
+    changed through ``/proc/self/fd``, so a name swapped for another inode (a
+    hard link to an outside file included) is never touched.
+    """
+    fd = os.open(name, os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=dir_fd)
+    try:
+        held = os.fstat(fd)
+        if (held.st_dev, held.st_ino) != (expected.st_dev, expected.st_ino) or held.st_uid != os.geteuid():
+            raise ContainmentError(f"directory {name!r} changed before its permission repair")
+        if held.st_dev != device or fd_mount_id(fd) != mount_id:
+            raise ContainmentError(f"refusing to repair permissions across a mount at {name!r}")
+        os.chmod(f"/proc/self/fd/{fd}", stat.S_IMODE(held.st_mode) | stat.S_IRWXU)
+    finally:
+        os.close(fd)
+
+
 def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
     """Remove every entry below ``dir_fd`` without leaving ``device`` or ``mount_id``.
 
     Symlinks are unlinked, never followed. Every directory descent re-proves
     identity, device and mount id on the descriptor it just opened, and every
     ``rmdir`` re-identifies its target with the emptied directory still held
-    open (:func:`_rmdir_held`). A directory without owner rwx gets it, on the
-    held descriptor, before it is emptied.
+    open (:func:`_rmdir_held`). A directory without owner rwx gets it before it
+    is emptied, through a descriptor proven to be that directory.
     """
     with os.scandir(dir_fd) as it:
         entries = [(entry.name, entry.stat(follow_symlinks=False)) for entry in it]
@@ -533,7 +554,7 @@ def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
             try:
                 child_fd = _open_dir_at(dir_fd, name)
             except PermissionError:
-                os.chmod(name, stat.S_IMODE(st.st_mode) | stat.S_IRWXU, dir_fd=dir_fd, follow_symlinks=False)
+                grant_owner_rwx(dir_fd, name, st, device=device, mount_id=mount_id)
                 child_fd = _open_dir_at(dir_fd, name)
             try:
                 child_st = _verify_held_dir(

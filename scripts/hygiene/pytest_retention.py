@@ -253,34 +253,39 @@ def _abandonment(candidate: Candidate, *, boot_id: str | None) -> str | None:
     return "live_owner" if status == "owner_alive" else status
 
 
-def _unlock_owned_dirs(dir_fd: int, path: Path, mounts: frozenset[str]) -> int:
+def _unlock_owned_dirs(dir_fd: int, *, device: int, mount_id: int) -> int:
     """Give owner rwx to each of our directories below ``dir_fd`` that the owner cannot list or enter.
 
     A test can leave such a directory (mode 000), which no scan can see into, so
     the run could never be judged. This runs only in apply mode, on a run whose
-    owner is proven gone and whose lock the sweep holds. The repair changes each
-    directory's ctime, and the run is kept in this sweep, so a later sweep judges
-    its whole tree from that change on. It never follows a symlink, crosses a device or touches a mount
-    point. Returns how many directories it repaired.
+    owner is proven gone and whose lock the sweep holds. Each repair goes
+    through a descriptor proven to be that directory, on this device and mount
+    (``task_scratch.grant_owner_rwx``); a directory that cannot be proven is
+    left as it is, and the tree scan then reports it. The repair changes each
+    directory's ctime, and the run is kept in this sweep, so a later sweep
+    judges its whole tree from that change on. Returns how many directories it
+    repaired.
     """
     listable = stat.S_IRUSR | stat.S_IXUSR
     repaired = 0
-    device = os.fstat(dir_fd).st_dev
     with os.scandir(dir_fd) as entries:
         children = [(entry.name, entry.stat(follow_symlinks=False)) for entry in entries]
     for name, info in children:
-        if not stat.S_ISDIR(info.st_mode) or info.st_dev != device or str(path / name) in mounts:
+        if not stat.S_ISDIR(info.st_mode) or info.st_dev != device:
             continue
         if info.st_uid == os.geteuid() and stat.S_IMODE(info.st_mode) & listable != listable:
-            os.chmod(name, stat.S_IMODE(info.st_mode) | stat.S_IRWXU, dir_fd=dir_fd, follow_symlinks=False)
+            try:
+                ownership.grant_owner_rwx(dir_fd, name, info, device=device, mount_id=mount_id)
+            except (OSError, ownership.TaskScratchError):
+                continue
             repaired += 1
         try:
             child = os.open(name, sweep._DIR_FLAGS, dir_fd=dir_fd)
         except PermissionError:
             continue  # not ours to repair; the tree scan reports it
         try:
-            if os.path.samestat(os.fstat(child), info):
-                repaired += _unlock_owned_dirs(child, path / name, mounts)
+            if os.path.samestat(os.fstat(child), info) and ownership.fd_mount_id(child) == mount_id:
+                repaired += _unlock_owned_dirs(child, device=device, mount_id=mount_id)
         finally:
             os.close(child)
     return repaired
@@ -299,25 +304,26 @@ def _classify(
     if not stat.S_ISDIR(info.st_mode):
         return candidate
     row.update(kind="directory", identity=[info.st_dev, info.st_ino, info.st_uid])
-    run_fd = os.open(name, sweep._DIR_FLAGS, dir_fd=ns_fd)
-    try:
-        if not os.path.samestat(os.fstat(run_fd), info):
-            row["reason"] = "identity_changed"
-            return candidate
-        candidate.lock, reason = _lock(run_fd)
-        candidate.locked = candidate.lock is not None
-        candidate.lease, candidate.lease_error = _read_lease(run_fd)
-        mounts = sweep.mount_points()
-        if apply and not reason and mounts is not None and _abandonment(candidate, boot_id=boot_id) is None:
-            row["permissions_repaired"] = _unlock_owned_dirs(run_fd, path, mounts)
-    finally:
-        os.close(run_fd)
     with ExitStack() as inspection:
-        if candidate.lock is not None:
-            inspection.callback(os.close, candidate.lock)
-            if not apply:  # a dry run only observes the lock
-                inspection.close()
-                candidate.lock = None
+        run_fd = os.open(name, sweep._DIR_FLAGS, dir_fd=ns_fd)
+        try:
+            if not os.path.samestat(os.fstat(run_fd), info):
+                row["reason"] = "identity_changed"
+                return candidate
+            candidate.lock, reason = _lock(run_fd)
+            if candidate.lock is not None:
+                # Registered at once, so any failure below still releases it.
+                inspection.callback(os.close, candidate.lock)
+            candidate.locked = candidate.lock is not None
+            candidate.lease, candidate.lease_error = _read_lease(run_fd)
+            mount_id = ownership.fd_mount_id(run_fd)
+            if apply and not reason and mount_id is not None and _abandonment(candidate, boot_id=boot_id) is None:
+                row["permissions_repaired"] = _unlock_owned_dirs(run_fd, device=info.st_dev, mount_id=mount_id)
+        finally:
+            os.close(run_fd)
+        if candidate.lock is not None and not apply:  # a dry run only observes the lock
+            inspection.close()
+            candidate.lock = None
         if reason:
             row["reason"] = reason
             return candidate

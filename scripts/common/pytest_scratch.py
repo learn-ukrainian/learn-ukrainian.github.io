@@ -84,8 +84,10 @@ _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
 _LOCK_JOIN_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
-# Shared holds on the run this process works inside, kept until it exits.
-_JOINED: list[int] = []
+# The inherited TMPDIR names no managed run: no lock file there, or not a plain one.
+_NOT_A_RUN_ERRNOS = frozenset({errno.ENOENT, errno.ENOTDIR, errno.ELOOP})
+# Shared holds on the runs this process works inside, by lock identity, kept until it exits.
+_JOINED: dict[tuple[int, int], int] = {}
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -407,24 +409,32 @@ def _join_inherited_run() -> None:
     xdist workers and nested sessions work inside their parent session's run.
     The sweep needs the run's lock exclusively, so holding it shared keeps the
     run for as long as any of them lives, even after its owner is gone. The
-    descriptor is close-on-exec and is released when this process exits. Any
-    other ``TMPDIR`` joins nothing.
+    descriptor is close-on-exec and is released when this process exits. A
+    ``TMPDIR`` whose parent holds no regular lock file names no managed run and
+    joins nothing. Any other failure to join stops the session before it uses
+    that scratch: the run could be deleted under it.
     """
     inherited = os.environ.get("TMPDIR", "")
     if os.path.basename(inherited) != PAYLOAD_DIRNAME:
         return
+    lock = os.path.join(os.path.dirname(inherited), LOCK_FILENAME)
     try:
-        fd = os.open(os.path.join(os.path.dirname(inherited), LOCK_FILENAME), _LOCK_JOIN_FLAGS)
-    except OSError:
-        return
+        fd = os.open(lock, _LOCK_JOIN_FLAGS)
+    except OSError as exc:
+        if exc.errno in _NOT_A_RUN_ERRNOS:
+            return
+        raise pytest.UsageError(f"cannot hold the scratch run of TMPDIR={inherited}: {_reason(exc)}") from exc
     try:
-        if not stat.S_ISREG(os.fstat(fd).st_mode):
-            raise OSError(errno.EINVAL, "lock is not a regular file")
+        held = os.fstat(fd)
+        if not stat.S_ISREG(held.st_mode) or (held.st_dev, held.st_ino) in _JOINED:
+            # Not a run, or already held by this process (an in-process nested session).
+            os.close(fd)
+            return
         fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
-    except OSError:
+    except OSError as exc:
         os.close(fd)
-        return
-    _JOINED.append(fd)
+        raise pytest.UsageError(f"cannot hold the scratch run of TMPDIR={inherited}: {_reason(exc)}") from exc
+    _JOINED[(held.st_dev, held.st_ino)] = fd
 
 
 def _allocate_run() -> TaskScratch:

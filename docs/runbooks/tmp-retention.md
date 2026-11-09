@@ -90,7 +90,9 @@ deleted outright when all of these hold:
   sweep. The owner holds it shared for its lifetime, and so does every xdist
   worker or nested pytest session that inherits the run's payload as `TMPDIR`,
   so a run whose owner was killed is kept as `in_use` while any of them
-  lives. A lock the sweep cannot open keeps the run as `lock_unknown`.
+  lives. A session that cannot join the run it inherited stops with a usage
+  error rather than work unprotected. A lock the sweep cannot open keeps the
+  run as `lock_unknown`.
 
 A folder with no `lease.json`, or a malformed one, records no owner. The lease
 is written before anything else exists, so such a folder is the residue of an
@@ -99,7 +101,8 @@ interrupted removal; it goes once idle, when its lock (if any) is free.
 A test can leave a directory its owner cannot list (mode 000), which no scan
 can see into, so the run reads as `tree_unknown`. With `--apply`, once the
 owner is proven gone and the sweep holds the lock, the sweep gives such
-directories owner rwx back and keeps the run in that sweep
+directories owner rwx back, each through a descriptor proven to be that
+directory on the run's device and mount, and keeps the run in that sweep
 (`permissions_repaired`). The change makes the run young, so a later sweep
 judges its whole tree; a dry run only reports `tree_unknown`.
 
