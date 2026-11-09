@@ -37,8 +37,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 

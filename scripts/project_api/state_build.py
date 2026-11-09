@@ -12,12 +12,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
+    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
 
-from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from .config import LEVELS
 from .curriculum_state import (

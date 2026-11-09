@@ -11,9 +11,9 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.research import registry as reg
 
 from scripts.audit import check_research_registry_pilot as pilot
-from scripts.research import registry as reg
 
 
 def test_real_seeded_pilot_checker_is_green() -> None:

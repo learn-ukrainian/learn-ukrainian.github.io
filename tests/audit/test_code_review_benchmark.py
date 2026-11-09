@@ -145,7 +145,7 @@ def test_native_codex_accepts_approved_model():
 
 def test_native_claude_runs_without_background_work(monkeypatch):
     """The headless Claude lane carries the #9690 controls from the adapter (#9750)."""
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
 
     calls = []
 

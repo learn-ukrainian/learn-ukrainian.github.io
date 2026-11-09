@@ -19,8 +19,9 @@ from urllib.parse import quote
 import requests
 
 try:
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
     from scripts.audit.sum11_sovietization_scan import classify_entry
-    from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -30,8 +31,9 @@ except ModuleNotFoundError as exc:
     _scripts_dir = Path(__file__).resolve().parents[1]
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
     from audit.sum11_sovietization_scan import classify_entry  # type: ignore[no-redef]
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 DEFAULT_USER_AGENT = (

@@ -5,15 +5,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import lu_machinery.api.work_router as work_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.work_router as work_router
-from scripts.api.main import app
-from scripts.api.state_helpers import cache_invalidate
-from scripts.work.normalize import build_projection
-from scripts.work.schema import SchemaValidationError, parse_saved_view_params
-from scripts.work.sources_public import SectionResult, private_capability_seam
+from lu_machinery.api.main import app
+from lu_machinery.api.state_helpers import cache_invalidate
+from lu_machinery.work.normalize import build_projection
+from lu_machinery.work.schema import SchemaValidationError, parse_saved_view_params
+from lu_machinery.work.sources_public import SectionResult, private_capability_seam
 
 ROOT = Path(__file__).resolve().parents[1]
 pytestmark = pytest.mark.repo_wide

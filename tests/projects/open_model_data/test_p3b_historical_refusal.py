@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.storage.paths import ArtifactSet
 
 from scripts.projects.open_model_data import (
     v4_production_shards_assembly as production,
@@ -19,7 +20,6 @@ from scripts.projects.open_model_data import (
     v5_mine_middle_ukrainian as middle,
 )
 from scripts.projects.open_model_data.p3b_refusal import HistoricalProducerDeferredError
-from scripts.storage.paths import ArtifactSet
 
 
 def _tree_state(root: Path) -> dict[str, tuple[bytes | None, int, int, int]]:

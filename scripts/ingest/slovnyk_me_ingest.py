@@ -18,8 +18,9 @@ from urllib.parse import quote, urlparse
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
-from scripts.storage.topology import is_network_filesystem_path, store_data_dir
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
+from lu_machinery.storage.topology import is_network_filesystem_path, store_data_dir
+
 from scripts.wiki.slovnyk_me import (
     DEFAULT_SLOVNYK_ME_DICTS,
     DEFAULT_USER_AGENT,
@@ -82,8 +83,8 @@ WHERE EXISTS (
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

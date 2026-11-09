@@ -4,8 +4,7 @@ import importlib
 import sys
 
 import pytest
-
-from scripts.storage import topology as t
+from lu_machinery.storage import topology as t
 
 
 def test_config_and_verification_import_do_not_resolve(monkeypatch):

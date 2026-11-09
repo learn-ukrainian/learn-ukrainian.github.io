@@ -228,7 +228,8 @@ class TestCompileArticleSkipLogic:
         mark_compiled.assert_not_called()
 
     def test_compile_records_actual_fallback_model_in_meta_and_state(self, tmp_path):
-        from ai_llm.fallback import CallResult
+        from lu_machinery.ai_llm.fallback import CallResult
+
         from wiki.compiler import compile_article
 
         prompts_dir = tmp_path / "prompts"

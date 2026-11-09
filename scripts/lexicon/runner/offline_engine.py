@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.runner.contracts import (
     ENGINE_VERSION,
     ChunkSpec,
@@ -42,7 +44,6 @@ from scripts.lexicon.runner.stream_manifest import (
     stream_manifest_entries_sqlite,
 )
 from scripts.lexicon.runner.worker import run_capped_worker
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def enrich_offline_slice(

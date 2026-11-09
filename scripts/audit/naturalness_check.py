@@ -21,8 +21,8 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from agent_runtime.json_parse import extract_json_object
-from common.repo_root import project_interpreter
+from lu_machinery.agent_runtime.json_parse import extract_json_object
+from lu_machinery.common.repo_root import machinery_path, project_interpreter
 
 VENV_PYTHON = project_interpreter()
 
@@ -105,7 +105,7 @@ def call_agy(prompt: str, task_id: str, model: str = "gemini-3.8-flash-high") ->
         result = subprocess.run(
             [
                 str(VENV_PYTHON),
-                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
+                str(machinery_path("ai_agent_bridge/__main__.py")),
                 "ask-agy",
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
@@ -154,7 +154,7 @@ def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
         result = subprocess.run(
             [
                 str(VENV_PYTHON),
-                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
+                str(machinery_path("ai_agent_bridge/__main__.py")),
                 "ask-claude",
                 prompt,
                 "--task-id", task_id,

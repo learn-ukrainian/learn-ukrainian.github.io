@@ -1773,7 +1773,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     try:
         rp = ctx.paths.get("research")
         if rp and rp.exists():
-            from research_quality import assess_research_compat
+            from lu_machinery.research_quality import assess_research_compat
             rq = assess_research_compat(rp, ctx.track, ctx.paths.get("md"))
             if rq:
                 score = rq.get("score")

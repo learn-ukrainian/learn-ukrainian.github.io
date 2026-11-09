@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-from scripts.common import github_client as gh
+from lu_machinery.common import github_client as gh
 
 
 def production_github_cache_directory():

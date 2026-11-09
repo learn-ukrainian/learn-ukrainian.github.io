@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.git_context import sanitized_git_env
 
 from scripts.audit.llm_qg_store import (
     current_evidence_for_module,
@@ -17,7 +18,6 @@ from scripts.audit.llm_qg_store import (
     latest_llm_qg,
     record_llm_qg,
 )
-from scripts.common.git_context import sanitized_git_env
 
 
 def _module(tmp_path: Path) -> Path:

@@ -79,9 +79,9 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.common.jsonl import physical_lines
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
-from scripts.orchestration.task_record_store import locate_task_record
+from lu_machinery.common.jsonl import physical_lines
+from lu_machinery.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
     r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|deepseek|deepseek-v4-pro|cursor|muse|opencode|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",

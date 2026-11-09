@@ -59,11 +59,12 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.repo_root import machinery_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = PROJECT_ROOT / "docs" / "references" / "research-registry.yaml"
 SCHEMA_PATH = PROJECT_ROOT / "schemas" / "research_registry.schema.json"
-STREAMS_PATH = PROJECT_ROOT / "scripts" / "config" / "issue_streams.yaml"
+STREAMS_PATH = machinery_path("config/issue_streams.yaml")
 DECISIONS_PATH = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
 # Digest copyright policy (ADR-011 §"Digest content policy"). These are a
@@ -860,7 +861,7 @@ def _run_strict_adoption(
     # directory under a test project root).
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.append(str(PROJECT_ROOT))
-    from scripts.orchestration import issue_stream_audit as isa
+    from lu_machinery.orchestration import issue_stream_audit as isa
 
     atlas_intake_registry = _load_atlas_intake_registry()
 
@@ -869,7 +870,7 @@ def _run_strict_adoption(
         message = (
             "strict adoption gate: no fresh issue-stream membership cache "
             f"(<= {max_age_s}s old). Refresh it first: "
-            ".venv/bin/python -m scripts.orchestration.issue_stream_audit --json"
+            ".venv/bin/python -m lu_machinery.orchestration.issue_stream_audit --json"
         )
         if as_json:
             print(json.dumps({"ok": False, "errors": [message], "cache": "missing"}, indent=2))

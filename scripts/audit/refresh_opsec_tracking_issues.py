@@ -29,7 +29,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.common import github_client
+from lu_machinery.common import github_client
 
 SWEEP_DIR = _REPO_ROOT / "tests" / "api" / "opsec_sweep"
 TRACKING_PATH = SWEEP_DIR / "tracking_issues.toml"

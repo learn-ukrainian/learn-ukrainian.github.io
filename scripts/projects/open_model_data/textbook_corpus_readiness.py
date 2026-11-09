@@ -72,7 +72,7 @@ except ModuleNotFoundError:
         subject_for_source_file,
     )
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 SCHEMA_VERSION = "textbook_corpus_readiness_v1"
 HASH_BLOCK_SIZE = 1024 * 1024

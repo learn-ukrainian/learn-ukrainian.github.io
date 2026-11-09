@@ -9,8 +9,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from scripts.agent_runtime import target_admission
-from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+from lu_machinery.agent_runtime import target_admission
+from lu_machinery.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -180,7 +181,7 @@ def test_budget_blocked_codex_seat_excludes_account_a_quota_bucket(monkeypatch):
     """
     import contextlib
 
-    from scripts.review import capacity, reviewer_resolver
+    from lu_machinery.review import capacity, reviewer_resolver
 
     excluded = []
     real = reviewer_resolver.resolve_reviewer

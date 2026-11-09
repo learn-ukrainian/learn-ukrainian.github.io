@@ -64,7 +64,7 @@ def test_native_original50_membership_version_and_source_drift_refuse(tmp_path):
 
 def test_native_original50_untrusted_identity_freezer_and_per_card_sources_refuse(tmp_path, monkeypatch):
     """Granted class B: no accepted human/model evidence is created by these controls."""
-    from scripts.review import record_cf_verdict as reviews
+    from lu_machinery.review import record_cf_verdict as reviews
 
     inspection, _, _ = _native50_engine_shape(tmp_path)
     producer = inspection["producer"]

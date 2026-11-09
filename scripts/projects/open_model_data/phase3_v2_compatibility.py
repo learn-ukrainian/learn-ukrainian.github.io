@@ -20,11 +20,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from jsonschema import Draft202012Validator
+from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data import phase3_cycle_void_receipt as cycle_void
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
 

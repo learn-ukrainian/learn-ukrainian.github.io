@@ -21,9 +21,8 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
-
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set
 
 _ASSESSMENT = "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
 

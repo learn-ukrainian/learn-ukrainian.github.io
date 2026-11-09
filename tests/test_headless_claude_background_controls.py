@@ -12,9 +12,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.agent_runtime.adapters import claude as claude_adapter
-from scripts.agent_runtime.adapters.claude import (
+from lu_machinery.agent_runtime.adapters import claude as claude_adapter
+from lu_machinery.agent_runtime.adapters.claude import (
     HEADLESS_BACKGROUND_TOOL_DENIES,
     headless_claude_argv,
     popen_headless_claude,
@@ -281,7 +280,7 @@ def test_native_benchmark_timeout_and_other_providers_are_retained(
 
 @pytest.mark.usefixtures("ambient_switch_off")
 def test_openai_proxy_claude_child_keeps_the_parent_env_exclusions(spawned: list[dict[str, Any]]) -> None:
-    from scripts.ai_agent_bridge import openai_proxy as proxy
+    from lu_machinery.ai_agent_bridge import openai_proxy as proxy
 
     response = proxy._claude_backend("claude-opus-5-5", [proxy.Message(role="user", content="hello")])
 
@@ -302,7 +301,7 @@ def test_openai_proxy_claude_child_keeps_the_parent_env_exclusions(spawned: list
 
 
 def test_openai_proxy_claude_failure_is_still_translated(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.ai_agent_bridge import openai_proxy as proxy
+    from lu_machinery.ai_agent_bridge import openai_proxy as proxy
 
     monkeypatch.setattr(
         claude_adapter.subprocess,
@@ -404,7 +403,7 @@ def test_zno_eval_timeout_kills_the_process_group_and_drains(monkeypatch: pytest
 def test_isolated_claude_review_spawn_is_controlled_and_keeps_the_reviewer_env(
     tmp_path: Path, spawned: list[dict[str, Any]]
 ) -> None:
-    from scripts.review.isolation import build_claude_review_argv, run_claude_review
+    from lu_machinery.review.isolation import build_claude_review_argv, run_claude_review
 
     binary = tmp_path / "claude"
     binary.write_text("#!/bin/sh\n", encoding="utf-8")
@@ -430,7 +429,7 @@ def test_isolated_claude_review_spawn_is_controlled_and_keeps_the_reviewer_env(
 
 
 def test_version_probe_runs_only_literal_version_argvs(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.utils import claude_version
+    from lu_machinery.utils import claude_version
 
     argvs: list[list[str]] = []
     monkeypatch.setattr(

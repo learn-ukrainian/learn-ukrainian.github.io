@@ -34,10 +34,11 @@ import jsonschema
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.opsec.needles import home_dir_pattern, load_needles
+
 from scripts.lexicon.source_attribution import cites_soviet_dictionary, cites_soviet_dictionary_outside_context
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]

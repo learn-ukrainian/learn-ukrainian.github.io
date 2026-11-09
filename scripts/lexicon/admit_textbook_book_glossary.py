@@ -49,17 +49,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 try:
-    from scripts.storage.topology import (
+    from lu_machinery.storage.topology import (
         ActiveDatabaseNetworkError,
         is_network_filesystem_path,
     )
 except ImportError:
     try:
-        from storage.topology import (  # type: ignore[no-redef]
+        from lu_machinery.storage.topology import (  # type: ignore[no-redef]
             ActiveDatabaseNetworkError,
             is_network_filesystem_path,
         )
@@ -102,13 +102,13 @@ GLOSS_MAX_SENSES = 3
 @lru_cache(maxsize=16)
 def _cached_resolve_main_root(path_str: str) -> Path | None:
     try:
-        from scripts.guardrails.worktree_containment import (
+        from lu_machinery.guardrails.worktree_containment import (
             NotAGitRepositoryError,
             resolve_main_root,
         )
     except ImportError:
         try:
-            from guardrails.worktree_containment import (  # type: ignore[no-redef]
+            from lu_machinery.guardrails.worktree_containment import (  # type: ignore[no-redef]
                 NotAGitRepositoryError,
                 resolve_main_root,
             )

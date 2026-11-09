@@ -28,6 +28,8 @@ import yaml
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.audit.source_inventory_intake import (
     SourceInventoryRecord,
 )
@@ -42,7 +44,6 @@ from scripts.lexicon.content_lexicon_reconciler import (
 )
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.manifest_io import load_manifest
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 INVENTORY_FILENAME = "atlas-curriculum-full-text-inventory.json"
@@ -1034,14 +1035,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or lu_machinery.tools.task_scratch run).\n"
             "The caller retains outputs for readback and owns cleanup.\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.lexicon.curriculum_atlas_intake\n"
             "  .venv/bin/python -m scripts.lexicon.curriculum_atlas_intake --inventory-out inventory.json --report-out report.json\n"
             "Outputs: JSON inventory and aggregate report; optional decision-ledger YAML. No Atlas or learner publication.\n"
             "Exit codes: 0 success; 2 invalid arguments, destination or intake failure.\n"
-            "Related: #9702; scripts.tools.task_scratch; source_inventory_review_decisions."
+            "Related: #9702; lu_machinery.tools.task_scratch; source_inventory_review_decisions."
         ),
     )
     parser.add_argument(

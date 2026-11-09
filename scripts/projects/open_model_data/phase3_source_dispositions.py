@@ -20,8 +20,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_disposition_audit as disposition_audit
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR

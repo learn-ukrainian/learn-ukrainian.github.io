@@ -44,11 +44,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.artifacts import write_artifact
+
 from scripts.audit.generate_practice_deck import _plain, read_atlas_db
 from scripts.audit.lexeme_filter import is_practice_eligible
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words as _vesum_verify_words
 
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"

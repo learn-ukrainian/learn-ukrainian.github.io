@@ -12,9 +12,9 @@ from typing import Any
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.fleet import credit_lane
+from lu_machinery.orchestration import curriculum_coordinator as coordinator
 
-from scripts.fleet import credit_lane
-from scripts.orchestration import curriculum_coordinator as coordinator
 from tests.claude_route_accounts import bound
 
 pytestmark = pytest.mark.reads_content
@@ -540,7 +540,7 @@ def test_published_credit_relief_is_not_reused_after_a_new_rate_limit(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """The wave gate re-reads the shared runtime log: a rate limit after publication fails the gate."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)

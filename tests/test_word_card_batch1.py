@@ -14,6 +14,7 @@ from types import SimpleNamespace
 
 import pytest
 from jsonschema import Draft202012Validator
+from lu_machinery.common.scratch import ensure_scratch_root
 
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as assembly
@@ -21,7 +22,6 @@ from scripts.atlas import word_card_batch1 as batch
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as sources
 from scripts.atlas import word_card_verify as verifier
-from scripts.common.scratch import ensure_scratch_root
 from tests.test_word_card_assembly import LABEL_M, World, make_inputs
 
 # Frozen allocation for the 150 placeholder units constructed below.

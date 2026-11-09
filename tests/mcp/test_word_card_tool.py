@@ -475,7 +475,7 @@ def _dynamic_loads(source: str) -> list[str]:
 
 def test_server_modules_load_code_only_through_imports_the_digest_traces():
     """The review digest hashes what import statements name; a dynamic load would run unhashed code."""
-    from scripts.review.render_contract import server_code_files
+    from lu_machinery.review.render_contract import server_code_files
 
     traced = server_code_files(PROJECT_ROOT)
     server_dir = SERVER_PATH.parent.relative_to(PROJECT_ROOT).as_posix() + "/"
@@ -487,7 +487,7 @@ def test_server_modules_load_code_only_through_imports_the_digest_traces():
 
 
 def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
-    from scripts.review.render_contract import (
+    from lu_machinery.review.render_contract import (
         LOCK_FILE,
         SERVER_ENTRY,
         ReviewContractError,
@@ -523,7 +523,7 @@ def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
 @pytest.fixture
 def network_dir(tmp_path, monkeypatch):
     """A directory the locality check reports as network storage; nothing under it may be read."""
-    from scripts.storage import topology
+    from lu_machinery.storage import topology
 
     network = (tmp_path / "network").resolve()
     network.mkdir()

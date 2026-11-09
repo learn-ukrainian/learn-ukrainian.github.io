@@ -23,10 +23,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.ci import metadata_commit, pytest_report
+from lu_machinery.ci.split_tests import DEFAULT_HISTORY, HISTORY_SHARD, assign, junit_file_seconds, read_list
+from lu_machinery.ci.split_tests import main as split_main
 
-from scripts.ci import metadata_commit, pytest_report
-from scripts.ci.split_tests import DEFAULT_HISTORY, HISTORY_SHARD, assign, junit_file_seconds, read_list
-from scripts.ci.split_tests import main as split_main
 from tests.conftest import LU_PYTEST_SHARD_FILES_ENV_VAR, _load_shard_allowlist, pytest_ignore_collect
 
 pytestmark = pytest.mark.usefixtures("_clear_allowlist_cache")
@@ -561,8 +561,8 @@ def _run_pytest_script() -> str:
 
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     script = _run_pytest_script()
-    assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
-    assert "scripts.ci.split_tests duration-source" in script
+    assert 'python3 -m lu_machinery.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    assert "lu_machinery.ci.split_tests duration-source" in script
     assert '--durations "$durations"' in script
     assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
     assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script
@@ -579,7 +579,7 @@ def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     ):
         assert flag in script
     assert "-n auto" not in script
-    assert "scripts.ci.pg_skip_guard" in script
+    assert "lu_machinery.ci.pg_skip_guard" in script
     assert (
         'export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}'
         + pytest_report.COLLECTED_SUFFIX
@@ -611,7 +611,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     steps = report["steps"]
     assert any(step.get("with", {}).get("pattern") == "pytest-junit-shard-*" for step in steps)
-    report_step = next(step for step in steps if "scripts.ci.pytest_report" in str(step.get("run", "")))
+    report_step = next(step for step in steps if "lu_machinery.ci.pytest_report" in str(step.get("run", "")))
     # The audit record identifies the exact candidate and run.
     assert report_step["env"] == {"PR_NUMBER": "${{ github.event.pull_request.number }}"}
     assert any(step.get("with", {}).get("name") == "ci-tested-tree" for step in steps)
@@ -647,7 +647,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     assert steps.index(checkout) < steps.index(setup) < steps.index(metadata) < steps.index(scan)
     assert setup["with"] == {"python-version-file": ".python-version"}
     record = next(step for step in steps if step.get("name") == "Record original queue candidate")
-    assert "scripts.ci.gate --record-queue" in record["run"]
+    assert "lu_machinery.ci.gate --record-queue" in record["run"]
     upload = next(step for step in steps if step.get("with", {}).get("name") == "ci-queue-candidate")
     assert upload["with"]["if-no-files-found"] == "error"
     assert steps.index(record) < steps.index(upload) < steps.index(metadata)
@@ -659,7 +659,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
         "sparse-checkout-cone-mode": False,
     }
     assert metadata["id"] == "metadata"
-    assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]
+    assert "python3 -m lu_machinery.ci.metadata_commit --commit HEAD" in metadata["run"]
     full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
     assert scan["uses"] == full_scan["uses"]
     assert scan["with"] == {
@@ -696,7 +696,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Use immutable merge parents despite stale metadata; reject wrong heads and dirty sources."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     guards = [
         'tests/test_delegate_review_admission.py', 'tests/review/test_routing_consumers.py',
@@ -768,7 +768,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
                        'GITHUB_STEP_SUMMARY': str(tmp_path / 'summary')}.items():
         monkeypatch.setenv(key, value)
     monkeypatch.setattr(sys, 'argv', ['pr-affected'])
-    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+    cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests'],
                          capture_output=True, text=True, timeout=60)
     assert cli.returncode == 0, cli.stdout + cli.stderr
     print(cli.stdout)
@@ -792,7 +792,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     (repo / 'ci-artifacts/pr-repo-wide.xml').unlink()
     assert affected.main() == 1  # stale report cannot masquerade as this execution
     monkeypatch.setenv('GITHUB_SHA', base)
-    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+    cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests'],
                          capture_output=True, text=True, timeout=60)
     assert cli.returncode == 1
     assert 'stage=event_identity' in cli.stderr
@@ -801,7 +801,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     monkeypatch.setenv('GITHUB_SHA', candidate)
     payload['pull_request']['head']['sha'] = base
     event.write_text(json.dumps(payload))
-    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+    cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests'],
                          capture_output=True, text=True, timeout=60)
     assert cli.returncode == 1
     assert 'stage=merge_parents' in cli.stderr
@@ -826,7 +826,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     _git(repo, 'update-ref', '-d', 'refs/remotes/origin/fixture-base')
     (repo / 'untracked-note.txt').write_text('unrelated runner output\n')
     (repo / 'ci-artifacts/pr-affected.xml').unlink()
-    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+    cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests'],
                          capture_output=True, text=True, timeout=60)
     assert cli.returncode == 0, cli.stdout + cli.stderr
     print(cli.stdout)
@@ -839,7 +839,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert workflow['execution_status'] == 'completed' and workflow['exit_code'] == 0
     assert workflow['failed_cases'] == 0 and workflow['skipped_cases'] == 0
     assert workflow['deferred_case_count'] is None
-    marker_cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests', '--repo-wide'],
+    marker_cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests', '--repo-wide'],
                                 capture_output=True, text=True, timeout=60)
     assert marker_cli.returncode == 0, marker_cli.stdout + marker_cli.stderr
     marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
@@ -876,7 +876,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert failed['reason'] == 'pytest infrastructure changed'
     assert failed['deferred_case_count'] is None
     (repo / 'ci-artifacts/pr-repo-wide.xml').unlink()
-    marker_cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests', '--repo-wide'],
+    marker_cli = subprocess.run([sys.executable, '-m', 'lu_machinery.ci.pr_affected_tests', '--repo-wide'],
                                 capture_output=True, text=True, timeout=60)
     assert marker_cli.returncode == 1
     marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
@@ -956,7 +956,7 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Durations that would fill to 595 s stop at the fill limit; the rest defer."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     guard = 'tests/test_guard.py'
     importers = [f'tests/test_imp_{n}.py' for n in range(6)]
@@ -999,8 +999,8 @@ def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypat
     to it selects those tests, and only those: not a sibling directory sharing a name prefix, and
     not tests under a conftest that imports other code.
     """
-    from scripts.ci import components
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import components
+    from lu_machinery.ci import pr_affected_tests as affected
 
     sources = {
         'scripts/x.py': b'X = 1\n',
@@ -1038,8 +1038,8 @@ def test_pr_import_scan_parses_only_files_that_can_select_a_test(monkeypatch: py
     costs time: the real tree has twice as many other files. Those files stay import targets,
     and the scan gives each file it parses exactly the edges of a whole-tree scan.
     """
-    from scripts.ci import components
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import components
+    from lu_machinery.ci import pr_affected_tests as affected
 
     sources = {
         'scripts/x.py': b'X = 1\n',
@@ -1072,8 +1072,8 @@ def test_pr_candidate_tree_parses_each_test_file_once_across_plans(monkeypatch: 
     by the import scan, which records its string literals; a literal written with an escape
     still counts. An edited tree is scanned afresh, so a new literal is never missed.
     """
-    from scripts.ci import components
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import components
+    from lu_machinery.ci import pr_affected_tests as affected
 
     sources = {
         'scripts/x.py': b'X = 1\n',
@@ -1104,8 +1104,8 @@ def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch
     the #12777 source paths as the diff, the real scanner and planner run the test, and every test the
     plan runs without text readers still runs. A sibling in the same package does not select it.
     """
-    from scripts.ci import components
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import components
+    from lu_machinery.ci import pr_affected_tests as affected
 
     # Built from parts: a whole-path literal here would make this test a text reader of each file.
     changed_12777 = [f'scripts/{folder}/{name}.py' for folder, names in {
@@ -1153,7 +1153,7 @@ def test_text_references_selects_escaped_and_non_utf8_literals() -> None:
     string and a conftest still do not count, and a package ``__init__.py`` still
     matches by path only.
     """
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     path = 'pkg/' + 'escaped_target.py'
     module = 'pkg.' + 'escaped_target'
@@ -1193,7 +1193,7 @@ def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A test file too heavy for the cap is deferred whole, but its pinned guard id still runs."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     heavy = 'tests/dispatcher/test_core.py'
     pinned = f'{heavy}::test_read_only_mode_denies_edits_on_every_provider'
@@ -1247,7 +1247,7 @@ def test_pinned_test_whose_file_is_already_selected_adds_no_estimate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A pinned id costs nothing when its whole file is already selected."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     whole, other = 'tests/test_whole.py', 'tests/test_other.py'
     repo = tmp_path / 'pinned'
@@ -1275,7 +1275,7 @@ def test_pr_selection_estimated_just_under_the_timeout_is_deferred_not_run_to_th
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A 475 s estimate is under both limits but has no room for runner variance: defer it."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     guard, heavy, light = 'tests/test_guard.py', 'tests/test_heavy.py', 'tests/test_light.py'
     repo = tmp_path / 'margin'
@@ -1332,7 +1332,7 @@ def test_main_refuses_when_guards_alone_exceed_the_safe_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
 ) -> None:
     """main() records the refusal and returns before pytest when guards exceed the safe budget."""
-    from scripts.ci import pr_affected_tests as affected
+    from lu_machinery.ci import pr_affected_tests as affected
 
     guard = 'tests/test_guard.py'
     repo = tmp_path / 'refusal'

@@ -21,11 +21,12 @@ DEFAULT_SOURCES_DB = ROOT / "data" / "sources.db"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.manifest_io import _write_atomic
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.storage.paths import artifact_path
 
 
 def _load_json(path: Path) -> dict[str, Any]:

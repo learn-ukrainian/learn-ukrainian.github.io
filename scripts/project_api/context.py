@@ -14,9 +14,9 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
-from scripts.api.monitor_context import DatabaseHandle, MonitorContext, resolve_context
-from scripts.api.resilience import connect_sqlite
-from scripts.storage.topology import (
+from lu_machinery.api.monitor_context import DatabaseHandle, MonitorContext, resolve_context
+from lu_machinery.api.resilience import connect_sqlite
+from lu_machinery.storage.topology import (
     StoreBinding,
     StoreRefusal,
     resolve_active_sources_db,

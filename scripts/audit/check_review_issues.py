@@ -28,9 +28,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.common.repo_root import project_interpreter
-from scripts.opsec.prepublish import publication_cli
-from scripts.publish.github import Request, request_run
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.opsec.prepublish import publication_cli
+from lu_machinery.publish.github import Request, request_run
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 VENV_PYTHON = str(project_interpreter())

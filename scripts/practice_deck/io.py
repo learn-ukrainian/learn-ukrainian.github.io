@@ -14,7 +14,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.lexicon.manifest_io import download_release_asset
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"

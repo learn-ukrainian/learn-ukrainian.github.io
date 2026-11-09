@@ -56,13 +56,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+
 from scripts.atlas.atlas_db import ENRICHMENT_SECTIONS, unstressed
 from scripts.lexicon.enrich_manifest import (
     _leading_phraseology_phrase,
     _load_current_slovnyk_cache_file,
     _phrase_contains_lemma,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 from scripts.wiki.sum20_official import live_article_predicate_for
 
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"

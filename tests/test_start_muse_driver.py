@@ -361,7 +361,7 @@ def test_dry_run_argv_and_capsule_binding(
     assert f"launcher already claimed the {lane} lease" in argv[-1]
     assert f"would claim lease stream={stream} agent=muse harness=muse-cli" in result.stdout
     assert f"slot=muse-{lane}" in result.stdout
-    assert "provider canary: not run; rollover uses scripts.session_canary.muse_lane mint and score" in result.stdout
+    assert "provider canary: not run; rollover uses lu_machinery.session_canary.muse_lane mint and score" in result.stdout
     assert "MUSE_GUARD_PARITY_UNPROVEN" in result.stdout
 
 
@@ -656,7 +656,7 @@ def test_shared_renewal_precedes_close_and_stops_on_lease_loss(
     body = python_stub.read_text()
     first, rest = body.split("\n", 1)
     heartbeat = (
-        'if [[ "${1:-}" == "-m" && "${2:-}" == "scripts.session_supervisor" && "${3:-}" == heartbeat ]]; then\n'
+        'if [[ "${1:-}" == "-m" && "${2:-}" == "lu_machinery.session_supervisor" && "${3:-}" == heartbeat ]]; then\n'
         '  printf "renew\\n" >> "$MUSE_TEST_EVENTS"\n'
         + ('  echo "LEASE LOST" >&2; exit 4\n' if lost else "  exit 0\n")
         + "fi\n"

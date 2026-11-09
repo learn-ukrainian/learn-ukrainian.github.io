@@ -7,11 +7,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
-from scripts.orchestration import integration_sweep as sweep
-from scripts.publish.merge_guard import bound_rollup_states
-from scripts.review.record_cf_verdict import build_comment
+from lu_machinery.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.publish.merge_guard import bound_rollup_states
+from lu_machinery.review.record_cf_verdict import build_comment
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -21,7 +20,7 @@ START = "2026-09-23T12:00:00.000001+00:00"
 @pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch):
     """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
-    from scripts.ci import advisory_checks
+    from lu_machinery.ci import advisory_checks
 
     monkeypatch.setattr(
         advisory_checks,

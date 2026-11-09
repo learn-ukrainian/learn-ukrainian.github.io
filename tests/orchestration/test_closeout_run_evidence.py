@@ -7,12 +7,12 @@ from copy import deepcopy
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.orchestration import lifecycle_observation as lo
+from lu_machinery.orchestration import merge_closeout as mc
+from lu_machinery.orchestration import task_closeout
+from lu_machinery.orchestration import task_lifecycle as tl
 
-from scripts.opsec import prepublish as gate
-from scripts.orchestration import lifecycle_observation as lo
-from scripts.orchestration import merge_closeout as mc
-from scripts.orchestration import task_closeout
-from scripts.orchestration import task_lifecycle as tl
 from tests.orchestration.test_task_lifecycle import (
     HEAD,
     MERGE,

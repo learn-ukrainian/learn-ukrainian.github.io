@@ -74,20 +74,20 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.review import findings_db, second_seat
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
-from scripts.review import findings_db, second_seat
 from scripts.review.validate.validate import fold_quote
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

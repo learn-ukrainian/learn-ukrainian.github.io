@@ -27,10 +27,7 @@ import pytest
 from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
-from starlette.requests import Request
-
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from scripts.api import (
+from lu_machinery.api import (
     epics_router,
     fleet_router,
     issues_router,
@@ -39,10 +36,13 @@ from scripts.api import (
     state_helpers,
     state_router,
 )
-from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context
-from scripts.docs import catalogue as docs_catalogue
-from scripts.fleet_comms import message_plane
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.docs import catalogue as docs_catalogue
+from lu_machinery.fleet_comms import message_plane
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from starlette.requests import Request
+
 from scripts.project_api import dashboard_helpers
 from scripts.wiki import sources_db
 
@@ -291,7 +291,7 @@ REAL_BOARD_PROBE_KEYS = frozenset(
 
 
 def _assert_real_cold_start_board_producer() -> None:
-    from scripts.fleet_comms.cold_start_board import build_cold_start_board as real_build
+    from lu_machinery.fleet_comms.cold_start_board import build_cold_start_board as real_build
 
     assert fleet_router.build_cold_start_board is real_build
 
@@ -425,10 +425,10 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # comms routes now hand the bridge the MonitorContext's broker DB
     # explicitly, so the bridge's import-time default DB_PATH globals are no
     # longer seams this sweep must repoint.
-    importlib.import_module("scripts.telemetry.legacy_bridge")
+    importlib.import_module("lu_machinery.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
+        if module is None or not module_name.startswith(("lu_machinery.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
@@ -468,7 +468,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         return isolated_plane_root
 
     for module_name, module in tuple(sys.modules.items()):
-        if not module_name.startswith(("scripts.api", "scripts.project_api")) or module is None:
+        if not module_name.startswith(("lu_machinery.api", "scripts.project_api")) or module is None:
             continue
         if "default_plane_root" in vars(module):
             monkeypatch.setattr(module, "default_plane_root", isolated_plane_resolver)

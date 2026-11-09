@@ -7,7 +7,7 @@ routes and pages and join that registry through the product contribution.
 
 from __future__ import annotations
 
-from scripts.api.route_contracts import PageContract, RouteContract
+from lu_machinery.api.route_contracts import PageContract, RouteContract
 
 ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(

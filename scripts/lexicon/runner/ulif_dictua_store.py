@@ -8,7 +8,7 @@ under ``ulif_dictua_entries`` keyed by ``(normalized_query, homonym_index)``.
 
 from __future__ import annotations
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 
 ULIF_DICTUA_ENTRY_COLUMNS: tuple[str, ...] = (
     "id",

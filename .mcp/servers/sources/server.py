@@ -59,13 +59,13 @@ if str(SERVER_DIR) not in sys.path:
     sys.path.append(str(SERVER_DIR))
 
 import word_card
+from lu_machinery.lib.readonly_sqlite import SerializedConnection, SerializedCursor
+from lu_machinery.storage.generations import one_generation as one_sources_generation
 
 import scripts.wiki.sources_db as sources_db_full_name
 import wiki.sources_db as sources_db_short_name
-from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.rag.metrics import ToolMetrics
-from scripts.storage.generations import one_generation as one_sources_generation
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
@@ -1754,7 +1754,7 @@ def _discard_retired_v4_evidence_args(arguments: dict[str, Any]) -> None:
 
 
 def _typed_identifier(namespace: str, typed_result: dict[str, Any]) -> str:
-    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
 
     return v4_store.immutable_evidence_identifier(
         namespace=namespace,
@@ -2766,7 +2766,8 @@ async def handle_get_chunk_context(args: dict):
     include_superseded = args.get("include_superseded", False) is True
     query_obj = {"chunk_id": chunk_id, "include_superseded": include_superseded}
 
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
+
     from wiki.sources_db import _get_conn, _transcription_filter
 
     try:
@@ -3262,7 +3263,8 @@ def _lookup_wikipedia_in_db(query: str, *, include_provenance: bool = False) -> 
     import contextlib
     import sqlite3
 
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
+
     from wiki.sources_db import _open_conn, _read_db_path
 
     try:
@@ -3821,7 +3823,8 @@ def _ulif_miss_text(word: str, result: dict) -> str:
 
 async def _query_ulif_local(word: str, sections) -> dict | list[TextContent]:
     """Run the local ULIF lookup, or return the missing-database reply."""
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
+
     from wiki.sources_db import _read_db_path, query_ulif_local
 
     try:
@@ -3918,8 +3921,9 @@ async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
 
 
 async def handle_query_ulif_records(args: dict) -> list[TextContent]:
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError
+
     from scripts.lexicon.runner.ulif_dictua_parse import strip_raw_html
-    from scripts.storage.topology import ActiveDatabaseNetworkError
     from wiki.sources_db import (
         ULIF_DICTUA_ATTRIBUTION_LABEL,
         ULIF_DICTUA_OFFICIAL_URL,

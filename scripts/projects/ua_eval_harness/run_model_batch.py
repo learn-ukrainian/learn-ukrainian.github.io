@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import physical_lines
+from lu_machinery.common.jsonl import physical_lines
 
 REQUEST_SCHEMA = "ua_eval_generation_requests.v1"
 STATE_SCHEMA = "ua_eval_model_batch_state.v1"

@@ -26,9 +26,10 @@ if str(PROJECT_ROOT / "scripts") not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.common.repo_root import project_interpreter
+
 from manifest_utils import get_module_by_number, get_modules_for_level, load_manifest, parse_numbered_slug
 from scripts.audit import check_mdx_source_parity
-from scripts.common.repo_root import project_interpreter
 from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.validate import validate_plans as plan_yaml_validator
 

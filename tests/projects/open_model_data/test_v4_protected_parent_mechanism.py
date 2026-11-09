@@ -23,9 +23,8 @@ from learn_ukrainian_v4_runtime import v4_fleet_execution_authority as fleet
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import principal, role_connection
-
-from scripts.fleet_comms.request_executor import RequestExecutor
 
 
 def _run_real_pair(

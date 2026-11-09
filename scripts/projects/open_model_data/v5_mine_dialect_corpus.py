@@ -43,13 +43,13 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import jsonschema
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage import paths as storage_paths
+from lu_machinery.storage.artifacts import write_artifact_set
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.source_attribution import cites_soviet_dictionary
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import assert_not_archived_path
-from scripts.storage import paths as storage_paths
-from scripts.storage.artifacts import write_artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 

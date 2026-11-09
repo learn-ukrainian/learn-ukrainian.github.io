@@ -12,13 +12,12 @@ import time
 import unicodedata
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-from scripts.docs import find as find_module
-from scripts.docs.find import FindError, find, main, query_terms
+from lu_machinery.docs import find as find_module
+from lu_machinery.docs.find import FindError, find, main, query_terms
 
 REPO = Path(__file__).resolve().parents[1]
 SCHEMA = (REPO / 'docs/knowledge/catalogue.schema.json').read_text(encoding='utf-8')
@@ -141,7 +140,7 @@ def test_terms_drop_stopwords_and_casefold_without_stemming():
 
 def _state(repo, data):
     schema = json.loads(SCHEMA)
-    from scripts.docs import catalogue as cat
+    from lu_machinery.docs import catalogue as cat
     files = cat.index_entries(repo)
     report = cat.validate(data, schema, list(files), {'docs-knowledge', 'infra-harness'})
     return find_module.State(repo, data, report, files, by_id={e['id']: e for e in data['entries']})
@@ -463,7 +462,7 @@ def test_route_returns_the_library_result(client):
 
 
 def test_route_is_not_behind_the_research_registry_kill_switch(client, monkeypatch):
-    from scripts.research import registry as reg
+    from lu_machinery.research import registry as reg
     monkeypatch.setenv(reg.ENV_FLAG, 'false')
     monkeypatch.setattr(reg, 'is_enabled', lambda **_kwargs: False)
     assert client.get('/api/knowledge/manifest').json().get('enabled') is False  # the registry is off

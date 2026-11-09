@@ -1082,7 +1082,8 @@ def test_runner_spawns_use_primary_project_interpreter(
     """
     import inspect
 
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
+
     from scripts.lexicon.runner import memory as memory_mod
     from scripts.lexicon.runner import worker as worker_mod
 

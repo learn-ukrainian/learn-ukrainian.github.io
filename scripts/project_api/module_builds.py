@@ -21,15 +21,15 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 
-from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from scripts.api.telemetry_router import _clean_text, _isoformat_z, _now_z, _open_telemetry_db, _required_text
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.api.telemetry_router import _clean_text, _isoformat_z, _now_z, _open_telemetry_db, _required_text
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
 

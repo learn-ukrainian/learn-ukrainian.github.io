@@ -4,11 +4,11 @@ import sqlite3
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
 
 import scripts.project_api.wiki_router as wiki_router
-from scripts.api.main import app
-from scripts.api.monitor_context import fixture_context
-from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
 from scripts.project_api.context import product_roots
 
 pytestmark = pytest.mark.reads_content

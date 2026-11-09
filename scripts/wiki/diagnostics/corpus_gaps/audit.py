@@ -18,8 +18,8 @@ from typing import Any
 import yaml
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -32,14 +32,15 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path
+from lu_machinery.storage.artifacts import write_artifact
+from lu_machinery.storage.paths import artifact_path
+
 from wiki.config import TRACK_WRITE_DOMAIN
 from wiki.diagnostics.retrieval_playback import normalize_text
 from wiki.sources_db import SOURCES_DB_PATH

@@ -25,8 +25,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import jsonschema
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,

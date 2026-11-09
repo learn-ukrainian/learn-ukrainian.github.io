@@ -34,7 +34,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.agent_runtime.adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+from lu_machinery.agent_runtime.adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+
 from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring, qg_schema
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
 from scripts.audit.runtime_tool_events import map_runtime_tool_calls
@@ -335,7 +336,7 @@ _SUBSCRIPTION_BARE_ROUTES_BY_PIN = {
 
 
 def _subscription_tooled_tool_config(runtime_agent: str) -> dict[str, Any]:
-    from scripts.agent_runtime.tool_config import build_mcp_tool_config
+    from lu_machinery.agent_runtime.tool_config import build_mcp_tool_config
 
     if runtime_agent == "agy":
         config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
@@ -870,8 +871,8 @@ def invoke_subscription_bare_route(
     """Invoke a subscription bare route through ``agent_runtime.invoke`` only."""
     identity = _subscription_identity(route)
     try:
-        from scripts.agent_runtime import runner as agent_runner
-        from scripts.agent_runtime.errors import (
+        from lu_machinery.agent_runtime import runner as agent_runner
+        from lu_machinery.agent_runtime.errors import (
             AgentStalledError,
             AgentTimeoutError,
             AgentUnavailableError,
@@ -962,8 +963,8 @@ def invoke_subscription_tooled_route(
     tool_config = _subscription_tooled_tool_config(runtime_agent)
     mode = "danger" if runtime_agent == "agy" else "workspace-write"
     try:
-        from scripts.agent_runtime import runner as agent_runner
-        from scripts.agent_runtime.errors import (
+        from lu_machinery.agent_runtime import runner as agent_runner
+        from lu_machinery.agent_runtime.errors import (
             AgentStalledError,
             AgentTimeoutError,
             AgentUnavailableError,
@@ -1069,7 +1070,7 @@ def preflight_subscription_bare_routes(routes: Sequence[llm_reviewer_dispatch.Re
             failures.append(f"{route.route_name}: unsupported runtime agent {agent!r}")
 
         try:
-            from scripts.agent_runtime.usage import has_headroom
+            from lu_machinery.agent_runtime.usage import has_headroom
 
             unreadable = {"files": 0, "lines": 0, "records": 0}
             ok, reason = has_headroom(agent, route.reviewer_model_id, unreadable=unreadable)
@@ -1421,7 +1422,7 @@ def run_matrix(
     # pin must fail the whole matrix at config time, not burn N-1 cells first.
     # Defense-in-depth: _invoke_opencode_reviewer re-asserts at the transport,
     # covering injected runners and non-matrix callers.
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+    from lu_machinery.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
     for route in routes:
         if _is_subscription_bare_route(route):
@@ -1527,7 +1528,7 @@ def _model_block(
 
 def _failure_class(exc: Exception) -> str:
     try:
-        from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
+        from lu_machinery.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
     except Exception:  # pragma: no cover - import path fallback only
         AgentStalledError = AgentTimeoutError = RateLimitedError = type("_UnavailableRuntimeError", (Exception,), {})
     if isinstance(exc, (BakeoffOpsQuotaError, RateLimitedError)):
@@ -1547,7 +1548,7 @@ def _failure_class(exc: Exception) -> str:
 
 def _timed_out(exc: Exception) -> bool:
     try:
-        from scripts.agent_runtime.errors import AgentTimeoutError
+        from lu_machinery.agent_runtime.errors import AgentTimeoutError
     except Exception:  # pragma: no cover - import path fallback only
         AgentTimeoutError = type("_UnavailableRuntimeTimeout", (Exception,), {})
     return bool(getattr(exc, "timed_out", False) or isinstance(exc, AgentTimeoutError))

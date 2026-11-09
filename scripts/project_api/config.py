@@ -9,8 +9,7 @@ from pathlib import Path
 from typing import Any, cast
 
 import yaml
-
-from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
+from lu_machinery.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 # Textbook PDFs live under the resolved bulk raw-source root, never a
 # repository symlink (#8803; docs/runbooks/storage-topology.md).

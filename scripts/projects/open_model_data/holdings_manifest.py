@@ -33,9 +33,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_OUTPUT = REPO_ROOT / "registry" / "projects" / "open_model_data" / "sources" / "holdings_manifest.yaml"

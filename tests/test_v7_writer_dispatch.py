@@ -8,9 +8,9 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.agent_runtime import tool_config as tool_config_mod
+from lu_machinery.agent_runtime.registry import get_agent_entry
 
-from scripts.agent_runtime import tool_config as tool_config_mod
-from scripts.agent_runtime.registry import get_agent_entry
 from scripts.build import linear_pipeline, v7_build
 
 pytestmark = pytest.mark.reads_content

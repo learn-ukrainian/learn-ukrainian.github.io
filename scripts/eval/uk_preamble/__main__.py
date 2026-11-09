@@ -13,7 +13,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
     __package__ = "scripts.eval.uk_preamble"
 
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import machinery_path, project_interpreter
 
 from .common import (
     SEATS,
@@ -96,7 +96,7 @@ def _default_python() -> str:
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
     dispatcher = DelegateDispatcher(
         python=args.python or _default_python(),
-        dispatch_script=REPO_ROOT / "scripts" / "dispatch.py",
+        dispatch_script=machinery_path("dispatch.py"),
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),

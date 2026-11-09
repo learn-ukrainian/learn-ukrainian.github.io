@@ -176,7 +176,7 @@ _hook_deadline() { shift; "$@"; }
     assert result.stdout == expected + "\n"
 
 
-_ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+_ROOT_DETAIL = "Detail: .venv/bin/python -m lu_machinery.hygiene.root_entry_guard"
 
 
 @pytest.mark.parametrize(
@@ -631,5 +631,5 @@ def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> No
     )
     assert "Driver state (AUTHORITATIVE" in result.stdout
     assert ".claude/infra-epic/DRIVER-STATE.md" in result.stdout
-    assert "scripts.driver_blockers" not in result.stdout
+    assert "lu_machinery.driver_blockers" not in result.stdout
     assert "--expect-generation" not in result.stdout

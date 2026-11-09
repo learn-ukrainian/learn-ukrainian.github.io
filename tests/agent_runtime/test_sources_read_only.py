@@ -7,20 +7,19 @@ import tomllib
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters import claude, codex
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.review_mcp import (
+from lu_machinery.agent_runtime.adapters import claude, codex
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.review_mcp import (
     _render_codex_review_config,
     agy_full_review_settings,
     review_tools_allowed_csv,
 )
-from scripts.agent_runtime.sources_read_only import (
-    SERVER_PATH,
-    sources_tool_sets,
-)
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
 from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
 from tests.agent_runtime.test_codex_sources_config_layers import layer
+
+SERVER_PATH = Path(__file__).resolve().parents[2] / SERVER_RELATIVE_PATH
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
@@ -222,7 +221,7 @@ def test_missing_server_fails_closed_and_can_be_retried(tmp_path):
 
 @pytest.mark.parametrize("session", [None, "resume-reader"])
 def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monkeypatch, session):
-    from scripts.agent_runtime.adapters import codex
+    from lu_machinery.agent_runtime.adapters import codex
 
     def missing():
         return sources_tool_sets(tmp_path / "missing.py")
@@ -243,8 +242,9 @@ def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monke
 @pytest.mark.parametrize("access", ["isolated", "full"])
 @pytest.mark.parametrize("session", [None, "resume-reader"])
 def test_formal_codex_missing_server_keeps_explicit_contract(tmp_path, monkeypatch, access, session):
-    from scripts.agent_runtime import review_mcp
-    from scripts.agent_runtime.adapters import codex
+    from lu_machinery.agent_runtime import review_mcp
+    from lu_machinery.agent_runtime.adapters import codex
+
     from scripts.review.receipts import ledger
 
     def unexpected():
@@ -294,7 +294,7 @@ def test_formal_contract_refuses_reclassified_writer_at_call_time(tmp_path, monk
 
 
 def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
-    from scripts.agent_runtime import review_mcp
+    from lu_machinery.agent_runtime import review_mcp
 
     monkeypatch.setattr(review_mcp, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
     with pytest.raises(FileNotFoundError):
@@ -303,7 +303,7 @@ def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)
 def test_claude_ad_hoc_reviewer_denies_every_writer(tmp_path, writer):
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
 
     tc = {"reviewer_tools": True}
     plan = ClaudeAdapter().build_invocation(
@@ -350,8 +350,8 @@ def test_formal_sources_wire_hides_and_refuses_writers_before_handler(monkeypatc
 
 
 def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
-    from scripts.agent_runtime.errors import AgentUnavailableError
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.errors import AgentUnavailableError
 
     def refused(*args, **kwargs):
         raise RuntimeError("filesystem_boundary_unverified")
@@ -359,14 +359,15 @@ def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_pat
     def unexpected(*args, **kwargs):
         pytest.fail("unverified parent must not construct or execute bypass argv")
 
-    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refused)
+    monkeypatch.setattr("lu_machinery.agent_runtime.attempt_boundary.prepare_attempt_boundary", refused)
     monkeypatch.setattr(runner, "_load_adapter", unexpected)
     with pytest.raises(AgentUnavailableError, match="filesystem boundary refused"):
         runner.invoke("codex", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
 
 
 def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
-    from scripts.review.isolation import review_isolation_tool_config
+    from lu_machinery.review.isolation import review_isolation_tool_config
+
     from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
 
     fake = write_config_probe_binary(tmp_path / "codex")

@@ -34,7 +34,8 @@ PROJECT_ROOT = SCRIPT_PATH.parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from guardrails.worktree_containment import resolve_main_root
+from lu_machinery.guardrails.worktree_containment import resolve_main_root
+
 from projects.open_model_data.phase3_live_ingest_gate import (
     COUNTS_BEFORE as LIVE_INGEST_COUNTS_BEFORE,
 )
@@ -80,10 +81,10 @@ from wiki.extract_sections import (
 from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
 try:
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 
 # The canonical chunk store is the Google Drive corpus mount. Keep this
 # constant patchable for local fixtures, but do not assume the absent
@@ -132,8 +133,8 @@ WAVE1_SLUGS: tuple[str, ...] = (
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,
@@ -446,7 +447,7 @@ def ingest(
     if isinstance(request, StoreRefusal):
         raise ValueError(request.reason) from None
     db_path = Path(request.location)
-    from scripts.storage.topology import resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import resolve_store, unavailable_store_path
 
     active = resolve_store("sources", Path(__file__).resolve().parents[2])
     live_db_path = (globals().get("DEFAULT_DB") or

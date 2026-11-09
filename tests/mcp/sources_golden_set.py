@@ -38,7 +38,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from scripts.lib.readonly_sqlite import open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_SERVER_PATH = PROJECT_ROOT / ".mcp" / "servers" / "sources" / "server.py"

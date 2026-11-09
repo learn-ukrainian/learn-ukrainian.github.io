@@ -12,10 +12,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.attempt_boundary import prepare_attempt_boundary, verify_full_review_tree
+from lu_machinery.review.isolation import ReviewIsolationError
 
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.attempt_boundary import prepare_attempt_boundary, verify_full_review_tree
-from scripts.review.isolation import ReviewIsolationError
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.agent_runtime.test_attempt_boundary import attempt_config as _attempt_config
 from tests.agent_runtime.test_attempt_boundary import manifest_world
@@ -27,7 +27,8 @@ attempt_config = partial(_attempt_config, review_access="full")
 @pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
 @pytest.mark.parametrize("access", ["isolated", "full"])
 def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_path, agent, access):
-    from scripts.agent_runtime.review_mcp import prepare_review_attempt, review_tools_allowed_csv
+    from lu_machinery.agent_runtime.review_mcp import prepare_review_attempt, review_tools_allowed_csv
+
     from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
 
     root, _ = world
@@ -52,7 +53,7 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
         config = tomllib.loads((plan.codex_home / "config.toml").read_text())
         assert config["mcp_servers"]["sources"]["env"] == server["env"]
     else:
-        from scripts.agent_runtime.review_mcp import agy_full_review_settings, agy_review_mcp_config_path
+        from lu_machinery.agent_runtime.review_mcp import agy_full_review_settings, agy_review_mcp_config_path
 
         assert json.loads(agy_review_mcp_config_path(plan.agy_home).read_bytes())["mcpServers"]["sources"] == server
         assert agy_full_review_settings()["permissions"]["allow"] == [
@@ -260,7 +261,7 @@ def test_full_review_refuses_mismatched_sources_access(world, tmp_path, agent, s
 
 
 def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path, monkeypatch):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
@@ -282,8 +283,8 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
 def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
     world, tmp_path, monkeypatch, access, candidate
 ):
-    from scripts.agent_runtime.adapters import agy
-    from scripts.agent_runtime.review_mcp import agy_review_settings
+    from lu_machinery.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.review_mcp import agy_review_settings
 
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
@@ -299,7 +300,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
         elif candidate == "no_guard":
             (Path(boundary.tool_config["agy_home_override"]) / ".gemini/config/hooks.json").unlink()
         if candidate != "provisioned_home":
-            from scripts.agent_runtime.agy_hook_config import AgyHookConfigError
+            from lu_machinery.agent_runtime.agy_hook_config import AgyHookConfigError
 
             reason = "missing_guard" if candidate == "unguarded_workspace" else "missing_file"
             with pytest.raises(AgyHookConfigError, match=reason):
@@ -344,7 +345,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
     ],
 )
 def test_full_agy_permission_widening_is_refused_before_cli(world, tmp_path, monkeypatch, settings):
-    from scripts.agent_runtime.review_mcp import verify_agy_review_effective_mcp
+    from lu_machinery.agent_runtime.review_mcp import verify_agy_review_effective_mcp
 
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
@@ -367,7 +368,7 @@ def test_full_agy_permission_widening_is_refused_before_cli(world, tmp_path, mon
 
 @pytest.mark.parametrize("formal", [True, False])
 def test_runner_preserves_actual_checkout_and_disables_formal_failover(tmp_path, monkeypatch, formal):
-    from scripts.agent_runtime import attempt_boundary, runner
+    from lu_machinery.agent_runtime import attempt_boundary, runner
 
     seen = {}
     monkeypatch.setattr(attempt_boundary, "prepare_attempt_boundary", lambda a, m, s, tc: seen.update(config=tc))
@@ -394,7 +395,7 @@ def test_full_review_refuses_a_sparse_checkout(world, tmp_path):
 
 
 def test_native_claude_full_review_keeps_shell_sources_deny_list_and_hooks(tmp_path):
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
 
     config = tmp_path / "mcp.json"
     config.write_text('{"mcpServers": {}}')
@@ -424,7 +425,7 @@ def test_native_claude_full_review_keeps_shell_sources_deny_list_and_hooks(tmp_p
 
 
 def test_native_codex_full_review_keeps_read_only_sandbox(tmp_path, monkeypatch):
-    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
     lease = tmp_path / "scratch" / "learn-ukrainian" / "review"
     lease.mkdir(parents=True)
@@ -487,8 +488,8 @@ def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkey
     import time
     from dataclasses import replace
 
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
-    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
+    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
 
     root, _home = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
@@ -497,7 +498,7 @@ def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkey
     boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
     try:
         adapter = {"claude": ClaudeAdapter, "codex": CodexAdapter, "agy": AgyAdapter}[agent]()
-        monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda *a: None)
+        monkeypatch.setattr("lu_machinery.agent_runtime.adapters.agy._require_background_wait_support", lambda *a: None)
         plan = adapter.build_invocation(
             prompt="probe",
             mode="read-only",
@@ -587,8 +588,8 @@ def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkey
 
 
 def test_full_bwrap_unavailable_and_failed_probe_refuse(world, tmp_path, monkeypatch):
-    from scripts.agent_runtime.attempt_boundary import full_review_reads
-    from scripts.review import isolation
+    from lu_machinery.agent_runtime.attempt_boundary import full_review_reads
+    from lu_machinery.review import isolation
 
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "codex")
@@ -603,7 +604,7 @@ def test_full_bwrap_unavailable_and_failed_probe_refuse(world, tmp_path, monkeyp
         with pytest.raises(ReviewIsolationError, match="sandbox_unavailable:linux_bwrap_missing"):
             boundary.wrap(["/bin/true"], {})
         reads = full_review_reads(root)
-        monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.full_review_reads", lambda workspace: reads)
+        monkeypatch.setattr("lu_machinery.agent_runtime.attempt_boundary.full_review_reads", lambda workspace: reads)
         monkeypatch.setattr(isolation, "_resolve_fixed_system_executable", lambda *a, **k: Path("/usr/bin/bwrap"))
         monkeypatch.setattr(isolation.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess([], 1))
         with pytest.raises(ReviewIsolationError, match="sandbox_probe_allow_failed"):
@@ -616,11 +617,11 @@ def test_full_bwrap_unavailable_and_failed_probe_refuse(world, tmp_path, monkeyp
 def test_full_cli_compatibility_and_mcp_probes_are_sandboxed(world, tmp_path, monkeypatch, agent):
     import shlex
 
-    from scripts.agent_runtime.attempt_boundary import runtime_files
-    from scripts.agent_runtime.review_mcp import verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
+    from lu_machinery.agent_runtime.attempt_boundary import runtime_files
+    from lu_machinery.agent_runtime.review_mcp import verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
 
     monkeypatch.setattr(
-        "scripts.agent_runtime.attempt_boundary.runtime_files", lambda binary: runtime_files(Path("/bin/sh"))
+        "lu_machinery.agent_runtime.attempt_boundary.runtime_files", lambda binary: runtime_files(Path("/bin/sh"))
     )
 
     root, _ = world
@@ -665,7 +666,7 @@ def test_full_cli_compatibility_and_mcp_probes_are_sandboxed(world, tmp_path, mo
 
 
 def test_full_dispatch_telemetry_does_not_execute_cli(monkeypatch):
-    from scripts.agent_runtime import telemetry
+    from lu_machinery.agent_runtime import telemetry
 
     monkeypatch.setattr(telemetry, "_resolve_cli_version", lambda *a: pytest.fail("unconfined CLI probe"))
     result = telemetry.resolve_dispatch_start_telemetry(

@@ -28,14 +28,14 @@ import urllib.request
 from pathlib import Path
 
 try:
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"

@@ -21,9 +21,9 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
 
 import scripts.project_api.dashboard_router as dashboard_router
-from scripts.api.main import app
 
 pytestmark = pytest.mark.reads_content
 
@@ -87,7 +87,7 @@ class TestDispatcherScanEndpoint:
 
     def test_returns_200_on_success(self):
         with patch(
-            "scripts.api.main.subprocess.run",
+            "lu_machinery.api.main.subprocess.run",
             return_value=subprocess.CompletedProcess(["scan"], 0),
         ) as mock_run:
             resp = client.post("/api/batch/dispatcher/scan")
@@ -99,7 +99,7 @@ class TestDispatcherScanEndpoint:
 
     def test_returns_500_on_subprocess_failure(self):
         with patch(
-            "scripts.api.main.subprocess.run",
+            "lu_machinery.api.main.subprocess.run",
             return_value=subprocess.CompletedProcess(["scan"], 1),
         ):
             resp = client.post("/api/batch/dispatcher/scan")
@@ -384,7 +384,7 @@ class TestDashboardModuleDetail:
         monkeypatch.setattr(dashboard_router, "get_orchestration_info", lambda _orch_dir: {})
 
 
-        from scripts.api.monitor_context import fixture_context
+        from lu_machinery.api.monitor_context import fixture_context
 
         ctx = fixture_context(tmp_path)
         ctx = ctx.with_roots(curriculum_root=tmp_path / "curriculum")

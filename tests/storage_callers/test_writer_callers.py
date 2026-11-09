@@ -4,9 +4,9 @@ import contextlib
 import sqlite3
 
 import pytest
+from lu_machinery.storage import generations, topology
 
 from scripts.ingest import dictionary_ingest as writer
-from scripts.storage import generations, topology
 
 
 class Adapter:
@@ -74,7 +74,7 @@ def test_live_writer_connection_closes_before_lock_release(tmp_path, monkeypatch
                 adapter.connection.execute("SELECT 1")
     monkeypatch.setattr(writer, "store_writer", observed)
     writer.ingest(adapter, source, path, dry_run=False, force=False)
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 
     with open_readonly(path) as connection:
         assert connection.execute("SELECT value FROM proof").fetchall() == [("committed",)]

@@ -32,8 +32,9 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import model_view_exporter
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR

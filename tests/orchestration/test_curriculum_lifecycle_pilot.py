@@ -8,8 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from scripts.orchestration import curriculum_lifecycle_pilot as pilot
+from lu_machinery.orchestration import curriculum_lifecycle_pilot as pilot
 
 
 def test_pilot_gate_bindings_are_the_original_product_objects() -> None:
@@ -26,8 +25,8 @@ def test_pilot_gate_bindings_are_the_original_product_objects() -> None:
 
 
 def test_readiness_loader_dynamic_accounting() -> None:
-    from scripts.ci.components import scan_imports
-    from scripts.lint.boundary_ratchet import CONFIG_PATH, _configured_line, _dynamic_count, load_config
+    from lu_machinery.ci.components import scan_imports
+    from lu_machinery.lint.boundary_ratchet import CONFIG_PATH, _configured_line, _dynamic_count, load_config
 
     root = Path(__file__).resolve().parents[2]
     # The pilot reuses curriculum_readiness's strict loader, so it is not a configured caller.

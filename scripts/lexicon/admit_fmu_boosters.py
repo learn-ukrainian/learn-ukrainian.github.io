@@ -30,6 +30,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.publish.github import Asset, publish
+
 from scripts.atlas.atlas_db import migrate_manifest, validate_alias_targets
 from scripts.audit import generate_search_index
 from scripts.audit.source_inventory_intake import read_source_inventory
@@ -38,8 +41,6 @@ from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic, load_manifest
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.publish.github import Asset, publish
 from scripts.verification.vesum import verify_word
 
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"

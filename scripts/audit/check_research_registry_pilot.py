@@ -33,11 +33,10 @@ if __name__ == "__main__":
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 
+import lu_machinery.api.main as api_main
+import lu_machinery.api.state_router as state_router
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-import scripts.api.state_router as state_router
-from scripts.research import registry as reg
+from lu_machinery.research import registry as reg
 
 EXPECTED_CASES = (
     (

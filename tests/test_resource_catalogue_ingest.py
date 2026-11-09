@@ -310,7 +310,7 @@ def test_cli_help_and_storage_guards(tmp_path, publish_store, monkeypatch, capsy
             catalogue.main(invalid)
         assert exit_info.value.code == 2
     before = _store_files(selector)
-    from scripts.storage import topology
+    from lu_machinery.storage import topology
 
     for reason, store, patch in (
         ("store_not_selector", selector.with_name("copy.db"), None),
@@ -688,7 +688,7 @@ def test_free_access_requires_evidence(fields):
 @pytest.fixture
 def publish_store(tmp_path, monkeypatch):
     """A held fixture store behind its selector, with unrelated tables, and a private catalogue copy."""
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     for name in ("LU_SOURCES_DB", "SOURCES_DB_PATH"):
         monkeypatch.delenv(name, raising=False)
@@ -751,7 +751,7 @@ def _publish_args(selector, generation, root, digest=None):
 
 def _store_files(selector):
     """Every file beside the selector and in its generation directory, with the selected name."""
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     names = sorted(p.relative_to(selector.parent).as_posix() for p in selector.parent.rglob("*"))
     return generations.inspect_selector(selector).generation.name, names
@@ -801,8 +801,8 @@ def test_publish_refuses_input_manifest_drift(publish_store, monkeypatch, capsys
 
 def test_publish_refuses_changed_source_generation(publish_store, monkeypatch, capsys):
     """Defect class: publishing over a selection other than the expected, held, unchanged one."""
-    from scripts.storage import generations
-    from scripts.storage.wal_permissions import hold_database, lift_database
+    from lu_machinery.storage import generations
+    from lu_machinery.storage.wal_permissions import hold_database, lift_database
 
     selector, generation, root = publish_store
     before = _store_files(selector)
@@ -839,7 +839,7 @@ def test_publish_refuses_changed_source_generation(publish_store, monkeypatch, c
 
 def test_publish_preserves_selected_generation_on_ingest_failure(publish_store, monkeypatch, capsys):
     """Defect class: a failed ingest, verification or late space check changes the selection or leaves a candidate."""
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     selector, generation, root = publish_store
     before = _store_files(selector)
@@ -890,7 +890,7 @@ def test_publish_preserves_selected_generation_on_ingest_failure(publish_store, 
 
 def test_publish_records_post_switch_failure_without_retry(publish_store, monkeypatch, capsys):
     """Defect class: an error after the selector switch reported as unchanged, or the ingest retried."""
-    from scripts.storage import generations
+    from lu_machinery.storage import generations
 
     selector, generation, root = publish_store
     real_complete = generations._complete_receipt
@@ -945,8 +945,8 @@ def test_publish_records_post_switch_failure_without_retry(publish_store, monkey
 
 def test_publish_scratch_round_trip_preserves_non_catalogue_tables(publish_store, capsys):
     """Defect class: publication loses non-catalogue data or the previous generation cannot be restored."""
-    from scripts.storage import cli as storage_cli
-    from scripts.storage import generations
+    from lu_machinery.storage import cli as storage_cli
+    from lu_machinery.storage import generations
 
     selector, generation, root = publish_store
     with closing(catalogue.open_readonly(generation)) as conn:

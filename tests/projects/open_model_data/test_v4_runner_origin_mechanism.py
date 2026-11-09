@@ -17,9 +17,9 @@ import _v4_a7_real_slot_fixture as fx
 import _v4_synthetic_chain_fixture as base_fixture
 import pytest
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_a7_evidence_binder as evidence_binder
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7

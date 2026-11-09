@@ -770,7 +770,7 @@ def cmd_dispatch_one(args):
 
 def _drop_unneeded_dispatcher_secrets() -> None:
     """Drop unknown API keys, retaining recognized downstream provider keys."""
-    from agent_runtime.env_sanitize import unneeded_env_var_names
+    from lu_machinery.agent_runtime.env_sanitize import unneeded_env_var_names
 
     for name in unneeded_env_var_names(os.environ, "dispatcher"):
         os.environ.pop(name, None)

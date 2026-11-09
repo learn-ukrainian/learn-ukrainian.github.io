@@ -13,7 +13,7 @@ from scripts.audit.lint_agent_trailer import ProvenanceContext, _check_commit, m
 @pytest.fixture(autouse=True)
 def _stub_primary_integrity_sweep(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep delegate tests hermetic from the ambient checkout (same as tests/test_delegate.py:59)."""
-    import scripts.hygiene.check_primary_integrity as cpi
+    import lu_machinery.hygiene.check_primary_integrity as cpi
 
     monkeypatch.setattr(
         cpi,

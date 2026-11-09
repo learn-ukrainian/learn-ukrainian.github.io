@@ -42,9 +42,10 @@ _import_path = sys.path[:]
 try:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
     from scripts.audit import qg_schema
     from scripts.audit._judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 finally:
     sys.path[:] = _import_path
     del _import_path
@@ -92,7 +93,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

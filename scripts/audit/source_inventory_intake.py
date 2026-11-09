@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 

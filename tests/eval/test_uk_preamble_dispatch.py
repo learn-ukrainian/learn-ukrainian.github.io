@@ -13,10 +13,10 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.dispatcher.cli import build_parser
 
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.dispatcher.cli import build_parser
 from scripts.eval.uk_preamble import dispatch as dispatch_module
 from scripts.eval.uk_preamble.__main__ import make_dispatcher
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
@@ -268,7 +268,7 @@ def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
 @pytest.mark.parametrize("boundary", [None, "bubblewrap (bwrap) is not installed"])
 def test_flash_dispatch_carries_no_effort(fake, monkeypatch, boundary):
     dispatcher, prompt, state = fake
-    monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: boundary)
+    monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: boundary)
     with pytest.raises(DispatchError, match="new evaluation run tag"):
         dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
     dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
@@ -460,7 +460,7 @@ class SimulatedDelegate(DelegateDispatcher):
         )
 
     def _run(self, *args: str, **kwargs):
-        from scripts.dispatcher import cli
+        from lu_machinery.dispatcher import cli
 
         out, err = io.StringIO(), io.StringIO()
         with redirect_stdout(out), redirect_stderr(err):
@@ -472,7 +472,7 @@ class SimulatedDelegate(DelegateDispatcher):
 def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fresh_id(
     linked_worktree, outside_dir, monkeypatch, status
 ):
-    from scripts.dispatcher import git, store, worker
+    from lu_machinery.dispatcher import git, store, worker
 
     tasks_dir = outside_dir / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
@@ -553,7 +553,7 @@ def test_done_with_error_is_refused_and_legacy_error_behavior_is_unchanged(fake,
 def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
     linked_worktree: Path, outside_dir: Path, monkeypatch
 ):
-    from scripts.dispatcher import git, providers, store, worker
+    from lu_machinery.dispatcher import git, providers, store, worker
 
     # The Claude seats are read-only, so the real CLI asks `claude doctor` for managed settings first.
     (outside_dir / "bin").mkdir()
@@ -657,7 +657,7 @@ def test_result_digest_mismatch_is_refused(fake):
 
 
 def test_caller_initiator_matches_delegate_attribution():
-    from scripts.agent_runtime.attribution import resolve_invocation_attribution
+    from lu_machinery.agent_runtime.attribution import resolve_invocation_attribution
 
     assert dispatch_module.caller_initiator() == resolve_invocation_attribution().initiator
 

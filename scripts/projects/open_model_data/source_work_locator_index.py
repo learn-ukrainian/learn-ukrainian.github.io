@@ -20,8 +20,8 @@ from jsonschema import Draft202012Validator
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "registry/projects/open_model_data/contracts/source_work_locator_v1.schema.json"

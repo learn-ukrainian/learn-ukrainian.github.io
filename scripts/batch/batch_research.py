@@ -13,8 +13,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from lu_machinery.common.repo_root import project_interpreter
+
 from batch_gemini_config import FLASH_MODEL
-from common.repo_root import project_interpreter
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
@@ -230,7 +231,7 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     try:
         result = subprocess.run(
             [
-                str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+                str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
                 "ask-gemini", "-",
                 "--task-id", task_id,
                 "--output-path", output_path,

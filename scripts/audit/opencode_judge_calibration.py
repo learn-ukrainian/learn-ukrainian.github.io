@@ -56,7 +56,7 @@ except ModuleNotFoundError:
         score_case,
     )
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 OPENCODE_BIN = "opencode"
 REQUEST_TIMEOUT_S = 600  # opencode startup + reasoning overhead

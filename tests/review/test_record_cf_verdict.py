@@ -10,15 +10,15 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import integration_sweep as sweep
-from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.review import record_cf_verdict as recorder
-from scripts.review.ukrainian_seats import (
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.orchestration import merge_queue_keeper as keeper
+from lu_machinery.review import record_cf_verdict as recorder
+from lu_machinery.review.ukrainian_seats import (
     UKRAINIAN_SEAT_FAMILIES,
     attested_author_families,
     required_ukrainian_seats,
 )
+
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
@@ -37,7 +37,7 @@ def captured_source_trace(tasks, *, task_id="review-one", tool="verify_word", ar
 
 @pytest.mark.parametrize("marker", ["trial_label", "trial_role", "trial_qualified_task"])
 def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
-    from scripts.review.review_lineage import review_records
+    from lu_machinery.review.review_lineage import review_records
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(tasks, **{marker: "trial"})
@@ -57,7 +57,7 @@ def _misnamed_copy(tasks, name, **updates):
 
 def test_saved_wait_output_beside_its_record_neither_blocks_nor_counts(tmp_path):
     """Defect class: a worker's saved `dispatch.py wait` stdout stopped every review fleet-wide."""
-    from scripts.review.review_lineage import review_records
+    from lu_machinery.review.review_lineage import review_records
 
     tasks = tmp_path / "tasks"
     write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
@@ -67,7 +67,7 @@ def test_saved_wait_output_beside_its_record_neither_blocks_nor_counts(tmp_path)
 
 def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
     """Defect class: a renamed or orphaned review record silently drops out of the lineage."""
-    from scripts.review.review_lineage import LineageRefused, review_records
+    from lu_machinery.review.review_lineage import LineageRefused, review_records
 
     tasks = tmp_path / "tasks"
     write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
@@ -87,7 +87,7 @@ def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
 
 def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_path):
     """Defect class: a stray copy of any record beside its original blocks this repository's reviews."""
-    from scripts.review.review_lineage import review_records
+    from lu_machinery.review.review_lineage import review_records
 
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="other-review", schema_version=2, pr=7, run_nonce="nonce-2", repository="owner/other")
@@ -105,8 +105,9 @@ def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_pat
 @pytest.fixture
 def scanned_recorder(monkeypatch, tmp_path):
     """Exercise the supported publisher; fake only GitHub reads and transport."""
-    from scripts.opsec import prepublish as gate
-    from scripts.publish import github
+    from lu_machinery.opsec import prepublish as gate
+    from lu_machinery.publish import github
+
     from tests.test_opsec_prepublish import real_tooling
 
     tooling = real_tooling()
@@ -138,7 +139,7 @@ def scanned_recorder(monkeypatch, tmp_path):
 ])
 @pytest.mark.parametrize("verdict", ["APPROVED", "CHANGES_REQUESTED", "BLOCKED"])
 def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail, rule, verdict):
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
 
     tasks, comments, calls, sent, tooling = scanned_recorder
     reply = f"VERDICT: {verdict}\n{detail}\nHarmless reviewer sentence quoting `<!-- cf-verdict`.\n- A prose bullet."
@@ -193,7 +194,8 @@ def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
 
 
 def test_skeleton_scanner_rejection_has_no_write(scanned_recorder, tmp_path, monkeypatch, synthetic_opsec):
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
+
     from tests.opsec_fixtures import synthetic_rules
 
     tasks, comments, calls, sent, _ = scanned_recorder
@@ -210,7 +212,7 @@ def test_skeleton_scanner_rejection_has_no_write(scanned_recorder, tmp_path, mon
 
 @pytest.mark.parametrize("failure", ["scanner_unavailable", "lookup_failed"])
 def test_unrelated_failure_never_uses_skeleton(scanned_recorder, tmp_path, monkeypatch, failure):
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
 
     tasks, comments, calls, sent, _ = scanned_recorder
     scans = []
@@ -497,7 +499,7 @@ def test_skeleton_preserves_complete_marker_metadata(metadata):
 
 
 def test_transport_failure_after_scan_never_retries_skeleton(scanned_recorder, tmp_path, monkeypatch):
-    from scripts.publish import github
+    from lu_machinery.publish import github
 
     tasks, comments, calls, sent, _ = scanned_recorder
     attempts = []
@@ -722,8 +724,9 @@ def record_seat(tasks, tmp_path, task_id, **seat):
 
 def merge(monkeypatch, comments, *, files=None):
     """Run ``pr-merge`` on SHA with every check passing; only the recorded seats can refuse it."""
-    from scripts.opsec import prepublish as gate
-    from scripts.publish import github as pub
+    from lu_machinery.opsec import prepublish as gate
+    from lu_machinery.publish import github as pub
+
     from tests.opsec_fixtures import CATALOG
 
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
@@ -756,8 +759,8 @@ def merge(monkeypatch, comments, *, files=None):
 
 
 def test_metadata_only_release_manifest_merges_without_a_ukrainian_seat(monkeypatch, tmp_path):
-    from scripts.ci.deploy_paths import decide_auto_deploy
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.ci.deploy_paths import decide_auto_deploy
+    from lu_machinery.opsec import prepublish as gate
 
     # PR #12629 at 02b0a5e3: the manifest is its only content-prefixed path.
     paths = [
@@ -799,7 +802,7 @@ def test_metadata_only_release_manifest_merges_without_a_ukrainian_seat(monkeypa
 
 def test_one_ukrainian_seat_leaves_the_status_pending_and_the_merge_refused(monkeypatch, tmp_path):
     # An author outside OpenAI and Google still needs both Gemini and Sol.
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
     statuses = []
@@ -826,7 +829,8 @@ def test_two_eligible_ukrainian_seats_at_the_same_head_pass(monkeypatch, tmp_pat
 
 def test_a_ukrainian_seat_approving_an_older_head_does_not_count(monkeypatch, tmp_path):
     # Seats count only when they approved the head that would land.
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
+
     from tests.test_record_cf_verdict import OTHER
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
@@ -851,7 +855,7 @@ def test_a_ukrainian_seat_approving_an_older_head_does_not_count(monkeypatch, tm
 
 def test_sol_authored_gemini_approval_passes_and_gemini_author_needs_sol(monkeypatch, tmp_path):
     """A Sol-authored Ukrainian head with one Gemini APPROVE passes; a Gemini-authored one needs Sol."""
-    from scripts.opsec import prepublish as gate
+    from lu_machinery.opsec import prepublish as gate
 
     sol_root = tmp_path / "sol"
     tasks, comments, _ = setup_record(monkeypatch, sol_root, families={"openai"})
@@ -1094,7 +1098,7 @@ def test_recorded_round_stores_score_with_reviewer_and_author_models(scanned_rec
 
 def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
     """A quote that is not a literal substring of the frozen item does not count as coverage."""
-    from scripts.review.review_contract import build_item_packet, render_item_packet
+    from lu_machinery.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     captured_source_trace(tasks)
@@ -1216,7 +1220,7 @@ def test_quote_mismatch_voids_chunk_coverage(monkeypatch, tmp_path):
 
 def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path):
     """Defect class (#12417): a contract-only judgment block with a frozen packet is refused for lack of a verdict line."""
-    from scripts.review.review_contract import build_item_packet, render_item_packet
+    from lu_machinery.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     packet = build_item_packet([{"id": "card-a", "text": "привіт"}, {"id": "card-b", "text": "друг"}])
@@ -1249,7 +1253,7 @@ def test_block_only_ukrainian_reply_records_full_coverage(monkeypatch, tmp_path)
 
 def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, tmp_path):
     """An item with verdict 'unknown' is unreviewed and does not count as coverage."""
-    from scripts.review.review_contract import build_item_packet, render_item_packet
+    from lu_machinery.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     captured_source_trace(tasks)
@@ -1300,7 +1304,7 @@ def test_item_judgments_unknown_verdict_leaves_coverage_incomplete(monkeypatch, 
 
 def test_code_review_with_evidence_yields_reviewer_bookkeeping_empty_coverage():
     """Code profile rejects evidence in item judgments as reviewer bookkeeping, returning empty coverage."""
-    from scripts.review.review_contract import VOID_REVIEWER_BOOKKEEPING, build_item_packet, judge_item_reply
+    from lu_machinery.review.review_contract import VOID_REVIEWER_BOOKKEEPING, build_item_packet, judge_item_reply
 
     packet = build_item_packet([{"id": "item-1", "text": "def test(): pass"}])
     reply = (
@@ -1353,7 +1357,7 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
     monkeypatch, tmp_path, claim, output, placement, reply_format,
 ):
     """An unbound review must not publish a source assertion missing from its own outputs."""
-    from scripts.review.review_contract import build_item_packet, render_item_packet
+    from lu_machinery.review.review_contract import build_item_packet, render_item_packet
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     packet = build_item_packet([{"id": "item-a", "text": "example"}])
@@ -1461,10 +1465,13 @@ def test_unbound_ukrainian_source_claims_refused_before_publication(
 def test_ukrainian_supported_claim_remains_recordable(monkeypatch, tmp_path, capture, finding, bad_quote):
     """A supported exact-head review must not be over-rejected, including quoted source output."""
     import yaml
-
-    from scripts.dispatcher import store
-    from scripts.ops.product_entry import load_configured_module
-    from scripts.review.review_contract import build_item_packet, render_item_packet, validate_ukrainian_reply_claims
+    from lu_machinery.dispatcher import store
+    from lu_machinery.ops.product_entry import load_configured_module
+    from lu_machinery.review.review_contract import (
+        build_item_packet,
+        render_item_packet,
+        validate_ukrainian_reply_claims,
+    )
 
     # The receipt ledger is product code: load it from the product checkout, as the review hooks do.
     ledger = load_configured_module("scripts.review.receipts.ledger")
@@ -1596,7 +1603,8 @@ def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
     """Defect: one family's APPROVE lands a mixed-family head."""
     from dataclasses import replace
 
-    from scripts.publish import github
+    from lu_machinery.publish import github
+
     from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
     from tests.test_record_cf_verdict import REPOSITORY
 
@@ -1679,7 +1687,8 @@ def test_mixed_family_head_needs_both_family_approvals(tmp_path, monkeypatch):
     ))
     with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from lu_machinery.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+
     from tests.claude_route_accounts import HOST_ACCOUNT
 
     with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
@@ -1696,7 +1705,8 @@ def test_single_family_branch_resolution_unchanged(tmp_path, monkeypatch):
     """Control: the pair rule changes single-family routing."""
     from dataclasses import asdict, replace
 
-    from scripts.review.reviewer_resolver import resolve_reviewer
+    from lu_machinery.review.reviewer_resolver import resolve_reviewer
+
     from tests.claude_route_accounts import HOST_ACCOUNT
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
 

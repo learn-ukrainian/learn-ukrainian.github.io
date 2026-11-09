@@ -30,6 +30,8 @@ if str(SCRIPTS_ROOT) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.common.repo_root import project_interpreter
+
 from audit.check_no_internal_ids import (
     INTERNAL_ID_PATTERNS,
     INTERNAL_REGISTER_PATTERNS,
@@ -37,7 +39,6 @@ from audit.check_no_internal_ids import (
 )
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 from audit.content_surface_gates import scan_module_surface
-from common.repo_root import project_interpreter
 from level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from manifest_utils import get_modules_for_level, load_manifest
 from wiki.domains import resolve_write_domain

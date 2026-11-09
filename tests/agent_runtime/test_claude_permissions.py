@@ -24,14 +24,13 @@ import tarfile
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters.claude import (
+from lu_machinery.agent_runtime.adapters.claude import (
     REVIEWER_PERMISSION_PROFILE,
     ClaudeAdapter,
 )
-from scripts.agent_runtime.env_sanitize import build_agent_env
-from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.review_mcp import review_tools_allowed_csv
+from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
 
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
@@ -353,8 +352,8 @@ def test_discussion_readonly_keeps_separate_permissions(tmp_path: Path) -> None:
 
 
 def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch) -> None:
-    from scripts.agent_runtime.adapters import claude
-    from scripts.review import isolation
+    from lu_machinery.agent_runtime.adapters import claude
+    from lu_machinery.review import isolation
 
     mcp = tmp_path / "empty.json"
     mcp.write_text('{"mcpServers":{}}\n', encoding="utf-8")
@@ -386,7 +385,7 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
 
 @pytest.mark.repo_wide
 def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Path, monkeypatch) -> None:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     # Fixture clone of the tracked hook tree. Cloning this repository
     # (`git clone --shared`) exceeds the 30s bound when the host is busy (#8947).
@@ -445,7 +444,7 @@ _PINNED_GUARDS = ("guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-swi
 
 def _mark_product_checkout(root: Path, monkeypatch) -> None:
     """Select ``root`` as the product checkout too: the settings file is product configuration."""
-    from scripts.common import repo_root
+    from lu_machinery.common import repo_root
 
     marker = root / repo_root.PRODUCT_MARKER
     marker.parent.mkdir(parents=True, exist_ok=True)
@@ -471,7 +470,7 @@ def _guard_source_tree(root: Path, commands: list[str], *, interpreter: bool = T
 
 
 def _settings_from(root: Path, monkeypatch) -> list[dict]:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     _mark_product_checkout(root, monkeypatch)
     monkeypatch.setattr(claude, "__file__", str(root / "scripts/agent_runtime/adapters/claude.py"))
@@ -481,7 +480,7 @@ def _settings_from(root: Path, monkeypatch) -> list[dict]:
 
 @pytest.mark.parametrize("advisor", [None, "claude-opus-5-5", "claude-sonnet-5-5"])
 def test_worker_settings_omit_the_interactive_advisor(tmp_path: Path, monkeypatch, advisor: str | None) -> None:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     _guard_source_tree(tmp_path, ["$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh"])
     source_path = tmp_path / "agents_extensions/shared/settings.json"
@@ -502,7 +501,7 @@ def test_worker_settings_omit_the_interactive_advisor(tmp_path: Path, monkeypatc
 
 
 def test_worker_guards_run_parser_guards_under_the_project_interpreter(tmp_path: Path, monkeypatch) -> None:
-    from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS
+    from lu_machinery.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS
 
     assert set(_PINNED_GUARDS) == PROJECT_PYTHON_GUARDS
     hooks_dir = _guard_source_tree(
@@ -602,7 +601,7 @@ def test_worker_guards_refuse_an_unreadable_hook_command(tmp_path: Path, monkeyp
 
 
 def test_grok_agent_definition_keeps_a_split_quoted_parser_guard(tmp_path: Path, monkeypatch) -> None:
-    from scripts.agent_runtime.adapters.grok_build import _guard_agent_definition
+    from lu_machinery.agent_runtime.adapters.grok_build import _guard_agent_definition
 
     hooks_dir = _guard_source_tree(tmp_path, [f"{_SPLIT_WRAPPER} guard-pr-merge.py"])
     _settings_from(tmp_path, monkeypatch)  # points the adapter at the fixture tree
@@ -791,12 +790,12 @@ def test_sources_tool_split_matches_server_annotations() -> None:
 
 
 def test_reviewer_loads_only_the_trusted_sources_server(tmp_path: Path) -> None:
-    from scripts.agent_runtime.review_mcp import (
+    from lu_machinery.agent_runtime.review_mcp import (
         isolated_sources_mcp_config,
         review_server_checkout,
         sources_server_launch,
     )
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.common.repo_root import project_interpreter
 
     cmd = _reviewer_plan(tmp_path)
     config = _mcp_config(cmd)
@@ -867,7 +866,7 @@ def test_reviewer_refuses_a_caller_mcp_config_outside_formal_full_access(tmp_pat
 
 
 def test_full_review_access_keeps_review_tool_set(tmp_path: Path) -> None:
-    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+    from lu_machinery.agent_runtime.review_mcp import review_tools_allowed_csv
 
     (tmp_path / ".mcp.json").write_text("{", encoding="utf-8")  # never read for formal attempts
     attempt = tmp_path / "attempt.json"
@@ -917,8 +916,8 @@ def test_explicit_allowed_tools_are_not_widened_or_narrowed(
 
 
 def _isolated_review_config(tmp_path: Path, monkeypatch) -> dict:
-    from scripts.agent_runtime.adapters import claude
-    from scripts.review import isolation
+    from lu_machinery.agent_runtime.adapters import claude
+    from lu_machinery.review import isolation
 
     mcp = tmp_path / "empty.json"
     mcp.write_text('{"mcpServers":{}}\n', encoding="utf-8")
@@ -996,7 +995,7 @@ def test_every_read_only_path_denies_every_sources_writer(
 
 def _alias_sources_config(path: Path, server: str) -> Path:
     """An MCP config that registers the real sources launcher under ``server``."""
-    from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
+    from lu_machinery.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
 
     launch = isolated_sources_mcp_config(*sources_server_launch())["mcpServers"]["sources"]
     path.write_text(json.dumps({"mcpServers": {server: launch}}), encoding="utf-8")
@@ -1116,7 +1115,7 @@ def test_write_and_danger_modes_never_deny_sources_writers(tmp_path: Path, mode:
 
 @pytest.mark.parametrize("tool_config", [None, {"reviewer_tools": True}, {"allowed_tools": "mcp__sources__*"}])
 def test_unreadable_server_declarations_refuse_read_only_launch(tmp_path: Path, monkeypatch, tool_config) -> None:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     monkeypatch.setattr(claude, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
     with pytest.raises(FileNotFoundError):

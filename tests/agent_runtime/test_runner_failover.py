@@ -12,16 +12,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from agent_runtime import runner as runner_mod
-from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.errors import AgentStalledError, RateLimitedError
-from agent_runtime.failover import (
+from lu_machinery.agent_runtime import runner as runner_mod
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.errors import AgentStalledError, RateLimitedError
+from lu_machinery.agent_runtime.failover import (
     FAILOVER_CONFIG_ENV,
     FAILOVER_COOLDOWN_DB_ENV,
     RUNNER_FAILOVER_MARKER,
 )
-from agent_runtime.result import ParseResult
-from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
+from lu_machinery.agent_runtime.result import ParseResult
+from lu_machinery.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
 
 class _FailoverTestAdapter:
@@ -142,9 +142,9 @@ def _install_fake_runtime(
 
     records: list[dict[str, Any]] = []
     emitted_events: list[tuple[str, dict[str, Any]]] = []
-    fake_emit = types.ModuleType("telemetry.emit")
+    fake_emit = types.ModuleType("lu_machinery.telemetry.emit")
     fake_emit.emit_event = lambda event_name, payload: emitted_events.append((event_name, payload))
-    monkeypatch.setitem(sys.modules, "telemetry.emit", fake_emit)
+    monkeypatch.setitem(sys.modules, "lu_machinery.telemetry.emit", fake_emit)
     monkeypatch.setattr(runner_mod, "write_record", records.append)
     monkeypatch.setattr(runner_mod, "has_headroom", lambda _agent, _model: (True, ""))
     monkeypatch.setattr(
@@ -489,7 +489,7 @@ def test_shipped_config_declares_no_deepseek_chain():
     orchestrator (grok-build/codex), never by burning API credit. Any future
     chain must be explicitly user-approved and must not contain openrouter.
     """
-    from agent_runtime.failover import (
+    from lu_machinery.agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
     )
@@ -512,7 +512,7 @@ def test_classifier_routes_credential_startup_failure_to_auth():
     """Live-captured 2026-07-06: a dead/missing credential fails the provider
     CLI at startup with prose that previously matched NO trigger class, so the
     chain never rotated. Credential rotation is the point — must classify as auth."""
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     stderr = (
         "agent failed: Provider 'deepseek' is set in config.yaml "
@@ -533,7 +533,7 @@ def test_classifier_routes_credential_startup_failure_to_auth():
 def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
     """#7166 / #7472: a seat whose gh lost its auth context fails with
     "please run: gh auth login" — an auth failure, never a rate limit."""
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     stderr = (
         "To get started with GitHub CLI, please run:  gh auth login\n"
@@ -554,7 +554,7 @@ def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
 def test_classifier_refuses_to_rotate_on_inband_400():
     """Review D2 (PR #4580): a request-format error would fail identically on
     every route — the gate must return None so the chain is not burned."""
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(
@@ -572,7 +572,7 @@ def test_classifier_refuses_to_rotate_on_inband_400():
 
 
 def test_classifier_routes_initial_response_timeout_to_transport():
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=None),
@@ -586,7 +586,7 @@ def test_classifier_routes_initial_response_timeout_to_transport():
 
 
 def test_classifier_refuses_to_rotate_on_streaming_silence_timeout():
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=None),
@@ -603,7 +603,7 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(tmp_path, ca
     """Review D4 (PR #4580): fail-safe stays (no raise), but loudly."""
     import logging
 
-    from agent_runtime.failover import load_failover_chain
+    from lu_machinery.agent_runtime.failover import load_failover_chain
 
     config = tmp_path / "failover.yaml"
     config.write_text(
@@ -625,7 +625,7 @@ def test_shipped_config_declares_no_grok_chain():
     """Pin the shipped config: native ``grok`` has NO failover chain (user
     order 2026-07-07 — work belongs on the native-app seat; grok-4.* via
     OpenRouter has no measured niche and 402-drained the OR balance)."""
-    from agent_runtime.failover import (
+    from lu_machinery.agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
     )
@@ -660,7 +660,7 @@ _TOOL_OUTPUT_RATE_LIMIT_TEXT = (
 )
 def test_classifier_honors_structured_provider_failure_code_over_raw_text(failure_code, rate_limited, expected):
     """#9532: a typed structured provider error outranks tool output in the raw streams."""
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(
@@ -704,7 +704,7 @@ def test_classifier_reads_no_text_when_the_adapter_types_the_outcome(
     Unknown or incomplete outcomes never fall back to raw stdout/stderr (agent
     and tool text) or to regexes over the provider message.
     """
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(
@@ -725,7 +725,7 @@ def test_classifier_reads_no_text_when_the_adapter_types_the_outcome(
 
 def test_classifier_without_isolated_provider_text_keeps_reading_raw_streams():
     """Adapters that make no provenance claim keep the raw-stream classification."""
-    from agent_runtime.failover import classify_failover_trigger
+    from lu_machinery.agent_runtime.failover import classify_failover_trigger
 
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt="noise", failure_code="provider_error"),
@@ -740,7 +740,7 @@ def test_classifier_without_isolated_provider_text_keeps_reading_raw_streams():
 
 def test_runner_failover_never_rotates_or_cools_on_policy_refusal(tmp_path, monkeypatch, capsys):
     """#9532: a provider policy refusal is a typed failure, not a rate limit."""
-    from agent_runtime.failover import FailoverCooldownStore, FailoverRoute
+    from lu_machinery.agent_runtime.failover import FailoverCooldownStore, FailoverRoute
 
     excerpt = "provider_policy_refusal (codex_error_info=cyber_policy): This content was flagged."
     adapter, records, _emitted_events = _install_fake_runtime(
@@ -822,8 +822,8 @@ def test_codex_stream_outcome_decides_cooldown_and_rotation(tmp_path, monkeypatc
     """#9532 end to end: the real Codex adapter types each JSONL stream, and
     the runner cools and rotates only on provider-typed quota or capacity
     failures, never on forged text in items, stdout or stderr."""
-    from agent_runtime.adapters.codex import CodexAdapter
-    from agent_runtime.failover import FailoverCooldownStore, FailoverRoute
+    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+    from lu_machinery.agent_runtime.failover import FailoverCooldownStore, FailoverRoute
 
     stdout, returncode = _codex_stream_case(case)
     output_file = tmp_path / "last-message.txt"
@@ -875,8 +875,9 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
     import json
     from dataclasses import replace
 
-    from agent_runtime.adapters.agy import AgyAdapter
-    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+    from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
+
     from scripts.eval.uk_preamble.common import SEATS, sha256_text
     from scripts.eval.uk_preamble.dispatch import TaskOutcome
 
@@ -1008,7 +1009,8 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
 @pytest.mark.parametrize("case,known", [("terminal-session", False), ("duplicate-after", False),
                                        ("repeated-session", False), ("other-pin", True), ("repeated", True)])
 def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypatch, pin, case, known):
-    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, case))
@@ -1039,8 +1041,9 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
 
 @pytest.mark.parametrize("kill_reason", ["stdout_silence_timeout", "initial_response_timeout", "hard_timeout"])
 def test_watchdog_substitution_events_preserve_observed_identity(tmp_path, monkeypatch, kill_reason):
-    from agent_runtime.errors import AgentTimeoutError
-    from telemetry import emit as telemetry_emit
+    from lu_machinery.agent_runtime.errors import AgentTimeoutError
+    from lu_machinery.telemetry import emit as telemetry_emit
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     pin, observed = "claude-sonnet-5-5-high", "claude-opus-5-5-high"
@@ -1097,9 +1100,10 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
 ):
     import json
 
-    from agent_runtime import usage
-    from agent_runtime.failover import FailoverChain, FailoverRoute
-    from telemetry import emit as telemetry_emit
+    from lu_machinery.agent_runtime import usage
+    from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
+    from lu_machinery.telemetry import emit as telemetry_emit
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(
@@ -1142,7 +1146,7 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
         (Path(__file__).resolve().parents[1] / "fixtures" / "accounting_10954.json").read_text()
     ) if row["pin"] == pin and row["case"] == case)
     expected_projection = expected_row["expected"]
-    from scripts.agent_runtime.accounting import recorded_model_accounting_fields
+    from lu_machinery.agent_runtime.accounting import recorded_model_accounting_fields
 
     for row in (saved, result.usage_record, vars(result), recorded_model_accounting_fields(saved)):
         assert {key: row[key] for key in expected_projection} == expected_projection

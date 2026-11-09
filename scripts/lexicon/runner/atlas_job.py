@@ -30,7 +30,7 @@ from typing import Any, Protocol
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"

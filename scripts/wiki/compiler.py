@@ -13,9 +13,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-from ai_llm.claude_call import call_claude_with_fallback
-from ai_llm.codex_call import call_codex_with_fallback
-from ai_llm.fallback import (
+from lu_machinery.ai_llm.claude_call import call_claude_with_fallback
+from lu_machinery.ai_llm.codex_call import call_codex_with_fallback
+from lu_machinery.ai_llm.fallback import (
     AGY_GEMINI_MODEL,
     AttemptRecord,
     CallResult,
@@ -23,6 +23,7 @@ from ai_llm.fallback import (
     call_gemini_with_fallback,
     visible_sleep,
 )
+
 from validate.check_wiki_verify_markers import (
     assert_no_verify_markers,
     find_verify_markers_text,
@@ -44,7 +45,7 @@ from .sources_schema import (
 from .state import is_compiled, mark_compiled
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -57,7 +58,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Gemini CLI path (same pattern as agent bridge)
 GEMINI_CLI = shutil.which("gemini") or "gemini"

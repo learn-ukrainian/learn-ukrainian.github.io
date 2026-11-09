@@ -18,10 +18,11 @@ import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
 from scripts.atlas import word_card_foundation as foundation
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
-from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.wiki.sources_db import compute_ulif_entry_fingerprint
 
 ACUTE = "́"

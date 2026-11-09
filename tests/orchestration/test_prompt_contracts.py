@@ -8,7 +8,7 @@ import yaml
 
 pytestmark = [pytest.mark.docs_skills, pytest.mark.reads_content]
 
-from scripts.orchestration import prompt_contracts as contracts
+from lu_machinery.orchestration import prompt_contracts as contracts
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = Path("agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml")

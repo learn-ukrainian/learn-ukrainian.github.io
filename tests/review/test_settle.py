@@ -12,8 +12,8 @@ from typing import Any
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.review import findings_db as db
 
-from scripts.review import findings_db as db
 from scripts.review import settle
 from scripts.review.prompts.check import check_prompt
 from scripts.review.prompts.eligibility import pin_refusals

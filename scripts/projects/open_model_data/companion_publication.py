@@ -5,8 +5,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set, manifest_path
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set, manifest_path
 
 
 def publish_bound_companion(repo: Path, group: str, producer: str, target: Path, payload: bytes) -> bool:

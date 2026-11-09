@@ -1,4 +1,4 @@
-"""Tests for batch_otaman, batch_dispatcher, batch_fix_review, and tools.agent_watcher.
+"""Tests for batch_otaman, batch_dispatcher, batch_fix_review, and lu_machinery.tools.agent_watcher.
 
 Targets batch/agent helper coverage with heavy mocking of subprocess, filesystem, etc.
 """
@@ -706,34 +706,34 @@ class TestBatchDispatcherPickTrack:
         result = d._pick_track({})
         assert result is None
 # ═══════════════════════════════════════════════════════════════════════
-# tools.agent_watcher.py
+# lu_machinery.tools.agent_watcher.py
 # ═══════════════════════════════════════════════════════════════════════
 
 class TestAgentWatcherLoadConfig:
-    @patch("tools.agent_watcher._AGENTS_CONFIG", None)
+    @patch("lu_machinery.tools.agent_watcher._AGENTS_CONFIG", None)
     def test_load_from_file(self, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         config_path = tmp_path / "agents.yaml"
         config_path.write_text("agents:\n  claude:\n    bridge_command: process-claude\n    process_pattern: claude\n")
 
         with patch.object(Path, "__new__", wraps=Path.__new__):
-            old_path = tools.agent_watcher.load_agent_config.__globals__
+            old_path = lu_machinery.tools.agent_watcher.load_agent_config.__globals__
             # Reset the cache
-            tools.agent_watcher._AGENTS_CONFIG = None
-            with patch("tools.agent_watcher.Path") as mock_path:
+            lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
+            with patch("lu_machinery.tools.agent_watcher.Path") as mock_path:
                 mock_path.return_value.__truediv__ = lambda *a: config_path
                 mock_path.__truediv__ = lambda *a: config_path
                 # Use a simpler approach: just patch the config path check
                 with patch("builtins.open", mock_open(read_data="agents:\n  test_agent:\n    bridge_command: test\n    process_pattern: test\n")), patch("pathlib.Path.exists", return_value=True):
-                        tools.agent_watcher._AGENTS_CONFIG = None
-                        config = tools.agent_watcher.load_agent_config()
+                        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
+                        config = lu_machinery.tools.agent_watcher.load_agent_config()
                         assert "test_agent" in config
 
 
 class TestAgentWatcherGetUnreadMessages:
 
     def test_with_messages(self, sqlite_db):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
         conn.execute(
             "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
@@ -741,14 +741,14 @@ class TestAgentWatcherGetUnreadMessages:
         )
         conn.commit()
         conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages()
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", sqlite_db):
+            msgs = lu_machinery.tools.agent_watcher.get_unread_messages()
             assert len(msgs) == 1
             assert msgs[0]["task_id"] == "task1"
             assert msgs[0]["from"] == "claude"
 
     def test_filter_by_agent(self, sqlite_db):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
         conn.execute(
             "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
@@ -760,15 +760,15 @@ class TestAgentWatcherGetUnreadMessages:
         )
         conn.commit()
         conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages(for_agent="gemini")
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", sqlite_db):
+            msgs = lu_machinery.tools.agent_watcher.get_unread_messages(for_agent="gemini")
             assert len(msgs) == 1
             assert msgs[0]["task_id"] == "task1"
 
 
 class TestAgentWatcherAcknowledgeMessage:
     def test_acknowledge(self, sqlite_db):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
         conn.execute(
             "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
@@ -776,16 +776,16 @@ class TestAgentWatcherAcknowledgeMessage:
         )
         conn.commit()
         conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            tools.agent_watcher.acknowledge_message(1, "delivered")
-            msgs = tools.agent_watcher.get_unread_messages()
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", sqlite_db):
+            lu_machinery.tools.agent_watcher.acknowledge_message(1, "delivered")
+            msgs = lu_machinery.tools.agent_watcher.get_unread_messages()
             assert len(msgs) == 0
 
 
 class TestAgentWatcherCountTaskTurns:
 
     def test_counts_non_error(self, sqlite_db):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
         conn.execute(
             "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
@@ -801,127 +801,127 @@ class TestAgentWatcherCountTaskTurns:
         )
         conn.commit()
         conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            assert tools.agent_watcher.count_task_turns("task1") == 2
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", sqlite_db):
+            assert lu_machinery.tools.agent_watcher.count_task_turns("task1") == 2
 
 
 class TestAgentWatcherIsAnyAgentActive:
     @patch("subprocess.run")
     def test_no_agents(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = None
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
         with patch("pathlib.Path.exists", return_value=False):
-            tools.agent_watcher._AGENTS_CONFIG = {
+            lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {
                 "claude": {"process_pattern": "claude"},
             }
             mock_run.return_value = MagicMock(returncode=1, stdout="")
-            assert tools.agent_watcher.is_any_agent_active() is False
-        tools.agent_watcher._AGENTS_CONFIG = None
+            assert lu_machinery.tools.agent_watcher.is_any_agent_active() is False
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
     @patch("subprocess.run")
     def test_agent_active(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {
             "claude": {"process_pattern": "claude"},
         }
         mock_run.return_value = MagicMock(returncode=0, stdout="12345")
-        assert tools.agent_watcher.is_any_agent_active() is True
-        tools.agent_watcher._AGENTS_CONFIG = None
+        assert lu_machinery.tools.agent_watcher.is_any_agent_active() is True
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
 
 class TestAgentWatcherTriggerAgent:
     @patch("subprocess.run")
     def test_success(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {
             "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
         }
         mock_run.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent")):
-            result = tools.agent_watcher.trigger_agent("gemini", 1, "task1", "claude")
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", Path("/nonexistent")):
+            result = lu_machinery.tools.agent_watcher.trigger_agent("gemini", 1, "task1", "claude")
         assert result is True
-        tools.agent_watcher._AGENTS_CONFIG = None
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
     @patch("subprocess.run")
     def test_failure(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {
             "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
         }
         mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="error")
-        result = tools.agent_watcher.trigger_agent("gemini", 1, "task1")
+        result = lu_machinery.tools.agent_watcher.trigger_agent("gemini", 1, "task1")
         assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
     def test_unknown_agent(self):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {"claude": {"bridge_command": "x"}}
-        result = tools.agent_watcher.trigger_agent("nonexistent", 1)
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {"claude": {"bridge_command": "x"}}
+        result = lu_machinery.tools.agent_watcher.trigger_agent("nonexistent", 1)
         assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
     @patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 360))
     def test_timeout(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
+        import lu_machinery.tools.agent_watcher
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = {
             "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
         }
-        result = tools.agent_watcher.trigger_agent("gemini", 1)
+        result = lu_machinery.tools.agent_watcher.trigger_agent("gemini", 1)
         assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
+        lu_machinery.tools.agent_watcher._AGENTS_CONFIG = None
 
 
 class TestAgentWatcherPidFile:
     def test_write_pid(self, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            tools.agent_watcher.write_pid()
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", pid_file):
+            lu_machinery.tools.agent_watcher.write_pid()
             assert pid_file.exists()
             assert int(pid_file.read_text().strip()) == os.getpid()
 
     def test_read_pid_invalid(self, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
         pid_file.write_text("not_a_number")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.read_pid() is None
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", pid_file):
+            assert lu_machinery.tools.agent_watcher.read_pid() is None
 
 
 class TestAgentWatcherIsRunning:
     @patch("os.kill")
     def test_running(self, mock_kill, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
         pid_file.write_text("12345")
         mock_kill.return_value = None  # Process exists
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.is_running() is True
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", pid_file):
+            assert lu_machinery.tools.agent_watcher.is_running() is True
 
     @patch("os.kill", side_effect=OSError("no such process"))
     def test_stale_pid(self, mock_kill, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
         pid_file.write_text("99999")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.is_running() is False
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", pid_file):
+            assert lu_machinery.tools.agent_watcher.is_running() is False
 
 
 class TestAgentWatcherStopDaemon:
     @patch("os.kill")
     def test_stop_success(self, mock_kill, tmp_path):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         pid_file = tmp_path / "watcher.pid"
         pid_file.write_text("12345")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file), patch("time.sleep"):
-            result = tools.agent_watcher.stop_daemon()
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", pid_file), patch("time.sleep"):
+            result = lu_machinery.tools.agent_watcher.stop_daemon()
         assert result is True
         mock_kill.assert_called_with(12345, signal.SIGTERM)
 
     def test_stop_no_pid(self, tmp_path, capsys):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
-            result = tools.agent_watcher.stop_daemon()
+        import lu_machinery.tools.agent_watcher
+        with patch.object(lu_machinery.tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
+            result = lu_machinery.tools.agent_watcher.stop_daemon()
         assert result is False
         assert "No watcher running" in capsys.readouterr().out
 # ═══════════════════════════════════════════════════════════════════════
@@ -1164,7 +1164,7 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
 
 class TestAgentWatcherEdgeCases:
     def test_get_unread_acknowledged_not_returned(self, sqlite_db):
-        import tools.agent_watcher
+        import lu_machinery.tools.agent_watcher
         conn = sqlite3.connect(sqlite_db)
         conn.execute(
             "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp, acknowledged) VALUES (?, ?, ?, ?, ?, ?)",
@@ -1172,8 +1172,8 @@ class TestAgentWatcherEdgeCases:
         )
         conn.commit()
         conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages()
+        with patch.object(lu_machinery.tools.agent_watcher, "DB_PATH", sqlite_db):
+            msgs = lu_machinery.tools.agent_watcher.get_unread_messages()
             assert len(msgs) == 0
 
 
@@ -1370,7 +1370,8 @@ class TestBatchDispatcherRunningTrackCleanup:
 class TestBatchDispatcherClaudeFixBackground:
     def test_claude_fix_runs_without_background_work(self, monkeypatch):
         """The headless Claude rebuild carries the #9690 controls from the adapter (#9750)."""
-        from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+        from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+
         from batch import batch_dispatcher_helpers as helpers
 
         seen = {}

@@ -53,13 +53,14 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+
 from scripts.ingest._section_coverage import (
     LessonSection,
     ensure_section_schema,
     link_lesson_sections,
 )
 from scripts.lexicon.ohoiko_quality_enrichment import normalize_500_verbs_lines
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = None  # Selected by the connection owner at call time.
@@ -112,8 +113,8 @@ _INDEX_TERMINATOR = "Index of Ukrainian Verbs"
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

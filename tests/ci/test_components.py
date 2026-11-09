@@ -11,8 +11,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.ci import components as c
+from lu_machinery.ci import components as c
 
 
 @pytest.fixture
@@ -149,7 +148,7 @@ load('source', ROOT / 'scripts' / 'lexicon' / 'source.py')
 
 def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, manifest):
     path = repo / "scripts/config.py"
-    path.write_text("from scripts.ci import components\n")
+    path.write_text("from lu_machinery.ci import components\n")
     git(repo, "add", "scripts/config.py")
     git(repo, "update-index", "--skip-worktree", "scripts/config.py")
     path.unlink()
@@ -160,7 +159,7 @@ def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, m
 
 
 def test_import_graph_reuse_tracks_manifest_content(repo, manifest, monkeypatch):
-    (repo / "scripts/config.py").write_text("from scripts.ci import components\n")
+    (repo / "scripts/config.py").write_text("from lu_machinery.ci import components\n")
     manifest["exact_paths"]["scripts/config.py"] = ["atlas-data"]
     manifest["exact_paths"]["scripts/ci/components.py"] = ["harness"]
     manifest["edges"] = [{"id": "required", "kind": "import", "producer": "harness",
@@ -449,13 +448,13 @@ def test_configured_entry_point_calls_are_module_loads():
             b"import importlib\n\ndef load_configured_module(name):\n    return importlib.import_module(name)\n"
         ),
         "scripts/review/hooks.py": b"X = 1\n",
-        "scripts/plain.py": b"from scripts.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
+        "scripts/plain.py": b"from lu_machinery.ops.product_entry import load_configured_module\nload_configured_module(name)\n",
         "scripts/aliased.py": (
-            b"from scripts.ops.product_entry import load_configured_module as load\n"
+            b"from lu_machinery.ops.product_entry import load_configured_module as load\n"
             b"load(first)\nload(name=second)\n"
         ),
-        "scripts/qualified.py": b"import scripts.ops.product_entry as entry\nentry.load_configured_module('scripts.review.hooks')\n",
-        "scripts/module_alias.py": b"from scripts.ops import product_entry\nproduct_entry.load_configured_module(name='scripts.review.hooks')\n",
+        "scripts/qualified.py": b"import lu_machinery.ops.product_entry as entry\nentry.load_configured_module('lu_machinery.review.hooks')\n",
+        "scripts/module_alias.py": b"from scripts.ops import product_entry\nproduct_entry.load_configured_module(name='lu_machinery.review.hooks')\n",
         "scripts/other.py": b"from importlib import import_module as load\nload(name)\n",
     }
     graph = c.scan_imports(sources)
@@ -481,11 +480,11 @@ def test_configured_alias_never_reinterprets_another_loader(loader):
         "scripts/prod/widget.py": b"W = 1\n",
         "scripts/mixed.py": (
             f"def run():\n    {loader}\n    {call}\n\n"
-            "def hooks():\n    from scripts.ops.product_entry import load_configured_module as load\n"
+            "def hooks():\n    from lu_machinery.ops.product_entry import load_configured_module as load\n"
             "    load('scripts.prod.widget')\n"
         ).encode(),
         "scripts/renamed.py": (
-            b"from scripts.ops.product_entry import load_configured_module as run_module\n"
+            b"from lu_machinery.ops.product_entry import load_configured_module as run_module\n"
             b"run_module(name='scripts.prod.widget')\n"
         ),
     }
@@ -625,7 +624,7 @@ def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_preceden
     ('import io\nio.open("schemas/input.json")', "schemas/input.json"),
     ('import builtins\nbuiltins.open(file="schemas/input.json")', "schemas/input.json"),
     ('import subprocess, sys\nsubprocess.run([sys.executable, "scripts/config.py"])', "scripts/config.py"),
-    ('from subprocess import run as go\ngo(["python3", "-m", "scripts.config"])', "scripts/config.py"),
+    ('from subprocess import run as go\ngo(["python3", "-m", "lu_machinery.config"])', "scripts/config.py"),
 ])
 def test_runtime_literal_file_and_subprocess_edges(source, target):
     graph = c.scan_imports({"tests/test_reader.py": source.encode(), "scripts/config.py": b"VALUE = 1"},

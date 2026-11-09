@@ -14,8 +14,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.storage import artifacts, paths
+from lu_machinery.storage import artifacts, paths
 
 
 def _git(repo: Path, *args: str) -> None:

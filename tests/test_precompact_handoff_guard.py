@@ -12,9 +12,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.orchestration import precompact_handoff_check as check
-from scripts.orchestration import thread_handoff as th
+from lu_machinery.orchestration import precompact_handoff_check as check
+from lu_machinery.orchestration import thread_handoff as th
 
 REPO = Path(__file__).resolve().parents[1]
 HOOK = REPO / "agents_extensions/shared/hooks/precompact-handoff-guard.sh"

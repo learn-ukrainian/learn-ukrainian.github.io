@@ -25,11 +25,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 
 STRIPPED_MODULES = (
-    "guardrails.worktree_containment",
+    "lu_machinery.guardrails.worktree_containment",
     "path_safety",
     "audit.decision_lineage",
-    "common.git_context",
-    "common.release_layout",
+    "lu_machinery.common.git_context",
+    "lu_machinery.common.release_layout",
 )
 
 

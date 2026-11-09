@@ -14,8 +14,8 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
-from scripts.api.monitor_context import MonitorContext
-from scripts.api.product_contribution import ProductContribution, RouterMount
+from lu_machinery.api.monitor_context import MonitorContext
+from lu_machinery.api.product_contribution import ProductContribution, RouterMount
 
 from . import (
     admin_router,
@@ -70,7 +70,7 @@ PRELOAD_MODULES = (
     "yaml_activities",
     "scripts.build.phase_constants",
     "research_quality",
-    "research.research_markdown_utils",
+    "lu_machinery.research.research_markdown_utils",
 )
 
 OPTIONAL_PRELOAD_MODULES = (

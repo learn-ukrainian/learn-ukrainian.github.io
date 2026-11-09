@@ -9,8 +9,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.ci.frontend_change_scope import load_denominator, path_in_denominator
+from lu_machinery.ci.frontend_change_scope import load_denominator, path_in_denominator
 
 pytestmark = pytest.mark.repo_wide
 

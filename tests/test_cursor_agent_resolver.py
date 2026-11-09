@@ -8,18 +8,18 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
+import lu_machinery.agent_runtime.binary_resolve as binary_resolve
 import pytest
-
-import scripts.agent_runtime.binary_resolve as binary_resolve
-from scripts.agent_runtime import telemetry as telemetry_mod
-from scripts.agent_runtime.adapters import cursor as cursor_mod
-from scripts.agent_runtime.adapters.cursor import (
+from lu_machinery.agent_runtime import telemetry as telemetry_mod
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters.cursor import (
     CursorAdapter,
     CursorAgentMissingError,
     probe_cursor_login,
     resolve_cursor_agent_binary,
 )
-from scripts.ai_agent_bridge._cursor import _invoke_cursor
+from lu_machinery.ai_agent_bridge._cursor import _invoke_cursor
+
 from scripts.audit import cursor_judge_calibration as calibration
 
 

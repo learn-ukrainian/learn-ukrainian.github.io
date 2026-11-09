@@ -75,7 +75,7 @@ def install_override(tooling, source=OVERRIDE):
 
 def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
     # The machinery package finds its own policy file, so this holds in either checkout layout.
-    from scripts.common.repo_root import machinery_path
+    from lu_machinery.common.repo_root import machinery_path
 
     policy = json.loads(machinery_path("opsec/blocking.json").read_text())
     rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
@@ -121,7 +121,7 @@ def make_tooling(directory):
 
 @pytest.fixture
 def synthetic_opsec(tmp_path, monkeypatch):
-    from scripts.opsec import prepublish
+    from lu_machinery.opsec import prepublish
 
     directory = make_tooling(tmp_path / "tooling")
     monkeypatch.setattr(prepublish, "private_tooling", lambda: directory)
@@ -193,7 +193,7 @@ def gh_shim_sandbox(tmp_path):
     shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
     # The merge gate's learner-content check reads the deploy path policy data, a product file
     # that stays under the product checkout's scripts/ when the machinery package moves.
-    from scripts.common.repo_root import product_root
+    from lu_machinery.common.repo_root import product_root
 
     deploy_paths = root / "scripts/curriculum/deploy_paths.v1.json"
     deploy_paths.parent.mkdir(parents=True, exist_ok=True)
@@ -224,7 +224,7 @@ def gh_shim_sandbox(tmp_path):
 @pytest.fixture
 def publisher_transport(monkeypatch):
     """Explicitly inject existing subprocess spies at the typed transport boundary."""
-    from scripts.publish import github
+    from lu_machinery.publish import github
     original = github._send
     def send(argv, *, runner, **kwargs):
         return original(argv, runner=subprocess.run if runner is None else runner, **kwargs)

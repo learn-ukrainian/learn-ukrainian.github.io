@@ -48,8 +48,8 @@ import yaml
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage.topology import store_data_dir
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage.topology import store_data_dir
 
 # Version the extraction contract so golden tests + index can invalidate together.
 EXTRACTION_SPEC_VERSION: str = "2026-07-v1-ua-learner-activities"
@@ -96,7 +96,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

@@ -10,8 +10,8 @@ from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import freeze_phase3_v3a_taxonomy_denominator_compatibility as v3a
 
 

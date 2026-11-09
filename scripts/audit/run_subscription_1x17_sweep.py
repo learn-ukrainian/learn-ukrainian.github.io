@@ -23,7 +23,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
 PY = project_interpreter()
 DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS: float = 600.0

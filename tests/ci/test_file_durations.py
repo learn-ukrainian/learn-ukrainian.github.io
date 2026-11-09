@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.ci import split_tests as split
 
-from scripts.ci import split_tests as split
 from tests.test_ci_pr_triggers import _EVENTS, _run_gate, _simulate
 
 
@@ -218,7 +218,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert report["needs"] == ["pytest"]
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     report_steps = report["steps"]
-    proof = next(i for i, step in enumerate(report_steps) if "scripts.ci.pytest_report" in step.get("run", ""))
+    proof = next(i for i, step in enumerate(report_steps) if "lu_machinery.ci.pytest_report" in step.get("run", ""))
     record = next(i for i, step in enumerate(report_steps) if step.get("name") == "Record pytest durations")
     assert proof < record
     assert "split_tests durations --shards ci-artifacts/shards" in report_steps[record]["run"]
@@ -235,7 +235,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert gate["timeout-minutes"] == 5
     assert "refresh-pytest-durations" in gate["needs"]
     verdict = next(step["run"] for step in gate["steps"] if step.get("name") == "Require every job")
-    assert verdict == '"$PYTHON_BIN" -m scripts.ci.gate'
+    assert verdict == '"$PYTHON_BIN" -m lu_machinery.ci.gate'
     aggregation = next(step for step in gate["steps"] if step.get("name") == "Require every job")
     assert aggregation["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
     for event in ("merge_group", "schedule", "workflow_dispatch"):
@@ -270,7 +270,7 @@ def _assert_exact_partition(files: list[str], snapshot: Path) -> None:
             [
                 sys.executable,
                 "-m",
-                "scripts.ci.split_tests",
+                "lu_machinery.ci.split_tests",
                 "split",
                 "--shard",
                 str(number),
@@ -688,7 +688,7 @@ def test_duplicate_timing_members_are_rejected() -> None:
 
 
 def test_archive_client_bound_maps_to_existing_size_failure(monkeypatch):
-    from scripts.common.github_client import Result
+    from lu_machinery.common.github_client import Result
 
     def oversized(*args, **kwargs):
         failure = subprocess.CalledProcessError(1, args[0])

@@ -23,7 +23,8 @@ from collections.abc import Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from scripts.api.occupancy_local import occupancy_marker_scope
+from lu_machinery.api.occupancy_local import occupancy_marker_scope
+
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 

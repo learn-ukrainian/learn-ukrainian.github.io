@@ -35,7 +35,8 @@ from scripts.audit.source_inventory_intake import (
     read_source_inventories,
     source_inventory_candidates,
 )
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 SUPPORTED_INVENTORY_SUFFIXES = {".csv", ".tsv", ".jsonl", ".json", ".yaml", ".yml"}
 DEFAULT_INVENTORY_DIR = REGISTRY_ROOT / "lexicon/source-inventory"

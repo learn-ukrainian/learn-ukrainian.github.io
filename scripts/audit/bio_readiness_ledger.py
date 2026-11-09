@@ -19,7 +19,7 @@ from pathlib import Path
 import yaml
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -32,7 +32,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -44,13 +44,14 @@ if __name__ == "__main__":
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.orchestration.preparation_evidence import RegistryValidationError, load_manual_evidence
+
 from scripts.audit import lint_bio_dossier_xref
 from scripts.audit.llm_qg_store import content_sha_for_module
 from scripts.audit.llm_qg_store import db_path as configured_qg_db_path
 from scripts.audit.module_quality_audit import PlannedModule, audit_one_module
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
-from scripts.orchestration.preparation_evidence import RegistryValidationError, load_manual_evidence
 from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
 from scripts.wiki.domains import resolve_write_domain
 

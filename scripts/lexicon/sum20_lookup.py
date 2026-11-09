@@ -20,9 +20,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
 from scripts.lexicon.sum20_store import lookup_sum20_cached as lookup_sum20_cached
 from scripts.lexicon.sum20_store import open_sources, resolve_sum20_articles
-from scripts.lib.readonly_sqlite import SQLiteConnection
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> SQLiteConnection:

@@ -18,7 +18,7 @@ import yaml
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 try:
     from scripts.build.linear_pipeline import _TOOL_CITATION_RE

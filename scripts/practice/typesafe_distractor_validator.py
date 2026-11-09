@@ -163,7 +163,7 @@ def _resolve_sources_db_path(db_path: str | Path | None = None) -> Path | None:
     if local.is_file():
         return local
     try:
-        from scripts.guardrails.worktree_containment import resolve_main_root
+        from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
         primary = resolve_main_root(REPO_ROOT) / "data" / "sources.db"
         if primary.is_file():

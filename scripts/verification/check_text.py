@@ -17,11 +17,13 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
+from lu_machinery.storage.topology import ActiveDatabaseNetworkError, require_local_active_sources_db
 
 from scripts.curriculum.evidence.sources import _signature
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
@@ -33,7 +35,6 @@ from scripts.curriculum.resolver.tokenize import (
     tokenize,
 )
 from scripts.lexicon.calque_corrections import CURATED_CALQUES, LEXICALISED_SAFE
-from scripts.storage.topology import ActiveDatabaseNetworkError, require_local_active_sources_db
 from scripts.verification.antonenko_patterns import PATTERNS, find_book_calques
 from scripts.verification.check_ru_morph import (
     KNOWN_SHADOW_LEMMAS,
@@ -163,7 +164,7 @@ def _sources_path_resolved() -> Path:
     if path.is_file():
         return path
     try:
-        from scripts.guardrails.worktree_containment import resolve_main_root
+        from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
         main_root = resolve_main_root(Path(__file__).resolve().parents[2])
         main_path = require_local_active_sources_db(main_root)

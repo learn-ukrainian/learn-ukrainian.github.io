@@ -6,9 +6,9 @@ from unittest.mock import Mock
 
 import pytest
 import requests
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.ingest import grac_frequency_ingest as crawler
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag import source_query as query
 
 
@@ -442,8 +442,8 @@ def test_cli_help_defaults_and_error_status(tmp_path, monkeypatch, capsys):
 
 
 def test_default_path_storage_resolution_and_override(tmp_path, monkeypatch):
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.storage.topology import require_local_active_sources_db
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.storage.topology import require_local_active_sources_db
     monkeypatch.delenv('LU_GRAC_FREQUENCY_DB', raising=False)
     expected = require_local_active_sources_db(main_checkout_root(Path(query.__file__).resolve().parents[2])).with_name('grac_frequency.db')
     assert query.grac_db_path() == expected
@@ -452,7 +452,7 @@ def test_default_path_storage_resolution_and_override(tmp_path, monkeypatch):
 
 
 def test_refuses_network_sqlite(tmp_path, monkeypatch):
-    monkeypatch.setattr('scripts.storage.topology.is_network_filesystem_path', lambda _: True)
+    monkeypatch.setattr('lu_machinery.storage.topology.is_network_filesystem_path', lambda _: True)
     with pytest.raises(ValueError):
         query.grac_db_path()
     assert query.grac_frequency('a', cache_only=True, db_path=tmp_path / 'absent.db') is None

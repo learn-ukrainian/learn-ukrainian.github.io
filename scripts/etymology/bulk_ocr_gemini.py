@@ -25,7 +25,7 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from scripts.common.http_status import has_http_status
+from lu_machinery.common.http_status import has_http_status
 
 RAW_ESUM = ROOT / "data/raw/esum"
 JP2_STAGING = RAW_ESUM / "jp2-staging"
@@ -798,7 +798,7 @@ def quality_halt_message() -> str:
 
 async def run(args: argparse.Namespace) -> int:
     if not args.dry_run:
-        from scripts.review.model_catalog import require_execution_model
+        from lu_machinery.review.model_catalog import require_execution_model
 
         require_execution_model(args.model, transport="native_gemini")
     selected = parse_only(args.only)

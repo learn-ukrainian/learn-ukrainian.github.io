@@ -5,9 +5,9 @@ from __future__ import annotations
 import json
 
 import pytest
+from lu_machinery.storage.paths import artifact_path
 
 from scripts.lexicon.miyklas_relation_miner import clean_candidate_records, parse_relation_term
-from scripts.storage.paths import artifact_path
 
 
 def test_strips_only_complete_dotted_qualifier_tokens() -> None:

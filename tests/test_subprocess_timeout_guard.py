@@ -27,9 +27,8 @@ import textwrap
 from pathlib import Path
 
 import pytest
-
-from scripts.ci import subprocess_timeout_guard as guard
-from scripts.ci.subprocess_timeout_guard import (
+from lu_machinery.ci import subprocess_timeout_guard as guard
+from lu_machinery.ci.subprocess_timeout_guard import (
     ALLOWLIST_KEY_PARTS,
     SHAPE_HASH_HEX_LEN,
     SORT_ADVICE,
@@ -48,7 +47,8 @@ from scripts.ci.subprocess_timeout_guard import (
     timeout_less_calls_from_source,
     validate_allowlist_entry,
 )
-from scripts.hygiene.lint_source_db_writable_connects import _without_cyclic_gc
+from lu_machinery.hygiene.lint_source_db_writable_connects import _without_cyclic_gc
+
 from tests.project_python import project_python
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]

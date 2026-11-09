@@ -21,8 +21,8 @@ from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
+from lu_machinery.agent_runtime.adapters._output_schema import load_output_schema
 
-from scripts.agent_runtime.adapters._output_schema import load_output_schema
 from scripts.audit import llm_reviewer, qg_schema
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
@@ -97,7 +97,7 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
 
 def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
     module_name, class_name = ADAPTERS[route]
-    module = importlib.import_module(f"scripts.agent_runtime.adapters.{module_name}")
+    module = importlib.import_module(f"lu_machinery.agent_runtime.adapters.{module_name}")
     if route == "cursor":
         # Binary lookup is the shared resolver; which() still stubs the other adapters.
         monkeypatch.setattr(module, "resolve_cursor_agent_binary", lambda: "/usr/bin/cursor-agent")
@@ -209,7 +209,7 @@ def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch,
 
 
 def _assert_agy_registered_workspace_round_trip(workspace, original_log_root, monkeypatch):
-    from scripts.agent_runtime.adapters import agy
+    from lu_machinery.agent_runtime.adapters import agy
 
     original_log_root.mkdir()
     monkeypatch.setattr(agy, "_build_log_path", lambda _: original_log_root / "runtime.log")
@@ -429,7 +429,7 @@ def test_codex_dimension_and_direct_missing_file_never_recovers_prose(tmp_path, 
 
 @pytest.mark.parametrize("wire", ('{"x":NaN}', '{"x":Infinity}', '{"x":1,"x":2}'))
 def test_non_json_or_ambiguous_objects_rejected(wire):
-    from scripts.agent_runtime.adapters._output_schema import INVALID_JSON, json_value
+    from lu_machinery.agent_runtime.adapters._output_schema import INVALID_JSON, json_value
 
     assert json_value(wire) is INVALID_JSON
 
@@ -557,7 +557,7 @@ def direct_context(tmp_path: Path) -> direct.DirectModuleContext:
 
 @pytest.mark.parametrize("damage", ("none", "defect", "missing", "invalid", "truncated", "failed", "contradiction"))
 def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     monkeypatch.setattr(direct, "PROJECT_ROOT", tmp_path)
     ctx = direct_context(tmp_path)
@@ -592,7 +592,8 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
 
 
 def test_audit_claude_schema_and_embedded_fence_survive_consumption(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+
     from scripts.audit import llm_reviewer_dispatch as dispatch
 
     payload = mechanical_payload("audit")

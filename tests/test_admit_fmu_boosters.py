@@ -174,9 +174,9 @@ def test_release_publication_freezes_binary_and_scans_text(tmp_path, synthetic_o
     import subprocess
 
     import pytest
+    from lu_machinery.opsec import prepublish
 
     from scripts.lexicon.admit_fmu_boosters import _publish_asset
-    from scripts.opsec import prepublish
     from tests.opsec_fixtures import CATALOG, TOKEN
 
     monkeypatch.setattr(prepublish, "catalog", lambda: CATALOG)

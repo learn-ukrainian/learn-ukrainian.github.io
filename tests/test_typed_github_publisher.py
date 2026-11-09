@@ -13,10 +13,10 @@ import time
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.opsec.gh_snapshot import admit
+from lu_machinery.publish import github as pub
 
-from scripts.opsec import prepublish as gate
-from scripts.opsec.gh_snapshot import admit
-from scripts.publish import github as pub
 from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, recorded_approval
 
@@ -170,7 +170,7 @@ def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, g
         ],
     }
     if verb in expected_requests:
-        from scripts.common.github_client import Response
+        from lu_machinery.common.github_client import Response
 
         def transport(method, endpoint, headers, body, timeout):
             if verb == "comment-edit" and method == "GET":
@@ -795,7 +795,7 @@ print('HTTP/2.0 201 Created\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Res
         [
             sys.executable,
             "-m",
-            "scripts.publish",
+            "lu_machinery.publish",
             "issue-comment",
             "--number",
             "1",
@@ -1030,7 +1030,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 
     stub_parent_epic(monkeypatch)
 
-    from scripts.publish.github import Request
+    from lu_machinery.publish.github import Request
 
     monkeypatch.setenv("GH_REPO", "unit/public")
     calls = []
@@ -1075,7 +1075,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 
     def invoke():
         if consumer == "bridge":
-            assert not importlib.import_module("scripts.ai_agent_bridge._github")._gh_comment(1, TOKEN)
+            assert not importlib.import_module("lu_machinery.ai_agent_bridge._github")._gh_comment(1, TOKEN)
         elif consumer == "decision":
             module = importlib.import_module("scripts.audit.check_decisions")
             assert (
@@ -1085,11 +1085,11 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
         elif consumer == "review-audit":
             importlib.import_module("scripts.audit.check_review_issues")._comment_issue(1, TOKEN)
         elif consumer == "verify":
-            importlib.import_module("scripts.verify_review")._post_summary(1, {"final_disposition": TOKEN})
+            importlib.import_module("lu_machinery.verify_review")._post_summary(1, {"final_disposition": TOKEN})
         elif consumer == "verdict":
-            module = importlib.import_module("scripts.review.record_cf_verdict")
-            from scripts.orchestration.fleet_repos import FleetRepo
-            from scripts.review import target_resolution
+            module = importlib.import_module("lu_machinery.review.record_cf_verdict")
+            from lu_machinery.orchestration.fleet_repos import FleetRepo
+            from lu_machinery.review import target_resolution
 
             real_run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, timeout=30)
             real_run(
@@ -1139,24 +1139,24 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             assert receipt["verdict"] == "APPROVED"
             assert receipt["comment"] == receipt["status"] == "posted"
         elif consumer == "review-publisher":
-            importlib.import_module("scripts.fleet_comms.review_publisher").post_pr_comment(
+            importlib.import_module("lu_machinery.fleet_comms.review_publisher").post_pr_comment(
                 repository="unit/public", pr_number=1, body=TOKEN, runner=transport
             )
         elif consumer == "settle":
-            module = importlib.import_module("scripts.orchestration.dispatch_settle")
+            module = importlib.import_module("lu_machinery.orchestration.dispatch_settle")
             monkeypatch.setattr(module, "_find_pr", lambda *a: (None, None))
             module.push_and_maybe_open_pr(tmp_path, "unit", open_pr=True, title=TOKEN, body="clean")
         elif consumer == "closeout":
-            importlib.import_module("scripts.orchestration.task_closeout").GhGitHubAdapter(tmp_path).update_issue_body(
+            importlib.import_module("lu_machinery.orchestration.task_closeout").GhGitHubAdapter(tmp_path).update_issue_body(
                 "unit/public", 1, TOKEN
             )
         elif consumer == "keeper":
-            importlib.import_module("scripts.orchestration.merge_queue_keeper").GitHub(tmp_path, "unit/public").comment(
+            importlib.import_module("lu_machinery.orchestration.merge_queue_keeper").GitHub(tmp_path, "unit/public").comment(
                 1, TOKEN
             )
         elif consumer == "stream":
             # Membership has no public text; fixed mutation succeeds without the matcher.
-            importlib.import_module("scripts.orchestration.issue_stream_audit")._gh_json(
+            importlib.import_module("lu_machinery.orchestration.issue_stream_audit")._gh_json(
                 Request("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD"), cwd=tmp_path
             )
         elif consumer == "practice":
@@ -1235,7 +1235,7 @@ def test_raw_rest_private_exemption_requires_actual_endpoint_host(host, allowed)
     "args,expected", [(["run", "watch", "1", "--compact"], 7), (["issue", "comment", "1", "--body", TOKEN], 2), (["api", "graphql", "-f", "query=mutation{deleteIssue(input:{issueId:fixture}){clientMutationId}}"], 2)]
 )
 def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, capsys):
-    from scripts.opsec import gh_entry
+    from lu_machinery.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
     executable.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > "' + str(tmp_path / "argv") + '"\nprintf "native gh error\\n" >&2\nexit 7\n')
@@ -1251,7 +1251,7 @@ def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, c
 
 
 def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
-    from scripts.opsec import gh_entry
+    from lu_machinery.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
     executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
@@ -1276,7 +1276,7 @@ def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
     ],
 )
 def test_repository_resolution_is_exact_and_ordered(environment, explicit, origin, expected, tmp_path):
-    from scripts.opsec.gh_snapshot import repository
+    from lu_machinery.opsec.gh_snapshot import repository
 
     def local_read(args, **kwargs):
         return subprocess.CompletedProcess(args, 0, origin, "")
@@ -1285,7 +1285,7 @@ def test_repository_resolution_is_exact_and_ordered(environment, explicit, origi
 
 
 def test_repository_read_failure_is_unknown(tmp_path):
-    from scripts.opsec.gh_snapshot import repository
+    from lu_machinery.opsec.gh_snapshot import repository
 
     def broken(*a, **k):
         raise OSError(TOKEN)
@@ -1321,7 +1321,7 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
             [
                 sys.executable,
                 "-m",
-                "scripts.publish",
+                "lu_machinery.publish",
                 "issue-comment",
                 "--repo",
                 "unit/public",
@@ -1456,7 +1456,7 @@ def test_pr_creation_cannot_publish_implicit_branch_names(fields):
 
 
 def test_9794_issue_parent_read_selects_typed_parent_repository(github_transport):
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     issue = {
         "number": 1,

@@ -32,9 +32,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.jsonl import jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+
 from scripts.ingest import ulp_lesson_notes_ingest as ulp
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 DEFAULT_TARGET_CHARS = 1500
 DEFAULT_OVERLAP_CHARS = 120
@@ -42,8 +43,8 @@ DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

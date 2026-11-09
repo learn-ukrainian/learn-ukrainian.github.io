@@ -20,7 +20,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
 PY = project_interpreter()
 OUT = REPO / "audit" / "2026-07-08-gemini-multirun-1x"
@@ -222,7 +222,7 @@ def main() -> int:
     if not PY.is_file():
         print(f"ERROR: venv python not found at {PY}", file=sys.stderr)
         return 2
-    from scripts.review.model_catalog import ModelCatalogError, require_execution_model
+    from lu_machinery.review.model_catalog import ModelCatalogError, require_execution_model
 
     try:
         require_execution_model(MODEL, transport="agy")

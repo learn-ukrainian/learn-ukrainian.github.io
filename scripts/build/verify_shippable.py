@@ -42,7 +42,7 @@ from pathlib import Path
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"

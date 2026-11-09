@@ -268,7 +268,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.sources_db is None:
             args.sources_db = args.repo / "data" / "sources.db"
         if args.kaikki_json is None:
-            from scripts.storage.paths import artifact_path
+            from lu_machinery.storage.paths import artifact_path
 
             args.kaikki_json = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=args.repo)
     return _run(args)

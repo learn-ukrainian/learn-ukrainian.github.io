@@ -30,8 +30,12 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.agent_runtime.registry import AGENTS
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.task_store_paths import tasks_dir
+from lu_machinery.dispatcher.store import read as read_task_record
+from lu_machinery.orchestration.task_record_store import locate_task_record
 
-from scripts.agent_runtime.registry import AGENTS
 from scripts.build.fresh.draft_schema import (
     DraftError,
     DraftValidationError,
@@ -47,11 +51,7 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
-from scripts.common.jsonl import jsonl_lines
-from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
-from scripts.dispatcher.store import read as read_task_record
-from scripts.orchestration.task_record_store import locate_task_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy")
@@ -296,7 +296,7 @@ def dispatch_writer(
     if inputs["prompt_sha256"] != prompt_sha256:
         raise ValueError("Writer inputs snapshot does not match prompt_sha256.")
     task_id = writer_task_id(level, slug, lesson_n, attempt, effort, inputs)
-    del_script = delegate_script or (root / "scripts/dispatch.py")
+    del_cmd = [sys.executable, str(delegate_script)] if delegate_script else [sys.executable, "-m", "lu_machinery.dispatch"]
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -380,8 +380,7 @@ def dispatch_writer(
                 raise WriterHarnessError("Reused v2 writer task is missing its run nonce")
         # New tasks use the minimal dispatcher; historical tasks retain their supervisor.
         dispatch_cmd = [
-            sys.executable,
-            str(del_script),
+            *del_cmd,
             "dispatch",
             "--agent",
             writer,
@@ -419,8 +418,7 @@ def dispatch_writer(
 
         # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7, MAJOR D)
         wait_cmd = [
-            sys.executable,
-            str(del_script),
+            *del_cmd,
             "wait",
             task_id,
             "--timeout",

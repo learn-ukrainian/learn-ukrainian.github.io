@@ -14,8 +14,8 @@ import sys
 from collections.abc import Mapping
 from typing import Any
 
-from scripts.api.monitor_context import MonitorContext, resolve_context
-from scripts.api.product_contribution import OrientSection
+from lu_machinery.api.monitor_context import MonitorContext, resolve_context
+from lu_machinery.api.product_contribution import OrientSection
 
 from . import state_router as state_api
 from . import wiki_router as wiki_api

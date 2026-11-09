@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.storage.paths import artifact_path
 
 from scripts.lexicon import ohoiko_paired_headword_split as paired_split
 from scripts.lexicon.ohoiko_paired_headword_split import (
@@ -21,7 +22,6 @@ from scripts.lexicon.ohoiko_paired_headword_split import (
     split_paired_headword,
     strip_trailing_parentheticals,
 )
-from scripts.storage.paths import artifact_path
 
 
 def test_split_basic_gender_pair() -> None:

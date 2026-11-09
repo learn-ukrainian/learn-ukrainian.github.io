@@ -16,8 +16,8 @@ import re
 from functools import lru_cache
 from ipaddress import AddressValueError, IPv4Address
 
-from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
-from scripts.opsec.needles import Needles, home_dir_pattern, load_needles
+from lu_machinery.api.occupancy_sanitize import _CANONICAL_ALIASES
+from lu_machinery.opsec.needles import Needles, home_dir_pattern, load_needles
 
 # Fictional values for reject samples; only their shape matters.
 FIXTURE_USER = "fixture-user"

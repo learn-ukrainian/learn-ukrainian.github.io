@@ -30,12 +30,12 @@ from uuid import uuid4
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
-from scripts.api.resilience import connect_sqlite
-from scripts.common.git_context import sanitized_git_env
+from lu_machinery.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
+from lu_machinery.api.resilience import connect_sqlite
+from lu_machinery.common.git_context import sanitized_git_env
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -48,7 +48,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"

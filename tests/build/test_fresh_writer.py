@@ -89,7 +89,7 @@ def test_terminal_writer_collision_retries_then_reuses_done(
     tmp_path, monkeypatch, a1_valid_fixture, passing_preflight, status, archived
 ):
     """The same paid success is reused even when it followed failed terminal records."""
-    from scripts.orchestration.task_record_store import task_record_path
+    from lu_machinery.orchestration.task_record_store import task_record_path
 
     store = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(store))

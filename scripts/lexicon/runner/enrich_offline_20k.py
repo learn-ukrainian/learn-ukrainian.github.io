@@ -240,7 +240,7 @@ def dry_run_plan(args: argparse.Namespace) -> int:
     _load_repo(repo)
     # The plan reports the caps the real run would use, and refuses the same values.
     _resolve_job_memory_mib(args)
-    from scripts.storage.paths import artifact_path
+    from lu_machinery.storage.paths import artifact_path
 
     input_path = _resolve_input(args)
     work_dir = args.work_dir.resolve() if args.work_dir is not None else None
@@ -333,7 +333,7 @@ def _run(args: argparse.Namespace) -> int:
     if args.kaikki_json is not None:
         kaikki = Path(args.kaikki_json).resolve()
     else:
-        from scripts.storage.paths import artifact_path
+        from lu_machinery.storage.paths import artifact_path
 
         kaikki = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=repo)
     if not sources.is_file():

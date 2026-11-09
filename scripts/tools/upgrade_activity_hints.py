@@ -27,7 +27,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
+
 from tools.plan_autofix import _bump_version
 
 logger = logging.getLogger(__name__)

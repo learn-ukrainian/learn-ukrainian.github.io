@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-
-from scripts.ci import components
-from scripts.ci import deploy_paths as pages
+from lu_machinery.ci import components
+from lu_machinery.ci import deploy_paths as pages
 
 
 @pytest.mark.parametrize(("path", "deploy", "reason"), [

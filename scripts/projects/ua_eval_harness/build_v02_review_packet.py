@@ -13,7 +13,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / "data/projects/ua_eval_harness/analysis/v0.1.1/item_evidence.jsonl"

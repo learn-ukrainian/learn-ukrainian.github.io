@@ -14,8 +14,7 @@ from pathlib import Path
 
 import pymupdf
 import yaml
-
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 
 def clean(text: str, stress_free: bool = False) -> str:

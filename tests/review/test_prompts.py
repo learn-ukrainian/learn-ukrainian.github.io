@@ -22,11 +22,11 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.lib import rules_core
 
 from scripts.build.fresh import manifest, plan_manifest
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.curriculum.evidence import lock
-from scripts.lib import rules_core
 from scripts.review.prompts import eligibility
 from scripts.review.prompts.check import (
     ATTEMPT_ENTRY,
@@ -261,7 +261,7 @@ def _cache_repeated_exact_renders_and_template_lint():
         if key is None:
             return original_render(manifest_source, template_name, **kwargs)
         # Machinery bytes are render inputs too; a changed or missing core cannot hit an old render.
-        from scripts.review.render_contract import trusted_core_context
+        from lu_machinery.review.render_contract import trusted_core_context
 
         key = (*key, kwargs.get("review_access", "full"), trusted_core_context()[0])
         cached = renders.get(key)
@@ -476,9 +476,10 @@ def test_lesson_review_prompt_rendered_from_real_fixture(tmp_path: Path, monkeyp
 
     # #9163: the sidecar records what the prompt was rendered against, and a review attempt run by this
     # checkout's own sources server admits it.
-    from scripts.agent_runtime.review_mcp import check_review_contract
+    from lu_machinery.agent_runtime.review_mcp import check_review_contract
+    from lu_machinery.review.render_contract import server_code_digest
+
     from scripts.review.prompts.render import REPO_ROOT
-    from scripts.review.render_contract import server_code_digest
 
     record = json.loads(prompt_out.with_name(f"{prompt_out.name}.files_read.json").read_text())["render_contract"]
     assert record["render_checkout"] == str(REPO_ROOT)
@@ -1822,7 +1823,8 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     import sys
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import review_mcp, runner
+    from lu_machinery.agent_runtime import review_mcp, runner
+
     from scripts.review import record
     from scripts.review import validate as review_validator
     from scripts.review.receipts.ledger import create_empty_ledger
@@ -1889,7 +1891,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     monkeypatch.setattr(
         sys,
         "argv",
-        ["-", "plan-template", str(path), str(tmp_path), "scripts.agent_runtime.runner", "scripts.agent_runtime.review_mcp"],
+        ["-", "plan-template", str(path), str(tmp_path), "lu_machinery.agent_runtime.runner", "lu_machinery.agent_runtime.review_mcp"],
     )
     runbook = Path(__file__).resolve().parents[2] / "docs/runbooks/agy-review-permissions.md"
     snippet = runbook.read_text().split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]

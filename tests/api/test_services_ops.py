@@ -103,8 +103,8 @@ def temp_services_sh(tmp_path: Path):
     content = content.replace("API_LIVE_MODE=0", "API_LIVE_MODE=1")
 
     # Replace the real uvicorn start command with a python sleep command to avoid binding to real ports
-    old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
-    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 127.0.0.1 --port {port}"'
+    old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn lu_machinery.api.main:app --host 127.0.0.1 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
+    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" lu_machinery.api.main:app --host 127.0.0.1 --port {port}"'
 
     if old_cmd in content:
         content = content.replace(old_cmd, dummy_cmd)
@@ -211,7 +211,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
     # Start a dummy sleep process to act as the listener process.
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
+        "lu_machinery.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
     try:
@@ -318,7 +318,7 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
     # Start a dummy sleep process
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
+        "lu_machinery.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
 
