@@ -296,7 +296,7 @@ def dispatch_writer(
     if inputs["prompt_sha256"] != prompt_sha256:
         raise ValueError("Writer inputs snapshot does not match prompt_sha256.")
     task_id = writer_task_id(level, slug, lesson_n, attempt, effort, inputs)
-    del_cmd = [sys.executable, str(delegate_script)] if delegate_script else [sys.executable, "-m", "lu_machinery.dispatch"]
+    del_script = delegate_script or (root / "scripts/dispatch.py")
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -380,7 +380,8 @@ def dispatch_writer(
                 raise WriterHarnessError("Reused v2 writer task is missing its run nonce")
         # New tasks use the minimal dispatcher; historical tasks retain their supervisor.
         dispatch_cmd = [
-            *del_cmd,
+            sys.executable,
+            str(del_script),
             "dispatch",
             "--agent",
             writer,
@@ -418,7 +419,8 @@ def dispatch_writer(
 
         # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7, MAJOR D)
         wait_cmd = [
-            *del_cmd,
+            sys.executable,
+            str(del_script),
             "wait",
             task_id,
             "--timeout",

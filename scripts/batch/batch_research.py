@@ -231,7 +231,7 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     try:
         result = subprocess.run(
             [
-                str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
+                str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
                 "ask-gemini", "-",
                 "--task-id", task_id,
                 "--output-path", output_path,

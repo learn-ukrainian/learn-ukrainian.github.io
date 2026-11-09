@@ -64,7 +64,6 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 from lu_machinery.common.jsonl import jsonl_lines
-from lu_machinery.common.repo_root import machinery_path
 
 from scripts.build.fresh.assemble import (
     check_5_assembly,
@@ -1386,7 +1385,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     lock.atomic_write(prompt, instruction.encode("utf-8") + lock.yaml_bytes(batch))
     cmd = [
         sys.executable,
-        str(machinery_path("dispatch.py")),
+        str(repo_root / "scripts" / "dispatch.py"),
         "dispatch",
         "--agent",
         agent,
@@ -1421,7 +1420,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     done = subprocess.run(
         [
             sys.executable,
-            str(machinery_path("dispatch.py")),
+            str(repo_root / "scripts" / "dispatch.py"),
             "wait",
             task_id,
             "--run-nonce",

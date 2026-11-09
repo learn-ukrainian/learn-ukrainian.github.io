@@ -274,7 +274,7 @@ def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     )
     result = subprocess.run(
         [
-            str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
+            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,
@@ -297,7 +297,7 @@ def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     full_prompt = f"{prompt_content}\n\nWrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters."
     result = subprocess.run(
         [
-            str(VENV_PYTHON), "-m", "lu_machinery.ai_agent_bridge",
+            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,

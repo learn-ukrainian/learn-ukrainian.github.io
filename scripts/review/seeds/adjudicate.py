@@ -63,7 +63,7 @@ except ModuleNotFoundError as exc:
 
 import yaml
 from jsonschema import Draft202012Validator
-from lu_machinery.common.repo_root import machinery_path, main_checkout_root, project_interpreter
+from lu_machinery.common.repo_root import main_checkout_root, project_interpreter
 from lu_machinery.orchestration.task_record_store import locate_task_record
 from lu_machinery.review import findings_db, second_seat
 from lu_machinery.review.seeds import manifest as seed_manifest
@@ -76,7 +76,7 @@ SCHEMAS = {
     "clean": REPO_ROOT / "schemas" / "clean-adjudication-v1.schema.json",
 }
 TASKS_SUBDIR = "adjudication"
-DISPATCH = machinery_path("dispatch.py")
+DISPATCH = REPO_ROOT / "scripts" / "dispatch.py"
 READ_ONLY_MODE = "read-only"
 
 

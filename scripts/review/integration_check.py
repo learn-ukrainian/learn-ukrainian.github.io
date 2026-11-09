@@ -57,7 +57,7 @@ except ModuleNotFoundError as exc:
     from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
-from lu_machinery.common.repo_root import machinery_path, project_interpreter, resolve_repo_root
+from lu_machinery.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
 from lu_machinery.common.task_store_paths import tasks_dir
 from lu_machinery.review import findings_db, second_seat
 
@@ -93,8 +93,8 @@ from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsuppo
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
-# The dispatcher entry is the installed package's, never the configured target (#12681).
-DISPATCH_ENTRY = machinery_path("dispatch.py")
+# The dispatcher entry comes from this code's own primary, never the configured target (#12681).
+DISPATCH_ENTRY = main_checkout_root(Path(__file__).resolve().parents[2]) / "scripts" / "dispatch.py"
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"

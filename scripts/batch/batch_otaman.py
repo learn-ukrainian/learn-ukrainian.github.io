@@ -52,7 +52,6 @@ from threading import Lock
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from lu_machinery.common.http_status import has_http_status
-from lu_machinery.common.repo_root import machinery_path
 
 from audit.status_cache import get_source_paths, read_status
 from batch.batch_dispatcher_config import (
@@ -69,7 +68,7 @@ from batch_gemini_config import PROJECT_ROOT, VENV_PYTHON, get_module_index, get
 
 log = logging.getLogger("batch_otaman")
 
-BRIDGE_SCRIPT = str(machinery_path("ai_agent_bridge/__main__.py"))
+BRIDGE_SCRIPT = str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py")
 STATE_FILE = PROJECT_ROOT / "batch_state" / "otaman_state.json"
 FOREMAN_TIMEOUT = 45 * 60  # 45 minutes per module (Phases 0-7)
 INTER_DISPATCH_PAUSE = 10  # Seconds between dispatches

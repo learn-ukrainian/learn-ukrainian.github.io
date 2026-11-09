@@ -1494,8 +1494,7 @@ def run_cycle002(
     prompt = prompt_path.read_bytes()
     command = [
         str(ROOT / ".venv/bin/python"),
-        "-m",
-        "lu_machinery.ai_agent_bridge",
+        str(ROOT / "scripts/ai_agent_bridge/__main__.py"),
         "ask-codex",
         "-",
         "--from",

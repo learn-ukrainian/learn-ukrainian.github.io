@@ -74,9 +74,9 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from lu_machinery.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
-from lu_machinery.common.repo_root import machinery_path, project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
-BRIDGE = machinery_path("ai_agent_bridge/__main__.py")
+BRIDGE = PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"
 VENV_PY = project_interpreter(PROJECT_ROOT)
 
 # Per-family subprocess timeout. Calibrated empirically: gemini-judge

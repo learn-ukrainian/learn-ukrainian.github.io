@@ -458,8 +458,7 @@ def command_for(entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Pat
     """Return the fixed subscription bridge command; prompt bytes go on stdin."""
     return [
         str(ROOT / ".venv/bin/python"),
-        "-m",
-        "lu_machinery.ai_agent_bridge",
+        str(ROOT / "scripts/ai_agent_bridge/__main__.py"),
         "ask-agy",
         "-",
         "--task-id",
