@@ -59,12 +59,11 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
-from lu_machinery.common.repo_root import machinery_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = PROJECT_ROOT / "docs" / "references" / "research-registry.yaml"
 SCHEMA_PATH = PROJECT_ROOT / "schemas" / "research_registry.schema.json"
-STREAMS_PATH = machinery_path("config/issue_streams.yaml")
+STREAMS_PATH = PROJECT_ROOT / "scripts" / "config" / "issue_streams.yaml"
 DECISIONS_PATH = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
 # Digest copyright policy (ADR-011 §"Digest content policy"). These are a

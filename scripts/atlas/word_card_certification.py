@@ -19,7 +19,6 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from lu_machinery.common.jsonl import jsonl_lines
-from lu_machinery.common.repo_root import machinery_path
 
 from scripts.atlas import word_card_golden_set as gold
 
@@ -73,7 +72,7 @@ RULE_PATHS = (
     PROJECT_ROOT / "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
     PROJECT_ROOT / "registry/atlas/source-completeness/manifest-contract.md",
     PROJECT_ROOT / "docs/sources/permissions-register.yaml",
-    machinery_path("config/model_catalog.yaml"),
+    PROJECT_ROOT / "scripts/config/model_catalog.yaml",
 )
 
 

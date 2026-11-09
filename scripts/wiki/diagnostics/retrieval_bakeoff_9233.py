@@ -36,7 +36,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
-from lu_machinery.common.repo_root import machinery_path, project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
 
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
@@ -558,7 +558,7 @@ def _scope_command() -> list[str]:
     return [
         "systemd-run", "--user", "--scope", "--quiet", "--slice=lu.slice",
         "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0",
-        "/bin/bash", str(machinery_path("lib/job_memory_scope.sh")), str(MEMORY_BYTES), "--",
+        "/bin/bash", str(ROOT / "scripts/lib/job_memory_scope.sh"), str(MEMORY_BYTES), "--",
     ]
 
 

@@ -80,8 +80,8 @@ _UNKNOWN_TOKENS = (
 
 
 def test_canonical_normalize_family_maps_every_recognized_token() -> None:
-    from lu_machinery.review.record_cf_verdict import incoming_writer_family
-    from lu_machinery.review.reviewer_resolver import resolve_author_family, resolve_family
+    from scripts.review.record_cf_verdict import incoming_writer_family
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
 
     for token, expected in _TOKEN_TO_FAMILY.items():
         assert model_families.normalize_family(token).value == expected, token
@@ -105,8 +105,8 @@ def test_canonical_normalize_family_maps_every_recognized_token() -> None:
 
 
 def test_canonical_normalize_family_unknown_is_first_class() -> None:
-    from lu_machinery.review.record_cf_verdict import BranchFactsError, incoming_writer_family
-    from lu_machinery.review.reviewer_resolver import resolve_author_family, resolve_family
+    from scripts.review.record_cf_verdict import BranchFactsError, incoming_writer_family
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
 
     for token in _UNKNOWN_TOKENS:
         assert model_families.normalize_family(token) is model_families.Family.UNKNOWN, token
@@ -156,7 +156,7 @@ def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:
 
 
 def test_canonical_lineage_ambiguous_concrete_signals_fail_closed() -> None:
-    from lu_machinery.review.reviewer_resolver import resolve_author_family
+    from scripts.review.reviewer_resolver import resolve_author_family
 
     assert (
         model_families.normalize_lineage_family({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"})
@@ -211,8 +211,7 @@ def test_unknown_writer_refuses_on_live_path_with_lineage_error() -> None:
 
 
 def test_self_review_still_blocks_when_families_match() -> None:
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, ReviewerCandidate, evaluate_candidate
-
+    from scripts.review.reviewer_resolver import ResolverInputs, ReviewerCandidate, evaluate_candidate
     from tests.claude_route_accounts import HOST_ACCOUNT
 
     # Behavior preservation: equal families still raise ReviewerSelfReviewError.
@@ -306,7 +305,7 @@ def test_cursor_display_name_normaliser_rejects_everything_else(value: str) -> N
     ],
 )
 def test_cursor_auto_selectors_share_canonical_family(selector):
-    from lu_machinery.review.model_catalog import is_cursor_auto_selector
+    from scripts.review.model_catalog import is_cursor_auto_selector
 
     assert is_cursor_auto_selector(selector)
     assert model_families.normalize_family(selector) is model_families.Family.CURSOR
@@ -338,7 +337,7 @@ def test_explicit_auto_selector_keeps_cursor_despite_runtime_telemetry(field, se
     ],
 )
 def test_agy_decoration_preserves_concrete_family_in_all_shared_consumers(selector, expected):
-    from lu_machinery.review.reviewer_resolver import resolve_author_family, resolve_family
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
 
     assert model_families.normalize_family(selector).value == expected
     assert model_families.normalize_lineage_family({"model": selector}).value == expected
@@ -393,7 +392,7 @@ def test_agy_does_not_change_existing_mixed_concrete_token_precedence(mixed, exp
 
 @pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
 def test_agy_decoration_does_not_override_conflicting_lineage_or_author_family(model, family):
-    from lu_machinery.review.reviewer_resolver import resolve_author_family
+    from scripts.review.reviewer_resolver import resolve_author_family
 
     decorated = f"agy:{model}"
     assert model_families.normalize_lineage_family({"family": "google", "pin": decorated}).value == "unknown"

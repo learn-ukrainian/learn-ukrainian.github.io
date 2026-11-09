@@ -32,13 +32,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from lu_machinery.common import github_client
-from lu_machinery.common.repo_root import machinery_path
 from lu_machinery.opsec.prepublish import PublishBlocked, publication_cli
 from lu_machinery.orchestration import issue_stream_audit
 from lu_machinery.publish.github import Request, request_run
 
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
-STACK_PINS_FILE = machinery_path("config/stack_pins.yaml")
+STACK_PINS_FILE = PROJECT_ROOT / "scripts" / "config" / "stack_pins.yaml"
 
 BUDGET_WARN = 40
 BUDGET_MAX = 50

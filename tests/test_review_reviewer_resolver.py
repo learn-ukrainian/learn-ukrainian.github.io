@@ -13,8 +13,8 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.fleet import credit_lane
-from lu_machinery.review.reviewer_resolver import (
+from scripts.fleet import credit_lane
+from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
@@ -30,13 +30,12 @@ from lu_machinery.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
-from lu_machinery.review.subject_seat import (
+from scripts.review.subject_seat import (
     candidate_matches_subject_seat,
     normalize_subject_family,
     normalize_subject_seat,
     prepare_subject_exclusion,
 )
-
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 # Synthetic same-tier OpenAI candidate for ranking tests, never a fleet route.
@@ -190,7 +189,7 @@ def test_agy_author_alias_keeps_every_same_family_seat_out_of_formal_review(
     import subprocess
     import urllib.request
 
-    from lu_machinery.agent_runtime import model_pause
+    from scripts.agent_runtime import model_pause
 
     provider_calls = []
 
@@ -1066,7 +1065,7 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected is not None
     assert selected.participant == "codex"
     assert selected.adapter_transport == "acp"
-    assert selected.sealed_executable == "lu_machinery.agent_runtime.runner:invoke_inter_agent"
+    assert selected.sealed_executable == "agent_runtime.runner:invoke_inter_agent"
     assert selected.quota_bucket == "codex:a"
     assert selected.credential_bucket == "codex:a"
     assert selected.quota_limit == selected.credential_limit == 1
@@ -1158,9 +1157,9 @@ def test_astra_authors_never_receive_openai_cross_family_review():
 def test_sealed_executable_catalog_and_resolver_parity():
     import dataclasses
 
-    from lu_machinery.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
+    from scripts.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
 
-    assert _SEALED_REVIEW_EXECUTABLE == "lu_machinery.agent_runtime.runner:invoke_inter_agent"
+    assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
@@ -1601,7 +1600,7 @@ def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
 
 @pytest.mark.repo_wide
 def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
-    from lu_machinery.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
+    from scripts.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
 
     repo = Path(__file__).resolve().parent.parent
     expected = {
@@ -2136,7 +2135,7 @@ def test_review_ranks_by_load_regardless_of_credit_balance(practical_astra):
 
 def _shared_rate_limit(monkeypatch, tmp_path, *, at: datetime) -> None:
     """One codex ``rate_limited`` record at ``at`` in a simulated shared runtime log, read by the real reader."""
-    from lu_machinery.agent_runtime import usage
+    from scripts.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
@@ -2174,7 +2173,7 @@ def test_unreadable_credit_evidence_does_not_exclude_review(monkeypatch):
 
 
 def _complete(families, *, risk="medium", author_model="", author_family=None, paths=("docs/a.md",)):
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     return resolve_reviewer(
         ResolverInputs(
@@ -2189,7 +2188,7 @@ def _complete(families, *, risk="medium", author_model="", author_family=None, p
 
 
 def test_complete_author_set_excludes_every_member_not_only_the_latest():
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     latest_only = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
@@ -2225,7 +2224,7 @@ def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
     [({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
 )
 def test_complete_set_with_an_unresolved_member_fails_closed(families, author_model):
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, evaluate_candidate
+    from scripts.review.reviewer_resolver import ResolverInputs, evaluate_candidate
 
     resolution = _complete(families, author_model=author_model)
     assert resolution.selected is None and "holds an unresolved family" in resolution.fail_closed_reason
@@ -2281,7 +2280,7 @@ def test_unknown_reviewer_family_is_always_refused(authors):
 
 
 def test_empty_complete_set_keeps_single_author_selection_identical():
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     single = ResolverInputs(author_model="claude-opus-5-5", risk="high", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
     assert resolve_reviewer(single) == resolve_reviewer(replace(single, author_families=frozenset()))

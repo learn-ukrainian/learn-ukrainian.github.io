@@ -3,8 +3,9 @@
 from dataclasses import replace
 
 import pytest
-from lu_machinery.review.family_exclusions import family_exclusion
-from lu_machinery.review.reviewer_resolver import (
+
+from scripts.review.family_exclusions import family_exclusion
+from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
     evaluate_candidate,
@@ -13,7 +14,6 @@ from lu_machinery.review.reviewer_resolver import (
     resolve_reviewer,
     review_task_id_comparison_keys,
 )
-
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
@@ -24,7 +24,7 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     import io
     import json
 
-    from lu_machinery.agent_runtime import model_pause
+    from scripts.agent_runtime import model_pause
 
     monkeypatch.setattr(
         model_pause,
@@ -495,10 +495,10 @@ def test_astra_exception_role_or_expiry_escape(monkeypatch, tmp_path, stage, cas
     """The operator exception never admits Astra outside its seat or at/after expiry."""
     from datetime import UTC, datetime, timedelta
 
-    from lu_machinery.dispatcher import checks
-    from lu_machinery.dispatcher.providers import codex
-    from lu_machinery.dispatcher.types import TaskSpec
-    from lu_machinery.review import model_catalog, record_cf_verdict
+    from scripts.dispatcher import checks
+    from scripts.dispatcher.providers import codex
+    from scripts.dispatcher.types import TaskSpec
+    from scripts.review import model_catalog, record_cf_verdict
 
     expiry = datetime(2026, 11, 4, tzinfo=UTC)
     clock = expiry if case == "at_expiry" else expiry + timedelta(seconds=1) if case == "after_expiry" else expiry - timedelta(microseconds=1)
