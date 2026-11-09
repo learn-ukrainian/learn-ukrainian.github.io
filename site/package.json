@@ -51,7 +51,7 @@
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.35.5",
-    "ts-fsrs": "^5.4.2",
+    "ts-fsrs": "^6.0.0",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
