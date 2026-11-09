@@ -39,7 +39,12 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, TaskIdentityMismatch, read_task_record
+from scripts.orchestration.task_record_store import (
+    ARCHIVE_DIR_NAME,
+    TaskIdentityMismatch,
+    candidate_task_record_names,
+    read_task_record,
+)
 from scripts.review import capability_failure
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.capability_failure import run_started as _started
@@ -181,7 +186,12 @@ def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict
             raise LineageRefused(f"task record {path.name} unreadable: {exc}") from None
         if not isinstance(record, dict):
             continue
-        named.add((record.get("task_id"), record.get("run_nonce")))
+        task_id, nonce = record.get("task_id"), record.get("run_nonce")
+        # Only a record whose file name is its task_id's can vouch for a copy.
+        if isinstance(task_id, str) and isinstance(nonce, str) and nonce and candidate_task_record_names(
+            task_id, (path.name,)
+        ):
+            named.add((task_id, nonce))
         if record.get("status") in {"dry_run", "dry-run"} or not _is_review_task(record):
             continue
         if not isinstance(record.get("repository"), str) or normalize_repository(

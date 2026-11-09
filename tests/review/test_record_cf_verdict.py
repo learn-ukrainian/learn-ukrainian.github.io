@@ -78,6 +78,11 @@ def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
     (tasks / "review-one.json").rename(tasks / "review-one.saved.json")
     with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity and no correctly named record"):
         review_records(tasks, repository="owner/repo")
+    # A legacy or schema-1 record under another name never vouches for the copy (round-1 F1).
+    for anchor in ({}, {"schema_version": 1}):
+        (tasks / "unrelated.json").write_text(json.dumps({**anchor, "task_id": "review-one", "run_nonce": "nonce-1"}))
+        with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity"):
+            review_records(tasks, repository="owner/repo")
 
 
 def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_path):
@@ -90,6 +95,9 @@ def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_pat
     worker = json.dumps({"schema_version": 2, "task_id": "worker", "run_nonce": "nonce-3", "status": "done"})
     (tasks / "worker.json").write_text(worker)
     (tasks / "worker.status.json").write_text(worker)
+    # A list or object nonce in any record is never hashed into a crash (round-1 F2).
+    (tasks / "listed.json").write_text(json.dumps({"schema_version": 2, "task_id": "listed", "run_nonce": []}))
+    write_task(tasks, task_id="mapped", schema_version=2, pr=8, run_nonce={}, repository="owner/other")
     write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
     assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
 
