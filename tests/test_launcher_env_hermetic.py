@@ -252,6 +252,5 @@ def test_tracked_wrapper_coverage_cannot_silently_shrink() -> None:
     assert {node.split("::")[0] for node in POLLUTED_PARENT_TESTS} | {
         "tests/test_launcher_env_hermetic.py"
     } == set(LAUNCHER_TEST_FILES)
-    retired = {"start-kimi.sh", "start-kimicc.sh"}
     public_only = {"start-muse-driver.sh"}
-    assert set(tracked_launcher_wrappers()) == set(DRIVERS) | set(INTERACTIVE) | retired | public_only
+    assert set(tracked_launcher_wrappers()) == set(DRIVERS) | set(INTERACTIVE) | public_only
