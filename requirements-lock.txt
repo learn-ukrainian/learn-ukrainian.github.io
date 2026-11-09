@@ -87,7 +87,7 @@ iniconfig==2.3.0
 inscriptis==2.7.3
 ipa-uk @ git+https://github.com/lang-uk/ipa-uk.git@e7fc944faca090ca985d5ca09a24c59154d9dea1
 ipdb==0.13.13
-ipython==9.17.1
+ipython==9.18.1
 ipython-pygments-lexers==1.1.1
 ir_datasets==0.6.3
 itsdangerous==2.2.0
