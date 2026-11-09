@@ -32,7 +32,6 @@ HANDLING = {
     "scripts/review/review_lineage.py": "accept-as-approval",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
-    "scripts/ci/pr20_measurement.py": "ignore",
 }
 
 
