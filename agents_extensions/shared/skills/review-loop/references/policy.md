@@ -124,9 +124,11 @@ Use the primary recorder so the caller's branch age cannot select its rules.
   any other capability by the reply's `missing_capabilities` list beside its findings. `ci-logs`
   means the reviewer could not read the CI or execution logs its review needed. A prose
   reply, any finding (P3 included), a severity or a non-PASS security verdict in any decoded
-  string, or "no in-scope blocker" does not qualify. Do not record that BLOCKED as a verdict: a BLOCKED recorded at a head can only be
-  cleared by an APPROVE at a new head. Treat the run as a failed review execution and rerun it once at
-  the same head (no new round), with the missing evidence inline in the brief.
+  string, or "no in-scope blocker" does not qualify. A reply with findings, a severity or a non-PASS security verdict stays an ordinary
+  rejection. When the reply is a capability-only BLOCKED that does not qualify, do not record it as a
+  verdict: a BLOCKED recorded at a head can only be cleared by an APPROVE at a new head. Treat the run
+  as a failed review execution and rerun it once at the same head (no new round), with the missing
+  evidence inline in the brief.
 - The event is bound to the run, its reviewed head and its reply digest; the reply stays as it is.
   It is not a verdict: it approves nothing, rejects nothing and fills no seat, so every required
   review still has to happen. Only the lineage's first capability failure opens no round
