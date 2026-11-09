@@ -22,6 +22,9 @@ never fine.
    Read each pool's CodexBar pace line: used minus expected and whether it will last to reset.
    Restrict routing for scarcity only when projected exhaustion precedes reset
    ([OO-99 pacing](decisions.md#tactical-layer-per-cycle)). Unknown pace is not scarcity.
+   A pool that will have allowance left at its reset (the pace line shows reserve and
+   projected unused allowance) gets ready work dispatched on it in that cycle, per the standing
+   order to pace every pool to its reset; reserve is unused capacity, not safety margin.
    Read Opus task-hours per lane over the last 12 hours from task records. Flag a lane
    when the Claude pool's pace line shows it running out before reset, or for unauthorized
    use. Apply the same scarcity rule before changing routing.

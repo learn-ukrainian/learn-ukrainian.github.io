@@ -4,6 +4,10 @@ Keep working until the keeper's handoff prompt; reply `HANDOFF-DONE` with its ex
 Claude uses that handoff; Codex compacts natively. Never stop early for a context percentage
 or ask the operator to restart. Watchers, waits and wake timers die with the session;
 the next one re-arms them from the tracker handoff.
+When the seat restarts itself rather than through the keeper, start the restart outside the
+seat's own process scope as the private operations doc describes: the launcher stops the seat's
+whole scope when its agent exits, so a child of the session dies with it. The restart counts
+only when its log shows the successor live.
 
 1. Run a last [cycle](cycle.md) so every number is current.
 2. Timestamp with `date -u +%Y-%m-%dT%H:%MZ`; never type a time.

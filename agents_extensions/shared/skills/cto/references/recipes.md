@@ -100,6 +100,8 @@ Run Claude-account dispatches from the seat as `env -u CLAUDE_CONFIG_DIR .venv/b
 scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
 `CLAUDE_CONFIG_DIR` into the seat's shells, and the dispatcher refuses an explicit account
 while that ambient value is set (`claude_account_ambient_conflict`).
+CTO dispatches omit `--claude-account` unless a current order names an exception: the saved
+dispatch default account carries the active account order, and an explicit account overrides it.
 Dispatch every takeover successor with `--branch <the PR's head branch>` together with
 `--base origin/main`, never the PR branch as base; the `takeover` skill checks out the PR branch.
 A successor dispatched without `--branch` is refused by `scripts.orchestration.pr_ownership accept`
