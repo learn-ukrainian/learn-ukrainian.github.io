@@ -6,9 +6,9 @@ import shutil
 from contextlib import closing
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.lexdata import verify
+from scripts.lib.readonly_sqlite import open_readonly
 from tests.lexdata._support import FixtureStage, fixture_binding, mutate_sqlite
 
 pytestmark = pytest.mark.usefixtures("local_fs")

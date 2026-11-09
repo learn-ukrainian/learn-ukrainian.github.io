@@ -13,11 +13,11 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime.env_sanitize import (
+
+from agent_runtime.env_sanitize import (
     unneeded_env_var_names,
     without_unneeded_secrets,
 )
-
 from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
@@ -26,7 +26,7 @@ SYNTHETIC_KEY = "synthetic-cursor-key-0123456789"
 
 
 def test_github_identity_token_is_omitted_from_repr() -> None:
-    from lu_machinery.agent_runtime.agent_github_identity import GitHubIdentity
+    from agent_runtime.agent_github_identity import GitHubIdentity
 
     identity = GitHubIdentity(token=SYNTHETIC_KEY, source="test")
     rendered = repr(identity)
@@ -895,8 +895,8 @@ def test_round3_real_launcher_dispatcher_child_parity(
     import json
     from unittest.mock import patch
 
-    import lu_machinery.agent_runtime.agent_github_identity as identity
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    import agent_runtime.agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
 
     names = {
         "ANTHROPIC_API_KEY",
@@ -949,7 +949,7 @@ def test_round3_real_launcher_dispatcher_child_parity(
     bootstrap.write_text(
         "import runpy, sys\n"
         + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
-        + "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
         + f"identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity({SYNTHETIC_KEY!r}, 'test')\n"
         + "sys.argv = sys.argv[1:]\nrunpy.run_path(sys.argv[0], run_name='__main__')\n"
     )
@@ -1070,7 +1070,7 @@ def test_round3_launcher_resolves_synthetic_github_identity(tmp_path: Path, prov
     import json
     from unittest.mock import patch
 
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    from agent_runtime.env_sanitize import build_agent_env
 
     parent = {"PATH": os.defpath, "HOME": str(tmp_path), source: SYNTHETIC_KEY}
     with patch.dict(os.environ, parent, clear=True):
@@ -1096,7 +1096,7 @@ def test_round3_launcher_preserves_metadata_without_forwarding_worker_lease(tmp_
     import json
     from unittest.mock import patch
 
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    from agent_runtime.env_sanitize import build_agent_env
 
     metadata = {
         "SESSION_STREAM_FENCING_TOKEN": counter,
@@ -1291,9 +1291,9 @@ def test_round4_driver_app_identity_and_worker_key_boundary(tmp_path: Path, key_
         tmp_path,
         "import json, os, sys\n"
         + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
-        + "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
         "identity.mint_installation_token = lambda **kwargs: 'synthetic-minted-token'\n"
-        "from lu_machinery.agent_runtime.env_sanitize import build_agent_env\n"
+        "from agent_runtime.env_sanitize import build_agent_env\n"
         "assert all(name not in os.environ for name in ('OPENAI_API_KEY', 'OTHER_PASSWORD', 'OTHER_AUTH_TOKEN', 'HF_TOKEN'))\n"
         + (
             "assert identity.resolve_agent_github_identity().source == 'app'\n"
@@ -1310,7 +1310,7 @@ def test_round4_driver_app_identity_and_worker_key_boundary(tmp_path: Path, key_
         mode=mode,
         environment=parent,
         bootstrap_code=(
-            "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+            "import agent_runtime.agent_github_identity as identity\n"
             "identity.mint_installation_token = lambda **kwargs: 'synthetic-minted-token'\n"
         ),
     )
@@ -1447,9 +1447,9 @@ def test_round4_real_launcher_kept_dropped_table(
         tmp_path,
         "import json, os, sys\n"
         + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
-        + "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
         "identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity('synthetic-resolved-token', 'test')\n"
-        "from lu_machinery.agent_runtime.env_sanitize import build_agent_env\n"
+        "from agent_runtime.env_sanitize import build_agent_env\n"
         + f"names = {sorted(names)!r}\n"
         + (
             f"child = build_agent_env(provider={provider!r}, harness={harness!r})\n"
@@ -1462,7 +1462,7 @@ def test_round4_real_launcher_kept_dropped_table(
         mode=mode,
         environment=parent,
         bootstrap_code=(
-            "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+            "import agent_runtime.agent_github_identity as identity\n"
             "identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity('synthetic-resolved-token', 'test')\n"
         ),
     )
@@ -1508,7 +1508,7 @@ def test_round5_driver_github_passthrough(tmp_path: Path, provider: str, has_tok
         provider=provider,
         environment=parent,
         bootstrap_code=(
-            "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+            "import agent_runtime.agent_github_identity as identity\n"
             "def forbidden(**kwargs):\n    raise AssertionError('driver attempted identity resolution or mint')\n"
             "identity.resolve_agent_github_identity = forbidden\nidentity.mint_installation_token = forbidden\n"
         ),
@@ -1529,7 +1529,7 @@ def test_round5_launcher_preserves_process_paths(tmp_path: Path, name: str, mode
         setup=f"cd {shlex.quote(value)}\n" if name == "PWD" else f"export {name}={shlex.quote(value)}\n",
         mode=mode,
         bootstrap_code=(
-            "import lu_machinery.agent_runtime.agent_github_identity as identity\n"
+            "import agent_runtime.agent_github_identity as identity\n"
             "identity.resolve_agent_github_identity = lambda **kwargs: None\n"
         ),
     )
@@ -1539,8 +1539,8 @@ def test_round5_launcher_preserves_process_paths(tmp_path: Path, name: str, mode
 
 @pytest.mark.parametrize("name", ["PATH", "HOME"])
 def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
-    from lu_machinery.agent_runtime import agent_github_identity as identity
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
     # A classic GitHub PAT body is 36 characters; the short ``ghp_path``
@@ -1554,8 +1554,8 @@ def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPat
 @pytest.mark.parametrize("value", ["synthetic/plain", "synthetic/task-ghp_" + "FAKE" * 9])
 def test_round5_dispatcher_excludes_pwd_independently_of_value(monkeypatch: pytest.MonkeyPatch, value: str) -> None:
     """PWD exclusion is dispatch context policy, not evidence of credential detection."""
-    from lu_machinery.agent_runtime import agent_github_identity as identity
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env, child_credential_env
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env, child_credential_env
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
     assert child_credential_env({"PWD": value}, provider="claude")["PWD"] == value
@@ -1565,8 +1565,8 @@ def test_round5_dispatcher_excludes_pwd_independently_of_value(monkeypatch: pyte
 @pytest.mark.parametrize("name", ["PATH", "HOME"])
 def test_round5_dispatcher_keeps_short_key_prefix_in_path_value(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
     """#11326: a run-directory name embedding a key prefix is not a credential."""
-    from lu_machinery.agent_runtime import agent_github_identity as identity
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
     value = "synthetic/task-ghp_path"

@@ -371,8 +371,9 @@ def produce_author_record(root, pg, monkeypatch, wheel):
     from learn_ukrainian_v4_runtime import v4_trust_authority as trust
     from learn_ukrainian_v4_runtime.operation_auth import canonical_bytes
     from learn_ukrainian_v4_runtime.operation_store import OperationStore
-    from lu_machinery.fleet_comms.request_executor import RequestExecutor
     from test_v4_operation_lifecycle import principal, role_connection
+
+    from scripts.fleet_comms.request_executor import RequestExecutor
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")

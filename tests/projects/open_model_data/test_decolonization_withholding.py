@@ -7,8 +7,8 @@ import json
 import sqlite3
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import build_decolonization_cases as builder
 from scripts.projects.open_model_data import sum20_codification_records as records
 from tests.projects.open_model_data.test_sum20_codification_records import (

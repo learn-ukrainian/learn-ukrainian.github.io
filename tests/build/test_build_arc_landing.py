@@ -209,9 +209,7 @@ def test_reviewed_state_fails_on_a_stale_approve_when_a_findings_database_is_pre
 ) -> None:
     """The reviewer's scenario (#8774 r5/r6): a saved APPROVE a later database write has superseded."""
     _stub_fresh_plan_status(monkeypatch, root)
-    from lu_machinery.review import findings_db
-
-    from scripts.review import fixloop
+    from scripts.review import findings_db, fixloop
 
     _plan(root, "reviewed", 1)
     _review(root, "reviewed", "plan-review.yaml")

@@ -154,7 +154,7 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
         ("git push origin --delete grok/y", None),
         ("gh pr merge 9030 --squash", "allow"),
         ("gh workflow run ci.yml --ref claude/x", "allow"),
-        (".venv/bin/python -m lu_machinery.fleet.capacity_pick --json", "allow"),
+        (".venv/bin/python -m scripts.fleet.capacity_pick --json", "allow"),
         ("npm run agents:deploy", "allow"),
         ("sudo systemctl restart caddy", "allow"),
         ("sudo caddy reload --config /etc/caddy/Caddyfile", "allow"),

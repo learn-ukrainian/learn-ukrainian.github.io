@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from lu_machinery.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
+from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
 
 
 def test_parse_json_events_accepts_pretty_printed_json_object() -> None:

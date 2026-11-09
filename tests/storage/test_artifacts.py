@@ -18,7 +18,8 @@ import tarfile
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import artifacts, paths
+
+from scripts.storage import artifacts, paths
 
 
 def git(repo: Path, *args: str) -> str:
@@ -547,7 +548,7 @@ def test_failed_recovery_names_journal_and_remediation_for_every_command(
         err = capsys.readouterr().err
         assert f"publish recovery failed for journal {journal}" in err
         assert "remediation: every" in err
-        assert "lu_machinery.storage.artifacts status" in err and "verify --group <group>" in err
+        assert "scripts.storage.artifacts status" in err and "verify --group <group>" in err
         assert f"mv {journal} {journal}.resolved" in err
         assert "sha256sum" in err and "cat " in err
     with pytest.raises(artifacts.RecoveryError, match="remediation"):
@@ -581,10 +582,10 @@ def test_recovery_remediation_first_command_does_not_trip_recovery(repo: Path) -
         artifacts.recover_incomplete(repo)
     message = str(excinfo.value)
     first = re.search(r"1\. .*?`([^`]+)`", message).group(1)
-    assert "lu_machinery.storage.artifacts" not in first
+    assert "scripts.storage.artifacts" not in first
     result = subprocess.run(shlex.split(first), capture_output=True, text=True, check=False, timeout=30)
     assert result.returncode == 0 and result.stdout == "{not json"
-    assert message.index(first) < message.index("lu_machinery.storage.artifacts status")
+    assert message.index(first) < message.index("scripts.storage.artifacts status")
     assert message.index("mv ") < message.index("verify --group <group>")
     journal.rename(journal.with_name(journal.name + ".resolved"))
     assert artifacts.recover_incomplete(repo) == 0

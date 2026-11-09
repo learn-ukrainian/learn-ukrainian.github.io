@@ -94,9 +94,8 @@ def test_extract_book_headword_inventory_run_timeout() -> None:
 
 
 def test_publish_manifest_gh_subprocess_timeouts(tmp_path, synthetic_opsec, publisher_transport, monkeypatch) -> None:
-    from lu_machinery.opsec import prepublish
-
     from scripts.lexicon import publish_manifest as pm
+    from scripts.opsec import prepublish
 
     monkeypatch.setattr(prepublish, "catalog", lambda: {"public": {"github": "unit/public"}})
     asset = tmp_path / "lexicon-manifest.json.gz"

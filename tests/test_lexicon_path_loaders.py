@@ -33,7 +33,7 @@ _OTHER_MODULE = "missing_reader_dependency"
 
 
 class _ReaderInitLoader(importlib.abc.Loader):
-    """Fail while ``lu_machinery.lib.readonly_sqlite`` itself is initializing."""
+    """Fail while ``scripts.lib.readonly_sqlite`` itself is initializing."""
 
     def __init__(self, kind: str) -> None:
         self.kind = kind
@@ -67,7 +67,7 @@ class _ReaderInitFinder(importlib.abc.MetaPathFinder):
             spec = importlib.machinery.ModuleSpec(fullname, None, is_package=True)
             spec.submodule_search_locations = []
             return spec
-        if fullname == "lu_machinery.lib.readonly_sqlite":
+        if fullname == "scripts.lib.readonly_sqlite":
             return importlib.machinery.ModuleSpec(fullname, _ReaderInitLoader(self.kind))
         return None
 
@@ -146,13 +146,13 @@ def _load_on_clean_path(repo: str, *relative_paths: str) -> None:
         spec.loader.exec_module(module)
         if relative.endswith("heritage_classifier.py"):
             opener = module._open_readonly
-            if opener.__module__ != "lu_machinery.lib.readonly_sqlite":
+            if opener.__module__ != "lib.readonly_sqlite":
                 raise SystemExit(f"{relative} imported {opener.__module__}, expected lib.readonly_sqlite")
             if not callable(module.resolve_usage_label) or not callable(module.usage_source_records):
                 raise SystemExit(f"{relative} did not finish initializing")
         if (
             relative.endswith("generate_search_index.py")
-            and module._HERITAGE_CLASSIFIER._open_readonly.__module__ != "lu_machinery.lib.readonly_sqlite"
+            and module._HERITAGE_CLASSIFIER._open_readonly.__module__ != "lib.readonly_sqlite"
         ):
             raise SystemExit("search-index loader did not path-load heritage_classifier")
     print("ok")
@@ -194,10 +194,10 @@ def _assert_opened_path(mode: str, repo: str, database: str) -> None:
         from scripts.lexicon.heritage_classifier import _open_readonly
 
         opener = _open_readonly
-        expected_module = "lu_machinery.lib.readonly_sqlite"
+        expected_module = "scripts.lib.readonly_sqlite"
     elif mode == "file":
         opener = _load_heritage_file(root)._open_readonly
-        expected_module = "lu_machinery.lib.readonly_sqlite"
+        expected_module = "lib.readonly_sqlite"
     else:
         raise SystemExit(f"unknown mode {mode}")
     if opener.__module__ != expected_module:
@@ -217,7 +217,7 @@ def test_package_import_uses_scripts_package_reader(tmp_path: Path) -> None:
 
     database = tmp_path / "reader.db"
     _make_database(database)
-    assert _open_readonly.__module__ == "lu_machinery.lib.readonly_sqlite"
+    assert _open_readonly.__module__ == "scripts.lib.readonly_sqlite"
     assert callable(resolve_usage_label)
     assert callable(usage_source_records)
     assert _opened_database(_open_readonly, database) == database.resolve()

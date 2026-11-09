@@ -18,10 +18,10 @@ from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
-from lu_machinery.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 
 from scripts.projects.open_model_data import v4_source_custody_access as custody
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 from tests._host_path_guard import (
     FIXTURE_HOME,
     FIXTURE_USER,

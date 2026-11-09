@@ -1134,7 +1134,7 @@ def test_unproven_node_modules_overlays_are_refused(repo: Path, lock_state: str,
 def test_dependency_input_predicate_matches_reaper(
     repo: Path, monkeypatch: pytest.MonkeyPatch, relative: str, state: str, expected: bool
 ) -> None:
-    from lu_machinery.fleet.regenerable_output import is_regenerable_ignored_path
+    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
 
     parts = Path(relative).parts
     parent = Path(*parts[:parts.index("node_modules")]) if "node_modules" in parts else Path("site")

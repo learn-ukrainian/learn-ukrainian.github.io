@@ -10,7 +10,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
-from lu_machinery.ci import frontend_change_scope as scope
+
+from scripts.ci import frontend_change_scope as scope
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -304,7 +305,7 @@ def _declared_selector_graph(manifest: dict) -> dict:
 
 def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
     """Shared/all-node obligations must not replace today's cheap-exit policy."""
-    from lu_machinery.ci import components
+    from scripts.ci import components
 
     manifest = components.load_manifest()
     owned = components.affected(["scripts/config.py"], manifest, _declared_selector_graph(manifest))

@@ -10,8 +10,9 @@ from pathlib import Path
 
 import psycopg
 import pytest
-from lu_machinery.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
-from lu_machinery.fleet_comms.pg_schema import (
+
+from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+from scripts.fleet_comms.pg_schema import (
     MIGRATIONS,
     PG_BLOB_TABLE,
     PG_MIGRATION_TABLE,
@@ -31,8 +32,8 @@ def pg_conn(monkeypatch: pytest.MonkeyPatch):
     if not (os.environ.get(_PG_DSN_ENV) or "").strip():
         pytest.skip(f"{_PG_DSN_ENV} unset/empty — Postgres tests skipped")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    from lu_machinery.control_plane.storage import StoreId
-    from lu_machinery.control_plane.storage import connect as cp_connect
+    from scripts.control_plane.storage import StoreId
+    from scripts.control_plane.storage import connect as cp_connect
 
     conn = cp_connect(StoreId.FLEET_COMMS)
     conn.autocommit = True
@@ -123,7 +124,7 @@ def test_open_readonly_pg_verifies_without_applying_and_refuses_drift(
 ) -> None:
     """Readonly pg open is the drift gate; it must never apply/mutate DDL."""
     apply_pg_schema(pg_conn)
-    import lu_machinery.fleet_comms.artifacts as artifacts_mod
+    import scripts.fleet_comms.artifacts as artifacts_mod
 
     apply_calls: list[object] = []
     verify_calls: list[object] = []
@@ -171,8 +172,9 @@ def test_open_readonly_pg_maps_missing_schema_not_undefined_table(
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
 
     import learn_ukrainian_v4_runtime.pg_schema as pg_schema_mod
-    import lu_machinery.fleet_comms.artifacts as artifacts_mod
     import psycopg.errors
+
+    import scripts.fleet_comms.artifacts as artifacts_mod
 
     def forbid_apply(_conn):
         raise AssertionError("readonly pg open must not apply_pg_schema")

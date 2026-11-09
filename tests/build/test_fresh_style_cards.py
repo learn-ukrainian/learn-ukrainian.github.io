@@ -8,7 +8,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.lib.readonly_sqlite import open_readonly
+
+from scripts.lib.readonly_sqlite import open_readonly
 
 REPO = Path(__file__).resolve().parents[2]
 CARDS = REPO / "docs" / "style-cards"

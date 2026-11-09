@@ -7,7 +7,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.git_context import sanitized_git_env
+
+from scripts.common.git_context import sanitized_git_env
 
 
 def sanitize_git_env_for_test(monkeypatch: pytest.MonkeyPatch) -> None:

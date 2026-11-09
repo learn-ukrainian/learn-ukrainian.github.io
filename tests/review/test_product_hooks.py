@@ -3,7 +3,8 @@
 import json
 
 import pytest
-from lu_machinery.review.product_hooks import HOOKS_REL, SCHEMA, ProductHooksError, _module_name
+
+from scripts.review.product_hooks import HOOKS_REL, SCHEMA, ProductHooksError, _module_name
 
 
 def test_schema_version_rejects_boolean_and_float_lookalikes(tmp_path):
@@ -37,8 +38,8 @@ def product_checkout_root(tmp_path, monkeypatch):
     import importlib.util
     import sys
 
-    from lu_machinery.common import repo_root
-    from lu_machinery.review import product_hooks  # noqa: F401 - machinery, imported before the swap
+    from scripts.common import repo_root
+    from scripts.review import product_hooks  # noqa: F401 - machinery, imported before the swap
 
     for relative in ("__init__.py", "audit/__init__.py", "ops/__init__.py", "ops/product_entry.py"):
         (tmp_path / "scripts" / relative).parent.mkdir(parents=True, exist_ok=True)
@@ -51,7 +52,7 @@ def product_checkout_root(tmp_path, monkeypatch):
     )
     package = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(package)
-    for name in ("scripts.audit", "scripts.ops", "lu_machinery.ops.product_entry"):
+    for name in ("scripts.audit", "scripts.ops", "scripts.ops.product_entry"):
         monkeypatch.delitem(sys.modules, name, raising=False)
     monkeypatch.setitem(sys.modules, "scripts", package)
     before = set(sys.modules)
@@ -97,7 +98,7 @@ def test_hooks_json_refusals_keep_error_codes(tmp_path, raw, code):
 def test_hooks_file_refusals_keep_error_codes(tmp_path, monkeypatch, kind):
     from pathlib import Path
 
-    from lu_machinery.review import product_hooks as hooks
+    from scripts.review import product_hooks as hooks
 
     path = tmp_path / "hooks.json"
     expected = "hooks_not_json"
@@ -143,9 +144,9 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
     import sys
     from types import ModuleType
 
-    from lu_machinery.common.repo_root import product_root
-    from lu_machinery.ops.product_entry import ConfiguredModuleError
-    from lu_machinery.review import product_hooks as hooks
+    from scripts.common.repo_root import product_root
+    from scripts.ops.product_entry import ConfiguredModuleError
+    from scripts.review import product_hooks as hooks
 
     pinned = hooks.attempt_hooks()
     name = _module_name(product_root() / hooks.HOOKS_REL)
@@ -162,13 +163,13 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
     [
         ("scripts.audit.loader_slice_missing", "hooks_module_missing", None),
         ("scripts.loader_slice_missing.child", None, "scripts.loader_slice_missing"),
-        ("lu_machinery.ops.product_entry.child", None, "lu_machinery.ops.product_entry.child"),
+        ("scripts.ops.product_entry.child", None, "scripts.ops.product_entry.child"),
     ],
 )
 def test_hooks_missing_target_keeps_leaf_error_and_parent_error(
     product_checkout_root, tmp_path, monkeypatch, name, expected, missing
 ):
-    from lu_machinery.review import product_hooks as hooks
+    from scripts.review import product_hooks as hooks
 
     path = tmp_path / HOOKS_REL
     path.parent.mkdir(parents=True)
@@ -186,7 +187,7 @@ def test_hooks_missing_target_keeps_leaf_error_and_parent_error(
 def test_hooks_existing_module_dependency_error_is_not_translated(product_checkout_root, tmp_path, monkeypatch):
     import sys
 
-    from lu_machinery.review import product_hooks as hooks
+    from scripts.review import product_hooks as hooks
 
     name = "scripts.audit.loader_slice_dependency"
     (tmp_path / "scripts" / "audit" / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
@@ -203,8 +204,8 @@ def test_configured_callers_are_counted_once_and_implementation_separately():
     """The dependency scan must expose both callers without double counting R's old wrapper."""
     from pathlib import Path
 
-    from lu_machinery.ci.components import scan_imports
-    from lu_machinery.lint.boundary_ratchet import CONFIG_PATH, _configured_line, _dynamic_count, load_config
+    from scripts.ci.components import scan_imports
+    from scripts.lint.boundary_ratchet import CONFIG_PATH, _configured_line, _dynamic_count, load_config
 
     root = Path(__file__).resolve().parents[2]
     paths = ["scripts/research/registry.py", "scripts/review/product_hooks.py", "scripts/ops/product_entry.py"]

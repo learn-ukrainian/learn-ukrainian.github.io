@@ -8,8 +8,8 @@ from pathlib import Path
 import jsonschema
 import numpy as np
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     CANARY_RECEIPT_SCHEMA_PATH,
     DEFAULT_ADAPTER_OUTPUT,

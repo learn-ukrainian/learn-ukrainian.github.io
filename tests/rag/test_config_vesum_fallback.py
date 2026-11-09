@@ -5,9 +5,9 @@ import importlib
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import topology
 
 from scripts.rag import config
+from scripts.storage import topology
 
 
 @pytest.fixture(autouse=True)

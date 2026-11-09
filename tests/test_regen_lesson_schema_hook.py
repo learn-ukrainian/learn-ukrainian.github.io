@@ -11,9 +11,9 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 import yaml
-from lu_machinery.pre_commit import product_entry, regen_lesson_schema
 
 from scripts.build import generate_lesson_schema
+from scripts.pre_commit import product_entry, regen_lesson_schema
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -66,9 +66,9 @@ def test_pre_commit_loader_keeps_document_refusals(entry_file, field, value):
 
 
 @pytest.mark.parametrize("entry", [
-    {}, [], {"entry_point": "lu_machinery.api:main", "argv": "bad"},
-    {"entry_point": "lu_machinery.api:main", "argv": [1]},
-    {"entry_point": "lu_machinery.api:main", "argv": [], "extra": 1},
+    {}, [], {"entry_point": "scripts.api:main", "argv": "bad"},
+    {"entry_point": "scripts.api:main", "argv": [1]},
+    {"entry_point": "scripts.api:main", "argv": [], "extra": 1},
 ])
 def test_pre_commit_loader_refuses_malformed_siblings(entry_file, entry):
     document = json.loads(entry_file.read_text())

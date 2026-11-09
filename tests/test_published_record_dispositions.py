@@ -9,12 +9,12 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.review.record_cf_verdict import build_comment
-from lu_machinery.review.review_contract import AgentIdentity, FindingValidation, VerifyContext, build_receipt
-from lu_machinery.review.target_resolution import ReviewTarget
 
 from scripts.lexicon import manifest_io
 from scripts.lexicon import published_record_dispositions as dispositions
+from scripts.review.record_cf_verdict import build_comment
+from scripts.review.review_contract import AgentIdentity, FindingValidation, VerifyContext, build_receipt
+from scripts.review.target_resolution import ReviewTarget
 
 ROOT = Path(__file__).resolve().parents[1]
 

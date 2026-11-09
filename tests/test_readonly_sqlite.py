@@ -14,14 +14,14 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from lu_machinery.api.resilience import connect_sqlite
-from lu_machinery.lib.readonly_sqlite import (
+
+from scripts.api.resilience import connect_sqlite
+from scripts.lib.readonly_sqlite import (
     CorpusDatabaseWriteRefused,
     SerializedConnection,
     SerializedCursor,
     open_readonly,
 )
-
 from scripts.wiki import sources_db
 
 
@@ -100,7 +100,7 @@ def test_sources_db_writer_may_open_through_connect_sqlite(tmp_path):
     database = tmp_path / "sources.db"
     source = (
         "def _review_probe(path):\n"
-        "    from lu_machinery.api.resilience import connect_sqlite\n"
+        "    from scripts.api.resilience import connect_sqlite\n"
         "    return connect_sqlite(str(path))\n"
     )
     exec(compile(source, sources_db.__file__, "exec"), sources_db.__dict__)
@@ -346,7 +346,7 @@ def test_cursor_finalizer_never_waits_for_another_connections_lock(database, ree
 
 def test_cursor_finalizer_tolerates_partial_init_closed_connection_and_shutdown(database, monkeypatch):
     """Finalization must not emit unraisable errors after failed init or module teardown."""
-    from lu_machinery.lib import readonly_sqlite
+    from scripts.lib import readonly_sqlite
 
     finalizer = getattr(SerializedCursor, "__del__", None)
     assert finalizer is not None
@@ -597,7 +597,7 @@ def test_shared_reader_cursor_and_transaction_methods_preserve_results(database)
 
 def _generation_store(tmp_path):
     """A selector over two generations, held read-only, as the publisher leaves them."""
-    from lu_machinery.storage import generations
+    from scripts.storage import generations
 
     data = tmp_path / "data"
     directory = data / "sources-generations"
@@ -617,7 +617,7 @@ def _as_declared_writer(path):
     """Open ``path`` writable from a frame inside the declared writer sources_db.py."""
     source = (
         "def _review_generation_probe(path):\n"
-        "    from lu_machinery.api.resilience import connect_sqlite\n"
+        "    from scripts.api.resilience import connect_sqlite\n"
         "    return connect_sqlite(str(path))\n"
     )
     exec(compile(source, sources_db.__file__, "exec"), sources_db.__dict__)
@@ -628,7 +628,7 @@ def _as_declared_writer(path):
 
 
 def test_generation_files_and_links_to_them_are_the_sources_corpus(tmp_path):
-    from lu_machinery.lib.readonly_sqlite import corpus_database_name
+    from scripts.lib.readonly_sqlite import corpus_database_name
 
     selector, old, current = _generation_store(tmp_path)
     alias = tmp_path / "alias.db"
@@ -650,7 +650,7 @@ def test_writable_generation_open_is_refused_even_for_a_declared_writer(tmp_path
 
 
 def test_lock_holder_may_open_only_the_selected_generation(tmp_path):
-    from lu_machinery.storage import generations
+    from scripts.storage import generations
 
     selector, old, current = _generation_store(tmp_path)
     with generations.writer_lock(selector, lift=True):
@@ -666,13 +666,13 @@ def test_lock_holder_may_open_only_the_selected_generation(tmp_path):
 
 
 def test_pre_bootstrap_live_store_needs_the_lock(tmp_path, monkeypatch):
-    from lu_machinery.storage import generations
+    from scripts.storage import generations
 
     live = tmp_path / "data" / "sources.db"
     live.parent.mkdir()
     with closing(sqlite3.connect(live)) as conn:
         conn.execute("CREATE TABLE synthetic (id INTEGER)")
-    from lu_machinery.storage import topology
+    from scripts.storage import topology
 
     monkeypatch.setattr(topology, "live_store_path", lambda: live)
     with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
@@ -686,7 +686,7 @@ def test_pre_bootstrap_live_store_needs_the_lock(tmp_path, monkeypatch):
 
 def test_aliases_of_a_generation_still_need_the_lock(tmp_path):
     """A link's own name or a symlinked parent directory cannot rename a generation."""
-    from lu_machinery.lib.readonly_sqlite import corpus_database_name
+    from scripts.lib.readonly_sqlite import corpus_database_name
 
     _, old, current = _generation_store(tmp_path)
     named_vesum = tmp_path / "vesum.db"

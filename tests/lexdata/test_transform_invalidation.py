@@ -5,10 +5,9 @@ from __future__ import annotations
 from contextlib import closing
 from dataclasses import replace
 
-from lu_machinery.lib.readonly_sqlite import open_readonly
-
 from scripts.lexdata import build_store, generation, transforms, verify
 from scripts.lexdata.normalize import NORMALIZER_VERSION
+from scripts.lib.readonly_sqlite import open_readonly
 from tests.lexdata import n2_normalizer
 from tests.lexdata._support import FIXTURE_SOURCE, FixtureStage, fixture_binding
 

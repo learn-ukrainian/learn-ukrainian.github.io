@@ -8,7 +8,6 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import artifacts, paths
 
 from scripts.projects.open_model_data import (
     phase3_historical_protection_channels as historical,
@@ -23,6 +22,7 @@ from scripts.projects.open_model_data import (
     v4_reproduce_deliverables as delivery,
 )
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.storage import artifacts, paths
 
 K_PATHS = (
     quality._ASSESSMENT,

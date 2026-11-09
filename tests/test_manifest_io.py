@@ -653,7 +653,7 @@ def test_lexicon_scripts_do_not_open_manifest_inplace() -> None:
 
 def test_release_download_uses_binary_api_instead_of_browser_url(monkeypatch, tmp_path):
     """Published-release browser 504s must not affect API hydration."""
-    from lu_machinery.common import github_client
+    from scripts.common import github_client
 
     calls = []
     root = "repos/learn-ukrainian/learn-ukrainian.github.io/releases"

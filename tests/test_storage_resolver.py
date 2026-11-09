@@ -10,7 +10,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage.topology import (
+
+from scripts.storage.topology import (
     REQUIRED_BULK_MARKERS,
     ActiveDatabaseNetworkError,
     require_local_active_sources_db,
@@ -18,7 +19,6 @@ from lu_machinery.storage.topology import (
     resolve_bulk_root,
     resolve_topology,
 )
-
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -227,7 +227,7 @@ def test_cli_status_json_subprocess(tmp_path: Path) -> None:
         [
             str(_project_python()),
             "-m",
-            "lu_machinery.storage",
+            "scripts.storage",
             "status",
             "--json",
             "--repo",

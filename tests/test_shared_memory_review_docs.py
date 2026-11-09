@@ -8,10 +8,10 @@ import shlex
 from pathlib import Path
 
 import pytest
-from lu_machinery.dispatcher import cli as dispatch_cli
-from lu_machinery.dispatcher import git as dispatch_git
-from lu_machinery.review import record_cf_verdict as recorder
 
+from scripts.dispatcher import cli as dispatch_cli
+from scripts.dispatcher import git as dispatch_git
+from scripts.review import record_cf_verdict as recorder
 from tests.test_authoring_review_feasibility import SOL, mini_repo
 
 MEMORY = Path(__file__).resolve().parents[1] / "agents_extensions/shared/memory/MEMORY.md"

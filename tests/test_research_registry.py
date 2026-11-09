@@ -698,7 +698,7 @@ def test_resolve_symbol_finds_module_level_constant(tmp_path: Path) -> None:
     ],
 )
 def test_research_config_json_refusals(tmp_path, monkeypatch, raw, message):
-    from lu_machinery.research import registry as reg
+    from scripts.research import registry as reg
 
     path = tmp_path / "research.json"
     path.write_text(raw)
@@ -708,7 +708,7 @@ def test_research_config_json_refusals(tmp_path, monkeypatch, raw, message):
 
 
 def test_research_config_missing_file_keeps_unreadable_error(tmp_path, monkeypatch):
-    from lu_machinery.research import registry as reg
+    from scripts.research import registry as reg
 
     monkeypatch.setattr(reg, "_check_config_path", lambda _root: tmp_path / "missing.json")
     with pytest.raises(RuntimeError, match="research check config is unreadable"):
@@ -722,7 +722,7 @@ def test_research_config_missing_file_keeps_unreadable_error(tmp_path, monkeypat
 def test_research_config_refuses_malformed_names(tmp_path, monkeypatch, key, name):
     import json
 
-    from lu_machinery.research import registry as reg
+    from scripts.research import registry as reg
 
     payload = {"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), key: name}
     path = tmp_path / "research.json"
@@ -736,8 +736,8 @@ def test_research_config_refuses_malformed_names(tmp_path, monkeypatch, key, nam
 def test_research_shared_loader_refuses_capitals_and_sqlite_names(tmp_path, monkeypatch, name):
     import json
 
-    from lu_machinery.ops.product_entry import ConfiguredModuleError
-    from lu_machinery.research import registry as reg
+    from scripts.ops.product_entry import ConfiguredModuleError
+    from scripts.research import registry as reg
 
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
@@ -752,8 +752,8 @@ def test_research_loader_refuses_foreign_cached_modules_without_repinning(tmp_pa
     import sys
     from types import ModuleType
 
-    from lu_machinery.ops.product_entry import ConfiguredModuleError
-    from lu_machinery.research import registry as reg
+    from scripts.ops.product_entry import ConfiguredModuleError
+    from scripts.research import registry as reg
 
     pinned = reg.configured_check_module()
     name = reg.research_check_config()[key]
@@ -770,7 +770,7 @@ def test_research_missing_configured_target_keeps_file_not_found(tmp_path, monke
     import errno
     import json
 
-    from lu_machinery.research import registry as reg
+    from scripts.research import registry as reg
 
     path = tmp_path / "research.json"
     path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
@@ -792,8 +792,8 @@ def product_checkout_root(tmp_path, monkeypatch):
     import importlib.util
     import sys
 
-    from lu_machinery.common import repo_root
-    from lu_machinery.research import registry
+    from scripts.common import repo_root
+    from scripts.research import registry
 
     # The product's research-check data travels with the product checkout.
     config = registry._check_config_path(tmp_path)
@@ -824,7 +824,7 @@ def test_research_existing_module_dependency_error_is_not_translated(product_che
     import json
     import sys
 
-    from lu_machinery.research import registry as reg
+    from scripts.research import registry as reg
 
     name = "scripts.audit.loader_slice_dependency"
     (tmp_path / "scripts" / "audit" / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")

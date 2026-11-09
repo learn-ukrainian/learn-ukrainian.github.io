@@ -8,8 +8,8 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.ai_agent_bridge._opencode import OpencodeStreamParse, _extract_tool_event
 
+from scripts.ai_agent_bridge._opencode import OpencodeStreamParse, _extract_tool_event
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 
 pytestmark = pytest.mark.reads_content
@@ -267,7 +267,7 @@ def test_invoke_bridge_route_opencode_populates_tool_fields(subscribed_reviewer_
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ) as invoke,
     ):
@@ -290,7 +290,7 @@ def test_invoke_opencode_reviewer_persists_module_review(subscribed_reviewer_rou
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ),
     ):
@@ -317,7 +317,7 @@ def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(s
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ),
     ):
@@ -367,7 +367,7 @@ def test_invoke_opencode_reviewer_runs_transport_outside_repo(subscribed_reviewe
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
             side_effect=fake_detailed,
         ),
     ):
@@ -392,7 +392,7 @@ def test_frontier_opencode_fails_fast_when_mcp_endpoint_down(subscribed_reviewer
     with (
         patch(f"{_DISPATCH}._load_opencode_config", return_value=config),
         patch(f"{_DISPATCH}._http_endpoint_responds", return_value=False),
-        patch("lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed") as invoke,
+        patch("scripts.ai_agent_bridge._opencode._invoke_opencode_detailed") as invoke,
     ):
         with pytest.raises(llm_reviewer_dispatch.ReviewerProviderError, match="not reachable"):
             llm_reviewer_dispatch.invoke_bridge_route(route, "prompt", "task-1")
@@ -404,7 +404,7 @@ def test_frontier_opencode_fails_fast_when_mcp_not_configured(subscribed_reviewe
     with (
         patch(f"{_DISPATCH}._load_opencode_config", return_value={"mcp": {}}),
         patch(f"{_DISPATCH}._http_endpoint_responds", return_value=True),
-        patch("lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed") as invoke,
+        patch("scripts.ai_agent_bridge._opencode._invoke_opencode_detailed") as invoke,
     ):
         with pytest.raises(llm_reviewer_dispatch.ReviewerProviderError, match="not configured"):
             llm_reviewer_dispatch.invoke_bridge_route(route, "prompt", "task-1")
@@ -420,7 +420,7 @@ def test_gemma_surface_route_does_not_require_mcp(subscribed_reviewer_routes, ) 
         patch(f"{_DISPATCH}._load_opencode_config", return_value={"mcp": {}}),
         patch(f"{_DISPATCH}._http_endpoint_responds", return_value=False),
         patch(
-            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ) as invoke,
     ):

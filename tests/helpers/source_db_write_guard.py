@@ -15,7 +15,8 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
-from lu_machinery.common.repo_root import main_checkout_root
+
+from scripts.common.repo_root import main_checkout_root
 
 _WORKTREE = Path(__file__).resolve().parents[2]
 DATA_ROOTS = frozenset({(_WORKTREE / "data").resolve(), (main_checkout_root(_WORKTREE) / "data").resolve()})

@@ -417,7 +417,7 @@ def test_select_sum20_database_ignores_a_worktree_shadow(tmp_path: Path, monkeyp
     shadow = repo / "data" / "lexdata.db"
     shadow.parent.mkdir(parents=True)
     shadow.write_bytes(b"shadow-not-sqlite")
-    monkeypatch.setattr("lu_machinery.storage.topology.main_checkout_root", lambda _root: tmp_path)
+    monkeypatch.setattr("scripts.storage.topology.main_checkout_root", lambda _root: tmp_path)
     with pytest.raises(Sum20StoreError, match="worktree_local_store"):
         open_sum20(repository_root=repo)
 
@@ -525,7 +525,7 @@ def test_enrichment_reads_canonical_store_without_network_import_or_fallback(tmp
 def test_reader_refuses_untrusted_locality(tmp_path, monkeypatch, locality):
     lexdata = _seed_articles(tmp_path, name="lexdata.db")
     monkeypatch.setenv("LEXDATA_DB_PATH", str(lexdata))
-    monkeypatch.setattr("lu_machinery.storage.topology._store_locality", lambda _path: locality)
+    monkeypatch.setattr("scripts.storage.topology._store_locality", lambda _path: locality)
     with pytest.raises(Sum20StoreError, match=f"locality_{locality}"):
         lookup_sum20_articles("вода")
 
@@ -577,7 +577,7 @@ def test_override_symlink_is_validated_at_its_target(tmp_path, monkeypatch):
         seen.append(path)
         return "network"
 
-    monkeypatch.setattr("lu_machinery.storage.topology._store_locality", network_target)
+    monkeypatch.setattr("scripts.storage.topology._store_locality", network_target)
     with pytest.raises(Sum20StoreError, match="locality_network"):
         lookup_sum20_articles("вода")
     assert seen == [target.resolve()]
@@ -761,7 +761,7 @@ def test_missing_mirror_is_a_plain_miss_and_creates_nothing(tmp_path):
                                          ("partial_schema", "mirror_unavailable"),
                                          ("network", "locality_network"), ("unknown", "locality_unknown")])
 def test_invalid_mirror_is_typed_refusal_not_miss(tmp_path, monkeypatch, kind, reason):
-    from lu_machinery.storage import topology
+    from scripts.storage import topology
 
     _seed_articles(tmp_path / "data")
     mirror = tmp_path / "mirror.db"

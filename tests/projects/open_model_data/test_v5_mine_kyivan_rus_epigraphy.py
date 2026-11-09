@@ -45,7 +45,6 @@ from typing import Any
 
 import jsonschema
 import pytest
-from lu_machinery.storage.paths import ArtifactSet, artifact_set
 
 from scripts.projects.open_model_data.v5_mine_kyivan_rus_epigraphy import (
     DEFAULT_RELEASE_DIR,
@@ -60,6 +59,7 @@ from scripts.projects.open_model_data.v5_mine_kyivan_rus_epigraphy import (
     evaluate_epigraphic_suite,
     normalize_historical_snippet,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_RELEASE_DIR = REPO_ROOT / "registry" / DEFAULT_RELEASE_DIR.relative_to(REPO_ROOT / "data")

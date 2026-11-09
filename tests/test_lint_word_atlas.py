@@ -618,9 +618,9 @@ def test_practice_deck_entry_changes_are_scoped_by_lemma() -> None:
 
 def test_release_asset_lint_uses_client_without_retry(monkeypatch):
     import pytest
-    from lu_machinery.common.github_client import GitHubRateLimited
 
     from scripts.audit import lint_word_atlas
+    from scripts.common.github_client import GitHubRateLimited
     calls = []
     def unavailable(request, **kwargs):
         calls.append(request.full_url)

@@ -11,9 +11,10 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery import driver_state
-from lu_machinery.ai_agent_bridge.monitor_client import MonitorClient
-from lu_machinery.common import task_store_paths
+
+from scripts import driver_state
+from scripts.ai_agent_bridge.monitor_client import MonitorClient
+from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
 SYNTHETIC_WORKER_TARGET = 7
@@ -121,7 +122,7 @@ def test_whoami_redacts_state_path(state, capsys, missing):
     assert "state: (configured)" in out
     assert "blocker-policy:" not in out
     assert "Blocker baseline:" not in out
-    assert "lu_machinery.driver_blockers" not in out
+    assert "scripts.driver_blockers" not in out
     assert str(path.parent) not in out
     assert path.name not in out
     if missing:
@@ -474,7 +475,7 @@ def test_cli_non_stop_failure_does_not_reset_counter(state, tmp_path, monkeypatc
 
 
 def test_bridge_consult_environment_excludes_driver_state_even_in_same_workspace(state, tmp_path, monkeypatch):
-    from lu_machinery.ai_agent_bridge._env import build_agent_env
+    from scripts.ai_agent_bridge._env import build_agent_env
 
     child_env = build_agent_env(
         {
@@ -796,7 +797,7 @@ def test_blocker_policy_requires_exact_real_heading(state, prefix):
     if "Lookalike recovery note." in prefix:
         assert prefix in message
     assert "\n## CTO blocker delta policy\n" not in message.replace(prefix, "", 1)
-    assert "lu_machinery.driver_blockers" not in message
+    assert "scripts.driver_blockers" not in message
     assert "Retired ledger commands." not in message
     assert "Retired subheading body." not in message
     assert "### Retired details" not in message
@@ -972,7 +973,7 @@ def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, e
     original = builtins.__import__
 
     def fail_store(name, *args, **kwargs):
-        if name == "lu_machinery.dispatcher.worker":
+        if name == "scripts.dispatcher.worker":
             raise error("synthetic dispatcher import failure")
         return original(name, *args, **kwargs)
 
@@ -1355,7 +1356,7 @@ def test_gate_failure_refuses_symlinked_receipt(driver, state, monkeypatch, caps
 @pytest.mark.parametrize("status", ["running", "spawning"])
 @pytest.mark.parametrize("identity, expected", [("boot:42", 3), ("boot:99", 2), (None, 2)])
 def test_mixed_schema_worker_count_is_read_only(driver, monkeypatch, identity, expected, status):
-    from lu_machinery.dispatcher import worker
+    from scripts.dispatcher import worker
 
     _workers(driver, "gemini-infra", 3, status=status)
     for index, pid in [(1, 123), (2, 124)]:
@@ -1430,7 +1431,7 @@ def test_worker_count_needs_no_legacy_runtime_import(driver, monkeypatch):
 
 
 def test_v2_worker_count_bypasses_monitor_and_keeps_archive_read_only(driver, monkeypatch):
-    from lu_machinery.dispatcher import store, worker
+    from scripts.dispatcher import store, worker
 
     _workers(driver, "gemini-infra", 1)
     path = driver_state.tasks_dir() / "t0.json"

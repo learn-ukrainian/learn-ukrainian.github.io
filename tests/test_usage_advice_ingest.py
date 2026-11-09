@@ -21,8 +21,8 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import requests
-from lu_machinery.common.scratch import ensure_scratch_root
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest.usage_advice_ingest import (
     EXIT_HTTP_403_FORBIDDEN,
     EXIT_HTTP_SERVER_ERROR,

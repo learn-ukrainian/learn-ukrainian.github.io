@@ -27,8 +27,8 @@ from pathlib import Path
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
-from lu_machinery.fleet_comms.contracts import CompletionState, ResponseEnvelope
 
+from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_candidate_family_floor as floor
 from scripts.projects.open_model_data import v4_a3_d1_transition_validator as d1_validator

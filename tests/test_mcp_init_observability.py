@@ -11,10 +11,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.agent_runtime import tool_config as tool_config_mod
-from lu_machinery.agent_runtime import tool_config as wiki_tool_config_mod
-from lu_machinery.agent_runtime.runner import _McpRuntimeObserver
-
+from agent_runtime import tool_config as wiki_tool_config_mod
+from scripts.agent_runtime import tool_config as tool_config_mod
+from scripts.agent_runtime.runner import _McpRuntimeObserver
 from scripts.build import linear_pipeline
 from scripts.wiki import review as wiki_review
 from tests.helpers.codex_exec_stream import command, item_started, jsonl, mcp_call

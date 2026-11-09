@@ -22,7 +22,6 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data import generate_grammar_signoff_8342 as grammar_signoff
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
@@ -44,6 +43,7 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     is_finite_active_verb,
 )
 from scripts.projects.open_model_data.paths import REGISTRY_GRAMMAR_DIR
+from scripts.storage.paths import artifact_set
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 GRAMMAR_DIR = REGISTRY_GRAMMAR_DIR

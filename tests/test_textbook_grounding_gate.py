@@ -68,7 +68,7 @@ def _seed_mcp_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         ),
         encoding="utf-8",
     )
-    from lu_machinery.agent_runtime import tool_config as tc_mod
+    from scripts.agent_runtime import tool_config as tc_mod
 
     monkeypatch.setattr(tc_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
     tc_mod._load_mcp_config.cache_clear()

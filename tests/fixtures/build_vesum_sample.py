@@ -7,7 +7,7 @@ import argparse
 import sqlite3
 from pathlib import Path
 
-from lu_machinery.lib.readonly_sqlite import open_readonly
+from scripts.lib.readonly_sqlite import open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = Path(__file__).with_name("vesum_sample.db")

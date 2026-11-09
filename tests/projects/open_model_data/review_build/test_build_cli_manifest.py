@@ -7,8 +7,8 @@ from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.jsonl import jsonl_lines
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data import review_build as framework
 from scripts.projects.open_model_data.review_build import __main__ as cli
 from scripts.projects.open_model_data.review_build import output

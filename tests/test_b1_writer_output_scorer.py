@@ -6,8 +6,9 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-from lu_machinery.bakeoff import run_b1_writer, score_b1_writer_output
-from lu_machinery.bakeoff.score_b1_writer_output import (
+
+from scripts.bakeoff import run_b1_writer, score_b1_writer_output
+from scripts.bakeoff.score_b1_writer_output import (
     _check_source_tool_evidence,
     score_writer_output,
 )
@@ -338,7 +339,7 @@ def bakeoff_caller(request: pytest.FixtureRequest) -> ModuleType:
 
 
 def _configure_hooks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caller: ModuleType, payload: str) -> None:
-    from lu_machinery.common import repo_root
+    from scripts.common import repo_root
 
     path = tmp_path / "scripts/build/bakeoff_hooks.v1.json"
     path.parent.mkdir(parents=True)
@@ -410,9 +411,9 @@ def test_bakeoff_refuses_foreign_cached_hooks(
 
 
 def test_bakeoff_configured_loads_count_each_caller_once() -> None:
-    from lu_machinery.ci.components import scan_imports
-    from lu_machinery.hygiene.lint_source_db_writable_connects import classify_source
-    from lu_machinery.lint.boundary_ratchet import _configured_line
+    from scripts.ci.components import scan_imports
+    from scripts.hygiene.lint_source_db_writable_connects import classify_source
+    from scripts.lint.boundary_ratchet import _configured_line
 
     root = Path(__file__).resolve().parents[1]
     callers = [

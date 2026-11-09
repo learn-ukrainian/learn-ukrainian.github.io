@@ -17,13 +17,14 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
-import lu_machinery.agent_runtime.review_mcp as review_mcp_module
-import lu_machinery.common.safe_open as safe_open_module
 import pytest
-from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
-from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
-from lu_machinery.agent_runtime.adapters.cursor import CursorAdapter
-from lu_machinery.agent_runtime.review_mcp import (
+
+import scripts.agent_runtime.review_mcp as review_mcp_module
+import scripts.common.safe_open as safe_open_module
+from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+from scripts.agent_runtime.adapters.codex import CodexAdapter
+from scripts.agent_runtime.adapters.cursor import CursorAdapter
+from scripts.agent_runtime.review_mcp import (
     ENV_ATTEMPT_ID,
     ENV_LEDGER_PATH,
     ENV_MANIFEST_SHA256,
@@ -42,17 +43,14 @@ from lu_machinery.agent_runtime.review_mcp import (
     verify_codex_review_effective_mcp,
     verify_review_attempt_paths,
 )
-from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
-from lu_machinery.common.repo_root import project_interpreter, resolve_repo_root
-from lu_machinery.common.safe_open import UnsafeEntryError, safe_open_below
-from lu_machinery.review import render_contract
-from lu_machinery.review.render_contract import ReviewContractError
-
+from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
+from scripts.common.safe_open import UnsafeEntryError, safe_open_below
+from scripts.review import render_contract
 from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from scripts.review.render_contract import ReviewContractError
 from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
-
-SERVER_PATH = Path(__file__).resolve().parents[2] / SERVER_RELATIVE_PATH
 
 
 @pytest.fixture(autouse=True)
@@ -441,8 +439,7 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
 def test_prepared_codex_contract_survives_adapter_overrides(manifest_file: Path, tmp_path: Path, access: str) -> None:
-    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
-
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
     from scripts.review.receipts.ledger import review_tools
     from tests.agent_runtime.test_sources_read_only import _server_config
 
@@ -502,7 +499,7 @@ def test_claude_adapter_command_line_contains_review_grant(
     # probes `npx @anthropic-ai/claude-code@latest --version`. The gate is covered
     # by tests/test_agent_runtime.py::test_claude_adapter_rejects_old_cli_version.
     monkeypatch.setattr(
-        "lu_machinery.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
+        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
         lambda _cmd_prefix: (2, 1, 116),
     )
     review_plan = prepare_review_attempt(
@@ -851,7 +848,7 @@ def test_non_codex_harness_creates_no_codex_home(manifest_file: Path, tmp_path: 
 def test_failed_codex_preparation_leaves_nothing_behind(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import lu_machinery.agent_runtime.review_mcp as review_mcp
+    import scripts.agent_runtime.review_mcp as review_mcp
 
     def boom(_home: Path) -> None:
         raise OSError("auth link failed")
@@ -1063,7 +1060,7 @@ def test_agy_home_layout_modes_and_single_source_config(
     assert token.is_symlink()
     assert Path(os.readlink(token)) == fake_agy_user_home / "antigravity-oauth-token"
     assert sorted(entry.name for entry in app_data.iterdir()) == ["antigravity-oauth-token", "settings.json"]
-    from lu_machinery.agent_runtime.review_mcp import agy_review_settings
+    from scripts.agent_runtime.review_mcp import agy_review_settings
 
     settings = app_data / "settings.json"
     assert json.loads(settings.read_text()) == agy_review_settings("isolated", checkout_root=tmp_path)
@@ -1499,7 +1496,7 @@ def _agy_tool_config(plan, **extra) -> dict:
 
 
 def _write_agy_workspace_guard(cwd: Path) -> None:
-    from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
 
     path = cwd / ".agents" / "hooks.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -1560,9 +1557,9 @@ def test_agy_launch_gate_refuses_when_the_sanitizer_would_drop_the_scoped_home(
 def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
-    from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+    from scripts.agent_runtime.env_sanitize import build_agent_env
 
     real_home = tmp_path / "real-home"
     real_home.mkdir()
@@ -1947,7 +1944,7 @@ def test_refusals_never_echo_a_path_from_untrusted_input(
 
 
 def test_echo_identifier_shows_clean_names_verbatim_and_redacts_everything_else() -> None:
-    from lu_machinery.agent_runtime.review_mcp import _echo_identifier
+    from scripts.agent_runtime.review_mcp import _echo_identifier
 
     for clean in ("sources", "mcp__sources__verify_words", "att-001", "a.b:c_d-9", "x" * 64):
         assert _echo_identifier(clean) == clean

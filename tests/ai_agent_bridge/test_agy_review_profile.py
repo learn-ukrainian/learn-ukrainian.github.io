@@ -5,14 +5,14 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
-from lu_machinery.ai_agent_bridge._agy import (
+
+from scripts.ai_agent_bridge._agy import (
     gemini_content_paths_error,
     gemini_review_profile_error,
     is_content_class_path,
 )
-from lu_machinery.ai_agent_bridge._channels_cli import _gemini_review_request_error
-from lu_machinery.ai_agent_bridge._cli import _handle_acp_compat
-
+from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
+from scripts.ai_agent_bridge._cli import _handle_acp_compat
 from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
 
 pytestmark = pytest.mark.reads_content
@@ -117,7 +117,7 @@ def test_ask_agy_ukrainian_profile_reaches_dispatch(monkeypatch: pytest.MonkeyPa
         seen["kwargs"] = kwargs
 
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._dispatch_headless_review",
+        "scripts.ai_agent_bridge._cli._dispatch_headless_review",
         fake_dispatch,
     )
     args = SimpleNamespace(
@@ -234,9 +234,9 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
         seen["target"] = target
         seen["kwargs"] = kwargs
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("content-branch", "a" * 40),
     )
 
@@ -252,7 +252,7 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     _handle_acp_compat(_review_args(pr=77), "agy")
     assert seen["target"] == "agy"
     assert seen["kwargs"]["review_profile"] == "ukrainian"
@@ -264,9 +264,9 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("mixed PR must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("mixed-branch", "b" * 40),
     )
 
@@ -282,7 +282,7 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=88), "agy")
 
@@ -291,9 +291,9 @@ def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> 
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("file-listing failure must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("broken-branch", "c" * 40),
     )
 
@@ -303,7 +303,7 @@ def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> 
         return subprocess.CompletedProcess(command, 1, stderr="gh unavailable")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=99), "agy")
 
@@ -314,9 +314,9 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("a code file past page 1 must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("wide-branch", "d" * 40),
     )
     sha = "d" * 40
@@ -333,7 +333,7 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
         return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=120), "agy")
 
@@ -344,7 +344,7 @@ def test_content_only_branch_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyP
     def fake_dispatch(target: str, content: str, **kwargs: object) -> None:
         seen["branch"] = kwargs.get("branch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr("subprocess.run", _fake_branch_diff("content-branch", f"{_CONTENT_PATH}\n"))
     _handle_acp_compat(_review_args(branch="content-branch"), "agy")
     assert seen["branch"] == "content-branch"
@@ -355,7 +355,7 @@ def test_prefixed_branch_names_are_refused_before_git(monkeypatch: pytest.Monkey
         raise AssertionError(f"prefixed branch must not reach git: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     for name in ("origin/feature", "refs/heads/feature", "github/feature", "+feature", "-feature", "feat:ure"):
         with pytest.raises(SystemExit, match="could not list changed files"):
             _handle_acp_compat(_review_args(branch=name), "agy")
@@ -369,7 +369,7 @@ def test_stale_local_content_branch_is_refused_when_remote_has_code(
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("remote code must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr(
         "subprocess.run",
         _fake_branch_diff("feature", f"{_CONTENT_PATH}\n{_CODE_PATH}\n"),
@@ -382,7 +382,7 @@ def test_branch_fetch_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> Non
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("a failed fetch must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="fetch"))
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(branch="feature"), "agy")
@@ -392,7 +392,7 @@ def test_branch_diff_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> None
     def fake_dispatch(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("a failed diff must not reach Gemini dispatch")
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
     monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="diff"))
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(branch="feature"), "agy")
@@ -409,9 +409,9 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
             f"refusing dispatch: fetched branch head {moved_sha} differs from the pinned head SHA {gate_sha}"
         )
 
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._dispatch_wrappers.run_ask_review_dispatch", fake_dispatch)
+    monkeypatch.setattr("scripts.ai_agent_bridge._dispatch_wrappers.run_ask_review_dispatch", fake_dispatch)
     monkeypatch.setattr(
-        "lu_machinery.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("content-branch", gate_sha),
     )
 
@@ -424,7 +424,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="differs from the pinned head SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
 
@@ -432,7 +432,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
 def _git(repo: str, *args: str) -> None:
     import subprocess
 
-    from lu_machinery.common.git_context import sanitized_git_env
+    from scripts.common.git_context import sanitized_git_env
 
     completed = subprocess.run(
         ["git", *args],
@@ -489,7 +489,7 @@ def _git_check_ref_format_branch(repo: str, name: str) -> str | None:
     """Return the name git prints, or None when ``--branch`` rejects it."""
     import subprocess
 
-    from lu_machinery.common.git_context import sanitized_git_env
+    from scripts.common.git_context import sanitized_git_env
 
     completed = subprocess.run(
         ["git", "check-ref-format", "--branch", name],
@@ -515,7 +515,7 @@ def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> N
     expands it. The validator must refuse that shorthand instead of returning the
     expanded name. Git runs only in this test, with a timeout.
     """
-    from lu_machinery.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -541,7 +541,7 @@ def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> N
     assert validate_plain_branch_name("valid-name", repo_root=root) == "valid-name"
     import subprocess
 
-    from lu_machinery.common.git_context import sanitized_git_env
+    from scripts.common.git_context import sanitized_git_env
 
     expanded = subprocess.run(
         ["git", "check-ref-format", "--branch", "@{-1}"],
@@ -566,7 +566,7 @@ def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> N
 
 def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     """Fetch, rev-parse, and diff must follow ``repo_root``, not the caller's ``GIT_DIR``."""
-    from lu_machinery.ai_agent_bridge._agy import list_branch_changed_paths
+    from scripts.ai_agent_bridge._agy import list_branch_changed_paths
 
     remote = tmp_path / "remote.git"
     repo = tmp_path / "repo"
@@ -598,7 +598,7 @@ def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyP
 
 def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.MonkeyPatch) -> None:
     """``--no-renames`` keeps the deleted code path visible on the pinned SHA."""
-    from lu_machinery.ai_agent_bridge._agy import list_branch_changed_paths, list_commit_changed_paths
+    from scripts.ai_agent_bridge._agy import list_branch_changed_paths, list_commit_changed_paths
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
@@ -615,7 +615,7 @@ def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.Monkey
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("lu_machinery.common.github_client.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     branch_paths = list_branch_changed_paths("feature", repo_root=".")
     assert "scripts/x.py" in branch_paths
     pr_paths = list_commit_changed_paths(_REMOTE_SHA, repo_root=".")

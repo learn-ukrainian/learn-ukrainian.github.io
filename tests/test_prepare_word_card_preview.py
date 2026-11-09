@@ -767,7 +767,7 @@ def test_http_open_preserves_bytes_body_on_gateway_error():
     import urllib.error
     import urllib.request
 
-    from lu_machinery.common import github_client
+    from scripts.common import github_client
 
     body = b"<html>504 Gateway Time-out</html>"
 

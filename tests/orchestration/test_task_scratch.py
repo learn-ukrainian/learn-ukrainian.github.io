@@ -12,7 +12,8 @@ import time
 from pathlib import Path
 
 import pytest
-from lu_machinery.common import task_scratch as ts
+
+from scripts.common import task_scratch as ts
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CLI = REPO_ROOT / "scripts" / "tools" / "task_scratch.py"

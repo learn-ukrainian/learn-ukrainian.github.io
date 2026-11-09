@@ -30,4 +30,4 @@ def test_issue_workflow_hardening():
     assert steps[2]["uses"] == "./.github/actions/python-ci-env"
     for step in steps:
         assert "github.event." not in step.get("run", "")
-    assert steps[-1]["run"] == ".venv/bin/python -m lu_machinery.ci.comment_issue_task_quality"
+    assert steps[-1]["run"] == ".venv/bin/python -m scripts.ci.comment_issue_task_quality"

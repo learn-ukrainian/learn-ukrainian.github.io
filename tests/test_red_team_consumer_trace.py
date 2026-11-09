@@ -9,10 +9,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from lu_machinery.fleet_comms import review_publication, review_publisher
-from lu_machinery.orchestration import integration_sweep as sweep
-from lu_machinery.orchestration import merge_queue_keeper as keeper
-from lu_machinery.review.record_cf_verdict import build_comment
+
+from scripts.fleet_comms import review_publication, review_publisher
+from scripts.orchestration import integration_sweep as sweep
+from scripts.orchestration import merge_queue_keeper as keeper
+from scripts.review.record_cf_verdict import build_comment
 
 # Publication and telemetry readers are included so a new reference cannot
 # silently enter the approval path. These are handling labels, not endorsements.
@@ -89,8 +90,7 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
 
 def test_fleet_board_counts_red_team_as_ready():
     """#10452 AC-02: display the mode, and do not present it as an ordinary approval."""
-    from lu_machinery.api.fleet_board import prs
-
+    from scripts.api.fleet_board import prs
     from tests.api.test_fleet_board_prs import _mq, _pull, _view
     from tests.orchestration.test_integration_sweep import SHA
 
@@ -191,8 +191,7 @@ def test_lexicon_dispositions_refuse_red_team(tmp_path):
 
 
 def test_recovery_accepts_red_team_approval(tmp_path, monkeypatch):
-    from lu_machinery.publish import github
-
+    from scripts.publish import github
     from tests import test_ci_recovery
 
     monkeypatch.setattr(github.recovery, "ledger_path", lambda _cwd: tmp_path / "recovery.sqlite3")

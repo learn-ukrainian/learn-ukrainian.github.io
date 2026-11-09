@@ -13,10 +13,10 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.agent_runtime import attempt_network, runner
-from lu_machinery.agent_runtime.attempt_boundary import AttemptBoundary
-from lu_machinery.agent_runtime.review_mcp import prepare_review_attempt
 
+from scripts.agent_runtime import attempt_network, runner
+from scripts.agent_runtime.attempt_boundary import AttemptBoundary
+from scripts.agent_runtime.review_mcp import prepare_review_attempt
 from scripts.review.receipts.ledger import records
 from tests.agent_runtime.test_attempt_boundary import manifest_world
 from tests.agent_runtime.test_full_review_access import captured_probe, full_probe_code
@@ -27,7 +27,7 @@ from tests.conftest import _set_live_network_allowed
 @pytest.mark.live_network
 def test_real_claude_full_review_search_resources_receipt(tmp_path, monkeypatch):
     """A scratch harness identity must return a successful catalogue receipt."""
-    from lu_machinery.agent_runtime import review_mcp
+    from scripts.agent_runtime import review_mcp
 
     original_proxy_run = attempt_network.AttemptEgress._run
 
@@ -102,7 +102,7 @@ def test_real_claude_full_review_search_resources_receipt(tmp_path, monkeypatch)
 @pytest.mark.live_network
 def test_real_agy_full_review_sources_permission(tmp_path, monkeypatch):
     """A fixture attempt must finish with a real sources receipt and final reply."""
-    from lu_machinery.agent_runtime import review_mcp
+    from scripts.agent_runtime import review_mcp
 
     monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: Path(__file__).resolve().parents[2])
     original_proxy_run = attempt_network.AttemptEgress._run

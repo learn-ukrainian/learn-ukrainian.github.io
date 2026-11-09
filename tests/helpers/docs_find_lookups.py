@@ -19,7 +19,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.docs.find import find
+
+from scripts.docs.find import find
 
 REPO = Path(__file__).resolve().parents[2]
 DEV_LOOKUPS = yaml.safe_load((REPO / 'tests/fixtures/docs_find_dev_lookups.yaml').read_text(encoding='utf-8'))

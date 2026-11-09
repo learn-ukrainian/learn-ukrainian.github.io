@@ -10,8 +10,9 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.docs import catalogue as cat
-from lu_machinery.docs.catalogue import (
+
+from scripts.docs import catalogue as cat
+from scripts.docs.catalogue import (
     README_BEGIN,
     README_END,
     main,

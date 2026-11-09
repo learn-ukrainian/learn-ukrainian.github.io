@@ -26,7 +26,7 @@ def _scripts_on_path(monkeypatch):
 
 
 def test_normalize_seat_maps_alias():
-    from lu_machinery.agent_runtime.agent_identity import (
+    from agent_runtime.agent_identity import (
         NATIVE_GROK_SEAT,
         is_native_grok_seat,
         normalize_seat,
@@ -46,7 +46,7 @@ def test_normalize_seat_maps_alias():
 
 
 def test_tool_config_canonical_order_prefers_native():
-    from lu_machinery.agent_runtime.tool_config import _canonical_agent_name
+    from agent_runtime.tool_config import _canonical_agent_name
 
     assert _canonical_agent_name("grok-build") == "grok"
     assert _canonical_agent_name("grok-build-review") == "grok"
@@ -54,7 +54,7 @@ def test_tool_config_canonical_order_prefers_native():
 
 
 def test_grok_agent_env_autodetect_returns_canonical(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
     monkeypatch.delenv("CLAUDE_AGENT_NAME", raising=False)
@@ -67,7 +67,7 @@ def test_grok_agent_env_autodetect_returns_canonical(monkeypatch):
 
 
 def test_grok_agent_non_sentinel_does_not_false_positive(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     for key in (
         "SESSION_HANDOFF_AGENT",
@@ -86,7 +86,7 @@ def test_budget_agent_key_dual_reads_historical_alias():
     # Import via the scripts package path used by the API app. Avoid bare
     # `api.state_router`, which can resolve to a stale/duplicate module object
     # after other tests insert `scripts/` on sys.path (pre-commit suite order).
-    from lu_machinery.api.state_router import _agent_key
+    from scripts.api.state_router import _agent_key
 
     assert _agent_key("grok") == "grok"
     assert _agent_key("grok-build") == "grok"
@@ -128,8 +128,7 @@ def test_historical_grok_build_transport_string_frozen_in_judge_material():
 
 def test_no_live_judge_path_selects_native_grok_as_default():
     """Default review stall / judge seats prefer native grok."""
-    from lu_machinery.agent_runtime.registry import AGENTS
-
+    from agent_runtime.registry import AGENTS
     from audit.layerb_judge_bridge import BridgeConfig
 
     # Judge family "grok" is the native-seat judge family (transport string

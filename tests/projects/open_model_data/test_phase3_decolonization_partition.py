@@ -15,16 +15,15 @@ from pathlib import Path
 
 import jsonschema
 import pytest
-from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from lu_machinery.lib.readonly_sqlite import open_readonly
-
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,

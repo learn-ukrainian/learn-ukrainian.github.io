@@ -35,8 +35,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.common.scratch import ensure_scratch_root
 
+from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
@@ -1044,7 +1044,7 @@ def test_issue_11381_protected_or_unresolved_git_target_blocked(
 
 
 def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
-    from lu_machinery.guardrails import worktree_containment as wc
+    from scripts.guardrails import worktree_containment as wc
 
     expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
     with chdir(tmp_path):
@@ -1790,7 +1790,7 @@ def test_issue_10633_nested_ansi_c_quoting_refused(repo: Path, shape: str):
         # the refusal comes first.
         pytest.param("git checkout -- $'curriculum/tracked.md'", "primary", id="git-rescue-allowlist"),
         pytest.param(
-            ".venv/bin/python -m lu_machinery.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
+            ".venv/bin/python -m scripts.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
         ),
     ],
 )

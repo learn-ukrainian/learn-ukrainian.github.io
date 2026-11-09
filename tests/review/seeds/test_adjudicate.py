@@ -14,11 +14,11 @@ from unittest.mock import Mock
 
 import pytest
 import yaml
-from lu_machinery.common.repo_root import main_checkout_root
-from lu_machinery.dispatcher.cli import build_parser
-from lu_machinery.review.seeds import manifest as sm
 
+from scripts.common.repo_root import main_checkout_root
+from scripts.dispatcher.cli import build_parser
 from scripts.review.seeds import adjudicate as adj
+from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"

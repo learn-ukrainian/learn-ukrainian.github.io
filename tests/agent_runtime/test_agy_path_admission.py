@@ -5,7 +5,8 @@ import os
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime.adapters import agy
+
+from scripts.agent_runtime.adapters import agy
 
 _CORPUS_FIXTURE = json.loads(
     (Path(__file__).parents[1] / "fixtures" / "agy_read_only_admission.json").read_text()

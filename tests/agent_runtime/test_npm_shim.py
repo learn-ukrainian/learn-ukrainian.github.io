@@ -30,8 +30,9 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime import npm_guard
-from lu_machinery.common.scratch import ensure_scratch_root
+
+from scripts.agent_runtime import npm_guard
+from scripts.common.scratch import ensure_scratch_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "npm"
@@ -708,7 +709,7 @@ def test_npx_and_npm_exec_launching_a_tool_pass_through(layout, tool, args, rela
 
 def test_claude_adapter_npx_fallback_passes_through(layout, monkeypatch):
     """The adapter's own npx command line (no native claude), as build_invocation assembles it."""
-    from lu_machinery.agent_runtime.adapters import claude as claude_adapter
+    from scripts.agent_runtime.adapters import claude as claude_adapter
 
     monkeypatch.setattr(claude_adapter, "_default_claude_bin", lambda: None)
     monkeypatch.setattr(claude_adapter.shutil, "which", lambda name, *a, **k: "/usr/bin/npx" if name == "npx" else None)
@@ -1228,7 +1229,7 @@ def test_linked_worktree_shim_uses_the_main_checkout_interpreter(layout, git_env
 
 @pytest.mark.parametrize("stamped", [True, False], ids=["stamped-interpreter", "common-dir-lookup"])
 def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stamped):
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     _, linked_shims = _linked_shim_checkout(layout["tmp"])
     env = runner._apply_merge_guard(
@@ -1385,7 +1386,7 @@ def test_real_tool_never_inherits_the_shim_tool_variable(layout, tool, extra_env
 
 
 def test_runner_merge_guard_path_resolves_npm_to_the_shim():
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     env = runner._apply_merge_guard(mode="danger", env={"PATH": "/usr/bin:/bin"})
     assert shutil.which("npm", path=env["PATH"]) == str(runner._SHIMS_DIR / "npm")

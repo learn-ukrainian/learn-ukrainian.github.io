@@ -12,8 +12,9 @@ import tomllib
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime import codex_hook_policy
-from lu_machinery.agent_runtime.codex_hook_policy import (
+
+from scripts.agent_runtime import codex_hook_policy
+from scripts.agent_runtime.codex_hook_policy import (
     ENFORCE_VENV_TIMEOUT,
     LOCAL_BASH_GUARDS,
     MERGE_GUARDS,
@@ -22,7 +23,6 @@ from lu_machinery.agent_runtime.codex_hook_policy import (
     _run_enforce_venv,
     run_guard,
 )
-
 from tests.helpers.python import project_python
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -227,7 +227,7 @@ _SYNTHETIC_ROOT_GUARD = (
     "report = pathlib.Path(__file__).with_name('report.json').read_text(encoding='utf-8')\n"
     "print(json.dumps(json.loads(report), indent=2))\n"
 )
-_ROOT_DETAIL = "Detail: .venv/bin/python -m lu_machinery.hygiene.root_entry_guard"
+_ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
 # The lane self-test's literal verdict when the probed CLI is not on PATH.
 _CLI_MISSING_REASON = "FileNotFoundError while building or spawning the adapter"
 _CODEX_CLI_MISSING = f"DISPATCH LANE SELF-TEST FAILED for codex: {_CLI_MISSING_REASON}"
@@ -572,7 +572,7 @@ def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = F
     if block_hydration_import:
         # Selection must not pay the unrelated hydration runtime's import cost.
         guarded_selection = (
-            "import sys; sys.modules['lu_machinery.session_canary.shared_hydration'] = None; "
+            "import sys; sys.modules['scripts.session_canary.shared_hydration'] = None; "
             "exec(sys.argv.pop(1))"
         )
         selection_guard = (
@@ -931,7 +931,7 @@ def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     args_log = tmp_path / "inbox-cli-args.log"
     python.write_text(
         "#!/bin/sh\n"
-        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"lu_machinery.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
+        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
         "  exit 64\n"
         "fi\n"
         "printf '%s\\n' \"$*\" >> \"$FAKE_INBOX_ARGS\"\n"
@@ -981,7 +981,7 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     assert "CODEX INBOX: 1 unread message" in context
     assert "codex-only message" in context
     assert "claude-only message" not in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for codex"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"
 
 
 def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
@@ -1055,11 +1055,11 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     assert all(len(path.stem.removeprefix("inbox-")) == 64 for path in state_files)
     assert all("message" not in path.read_text(encoding="utf-8") for path in state_files)
     assert args_log.read_text(encoding="utf-8").splitlines() == [
-        "-m lu_machinery.ai_agent_bridge inbox --for codex",
-        "-m lu_machinery.ai_agent_bridge inbox --for codex",
-        "-m lu_machinery.ai_agent_bridge inbox --for codex",
-        "-m lu_machinery.ai_agent_bridge inbox --for claude",
-        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for claude",
+        "-m scripts.ai_agent_bridge inbox --for codex",
     ]
 
 

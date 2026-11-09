@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.hygiene.lint_source_db_writable_connects import classify_store_source
 
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
+from scripts.hygiene.lint_source_db_writable_connects import classify_store_source
 from scripts.lexicon import curated_textbook_jsonl_repromote as textbook
 
 

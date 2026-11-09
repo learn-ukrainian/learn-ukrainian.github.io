@@ -11,10 +11,9 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.storage import topology
-
 from scripts.lexdata import build_store, transforms
 from scripts.lexdata.canonical import sha256_file
+from scripts.storage import topology
 from tests.lexdata.fixture_parser import FIXTURE_PARSER, FIXTURE_SOURCE, FixtureAdapter
 
 NO_BUDGET = build_store.Admission(peak_budget_bytes=0, reserve_bytes=0)

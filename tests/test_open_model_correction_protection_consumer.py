@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
-from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data import correction_protection_consumer as consumer
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "data/projects/open_model_data/release/correction_protection_v1"

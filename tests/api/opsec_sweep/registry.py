@@ -24,8 +24,9 @@ from datetime import date
 from typing import Any, Literal
 
 from fastapi.routing import APIRoute
-from lu_machinery.orchestration import thread_handoff
 from starlette.routing import Mount, Route, WebSocketRoute
+
+from scripts.orchestration import thread_handoff
 
 from . import tracking_issues
 from .mutation_recipes import RECIPES, REFUSAL_RECIPES, MutationEnv, MutationRecipe, Prepared

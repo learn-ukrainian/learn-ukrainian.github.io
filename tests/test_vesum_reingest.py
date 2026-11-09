@@ -349,8 +349,7 @@ def test_release_download_uses_client_and_verified_cache(tmp_path, monkeypatch):
 
 
 def test_release_limit_preserves_cache_and_has_no_retry(tmp_path, monkeypatch):
-    from lu_machinery.common.github_client import GitHubRateLimited
-
+    from scripts.common.github_client import GitHubRateLimited
     from scripts.rag import vesum_reingest
     lock = _lock_for_asset(_write_synthetic_asset(tmp_path))
     calls = []

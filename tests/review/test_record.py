@@ -20,15 +20,14 @@ from typing import Any
 
 import pytest
 import yaml
-from lu_machinery.review import findings_db, second_seat
-from lu_machinery.review.seeds import manifest as seed_manifest
 
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.plan_promote import promote_plan
 from scripts.curriculum.evidence import lock
-from scripts.review import fixloop, record
+from scripts.review import findings_db, fixloop, record, second_seat
 from scripts.review.receipts.ledger import create_empty_ledger
+from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate import codes
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
 from tests.review.test_r1_schema_ledger import LESSON_CHECKS, PLAN_CHECKS, _dump, _record, _review
@@ -1684,9 +1683,8 @@ def _rendered(world: World, made: dict[str, Any], access: str = "isolated") -> s
 
 def test_placeholder_attestation_keeps_recorded_core_but_rejects_tampering(world, monkeypatch, tmp_path):
     """Defect class: rules churn invalidates a paid return, or an archived prefix bypasses proof checks."""
-    from lu_machinery.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
-
     from scripts.review.prompts.render import REPO_ROOT, render_prompt
+    from scripts.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
 
     core = tmp_path / "rules" / "core.md"
     core.parent.mkdir()

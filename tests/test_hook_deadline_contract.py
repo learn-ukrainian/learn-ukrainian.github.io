@@ -6,7 +6,7 @@ import json
 import time
 from pathlib import Path
 
-from lu_machinery.agent_runtime.bounded_command import TIMEOUT_EXIT_CODE, run
+from scripts.agent_runtime.bounded_command import TIMEOUT_EXIT_CODE, run
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CODEX_HOOKS = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"

@@ -672,10 +672,10 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert 'bash "$(dirname "${BASH_SOURCE[0]}")/setup_bubblewrap.sh" postgresql-16 libpq-dev' in postgres
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
     assert job['steps'].index(setup) < job['steps'].index(step)
-    assert '.venv/bin/python -m lu_machinery.ci.pr_affected_tests' in step['run']
+    assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
     assert '"$EVENT_NAME" = pull_request' in step['run']
     invariants = next(s for s in job['steps'] if s.get('name') == 'Run repository invariants')
-    assert invariants['run'] == '.venv/bin/python -m lu_machinery.ci.pr_affected_tests --repo-wide'
+    assert invariants['run'] == '.venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide'
     assert job['steps'].index(step) < job['steps'].index(invariants)
     for event, status, expected in [('pull_request', 'success', True), ('pull_request', 'failure', True),
                                     ('pull_request', 'cancelled', False), ('merge_group', 'success', False)]:
@@ -688,7 +688,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert result.returncode == 0
     assert 'ran on this head' in result.stdout
     # An absent dependency is distinct from a present dependency with no result.
-    from lu_machinery.ci.gate import COMMON
+    from scripts.ci.gate import COMMON
     assert 'pr-affected' in COMMON
     needs = {name: {'result': 'success'} for name in COMMON - {'pr-affected'}}
     needs.update({name: {'result': 'skipped'} for name in ('queue-metadata-scan', 'frontend', 'refresh-pytest-durations', 'pytest', 'pytest-report')})

@@ -239,8 +239,8 @@ def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, conditi
     import json
     import sys
 
-    from lu_machinery.agent_runtime import agy_hook_config as hooks
-    from lu_machinery.common.repo_root import main_checkout_root
+    from scripts.agent_runtime import agy_hook_config as hooks
+    from scripts.common.repo_root import main_checkout_root
 
     root = Path(__file__).resolve().parents[1]
     workspace = tmp_path / "worker"

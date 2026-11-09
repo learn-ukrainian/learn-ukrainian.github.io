@@ -16,9 +16,9 @@ from typing import Any
 
 import pytest
 import yaml
-from lu_machinery.orchestration import curriculum_readiness
 
 from scripts.audit import llm_reviewer_dispatch, qg_workflow
+from scripts.orchestration import curriculum_readiness
 
 pytestmark = pytest.mark.reads_content
 

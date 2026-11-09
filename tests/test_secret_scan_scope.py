@@ -9,8 +9,9 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-from lu_machinery.ci import secret_scan_scope
-from lu_machinery.ci.secret_scan_scope import resolve_scan_scope
+
+from scripts.ci import secret_scan_scope
+from scripts.ci.secret_scan_scope import resolve_scan_scope
 
 
 def _git(root: Path, *args: str) -> str:
@@ -462,7 +463,7 @@ def test_schedule_lookup_failure_exits_nonzero_instead_of_narrowing(
             raise subprocess.TimeoutExpired(args, secret_scan_scope.GIT_REV_LIST_TIMEOUT_SECONDS)
         return real_run(args, **kwargs)  # type: ignore[arg-type]
 
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="refusing to narrow"):
             resolve_scan_scope(
                 "schedule", schedule_last_scanned_head=_git(tmp_path, "rev-parse", "HEAD"), repo_root=tmp_path
@@ -476,7 +477,7 @@ def test_schedule_lookup_failure_exits_nonzero_instead_of_narrowing(
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
     for key in ("MERGE_GROUP_BASE_SHA", "MERGE_GROUP_HEAD_SHA", "PUSH_BEFORE_SHA", "PUSH_AFTER_SHA"):
         monkeypatch.delenv(key, raising=False)
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
         code = secret_scan_scope.main()
     captured = capsys.readouterr()
 
@@ -504,7 +505,7 @@ def test_schedule_rev_list_error_exits_nonzero(
     recorded_head = _git(tmp_path, "rev-parse", "HEAD")
     monkeypatch.setattr(secret_scan_scope, "_last_scanned_head", lambda *args: recorded_head)
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=fail_rev_list):
         code = secret_scan_scope.main()
     captured = capsys.readouterr()
 
@@ -521,7 +522,7 @@ def test_schedule_refuses_identical_base_and_head(tmp_path: Path) -> None:
     fake.stdout = (sha + "\n") * (secret_scan_scope.SCHEDULE_FIRST_PARENT_STEPS + 1)
     fake.stderr = ""
 
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", return_value=fake):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", return_value=fake):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="identical"):
             resolve_scan_scope("schedule", schedule_last_scanned_head=sha, repo_root=tmp_path)
 
@@ -532,12 +533,12 @@ def test_schedule_rev_list_garbage_refuses_to_narrow(tmp_path: Path) -> None:
     fake.stderr = ""
     fake.stdout = "not-a-commit\n"
 
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", return_value=fake):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", return_value=fake):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="non-commit"):
             resolve_scan_scope("schedule", schedule_last_scanned_head="a" * 40, repo_root=tmp_path)
 
     fake.stdout = "\n"
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", return_value=fake):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", return_value=fake):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="no commits"):
             resolve_scan_scope("schedule", schedule_last_scanned_head="a" * 40, repo_root=tmp_path)
 
@@ -938,7 +939,7 @@ def test_dispatch_rejects_a_nonancestor_returned_by_merge_base(tmp_path: Path) -
             return subprocess.CompletedProcess(args, 0, stdout=unrelated + "\n", stderr="")
         return real_run(args, **kwargs)  # type: ignore[arg-type]
 
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=wrong_merge_base):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=wrong_merge_base):
         with pytest.raises(secret_scan_scope.SecretScanScopeError):
             resolve_scan_scope(
                 "workflow_dispatch",
@@ -968,7 +969,7 @@ def test_dispatch_git_failure_raises_instead_of_falling_back(tmp_path: Path, fai
             )
         return real_run(args, **kwargs)  # type: ignore[arg-type]
 
-    with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=fail_merge_base):
+    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=fail_merge_base):
         with pytest.raises(secret_scan_scope.SecretScanScopeError):
             resolve_scan_scope(
                 "workflow_dispatch",
@@ -1048,7 +1049,7 @@ def test_schedule_stale_coverage_recovers_every_missed_commit(tmp_path: Path, mo
 
         # A failed ancestry comparison must not replace the window base with
         # a recent record and silently narrow the overlap.
-        with patch("lu_machinery.ci.secret_scan_scope.subprocess.run", side_effect=failed_comparison):
+        with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=failed_comparison):
             with pytest.raises(secret_scan_scope.SecretScanScopeError):
                 resolve_scan_scope("schedule", schedule_last_scanned_head=head, repo_root=tmp_path)
 
@@ -1130,6 +1131,6 @@ def test_coverage_api_failure_fails_visibly_instead_of_narrowing(failure: str) -
             raise OSError("gh unavailable")
         return subprocess.CompletedProcess("gh", 0, stdout="[1]" if failure == "shape" else "invalid")
 
-    with patch("lu_machinery.ci.secret_scan_scope.github_client.run", side_effect=failed_api):
+    with patch("scripts.ci.secret_scan_scope.github_client.run", side_effect=failed_api):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="full-history-audit"):
             secret_scan_scope._last_scanned_head("unit/repo", "42", "refs/heads/main")

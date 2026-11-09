@@ -7,9 +7,9 @@ from pathlib import Path
 
 import jsonschema
 import pytest
-from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"

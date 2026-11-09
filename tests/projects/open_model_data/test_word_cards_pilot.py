@@ -10,11 +10,11 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.scratch import ensure_scratch_root
 
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
+from scripts.common.scratch import ensure_scratch_root
 from scripts.projects.open_model_data.word_cards import rehearsal
 from tests.test_word_card_assembly import SYNTHETIC_ALLOCATION_DIGEST, build_world, make_inputs
 

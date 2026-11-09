@@ -137,13 +137,13 @@ if __name__ == "__main__":
     raise SystemExit(main() - 1)
 '''
 
-UTIL = 'VALUE = 1\nMODULE = "lu_machinery.dispatch"\n'
+UTIL = 'VALUE = 1\nMODULE = "scripts.dispatch"\n'
 DESELECTING_CONFTEST = """def pytest_collection_modifyitems(config, items):
     dropped = [item for item in items if item.name == "test_second"]
     config.hook.pytest_deselected(items=dropped)
     items[:] = [item for item in items if item not in dropped]
 """
-CORE = "Run `python -m lu_machinery.dispatch`; see scripts/dispatch.py.\n"
+CORE = "Run `python -m scripts.dispatch`; see scripts/dispatch.py.\n"
 PORTED_TEST = "from scripts.lib import util\n\n\ndef test_value():\n    assert util.VALUE == 1\n"
 
 MANIFEST = [
@@ -366,8 +366,8 @@ def transform(extract: Path) -> dict[str, str | None]:
     return {
         "lu_machinery/__init__.py": "",
         "lu_machinery/dispatch.py": dispatch.replace("from scripts.lib import", "from lu_machinery.lib import"),
-        "lu_machinery/lib/util.py": UTIL.replace('"lu_machinery.dispatch"', '"lu_machinery.dispatch"'),
-        "agents_extensions/shared/rules/core.md": core.replace("lu_machinery.dispatch", "lu_machinery.dispatch").replace(
+        "lu_machinery/lib/util.py": UTIL.replace('"scripts.dispatch"', '"lu_machinery.dispatch"'),
+        "agents_extensions/shared/rules/core.md": core.replace("scripts.dispatch", "lu_machinery.dispatch").replace(
             "scripts/dispatch.py", "lu_machinery/dispatch.py"
         ),
     }
@@ -630,7 +630,7 @@ def test_v3_import_origin_defect_out_of_root_module_is_found(build: Build, tmp_p
 
     def reach_out(extract: Path) -> dict[str, str | None]:
         util = f"import sys\nsys.path.insert(0, {str(outside)!r})\nimport outsider_mod\n" + UTIL.replace(
-            '"lu_machinery.dispatch"', '"lu_machinery.dispatch"'
+            '"scripts.dispatch"', '"lu_machinery.dispatch"'
         )
         return {"lu_machinery/lib/util.py": util}
 
@@ -657,7 +657,7 @@ def test_v3_import_origin_defect_failing_import_and_dispatch_help(build: Build) 
 
 def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     def leak(extract: Path) -> dict[str, str | None]:
-        util = UTIL.replace('"lu_machinery.dispatch"', '"lu_machinery.dispatch"') + (
+        util = UTIL.replace('"scripts.dispatch"', '"lu_machinery.dispatch"') + (
             "\n\ndef later():\n"
             "    import product_mod\n"
             "    import scripts.lib.legacy\n"
@@ -746,8 +746,8 @@ def test_v4_product_import_defect_reports_file_and_line(build: Build) -> None:
     assert f"lu_machinery/lib/util.py:41: relative import of scripts.lib.product_child {inside}" in text
     assert f"lu_machinery/lib/util.py:42: relative import of scripts.lib.product_child {inside}" in text
     # A name assembled from a target and its fromlist, and literals joined by +, are judged like literals.
-    assert "lu_machinery/lib/util.py:43: loader target lu_machinery.dispatch names machinery (missed rename)" in text
-    assert "lu_machinery/lib/util.py:44: string references machinery module lu_machinery.dispatch (missed rename)" in text
+    assert "lu_machinery/lib/util.py:43: loader target scripts.dispatch names machinery (missed rename)" in text
+    assert "lu_machinery/lib/util.py:44: string references machinery module scripts.dispatch (missed rename)" in text
     assert "string holds machinery path scripts/product_mod.py" not in text  # a product path literal is allowed
     assert "lu_machinery/dispatch.py" not in text  # its docstring prose keeps scripts.dispatch
 
@@ -786,7 +786,7 @@ def test_v4_static_expressions_split_paths_and_anchored_loaders_are_judged() -> 
     )
     listed: list[str] = []
     found = module.scan_python_source("lu_machinery/x.py", source, _index(module), listed=listed)
-    machinery = "string references machinery module lu_machinery.dispatch (missed rename)"
+    machinery = "string references machinery module scripts.dispatch (missed rename)"
     assert sorted(found) == [
         f"lu_machinery/x.py:3: {machinery}",
         f"lu_machinery/x.py:4: {machinery}",
@@ -811,9 +811,9 @@ def test_v4_a1_import_statements_of_scripts_or_product_code_fail() -> None:
 
 def test_v4_a1_references_to_extracted_machinery_files_fail_as_missed_renames() -> None:
     module = _load_verifier()
-    source = b'TARGET = "lu_machinery.dispatch"\nPATH = "scripts/lib/util.py"\n'
+    source = b'TARGET = "scripts.dispatch"\nPATH = "scripts/lib/util.py"\n'
     assert module.scan_python_source("lu_machinery/x.py", source, _index(module)) == [
-        "lu_machinery/x.py:1: string references machinery module lu_machinery.dispatch (missed rename)",
+        "lu_machinery/x.py:1: string references machinery module scripts.dispatch (missed rename)",
         "lu_machinery/x.py:2: string holds machinery path scripts/lib/util.py (missed rename)",
     ]
 
@@ -1182,7 +1182,7 @@ REVIEWER_PROBES = [
     (
         "lu_machinery/x.py",
         'def f():\n    __import__("scripts", fromlist=["dispatch"])\n',
-        "loader target lu_machinery.dispatch names machinery (missed rename)",
+        "loader target scripts.dispatch names machinery (missed rename)",
         None,
     ),
     # Round 5: product modules behind an attribute suffix, and composed literals.
@@ -1225,7 +1225,7 @@ REVIEWER_PROBES = [
     (
         "lu_machinery/x.py",
         "P = f\"{'scripts'}.{'dispatch':s}\"\n",
-        "string references machinery module lu_machinery.dispatch (missed rename)",
+        "string references machinery module scripts.dispatch (missed rename)",
         None,
     ),
     # An attribute chain on the bare name is a lu_machinery-qualified name too.
@@ -1324,7 +1324,7 @@ def test_v5_rename_defect_missing_class_is_unusable_input(world: World) -> None:
 def test_v5_rename_defect_pending_rewrite_breaks_idempotence(build: Build) -> None:
     def leave_token(extract: Path) -> dict[str, str | None]:
         core = (extract / "agents_extensions/shared/rules/core.md").read_text(encoding="utf-8")
-        return {"agents_extensions/shared/rules/core.md": core + "Dry run: python -m lu_machinery.dispatch --dry-run\n"}
+        return {"agents_extensions/shared/rules/core.md": core + "Dry run: python -m scripts.dispatch --dry-run\n"}
 
     world = build(edit=leave_token)
     code, checks, output = world.run()
@@ -1758,7 +1758,7 @@ def test_read_only_imported_module_cannot_write_the_source_repository(build: Bui
         target = extract.parent / "src" / "scripts" / "product_mod.py"
         target_holder["path"] = target
         util = f"open({str(target)!r}, 'w').write('overwritten')\n" + UTIL.replace(
-            '"lu_machinery.dispatch"', '"lu_machinery.dispatch"'
+            '"scripts.dispatch"', '"lu_machinery.dispatch"'
         )
         return {"lu_machinery/lib/util.py": util}
 

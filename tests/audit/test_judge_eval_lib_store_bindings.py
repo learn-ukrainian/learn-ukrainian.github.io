@@ -5,9 +5,9 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import topology
 
 from scripts.audit import _judge_eval_lib as judge
+from scripts.storage import topology
 
 
 def _sources_db(path: Path, label: str) -> Path:

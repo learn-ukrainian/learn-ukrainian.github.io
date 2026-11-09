@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime import agy_hook_config
 
+from scripts.agent_runtime import agy_hook_config
 from tests.helpers.agy_inbox_fixtures import (
     BODY_MARKER,
     MESSAGE_ID,
@@ -28,7 +28,7 @@ pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_UNKNOWN_NOTICE = (
     "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
-    "authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
+    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
 )
 SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
 
@@ -105,9 +105,9 @@ def test_monitor_alias_cli_and_hook_policy(stores, roster, monkeypatch, provider
     if source == "legacy":
         guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}"
     elif source == "authority":
-        guidance = "; authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
+        guidance = "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
     else:
-        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}; authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
+        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
     shown = ",".join(map(str, ids))
     assert result == {"injectSteps": [{"ephemeralMessage": f"PENDING ORDERS: {len(ids)} (ids {shown}){guidance}"}]}
     line = result["injectSteps"][0]["ephemeralMessage"]
@@ -201,7 +201,7 @@ def test_alias_only_supervisory_consumption_is_silent(stores, roster, monkeypatc
         {
             "injectSteps": [
                 {
-                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {MESSAGE_ID}); authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
+                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {MESSAGE_ID}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
                 }
             ]
         }
@@ -285,7 +285,7 @@ def test_denominator_matrix(stores, state, recipient, failure, monkeypatch):
         else:
             identifier = MESSAGE_ID if state.startswith("authority") else "1"
             guidance = (
-                "; authority: .venv/bin/python -m lu_machinery.fleet_comms deliveries --help"
+                "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
                 if state.startswith("authority")
                 else "; legacy: ai_agent_bridge inbox --for gemini-infra"
             )

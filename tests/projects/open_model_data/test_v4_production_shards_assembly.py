@@ -16,8 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from lu_machinery.storage.paths import ArtifactSet, artifact_set
-
 from scripts.projects.open_model_data.v4_production_shards_assembly import (
     ANTI_HYPERPURIST_DPO_QUOTA,
     ANTI_SOVIET_DPO_QUOTA,
@@ -46,6 +44,7 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
 from scripts.projects.open_model_data.v4_production_shards_assembly import (
     HISTORICAL_ARCHIVE_DIR as DEFAULT_OUTPUT_DIR,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
 REGISTRY_OUTPUT_DIR = REPO_ROOT / "registry" / DEFAULT_OUTPUT_DIR.relative_to(REPO_ROOT / "data")
 

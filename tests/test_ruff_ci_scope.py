@@ -83,7 +83,7 @@ def test_pre_commit_has_no_pytest_hooks_and_checks_remains_required() -> None:
     jobs = workflow["jobs"]
     assert "checks" in jobs["ci-gate"]["needs"], "CI Gate must require Checks"
     verdict = next(step for step in jobs["ci-gate"]["steps"] if step.get("name") == "Require every job")
-    assert verdict["run"] == '"$PYTHON_BIN" -m lu_machinery.ci.gate'
+    assert verdict["run"] == '"$PYTHON_BIN" -m scripts.ci.gate'
     assert verdict["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
     result = _run_gate("pull_request", CHECKS="failure")
     assert result.returncode != 0, "Checks must participate in the gate verdict"

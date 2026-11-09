@@ -9,10 +9,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.fleet import ignored_task_output as output
-from lu_machinery.fleet import regenerable_output as patterns
-from lu_machinery.orchestration import worktree_claims
 
+from scripts.fleet import ignored_task_output as output
+from scripts.fleet import regenerable_output as patterns
+from scripts.orchestration import worktree_claims
 from tests.orchestration import test_worktree_artifacts as fixtures
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
@@ -778,8 +778,7 @@ def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, mon
 
 
 def test_removal_does_not_follow_symlink(tmp_path):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
 
     primary = _primary(tmp_path)
@@ -841,8 +840,7 @@ def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout
 
 @pytest.mark.parametrize("case", ["force_new", "vanished_copy", "internal_link", "changed_copy"])
 def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path, monkeypatch, case):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
 
     primary = _primary(tmp_path)
@@ -1037,7 +1035,7 @@ def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):
 
 def _write_legacy_merged_reuse_proof(repo, tree, tasks, head):
     """Write the ``merged-reuse-reap.v1`` proof the retired reaper left on creator records."""
-    from lu_machinery.orchestration import worktree_git as wg
+    from scripts.orchestration import worktree_git as wg
 
     matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
     cohort = output._current_reuse_records(matches, tasks)
@@ -1073,8 +1071,7 @@ def _write_legacy_merged_reuse_proof(repo, tree, tasks, head):
 
 @pytest.mark.parametrize("failure", [None, "missing", "head", "member", "pid", "keep"])
 def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pending_cohort, failure):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _git
     from tests.test_reused_worktree_retention import save
 
@@ -1111,8 +1108,7 @@ def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pen
 
 @pytest.mark.parametrize("mutation", ["pid", "keep", "head", "patch", "new_claim", "dirty"])
 def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _git
     from tests.test_reused_worktree_retention import save
 
@@ -1209,8 +1205,7 @@ def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, fl
 
 
 def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _git
     from tests.test_continuation_worktree_reap import _write_abandon_receipt
 
@@ -1249,8 +1244,7 @@ def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
 
 
 def test_10303_abandon_patch_base_must_be_on_main(abandon_cohort):
-    from lu_machinery.orchestration import worktree_claims as claims
-
+    from scripts.orchestration import worktree_claims as claims
     from tests.test_reused_worktree_retention import save
 
     repo, tree, tasks, creator, _, source = abandon_cohort

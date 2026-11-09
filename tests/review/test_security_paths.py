@@ -8,22 +8,23 @@ from fnmatch import fnmatchcase
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.git_context import sanitized_git_env
-from lu_machinery.review.closeout_cli import main
-from lu_machinery.review.security_paths import (
+
+from scripts.common.git_context import sanitized_git_env
+from scripts.review.closeout_cli import main
+from scripts.review.security_paths import (
     SECURITY_SENSITIVE_PATHS,
     effective_review_risk,
     git_changed_paths,
     is_security_sensitive_change,
 )
-from lu_machinery.review.target_resolution import TargetResolutionError
+from scripts.review.target_resolution import TargetResolutionError
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture(autouse=True)
 def isolated_live_snapshot(monkeypatch):
-    monkeypatch.setattr("lu_machinery.fleet.credit_lane.read_routing_budget", lambda **_: None)
+    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -175,14 +176,14 @@ def test_invalid_sha_refuses_before_git(repo, monkeypatch, base, head):
     def unexpected(*_args):
         pytest.fail("invalid state-file endpoints must never reach git")
 
-    monkeypatch.setattr("lu_machinery.review.security_paths._run_git", unexpected)
+    monkeypatch.setattr("scripts.review.security_paths._run_git", unexpected)
     with pytest.raises(TargetResolutionError, match="target_sha_invalid"):
         git_changed_paths(repo, base, head)
 
 
 @pytest.mark.parametrize("error", [OSError("unavailable"), subprocess.TimeoutExpired("git", 30)])
 def test_git_collection_launch_or_timeout_is_a_refusal(repo, monkeypatch, error):
-    from lu_machinery.review import security_paths
+    from scripts.review import security_paths
 
     def fail(*_args):
         raise error

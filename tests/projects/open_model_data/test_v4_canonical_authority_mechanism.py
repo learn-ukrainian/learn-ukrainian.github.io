@@ -13,13 +13,13 @@ from typing import Any
 import _v4_a7_real_slot_fixture as fx
 import pytest
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
-from lu_machinery.fleet_comms.artifacts import ArtifactStore
-from lu_machinery.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 from test_v4_runner_origin_mechanism import (
     FIXTURE_MODEL,
     FIXTURE_SESSION,
 )
 
+from scripts.fleet_comms.artifacts import ArtifactStore
+from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 from scripts.projects.open_model_data import v4_a3_reference_check as reference_check
 from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority

@@ -9,10 +9,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import artifacts, paths
 
 from scripts.projects.open_model_data import build_decolonization_cases as decol
 from scripts.projects.open_model_data import build_grammar_component_8342 as grammar
+from scripts.storage import artifacts, paths
 
 GRAMMAR = "projects/open_model_data/components/grammar"
 DECOL = "projects/open_model_data/components/decolonization"

@@ -21,9 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from lu_machinery.lib.readonly_sqlite import open_readonly
-from lu_machinery.storage.paths import artifact_path
-
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import v4_mine_corpus_calques as corpus_miner
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
@@ -49,6 +47,7 @@ from scripts.projects.open_model_data.v4_mine_uagec_calques import (
     lookup_uagec_source_sentence,
     resolve_uagec_sentence_context,
 )
+from scripts.storage.paths import artifact_path
 from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"

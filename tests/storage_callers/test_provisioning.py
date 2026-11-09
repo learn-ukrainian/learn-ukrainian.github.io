@@ -3,10 +3,10 @@
 import subprocess
 
 import pytest
-from lu_machinery.dispatcher import git
-from lu_machinery.storage.topology import StoreBinding, resolve_store
 
 from scripts.build import v7_build
+from scripts.dispatcher import git
+from scripts.storage.topology import StoreBinding, resolve_store
 
 
 @pytest.mark.parametrize("creator", ["dispatcher", "v7"])

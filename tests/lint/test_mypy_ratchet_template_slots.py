@@ -27,13 +27,14 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-from lu_machinery.lint import mypy_ratchet as source_ratchet
+
+from scripts.lint import mypy_ratchet as source_ratchet
 
 _REPO = Path(__file__).resolve().parents[2]
 _RATCHET = _REPO / "scripts" / "lint" / "mypy_ratchet.py"
 _FIXTURES = Path(__file__).with_name("fixtures") / "mypy_ratchet"
 _PKG = "lu_machinery"
-_IDENTITY = "lu_machinery.agent_runtime.agent_identity"
+_IDENTITY = "agent_runtime.agent_identity"
 
 _CONFIG = '[tool.mypy]\npython_version = "3.12"\n'
 _SUPPORT = {
@@ -187,7 +188,7 @@ _EQUAL_CASES = [
         _TEMPLATES_PATH,
         "valid-type",
         f'Variable "{_PKG}.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type',
-        'Variable "lu_machinery.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type',
+        'Variable "scripts.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type',
     ),
     (
         "product-module-preserved",
@@ -300,7 +301,7 @@ def test_a_whole_machinery_module_name_in_data_is_compared_exactly(cases: tuple[
         (
             "changed-symbol",
             "valid-type",
-            'Variable "lu_machinery.orchestration.prompt_contracts._OtherBase" is not valid as a type',
+            'Variable "scripts.orchestration.prompt_contracts._OtherBase" is not valid as a type',
             f'Variable "{_PKG}.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type',
         ),
         (
@@ -354,11 +355,11 @@ def test_near_templates_are_never_respelled(extracted: tuple[Path, ModuleType], 
 @pytest.mark.parametrize(
     "message",
     [
-        'Variable "lu_machinery.orchestration.prompt_contracts" is not valid as a type',
+        'Variable "scripts.orchestration.prompt_contracts" is not valid as a type',
         'Variable "scripts.zz_unknown.X" is not valid as a type',
-        'Module "lu_machinery.orchestration.prompt_contracts" is not valid as a type',
-        'Function "lu_machinery.orchestration.prompt_contracts.f" is not valid as a type',
-        'Variable "lu_machinery.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type; x',
+        'Module "scripts.orchestration.prompt_contracts" is not valid as a type',
+        'Function "scripts.orchestration.prompt_contracts.f" is not valid as a type',
+        'Variable "scripts.orchestration.prompt_contracts._SafeLoaderBase" is not valid as a type; x',
     ],
 )
 def test_variable_slot_needs_a_known_module_and_a_symbol(extracted: tuple[Path, ModuleType], message: str) -> None:

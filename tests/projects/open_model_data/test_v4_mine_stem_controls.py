@@ -15,9 +15,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from lu_machinery.opsec.needles import Needles
-
 import scripts.projects.open_model_data.v4_mine_stem_controls as stem_controls
+from scripts.opsec.needles import Needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_mine_stem_controls import (
     DEFAULT_OUTPUT_DIR,

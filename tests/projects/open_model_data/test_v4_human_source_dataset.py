@@ -10,8 +10,8 @@ from typing import Any
 
 import jsonschema
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_human_source_dataset import (
     _get_language_usage_masks,

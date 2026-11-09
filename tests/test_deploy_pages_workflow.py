@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.ci.deploy_paths import AutoDeployDecision, decide_auto_deploy
 
+from scripts.ci.deploy_paths import AutoDeployDecision, decide_auto_deploy
 from scripts.deploy.auto_deploy_eligibility import (
     format_step_summary,
     main,

@@ -1,11 +1,12 @@
-"""Read-only diagnostic projections for lu_machinery.publish (#9792), with no gh calls."""
+"""Read-only diagnostic projections for scripts.publish (#9792), with no gh calls."""
 
 import json
 import subprocess
 
 import pytest
-from lu_machinery.opsec.prepublish import PublishBlocked
-from lu_machinery.publish import github as pub
+
+from scripts.opsec.prepublish import PublishBlocked
+from scripts.publish import github as pub
 
 
 @pytest.mark.parametrize("extra", [

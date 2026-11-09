@@ -12,10 +12,11 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime.review_mcp import check_review_contract
-from lu_machinery.common.git_context import sanitized_git_env
-from lu_machinery.review import render_contract
-from lu_machinery.review.render_contract import (
+
+from scripts.agent_runtime.review_mcp import check_review_contract
+from scripts.common.git_context import sanitized_git_env
+from scripts.review import render_contract
+from scripts.review.render_contract import (
     LOCK_FILE,
     RENDER_RECORD_KEY,
     ReviewContractError,
@@ -511,7 +512,7 @@ def test_equal_size_edit_with_restored_mtime_changes_the_digest(tmp_path: Path) 
 
 def test_non_list_findings_envelope_is_refused_not_zero_claims():
     """A findings envelope that is not a list of findings is refused before claim counting (#12617)."""
-    from lu_machinery.review.review_contract import ContractError, validate_ukrainian_reply_claims
+    from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
 
     evidence = {"receipt": "missing", "quote": "fabricated excerpt"}
     for findings in ({"evidence": evidence}, "fabricated excerpt", [["fabricated excerpt"]]):
@@ -531,7 +532,7 @@ def test_non_list_findings_envelope_is_refused_not_zero_claims():
 
 def test_invalid_yaml_scalar_is_typed_malformed_refusal():
     """A reply that YAML parses but cannot construct gets the typed malformed refusal, not an exception (#12613)."""
-    from lu_machinery.review.review_contract import ContractError, validate_ukrainian_reply_claims
+    from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
 
     # ValueError, AttributeError, IndexError, KeyError, OverflowError and RecursionError from construction.
     bodies = ("x: 2024-13-45", "x: !!float abc", "x: !!timestamp abc", 'x: !!int ""', "x: !!bool abc",
@@ -544,7 +545,7 @@ def test_invalid_yaml_scalar_is_typed_malformed_refusal():
 
 
 def _cited_fact_rows() -> list[tuple[str, bool]]:
-    from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
 
     tools = sorted(
         name for name in (*sources_tool_sets()[0], *sources_tool_sets()[1])
@@ -581,7 +582,7 @@ def _cited_fact_rows() -> list[tuple[str, bool]]:
 def test_severity_labels_and_non_tool_identifiers_are_not_cited_source_facts(text: str, cites: bool):
     """Defect class: false cited-fact claims (#12855). Severity labels P0-P3 and identifiers that only share a
     Sources tool prefix are not source citations, while every real citation branch still needs captured support."""
-    from lu_machinery.review.review_contract import validate_ukrainian_reply_claims
+    from scripts.review.review_contract import validate_ukrainian_reply_claims
 
     _, checked = validate_ukrainian_reply_claims(f"VERDICT: APPROVE\n{text}\n")
     if cites:

@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.ci import stack_currency_report as report
 
+from scripts.ci import stack_currency_report as report
 from tests._host_path_guard import assert_no_host_facts, assert_no_host_paths
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]

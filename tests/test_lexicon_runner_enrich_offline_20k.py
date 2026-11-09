@@ -124,9 +124,8 @@ def test_dry_run_missing_candidate_reports_not_ok(tmp_path: Path) -> None:
 
 
 def test_dry_run_default_kaikki_requires_hydrated_artifact(tmp_path: Path) -> None:
-    from lu_machinery.storage import paths
-
     from scripts.lexicon.runner.enrich_offline_20k import build_parser, dry_run_plan
+    from scripts.storage import paths
 
     manifest = paths.manifest_path("lexicon_kaikki", tmp_path)
     manifest.parent.mkdir(parents=True)

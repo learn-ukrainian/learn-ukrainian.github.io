@@ -6,9 +6,9 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from lu_machinery.agent_runtime.adapters.base import InvocationPlan
-from lu_machinery.agent_runtime.adapters.gemini import GeminiAdapter
 
+from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.agent_runtime.adapters.gemini import GeminiAdapter
 from scripts.build import linear_pipeline
 
 

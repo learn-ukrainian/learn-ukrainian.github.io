@@ -11,8 +11,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.agent_runtime.runner import invoke
-
+from scripts.agent_runtime.runner import invoke
 from scripts.audit.failure_classes import FailureClass
 from scripts.build import linear_pipeline
 from scripts.build.linear_pipeline import classify_writer_trace
@@ -187,7 +186,7 @@ def test_claude_subprocess_argv_contains_allowed_tools(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from lu_machinery.agent_runtime.adapters import claude as claude_adapter_mod
+    from scripts.agent_runtime.adapters import claude as claude_adapter_mod
 
     class FakeProc:
         def __init__(self) -> None:
@@ -247,9 +246,9 @@ def test_claude_subprocess_argv_contains_allowed_tools(
     monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
 
     with (
-        patch("lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("lu_machinery.agent_runtime.runner.write_record"),
-        patch("lu_machinery.agent_runtime.runner.subprocess.Popen", side_effect=fake_popen),
+        patch("scripts.agent_runtime.runner.has_headroom", return_value=(True, "")),
+        patch("scripts.agent_runtime.runner.write_record"),
+        patch("scripts.agent_runtime.runner.subprocess.Popen", side_effect=fake_popen),
     ):
         result = invoke(
             "claude",

@@ -27,7 +27,7 @@ from collections.abc import Mapping, Sequence
 from contextlib import suppress
 from pathlib import Path
 
-from lu_machinery.common.scratch import ensure_scratch_root
+from scripts.common.scratch import ensure_scratch_root
 
 _POLL_S = 0.05
 _REAP_TIMEOUT_S = 10

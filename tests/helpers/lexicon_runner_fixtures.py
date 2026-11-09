@@ -7,9 +7,9 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.lexicon.runner.generate_pr1_fixture import resolve_sources_slice
+from scripts.lib.readonly_sqlite import open_readonly
 from tests.helpers.sum20_store import bind_empty_sum20_store, seed_sum20_rows
 
 

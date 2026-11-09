@@ -15,7 +15,8 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from lu_machinery.api.opsec_sanitize import opsec_path_sanitizer_middleware, sanitize_document, sanitize_text
+
+from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware, sanitize_document, sanitize_text
 
 pytestmark = pytest.mark.repo_invariant
 

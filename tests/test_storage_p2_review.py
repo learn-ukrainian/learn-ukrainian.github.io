@@ -7,11 +7,11 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import paths
 
 from scripts.lexicon import curated_textbook_jsonl_repromote as textbook
 from scripts.lexicon import reenrich_thin_manifest_entries as reenrich
 from scripts.lexicon import repair_plural_noun_aliases as repair
+from scripts.storage import paths
 
 
 def test_textbook_default_inventory_is_tracked_registry_file() -> None:

@@ -191,7 +191,7 @@ def test_heal_core_bare_is_fail_open_and_bounded() -> None:
 
 def test_claude_worker_settings_inherit_the_failure_policy() -> None:
     """Dispatched Claude workers and Grok agents are built from the shared settings."""
-    from lu_machinery.agent_runtime.adapters import claude
+    from scripts.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings())["hooks"]["PreToolUse"]
     guards = [hook for group in groups for hook in group["hooks"] if _is_refusing_guard(Path(hook["command"]).name)]
@@ -201,7 +201,7 @@ def test_claude_worker_settings_inherit_the_failure_policy() -> None:
 
 def test_reviewer_publish_guard_blocks_on_failure() -> None:
     """The adapter adds this guard to read-only runs; it follows the shared guards' failure policy."""
-    from lu_machinery.agent_runtime.adapters import claude
+    from scripts.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
     publish = [
@@ -219,7 +219,7 @@ def test_reviewer_publish_guard_blocks_on_failure() -> None:
 
 def test_every_adapter_added_guard_blocks_on_failure() -> None:
     """Any refusing guard the adapter adds beyond the shared settings must carry the policy too."""
-    from lu_machinery.agent_runtime.adapters import claude
+    from scripts.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
     guards = [hook for group in groups for hook in group["hooks"] if _is_refusing_guard(Path(hook["command"]).name)]
@@ -541,7 +541,7 @@ def test_heal_core_bare_spawns_the_checker_only_on_possible_drift(tmp_path: Path
 
 
 def test_codex_outer_timeout_exceeds_the_inner_deadline_chain() -> None:
-    from lu_machinery.agent_runtime import codex_hook_policy as policy
+    from scripts.agent_runtime import codex_hook_policy as policy
 
     hooks = json.loads((REPO / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
     (pre,) = hooks["hooks"]["PreToolUse"]
@@ -555,7 +555,7 @@ def test_codex_outer_timeout_exceeds_the_inner_deadline_chain() -> None:
 
 
 def test_agy_outer_timeout_exceeds_the_secret_guard_deadline() -> None:
-    from lu_machinery.agent_runtime import secret_print_hook
+    from scripts.agent_runtime import secret_print_hook
 
     hooks = json.loads((REPO / "agents_extensions/agy/hooks.json").read_text(encoding="utf-8"))
     entry = hooks["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]
@@ -590,7 +590,7 @@ def test_grok_bridge_denies_a_guard_that_times_out_or_crashes(
     """Grok fails open on any hook failure, so the bridge itself must turn one into a deny."""
     import io
 
-    from lu_machinery.agent_runtime import grok_hook_bridge as bridge
+    from scripts.agent_runtime import grok_hook_bridge as bridge
 
     real_run = subprocess.run
 
@@ -669,10 +669,10 @@ def test_tracked_cursor_guard_hooks_fail_closed() -> None:
         ("gh api -X POST repos/o/r", True),
         ("gh release create v1", True),
         ("gh workflow run ci.yml", True),
-        ("python -m lu_machinery.publish issue-comment --number 5 --body x", True),
+        ("python -m scripts.publish issue-comment --number 5 --body x", True),
         ("gh pr view 5", False),
         ("gh api -X GET repos/o/r", False),
-        ("python -m lu_machinery.publish --help", False),
+        ("python -m scripts.publish --help", False),
         ("git status", False),
     ],
 )

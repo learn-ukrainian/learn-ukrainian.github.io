@@ -9,9 +9,10 @@ from _v4_linguistic_context_fixture import stored_preparation
 from _v4_packaged_runtime_fixture import produce_author_record
 from _v4_shared_runtime_fixtures import assert_authorized_request, role_connection
 from learn_ukrainian_v4_runtime import semantic_inputs
-from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import claim
 from test_v4_protected_parent_mechanism import _run_real_pair
+
+from scripts.fleet_comms.request_executor import RequestExecutor
 
 pytest_plugins = ("pytester",)
 

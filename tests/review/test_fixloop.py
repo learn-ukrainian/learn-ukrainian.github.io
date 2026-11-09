@@ -10,12 +10,11 @@ from typing import Any
 
 import pytest
 import yaml
-from lu_machinery.review import findings_db as db
-from lu_machinery.review import second_seat
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.curriculum.evidence import lock as lock_module
-from scripts.review import fixloop
+from scripts.review import findings_db as db
+from scripts.review import fixloop, second_seat
 from scripts.review import record as record_module
 from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, _run_together, finding, unsupported
 

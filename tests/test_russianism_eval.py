@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 import pytest
 import yaml
-from lu_machinery.ai_agent_bridge import _claude, _cli
 
+from scripts.ai_agent_bridge import _claude, _cli
 from scripts.audit import russianism_eval, russianism_judge
 
 

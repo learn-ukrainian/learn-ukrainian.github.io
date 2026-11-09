@@ -33,7 +33,7 @@ def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     args_log = tmp_path / "inbox-cli-args.log"
     python.write_text(
         "#!/bin/sh\n"
-        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"lu_machinery.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
+        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
         "  exit 64\n"
         "fi\n"
         "if [ \"${FAKE_INBOX_FAIL:-0}\" = \"1\" ]; then\n"
@@ -67,13 +67,13 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
     assert ".timeout 1000" in source
     assert "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0" in source
     assert not re.search(r"\b(INSERT|UPDATE|DELETE|REPLACE)\b", source)
-    assert '"$PROJECT_DIR/.venv/bin/python" -m lu_machinery.ai_agent_bridge inbox --for "$RECIPIENT"' in source
+    assert '"$PROJECT_DIR/.venv/bin/python" -m scripts.ai_agent_bridge inbox --for "$RECIPIENT"' in source
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
 
     test_cases = [
-        ("claude", "CLAUDE INBOX: 1 unread message", "claude-targeted unread payload", ".venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for claude"),
-        ("codex", "CODEX INBOX: 1 unread message", "codex-targeted unread payload", ".venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for codex"),
-        ("gemini", "GEMINI INBOX: 1 unread message", "gemini-targeted unread payload", ".venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for gemini"),
+        ("claude", "CLAUDE INBOX: 1 unread message", "claude-targeted unread payload", ".venv/bin/python -m scripts.ai_agent_bridge inbox --for claude"),
+        ("codex", "CODEX INBOX: 1 unread message", "codex-targeted unread payload", ".venv/bin/python -m scripts.ai_agent_bridge inbox --for codex"),
+        ("gemini", "GEMINI INBOX: 1 unread message", "gemini-targeted unread payload", ".venv/bin/python -m scripts.ai_agent_bridge inbox --for gemini"),
     ]
 
     for recipient, expected_header, expected_preview, expected_instruction in test_cases:
@@ -112,9 +112,9 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
         assert "mcp__message-broker" not in context, f"Retired MCP tool found in:\n{context}"
 
     assert args_log.read_text(encoding="utf-8").splitlines()[-3:] == [
-        "-m lu_machinery.ai_agent_bridge inbox --for claude",
-        "-m lu_machinery.ai_agent_bridge inbox --for codex",
-        "-m lu_machinery.ai_agent_bridge inbox --for gemini",
+        "-m scripts.ai_agent_bridge inbox --for claude",
+        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for gemini",
     ]
 
 
@@ -152,9 +152,9 @@ def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
     context = output["hookSpecificOutput"]["additionalContext"]
 
     assert "CLAUDE INBOX: 1 unread message" in context
-    assert ".venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for claude" in context
+    assert ".venv/bin/python -m scripts.ai_agent_bridge inbox --for claude" in context
     assert "mcp__message-broker" not in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for claude"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for claude"
 
 
 def test_inbox_hook_fails_open_when_project_interpreter_is_missing(tmp_path: Path) -> None:
@@ -385,8 +385,8 @@ def test_inbox_hook_unread_rows_keep_exact_live_cli_preview(tmp_path: Path) -> N
     context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert "CODEX INBOX: 1 unread message" in context
     assert "codex fast-path payload" in context
-    assert ".venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for codex" in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for codex"
+    assert ".venv/bin/python -m scripts.ai_agent_bridge inbox --for codex" in context
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"
 
 
 @pytest.mark.skipif(shutil.which("sqlite3") is None, reason="fast path uses the sqlite3 CLI")
@@ -423,7 +423,7 @@ def test_inbox_hook_grok_seat_dual_reads_grok_build_alias(tmp_path: Path) -> Non
     context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert "GROK INBOX: 1 unread message" in context
     assert "grok alias payload" in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for grok"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for grok"
 
 
 @pytest.mark.skipif(shutil.which("sqlite3") is None, reason="fast path uses the sqlite3 CLI")
@@ -460,4 +460,4 @@ def test_inbox_hook_db_error_falls_back_to_live_cli(tmp_path: Path) -> None:
     context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert "CODEX INBOX: 1 unread message" in context
     assert "fallback payload" in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for codex"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"

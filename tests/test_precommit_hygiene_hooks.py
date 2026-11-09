@@ -5,7 +5,8 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.pre_commit.declared_hook_stages import declared_stages
+
+from scripts.pre_commit.declared_hook_stages import declared_stages
 
 
 @pytest.fixture
@@ -27,7 +28,7 @@ def test_hygiene_hooks_use_project_python_at_commit(config, hook_id, module, pas
     ]
     assert len(hooks) == 1
     hook = hooks[0]
-    assert hook["entry"] == f"bash scripts/pre_commit/project_python.sh -m lu_machinery.hygiene.{module}"
+    assert hook["entry"] == f"bash scripts/pre_commit/project_python.sh -m scripts.hygiene.{module}"
     assert hook["language"] == "system"
     assert hook["stages"] == ["pre-commit"]
     assert hook["pass_filenames"] is pass_filenames

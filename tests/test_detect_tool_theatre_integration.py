@@ -6,8 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.agent_runtime.result import Result
-
+from agent_runtime.result import Result
 from build import linear_pipeline
 
 

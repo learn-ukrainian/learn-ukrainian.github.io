@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.ai_llm.fallback import (
+from ai_llm.fallback import (
     AGY_GEMINI_MODEL,
     AttemptOutcome,
     run_gemini_fallback_ladder,

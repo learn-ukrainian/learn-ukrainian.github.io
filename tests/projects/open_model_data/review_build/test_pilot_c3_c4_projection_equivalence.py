@@ -16,11 +16,11 @@ from dataclasses import asdict
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.scratch import ensure_scratch_root
 
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_batch1 as batch
 from scripts.atlas import word_card_foundation as foundation
+from scripts.common.scratch import ensure_scratch_root
 from scripts.projects.open_model_data.review_build.components import (
     ComponentContext,
     c3_relations,

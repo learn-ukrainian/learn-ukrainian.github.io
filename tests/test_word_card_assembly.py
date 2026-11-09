@@ -20,10 +20,6 @@ from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
-from lu_machinery.common.git_context import sanitized_git_env
-from lu_machinery.common.scratch import ensure_scratch_root
-from lu_machinery.guardrails import worktree_containment as containment
-from lu_machinery.storage.topology import StoreBinding, resolve_store
 
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as wa
@@ -33,6 +29,10 @@ from scripts.atlas import word_card_sources as src
 from scripts.atlas import word_card_verify as verify
 from scripts.atlas.allocate_pilot_identities import BUILD_PREFIX, HOLDING_BASIS, HOLDING_BUILD_PREFIX
 from scripts.atlas.word_card_resolver import _project, aid, card_version
+from scripts.common.git_context import sanitized_git_env
+from scripts.common.scratch import ensure_scratch_root
+from scripts.guardrails import worktree_containment as containment
+from scripts.storage.topology import StoreBinding, resolve_store
 from scripts.wiki import sum20_mirror
 from tests.test_word_card_sources import (
     ENTRY_DDL,

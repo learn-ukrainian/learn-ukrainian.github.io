@@ -535,7 +535,7 @@ def test_promote_refuses_without_a_review_or_without_approve(env: Env, capsys) -
 
 def test_promote_refuses_a_hand_written_review_without_a_dispatch_record(env: Env, capsys) -> None:
     """A plan-review.yaml no bound dispatch recorded is refused, naming what is missing (#12114)."""
-    from lu_machinery.review import findings_db
+    from scripts.review import findings_db
 
     forge_review(env, make_manifest(env, capsys))
     findings_db.connect(findings_db.db_path(LEVEL, env.root)).close()  # this host's database, without the attempt

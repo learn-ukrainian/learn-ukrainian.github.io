@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from lu_machinery.agent_runtime.errors import AgentStalledError
 
+from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline, v7_review
 from scripts.curriculum.quality.thresholds import QG_DIMS
 

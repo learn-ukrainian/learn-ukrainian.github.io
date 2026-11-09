@@ -13,9 +13,8 @@ from typing import ClassVar
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from lu_machinery.lib.readonly_sqlite import open_readonly
-
 from rag.config import LITERARY_DIR
+from scripts.lib.readonly_sqlite import open_readonly
 
 # ── Post-execution tests ─────────────────────────────────────────────
 

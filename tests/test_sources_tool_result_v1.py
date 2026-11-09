@@ -276,8 +276,7 @@ def test_synii_pinned_lookup(server_module, monkeypatch, tmp_path, synii_matches
     """Exercise the real SQL lookup with source-attested rows, including POS filtering."""
     import sqlite3
 
-    from lu_machinery.storage.topology import ENV_VESUM_DB
-
+    from scripts.storage.topology import ENV_VESUM_DB
     from scripts.verification import vesum
 
     db_path = tmp_path / "vesum.db"

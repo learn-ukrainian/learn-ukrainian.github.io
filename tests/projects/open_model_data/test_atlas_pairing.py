@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
-from lu_machinery.common.jsonl import jsonl_lines
-from lu_machinery.common.repo_root import main_checkout_root
 
+from scripts.common.jsonl import jsonl_lines
+from scripts.common.repo_root import main_checkout_root
 from scripts.projects.open_model_data import generate_atlas_pairing as pairing
 
 ROOT = Path(__file__).resolve().parents[3]

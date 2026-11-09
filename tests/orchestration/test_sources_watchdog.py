@@ -16,8 +16,8 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-from lu_machinery.orchestration import sources_watchdog as wd
 
+from scripts.orchestration import sources_watchdog as wd
 from scripts.rag import hang_diagnostics as hd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -716,7 +716,7 @@ def malformed_policy_repo(tmp_path: Path) -> Path:
 @pytest.mark.parametrize("probe", ["watchdog", "diagnostics", "governor"])
 def test_diagnostics_survive_malformed_curriculum_policy(malformed_policy_repo: Path, probe: str) -> None:
     if probe == "watchdog":
-        args = ["-m", "lu_machinery.orchestration.sources_watchdog", "--help"]
+        args = ["-m", "scripts.orchestration.sources_watchdog", "--help"]
         expected = "usage:"
     elif probe == "diagnostics":
         args = ["-c", "import scripts.rag.hang_diagnostics; print('diagnostics imported')"]

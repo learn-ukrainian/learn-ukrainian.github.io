@@ -7,8 +7,9 @@ from pathlib import Path
 
 import pytest
 from fastapi import HTTPException
-from lu_machinery.api import coordination_router
-from lu_machinery.orchestration import agent_ledger
+
+from scripts.api import coordination_router
+from scripts.orchestration import agent_ledger
 
 pytestmark = pytest.mark.reads_content
 

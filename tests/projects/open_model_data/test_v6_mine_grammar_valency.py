@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 from jsonschema import validate
-from lu_machinery.lib.readonly_sqlite import open_readonly
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import v6_mine_grammar_valency as miner
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 

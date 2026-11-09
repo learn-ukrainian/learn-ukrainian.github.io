@@ -17,8 +17,8 @@ from types import SimpleNamespace
 
 import pytest
 import requests
-from lu_machinery.hygiene import lint_source_db_writable_connects as sqlite_lint
 
+from scripts.hygiene import lint_source_db_writable_connects as sqlite_lint
 from scripts.ingest import dictionary_acquisition as acquisition
 
 SLOVNYK_HTML = '<html><section id="dictionary-article"><article><p>synthetic article</p></article></section></html>'

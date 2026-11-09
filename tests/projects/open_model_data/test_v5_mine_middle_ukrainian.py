@@ -12,9 +12,8 @@ from pathlib import Path
 
 import jsonschema
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
-from lu_machinery.storage.paths import ArtifactSet, artifact_set
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     DEFAULT_RELEASE_DIR,
     DEFAULT_SOURCES_DB,
@@ -37,6 +36,7 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     load_replay_buffer,
     normalize_historical_snippet,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_RELEASE_DIR = REPO_ROOT / "registry" / DEFAULT_RELEASE_DIR.relative_to(REPO_ROOT / "data")

@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, REFUSAL_CODE
+from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, REFUSAL_CODE
 
 ROOT = Path(__file__).resolve().parents[1]
 

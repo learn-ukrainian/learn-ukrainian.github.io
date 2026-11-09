@@ -8,7 +8,8 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from lu_machinery.storage import generations
+
+from scripts.storage import generations
 
 SPAWN = multiprocessing.get_context("spawn")
 WAIT = 60

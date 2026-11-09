@@ -15,9 +15,9 @@ from pathlib import Path
 
 import pytest
 import yaml
-from lu_machinery.ci import check_agent_attribution as check
 from markdown_it import MarkdownIt
 
+from scripts.ci import check_agent_attribution as check
 from tests.test_ci_pr_triggers import _condition, _interpolate
 
 _GIT_BIN = os.environ.get("AGENT_REAL_GIT", "git")  # the agent shim refuses branch switches

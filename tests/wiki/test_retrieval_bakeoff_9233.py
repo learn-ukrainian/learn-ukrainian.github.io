@@ -605,9 +605,9 @@ def test_corpus_manifest_and_cli_paths(tmp_path: Path, monkeypatch, capsys) -> N
 
 @pytest.mark.parametrize("refused", [False, True])
 def test_admission_probe_does_not_write_shadow_journal(tmp_path, monkeypatch, refused):
-    from lu_machinery.common import task_store_paths
-    from lu_machinery.orchestration import admission_shadow as shadow
-    from lu_machinery.orchestration import dispatch_admission as adm
+    from scripts.common import task_store_paths
+    from scripts.orchestration import admission_shadow as shadow
+    from scripts.orchestration import dispatch_admission as adm
 
     journal = tmp_path / "journal"
     monkeypatch.setenv(shadow.DIRECTORY_ENV, str(journal))
