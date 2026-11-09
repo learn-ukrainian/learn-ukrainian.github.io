@@ -17,7 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from lu_machinery.common.repo_root import project_interpreter
 
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(PROJECT_ROOT)
 
 # ══════════════════════════════════════════════════════════════════════
 # Wave 5: Old Ukrainian Literature (inoldlit.htm)

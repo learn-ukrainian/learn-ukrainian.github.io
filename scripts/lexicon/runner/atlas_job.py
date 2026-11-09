@@ -989,7 +989,7 @@ def _python_bin() -> str:
     override = os.environ.get("ATLAS_RE_ENRICH_PYTHON")
     if override:
         return override
-    return str(project_interpreter())
+    return str(project_interpreter(Path(__file__).resolve().parents[3]))
 
 
 def _expand_env_value(value: str, env: dict[str, str]) -> str:

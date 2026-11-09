@@ -80,7 +80,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from lu_machinery.common.jsonl import physical_lines
-from lu_machinery.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.common.repo_root import configured_primary_root, main_checkout_root
 from lu_machinery.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
@@ -110,7 +110,7 @@ def _git(*args: str, cwd: Path | None = None) -> str:
 
 def _default_tasks_dir(repo_root: Path | None = None) -> Path:
     """Return the default tasks directory under batch_state/tasks."""
-    root = main_checkout_root(Path(repo_root)) if repo_root else resolve_repo_root(Path(__file__), 2)
+    root = main_checkout_root(Path(repo_root)) if repo_root else configured_primary_root() or main_checkout_root(_REPO_ROOT)
     return (root / "batch_state" / "tasks").resolve()
 
 

@@ -33,7 +33,7 @@ from lu_machinery.opsec.prepublish import publication_cli
 from lu_machinery.publish.github import Request, request_run
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-VENV_PYTHON = str(project_interpreter())
+VENV_PYTHON = str(project_interpreter(PROJECT_ROOT))
 
 DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0

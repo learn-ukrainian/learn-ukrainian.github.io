@@ -11,7 +11,8 @@ from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
-from lu_machinery.orchestration import task_closeout, task_identity, task_lifecycle
+
+from scripts.orchestration import task_closeout, task_identity, task_lifecycle
 
 NOW = "2026-07-16T10:00:00Z"
 HEAD = "a" * 40
@@ -2841,7 +2842,7 @@ def test_9794_resolved_root_allows_unresolved_descendant_reporting():
 def _ukrainian_receipt(
     tmp_path: Path, *, head: str, comments: list[dict], author_model: str = "claude-opus-5-5"
 ) -> dict:
-    from lu_machinery.review.review_contract import build_ukrainian_behavior_receipt
+    from scripts.review.review_contract import build_ukrainian_behavior_receipt
 
     binding = "c" * 64
     clause = {
@@ -2892,7 +2893,7 @@ def _ukrainian_receipt(
 
 
 def _seat_comment(family: str, url: str, *, author_model: str = "claude-opus-5-5") -> dict:
-    from lu_machinery.review.record_cf_verdict import build_comment
+    from scripts.review.record_cf_verdict import build_comment
 
     body = build_comment(
         sha=HEAD,
@@ -3108,8 +3109,8 @@ def test_runtime_release_metadata_accepts_infra_proof_without_exempting_learner_
     code. The same manifest plus any other learner path still requires the Ukrainian
     receipt and seat. Auto-deploy eligibility stays on the content prefix.
     """
-    from lu_machinery.ci.deploy_paths import decide_auto_deploy
-    from lu_machinery.orchestration.integration_sweep import (
+    from scripts.ci.deploy_paths import decide_auto_deploy
+    from scripts.orchestration.integration_sweep import (
         METADATA_ONLY_RELEASE_MANIFESTS,
         changes_learner_content,
     )

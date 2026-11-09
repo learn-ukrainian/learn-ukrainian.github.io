@@ -9,7 +9,7 @@ import pytest
 
 def install_github_command_boundary(monkeypatch):
     """Point ``github_client.run`` at ``subprocess.run`` without a collection import."""
-    from lu_machinery.common import github_client
+    from scripts.common import github_client
 
     def run(args, **kwargs):
         kwargs.pop("fresh", None)

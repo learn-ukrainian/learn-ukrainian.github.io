@@ -29,6 +29,7 @@ from uuid import uuid4
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    import scripts  # noqa: F401  # names this checkout as the lu_machinery product (scripts/__init__.py)
 
 from lu_machinery.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from lu_machinery.api.resilience import connect_sqlite

@@ -24,7 +24,7 @@ if str(PROJECT_ROOT / "scripts") not in sys.path:
 from lu_machinery.agent_runtime.json_parse import extract_json_object
 from lu_machinery.common.repo_root import machinery_path, project_interpreter
 
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(PROJECT_ROOT.resolve())
 
 # Structured prompt that returns JSON (reliable parsing)
 NATURALNESS_PROMPT = """Evaluate the naturalness of this Ukrainian educational text.

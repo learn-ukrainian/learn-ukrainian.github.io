@@ -16,11 +16,11 @@ from tempfile import TemporaryDirectory
 
 import pytest
 import yaml
-from lu_machinery.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
-from lu_machinery.common.scratch import ensure_scratch_root
-from lu_machinery.orchestration.fleet_repos import FleetRepo
-from lu_machinery.review import record_cf_verdict as recorder
 
+from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
+from scripts.common.scratch import ensure_scratch_root
+from scripts.orchestration.fleet_repos import FleetRepo
+from scripts.review import record_cf_verdict as recorder
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.test_verdict_parser import CAPACITY_OUTLINES, FROZEN_CONTAINER_CASES, OVERLAP_QUOTE
 
@@ -375,7 +375,7 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     monkeypatch.setattr(recorder, "resolve_review_repository", lambda root, _key, **_kwargs: root)
 
     def fake_json(args, *, input_text=None):
-        from lu_machinery.publish.github import Request
+        from scripts.publish.github import Request
 
         if isinstance(args, Request):
             if args.verb == "issue-comment-json":
@@ -537,7 +537,7 @@ def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, fami
     body = comments[0]["body"]
     assert body.startswith("### Adversarial red-team review\nReview mode: red_team\n")
     assert body.endswith("review_mode=red_team -->")
-    from lu_machinery.orchestration.integration_sweep import lookup_verdict
+    from scripts.orchestration.integration_sweep import lookup_verdict
 
     verdict = lookup_verdict(comments, SHA, "fleet")
     assert verdict.state == "APPROVED"
@@ -681,7 +681,7 @@ def retargeted_review(monkeypatch, tmp_path):
 def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch, tmp_path, mode, state):
     from dataclasses import replace
 
-    from lu_machinery.orchestration import integration_sweep as sweep
+    from scripts.orchestration import integration_sweep as sweep
 
     if state == "retargeted-base":
         pr_review_facts = recorder.pr_review_facts
@@ -1139,9 +1139,8 @@ def test_status_failure_keeps_comment_and_reports_partial(monkeypatch, tmp_path)
 
 def test_flagged_comment_withholds_prose_despite_override(monkeypatch, tmp_path, synthetic_opsec):
     """Both publications pass the gate without granting the recorder an override."""
-    from lu_machinery.fleet_comms import review_publisher
-    from lu_machinery.opsec import prepublish as gate
-
+    from scripts.fleet_comms import review_publisher
+    from scripts.opsec import prepublish as gate
     from tests.opsec_fixtures import TOKEN, synthetic_rules
 
     rules = json.loads((synthetic_opsec / "rules.json").read_text())
@@ -1985,9 +1984,8 @@ def test_model_trailer_preserves_effort_and_context_forms(
 
 def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
     """#8625: a review archived before its verdict was recorded can still be published."""
-    from lu_machinery.review.render_contract import trusted_core_context
-
     from scripts.review import record
+    from scripts.review.render_contract import trusted_core_context
 
     tasks = tmp_path / "tasks"
     write_task(tasks / "archive", task_id="review-old", reply="VERDICT: APPROVE")
@@ -2235,8 +2233,7 @@ def test_repository_relative_reply_refuses_worktree_root_resolving_outside_prima
     ],
 )
 def test_repository_relative_reply_unicode_paths_still_refuse_real_scanner(checkout, suffix, monkeypatch):
-    from lu_machinery.opsec import prepublish as gate
-
+    from scripts.opsec import prepublish as gate
     from tests.test_opsec_prepublish import real_tooling
 
     tooling = real_tooling()
@@ -2348,7 +2345,7 @@ def test_record_fixture_dry_run_through_publication_scanner(
     monkeypatch, tmp_path, synthetic_opsec, capsys, reply, refused, citation_checkout
 ):
     """Run the recorder and typed publisher with only the GitHub transport faked."""
-    from lu_machinery.publish import github
+    from scripts.publish import github
 
     root, worktree = citation_checkout
     reply = reply.replace("/checkout", str(root))
@@ -2533,8 +2530,7 @@ def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch,
 
 @pytest.fixture
 def real_recorder_matcher(monkeypatch):
-    from lu_machinery.opsec import prepublish as gate
-
+    from scripts.opsec import prepublish as gate
     from tests.test_opsec_prepublish import real_tooling
 
     tooling = real_tooling()
@@ -2543,7 +2539,7 @@ def real_recorder_matcher(monkeypatch):
 
 
 def assert_rendered_path_refusal(reply, rewritten, tooling):
-    from lu_machinery.opsec import prepublish as gate
+    from scripts.opsec import prepublish as gate
 
     for text in (reply, rewritten):
         comment = recorder.build_comment(
@@ -2582,7 +2578,7 @@ def test_scanner_span_preserves_ascii_traversal(
 def test_interpreter_symlink_citation_rewrites(
     citation_checkout, tmp_path, real_recorder_matcher, checkout, target_kind
 ):
-    from lu_machinery.opsec import prepublish as gate
+    from scripts.opsec import prepublish as gate
 
     root, worktree = citation_checkout
     target = tmp_path / "interpreter"
@@ -2657,7 +2653,7 @@ def reviewed_checkout(tmp_path):
 
 
 def test_removed_reviewer_worktree_citations_publish_repository_relative(tmp_path, real_recorder_matcher):
-    from lu_machinery.opsec import prepublish as gate
+    from scripts.opsec import prepublish as gate
 
     root, worktree, sha = reviewed_checkout(tmp_path)
     review = {"worktree_path": str(worktree), "worktree_base_sha": sha}
@@ -2885,7 +2881,7 @@ def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
 @pytest.mark.parametrize("remaining", [54, 5])
 @pytest.mark.parametrize("head", [SHA, OTHER])
 def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatch, tmp_path, remaining, head):
-    from lu_machinery.fleet import credit_lane
+    from scripts.fleet import credit_lane
 
     reads = []
     monkeypatch.setattr(
@@ -3088,7 +3084,7 @@ def test_merge_author_model_is_bound_to_named_task(real_commit_set, tmp_path, ca
 def test_unknown_history_excludes_all_possible_author_families():
     from dataclasses import replace
 
-    from lu_machinery.review.reviewer_resolver import resolve_reviewer
+    from scripts.review.reviewer_resolver import resolve_reviewer
 
     facts = replace(
         facts_for({"unknown", "openai"}),
@@ -3195,7 +3191,7 @@ def repair_repo(tmp_path, *, head_kind, conflicting=True):
 
 def verified_approve(repo, approved, head):
     """The repair round reviewer's APPROVE, naming the complete delta it verified as only the repair."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     return f"VERDICT: APPROVE\nREPAIR_VERIFIED: {repair_round._diff_sha256(repo, approved, head)}"
 
@@ -3204,7 +3200,7 @@ CI_RUN = {"path": ".github/workflows/ci.yml", "conclusion": "failure"}
 
 
 def fake_github_reads(*, failed=(), queue=(), trees=None, issues=()):
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     return repair_round.GitHubReads(
         failed_runs=lambda sha: [dict(run) for run in failed if run["head_sha"] == sha],
@@ -3216,7 +3212,7 @@ def fake_github_reads(*, failed=(), queue=(), trees=None, issues=()):
 
 def repair_case(monkeypatch, tmp_path, *, head_kind="conflict", conflicting=True, github=None, last_verdict="APPROVED"):
     """Three spent rounds ending in A's verdict, each a published run on record, and the round at N to record."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     repo, approved, head, run = repair_repo(tmp_path, head_kind=head_kind, conflicting=conflicting)
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
@@ -3288,7 +3284,7 @@ def test_ci_fix_needs_a_failed_run_tied_to_the_approved_head(monkeypatch, tmp_pa
     with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[evidence\].*no failed CI run is tied"):
         recorder.record("review-one", **kwargs)
     assert receipts(tasks) == [] and calls["posts"] == 0
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     # A manual run, another workflow, or a cancelled run of CI is no evidence (review round 1, F1).
     unrelated = [
@@ -3308,7 +3304,7 @@ def test_ci_fix_needs_a_failed_run_tied_to_the_approved_head(monkeypatch, tmp_pa
 
 
 def test_ci_fix_ties_a_failed_merge_queue_candidate_by_its_tree(monkeypatch, tmp_path):
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, _comments, _calls, approved, _head, run = repair_case(monkeypatch, tmp_path, head_kind="fix", conflicting=False)
     base = run("rev-parse", "main")
@@ -3373,7 +3369,7 @@ def test_repair_round_needs_an_approval_of_record(monkeypatch, tmp_path):
 @pytest.mark.parametrize("key", ["branch", "issue"])
 def test_a_replacement_pr_never_replenishes_the_repair_round(monkeypatch, tmp_path, key):
     """A receipt of PR #41 on the same branch, or closing the same issue, spends this lineage's round."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, _comments, calls, _approved, _head, _run = repair_case(
         monkeypatch, tmp_path, github=fake_github_reads(issues=[7])
@@ -3411,7 +3407,7 @@ def structured_repair_reply(explanation, *, finding_body=None):
 
 def test_a_structured_repair_round_approve_attests_in_its_explanation(monkeypatch, tmp_path):
     """A one-line structured APPROVE whose explanation carries the attestation is recorded (#12726)."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, _comments, calls, approved, head, _run = repair_case(monkeypatch, tmp_path)
     digest = repair_round._diff_sha256(tmp_path / "repair-repo", approved, head)
@@ -3425,7 +3421,7 @@ def test_a_structured_repair_round_approve_attests_in_its_explanation(monkeypatc
 @pytest.mark.parametrize("case", ["none", "two", "other-digest", "finding-only", "prose-without-line"])
 def test_a_repair_round_attestation_is_exactly_one_explanation_line(case):
     """Only overall.explanation attests in a structured reply, once and naming the receipt digest (#12726)."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     digest = "a" * 64
     line = f"REPAIR_VERIFIED: {digest}"
@@ -3450,7 +3446,7 @@ def test_a_repair_round_rejection_needs_no_attestation_and_spends_the_round(monk
 
 def test_an_interrupted_admission_is_completed_under_every_key(monkeypatch, tmp_path):
     """A retry writes every key the interrupted attempt missed, so a replacement PR finds the round spent (F2)."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, comments, _calls, _approved, head, _run = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
     root = tasks.parent / "review-repair-rounds"
@@ -3474,7 +3470,7 @@ def test_an_interrupted_admission_is_completed_under_every_key(monkeypatch, tmp_
 
 
 def test_an_unreadable_receipt_under_any_key_refuses(monkeypatch, tmp_path):
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
     root = tasks.parent / "review-repair-rounds"
@@ -3487,7 +3483,7 @@ def test_an_unreadable_receipt_under_any_key_refuses(monkeypatch, tmp_path):
 
 def test_a_retried_round_rechecks_the_lineage(monkeypatch, tmp_path):
     """An admitted round whose post failed is not admitted again once A is rejected (review round 2, F4)."""
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, comments, calls, approved, head, _run = repair_case(monkeypatch, tmp_path)
     root = tasks.parent / "review-repair-rounds"
@@ -3508,7 +3504,7 @@ def test_a_retried_round_rechecks_the_lineage(monkeypatch, tmp_path):
 
 
 def test_an_admitted_round_whose_post_failed_is_retried_as_the_same_round(monkeypatch, tmp_path):
-    from lu_machinery.review import repair_round
+    from scripts.review import repair_round
 
     tasks, comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
     root = tasks.parent / "review-repair-rounds"
@@ -3650,7 +3646,7 @@ SPENT = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"))
 
 
 def test_clean_base_merge_after_approval_consumes_no_round(monkeypatch, tmp_path):
-    from lu_machinery.orchestration import integration_sweep as sweep
+    from scripts.orchestration import integration_sweep as sweep
 
     git = ExemptionRepo(tmp_path)
     first_base = git.main_moves("base-one")
@@ -3693,7 +3689,7 @@ def test_clean_base_merge_after_approval_consumes_no_round(monkeypatch, tmp_path
 
 
 def test_exempt_head_rejection_is_not_cleared(monkeypatch, tmp_path):
-    from lu_machinery.orchestration import integration_sweep as sweep
+    from scripts.orchestration import integration_sweep as sweep
 
     git = ExemptionRepo(tmp_path)
     git.main_moves("base-one")
@@ -3853,7 +3849,7 @@ else:
 @pytest.mark.parametrize("form", ["file", "module"])
 def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
     repo = Path(recorder.__file__).resolve().parents[2]
-    entry = str(repo / "scripts/review/record_cf_verdict.py") if form == "file" else "lu_machinery.review.record_cf_verdict"
+    entry = str(repo / "scripts/review/record_cf_verdict.py") if form == "file" else "scripts.review.record_cf_verdict"
     env = {**os.environ, "PYTHONPATH": os.pathsep.join(filter(None, [str(repo), os.environ.get("PYTHONPATH")]))}
     done = subprocess.run(
         [sys.executable, "-c", _REFUSING_LAUNCHER, form, entry, "budget-check", "--repository", REPOSITORY, "--pr", "42"],
@@ -3896,7 +3892,7 @@ def recorder_cli_tree(tmp_path):
 
 def run_recorder_cli(tree, form, argv):
     entry = [str(tree / "scripts/review/record_cf_verdict.py")] if form == "file" else [
-        "-m", "lu_machinery.review.record_cf_verdict"
+        "-m", "scripts.review.record_cf_verdict"
     ]
     cwd = tree / "nested working directory"
     cwd.mkdir()

@@ -15,13 +15,13 @@ from unittest.mock import patch
 
 import pytest
 import yaml
-from lu_machinery.review.model_catalog import (
+
+from scripts.review.model_catalog import (
     ModelCatalogError,
     _require_routable_model,
     load_model_catalog,
     require_execution_model,
 )
-
 from tests.helpers import machinery_package
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
@@ -714,14 +714,14 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     import os
     from unittest.mock import MagicMock
 
-    from lu_machinery.agent_runtime import telemetry
-    from lu_machinery.agent_runtime.adapters.base import InvocationPlan
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
-    from lu_machinery.review.model_catalog import activity_role_refusal
+    from scripts.agent_runtime import telemetry
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+    from scripts.review.model_catalog import activity_role_refusal
 
     with (
         patch.dict(os.environ, {"PATH": "/usr/bin", "HOME": "/nonexistent", "MUSE_OTHER": "drop"}, clear=True),
-        patch("lu_machinery.agent_runtime.agent_github_identity.resolve_agent_github_identity", return_value=None),
+        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity", return_value=None),
     ):
         env = build_agent_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
         assert env["MUSE_NO_AUTO_UPDATE"] == "1"
@@ -762,8 +762,8 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
             "OPENAI_API_KEY": "sentinel-parent", "SSH_AUTH_SOCK": "/fixture/socket",
             "LD_PRELOAD": "/fixture/inject.so", "LU_PROBE_TOKEN": "sentinel-parent",
         }, clear=True),
-        patch("lu_machinery.agent_runtime.adapters.muse.require_muse_execution_model"),
-        patch("lu_machinery.agent_runtime.agent_github_identity.resolve_agent_github_identity") as identity,
+        patch("scripts.agent_runtime.adapters.muse.require_muse_execution_model"),
+        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity") as identity,
         patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", return_value=process) as spawn,
     ):
         resolved = telemetry.resolve_dispatch_start_telemetry(
@@ -855,7 +855,7 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration):
     """Only the approved word-card and cached Wikipedia grants alter the captured argv."""
-    from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
 
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
     before = json.loads(gzip.decompress(path.read_bytes()))
@@ -1131,6 +1131,10 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
+            # C-4965: Fable 5.2 is an explicit-pin model with no review or advisory role, so it
+            # joins no seat, review route, ladder or ranking; every other field stays frozen.
+            fable52 = value["models"].pop("claude-fable-5-2")
+            assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
             # The advisory_roles section moves no seat, route or review ranking.
             _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
@@ -1160,10 +1164,9 @@ def refresh_current_baseline():
     """Recapture the existing cases with frozen time, no live usage, and no dispatches."""
     from functools import partial
 
-    from lu_machinery.fleet import credit_lane
-    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
-    from lu_machinery.review.role_resolution import expanded_legacy_view
-
+    from scripts.fleet import credit_lane
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from scripts.review.role_resolution import expanded_legacy_view
     from tests.claude_route_accounts import HOST_ACCOUNT
 
     capture = deepcopy(_V2_BASELINE)
@@ -1184,9 +1187,9 @@ def refresh_current_baseline():
     assert not usage_dir.exists()
     receipts = []
     with (
-        patch("lu_machinery.agent_runtime.model_pause.load_policy", return_value={}),
+        patch("scripts.agent_runtime.model_pause.load_policy", return_value={}),
         # Match conftest's hermetic AGY Claude window instead of reading the host.
-        patch("lu_machinery.agent_runtime.model_pause.routing_budget_used_pct", return_value=0.0),
+        patch("scripts.agent_runtime.model_pause.routing_budget_used_pct", return_value=0.0),
         patch.object(credit_lane, "routing_facts", partial(credit_lane.routing_facts, now=FIXED_NOW, usage_dir=usage_dir)),
         patch.object(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=FIXED_NOW)),
     ):

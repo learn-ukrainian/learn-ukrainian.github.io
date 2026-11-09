@@ -25,7 +25,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 from lu_machinery.common.repo_root import project_interpreter
 
-PY = project_interpreter()
+PY = project_interpreter(REPO)
 DEFAULT_BAKEOFF_CELL_TIMEOUT_SECONDS: float = 600.0
 
 ALL_FIXTURES = [

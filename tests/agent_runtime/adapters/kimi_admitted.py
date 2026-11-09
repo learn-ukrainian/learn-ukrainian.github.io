@@ -42,7 +42,8 @@ def install_historical_kimi_catalog(tmp_path: Path, monkeypatch) -> Path:
     from copy import deepcopy
 
     import pytest
-    from lu_machinery.review.model_catalog import (
+
+    from scripts.review.model_catalog import (
         ModelCatalogError,
         load_model_catalog,
         require_execution_model,
@@ -60,11 +61,11 @@ def install_historical_kimi_catalog(tmp_path: Path, monkeypatch) -> Path:
         identity for identity in catalog["models"]
         if "kimi" in identity and identity not in {"kimi-code/k3-256k", "kimi-k3-max"}
     ]
-    for name in ("scripts.agent_runtime.adapters.kimicc", "lu_machinery.agent_runtime.adapters.kimicc"):
+    for name in ("scripts.agent_runtime.adapters.kimicc", "agent_runtime.adapters.kimicc"):
         module = importlib.import_module(name)
         monkeypatch.setattr(module, "load_model_catalog", lambda: catalog)
         monkeypatch.setattr(module, "resolve_kimi_model", lambda model: resolve_kimi_model(model, catalog))
-    monkeypatch.setattr("lu_machinery.review.model_catalog.resolve_kimi_model", lambda model: resolve_kimi_model(model, catalog))
+    monkeypatch.setattr("scripts.review.model_catalog.resolve_kimi_model", lambda model: resolve_kimi_model(model, catalog))
     fixture_path = tmp_path / "historical-kimi-catalog.json"
     fixture_path.write_text(json.dumps(catalog))
     root = Path(__file__).resolve().parents[3]
@@ -74,7 +75,7 @@ def install_historical_kimi_catalog(tmp_path: Path, monkeypatch) -> Path:
         "import json, os, sys\n"
         f"sys.path[:0] = {[str(root), str(root / 'scripts')]!r}\n"
         "if len(sys.argv) > 1 and sys.argv[1].endswith('/scripts/review/model_catalog.py'):\n"
-        "    from lu_machinery.review import model_catalog\n"
+        "    from scripts.review import model_catalog\n"
         f"    with open({str(fixture_path)!r}) as stream: catalog = json.load(stream)\n"
         "    model_catalog.load_model_catalog = lambda: catalog\n"
         "    sys.argv = sys.argv[1:]\n"

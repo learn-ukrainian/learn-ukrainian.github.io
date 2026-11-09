@@ -17,8 +17,9 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import open_readonly
-from lu_machinery.storage import topology
+
+from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage import topology
 
 _NOT_RUN = "data_store.not_run"
 _RECORDS = pytest.StashKey[dict[str, set[tuple[str, str]]]]()

@@ -22,7 +22,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 from lu_machinery.common.repo_root import project_interpreter
 
-PY = project_interpreter()
+PY = project_interpreter(REPO)
 OUT = REPO / "audit" / "2026-07-08-gemini-multirun-1x"
 PROBE = REPO / "audit" / "2026-07-08-gemini-strict-probe"
 MODEL = "gemini-3.1-pro-high"

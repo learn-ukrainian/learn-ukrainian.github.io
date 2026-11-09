@@ -12,7 +12,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from lu_machinery.fleet.claude_account_lane import UNRESOLVED_SOURCE, AccountSnapshot, ClaudeAccount, bind_snapshot
+from scripts.fleet.claude_account_lane import UNRESOLVED_SOURCE, AccountSnapshot, ClaudeAccount, bind_snapshot
 
 # What a dispatch without a default-account file resolves: the built-in default, which reads the lane row.
 HOST_ACCOUNT = ClaudeAccount("a", "builtin")

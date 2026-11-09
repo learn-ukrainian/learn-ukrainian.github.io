@@ -36,9 +36,9 @@ from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
-from lu_machinery.common.repo_root import PRODUCT_MARKER
-from lu_machinery.lib import rules_core
 
+from scripts.common.repo_root import PRODUCT_MARKER
+from scripts.lib import rules_core
 from tests.helpers import machinery_package, product_checkout
 from tests.launcher_sandbox import launcher_environment
 

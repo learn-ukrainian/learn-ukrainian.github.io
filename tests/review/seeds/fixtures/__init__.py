@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.review import findings_db
-from lu_machinery.review.seeds import manifest as sm
+from scripts.review import findings_db
+from scripts.review.seeds import manifest as sm
 
 LEVEL = "a1"
 WRITER_FAMILY = "anthropic"

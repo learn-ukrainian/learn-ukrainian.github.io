@@ -12,7 +12,7 @@ def github_transport(monkeypatch):
     The handler receives method, endpoint, headers, body and timeout. Responses
     exercise status, headers, caching and REST reshaping exactly as production.
     """
-    from lu_machinery.common import github_client
+    from scripts.common import github_client
 
     constructor = github_client.GitHubClient
 

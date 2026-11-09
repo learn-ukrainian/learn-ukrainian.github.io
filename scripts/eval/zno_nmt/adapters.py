@@ -36,7 +36,7 @@ class AdapterError(ValueError):
 
 
 _TOOL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,127}$")
-_PROJECT_PYTHON = project_interpreter()
+_PROJECT_PYTHON = project_interpreter(Path(__file__).resolve().parents[3])
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
 _SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "vesum_db_sha256"})
 _SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset(

@@ -34,7 +34,7 @@ from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(REPO.resolve())
 MAX_RETRIES = 3
 # Batch fix loop targets the style-reviewer PASS score (9.0).
 PASS_THRESHOLD = STYLE_REVIEW_TARGET

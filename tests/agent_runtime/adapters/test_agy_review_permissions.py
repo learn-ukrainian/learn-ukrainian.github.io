@@ -6,11 +6,11 @@ import json
 import subprocess
 
 import pytest
-from lu_machinery.agent_runtime.adapters import agy
-from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
-from lu_machinery.agent_runtime.review_mcp import agy_review_settings
-from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
 
+from scripts.agent_runtime.adapters import agy
+from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+from scripts.agent_runtime.review_mcp import agy_review_settings
+from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.review.receipts.ledger import review_tools
 
 
@@ -84,11 +84,11 @@ def test_exact_review_grants(tmp_path, scoped, route):
 
 
 def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_path, monkeypatch):
-    from lu_machinery.agent_runtime.review_mcp import prepare_agy_permission_home
+    from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
 
     token = tmp_path / "fixture-token"
     token.write_text("fixture")
-    monkeypatch.setattr("lu_machinery.agent_runtime.review_mcp._real_agy_token", lambda: token)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
     home = prepare_agy_permission_home(tmp_path, checkout_root=tmp_path)
@@ -131,7 +131,7 @@ def test_permission_only_route_refuses_writers_and_non_sources(tmp_path, scoped,
 
 @pytest.mark.parametrize("route", [None, "isolated", "full"])
 def test_unreadable_inventory_refuses_before_launch_even_after_cached_read(tmp_path, scoped, monkeypatch, route):
-    from lu_machinery.agent_runtime import review_mcp
+    from scripts.agent_runtime import review_mcp
 
     agy_review_settings(route)
     monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: (tmp_path / "interpreter", tmp_path / "missing"))
@@ -145,12 +145,8 @@ def test_unreadable_inventory_refuses_before_launch_even_after_cached_read(tmp_p
 
 
 def test_deny_inventory_uses_launched_server_declarations(tmp_path, monkeypatch):
-    from pathlib import Path
-
-    from lu_machinery.agent_runtime import review_mcp
-    from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH
-
-    SERVER_PATH = Path(__file__).resolve().parents[3] / SERVER_RELATIVE_PATH
+    from scripts.agent_runtime import review_mcp
+    from scripts.agent_runtime.sources_read_only import SERVER_PATH
 
     server = tmp_path / "server.py"
     # Add a tool to the actual list_tools declaration, with its default read-only annotation.
@@ -415,7 +411,7 @@ def test_auto_denial_does_not_persist_unbound_concrete_resource(kind, target):
     ],
 )
 def test_cli_url_fallback_needs_no_workspace_plan(target, expected, reason):
-    from lu_machinery.agent_runtime.result import AgyTelemetry
+    from scripts.agent_runtime.result import AgyTelemetry
 
     parsed = agy.AgyAdapter().parse_response(
         stdout="", stderr=auto_denial(f"read_url({target})"), returncode=1, output_file=None

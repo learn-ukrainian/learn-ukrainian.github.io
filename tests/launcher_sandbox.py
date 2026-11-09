@@ -27,8 +27,7 @@ import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 
-from lu_machinery.common.scratch import ensure_scratch_root
-
+from scripts.common.scratch import ensure_scratch_root
 from tests.helpers import machinery_module, machinery_package, product_checkout
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
@@ -407,7 +406,7 @@ print(json.dumps(sorted(paths)))
 def slot_registry_sources() -> tuple[Path, ...]:
     """Repo-relative tracked files the launcher's handoff-slot gate needs."""
     probe = subprocess.run(
-        [sys.executable, "-c", _PROBE, machinery_module("lu_machinery.orchestration.handoff_slot_registry")],
+        [sys.executable, "-c", _PROBE, machinery_module("orchestration.handoff_slot_registry")],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,

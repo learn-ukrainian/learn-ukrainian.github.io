@@ -77,7 +77,7 @@ from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 from lu_machinery.common.repo_root import machinery_path, project_interpreter
 
 BRIDGE = machinery_path("ai_agent_bridge/__main__.py")
-VENV_PY = project_interpreter()
+VENV_PY = project_interpreter(PROJECT_ROOT)
 
 # Per-family subprocess timeout. Calibrated empirically: gemini-judge
 # calls can exceed 240s under load; claude/codex consistently land under

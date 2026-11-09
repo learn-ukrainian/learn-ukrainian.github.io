@@ -52,7 +52,7 @@ from lu_machinery.common.repo_root import project_interpreter
 
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(PROJECT_ROOT)
 
 # Rate limiting — requested in #1151.
 BLOG_DELAY = 1.5

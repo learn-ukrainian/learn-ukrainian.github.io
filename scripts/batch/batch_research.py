@@ -19,7 +19,7 @@ from batch_gemini_config import FLASH_MODEL
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(REPO.resolve())
 
 
 def find_module_files(level: str, num: int) -> dict | None:

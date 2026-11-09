@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
 
 
 def register_agy_hooks(cwd: Path, *, home: Path | None = None) -> None:

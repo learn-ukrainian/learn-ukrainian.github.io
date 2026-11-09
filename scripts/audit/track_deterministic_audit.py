@@ -47,7 +47,7 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SITE_DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 SITE_READINGS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "readings"
 DEFAULT_CONFIG = PROJECT_ROOT / "scripts" / "audit" / "track_deterministic_audit_config.yaml"
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(PROJECT_ROOT)
 
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 DEFAULT_GENERATE_TIMEOUT_SECONDS: float = 60.0

@@ -28,7 +28,7 @@ def __getattr__(name: str) -> str:
     """
     if name != "VENV_PYTHON":
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    value = str(project_interpreter())
+    value = str(project_interpreter(PROJECT_ROOT.resolve()))
     globals()["VENV_PYTHON"] = value
     return value
 

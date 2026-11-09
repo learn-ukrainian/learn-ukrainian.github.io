@@ -9,7 +9,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.common.git_context import sanitized_git_env
+
+from scripts.common.git_context import sanitized_git_env
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -35,7 +36,7 @@ def init_review_repo(tmp_path: Path) -> tuple[Path, str]:
 
 def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Real ordinary Git scope, even when a dispatch test stubs process spawning."""
-    from lu_machinery.review import security_paths, target_resolution
+    from scripts.review import security_paths, target_resolution
 
     repo, _base = init_review_repo(tmp_path)
     file = repo / "ordinary.py"
@@ -58,7 +59,7 @@ def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
 
 def write_code_review_manifest(repo: Path, path: Path) -> Path:
     """Freeze a real code target in the shape admission reads."""
-    from lu_machinery.review.target_resolution import resolve_branch_target
+    from scripts.review.target_resolution import resolve_branch_target
 
     target = resolve_branch_target(repo, "refs/remotes/origin/review-target", "refs/remotes/origin/main")
     path.write_text(json.dumps({"target": asdict(target)}))

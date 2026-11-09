@@ -25,19 +25,20 @@ from types import SimpleNamespace
 
 import pytest
 import yaml
-from lu_machinery.agent_runtime import attempt_boundary, env_sanitize, runner
-from lu_machinery.agent_runtime.adapters.base import InvocationPlan
-from lu_machinery.agent_runtime.attempt_boundary import (
+
+from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
+from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.agent_runtime.attempt_boundary import (
     AttemptBoundary,
     ClaudeAccountRefused,
     authorized_closure,
     prepare_attempt_boundary,
     runtime_files,
 )
-from lu_machinery.agent_runtime.errors import AgentUnavailableError
-from lu_machinery.agent_runtime.result import ParseResult
-from lu_machinery.agent_runtime.review_mcp import prepare_review_attempt
-from lu_machinery.review.isolation import ReviewIsolationError
+from scripts.agent_runtime.errors import AgentUnavailableError
+from scripts.agent_runtime.result import ParseResult
+from scripts.agent_runtime.review_mcp import prepare_review_attempt
+from scripts.review.isolation import ReviewIsolationError
 
 
 def manifest_world(root: Path, kind: str) -> dict:
@@ -154,8 +155,8 @@ def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str, *, re
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
 def test_agy_attempt_home_registers_same_guard_as_review_provisioner(world, tmp_path, access):
-    from lu_machinery.agent_runtime.agy_hook_config import HookConfigResult, check_hook_config
-    from lu_machinery.agent_runtime.review_mcp import _populate_agy_review_home
+    from scripts.agent_runtime.agy_hook_config import HookConfigResult, check_hook_config
+    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
 
     root, old_home = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
@@ -398,7 +399,7 @@ def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, 
     monkeypatch.setattr(subprocess, "Popen", unexpected)
     with pytest.raises(AgentUnavailableError) as caught:
         if site == "prepare":
-            monkeypatch.setattr("lu_machinery.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
+            monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
             monkeypatch.setattr(runner, "_load_adapter", unexpected)
             runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
         else:
@@ -475,11 +476,11 @@ def test_claude_boundary_refuses_before_input_reads_or_provisioning(monkeypatch)
     def unexpected(*args, **kwargs):
         pytest.fail("pending Claude adapter must refuse before boundary side effects")
 
-    monkeypatch.setattr("lu_machinery.agent_runtime.review_mcp.verify_review_attempt_paths", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.verify_review_attempt_paths", unexpected)
     monkeypatch.setattr(tempfile, "TemporaryDirectory", unexpected)
-    monkeypatch.setattr("lu_machinery.review.isolation.stage_engine_auth", unexpected)
-    monkeypatch.setattr("lu_machinery.agent_runtime.attempt_boundary.SourcesConnection", unexpected)
-    monkeypatch.setattr("lu_machinery.agent_runtime.attempt_network.AttemptEgress", unexpected)
+    monkeypatch.setattr("scripts.review.isolation.stage_engine_auth", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.SourcesConnection", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_network.AttemptEgress", unexpected)
     with pytest.raises(ReviewIsolationError, match=r"^attempt_boundary_claude_adapter_pending$"):
         AttemptBoundary(agent="claude", tool_config={})
 
@@ -581,8 +582,8 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 @pytest.mark.parametrize("review_access", ["isolated", "full"])
 def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monkeypatch, agent, kind, review_access):
-    from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
-    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
 
     root, home = world
     tc = attempt_config(root, tmp_path, manifest_world(root, kind), agent, review_access=review_access)
@@ -597,7 +598,7 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             # planning and sandbox seam, using a native executable fixture.
             monkeypatch.setattr(shutil, "which", lambda name: "/bin/true")
             monkeypatch.setattr(
-                "lu_machinery.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
+                "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
             )
         if agent == "agy":
             settings = json.loads(
@@ -625,8 +626,7 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             assert Path(plan.env_overrides["CODEX_HOME"]).is_relative_to(boundary.write_root)
             assert plan.output_file.is_relative_to(boundary.write_root)
             assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
-            from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
-
+            from scripts.agent_runtime.sources_read_only import sources_tool_sets
             from scripts.review.receipts.ledger import review_tools
             from tests.agent_runtime.test_sources_read_only import _server_config
 
@@ -656,11 +656,10 @@ def test_native_bound_review_wire_contains_hash_bound_core_without_boot_files(
     world, tmp_path, monkeypatch, two_accounts, agent, access,
 ):
     """Defect class: isolated native review transports drop the rendered, hash-bound trusted core."""
-    from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
-    from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
-    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
-    from lu_machinery.lib import rules_core
-
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.lib import rules_core
     from scripts.review.prompts.render import render_prompt
     from tests.review.test_prompts import _setup_lexical_fixture
 
@@ -679,7 +678,7 @@ def test_native_bound_review_wire_contains_hash_bound_core_without_boot_files(
         native_which = shutil.which
         monkeypatch.setattr(shutil, "which", lambda name: "/bin/true" if name in {"agy", "codex", "claude"}
                             else native_which(name))
-        monkeypatch.setattr("lu_machinery.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
+        monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
         adapter = {"agy": AgyAdapter, "codex": CodexAdapter, "claude": ClaudeAdapter}[agent]()
         if agent == "agy":
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
@@ -716,7 +715,7 @@ print(json.dumps({"argv": sys.argv[1:], "text": payload, "sha256": hashlib.sha25
 @pytest.mark.parametrize("proxy_mode", ["normal", "cleared", "overridden"])
 @pytest.mark.live_network  # Positive controls target this fixture on enumerated local interfaces only.
 def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_mode):
-    from lu_machinery.agent_runtime.attempt_network import host_addresses
+    from scripts.agent_runtime.attempt_network import host_addresses
 
     root, _ = world
     boundary = AttemptBoundary(
@@ -870,7 +869,7 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
     import asyncio
     import ssl
 
-    from lu_machinery.agent_runtime.attempt_network import load_allowlist
+    from scripts.agent_runtime.attempt_network import load_allowlist
 
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent, review_access=access)
@@ -1014,7 +1013,7 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
             assert kwargs["network_allowed"] is False
             raise ReviewIsolationError("sandbox_probe_allow_failed:fixture")
 
-        monkeypatch.setattr("lu_machinery.review.isolation.prepare_host_sandbox", fail)
+        monkeypatch.setattr("scripts.review.isolation.prepare_host_sandbox", fail)
         with pytest.raises(ReviewIsolationError, match="sandbox_probe_allow_failed"):
             boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
     finally:
@@ -1023,7 +1022,7 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
 
 def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     """No sandbox gets a known-expired token: a renewable default credential refuses, unrenewed."""
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", lambda _directory: pytest.fail("renewed"))
 
@@ -1295,7 +1294,7 @@ def _renewable(path: Path, token: str) -> None:
 # Fails on f181a42959: the preflight sent the expired access token to the provider,
 # which refuses it, so the bound account stayed unresolved.
 def test_bound_preflight_renews_then_proves_the_renewed_token(two_accounts, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     path = two_accounts.config_dir / ".credentials.json"
     _renewable(path, two_accounts.bound_token)
@@ -1317,7 +1316,7 @@ def test_bound_preflight_renews_then_proves_the_renewed_token(two_accounts, monk
 
 
 def test_selected_material_must_match_bound_identity(two_accounts):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
     with pytest.raises(ReviewIsolationError, match=r"^claude_account_unverified$"):
@@ -1325,7 +1324,7 @@ def test_selected_material_must_match_bound_identity(two_accounts):
 
 
 def test_selected_directory_swap_cannot_redirect_use(two_accounts, monkeypatch):
-    from lu_machinery.agent_runtime import attempt_boundary as module
+    from scripts.agent_runtime import attempt_boundary as module
 
     # The selected directory's global config is read through the held descriptor (#10619).
     original = module._checked_login_global_config
@@ -1356,7 +1355,7 @@ def test_selected_directory_swap_cannot_redirect_use(two_accounts, monkeypatch):
     ],
 )
 def test_selected_directory_rejects_unsafe_ancestry(two_accounts, case):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     if case.endswith("selected"):
         two_accounts.config_dir.chmod(0o770 if case.startswith("group") else 0o707)
@@ -1392,7 +1391,7 @@ def test_selected_directory_rejects_unsafe_ancestry(two_accounts, case):
 def test_selected_path_errors_are_sanitized(two_accounts, monkeypatch, error, code):
     import traceback
 
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     original = os.open
 
@@ -1426,7 +1425,7 @@ def test_selected_path_errors_are_sanitized(two_accounts, monkeypatch, error, co
 def test_selected_identity_failure_is_value_free(two_accounts, monkeypatch, case):
     import traceback
 
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     class FailedProfile:
         def __init__(self, *_args, **_kwargs):
@@ -1461,7 +1460,7 @@ def test_selected_identity_failure_is_value_free(two_accounts, monkeypatch, case
 
 
 def test_selected_material_is_not_reopened_after_identity_check(two_accounts, monkeypatch):
-    from lu_machinery.agent_runtime import attempt_boundary as module
+    from scripts.agent_runtime import attempt_boundary as module
 
     original = module._claude_selected_identity
 
@@ -1476,7 +1475,7 @@ def test_selected_material_is_not_reopened_after_identity_check(two_accounts, mo
 
 
 def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth, verify_claude_account
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth, verify_claude_account
 
     assert verify_claude_account("b").label == "b"
     _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
@@ -1485,7 +1484,7 @@ def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
 
 
 def test_default_claude_account_keeps_legacy_selection(two_accounts, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     # The default label never consults the private binding, even when it is absent.
     monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(two_accounts.binding.with_name("absent.json")))
@@ -1496,7 +1495,7 @@ def test_default_claude_account_keeps_legacy_selection(two_accounts, monkeypatch
 
 
 def test_second_claude_account_reads_only_its_bound_credential(two_accounts, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     assert linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
     # Naming the same directory ambiently is not a conflict.
@@ -1507,7 +1506,7 @@ def test_second_claude_account_reads_only_its_bound_credential(two_accounts, mon
 @pytest.mark.parametrize("label", ["c", "B", "", " b", "a\n", 1])
 def test_unknown_claude_account_label_is_refused(two_accounts, label):
     """AC-01: base code has no label parameter (TypeError); the label is refused with its typed code."""
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     with pytest.raises(ReviewIsolationError) as refused:
         linux_claude_auth(label)
@@ -1591,7 +1590,7 @@ def _conflict(accounts: SimpleNamespace, monkeypatch, case: str) -> None:
 )
 def test_second_claude_account_refuses_conflicting_sources(two_accounts, monkeypatch, case, code):
     """AC-01: each conflicting or unverifiable source is refused by code alone, before any token is returned."""
-    from lu_machinery.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, linux_claude_auth
 
     assert linux_claude_auth("b")  # positive control: the unchanged fixture authenticates
     _conflict(two_accounts, monkeypatch, case)
@@ -1615,7 +1614,7 @@ def test_second_claude_account_admits_inert_user_settings_names(two_accounts, ca
     On 4e1f252ca7 each of these refused with
     ``claude_account_settings_credential_source``.
     """
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     _private_json(two_accounts.config_dir / "settings.json", INERT_USER_SETTINGS_CASES[case])
 
@@ -1625,7 +1624,7 @@ def test_second_claude_account_admits_inert_user_settings_names(two_accounts, ca
 @pytest.mark.parametrize("case", sorted(SETTINGS_REFUSED_BESIDE_INERT))
 def test_second_claude_account_refuses_a_credential_source_beside_inert_names(two_accounts, case):
     """Beside the inert names, a key, helper, endpoint, provider or unknown name still refuses, value-free."""
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     _private_json(
         two_accounts.config_dir / "settings.json", inert_user_settings_with(SETTINGS_REFUSED_BESIDE_INERT[case])
@@ -1647,7 +1646,7 @@ def test_second_claude_account_refuses_auto_mode(two_accounts, case):
     On d183ad934b this was admitted, although the classifier reads it whatever
     the setting sources.
     """
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     _private_json(two_accounts.config_dir / "settings.json", AUTO_MODE_REFUSED[case])
 
@@ -1666,7 +1665,7 @@ def test_second_claude_account_refuses_a_host_with_machine_policy(two_accounts, 
 
     On f8dce2b219 every case returned the bound token.
     """
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     assert linux_claude_auth("b")  # positive control: no machine policy
     two_accounts.profile_calls.clear()
@@ -1683,7 +1682,7 @@ def test_second_claude_account_refuses_wsl(two_accounts, monkeypatch, tmp_path, 
 
     WSL is what the CLI takes it for: either variable set, or a kernel string naming it.
     """
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     assert linux_claude_auth("b")  # positive control: a plain Linux kernel string
     (tmp_path / "proc-version").write_text("Linux version 6.0.0-fixture\n", encoding="utf-8")
@@ -1720,9 +1719,9 @@ def test_attempt_boundary_authenticates_claude_seat_as_the_labelled_account(worl
 @pytest.mark.parametrize("agent", ["codex", "agy"])
 def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, agent):
     """Reproduce B1/B1b through the real sandbox and runner parse boundary."""
-    from lu_machinery.agent_runtime.adapters import agy as agy_module
-    from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
-    from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.agent_runtime.adapters import agy as agy_module
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
 
     root, home = world
     forbidden = home / "forbidden.jsonl"
@@ -1801,14 +1800,14 @@ def _default_file(tmp_path: Path, monkeypatch, content: bytes, *, mode: int = 0o
     [(b"b", "b"), (b"b\n", "b"), (b"  a\r\n", "a"), (b"\tb \n\n", "b"), (b"", None), (b" \n", None)],
 )
 def test_default_account_file_names_one_label_or_none(tmp_path, monkeypatch, content, label):
-    from lu_machinery.agent_runtime.attempt_boundary import read_claude_default_account
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
 
     _default_file(tmp_path, monkeypatch, content)
     assert read_claude_default_account() == label
 
 
 def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
 
     monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(tmp_path / "absent"))
     assert resolve_dispatch_claude_account(None) == ("a", "builtin")
@@ -1826,7 +1825,7 @@ def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, m
 
 
 def test_default_file_refusal_names_no_value_or_location(tmp_path, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import ClaudeAccountRefused, read_claude_default_account
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, read_claude_default_account
 
     path = _default_file(tmp_path, monkeypatch, b"fixture-secretish-content\n")
     with pytest.raises(ClaudeAccountRefused) as refused:
@@ -1840,7 +1839,7 @@ def test_default_file_refusal_names_no_value_or_location(tmp_path, monkeypatch):
 
 def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):
     """The sealed boundary's verified selection of the bound credential is this run's receipt."""
-    from lu_machinery.agent_runtime.attempt_boundary import (
+    from scripts.agent_runtime.attempt_boundary import (
         claude_account_auth_receipt,
         linux_claude_auth,
         reset_claude_account_receipts,
@@ -1860,9 +1859,9 @@ def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):
 
 
 def test_receipt_is_shared_by_both_import_names_of_the_binding_module():
-    """The worker imports ``lu_machinery.agent_runtime``; the runner loads the same files as ``agent_runtime``."""
-    import lu_machinery.agent_runtime.attempt_boundary as canonical
-    import lu_machinery.agent_runtime.attempt_boundary as short_name
+    """The worker imports ``scripts.agent_runtime``; the runner loads the same files as ``agent_runtime``."""
+    import agent_runtime.attempt_boundary as short_name
+    import scripts.agent_runtime.attempt_boundary as canonical
 
     canonical.reset_claude_account_receipts()
     short_name.note_claude_account_verified("b", "subscription_login")
@@ -1872,7 +1871,7 @@ def test_receipt_is_shared_by_both_import_names_of_the_binding_module():
 
 
 def test_receipt_carries_only_fixed_vocabulary():
-    from lu_machinery.agent_runtime.attempt_boundary import (
+    from scripts.agent_runtime.attempt_boundary import (
         claude_account_auth_receipt,
         note_claude_account_verified,
         reset_claude_account_receipts,
@@ -1917,7 +1916,7 @@ def api_key_account(two_accounts, tmp_path):
 @pytest.mark.parametrize("label", ["kk", "szb"])
 def test_api_key_label_is_accepted_and_mapped_to_its_bound_directory(api_key_account, tmp_path, label):
     """An API-key label resolves and binds its own directory, with no login account or provider call."""
-    from lu_machinery.agent_runtime.attempt_boundary import (
+    from scripts.agent_runtime.attempt_boundary import (
         resolve_claude_account_label,
         resolve_dispatch_claude_account,
         verify_claude_account,
@@ -1937,7 +1936,7 @@ def test_api_key_label_is_accepted_and_mapped_to_its_bound_directory(api_key_acc
 
 @pytest.mark.parametrize("label", ["KK", "kk ", "szb\n", "k", "api"])
 def test_unknown_api_key_like_label_is_refused(api_key_account, label):
-    from lu_machinery.agent_runtime.attempt_boundary import verify_claude_account
+    from scripts.agent_runtime.attempt_boundary import verify_claude_account
 
     with pytest.raises(ClaudeAccountRefused) as refused:
         verify_claude_account(label)
@@ -2000,7 +1999,7 @@ def _api_key_conflict(accounts: SimpleNamespace, monkeypatch, case: str) -> None
 )
 def test_api_key_label_refuses_conflicting_sources(api_key_account, monkeypatch, case, code):
     """Each ambiguous or competing source refuses an API-key label by code alone; no value is reported."""
-    from lu_machinery.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, verify_claude_account
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, verify_claude_account
 
     assert verify_claude_account("kk")  # positive control
     _api_key_conflict(api_key_account, monkeypatch, case)
@@ -2012,7 +2011,7 @@ def test_api_key_label_refuses_conflicting_sources(api_key_account, monkeypatch,
 
 
 def test_api_key_label_with_its_own_ambient_config_dir_is_admitted(api_key_account, monkeypatch):
-    from lu_machinery.agent_runtime.attempt_boundary import verify_claude_account
+    from scripts.agent_runtime.attempt_boundary import verify_claude_account
 
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(api_key_account.api_dir))
     assert verify_claude_account("kk").config_dir == api_key_account.api_dir
@@ -2020,7 +2019,7 @@ def test_api_key_label_with_its_own_ambient_config_dir_is_admitted(api_key_accou
 
 def test_api_key_label_never_comes_from_the_default_file_or_a_sealed_attempt(api_key_account, tmp_path, monkeypatch):
     """A paid key is named explicitly per run; a sealed attempt would need the key itself."""
-    from lu_machinery.agent_runtime.attempt_boundary import linux_claude_auth, resolve_dispatch_claude_account
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth, resolve_dispatch_claude_account
 
     _default_file(tmp_path, monkeypatch, b"kk\n")
     with pytest.raises(ClaudeAccountRefused) as refused:
@@ -2031,7 +2030,7 @@ def test_api_key_label_never_comes_from_the_default_file_or_a_sealed_attempt(api
 
 
 def test_api_key_receipt_names_the_helper_method():
-    from lu_machinery.agent_runtime.attempt_boundary import (
+    from scripts.agent_runtime.attempt_boundary import (
         claude_account_auth_receipt,
         note_claude_account_verified,
         reset_claude_account_receipts,
