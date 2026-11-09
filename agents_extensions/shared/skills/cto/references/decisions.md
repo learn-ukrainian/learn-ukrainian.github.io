@@ -73,7 +73,8 @@ headroom. When a result is missed, fix the rule, skill, tool or check that allow
       rendering the Ukrainian locale; a string table alone is insufficient.
 - [ ] The open mistakes-ledger entries checked as known traps.
 - [ ] Orders keep issue updates in the body and one closing comment; only the CTO files issues.
-- [ ] Every factual claim in a brief or order checked against its source text, beyond confirming the source exists.
+- [ ] Every factual claim in a brief, an order, or a proposal the CTO endorses or relays is checked against its source text with one command, cited, beyond confirming the source exists.
+- [ ] A claim that something is absent from a file or tree comes from a whole-file search (`git grep -n`, `grep -n` on the full blob), never from a head, tail or line-range slice.
 - [ ] Anything not re-derived says NOT CHECKED with its command.
 - [ ] To the operator: answer a direct question first and honestly, then the action; a
       choice uses the P6 format with one recommendation, never a menu of questions.
