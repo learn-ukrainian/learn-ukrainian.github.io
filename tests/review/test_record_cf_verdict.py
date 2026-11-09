@@ -50,6 +50,47 @@ def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
     assert review_records(tasks, repository="owner/repo") == []
 
 
+def _misnamed_copy(tasks, name, **updates):
+    record = json.loads((tasks / "review-one.json").read_text())
+    (tasks / name).write_text(json.dumps({**record, **updates}))
+
+
+def test_saved_wait_output_beside_its_record_neither_blocks_nor_counts(tmp_path):
+    """Defect class: a worker's saved `dispatch.py wait` stdout stopped every review fleet-wide."""
+    from scripts.review.review_lineage import review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    _misnamed_copy(tasks, "review-one.review-wait.json", status="running")
+    assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
+
+
+def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
+    """Defect class: a renamed or orphaned review record silently drops out of the lineage."""
+    from scripts.review.review_lineage import LineageRefused, review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    _misnamed_copy(tasks, "review-one.saved.json", run_nonce="nonce-2")
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json is a misnamed review record"):
+        review_records(tasks, repository="owner/repo")
+    (tasks / "review-one.saved.json").unlink()
+    (tasks / "review-one.json").rename(tasks / "review-one.saved.json")
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json is a misnamed review record"):
+        review_records(tasks, repository="owner/repo")
+
+
+def test_misnamed_record_outside_this_repository_lineage_does_not_refuse(tmp_path):
+    """Defect class: one repository's stray copy blocks another repository's reviews."""
+    from scripts.review.review_lineage import review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    _misnamed_copy(tasks, "other-repo.copy.json", task_id="other-review", repository="owner/other")
+    (tasks / "worker.copy.json").write_text(json.dumps({"schema_version": 2, "task_id": "worker", "status": "done"}))
+    assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
+
+
 @pytest.fixture
 def scanned_recorder(monkeypatch, tmp_path):
     """Exercise the supported publisher; fake only GitHub reads and transport."""

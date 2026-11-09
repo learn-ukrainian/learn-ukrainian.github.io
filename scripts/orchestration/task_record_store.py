@@ -119,11 +119,25 @@ def parse_task_record(path: Path, raw: bytes, *, display_unknown_schema: bool = 
             return {"schema_version": record["schema_version"]}
         raise ValueError(f"task record {path} has invalid schema_version")
     if (("task_id" in record and (not isinstance(task_id, str) or not task_id))
-            or (record.get("schema_version") == 2 and (
-                not isinstance(task_id, str) or not candidate_task_record_names(task_id, (path.name,))
-            ))):
+            or (record.get("schema_version") == 2 and not isinstance(task_id, str))):
         raise ValueError(f"task record {path} has invalid task identity")
+    if (record.get("schema_version") == 2 and isinstance(task_id, str)
+            and not candidate_task_record_names(task_id, (path.name,))):
+        raise TaskIdentityMismatch(path, record)
     return record
+
+
+class TaskIdentityMismatch(ValueError):
+    """A v2 record under a name dispatch never gives its task_id: a copy, or a renamed record.
+
+    ``record`` is the decoded content, so a reader can tell a copy (its correctly named
+    record exists) from a renamed or orphaned one. It is a ValueError, so every reader
+    that does not ask refuses it exactly as before.
+    """
+
+    def __init__(self, path: Path, record: dict[str, Any]) -> None:
+        super().__init__(f"task record {path} has invalid task identity")
+        self.record = record
 
 
 def read_task_record(path: Path) -> dict[str, Any] | None:
