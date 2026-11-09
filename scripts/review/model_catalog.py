@@ -1092,6 +1092,14 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     suffix (``VARIANT_SUFFIX``); ``claude-opus-5-6`` is an unknown model, not
     a variant of ``claude-opus-5``.
     """
+    return _catalog_match(model, catalog, variants_only=True)
+
+
+def _catalog_match(model: Any, catalog: dict[str, Any] | None, *, variants_only: bool) -> str | None:
+    """Exact id or alias first, else the longest catalog id or alias the spelling extends.
+
+    ``variants_only`` admits an extension only when its whole remainder is a ``VARIANT_SUFFIX``.
+    """
     text = str(model or "").strip().split("[", 1)[0].strip()
     if not text:
         return None
@@ -1104,7 +1112,8 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
             (len(alias), owner)
             for candidate in candidates
             for alias, owner in lookup.items()
-            if candidate.startswith(f"{alias}-") and VARIANT_SUFFIX.fullmatch(candidate[len(alias) + 1 :])
+            if candidate.startswith(f"{alias}-")
+            and (not variants_only or VARIANT_SUFFIX.fullmatch(candidate[len(alias) + 1 :]))
         ]
         model_id = max(extended)[1] if extended else None
     return model_id
@@ -1345,7 +1354,9 @@ def retired_model_refusal(
     """Refuse retired ids using the same canonical identity as review admission.
 
     Delegate, the runner and adapter model guards call this before side effects.
-    Unknown ids return None; transport gates own them.
+    Unknown ids return None; transport gates own them. An unknown spelling that extends a retired
+    or red-team-only id (``claude-opus-5-6``, ``gemma-4-26b-a4b-it``) names no catalog model, but
+    stays refused here as it was before identity stopped reading it as that model (C-4967).
     """
     text = str(model or "").strip()
     if not text:
@@ -1354,6 +1365,13 @@ def retired_model_refusal(
     models = catalog["models"]
     model_id = resolve_catalog_model_id(text, catalog)
     if model_id is None:
+        prefix = _catalog_match(text, catalog, variants_only=False)
+        if prefix is None:
+            return None
+        if models[prefix]["lifecycle"] == "retired":
+            return f"model {text!r} names no catalog model; its prefix {prefix} is retired in the model catalog"
+        if models[prefix].get("red_team_only"):
+            return f"model {text!r} names no catalog model; its prefix {prefix} is restricted to red-team review (#10437)"
         return None
     entry = models[model_id]
     if restriction := entry.get("red_team_only"):

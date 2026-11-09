@@ -202,8 +202,7 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         run_launcher(DRIVER, "--epic", "infra", "--model", model),
         run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
     ):
-        # C-4967: "-fast" is no effort variant, so composer-2.5-fast names no catalog model.
-        if model.partition("[")[0] in RETIRED_MODEL_IDS:
+        if model.partition("[")[0] in RETIRED_MODEL_IDS or model.startswith("composer-2.5"):
             assert result.returncode == 2, result.stdout + result.stderr
             assert "is retired in the model catalog" in result.stderr
             assert model in result.stderr
