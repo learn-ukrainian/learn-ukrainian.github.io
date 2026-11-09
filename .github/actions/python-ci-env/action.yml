@@ -77,7 +77,10 @@ runs:
           wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
           mkdir -p "${wheelhouse}"
           wheel="lu_machinery-${machinery_version}-py3-none-any.whl"
-          curl -fsSL --retry 5 --retry-all-errors -o "${wheelhouse}/${wheel}" \
+          # Every CI job fetches from the release CDN (~20 shards per merge
+          # group); ride out a short CDN outage instead of ejecting the group.
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 \
+            --connect-timeout 20 -o "${wheelhouse}/${wheel}" \
             "https://github.com/learn-ukrainian/machinery/releases/download/v${machinery_version}/${wheel}"
           if ! uv pip install --offline --python .venv/bin/python --require-hashes --no-deps \
               --find-links "${wheelhouse}" -r "${machinery_lock}"; then
