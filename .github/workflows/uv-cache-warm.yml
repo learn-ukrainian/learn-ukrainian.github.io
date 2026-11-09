@@ -3,8 +3,8 @@ name: Warm uv cache
 # Writes the uv cache onto refs/heads/main so later pull_request and
 # merge_group runs can install offline (#9095).
 #
-# setup-uv keys the cache on requirements-lock.txt and restores only that
-# exact key. The python-ci-env action saves only on refs/heads/main (#9101),
+# setup-uv keys the cache on requirements-lock.txt plus
+# requirements-machinery.lock and restores only that exact key. The python-ci-env action saves only on refs/heads/main (#9101),
 # because a cache saved for a pull_request ref is invisible to every other
 # ref and ~447 MiB each pushed the repository past GitHub's 10 GB limit. The
 # only writer that lands on main inside ci.yml is the nightly schedule, so a
@@ -30,6 +30,7 @@ on:
     branches: [main]
     paths:
       - 'requirements-lock.txt'
+      - 'requirements-machinery.lock'
       - '.python-version'
       - '.github/actions/python-ci-env/**'
       - '.github/workflows/uv-cache-warm.yml'
@@ -78,7 +79,7 @@ jobs:
         with:
           python-version-file: '.python-version'
       # Same composite as ci.yml, so the cache key (runner, Python from
-      # .python-version, requirements-lock.txt) and the cached wheels match
+      # .python-version, both lock files) and the cached wheels match
       # the install the shards restore.
       - name: Python CI environment
         id: python-ci-env

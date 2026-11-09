@@ -28,7 +28,7 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     assert uv["id"] == "setup-uv"
     assert action["outputs"]["uv-cache-key"]["value"] == "${{ steps.setup-uv.outputs.cache-key }}"
     assert uv["with"]["enable-cache"] is True
-    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
+    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt\nrequirements-machinery.lock\n"
     assert uv["with"].get("prune-cache", False) is False
 
     warm = yaml.safe_load(_WARM.read_text(encoding="utf-8"))
@@ -37,6 +37,7 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
         "branches": ["main"],
         "paths": [
             "requirements-lock.txt",
+            "requirements-machinery.lock",
             ".python-version",
             ".github/actions/python-ci-env/**",
             ".github/workflows/uv-cache-warm.yml",
