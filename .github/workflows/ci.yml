@@ -257,6 +257,7 @@ jobs:
         run: .venv/bin/python -m scripts.common.flake_quarantine --base-ref "$BASE_SHA"
       - name: Lint and content contracts
         env:
+          GH_TOKEN: ${{ github.token }}
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
