@@ -21,7 +21,7 @@ def spec_at(tmp_path, provider):
     checkout.mkdir()
     brief = tmp_path / "brief"
     brief.write_bytes(b"Original brief\r\n")
-    return TaskSpec("delivery", provider, "stub", "high", "workspace-write", checkout, brief, tmp_path / "result")
+    return TaskSpec("delivery", provider, "gpt-6.1-sol", "high", "workspace-write", checkout, brief, tmp_path / "result")
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)

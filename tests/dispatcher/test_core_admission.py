@@ -314,7 +314,7 @@ def admission_dispatch(sandbox, monkeypatch):
 
     monkeypatch.setattr(worker, "start", start)
 
-    def dispatch(*flags, model="echo", mode="workspace-write", task_id="adm-worker"):
+    def dispatch(*flags, model="gpt-6.1-sol", mode="workspace-write", task_id="adm-worker"):
         return cli.main(["dispatch", "--agent", "sol", "--model", model, "--mode", mode,
                          "--task-id", task_id, "--prompt", "Map the parser flags.", *flags])
 
