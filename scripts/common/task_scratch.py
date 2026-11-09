@@ -12,7 +12,8 @@ This module gives every wrapper invocation one unique directory under the
 
     <scratch root>/task-scratch/<task>.<random>/
         lease.json    versioned owner metadata (regular file, 0600)
-        lease.lock    flock held by the owning wrapper for its lifetime
+        lease.lock    flock held shared by the owning wrapper for its lifetime
+                      (and by any descendant that joins it); recovery needs it exclusive
         scratch/      the payload directory exposed as $LU_TASK_SCRATCH_DIR
 
 Ownership and liveness are recorded, never inferred from a filename:
@@ -514,14 +515,35 @@ def _rmdir_held(dir_fd: int, name: str, *, held_fd: int, held_st: os.stat_result
         raise ContainmentError(f"rmdir removed a different directory in place of {name!r}")
 
 
+def grant_owner_rwx(dir_fd: int, name: str, expected: os.stat_result, *, device: int, mount_id: int) -> None:
+    """Give owner rwx to the directory ``name`` below ``dir_fd``, pinned before its mode changes.
+
+    The name is held through an ``O_PATH`` descriptor, which needs no access to
+    the directory and refuses a symlink or any non-directory. Its identity,
+    owner, device and mount id are proven on that descriptor, and the mode is
+    changed through ``/proc/self/fd``, so a name swapped for another inode (a
+    hard link to an outside file included) is never touched.
+    """
+    fd = os.open(name, os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=dir_fd)
+    try:
+        held = os.fstat(fd)
+        if (held.st_dev, held.st_ino) != (expected.st_dev, expected.st_ino) or held.st_uid != os.geteuid():
+            raise ContainmentError(f"directory {name!r} changed before its permission repair")
+        if held.st_dev != device or fd_mount_id(fd) != mount_id:
+            raise ContainmentError(f"refusing to repair permissions across a mount at {name!r}")
+        os.chmod(f"/proc/self/fd/{fd}", stat.S_IMODE(held.st_mode) | stat.S_IRWXU)
+    finally:
+        os.close(fd)
+
+
 def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
     """Remove every entry below ``dir_fd`` without leaving ``device`` or ``mount_id``.
 
     Symlinks are unlinked, never followed. Every directory descent re-proves
     identity, device and mount id on the descriptor it just opened, and every
     ``rmdir`` re-identifies its target with the emptied directory still held
-    open (:func:`_rmdir_held`). Owner-only permission barriers are repaired
-    once (owner rwx) and retried.
+    open (:func:`_rmdir_held`). A directory without owner rwx gets it before it
+    is emptied, through a descriptor proven to be that directory.
     """
     with os.scandir(dir_fd) as it:
         entries = [(entry.name, entry.stat(follow_symlinks=False)) for entry in it]
@@ -532,7 +554,7 @@ def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
             try:
                 child_fd = _open_dir_at(dir_fd, name)
             except PermissionError:
-                os.chmod(name, stat.S_IMODE(st.st_mode) | stat.S_IRWXU, dir_fd=dir_fd, follow_symlinks=False)
+                grant_owner_rwx(dir_fd, name, st, device=device, mount_id=mount_id)
                 child_fd = _open_dir_at(dir_fd, name)
             try:
                 child_st = _verify_held_dir(
@@ -543,6 +565,9 @@ def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
                     mount_id=mount_id,
                     what=f"directory {name!r}",
                 )
+                if stat.S_IMODE(child_st.st_mode) & stat.S_IRWXU != stat.S_IRWXU:
+                    # A read-only directory would refuse to give up its entries.
+                    os.fchmod(child_fd, stat.S_IMODE(child_st.st_mode) | stat.S_IRWXU)
                 _rmtree_fd(child_fd, device=device, mount_id=mount_id)
                 _rmdir_held(dir_fd, name, held_fd=child_fd, held_st=child_st)
             finally:
@@ -601,15 +626,19 @@ def _remove_invocation_dir(
         # the lease metadata survives for recovery to classify. The same
         # checks repeat on every descent during deletion for anything that
         # appears afterwards.
-        _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
+        _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount, opaque_locked=True)
         _rmtree_fd(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
         _rmdir_held(namespace_fd, name, held_fd=inv_fd, held_st=inv_st)
     finally:
         os.close(inv_fd)
 
 
-def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]:
-    """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts."""
+def _walk_stats(dir_fd: int, *, device: int, mount_id: int, opaque_locked: bool = False) -> tuple[int, float]:
+    """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts.
+
+    ``opaque_locked`` (the removal pre-walk only) skips a directory of ours that
+    its owner cannot open; the remover repairs it and re-proves it on descent.
+    """
     total = 0
     newest = 0.0
     with os.scandir(dir_fd) as it:
@@ -619,7 +648,14 @@ def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]
         if stat.S_ISDIR(st.st_mode):
             if st.st_dev != device:
                 raise ContainmentError(f"mount boundary at {name!r}")
-            child_fd = _open_dir_at(dir_fd, name)
+            try:
+                child_fd = _open_dir_at(dir_fd, name)
+            except PermissionError:
+                if not opaque_locked or st.st_uid != os.geteuid():
+                    raise
+                if stat.S_IMODE(st.st_mode) & stat.S_IRWXU == stat.S_IRWXU:
+                    raise
+                continue
             try:
                 _verify_held_dir(
                     child_fd,
@@ -629,7 +665,9 @@ def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]
                     mount_id=mount_id,
                     what=f"directory {name!r}",
                 )
-                sub_bytes, sub_newest = _walk_stats(child_fd, device=device, mount_id=mount_id)
+                sub_bytes, sub_newest = _walk_stats(
+                    child_fd, device=device, mount_id=mount_id, opaque_locked=opaque_locked
+                )
             finally:
                 os.close(child_fd)
             total += sub_bytes
@@ -883,7 +921,8 @@ def allocate(task_id: str, *, root: Path | None = None, namespace_dirname: str =
             dir_fd=dir_fd,
         )
         try:
-            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            # Shared, so descendants can join the hold; recovery needs it exclusive.
+            fcntl.flock(lock_fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
             lease: dict[str, Any] = {
                 "schema_version": LEASE_SCHEMA_VERSION,
                 "kind": NAMESPACE_DIRNAME,
