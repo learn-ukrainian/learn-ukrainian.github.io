@@ -33,12 +33,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from lu_machinery.guardrails.worktree_containment import resolve_main_root
-from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
-from lu_machinery.storage.artifacts import write_artifact
-
+from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT

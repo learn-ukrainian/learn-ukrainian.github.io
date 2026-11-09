@@ -24,13 +24,13 @@ import pymupdf
 import yaml
 from bs4 import BeautifulSoup
 from docx import Document
-from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-from lu_machinery.storage.topology import is_network_filesystem_path
 from lxml import etree
 
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.evidence.publication import load_owned_rights
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.storage.topology import is_network_filesystem_path
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 MEMBER_CAP = 200 * 1024 * 1024

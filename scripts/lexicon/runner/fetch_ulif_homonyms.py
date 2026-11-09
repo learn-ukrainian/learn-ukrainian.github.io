@@ -42,9 +42,6 @@ from bs4 import BeautifulSoup
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
-from lu_machinery.storage.generations import GenerationError, store_writer
-
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner.ulif_dictua_parse import (
     ULIF_PARSER_VERSION,
@@ -54,6 +51,8 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_ulif_paradigm,
     parse_ulif_relation_groups,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.storage.generations import GenerationError, store_writer
 
 ULIF_URL = "https://lcorp.ulif.org.ua/dictua/"
 USER_AGENT = (

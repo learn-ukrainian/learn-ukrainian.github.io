@@ -38,8 +38,7 @@ from scripts.atlas.word_card_certification import (
     certified_inventory,
     guard_card_inventory,
 )
-
-REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
+from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"

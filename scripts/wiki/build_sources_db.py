@@ -57,9 +57,9 @@ except ModuleNotFoundError:
         require_production_eligible_entry,
     )
 
-from lu_machinery.common.repo_root import main_checkout_root
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+from scripts.common.repo_root import main_checkout_root
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
@@ -912,7 +912,7 @@ def _publishes_live_store(build_fn):
     """
     import functools
 
-    from lu_machinery.storage import generations
+    from scripts.storage import generations
 
     @functools.wraps(build_fn)
     def build_routed(db_path=None, *args, dry_run=False, **kwargs):
@@ -1251,7 +1251,7 @@ def build(db_path: Path | None = None,
     # a half-written live DB.
     if _held_writer is not None:
         # The live store: publish a new generation; readers keep the old one.
-        from lu_machinery.storage.generations import publish_generation
+        from scripts.storage.generations import publish_generation
 
         try:
             publication = publish_generation(tmp_db, _held_writer)

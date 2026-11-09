@@ -11,10 +11,10 @@ import sys
 from pathlib import Path
 
 try:
-    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"

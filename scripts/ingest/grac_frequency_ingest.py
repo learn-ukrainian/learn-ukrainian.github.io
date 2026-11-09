@@ -25,9 +25,8 @@ import requests
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lu_machinery.storage.topology import is_network_filesystem_path
-
 from scripts.rag.source_query import GRAC_BASE, GRAC_CORPUS, grac_db_path
+from scripts.storage.topology import is_network_filesystem_path
 
 USER_AGENT = (
     "learn-ukrainian-grac-frequency/1.0 (noncommercial educational; resumable wordlist snapshot; "

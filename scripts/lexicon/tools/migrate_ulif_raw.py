@@ -18,15 +18,14 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from lu_machinery.lib.readonly_sqlite import (
+from scripts.lexicon import ulif_raw_cache
+from scripts.lib.readonly_sqlite import (
     open_readonly as _shared_open_readonly,
 )
-from lu_machinery.lib.readonly_sqlite import (
+from scripts.lib.readonly_sqlite import (
     refuse_writable_corpus_database,
 )
-from lu_machinery.storage.generations import store_kind
-
-from scripts.lexicon import ulif_raw_cache
+from scripts.storage.generations import store_kind
 from scripts.wiki import sources_db
 
 GIB = 1024**3

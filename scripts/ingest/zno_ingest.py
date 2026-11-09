@@ -15,11 +15,9 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-
 from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
-
-REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
 ZNO_ANNOTATIONS_WORKSHEET = REGISTRY_ROOT / "lexicon" / "paronym_worksheet_candidates.yaml"

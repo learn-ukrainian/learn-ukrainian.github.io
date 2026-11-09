@@ -35,9 +35,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
-from lu_machinery.common.repo_root import project_interpreter
-
+from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.common.repo_root import project_interpreter
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
 from scripts.wiki.diagnostics import retrieval_probe_9233 as phase1
@@ -518,8 +517,8 @@ def _assert_permutation(before: list[str], after: list[str]) -> None:
 
 
 def _admission_probe() -> bool:
-    from lu_machinery.common.task_store_paths import tasks_dir
-    from lu_machinery.orchestration.dispatch_admission import evaluate
+    from scripts.common.task_store_paths import tasks_dir
+    from scripts.orchestration.dispatch_admission import evaluate
 
     decision = evaluate("danger", tasks_dir(), record_shadow=False)
     probe = decision.probe

@@ -259,7 +259,7 @@
       },
       {
         "path": "scripts/lexicon/load_relation_candidates.py",
-        "sha256": "820a1e0611b2b642d95f161e35f963cc48cc62859e5e5812385f47b1ae8d64b0"
+        "sha256": "ab24faaacd15ce79dde9d4b01e5efd3a043e06a7fa6515f09906105daf2f8b45"
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
@@ -287,7 +287,7 @@
       },
       {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",
-        "sha256": "632243a01a91b71e55ee0ff7d1923bd6c14ae38de6dcc49d662aced80c4b12e3"
+        "sha256": "d6ca0e45a4c5ffde1ed8313bcbccaade1382f4581e2daa92bf157b1869f1f0cd"
       },
       {
         "path": "scripts/lexicon/mine_wikipedia_relations.py",
@@ -351,7 +351,7 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "986a1df2d465957ce440de72c2155eae8a48364d1315e1d3fac61102e2f0fc98"
+        "sha256": "b198057deb985cbca702e4bdb24a999946a80d484366b29ee842d01b64e6588d"
       },
       {
         "path": "scripts/lexicon/reconcile_sum20.py",
@@ -403,7 +403,7 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "9e9c10bddc4c75dd68bf91dd8206185777db4d5f92f848eb9ee101ad80a9d2c3"
+        "sha256": "728dc3e98dededa98d621e04eaf2e20ad55146ea42d3d6c215573ee7bd13d4fd"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
@@ -419,7 +419,7 @@
       },
       {
         "path": "scripts/lexicon/ulif_raw_cache.py",
-        "sha256": "e4d5a8f2a8a724ff237de1f05289c2323b186b212b0cb3282e07aff863248e53"
+        "sha256": "f4f0f0cf4c53d717c8b7630ff25da3ea277318539e63c51a182e2948cfcf7f7e"
       },
       {
         "path": "scripts/lexicon/ulp_glossary_parse.py",

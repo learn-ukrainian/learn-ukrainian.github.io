@@ -28,9 +28,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
-
 from scripts.lexicon import enrich_manifest as em
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 FIXTURES_ROOT = ROOT / "tests" / "fixtures"

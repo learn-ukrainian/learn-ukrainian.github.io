@@ -41,13 +41,12 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lu_machinery.common.repo_root import main_checkout_root
-from lu_machinery.lib.readonly_sqlite import open_readonly
-from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
-
 from scripts.atlas import atlas_db
+from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB

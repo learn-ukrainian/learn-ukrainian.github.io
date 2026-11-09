@@ -36,11 +36,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 try:
-    from lu_machinery.lib.readonly_sqlite import open_readonly
+    from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db

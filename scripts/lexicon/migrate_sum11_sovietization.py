@@ -21,9 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-
 from scripts.audit.sum11_sovietization_scan import scan_and_update, write_audit_report
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 

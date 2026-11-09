@@ -52,11 +52,10 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lu_machinery.common.repo_root import main_checkout_root
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from lu_machinery.storage import generations, topology
-
+from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import reconcile_sum20
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from scripts.storage import generations, topology
 from scripts.wiki import sum20_mirror
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
@@ -632,7 +631,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import plan\n"
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import import --expect-staging-sha256 <sha256>\n"
-            "  .venv/bin/python -m lu_machinery.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
+            "  .venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
             "Outputs: JSON on stdout; the new generation under data/sources-generations/.\n"
             "Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused (selection unchanged);\n"
             "3 published, but a step after the selector switch failed (the new generation is selected).\n"

@@ -27,8 +27,6 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-
 from scripts.ingest.private_teacher_lessons_ingest import ingest_lessons, parse_docx
 from scripts.lexicon import teacher_deck_shard as shard
 from scripts.lexicon.sync_teacher_table_deck import (
@@ -41,6 +39,7 @@ from scripts.lexicon.sync_teacher_table_deck import (
     normalize_uk_key,
     site_data_bytes,
 )
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.practice_deck import publish as release
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

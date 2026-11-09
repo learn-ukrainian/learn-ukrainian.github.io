@@ -26,10 +26,10 @@ if __package__ in {None, ""}:
 
 import yaml
 from jsonschema import Draft202012Validator
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-from lu_machinery.storage.generations import store_kind
 
 from scripts.ingest import incremental_historical_source_ingest as ingest
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.storage.generations import store_kind
 from scripts.wiki import historical_sources
 
 ROOT = Path(__file__).resolve().parents[3]

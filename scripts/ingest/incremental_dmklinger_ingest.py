@@ -17,9 +17,8 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lu_machinery.common.scratch import ensure_scratch_root
-from lu_machinery.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
-
+from scripts.common.scratch import ensure_scratch_root
+from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
 from scripts.projects.open_model_data.textbook_native_exactness import atomic_write
 from scripts.wiki.build_sources_db import SCHEMA, _ingest_jsonl
 

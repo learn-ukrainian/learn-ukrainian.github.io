@@ -42,18 +42,18 @@ from pathlib import Path
 from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
 try:
-    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = None  # Selected by the connection owner at call time.
 
 
 
-from lu_machinery.storage.generations import GenerationError, store_writer
-from lu_machinery.storage.topology import (
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

@@ -24,10 +24,10 @@ from datetime import date
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 from lxml import etree
 
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 SOURCE_FILE = "private-teacher-lessons-a"
 AUTHOR = "private_teacher_lesson"

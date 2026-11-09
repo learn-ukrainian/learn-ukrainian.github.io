@@ -9,8 +9,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.common.jsonl import jsonl_lines
-from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.common.jsonl import jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 
 def _sha256_text(text: str) -> str:

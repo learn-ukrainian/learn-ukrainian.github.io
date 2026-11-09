@@ -31,9 +31,9 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 import yaml
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
 
 from scripts.curriculum.evidence import codes, sources
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
 
 CATALOGUES = (
     "podcasts/podcast_db.json",
@@ -734,9 +734,8 @@ def publication_target(store: Path) -> Any:
     (the importer's own default target). Any other directory under the primary
     ``data/`` is refused, so a scratch store cannot alias the live one.
     """
-    from lu_machinery.storage import topology
-
     from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import topology
 
     if store.name != topology.SELECTOR_NAME:
         raise importer.Refused("store_not_selector")
@@ -758,9 +757,8 @@ def _build_candidate(
     target: Any, current: Path, root: Path, inputs: Mapping[str, bytes], options: dict[str, Any]
 ) -> tuple[Path, dict[str, Any]]:
     """Copy ``current`` completely, ingest into the copy only and verify it; ``current`` is only read."""
-    from lu_machinery.storage import topology
-
     from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import topology
 
     # Beside the selector: the publisher hard-links the candidate, so it must share the store's filesystem.
     candidate = target.data_dir / f".{topology.SELECTOR_NAME}.{os.getpid()}.{secrets.token_hex(4)}.{CANDIDATE_SUFFIX}"
@@ -796,9 +794,8 @@ def publish(
     is a ``PostSwitchFailure`` naming the generation now selected; nothing is
     retried.
     """
-    from lu_machinery.storage import generations
-
     from scripts.ingest import sum20_mirror_import as importer
+    from scripts.storage import generations
 
     current: Path | None = None
     try:
@@ -852,7 +849,7 @@ def publish(
 
 def _selected_name(selector: Path | None) -> str | None:
     """The generation a selector selects now, read after a failure; never raises."""
-    from lu_machinery.storage import topology
+    from scripts.storage import topology
 
     try:
         state = topology.inspect_selector(selector) if selector is not None else None
@@ -961,7 +958,7 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; docs/runb
         parser.error("workers must be 1–16 and timeout must be positive")
     publication = (args.store, args.expect_generation, args.expect_input_sha256)
     if args.publish:
-        from lu_machinery.storage.topology import is_generation_name
+        from scripts.storage.topology import is_generation_name
 
         if args.db is not None or None in publication:
             parser.error("--publish takes --store, --expect-generation and --expect-input-sha256, never --db")
@@ -972,7 +969,7 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; docs/runb
         return _publish_main(args)
     if args.db is None or any(value is not None for value in publication):
         parser.error("--db is required without --publish; --store and --expect-* need --publish")
-    from lu_machinery.storage.topology import is_network_filesystem_path
+    from scripts.storage.topology import is_network_filesystem_path
 
     if is_network_filesystem_path(args.db) or is_network_filesystem_path(args.db.resolve()):
         parser.error("SQLite database must be local")

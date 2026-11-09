@@ -11,12 +11,14 @@ from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 
-if __package__ in (None, ""):  # run by path: put the repository root on sys.path
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-from lu_machinery.storage.generations import GenerationError, store_writer
-from lu_machinery.storage.topology import (
+from scripts.storage.generations import GenerationError, store_writer
+from scripts.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,

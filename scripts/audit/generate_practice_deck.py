@@ -33,9 +33,6 @@ _import_path = sys.path[:]
 try:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-    from lu_machinery.lib.readonly_sqlite import open_readonly
-    from lu_machinery.storage.paths import artifact_path
-
     from scripts.audit.lexeme_filter import (
         SOURCE_INVENTORY_SOURCE,
         SURFACE_CLOZE,
@@ -61,6 +58,7 @@ try:
         apply_membership,
         read_membership,
     )
+    from scripts.lib.readonly_sqlite import open_readonly
     from scripts.practice.creation_review import CreationReview, heritage_source
     from scripts.practice.ulif_synonym_groups import (
         ULIF_SYNONYMS_SOURCE,
@@ -73,8 +71,7 @@ try:
         read_end_dictionary_stress_overlay,
     )
     from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
-
-    REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
+    from scripts.storage.paths import REGISTRY_ROOT, artifact_path
 finally:
     sys.path[:] = _import_path
     del _import_path
@@ -90,7 +87,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

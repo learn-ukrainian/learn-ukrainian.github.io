@@ -27,8 +27,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from lu_machinery.common.schema_check import check_schema
-
+from scripts.common.schema_check import check_schema
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.model_view_exporter import build_exclusion_registry, registry_receipt
 

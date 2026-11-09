@@ -20,16 +20,15 @@ from filelock import FileLock, Timeout
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from lu_machinery.lib.readonly_sqlite import (
-    open_readonly as _shared_open_readonly,
-)
-from lu_machinery.lib.readonly_sqlite import (
-    refuse_writable_corpus_database,
-)
-from lu_machinery.storage.topology import store_kind
-
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
+from scripts.lib.readonly_sqlite import (
+    open_readonly as _shared_open_readonly,
+)
+from scripts.lib.readonly_sqlite import (
+    refuse_writable_corpus_database,
+)
+from scripts.storage.topology import store_kind
 from scripts.wiki import sources_db
 
 ULIF_FORMS_PARSER_VERSION = ulif_dictua_parse.ULIF_FORMS_PARSER_VERSION

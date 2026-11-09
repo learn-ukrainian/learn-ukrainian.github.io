@@ -45,11 +45,11 @@ import time
 from pathlib import Path
 
 try:
-    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_shared_readonly
+    from scripts.lib.readonly_sqlite import open_readonly as _open_shared_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_shared_readonly  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_shared_readonly  # type: ignore[no-redef]
 
 from scripts.atlas.atlas_db import SCHEMA
 
@@ -73,7 +73,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

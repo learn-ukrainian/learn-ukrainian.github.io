@@ -7,8 +7,7 @@ import argparse
 import sqlite3
 from pathlib import Path
 
-from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
-
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.wiki.extract_sections import DEFAULT_DB_PATH, column_exists, table_exists
 
 ORIGINAL_TEXTBOOKS_SCHEMA = """
