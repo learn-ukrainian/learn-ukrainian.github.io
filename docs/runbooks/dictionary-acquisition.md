@@ -230,7 +230,7 @@ exits with a quiet interval of at least two seconds. Per-target attempts and
 supervisor launches are reserved **durably before execution**. A restart of either
 process cannot reset the budget. Defaults allow four attempts per unresolved
 target and four child launches **without durable target progress** (initial plus
-three restarts). Each committed positive article or proven 404 starts a new
+three restarts). Each committed positive article, proven 404, or recorded unusable article starts a new
 no-progress launch budget; transient results, in-flight attempts and process
 startup do not. Launch reservations and resolved outcomes share the persisted
 event sequence, so progress remains effective across a supervisor restart,
@@ -264,7 +264,7 @@ proven 404s and recorded unusable articles, and it stops on anything still open.
 The parser is unchanged; an unusable article is stored, not reinterpreted.
 Raw response bodies and request secrets are never emitted to logs or status.
 The response text of an unusable article is kept only in that row's payload in
-`staging.sqlite3` (truncated past 1 MiB, with the SHA-256 of the full text).
+`staging.sqlite3` (a valid UTF-8 prefix of at most 1 MiB of bytes, with the SHA-256 of the full text).
 Successful articles live only in local staging.
 
 After the driver has investigated a stop and the operator authorizes another
@@ -304,8 +304,9 @@ interrupted requests; it cannot prove that every reserved request reached upstre
 `retry` reports the next unresolved target's attempts/deadline.
 `retry.supervisor_launches` and `supervisor_restarts` are lifetime counters;
 `retry.no_progress_launches` is the current launch budget used, bounded by
-`retry.max_no_progress_launches` (`max_restarts + 1`). A resolved target resets
-only that current launch budget, never per-target attempts or historical counts.
+`retry.max_no_progress_launches` (`max_restarts + 1`). A positive, a proven 404, or a
+recorded unusable article resets only that current launch budget, never per-target
+attempts or historical counts.
 The structured log includes the same retry and attempt counters as status.
 Elapsed time includes interruptions. ETA is `null` until at least two
 network targets resolve, and remains unknown for terminal errors. A supported ETA

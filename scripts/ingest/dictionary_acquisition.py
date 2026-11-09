@@ -72,6 +72,7 @@ CLASSIFIED = SUCCESS | {"parse_error"}
 # stops. Five is past a short cluster of odd pages and, at the default four-second delay, stops a
 # broken parser in about twenty seconds. The streak is consecutive in target order and durable.
 CONSECUTIVE_UNUSABLE_LIMIT = 5
+# Inspection payload bound, in UTF-8 bytes. A character count would keep several mebibytes of Cyrillic.
 _UNUSABLE_TEXT_LIMIT = 1_048_576
 _CRAWL_SETTLED_SQL = "'positive','not_found','reused','parse_error'"
 EXIT = {
@@ -351,10 +352,15 @@ def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]],
 
 
 def no_progress_launches(conn: sqlite3.Connection) -> int:
-    """Count durable launch reservations since the last resolved target or explicit resume."""
+    """Count durable launch reservations since the last classified target or explicit resume.
+
+    A recorded unusable article is classified progress and starts a new budget, as a positive
+    or a proven 404 does. Transient results and in-flight attempts do not.
+    """
     return conn.execute(
         "SELECT COUNT(*) FROM events WHERE kind='supervisor_launch' AND id > "
-        "COALESCE((SELECT MAX(id) FROM events WHERE kind IN ('positive','not_found','operator_resume')),0)"
+        "COALESCE((SELECT MAX(id) FROM events WHERE kind IN "
+        "('positive','not_found','parse_error','operator_resume')),0)"
     ).fetchone()[0]
 
 
@@ -559,16 +565,18 @@ class _LastGet:
 def unusable_payload(capture: _LastGet, http: int | None, now: float) -> dict[str, Any]:
     """Inspection copy of one unusable response. Logs and status never receive this body."""
     text = capture.text if isinstance(capture.text, str) else ""
-    stored = text if len(text) <= _UNUSABLE_TEXT_LIMIT else text[:_UNUSABLE_TEXT_LIMIT]
+    raw = text.encode()
+    # A cut may land inside a character. Drop that partial character and keep valid UTF-8.
+    stored = text if len(raw) <= _UNUSABLE_TEXT_LIMIT else raw[:_UNUSABLE_TEXT_LIMIT].decode("utf-8", errors="ignore")
     payload: dict[str, Any] = {
         "source_url": capture.url,
         "fetched_at": datetime.fromtimestamp(now, UTC).isoformat(),
         "http_status": http,
         "provenance": "observed_http_unusable",
-        "content_sha256": digest(text.encode()),
+        "content_sha256": digest(raw),
         "response_text": stored,
     }
-    if len(stored) != len(text):
+    if len(raw) > _UNUSABLE_TEXT_LIMIT:
         payload["response_truncated"] = True
     return payload
 

@@ -313,6 +313,24 @@ def test_one_unusable_article_is_recorded_and_skipped(tmp_path, dictionary):
     rerun = HTTP([], clock)
     assert invoke("run", argv, rerun, clock) == 0
     assert rerun.calls == []
+    if dictionary == "vts":
+        # Cyrillic is two bytes. A character cap would keep 1,200,000 bytes and leave the flag off.
+        wide = "\u0404" * 600_000
+        html = f"<article>{wide}</article>"
+        clock2 = Clock()
+        wide_root = tmp_path / "wide"
+        wide_root.mkdir()
+        argv2 = arguments(wide_root, "vts", ("wide", "ok"))
+        http2 = HTTP([response(200, html), response()], clock2)
+        assert invoke("run", argv2, http2, clock2) == 0
+        with database(tmp_path / "wide") as conn:
+            stored = json.loads(conn.execute("SELECT payload FROM results WHERE position=0").fetchone()[0])
+        raw = stored["response_text"].encode()
+        assert len(raw) <= acquisition._UNUSABLE_TEXT_LIMIT
+        assert stored["response_truncated"] is True
+        assert stored["content_sha256"] == acquisition.digest(html.encode())
+        assert raw.decode() == stored["response_text"]
+        assert wide not in published_text(tmp_path / "wide")
 
 
 def test_unusable_articles_separated_by_a_success_do_not_stop_the_job(tmp_path):
@@ -393,10 +411,11 @@ def test_consecutive_unusable_streak_survives_a_restart(tmp_path):
 def test_job_stopped_on_one_unusable_article_continues_on_supervise(tmp_path):
     """A job already latched by the old single-article stop continues at the next entry.
 
-    Defect class: parse_error job state blocks the remaining denominator after one bad article.
+    Defect class: parse_error job state blocks the remaining denominator after one bad article,
+    including when the launch that recorded it already used a zero restart budget.
     """
     clock = Clock()
-    argv = arguments(tmp_path, "vts", ("bad", "good"))
+    argv = arguments(tmp_path, "vts", ("bad", "good"), "--max-restarts", "0")
     assert invoke("run", argv, HTTP([response(200, UNUSABLE_HTML), response()], clock), clock) == 0
     with database(tmp_path) as conn, conn:
         conn.execute(
@@ -407,6 +426,10 @@ def test_job_stopped_on_one_unusable_article_continues_on_supervise(tmp_path):
             "next_attempt_at=0 WHERE position=1"
         )
         conn.execute("UPDATE job SET state='parse_error', reason='unusable_article'")
+        # The launch that recorded the bad article sits before that row's event.
+        conn.execute("DELETE FROM events")
+        conn.execute("INSERT INTO events(time,kind) VALUES(1.0,'supervisor_launch')")
+        conn.execute("INSERT INTO events(position,time,kind,http_status) VALUES(0,1.0,'parse_error',200)")
     fetched = HTTP([response()], clock)
 
     def launch(command, **kwargs):
