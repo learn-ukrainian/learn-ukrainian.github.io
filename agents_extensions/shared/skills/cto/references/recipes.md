@@ -70,6 +70,12 @@ Classify each granted case before the grant is sent:
 The PR body lists which cases are defect cases and which are controls, with the before and
 after result of each. Never require a control case to fail before the fix.
 
+## Disposition of a residual for a worker
+
+Before recording a "not reachable" disposition for a worker, cite evidence of what that worker
+can reach: its own worktree, branch and remote, from its task record or a command run as it
+would run. An item's absence from a repository's default branch is not that evidence.
+
 ## Worktree disposition before re-dispatch
 
 A finished task's worktree and branch lease end when the dispatcher settles it and removes the
