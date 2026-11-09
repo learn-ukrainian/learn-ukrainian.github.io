@@ -520,8 +520,8 @@ def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
     Symlinks are unlinked, never followed. Every directory descent re-proves
     identity, device and mount id on the descriptor it just opened, and every
     ``rmdir`` re-identifies its target with the emptied directory still held
-    open (:func:`_rmdir_held`). Owner-only permission barriers are repaired
-    once (owner rwx) and retried.
+    open (:func:`_rmdir_held`). A directory without owner rwx gets it, on the
+    held descriptor, before it is emptied.
     """
     with os.scandir(dir_fd) as it:
         entries = [(entry.name, entry.stat(follow_symlinks=False)) for entry in it]
@@ -543,6 +543,9 @@ def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
                     mount_id=mount_id,
                     what=f"directory {name!r}",
                 )
+                if stat.S_IMODE(child_st.st_mode) & stat.S_IRWXU != stat.S_IRWXU:
+                    # A read-only directory would refuse to give up its entries.
+                    os.fchmod(child_fd, stat.S_IMODE(child_st.st_mode) | stat.S_IRWXU)
                 _rmtree_fd(child_fd, device=device, mount_id=mount_id)
                 _rmdir_held(dir_fd, name, held_fd=child_fd, held_st=child_st)
             finally:
@@ -609,7 +612,10 @@ def _remove_invocation_dir(
 
 
 def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]:
-    """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts."""
+    """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts.
+
+    A directory of ours that its owner cannot open is counted by its own entry only.
+    """
     total = 0
     newest = 0.0
     with os.scandir(dir_fd) as it:
@@ -619,7 +625,13 @@ def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]
         if stat.S_ISDIR(st.st_mode):
             if st.st_dev != device:
                 raise ContainmentError(f"mount boundary at {name!r}")
-            child_fd = _open_dir_at(dir_fd, name)
+            try:
+                child_fd = _open_dir_at(dir_fd, name)
+            except PermissionError:
+                if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) & stat.S_IRWXU == stat.S_IRWXU:
+                    raise
+                # Opaque until the remover restores owner permission and re-proves it on descent.
+                continue
             try:
                 _verify_held_dir(
                     child_fd,

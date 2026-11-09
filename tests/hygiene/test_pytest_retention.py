@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import errno
 import fcntl
 import json
 import math
@@ -23,27 +22,6 @@ from scripts.hygiene import pytest_retention, tmp_sweep
 pytest_plugins = ("pytester",)
 REPO = Path(__file__).resolve().parents[2]
 HOUR = 3600.0
-SECRET = "RAW-VALUE-NEVER-EMITTED"
-# Waits on stdin; the first line names a path for fd/maps holders, the rest keeps it alive.
-HOLDER = """
-import ctypes, mmap, os, sys
-mode = sys.argv[1]
-target = sys.stdin.readline().strip()
-handles = []
-if mode == "fd":
-    handles.append(open(target, "rb"))
-elif mode == "maps":
-    # Python's mmap keeps a duplicate descriptor; map through libc so only the mapping remains.
-    libc = ctypes.CDLL(None, use_errno=True)
-    libc.mmap.restype = ctypes.c_void_p
-    libc.mmap.argtypes = (ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_long)
-    fd = os.open(target, os.O_RDONLY)
-    handles.append(libc.mmap(None, os.fstat(fd).st_size, mmap.PROT_READ, mmap.MAP_SHARED, fd, 0))
-    os.close(fd)
-    assert handles[0] not in (None, ctypes.c_void_p(-1).value)
-print("ready", flush=True)
-sys.stdin.read()
-"""
 
 
 @pytest.fixture
@@ -58,7 +36,7 @@ def area(tmp_path, monkeypatch):
     proc.mkdir()
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
     monkeypatch.setattr(pytest_retention, "scratch_scan_roots", lambda: [root])
-    # An empty process table is a complete probe with no holders; tests add real or fake processes.
+    # An empty process table: a lease owner is judged against the real one only where a test says so.
     monkeypatch.setattr(pytest_retention, "PROC_ROOT", proc)
     monkeypatch.setattr(tmp_sweep, "SYSTEM_TEMP_AREAS", (temp,))
     monkeypatch.setattr(tmp_sweep, "process_snapshot", lambda: ([], True))
@@ -206,39 +184,6 @@ def row_for(report: dict, path: Path) -> dict:
     return next(row for row in report["rows"] if row["name"] == path.name)
 
 
-def expose(proc: Path, *pids: int) -> None:
-    """Show only these real processes to the probe, through links to their /proc entries."""
-    for pid in pids:
-        (proc / str(pid)).symlink_to(f"/proc/{pid}", target_is_directory=True)
-
-
-def fake_process(proc: Path, pid: int, state: str, *, cwd: Path | None = None) -> None:
-    entry = proc / str(pid)
-    entry.mkdir()
-    (entry / "stat").write_text(f"{pid} (fake) {state} 1 1 1")
-    for name in ("cmdline", "environ", "maps"):
-        (entry / name).write_bytes(b"")
-    (entry / "fd").mkdir()
-    if cwd is not None:
-        (entry / "cwd").symlink_to(cwd)
-
-
-def spawn(mode: str, target: Path | None = None, *, cwd: Path | None = None, argv=(), env=None):
-    proc = subprocess.Popen(
-        [sys.executable, "-c", HOLDER, mode, *argv], cwd=cwd or REPO, env=env,
-        stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
-    )
-    proc.stdin.write(f"{target or ''}\n")
-    proc.stdin.flush()
-    assert proc.stdout.readline().strip() == "ready"
-    return proc
-
-
-def stop(proc: subprocess.Popen) -> None:
-    proc.communicate(timeout=10)
-    assert proc.returncode == 0
-
-
 def test_old_unowned_malformed_and_completed_runs_dry_run_then_delete(area, monkeypatch):
     root, args = area
     runs = [
@@ -255,7 +200,7 @@ def test_old_unowned_malformed_and_completed_runs_dry_run_then_delete(area, monk
     assert {row["name"]: row["decision"] for row in dry["rows"]} == dict.fromkeys(sizes, "would_delete")
     assert {row["reason"] for row in dry["rows"]} == {"inactive_pytest_scratch"}
     assert dry["would_delete_bytes"] == sum(sizes.values()) > 0
-    assert dry["deleted_bytes"] == 0 and dry["errors"] == 0 and dry["liveness_complete"] is True
+    assert dry["deleted_bytes"] == 0 and dry["errors"] == 0
 
     report = tmp_sweep.sweep(**args, apply=True)
     retention = report["pytest_retention"]
@@ -281,7 +226,7 @@ def test_deeply_nested_lease_is_malformed_and_later_runs_are_still_swept(area, m
 
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     # The nested lease records no owner, like any malformed lease, so the lock
-    # and holder evidence decide; the run after it is still processed.
+    # and idle time decide; the run after it is still processed.
     for run in (nested, following):
         assert (row_for(report, run)["decision"], row_for(report, run)["reason"]) == (
             "deleted", "inactive_pytest_scratch",
@@ -322,161 +267,7 @@ def test_recently_extracted_old_mtime_files_keep_the_folder_young(area, monkeypa
     assert (run / "scratch" / "base" / "payload").is_file()
 
 
-@pytest.mark.parametrize("channel", ["cwd", "fd", "maps", "argv", "environ", "relative_argv"])
-def test_every_live_holder_channel_preserves_the_run(area, monkeypatch, tmp_path, channel):
-    root, args = area
-    run = unowned(root, "held")
-    other = unowned(root, "quiet-run")
-    payload = run / "scratch" / "base" / "payload"
-    later(monkeypatch, 3 * HOUR)
-    env = {**os.environ, "SECRET_MARKER": SECRET}
-    if channel == "cwd":
-        proc = spawn("idle", cwd=payload.parent, env=env)
-    elif channel in {"fd", "maps"}:
-        proc = spawn(channel, payload, env=env)
-    elif channel == "argv":
-        proc = spawn("idle", argv=[f"--scratch={run}/scratch", SECRET], env=env)
-    elif channel == "environ":
-        proc = spawn("idle", env={**env, "TMPDIR": str(run / "scratch")})
-    else:
-        proc = spawn("idle", cwd=run.parent, argv=[f"./{run.name}/scratch", SECRET], env=env)
-    try:
-        expose(pytest_retention.PROC_ROOT, proc.pid)
-        dry = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
-        assert (dry["decision"], dry["reason"], dry["live_pids"]) == ("preserve", "live_process", [proc.pid])
-        report = tmp_sweep.sweep(**args, apply=True)
-        retention = report["pytest_retention"]
-        row = row_for(retention, run)
-        assert (row["decision"], row["reason"]) == ("preserve", "live_process")
-        assert row["live_pids"] == [proc.pid]
-        assert row["holders"] == ["argv" if channel == "relative_argv" else channel]
-        assert payload.read_bytes() == b"x" * 8192
-        assert row_for(retention, other)["decision"] == "deleted" and not other.exists()
-        emitted = json.dumps(report) + json.dumps(tmp_sweep.summarize(report))
-        assert SECRET not in emitted and "--scratch=" not in emitted
-    finally:
-        stop(proc)
-
-
-def _spelled_holder(channel: str, cwd: Path, value: str):
-    env = {**os.environ, "SECRET_MARKER": SECRET}
-    if channel == "environ":
-        return spawn("idle", cwd=cwd, env={**env, "SCRATCH_HOME": value})
-    return spawn("idle", cwd=cwd, argv=[value, SECRET], env=env)
-
-
-@pytest.mark.parametrize("channel", ["argv", "environ"])
-@pytest.mark.parametrize(
-    "spelling",
-    [
-        "ancestor_relative", "namespace_dotdot", "absolute_dotdot", "symlink_alias", "path_list",
-        "symlink_dotdot", "absolute_symlink_dotdot", "path_list_symlink_dotdot",
-    ],
-)
-def test_noncanonical_argv_and_environment_spellings_hold_the_run(area, monkeypatch, tmp_path, channel, spelling):
-    """Defect class: a live path named relative to an ancestor cwd, through ``..``, an alias, or an alias
-    followed by ``..`` (which the kernel resolves through the alias target, not lexically) went unmatched."""
-    root, args = area
-    run = unowned(root, "spelled")
-    quiet = unowned(root, "quiet-run")
-    ns = run.parent
-    alias = tmp_path / "alias"
-    alias.symlink_to(ns, target_is_directory=True)
-    below = f"{pytest_scratch.NAMESPACE}/{ns.name}/{run.name}/scratch"
-    through = f"alias/../{ns.name}/{run.name}/scratch"  # alias -> ns, so its .. is ns's parent, not tmp_path
-    cwd, value = {
-        "ancestor_relative": (root, below),
-        "namespace_dotdot": (ns, f"../{ns.name}/{run.name}/scratch"),
-        "absolute_dotdot": (REPO, f"{ns}/../{ns.name}/{run.name}/scratch"),
-        "symlink_alias": (REPO, f"{alias}/{run.name}/scratch"),
-        "path_list": (root, f"/absent-11297:{below}"),
-        "symlink_dotdot": (tmp_path, through),
-        "absolute_symlink_dotdot": (REPO, f"{tmp_path}/{through}"),
-        "path_list_symlink_dotdot": (tmp_path, f"/absent-11297:{through}"),
-    }[spelling]
-    assert str(run) not in value  # none of these spellings carries the canonical path
-    # Kernel oracle: the spelling, read from the holder's cwd, reaches the run.
-    assert os.path.samestat(os.stat(cwd / value.rpartition(":")[2]), os.stat(run / "scratch"))
-    later(monkeypatch, 3 * HOUR)
-    proc = _spelled_holder(channel, cwd, value)
-    try:
-        expose(pytest_retention.PROC_ROOT, proc.pid)
-        dry = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
-        assert (dry["decision"], dry["reason"], dry["live_pids"], dry["holders"]) == (
-            "preserve", "live_process", [proc.pid], [channel],
-        )
-        report = tmp_sweep.sweep(**args, apply=True)
-        retention = report["pytest_retention"]
-        row = row_for(retention, run)
-        assert (row["decision"], row["reason"], row["holders"]) == ("preserve", "live_process", [channel])
-        assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
-        assert row_for(retention, quiet)["decision"] == "deleted" and not quiet.exists()
-        emitted = json.dumps(report) + json.dumps(tmp_sweep.summarize(report))
-        assert SECRET not in emitted and value not in emitted
-    finally:
-        stop(proc)
-
-
-@pytest.mark.parametrize("channel", ["argv", "environ"])
-@pytest.mark.parametrize("spelling", ["longer_name", "wrong_anchor", "dotdot_out"])
-def test_lookalike_relative_spellings_do_not_hold_the_run(area, monkeypatch, channel, spelling):
-    """Defect class: over-broad relative matching would keep an eligible run forever."""
-    root, args = area
-    run = unowned(root, "spelled")
-    ns = run.parent
-    cwd, value = {
-        "longer_name": (ns, f"{run.name}-other/scratch"),
-        "wrong_anchor": (root, f"{ns.name}/{run.name}"),
-        "dotdot_out": (ns, f"{run.name}x/../../{run.name}"),
-    }[spelling]
-    later(monkeypatch, 3 * HOUR)
-    proc = _spelled_holder(channel, cwd, value)
-    try:
-        expose(pytest_retention.PROC_ROOT, proc.pid)
-        dry = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
-        assert (dry["decision"], dry["live_pids"]) == ("would_delete", [])
-        assert row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)["decision"] == "deleted"
-        assert not run.exists()
-    finally:
-        stop(proc)
-
-
-@pytest.mark.parametrize("channel", ["cwd", "fd"])
-def test_callers_own_preexisting_references_still_count(area, monkeypatch, channel):
-    """Only the sweep's own lock handles are excused; the caller's real cwd and descriptors are holders."""
-    root, args = area
-    run = unowned(root, "caller")
-    later(monkeypatch, 3 * HOUR)
-    expose(pytest_retention.PROC_ROOT, os.getpid())
-    if channel == "cwd":
-        monkeypatch.chdir(run / "scratch")
-        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    else:
-        with open(run / "scratch" / "base" / "payload", "rb"):
-            report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    row = row_for(report, run)
-    assert (row["reason"], row["holders"], row["live_pids"]) == ("live_process", [channel], [os.getpid()])
-    assert run.is_dir()
-
-
-def test_sweeps_own_lock_handles_are_not_holders_but_disabling_the_excuse_is_caught(area, monkeypatch):
-    root, args = area
-    runs = completed(root, 2)
-    later(monkeypatch, 3 * HOUR)
-    expose(pytest_retention.PROC_ROOT, os.getpid())
-    real = pytest_retention.holder_snapshot
-    # Negative control: without the own-handle excuse the held run locks look like holders.
-    monkeypatch.setattr(pytest_retention, "holder_snapshot", lambda own_fds=frozenset(): real())
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    assert {(row["reason"], tuple(row["holders"])) for row in report["rows"]} == {("live_process", ("fd",))}
-    assert all(path.is_dir() for path in runs)
-    monkeypatch.setattr(pytest_retention, "holder_snapshot", real)
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    assert report["by_decision"] == {"deleted": 2}
-    assert not any(path.exists() for path in runs)
-
-
-def test_held_run_lock_preserves_even_when_the_holder_is_invisible(area, monkeypatch):
+def test_held_run_lock_preserves_the_run(area, monkeypatch):
     root, args = area
     run = completed(root, 1)[0]
     later(monkeypatch, 3 * HOUR)
@@ -592,23 +383,24 @@ print(json.dumps(reports))
         assert all(not run.exists() for run in runs)
 
 
-@pytest.mark.parametrize("rejection", ["too_young", "tree_unknown", "git_metadata", "scan_error"])
+@pytest.mark.parametrize("rejection", ["too_young", "tree_unknown", "mount_point", "scan_error"])
 def test_rejected_lock_is_released_before_the_next_eligible_run(area, monkeypatch, rejection):
     """Preserve and exception paths must release their lock before inspecting the next run."""
     root, args = area
     rejected, eligible = malformed(root, "a-rejected"), malformed(root, "z-eligible")
     now = later(monkeypatch, 3 * HOUR)
-    if rejection == "git_metadata":
-        (rejected / ".git").mkdir()
+    if rejection == "mount_point":
+        mounts = task_scratch.mount_points()
+        monkeypatch.setattr(tmp_sweep, "mount_points", lambda: mounts | {str(rejected / "scratch")})
     real_fingerprint, real_facts = tmp_sweep.tree_fingerprint, tmp_sweep.tree_facts
 
-    def fingerprint(path):
-        return None if path == rejected and rejection == "tree_unknown" else real_fingerprint(path)
+    def fingerprint(path, **kwargs):
+        return None if path == rejected and rejection == "tree_unknown" else real_fingerprint(path, **kwargs)
 
-    def facts(path):
+    def facts(path, **kwargs):
         if path == rejected and rejection == "scan_error":
             raise OSError(5, "inspection failed after locking")
-        return real_facts(path)
+        return real_facts(path, **kwargs)
 
     real_classify = pytest_retention._classify
 
@@ -747,12 +539,10 @@ def test_summary_keeps_lock_failures_visible_beside_measured_protected_bytes(are
     assert young.is_dir() and uncertain.is_dir()
 
 
-@pytest.mark.parametrize("phase", ["initial", "recheck", "lock", "process_state", "process_maps"])
-def test_real_descriptor_exhaustion_is_an_error_and_preserves_runs(area, phase):
-    """EMFILE must not masquerade as successful liveness probing or measured zero bytes."""
+def test_real_descriptor_exhaustion_is_an_error_and_preserves_runs(area):
+    """EMFILE on the run lock must not masquerade as a free lock or measured zero bytes."""
     root, args = area
     run = malformed(root, "preserved")
-    expected = allocated(run)
     parent_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
     result = subprocess.run(
         [sys.executable, "-c", """
@@ -761,7 +551,6 @@ from pathlib import Path
 from scripts.hygiene import pytest_retention as retention, tmp_sweep
 from scripts.hygiene.tmp_sweep_ledger import Ledger
 root, state, tasks, proc = map(Path, sys.argv[1:5])
-phase = sys.argv[5]
 retention.scratch_scan_roots = lambda: [root]
 retention.PROC_ROOT = proc
 tmp_sweep.registered_worktrees = lambda _: set()
@@ -779,40 +568,9 @@ def release():
     for fd in held:
         os.close(fd)
     held.clear()
-if phase.startswith('process_'):
-    entry = proc / '4242'
-    entry.mkdir()
-    (entry / 'stat').write_bytes(b'4242 (fixture) S 1 2 3')
-    (entry / 'cwd').symlink_to(root.parent, target_is_directory=True)
-    (entry / 'fd').mkdir()
-    (entry / 'maps').write_bytes(b'')
-    (entry / 'cmdline').write_bytes(b'')
-    (entry / 'environ').write_bytes(b'')
-real_state = retention._process_state
-def process_state(entry):
-    if phase == 'process_state':
-        exhaust()
-    return real_state(entry)
-retention._process_state = process_state
-real_read = Path.read_bytes
-def read_bytes(path):
-    if phase == 'process_maps' and path.name == 'maps':
-        exhaust()
-    return real_read(path)
-Path.read_bytes = read_bytes
-real_snapshot = retention.holder_snapshot
-def snapshot(own_fds=frozenset()):
-    if phase == 'initial' or (phase == 'recheck' and own_fds):
-        exhaust()
-    try:
-        return real_snapshot(own_fds)
-    finally:
-        release()
-retention.holder_snapshot = snapshot
 real_lock = retention._lock
 def lock(fd):
-    if phase == 'lock':
-        exhaust()
+    exhaust()
     try:
         return real_lock(fd)
     finally:
@@ -824,26 +582,19 @@ report = retention.sweep_pytest_runs(
     quarantine_s=7 * 86400, repo_root=Path.cwd(),
 )
 print(json.dumps(report))
-""", str(root), str(args["state_dir"]), str(args["task_root"]), str(root.parent / "proc"), phase],
+""", str(root), str(args["state_dir"]), str(args["task_root"]), str(root.parent / "proc")],
         cwd=REPO, capture_output=True, text=True, check=True, timeout=60,
     )
     report = json.loads(result.stdout)
-    print("real EMFILE", phase, result.stdout.strip())
+    print("real EMFILE", result.stdout.strip())
     assert resource.getrlimit(resource.RLIMIT_NOFILE) == parent_limit
     assert report["by_reason"] == {"descriptor_exhausted": 1}
     assert report["by_decision"] == {"preserve": 1}
     assert report["errors"] == report["descriptor_exhaustion_entries"] == 1
     assert report["deleted_entries"] == 0
-    assert report["liveness_complete"] is (phase == "lock")
-    assert report["liveness_unreadable_processes"] == 0
-    if phase in {"lock", "recheck"}:
-        assert report["unmeasured_entries"] == report["protected_unmeasured_entries"] == 1
-        assert report["protected_bytes_complete"] is False
-        assert report["rows"][0]["bytes"] is None
-    else:
-        assert report["unmeasured_entries"] == 0
-        assert report["protected_bytes_complete"] is True
-        assert report["protected_bytes"] == expected
+    assert report["unmeasured_entries"] == report["protected_unmeasured_entries"] == 1
+    assert report["protected_bytes_complete"] is False
+    assert report["rows"][0]["bytes"] is None
     assert (run / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
 
 
@@ -910,21 +661,6 @@ def test_descriptor_failure_does_not_duplicate_or_underreport_candidate_rows(are
         fcntl.flock(contender, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
-def test_released_lock_idle_owner_without_reference_is_eligible(area, monkeypatch):
-    """Ownership state is not a holder channel: an idle former owner that references nothing does not preserve."""
-    root, args = area
-    run = completed(root, 1)[0]
-    lease = json.loads((run / "lease.json").read_text())
-    assert lease["state"] == "preserved"
-    later(monkeypatch, 3 * HOUR)
-    proc = spawn("idle")
-    try:
-        expose(pytest_retention.PROC_ROOT, proc.pid)
-        assert row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)["decision"] == "deleted"
-    finally:
-        stop(proc)
-
-
 @pytest.mark.parametrize("kind", ["unlocked_lock", "unreadable_lock", "lock_fifo", "lock_symlink"])
 def test_lock_files_are_used_where_available_but_never_required(area, monkeypatch, tmp_path, kind):
     root, args = area
@@ -945,71 +681,9 @@ def test_lock_files_are_used_where_available_but_never_required(area, monkeypatc
     if kind == "unreadable_lock" and os.geteuid() != 0:
         assert (row["decision"], row["reason"]) == ("preserve", "lock_unknown")
         assert run.is_dir()
-    elif kind == "lock_fifo":  # tree safety, not custody: a FIFO endpoint cannot be proven unused
-        assert (row["decision"], row["reason"]) == ("preserve", "special_file")
     else:
         assert row["decision"] == "deleted" and not run.exists()
     assert outside.read_text() == "outside"
-
-
-@pytest.mark.parametrize("case", ["unreadable", "zombie", "dead", "vanished"])
-def test_process_liveness_unknown_preserves_and_finished_processes_hold_nothing(area, monkeypatch, case):
-    root, args = area
-    run = unowned(root, "liveness")
-    proc = pytest_retention.PROC_ROOT
-    later(monkeypatch, 3 * HOUR)
-    if case == "unreadable":
-        fake_process(proc, 4242, "S")  # alive, cwd unreadable
-    elif case == "zombie":
-        fake_process(proc, 4242, "Z")
-    elif case == "dead":
-        fake_process(proc, 4242, "X")
-    else:
-        fake_process(proc, 4242, "S")
-        real_state = pytest_retention._process_state
-
-        def exits_during_scan(entry):
-            if entry.name == "4242":
-                for child in sorted(entry.rglob("*"), reverse=True):
-                    child.unlink() if not child.is_dir() or child.is_symlink() else child.rmdir()
-                entry.rmdir()
-                return None
-            return real_state(entry)
-
-        monkeypatch.setattr(pytest_retention, "_process_state", exits_during_scan)
-    report = tmp_sweep.sweep(**args)["pytest_retention"]
-    row = row_for(report, run)
-    if case == "unreadable":
-        assert (row["decision"], row["reason"]) == ("preserve", "liveness_unknown")
-        assert report["liveness_complete"] is False and report["liveness_unreadable_processes"] == 1
-        assert tmp_sweep.sweep(**args, apply=True)["pytest_retention"]["deleted_entries"] == 0
-        assert run.is_dir()
-        # A spoofed command line alone still blocks; kernel unit and parent facts excuse it.
-        entry = proc / "4242"
-        uid = os.getuid()
-        (entry / "status").write_text(f"Name:\tssh-agent\nPPid:\t20\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
-        (entry / "cmdline").write_bytes(b"/usr/bin/ssh-agent\0-D\0")
-        assert tmp_sweep.sweep(**args, apply=True)["pytest_retention"]["deleted_entries"] == 0
-        assert run.is_dir()
-        manager = f"0::/user.slice/user-{uid}.slice/user@{uid}.service"
-        (entry / "cgroup").write_text(f"{manager}/app.slice/ssh-agent.service\n")
-        fake_process(proc, 20, "S")
-        (proc / "20" / "status").write_text(f"Name:\tsystemd\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
-        (proc / "20" / "cgroup").write_text(f"{manager}/init.scope\n")
-        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-        assert row_for(report, run)["decision"] == "deleted" and not run.exists()
-        assert report["liveness_complete"] is True and report["liveness_unreadable_processes"] == 0
-        assert report["allowed_session_daemons"] == [{"pid": 20, "identity": "systemd"}, {"pid": 4242, "identity": "ssh-agent"}]
-    else:
-        assert row["decision"] == "would_delete" and report["liveness_complete"] is True
-
-
-def test_unreadable_process_table_is_unknown(area, monkeypatch, tmp_path):
-    root, args = area
-    run = unowned(root, "no-proc")
-    monkeypatch.setattr(pytest_retention, "PROC_ROOT", tmp_path / "missing-proc")
-    later(monkeypatch, 3 * HOUR)
-    assert row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)["reason"] == "liveness_unknown"
 
 
 def _after_rename(monkeypatch, run: Path, action):
@@ -1028,77 +702,37 @@ def _after_rename(monkeypatch, run: Path, action):
     return calls
 
 
-@pytest.mark.parametrize(
-    "race",
-    [
-        "write", "holder_new_path", "holder_new_relative", "holder_old_path", "holder_old_relative",
-        "holder_old_dotdot", "holder_old_symlink_dotdot", "unknown", "replaced",
-    ],
-)
-def test_post_rename_recheck_returns_changed_or_newly_held_runs(area, monkeypatch, tmp_path, race):
+@pytest.mark.parametrize("race", ["write", "replaced"])
+def test_post_rename_recheck_returns_changed_runs(area, monkeypatch, race):
     root, args = area
     run = unowned(root, "raced")
     later(monkeypatch, 3 * HOUR)
-    procs = []
     identity = run.stat().st_ino
 
     def act(held: Path) -> None:
-        if race == "write":
-            (held / "scratch" / "new-output").write_text("fresh")
-        elif race == "holder_new_path":
-            procs.append(spawn("idle", cwd=held / "scratch"))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        elif race == "holder_new_relative":
-            procs.append(spawn("idle", cwd=held.parent, argv=[f"{run.name}/scratch"]))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        elif race == "holder_old_path":
-            procs.append(spawn("idle", argv=[str(run / "scratch")]))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        elif race == "holder_old_relative":
-            procs.append(spawn("idle", cwd=root, argv=[str((run / "scratch").relative_to(root))]))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        elif race == "holder_old_dotdot":
-            dotdot = f"{run.parent}/../{run.parent.name}/{run.name}/scratch"
-            procs.append(spawn("idle", env={**os.environ, "SCRATCH_HOME": dotdot}))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        elif race == "holder_old_symlink_dotdot":
-            (tmp_path / "alias").symlink_to(run.parent, target_is_directory=True)
-            procs.append(spawn("idle", cwd=tmp_path, argv=[f"alias/../{run.parent.name}/{run.name}/scratch"]))
-            expose(pytest_retention.PROC_ROOT, procs[-1].pid)
-        else:
-            fake_process(pytest_retention.PROC_ROOT, 4343, "S")
+        (held / "scratch" / "new-output").write_text("fresh")
 
-    try:
-        if race == "replaced":
-            original = tmp_sweep.rename_noreplace
-            calls = []
+    if race == "replaced":
+        original = tmp_sweep.rename_noreplace
+        calls = []
 
-            def swap_before_rename(src_fd, src, dst_fd, dst):
-                # After the pre-rename identity check, before the rename itself.
-                if src == run.name and not calls:
-                    calls.append(True)
-                    run.rename(run.with_name("moved-away"))
-                    run.mkdir()
-                    (run / "impostor").write_text("keep")
-                return original(src_fd, src, dst_fd, dst)
+        def swap_before_rename(src_fd, src, dst_fd, dst):
+            # After the pre-rename identity check, before the rename itself.
+            if src == run.name and not calls:
+                calls.append(True)
+                run.rename(run.with_name("moved-away"))
+                run.mkdir()
+                (run / "impostor").write_text("keep")
+            return original(src_fd, src, dst_fd, dst)
 
-            monkeypatch.setattr(tmp_sweep, "rename_noreplace", swap_before_rename)
-        else:
-            calls = _after_rename(monkeypatch, run, act)
-        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    finally:
-        for proc in procs:
-            stop(proc)
+        monkeypatch.setattr(tmp_sweep, "rename_noreplace", swap_before_rename)
+    else:
+        calls = _after_rename(monkeypatch, run, act)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     assert calls == [True]
     row = row_for(report, run)
     assert row["decision"] == "preserve"
-    expected = {
-        "write": "recent_write", "holder_new_path": "live_process", "holder_new_relative": "live_process",
-        "holder_old_path": "live_process", "holder_old_relative": "live_process", "holder_old_dotdot": "live_process",
-        "holder_old_symlink_dotdot": "live_process",
-        "unknown": "liveness_unknown", "replaced": "identity_changed",
-    }[race]
-    assert row["reason"] == expected
+    assert row["reason"] == {"write": "recent_write", "replaced": "identity_changed"}[race]
     if race == "replaced":
         assert (run / "impostor").read_text() == "keep"
         assert (run.with_name("moved-away") / "scratch" / "base" / "payload").is_file()
@@ -1197,7 +831,8 @@ def test_refused_rename_and_unreadable_tree_preserve_with_reasons(area, monkeypa
 
     monkeypatch.setattr(tmp_sweep, "rename_noreplace", rename)
     monkeypatch.setattr(
-        tmp_sweep, "tree_fingerprint", lambda path: None if path == unreadable else real_fingerprint(path)
+        tmp_sweep, "tree_fingerprint",
+        lambda path, **kwargs: None if path == unreadable else real_fingerprint(path, **kwargs),
     )
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     assert (row_for(report, refused)["reason"], row_for(report, refused)["error"]) == ("rename_refused", "EACCES")
@@ -1241,7 +876,8 @@ def test_remover_refusal_returns_the_run(area, monkeypatch):
 
 
 @pytest.mark.parametrize("problem", ["mount_point", "hardlinked_content", "special_file", "git_metadata"])
-def test_tree_safety_reasons_still_preserve(area, monkeypatch, tmp_path, problem):
+def test_only_a_mount_inside_keeps_an_abandoned_run(area, monkeypatch, tmp_path, problem):
+    """A run's contents are pytest's own scratch: links, FIFOs and repositories in it keep nothing (DISK-1109)."""
     root, args = area
     run = unowned(root, "unsafe")
     if problem == "mount_point":
@@ -1255,8 +891,14 @@ def test_tree_safety_reasons_still_preserve(area, monkeypatch, tmp_path, problem
         (run / "scratch" / ".git").mkdir()
     later(monkeypatch, 3 * HOUR)
     row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
-    assert (row["decision"], row["reason"]) == ("preserve", problem)
-    assert (run / "scratch" / "base" / "payload").is_file()
+    if problem == "mount_point":
+        assert (row["decision"], row["reason"]) == ("preserve", problem)
+        assert (run / "scratch" / "base" / "payload").is_file()
+    else:
+        assert (row["decision"], row["reason"]) == ("deleted", "inactive_pytest_scratch")
+        assert not run.exists()
+    if problem == "hardlinked_content":
+        assert (tmp_path / "outside-link").read_bytes() == b"x" * 8192
 
 
 def test_symlinks_never_lead_outside_the_namespace(area, monkeypatch, tmp_path):
@@ -1421,61 +1063,8 @@ def test_invalid_scan_root_still_reports_applied_sweep(area, monkeypatch, capsys
     assert not candidate.exists() and run.is_dir()
 
 
-@pytest.mark.parametrize(
-    "blob,cwd,side,expected",
-    [
-        (b"run-1\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1"),
-        (b"./run-1/scratch\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1/scratch"),
-        (b"TMPDIR=run-1/scratch\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1/scratch"),
-        (b"ns/run-1\0", "/absent-11297", 1, "/absent-11297/ns/run-1"),
-        (b"../ns/run-1\0", "/absent-11297/ns", 1, "/absent-11297/ns/run-1"),
-        (b"/absent-11297/ns/../ns/run-1\0", "/elsewhere", 0, "/absent-11297/ns/run-1"),
-        (b"PYTHONPATH=/x:ns/run-1\0", "/absent-11297", 1, "/absent-11297/ns/run-1"),
-        (b"run-1\0", "/absent-11297/ns (deleted)", 1, "/absent-11297/ns/run-1"),
-    ],
-)
-def test_named_paths_fold_relative_and_dotdot_spellings(blob, cwd, side, expected):
-    """Defect class: a spelling that the kernel resolves to the run but the matcher never derives."""
-    named = pytest_retention._named_paths(blob, cwd, {})
-    assert expected in named[side] and expected not in named[1 - side]
-
-
-def test_named_paths_resolve_aliases_and_skip_empty_values(tmp_path):
-    target = tmp_path / "ns"
-    target.mkdir()
-    (tmp_path / "alias").symlink_to(target, target_is_directory=True)
-    forms: dict = {}
-    absolute, relative = pytest_retention._named_paths(b"alias/run-1\0\0FLAG=\0", str(tmp_path), forms)
-    assert absolute == set()
-    assert str(target / "run-1") in relative and str(tmp_path / "alias" / "run-1") in relative
-    assert str(tmp_path) not in relative  # an empty argument or value names nothing
-    assert set(forms) == {str(tmp_path / "alias" / "run-1"), str(tmp_path / "FLAG=")}
-
-
-def test_named_paths_follow_a_symlink_before_a_later_dotdot(tmp_path):
-    """Defect class: folding ``..`` before resolving reads ``alias/../x`` as a sibling of the alias."""
-    target = tmp_path / "deep" / "ns"
-    target.mkdir(parents=True)
-    (tmp_path / "alias").symlink_to(target, target_is_directory=True)
-    absolute, relative = pytest_retention._named_paths(b"alias/../ns/run-1\0", str(tmp_path), {})
-    assert absolute == set()
-    assert str(target / "run-1") in relative  # where the kernel lands, not tmp_path/ns/run-1
-    listed = b"X=/absent-11297:" + os.fsencode(tmp_path) + b"/alias/../ns/run-1\0"
-    assert str(target / "run-1") in pytest_retention._named_paths(listed, "/", {})[0]
-
-
-def test_relative_spellings_inside_a_held_cwd_report_only_the_cwd():
-    """Defect class: every word of a process in the run misreported as an argv/environment holder."""
-    run = Path("/absent-11297/ns/run-1")
-    holders = pytest_retention.Holders(
-        paths=[(7, "cwd", str(run / "scratch")), (8, "cwd", "/absent-11297/ns")],
-        relative=[(7, "argv", str(run / "scratch" / "x")), (8, "environ", str(run / "y"))],
-    )
-    assert holders.holding([run]) == ([7, 8], ["cwd", "environ"])
-
-
-def test_live_pytest_session_is_held_by_its_own_channels(area, monkeypatch):
-    """A real running pytest owner shows through its lock descriptor and its exported TMPDIR."""
+def test_live_pytest_session_is_held_by_its_own_lock(area, monkeypatch):
+    """A real running pytest owner holds its run lock, so its run is never taken."""
     root, args = area
     proc = subprocess.Popen(
         [sys.executable, "-c", """
@@ -1491,9 +1080,8 @@ run.preserve()
     try:
         live = Path(proc.stdout.readline().strip())
         later(monkeypatch, 3 * HOUR)
-        expose(pytest_retention.PROC_ROOT, proc.pid)
         row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], live)
-        assert row["decision"] == "preserve" and row["reason"] in {"in_use", "live_process"}
+        assert (row["decision"], row["reason"]) == ("preserve", "in_use")
         assert live.is_dir()
     finally:
         proc.communicate(timeout=10)
@@ -1537,10 +1125,11 @@ def test_payload(tmp_path):
     caller_temp.mkdir()
     env = {"LU_SCRATCH_ROOT": str(root)}
     # Pytester's runner injects --basetemp, which intentionally opts out of ownership.
+    # The caller asks to keep the run, so what the session published can be inspected.
     result = subprocess.run(
         [sys.executable, "-c", "import os, pytest; os.umask(0o002); raise SystemExit(pytest.main(['-q', '-n', '2']))"],
         cwd=pytester.path, capture_output=True, text=True, timeout=30,
-        env={**env, "TMPDIR": str(caller_temp)},
+        env={**env, "TMPDIR": str(caller_temp), pytest_scratch.KEEP_ENV_VAR: "1"},
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
@@ -1580,15 +1169,18 @@ def test_payload(tmp_path):
 
 
 @pytest.mark.parametrize(
-    ("finish", "returncode", "kept"),
+    ("finish", "returncode", "keep"),
     [
-        pytest.param("", pytest.ExitCode.OK, False, id="clean_pass_removes"),
-        pytest.param("later_monitor_usage_error", pytest.ExitCode.USAGE_ERROR, True, id="later_hook_usage_error_keeps"),
+        pytest.param("", pytest.ExitCode.OK, "", id="clean_pass_removes"),
+        pytest.param("fail", pytest.ExitCode.TESTS_FAILED, "", id="failed_test_removes"),
+        pytest.param("later_monitor_usage_error", pytest.ExitCode.USAGE_ERROR, "", id="later_hook_usage_error_removes"),
         # Pytest catches this exit and leaves the exit status at 0.
-        pytest.param("hook_exit", pytest.ExitCode.OK, True, id="finish_hook_exit_keeps"),
+        pytest.param("hook_exit", pytest.ExitCode.OK, "", id="finish_hook_exit_removes"),
+        pytest.param("fail", pytest.ExitCode.TESTS_FAILED, "1", id="keep_requested_keeps"),
     ],
 )
-def test_only_a_passed_session_removes_its_run(pytester, area, finish, returncode, kept):
+def test_every_session_removes_its_run_unless_kept(pytester, area, finish, returncode, keep):
+    """Defect class (DISK-1109): a failed or aborted session kept gigabytes of scratch with no owner to free it."""
     root, _args = area
     pytester.makeini("[pytest]\ntmp_path_retention_policy = failed\n")
     pytester.makeconftest(f'''
@@ -1614,7 +1206,12 @@ def pytest_sessionfinish(session):
     if FINISH == "hook_exit":
         pytest.exit("abort")
 ''')
-    pytester.makepyfile("def test_passes(tmp_path):\n    (tmp_path / 'payload').write_text('hello')\n")
+    pytester.makepyfile(
+        "import os\n"
+        "def test_session(tmp_path):\n"
+        "    (tmp_path / 'payload').write_text('hello')\n"
+        "    assert os.environ.get('SESSION_FINISH') != 'fail'\n"
+    )
     (root / "pytest-runs").mkdir(mode=0o700)
     runs_dir = root / "pytest-runs" / "runs"
 
@@ -1622,13 +1219,14 @@ def pytest_sessionfinish(session):
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"],
         cwd=pytester.path, capture_output=True, text=True, timeout=60,
-        env={**os.environ, "LU_SCRATCH_ROOT": str(root), "SESSION_FINISH": finish},
+        env={**os.environ, "LU_SCRATCH_ROOT": str(root), "SESSION_FINISH": finish,
+             pytest_scratch.KEEP_ENV_VAR: keep},
     )
     assert result.returncode == returncode, result.stdout + result.stderr
     runs = list(runs_dir.iterdir())
-    if kept:
+    if keep:
         (run,) = runs
-        assert (run / "scratch" / "base").is_dir()
+        assert list((run / "scratch" / "base").rglob("payload"))
     else:
         assert not runs
 
@@ -1644,8 +1242,8 @@ def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, mo
     """Defect class #11409: an unreadable unrelated process blocked every reclaim.
 
     The lease names a real child that has exited; the run lock is free and the
-    tree is old, so the run must be deleted against the real process table.
-    C-2447 also requires disposable fixture Git metadata to remain reclaimable.
+    tree is old, so the run must be deleted against the real process table,
+    whatever else runs on the host. Fixture Git metadata inside does not keep it.
     """
     root, args = area
     pid, start = reaped_pid()
@@ -1662,8 +1260,7 @@ def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, mo
         "would_delete", "inactive_pytest_scratch",
     )
     assert dry["would_delete_bytes"] == expected_bytes > 0
-    # The host may expose unreadable same-user processes; the lease proof, not a
-    # complete snapshot, is what must admit the deletion.
+    # No snapshot of other processes is taken; the lease proof admits the deletion.
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     row = row_for(report, run)
     assert row["decision"] == "deleted" and not run.exists()
@@ -1678,7 +1275,7 @@ def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, mo
     "linked_worktree_config",
 ])
 def test_self_contained_fixture_git_is_reclaimed_and_outside_is_untouched(area, monkeypatch, tmp_path, ns, case):
-    """Fixture repositories as the test suite really makes them: nothing here is custodian of outside data.
+    """Fixture repositories as the test suite really makes them are reclaimed, and what they name survives.
 
     A remote, a branch tracking it, linked worktrees located in the same run, an
     alternates file naming an outside object store, a per-worktree config and a
@@ -1744,131 +1341,6 @@ def test_self_contained_fixture_git_is_reclaimed_and_outside_is_untouched(area, 
     assert row_for(report, run)["decision"] == "deleted" and not run.exists()
     assert (outside / "sentinel").read_text() == "keep outside"
     assert (outside / "objects").is_dir()
-
-
-@pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
-@pytest.mark.parametrize("case,reason", [
-    ("separate_git_dir", "git_metadata"), ("linked_worktree", "git_metadata"),
-    ("external_worktree", "git_metadata"), ("git_symlink", "git_metadata"),
-    ("objects_symlink", "git_metadata"), ("http_alternates", "git_metadata"),
-    ("commondir", "git_metadata"), ("core_worktree", "git_metadata"),
-    ("include", "git_metadata"), ("extension", "git_metadata"),
-    ("worktree_config_redirect", "git_metadata"), ("gitfile_outside", "git_metadata"),
-    ("linked_config_redirect", "git_metadata"), ("linked_config_include", "git_metadata"),
-    ("separate_dir_outside_worktree", "git_metadata"), ("submodule_admin_outside_worktree", "git_metadata"),
-    ("bare_repo_outside_worktree", "git_metadata"),
-    ("invalid_config", "git_metadata"),
-    ("no_owner", "git_metadata"), ("live_owner", "git_metadata"),
-    ("unknown_owner", "git_metadata"), ("probe_failure", "git_metadata"),
-    ("hardlink", "hardlinked_content"), ("fifo", "special_file"),
-    ("registered", "registered_worktree"), ("young", "too_young"),
-])
-def test_fixture_git_custody_and_safety_preserve(area, monkeypatch, tmp_path, ns, case, reason):
-    """Data-loss class: the disposable Git exception admits external custody or unsafe runs."""
-    root, args = area
-    pid, start = reaped_pid()
-    run = leased(root, "fixture-control", pid=pid, start_time=start, boot_id=current_boot(), ns=ns)
-    fixture = run / "scratch" / "fixture"
-    outside = tmp_path / "external"
-    outside.mkdir()
-    (outside / "sentinel").write_text("keep outside")
-
-    def git(*arguments):
-        return subprocess.run(["git", *map(str, arguments)], check=True, capture_output=True, timeout=10)
-
-    if case == "separate_git_dir":
-        git("init", "--separate-git-dir", outside / "metadata", fixture)
-    elif case == "separate_dir_outside_worktree":
-        # The inside-run .git file passes containment; the separate directory it names holds the registration.
-        git("init", "--separate-git-dir", run / "scratch" / "meta", fixture)
-        git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
-            "commit", "--allow-empty", "-m", "fixture")
-        git("-C", fixture, "worktree", "add", "--detach", outside / "worktree")
-    elif case in {"submodule_admin_outside_worktree", "bare_repo_outside_worktree"}:
-        git("init", fixture)
-        git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
-            "commit", "--allow-empty", "-m", "fixture")
-        admin = fixture / ".git" / "modules" / "sub" if case.startswith("submodule") else run / "scratch" / "bare.git"
-        admin.parent.mkdir(parents=True, exist_ok=True)
-        git("clone", "--bare", "--no-hardlinks", fixture, admin)
-        git("--git-dir", admin, "worktree", "add", "--detach", outside / "worktree")
-    elif case == "linked_worktree":
-        git("init", outside / "source")
-        git("-C", outside / "source", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
-            "commit", "--allow-empty", "-m", "fixture")
-        git("-C", outside / "source", "worktree", "add", "--detach", fixture)
-    else:
-        git("init", fixture)
-        metadata = fixture / ".git"
-        if case == "external_worktree":
-            git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
-                "commit", "--allow-empty", "-m", "fixture")
-            git("-C", fixture, "worktree", "add", "--detach", outside / "worktree")
-        elif case in {"linked_config_redirect", "linked_config_include"}:
-            git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
-                "commit", "--allow-empty", "-m", "fixture")
-            git("-C", fixture, "config", "extensions.worktreeConfig", "true")
-            git("-C", fixture, "worktree", "add", "--detach", run / "scratch" / "linked")
-            key, value = (
-                ("core.worktree", str(outside)) if case.endswith("redirect")
-                else ("include.path", str(outside / "sentinel"))
-            )
-            (config,) = (metadata / "worktrees").glob("*/")
-            git("config", "--file", config / "config.worktree", key, value)
-        elif case == "git_symlink":
-            metadata.rename(outside / "metadata")
-            metadata.symlink_to(outside / "metadata", target_is_directory=True)
-        elif case == "objects_symlink":
-            (metadata / "objects").rename(outside / "objects")
-            (metadata / "objects").symlink_to(outside / "objects", target_is_directory=True)
-        elif case == "http_alternates":
-            (metadata / "objects" / "info" / "http-alternates").write_text("https://example.test/objects\n")
-        elif case == "gitfile_outside":
-            (fixture / "nested").mkdir()
-            (fixture / "nested" / ".git").write_text(f"gitdir: {outside / 'metadata'}\n")
-        elif case == "worktree_config_redirect":
-            git("config", "--file", metadata / "config", "extensions.worktreeConfig", "true")
-            git("config", "--file", metadata / "config.worktree", "core.worktree", str(outside))
-        elif case == "commondir":
-            (metadata / "commondir").write_text(str(outside) + "\n")
-        elif case in {"core_worktree", "include", "extension"}:
-            key, value = {
-                "core_worktree": ("core.worktree", str(outside)),
-                "include": ("include.path", str(outside / "sentinel")),
-                "extension": ("extensions.objectFormat", "sha256"),
-            }[case]
-            git("config", "--file", metadata / "config", key, value)
-        elif case == "invalid_config":
-            (metadata / "config").write_text("[broken")
-        elif case == "no_owner":
-            (run / "lease.json").unlink()
-        elif case in {"live_owner", "unknown_owner"}:
-            write_lease(run, pid=os.getpid(), start_time=None, boot_id=current_boot())
-            use_real_proc(monkeypatch)
-            if case == "live_owner":
-                from scripts.common.acp_runtime_lock import process_start_time
-
-                write_lease(run, pid=os.getpid(), start_time=process_start_time(os.getpid()), boot_id=current_boot())
-        elif case == "probe_failure":
-            def unavailable(*args, **kwargs):
-                raise OSError(errno.EIO, "Git config probe unavailable")
-
-            monkeypatch.setattr(tmp_sweep.subprocess, "run", unavailable)
-        elif case == "hardlink":
-            os.link(metadata / "HEAD", outside / "linked-head")
-        elif case == "fifo":
-            os.mkfifo(metadata / "endpoint")
-        elif case == "registered":
-            monkeypatch.setattr(tmp_sweep, "registered_worktrees", lambda _: {fixture})
-    if case != "young":
-        later(monkeypatch, 3 * HOUR)
-    before = tree_state(root, outside)
-    for apply in (False, True):
-        report = tmp_sweep.sweep(**args, apply=apply)["pytest_retention"]
-        assert (row_for(report, run)["decision"], row_for(report, run)["reason"]) == ("preserve", reason)
-        assert report["deleted_bytes"] == report["would_delete_bytes"] == 0
-        assert tree_state(root, outside) == before
-        assert (outside / "sentinel").read_text() == "keep outside"
 
 
 @pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
@@ -1967,18 +1439,21 @@ def test_tree_change_on_recheck_preserves_a_dead_owner_run(area, monkeypatch):
     assert (run / "scratch" / "new-output").read_text() == "fresh"
 
 
-def test_lease_from_a_different_boot_is_kept(area, monkeypatch):
-    """Defect class: start times from another boot were compared as if comparable."""
+def test_lease_from_a_different_boot_is_reclaimed(area, monkeypatch):
+    """Defect class: a run from before a reboot was kept forever, though its owner cannot be alive."""
     root, args = area
-    pid, start = reaped_pid()
+    from scripts.common.acp_runtime_lock import process_start_time
+
     run = leased(
-        root, "other-boot", pid=pid, start_time=start,
+        root, "other-boot", pid=os.getpid(), start_time=process_start_time(os.getpid()),
         boot_id="00000000-0000-0000-0000-000000000000",
     )
     later(monkeypatch, 3 * HOUR)
+    # The recorded pid is alive on this boot, so only the boot id can prove the owner dead.
+    use_real_proc(monkeypatch)
     row = row_for(tmp_sweep.sweep(**args, apply=True)["pytest_retention"], run)
-    assert (row["decision"], row["reason"]) == ("preserve", "different_boot")
-    assert run.is_dir()
+    assert (row["decision"], row["reason"]) == ("deleted", "inactive_pytest_scratch")
+    assert not run.exists()
 
 
 def test_unreadable_lease_is_kept(area, monkeypatch):
@@ -2012,44 +1487,11 @@ def test_reused_pid_with_a_different_start_time_is_reclaimed(area, monkeypatch):
         child.wait(timeout=10)
 
 
-def test_root_holder_takes_the_bounded_quarantine_recheck_path(area, monkeypatch):
-    """Defect class: an unreadable root process blocked deletion instead of using the recheck.
-
-    Only the process's owner classification is injected; the lease liveness and
-    the quarantine/recheck remain the product code under test.
-    """
-    root, args = area
-    pid, start = reaped_pid()
-    run = leased(root, "root-held", pid=pid, start_time=start, boot_id=current_boot())
-    fake_process(pytest_retention.PROC_ROOT, 4242, "S")  # alive, cwd unreadable
-    real_uid = pytest_retention._process_uid
-    monkeypatch.setattr(
-        pytest_retention, "_process_uid",
-        lambda entry: 0 if entry.name == "4242" else real_uid(entry),
-    )
-    rechecks = []
-    real_recheck = pytest_retention._recheck
-
-    def recheck(*positional):
-        rechecks.append(True)
-        return real_recheck(*positional)
-
-    monkeypatch.setattr(pytest_retention, "_recheck", recheck)
-    later(monkeypatch, 3 * HOUR)
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    row = row_for(report, run)
-    assert rechecks == [True]
-    assert row["decision"] == "deleted" and not run.exists()
-    assert report["liveness_complete"] is False
-    assert report["liveness_unreadable_root_processes"] == 1
-    assert report["deleted_bytes"] > 0
-
-
-def test_copied_dead_owner_lease_does_not_bypass_unknown_liveness(area, monkeypatch):
+def test_copied_dead_owner_lease_does_not_prove_abandonment(area, monkeypatch):
     """Data-loss class: a lease copied from another run vouched for this run's owner.
 
-    Its dead owner says nothing about this run, so an incomplete process
-    snapshot must still preserve it; the run the lease names is the control.
+    Its dead owner says nothing about this run, so the run is preserved; the
+    run the lease names is the control.
     """
     root, args = area
     pid, start = reaped_pid()
@@ -2057,48 +1499,12 @@ def test_copied_dead_owner_lease_does_not_bypass_unknown_liveness(area, monkeypa
     copied = unowned(root, "lease-copy")
     for name in ("lease.json", "lease.lock"):
         (copied / name).write_bytes((source / name).read_bytes())
-    fake_process(pytest_retention.PROC_ROOT, 4242, "S")  # alive, cwd unreadable
     later(monkeypatch, 3 * HOUR)
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     row = row_for(report, copied)
     assert (row["decision"], row["reason"]) == ("preserve", "owner_liveness_unknown")
     assert (copied / "scratch" / "base" / "payload").read_bytes() == b"x" * 8192
-    assert report["liveness_complete"] is False
     assert row_for(report, source)["decision"] == "deleted" and not source.exists()
-
-
-def test_unprovable_holders_preserve_and_partial_holder_evidence_is_kept(area, monkeypatch):
-    """Data-loss class: an unreadable foreign-uid process or a later failed inspection channel
-    let a held run be deleted.
-
-    An unreadable foreign-uid process must leave an unleased run preserved, and
-    a holder whose working directory was read before its descriptors failed
-    must still preserve a dead-owner run.
-    """
-    root, args = area
-    proc = pytest_retention.PROC_ROOT
-    unleased = unowned(root, "foreign-unprovable")
-    fake_process(proc, 4242, "S")  # alive, cwd unreadable
-    real_uid = pytest_retention._process_uid
-    monkeypatch.setattr(
-        pytest_retention, "_process_uid",
-        lambda entry: os.geteuid() + 1 if entry.name == "4242" else real_uid(entry),
-    )
-    later(monkeypatch, 3 * HOUR)
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    row = row_for(report, unleased)
-    assert (row["decision"], row["reason"]) == ("preserve", "liveness_unknown") and unleased.is_dir()
-    assert report["liveness_complete"] is False
-    assert report["liveness_unreadable_foreign_processes"] == 1
-
-    pid, start = reaped_pid()
-    partial = leased(root, "partially-read-holder", pid=pid, start_time=start, boot_id=current_boot())
-    fake_process(proc, 4343, "S", cwd=partial / "scratch")
-    (proc / "4343" / "fd").rmdir()  # descriptors fail after the cwd was read
-    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
-    held = row_for(report, partial)
-    assert (held["decision"], held["reason"], held["live_pids"]) == ("preserve", "live_process", [4343])
-    assert partial.is_dir() and report["deleted_entries"] == 0
 
 
 def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(area, monkeypatch):
@@ -2112,11 +1518,12 @@ def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(
     child, pid, start = live_pid()
     try:
         live = leased(root, "rx-live", pid=pid, start_time=start, boot_id=current_boot(), size=16384)
-        expose(pytest_retention.PROC_ROOT, pid)
+        use_real_proc(monkeypatch)
         other = leased(
             root, "rx-other-boot", pid=dead_pid, start_time=dead_start,
             boot_id="00000000-0000-0000-0000-000000000000", size=8192,
         )
+        deleted_bytes += allocated(other)
         unreadable = leased(
             root, "rx-unreadable", pid=dead_pid, start_time=dead_start, boot_id=current_boot(), size=32768
         )
@@ -2126,23 +1533,18 @@ def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(
     finally:
         child.terminate()
         child.wait(timeout=10)
-    assert report["preserved_by_reason"] == {
-        "live_owner": 1, "different_boot": 1, "lease_unreadable": 1,
-    }
-    assert report["reclaimed_entries"] == 1
+    assert report["preserved_by_reason"] == {"live_owner": 1, "lease_unreadable": 1}
+    assert report["reclaimed_entries"] == 2 and not other.exists()
     assert report["reclaimed_bytes"] == report["deleted_bytes"] == deleted_bytes
-    expected = sorted(
-        ((allocated(path), path.name) for path in (live, other, unreadable)), reverse=True
-    )
+    expected = sorted(((allocated(path), path.name) for path in (live, unreadable)), reverse=True)
     receipts = report["largest_preserved_runs"]
-    assert [entry["rank"] for entry in receipts] == [1, 2, 3]
+    assert [entry["rank"] for entry in receipts] == [1, 2]
     assert [(entry["bytes"], entry["reason"]) for entry in receipts] == [
         (expected[0][0], "lease_unreadable"),
         (expected[1][0], "live_owner"),
-        (expected[2][0], "different_boot"),
     ]
     ranked = {
         row["largest_preserved_rank"]: row["name"]
         for row in report["rows"] if "largest_preserved_rank" in row
     }
-    assert ranked == {1: unreadable.name, 2: live.name, 3: other.name}
+    assert ranked == {1: unreadable.name, 2: live.name}

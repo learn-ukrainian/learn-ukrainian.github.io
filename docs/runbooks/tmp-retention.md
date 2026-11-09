@@ -47,134 +47,94 @@ component.
 
 ### Inactive pytest scratch
 
-Operator retention decisions for #11297 and C-2447. The sweep looks only inside
-the two managed pytest namespaces, `pytest-runs/runs` and the legacy
-`pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
-`LU_SCRATCH_SCAN_ROOT`. Fixture `.git` metadata is disposable only when the
-existing lease and exclusive lock prove this run's owner dead on this boot, and
-only when it is custodian of nothing outside the run. The test is what the
-metadata would take with it, not whether its configuration is familiar:
+Operator retention decisions for #11297 and DISK-1109. Test scratch is deleted
+once it is no longer needed.
 
-- Disposable: remotes and tracking branches, linked worktrees located in the
-  same run (their `.git` files and the registrations under `worktrees/`),
-  alternates naming an outside object store (the run depends on that store;
-  deleting the run leaves it untouched), `extensions.worktreeConfig` with a
-  `config.worktree`, hooks path, credential, alias and similar settings.
-- Judged by shape, not name: any directory holding `HEAD`, `objects` and `refs`
-  (a separate Git directory, a bare repository, a submodule's administrative
-  directory) gets the same checks as `.git`, and so does each linked worktree's own
-  `config.worktree`.
-- Kept as `git_metadata`: a worktree registered here that lives outside the run,
-  a `.git` file pointing outside it, a Git directory that is itself linked or
-  separate (`commondir`, `gitdir`), `core.worktree` resolving outside the run,
-  `include` or `includeIf` (the sweep does not read what they pull in), any
-  other `extensions.*`, `http-alternates`, a Git symlink, a config that does not
-  parse, and `core.bare` or `core.repositoryformatversion` other than the
-  ordinary values.
+**At session end.** Ordinary repository pytest sessions allocate an invocation
+with `lease.json` and a lifetime-held `lease.lock` using
+`scripts.common.task_scratch`. The session points `TMPDIR` and Python's cached
+temp directory at the invocation's payload, so ordinary temporary files and
+pytest fixtures share one containment root; teardown restores both. When the
+session ends, whatever its outcome (passed, failed, interrupted or aborted by a
+hook), it removes its own run through the scratch owner's descriptor-safe
+remover. Failure evidence is pytest's report and junit, not the run's
+checkouts and virtual environments. Set `LU_KEEP_PYTEST_SCRATCH=1` to keep the
+run for inspection. A refused removal leaves the run for the sweep and never
+fails the session.
 
-General temporary directories and older ledger
-entries retain Git preservation, including `purge_problem` and its default
-`tree_facts` check; their quarantine timing and purge eligibility are unchanged.
-The existing pytest inflow settings remain `tmp_path_retention_policy = "failed"`
-and `tmp_path_retention_count = 1`. A run folder there is deleted outright when
-both of these hold:
+New invocations use the neutral `runs` component so emitted fixture paths do
+not contain secret-token prefixes. Pytest folders directly below a scratch
+root, outside the two namespaces, are reported as `legacy_ownership_unknown`
+and never touched. An explicit `--basetemp` keeps its caller's ownership,
+except that one inside `.agent`, `.claude`, `batch_state` or `data` of a
+checkout (a directory that holds a `.git` directory, so a linked worktree does
+not count) is refused: pytest exits 4 before creating anything, because the
+nightly data backup refuses the absolute symlinks a base temp holds
+([data backup](data-backup.md)). The pre-push gate removes its own base temp.
+Other managed scratch is untouched.
+
+**The sweep.** A killed session, or one kept on request, is reclaimed by the
+hourly sweep. It looks only inside the two managed pytest namespaces,
+`pytest-runs/runs` and the legacy `pytest-runs/task-scratch`, below the
+existing scratch scan roots, and honors `LU_SCRATCH_SCAN_ROOT`. A run folder is
+deleted outright when all of these hold:
 
 - Its newest change anywhere inside is more than two hours old. A change is a
   write or an inode change, so a folder whose files were extracted recently
   with old preserved mtimes stays young. Exactly two hours is still young.
-- No live process holds it. The sweep reads every process's working
-  directory, open descriptors, memory-mapped files, command line and
-  environment. A reference is the folder's path or a path below it in any
-  spelling the process can use: an argument, a `VAR=value` value or a `:`
-  list entry, read relative to the process's working directory, with `.`
-  and `..` folded and symlinked aliases resolved as the kernel does (a
-  symlink is followed before a later `..`). Command lines and
-  environment values are never reported. Rows carry only PIDs and channel
-  names (`cwd`, `fd`, `maps`, `argv`, `environ`).
+- Its lease owner is provably dead: the lease names this run (directory
+  identity, invocation id and uid) and records an earlier kernel boot, or
+  records this boot and the recorded pid is absent or now reports a different
+  start time.
+- Its run lock (`lease.lock`), when present, is acquired exclusively by the
+  sweep. A lock held by anyone else keeps the run as `in_use`, and a lock the
+  sweep cannot open keeps it as `lock_unknown`.
 
-No ownership record is required. A run with no `lease.json`, a malformed one
-or a completed one is treated the same way. Retention counts, completion
-proofs and the seven-day quarantine play no part in this class. A run lock
-(`lease.lock`) is used where it exists. A lock held by anyone else keeps the
-run as `in_use`, and a lock the sweep cannot open keeps it as `lock_unknown`.
-A missing lock is not a reason to keep anything.
+A folder with no `lease.json`, or a malformed one, records no owner. The lease
+is written before anything else exists, so such a folder is the residue of an
+interrupted removal; it goes once idle, when its lock (if any) is free.
+
+No snapshot of other processes is taken. On this host an unprivileged user can
+never read every process, so requiring one kept every run (see
+[Process coverage](#process-coverage)). A run's contents are pytest's own
+scratch: `.git` metadata, hard links (virtual environments) and sockets or
+FIFOs inside it keep nothing.
 
 The run is still kept, with its reason in the report, when:
 
-- any live process could not be inspected (`liveness_unknown`; see
-  [Process coverage](#process-coverage));
-- the tree has a mount point, a foreign owner, `.git` metadata, hard-linked
-  content, a socket or FIFO, or cannot be read (the tree-safety reasons in
-  [Other scratch](#other-scratch));
+- its lease is unreadable (`lease_unreadable`), names another run
+  (`owner_liveness_unknown`), its owner is alive (`live_owner`) or the owner's
+  liveness cannot be read;
+- a lease exists but its lock is missing (`lock_missing`);
+- the tree has a mount point or a foreign owner, or cannot be read;
 - it is a registered worktree, or the worktree probe failed;
 - the entry is a symlink or not a directory;
 - its namespace is a symlink, not owned by the agent user or not private
   (`namespace_untrusted`, counted as an error).
 
 With `--apply`, every proven folder is first renamed, never replacing
-anything, into a locked holding directory inside its namespace. One fresh
-process scan then checks both the original and the held path, and the tree is
-compared with the fingerprint taken before the rename. A changed inode, any
-holder, an uninspectable process or any write renames the folder back under
-its own name. Otherwise the common descriptor-safe remover deletes it; it
-refuses mount points and identity changes, and whatever a refused deletion
-leaves is renamed back. If the original name was taken meanwhile, the folder
-stays in the holding directory as `restore_blocked`. A crash leaves it there
-too. The next run returns it to its name, where it waits two more hours.
+anything, into a locked holding directory inside its namespace. The held
+folder must still be the same inode in the same directories, and its tree must
+equal the fingerprint taken before the rename. Otherwise it is renamed back
+under its own name. If the checks pass, the common descriptor-safe remover
+deletes it. It refuses mount points and identity changes, gives a read-only
+directory owner write permission before emptying it, and renames back
+whatever a refused deletion leaves. If the original name was taken meanwhile,
+the folder stays in the holding directory as `restore_blocked`. A crash leaves
+it there too. The next run returns it to its name, where it waits two more
+hours.
 
 A dry run reports the same decisions as `would_delete` and changes nothing.
 Under `pytest_retention`, the `--summary` output includes
 `would_delete_entries` and `would_delete_bytes` (dry run), `deleted_entries`
-and `deleted_bytes` (allocated bytes actually removed), `liveness_complete`,
-`liveness_unreadable_processes`, protected bytes and counts by reason. It
-never includes entry names. Entries an earlier policy left in the ledger
-quarantine keep their recorded recovery and purge path. Invalid
-`LU_SCRATCH_SCAN_ROOT` configuration reports `scan_root_invalid` and a nonzero
-exit while preserving the summary of any general temp-sweep actions already
-applied. It never falls back to host roots.
-
-Ordinary repository pytest sessions still allocate an invocation with
-`lease.json` and a lifetime-held `lease.lock` using
-`scripts.common.task_scratch`. The session points `TMPDIR` and Python's cached
-temp directory at the invocation's payload, so ordinary temporary files and
-pytest fixtures share one containment root; teardown restores both. A running
-session is therefore held by its lock descriptor and, in its xdist workers
-and child processes, by the exported `TMPDIR`. New invocations use the neutral
-`runs` component so emitted fixture paths do not contain secret-token
-prefixes. Pytest folders directly below a scratch root, outside the two
-namespaces, are reported as `legacy_ownership_unknown` and never touched. An
-explicit `--basetemp` keeps its caller's ownership, except that one inside
-`.agent`, `.claude`, `batch_state` or `data` of a checkout (a directory that
-holds a `.git` directory, so a linked worktree does not count) is refused:
-pytest exits 4 before creating anything, because the nightly data backup
-refuses the absolute symlinks a base temp holds ([data backup](data-backup.md)).
-The pre-push gate removes its own base temp. Other managed scratch is
-untouched.
-
-When pytest's main command returns, the session removes its own run if it
-passed under `tmp_path_retention_policy = "failed"`, through the scratch
-owner's descriptor-safe remover. This is the removal pytest documents for that
-policy; pytest skips it whenever `--basetemp` is set, and this plugin always
-sets it. A session passed only when the main command returned 0 without any
-exception, after every hook and every teardown cleanup had run, and its test
-loop and whole session-finish call (every implementation, wrapper and
-hook-call monitor) also returned without any exception. Every other session
-keeps its run for inspection, and the sweep above handles it: a failed,
-interrupted or killed session, one whose teardown cleanup failed, and one that
-a session-finish hook ended with an error or a `pytest.exit`, even when pytest
-still exits with status 0. Under the other retention policies every run is
-kept. A refused removal leaves the run preserved as before and never fails
-the session.
-
-One accepted exception: a session that registers this plugin only after the
-main command began, for example from a `pytest_configure` hook, keeps its run
-even when it passed. The plugin cannot observe that command's exit status or
-the cleanups registered before it, so removing the run there could delete a
-failed session's evidence; keeping it matches the earlier behaviour, and the
-hourly sweep handles it. Every supported loading path registers the plugin
-before the command and removes a passed run: a conftest's `pytest_plugins`
-(how this repository loads it, from `tests/conftest.py`), `-p`, and the
-`plugins` argument of `pytest.main()`.
+and `deleted_bytes` (allocated bytes actually removed), protected bytes and
+counts by reason. It never includes entry names. Entries an earlier policy
+left in the ledger quarantine keep their recorded recovery and purge path.
+Invalid `LU_SCRATCH_SCAN_ROOT` configuration reports `scan_root_invalid` and a
+nonzero exit while preserving the summary of any general temp-sweep actions
+already applied. It never falls back to host roots. General temporary
+directories and older ledger entries keep Git and hard-link preservation,
+including `purge_problem` and its default `tree_facts` check.
 
 ### Other scratch
 
@@ -251,16 +211,14 @@ engine after its liveness recheck. Live or unknown candidates remain in
 place. This convergence does not resolve the process-inspection privilege
 requirement below (#9702).
 
-The sweep reads `/proc/<pid>/cwd`, `/proc/<pid>/fd` and `/proc/<pid>/maps`
-for every process. For inactive pytest scratch it also reads
-`/proc/<pid>/cmdline` and `/proc/<pid>/environ`, and inspects its own process
-too, excusing only the run locks it holds itself.
+For the general temp scratch above, the sweep reads `/proc/<pid>/cwd`,
+`/proc/<pid>/fd` and `/proc/<pid>/maps` for every process. Pytest scratch does
+not use this probe; its owner is proven dead from its lease instead.
 The kernel refuses some of these reads. Examples are other users' processes,
 such as root daemons, and non-dumpable processes of the agent user, such as
 its systemd manager or SSH sessions. A process that cannot be read could hold
 any entry. Any refusal therefore makes the probe incomplete, and every
-candidate in every class, pytest scratch included, is kept as
-`liveness_unknown`. Zombies and processes that exit during the scan hold
+candidate in those classes is kept as `liveness_unknown`. Zombies and processes that exit during the scan hold
 nothing.
 
 Consequence: an unprivileged user cannot read root's processes on a normal
