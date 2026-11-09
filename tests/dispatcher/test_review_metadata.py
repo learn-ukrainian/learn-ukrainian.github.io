@@ -95,7 +95,7 @@ def test_subject_self_review_effective_identity_or_unknown_refused_before_launch
 @pytest.mark.parametrize("model,flags", [
     ("grok-4.7-high", ("--subject-seat", "claude")),
     ("gpt-6.1-sol", ()),
-    ("unknown-model", ()),
+    ("auto", ()),
 ])
 def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, model, flags):
     assert dispatch(*flags, agent="cursor", model=model)["model"] == model

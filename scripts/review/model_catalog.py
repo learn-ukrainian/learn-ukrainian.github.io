@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -1063,6 +1064,10 @@ def model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
     return aliases
 
 
+# The whole remainder after a catalog id that still names that model: an effort or thinking variant.
+VARIANT_SUFFIX = re.compile(r"(?:low|medium|high|xhigh|max|minimal|thinking|thinking-(?:low|medium|high|xhigh|max))")
+
+
 def _model_id_candidates(model: str) -> list[str]:
     """Return ``model`` plus each harness-qualified suffix, most specific first.
 
@@ -1082,7 +1087,10 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     Matches case-insensitively through catalog aliases and harness prefixes
     (``codex:gpt-6-luna``, ``openai/gpt-6-luna``), drops a bracketed context
     suffix (``claude-opus-5-5[1m]``), and resolves a provider variant such as
-    ``gpt-6-luna-high`` to the longest catalog id it extends.
+    ``gpt-6-luna-high`` to the longest catalog id it extends. A variant names
+    that model only when everything after the id is one effort or thinking
+    suffix (``VARIANT_SUFFIX``); ``claude-opus-5-6`` is an unknown model, not
+    a variant of ``claude-opus-5``.
     """
     text = str(model or "").strip().split("[", 1)[0].strip()
     if not text:
@@ -1096,7 +1104,7 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
             (len(alias), owner)
             for candidate in candidates
             for alias, owner in lookup.items()
-            if candidate.startswith(f"{alias}-")
+            if candidate.startswith(f"{alias}-") and VARIANT_SUFFIX.fullmatch(candidate[len(alias) + 1 :])
         ]
         model_id = max(extended)[1] if extended else None
     return model_id
@@ -1434,6 +1442,11 @@ def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None 
     )
 
 
+def unknown_model_refusal(model: Any) -> str:
+    """The one refusal wording for a model string that names no catalog model."""
+    return f"model {model!r} is not in the model catalog"
+
+
 def require_execution_model(
     model: str, *, transport: str, catalog: dict[str, Any] | None = None,
 ) -> str:
@@ -1448,7 +1461,7 @@ def require_execution_model(
         raise ModelCatalogError(refusal)
     model_id = resolve_catalog_model_id(model, catalog)
     if model_id is None:
-        raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+        raise ModelCatalogError(unknown_model_refusal(model))
     _require_routable_model(catalog["models"], model_id, "execution model", deepseek_execution=True)
     entry = catalog["models"][model_id]
     if entry["family"] == "deepseek" and transport != "opencode":

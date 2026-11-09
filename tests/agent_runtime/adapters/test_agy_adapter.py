@@ -761,7 +761,8 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(ValueError, match="retired in the model catalog" if model == "gemini-4-argon-high-preview" else "Unsupported AGY model") as error:
+    # C-4967: "-preview" is no effort variant, so it names no retired Argon model; it is unlisted.
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         AgyAdapter().build_invocation(
             prompt="hello", mode="workspace-write", cwd=tmp_path, model=model,
             task_id=None, session_id=None, tool_config=None, effort=effort,

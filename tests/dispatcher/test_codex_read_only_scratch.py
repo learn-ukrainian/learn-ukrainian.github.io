@@ -28,7 +28,7 @@ def worktree(tmp_path, monkeypatch):
 def spec_for(worktree, mode="read-only"):
     prompt = worktree.parent / "prompt.txt"
     prompt.write_text("Review the change")
-    return TaskSpec(TASK_ID, "codex", "explicit-model", None, mode, worktree, prompt, worktree.parent / "final.txt")
+    return TaskSpec(TASK_ID, "codex", "gpt-6.1-sol", None, mode, worktree, prompt, worktree.parent / "final.txt")
 
 
 def permissions(argv):
