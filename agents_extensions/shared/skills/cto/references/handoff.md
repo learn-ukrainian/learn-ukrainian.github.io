@@ -24,9 +24,10 @@ the next one re-arms them from the tracker handoff.
    and the worker watchers armed after HANDOFF-DONE, and use `TaskStop` only on the other
    background tasks before posting HANDOFF-DONE. A running task makes the TUI ask before exit;
    the keeper's restart answers that prompt with "Exit and stop tasks", so the kept watchers
-   end when this session exits, before the successor starts. The successor re-arms them from
-   the tracker handoff and its first inbox claim shows it is live; the gap between exit and
-   that claim is not covered. Delegate workers are separate processes and keep running.
+   die when this session exits, before the successor starts. Nothing is lost: deliveries stay
+   queued in Fleet Comms, and the successor drains the inbox and re-arms the worker waits from
+   the handoff note first thing; the gap only delays the wake. Delegate workers are separate
+   processes and keep running.
 7. Write the durable brief (core.md P7) and drain the inbox one last time.
 
 The `handoff_note` contains:
