@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import shlex
 import subprocess
 import sys
@@ -11,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime.registry import AGENTS
+from scripts.dispatcher import checks
 from scripts.review.model_catalog import (
     ModelCatalogError,
     activity_role_refusal,
@@ -30,6 +32,7 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     risk_reviewer_refusal,
     runtime_model_matches_requested,
+    unknown_model_refusal,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -750,8 +753,8 @@ def test_catalog_refuses_a_direct_bounded_worker_route():
 
 
 @pytest.mark.parametrize(
-    ("spelling", "expected"),
-    [
+    ("spelling", "expected", "agent"),
+    [(spelling, expected, "codex") for spelling, expected in [
         ("gpt-6-luna", "gpt-6-luna"),
         ("GPT-6-Luna", "gpt-6-luna"),
         ("codex:gpt-6-luna", "gpt-6-luna"),
@@ -765,12 +768,41 @@ def test_catalog_refuses_a_direct_bounded_worker_route():
         ("claude-fable-5-2[1m]", "claude-fable-5-2"),
         ("claude-fable-5-1", "claude-fable-5-1"),
         ("claude-fable-5", "claude-fable-5"),
+        # C-4967: only a whole effort or thinking suffix is a variant; an unknown newer version is
+        # no model at all, never its retired predecessor.
+        ("gpt-6.1-sol-high", "gpt-6.1-sol"),
+        ("claude-opus-5-5-high", "claude-opus-5-5"),
+        ("claude-opus-5-5-thinking-xhigh", "claude-opus-5-5"),
+        ("claude-fable-5-1-thinking-high", "claude-fable-5-1"),
+        ("grok-4.7-build", "grok-4.7"),
+        ("grok-4.7-build-fast", None),
+        ("gpt-6-luna-highest", None),
+        ("claude-opus-5-6", None),
+        ("claude-sonnet-5-6", None),
+        ("claude-fable-5-3", None),
+        ("claude-opus-5-6[1m]", None),
         ("not-a-model", None),
         (None, None),
+    ]] + [
+        # Dispatch admission normalizes a native Claude alias first; Cursor's Auto selector names no model.
+        ("opus", None, "claude"),
+        ("sonnet[1m]", None, "claude"),
+        ("fable", None, "claude"),
+        ("auto", None, "cursor"),
+        ("grok-4.7-high", "grok-4.7", "cursor"),
     ],
 )
-def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected):
+def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected, agent):
     assert canonical_model_id(spelling) == expected
+    if spelling is None:
+        return
+    prompt = b"implement the brief"
+    if agent == "codex" and expected is None:
+        # An unknown explicit pin is refused at dispatch admission with the catalog's unknown-model text.
+        with pytest.raises(ValueError, match=re.escape(unknown_model_refusal(spelling))):
+            checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
+    else:
+        checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():

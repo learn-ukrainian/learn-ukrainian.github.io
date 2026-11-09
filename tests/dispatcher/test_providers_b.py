@@ -32,7 +32,7 @@ def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, 
     brief = tmp_path / "brief"
     original = b'Inspect "this".\r\nPreserve brief bytes.\n'
     brief.write_bytes(original)
-    spec = TaskSpec("core-delivery", provider, "grok-4.7-high" if provider == "cursor" else "stub",
+    spec = TaskSpec("core-delivery", provider, "grok-4.7-high" if provider == "cursor" else "gpt-6.1-sol",
                     "high", mode, checkout, brief, tmp_path / "result")
     monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
     binary = tmp_path / ("cursor-agent" if provider == "cursor" else provider)
@@ -156,7 +156,7 @@ def test_private_repo_workers_can_load_shared_skills_and_task_records(tmp_path, 
     prompt = tmp_path / "prompt"
     original = b"List the loaded skills.\r\nRead previous.result from the shared task store."
     prompt.write_bytes(original)
-    spec = TaskSpec("context", provider, "stub", "high", mode, private, prompt, tmp_path / "final")
+    spec = TaskSpec("context", provider, "gpt-6.1-sol", "high", mode, private, prompt, tmp_path / "final")
     invocation = runtime_context.build(spec, child_env(spec))
     # A real child interprets the advertised catalog and opens its files, rather than just
     # asserting that a helper was called or that environment keys were set.
@@ -199,7 +199,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     prompt_bytes = 'Inspect "the file".\r\nЗвіт.\n--not-a-flag'.encode()
     prompt.write_bytes(prompt_bytes)
     final = tmp_path / "final.txt"
-    spec = TaskSpec("provider-b", provider, "explicit-model", effort, mode, worktree, prompt, final, "a")
+    spec = TaskSpec("provider-b", provider, "gpt-6.1-sol", effort, mode, worktree, prompt, final, "a")
     executable = "cursor-agent" if provider == "cursor" else provider
     binary = tmp_path / executable
     binary.write_text(f"#!{sys.executable}\n" + STUB)
@@ -213,12 +213,12 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     original_env = env.copy()
     invocation = load(provider).build(spec, env)
     expected = {
-        "codex": ["exec", "--json", "-C", str(worktree), "-m", "explicit-model", "-o", str(final)],
-        "claude": ["-p", "--model", "explicit-model"],
+        "codex": ["exec", "--json", "-C", str(worktree), "-m", "gpt-6.1-sol", "-o", str(final)],
+        "claude": ["-p", "--model", "gpt-6.1-sol"],
         "cursor": [
             "-p",
             "--model",
-            "explicit-model",
+            "gpt-6.1-sol",
             "--output-format",
             "stream-json",
             "--trust",
@@ -233,7 +233,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             "--output-format",
             "stream-json",
             "--model",
-            "explicit-model",
+            "gpt-6.1-sol",
         ],
     }[provider]
     if provider == "codex":
@@ -382,7 +382,7 @@ def test_claude_parse_counts_completed_sources_mcp_calls_from_the_stream():
 def test_unknown_provider_mode_never_receives_write_or_bypass_flags(tmp_path, provider, mode):
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("private prompt must not be echoed")
-    spec = TaskSpec("unknown-mode", provider, "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    spec = TaskSpec("unknown-mode", provider, "gpt-6.1-sol", None, mode, tmp_path, prompt, tmp_path / "final.txt")
     invocation = None
     with pytest.raises(ValueError) as exc:
         invocation = load(provider).build(spec, {"PRIVATE_ENV": "must not be echoed"})
@@ -394,7 +394,7 @@ def test_unknown_provider_mode_never_receives_write_or_bypass_flags(tmp_path, pr
 def test_unknown_codex_mode_never_receives_sandbox_bypass(tmp_path, mode):
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("private prompt must not be echoed")
-    spec = TaskSpec("unknown-mode", "codex", "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    spec = TaskSpec("unknown-mode", "codex", "gpt-6.1-sol", None, mode, tmp_path, prompt, tmp_path / "final.txt")
     invocation = None
     with pytest.raises(ValueError) as exc:
         invocation = load("codex").build(spec, {"PRIVATE_ENV": "must not be echoed"})

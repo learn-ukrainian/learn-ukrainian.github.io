@@ -1135,6 +1135,9 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # joins no seat, review route, ladder or ranking; every other field stays frozen.
             fable52 = value["models"].pop("claude-fable-5-2")
             assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
+            # C-4967: the native Grok runtime id becomes an exact alias of its holder, so it keeps its
+            # identity once only effort suffixes count as variants; no seat, route or ranking moves.
+            assert value["models"]["grok-4.7"].pop("aliases") == ["grok-4.7-build"]
             # The advisory_roles section moves no seat, route or review ranking.
             _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off

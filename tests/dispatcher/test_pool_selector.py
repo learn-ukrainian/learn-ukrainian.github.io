@@ -164,7 +164,7 @@ def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch)
         }},
     }
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    args = cli.build_parser().parse_args(["dispatch", "--agent", "claude", "--model", "approved-model",
+    args = cli.build_parser().parse_args(["dispatch", "--agent", "claude", "--model", "claude-sonnet-5-5",
         "--task-id", "shadow-hook", "--prompt", "bounded task", "--mode", "read-only", "--worktree"])
     monkeypatch.setattr(cli.admission, "claude_account", lambda *_: {"claude_account": "live-login"})
     monkeypatch.setattr(cli.git, "resolve_repo", lambda *_: (tmp_path, {"key": "public", "github": "test/repo"}))
