@@ -7,6 +7,7 @@ import io
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -275,30 +276,42 @@ def test_load_manifest_retries_transient_download_error(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """A subprocess timeout must remain a retryable transient download failure."""
     payload = {"entries": [{"lemma": "мережа"}], "enrichment_generated": True}
     json_bytes = _json_bytes(payload)
     gz_bytes = gzip.compress(json_bytes)
     manifest_path = tmp_path / "lexicon-manifest.json"
     pointer_path = tmp_path / "lexicon-manifest.pointer.json"
     _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    pointer = json.loads(pointer_path.read_text())
+    pointer["asset_url"] = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/fixture.gz"
+    pointer_path.write_text(json.dumps(pointer))
     _pin_defaults(monkeypatch, manifest_path, pointer_path)
-    urls: list[str] = []
+    calls: list[tuple[str, int]] = []
+    root = "repos/learn-ukrainian/learn-ukrainian.github.io/releases"
 
-    def fake_urlopen(request: object, timeout: int):
-        assert timeout == 60
-        urls.append(_request_url(request))
-        if len(urls) == 1:
-            raise manifest_io.urllib.error.URLError("temporary release edge failure")
-        return io.BytesIO(gz_bytes)
+    def request(self, method, endpoint, **kwargs):
+        assert method == "GET"
+        assert kwargs["fresh"] is True
+        calls.append((endpoint, kwargs["timeout"]))
+        if endpoint == root + "/tags/atlas-manifest":
+            return manifest_io.github_client.Result(value={"assets": [{"id": 42, "name": "fixture.gz"}]})
+        assert endpoint == root + "/assets/42"
+        assert kwargs["headers"]["Accept"] == "application/octet-stream"
+        if len(calls) == 2:
+            raise subprocess.TimeoutExpired(["gh", "api"], kwargs["timeout"])
+        return manifest_io.github_client.Result(value=gz_bytes)
 
-    monkeypatch.setattr(manifest_io.github_client, "http_open", fake_urlopen)
+    monkeypatch.setattr(manifest_io.github_client.GitHubClient, "request", request)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
     assert manifest_path.read_bytes() == json_bytes
-    assert urls[1] == (
-        "https://example.test/lexicon-manifest.json.gz"
-        f"?atlas_manifest_sha256={_sha256(gz_bytes)}&atlas_manifest_attempt=1"
-    )
+    assert calls == [
+        (root + "/tags/atlas-manifest", 60),
+        (root + "/assets/42", 300),
+        (root + "/tags/atlas-manifest", 60),
+        (root + "/assets/42", 300),
+    ]
 
 
 def test_load_manifest_reports_final_download_error_after_prior_mismatch(
