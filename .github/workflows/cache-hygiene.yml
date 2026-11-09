@@ -42,6 +42,7 @@ on:
       - scripts/opsec/gh_snapshot.py
       - scripts/opsec/prepublish.py
       - requirements-lock.txt
+      - requirements-machinery.lock
       - '.python-version'
 
 permissions: {}
@@ -80,6 +81,7 @@ jobs:
             scripts/opsec/gh_snapshot.py
             scripts/opsec/prepublish.py
             requirements-lock.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -89,7 +91,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-        run: python3 scripts/ci/cache_hygiene.py --repo "${REPO}" --lock-file requirements-lock.txt --apply
+        run: python3 scripts/ci/cache_hygiene.py --repo "${REPO}" --lock-file requirements-lock.txt --lock-file requirements-machinery.lock --apply
 
   import-check:
     name: Import cache hygiene
@@ -115,6 +117,7 @@ jobs:
             scripts/opsec/gh_snapshot.py
             scripts/opsec/prepublish.py
             requirements-lock.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
