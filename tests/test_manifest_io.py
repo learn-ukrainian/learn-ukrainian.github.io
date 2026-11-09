@@ -636,3 +636,30 @@ def test_lexicon_scripts_do_not_open_manifest_inplace() -> None:
     assert _inplace_lines(sample) == [3]
     root = Path(__file__).resolve().parents[1]
     assert _inplace_manifest_writers(root) == []
+
+
+def test_release_download_uses_binary_api_instead_of_browser_url(monkeypatch, tmp_path):
+    """Published-release browser 504s must not affect API hydration."""
+    from scripts.common import github_client
+
+    calls = []
+    root = "repos/learn-ukrainian/learn-ukrainian.github.io/releases"
+
+    def transport(method, endpoint, headers, body, timeout):
+        calls.append((method, endpoint, headers))
+        if endpoint == root + "/tags/atlas-practice-deck":
+            return github_client.Response(200, {}, json.dumps({"assets": [
+                {"id": 42, "name": "pinned.json.gz"},
+            ]}).encode())
+        assert endpoint == root + "/assets/42"
+        assert headers["Accept"] == "application/octet-stream"
+        return github_client.Response(200, {}, b"verified-asset")
+
+    client = github_client.GitHubClient(transport=transport, cache_dir=tmp_path / "github", env={"GH_TOKEN": "test-token"})
+    monkeypatch.setattr(github_client, "GitHubClient", lambda: client)
+    url = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/pinned.json.gz"
+    assert manifest_io.download_release_asset(url) == b"verified-asset"
+    assert [(method, endpoint) for method, endpoint, _ in calls] == [
+        ("GET", root + "/tags/atlas-practice-deck"),
+        ("GET", root + "/assets/42"),
+    ]

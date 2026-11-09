@@ -223,6 +223,8 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
       # mypy ratchet (#12642). One cache key, saved on main only: a pull_request
       # save is visible only to that PR and the scripts/ cache is large.
       # A miss rechecks scripts/ inside this job; a hit reuses incremental results.
@@ -285,6 +287,8 @@ jobs:
           cache-dependency-path: site/package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Install site toolchain
         working-directory: site
         run: npm ci --prefer-offline --no-audit --no-fund
@@ -319,6 +323,7 @@ jobs:
         name: Build, drift check, unit and built-output tests
         working-directory: site
         env:
+          GH_TOKEN: ${{ github.token }}
           FRONTEND_BUILD_RECORD: ${{ runner.temp }}/frontend-build/record.json
         run: |
           set -euo pipefail
@@ -427,6 +432,8 @@ jobs:
       - run: bash scripts/ci/test_env.sh start npm
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
       - run: bash scripts/ci/test_env.sh wait
         timeout-minutes: 5
       # The refresh-job result is the same on every shard. Success always uploaded
@@ -610,6 +617,8 @@ jobs:
       - name: Python CI environment
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Set up bubblewrap
         if: github.event_name == 'pull_request'
         run: bash scripts/ci/setup_bubblewrap.sh

@@ -759,3 +759,25 @@ def test_sentinels_shared_with_the_real_release_are_not_false_positives(tmp_path
     (built.dist / "lexicon-v2/release/index.html").write_text(_page(body="fixture-only-version"), encoding="utf-8")
     with pytest.raises(preview.PreviewError, match="fixture-only-version"):
         built.verify(tmp_path / "fixtures")
+
+
+def test_http_open_preserves_bytes_body_on_gateway_error():
+    """A raw 504 must reach hydrate retries, rather than fail JSON serialization."""
+    import io
+    import urllib.error
+    import urllib.request
+
+    from scripts.common import github_client
+
+    body = b"<html>504 Gateway Time-out</html>"
+
+    def unavailable(request, **kwargs):
+        raise urllib.error.HTTPError(request.full_url, 504, "Gateway Time-out", {}, io.BytesIO(body))
+
+    with pytest.raises(urllib.error.HTTPError) as error:
+        github_client.http_open(
+            urllib.request.Request("https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/test.gz"),
+            opener=unavailable,
+        )
+    assert error.value.code == 504
+    assert error.value.read() == body
