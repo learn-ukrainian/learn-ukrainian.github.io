@@ -43,6 +43,9 @@ def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     assert "would exec claude " in default.stdout
     assert "would exec claude --model claude-fable-5-1" in fable.stdout
     assert "would exec claude --model claude-sonnet-5-5" in sonnet.stdout
+    fable52 = run_launcher("start-claude.sh", "--model", "claude-fable-5-2")
+    assert fable52.returncode == 0, fable52.stderr
+    assert "would exec claude --model claude-fable-5-2" in fable52.stdout
 
 
 def test_claude_interactive_injects_effort_when_explicit() -> None:
@@ -176,6 +179,16 @@ def test_claude_driver_default_yields_to_launcher_env() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
+
+    # C-4965: the driver allowlist admits the explicit Fable 5.2 pin; the alias stays 5.1.
+    pinned = run_launcher(
+        "start-claude-driver.sh",
+        "--epic",
+        "devops",
+        env={"LAUNCHER_MODEL": "claude-fable-5-2", "LAUNCHER_EFFORT": "medium"},
+    )
+    assert pinned.returncode == 0, pinned.stderr
+    assert "would exec claude --model claude-fable-5-2 --effort medium" in pinned.stdout
 
 
 @pytest.mark.parametrize(
