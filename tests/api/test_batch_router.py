@@ -10,8 +10,8 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from lu_machinery.api.monitor_context import fixture_context
 
+from scripts.api.monitor_context import fixture_context
 from scripts.project_api import batch_router as batch_router_mod
 from scripts.project_api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
 from scripts.project_api.batch_router import router as batch_router

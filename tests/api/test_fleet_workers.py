@@ -13,16 +13,16 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
-from lu_machinery.api import fleet_workers_collect as collect_mod
-from lu_machinery.api import fleet_workers_router as router_mod
-from lu_machinery.api import project_state_router as state_router_mod
-from lu_machinery.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
-from lu_machinery.api.main import app
-from lu_machinery.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
-from lu_machinery.api.occupancy_local import OccupancyRead, _marker_fresh
-from lu_machinery.api.project_state_router import LocalDocumentSnapshot, reset_local_document_cache
-from lu_machinery.api.project_state_store import get_stored_report, reset_project_state_store
 
+from scripts.api import fleet_workers_collect as collect_mod
+from scripts.api import fleet_workers_router as router_mod
+from scripts.api import project_state_router as state_router_mod
+from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
+from scripts.api.main import app
+from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
+from scripts.api.occupancy_local import OccupancyRead, _marker_fresh
+from scripts.api.project_state_router import LocalDocumentSnapshot, reset_local_document_cache
+from scripts.api.project_state_store import get_stored_report, reset_project_state_store
 from tests import _host_path_guard as guard
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -178,7 +178,7 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
     )
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"teach-box=host-teacher,worker-box={self_host_id}")
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {self_host_id})
-    monkeypatch.setattr("lu_machinery.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
     monkeypatch.setattr(collect_mod, "collect_driver_workers", lambda **_: ([], []))
     monkeypatch.setattr(collect_mod, "collect_job_workers", lambda **_: ([], None))
     monkeypatch.setattr(collect_mod, "collect_marker_workers", lambda **_: [])
@@ -524,7 +524,7 @@ def test_oversized_task_id_dropped_not_500(
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-worker"})
-    monkeypatch.setattr("lu_machinery.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
     response = client.get("/api/fleet/workers/v1?host_id=host-worker")
     assert response.status_code == 200
     data = response.json()

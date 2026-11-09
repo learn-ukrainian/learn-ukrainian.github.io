@@ -12,9 +12,9 @@ import json
 import os
 from pathlib import Path
 
-import lu_machinery.api.main as api_main
 from fastapi.testclient import TestClient
 
+import scripts.api.main as api_main
 import scripts.project_api.state_compute as state_compute
 import scripts.project_api.state_router as state_router
 from scripts.audit.llm_qg_store import DB_ENV_VAR, record_llm_qg

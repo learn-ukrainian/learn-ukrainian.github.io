@@ -21,9 +21,9 @@ import httpx
 import pytest
 from fastapi import APIRouter, FastAPI
 from httpx import ASGITransport
-from lu_machinery.api import delegate_router, epics_router, state_helpers, state_router
-from lu_machinery.api.monitor_context import fixture_context
 
+from scripts.api import delegate_router, epics_router, state_helpers, state_router
+from scripts.api.monitor_context import fixture_context
 from scripts.project_api import artifacts_router
 from scripts.project_api import state_router as product_state_router
 

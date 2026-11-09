@@ -21,7 +21,8 @@ from typing import Any, cast
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException, Query
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 
 from .curriculum_state import monitor_surface
 

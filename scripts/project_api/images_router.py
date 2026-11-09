@@ -26,8 +26,9 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx
 from pydantic import BaseModel
+
+from scripts.api.monitor_context import MonitorContext, get_ctx
 
 from .context import image_store
 from .curriculum_state import monitor_surface

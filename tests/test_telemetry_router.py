@@ -6,12 +6,12 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
-import lu_machinery.api.telemetry_router as telemetry_router
 from fastapi.testclient import TestClient
-from lu_machinery.api.main import app
-from lu_machinery.api.monitor_context import fixture_context
 
+import scripts.api.telemetry_router as telemetry_router
 import scripts.project_api.module_builds as product_module_builds
+from scripts.api.main import app
+from scripts.api.monitor_context import fixture_context
 
 client = TestClient(app, raise_server_exceptions=False)
 

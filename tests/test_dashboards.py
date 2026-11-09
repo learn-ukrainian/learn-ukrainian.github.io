@@ -190,7 +190,8 @@ class TestOverviewLastGoodHonesty:
 
     def _client(self):
         from fastapi.testclient import TestClient
-        from lu_machinery.api.main import app
+
+        from scripts.api.main import app
 
         return TestClient(app, raise_server_exceptions=False)
 

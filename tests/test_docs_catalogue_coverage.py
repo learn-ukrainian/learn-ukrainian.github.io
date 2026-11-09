@@ -21,14 +21,14 @@ import re
 import subprocess
 from pathlib import Path
 
-import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
-from lu_machinery.docs import catalogue as cat
-from lu_machinery.docs import find as find_module
-from lu_machinery.docs import store_census
-from lu_machinery.docs.find import find
 
+import scripts.api.main as api_main
+from scripts.docs import catalogue as cat
+from scripts.docs import find as find_module
+from scripts.docs import store_census
+from scripts.docs.find import find
 from tests.helpers.docs_find_lookups import (
     DEV_KINDS,
     DEV_LOOKUPS,
@@ -59,7 +59,7 @@ def checked():
 def _fix_hint(report, catalogue) -> str:
     parts = []
     if report.uncovered:
-        parts.append('Paste-ready family stubs (python -m lu_machinery.docs.catalogue check --suggest):\n'
+        parts.append('Paste-ready family stubs (python -m scripts.docs.catalogue check --suggest):\n'
                      + cat.suggest(report, catalogue))
     for store in cat.unclaimed_stores(catalogue, report.store_literals or {}):
         parts.append(f'Paste-ready store stub for {store}:\n' + cat.store_stub(store))

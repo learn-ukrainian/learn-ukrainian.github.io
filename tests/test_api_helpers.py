@@ -500,8 +500,7 @@ class TestScanTrackCached:
     """scan_track_cached returns cached results within TTL."""
 
     def test_cache_returns_same_result(self, tmp_path):
-        from lu_machinery.api.monitor_context import fixture_context
-
+        from scripts.api.monitor_context import fixture_context
         from scripts.project_api.dashboard_helpers import _track_cache, _track_cache_key, scan_track_cached
 
         ctx = fixture_context(tmp_path)
@@ -516,7 +515,7 @@ class TestScanTrackCached:
 
 
 def _dashboard_ctx(tmp_path):
-    from lu_machinery.api.monitor_context import fixture_context
+    from scripts.api.monitor_context import fixture_context
 
     return fixture_context(tmp_path)
 
@@ -706,9 +705,8 @@ class TestGetBrokerMessagesForSlug:
     def test_respects_limit_and_order(self, tmp_path):
         import sqlite3
 
-        from lu_machinery.api.monitor_context import DatabaseHandle
-        from lu_machinery.api.resilience import connect_sqlite
-
+        from scripts.api.monitor_context import DatabaseHandle
+        from scripts.api.resilience import connect_sqlite
         from scripts.project_api.curriculum_state import get_broker_messages_for_slug
 
         db_path = tmp_path / "messages.sqlite3"

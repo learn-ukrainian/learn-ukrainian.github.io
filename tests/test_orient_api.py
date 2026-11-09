@@ -10,11 +10,11 @@ import threading
 import time
 from pathlib import Path
 
-import lu_machinery.api.main as api_main
-import lu_machinery.api.state_helpers as state_helpers
 import pytest
 from fastapi.testclient import TestClient
 
+import scripts.api.main as api_main
+import scripts.api.state_helpers as state_helpers
 import scripts.project_api.orient as product_orient
 from tests.latency_budget import assert_under_budget
 
@@ -154,8 +154,8 @@ def _init_orient_git_repo(tmp_path: Path) -> Path:
 
 
 def test_health_canaries_do_not_apply_general_repairs(monkeypatch):
-    import lu_machinery.hygiene.check_primary_integrity as primary_check
-    import lu_machinery.hygiene.check_self_symlinks as symlink_check
+    import scripts.hygiene.check_primary_integrity as primary_check
+    import scripts.hygiene.check_self_symlinks as symlink_check
 
     fix_values: list[bool] = []
 

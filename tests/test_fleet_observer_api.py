@@ -6,15 +6,15 @@ import json
 import sqlite3
 from pathlib import Path
 
-import lu_machinery.api.fleet_router as fleet_router
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from lu_machinery.api import product_contribution
-from lu_machinery.api.monitor_context import MonitorContext, fixture_context
-from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
+import scripts.api.fleet_router as fleet_router
 import scripts.project_api.batch_progress as product_batch_progress
+from scripts.api import product_contribution
+from scripts.api.monitor_context import MonitorContext, fixture_context
+from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
 @pytest.fixture()
@@ -558,7 +558,7 @@ def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> Non
     """Calling fleet_reviews directly as a Python function with defaults must not
     raise AttributeError or pass Query sentinel objects into SQL/filters (#6849)."""
     _seed_plane(fleet_root)
-    from lu_machinery.api.fleet_router import fleet_reviews
+    from scripts.api.fleet_router import fleet_reviews
 
     public_repo = "learn-ukrainian/learn-ukrainian.github.io"
     result = fleet_reviews(limit=10, offset=0, repository=public_repo)

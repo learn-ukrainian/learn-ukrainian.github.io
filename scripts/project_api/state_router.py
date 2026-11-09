@@ -41,18 +41,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 try:
-    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join  # scripts.api package import (production)
 
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx
-from lu_machinery.api.repository_authority import (
-    RepositoryAuthorityError,
-    build_repository_authority,
-    preparation_data_root,
-)
-from lu_machinery.api.rules_router import _matches_etag
-from lu_machinery.api.state_helpers import (
+from scripts.api.monitor_context import MonitorContext, get_ctx
+from scripts.api.repository_authority import RepositoryAuthorityError, build_repository_authority, preparation_data_root
+from scripts.api.rules_router import _matches_etag
+from scripts.api.state_helpers import (
     cache_get,
     cache_get_or_compute,
     cache_get_or_compute_async,

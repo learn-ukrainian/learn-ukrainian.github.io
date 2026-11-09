@@ -12,7 +12,8 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
+
+from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 
 ROOT = Path(__file__).resolve().parents[1]
 READERS = (
@@ -46,16 +47,16 @@ def test_helper_fallback_only_handles_missing_scripts(reader, missing):
     block = next(
         node for node in tree.body
         if isinstance(node, ast.Try)
-        and any(isinstance(child, ast.ImportFrom) and child.module == "lu_machinery.lib.readonly_sqlite"
+        and any(isinstance(child, ast.ImportFrom) and child.module == "scripts.lib.readonly_sqlite"
                 for child in node.body)
     )
     attempted = []
 
     def controlled_import(name, *args, **kwargs):
         attempted.append(name)
-        if name == "lu_machinery.lib.readonly_sqlite":
+        if name == "scripts.lib.readonly_sqlite":
             raise ModuleNotFoundError(name=missing)
-        if name == "lu_machinery.lib.readonly_sqlite":
+        if name == "lib.readonly_sqlite":
             return SimpleNamespace(
                 SQLiteConnection=SQLiteConnection,
                 open_readonly=open_readonly,
@@ -72,12 +73,12 @@ def test_helper_fallback_only_handles_missing_scripts(reader, missing):
     if missing == "scripts":
         exec(code, namespace)
         assert namespace["open_readonly"] is open_readonly
-        assert attempted == ["lu_machinery.lib.readonly_sqlite", "lu_machinery.lib.readonly_sqlite"]
+        assert attempted == ["scripts.lib.readonly_sqlite", "lib.readonly_sqlite"]
     else:
         with pytest.raises(ModuleNotFoundError) as error:
             exec(code, namespace)
         assert error.value.name == missing
-        assert attempted == ["lu_machinery.lib.readonly_sqlite"]
+        assert attempted == ["scripts.lib.readonly_sqlite"]
 
 
 @pytest.mark.parametrize("reader, function", [

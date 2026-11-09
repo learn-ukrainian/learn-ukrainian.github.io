@@ -17,13 +17,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
-from lu_machinery.research import registry as reg
 
+import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
+from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

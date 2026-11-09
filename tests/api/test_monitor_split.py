@@ -18,14 +18,14 @@ from pathlib import Path
 import pytest
 from fastapi.routing import _IncludedRouter
 from fastapi.testclient import TestClient
-from lu_machinery.api import main as api_main
-from lu_machinery.api import product_contribution
-from lu_machinery.api.monitor_context import fixture_context
-from lu_machinery.api.product_contribution import EMPTY, ProductContribution, ProductEntryError, load_product
-from lu_machinery.ci.components import scan_imports
-from lu_machinery.ops.product_entry import ConfiguredModuleError, load_configured_module
 from starlette.routing import Match
 
+from scripts.api import main as api_main
+from scripts.api import product_contribution
+from scripts.api.monitor_context import fixture_context
+from scripts.api.product_contribution import EMPTY, ProductContribution, ProductEntryError, load_product
+from scripts.ci.components import scan_imports
+from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from tests.api.opsec_sweep import registry
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -174,8 +174,7 @@ def test_undeclared_and_escaping_product_files_are_not_served(tmp_path: Path, mo
 
 
 def test_contract_registry_composes_machinery_then_product_declarations(tmp_path: Path) -> None:
-    from lu_machinery.api import route_contracts
-
+    from scripts.api import route_contracts
     from scripts.project_api import route_contracts as product_contracts
 
     app = _app(tmp_path)
@@ -207,16 +206,16 @@ def test_no_machinery_api_module_imports_product_code() -> None:
 
 def test_loader_refuses_a_bad_product_root(tmp_path: Path) -> None:
     with pytest.raises(ConfiguredModuleError, match="absolute"):
-        load_configured_module("lu_machinery.lib.readonly_sqlite", product_root=Path("relative"))
+        load_configured_module("scripts.lib.readonly_sqlite", product_root=Path("relative"))
     with pytest.raises(ConfiguredModuleError, match="no scripts/ directory"):
-        load_configured_module("lu_machinery.lib.readonly_sqlite", product_root=tmp_path)
+        load_configured_module("scripts.lib.readonly_sqlite", product_root=tmp_path)
     (tmp_path / "scripts").mkdir()
     with pytest.raises(ConfiguredModuleError, match="not a file in this checkout"):
-        load_configured_module("lu_machinery.lib.readonly_sqlite", product_root=tmp_path)
+        load_configured_module("scripts.lib.readonly_sqlite", product_root=tmp_path)
     with pytest.raises(ConfiguredModuleError, match="SQLite"):
         load_configured_module("scripts.sqlite3", product_root=REPO_ROOT)
-    assert load_configured_module("lu_machinery.lib.readonly_sqlite", product_root=REPO_ROOT).__name__ == (
-        "lu_machinery.lib.readonly_sqlite"
+    assert load_configured_module("scripts.lib.readonly_sqlite", product_root=REPO_ROOT).__name__ == (
+        "scripts.lib.readonly_sqlite"
     )
 
 

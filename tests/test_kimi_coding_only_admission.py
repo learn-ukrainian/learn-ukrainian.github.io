@@ -17,10 +17,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.agent_runtime import kimi_admission
-from lu_machinery.fleet_comms.endpoints import load_endpoint_registry
-from lu_machinery.fleet_comms.request_executor import RequestExecutor
-
+from scripts.agent_runtime import kimi_admission
+from scripts.fleet_comms.endpoints import load_endpoint_registry
+from scripts.fleet_comms.request_executor import RequestExecutor
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -729,7 +728,7 @@ def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch
     real_import = builtins.__import__
 
     def without_catalog(name, *args, **kwargs):
-        if name == "lu_machinery.review.model_catalog":
+        if name == "scripts.review.model_catalog":
             raise ModuleNotFoundError("catalog unavailable")
         return real_import(name, *args, **kwargs)
 
@@ -742,7 +741,7 @@ def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch
 
 
 def test_9312_kimi_refusal_surfaces_malformed_catalog(monkeypatch):
-    from lu_machinery.review import model_catalog
+    from scripts.review import model_catalog
 
     def malformed():
         raise model_catalog.ModelCatalogError("invalid model catalog")
@@ -754,7 +753,7 @@ def test_9312_kimi_refusal_surfaces_malformed_catalog(monkeypatch):
 
 @pytest.mark.parametrize("catalog", [{}, {"models": [], "review_candidates": {"bad": None}}])
 def test_kimi_refusal_surfaces_invalid_alternative_seat_data(monkeypatch, catalog):
-    from lu_machinery.review import model_catalog
+    from scripts.review import model_catalog
 
     monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: catalog)
     message = kimi_admission.format_refusal("kimi", ["review dispatches"])
@@ -762,7 +761,7 @@ def test_kimi_refusal_surfaces_invalid_alternative_seat_data(monkeypatch, catalo
 
 
 def test_kimi_refusal_formats_unexpected_catalog_errors_without_raising(monkeypatch):
-    from lu_machinery.review import model_catalog
+    from scripts.review import model_catalog
 
     def unexpected():
         raise RuntimeError("unexpected catalog bug")
@@ -774,7 +773,7 @@ def test_kimi_refusal_formats_unexpected_catalog_errors_without_raising(monkeypa
 
 
 def test_9386_kimi_refusal_handles_empty_alternative_catalog(monkeypatch):
-    from lu_machinery.review import model_catalog
+    from scripts.review import model_catalog
 
     monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: {
         "models": {}, "review_candidates": {}, "orchestrator_seats": {}, "review_scheduler": {"endpoints": {}},
@@ -802,7 +801,7 @@ def test_9386_kimi_refusal_handles_empty_alternative_catalog(monkeypatch):
     ],
 )
 def test_runner_invoke_refuses_before_attribution_or_trail_provisioning(tmp_path, monkeypatch, mode, tool_config):
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     monkeypatch.setattr(runner, "resolve_invocation_attribution", _fail)
     monkeypatch.setattr(runner, "prepare_trail_isolation", _fail)
@@ -812,7 +811,7 @@ def test_runner_invoke_refuses_before_attribution_or_trail_provisioning(tmp_path
 
 
 def test_inter_agent_route_refuses_a_kimi_model_override():
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     for participant, model in (("kimi", None), ("kimicc", None), ("claude", "kimi-code/k3")):
         with pytest.raises(runner.InterAgentTransportError, match=_TOKEN):
@@ -820,7 +819,7 @@ def test_inter_agent_route_refuses_a_kimi_model_override():
 
 
 def test_no_non_kimi_acp_participant_pins_a_kimi_model():
-    from lu_machinery.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from scripts.agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     for name, route in ACPX_SUPPORTED_PARTICIPANTS.items():
         if kimi_admission.is_kimi_model(route.get("model")):
@@ -868,8 +867,7 @@ def _owned_config(*paths: str, harness: str | None = None) -> dict:
 @pytest.fixture
 def launch_probe(monkeypatch):
     """Record every launch plan the runtime builds; nothing is spawned."""
-    from lu_machinery.agent_runtime import runner
-
+    from scripts.agent_runtime import runner
     from scripts.agent_runtime.adapters import kimi as kimi_adapter
 
     class _Reached(Exception):
@@ -888,7 +886,7 @@ def launch_probe(monkeypatch):
 
 @pytest.mark.parametrize("owned", [(), (_UKRAINIAN_COMPONENT,)])
 def test_the_runtime_refuses_kimi_workspace_write_without_admitted_ownership(launch_probe, owned):
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     planned, _ = launch_probe
     with pytest.raises(kimi_admission.KimiAdmissionRefused, match=_TOKEN) as refused:
@@ -901,7 +899,7 @@ def test_the_runtime_refuses_kimi_workspace_write_without_admitted_ownership(lau
 
 def test_the_runtime_refuses_a_retired_kimi_even_when_ownership_is_admitted(launch_probe):
     """OO-58: an admitted Cyrillic-free path still does not launch a retired Kimi model."""
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     planned, _reached = launch_probe
     with pytest.raises(ValueError, match="is retired in the model catalog"):
@@ -958,8 +956,7 @@ def test_the_native_adapter_refuses_a_retired_model_before_planning_an_admitted_
 
 
 def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(tmp_path, monkeypatch):
-    from lu_machinery.agent_runtime import runner
-
+    from scripts.agent_runtime import runner
     from scripts.agent_runtime.adapters import kimi as kimi_adapter
 
     def no_tempdir(*_args, **_kwargs):
@@ -989,7 +986,7 @@ def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(
 
 
 def test_trail_isolation_refuses_kimi():
-    from lu_machinery.agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
+    from scripts.agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
 
     with pytest.raises(TrailIsolationError, match=_TOKEN):
         prepare_trail_isolation(
@@ -1107,9 +1104,8 @@ def test_a_worker_push_fails_and_the_pre_push_hook_refuses_cyrillic(bounded_repo
 
 
 def test_the_kimi_worker_environment_carries_no_push_credential(bounded_repo, monkeypatch):
-    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
-
     from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.env_sanitize import build_agent_env
 
     for name in ("GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN"):
         monkeypatch.setenv(name, "ghp_" + "x" * 36)
@@ -1152,8 +1148,8 @@ def test_remove_takes_the_boundary_down(bounded_repo):
 
 
 def test_compat_ask_refuses_before_telemetry(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _acp_compat
-    from lu_machinery.telemetry import legacy_bridge
+    from scripts.ai_agent_bridge import _acp_compat
+    from scripts.telemetry import legacy_bridge
 
     monkeypatch.setattr(legacy_bridge, "start_bridge_invocation_safely", _fail)
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", _fail)
@@ -1164,7 +1160,7 @@ def test_compat_ask_refuses_before_telemetry(monkeypatch):
 
 
 def test_compat_ask_impl_refuses_before_the_job_host_forward(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _acp_compat, _job_host_forward
+    from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
 
     monkeypatch.setattr(_job_host_forward, "maybe_forward_compat_ask", _fail)
     with pytest.raises(ValueError, match=_TOKEN):
@@ -1172,8 +1168,8 @@ def test_compat_ask_impl_refuses_before_the_job_host_forward(monkeypatch):
 
 
 def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypatch, tmp_path):
-    from lu_machinery.ai_agent_bridge import _acp_compat
-    from lu_machinery.fleet_comms import authority
+    from scripts.ai_agent_bridge import _acp_compat
+    from scripts.fleet_comms import authority
 
     config = tmp_path / "agent_fallback_substitutions.yaml"
     config.write_text("dispatch_fallbacks:\n  codex: kimi\n", encoding="utf-8")
@@ -1191,7 +1187,7 @@ def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypat
 
 @pytest.mark.parametrize("extra", [[], ["--pr", "9158"], ["--review"]])
 def test_ask_kimi_cli_refuses_before_pr_resolution_or_dispatch(monkeypatch, extra):
-    from lu_machinery.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
+    from scripts.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
 
     monkeypatch.setattr(_cli, "_resolve_same_repo_pr_head", _fail)
     monkeypatch.setattr(_acp_compat, "run_compat_ask", _fail)
@@ -1203,7 +1199,7 @@ def test_ask_kimi_cli_refuses_before_pr_resolution_or_dispatch(monkeypatch, extr
 
 
 def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _dispatch_wrappers
+    from scripts.ai_agent_bridge import _dispatch_wrappers
 
     monkeypatch.setattr(_dispatch_wrappers, "_prompt_directory", _fail)
     monkeypatch.setattr(_dispatch_wrappers.subprocess, "run", _fail)
@@ -1214,10 +1210,9 @@ def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
 
 
 def test_ask_review_dispatch_command_never_selects_a_kimi_harness(tmp_path):
-    from lu_machinery.agent_runtime.target_admission import resolve_and_admit
-    from lu_machinery.ai_agent_bridge import _dispatch_wrappers
-
     from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.ai_agent_bridge import _dispatch_wrappers
 
     (target,) = resolve_and_admit(("claude",), mode=REVIEW_MODE, review=True)
     cmd = _dispatch_wrappers.build_ask_review_dispatch_command(target, "t", tmp_path / "p.md", effort=None)
@@ -1225,7 +1220,7 @@ def test_ask_review_dispatch_command_never_selects_a_kimi_harness(tmp_path):
 
 
 def test_authority_enqueue_request_refuses_before_any_write():
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     service = AuthorityService.__new__(AuthorityService)  # no connection: any write would raise AttributeError
     with pytest.raises(ValueError, match=_TOKEN):
@@ -1235,7 +1230,7 @@ def test_authority_enqueue_request_refuses_before_any_write():
 
 
 def test_authority_enqueue_discussion_refuses_before_any_write():
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     service = AuthorityService.__new__(AuthorityService)
     with pytest.raises(ValueError, match=_TOKEN):
@@ -1268,7 +1263,7 @@ def test_fleet_request_to_kimi_is_refused_before_any_insert():
 def test_acp_discussion_refuses_on_effective_seats_and_models_before_the_plane(
     tmp_path, monkeypatch, participants, models
 ):
-    from lu_machinery.agent_runtime import acpx_discuss
+    from scripts.agent_runtime import acpx_discuss
 
     monkeypatch.setattr(acpx_discuss, "AcpxDiscussionController", _fail)
     monkeypatch.setattr(acpx_discuss, "ArtifactStore", _fail)
@@ -1288,8 +1283,8 @@ def test_acp_discussion_refuses_on_effective_seats_and_models_before_the_plane(
 
 @pytest.mark.parametrize(("with_agents", "models"), [("claude,kimicc", None), ("claude,codex", "claude:kimi-code/k3")])
 def test_ab_discuss_refuses_on_effective_models_before_any_channel_write(monkeypatch, capsys, with_agents, models):
-    from lu_machinery.ai_agent_bridge import _channels_cli
-    from lu_machinery.fleet_comms import authority
+    from scripts.ai_agent_bridge import _channels_cli
+    from scripts.fleet_comms import authority
 
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
     monkeypatch.setattr(authority, "AuthorityService", _fail)
@@ -1301,7 +1296,7 @@ def test_ab_discuss_refuses_on_effective_models_before_any_channel_write(monkeyp
 
 
 def test_ab_inbox_run_for_kimi_is_refused_before_housekeeping(monkeypatch, capsys):
-    from lu_machinery.ai_agent_bridge import _channels, _channels_cli
+    from scripts.ai_agent_bridge import _channels, _channels_cli
 
     monkeypatch.setattr(_channels, "expire_stale_deliveries", _fail)
     args = types.SimpleNamespace(agent="kimi", once=True, until_idle=False, max_messages=None)
@@ -1310,7 +1305,7 @@ def test_ab_inbox_run_for_kimi_is_refused_before_housekeeping(monkeypatch, capsy
 
 
 def test_inbox_worker_refuses_kimi_before_any_claim(monkeypatch):
-    from lu_machinery.ai_agent_bridge import _channels, _inbox
+    from scripts.ai_agent_bridge import _channels, _inbox
 
     monkeypatch.setattr(_inbox, "_claim_next_thread", _fail)
     monkeypatch.setattr(_channels, "expire_stale_deliveries", _fail)
@@ -1329,7 +1324,7 @@ def broker_db(tmp_path, monkeypatch):
     ``unchanged()`` compares the whole database with its seeded dump, and
     ``connects`` records every SQLite connection opened after seeding.
     """
-    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _db, _messaging, _process
+    from scripts.ai_agent_bridge import _ask_lifecycle, _db, _messaging, _process
 
     monkeypatch.setattr(_db, "DB_PATH", tmp_path / "messages.db")
     seed = _db.get_db()
@@ -1373,7 +1368,7 @@ _SKIPPED = "skipped: Kimi is not a bridge recipient"
 
 @pytest.mark.parametrize("message_id", [7, 8])
 def test_a_kimi_addressed_message_is_never_processed(broker_db, capsys, message_id):
-    from lu_machinery.ai_agent_bridge import _process
+    from scripts.ai_agent_bridge import _process
 
     assert _process.process_message_for_recipient(message_id) is None
     assert capsys.readouterr().out.count(_SKIPPED) == 1
@@ -1382,7 +1377,7 @@ def test_a_kimi_addressed_message_is_never_processed(broker_db, capsys, message_
 
 
 def test_process_refuses_a_kimi_model_before_the_broker_is_opened(broker_db):
-    from lu_machinery.ai_agent_bridge import _process
+    from scripts.ai_agent_bridge import _process
 
     with pytest.raises(ValueError, match=_TOKEN):
         _process.process_message_for_recipient(9, model="kimi-code/k3")
@@ -1392,7 +1387,7 @@ def test_process_refuses_a_kimi_model_before_the_broker_is_opened(broker_db):
 @pytest.mark.parametrize("argv", [["process", "9", "--model", "kimi-code/k3"], ["process-kimi", "7"]])
 def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
     """A Kimi seat or model named on the command line is a Kimi request: refused before the broker is opened."""
-    from lu_machinery.ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     with pytest.raises(SystemExit, match=_TOKEN):
         _cli._dispatch_command(_cli._build_parser().parse_args(argv))
@@ -1403,7 +1398,7 @@ def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
 @pytest.mark.parametrize("argv", [["process", "7"], ["process", "8"], ["process-claude", "7"], ["process-claude", "8"]])
 def test_process_cli_skips_a_stored_kimi_row_and_records_nothing(broker_db, capsys, argv):
     """A generic drain reads the broker, then skips a stored Kimi-addressed row, reporting it once."""
-    from lu_machinery.ai_agent_bridge import _cli
+    from scripts.ai_agent_bridge import _cli
 
     _cli._dispatch_command(_cli._build_parser().parse_args(argv))
     assert capsys.readouterr().out.count(_SKIPPED) == 1
@@ -1411,7 +1406,7 @@ def test_process_cli_skips_a_stored_kimi_row_and_records_nothing(broker_db, caps
 
 
 def test_detached_ask_worker_refuses_a_kimi_target_unopened(broker_db, monkeypatch):
-    from lu_machinery.ai_agent_bridge import _ask_lifecycle
+    from scripts.ai_agent_bridge import _ask_lifecycle
 
     monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
     with pytest.raises(SystemExit, match=_TOKEN):
@@ -1422,7 +1417,7 @@ def test_detached_ask_worker_refuses_a_kimi_target_unopened(broker_db, monkeypat
 
 @pytest.mark.parametrize("message_id", [7, 8])
 def test_detached_ask_worker_skips_a_stored_kimi_row(broker_db, monkeypatch, capsys, message_id):
-    from lu_machinery.ai_agent_bridge import _ask_lifecycle
+    from scripts.ai_agent_bridge import _ask_lifecycle
 
     monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
     assert _ask_lifecycle.process_background_ask(message_id, "claude") is None
@@ -1431,7 +1426,7 @@ def test_detached_ask_worker_skips_a_stored_kimi_row(broker_db, monkeypatch, cap
 
 
 def test_the_query_only_connection_never_creates_or_writes_the_db(broker_db, tmp_path, monkeypatch):
-    from lu_machinery.ai_agent_bridge import _db
+    from scripts.ai_agent_bridge import _db
 
     conn = _db.connect_readonly()
     with pytest.raises(sqlite3.OperationalError):
@@ -1477,7 +1472,7 @@ def write_trap(tmp_path, monkeypatch):
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
-    from lu_machinery.ai_agent_bridge import _db
+    from scripts.ai_agent_bridge import _db
 
     monkeypatch.setattr(_db, "DB_PATH", state / "broker" / "messages.db")
     attempts: list[str] = []
@@ -1529,13 +1524,13 @@ def write_trap(tmp_path, monkeypatch):
 
 
 def _acp_ask(trap):
-    from lu_machinery.ai_agent_bridge import _acp_compat
+    from scripts.ai_agent_bridge import _acp_compat
 
     return _acp_compat.run_compat_ask("kimi", "Consult on this design.", task_id="kimi-consult")
 
 
 def _acp_inter_agent(trap):
-    from lu_machinery.agent_runtime import runner
+    from scripts.agent_runtime import runner
 
     trap.monkeypatch.setenv(runner.ACPX_TRANSPORT_ENV, "active")
     return runner.invoke_inter_agent(
@@ -1544,7 +1539,7 @@ def _acp_inter_agent(trap):
 
 
 def _acp_discuss(trap):
-    from lu_machinery.agent_runtime import acpx_discuss
+    from scripts.agent_runtime import acpx_discuss
 
     return acpx_discuss.run_discussion(
         prompt="Compare the options.",
@@ -1559,7 +1554,7 @@ def _acp_discuss(trap):
 
 def _bridge(*argv: str, legacy_plane: bool = False):
     def call(trap):
-        from lu_machinery.ai_agent_bridge import _channels_cli, _cli
+        from scripts.ai_agent_bridge import _channels_cli, _cli
 
         if legacy_plane:  # authority mode retires `inbox run` before the Kimi gate
             trap.monkeypatch.setattr(_channels_cli, "_legacy_writes_retired", lambda: False)
@@ -1580,8 +1575,8 @@ def _seed_broker(live_wal: bool) -> list[sqlite3.Connection]:
     stays open on each DB with newer, un-checkpointed inserts and routing
     updates, so ``-wal``/``-shm`` exist; the caller closes the returned writers.
     """
-    from lu_machinery.ai_agent_bridge import _db
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.ai_agent_bridge import _db
+    from scripts.fleet_comms.authority import AuthorityService
 
     conn = _db.get_db()
     assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
@@ -1632,7 +1627,7 @@ def _stat_tree(root: Path) -> dict[str, tuple[int, int, bytes]]:
 
 def _fleet(*argv: str):
     def call(trap):
-        from lu_machinery.fleet_comms import cli as fleet_cli
+        from scripts.fleet_comms import cli as fleet_cli
 
         return fleet_cli.main([*argv, "--root", str(trap.state / "plane")])
 
@@ -1641,7 +1636,7 @@ def _fleet(*argv: str):
 
 def _send(**kwargs):
     def call(_trap):
-        from lu_machinery.ai_agent_bridge import _messaging
+        from scripts.ai_agent_bridge import _messaging
 
         return _messaging.send_message("Consult.", **kwargs)
 
@@ -1650,7 +1645,7 @@ def _send(**kwargs):
 
 def _post(**kwargs):
     def call(_trap):
-        from lu_machinery.ai_agent_bridge import _channels
+        from scripts.ai_agent_bridge import _channels
 
         return _channels.post("ops", "claude", "Consult.", **kwargs)
 
@@ -1658,7 +1653,7 @@ def _post(**kwargs):
 
 
 def _new_channel(_trap):
-    from lu_machinery.ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels
 
     return _channels.create_channel("kimi-ops", subscribers=["kimi"])
 
@@ -1760,7 +1755,7 @@ _DATA_PAYLOADS = {
 
 
 def _entry_send_message(_trap, payload, _path):
-    from lu_machinery.ai_agent_bridge import _messaging
+    from scripts.ai_agent_bridge import _messaging
 
     return _messaging.send_message("Consult.", to_llm="claude", data=json.dumps(payload))
 
@@ -1774,13 +1769,13 @@ def _entry_ask_cli(trap, _payload, path):
 
 
 def _entry_post(_trap, payload, _path):
-    from lu_machinery.ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels
 
     return _channels.post("ops", "claude", "Consult.", to_agents=["claude"], attachments=[payload])
 
 
 def _entry_acp(_trap, payload, _path):
-    from lu_machinery.ai_agent_bridge import _acp_compat
+    from scripts.ai_agent_bridge import _acp_compat
 
     return _acp_compat.run_compat_ask("claude", "Consult.", task_id="t", data=json.dumps(payload))
 
@@ -1825,7 +1820,7 @@ def test_kimi_named_in_request_data_refuses_with_zero_effects(write_trap, capsys
 
 def test_send_message_stores_no_kimi_row_for_data_supplied_model(write_trap):
     """The probe that found the gap: neutral recipient, Kimi model only in ``data``."""
-    from lu_machinery.ai_agent_bridge import _db, _messaging
+    from scripts.ai_agent_bridge import _db, _messaging
 
     with pytest.raises(ValueError, match=_TOKEN):
         _messaging.send_message("q", to_llm="claude", data='{"to_model":"kimi-code/k3"}', quiet=True)
@@ -1834,7 +1829,7 @@ def test_send_message_stores_no_kimi_row_for_data_supplied_model(write_trap):
 
 def test_explicit_model_replaces_the_data_model_as_before(write_trap, monkeypatch):
     """An explicit non-Kimi model overrides a data ``to_model``: admitted, and the explicit model is stored."""
-    from lu_machinery.ai_agent_bridge import _db, _messaging
+    from scripts.ai_agent_bridge import _db, _messaging
 
     monkeypatch.setattr(_messaging.subprocess, "run", lambda *_a, **_k: None)
     msg_id = _messaging.send_message(
@@ -1850,7 +1845,7 @@ def test_explicit_model_replaces_the_data_model_as_before(write_trap, monkeypatc
 
 def test_non_json_and_neutral_data_stay_admitted():
     """Plain text, JSON arrays and neutral selector values are not refused."""
-    from lu_machinery.ai_agent_bridge import _acp_compat
+    from scripts.ai_agent_bridge import _acp_compat
 
     for data in (None, "plain text naming kimi in prose", '["kimi"]', '{"to_model":"claude-opus-5-5","note":"kimi"}'):
         assert _acp_compat.require_compat_target("claude", data=data) == "claude"
@@ -1859,7 +1854,7 @@ def test_non_json_and_neutral_data_stay_admitted():
 
 def test_authority_request_metadata_is_gated(tmp_path):
     """``enqueue_request`` refuses a Kimi model under any model key before writing."""
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
         for key in kimi_admission.MODEL_SELECTOR_KEYS:
@@ -1884,9 +1879,9 @@ def _kimi_effect_trap():
     usage telemetry. Every broker connection also gets an authorizer that
     records and denies any INSERT, UPDATE or DELETE on ``messages``.
     """
-    from lu_machinery.agent_runtime import runner as agent_runner
-    from lu_machinery.agent_runtime import runner as scripts_runner
-    from lu_machinery.ai_agent_bridge import (
+    from agent_runtime import runner as agent_runner
+    from scripts.agent_runtime import runner as scripts_runner
+    from scripts.ai_agent_bridge import (
         _acp_compat,
         _agy,
         _ask_lifecycle,
@@ -1898,7 +1893,7 @@ def _kimi_effect_trap():
         _opencode,
         _process,
     )
-    from lu_machinery.telemetry import legacy_bridge
+    from scripts.telemetry import legacy_bridge
 
     effects: list[str] = []
 
@@ -1968,7 +1963,7 @@ def _stored_drain_rows(writer: sqlite3.Connection) -> None:
 
 def _direct(message_id):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _process
+        from scripts.ai_agent_bridge import _process
 
         return _process.process_message_for_recipient(message_id)
 
@@ -1977,7 +1972,7 @@ def _direct(message_id):
 
 def _cli_argv(*argv):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _cli
+        from scripts.ai_agent_bridge import _cli
 
         return _cli._dispatch_command(_cli._build_parser().parse_args(list(argv)))
 
@@ -1986,7 +1981,7 @@ def _cli_argv(*argv):
 
 def _interactive(message_id):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _cli
+        from scripts.ai_agent_bridge import _cli
 
         return _cli._dispatch_interactive("process", ["process", str(message_id)])
 
@@ -1995,7 +1990,7 @@ def _interactive(message_id):
 
 def _target(message_id, target):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _ask_lifecycle
+        from scripts.ai_agent_bridge import _ask_lifecycle
 
         return _ask_lifecycle._process_target(message_id, target, {"no_timeout": True})
 
@@ -2004,7 +1999,7 @@ def _target(message_id, target):
 
 def _background(message_id, target):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _ask_lifecycle
+        from scripts.ai_agent_bridge import _ask_lifecycle
 
         return _ask_lifecycle.process_background_ask(message_id, target)
 
@@ -2013,7 +2008,7 @@ def _background(message_id, target):
 
 def _batch(seat):
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _cli, _codex
+        from scripts.ai_agent_bridge import _cli, _codex
 
         return {
             "claude": _cli.process_all_claude,
@@ -2028,7 +2023,7 @@ def _watchdog(agent, message_id=None):
     """The ask watchdog sweep, with a dead worker's launch record naming *agent*."""
 
     def call(_state):
-        from lu_machinery.ai_agent_bridge import _ask_lifecycle
+        from scripts.ai_agent_bridge import _ask_lifecycle
 
         return _ask_lifecycle.run_ask_watchdog(message_id)
 
@@ -2073,7 +2068,7 @@ def test_generic_drains_skip_stored_kimi_rows_before_any_kimi_effect(tmp_path, m
     The rows include uncheckpointed inserts and routing updates held in a
     live WAL (a writer stays open), and the trap is armed for the whole call.
     """
-    from lu_machinery.ai_agent_bridge import _ask_lifecycle, _db
+    from scripts.ai_agent_bridge import _ask_lifecycle, _db
 
     monkeypatch.setattr(_db, "DB_PATH", tmp_path / "state" / "broker" / "messages.db")
     broker, authority = _seed_broker(live_wal=True)
@@ -2105,7 +2100,7 @@ def test_generic_drains_skip_stored_kimi_rows_before_any_kimi_effect(tmp_path, m
 
 def test_a_kimi_subscriber_gets_no_delivery(tmp_path):
     """An existing Kimi subscriber row stays, but a fan-out publish never creates a delivery for it."""
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
         service.create_channel("ops", subscribers=["claude", "kimi", "kimicc"])
@@ -2122,7 +2117,7 @@ def test_a_kimi_subscriber_gets_no_delivery(tmp_path):
 
 @pytest.mark.parametrize("broadcast", [False, True])
 def test_channel_default_recipients_skip_kimi_seats(monkeypatch, broadcast):
-    from lu_machinery.ai_agent_bridge import _channels, _channels_cli
+    from scripts.ai_agent_bridge import _channels, _channels_cli
 
     channel = {"subscribers": ["claude", "kimi", "kimicc", "codex"]}
     monkeypatch.setattr(_channels, "live_agents", lambda: ["claude", "kimi", "kimicc", "codex"])
@@ -2145,10 +2140,10 @@ def delivery_db(tmp_path, monkeypatch):
     filter would reach them first. Returns ``rows()``, the full deliveries
     table keyed by id.
     """
-    from lu_machinery.ai_agent_bridge import _channels, _db
+    from scripts.ai_agent_bridge import _channels, _db
 
     db_file = tmp_path / "messages.db"
-    monkeypatch.setattr("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file)
+    monkeypatch.setattr("scripts.ai_agent_bridge._config.DB_PATH", db_file)
     monkeypatch.setattr(_db, "DB_PATH", db_file)
     monkeypatch.setattr(_channels, "WAKE_ROOT", tmp_path / "wake")
     _db.init_db().close()
@@ -2198,7 +2193,7 @@ def _changed(before: dict[str, tuple], after: dict[str, tuple]) -> set[str]:
 
 def _sweep(name):
     def call():
-        from lu_machinery.ai_agent_bridge import _channels, _reconcile
+        from scripts.ai_agent_bridge import _channels, _reconcile
 
         return {
             "claim": lambda: _channels.claim_next_delivery("claude"),
@@ -2236,14 +2231,14 @@ def test_the_inbox_drain_skips_a_stored_kimi_delivery_before_claim_writes_or_tel
     The drain's own sweeps expire the old Claude rows and it delivers a fresh
     one (non-Kimi paths unchanged).
     """
-    from lu_machinery.agent_runtime.result import Result
-    from lu_machinery.ai_agent_bridge import _channels, _inbox
+    from agent_runtime.result import Result
+    from scripts.ai_agent_bridge import _channels, _inbox
 
     telemetry: list[tuple] = []
     for name in ("emit_delivery_failed", "emit_delivery_delivered", "emit_reply_started", "emit_reply_complete"):
         monkeypatch.setattr(_inbox, name, lambda *args, _name=name, **kwargs: telemetry.append((_name, args, kwargs)))
     monkeypatch.setattr(
-        "lu_machinery.fleet_comms.bottleneck_alerts.scan_bottlenecks_at_inbox_checkpoint", lambda **_kwargs: None
+        "scripts.fleet_comms.bottleneck_alerts.scan_bottlenecks_at_inbox_checkpoint", lambda **_kwargs: None
     )
     invoked: list[str] = []
 
@@ -2282,7 +2277,7 @@ def test_the_inbox_drain_skips_a_stored_kimi_delivery_before_claim_writes_or_tel
 
 
 def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tmp_path):
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
         message = service.publish_message(sender="user", body="q", recipients=["claude"], deadline_at=_OLD)
@@ -2306,7 +2301,7 @@ def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tm
 
 def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path):
     """A stored request to a Kimi seat, or whose message metadata pins a Kimi model, is never requeued."""
-    from lu_machinery.fleet_comms.request_executor import RequestExecutor
+    from scripts.fleet_comms.request_executor import RequestExecutor
 
     with RequestExecutor(root=tmp_path) as executor:
         kept = executor.create_request(recipient="codex", body="ping", metadata={"model": "gpt-6.1-sol"})
@@ -2327,9 +2322,8 @@ def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path
 
 
 def test_create_request_refuses_a_kimi_model_in_its_metadata_before_any_insert(tmp_path):
-    from lu_machinery.fleet_comms.request_executor import RequestExecutor
-
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.fleet_comms.request_executor import RequestExecutor
 
     with RequestExecutor(root=tmp_path) as executor:
         conn = executor.store.connection
@@ -2340,7 +2334,7 @@ def test_create_request_refuses_a_kimi_model_in_its_metadata_before_any_insert(t
 
 
 def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(broker_db, capsys):
-    from lu_machinery.ai_agent_bridge import _broker, _db
+    from scripts.ai_agent_bridge import _broker, _db
 
     check = sqlite3.connect(_db.DB_PATH)
     check.execute("UPDATE messages SET timestamp = ?", (_OLD,))
@@ -2360,7 +2354,7 @@ _FUTURE = "2999-01-01T00:00:00Z"
 
 def _legacy_job(service, payload, *, kind="request", deadline_at=None, lease_expires_at=None):
     """A stored job written before enqueue refused Kimi (bypasses admission, as legacy rows did)."""
-    from lu_machinery.fleet_comms.contracts import new_id
+    from scripts.fleet_comms.contracts import new_id
 
     with service._write_transaction():
         job = service._enqueue_job_tx(
@@ -2389,7 +2383,7 @@ def job_plane(tmp_path):
     controls, state)`` where ``state()`` snapshots the job, event and
     dead-letter rows per job.
     """
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     service = AuthorityService(root=tmp_path / "plane")
     kimi_ids = {
@@ -2470,7 +2464,7 @@ def test_generic_job_reclaim_and_claims_leave_stored_kimi_jobs_unwritten(job_pla
 @pytest.mark.parametrize("operation", ["claim_job", "retry_job", "redrive_job"])
 def test_a_named_stored_kimi_job_is_refused_unwritten(job_plane, operation):
     """Claiming, retrying or redriving a stored Kimi job by id is refused before any write."""
-    from lu_machinery.fleet_comms.authority import AuthorityServiceError
+    from scripts.fleet_comms.authority import AuthorityServiceError
 
     service, kimi_ids, _controls, state = job_plane
     job_id = kimi_ids["seat-expired"]
@@ -2500,7 +2494,7 @@ def test_an_unreadable_job_payload_is_left_unwritten(job_plane):
 
 def test_a_delivery_of_a_kimi_model_request_is_never_claimed_or_reclaimed(tmp_path):
     """A stored delivery to Claude of a request pinned to a Kimi model is passed over by claims and reclaims."""
-    from lu_machinery.fleet_comms.authority import AuthorityService
+    from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
         legacy = service.publish_message(sender="user", body="old", recipients=["claude"], deadline_at=_FUTURE)
@@ -2540,7 +2534,7 @@ def message_db(tmp_path, monkeypatch):
     Every row is old, acknowledged-or-timed-out and due for a generic write.
     Returns ``rows()``, the messages table keyed by id.
     """
-    from lu_machinery.ai_agent_bridge import _broker, _db
+    from scripts.ai_agent_bridge import _broker, _db
 
     db_file = tmp_path / "messages.db"
     monkeypatch.setattr(_db, "DB_PATH", db_file)
@@ -2574,7 +2568,7 @@ _KIMI_MESSAGES = (1, 2, 3)
 
 
 def test_ack_all_leaves_a_stored_kimi_model_message_unacknowledged(message_db, capsys):
-    from lu_machinery.ai_agent_bridge import _messaging
+    from scripts.ai_agent_bridge import _messaging
 
     before = message_db()
     _messaging.acknowledge_all("claude", consumed_by_live_driver=True)
@@ -2584,7 +2578,7 @@ def test_ack_all_leaves_a_stored_kimi_model_message_unacknowledged(message_db, c
 
 
 def test_timeout_notices_neither_show_nor_mark_a_stored_kimi_ask(message_db, capsys):
-    from lu_machinery.ai_agent_bridge import _ask_lifecycle
+    from scripts.ai_agent_bridge import _ask_lifecycle
 
     before = message_db()
     assert _ask_lifecycle.print_timeout_notice() == [4, 5]
@@ -2596,7 +2590,7 @@ def test_timeout_notices_neither_show_nor_mark_a_stored_kimi_ask(message_db, cap
 
 def test_retention_keeps_stored_kimi_messages_and_deliveries(message_db, delivery_db):
     """``ab cleanup`` retention deletes old terminal rows but keeps stored Kimi ones and their channel messages."""
-    from lu_machinery.ai_agent_bridge import _broker, _db
+    from scripts.ai_agent_bridge import _broker, _db
 
     conn = _db.get_db()
     conn.execute("UPDATE messages SET acknowledged = 1")
@@ -2620,7 +2614,7 @@ def test_retention_keeps_stored_kimi_messages_and_deliveries(message_db, deliver
 
 def test_the_live_consumption_backfill_leaves_a_stored_kimi_message_as_it_is(tmp_path, monkeypatch):
     """The one-time ``consumed_by_live_driver`` backfill grandfathers acknowledged rows, except stored Kimi ones."""
-    from lu_machinery.ai_agent_bridge import _db
+    from scripts.ai_agent_bridge import _db
 
     db_file = tmp_path / "messages.db"
     monkeypatch.setattr(_db, "DB_PATH", db_file)

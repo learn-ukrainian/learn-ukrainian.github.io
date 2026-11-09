@@ -8,7 +8,8 @@ from typing import cast
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+
+from scripts.api.monitor_context import MonitorContext, get_ctx
 
 from .context import product_roots, sources_db
 from .curriculum_state import monitor_surface

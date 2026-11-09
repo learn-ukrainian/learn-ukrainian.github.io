@@ -19,8 +19,9 @@ from typing import Any, cast
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import (
+
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import (
     cache_get_with_age,
     cache_invalidate,
     cache_set,
@@ -58,10 +59,10 @@ from .state_coverage import compute_summary
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 try:
-    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
-from lu_machinery.research_quality import assess_research_compat, find_research_path
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
+from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)

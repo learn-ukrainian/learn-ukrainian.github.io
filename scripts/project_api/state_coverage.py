@@ -13,11 +13,11 @@ from pathlib import Path
 import yaml
 
 try:
-    from lu_machinery.path_safety import trusted_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import trusted_join  # scripts.project_api package import (production)
+    from ..path_safety import trusted_join  # scripts.project_api package import (production)
 
-from lu_machinery.api import config
+from scripts.api import config
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 from .curriculum_state import (
@@ -37,7 +37,7 @@ from .curriculum_state import V6_PHASE_ORDER as V6_PHASES
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.research_quality import assess_research_compat, find_research_path
+from research_quality import assess_research_compat, find_research_path
 
 from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
 

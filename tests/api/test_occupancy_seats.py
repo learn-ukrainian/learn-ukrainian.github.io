@@ -9,14 +9,14 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from lu_machinery.api import product_contribution
-from lu_machinery.api.monitor_context import fixture_context
-from lu_machinery.api.occupancy import router as occupancy_router
-from lu_machinery.api.occupancy_local import write_marker
-from lu_machinery.session_streams.db import SessionStreamDatabase
-from lu_machinery.session_streams.model import LeaseHolder
-from lu_machinery.session_streams.store import SessionStreamStore
 
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.model import LeaseHolder
+from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.api import product_contribution
+from scripts.api.monitor_context import fixture_context
+from scripts.api.occupancy import router as occupancy_router
+from scripts.api.occupancy_local import write_marker
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import atlas_jobs_router as load_mod
 from tests import _host_path_guard as guard
@@ -43,7 +43,7 @@ def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.delenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
     monkeypatch.setattr(
-        "lu_machinery.api.occupancy_local.session_streams_db_path",
+        "scripts.api.occupancy_local.session_streams_db_path",
         lambda: tmp_path / "missing-session-streams.sqlite3",
     )
     # An app built by an earlier test installs the product's Atlas provider for
@@ -103,7 +103,7 @@ def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "teach-box")
     db_path = tmp_path / "session-streams.sqlite3"
-    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
     _open_driver_lease(db_path)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
@@ -142,7 +142,7 @@ def test_occupancy_driver_lease_without_host_claim_stays_idle(tmp_path: Path, mo
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     db_path = tmp_path / "session-streams.sqlite3"
-    monkeypatch.setattr("lu_machinery.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
     _open_driver_lease(db_path)
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
@@ -219,7 +219,7 @@ def test_occupancy_marker_on_empty_map_linux_host_teacher_is_not_idle(
     monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
     (tmp_path / "run-root").mkdir()
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-    monkeypatch.setattr("lu_machinery.api.occupancy.sys.platform", "linux")
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
     markers = tmp_path / "markers"
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
     write_marker(
@@ -252,7 +252,7 @@ def test_occupancy_marker_on_unavailable_mac_operator_is_not_idle(
     """mac-operator stays unavailable without observers; a live marker still blocks idle."""
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-    monkeypatch.setattr("lu_machinery.api.occupancy.sys.platform", "linux")
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
     markers = tmp_path / "markers"
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
     write_marker(

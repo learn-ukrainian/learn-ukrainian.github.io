@@ -14,13 +14,13 @@ from pathlib import Path
 from typing import Any, cast
 
 try:
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from lu_machinery.api.monitor_context import MonitorContext, resolve_context
+from scripts.api.monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None

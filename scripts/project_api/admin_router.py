@@ -29,11 +29,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 try:
-    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 
 from .context import product_roots
 
@@ -50,7 +50,7 @@ ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 
-from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
 
 def _store_path(store, path=None, *, root=None, required=False):

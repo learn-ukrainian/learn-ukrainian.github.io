@@ -16,11 +16,11 @@ import urllib.request
 from pathlib import Path
 
 import pytest
-from lu_machinery.api import release_snapshot
-from lu_machinery.common.git_context import sanitized_git_env
-from lu_machinery.common.release_layout import MANIFEST_NAME, is_release_root
-from lu_machinery.path_safety import safe_join
 
+from scripts.api import release_snapshot
+from scripts.common.git_context import sanitized_git_env
+from scripts.common.release_layout import MANIFEST_NAME, is_release_root
+from scripts.path_safety import safe_join
 from tests.helpers.python import project_python
 from tests.wait_helpers import wait_until
 
@@ -240,7 +240,7 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
             "-B",
             "-m",
             "uvicorn",
-            "lu_machinery.api.main:app",
+            "scripts.api.main:app",
             "--host",
             "127.0.0.1",
             "--port",
@@ -474,7 +474,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                 str(VENV_PYTHON),
                 "-m",
                 "uvicorn",
-                "lu_machinery.api.main:app",
+                "scripts.api.main:app",
                 "--host",
                 "127.0.0.1",
                 "--port",
@@ -545,7 +545,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
 
 def test_trusted_join_validates_components_lexically(tmp_path: Path) -> None:
     """trusted_join keeps the lexical guards: no .., no absolute, no separators."""
-    from lu_machinery.path_safety import trusted_join
+    from scripts.path_safety import trusted_join
 
     base = tmp_path / "root"
     base.mkdir()

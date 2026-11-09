@@ -12,13 +12,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
-from lu_machinery.api.monitor_context import fixture_context
 
+import scripts.api.main as api_main
 import scripts.project_api.artifacts_router as artifacts_router
 import scripts.project_api.state_router as state_router
+from scripts.api.monitor_context import fixture_context
 
 pytestmark = pytest.mark.reads_content
 

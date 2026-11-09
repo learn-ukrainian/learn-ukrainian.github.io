@@ -29,14 +29,14 @@ from jsonschema import Draft7Validator
 from pydantic import BaseModel, Field, field_validator
 
 try:
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from lu_machinery.api.config import BATCH_STATE_DIR, PROJECT_ROOT
-from lu_machinery.api.resilience import connect_sqlite
+from scripts.api.config import BATCH_STATE_DIR, PROJECT_ROOT
+from scripts.api.resilience import connect_sqlite
 
 from .curriculum_state import monitor_surface
 

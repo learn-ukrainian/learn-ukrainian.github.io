@@ -31,9 +31,10 @@ from pathlib import Path
 from typing import Any, cast
 
 from fastapi import APIRouter, Depends, Query
-from lu_machinery.api import config as api_config
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.common import github_client
+
+from scripts.api import config as api_config
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.common import github_client
 
 router = APIRouter(tags=["site"])
 

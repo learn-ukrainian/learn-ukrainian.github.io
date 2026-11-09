@@ -16,12 +16,12 @@ from fastapi.exception_handlers import websocket_request_validation_exception_ha
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
-from lu_machinery.api import main as api_main
-from lu_machinery.api.monitor_context import fixture_context, production_context
-from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from lu_machinery.api.resilience import TimedSQLiteConnection, resilience_middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from scripts.api import main as api_main
+from scripts.api.monitor_context import fixture_context, production_context
+from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
+from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
 from scripts.project_api import dashboard_comms
 from scripts.project_api.context import product_roots, sources_db
 

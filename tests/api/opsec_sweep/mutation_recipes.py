@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Any
 
 import psutil
-from lu_machinery.api import agent_monitor_router, project_state_router
-from lu_machinery.session_streams.model import LeaseHolder
 
+from agents_extensions.shared.session_streams.model import LeaseHolder
+from scripts.api import agent_monitor_router, project_state_router
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import batch_router
 from scripts.project_api.context import image_store

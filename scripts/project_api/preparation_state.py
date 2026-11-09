@@ -8,7 +8,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.orchestration import curriculum_readiness
+from scripts.orchestration import curriculum_readiness
 
 CONTRACT_VERSION = "agent-preparation-state.v1"
 BUNDLE_STATES = ("unbuilt", "partial", "built")

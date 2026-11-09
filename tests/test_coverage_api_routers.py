@@ -95,9 +95,9 @@ def _patch_config(mock_project_root, broker_db):
     unmigrated; #7325) and helpers that read ``scripts.api.config``.
     """
     with (
-        patch("lu_machinery.api.config.PROJECT_ROOT", mock_project_root),
-        patch("lu_machinery.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
-        patch("lu_machinery.api.config.MESSAGE_DB", broker_db),
+        patch("scripts.api.config.PROJECT_ROOT", mock_project_root),
+        patch("scripts.api.config.CURRICULUM_ROOT", mock_project_root / "curriculum" / "l2-uk-en"),
+        patch("scripts.api.config.MESSAGE_DB", broker_db),
     ):
         yield
 
@@ -111,7 +111,7 @@ def _comms_ctx(project_root, **root_overrides):
     ``pid_dir=Path("/nonexistent")``).
     """
 
-    from lu_machinery.api.monitor_context import fixture_context
+    from scripts.api.monitor_context import fixture_context
 
     ctx = fixture_context(project_root)
     if root_overrides:
@@ -122,8 +122,7 @@ def _comms_ctx(project_root, **root_overrides):
 @pytest.fixture()
 def comms_client(_patch_config, mock_project_root):
     """TestClient for the comms router and the product batch-progress routes under its prefix."""
-    from lu_machinery.api.comms_router import router
-
+    from scripts.api.comms_router import router
     from scripts.project_api.batch_progress import router as batch_progress_router
     app = FastAPI()
     app.state.ctx = _comms_ctx(mock_project_root)
@@ -152,8 +151,7 @@ def admin_client(admin_app):
 @pytest.fixture()
 def images_client(_patch_config, mock_project_root):
     """TestClient for images router."""
-    from lu_machinery.api.monitor_context import fixture_context
-
+    from scripts.api.monitor_context import fixture_context
     from scripts.project_api import images_router
 
     app = FastAPI()
@@ -165,8 +163,7 @@ def images_client(_patch_config, mock_project_root):
 @pytest.fixture()
 def rag_client(mock_project_root):
     """TestClient for sources router."""
-    from lu_machinery.api.monitor_context import fixture_context
-
+    from scripts.api.monitor_context import fixture_context
     from scripts.project_api.sources_router import router
 
     app = FastAPI()
@@ -178,8 +175,8 @@ def rag_client(mock_project_root):
 @pytest.fixture()
 def contracts_client(mock_project_root):
     """TestClient for contracts router."""
-    from lu_machinery.api.monitor_context import fixture_context
-    from lu_machinery.api.route_contracts import router
+    from scripts.api.monitor_context import fixture_context
+    from scripts.api.route_contracts import router
 
     app = FastAPI()
     app.state.ctx = fixture_context(mock_project_root)
@@ -417,12 +414,12 @@ class TestAdminHelpers:
     def test_safe_join_valid(self, tmp_path):
         # _safe_within was replaced by path_safety.safe_join in commit
         # 9fe99a00a7. Same guarantee, raises ValueError instead of bool.
-        from lu_machinery.path_safety import safe_join
+        from scripts.path_safety import safe_join
         result = safe_join(tmp_path, "child", "file.txt")
         assert result.name == "file.txt"
 
     def test_safe_join_traversal(self, tmp_path):
-        from lu_machinery.path_safety import safe_join
+        from scripts.path_safety import safe_join
         with pytest.raises(ValueError):
             safe_join(tmp_path, "..", "etc", "passwd")
 
@@ -652,7 +649,7 @@ class TestImagesHelpers:
         assert remaining[0]["image_id"] == "keep"
 
     def test_rewrite_annotations_jsonl_sync(self, mock_project_root, _patch_config):
-        from lu_machinery.api.monitor_context import fixture_context
+        from scripts.api.monitor_context import fixture_context
         ctx = fixture_context(mock_project_root)
         store = image_store(ctx)
         ann_file = mock_project_root / "data" / "textbook_images" / "image_text_pairs.jsonl"

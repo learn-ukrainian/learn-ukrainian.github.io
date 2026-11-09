@@ -18,19 +18,19 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.api import config
-from lu_machinery.research_quality import (
+from research_quality import (
     DIMENSION_SHORT_LABELS,
     assess_research_compat,
     find_research_path,
     get_dimensions,
     get_rubric,
 )
+from scripts.api import config
 
 try:
-    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
 from .curriculum_state import (
     V5_PHASE_ORDER,

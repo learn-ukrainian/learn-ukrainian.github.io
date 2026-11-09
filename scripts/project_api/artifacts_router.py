@@ -30,13 +30,13 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
 try:
-    from lu_machinery.path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from lu_machinery.path_safety import safe_join  # scripts.project_api package import (production)
+    from ..path_safety import safe_join  # scripts.project_api package import (production)
 
-from lu_machinery.api.docs_router import collect_html_artifacts
-from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from scripts.api.docs_router import collect_html_artifacts
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from scripts.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 
 from .config import LEVELS
 from .curriculum_state import (
