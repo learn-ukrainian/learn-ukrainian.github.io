@@ -1672,11 +1672,11 @@ def test_release_pointer_limit_never_retries(module_name, function_name, monkeyp
     module = importlib.import_module(module_name)
     calls = []
 
-    def unavailable(request, **kwargs):
-        calls.append(request)
-        raise gh.GitHubRateLimited(2000)
+    def unavailable(self, method, endpoint, **kwargs):
+        calls.append((method, endpoint))
+        return gh.Result(status=429, error="github_rate_limited", reset_at=2000)
 
-    monkeypatch.setattr(module.github_client, "http_open", unavailable)
+    monkeypatch.setattr(gh.GitHubClient, "request", unavailable)
     with pytest.raises(gh.GitHubRateLimited):
         getattr(module, function_name)(
             {

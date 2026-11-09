@@ -1,3 +1,4 @@
+import { fetchReleaseAsset } from "./hydrate-practice-deck.mjs";
 import { existsSync } from "node:fs";
 import { readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -156,15 +157,7 @@ async function downloadGzip(pointer) {
   for (let attempt = 0; attempt < DOWNLOAD_ATTEMPTS; attempt += 1) {
     try {
       const requestUrl = assertAllowedDownloadUrl(downloadUrl(pointer, attempt));
-      const response = await fetch(requestUrl, {
-        cache: "no-store",
-        headers: {
-          Accept: "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-          "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
-        },
-      });
+      const response = await fetchReleaseAsset(requestUrl);
       if (!response.ok) {
         throw new Error(`fetch failed: ${response.status} ${response.statusText}`);
       }

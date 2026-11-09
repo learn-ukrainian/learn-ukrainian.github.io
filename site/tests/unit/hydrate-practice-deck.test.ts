@@ -8,6 +8,7 @@ import {
   assertAllowedDownloadUrl,
   assertNotClobberingRicherLocal,
   downloadGzip,
+  fetchReleaseAsset,
   downloadUrl,
   parsePackage,
 } from '../../scripts/hydrate-practice-deck.mjs';
@@ -66,9 +67,53 @@ function okResponse(gzBytes: Buffer) {
   };
 }
 
+function mockReleaseDownloads(binaryFetch: ReturnType<typeof vi.fn>) {
+  vi.stubGlobal('fetch', (url: string, options: RequestInit) => {
+    if (url.includes('/releases/tags/')) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ assets: [ASSET_URL, VERSIONED_ASSET_URL].map((url, index) => ({
+          name: url.split('/').at(-1), id: index + 1,
+        })) }),
+      });
+    }
+    return binaryFetch(url, options);
+  });
+}
+
 describe('hydrate practice deck release download', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  test.each(['GH_TOKEN', 'GITHUB_TOKEN'])('uses %s only for the release API', async (tokenName) => {
+    vi.stubEnv('GH_TOKEN', '');
+    vi.stubEnv('GITHUB_TOKEN', '');
+    vi.stubEnv(tokenName, 'test-token');
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ assets: [
+        { id: 42, name: 'lexicon-practice-deck.json.gz' },
+      ] }) })
+      .mockResolvedValueOnce(okResponse(Buffer.from('asset')))
+      .mockResolvedValueOnce(okResponse(Buffer.from('cdn')));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchReleaseAsset(ASSET_URL);
+    expect(fetchMock).toHaveBeenNthCalledWith(1,
+      'https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/releases/tags/atlas-practice-deck',
+      expect.objectContaining({ headers: expect.objectContaining({
+        Authorization: 'Bearer test-token', Accept: 'application/vnd.github+json',
+      }) }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(2,
+      'https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/releases/assets/42',
+      expect.objectContaining({ headers: expect.objectContaining({
+        Authorization: 'Bearer test-token', Accept: 'application/octet-stream',
+      }) }),
+    );
+    await fetchReleaseAsset('https://objects.githubusercontent.com/pinned.gz');
+    expect(fetchMock.mock.calls[2][1].headers).not.toHaveProperty('Authorization');
   });
 
   test('adds deterministic cache-busting query parameters after first attempt', () => {
@@ -94,7 +139,7 @@ describe('hydrate practice deck release download', () => {
     const { gzBytes, pointer } = packageFixture();
     const staleGzBytes = gzipSync(Buffer.from('{"old":true}'));
     const fetchMock = vi.fn().mockResolvedValueOnce(okResponse(staleGzBytes)).mockResolvedValueOnce(okResponse(gzBytes));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).resolves.toEqual(gzBytes);
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -109,7 +154,7 @@ describe('hydrate practice deck release download', () => {
     const { pointer } = packageFixture();
     const staleGzBytes = gzipSync(Buffer.from('{"old":true}'));
     const fetchMock = vi.fn().mockResolvedValue(okResponse(staleGzBytes));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).rejects.toThrow('Re-downloading cannot fix a stale pointer.');
     expect(fetchMock).toHaveBeenCalledTimes(3);

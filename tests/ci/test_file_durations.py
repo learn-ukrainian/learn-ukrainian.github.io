@@ -199,7 +199,10 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert not {"github-token", "run-id", "repository"} & set(download["with"])
     for step in steps:
         assert "gh run download" not in step.get("run", "")
-        assert "GH_TOKEN" not in step.get("env", {})
+        if step.get("uses") == "./.github/actions/python-ci-env":
+            assert step.get("env") == {"GH_TOKEN": "${{ github.token }}"}
+        else:
+            assert "GH_TOKEN" not in step.get("env", {})
     for step in (decide, download, validate):
         assert "continue-on-error" not in step
     assert validate["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"

@@ -33,6 +33,20 @@ function okResponse(gzBytes: Buffer) {
   };
 }
 
+function mockReleaseDownloads(binaryFetch: ReturnType<typeof vi.fn>) {
+  vi.stubGlobal('fetch', (url: string, options: RequestInit) => {
+    if (url.includes('/releases/tags/')) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ assets: [ASSET_URL, VERSIONED_ASSET_URL].map((url, index) => ({
+          name: url.split('/').at(-1), id: index + 1,
+        })) }),
+      });
+    }
+    return binaryFetch(url, options);
+  });
+}
+
 describe('hydrate manifest release download', () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -67,7 +81,7 @@ describe('hydrate manifest release download', () => {
       .fn()
       .mockResolvedValueOnce(okResponse(staleGzBytes))
       .mockResolvedValueOnce(okResponse(gzBytes));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).resolves.toEqual(gzBytes);
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -85,7 +99,7 @@ describe('hydrate manifest release download', () => {
       .fn()
       .mockRejectedValueOnce(new Error('temporary edge failure'))
       .mockResolvedValueOnce(okResponse(gzBytes));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).resolves.toEqual(gzBytes);
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -105,7 +119,7 @@ describe('hydrate manifest release download', () => {
       .mockResolvedValueOnce(okResponse(staleGzBytes))
       .mockRejectedValueOnce(new Error('temporary edge failure'))
       .mockRejectedValueOnce(new Error('late edge failure'));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).rejects.toThrow(
       'failed to download Atlas manifest release asset after 3 attempts: late edge failure',
@@ -118,7 +132,7 @@ describe('hydrate manifest release download', () => {
     const staleGzBytes = gzipSync(Buffer.from('{"entries":[{"lemma":"старий"}]}'));
     const pointer = pointerFor(gzBytes);
     const fetchMock = vi.fn().mockResolvedValue(okResponse(staleGzBytes));
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).rejects.toThrow('Re-downloading cannot fix a stale pointer.');
     expect(fetchMock).toHaveBeenCalledTimes(3);
@@ -164,7 +178,7 @@ describe('asset_url host allowlist', () => {
       gz_sha256: sha256(gzBytes),
     };
     const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
+    mockReleaseDownloads(fetchMock);
 
     await expect(downloadGzip(pointer)).rejects.toThrow('allowlisted');
     expect(fetchMock).not.toHaveBeenCalled();

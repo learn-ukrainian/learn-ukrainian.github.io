@@ -8,6 +8,7 @@ import http.client
 import json
 import os
 import shutil
+import subprocess
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -257,9 +258,42 @@ def _download_url(pointer: dict[str, Any], attempt: int) -> str:
     return urllib.parse.urlunsplit(split._replace(query=urllib.parse.urlencode(query)))
 
 
-def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
+def download_release_asset(url: str, *, timeout: int = 60) -> bytes:
+    """Download GitHub releases through the binary API, using the shared client."""
+    asset_url = urllib.parse.urlsplit(url)
+    parts = asset_url.path.split("/")
+    if (
+        asset_url.scheme == "https"
+        and asset_url.netloc == "github.com"
+        and len(parts) == 7
+        and parts[3:5] == ["releases", "download"]
+    ):
+        try:
+            client = github_client.GitHubClient()
+            root = f"repos/{'/'.join(parts[1:3])}/releases"
+            release = client.request("GET", f"{root}/tags/{parts[5]}", fresh=True, timeout=timeout)
+            if release.error and release.error != "github_rate_limited":
+                raise OSError(f"release lookup failed: HTTP {release.status} {release.error}")
+            name = urllib.parse.unquote(parts[6])
+            asset = next((item for item in release.require_fresh()["assets"] if item["name"] == name), None)
+            if asset is None:
+                raise OSError(f"release asset not found: {name}")
+            downloaded = client.request(
+                "GET", f"{root}/assets/{asset['id']}",
+                headers={"Accept": "application/octet-stream"},
+                fresh=True, raw_response=True, timeout=max(timeout, 300),
+            )
+            if downloaded.error and downloaded.error != "github_rate_limited":
+                raise OSError(f"release asset download failed: HTTP {downloaded.status} {downloaded.error}")
+            data = downloaded.require_fresh()
+            if not isinstance(data, bytes):
+                raise OSError("release asset API returned non-binary content")
+            return data
+        except subprocess.TimeoutExpired as exc:
+            raise TimeoutError(f"GitHub release request timed out after {exc.timeout}s") from exc
+    # Direct CDN pointers and non-GitHub fixture URLs have no release id to resolve.
     request = urllib.request.Request(
-        _download_url(pointer, attempt),
+        url,
         headers={
             "Accept": "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
             "Cache-Control": "no-cache",
@@ -267,8 +301,12 @@ def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
             "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
         },
     )
-    with github_client.http_open(request, timeout=60) as response:
+    with github_client.http_open(request, timeout=timeout) as response:
         return response.read()
+
+
+def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
+    return download_release_asset(_download_url(pointer, attempt))
 
 
 def _download_verified_json(pointer: dict[str, Any]) -> bytes:
