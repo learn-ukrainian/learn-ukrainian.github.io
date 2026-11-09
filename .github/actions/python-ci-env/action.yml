@@ -1,8 +1,9 @@
 name: 'Python CI environment'
 description: >-
-  Set up uv, install requirements-lock.txt into .venv (offline-first with an
-  index retry, #9061), install ./packages/v4-runtime, then verify the Atlas
-  lexicon manifest. Shared by ci.yml and uv-cache-warm.yml so
+  Set up uv, install the hash-pinned lu-machinery release from
+  requirements-machinery.lock and then requirements-lock.txt into .venv
+  (offline-first with an index retry, #9061), install ./packages/v4-runtime,
+  then verify the Atlas lexicon manifest. Shared by ci.yml and uv-cache-warm.yml so
   the install cannot drift between jobs (#9062).
 inputs:
   save-cache:
@@ -10,7 +11,7 @@ inputs:
     default: ${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}
 outputs:
   uv-cache-key:
-    description: 'Exact setup-uv cache key for this runner, Python and requirements-lock.txt.'
+    description: 'Exact setup-uv cache key for this runner, Python and both lock files.'
     value: ${{ steps.setup-uv.outputs.cache-key }}
 
 runs:
@@ -32,9 +33,12 @@ runs:
         # producing an unknown cache key before a matching environment exists.
         python-version: ${{ steps.python-pin.outputs.version }}
         enable-cache: true
-        # Hash of requirements-lock.txt only. setup-uv restores that exact key
-        # and passes no restore-keys; a different lock cannot satisfy --offline.
-        cache-dependency-glob: requirements-lock.txt
+        # Hash of both locks, in this order (scripts/ci/cache_hygiene.py
+        # recomputes it). setup-uv restores that exact key and passes no
+        # restore-keys; a different lock cannot satisfy --offline.
+        cache-dependency-glob: |
+          requirements-lock.txt
+          requirements-machinery.lock
         # Only refs/heads/main saves (the nightly schedule and uv-cache-warm.yml),
         # so the one entry every ref can read is the only one written (#9101).
         # A pull_request save lands on refs/pull/N/merge, readable only by that
@@ -52,6 +56,36 @@ runs:
         # No ensurepip (~2 s): pip, setuptools and wheel are pinned in the lock
         # and installed from it below.
         python -m venv --without-pip .venv
+        # lu-machinery first, with --require-hashes: every package it pins is
+        # then installed from a hash-checked wheel, and the unhashed
+        # requirements-lock.txt install below finds those packages already
+        # present. Both files must carry the same version of a shared package.
+        # A checkout without the lock (coverage-ref.yml measuring an older
+        # commit) installs no lu-machinery; ci.yml's "Report lu-machinery"
+        # step imports it, so a missing lock fails CI Gate there.
+        machinery_lock=requirements-machinery.lock
+        if [[ -f "${machinery_lock}" ]]; then
+          # lu-machinery is not on PyPI: fetch the exact release wheel into a
+          # temporary wheelhouse (machinery docs/release.md, Consumers). The
+          # lock's hash, not the download URL, decides which bytes install.
+          mapfile -t versions < <(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' "${machinery_lock}")
+          if (( ${#versions[@]} != 1 )); then
+            echo "::error::${machinery_lock} must pin exactly one lu-machinery==X.Y.Z line"
+            exit 1
+          fi
+          machinery_version="${versions[0]}"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "${wheelhouse}"
+          wheel="lu_machinery-${machinery_version}-py3-none-any.whl"
+          curl -fsSL --retry 5 --retry-all-errors -o "${wheelhouse}/${wheel}" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${machinery_version}/${wheel}"
+          if ! uv pip install --offline --python .venv/bin/python --require-hashes --no-deps \
+              --find-links "${wheelhouse}" -r "${machinery_lock}"; then
+            echo 'uv cache incomplete for the machinery lock; retrying installation from the index'
+            uv pip install --python .venv/bin/python --require-hashes --no-deps \
+              --find-links "${wheelhouse}" -r "${machinery_lock}"
+          fi
+        fi
         # Drop live-ML wheels; the unit suite does not import them and they
         # exceed the 15m budget. Check the installed dependency graph below.
         # Also drop the local v4-runtime path: it is built once, without build

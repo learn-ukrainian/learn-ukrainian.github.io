@@ -225,6 +225,11 @@ jobs:
         uses: ./.github/actions/python-ci-env
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Report lu-machinery
+        # Isolated mode: the installed release from requirements-machinery.lock,
+        # never a checkout path. Every job installs through the same action;
+        # this import fails CI Gate when the lock was missing or not installed.
+        run: .venv/bin/python -I -c "import lu_machinery, importlib.metadata as m; print('lu-machinery', m.version('lu-machinery'), 'from', lu_machinery.__file__)"
       # mypy ratchet (#12642). One cache key, saved on main only: a pull_request
       # save is visible only to that PR and the scripts/ cache is large.
       # A miss rechecks scripts/ inside this job; a hit reuses incremental results.
@@ -233,7 +238,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Mypy ratchet
         run: .venv/bin/python -m scripts.lint.mypy_ratchet
       - name: Save mypy cache
@@ -241,7 +246,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Package boundary ratchet
         run: .venv/bin/python -m scripts.lint.boundary_ratchet
       - name: Collect pytest for PR admission
