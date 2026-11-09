@@ -72,22 +72,25 @@ def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
     _misnamed_copy(tasks, "review-one.saved.json", run_nonce="nonce-2")
-    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json is a misnamed review record"):
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity and no correctly named record"):
         review_records(tasks, repository="owner/repo")
     (tasks / "review-one.saved.json").unlink()
     (tasks / "review-one.json").rename(tasks / "review-one.saved.json")
-    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json is a misnamed review record"):
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity and no correctly named record"):
         review_records(tasks, repository="owner/repo")
 
 
-def test_misnamed_record_outside_this_repository_lineage_does_not_refuse(tmp_path):
-    """Defect class: one repository's stray copy blocks another repository's reviews."""
+def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_path):
+    """Defect class: a stray copy of any record beside its original blocks this repository's reviews."""
     from scripts.review.review_lineage import review_records
 
     tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="other-review", schema_version=2, pr=7, run_nonce="nonce-2", repository="owner/other")
+    (tasks / "other-review.wait.json").write_text((tasks / "other-review.json").read_text())
+    worker = json.dumps({"schema_version": 2, "task_id": "worker", "run_nonce": "nonce-3", "status": "done"})
+    (tasks / "worker.json").write_text(worker)
+    (tasks / "worker.status.json").write_text(worker)
     write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
-    _misnamed_copy(tasks, "other-repo.copy.json", task_id="other-review", repository="owner/other")
-    (tasks / "worker.copy.json").write_text(json.dumps({"schema_version": 2, "task_id": "worker", "status": "done"}))
     assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
 
 

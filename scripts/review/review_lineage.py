@@ -168,34 +168,31 @@ def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
         raise LineageRefused(f"task ledger unavailable: {exc}") from None
-
-    def ours(record: Mapping[str, Any]) -> bool:
-        return (
-            record.get("status") not in {"dry_run", "dry-run"}
-            and _is_review_task(record)
-            and isinstance(record.get("repository"), str)
-            and normalize_repository(record["repository"]) == normalize_repository(repository)
-        )
-
-    records, misnamed = [], []
+    records, named, misnamed = [], set(), []
     for path in paths:
         try:
             record = read_task_record(path)
         except TaskIdentityMismatch as exc:
-            # A misnamed copy never joins the lineage; one of this repository's reviews must
-            # still match a correctly named record below, or the record was renamed.
-            if ours(exc.record):
-                misnamed.append((path, exc.record))
+            # A copy (a worker's saved `dispatch.py wait` output) never joins the lineage; it
+            # must match a correctly named record below, or a record was renamed or forged.
+            misnamed.append((path, exc.record))
             continue
         except (OSError, ValueError) as exc:
             raise LineageRefused(f"task record {path.name} unreadable: {exc}") from None
-        if isinstance(record, dict) and ours(record):
-            records.append((path, record))
-    named = {(record.get("task_id"), record.get("run_nonce")) for _, record in records}
+        if not isinstance(record, dict):
+            continue
+        named.add((record.get("task_id"), record.get("run_nonce")))
+        if record.get("status") in {"dry_run", "dry-run"} or not _is_review_task(record):
+            continue
+        if not isinstance(record.get("repository"), str) or normalize_repository(
+            record["repository"]
+        ) != normalize_repository(repository):
+            continue
+        records.append((path, record))
     for path, record in misnamed:
         nonce = record.get("run_nonce")
         if not isinstance(nonce, str) or not nonce or (record["task_id"], nonce) not in named:
-            raise LineageRefused(f"task record {path.name} is a misnamed review record with no correctly named record")
+            raise LineageRefused(f"task record {path.name} has invalid task identity and no correctly named record")
         _LOG.warning("NON_RECORD_FILE: %s copies task record %s", path, record["task_id"])
     return records
 
