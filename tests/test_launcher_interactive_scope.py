@@ -524,7 +524,6 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     [
         ("start-claude.sh", ("--does-not-exist",), "0", 2, "unknown launcher flag"),
         ("start-glmcc.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
-        ("start-kimicc.sh", ("--harness", "kimi-code"), "0", 2, "always uses Claude Code"),
         ("start-claude-driver.sh", ("--epic", "devops", "--model", "not-certified"), "0", 4, "not certified"),
         ("start-gemini-driver.sh", ("--epic", "devops", "--model", "gemini-unknown"), "0", 4, "not certified"),
         ("start-claude.sh", ("--model", "opus"), "0", 7, "Opus is blocked"),

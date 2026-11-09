@@ -317,7 +317,6 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
 
 # --------------------------------------------------------------------------- launchers
 
-_KIMI_CREDENTIALS = {"KIMICC_AUTH_TOKEN": "test-key", "MOONSHOT_API_KEY": "", "KIMI_API_KEY": ""}
 _GLM_CREDENTIALS = {"GLMCC_AUTH_TOKEN": "", "ZAI_API_KEY": "test-key", "ZHIPU_API_KEY": "", "GLM_API_KEY": ""}
 
 # (row, launcher, args, extra env kind, carrier, seat)
@@ -357,9 +356,7 @@ def _launch(
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
     env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
-    if env_kind == "kimi":
-        env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
-    elif env_kind == "glm":
+    if env_kind == "glm":
         env.update({**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")})
     env.update(extra_env or {})
     result = subprocess.run(
@@ -433,91 +430,6 @@ def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_ro
     _, argv = _launch(core_root, "start-gemini.sh", ("--", "-p", "hello"), tmp_path, None)
     assert argv.count("-i") == 0 and argv.count("-p") == 1
     assert argv[argv.index("-p") + 1] == rules_core.core_block("core") + "\n\nhello"
-
-
-_KIMI_REFUSED = (
-    ("--continue",),
-    ("-c",),
-    ("-C",),
-    ("-yc",),
-    ("-cy",),
-    ("--session",),
-    ("--session=abc",),
-    ("-S",),
-    ("-S", "abc"),
-    ("-Sabc",),
-    ("-ySabc",),
-    ("--resume",),
-    ("--resume=abc",),
-    ("-r",),
-    ("-rabc",),
-    ("--agent", "okabe"),
-    ("--agent=okabe",),
-    ("--agent-file", "/tmp/custom.md"),
-    ("--agent-file=/tmp/custom.md",),
-    ("--model", "k2.7"),
-    ("-m", "k2.7"),
-    ("--unknown-flag",),
-    ("-Z",),
-    ("session",),
-    ("fork", "abc"),
-    ("--",),
-    ("-",),
-    ("--yolo", "--prompt"),
-    ("-p",),
-    ("-p", "--continue"),
-    ("--prompt", "-S"),
-    ("-p-c",),
-)
-
-
-@pytest.mark.parametrize("forwarded", _KIMI_REFUSED, ids=lambda forwarded: " ".join(forwarded))
-def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, core_root: Path) -> None:
-    """OO-58: the retired default refuses before the fresh-session classifier, and nothing execs."""
-    result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "forwarded",
-    (
-        (),
-        ("--yolo",),
-        ("-y",),
-        ("--auto",),
-        ("--plan",),
-        ("-yp", "hello"),
-        ("-phello",),
-        ("--prompt=hello",),
-        ("--prompt", "hello", "--output-format", "text"),
-        ("--output-format=stream-json", "--yolo"),
-        ("--skills-dir", "/tmp/skills", "--add-dir=/tmp/extra", "--add-dir", "/tmp/more"),
-    ),
-    ids=lambda forwarded: " ".join(forwarded) or "plain",
-)
-def test_kimi_code_fresh_launch_carries_the_core(forwarded, tmp_path: Path, core_root: Path) -> None:
-    """OO-58: a fresh Kimi launch is refused before argv, so the core is never attached to a command."""
-    result, _ = _launch(
-        core_root,
-        "start-kimi.sh",
-        ("--", *forwarded) if forwarded else (),
-        tmp_path,
-        None,
-        expect_launch=False,
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-
-
-def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
-    """OO-58: kimicc resume is refused with the retired default before a core-bearing argv exists."""
-    result, _ = _launch(
-        core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi", expect_launch=False
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(

@@ -59,13 +59,11 @@ PUBLIC = (
     "start-muse-driver.sh",
     "start-grok.sh",
     "start-grok-driver.sh",
-    "start-kimi.sh",
-    "start-kimicc.sh",
     "start-glm.sh",
     "start-glmcc.sh",
 )
 # Compat wrappers forward into the shared adapters; they are part of PUBLIC.
-COMPAT = ("start-kimicc.sh", "start-glmcc.sh")
+COMPAT = ("start-glmcc.sh",)
 assert set(COMPAT).issubset(PUBLIC)
 
 
@@ -210,9 +208,6 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
         ("start-grok.sh", "interactive launchers reject --epic"),
         ("start-glm.sh", "is retired in the model catalog"),
         ("start-glmcc.sh", "is retired in the model catalog"),
-        # OO-58: the retired default is refused before the interactive --epic check.
-        ("start-kimi.sh", "is retired in the model catalog"),
-        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> None:
@@ -231,9 +226,6 @@ def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> No
         ("start-grok.sh", "interactive launchers reject --force"),
         ("start-glm.sh", "is retired in the model catalog"),
         ("start-glmcc.sh", "is retired in the model catalog"),
-        # OO-58: the retired default is refused before the interactive --force check.
-        ("start-kimi.sh", "is retired in the model catalog"),
-        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_force(name: str, message: str) -> None:
@@ -1186,22 +1178,8 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     assert supervisor.close_driver(role=LaunchRole.DRIVER, lease=rerouted) == "closed"
 
 
-def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> None:
+def test_harness_contracts_and_redacted_glm_credentials(tmp_path: Path) -> None:
     home = tmp_path / "home"
-    kimi_secret = "kimi-secret-must-not-appear"
-    kimi = run_launcher(
-        "start-kimi.sh",
-        "--harness",
-        "claude-code",
-        "--model",
-        "k3",
-        env={"HOME": str(home), "KIMICC_AUTH_TOKEN": kimi_secret},
-    )
-    assert kimi.returncode == 2, kimi.stdout
-    assert "is retired in the model catalog" in kimi.stderr
-    assert kimi_secret not in kimi.stdout + kimi.stderr
-    assert "would exec" not in kimi.stdout
-
     glm_secret = "glm-secret-must-not-appear"
     glm = run_launcher(
         "start-glmcc.sh",
@@ -1214,19 +1192,6 @@ def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> 
     unsupported = run_launcher("start-glm.sh", "--harness", "native")
     assert unsupported.returncode == 2
     assert "is retired in the model catalog" in unsupported.stderr
-
-
-def test_kimi_never_uses_ambient_anthropic_token(tmp_path: Path) -> None:
-    foreign = "anthropic-secret-must-not-appear"
-    result = run_launcher(
-        "start-kimi.sh",
-        "--harness",
-        "claude-code",
-        env={"HOME": str(tmp_path / "home"), "ANTHROPIC_AUTH_TOKEN": foreign},
-    )
-    assert result.returncode == 2, result.stdout
-    assert "is retired in the model catalog" in result.stderr
-    assert foreign not in result.stdout + result.stderr
 
 
 def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) -> None:
@@ -1327,12 +1292,6 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     assert closeout in cto
     assert "common-reaper" not in result.stdout
     assert "post-task-reaper" not in result.stdout
-
-
-def test_compat_kimicc_rejects_harness_override() -> None:
-    result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
-    assert result.returncode == 2
-    assert "always uses Claude Code" in result.stderr
 
 
 @pytest.mark.rules_core_absent

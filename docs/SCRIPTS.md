@@ -252,8 +252,6 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-kimi.sh        # retired catalog ids; the wrapper refuses (OO-58)
-./start-kimicc.sh      # retired catalog ids; the wrapper refuses (OO-58)
 ./start-glm.sh         # Claude Code routed to Z.AI GLM
 ./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
@@ -262,8 +260,7 @@ Project-local wrappers for interactive agent sessions:
 ```
 
 Kimi models are retired (OO-58, #11327). Do not dispatch `--agent kimi` or start a Kimi model.
-The bridge refuses every Kimi recipient, ask, inbox and discussion. Launcher names remain
-so a short name resolves and is refused.
+The bridge refuses every Kimi recipient, ask, inbox and discussion. There is no Kimi launcher.
 
 ### Rules core loading
 
@@ -328,16 +325,6 @@ The adapter uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
 client token by default. `CODEX_CC_BASE_URL` is restricted to that local
 endpoint; `CODEX_CC_AUTH_TOKEN` is process-scoped and never written to the
 repository.
-
-### Kimi through Claude Code
-
-Retired (OO-58, #11327). `start-kimi.sh` and `start-kimicc.sh` remain so a short
-name resolves, then the catalog refusal exits 2. There is no default Kimi model,
-no KimiCC opt-in, and no headless `--agent kimi` route. Do not log in or point a
-job at these wrappers. Historically the Claude Code UI reached Kimi models through
-an isolated config and an explicit Kimi credential, never an ambient
-`ANTHROPIC_AUTH_TOKEN`. Every Kimi catalog id now has empty transports.
-See [`agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
 
 ### GLM through Claude Code (Z.AI)
 
