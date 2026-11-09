@@ -16,7 +16,8 @@ The companion keeps its one-request transport local: internal legacy retries
 and process-local pacing cannot durably reserve every attempt across jobs. It
 reuses dictionary identities, lookup normalization, URL construction, identifying
 headers and the existing article parsers. There is no transport framework or
-parser fork. Valid 200s yield positives; unusable 200s stop as parse errors; only
+parser fork. Valid 200s yield positives; one unusable 200 is recorded on that
+row and the job continues; five consecutive unusable 200s stop as a parse error; only
 404 proves a miss; 401/403 and other unsupported non-200s stop immediately;
 408/425/429/5xx and network exceptions are transient. Numeric HTTP evidence is
 retained even when legacy storage labels are lossy. Redirects are unsupported.
@@ -222,13 +223,14 @@ refetched; null is not proof of a 404. Seed files are never rewritten. The seed
 snapshot is retained in staging after creation; changing a seed file later does
 not alter an existing job.
 
-`run` processes resolved targets until it encounters a transient failure or a
-terminal stop. `supervise` launches `run` and retries transient/unexpected crash
+`run` records each unusable article and continues until a transient failure, a
+blocked response, five consecutive unusable articles, or the end of the target
+list. `supervise` launches `run` and retries transient/unexpected crash
 exits with a quiet interval of at least two seconds. Per-target attempts and
 supervisor launches are reserved **durably before execution**. A restart of either
 process cannot reset the budget. Defaults allow four attempts per unresolved
 target and four child launches **without durable target progress** (initial plus
-three restarts). Each committed positive article or proven 404 starts a new
+three restarts). Each committed positive article, proven 404, or recorded unusable article starts a new
 no-progress launch budget; transient results, in-flight attempts and process
 startup do not. Launch reservations and resolved outcomes share the persisted
 event sequence, so progress remains effective across a supervisor restart,
@@ -244,18 +246,26 @@ lifetime launch or request-attempt history. Retryable network failures and
 | 0 | `complete`, or successful `status`/explicit `resume`; supervisor stops |
 | 2 | Invalid arguments, dictionary, storage, frozen-input mismatch; stop |
 | 3 | First 401/403 or other unsupported HTTP/redirect; `blocked`, stop immediately |
-| 4 | HTTP 200 without a usable parsed article; `parse_error`, stop |
+| 4 | Five consecutive HTTP 200s without a usable article; `parse_error`, reason `consecutive_unusable_articles`, stop |
 | 5 | Persistent attempt or supervisor budget exhausted; stop |
 | 6 | Conflicting writer/supervisor; stop |
 | 75 | One transient result from `run`; supervisor may retry within persisted caps |
 | Unexpected child exit | Supervisor may restart within persisted caps, after checking durable terminal state |
 
-Blocked, parse-error, exhausted and complete jobs do not automatically resume,
-including when a child commits a terminal state and dies before returning its
-exit code. The failed wordid/lemma stays unresolved; checkpoint does not advance.
-A 404 is the only observed HTTP miss. Parser/schema ambiguity stops rather than
-guessing or changing parser semantics. Raw response bodies and request secrets
-are never emitted to logs/status; successful articles live only in local staging.
+Blocked, consecutive-parse-error, exhausted and complete jobs do not automatically
+resume, including when a child commits a terminal state and dies before returning
+its exit code. A job stopped by the older single-article rule (`parse_error`,
+reason `unusable_article`, fewer than five consecutive unusable rows) continues
+on the next `run` or `supervise`; those rows stay recorded and are not fetched
+again. Five consecutive unusable articles latch `parse_error` with reason
+`consecutive_unusable_articles`. An unusable article is not a miss: a 404 is the
+only observed HTTP miss. The checkpoint advances over positives, reused rows,
+proven 404s and recorded unusable articles, and it stops on anything still open.
+The parser is unchanged; an unusable article is stored, not reinterpreted.
+Raw response bodies and request secrets are never emitted to logs or status.
+The response text of an unusable article is kept only in that row's payload in
+`staging.sqlite3` (a valid UTF-8 prefix of at most 1 MiB of bytes, with the SHA-256 of the full text).
+Successful articles live only in local staging.
 
 After the driver has investigated a stop and the operator authorizes another
 attempt, use an **explicit** resume action with the original frozen options:
@@ -268,19 +278,25 @@ attempt, use an **explicit** resume action with the original frozen options:
 
 `resume` makes no requests. It resets unresolved attempt/no-progress launch budgets, records
 an `operator_resume` event and preserves resolved articles/misses and historical
-events. It refuses an active writer or supervisor. Then deliberately launch the
+events. Recorded unusable rows are unresolved for `resume`: it clears them so a
+parser fix can refetch them. A plain `run` does not. It refuses an active writer
+or supervisor. Then deliberately launch the
 same reviewed `supervise` command again. The supervisor never passes `resume` to
 a child. A new root requires separate driver scheduling so the shared-host budget
 is preserved; do not use a new root to circumvent a stop or reset a budget.
 
 ## Coverage and evidence
 
-`counts.positive`, `miss`, `pending`, `error`, `reused` partition the frozen
-denominator and are recomputed from durable result rows. `checkpoint` is the
-length of the contiguous resolved prefix; official status also names `next_wordid`.
+`counts.positive`, `miss`, `pending`, `error`, `reused`, `unusable` partition the
+frozen denominator and are recomputed from durable result rows. `unusable` is a
+recorded article the parser could not use. `error` is every other non-success,
+non-pending row (blocked, exhausted, transient). `checkpoint` is the length of
+the contiguous classified prefix (positive, reused, miss, unusable); official
+status also names `next_wordid`.
 Positive official rows are unique by requested wordid. `complete` means every
-target in this manifest/range has a positive/reused article or proven 404, including
-the possible all-miss case; it never claims all upstream articles were acquired.
+target in this manifest/range has a positive/reused article, a proven 404, or a
+recorded unusable article, including the possible all-miss case; it never claims
+all upstream articles were acquired.
 
 `request_attempts` counts historical durable attempt reservations, including
 interrupted requests; it cannot prove that every reserved request reached upstream.
@@ -288,8 +304,9 @@ interrupted requests; it cannot prove that every reserved request reached upstre
 `retry` reports the next unresolved target's attempts/deadline.
 `retry.supervisor_launches` and `supervisor_restarts` are lifetime counters;
 `retry.no_progress_launches` is the current launch budget used, bounded by
-`retry.max_no_progress_launches` (`max_restarts + 1`). A resolved target resets
-only that current launch budget, never per-target attempts or historical counts.
+`retry.max_no_progress_launches` (`max_restarts + 1`). A positive, a proven 404, or a
+recorded unusable article resets only that current launch budget, never per-target
+attempts or historical counts.
 The structured log includes the same retry and attempt counters as status.
 Elapsed time includes interruptions. ETA is `null` until at least two
 network targets resolve, and remains unknown for terminal errors. A supported ETA

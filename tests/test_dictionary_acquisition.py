@@ -209,7 +209,7 @@ def test_positive_miss_and_unique_frozen_denominator(tmp_path):
     assert invoke("run", argv, http, clock) == 0
     result = status(tmp_path)
     assert result["denominator"] == 2
-    assert result["counts"] == {"positive": 1, "miss": 1, "pending": 0, "error": 0, "reused": 0}
+    assert result["counts"] == {"positive": 1, "miss": 1, "pending": 0, "error": 0, "reused": 0, "unusable": 0}
     assert result["checkpoint"] == 2
     assert result["state"] == "complete"
     assert result["eta_seconds"] == 0
@@ -253,24 +253,205 @@ def test_first_access_failure_stops_one_request_and_latches(tmp_path, dictionary
         assert headers["Accept"] == "text/html,application/xhtml+xml"
 
 
+UNUSABLE_HTML = "<article>UNUSABLE-MARKER</article>"
+
+
+def published_text(tmp_path, dictionary="vts") -> str:
+    directory = tmp_path / "staging" / dictionary
+    return "\n".join(
+        path.read_text()
+        for path in (directory / "status.json", directory / "job.log", directory / "progress.log")
+        if path.is_file()
+    )
+
+
 @pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
-def test_parse_error_never_advances_or_becomes_miss(tmp_path, dictionary):
+def test_one_unusable_article_is_recorded_and_skipped(tmp_path, dictionary):
+    """One unusable article is a terminal row. It is not a miss and it does not stop the job.
+
+    Defect class: a single parse_error latches the job and leaves the rest unfetched.
+    """
     clock = Clock()
-    http = HTTP([response(200, "<article></article>")], clock)
+    good = response(200, OFFICIAL_HTML if dictionary == "sum20_official" else SLOVNYK_HTML)
+    # Official arguments cover two wordids; vts here is the one-article case.
+    responses = (
+        [response(200, UNUSABLE_HTML), good] if dictionary == "sum20_official" else [response(200, UNUSABLE_HTML)]
+    )
+    http = HTTP(responses, clock)
     argv = arguments(tmp_path, dictionary)
-    assert invoke("run", argv, http, clock) == 4
-    assert status(tmp_path, dictionary)["checkpoint"] == 0
-    assert status(tmp_path, dictionary)["counts"]["miss"] == 0
-    assert invoke("run", argv, HTTP([], clock), clock) == 4
+    assert invoke("run", argv, http, clock) == 0
+    result = status(tmp_path, dictionary)
+    assert result["state"] == "complete"
+    assert result["terminal_reason"] == "target_resolved"
+    assert result["counts"]["unusable"] == 1
+    assert result["counts"]["miss"] == result["counts"]["error"] == 0
+    if dictionary == "sum20_official":
+        assert result["counts"]["positive"] == 1
+        assert result["checkpoint"] == result["denominator"] == 2
+        assert len(http.calls) == 2
+    else:
+        assert result["counts"]["positive"] == 0
+        assert result["checkpoint"] == result["denominator"] == 1
+        assert len(http.calls) == 1
     with database(tmp_path, dictionary) as conn:
-        assert conn.execute("SELECT status,http_status,attempts FROM results WHERE position=0").fetchone()[:] == (
+        row = conn.execute("SELECT status,reason,http_status,attempts,payload FROM results WHERE position=0").fetchone()
+        assert (row["status"], row["reason"], row["http_status"], row["attempts"]) == (
             "parse_error",
+            "unusable_article",
             200,
             1,
         )
+        payload = json.loads(row["payload"])
+        assert payload["provenance"] == "observed_http_unusable"
+        assert payload["response_text"] == UNUSABLE_HTML
+        assert payload["content_sha256"]
+        assert payload["http_status"] == 200
+    assert "UNUSABLE-MARKER" not in published_text(tmp_path, dictionary)
+    log = json.loads((tmp_path / "staging" / dictionary / "job.log").read_text().splitlines()[-1])
+    assert log["counts"]["unusable"] == 1
+    assert log["state"] == "complete"
+    rerun = HTTP([], clock)
+    assert invoke("run", argv, rerun, clock) == 0
+    assert rerun.calls == []
+    if dictionary == "vts":
+        # Cyrillic is two bytes. A character cap would keep 1,200,000 bytes and leave the flag off.
+        wide = "\u0404" * 600_000
+        html = f"<article>{wide}</article>"
+        clock2 = Clock()
+        wide_root = tmp_path / "wide"
+        wide_root.mkdir()
+        argv2 = arguments(wide_root, "vts", ("wide", "ok"))
+        http2 = HTTP([response(200, html), response()], clock2)
+        assert invoke("run", argv2, http2, clock2) == 0
+        with database(tmp_path / "wide") as conn:
+            stored = json.loads(conn.execute("SELECT payload FROM results WHERE position=0").fetchone()[0])
+        raw = stored["response_text"].encode()
+        assert len(raw) <= acquisition._UNUSABLE_TEXT_LIMIT
+        assert stored["response_truncated"] is True
+        assert stored["content_sha256"] == acquisition.digest(html.encode())
+        assert raw.decode() == stored["response_text"]
+        assert wide not in published_text(tmp_path / "wide")
 
 
-def test_official_parser_recursion_stops_one_request_and_latches(tmp_path):
+def test_unusable_articles_separated_by_a_success_do_not_stop_the_job(tmp_path):
+    """Defect class: a lifetime unusable total, rather than a consecutive run, stops a healthy crawl."""
+    clock = Clock()
+    bad = response(200, UNUSABLE_HTML)
+    http = HTTP([bad, response(), bad, response()], clock)
+    argv = arguments(tmp_path, "vts", ("a", "b", "c", "d"))
+    assert invoke("run", argv, http, clock) == 0
+    assert len(http.calls) == 4
+    result = status(tmp_path)
+    assert result["state"] == "complete"
+    assert result["terminal_reason"] == "target_resolved"
+    assert result["counts"]["unusable"] == 2
+    assert result["counts"]["positive"] == 2
+    assert result["counts"]["miss"] == result["counts"]["error"] == result["counts"]["pending"] == 0
+    assert result["checkpoint"] == 4
+    log = json.loads((tmp_path / "staging" / "vts" / "job.log").read_text().splitlines()[-1])
+    assert log["counts"]["unusable"] == 2
+    assert log["state"] == "complete"
+    assert "UNUSABLE-MARKER" not in published_text(tmp_path)
+    assert "job stops here" not in (tmp_path / "staging" / "vts" / "progress.log").read_text()
+
+
+def test_consecutive_unusable_articles_stop_the_job_and_status_counts_them(tmp_path):
+    """Defect class: a broken parser is recorded as success and the crawl runs to complete."""
+    limit = acquisition.CONSECUTIVE_UNUSABLE_LIMIT
+    lemmas = tuple(f"bad{i}" for i in range(limit + 1))
+    clock = Clock()
+    bad = response(200, UNUSABLE_HTML)
+    http = HTTP([bad] * limit + [response()], clock)
+    argv = arguments(tmp_path, "vts", lemmas)
+    assert invoke("run", argv, http, clock) == 4
+    assert len(http.calls) == limit
+    result = status(tmp_path)
+    assert result["state"] == "parse_error"
+    assert result["terminal_reason"] == "consecutive_unusable_articles"
+    assert result["counts"]["unusable"] == limit
+    assert result["counts"]["pending"] == 1
+    assert result["counts"]["miss"] == result["counts"]["positive"] == result["counts"]["error"] == 0
+    assert result["checkpoint"] == limit
+    with database(tmp_path) as conn:
+        rows = list(conn.execute("SELECT status,reason,payload FROM results ORDER BY position"))
+        assert [row["status"] for row in rows] == ["parse_error"] * limit + ["pending"]
+        assert all(row["reason"] == "unusable_article" for row in rows if row["status"] == "parse_error")
+        assert rows[-1]["payload"] is None
+        assert all(json.loads(row["payload"])["response_text"] == UNUSABLE_HTML for row in rows[:-1])
+    assert "UNUSABLE-MARKER" not in published_text(tmp_path)
+    progress = (tmp_path / "staging" / "vts" / "progress.log").read_text()
+    assert "consecutive_unusable_articles" in progress
+    assert "job stops here" in progress
+    log = json.loads((tmp_path / "staging" / "vts" / "job.log").read_text().splitlines()[-1])
+    assert log["counts"]["unusable"] == limit
+    assert log["state"] == "parse_error"
+    idle = HTTP([response()], clock)
+    assert invoke("run", argv, idle, clock) == 4
+    assert idle.calls == []
+    assert invoke("supervise", argv, idle, clock, launch=lambda *_a, **_k: pytest.fail("latched job launched")) == 4
+
+
+def test_consecutive_unusable_streak_survives_a_restart(tmp_path):
+    """Defect class: an in-memory streak resets on restart, so a parser break never trips."""
+    limit = acquisition.CONSECUTIVE_UNUSABLE_LIMIT
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", tuple(f"bad{i}" for i in range(limit + 1)))
+    first = HTTP([response(200, UNUSABLE_HTML)] * (limit - 1) + [KeyboardInterrupt()], clock)
+    assert invoke("run", argv, first, clock) == 130
+    second = HTTP([response(200, UNUSABLE_HTML), response()], clock)
+    assert invoke("run", argv, second, clock) == 4
+    assert len(second.calls) == 1
+    result = status(tmp_path)
+    assert result["state"] == "parse_error"
+    assert result["terminal_reason"] == "consecutive_unusable_articles"
+    assert result["counts"]["unusable"] == limit
+    assert result["counts"]["pending"] == 1
+
+
+def test_job_stopped_on_one_unusable_article_continues_on_supervise(tmp_path):
+    """A job already latched by the old single-article stop continues at the next entry.
+
+    Defect class: parse_error job state blocks the remaining denominator after one bad article,
+    including when the launch that recorded it already used a zero restart budget.
+    """
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("bad", "good"), "--max-restarts", "0")
+    assert invoke("run", argv, HTTP([response(200, UNUSABLE_HTML), response()], clock), clock) == 0
+    with database(tmp_path) as conn, conn:
+        conn.execute(
+            "UPDATE results SET status='parse_error', reason='unusable_article', payload=NULL WHERE position=0"
+        )
+        conn.execute(
+            "UPDATE results SET status='pending', reason='', payload=NULL, attempts=0, http_status=NULL, "
+            "next_attempt_at=0 WHERE position=1"
+        )
+        conn.execute("UPDATE job SET state='parse_error', reason='unusable_article'")
+        # The launch that recorded the bad article sits before that row's event.
+        conn.execute("DELETE FROM events")
+        conn.execute("INSERT INTO events(time,kind) VALUES(1.0,'supervisor_launch')")
+        conn.execute("INSERT INTO events(position,time,kind,http_status) VALUES(0,1.0,'parse_error',200)")
+    fetched = HTTP([response()], clock)
+
+    def launch(command, **kwargs):
+        assert kwargs == {"check": False}
+        return SimpleNamespace(
+            returncode=acquisition.main(command[3:], session_factory=lambda: fetched, clock=clock, sleep=clock.sleep)
+        )
+
+    assert invoke("supervise", argv, fetched, clock, launch=launch) == 0
+    assert len(fetched.calls) == 1
+    result = status(tmp_path)
+    assert result["state"] == "complete"
+    assert result["counts"]["unusable"] == 1
+    assert result["counts"]["positive"] == 1
+    assert result["terminal_reason"] == "target_resolved"
+    with database(tmp_path) as conn:
+        assert conn.execute("SELECT payload FROM results WHERE position=0").fetchone()[0] is None
+        assert conn.execute("SELECT status FROM results WHERE position=1").fetchone()[0] == "positive"
+        assert conn.execute("SELECT COUNT(*) FROM events WHERE kind='unusable_latch_released'").fetchone()[0] == 1
+
+
+def test_official_parser_recursion_is_one_unusable_article_and_the_job_continues(tmp_path):
     # Keep the real parser: this is a valid entry beyond its recursive walk limit.
     entry = OFFICIAL_HTML.removeprefix("<article>").removesuffix("</article>")
     source = "<article>" + "<div>" * 1200 + entry + "</div>" * 1200 + "</article>"
@@ -280,23 +461,26 @@ def test_official_parser_recursion_stops_one_request_and_latches(tmp_path):
     clock = Clock()
     http = HTTP([response(200, source), response(200, OFFICIAL_HTML)], clock)
     argv = arguments(tmp_path, "sum20_official")
-    assert invoke("run", argv, http, clock) == 4
+    assert invoke("run", argv, http, clock) == 0
     result = status(tmp_path, "sum20_official")
-    assert result["state"] == "parse_error"
-    assert result["terminal_reason"] == "unusable_article"
-    assert result["checkpoint"] == 0
-    assert result["next_wordid"] == 5
-    assert result["counts"]["error"] == result["counts"]["pending"] == 1
-    assert result["counts"]["positive"] == result["counts"]["miss"] == 0
+    assert result["state"] == "complete"
+    assert result["terminal_reason"] == "target_resolved"
+    assert result["checkpoint"] == 2
+    assert result["next_wordid"] is None
+    assert result["counts"]["unusable"] == result["counts"]["positive"] == 1
+    assert result["counts"]["error"] == result["counts"]["pending"] == result["counts"]["miss"] == 0
     with database(tmp_path, "sum20_official") as conn:
-        assert conn.execute("SELECT status,http_status,attempts FROM results WHERE position=0").fetchone()[:] == (
+        row = conn.execute("SELECT status,reason,http_status,attempts,payload FROM results WHERE position=0").fetchone()
+        assert (row["status"], row["reason"], row["http_status"], row["attempts"]) == (
             "parse_error",
+            "unusable_article",
             200,
             1,
         )
-    assert invoke("run", argv, http, clock) == 4
-    assert invoke("supervise", argv, http, clock, launch=lambda *_a, **_k: pytest.fail("latched job launched")) == 4
-    assert len(http.calls) == 1
+        assert json.loads(row["payload"])["response_text"] == source
+    assert invoke("run", argv, http, clock) == 0
+    assert invoke("supervise", argv, http, clock, launch=lambda *_a, **_k: pytest.fail("complete job launched")) == 0
+    assert len(http.calls) == 2
     assert status(tmp_path, "sum20_official") == result
 
 
@@ -419,9 +603,13 @@ def test_legacy_null_is_unattested_and_empty_200_is_parse_error(tmp_path):
     original = path.read_bytes()
     argv = arguments(tmp_path, "vts", ("sample",), "--seed-cache", str(seed))
     http = HTTP([response(200, "<article></article>")], clock)
-    assert invoke("run", argv, http, clock) == 4
+    assert invoke("run", argv, http, clock) == 0
     assert len(http.calls) == 1
+    assert status(tmp_path)["state"] == "complete"
+    assert status(tmp_path)["counts"]["unusable"] == 1
     assert status(tmp_path)["counts"]["miss"] == status(tmp_path)["counts"]["reused"] == 0
+    with database(tmp_path) as conn:
+        assert conn.execute("SELECT status FROM results").fetchone()[0] == "parse_error"
     assert path.read_bytes() == original
 
 
@@ -496,7 +684,7 @@ def test_status_reconciles_durable_commit_after_projection_failure(tmp_path):
     assert invoke("status", argv, HTTP([], clock), clock) == 0
     result = status(tmp_path)
     assert result["checkpoint"] == 1
-    assert result["counts"] == {"positive": 0, "miss": 1, "pending": 0, "error": 0, "reused": 0}
+    assert result["counts"] == {"positive": 0, "miss": 1, "pending": 0, "error": 0, "reused": 0, "unusable": 0}
     assert result["state"] == "complete"
 
 
@@ -511,7 +699,7 @@ def test_interrupted_attempt_counts_and_event_budget(tmp_path):
     assert status(tmp_path)["terminal_reason"] == "attempt_budget"
 
 
-@pytest.mark.parametrize("final_code,expected", [(403, 3), (200, 4), (503, 5), (404, 0)])
+@pytest.mark.parametrize("final_code,expected", [(403, 3), (200, 0), (503, 5), (404, 0)])
 def test_documented_supervise_cli_stops_without_further_launches(tmp_path, final_code, expected):
     clock = Clock()
     argv = arguments(tmp_path, "vts", ("sample",), "--max-attempts", "3")
@@ -576,7 +764,7 @@ def test_scattered_recovered_errors_outlive_launch_cap(tmp_path, dictionary):
     result = status(tmp_path, dictionary)
     assert result["state"] == "complete"
     assert result["denominator"] == result["checkpoint"] == 6
-    assert result["counts"] == {"positive": 3, "miss": 3, "pending": 0, "error": 0, "reused": 0}
+    assert result["counts"] == {"positive": 3, "miss": 3, "pending": 0, "error": 0, "reused": 0, "unusable": 0}
     assert result["request_attempts"] == result["current_attempt_budget_used"] == 12
     assert result["retry"]["supervisor_launches"] == len(launches) == 7
     assert result["retry"]["supervisor_restarts"] == 6
@@ -648,7 +836,7 @@ def test_restart_after_progress_then_crashes_retains_no_progress_cap(tmp_path):
     assert status(tmp_path)["retry"]["attempts"] == 1
 
 
-@pytest.mark.parametrize("last_code,expected", [(401, 3), (403, 3), (200, 4), (503, 5), (404, 0)])
+@pytest.mark.parametrize("last_code,expected", [(401, 3), (403, 3), (200, 0), (503, 5), (404, 0)])
 def test_terminal_state_after_progress_and_child_crash_stays_latched(tmp_path, last_code, expected):
     clock = Clock()
     argv = arguments(tmp_path, "vts", ("sample", "other"), "--max-attempts", "1", "--max-restarts", "0")
