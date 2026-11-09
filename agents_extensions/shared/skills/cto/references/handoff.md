@@ -21,11 +21,12 @@ the next one re-arms them from the tracker handoff.
    relaunch with no account argument starts on it. That setting is separate from the dispatch
    default account; both must name the same account when the handoff moves the seat.
 6. List every background Bash task and Monitor stream you started. Keep the inbox watcher
-   and the worker watchers armed after HANDOFF-DONE until the successor session is confirmed
-   live (its first inbox claim), so no gap is left with no wake; use `TaskStop` only on the
-   other background tasks before posting HANDOFF-DONE. A running task makes the TUI ask
-   before exit; the keeper's restart answers that prompt. Delegate workers are separate
-   processes and keep running.
+   and the worker watchers armed after HANDOFF-DONE, and use `TaskStop` only on the other
+   background tasks before posting HANDOFF-DONE. A running task makes the TUI ask before exit;
+   the keeper's restart answers that prompt with "Exit and stop tasks", so the kept watchers
+   end when this session exits, before the successor starts. The successor re-arms them from
+   the tracker handoff and its first inbox claim shows it is live; the gap between exit and
+   that claim is not covered. Delegate workers are separate processes and keep running.
 7. Write the durable brief (core.md P7) and drain the inbox one last time.
 
 The `handoff_note` contains:
