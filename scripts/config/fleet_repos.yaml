@@ -15,6 +15,10 @@
 # `python -m scripts.publish pr-merge` refuses a head without a recorded
 # exact-head cross-family APPROVE; when false, a head with no recorded verdict
 # keeps the publisher's older behaviour.
+#
+# `required_workflow` (optional) is the workflow file whose failed PR or merge-queue run is the CI
+# evidence for a repair-verification review round (scripts/review/repair_round.py); default
+# `.github/workflows/ci.yml`.
 
 version: 1
 
@@ -64,3 +68,4 @@ repos:
     transport: https
     role: public-machinery
     verdict_recorder: true
+    required_workflow: .github/workflows/ci-gate.yml

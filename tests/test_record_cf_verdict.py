@@ -3319,6 +3319,29 @@ def test_ci_fix_ties_a_failed_merge_queue_candidate_by_its_tree(monkeypatch, tmp
     monkeypatch.setattr(repair_round, "github_reads", lambda *_a: reads)
     receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["repair_round"]
     assert receipt["failed_runs"] == [{"run_id": 8, "event": "merge_group", "conclusion": "failure"}]
+    # Per-repository required workflow ignored: a repository whose registry row names another
+    # required workflow (machinery's ci-gate.yml) ties only that workflow's failed run, never ci.yml's.
+    gate = ".github/workflows/ci-gate.yml"
+    row = {"github": REPOSITORY.upper(), "required_workflow": gate}
+    monkeypatch.setattr(repair_round.prepublish, "catalog", lambda: {"unit": row})
+    kwargs = dict(number=42, repo_root=tmp_path / "repair-repo", github=reads)
+    assert repair_round.failed_runs_for(approved, **kwargs, workflow=repair_round.required_workflow(REPOSITORY)) == []
+    gate_queue = [{**item, "path": gate} for item in queue]
+    found = repair_round.failed_runs_for(
+        approved, **{**kwargs, "github": fake_github_reads(queue=gate_queue, trees={"c" * 40: tree})}, workflow=gate
+    )
+    assert found == [{"run_id": 8, "event": "merge_group", "conclusion": "failure"}]
+    for bad in ({"github": REPOSITORY, "required_workflow": "ci.yml"}, {"github": REPOSITORY, "required_workflow": 1}):
+        monkeypatch.setattr(repair_round.prepublish, "catalog", lambda bad=bad: {"unit": bad})
+        with pytest.raises(repair_round.RepairRefused, match=r"\[evidence\].*required_workflow"):
+            repair_round.required_workflow(REPOSITORY)
+    monkeypatch.setattr(repair_round.prepublish, "catalog", lambda: {"a": row, "b": row})
+    with pytest.raises(repair_round.RepairRefused, match=r"\[evidence\].*registered more than once"):
+        repair_round.required_workflow(REPOSITORY)
+    # Every registered repository without the key keeps ci.yml; machinery's row names ci-gate.yml.
+    monkeypatch.undo()
+    workflows = {key: repair_round.required_workflow(repo.github) for key, repo in recorder.load_fleet_repos().items()}
+    assert workflows.pop("machinery") == gate and set(workflows.values()) == {repair_round.DEFAULT_REQUIRED_WORKFLOW}
 
 
 @pytest.mark.parametrize(
