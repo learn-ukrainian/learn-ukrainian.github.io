@@ -297,22 +297,6 @@ def registered_worktrees(repo_root: Path) -> set[Path] | None:
         return None
 
 
-def _children(node: Path, info: os.stat_result, *, run_contents: bool) -> list[Path]:
-    """List a directory; in a run's own scratch, one its owner cannot list is opaque.
-
-    The tree remover restores owner permission on such a directory before it
-    descends, and re-proves device and mount there, so its unseen contents
-    need no inspection here.
-    """
-    try:
-        return list(node.iterdir())
-    except PermissionError:
-        locked = stat.S_IMODE(info.st_mode) & (stat.S_IRUSR | stat.S_IXUSR) != stat.S_IRUSR | stat.S_IXUSR
-        if run_contents and locked and info.st_uid == os.geteuid():
-            return []
-        raise
-
-
 def tree_facts(path: Path, *, run_contents: bool = False) -> tuple[int, float, float, str | None]:
     """Allocated bytes, latest write and latest change; refuse Git metadata, foreign owners and mounts.
 
@@ -321,8 +305,7 @@ def tree_facts(path: Path, *, run_contents: bool = False) -> tuple[int, float, f
     can be a bind-mount target, so every node is checked against the mounts.
     ``run_contents`` marks a managed pytest run whose owner is proven dead: its
     contents are pytest's own scratch, so Git metadata, hard links and special
-    files inside it keep nothing, and a directory its owner cannot list is
-    opaque; foreign owners and mounts still keep it.
+    files inside it keep nothing; foreign owners and mounts still do.
     """
     allocated = 0
     newest = 0.0
@@ -369,7 +352,7 @@ def tree_facts(path: Path, *, run_contents: bool = False) -> tuple[int, float, f
                 reason = reason or "mount_point"
                 continue
             if stat.S_ISDIR(info.st_mode):
-                pending.extend(_children(node, info, run_contents=run_contents))
+                pending.extend(node.iterdir())
     except OSError:
         return allocated, newest, changed, "tree_unknown"
     return allocated, newest, changed, reason
@@ -561,7 +544,7 @@ def top_level_contents(path: Path, info: os.stat_result) -> tuple[str | None, tu
         os.close(fd)
 
 
-def tree_fingerprint(path: Path, *, run_contents: bool = False) -> dict[str, tuple[Any, ...]] | None:
+def tree_fingerprint(path: Path) -> dict[str, tuple[Any, ...]] | None:
     """Every node's identity, type, links, owner, size, mtime and ctime, keyed by relative path.
 
     This is the pre-rename snapshot of the write check. Any write, truncate,
@@ -570,9 +553,7 @@ def tree_fingerprint(path: Path, *, run_contents: bool = False) -> dict[str, tup
     means the tree changed after the snapshot. The top-level ctime is left out
     because the quarantine rename itself sets it; its mtime is kept and its
     contents (``top_level_contents``) replace the ctime. ``None`` when any
-    node cannot be read, except an opaque directory of a run's own scratch
-    (``run_contents``, see :func:`tree_facts`). Never follows symlinks or
-    crosses a device.
+    node cannot be read. Never follows symlinks or crosses a device.
     """
     nodes: dict[str, tuple[Any, ...]] = {}
     try:
@@ -592,8 +573,7 @@ def tree_fingerprint(path: Path, *, run_contents: bool = False) -> dict[str, tup
                 info.st_ctime_ns if relative else top_level_contents(node, info),
             )
             if stat.S_ISDIR(info.st_mode) and info.st_dev == device:
-                children = _children(node, info, run_contents=run_contents)
-                pending.extend((child, f"{relative}/{child.name}") for child in children)
+                pending.extend((child, f"{relative}/{child.name}") for child in node.iterdir())
     except OSError:
         return None
     return nodes

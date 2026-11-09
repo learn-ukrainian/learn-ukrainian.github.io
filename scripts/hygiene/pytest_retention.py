@@ -7,11 +7,18 @@ when its lease owner is provably dead and nothing inside it has changed
 this run (directory identity, invocation id and uid) and either records an
 earlier kernel boot, or records this boot and the recorded pid is absent or
 now reports a different start time (the number was reused). The run's lease
-lock must also be acquired exclusively, so a live owner is never raced. A
-folder with no lease at all is the residue of an interrupted removal (the
-lease is written before anything else exists) and goes once idle and
-unlocked. An unreadable or malformed lease, a live or unknown owner, a mount
-or a foreign-owned node inside, or a registered worktree keeps the folder.
+lock must also be acquired exclusively. The owner holds it shared for its
+lifetime, and so do the pytest processes that work inside the run (xdist
+workers, nested sessions), so a run whose owner was killed is kept while any
+of them lives. A folder with no lease, or a malformed one, records no owner:
+it is the residue of an interrupted removal (the lease is written before
+anything else exists) and goes once idle, when its lock (if any) is free. An
+unreadable lease, a parsed lease without its lock, a live or unknown owner, a
+mount or a foreign-owned node inside, an unreadable tree or a registered
+worktree keeps the folder. With ``--apply``, a directory of an abandoned run
+that its owner cannot list (a test can leave mode 000) gets owner rwx back,
+and the run is kept in that sweep; the change makes it young, so a later sweep
+judges its whole tree.
 
 No snapshot of other processes is taken: on this host an unprivileged sweep
 can never read every process, so requiring one kept every run (machinery
@@ -97,8 +104,8 @@ def _lock(run_fd: int) -> tuple[int | None, str | None]:
     return lock, None
 
 
-def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None, bool]:
-    """Read ``lease.json`` relative to the run: ``(lease, error, present)``.
+def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None]:
+    """Read ``lease.json`` relative to the run: ``(lease, error)``.
 
     A missing lease records no owner. A lease that exists but cannot be read as
     a regular, owner-owned file of bounded size is unknown and preserves. A
@@ -109,34 +116,31 @@ def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None, bool]:
     try:
         info = os.stat(ownership.LEASE_FILENAME, dir_fd=run_fd, follow_symlinks=False)
     except FileNotFoundError:
-        return None, None, False
+        return None, None
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_size > ownership.LEASE_MAX_BYTES:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     try:
         fd = os.open(ownership.LEASE_FILENAME, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=run_fd)
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     try:
         if not os.path.samestat(os.fstat(fd), info):
-            return None, "lease_unreadable", True
+            return None, "lease_unreadable"
         data = bytearray()
         while chunk := os.read(fd, 65536):
             data += chunk
             if len(data) > ownership.LEASE_MAX_BYTES:
-                return None, "lease_unreadable", True
+                return None, "lease_unreadable"
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     finally:
         os.close(fd)
     try:
-        lease = ownership.parse_lease(bytes(data))
+        return ownership.parse_lease(bytes(data)), None
     except Exception:  # any parser failure, e.g. RecursionError, is a malformed lease
-        lease = None
-    if lease is None:
-        return None, None, True
-    return lease, None, True
+        return None, None
 
 
 def _pid_present(pid: int) -> bool | None:
@@ -210,7 +214,6 @@ class Candidate:
     locked: bool = False
     lease: dict[str, Any] | None = None
     lease_error: str | None = None
-    lease_present: bool = False
 
 
 def _names_run(lease: dict[str, Any], candidate: Candidate) -> bool:
@@ -238,10 +241,10 @@ def _abandonment(candidate: Candidate, *, boot_id: str | None) -> str | None:
     """
     if candidate.lease_error:
         return candidate.lease_error
-    if candidate.lease_present and not candidate.locked:
-        return "lock_missing"
     if candidate.lease is None:
         return None
+    if not candidate.locked:
+        return "lock_missing"
     if not _names_run(candidate.lease, candidate):
         return "owner_liveness_unknown"
     status = _owner_status(candidate.lease, boot_id)
@@ -250,12 +253,46 @@ def _abandonment(candidate: Candidate, *, boot_id: str | None) -> str | None:
     return "live_owner" if status == "owner_alive" else status
 
 
+def _unlock_owned_dirs(dir_fd: int, path: Path, mounts: frozenset[str]) -> int:
+    """Give owner rwx to each of our directories below ``dir_fd`` that the owner cannot list or enter.
+
+    A test can leave such a directory (mode 000), which no scan can see into, so
+    the run could never be judged. This runs only in apply mode, on a run whose
+    owner is proven gone and whose lock the sweep holds. The repair changes each
+    directory's ctime, and the run is kept in this sweep, so a later sweep judges
+    its whole tree from that change on. It never follows a symlink, crosses a device or touches a mount
+    point. Returns how many directories it repaired.
+    """
+    listable = stat.S_IRUSR | stat.S_IXUSR
+    repaired = 0
+    device = os.fstat(dir_fd).st_dev
+    with os.scandir(dir_fd) as entries:
+        children = [(entry.name, entry.stat(follow_symlinks=False)) for entry in entries]
+    for name, info in children:
+        if not stat.S_ISDIR(info.st_mode) or info.st_dev != device or str(path / name) in mounts:
+            continue
+        if info.st_uid == os.geteuid() and stat.S_IMODE(info.st_mode) & listable != listable:
+            os.chmod(name, stat.S_IMODE(info.st_mode) | stat.S_IRWXU, dir_fd=dir_fd, follow_symlinks=False)
+            repaired += 1
+        try:
+            child = os.open(name, sweep._DIR_FLAGS, dir_fd=dir_fd)
+        except PermissionError:
+            continue  # not ours to repair; the tree scan reports it
+        try:
+            if os.path.samestat(os.fstat(child), info):
+                repaired += _unlock_owned_dirs(child, path / name, mounts)
+        finally:
+            os.close(child)
+    return repaired
+
+
 def _classify(
     name: str, namespace: Path, ns_fd: int, *, worktrees: set[Path] | None, now: float,
     apply: bool, stack: ExitStack,
 ) -> Candidate:
     """Decide one run folder; transfer only eligible apply locks to the deletion scope."""
     path = namespace / name
+    boot_id = ownership.current_boot_id()
     row = sweep._bare_row(name, "symlink_or_not_directory", kind="other", bytes=None)
     info = os.stat(name, dir_fd=ns_fd, follow_symlinks=False)
     candidate = Candidate(name, namespace, ns_fd, row, (info.st_dev, info.st_ino))
@@ -269,7 +306,10 @@ def _classify(
             return candidate
         candidate.lock, reason = _lock(run_fd)
         candidate.locked = candidate.lock is not None
-        candidate.lease, candidate.lease_error, candidate.lease_present = _read_lease(run_fd)
+        candidate.lease, candidate.lease_error = _read_lease(run_fd)
+        mounts = sweep.mount_points()
+        if apply and not reason and mounts is not None and _abandonment(candidate, boot_id=boot_id) is None:
+            row["permissions_repaired"] = _unlock_owned_dirs(run_fd, path, mounts)
     finally:
         os.close(run_fd)
     with ExitStack() as inspection:
@@ -283,8 +323,8 @@ def _classify(
             return candidate
         # Fingerprint first: a write after it shows at the post-rename comparison,
         # a write before it is seen by the age scan below.
-        candidate.before = sweep.tree_fingerprint(path, run_contents=True) if apply else None
-        owner_reason = _abandonment(candidate, boot_id=ownership.current_boot_id())
+        candidate.before = sweep.tree_fingerprint(path) if apply else None
+        owner_reason = _abandonment(candidate, boot_id=boot_id)
         row["bytes"], _newest, changed, problem = sweep.tree_facts(path, run_contents=True)
         row["newest_change"] = changed
         row["idle_hours"] = round(max(0.0, now - changed) / 3600, 2)
@@ -293,6 +333,9 @@ def _classify(
             row["bytes"] = None
         elif apply and candidate.before is None:
             row["reason"] = "tree_unknown"
+        elif row.get("permissions_repaired"):
+            # What the repair uncovered is judged by a later sweep, from this change on.
+            row["reason"] = "permissions_repaired"
         elif now - changed <= INACTIVE_S:
             row["reason"] = "too_young"
         elif owner_reason:
@@ -333,7 +376,7 @@ def _recheck(candidate: Candidate, quarantine: sweep.Quarantine) -> str | None:
         return "identity_changed"
     if not _same(candidate.namespace, candidate.ns_fd) or not _same(quarantine.path, quarantine.fd):
         return "identity_changed"
-    return None if sweep.tree_fingerprint(held, run_contents=True) == candidate.before else "recent_write"
+    return None if sweep.tree_fingerprint(held) == candidate.before else "recent_write"
 
 
 def _delete(candidate: Candidate, namespace: Path, ns_fd: int, *, repo_root: Path) -> int:

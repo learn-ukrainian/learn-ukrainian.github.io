@@ -3,7 +3,10 @@
 When the session ends, whatever its outcome, the run's scratch is removed.
 Set ``LU_KEEP_PYTEST_SCRATCH=1`` to keep it for inspection; a kept run, or one
 whose process was killed, is reclaimed by ``scripts.hygiene.pytest_retention``
-once its owner is dead and it has been idle for two hours.
+once its owner is dead, its lock is free and it has been idle for two hours.
+The owner holds the run's lease lock shared for its lifetime, and so does
+every xdist worker or nested session that inherits the run's payload as
+``TMPDIR``, so the run outlives a killed owner while any of them still runs.
 
 A reviewer sandbox mounts the shared scratch root read-only (#11317). The root
 is then still verified, and refused if a symlink, foreign-owned or writable by
@@ -80,6 +83,9 @@ SHARED_MEMORY_TEMP = Path("/dev/shm")
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
+_LOCK_JOIN_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+# Shared holds on the run this process works inside, kept until it exits.
+_JOINED: list[int] = []
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -309,7 +315,7 @@ def _allocate_in_created(base: str, base_fd: int, name: str) -> TaskScratch:
         lock_fd = os.open(
             LOCK_FILENAME, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=run_fd
         )
-        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(lock_fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
         held = os.fstat(run_fd)
         # The lease allocate() writes, so lease readers treat this run like any other.
         lease: dict[str, Any] = {
@@ -395,6 +401,32 @@ def _release(scratch: TaskScratch) -> None:
         scratch.preserve()
 
 
+def _join_inherited_run() -> None:
+    """Share the lifetime lock of the run whose payload this process inherited as ``TMPDIR``.
+
+    xdist workers and nested sessions work inside their parent session's run.
+    The sweep needs the run's lock exclusively, so holding it shared keeps the
+    run for as long as any of them lives, even after its owner is gone. The
+    descriptor is close-on-exec and is released when this process exits. Any
+    other ``TMPDIR`` joins nothing.
+    """
+    inherited = os.environ.get("TMPDIR", "")
+    if os.path.basename(inherited) != PAYLOAD_DIRNAME:
+        return
+    try:
+        fd = os.open(os.path.join(os.path.dirname(inherited), LOCK_FILENAME), _LOCK_JOIN_FLAGS)
+    except OSError:
+        return
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise OSError(errno.EINVAL, "lock is not a regular file")
+        fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
+    except OSError:
+        os.close(fd)
+        return
+    _JOINED.append(fd)
+
+
 def _allocate_run() -> TaskScratch:
     root = _private_shared_root()
     if root is not None:
@@ -409,6 +441,7 @@ def _allocate_run() -> TaskScratch:
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config: pytest.Config) -> None:
     """Hold one invocation lock until teardown; explicit base temps retain their owner."""
+    _join_inherited_run()
     if hasattr(config, "workerinput"):
         return
     if config.option.basetemp is not None:

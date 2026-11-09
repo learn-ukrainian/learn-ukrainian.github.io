@@ -87,12 +87,21 @@ deleted outright when all of these hold:
   records this boot and the recorded pid is absent or now reports a different
   start time.
 - Its run lock (`lease.lock`), when present, is acquired exclusively by the
-  sweep. A lock held by anyone else keeps the run as `in_use`, and a lock the
-  sweep cannot open keeps it as `lock_unknown`.
+  sweep. The owner holds it shared for its lifetime, and so does every xdist
+  worker or nested pytest session that inherits the run's payload as `TMPDIR`,
+  so a run whose owner was killed is kept as `in_use` while any of them
+  lives. A lock the sweep cannot open keeps the run as `lock_unknown`.
 
 A folder with no `lease.json`, or a malformed one, records no owner. The lease
 is written before anything else exists, so such a folder is the residue of an
 interrupted removal; it goes once idle, when its lock (if any) is free.
+
+A test can leave a directory its owner cannot list (mode 000), which no scan
+can see into, so the run reads as `tree_unknown`. With `--apply`, once the
+owner is proven gone and the sweep holds the lock, the sweep gives such
+directories owner rwx back and keeps the run in that sweep
+(`permissions_repaired`). The change makes the run young, so a later sweep
+judges its whole tree; a dry run only reports `tree_unknown`.
 
 No snapshot of other processes is taken. On this host an unprivileged user can
 never read every process, so requiring one kept every run (see
@@ -105,7 +114,7 @@ The run is still kept, with its reason in the report, when:
 - its lease is unreadable (`lease_unreadable`), names another run
   (`owner_liveness_unknown`), its owner is alive (`live_owner`) or the owner's
   liveness cannot be read;
-- a lease exists but its lock is missing (`lock_missing`);
+- a parsed lease exists but its lock is missing (`lock_missing`);
 - the tree has a mount point or a foreign owner, or cannot be read;
 - it is a registered worktree, or the worktree probe failed;
 - the entry is a symlink or not a directory;
@@ -117,9 +126,9 @@ anything, into a locked holding directory inside its namespace. The held
 folder must still be the same inode in the same directories, and its tree must
 equal the fingerprint taken before the rename. Otherwise it is renamed back
 under its own name. If the checks pass, the common descriptor-safe remover
-deletes it. It refuses mount points and identity changes, gives a read-only
-directory owner write permission before emptying it, and renames back
-whatever a refused deletion leaves. If the original name was taken meanwhile,
+deletes it. It refuses mount points and identity changes, gives a directory
+owner rwx before emptying it, and renames back whatever a refused deletion
+leaves. If the original name was taken meanwhile,
 the folder stays in the holding directory as `restore_blocked`. A crash leaves
 it there too. The next run returns it to its name, where it waits two more
 hours.

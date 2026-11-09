@@ -12,7 +12,8 @@ This module gives every wrapper invocation one unique directory under the
 
     <scratch root>/task-scratch/<task>.<random>/
         lease.json    versioned owner metadata (regular file, 0600)
-        lease.lock    flock held by the owning wrapper for its lifetime
+        lease.lock    flock held shared by the owning wrapper for its lifetime
+                      (and by any descendant that joins it); recovery needs it exclusive
         scratch/      the payload directory exposed as $LU_TASK_SCRATCH_DIR
 
 Ownership and liveness are recorded, never inferred from a filename:
@@ -604,17 +605,18 @@ def _remove_invocation_dir(
         # the lease metadata survives for recovery to classify. The same
         # checks repeat on every descent during deletion for anything that
         # appears afterwards.
-        _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
+        _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount, opaque_locked=True)
         _rmtree_fd(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
         _rmdir_held(namespace_fd, name, held_fd=inv_fd, held_st=inv_st)
     finally:
         os.close(inv_fd)
 
 
-def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]:
+def _walk_stats(dir_fd: int, *, device: int, mount_id: int, opaque_locked: bool = False) -> tuple[int, float]:
     """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts.
 
-    A directory of ours that its owner cannot open is counted by its own entry only.
+    ``opaque_locked`` (the removal pre-walk only) skips a directory of ours that
+    its owner cannot open; the remover repairs it and re-proves it on descent.
     """
     total = 0
     newest = 0.0
@@ -628,9 +630,10 @@ def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]
             try:
                 child_fd = _open_dir_at(dir_fd, name)
             except PermissionError:
-                if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) & stat.S_IRWXU == stat.S_IRWXU:
+                if not opaque_locked or st.st_uid != os.geteuid():
                     raise
-                # Opaque until the remover restores owner permission and re-proves it on descent.
+                if stat.S_IMODE(st.st_mode) & stat.S_IRWXU == stat.S_IRWXU:
+                    raise
                 continue
             try:
                 _verify_held_dir(
@@ -641,7 +644,9 @@ def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]
                     mount_id=mount_id,
                     what=f"directory {name!r}",
                 )
-                sub_bytes, sub_newest = _walk_stats(child_fd, device=device, mount_id=mount_id)
+                sub_bytes, sub_newest = _walk_stats(
+                    child_fd, device=device, mount_id=mount_id, opaque_locked=opaque_locked
+                )
             finally:
                 os.close(child_fd)
             total += sub_bytes
@@ -895,7 +900,8 @@ def allocate(task_id: str, *, root: Path | None = None, namespace_dirname: str =
             dir_fd=dir_fd,
         )
         try:
-            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            # Shared, so descendants can join the hold; recovery needs it exclusive.
+            fcntl.flock(lock_fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
             lease: dict[str, Any] = {
                 "schema_version": LEASE_SCHEMA_VERSION,
                 "kind": NAMESPACE_DIRNAME,
