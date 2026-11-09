@@ -246,24 +246,28 @@ def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():
 
 
 def test_fable_holds_no_review_or_advisory_role():
-    """#9583 roles still bar review/advice while OO-58 parks the active model."""
+    """#9583 roles still bar review/advice while OO-58 parks the active model.
+
+    C-4965 adds Fable 5.2 under the same roles as an explicit pin only.
+    """
     catalog = load_model_catalog()
-    fable = catalog["models"]["claude-fable-5-1"]
-    assert fable["lifecycle"] == "active"
-    assert fable["transports"] == ["native_claude"]
-    assert "replaced_by" not in fable
-    assert not {"architecture", "critical_review", "consequential_advisory", "bounded_advisory_envelope"} & set(
-        fable["roles"]
-    )
-    assert all(c["model_id"] != "claude-fable-5-1" for c in catalog["review_candidates"].values())
+    for model_id in ("claude-fable-5-1", "claude-fable-5-2"):
+        fable = catalog["models"][model_id]
+        assert fable["lifecycle"] == "active"
+        assert fable["transports"] == ["native_claude"]
+        assert "replaced_by" not in fable
+        assert fable["roles"] == ["long_horizon_coding", "orchestration"]
+        assert all(c["model_id"] != model_id for c in catalog["review_candidates"].values())
+        assert model_id not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
+        assert model_id not in catalog["formal_cf_defaults"]["claude"]["family_models"]
+        assert model_id not in catalog["budget_substitution_models"]["cursor"]
     for risk, ladder in catalog["review_ladders"].items():
         assert not any(name.startswith("claude-fable") for rung in ladder for name in rung), risk
-    assert "claude-fable-5-1" not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
-    assert "claude-fable-5-1" not in catalog["formal_cf_defaults"]["claude"]["family_models"]
-    assert "claude-fable-5-1" not in catalog["budget_substitution_models"]["cursor"]
 
 
-@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high"])
+@pytest.mark.parametrize(
+    "model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high", "claude-fable-5-2"]
+)
 @pytest.mark.parametrize("activity", ["review", "consult"])
 def test_fable_is_refused_every_review_and_consult_activity(model, activity):
     """#9583: activity admission reads the catalog roles, so every Fable spelling is refused."""
@@ -756,6 +760,11 @@ def test_catalog_refuses_a_direct_bounded_worker_route():
         ("gemini-3.8-flash", "gemini-3.8-flash-high"),
         ("gemini-3.8-flash-low", "gemini-3.8-flash-high"),
         ("claude-opus-5-5[1m]", "claude-opus-5-5"),
+        # C-4965: a new minor version is its own id, never a variant of retired Fable 5.
+        ("claude-fable-5-2", "claude-fable-5-2"),
+        ("claude-fable-5-2[1m]", "claude-fable-5-2"),
+        ("claude-fable-5-1", "claude-fable-5-1"),
+        ("claude-fable-5", "claude-fable-5"),
         ("not-a-model", None),
         (None, None),
     ],
