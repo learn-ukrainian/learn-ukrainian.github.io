@@ -146,7 +146,8 @@ def _patch_sources_free_disk(module: Any) -> None:
     current = sources_cls.free_disk_bytes
     if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
         return
-    evidence_config = sys.modules["scripts.storage.generations"]
+    # The product module reads its evidence store configuration from the installed release.
+    evidence_config = sys.modules["lu_machinery.storage.generations"]
     if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
         raise RuntimeError(
             f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"
