@@ -113,6 +113,35 @@ function downloadUrl(pointer, attempt) {
   return url.toString();
 }
 
+export async function fetchReleaseAsset(rawUrl) {
+  const url = new URL(rawUrl);
+  const headers = {
+    Accept: "application/octet-stream",
+    "Cache-Control": "no-cache",
+    "User-Agent": "learn-ukrainian-atlas-hydrate/1.0",
+  };
+  if (url.hostname === "github.com") {
+    const [, owner, repo, , , tag, name] = url.pathname.split("/");
+    const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const root = `https://api.github.com/repos/${owner}/${repo}/releases`;
+    const metadata = await fetch(`${root}/tags/${tag}`, {
+      cache: "no-store",
+      headers: { ...headers, Accept: "application/vnd.github+json" },
+    });
+    if (!metadata.ok) throw new Error(`release lookup failed: ${metadata.status} ${metadata.statusText}`);
+    const release = await metadata.json();
+    const asset = release.assets.find((item) => item.name === decodeURIComponent(name));
+    if (!asset || !Number.isSafeInteger(asset.id) || asset.id <= 0) {
+      throw new Error("release asset not found");
+    }
+    // fetch strips Authorization on cross-origin redirects to the asset CDN.
+    return fetch(`${root}/assets/${asset.id}${url.search}`, { cache: "no-store", headers });
+  }
+  // Direct allowlisted CDN pointers have no GitHub release id or credential.
+  return fetch(rawUrl, { cache: "no-store", headers });
+}
+
 async function downloadGzip(pointer) {
   let gzBytes;
   let actualGzSha = "";
@@ -122,15 +151,7 @@ async function downloadGzip(pointer) {
   for (let attempt = 0; attempt < DOWNLOAD_ATTEMPTS; attempt += 1) {
     try {
       const requestUrl = assertAllowedDownloadUrl(downloadUrl(pointer, attempt));
-      const response = await fetch(requestUrl, {
-        cache: "no-store",
-        headers: {
-          Accept: "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-          "User-Agent": "learn-ukrainian-atlas-practice-deck-hydrate/1.0",
-        },
-      });
+      const response = await fetchReleaseAsset(requestUrl);
       if (!response.ok) {
         throw new Error(`fetch failed: ${response.status} ${response.statusText}`);
       }

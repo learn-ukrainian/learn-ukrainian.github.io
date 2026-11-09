@@ -20723,11 +20723,6 @@
       "message": "Incompatible types in assignment (expression has type \"None | str\", variable has type \"str\")"
     },
     {
-      "path": "scripts/practice_deck/io.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bytes\""
-    },
-    {
       "path": "scripts/practice_deck/markup_integrity.py",
       "code": "index",
       "message": "Value of type \"None | dict[str, Any]\" is not indexable"

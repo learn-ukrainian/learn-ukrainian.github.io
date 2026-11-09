@@ -107,7 +107,14 @@ function writePointer(pointer: unknown): string {
 }
 
 function stubDownload(gzBytes: Buffer) {
-  const fetchMock = vi.fn(async () => new Response(new Uint8Array(gzBytes), { status: 200 }));
+  const fetchMock = vi.fn(async (url: string) => {
+    if (url.includes('/releases/tags/')) {
+      return Response.json({ assets: [
+        { id: 42, name: 'lexicon-teacher-deck-teacher-v1-test.json.gz' },
+      ] });
+    }
+    return new Response(new Uint8Array(gzBytes), { status: 200 });
+  });
   vi.stubGlobal('fetch', fetchMock);
   return fetchMock;
 }
@@ -131,7 +138,11 @@ describe('teacher deck build gate (#8843)', () => {
     });
     expect(JSON.parse(readFileSync(join(targetDir, 'practice-cloze.teacher.json'), 'utf8')).cloze).toEqual([]);
     await expect(hydrateTeacherDeck({ pointerPath, targetDir, ledgerPath: writeLedger() })).resolves.toMatchObject({ downloaded: false });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenNthCalledWith(2,
+      'https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/releases/assets/42',
+      expect.objectContaining({ headers: expect.objectContaining({ Accept: 'application/octet-stream' }) }),
+    );
   });
 
   test('fails the build when the teacher cloze artifact is missing', async () => {

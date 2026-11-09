@@ -3691,7 +3691,7 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
     if result.error == GitHubUnpreparedRequest.code:
         raise GitHubUnpreparedRequest(result.reason)
     if result.error and result.error != "github_rate_limited":
-        encoded = json.dumps(result.value).encode()
+        encoded = result.value if isinstance(result.value, bytes) else json.dumps(result.value).encode()
         raise urllib.error.HTTPError(
             request.full_url, result.status, "GitHub HTTP request failed", result.headers, io.BytesIO(encoded)
         )
