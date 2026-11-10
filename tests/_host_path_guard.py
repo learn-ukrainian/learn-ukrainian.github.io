@@ -1,7 +1,7 @@
 """Host-path and host-fact guards for anti-leak tests.
 
 Tests check for generic home-directory patterns plus the deployment's own
-needles (``scripts/opsec/needles.py``), so no test has to name a real
+needles (``lu_machinery/opsec/needles.py``), so no test has to name a real
 account or home directory. Reject samples use the fictional values below.
 
 Results and failures carry kinds and line numbers only, never matched text: with
@@ -16,8 +16,8 @@ import re
 from functools import lru_cache
 from ipaddress import AddressValueError, IPv4Address
 
-from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
-from scripts.opsec.needles import Needles, home_dir_pattern, load_needles
+from lu_machinery.api.occupancy_sanitize import _CANONICAL_ALIASES
+from lu_machinery.opsec.needles import Needles, home_dir_pattern, load_needles
 
 # Fictional values for reject samples; only their shape matters.
 FIXTURE_USER = "fixture-user"
