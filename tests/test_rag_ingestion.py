@@ -1196,7 +1196,7 @@ def test_retired_ulp_debug_probe_never_fetches(monkeypatch, capsys):
     import requests
 
     monkeypatch.setattr(requests, "get", lambda *_a, **_k: pytest.fail("retired probe sent a request"))
-    runpy.run_path(str(ROOT / "scripts/debug/fetch_debug.py"), run_name="__main__")
+    runpy.run_module("lu_machinery.debug.fetch_debug", run_name="__main__")
     assert "disabled" in capsys.readouterr().out.lower()
 
 

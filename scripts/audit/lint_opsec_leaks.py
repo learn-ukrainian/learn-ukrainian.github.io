@@ -498,10 +498,12 @@ def publication_messages(base: object, head: object, *, new_branch: bool = False
 
 
 def current_publication_pr(repository: str, number: int) -> dict:
-    # Direct script execution also works in a clean stdlib-only checkout.
+    # Add the product root for direct-script execution. Live metadata uses the installed release.
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from scripts.common import github_client
+    from lu_machinery.common import github_client
+
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
     result = github_client.run(
         ["gh", "api", "-X", "GET", f"repos/{repository}/pulls/{number}"],

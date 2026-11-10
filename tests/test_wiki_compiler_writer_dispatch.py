@@ -9,7 +9,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from ai_llm.fallback import CallResult
+from lu_machinery.ai_llm.fallback import CallResult
+
 from wiki.compiler import _call_writer
 
 

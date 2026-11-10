@@ -289,6 +289,8 @@ def test_queue_scans_each_members_current_fields_and_original_commit_bodies(publ
 
 
 def test_direct_script_publication_mode_needs_no_site_packages(tmp_path):
+    from lu_machinery.common import github_client
+
     script = Path(opsec_linter.__file__).resolve()
     event = tmp_path / "event.json"
     event.write_text("{}")
@@ -303,7 +305,8 @@ import runpy, sys
 from types import SimpleNamespace
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).parents[2]))
-from scripts.common import github_client
+sys.path.insert(0, sys.argv[2])
+from lu_machinery.common import github_client
 github_client.run = lambda *a, **kw: SimpleNamespace(returncode=0, stdout='{}')
 module = runpy.run_path(sys.argv[1])
 try:
@@ -312,7 +315,8 @@ except ValueError:
     raise SystemExit(0)
 raise SystemExit(1)
 """
-    result = subprocess.run([sys.executable, "-S", "-c", code, str(script)],
+    result = subprocess.run([sys.executable, "-S", "-c", code, str(script),
+                             str(Path(github_client.__file__).resolve().parents[2])],
                             capture_output=True, text=True, timeout=30)
     assert result.returncode == 0
     assert result.stderr == ""

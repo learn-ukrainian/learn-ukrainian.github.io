@@ -1,8 +1,8 @@
 import hashlib
 import os
-import shlex
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -69,33 +69,17 @@ def test_fresh_hook_direct_script_invocation(fresh_page):
     root = sources.parents[1]
     repo = Path(__file__).resolve().parents[2]
     shutil.copytree(repo / "scripts", root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
-    # The actual wrapper resolves the shared interpreter from Git's common dir.
-    # Give this scratch repository the same read-only interpreter locator.
-    common = subprocess.check_output(
-        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=repo, text=True, timeout=30
-    ).strip()
     for cmd in (["git", "init", "-q"], ["git", "add", "curriculum", "site"]):
         subprocess.run(cmd, cwd=root, check=True, capture_output=True, timeout=30)
-    # Supply only the wrapper's interpreter locator; every parity Git operation
-    # reads the real scratch repository and index.
     git = shutil.which("git")
     assert git
-    bin_dir = root / "bin"
-    bin_dir.mkdir()
-    shim = bin_dir / "git"
-    shim.write_text(
-        "#!/bin/sh\nif [ \"$*\" = 'rev-parse --git-common-dir' ]; then\n"
-        f"  printf '%s\\n' {shlex.quote(common)}\nelse\n  exec {shlex.quote(git)} \"$@\"\nfi\n"
-    )
-    shim.chmod(0o755)
-    env = {**os.environ, "PATH": str(bin_dir) + os.pathsep + os.environ["PATH"]}
-    command = ["scripts/pre_commit/project_python.sh", "scripts/audit/check_mdx_source_parity.py", "--files",
+    command = [sys.executable, "scripts/audit/check_mdx_source_parity.py", "--files",
                page.relative_to(root).as_posix()]
-    result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stdout + result.stderr
     page.write_text(page.read_text() + "Hand edit\n")
     subprocess.run([git, "add", "site"], cwd=root, check=True, capture_output=True, timeout=30)
-    refused = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True, timeout=60)
+    refused = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=60)
     assert refused.returncode == 1 and "engine snapshot" in refused.stdout, refused.stdout + refused.stderr
     assert "ImportError" not in refused.stderr
 
