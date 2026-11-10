@@ -13,10 +13,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.curriculum.evidence import sources, words
 from scripts.curriculum.learner_state.base_layer import resolve_base_ids
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
