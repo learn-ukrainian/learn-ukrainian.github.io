@@ -150,7 +150,7 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
     A review-typed request needs a catalog review role (#9583) before any worktree or provider
     starts; the verdict recorder's later refusal would only discard a run that already happened.
     """
-    from scripts.dispatcher.admission import review_typed
+    from scripts.agent_runtime.model_pause import dispatch_roles
     from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
 
     catalog = load_model_catalog()
@@ -160,8 +160,9 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
             return
         raise ValueError(unknown_model_refusal(model))
     if not catalog["models"][identity].get("red_team_only"):
-        # ``--risk`` is the review risk label, so it types a review as at dispatch role admission.
-        reviewed = review_typed(options) or bool(options.get("risk"))
+        # Review typing is the one dispatch role admission infers: every review flag, --risk,
+        # --review-mode, --language-lane, the subject selectors and a review research role.
+        reviewed = "review" in dispatch_roles(options)
         if reviewed and (refusal := activity_role_refusal(identity, REVIEW_ACTIVITY, catalog)):
             raise ValueError(refusal)
         return
