@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock, patch
 
+import lu_machinery.agent_runtime.adapters.claude as release_claude_module
 import pytest
 
 import scripts.agent_runtime.adapters.acpx as acpx_module
@@ -77,6 +78,8 @@ def extract_argv(caller, model, tmp_path):
 def test_callers_apply_wire_normalization(caller, input_model, expected_wire, monkeypatch, tmp_path):
     import scripts.agent_runtime.adapters.claude as claude_module
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+    # The judge caller runs the installed release's model catalog, which reads the release's adapter.
+    monkeypatch.setattr(release_claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     monkeypatch.setattr(acpx_module, "_require_communication_transport", lambda **kw: None)
     monkeypatch.setattr(acpx_module, "_require_communication_target", lambda **kw: None)
 
@@ -95,6 +98,8 @@ def test_callers_apply_wire_normalization(caller, input_model, expected_wire, mo
 def test_callers_refuse_forbidden_variants(caller, input_model, refusal_code, monkeypatch, tmp_path):
     import scripts.agent_runtime.adapters.claude as claude_module
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+    # The judge caller runs the installed release's model catalog, which reads the release's adapter.
+    monkeypatch.setattr(release_claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     monkeypatch.setattr(acpx_module, "_require_communication_transport", lambda **kw: None)
     monkeypatch.setattr(acpx_module, "_require_communication_target", lambda **kw: None)
 

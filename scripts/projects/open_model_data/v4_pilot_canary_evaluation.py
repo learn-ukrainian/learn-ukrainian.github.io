@@ -38,11 +38,11 @@ from typing import Any
 import jsonschema
 import numpy as np
 import safetensors.numpy
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.opsec.needles import home_dir_pattern, load_needles
 from safetensors import safe_open
 from scipy.stats import beta
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import refuse_quarantined, resolve_open_model_path
 
 try:

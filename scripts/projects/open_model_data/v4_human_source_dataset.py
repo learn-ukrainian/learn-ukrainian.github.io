@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 DATASET_VERSION = "v4.0.0-human-pilot-scale"

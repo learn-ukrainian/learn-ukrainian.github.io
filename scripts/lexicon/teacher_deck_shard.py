@@ -27,6 +27,9 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.audit.generate_practice_deck import (
     PROJECT_ROOT,
     TEACHER_CLOZE_GZIP_LIMIT,
@@ -61,8 +64,6 @@ from scripts.ingest.private_teacher_lessons_ingest import DATE_START
 from scripts.ingest.private_teacher_lessons_ingest import SOURCE_FILE as TEACHER_LESSON_SOURCE
 from scripts.lexicon.build_teacher_deck_cloze import contains_private_teacher_name
 from scripts.lexicon.sync_teacher_table_deck import DECK_ID, normalize_uk_key
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
 
 SCHEMA = "atlas-practice-teacher-deck"

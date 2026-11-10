@@ -56,7 +56,11 @@ except ModuleNotFoundError:
         score_case,
     )
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 OPENCODE_BIN = "opencode"
 REQUEST_TIMEOUT_S = 600  # opencode startup + reasoning overhead

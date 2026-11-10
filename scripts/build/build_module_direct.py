@@ -39,6 +39,8 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-direct"
 MANIFEST_PATH = CURRICULUM_DIR / "manifest.yaml"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases"
 sys.path.insert(0, str(SCRIPTS_DIR))
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 from batch_gemini_config import PRO_MODEL, VENV_PYTHON
 from validate_direct import ValidationResult, validate_file
 
@@ -430,7 +432,8 @@ def phase_validate(ctx: DirectModuleContext) -> bool:
 # ── Phase: Review ─────────────────────────────────────────────────────────────
 def parse_direct_review_response(response: dict[str, Any] | str) -> dict[str, Any]:
     """Consume a review object, retaining the legacy unsupported-CLI dialect."""
-    from scripts.agent_runtime.adapters._output_schema import validate_output
+    from lu_machinery.agent_runtime.adapters._output_schema import validate_output
+
     from scripts.audit.qg_schema import reviewer_output_schema
 
     if isinstance(response, str):

@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import physical_lines
+from lu_machinery.common.jsonl import physical_lines
+
 from scripts.projects.ua_eval_harness.build_heldout_manifest import validate_manifest
 from scripts.projects.ua_eval_harness.build_scoring_dispositions import (
     ROW_LAYOUT as DISPOSITION_ROW_LAYOUT,

@@ -19,6 +19,9 @@ from collections.abc import Iterable, Iterator, Sequence
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.runner.contracts import canonical_json
 from scripts.lexicon.runner.ledger import CasStatus, Ledger, compute_run_fingerprint
 from scripts.lexicon.runner.stream_manifest import StreamingCandidateWriter
@@ -31,8 +34,6 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_dictua_envelope,
     summarize_artifacts,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PHASE = "offline_reduce"
 DEFAULT_CHUNK_SIZE = 25

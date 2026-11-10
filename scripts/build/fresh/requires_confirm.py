@@ -6,13 +6,13 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.review.second_seat import IdentityError
+from lu_machinery.review.second_seat import writer_family as lesson_writer_family
 
 from scripts.build.fresh.prompt import _environment
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes, receipts
 from scripts.curriculum.resolver.inputs import ResolverError
-from scripts.review.second_seat import IdentityError
-from scripts.review.second_seat import writer_family as lesson_writer_family
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 

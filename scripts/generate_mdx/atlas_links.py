@@ -73,8 +73,8 @@ from functools import lru_cache
 from pathlib import Path
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -87,8 +87,8 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 try:
     from lexicon.manifest_io import load_manifest
@@ -356,7 +356,7 @@ def _load_index(manifest_path: str) -> dict[str, str]:
 
 def _vesum_connection() -> SQLiteConnection | None:
     """Open VESUM read-only, or return None where it is not installed (CI)."""
-    from scripts.storage.topology import StoreRefusal, resolve_store
+    from lu_machinery.storage.topology import StoreRefusal, resolve_store
 
     binding = resolve_store("vesum")
     if isinstance(binding, StoreRefusal):

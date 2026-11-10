@@ -25,11 +25,13 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from jsonschema import Draft202012Validator
-
-from scripts.common.jsonl import jsonl_lines
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.repo_root import main_checkout_root
 
 ROOT = Path(__file__).resolve().parents[3]
 RELEASE_VERSION = "v0.1.0-pilot"

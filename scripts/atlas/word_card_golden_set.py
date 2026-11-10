@@ -17,8 +17,8 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, validators
+from lu_machinery.common.repo_root import main_checkout_root
 
-from scripts.common.repo_root import main_checkout_root
 from scripts.projects.open_model_data import source_completeness_manifest as accounting
 
 TEXT = {"type": "string", "pattern": r"\S"}

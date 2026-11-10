@@ -698,7 +698,9 @@ def _stale_module_verdict_problems(level: str, slug: str, *, repo_root: Path) ->
     that superseded the state the file was computed from must fail here, before a stale ``APPROVE``
     can reach the content PR that ``build_arc_landing.py`` reads it from directly (#8774 r5).
     """
-    from scripts.review import findings_db, fixloop
+    from lu_machinery.review import findings_db
+
+    from scripts.review import fixloop
 
     directory = fixloop.state_dir(repo_root, level, slug)
     if not (directory / fixloop.MODULE_VERDICT_NAME).is_file():

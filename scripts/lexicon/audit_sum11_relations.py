@@ -15,9 +15,10 @@ from pathlib import Path
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.enrich_manifest import _antonyms_ulif, _section_item_key, _synonyms_ulif
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification import vesum
 
 ROOT = Path(__file__).resolve().parents[2]

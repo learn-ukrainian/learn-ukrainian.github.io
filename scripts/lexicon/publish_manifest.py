@@ -23,15 +23,16 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.common import github_client
+from lu_machinery.opsec.prepublish import publication_boundary
+from lu_machinery.publish.github import Asset, Request, request_run
+
 from scripts.atlas.word_card_certification import certification_run, guard_card_inventory
-from scripts.common import github_client
 from scripts.lexicon.manifest_fingerprint import (
     DEFAULT_FINGERPRINT,
     build_fingerprint,
     sidecar_payload,
 )
-from scripts.opsec.prepublish import publication_boundary
-from scripts.publish.github import Asset, Request, request_run
 
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-manifest.pointer.json"

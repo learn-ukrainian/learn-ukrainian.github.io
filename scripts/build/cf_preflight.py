@@ -17,7 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.common import github_client
+from lu_machinery.common import github_client
 
 _SHA40 = re.compile(r"^[0-9a-f]{40}$", re.I)
 _APPROVE = re.compile(

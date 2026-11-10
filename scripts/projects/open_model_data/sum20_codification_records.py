@@ -11,7 +11,8 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import urlsplit
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
 # Historical candidate passages (#8340). URLs alone do not establish provenance.

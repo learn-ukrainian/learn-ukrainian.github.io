@@ -53,7 +53,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.storage import topology
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+
 from scripts.lexdata import records as rec
 from scripts.lexdata.canonical import canonical_json, sha256_canonical
 from scripts.lexdata.derive import derive_leaf
@@ -76,9 +80,6 @@ from scripts.lexicon.ohoiko_quality_enrichment import (
     parse_500_verbs_head_and_gloss,
     parse_1000_words_head_and_gloss,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage import topology
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 PARSER_VERSION = "1"
 WORDS_SOURCE_ID = "ohoiko_1000_words"

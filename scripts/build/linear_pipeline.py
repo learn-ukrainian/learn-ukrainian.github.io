@@ -36,8 +36,8 @@ from typing import Any
 import yaml
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -50,8 +50,8 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 LOGGER = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -64,6 +64,8 @@ FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "foreign_pro
 PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "registry" / "primary_text_sources.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
+
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from scripts.audit.content_surface_gates import scan_module_surface
 from scripts.audit.failure_classes import FailureClass, FailureRecord
@@ -96,7 +98,6 @@ from scripts.build.module_size_policy import (
     size_policy_summary,
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.pedagogy_config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.curriculum.quality.review_loop import (
     aggregate_min as review_loop_aggregate_min,
@@ -438,7 +439,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))
@@ -4198,7 +4199,7 @@ def _runtime_tool_config(
     if not agent_label.endswith("-tools"):
         return tool_config
 
-    from scripts.agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
+    from lu_machinery.agent_runtime.tool_config import _load_mcp_config, build_mcp_tool_config
 
     codex_disable_features: list[str] = []
     codex_home_override: str | None = None
@@ -4277,7 +4278,7 @@ def _runtime_tool_config(
             "grok-tools / deepseek-tools / qwen-tools / agy-tools."
         )
 
-    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+    from lu_machinery.agent_identity import tools_writer_runtime_agent
 
     # Explicit map — never split("-")[0] for a *-tools label; the map is the
     # single source of truth for the registry seat each writer runs on.
@@ -4304,7 +4305,7 @@ def _runtime_tool_config(
         # entry resolves above yet lists as a dead stdio server, and `agy -p`
         # then writes the whole module with no mcp__sources__* tools. Register
         # the HTTP shape the CLI reads (idempotent), then fail closed.
-        from scripts.agent_runtime.tool_config import AgyMcpCatalogError, ensure_agy_mcp_catalog
+        from lu_machinery.agent_runtime.tool_config import AgyMcpCatalogError, ensure_agy_mcp_catalog
 
         try:
             catalog_result = ensure_agy_mcp_catalog(resolved)
@@ -4395,9 +4396,9 @@ def invoke_writer(
     if writer not in WRITER_CHOICES:
         raise LinearPipelineError(f"Unknown writer {writer!r}; expected one of {WRITER_CHOICES}")
     if invoker is None:
-        from scripts.agent_runtime.runner import invoke as invoker
+        from lu_machinery.agent_runtime.runner import invoke as invoker
 
-    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+    from lu_machinery.agent_identity import tools_writer_runtime_agent
 
     defaults = WRITER_DEFAULTS[writer]
     resolved_effort = effort if effort is not None else defaults["effort"]
@@ -5486,9 +5487,10 @@ def invoke_reviewer_dim(
     if reviewer not in REVIEWER_CHOICES:
         raise LinearPipelineError(f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}")
     if invoker is None:
-        from scripts.agent_runtime.runner import invoke as invoker
+        from lu_machinery.agent_runtime.runner import invoke as invoker
 
-    from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+    from lu_machinery.agent_identity import tools_writer_runtime_agent
+
     from scripts.audit.llm_reviewer import invoke_reviewer_with_schema
 
     defaults = REVIEWER_DEFAULTS[reviewer]
@@ -6374,7 +6376,7 @@ def _invoke_pedagogical_corrector(
     stdout_silence_timeout: int | None = None,
 ) -> str:
     if invoker is None:
-        from scripts.agent_runtime.runner import invoke as runtime_invoke
+        from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
     else:
         runtime_invoke = invoker
 
@@ -7672,7 +7674,7 @@ def _wiki_coverage_corrector_response(
         )
     runtime_invoke = invoker
     if runtime_invoke is None:
-        from scripts.agent_runtime.runner import invoke as runtime_invoke
+        from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
 
     result = runtime_invoke(
         "codex",
@@ -8673,7 +8675,7 @@ def _apply_reviewer_correction(
     )
     if reviewer_corrector is None:
         if invoker is None:
-            from scripts.agent_runtime.runner import invoke as runtime_invoke
+            from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
         else:
             runtime_invoke = invoker
 

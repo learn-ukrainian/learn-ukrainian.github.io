@@ -61,6 +61,7 @@ def test_generate_readings_timeout_returns_nonzero_and_prints_error(
     interpreter = tmp_path / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True)
     interpreter.write_text("", encoding="utf-8")
+    interpreter.chmod(0o755)  # the installed release accepts only an executable interpreter
 
     status, written = promote_module._run_generate_readings(tmp_path, source)
 

@@ -30,7 +30,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.projects.open_model_data.dialect_protection_invariants import (
     COMBINED_CP_FLOOR,
     DIALECT_CP_FLOOR,

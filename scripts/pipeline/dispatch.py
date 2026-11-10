@@ -15,13 +15,13 @@ from contextlib import contextmanager
 from pathlib import Path
 
 try:
-    from agent_runtime.adapters.claude import run_headless_claude
-    from common.http_status import has_http_status
-    from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+    from lu_machinery.agent_runtime.adapters.claude import run_headless_claude
+    from lu_machinery.common.http_status import has_http_status
+    from lu_machinery.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 except ModuleNotFoundError:
-    from scripts.agent_runtime.adapters.claude import run_headless_claude
-    from scripts.common.http_status import has_http_status
-    from scripts.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+    from lu_machinery.agent_runtime.adapters.claude import run_headless_claude
+    from lu_machinery.common.http_status import has_http_status
+    from lu_machinery.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 # Late imports to avoid circular dependencies
 _pipeline_lib = None
@@ -135,7 +135,7 @@ def _agy_model(model: str | None) -> str:
 
 def _effective_agy_route(model: str | None) -> tuple[str, str | None]:
     """Resolve an attempted pipeline model to its actual ACP transport/model."""
-    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+    from lu_machinery.ai_agent_bridge._acp_compat import resolve_compat_model
 
     return "acp:agy", resolve_compat_model("agy", _agy_model(model))
 
@@ -166,7 +166,7 @@ def dispatch_gemini_raw(
     Returns (success, raw_output_text).
     """
     model = _agy_model(model)
-    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+    from lu_machinery.ai_agent_bridge._acp_compat import resolve_compat_model
 
     # Resolve in this process so incompatibility is visible to the caller;
     # subprocess stderr is intentionally not part of the pipeline result.

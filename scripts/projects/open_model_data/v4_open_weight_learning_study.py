@@ -24,10 +24,10 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+from lu_machinery.storage import paths as storage_paths
+from lu_machinery.storage.artifacts import ArtifactChange, CompanionChange, publish_set
 
 from scripts.projects.open_model_data.paths import refuse_quarantined
-from scripts.storage import paths as storage_paths
-from scripts.storage.artifacts import ArtifactChange, CompanionChange, publish_set
 
 _GROUP = "open_model_study_outputs"
 _DATASET_GROUP = "open_model_other_indexes"
@@ -114,7 +114,8 @@ def _verified_set(repo: Path, group: str) -> storage_paths.ArtifactSet:
     except (FileNotFoundError, ValueError) as exc:
         raise ValueError(
             f"Cannot verify {group}: {exc}; hydrate with "
-            f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+            f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
         ) from exc
 
 

@@ -27,10 +27,10 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 

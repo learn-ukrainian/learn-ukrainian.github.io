@@ -7,6 +7,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import usage as release_usage  # qg_bakeoff reads headroom through the release
 
 from agent_runtime import usage as bridge_usage
 from scripts.agent_runtime import acpx_pilot, runner, usage
@@ -31,11 +32,11 @@ CORRUPT_LINES = (
 @pytest.fixture
 def isolated_usage(tmp_path, monkeypatch):
     monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
-    for module in (usage, bridge_usage):
+    for module in (usage, bridge_usage, release_usage):
         module._reset_rate_limit_cache_for_tests()
         monkeypatch.setattr(module, "_usage_dir", lambda: tmp_path)
     yield tmp_path
-    for module in (usage, bridge_usage):
+    for module in (usage, bridge_usage, release_usage):
         module._reset_rate_limit_cache_for_tests()
 
 

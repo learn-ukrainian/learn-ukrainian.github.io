@@ -17,9 +17,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.agent_runtime.registry import get_agent_entry
+from lu_machinery.agent_runtime.registry import get_agent_entry
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.build import linear_pipeline
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 DEFAULT_WRITERS = "claude-tools,gemini-tools,codex-tools"
 DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 300.0

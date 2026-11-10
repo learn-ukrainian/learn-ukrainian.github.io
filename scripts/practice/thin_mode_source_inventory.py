@@ -22,7 +22,7 @@ from typing import Any
 
 import yaml
 
-from scripts.storage.paths import REGISTRY_ROOT
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:

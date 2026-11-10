@@ -58,17 +58,20 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 if str(_REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.json_parse import extract_json_object
-from agent_runtime.runner import invoke
-from agent_runtime.tool_config import build_mcp_tool_config
+from lu_machinery.agent_runtime.json_parse import extract_json_object
+from lu_machinery.agent_runtime.runner import invoke
+from lu_machinery.agent_runtime.tool_config import build_mcp_tool_config
+
 from curriculum.quality.review_loop import aggregate_min, best_round_index, min_score_regressed
 from curriculum.quality.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR

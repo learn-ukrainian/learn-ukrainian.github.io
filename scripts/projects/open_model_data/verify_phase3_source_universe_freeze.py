@@ -20,9 +20,9 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
+from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_EVIDENCE_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/source_universe_v1"

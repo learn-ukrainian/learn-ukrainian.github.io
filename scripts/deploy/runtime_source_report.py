@@ -170,9 +170,10 @@ def report_source_freshness(rows: list[dict[str, Any]], parity: dict[str, Any] |
         receipt = read_receipt(receipt_path)
     except (OSError, ValueError, KeyError, TypeError, AttributeError, RuntimeError):
         return unknown("receipt_invalid")
+    from lu_machinery.common.scratch import ensure_scratch_root
+
     from scripts.atlas.atlas_db import migrate_manifest, validate_alias_targets
     from scripts.audit.generate_search_index import build_atlas_db_search_artifacts
-    from scripts.common.scratch import ensure_scratch_root
     from scripts.deploy.vendor_atlas_tree import _discovery_exclusions
 
     binding = source_binding(manifest_path, pointer_dir=pointer_dir)

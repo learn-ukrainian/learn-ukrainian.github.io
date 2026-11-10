@@ -13,12 +13,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.common.repo_root import project_interpreter
+
 from batch_gemini_config import FLASH_MODEL
-from common.repo_root import project_interpreter
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(REPO.resolve())
 
 
 def find_module_files(level: str, num: int) -> dict | None:

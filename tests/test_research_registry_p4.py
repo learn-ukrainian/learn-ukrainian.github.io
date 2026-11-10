@@ -185,8 +185,14 @@ def _surface(root: Path, ts: datetime, task: str, rid: str) -> None:
 @pytest.fixture
 def strict_root(tmp_path, monkeypatch):
     """A registry root plus a monkeypatched cache path for the strict gate."""
-    cache = tmp_path / "cache.json"
+    from lu_machinery.orchestration import issue_stream_audit as release_isa  # TRANSITIONAL-PKG3-B2
+
+    # The strict gate reads the release's cache, state_root()/batch_state/issue_stream_audit.json.  # TRANSITIONAL-PKG3-B2
+    state = tmp_path / "state"
+    cache = state / "batch_state" / "issue_stream_audit.json"
+    cache.parent.mkdir(parents=True)
     monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    monkeypatch.setattr(release_isa, "state_root", lambda root=None: state)  # TRANSITIONAL-PKG3-B2
     return tmp_path, cache
 
 

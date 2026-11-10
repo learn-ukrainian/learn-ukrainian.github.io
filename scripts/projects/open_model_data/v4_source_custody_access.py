@@ -28,11 +28,11 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
 
 CONFIG_SCHEMA_VERSION = "v4_source_custody_access_config_v1"
 ITEM_SCHEMA_VERSION = "v4_source_custody_access_v1"

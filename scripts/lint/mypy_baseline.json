@@ -8754,21 +8754,6 @@
     },
     {
       "path": "scripts/build/linear_pipeline.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"tools_writer_runtime_agent\""
-    },
-    {
-      "path": "scripts/build/linear_pipeline.py",
       "code": "dict-item",
       "message": "Dict entry 1 has incompatible type \"str\": \"str\"; expected \"str\": \"list[str]\""
     },
@@ -17556,11 +17541,6 @@
       "path": "scripts/lexicon/heritage_classifier.py",
       "code": "call-overload",
       "message": "No overload variant of \"list\" matches argument type \"object\""
-    },
-    {
-      "path": "scripts/lexicon/heritage_classifier.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | Path\""
     },
     {
       "path": "scripts/lexicon/heritage_classifier.py",
@@ -27870,11 +27850,6 @@
     {
       "path": "scripts/rag/benchmark_embeddings.py",
       "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/rag/benchmark_embeddings.py",
-      "code": "no-any-return",
       "message": "Returning Any from function declared to return \"float\""
     },
     {
@@ -31606,11 +31581,6 @@
       "path": "scripts/wiki/restore_literary_metadata.py",
       "code": "arg-type",
       "message": "Argument 1 to \"join\" of \"str\" has incompatible type \"object\"; expected \"Iterable[str]\""
-    },
-    {
-      "path": "scripts/wiki/review.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | dict[Any, Any]\""
     },
     {
       "path": "scripts/wiki/review.py",
