@@ -635,14 +635,18 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
     ],
 )
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high"])
-def test_argon_selectors_are_retired_regardless_of_effort(
+def test_argon_selectors_keep_their_listed_effort_regardless_of_effort(
     tmp_path: Path, requested: str, selector: str, effort: str | None
 ) -> None:
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        AgyAdapter.resolve_model_slug(requested)
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        AgyAdapter().build_invocation(prompt="hello", mode="danger", cwd=tmp_path, model=requested,
-                                      task_id="t-argon", session_id=None, tool_config=None, effort=effort)
+    """Argon is an active Gemini work model again (operator decision 2026-11-10).
+
+    Each listed selector reaches ``agy --model`` as itself; the effort argument never
+    turns a -low or -medium pin into another listed effort.
+    """
+    assert AgyAdapter.resolve_model_slug(requested) == selector
+    plan = AgyAdapter().build_invocation(prompt="hello", mode="danger", cwd=tmp_path, model=requested,
+                                         task_id="t-argon", session_id=None, tool_config=None, effort=effort)
+    assert _model_after_flag(plan) == selector
 
 
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
@@ -761,7 +765,7 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(ValueError, match="retired in the model catalog" if model == "gemini-4-argon-high-preview" else "Unsupported AGY model") as error:
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         AgyAdapter().build_invocation(
             prompt="hello", mode="workspace-write", cwd=tmp_path, model=model,
             task_id=None, session_id=None, tool_config=None, effort=effort,

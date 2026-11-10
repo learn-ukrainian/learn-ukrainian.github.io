@@ -1047,6 +1047,11 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
+    """An active Gemini work model holds no review role, so it is refused any review of record.
+
+    Argon left retirement on 2026-11-10 as the second Gemini work option; the refusal now
+    comes from its catalog roles, not its lifecycle, and still precedes routing and launch.
+    """
     from scripts.agent_runtime import target_admission
 
     def forbidden(*args, **kwargs):
@@ -1054,7 +1059,10 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(target_admission.ReviewAdmissionRefused, match="is retired in the model catalog"):
+    with pytest.raises(
+        target_admission.ReviewAdmissionRefused,
+        match=r"\(gemini-4-argon\) holds no review, critique or approval role",
+    ):
         target_admission.resolve_and_admit(
             ("agy",),
             mode="read-only",
@@ -1066,6 +1074,26 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
             route=forbidden,
             claude_account=HOST_ACCOUNT,
         )
+
+
+@pytest.mark.parametrize(
+    ("agent", "model"),
+    [("agy", "gemini-4-carbon-medium"), ("agy", "gemini-4-argon-low"), ("claude", "claude-fable-5-2")],
+)
+def test_work_only_model_is_refused_a_review_typed_dispatch_before_launch(agent, model):
+    """Defect class: a model with no catalog review role admitted to a review-typed dispatch.
+
+    Dispatch admission must refuse it before any worktree or provider starts; the verdict
+    recorder's later refusal only discards a run that already happened (#9583). The same
+    model stays admitted for work.
+    """
+    review = {
+        "pr": 12935, "require_review_verdict": True, "review_profile": "infra",
+        "review_author_model": "gpt-6.1-sol", "risk": "high",
+    }
+    with pytest.raises(ValueError, match="holds no review"):
+        checks.check_model_admission(agent, model, "read-only", review, b"review the change")
+    checks.check_model_admission(agent, model, "read-only", {}, b"implement the change")
 
 
 def test_sol_defaults_and_escalations_use_high_across_catalog():
