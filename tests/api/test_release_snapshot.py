@@ -133,8 +133,8 @@ def _read_json(url: str, *, timeout: float = 0.5) -> dict:
         return json.loads(response.read().decode("utf-8"))
 
 
-def _read_text(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=0.5) as response:
+def _read_text(url: str, *, timeout: float = 0.5) -> str:
+    with urllib.request.urlopen(url, timeout=timeout) as response:
         return response.read().decode("utf-8")
 
 
@@ -526,7 +526,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
             # small discovery walk: the payload below lists only the two files
             # written above. The socket timeout is a hang guard.
             artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
-            docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}")
+            docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}", timeout=10)
         finally:
             process.terminate()
             try:
