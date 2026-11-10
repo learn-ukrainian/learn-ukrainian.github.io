@@ -1160,6 +1160,12 @@ def assert_frozen_surfaces(actual, *, surfaces):
                 if value["policy"]["notes"][index] != CURRENT_BASELINE["catalog"]["policy"]["notes"][index]:
                     assert hashlib.sha256(encode(value["policy"]["notes"][index])).hexdigest() == digest
                     value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
+            # Pin the approved prose-only cleanup while retaining the historical overlay.
+            haiku = value["models"]["claude-haiku-5-5"]
+            frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
+            if haiku["notes"] != frozen_notes:
+                assert hashlib.sha256(encode(haiku["notes"])).hexdigest() == "5b4dc868af7ddd99ea269733dafed62ab0b721d23fb0ca491c05b29f46fba9f1"
+                haiku["notes"] = frozen_notes
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

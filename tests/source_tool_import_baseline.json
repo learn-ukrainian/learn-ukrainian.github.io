@@ -371,7 +371,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "796e71391f97cd88e7a99bb6d27341154117fed2aa582c1402a129c305d9255e"
+    "cli_paths_sha256": "36aec2ac49b31b7f059c14ddb10d91c9d9e32f1a7508d3209a0e6fcca683cece"
   },
   "failures": [
     {
