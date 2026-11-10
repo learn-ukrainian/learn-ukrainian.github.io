@@ -438,6 +438,18 @@ def spy(calls, *, comment_edit=False, merge=False):
                 "viewerMergeBodyText": "* clean",
             }
             return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
+        if (
+            merge and args[:5] == ["gh", "api", "--method", "POST", "graphql"]
+            and json.loads(Path(args[6]).read_text())["query"] == pub.QUEUE_ENTRY_QUERY
+        ):
+            # pr-merge proves the reviewed head's queue entry after the enqueue (machinery #281).
+            pull = {
+                "headRefOid": "a" * 40,
+                "isInMergeQueue": True,
+                "mergeQueueEntry": {"headCommit": {"oid": "a" * 40}},
+                "autoMergeRequest": None,
+            }
+            return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         record = {"argv": args, "env": kwargs.get("env", {})}
         for flag in ("--body-file", "--notes-file", "--input"):
             if flag in args:
@@ -1878,9 +1890,9 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
         sender.queued = case == "already-queued"
 
         def transport(argv, sender=sender, case=case, **kwargs):
-            enqueue = argv[1:5] == ["api", "--method", "POST", "graphql"] and json.loads(
-                Path(argv[argv.index("--input") + 1]).read_text()
-            )["query"].startswith("mutation")
+            graphql = argv[1:5] == ["api", "--method", "POST", "graphql"]
+            query = json.loads(Path(argv[argv.index("--input") + 1]).read_text())["query"] if graphql else ""
+            enqueue = query.startswith("mutation")
             if enqueue:
                 if case == "unknown":
                     sender.failure = True
@@ -1890,8 +1902,10 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
             result = sender(argv, **kwargs)
             if enqueue:
                 result.stdout, result.stderr = "raw enqueue success", "raw transport note"
-                if case == "moved":
-                    sender.head = "b" * 40
+            # The publisher proves the queue entry at the reviewed head right after the enqueue
+            # (machinery #281); the head moves only once that proof has been read.
+            if case == "moved" and query == pub.QUEUE_ENTRY_QUERY:
+                sender.head = "b" * 40
             return result
 
         if case == "unknown":

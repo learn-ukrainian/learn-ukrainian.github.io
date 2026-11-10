@@ -86,7 +86,10 @@ def layout(tmp_path: Path) -> dict[str, Path]:
     primary = tmp_path / "estate" / "lu-primary"
     kube = tmp_path / "estate" / "kube-dojo"
     for checkout in (primary, kube):
-        (checkout / ".git").mkdir(parents=True)
+        # A real Git directory: Git needs HEAD, objects/ and refs/ before it treats .git as one.
+        for entry in ("objects", "refs"):
+            (checkout / ".git" / entry).mkdir(parents=True)
+        (checkout / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
     rules = tmp_path / "policy" / "rules"
     rules.mkdir(parents=True)
     (rules / "core.md").write_text("# Configured core\n", encoding="utf-8")
