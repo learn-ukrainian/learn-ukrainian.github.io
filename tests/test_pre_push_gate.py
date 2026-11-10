@@ -365,7 +365,10 @@ def surface_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     _install_surface_scanners(root)
+    (root / ".githooks").mkdir()
+    shutil.copy2(HOOK_DIR / "_lib.sh", root / ".githooks/_lib.sh")
     _write(root, "scripts/pre_commit/project_python.sh", f'#!/usr/bin/env bash\nexec "{sys.executable}" "$@"\n')
+    (root / "scripts/pre_commit/project_python.sh").chmod(0o755)
     _write(root, "docs/push-scan.md", "clean base\n")
     _commit(root, "base", ".")
     return root
