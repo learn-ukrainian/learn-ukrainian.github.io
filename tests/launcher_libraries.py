@@ -40,6 +40,7 @@ def installed_machinery() -> InstalledMachinery:
     install location, so a checkout or path entry cannot stand in for it. Every package file
     the distribution's RECORD lists must exist with its recorded SHA-256; an edited or
     partially replaced installation fails here instead of being exercised as the release.
+    Only installer-compiled bytecode, which RECORD lists without a hash, is left out.
     """
     distribution = importlib.metadata.distribution(INSTALLED_DISTRIBUTION)
     directory = Path(os.fspath(importlib.resources.files(INSTALLED_PACKAGE)))
@@ -52,8 +53,12 @@ def installed_machinery() -> InstalledMachinery:
     for entry in distribution.files or ():
         if entry.parts[:1] != (INSTALLED_PACKAGE,):
             continue
-        assert entry.hash is not None and entry.hash.mode == "sha256", entry
         relative = PurePosixPath(*entry.parts[1:])
+        if entry.hash is None and relative.parent.name == "__pycache__" and relative.suffix == ".pyc":
+            # Bytecode an installer such as pip compiles is recorded without a hash (installed
+            # RECORD specification); it is a cache, not release content, and is never linked.
+            continue
+        assert entry.hash is not None and entry.hash.mode == "sha256", entry
         digest = hashlib.sha256((directory / relative).read_bytes()).digest()
         assert base64.urlsafe_b64encode(digest).rstrip(b"=").decode() == entry.hash.value, relative
         files.append(relative)
