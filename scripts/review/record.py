@@ -360,7 +360,7 @@ def attested_return(
     )
     path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     task = json.loads(path.read_bytes())
-    from lu_machinery.review.render_contract import recorded_core_context
+    from scripts.review.render_contract import recorded_core_context
 
     try:
         prompt = Path(task["prompt_file"]).read_bytes()

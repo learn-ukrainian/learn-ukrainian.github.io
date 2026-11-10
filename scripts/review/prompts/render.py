@@ -31,17 +31,11 @@ from jinja2.sandbox import ImmutableSandboxedEnvironment
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from lu_machinery.review.render_contract import (
-    RENDER_RECORD_KEY,
-    ReviewContractError,
-    render_record,
-    trusted_core_context,
-)
-
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts.ledger import review_tools
+from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record, trusted_core_context
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent

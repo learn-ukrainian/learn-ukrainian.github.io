@@ -9,9 +9,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.errors import AgentTimeoutError
-from agent_runtime.result import Result
-from agent_runtime.watchdog import WatchdogState
+from lu_machinery.agent_runtime.errors import AgentTimeoutError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.agent_runtime.watchdog import WatchdogState
+
 from batch_gemini_runner.constants import TIMEOUT_SECONDS
 from batch_gemini_runner.execution import call_gemini
 
@@ -77,7 +78,7 @@ class _PopenCapture:
 
 @pytest.fixture(autouse=True)
 def _clear_runtime_state():
-    from agent_runtime import runner as runner_mod
+    from lu_machinery.agent_runtime import runner as runner_mod
 
     runner_mod._ADAPTER_CACHE.clear()
     yield
@@ -121,18 +122,18 @@ def _invoke_with_captured_env(
         stderr_lines=[],
     )
 
-    with patch("agent_runtime.runner.has_headroom", return_value=(True, "")), patch(
-        "agent_runtime.runner.write_record",
+    with patch("lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, "")), patch(
+        "lu_machinery.agent_runtime.runner.write_record",
     ), patch(
-        "agent_runtime.runner.subprocess.Popen", popen_capture,
+        "lu_machinery.agent_runtime.runner.subprocess.Popen", popen_capture,
     ), patch(
-        "agent_runtime.runner.start_watchdog", return_value=(watchdog_state, []),
+        "lu_machinery.agent_runtime.runner.start_watchdog", return_value=(watchdog_state, []),
     ), patch(
-        "agent_runtime.runner.stop_watchdog",
+        "lu_machinery.agent_runtime.runner.stop_watchdog",
     ), patch(
-        "agent_runtime.adapters.gemini.Path.home", return_value=tmp_path,
+        "lu_machinery.agent_runtime.adapters.gemini.Path.home", return_value=tmp_path,
     ), patch(
-        "scripts.agent_runtime.adapters.gemini.GeminiAdapter.default_model", "gemini-fixture-native",
+        "lu_machinery.agent_runtime.adapters.gemini.GeminiAdapter.default_model", "gemini-fixture-native",
     ), patch(
         "batch_gemini_runner.execution._log_api_usage",
     ):

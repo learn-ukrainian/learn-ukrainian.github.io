@@ -656,11 +656,10 @@ def test_native_bound_review_wire_contains_hash_bound_core_without_boot_files(
     world, tmp_path, monkeypatch, two_accounts, agent, access,
 ):
     """Defect class: isolated native review transports drop the rendered, hash-bound trusted core."""
-    from lu_machinery.lib import rules_core  # the product renderer injects the installed release's core
-
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.adapters.claude import ClaudeAdapter
     from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.lib import rules_core
     from scripts.review.prompts.render import render_prompt
     from tests.review.test_prompts import _setup_lexical_fixture
 

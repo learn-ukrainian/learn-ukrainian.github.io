@@ -121,10 +121,12 @@ def make_tooling(directory):
 
 @pytest.fixture
 def synthetic_opsec(tmp_path, monkeypatch):
-    from scripts.opsec import prepublish
+    import importlib
 
     directory = make_tooling(tmp_path / "tooling")
-    monkeypatch.setattr(prepublish, "private_tooling", lambda: directory)
+    # Product publishers run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.opsec.prepublish", "lu_machinery.opsec.prepublish"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(importlib.import_module(name), "private_tooling", lambda: directory)
     return directory
 
 

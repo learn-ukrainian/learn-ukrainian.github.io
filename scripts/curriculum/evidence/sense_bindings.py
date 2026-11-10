@@ -534,9 +534,8 @@ def _check_lexical_packet(task: dict, word: dict, pool: list[dict]) -> None:
 
 def _check_lexical_prompt(task: dict, attempt: dict, word: dict, pool: list[dict]) -> None:
     """Bind the consumer to the admitted lexical render, not just a result's assertions."""
-    from lu_machinery.review.render_contract import ReviewContractError, recorded_core_context
-
     from scripts.review.prompts.render import ManifestReader, RenderError, render
+    from scripts.review.render_contract import ReviewContractError, recorded_core_context
 
     try:
         contract = task["review_contract"]
