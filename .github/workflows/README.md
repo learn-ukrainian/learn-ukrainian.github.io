@@ -29,8 +29,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 ## Security gates (layered, non-wedging)
 
-0. **Workflow-path gate** — `.github/CODEOWNERS` requires human code-owner
-   review for PRs touching `workflows/**`, and
+0. **Workflow-path gate** —
    `scripts/audit/check_untrusted_workflow_interpolation.py` (invoked by
    `check_workflows.sh` after actionlint) fail-closes untrusted-context
    `${{ }}` interpolation in `run:` scripts; use the `env:` + `"$VAR"` pattern.
