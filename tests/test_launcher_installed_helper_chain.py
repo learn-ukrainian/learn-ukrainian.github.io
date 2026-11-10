@@ -79,18 +79,24 @@ def _release_relative(path: Path, root: Path, release: InstalledMachinery) -> Pu
     """The package-relative release file that ``path`` is or caches, or None outside machinery."""
     if path.suffix == ".pyc" and path.parent.name == "__pycache__":
         path = Path(importlib.util.source_from_cache(path))
-    for base in (root / release.name, release.directory):
+    package = root / release.name
+    for base in (package, package.resolve(), release.directory, release.directory.resolve()):
         if path.is_relative_to(base):
             return PurePosixPath(path.relative_to(base).as_posix())
     return None
+
+
+# The interpreter's own environment (standard library and installed dependencies). CI
+# creates its virtual environment inside the checkout, so it is excluded by location.
+_ENVIRONMENT = tuple({Path(prefix).resolve() for prefix in (sys.prefix, sys.base_prefix)})
 
 
 def _assert_release_origin(path: Path, root: Path, release: InstalledMachinery) -> None:
     relative = _release_relative(path, root, release)
     if relative is None:
         resolved = path.resolve()
-        # A virtual environment inside the checkout is not the checkout.
-        assert resolved.is_relative_to(release.directory) or not resolved.is_relative_to(REPO), path
+        if not any(resolved.is_relative_to(prefix) for prefix in _ENVIRONMENT):
+            assert not resolved.is_relative_to(REPO), f"{path}: a child read this checkout"
         return
     assert relative in release.files, f"{path}: not a file the installed release records"
     source = path if path.suffix != ".pyc" else Path(importlib.util.source_from_cache(path))
