@@ -10,6 +10,11 @@ stops refusing only when its seat recorded a later verdict at another head
 WITH CHANGES, advisory task cto-e08a-advlineage-sol). A finished run whose
 only outcome is a published capability failure
 (``scripts/review/capability_failure.py``) has no verdict and fills no seat.
+A terminal run that is not ``done`` and has no reply carries no verdict only
+when its record proves no provider ran (``provider_pgid`` absent or null, and
+no ``result_sha256``). Every other missing reply is refused, a ``done`` run
+is unchanged, and a published verdict that names a run which never ran is
+refused.
 The approval carry-over and the repair-verification round
 (``scripts/review/repair_round.py``) both apply it before anything else. Ported from the carry-over's reviewed reader (#11907) so the two
 share one implementation.
@@ -446,6 +451,17 @@ def dispatched_rounds(
     return rounds
 
 
+def _provider_never_ran(record: Mapping[str, Any]) -> bool:
+    """Whether the task record proves no provider process ran.
+
+    The supervisor stores ``provider_pgid`` as null, or omits it, and leaves
+    ``result_sha256`` unset when it dies before launching a provider. A recorded
+    pgid or a result digest means a provider may have run, so a missing reply
+    stays a refusal.
+    """
+    return record.get("provider_pgid") is None and record.get("result_sha256") is None
+
+
 def check_lineage(
     *,
     runs: Sequence[ReviewRun],
@@ -456,15 +472,20 @@ def check_lineage(
 ) -> list[str]:
     """Return the seats (reviewer families) whose latest verdict is the approved head's APPROVE.
 
-    Every published verdict must belong to a run on record, and every run must
-    be terminal with a reply: a finished run's verdict, model, family and start
+    Every published verdict must belong to a finished run on record, and every
+    run must be terminal. A ``done`` run's verdict, model, family and start
     must match its published marker, unless a later verdict of its seat
     supersedes it (:func:`superseded_runs`), and any other run's reply must
-    carry no verdict at all. A finished run may instead have exactly one capability-failure
-    event that its record and reply re-derive (``capability_failure.require_bound``),
-    never beside a published verdict. ``exclude_head`` drops the runs, verdicts
-    and events of one later head, the round being recorded, which is not part of
-    the lineage before it.
+    carry no verdict at all. A terminal run whose status is not ``done`` and
+    whose reply is missing is accepted as carrying no verdict only when
+    :func:`_provider_never_ran` holds. Every other missing reply is refused,
+    and a ``done`` run still needs its reply. A published verdict that names
+    a run which never started a provider is refused: that run is not claimed,
+    so the verdict has no finished review on record. A finished run may instead
+    have exactly one capability-failure event that its record and reply
+    re-derive (``capability_failure.require_bound``), never beside a published
+    verdict. ``exclude_head`` drops the runs, verdicts and events of one later
+    head, the round being recorded, which is not part of the lineage before it.
     """
     markers = [item for item in _trusted_markers(comments, login) if item[1]["sha"] != exclude_head]
     try:
@@ -483,6 +504,9 @@ def check_lineage(
         if status not in TERMINAL_TASK_STATUSES:
             raise LineageRefused(f"review task {run.task_id} is not terminal (status {status!r})")
         if run.reply is None:
+            # A supervisor crash before launch can never grow a reply. Admit only that shape.
+            if status != "done" and _provider_never_ran(run.record):
+                continue
             raise LineageRefused(f"review task {run.task_id} ({status}) has no reply on record")
         if status != "done":
             if recognized_verdicts(run.reply):
