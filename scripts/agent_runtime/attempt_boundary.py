@@ -1251,7 +1251,7 @@ class AttemptBoundary:
     def __init__(self, *, agent: str, tool_config: dict[str, Any]):
         from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
-        from .attempt_network import AttemptEgress, load_allowlist
+        from .attempt_network import AttemptEgress
         from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
         # Claude's adapter must land with its own eligible cross-family review
@@ -1322,7 +1322,7 @@ class AttemptBoundary:
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
-            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
+            self.egress = AttemptEgress(self.egress_endpoint)
             self.forwarder = self.write_root / "forwarder.py"
             self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {

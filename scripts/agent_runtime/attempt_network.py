@@ -1,4 +1,9 @@
-"""Parent-owned CONNECT-only egress for formal attempts; never mounted in seats."""
+"""Parent-owned CONNECT-only egress for agent sandboxes; never mounted in seats.
+
+Operator decision 2026-11-10: sandboxed agents reach any public host over HTTPS. The proxy admits
+``CONNECT <hostname>:443`` for every canonical hostname, still resolves in the parent, refuses every
+non-global or host-interface address and records each destination for the run's receipt.
+"""
 
 from __future__ import annotations
 
@@ -13,8 +18,6 @@ import socket
 import threading
 from dataclasses import dataclass
 from pathlib import Path
-
-import yaml
 
 from scripts.common.repo_root import project_interpreter
 from scripts.review.isolation import ReviewIsolationError
@@ -31,15 +34,6 @@ def canonical_host(value: str) -> bool:
     except ValueError:
         return True
     return False
-
-
-def load_allowlist(agent: str) -> frozenset[str]:
-    path = Path(__file__).resolve().parents[1] / "config" / "attempt_provider_egress.yaml"
-    data = yaml.safe_load(path.read_bytes())
-    hosts = data["harnesses"][agent]
-    if not isinstance(hosts, list) or not hosts or any(not isinstance(h, str) or not canonical_host(h) for h in hosts):
-        raise ReviewIsolationError("attempt_egress_allowlist_invalid")
-    return frozenset(hosts)
 
 
 def normalize_address(value: str):
@@ -91,14 +85,18 @@ def validate_answers(answers: list[str], local: frozenset) -> list:
     return list(dict.fromkeys(addresses))
 
 
-def connect_target(header: bytes, allowlist: frozenset[str]) -> str:
-    """RFC 9110 CONNECT authority, deliberately narrower than general HTTP."""
+def connect_target(header: bytes) -> str:
+    """RFC 9110 CONNECT authority, deliberately narrower than general HTTP.
+
+    Any canonical hostname on port 443 is a destination; IP literals are refused so that every
+    address passes the parent's DNS answer validation.
+    """
     lines = header.decode("ascii").split("\r\n")
     method, target, version = lines[0].split(" ")
     if method != "CONNECT" or version not in {"HTTP/1.0", "HTTP/1.1"}:
         raise ValueError("CONNECT required")
     host, port = target.split(":")
-    if port != "443" or not canonical_host(host) or host not in allowlist:
+    if port != "443" or not canonical_host(host):
         raise ValueError("destination refused")
     seen_host = False
     for line in lines[1:-2]:
@@ -132,8 +130,8 @@ DEFAULT_LIMITS = Limits()
 class AttemptEgress:
     """Bounded asyncio proxy with killable DNS processes and numeric connects."""
 
-    def __init__(self, endpoint: Path, allowlist: frozenset[str], *, limits: Limits = DEFAULT_LIMITS):
-        self.endpoint, self.allowlist, self.limits = endpoint, allowlist, limits
+    def __init__(self, endpoint: Path, *, limits: Limits = DEFAULT_LIMITS):
+        self.endpoint, self.limits = endpoint, limits
         self.local_addresses = host_addresses()
         self.records: list[dict] = []  # destination + byte count only; no payloads or addresses
         self.ready = threading.Event()
@@ -261,9 +259,9 @@ class AttemptEgress:
             header = await asyncio.wait_for(reader.readuntil(b"\r\n\r\n"), self.limits.header_seconds)
             if len(header) > self.limits.header_bytes:
                 raise ValueError("header too large")
-            host = connect_target(header, self.allowlist)
+            host = connect_target(header)
             record = {"destination": f"{host}:443", "bytes": 0}
-            # One aggregate per allowed destination keeps logs bounded as well.
+            # One aggregate per requested destination: the receipt's audit of which hosts were contacted.
             existing = next((r for r in self.records if r["destination"] == record["destination"]), None)
             if existing is None:
                 self.records.append(record)

@@ -16,7 +16,7 @@ from scripts.lib import rules_core
 # Read-only has a shell only inside an OS boundary (decision REVIEW-BOUNDARY-1101, #12378): every Bash
 # command goes through CLAUDE_CODE_SHELL_PREFIX to agy_sandbox.shell_main, which runs it in the
 # bubblewrap boundary of read-only AGY (read-only checkout and Git metadata, the project interpreter,
-# private scratch, no network, no credentials) and relays only the gh reads the route had before.
+# private scratch, no credentials, public HTTPS through the egress proxy) and relays only gh reads.
 # Claude Code itself, with its login, stays outside. The command denies below remain as defense in depth.
 # Claude Code's own OS sandbox would do the same, but it needs socat on Linux and refuses to start without it.
 # dontAsk still runs anything a loaded settings file pre-approves, and a worktree loads the main

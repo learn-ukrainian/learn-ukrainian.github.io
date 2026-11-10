@@ -11,7 +11,7 @@ import subprocess
 
 import pytest
 
-from scripts.agent_runtime.attempt_network import load_allowlist
+from scripts.agent_runtime.attempt_network import canonical_host
 from scripts.common.repo_root import project_interpreter
 from scripts.dispatcher import agy_sandbox
 from tests.dispatcher.test_providers_b import _bwrap_usable, _launch, _linked_worktree
@@ -88,7 +88,8 @@ _CASES = {
     "F1-zsh-git-push": (False, "$(command -v zsh || command -v dash || command -v bash) -c "
                                "'git push {remote} HEAD:refs/heads/pwned'"),
     "F1-sh-git-push-github": (False, "git push https://github.com/example/repo.git HEAD:refs/heads/pwned"),
-    "F1-curl-github-api-post": (False, "curl -sS --max-time 10 -X POST https://api.github.com/repos/example/repo/pulls/1/merge"),
+    # GitHub is reachable (operator decision 2026-11-10), but the sandbox holds no credential to write with.
+    "F1-curl-github-api-post": (False, "curl -sSf --max-time 10 -X POST https://api.github.com/repos/example/repo/pulls/1/merge"),
     "F1-python-primary-write": (False, f"{_PY} -c \"open('{{primary}}/review-mutation-probe','w').write('x')\""),
     "F2-curl-metadata-proxy": (False, "curl -sS --max-time 10 https://{metadata}/latest/meta-data/"),
     "F2-curl-metadata-direct": (False, "curl -sS --noproxy '*' --max-time 5 http://{metadata}/latest/meta-data/"),
@@ -96,7 +97,7 @@ _CASES = {
     "F2-curl-rfc1918-direct": (False, "curl -sS --noproxy '*' --max-time 5 http://{private}/"),
     "F2-fetch-metadata": (False, f"{_PY} -c \"import urllib.request as u; "
                                  "u.urlopen('https://{metadata}/latest/meta-data/', timeout=10)\""),
-    # GitHub writes through gh: native Claude's gh relay refuses them; AGY's sandbox has no gh login.
+    # GitHub writes through gh: the gh relay of both routes refuses them; neither sandbox has a gh login.
     "F1-gh-pr-merge": (False, "gh pr merge 1 --squash"),
     "F1-gh-api-post": (False, "gh api -X POST repos/example/repo/issues -f title=x"),
     "F1-gh-pr-view-web": (False, "gh pr view 1 -cw"),
@@ -190,16 +191,56 @@ def test_review_boundary_refuses_bypass_classes_and_keeps_execution(tmp_path, ro
                           timeout=30).stdout == ""
     assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
     assert not (primary / "review-mutation-probe").exists()
+    # Every route goes through the egress proxy; it records host names only, never an address literal.
+    assert all(canonical_host(record["destination"].removesuffix(":443")) for record in receipt["egress"])
+    if "-gh-" in case:  # the relay itself refused, not gh failing afterwards (cf-12521-sol-r2 F2)
+        assert receipt["gh"][0]["refused"] and "review boundary: " in run.stderr
     if route == "agy":
         assert not (worktree / ".venv").exists()  # the boundary removes the link it created
-        allowlist = load_allowlist("agy")
-        assert all(record["destination"].split(":")[0] in allowlist for record in receipt.get("egress", []))
     else:
-        # The shell has no network and no egress proxy; the link stays for the run's next command.
-        assert "egress" not in receipt
+        # The link stays for the run's next command.
         assert (worktree / ".venv").resolve() == project_interpreter().parent.parent.resolve()
         assert set(agy_sandbox.ensure_scratch_root().glob("claude-shell-*")) <= scratches  # removed with the command
-        if "-gh-" in case:  # the relay itself refused, not gh failing afterwards (cf-12521-sol-r2 F2)
-            assert receipt["gh"][0]["refused"] and "review boundary: " in run.stderr
         if granted:
             assert cwd_file.read_text().strip() == str(worktree.resolve())
+
+
+@pytest.mark.skipif(not _bwrap_usable(), reason="needs a usable unprivileged bubblewrap")
+@pytest.mark.skipif(shutil.which("gh") is None or shutil.which("curl") is None, reason="needs gh and curl on the host")
+@pytest.mark.live_network
+@pytest.mark.live_github
+def test_sandbox_reaches_public_hosts_and_github_while_filesystem_boundary_holds(tmp_path):
+    """Defect class: sandbox egress blocks non-provider hosts or GitHub, or opening it loosens the filesystem boundary.
+
+    Operator decision 2026-11-10: sandboxed agents reach the internet and GitHub. Both routes must reach a
+    public non-provider host and read GitHub through the gh relay, while the primary checkout stays
+    unwritable, host credentials stay unreadable and the relay still refuses another host.
+    """
+    worktree, head = _linked_worktree(tmp_path)
+    primary, home = tmp_path / "repo", os.path.expanduser("~")
+    command = (
+        "curl -sSfI --max-time 30 https://www.example.org >/dev/null"
+        " && gh issue view 100 -R learn-ukrainian/machinery --json number --jq .number"
+        f" && ! touch {primary}/sandbox-egress-probe 2>/dev/null"
+        f" && ! ls -d {home}/.config/gh 2>/dev/null"
+        " && ! gh issue view 100 -R localhost/learn-ukrainian/machinery 2>/dev/null"
+    )
+    for route in ("agy", "claude"):
+        task_id = f"egress-{route}"
+        if route == "agy":
+            argv, env = _launch(tmp_path, worktree, task_id, ["/bin/sh", "-c", command])
+        else:
+            argv, env, _cwd_file = _claude_shell(tmp_path, worktree, task_id, command)
+        run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=180, check=False, cwd=worktree)
+        if route == "agy":
+            receipt = json.loads((tmp_path / f"{task_id}.sandbox.json").read_text())
+        else:
+            receipt = _claude_receipt(tmp_path, task_id)
+        assert receipt["status"] == "ran" and receipt["canary"]["passed"] is True, (receipt.get("reason"), run.stderr)
+        assert (run.returncode, run.stdout) == (0, "100\n"), (route, run.stdout, run.stderr)
+        contacted = {record["destination"]: record["bytes"] for record in receipt["egress"]}
+        assert contacted.get("www.example.org:443", 0) > 0, (route, contacted)
+        assert [(record["command"], record["refused"], record["returncode"]) for record in receipt["gh"]] == [
+            (["issue", "view"], None, 0), (["issue", "view"], "--repo/-R accepts only OWNER/REPO on github.com", 1)]
+        assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
+        assert not (primary / "sandbox-egress-probe").exists()
