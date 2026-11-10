@@ -214,17 +214,22 @@ def test_sandbox_reaches_public_hosts_and_github_while_filesystem_boundary_holds
 
     Operator decision 2026-11-10: sandboxed agents reach the internet and GitHub. Both routes must reach a
     public non-provider host and read GitHub through the gh relay, while the primary checkout stays
-    unwritable, host credentials stay unreadable and the relay still refuses another host.
+    unwritable, host credentials stay unreadable and the relay still refuses another host. The issue read
+    itself is asserted where the host's gh has a login; without one (a CI runner) the relay must still run gh.
     """
     worktree, head = _linked_worktree(tmp_path)
     primary, home = tmp_path / "repo", os.path.expanduser("~")
-    command = (
-        "curl -sSfI --max-time 30 https://www.example.org >/dev/null"
-        " && gh issue view 100 -R learn-ukrainian/machinery --json number --jq .number"
-        f" && ! touch {primary}/sandbox-egress-probe 2>/dev/null"
-        f" && ! ls -d {home}/.config/gh 2>/dev/null"
-        " && ! gh issue view 100 -R localhost/learn-ukrainian/machinery 2>/dev/null"
-    )
+    logged_in = subprocess.run(["gh", "auth", "status"], capture_output=True, timeout=60, check=False).returncode == 0
+    # Each probe runs on its own line, so one outcome never hides the next.
+    command = "\n".join([
+        "curl -sSfI --max-time 30 https://www.example.org >/dev/null && echo public-host-reached",
+        "gh issue view 100 -R learn-ukrainian/machinery --json number --jq .number 2>/dev/null; echo gh-exit=$?",
+        f"touch {primary}/sandbox-egress-probe 2>/dev/null || echo primary-unwritable",
+        f"ls -d {home}/.config/gh >/dev/null 2>&1 || echo host-gh-config-hidden",
+        "gh issue view 100 -R localhost/learn-ukrainian/machinery 2>/dev/null || echo other-host-refused",
+    ])
+    expected = ["public-host-reached", *(["100", "gh-exit=0"] if logged_in else []), "primary-unwritable",
+                "host-gh-config-hidden", "other-host-refused"]
     for route in ("agy", "claude"):
         task_id = f"egress-{route}"
         if route == "agy":
@@ -237,10 +242,14 @@ def test_sandbox_reaches_public_hosts_and_github_while_filesystem_boundary_holds
         else:
             receipt = _claude_receipt(tmp_path, task_id)
         assert receipt["status"] == "ran" and receipt["canary"]["passed"] is True, (receipt.get("reason"), run.stderr)
-        assert (run.returncode, run.stdout) == (0, "100\n"), (route, run.stdout, run.stderr)
+        lines = run.stdout.splitlines()
+        if not logged_in:  # the relay ran the host's gh, which failed only for want of a login
+            assert lines.pop(1) != "gh-exit=0" and lines[0] == "public-host-reached", (route, run.stdout)
+        assert (run.returncode, lines) == (0, expected), (route, run.stdout, run.stderr)
         contacted = {record["destination"]: record["bytes"] for record in receipt["egress"]}
         assert contacted.get("www.example.org:443", 0) > 0, (route, contacted)
-        assert [(record["command"], record["refused"], record["returncode"]) for record in receipt["gh"]] == [
-            (["issue", "view"], None, 0), (["issue", "view"], "--repo/-R accepts only OWNER/REPO on github.com", 1)]
+        assert [(record["command"], record["refused"], record["returncode"] == 0) for record in receipt["gh"]] == [
+            (["issue", "view"], None, logged_in),
+            (["issue", "view"], "--repo/-R accepts only OWNER/REPO on github.com", False)]
         assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
         assert not (primary / "sandbox-egress-probe").exists()
