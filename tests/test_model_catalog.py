@@ -1076,6 +1076,26 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
         )
 
 
+@pytest.mark.parametrize(
+    ("agent", "model"),
+    [("agy", "gemini-4-carbon-medium"), ("agy", "gemini-4-argon-low"), ("claude", "claude-fable-5-2")],
+)
+def test_work_only_model_is_refused_a_review_typed_dispatch_before_launch(agent, model):
+    """Defect class: a model with no catalog review role admitted to a review-typed dispatch.
+
+    Dispatch admission must refuse it before any worktree or provider starts; the verdict
+    recorder's later refusal only discards a run that already happened (#9583). The same
+    model stays admitted for work.
+    """
+    review = {
+        "pr": 12935, "require_review_verdict": True, "review_profile": "infra",
+        "review_author_model": "gpt-6.1-sol", "risk": "high",
+    }
+    with pytest.raises(ValueError, match="holds no review"):
+        checks.check_model_admission(agent, model, "read-only", review, b"review the change")
+    checks.check_model_admission(agent, model, "read-only", {}, b"implement the change")
+
+
 def test_sol_defaults_and_escalations_use_high_across_catalog():
     bindings = []
 

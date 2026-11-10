@@ -143,11 +143,16 @@ def execution_identity(agent: str, model: str, catalog: dict | None = None) -> s
 
 
 def check_model_admission(agent: str, model: str, mode: str, options: dict, prompt: bytes) -> None:
-    """Refuse an unknown model, and keep the temporary reviewer exception closed, at admission and at spawn.
+    """Refuse an unknown model, a reviewer without a review role, and keep the temporary reviewer exception closed.
 
     An unknown explicit pin is refused before any model-specific exemption, so it can never run
     under another model's identity. Cursor's ``auto`` selector names no model and stays admitted.
+    A review-typed request needs a catalog review role (#9583) before any worktree or provider
+    starts; the verdict recorder's later refusal would only discard a run that already happened.
     """
+    from scripts.dispatcher.admission import review_typed
+    from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+
     catalog = load_model_catalog()
     identity = execution_identity(agent, model, catalog)
     if identity is None:
@@ -155,6 +160,10 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
             return
         raise ValueError(unknown_model_refusal(model))
     if not catalog["models"][identity].get("red_team_only"):
+        # ``--risk`` is the review risk label, so it types a review as at dispatch role admission.
+        reviewed = review_typed(options) or bool(options.get("risk"))
+        if reviewed and (refusal := activity_role_refusal(identity, REVIEW_ACTIVITY, catalog)):
+            raise ValueError(refusal)
         return
     context = {key: options.get(key) for key in ("review_mode", "review_profile", "requested_role")}
     context.update(author_model=options.get("review_author_model"),
