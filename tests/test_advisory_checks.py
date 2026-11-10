@@ -6,11 +6,11 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.ci import advisory_checks as advisory
-from scripts.opsec.prepublish import PublishBlocked
-from scripts.orchestration import handoff_ready, integration_sweep
-from scripts.publish.merge_guard import ensure_merge_ready, parse_checks
+from lu_machinery.ci import advisory_checks as advisory
+from lu_machinery.common.repo_root import product_root
+from lu_machinery.opsec.prepublish import PublishBlocked
+from lu_machinery.orchestration import handoff_ready, integration_sweep
+from lu_machinery.publish.merge_guard import ensure_merge_ready, parse_checks
 
 SHADOW = "Component shadow (advisory)"
 HEAD = "a" * 40
@@ -29,8 +29,10 @@ def workflow_jobs():
 
 @pytest.fixture
 def ci_file(tmp_path, monkeypatch):
-    path = tmp_path / "ci.yml"
-    monkeypatch.setattr(advisory, "CI_WORKFLOW_PATH", path)
+    # The release reads the selected product's .github/workflows/ci.yml at each call.
+    path = tmp_path / ".github/workflows/ci.yml"
+    path.parent.mkdir(parents=True)
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(tmp_path))
 
     def write(jobs=None):
         path.write_text(yaml.safe_dump({"name": "CI", "jobs": jobs or workflow_jobs()}))
@@ -45,7 +47,7 @@ def test_current_workflow_exact_set_and_repository_root(monkeypatch, tmp_path):
     real = advisory.load_advisory_checks()
     assert real.reason is None
     assert real.names == frozenset()
-    assert Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml" == advisory.CI_WORKFLOW_PATH
+    assert product_root().resolve() == Path(__file__).resolve().parents[1]
     policy = advisory.load_advisory_checks(Path(__file__).resolve().parent / "fixtures/ci_advisory_workflow.yml")
     assert policy.names == frozenset({SHADOW})
     assert advisory.is_advisory(SHADOW, workflow="CI", policy=policy)
@@ -242,7 +244,9 @@ def respond(scenario, args):
             reply["headRefOid"] = scenario.get("bound_head", head)
         return 0, json.dumps(reply), ""
     if args[:2] == ["pr", "view"]:
+        # The release's publisher also asks for mergeStateStatus and lands only CLEAN or HAS_HOOKS.
         meta = {"number": 5, "isDraft": False, "baseRefName": "main", "body": "", "headRefOid": head,
+                "mergeStateStatus": "CLEAN",
                 "url": scenario.get("url", "https://github.com/owner/repo/pull/5"), **scenario.get("meta", {})}
         return 0, json.dumps(meta), ""
     if args[:2] == ["pr", "checks"]:
@@ -491,7 +495,7 @@ def test_external_advisory_run_requires_exact_identity(run, proven):
 
 
 def test_prove_external_advisory_reads_only_exact_head_endpoints():
-    from scripts.publish.merge_guard import prove_external_advisory
+    from lu_machinery.publish.merge_guard import prove_external_advisory
 
     seen = []
     documents = {STATUS_ENDPOINT: {"total_count": 0, "statuses": []},
@@ -511,7 +515,7 @@ def test_prove_external_advisory_reads_only_exact_head_endpoints():
 
 
 def test_external_advisory_names_are_exact():
-    from scripts.publish.merge_guard import external_advisory_names
+    from lu_machinery.publish.merge_guard import external_advisory_names
 
     rows = [{"name": "Entire Gates"}, {"context": "Entire Gates"}, {"name": "entire gates"},
             {"name": ["Entire Gates"]}, "Entire Gates", {"name": "CI Gate"}]
@@ -520,7 +524,7 @@ def test_external_advisory_names_are_exact():
 
 
 def test_unproven_name_is_never_skipped_by_parsers():
-    from scripts.publish.merge_guard import _parse_status_rollup_rows
+    from lu_machinery.publish.merge_guard import _parse_status_rollup_rows
 
     # Headless ``gh pr checks`` rows never take an exemption; only the bound rollup does.
     rows = [check(ENTIRE.name, "pending", "IN_PROGRESS")]
@@ -606,7 +610,7 @@ def test_oo48_without_an_entry_name_the_selector_is_not_reinterpreted(tmp_path):
 
 
 def test_exempt_requires_a_clean_check_run_identity():
-    from scripts.publish.merge_guard import _exempt
+    from lu_machinery.publish.merge_guard import _exempt
 
     proven = frozenset({ENTIRE.name})
     assert _exempt(ROLLUP_ENTIRE, proven) is True
@@ -629,20 +633,20 @@ def test_exempt_requires_a_clean_check_run_identity():
 
 @pytest.mark.parametrize("rows", [None, {}, "", False, 0, "[]", {"statusCheckRollup": []}])
 def test_status_rollup_parser_accepts_only_a_list(rows):
-    from scripts.publish.merge_guard import _parse_status_rollup_rows
+    from lu_machinery.publish.merge_guard import _parse_status_rollup_rows
 
     assert _parse_status_rollup_rows(rows) is None
     assert _parse_status_rollup_rows(rows, advisory=frozenset({ENTIRE.name})) is None
 
 
 def test_status_rollup_parser_keeps_genuine_empty_list():
-    from scripts.publish.merge_guard import _parse_status_rollup_rows
+    from lu_machinery.publish.merge_guard import _parse_status_rollup_rows
 
     assert _parse_status_rollup_rows([]) == ([], [])
 
 
 def test_bound_rollup_states_binds_rows_proof_and_judged_head():
-    from scripts.publish.merge_guard import bound_rollup_states
+    from lu_machinery.publish.merge_guard import bound_rollup_states
 
     documents = {STATUS_ENDPOINT: {"total_count": 0, "statuses": []},
                  RUNS_ENDPOINT: {"total_count": 1, "check_runs": [entire_run()]}}
@@ -675,7 +679,7 @@ def test_bound_rollup_states_binds_rows_proof_and_judged_head():
 
 
 def test_external_check_states_switches_only_for_an_entry_name():
-    from scripts.publish.merge_guard import external_check_states
+    from lu_machinery.publish.merge_guard import external_check_states
 
     sentinel = ([], ["bound"])
     assert external_check_states([GREEN_GATE], parse_checks, pytest.fail) == ([], [])
@@ -709,7 +713,7 @@ def _paged_get_json(runs, *, total=None, drop=()):
 
 
 def test_prove_external_advisory_reads_every_page_of_a_large_head():
-    from scripts.publish.merge_guard import prove_external_advisory
+    from lu_machinery.publish.merge_guard import prove_external_advisory
 
     get_json, seen = _paged_get_json(_paged_runs(136))
     names = frozenset({ENTIRE.name})
@@ -718,7 +722,7 @@ def test_prove_external_advisory_reads_every_page_of_a_large_head():
 
 
 def test_prove_external_advisory_reads_a_full_single_page_once():
-    from scripts.publish.merge_guard import prove_external_advisory
+    from lu_machinery.publish.merge_guard import prove_external_advisory
 
     get_json, seen = _paged_get_json(_paged_runs(100))
     assert prove_external_advisory(REPO, HEAD, frozenset({ENTIRE.name}), get_json) == frozenset({ENTIRE.name})
@@ -735,7 +739,7 @@ def test_prove_external_advisory_reads_a_full_single_page_once():
     pytest.param(_paged_runs(90), {"total": 136}, id="short-first-page"),
 ])
 def test_prove_external_advisory_fails_closed_when_pages_do_not_add_up(runs, kwargs):
-    from scripts.publish.merge_guard import prove_external_advisory
+    from lu_machinery.publish.merge_guard import prove_external_advisory
 
     get_json, _ = _paged_get_json(runs, **kwargs)
     assert prove_external_advisory(REPO, HEAD, frozenset({ENTIRE.name}), get_json) is None

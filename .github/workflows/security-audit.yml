@@ -27,7 +27,7 @@ on:
       - 'site/package-lock.json'
       - 'scripts/config/pip-audit-ignore.yaml'
       - 'scripts/config/npm-audit-ignore.yaml'
-      - 'scripts/ci/audit_dependencies.py'
+      - 'requirements-machinery.lock'
       - '.github/workflows/security-audit.yml'
 
 jobs:
@@ -38,6 +38,10 @@ jobs:
     if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # The installed release has no implicit product: name this checkout.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,8 +54,17 @@ jobs:
       - name: pip-audit (blocking with suppression)
         run: |
           python -m pip install --upgrade pip pip-audit pyyaml
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
           echo "::group::pip-audit (requirements-lock.txt)"
-          python -m scripts.ci.audit_dependencies --skip-node
+          python -m lu_machinery.ci.audit_dependencies --skip-node
           echo "::endgroup::"
 
   npm-audit:
@@ -61,6 +74,10 @@ jobs:
     if: ${{ github.event.schedule != '23 4 * * *' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # The installed release has no implicit product: name this checkout.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -79,8 +96,17 @@ jobs:
       - name: npm audit (blocking production check with suppressions)
         run: |
           python -m pip install --upgrade pip pyyaml
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
           echo "::group::npm audit (production deps, audited suppressions)"
-          python -m scripts.ci.audit_dependencies --skip-python
+          python -m lu_machinery.ci.audit_dependencies --skip-python
           echo "::endgroup::"
           echo "::group::npm audit (all, advisory summary)"
           npm audit --prefix site || true
@@ -98,6 +124,10 @@ jobs:
     permissions:
       contents: read
       issues: write
+    # The installed release has no implicit product: name this checkout.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -114,7 +144,16 @@ jobs:
       - name: Collect unsuppressed findings
         run: |
           python -m pip install --upgrade pip pip-audit pyyaml
-          python -m scripts.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m lu_machinery.ci.dependency_advisory_issue collect --out ci-artifacts/dependency-findings.json
 
       - name: Plan tracking-issue action
         id: plan
@@ -122,7 +161,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
-          python -m scripts.ci.dependency_advisory_issue plan \
+          python -m lu_machinery.ci.dependency_advisory_issue plan \
             --findings ci-artifacts/dependency-findings.json \
             --issue-number "$ISSUE_NUMBER" \
             --body-out ci-artifacts/advisory-issue-body.md
