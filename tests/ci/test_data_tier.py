@@ -128,6 +128,7 @@ HISTORICAL_H126 = frozenset(
         "tests/test_practice_quality_gate.py::test_reviewer_source_label_probe_on_committed_err_0005[True]",
         "tests/test_practice_quality_gate.py::test_reviewer_probe_on_the_committed_deck_and_real_sources_db",
         "tests/test_practice_quality_gate.py::test_production_practice_shards_all_modes_gate_passes",
+        "tests/test_practice_quality_gate.py::test_ground_with_sources_direct",
         "tests/test_reattribute_ukrlib.py::TestPostSearchQuality::test_post_author_chunks_in_sources_db[\\u041a\\u043e\\u0446\\u044e\\u0431\\u0438\\u043d\\u0441\\u044c\\u043a\\u0438\\u0439 \\u041c.-Fata Morgana]",
         "tests/test_reattribute_ukrlib.py::TestPostSearchQuality::test_post_author_chunks_in_sources_db[\\u041a\\u043e\\u0442\\u043b\\u044f\\u0440\\u0435\\u0432\\u0441\\u044c\\u043a\\u0438\\u0439 \\u0406.-\\u0415\\u043d\\u0435\\u0457\\u0434\\u0430]",
         "tests/test_reattribute_ukrlib.py::TestPostSearchQuality::test_post_author_chunks_in_sources_db[\\u041c\\u0438\\u0440\\u043d\\u0438\\u0439 \\u041f.-\\u0425\\u0456\\u0431\\u0430 \\u0440\\u0435\\u0432\\u0443\\u0442\\u044c \\u0432\\u043e\\u043b\\u0438]",
@@ -238,7 +239,7 @@ NEW_STORE_SELECTIONS = frozenset(
         r"tests/test_check_text.py::test_mcp_round2_no_firm_book_false_positives[\u041f\u043e \u043c\u043e\u0457\u0439 \u0434\u0443\u043c\u0446\u0456 \u0442\u0430\u043a \u043d\u0435 \u043c\u043e\u0436\u043d\u0430 \u0440\u043e\u0431\u0438\u0442\u0438]",
     ]
 )
-PREVIOUS_SELECTION_SHA256 = "d8a0fd975160e257363b017d0c68166c83ba184bcd43bb301fdeaed5a82a808f"
+PREVIOUS_SELECTION_SHA256 = "78ab0a5e2615ae5e303bc8046902fbd2de078ed060bca9acab684e84db883afb"
 PREVIOUS_SELECTION_FILES_SHA256 = "5ac30f21fb3a547b41634fd2bcd22ebc81cb3603eb873b35aa41f2676a393f9b"
 
 
@@ -247,9 +248,9 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
     assert selection["source_run"] == 36611889906
     assert selection["source_sha"] == "410da34bb875aca2acfc960da4d8c9b87ae7867b"
     # The audited baseline is preserved; #10021 adds the 16 exact factory omissions.
-    assert selection["class_c_merge_group"] == 555
+    assert selection["class_c_merge_group"] == 556
     assert selection["class_c_nightly"] == 1
-    assert len(selection["nodeids"]) == 555
+    assert len(selection["nodeids"]) == 556
     assert len(selection["files"]) == 101
     assert "tests/test_citation_resolution_invariant.py" in selection["nodeids"]
     assert "tests/test_site_links.py::TestCurriculumSync::test_manifest_modules_have_mdx[a1]" in selection["nodeids"]
@@ -274,12 +275,12 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
 
 def test_real_store_selection_preserves_h126_and_covers_g177_and_overrides() -> None:
     selection = data_tier.load_selection()
-    assert len(HISTORICAL_H126) == 123
-    assert len(CURRENT_G177) == 174
+    assert len(HISTORICAL_H126) == 124
+    assert len(CURRENT_G177) == 175
     assert HISTORICAL_H126 <= CURRENT_G177
     assert len(LOCAL_OVERRIDE_REAL_STORE) == 6
     identified = CURRENT_G177 | LOCAL_OVERRIDE_REAL_STORE
-    assert len(identified) == 180
+    assert len(identified) == 181
 
     selected = set(selection["nodeids"])
     collected_files = set(selection["files"])
@@ -291,14 +292,14 @@ def test_real_store_selection_preserves_h126_and_covers_g177_and_overrides() -> 
     assert selected >= NEW_STORE_SELECTIONS
     assert selection["real_store_audit"] == {
         "issue": 10021,
-        "historical_h126": 123,
-        "current_factory_g177": 174,
-        "identified_real_store_cases": 180,
+        "historical_h126": 124,
+        "current_factory_g177": 175,
+        "identified_real_store_cases": 181,
         "new_selection_entries": 16,
         "new_collection_files": 1,
     }
     previous = selected - NEW_STORE_SELECTIONS
-    assert len(previous) == 539
+    assert len(previous) == 540
     assert hashlib.sha256("\n".join(sorted(previous)).encode()).hexdigest() == PREVIOUS_SELECTION_SHA256
     previous_files = collected_files - {"tests/verification/test_antonenko_patterns.py"}
     assert len(previous_files) == 100

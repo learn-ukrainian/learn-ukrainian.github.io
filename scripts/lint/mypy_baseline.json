@@ -6700,11 +6700,6 @@
     {
       "path": "scripts/audit/practice_quality_gate.py",
       "code": "arg-type",
-      "message": "Argument \"distractors\" to \"ground_with_sources\" has incompatible type \"list[Any | None | str]\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "code": "arg-type",
       "message": "Argument 1 to \"_normalize_plain\" has incompatible type \"Any | None | str\"; expected \"str\""
     },
     {

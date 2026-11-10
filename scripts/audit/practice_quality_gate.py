@@ -1028,7 +1028,6 @@ def audit_practice_shards(
 
 def ground_with_sources(
     target: str,
-    distractors: list[str],
     *,
     vesum_db_path: str | Path | None = None,
 ) -> dict[str, Any]:
@@ -1148,7 +1147,7 @@ def audit_card_ambiguity(
 
         # Deterministic offline fallback using Sources/VESUM grounding
         if vesum_db and Path(vesum_db).exists():
-            g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
+            g = ground_with_sources(target=target, vesum_db_path=vesum_db)
             t_ok = g.get("target", {}).get("in_vesum", False)
             if not t_ok:
                 verdict = "fail_broken"
