@@ -147,7 +147,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | CI Gate | `if: always()`; fails on any job result other than the expected one. Also runs the large-file guard and attribution on a sparse, full-history checkout (below). |
 
 `ci-advisory.yml` (pull_request only, never required) carries the advisory
-checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
+checks: Atlas POC richness (#3930) and the diff-scoped
 Atlas vocabulary coverage report.
 
 For an offline local TruffleHog scan of the work tree or the whole public history
@@ -188,7 +188,6 @@ that chose *which* tests or checks a change ran is gone.
 | Every test file ran | none (planner trust) | pytest report: shard file lists must partition `git ls-files tests` |
 | Full-history checkout where tests read old commits | pytest, Fast checks, Contracts | pytest shard 1 (the history shard), Checks, Frontend, Secret scan; pytest shards 2..N are shallow |
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
-| TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 

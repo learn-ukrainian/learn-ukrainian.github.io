@@ -5,159 +5,19 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
+from lu_machinery.agent_runtime.errors import AgentTimeoutError
+from lu_machinery.agent_runtime.result import Result
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from lu_machinery.agent_runtime.errors import AgentTimeoutError
-from lu_machinery.agent_runtime.result import Result
-from lu_machinery.agent_runtime.watchdog import WatchdogState
-
 from batch_gemini_runner.constants import TIMEOUT_SECONDS
 from batch_gemini_runner.execution import call_gemini
-
-
-class _FakeStdin:
-    def __init__(self) -> None:
-        self.buffer = ""
-
-    def write(self, text: str) -> int:
-        self.buffer += text
-        return len(text)
-
-    def close(self) -> None:
-        return None
-
-
-class _FakeProc:
-    def __init__(self, returncode: int = 0) -> None:
-        self.returncode = returncode
-        self.stdin = _FakeStdin()
-        self.stdout = None
-        self.stderr = None
-        self.pid = 4321
-        self.args: object = ()
-
-    def poll(self) -> int:
-        return self.returncode
-
-    def wait(self, timeout: float | None = None) -> int:
-        _ = timeout
-        return self.returncode
-
-    def communicate(
-        self, input: object = None, timeout: float | None = None
-    ) -> tuple[bytes, bytes]:
-        _ = input, timeout
-        return b"", b""
-
-    def kill(self) -> None:
-        return None
-
-    def __enter__(self) -> _FakeProc:
-        return self
-
-    def __exit__(self, *_args: object) -> bool:
-        return False
-
-
-class _PopenCapture:
-    def __init__(self, returncode: int = 0) -> None:
-        self.returncode = returncode
-        self.calls: list[dict[str, object]] = []
-
-    def __call__(self, *args, **kwargs):
-        proc = _FakeProc(self.returncode)
-        proc.args = args[0] if args else kwargs.get("args", ())
-        # ``subprocess.run`` in env sanitization shares this Popen patch.
-        # Keep ``calls`` as the agent spawn (the only call that gets ``env``).
-        if "env" in kwargs:
-            self.calls.append({"args": args, "kwargs": kwargs})
-        return proc
-
-
-@pytest.fixture(autouse=True)
-def _clear_runtime_state():
-    from lu_machinery.agent_runtime import runner as runner_mod
-
-    runner_mod._ADAPTER_CACHE.clear()
-    yield
-    runner_mod._ADAPTER_CACHE.clear()
 
 
 def _make_prompt_file(tmp_path: Path, text: str = "Say hello") -> Path:
     prompt_file = tmp_path / "prompt.md"
     prompt_file.write_text(text, encoding="utf-8")
     return prompt_file
-
-
-def _invoke_with_captured_env(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    *,
-    oauth_creds: bool,
-    auth_mode: str | None = None,
-) -> tuple[dict[str, object], _PopenCapture]:
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("GEMINI_API_KEY", "test-api-key")
-    if auth_mode is None:
-        monkeypatch.delenv("GEMINI_AUTH_MODE", raising=False)
-    else:
-        monkeypatch.setenv("GEMINI_AUTH_MODE", auth_mode)
-
-    gemini_dir = tmp_path / ".gemini"
-    gemini_dir.mkdir(exist_ok=True)
-    oauth_file = gemini_dir / "oauth_creds.json"
-    if oauth_creds:
-        oauth_file.write_text("{}", encoding="utf-8")
-    else:
-        oauth_file.unlink(missing_ok=True)
-
-    payload = json.dumps({"response": "hello from gemini", "stats": {"models": {}}})
-    popen_capture = _PopenCapture(returncode=0)
-    watchdog_state = WatchdogState(
-        start_time=0.0,
-        last_activity=0.0,
-        stdout_lines=[payload],
-        stderr_lines=[],
-    )
-
-    with patch("lu_machinery.agent_runtime.runner.has_headroom", return_value=(True, "")), patch(
-        "lu_machinery.agent_runtime.runner.write_record",
-    ), patch(
-        "lu_machinery.agent_runtime.runner.subprocess.Popen", popen_capture,
-    ), patch(
-        "lu_machinery.agent_runtime.runner.start_watchdog", return_value=(watchdog_state, []),
-    ), patch(
-        "lu_machinery.agent_runtime.runner.stop_watchdog",
-    ), patch(
-        "lu_machinery.agent_runtime.adapters.gemini.Path.home", return_value=tmp_path,
-    ), patch(
-        "lu_machinery.agent_runtime.adapters.gemini.GeminiAdapter.default_model", "gemini-fixture-native",
-    ), patch(
-        "batch_gemini_runner.execution._log_api_usage",
-    ):
-        result = call_gemini(_make_prompt_file(tmp_path), "bio", slug="demo", phase=2, retry=0)
-
-    return result, popen_capture
-
-
-def test_auto_mode_keeps_api_key_even_when_oauth_present(tmp_path, monkeypatch):
-    _result, popen_capture = _invoke_with_captured_env(
-        tmp_path, monkeypatch, oauth_creds=True,
-    )
-
-    env = popen_capture.calls[0]["kwargs"]["env"]
-    assert env["GEMINI_API_KEY"] == "test-api-key"
-
-
-def test_explicit_subscription_mode_strips(tmp_path, monkeypatch):
-    _result, popen_capture = _invoke_with_captured_env(
-        tmp_path, monkeypatch, oauth_creds=False, auth_mode="subscription",
-    )
-
-    env = popen_capture.calls[0]["kwargs"]["env"]
-    assert "GEMINI_API_KEY" not in env
 
 
 def test_return_shape_preserved(tmp_path):

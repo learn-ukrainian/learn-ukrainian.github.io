@@ -1891,39 +1891,51 @@ def test_muse_fresh_projection_keeps_binding_headroom():
     assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] == 70.0
 
 
-def test_muse_probe_invokes_supported_codexbar_interface(monkeypatch):
+def test_muse_probe_reads_muse_usage_json(monkeypatch):
     import subprocess
 
     captured: dict = {}
+    now_ms = int(time.time() * 1000)
+    payload = {
+        "allowance": {
+            "asOfMs": now_ms,
+            "tier": _MUSE_EMAIL,
+            "weekly": {"usedPercent": 30, "resetsAtMs": now_ms + 5 * 24 * 3600 * 1000},
+            "window": {"usedPercent": 10, "resetsAtMs": now_ms + 300 * 1000},
+        }
+    }
 
     def fake_run(argv, **kwargs):
         captured["argv"] = argv
         captured["kwargs"] = kwargs
-        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps([_MUSE_KNOWN]), stderr=_MUSE_EMAIL)
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payload), stderr=_MUSE_EMAIL)
 
     monkeypatch.setattr(
-        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar" if name == "codexbar" else None
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None
     )
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
     record = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
-    assert captured["argv"] == [
-        "/usr/bin/codexbar",
-        "usage",
-        "--provider",
-        "muse",
-        "--json",
-        "--no-credits",
-    ]
+    assert captured["argv"] == ["/usr/bin/muse", "usage", "--json"]
     assert captured["kwargs"]["stdin"] is subprocess.DEVNULL
+    assert record["status"] == "healthy"
+    assert record["source"] == "muse_usage"
+    assert record["weekly_used_pct"] == 30.0
     assert record["headroom_pct"] == 70.0
-    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
     _assert_muse_has_no_account_material(record)
+
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: None)
+    missing = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
+    assert missing["error_code"] == "NO_PROBE"
+    assert missing["status"] == "unavailable"
+    assert missing["status"] != "healthy"
+    assert missing["weekly_used_pct"] is None
+    assert missing["weekly_remaining_pct"] is None
 
 
 def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
     import subprocess
 
-    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar")
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None)
 
     def timeout_run(argv, **kwargs):
         raise subprocess.TimeoutExpired(argv, kwargs.get("timeout"))

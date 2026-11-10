@@ -234,9 +234,6 @@ packages:
   tools:
     reason: CLIs both sides may run.
     role: shared
-  typesafe:
-    reason: Domain-free TypeSafe HTTP client both sides may call.
-    role: shared
   utils:
     reason: Version gates and small helpers with no domain policy.
     role: shared

@@ -670,7 +670,7 @@ models:
     strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
     weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver]
     notes: >-
-      #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
+      #9996: routine lockfile, pointer and smoke work; mechanical
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
       owned paths and non-Ukrainian inputs. #10919: bounded implementation also
