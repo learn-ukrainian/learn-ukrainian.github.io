@@ -192,6 +192,25 @@ def _systemd_home(tmp_path: Path) -> Path:
     return home
 
 
+@pytest.fixture
+def api_client(tmp_path):
+    """The installed release's rules router on a fixture context.
+
+    The in-tree app no longer loads the product (slice F), and the release app
+    refuses to start without configured roots, so serve the router alone, as
+    machinery's port of this test does.
+    """
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from lu_machinery.api.monitor_context import fixture_context
+    from lu_machinery.api.rules_router import router
+
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path / "api")
+    app.include_router(router, prefix="/api/rules")
+    return TestClient(app, raise_server_exceptions=False)
+
+
 # --------------------------------------------------------------------------- AC-01: a non-default root is honoured
 
 
@@ -267,6 +286,26 @@ def test_systemd_exec_start_runs_with_the_configured_roots(tmp_path: Path, layou
         "rules": str(layout["rules"]),
         "slug": CONFIGURED_SLUG,
     }
+
+
+@pytest.mark.parametrize("repo", sorted(REPOS))
+def test_api_rules_serves_the_configured_rules_directory(monkeypatch, api_client, layout, repo: str) -> None:
+    # The release serves its packaged fleet core, never a configured rules
+    # directory (machinery #126); the content addendum still comes from the
+    # configured product. Changed: the core is the release's, not "# Configured core".
+    from lu_machinery.lib import rules_core as release_rules_core
+
+    for key, value in _configured(layout, repo).items():
+        monkeypatch.setenv(key, value)
+    core = api_client.get("/api/rules?scope=core&format=json")
+    assert core.status_code == 200, core.text
+    assert core.json()["markdown"] == release_rules_core.core_text("core")
+    content = api_client.get("/api/rules?scope=content&format=json")
+    assert content.status_code == 200, content.text
+    markdown = content.json()["markdown"]
+    assert markdown == release_rules_core.core_text("content")
+    assert markdown.startswith(release_rules_core.core_text("core"))
+    assert markdown.endswith("# Configured curriculum addendum\n")
 
 
 @pytest.mark.parametrize("repo", sorted(REPOS))
@@ -361,6 +400,15 @@ def test_unset_configuration_keeps_todays_systemd_exec_start() -> None:
     ]
     assert unit["WorkingDirectory"] == ["%h/projects/learn-ukrainian"]
     assert unit["EnvironmentFile"] == ["-%h/.config/learn-ukrainian/machinery.env"]
+
+
+def test_unset_configuration_serves_the_checkout_rules(clean_env, api_client) -> None:
+    # Changed: the release serves its packaged core, not the checkout's copy (machinery #126).
+    from lu_machinery.lib import rules_core as release_rules_core
+
+    body = api_client.get("/api/rules?scope=core&format=json").json()
+    core_path = release_rules_core.source_path(release_rules_core.CORE_REL)
+    assert body["markdown"] == core_path.read_text(encoding="utf-8").rstrip() + "\n"
 
 
 def test_machinery_path_refuses_absolute_traversal_and_escaping_symlink_inputs(monkeypatch, tmp_path: Path) -> None:
