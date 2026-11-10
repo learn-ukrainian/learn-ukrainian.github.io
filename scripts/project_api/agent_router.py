@@ -7,13 +7,8 @@ from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, Depends, HTTPException
-
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.path_safety import safe_join
 
 logger = logging.getLogger(__name__)
 

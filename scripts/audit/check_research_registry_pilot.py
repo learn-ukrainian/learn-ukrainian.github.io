@@ -27,17 +27,19 @@ if __name__ == "__main__":
     # A bare script invocation puts ``scripts/audit`` (not the repository root) on
     # sys.path.  Keep the documented ``.venv/bin/python scripts/audit/...`` command
     # usable without caller-specific PYTHONPATH configuration.  Remove that audit
-    # directory first: its ``config.py`` would otherwise shadow ``scripts/config.py``
-    # while importing the audit package.
+    # directory first: its ``config.py`` would otherwise shadow a top-level ``config``
+    # module while importing the audit package.
     sys.path[:] = [entry for entry in sys.path if Path(entry or ".").resolve() != AUDIT_DIR]
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
+# isort: split
+
+import lu_machinery.api.main as api_main
+import lu_machinery.api.state_router as state_router
 from fastapi.testclient import TestClient
-
-import scripts.api.main as api_main
-import scripts.api.state_router as state_router
-from scripts.research import registry as reg
+from lu_machinery.research import registry as reg
 
 EXPECTED_CASES = (
     (

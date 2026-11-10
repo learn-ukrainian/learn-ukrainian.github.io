@@ -13,8 +13,8 @@ from types import ModuleType
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
 
-from scripts.api.main import app
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import atlas_jobs_router as router_mod
 
@@ -716,7 +716,7 @@ def test_results_skips_corrupt_and_non_object_receipts(
 def test_results_and_receipt_resolve_via_monitor_context(
     tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api.monitor_context import fixture_context
 
     monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
     ctx_root = tmp_path / "custom_ctx"

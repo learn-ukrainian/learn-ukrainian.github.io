@@ -27,19 +27,15 @@ from typing import Any, cast
 import yaml
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
-from scripts.api.state_helpers import cache_get, cache_set, ctx_cache_scope
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.api.state_helpers import cache_get, cache_set, ctx_cache_scope
 
 from .config import LEVELS
 from .curriculum_state import monitor_surface, read_v2_state
 
 # state_helpers already inserts scripts/ into sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
+from lu_machinery.path_safety import safe_join
 
 router = APIRouter(tags=["consultation"])
 

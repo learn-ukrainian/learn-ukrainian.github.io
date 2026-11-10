@@ -12,8 +12,7 @@ import pytest
 import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.monitor_context import fixture_context
+from lu_machinery.api.monitor_context import fixture_context
 
 pytestmark = pytest.mark.reads_content
 

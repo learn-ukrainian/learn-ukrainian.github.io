@@ -80,9 +80,9 @@ def test_configured_loader_accounting_covers_map_callers_once():
     """The scanners must see every configured caller, without double counting."""
     from pathlib import Path
 
-    from scripts.ci.components import scan_imports
-    from scripts.hygiene.lint_source_db_writable_connects import classify_source
-    from scripts.lint import boundary_ratchet
+    from lu_machinery.ci.components import scan_imports
+    from lu_machinery.hygiene.lint_source_db_writable_connects import classify_source
+    from lu_machinery.lint import boundary_ratchet
 
     root = Path(__file__).resolve().parents[1]
     paths = [

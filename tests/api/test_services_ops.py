@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import select
 import shutil
 import socket
@@ -103,19 +104,9 @@ def temp_services_sh(tmp_path: Path):
     content = content.replace("API_LIVE_MODE=0", "API_LIVE_MODE=1")
 
     # Replace the real uvicorn start command with a python sleep command to avoid binding to real ports
-    old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
-    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 127.0.0.1 --port {port}"'
-
-    if old_cmd in content:
-        content = content.replace(old_cmd, dummy_cmd)
-    else:
-        # Fallback to regex substitution
-        import re
-        content = re.sub(
-            r'SVC_CMD\[api\]="\$VENV/python -m uvicorn scripts\.api\.main:app --host 127\.0\.0\.1 --port \d+ --log-config scripts/api/logging\.json --timeout-graceful-shutdown \d+"',
-            dummy_cmd,
-            content
-        )
+    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" lu_machinery.api.main:app --host 127.0.0.1 --port {port}"'
+    content, replaced = re.subn(r"^SVC_CMD\[api\]=.*$", lambda _match: dummy_cmd, content, count=1, flags=re.M)
+    assert replaced == 1, "services.sh has no SVC_CMD[api] line to replace"
 
     temp_script.write_text(content, encoding="utf-8")
     temp_script.chmod(0o755)
@@ -211,7 +202,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
     # Start a dummy sleep process to act as the listener process.
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
+        "lu_machinery.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
     try:
@@ -318,7 +309,7 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
     # Start a dummy sleep process
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
+        "lu_machinery.api.main:app", "--host", "127.0.0.1", "--port", str(port)
     ])
     reap_process_on_exit(proc)
 
@@ -603,6 +594,7 @@ def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> No
     (module / "__main__.py").write_text(
         """from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import re
 
 with open(os.environ["WORK_FAKE_PID_FILE"], "w", encoding="utf-8") as pid_file:
     pid_file.write(str(os.getpid()))

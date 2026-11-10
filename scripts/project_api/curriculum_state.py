@@ -13,7 +13,7 @@ Pipeline version note (#1186, 2026-04-11):
     ``V6_PHASE_ORDER``.
 
 The process-wide TTL cache these readers used to share a module with stays in
-the machinery ``scripts.api.state_helpers`` (Monitor split, C-4687).
+the machinery ``lu_machinery.api.state_helpers`` (Monitor split, C-4687).
 """
 
 from __future__ import annotations
@@ -29,24 +29,15 @@ from types import ModuleType
 from typing import Any, cast
 
 import yaml
-
-try:
-    from path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join, trusted_join  # scripts.project_api package import (production)
-
-from scripts.api import config
+from lu_machinery.api import config
+from lu_machinery.path_safety import safe_join, trusted_join
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from research_quality import assess_research_compat, find_research_path
-
-try:
-    from scripts.ops.product_entry import load_configured_module
-except ImportError:
-    from ops.product_entry import load_configured_module  # type: ignore[no-redef]
+from lu_machinery.ops.product_entry import load_configured_module
+from lu_machinery.research_quality import assess_research_compat, find_research_path
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}

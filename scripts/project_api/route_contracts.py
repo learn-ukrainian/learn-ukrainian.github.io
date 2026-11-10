@@ -1,13 +1,13 @@
 """Route and page contracts for the product half of the Monitor API (Monitor split, C-4687).
 
-The machinery registry in ``scripts.api.route_contracts`` owns the contract
+The machinery registry in ``lu_machinery.api.route_contracts`` owns the contract
 types and ``/api/contracts/routes``. These declarations cover the product
 routes and pages and join that registry through the product contribution.
 """
 
 from __future__ import annotations
 
-from scripts.api.route_contracts import PageContract, RouteContract
+from lu_machinery.api.route_contracts import PageContract, RouteContract
 
 ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
@@ -272,7 +272,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Monitor config and level metadata.",
-        "scripts/api/config.py constants.",
+        "lu_machinery/api/config.py constants.",
         "Generated per request; no route cache.",
         ("consultation.html", "agents"),
         "None.",

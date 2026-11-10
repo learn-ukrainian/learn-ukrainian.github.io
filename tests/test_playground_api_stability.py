@@ -9,10 +9,10 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.ai_agent_bridge import _db
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import production_context
 
-from scripts.ai_agent_bridge import _db
-from scripts.api.main import app
-from scripts.api.monitor_context import production_context
 from scripts.project_api.context import image_store, with_product_roots
 from tests.latency_budget import assert_under_budget
 

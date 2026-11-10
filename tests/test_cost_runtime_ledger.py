@@ -8,9 +8,8 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+import lu_machinery.telemetry.cost_report as cost_report
 import pytest
-
-import scripts.telemetry.cost_report as cost_report
 
 pytestmark = pytest.mark.reads_content
 
@@ -92,8 +91,8 @@ assert usage.redact_value is redactor.redact_value
         [
             sys.executable, "-I", "-c", probe,
             str(root / "scripts" if scripts_on_path else root),
-            "secret_redactor" if scripts_on_path else "scripts.secret_redactor",
-            "agent_runtime.usage" if scripts_on_path else "scripts.agent_runtime.usage",
+            "secret_redactor" if scripts_on_path else "lu_machinery.secret_redactor",
+            "agent_runtime.usage" if scripts_on_path else "lu_machinery.agent_runtime.usage",
         ],
         cwd=root,
         capture_output=True,

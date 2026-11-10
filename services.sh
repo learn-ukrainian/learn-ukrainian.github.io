@@ -160,14 +160,14 @@ SVC_HEALTH[sources]="http://127.0.0.1:8766/health"
 SVC_HEALTH_ALT[sources]="http://localhost:8766/health"
 SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766"
 
-SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port 8765 --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"
+SVC_CMD[api]="/usr/bin/env LU_PRODUCT_ROOT=$PROJECT_ROOT LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=$PUBLIC_PRIMARY_ROOT $VENV/python -m uvicorn lu_machinery.api.main:app --host 127.0.0.1 --port 8765 --log-config $("$VENV/python" -I -c 'import importlib.util as u; print(u.find_spec("lu_machinery").submodule_search_locations[0])' 2>/dev/null || true)/api/logging.json --timeout-graceful-shutdown 8"
 SVC_PORT[api]=8765
 SVC_HOST[api]=127.0.0.1
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
 SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
-SVC_MATCH[api]="scripts.api.main:app --host 127.0.0.1 --port 8765"
+SVC_MATCH[api]="lu_machinery.api.main:app --host 127.0.0.1 --port 8765"
 
 SVC_CMD[work]="$WORK_PRIVATE_ROOT/.venv/bin/python -m work_projection"
 SVC_PORT[work]=8769
@@ -697,7 +697,7 @@ _api_supervisor() {
         "$SVC_API_SUPERVISOR_BIN" "$@"
         return
     fi
-    "$VENV/python" -m scripts.api.launchd_supervisor "$@"
+    LU_PRODUCT_ROOT="$PROJECT_ROOT" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PUBLIC_PRIMARY_ROOT" "$VENV/python" -m lu_machinery.api.launchd_supervisor "$@"
 }
 
 _start_api_supervised() {
