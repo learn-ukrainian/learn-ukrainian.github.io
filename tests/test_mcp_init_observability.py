@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.agent_runtime import tool_config as release_tool_config  # TRANSITIONAL-PKG3-B2
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -530,6 +531,11 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data_dir))
     monkeypatch.setattr(
         tool_config_mod,
+        "_run_agy_mcp",
+        lambda _args: "NAME  TYPE  STATUS  COMMAND/URL\nsources  http  enabled  http://127.0.0.1:8766/mcp",
+    )
+    monkeypatch.setattr(  # TRANSITIONAL-PKG3-B2
+        release_tool_config,
         "_run_agy_mcp",
         lambda _args: "NAME  TYPE  STATUS  COMMAND/URL\nsources  http  enabled  http://127.0.0.1:8766/mcp",
     )
