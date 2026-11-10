@@ -1147,8 +1147,10 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is not None:
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
         if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
@@ -2027,19 +2029,20 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
-    api_config = _loaded_module("scripts", "api", "config")
-    if api_config is not None:
-        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-    monitor_context = _loaded_module("scripts", "api", "monitor_context")
-    if monitor_context is not None:
-        monitor_context.production_context.cache_clear()
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is None:
-        return
-    app = vars(api_main).get("app")
-    context = getattr(getattr(app, "state", None), "ctx", None)
-    if context is not None:
-        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_config = _loaded_module(package, "api", "config")
+        if api_config is not None:
+            monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+        monitor_context = _loaded_module(package, "api", "monitor_context")
+        if monitor_context is not None:
+            monitor_context.production_context.cache_clear()
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
+        app = vars(api_main).get("app")
+        context = getattr(getattr(app, "state", None), "ctx", None)
+        if context is not None:
+            monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
 
 
 # Per-process, not per-test: ``mktemp`` scans the base directory for the next
