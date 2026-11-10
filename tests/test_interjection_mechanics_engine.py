@@ -16,8 +16,8 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.practice.interjection_mechanics_engine import (
     InterjectionCategory,
     InterjectionInterferenceKey,

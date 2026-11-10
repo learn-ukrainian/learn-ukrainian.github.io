@@ -179,7 +179,7 @@ def test_load_coverage_map_reads_explicit_paths_directly(tmp_path: Path) -> None
 
 
 def test_load_coverage_map_fails_closed_when_the_published_map_is_absent(tmp_path: Path, monkeypatch) -> None:
-    from scripts.storage import paths
+    from lu_machinery.storage import paths
 
     repo = tmp_path / "repo"
     (repo / "registry/artifacts").mkdir(parents=True)
@@ -197,7 +197,7 @@ def test_load_coverage_map_reads_the_present_published_map(tmp_path: Path, monke
     import json
     import subprocess
 
-    from scripts.storage import paths
+    from lu_machinery.storage import paths
 
     repo = tmp_path / "repo"
     (repo / "registry/artifacts").mkdir(parents=True)
@@ -221,7 +221,7 @@ def test_load_coverage_map_reads_the_present_published_map(tmp_path: Path, monke
 def test_default_cli_writes_nothing_when_the_published_map_is_absent(tmp_path: Path, monkeypatch, module_name: str) -> None:
     import importlib
 
-    from scripts.storage import paths
+    from lu_machinery.storage import paths
 
     module = importlib.import_module(f"wiki.diagnostics.corpus_gaps.{module_name}")
     output = tmp_path / "out.md"

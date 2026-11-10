@@ -12,10 +12,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from scripts.lib import rules_core
-from scripts.orchestration import dispatch_admission, product_policy
-from scripts.review import reviewer_resolver, ukrainian_seats
+from lu_machinery.lib import rules_core
+from lu_machinery.orchestration import dispatch_admission, product_policy
+from lu_machinery.review import reviewer_resolver, ukrainian_seats
 
 REAL = product_policy.default_policy_path()
 
