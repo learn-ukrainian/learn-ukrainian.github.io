@@ -1,20 +1,277 @@
 """Round-four regression evidence for Design B; synthetic fixtures only."""
+
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import os
 import subprocess
 import sys
+import zipfile
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.opsec.gh_snapshot import admit
+from lu_machinery.publish import github as pub
+from lu_machinery.review.record_cf_verdict import build_comment as _recovery_build_comment
 
-from scripts.opsec import prepublish as gate
-from scripts.opsec.gh_snapshot import admit
-from scripts.publish import github as pub
 from tests.opsec_fixtures import CATALOG, ROOT, recorded_approval
 
+# Product fixtures retained from the machinery test consumers (C-5048).
+_recovery_HEAD = "a" * 40
+
+_recovery_TESTED = "c" * 40
+
+
+def _recovery_evidence(head=_recovery_HEAD):
+    return {
+        "pr": 42,
+        "head": head,
+        "run_id": 123,
+        "job_ids": [456],
+        "tested_sha": _recovery_TESTED,
+        "queue_group_diff": {
+            "base_sha": "d" * 40,
+            "head_sha": _recovery_TESTED,
+            "paths": ["lu_machinery/earlier-pr.py", "lu_machinery/this-pr.py"],
+        },
+        "failure_evidence": "Job log confirms runner checkout failure",
+        "unrelated_to_diff": "Failure precedes execution of changed code",
+    }
+
+
+_recovery_NEW_HEAD = "b" * 40
+
+
+class _recovery_Transport:
+    def __init__(self):
+        self.head = _recovery_HEAD
+        self.proof = _recovery_evidence()
+        self.approved = True
+        self.attempt = 1
+        self.status = "completed"
+        self.conclusion = "failure"
+        self.event = "merge_group"
+        self.failed_ids = [456]
+        self.removed = True
+        self.future_commit = False
+        self.removal_head = _recovery_HEAD
+        self.removal_date = "2026-10-09T11:00:00Z"
+        self.removal_failure = False
+        self.removal_history = None
+        self.removal_page_size = 100
+        self.removal_reason = "removed by actor"
+        self.timeline_count = None
+        self.removal_reads = []
+        self.pushes = []
+        self.associations = None
+        self.proof_login = "driver"
+        self.proof_association = "MEMBER"
+        self.failure = False
+        self.moved = False
+        self.pull_reads = 0
+        self.writes = []
+        self.queued = False
+        self.files = [[{"filename": "lu_machinery/example.py"}]]
+        self.compare_rows = {
+            "base_commit": {"sha": "d" * 40},
+            "merge_base_commit": {"sha": "d" * 40},
+            "status": "ahead",
+            "files": [{"filename": "lu_machinery/earlier-pr.py"}, {"filename": "lu_machinery/this-pr.py"}],
+        }
+        self.candidate_record = {
+            "base_sha": "d" * 40,
+            "head_sha": _recovery_TESTED,
+            "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40,
+            "run_id": 123,
+            "run_attempt": 1,
+        }
+
+    def __call__(self, argv, **kwargs):
+        if argv[1:3] == ["pr", "view"]:
+            assert "isInMergeQueue" not in argv[argv.index("--json") + 1].split(",")
+            data = {
+                "number": 42,
+                "isDraft": False,
+                "mergeStateStatus": "CLEAN",
+                "headRefOid": self.head,
+                "headRefName": "codex/fixture",
+                "state": "OPEN",
+                "isCrossRepository": False,
+                "baseRefName": "main",
+            }
+        elif argv[1:3] == ["pr", "checks"]:
+            data = []
+        elif argv[1:5] == ["api", "--method", "POST", "graphql"]:
+            payload = json.loads(Path(argv[6]).read_text())
+            query = payload["query"]
+            if query.startswith("mutation"):
+                assert "enqueuePullRequest" in query
+                self.writes.append(argv)
+                if self.failure:
+                    raise subprocess.TimeoutExpired(argv, 60)
+                self.queued = True
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"enqueuePullRequest": {"mergeQueueEntry": {"position": 1}}}}), ""
+                )
+            if "mergeQueueEntry" in query:
+                data = {
+                    "number": 42,
+                    "state": "OPEN",
+                    "headRefOid": self.head,
+                    "headRefName": "codex/fixture",
+                    "isInMergeQueue": self.queued,
+                    "mergeQueueEntry": {"headCommit": {"oid": _recovery_TESTED}},
+                }
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"repository": {"pullRequest": data}}}), ""
+                )
+            if "timelineItems" in query:
+                self.removal_reads.append(payload)
+                if self.removal_failure:
+                    return subprocess.CompletedProcess(argv, 1, "", "lookup failed")
+                events = (
+                    self.removal_history
+                    if self.removal_history is not None
+                    else [
+                        {
+                            "beforeCommit": {
+                                "oid": self.removal_head,
+                                "committedDate": "2099-01-01T00:00:00Z"
+                                if self.future_commit
+                                else "2026-10-09T10:00:00Z",
+                            }
+                            if self.removal_head
+                            else None,
+                            "createdAt": self.removal_date,
+                            "reason": self.removal_reason,
+                        }
+                    ]
+                    if self.removed
+                    else []
+                )
+                if "first:100" in query:
+                    start = int(payload["variables"].get("cursor") or 0)
+                    nodes = events[start : start + self.removal_page_size]
+                    end = start + len(nodes)
+                    removals = {
+                        "nodes": nodes,
+                        "totalCount": self.timeline_count if self.timeline_count is not None else len(events),
+                        "pageInfo": {"hasNextPage": end < len(events), "endCursor": str(end) if nodes else None},
+                    }
+                else:
+                    removals = {"nodes": events[-1:]}
+                pull = {"headRefOid": self.head, "pushes": {"nodes": self.pushes}, "removals": removals}
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), ""
+                )
+            data = {
+                "data": {
+                    "repository": {
+                        "pullRequest": {
+                            "headRefOid": self.head,
+                            "isMergeQueueEnabled": True,
+                            "id": "PR_fixture_42",
+                            "viewerMergeHeadlineText": "change (#42)",
+                            "viewerMergeBodyText": "change",
+                        }
+                    }
+                }
+            }
+        elif argv[1] == "api":
+            endpoint = next(arg for arg in argv if arg.startswith("repos/") or arg.split("?", 1)[0] == "user").split(
+                "?", 1
+            )[0]
+            if endpoint.endswith("/comments"):
+                approval = {
+                    "body": _recovery_build_comment(
+                        sha=self.head,
+                        task_id="review",
+                        started="2026-10-09T10:00:00.000001+00:00",
+                        verdict="APPROVED" if self.approved else "CHANGES_REQUESTED",
+                        model="claude-opus-5-5",
+                        family="anthropic",
+                        reply="VERDICT: APPROVE",
+                    ),
+                    "user": {"login": "driver"},
+                    "author_association": "MEMBER",
+                    "created_at": "2026-10-09T10:00:01Z",
+                    "updated_at": "2026-10-09T10:00:01Z",
+                }
+                comments = [approval]
+                if self.proof is not None:
+                    comments.append(
+                        {
+                            "id": 789,
+                            "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->",
+                            "user": {"login": self.proof_login},
+                            "author_association": self.proof_association,
+                        }
+                    )
+                data = [comments]
+            elif endpoint.endswith("/files"):
+                data = self.files
+            elif endpoint.endswith("/timeline"):
+                data = (
+                    [[{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
+                    if self.removed
+                    else [[]]
+                )
+                if self.future_commit:
+                    data[0].append(
+                        {"event": "committed", "sha": self.head, "committer": {"date": "2099-01-01T00:00:00Z"}}
+                    )
+            elif endpoint.endswith("/jobs"):
+                data = [{"jobs": [{"id": job, "conclusion": "failure"} for job in self.failed_ids]}]
+            elif endpoint.endswith("/runs/123"):
+                data = {
+                    "id": 123,
+                    "status": self.status,
+                    "conclusion": self.conclusion,
+                    "head_sha": _recovery_TESTED,
+                    "event": self.event,
+                    "head_branch": "gh-readonly-queue/main/pr-42-" + "e" * 40,
+                    "run_attempt": self.attempt,
+                    "pull_requests": self.associations
+                    if self.associations is not None
+                    else []
+                    if self.event == "merge_group"
+                    else [{"number": 42, "head": {"sha": self.head}}],
+                }
+            elif endpoint.endswith("/actions/runs/123/artifacts"):
+                data = {
+                    "total_count": 1,
+                    "artifacts": [{"name": "ci-queue-candidate", "id": 77, "expired": False, "size_in_bytes": 1024}],
+                }
+            elif endpoint.endswith("/actions/artifacts/77/zip"):
+                with io.BytesIO() as buffer:
+                    with zipfile.ZipFile(buffer, "w") as archive:
+                        archive.writestr("queue-candidate.json", json.dumps(self.candidate_record))
+                    kwargs["stdout"].write(buffer.getvalue())
+                return subprocess.CompletedProcess(argv, 0, "", "")
+            elif "/compare/" in endpoint:
+                data = self.compare_rows
+            elif endpoint.endswith("/pulls/42"):
+                self.pull_reads += 1
+                data = {
+                    "state": "open",
+                    "head": {"sha": _recovery_NEW_HEAD if self.moved and self.pull_reads > 1 else self.head},
+                }
+            elif endpoint == "user":
+                data = {"login": "driver"}
+            else:
+                pytest.fail(f"unexpected read {endpoint}")
+        else:
+            self.writes.append(argv)
+            if self.failure:
+                raise subprocess.TimeoutExpired(argv, 60)
+            if argv[1:3] == ["pr", "merge"]:
+                self.queued = True
+            return subprocess.CompletedProcess(argv, 0, "", "")
+        return subprocess.CompletedProcess(argv, 0, json.dumps(data), "")
 
 @pytest.fixture(autouse=True)
 def catalog(monkeypatch):
@@ -25,29 +282,29 @@ def catalog(monkeypatch):
 # The actual REST/search argv families from every refused caller in the review,
 # plus the fresh inventory. GET fields in worktree_git are now query parameters.
 READ_CALLERS = [
-    ("scripts/dispatch.py", ["api", "repos/unit/public/issues/1"]),
+    ("lu_machinery/dispatch.py", ["api", "repos/unit/public/issues/1"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/{owner}/{repo}/issues/1/comments", "--paginate"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/unit/public/pulls/1/reviews", "--paginate"]),
-    ("scripts/orchestration/worktree_git.py", ["api", "repos/unit/public/pulls?head=unit%3Abranch&state=all&per_page=100", "-X", "GET", "--paginate", "--slurp"]),
-    ("scripts/orchestration/worktree_git.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
-    ("scripts/orchestration/merge_closeout.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
-    ("scripts/gh_merge_queue_status.py", ["api", "repos/unit/public/actions/runs?event=merge_group&per_page=100"]),
-    ("scripts/github_rest_cache.py", ["api", "--method", "GET", "-i", "https://api.github.com/repos/unit/public/pulls/1", "-H", 'If-None-Match: "fixture"']),
-    ("scripts/orchestration/stale_task_records.py", ["api", "repos/unit/public/pulls?state=closed&page=1&per_page=100"]),
-    ("scripts/fleet/hramatka_hygiene_check.py", ["api", "repos/unit/public/issues/1"]),
-    ("scripts/orchestration/task_family/git_safety.py", ["api", "--paginate", "--slurp", "repos/unit/public/branches?per_page=100"]),
+    ("lu_machinery/orchestration/worktree_git.py", ["api", "repos/unit/public/pulls?head=unit%3Abranch&state=all&per_page=100", "-X", "GET", "--paginate", "--slurp"]),
+    ("lu_machinery/orchestration/worktree_git.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
+    ("lu_machinery/orchestration/merge_closeout.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
+    ("lu_machinery/gh_merge_queue_status.py", ["api", "repos/unit/public/actions/runs?event=merge_group&per_page=100"]),
+    ("lu_machinery/github_rest_cache.py", ["api", "--method", "GET", "-i", "https://api.github.com/repos/unit/public/pulls/1", "-H", 'If-None-Match: "fixture"']),
+    ("lu_machinery/orchestration/stale_task_records.py", ["api", "repos/unit/public/pulls?state=closed&page=1&per_page=100"]),
+    ("lu_machinery/fleet/hramatka_hygiene_check.py", ["api", "repos/unit/public/issues/1"]),
+    ("lu_machinery/orchestration/task_family/git_safety.py", ["api", "--paginate", "--slurp", "repos/unit/public/branches?per_page=100"]),
     ("agents_extensions/shared/hooks/guard-pr-merge.py", ["api", "repos/unit/public/branches/main/protection"]),
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/actions/runs/1"]),
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/compare/" + "a" * 40 + "..." + "b" * 40]),
     ("scripts/deploy/vendor_atlas_tree.py", ["api", "repos/unit/public/releases/assets/1", "-H", "Accept: application/octet-stream"]),
-    ("scripts/ci/cache_hygiene.py", ["api", "repos/unit/public/actions/caches?per_page=100&page=1"]),
-    ("scripts/ci/ci_timings.py", ["api", "repos/unit/public/actions/runs/1/jobs?per_page=100&page=1"]),
+    ("lu_machinery/ci/cache_hygiene.py", ["api", "repos/unit/public/actions/caches?per_page=100&page=1"]),
+    ("lu_machinery/ci/ci_timings.py", ["api", "repos/unit/public/actions/runs/1/jobs?per_page=100&page=1"]),
 ]
 
 
 @pytest.mark.parametrize("caller,args", READ_CALLERS)
 def test_listed_rest_read_reaches_transport(caller, args, tmp_path):
-    assert (ROOT / caller).is_file()
+    assert (files("lu_machinery").parent / caller if caller.startswith("lu_machinery/") else ROOT / caller).is_file()
     calls = []
     def spy(argv, **kwargs):
         calls.append(argv)
@@ -114,10 +371,11 @@ def test_auth_token_flag_spellings_refused(flag, tmp_path):
 def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, state):
     writes = []
     reads = []
+    enqueue_payloads = []
     def spy(args, **kwargs):
         if args[1:3] == ["pr", "view"]:
             reads.append(args)
-            body = {"number": 1, "isDraft": state == "draft", "headRefOid": "a" * 40}
+            body = {"number": 1, "isDraft": state == "draft", "mergeStateStatus": "CLEAN", "headRefOid": "a" * 40}
             if "headRefOid,statusCheckRollup" in args:
                 body["statusCheckRollup"] = [{
                     "__typename": "CheckRun", "name": "CI Gate",
@@ -128,14 +386,19 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             reads.append(args)
             body = [{"name": "CI Gate", "bucket": {"red": "fail", "pending": "pending", "unknown": "unrecognised"}.get(state, "pass")}]
         elif args[1:5] == ["api", "--method", "POST", "graphql"]:
+            document = json.loads(Path(args[args.index("--input") + 1]).read_text())
+            if document["query"].startswith("mutation"):
+                writes.append(args)
+                enqueue_payloads.append(document)
+                return subprocess.CompletedProcess(args, 0, "{}", "")
             reads.append(args)
             body = {"data": {"repository": {"pullRequest": {
-                "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                "id": "PR_fixture_1", "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
                 "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
         elif args[1:4] == ["api", "--method", "GET"]:
             reads.append(args)
             if "/pulls/1/files" in args[4]:
-                body = [[{"filename": "scripts/example.py"}]]
+                body = [[{"filename": "lu_machinery/example.py"}]]
             else:
                 body = [[recorded_approval("a" * 40)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
         else:
@@ -144,14 +407,16 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
         return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
     if state == "ready":
         assert pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={}).returncode == 0
-        assert len(writes) == 1 and "--match-head-commit=" + "a" * 40 in writes[0]
+        assert len(writes) == 1
+        assert enqueue_payloads[0]["variables"] == {"id": "PR_fixture_1", "head": "a" * 40}
+        assert "enqueuePullRequest" in enqueue_payloads[0]["query"]
     else:
         with pytest.raises(gate.PublishBlocked):
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
     # Read the head-bound checks; ready merges also read the default squash text
     # the recorded review seats (#12020), here an exact-head approval (#12031), and the PR's files (#12181).
-    assert len(reads) == (7 if state == "ready" else 3)
+    assert len(reads) == (7 if state == "ready" else 1 if state == "draft" else 3)
 
 
 def test_review_contract_change_without_canary_evidence_is_refused_before_write(synthetic_opsec):
@@ -159,17 +424,17 @@ def test_review_contract_change_without_canary_evidence_is_refused_before_write(
     writes = []
     def spy(args, **kwargs):
         if args[1:3] == ["pr", "view"]:
-            body = {"number": 1, "isDraft": False, "headRefOid": "a" * 40, "statusCheckRollup": [
+            body = {"number": 1, "isDraft": False, "mergeStateStatus": "CLEAN", "headRefOid": "a" * 40, "statusCheckRollup": [
                 {"__typename": "CheckRun", "name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}]}
         elif args[1:3] == ["pr", "checks"]:
             body = [{"name": "CI Gate", "bucket": "pass"}]
         elif args[1:5] == ["api", "--method", "POST", "graphql"]:
             body = {"data": {"repository": {"pullRequest": {
-                "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                "id": "PR_fixture_1", "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
                 "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
         elif args[1:4] == ["api", "--method", "GET"]:
             if "/pulls/1/files" in args[4]:
-                body = [[{"filename": "scripts/dispatcher/providers/codex.py"}]]
+                body = [[{"filename": "lu_machinery/dispatcher/providers/codex.py"}]]
             else:
                 body = [[recorded_approval("a" * 40)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
         else:
@@ -207,7 +472,7 @@ def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path
         "issue-reopen": [("PATCH", "repos/unit/public/issues/1", {"state": "open"})],
     }
     if verb in expected_requests:
-        from scripts.common.github_client import Response
+        from lu_machinery.common.github_client import Response
 
         def transport(method, endpoint, headers, body, timeout):
             return Response(200, {}, b"{}")
@@ -222,7 +487,7 @@ def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path
         monkeypatch.setattr(pub, "_run_transport", observe)
         sender = None
     if verb == "run-rerun":
-        from tests.test_ci_recovery import Transport
+        Transport = _recovery_Transport
         sender = Transport()
         calls = sender.writes
         monkeypatch.setattr(pub.recovery, "ledger_path", lambda cwd: tmp_path / "ci-recovery.sqlite3")
@@ -348,15 +613,15 @@ def test_hook_recognises_typed_merge(monkeypatch):
 
 
 @pytest.mark.parametrize("caller,name,fields", [
-    ("scripts/github_graphql_budget.py", "budget", {}),
-    ("scripts/gh_merge_queue_status.py", "membership", {"number": 1}),
-    ("scripts/fleet/hramatka_scope_gate.py", "issue-scope", {"number": 1}),
-    ("scripts/work/sources_public.py", "issue-states", {"numbers": [1, 2]}),
-    ("scripts/fleet_comms/efficiency_metrics.py", "merge-facts", {"batch": [("unit/public", 1)]}),
-    ("scripts/ci/cache_hygiene.py", "pr-bases", {"cursor": None}),
+    ("lu_machinery/github_graphql_budget.py", "budget", {}),
+    ("lu_machinery/gh_merge_queue_status.py", "membership", {"number": 1}),
+    ("lu_machinery/fleet/hramatka_scope_gate.py", "issue-scope", {"number": 1}),
+    ("lu_machinery/work/sources_public.py", "issue-states", {"numbers": [1, 2]}),
+    ("lu_machinery/fleet_comms/efficiency_metrics.py", "merge-facts", {"batch": [("unit/public", 1)]}),
+    ("lu_machinery/ci/cache_hygiene.py", "pr-bases", {"cursor": None}),
 ])
 def test_named_read_callers_have_closed_endpoint_plans(caller, name, fields):
-    assert (ROOT / caller).is_file()
+    assert (files("lu_machinery").parent / caller if caller.startswith("lu_machinery/") else ROOT / caller).is_file()
     sent = []
     def spy(args, **kwargs):
         sent.append(args)
@@ -425,7 +690,7 @@ def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
 
 
 def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_path, monkeypatch):
-    from scripts.fleet_comms import review_publisher
+    from lu_machinery.fleet_comms import review_publisher
     calls = []
     executable = tmp_path / "real-gh"
     executable.write_text("#!/bin/sh\nexit 0\n")

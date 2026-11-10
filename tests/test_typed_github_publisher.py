@@ -6,19 +6,349 @@ import io
 import json
 import os
 import re
+import shutil
 import statistics
 import subprocess
 import sys
 import time
+import zipfile
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import prepublish as gate
+from lu_machinery.opsec.gh_snapshot import admit
+from lu_machinery.publish import github as pub
+from lu_machinery.review.record_cf_verdict import build_comment as _recovery_build_comment
 
-from scripts.opsec import prepublish as gate
-from scripts.opsec.gh_snapshot import admit
-from scripts.publish import github as pub
 from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, recorded_approval
+
+# Product fixtures retained from the machinery test consumers (C-5048).
+
+_git_REAL_RUN = subprocess.run
+
+
+def _git_git_env() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and (not key.startswith("PRE_COMMIT")) and (key != "AGENT_NO_MERGE")
+    }
+
+
+def _git_run(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
+    return _git_REAL_RUN(args, cwd=cwd, capture_output=True, text=True, check=check, timeout=30, env=_git_git_env())
+
+
+def _git_init_repo(repo_root: Path) -> None:
+    repo_root.mkdir(parents=True)
+    remote = repo_root.parent / f"{repo_root.name}-origin.git"
+    _git_run(["git", "init", "--bare", str(remote)], cwd=repo_root.parent)
+    _git_run(["git", "init", "--initial-branch=main", str(repo_root)], cwd=repo_root.parent)
+    _git_run(["git", "config", "user.email", "test@example.com"], cwd=repo_root)
+    _git_run(["git", "config", "user.name", "Test User"], cwd=repo_root)
+    (repo_root / "README.md").write_text("# test\n", encoding="utf-8")
+    _git_run(["git", "add", "README.md"], cwd=repo_root)
+    _git_run(["git", "commit", "-m", "initial"], cwd=repo_root)
+    _git_run(["git", "remote", "add", "origin", str(remote)], cwd=repo_root)
+    _git_run(["git", "push", "-u", "origin", "main"], cwd=repo_root)
+
+
+_recovery_HEAD = "a" * 40
+
+_recovery_TESTED = "c" * 40
+
+
+def _recovery_evidence(head=_recovery_HEAD):
+    return {
+        "pr": 42,
+        "head": head,
+        "run_id": 123,
+        "job_ids": [456],
+        "tested_sha": _recovery_TESTED,
+        "queue_group_diff": {
+            "base_sha": "d" * 40,
+            "head_sha": _recovery_TESTED,
+            "paths": ["lu_machinery/earlier-pr.py", "lu_machinery/this-pr.py"],
+        },
+        "failure_evidence": "Job log confirms runner checkout failure",
+        "unrelated_to_diff": "Failure precedes execution of changed code",
+    }
+
+
+_recovery_NEW_HEAD = "b" * 40
+
+
+class _recovery_Transport:
+    def __init__(self):
+        self.head = _recovery_HEAD
+        self.proof = _recovery_evidence()
+        self.approved = True
+        self.attempt = 1
+        self.status = "completed"
+        self.conclusion = "failure"
+        self.event = "merge_group"
+        self.failed_ids = [456]
+        self.removed = True
+        self.future_commit = False
+        self.removal_head = _recovery_HEAD
+        self.removal_date = "2026-10-09T11:00:00Z"
+        self.removal_failure = False
+        self.removal_history = None
+        self.removal_page_size = 100
+        self.removal_reason = "removed by actor"
+        self.timeline_count = None
+        self.removal_reads = []
+        self.pushes = []
+        self.associations = None
+        self.proof_login = "driver"
+        self.proof_association = "MEMBER"
+        self.failure = False
+        self.moved = False
+        self.pull_reads = 0
+        self.writes = []
+        self.queued = False
+        self.files = [[{"filename": "lu_machinery/example.py"}]]
+        self.compare_rows = {
+            "base_commit": {"sha": "d" * 40},
+            "merge_base_commit": {"sha": "d" * 40},
+            "status": "ahead",
+            "files": [{"filename": "lu_machinery/earlier-pr.py"}, {"filename": "lu_machinery/this-pr.py"}],
+        }
+        self.candidate_record = {
+            "base_sha": "d" * 40,
+            "head_sha": _recovery_TESTED,
+            "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40,
+            "run_id": 123,
+            "run_attempt": 1,
+        }
+
+    def __call__(self, argv, **kwargs):
+        if argv[1:3] == ["pr", "view"]:
+            assert "isInMergeQueue" not in argv[argv.index("--json") + 1].split(",")
+            data = {
+                "number": 42,
+                "isDraft": False,
+                "mergeStateStatus": "CLEAN",
+                "headRefOid": self.head,
+                "headRefName": "codex/fixture",
+                "state": "OPEN",
+                "isCrossRepository": False,
+                "baseRefName": "main",
+            }
+        elif argv[1:3] == ["pr", "checks"]:
+            data = []
+        elif argv[1:5] == ["api", "--method", "POST", "graphql"]:
+            payload = json.loads(Path(argv[6]).read_text())
+            query = payload["query"]
+            if query.startswith("mutation"):
+                assert "enqueuePullRequest" in query
+                self.writes.append(argv)
+                if self.failure:
+                    raise subprocess.TimeoutExpired(argv, 60)
+                self.queued = True
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"enqueuePullRequest": {"mergeQueueEntry": {"position": 1}}}}), ""
+                )
+            if "mergeQueueEntry" in query:
+                data = {
+                    "number": 42,
+                    "state": "OPEN",
+                    "headRefOid": self.head,
+                    "headRefName": "codex/fixture",
+                    "isInMergeQueue": self.queued,
+                    "mergeQueueEntry": {"headCommit": {"oid": _recovery_TESTED}},
+                }
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"repository": {"pullRequest": data}}}), ""
+                )
+            if "timelineItems" in query:
+                self.removal_reads.append(payload)
+                if self.removal_failure:
+                    return subprocess.CompletedProcess(argv, 1, "", "lookup failed")
+                events = (
+                    self.removal_history
+                    if self.removal_history is not None
+                    else [
+                        {
+                            "beforeCommit": {
+                                "oid": self.removal_head,
+                                "committedDate": "2099-01-01T00:00:00Z"
+                                if self.future_commit
+                                else "2026-10-09T10:00:00Z",
+                            }
+                            if self.removal_head
+                            else None,
+                            "createdAt": self.removal_date,
+                            "reason": self.removal_reason,
+                        }
+                    ]
+                    if self.removed
+                    else []
+                )
+                if "first:100" in query:
+                    start = int(payload["variables"].get("cursor") or 0)
+                    nodes = events[start : start + self.removal_page_size]
+                    end = start + len(nodes)
+                    removals = {
+                        "nodes": nodes,
+                        "totalCount": self.timeline_count if self.timeline_count is not None else len(events),
+                        "pageInfo": {"hasNextPage": end < len(events), "endCursor": str(end) if nodes else None},
+                    }
+                else:
+                    removals = {"nodes": events[-1:]}
+                pull = {"headRefOid": self.head, "pushes": {"nodes": self.pushes}, "removals": removals}
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), ""
+                )
+            data = {
+                "data": {
+                    "repository": {
+                        "pullRequest": {
+                            "headRefOid": self.head,
+                            "isMergeQueueEnabled": True,
+                            "id": "PR_fixture_42",
+                            "viewerMergeHeadlineText": "change (#42)",
+                            "viewerMergeBodyText": "change",
+                        }
+                    }
+                }
+            }
+        elif argv[1] == "api":
+            endpoint = next(arg for arg in argv if arg.startswith("repos/") or arg.split("?", 1)[0] == "user").split(
+                "?", 1
+            )[0]
+            if endpoint.endswith("/comments"):
+                approval = {
+                    "body": _recovery_build_comment(
+                        sha=self.head,
+                        task_id="review",
+                        started="2026-10-09T10:00:00.000001+00:00",
+                        verdict="APPROVED" if self.approved else "CHANGES_REQUESTED",
+                        model="claude-opus-5-5",
+                        family="anthropic",
+                        reply="VERDICT: APPROVE",
+                    ),
+                    "user": {"login": "driver"},
+                    "author_association": "MEMBER",
+                    "created_at": "2026-10-09T10:00:01Z",
+                    "updated_at": "2026-10-09T10:00:01Z",
+                }
+                comments = [approval]
+                if self.proof is not None:
+                    comments.append(
+                        {
+                            "id": 789,
+                            "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->",
+                            "user": {"login": self.proof_login},
+                            "author_association": self.proof_association,
+                        }
+                    )
+                data = [comments]
+            elif endpoint.endswith("/files"):
+                data = self.files
+            elif endpoint.endswith("/timeline"):
+                data = (
+                    [[{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
+                    if self.removed
+                    else [[]]
+                )
+                if self.future_commit:
+                    data[0].append(
+                        {"event": "committed", "sha": self.head, "committer": {"date": "2099-01-01T00:00:00Z"}}
+                    )
+            elif endpoint.endswith("/jobs"):
+                data = [{"jobs": [{"id": job, "conclusion": "failure"} for job in self.failed_ids]}]
+            elif endpoint.endswith("/runs/123"):
+                data = {
+                    "id": 123,
+                    "status": self.status,
+                    "conclusion": self.conclusion,
+                    "head_sha": _recovery_TESTED,
+                    "event": self.event,
+                    "head_branch": "gh-readonly-queue/main/pr-42-" + "e" * 40,
+                    "run_attempt": self.attempt,
+                    "pull_requests": self.associations
+                    if self.associations is not None
+                    else []
+                    if self.event == "merge_group"
+                    else [{"number": 42, "head": {"sha": self.head}}],
+                }
+            elif endpoint.endswith("/actions/runs/123/artifacts"):
+                data = {
+                    "total_count": 1,
+                    "artifacts": [{"name": "ci-queue-candidate", "id": 77, "expired": False, "size_in_bytes": 1024}],
+                }
+            elif endpoint.endswith("/actions/artifacts/77/zip"):
+                with io.BytesIO() as buffer:
+                    with zipfile.ZipFile(buffer, "w") as archive:
+                        archive.writestr("queue-candidate.json", json.dumps(self.candidate_record))
+                    kwargs["stdout"].write(buffer.getvalue())
+                return subprocess.CompletedProcess(argv, 0, "", "")
+            elif "/compare/" in endpoint:
+                data = self.compare_rows
+            elif endpoint.endswith("/pulls/42"):
+                self.pull_reads += 1
+                data = {
+                    "state": "open",
+                    "head": {"sha": _recovery_NEW_HEAD if self.moved and self.pull_reads > 1 else self.head},
+                }
+            elif endpoint == "user":
+                data = {"login": "driver"}
+            else:
+                pytest.fail(f"unexpected read {endpoint}")
+        else:
+            self.writes.append(argv)
+            if self.failure:
+                raise subprocess.TimeoutExpired(argv, 60)
+            if argv[1:3] == ["pr", "merge"]:
+                self.queued = True
+            return subprocess.CompletedProcess(argv, 0, "", "")
+        return subprocess.CompletedProcess(argv, 0, json.dumps(data), "")
+
+
+@pytest.fixture
+def gh_shim_sandbox(tmp_path, monkeypatch):
+    """Stage the installed publisher and its dependency closure with synthetic policy."""
+    from tests import opsec_fixtures
+
+    root = tmp_path / "public-fixture"
+    root.mkdir()
+    installed = files("lu_machinery")
+    package = root / "lu_machinery"
+    package.mkdir()
+    with monkeypatch.context() as fixture_names:
+        fixture_names.setattr(opsec_fixtures, "machinery_package", lambda: "lu_machinery")
+        opsec_fixtures.copy_publisher_scripts(installed, package)
+    workflow = root / ".github/workflows/ci.yml"
+    workflow.parent.mkdir(parents=True)
+    shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
+    deploy_paths = root / "scripts/curriculum/deploy_paths.v1.json"
+    deploy_paths.parent.mkdir(parents=True)
+    shutil.copy2(ROOT / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
+    marker = root / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("")
+    shim = package / "agent_runtime/shims/gh"
+    shim.parent.mkdir(parents=True)
+    shutil.copy2(installed.joinpath("agent_runtime/shims/gh"), shim)
+    (package / "lib").mkdir(exist_ok=True)
+    shutil.copy2(installed.joinpath("lib/project_interpreter.sh"), package / "lib/project_interpreter.sh")
+    (package / "config").mkdir()
+    (package / "config/fleet_repos.yaml").write_text(json.dumps({"repos": CATALOG}))
+    (root / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)
+    tooling = opsec_fixtures.make_tooling(tmp_path / "private-fixture/tools/public_opsec_scan")
+    env = {key: value for key, value in os.environ.items() if not key.startswith(("GIT_", "PRE_COMMIT", "LU_OPSEC"))}
+    git = shutil.which("git", path=os.defpath)
+    subprocess.run([git, "init", "-q", str(root)], env=env, check=True, timeout=30)
+    subprocess.run(
+        [git, "-C", str(root), "remote", "add", "origin", "https://github.com/unit/public.git"],
+        env=env,
+        check=True,
+        timeout=30,
+    )
+    return root, shim, tooling
 
 READ_COMMANDS = [
     ['ruleset', 'list', '--repo', 'unit/public'],
@@ -78,17 +408,17 @@ def spy(calls, *, comment_edit=False, merge=False):
             # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), and the PR's files.
             endpoint = args[4].split("?", 1)[0]
             if endpoint.endswith("/files"):
-                seats = [[{"filename": "scripts/example.py"}]]
+                seats = [[{"filename": "lu_machinery/example.py"}]]
             else:
                 seats = [[recorded_approval("a" * 40)]] if args[4].startswith("repos/") else {"login": "unit"}
             return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if (
             args[:3] == ["gh", "pr", "view"]
             and "--json" in args
-            and args[args.index("--json") + 1] == "number,isDraft,headRefOid"
+            and args[args.index("--json") + 1] in {"number,isDraft,headRefOid", "number,isDraft,headRefOid,mergeStateStatus"}
         ):
             return subprocess.CompletedProcess(
-                args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), ""
+                args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "mergeStateStatus": "CLEAN", "headRefOid": "a" * 40}), ""
             )
         if (
             args[:3] == ["gh", "pr", "checks"]
@@ -97,10 +427,11 @@ def spy(calls, *, comment_edit=False, merge=False):
         ):
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if (
-            args[:5] == ["gh", "api", "--method", "POST", "graphql"]
-            and "isMergeQueueEnabled viewerMergeHeadlineText" in Path(args[6]).read_text()
+            merge and args[:5] == ["gh", "api", "--method", "POST", "graphql"]
+            and "viewerMergeHeadlineText" in Path(args[6]).read_text()
         ):
             pull = {
+                "id": "PR_fixture_1",
                 "headRefOid": "a" * 40,
                 "isMergeQueueEnabled": False,
                 "viewerMergeHeadlineText": "clean (#1)",
@@ -170,7 +501,7 @@ def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, g
         ],
     }
     if verb in expected_requests:
-        from scripts.common.github_client import Response
+        from lu_machinery.common.github_client import Response
 
         def transport(method, endpoint, headers, body, timeout):
             if verb == "comment-edit" and method == "GET":
@@ -209,8 +540,8 @@ def test_every_public_field_blocks_even_word_shaped(synthetic_opsec, verb, field
     fields = dict(fields)
     fields[key] = [payload] if pub.SCHEMAS[verb][1][key] == "texts" else payload
     calls = []
-    with pytest.raises(gate.PublishBlocked) as error:
-        pub.publish(verb, repo="unit/public", runner=spy(calls), **fields)
+    with pytest.raises(pub.gate.PublishBlocked) as error:
+        pub.publish(verb, repo="unit/public", runner=spy(calls, merge=verb == "pr-merge"), **fields)
     assert not calls and TOKEN not in str(error.value)
     assert "field=" in str(error.value) and "line=" in str(error.value)
 
@@ -252,7 +583,10 @@ def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
     body.write_bytes(b"clean\nexact UTF-8 \xc3\xa9\r\n")
     expected = body.read_bytes()
 
+    scanned = []
+
     def check(dest, texts, **kw):
+        scanned.extend(texts)
         original(dest, texts, **kw)
         body.write_text(TOKEN)
 
@@ -268,6 +602,13 @@ def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
         fields["verdict"] = "approve"
     calls = []
     pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls, comment_edit=verb == "comment-edit", merge=verb == "pr-merge"), **fields)
+    if verb == "pr-merge":
+        # Queue admission carries only identity/head; the supplied body is still frozen and scanned.
+        assert expected.decode("utf-8") in scanned
+        assert TOKEN not in "".join(scanned)
+        assert json.loads(calls[0]["--input"])["variables"] == {"id": "PR_fixture_1", "head": "a" * 40}
+        assert not Path(calls[0]["argv"][calls[0]["argv"].index("--input") + 1]).exists()
+        return
     flag = "--input" if verb == "comment-edit" else "--body-file"
     sent = calls[0][flag]
     if verb == "comment-edit":
@@ -781,7 +1122,8 @@ print('HTTP/2.0 201 Created\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Res
     executable.chmod(0o755)
     source = tmp_path / "body.md"
     source.write_text(body)
-    env = {"PATH": os.defpath, "AGENT_REAL_GH": str(executable)}
+    env = {"PATH": os.defpath, "AGENT_REAL_GH": str(executable),
+           "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(root), "LU_PRODUCT_ROOT": str(root)}
     raw = subprocess.run(
         [str(shim), "issue", "comment", "1", "--body-file", str(source)],
         cwd=root,
@@ -795,7 +1137,7 @@ print('HTTP/2.0 201 Created\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Res
         [
             sys.executable,
             "-m",
-            "scripts.publish",
+            "lu_machinery.publish",
             "issue-comment",
             "--number",
             "1",
@@ -1030,7 +1372,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 
     stub_parent_epic(monkeypatch)
 
-    from scripts.publish.github import Request
+    from lu_machinery.publish.github import Request
 
     monkeypatch.setenv("GH_REPO", "unit/public")
     calls = []
@@ -1077,7 +1419,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 
     def invoke():
         if consumer == "bridge":
-            assert not importlib.import_module("scripts.ai_agent_bridge._github")._gh_comment(1, TOKEN)
+            assert not importlib.import_module("lu_machinery.ai_agent_bridge._github")._gh_comment(1, TOKEN)
         elif consumer == "decision":
             module = importlib.import_module("scripts.audit.check_decisions")
             assert (
@@ -1087,11 +1429,11 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
         elif consumer == "review-audit":
             importlib.import_module("scripts.audit.check_review_issues")._comment_issue(1, TOKEN)
         elif consumer == "verify":
-            importlib.import_module("scripts.verify_review")._post_summary(1, {"final_disposition": TOKEN})
+            importlib.import_module("lu_machinery.verify_review")._post_summary(1, {"final_disposition": TOKEN})
         elif consumer == "verdict":
-            module = importlib.import_module("scripts.review.record_cf_verdict")
-            from scripts.orchestration.fleet_repos import FleetRepo
-            from scripts.review import target_resolution
+            module = importlib.import_module("lu_machinery.review.record_cf_verdict")
+            from lu_machinery.orchestration.fleet_repos import FleetRepo
+            from lu_machinery.review import target_resolution
 
             real_run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, timeout=30)
             real_run(
@@ -1141,24 +1483,24 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             assert receipt["verdict"] == "APPROVED"
             assert receipt["comment"] == receipt["status"] == "posted"
         elif consumer == "review-publisher":
-            importlib.import_module("scripts.fleet_comms.review_publisher").post_pr_comment(
+            importlib.import_module("lu_machinery.fleet_comms.review_publisher").post_pr_comment(
                 repository="unit/public", pr_number=1, body=TOKEN, runner=transport
             )
         elif consumer == "settle":
-            module = importlib.import_module("scripts.orchestration.dispatch_settle")
+            module = importlib.import_module("lu_machinery.orchestration.dispatch_settle")
             monkeypatch.setattr(module, "_find_pr", lambda *a: (None, None))
             module.push_and_maybe_open_pr(tmp_path, "unit", open_pr=True, title=TOKEN, body="clean")
         elif consumer == "closeout":
-            importlib.import_module("scripts.orchestration.task_closeout").GhGitHubAdapter(tmp_path).update_issue_body(
+            importlib.import_module("lu_machinery.orchestration.task_closeout").GhGitHubAdapter(tmp_path).update_issue_body(
                 "unit/public", 1, TOKEN
             )
         elif consumer == "keeper":
-            importlib.import_module("scripts.orchestration.merge_queue_keeper").GitHub(tmp_path, "unit/public").comment(
+            importlib.import_module("lu_machinery.orchestration.merge_queue_keeper").GitHub(tmp_path, "unit/public").comment(
                 1, TOKEN
             )
         elif consumer == "stream":
             # Membership has no public text; fixed mutation succeeds without the matcher.
-            importlib.import_module("scripts.orchestration.issue_stream_audit")._gh_json(
+            importlib.import_module("lu_machinery.orchestration.issue_stream_audit")._gh_json(
                 Request("issue-link", repo="unit/public", parent_id="PARENT", child_id="CHILD"), cwd=tmp_path
             )
         elif consumer == "practice":
@@ -1194,11 +1536,12 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             f"<!-- cf-verdict v1 sha={'a' * 40} task=unit-review started=2026-01-01T00:00:00.000000+00:00 "
             "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
         )
-        assert len(calls) == 3
+        assert len(calls) == 4
         assert all(args[:2] == ["gh", "api"] for args in calls)
-        assert "repos/unit/public/issues/1/comments" in calls[0]
-        assert "repos/unit/public/issues/comments/101?per_page=100" in calls[1]
-        assert f"repos/unit/public/statuses/{'a' * 40}" in calls[2]
+        assert "repos/unit/public/pulls/1/files?per_page=100" in calls[0]
+        assert "repos/unit/public/issues/1/comments" in calls[1]
+        assert "repos/unit/public/issues/comments/101?per_page=100" in calls[2]
+        assert f"repos/unit/public/statuses/{'a' * 40}" in calls[3]
         assert comments[0]["body"] == expected
         assert payloads == [
             {"body": expected},
@@ -1237,12 +1580,12 @@ def test_raw_rest_private_exemption_requires_actual_endpoint_host(host, allowed)
     "args,expected", [(["run", "watch", "1", "--compact"], 7), (["issue", "comment", "1", "--body", TOKEN], 2), (["api", "graphql", "-f", "query=mutation{deleteIssue(input:{issueId:fixture}){clientMutationId}}"], 2)]
 )
 def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, capsys):
-    from scripts.opsec import gh_entry
+    from lu_machinery.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
     executable.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > "' + str(tmp_path / "argv") + '"\nprintf "native gh error\\n" >&2\nexit 7\n')
     executable.chmod(0o755)
-    monkeypatch.setattr(sys, "argv", ["entry", str(executable), str(ROOT / "scripts/agent_runtime/shims/gh"), *args])
+    monkeypatch.setattr(sys, "argv", ["entry", str(executable), str(files("lu_machinery").joinpath("agent_runtime/shims/gh")), *args])
     monkeypatch.setenv("GH_REPO", "unit/public")
     assert gh_entry.main() == expected
     stderr = capsys.readouterr().err
@@ -1253,7 +1596,7 @@ def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, c
 
 
 def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
-    from scripts.opsec import gh_entry
+    from lu_machinery.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
     executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
@@ -1278,7 +1621,7 @@ def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
     ],
 )
 def test_repository_resolution_is_exact_and_ordered(environment, explicit, origin, expected, tmp_path):
-    from scripts.opsec.gh_snapshot import repository
+    from lu_machinery.opsec.gh_snapshot import repository
 
     def local_read(args, **kwargs):
         return subprocess.CompletedProcess(args, 0, origin, "")
@@ -1287,7 +1630,7 @@ def test_repository_resolution_is_exact_and_ordered(environment, explicit, origi
 
 
 def test_repository_read_failure_is_unknown(tmp_path):
-    from scripts.opsec.gh_snapshot import repository
+    from lu_machinery.opsec.gh_snapshot import repository
 
     def broken(*a, **k):
         raise OSError(TOKEN)
@@ -1323,7 +1666,7 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
             [
                 sys.executable,
                 "-m",
-                "scripts.publish",
+                "lu_machinery.publish",
                 "issue-comment",
                 "--repo",
                 "unit/public",
@@ -1333,7 +1676,8 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
                 str(body),
             ],
             cwd=root,
-            env={"PATH": os.defpath, "AGENT_REAL_GH": str(executable)},
+            env={"PATH": os.defpath, "AGENT_REAL_GH": str(executable),
+                 "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(root), "LU_PRODUCT_ROOT": str(root)},
             capture_output=True,
             text=True,
             timeout=10,
@@ -1427,11 +1771,11 @@ def test_catalog_c_safe_loader_matches_safe_loader(tmp_path, monkeypatch):
     monkeypatch.undo()
 
     root = tmp_path / "catalog-root"
-    target = root / "scripts/config/fleet_repos.yaml"
+    target = root / "lu_machinery/config/fleet_repos.yaml"
     target.parent.mkdir(parents=True)
     content = "repos:\n  public:\n    github: unit/public\n    default: true\n"
     target.write_text(content)
-    monkeypatch.setattr(gate, "ROOT", root)
+    monkeypatch.setattr(gate, "_PACKAGE", root / "lu_machinery")
     assert gate.catalog() == yaml.safe_load(content)["repos"]
     with pytest.raises(gate.PublishBlocked):
         target.write_text("!!python/object:unit {}")
@@ -1458,7 +1802,7 @@ def test_pr_creation_cannot_publish_implicit_branch_names(fields):
 
 
 def test_9794_issue_parent_read_selects_typed_parent_repository(github_transport):
-    from scripts.common.github_client import Response
+    from lu_machinery.common.github_client import Response
 
     issue = {
         "number": 1,
@@ -1504,8 +1848,9 @@ def test_keeper_issue_search_includes_unlabelled_open_issues():
 
 def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_path, monkeypatch, capsys):
     """Global cleanup must not delay fresh enqueue or already-queued reconciliation."""
-    from tests.orchestration.test_worktree_git import _init_repo
-    from tests.test_ci_recovery import HEAD, Transport
+    _init_repo = _git_init_repo
+    HEAD = _recovery_HEAD
+    Transport = _recovery_Transport
 
     # Exercise the production closed read encoder and client, not an invented gh PR field.
     from tests.test_github_client import client, response
@@ -1533,14 +1878,17 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
         sender.queued = case == "already-queued"
 
         def transport(argv, sender=sender, case=case, **kwargs):
-            if argv[1:3] == ["pr", "merge"]:
+            enqueue = argv[1:5] == ["api", "--method", "POST", "graphql"] and json.loads(
+                Path(argv[argv.index("--input") + 1]).read_text()
+            )["query"].startswith("mutation")
+            if enqueue:
                 if case == "unknown":
                     sender.failure = True
                 elif case == "failed":
                     sender.writes.append(argv)
                     return subprocess.CompletedProcess(argv, 1, "raw refusal", "raw error")
             result = sender(argv, **kwargs)
-            if argv[1:3] == ["pr", "merge"]:
+            if enqueue:
                 result.stdout, result.stderr = "raw enqueue success", "raw transport note"
                 if case == "moved":
                     sender.head = "b" * 40
@@ -1874,12 +2222,13 @@ def test_issue_transfer_mutation_returning_another_repository_is_unverified(tran
 
 @pytest.mark.parametrize("where", ["inside", "shared", "relative"])
 def test_issue_transfer_receipt_directory_must_be_private_and_outside_the_repository(transfer, tmp_path, where):
+    from scripts.publish import github as product_publisher
     directory = {"inside": str(ROOT / "receipts"), "shared": str(tmp_path / "shared"), "relative": "receipts"}[where]
     if where == "shared":
         (tmp_path / "shared").mkdir(mode=0o755)
         (tmp_path / "shared").chmod(0o755)
-    with pytest.raises(gate.PublishBlocked, match="receipt directory"):
-        pub.publish("issue-transfer", repo="public", number=7, destination="infra-private", receipt_dir=directory,
+    with pytest.raises(product_publisher.gate.PublishBlocked, match="receipt directory"):
+        product_publisher.publish("issue-transfer", repo="public", number=7, destination="infra-private", receipt_dir=directory,
                     runner=lambda *a, **k: pytest.fail("read or write"))
     assert not (ROOT / "receipts").exists()
 

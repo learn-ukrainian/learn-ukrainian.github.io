@@ -1,25 +1,162 @@
 from __future__ import annotations
 
+import json
 import sqlite3
-import sys
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.agent_runtime.adapters import agy
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.agent_runtime.errors import RateLimitedError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge import _channels, _config, _db, _inbox
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-
-from agent_runtime.errors import RateLimitedError
-from agent_runtime.result import Result
 from batch_gemini_config import FLASH_MODEL, PRO_MODEL
-from scripts.ai_agent_bridge import _channels, _db, _inbox
 
+# Product fixtures retained from the machinery test consumers (C-5048).
+
+
+def _agy_consistency_stream(slug, case):
+    """Frozen author inputs; expectations live in the consuming tests."""
+    other = "claude-opus-5-5-high" if "sonnet" in slug else "claude-sonnet-5-5-high"
+    init = {"event": "init", "model": slug, "session_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419"}
+    terminal = {
+        "event": "result",
+        "result": {"status": "SUCCESS", "response": "READY", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419"},
+    }
+    events = [init]
+    if case == "display":
+        init["model"] = "Claude Sonnet 5.5 (High)" if "sonnet" in slug else "Claude Opus 5.5 (High)"
+    elif case in {"other-pin", "mismatch-then-duplicate", "mismatch-then-session"}:
+        init["model"] = other
+    elif case == "other-family":
+        init["model"] = "gemini-3.8-flash-high"
+    elif case == "nested-model":
+        init["init"] = {"model": other}
+    elif case == "nested-session":
+        init["init"] = {"session_id": "different-session"}
+    elif case == "terminal-session":
+        terminal["result"]["conversation_id"] = "different-session"
+    elif case.startswith("repeated"):
+        repeated = dict(init)
+        if case == "repeated-model":
+            repeated["model"] = other
+        elif case == "repeated-session":
+            repeated["session_id"] = "different-session"
+        elif case == "repeated-source":
+            repeated["source"] = "configuration"
+        events.append(repeated)
+    elif case in {"unknown", "retired", "non-string"}:
+        init["model"] = {"unknown": "unrecognized", "retired": "Claude Opus 4.6 (Thinking)", "non-string": 7}[case]
+    elif case == "configuration":
+        init["source"] = "requested"
+    elif case == "missing":
+        events = []
+    elif case == "late":
+        events.insert(0, {"event": "step_update"})
+    elif case == "provider-failure":
+        terminal["result"].update(status="ERROR", error="synthetic provider failure")
+    if case == "mismatch-then-session":
+        events.append({**init, "session_id": "different-session"})
+    lines = list(map(json.dumps, events))
+    if case in {"duplicate-after", "mismatch-then-duplicate"}:
+        lines.append('{"event":"step_update","metadata":[{"model":"one","\\u006dodel":"two"}]}')
+    lines.append(json.dumps(terminal))
+    return "\n".join(lines) + "\n"
+
+
+def _agy_identity_stream_plan(tmp_path, slug):
+    conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    app_data = tmp_path / "agy-data"
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parent / "fixtures" / "agy" / "verify_words_transcript.jsonl"
+    transcript.write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={conversation_id}, sending message\n", encoding="utf-8")
+    plan = InvocationPlan(
+        cmd=["agy", "--output-format", "stream-json", "--model", slug],
+        cwd=tmp_path,
+        env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
+        metadata={"entire_fleet": {"requested_model": slug}},
+    )
+    terminal = {
+        "event": "result",
+        "result": {"status": "SUCCESS", "conversation_id": conversation_id, "response": "READY"},
+    }
+    return (plan, terminal)
+
+
+_agy_SLUGS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
+
+
+def _agy_mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="complete", version="1.4.0"):
+    """Mock only the process boundary, keeping adapter planning/parsing and runner custody."""
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    plan, _ = _agy_identity_stream_plan(tmp_path, _agy_SLUGS[1])
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(tmp_path / "agy-data"))
+    monkeypatch.setattr(agy, "_agy_app_data", lambda overrides: tmp_path / "agy-data")
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    binary = tmp_path / "agy-cli-fixture"
+    binary.write_bytes(b"synthetic CLI artifact, never executed\n")
+    original_which = agy.shutil.which
+    monkeypatch.setattr(agy.shutil, "which", lambda name: str(binary) if name == "agy" else original_which(name))
+    monkeypatch.setattr(runner, "has_headroom", lambda *a: (True, "fixture"))
+    monkeypatch.setattr(runner, "load_failover_chain", lambda *a, **k: None)
+    monkeypatch.setattr(runner, "write_record", lambda *a: None)
+    monkeypatch.setattr(
+        runner,
+        "resolve_invocation_telemetry",
+        lambda **k: SimpleNamespace(model=k["requested_model"], effort="high", cli_version=version),
+    )
+    monkeypatch.setattr(runner.PrimaryTreeWatch, "start", lambda **k: None)
+    monkeypatch.setattr(runner._ChildCwdPin, "start", lambda **k: None)
+    monkeypatch.setattr(runner, "_prepare_spawn_command", lambda cmd, env: (cmd, env))
+    launches = []
+
+    class Process:
+        pid = 999999991
+        returncode = None
+
+        def poll(self):
+            if self.returncode is not None:
+                return self.returncode
+            if exit_kind == "timeout":
+                return None
+            if exit_kind == "cancel":
+                raise KeyboardInterrupt("synthetic cancellation")
+            if exit_kind == "exception":
+                raise RuntimeError("synthetic runtime failure")
+            self.returncode = 0
+            return self.returncode
+
+        def wait(self, **kwargs):
+            return self.returncode
+
+    proc = Process()
+
+    def spawn(cmd, **kwargs):
+        launches.append((cmd, kwargs))
+        return (proc, None, None)
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", spawn)
+    monkeypatch.setattr(runner, "_kill_process_tree", lambda proc: setattr(proc, "returncode", -15))
+    monkeypatch.setattr(runner, "_agy_process_group_exited", lambda pid: True)
+    state = SimpleNamespace(stdout_lines=stdout.splitlines(keepends=True), stderr_lines=[])
+    monkeypatch.setattr(runner, "start_watchdog", lambda *a, **k: (state, []))
+    monkeypatch.setattr(runner, "stop_watchdog", lambda *a, **k: None)
+    if exit_kind == "timeout":
+        monkeypatch.setattr(runner, "should_kill", lambda *a, **k: "hard_timeout")
+    return (launches, plan, binary)
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -112,14 +249,15 @@ def _ok_result(
     ("configuration", False), ("provider-failure", False),
 ])
 def test_native_agy_inbox_uses_observation_not_requested_identity(monkeypatch, tmp_path, pin, case, ok):
-    from scripts.agent_runtime import runner
-    from scripts.fleet_comms import bottleneck_alerts
-    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.fleet_comms import bottleneck_alerts
+    consistency_stream = _agy_consistency_stream
+    mock_agy_provider = _agy_mock_agy_provider
 
     monkeypatch.setattr(bottleneck_alerts, "scan_bottlenecks_at_inbox_checkpoint", lambda **k: None)
     thread = _make_thread("agy")
     _set_delivery_model(str(thread[0]["message_id"]), pin)
-    monkeypatch.setattr(_inbox, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(_config, "REPO_ROOT", tmp_path)
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
     results = []
 
@@ -145,7 +283,7 @@ def test_native_agy_inbox_uses_observation_not_requested_identity(monkeypatch, t
         assert messages[-1]["body"] == "READY"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_single_delivery(mock_invoke):
     thread = _make_thread("claude", count=1)
     mock_invoke.return_value = _ok_result("claude")
@@ -166,7 +304,7 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert messages[-1]["parent_id"] == thread[0]["message_id"]
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -182,7 +320,7 @@ def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "codex-session-one"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -213,7 +351,7 @@ def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke
     assert str(follow_up["message_id"]) not in prompt
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     first = _make_thread("codex", channel="first", count=1)
     second = _make_thread("codex", channel="second", count=1)
@@ -234,7 +372,7 @@ def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     assert _inbox._get_session_id(second_task_id, "codex") == "second-session"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     task_id = _inbox._thread_session_key("topic", str(thread[0]["thread_id"]))
@@ -254,7 +392,7 @@ def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "existing-session"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     thread = _make_thread("claude", count=3)
     mock_invoke.return_value = _ok_result("claude")
@@ -273,7 +411,7 @@ def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     assert messages[-1]["parent_id"] == thread[-1]["message_id"]
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -292,7 +430,7 @@ def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     assert second_row["status"] == "delivered"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -318,7 +456,7 @@ def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     assert second_row["status"] == "pending"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -333,7 +471,7 @@ def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=2)
@@ -351,7 +489,7 @@ def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     assert all(row["status"] == "pending" for row in second_rows)
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
     """Regression: Gemini c2-review r1 BLOCKER — queue deadlock.
 
@@ -377,7 +515,7 @@ def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
         assert _delivery_rows(str(message["message_id"]))[0]["status"] == "delivered"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_invoke):
     """Retired Pro's alias equals Flash and must not create a self-retry cycle."""
     assert PRO_MODEL == FLASH_MODEL
@@ -398,7 +536,7 @@ def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_in
     assert len(_channels.read("topic", thread_id=str(thread[0]["thread_id"]))) == 1
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
     thread = _make_thread("gemini", count=1)
     _set_delivery_model(str(thread[0]["message_id"]), PRO_MODEL)
@@ -414,7 +552,7 @@ def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
 
 
 @pytest.mark.parametrize("raises", [False, True])
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_flash_capacity_exhaustion_does_not_retry_alias(mock_invoke, raises):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
@@ -441,7 +579,7 @@ def test_run_inbox_gemini_flash_capacity_exhaustion_does_not_retry_alias(mock_in
     assert len(messages) == 1
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
