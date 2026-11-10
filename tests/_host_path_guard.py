@@ -16,8 +16,11 @@ import re
 from functools import lru_cache
 from ipaddress import AddressValueError, IPv4Address
 
-from lu_machinery.api.occupancy_sanitize import _CANONICAL_ALIASES
 from lu_machinery.opsec.needles import Needles, home_dir_pattern, load_needles
+
+from scripts.api.occupancy_sanitize import (
+    _CANONICAL_ALIASES,  # TRANSITIONAL-PKG3-B2: held guard requires alias-set identity.
+)
 
 # Fictional values for reject samples; only their shape matters.
 FIXTURE_USER = "fixture-user"

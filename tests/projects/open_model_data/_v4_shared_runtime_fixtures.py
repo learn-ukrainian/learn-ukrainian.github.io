@@ -46,12 +46,15 @@ from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import ActionsPrincipal, canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
 from learn_ukrainian_v4_runtime.pg_schema import apply_pg_schema
-from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from packaging.markers import Marker, default_environment
 from packaging.requirements import Requirement
 from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from psycopg.rows import dict_row
+
+from scripts.fleet_comms.request_executor import (
+    RequestExecutor,  # TRANSITIONAL-PKG3-B2: held runtime needs authorize_author_execution.
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 
