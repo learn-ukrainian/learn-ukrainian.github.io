@@ -15,6 +15,8 @@ import uvicorn
 from fastapi import FastAPI
 from lu_machinery.api.main import create_app
 from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.session_streams.db import SessionStreamDatabase as ReleaseSessionStreamDatabase
+from lu_machinery.session_streams.store import SessionStreamStore as ReleaseSessionStreamStore
 
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
@@ -40,7 +42,13 @@ def epics_app_for_store(
     ctx = fixture_context(root)
     if live_repo_root is not None:
         ctx = ctx.with_roots(live_repo_root=Path(live_repo_root))
-    ctx = replace(ctx, stores=replace(ctx.stores, epics_store=store))
+    # The installed app's routers handle the installed store's types (for
+    # example its LifecycleError), so serve the caller's database through
+    # a release store. Both stores open the same SQLite file.
+    served = ReleaseSessionStreamStore(
+        ReleaseSessionStreamDatabase(store.database.path), _process_probe=store._process_probe
+    )
+    ctx = replace(ctx, stores=replace(ctx.stores, epics_store=served))
     return create_app(ctx, lifespan=_stub_lifespan)
 
 
