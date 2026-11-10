@@ -15,6 +15,7 @@ import uvicorn
 from fastapi import FastAPI
 from lu_machinery.api.main import create_app
 from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.product_contribution import ProductContribution
 from lu_machinery.session_streams.db import SessionStreamDatabase as ReleaseSessionStreamDatabase
 from lu_machinery.session_streams.store import SessionStreamStore as ReleaseSessionStreamStore
 
@@ -49,7 +50,8 @@ def epics_app_for_store(
         ReleaseSessionStreamDatabase(store.database.path), _process_probe=store._process_probe
     )
     ctx = replace(ctx, stores=replace(ctx.stores, epics_store=served))
-    return create_app(ctx, lifespan=_stub_lifespan)
+    # Only the epics routes are served; no product contribution (as machinery's port does).
+    return create_app(ctx, lifespan=_stub_lifespan, product=ProductContribution())
 
 
 @contextmanager
