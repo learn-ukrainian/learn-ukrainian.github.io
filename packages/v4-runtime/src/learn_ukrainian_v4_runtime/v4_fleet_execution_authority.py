@@ -17,7 +17,10 @@ source-free tests.
 from __future__ import annotations
 
 import contextlib
+import hashlib
+import json
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
@@ -505,6 +508,190 @@ def _issue_reviewer_receipt_from_evidence(
 # canonical Fleet Comms store and fixed Hramatka key custody.
 
 
+def _lock_queued_request(executor: Any, request_id: str) -> Any:
+    """Inside the caller's open transaction: lock the request row (PG
+    ``FOR UPDATE``, SQLite ``BEGIN IMMEDIATE``) and refuse unless it is
+    still ``queued``."""
+    from lu_machinery.fleet_comms.request_executor import RequestExecutorError, RequestRecord
+
+    ph = "%s" if executor._is_pg else "?"
+    if executor._is_pg:
+        row = executor._conn.execute(
+            f"SELECT * FROM requests WHERE request_id = {ph} FOR UPDATE",
+            (request_id,),
+        ).fetchone()
+    else:
+        row = executor._conn.execute(
+            f"SELECT * FROM requests WHERE request_id = {ph}",
+            (request_id,),
+        ).fetchone()
+    if row is None:
+        raise RequestExecutorError(f"request not found: {request_id}")
+    state = str(row["state"])
+    if state != "queued":
+        raise RequestExecutorError(
+            f"request {request_id} is not authorizable for a V4 slot "
+            f"(state={state}); only a still-queued request may be bound"
+        )
+    return RequestRecord(
+        request_id=str(row["request_id"]),
+        request_message_id=str(row["request_message_id"]),
+        requested_recipient=str(row["requested_recipient"]),
+        resolved_recipient=str(row["resolved_recipient"]),
+        state=state,
+        expires_at=str(row["expires_at"]),
+        completion_state=str(row["completion_state"]),
+        created_at=str(row["created_at"]),
+        updated_at=str(row["updated_at"]),
+    )
+
+
+def authorize_author_execution(executor: Any, *, request_id: str, slot_id: str, expected_seat: str) -> dict[str, Any]:
+    """Resolve frozen slot + A3 packet, build the source-blind author
+    prompt internally, and bind the still-queued request. Does not
+    accept a row/packet/content hash from the caller."""
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+    from learn_ukrainian_v4_runtime import v4_execution_origin as origin
+
+    packet_sha256 = origin.load_a3_packet_commitment()
+    origin.load_frozen_slot(slot_id)
+    prompt = origin.build_author_prompt(slot_id=slot_id, packet_sha256=packet_sha256, expected_seat=expected_seat)
+    task_id, run_id = origin.new_task_run_ids(slot_id=slot_id, role="author")
+    with executor.store._transaction() as conn:
+        req = _lock_queued_request(executor, request_id)
+        harness = origin.derive_harness(req.resolved_recipient)
+        binding = {
+            "request_id": request_id,
+            "task_id": task_id,
+            "run_id": run_id,
+            "role": "author",
+            "slot_id": slot_id,
+            "expected_seat_or_model": expected_seat,
+            "expected_harness": harness,
+            "prompt_profile": origin.AUTHOR_PROMPT_PROFILE,
+            "prompt_sha256": origin.prompt_digest(prompt),
+            "packet_sha256": packet_sha256,
+            "authorship_receipt_id": None,
+            "authorship_receipt_sha256": None,
+            "rubric_sha256": None,
+        }
+        v4_store.record_execution_dispatch_binding(binding, conn=conn, is_pg=executor._is_pg, commit=False)
+    return {**binding, "authorized_prompt": prompt}
+
+
+def authorize_reviewer_execution(
+    executor: Any,
+    *,
+    request_id: str,
+    authorship_receipt_id: str,
+    expected_seat: str,
+) -> dict[str, Any]:
+    """Resolve the author receipt + fixed rubric internally, build the
+    exact review prompt, and bind the still-queued request. Does not
+    accept packet/rubric/content hashes from the caller."""
+    from lu_machinery.fleet_comms.request_executor import RequestExecutorError
+
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+    from learn_ukrainian_v4_runtime import v4_execution_origin as origin
+
+    packet_sha256 = origin.load_a3_packet_commitment()
+    rubric_sha256 = origin.load_review_rubric_sha256()
+    with executor.store._transaction() as conn:
+        req = _lock_queued_request(executor, request_id)
+        authorship = v4_store.resolve_authorship_receipt(receipt_id=authorship_receipt_id, conn=conn, is_pg=executor._is_pg)
+        if authorship is None:
+            raise RequestExecutorError(f"unknown authorship_receipt_id {authorship_receipt_id!r} -- refusing")
+        authorship_sha256 = hashlib.sha256(
+            json.dumps(authorship, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        prompt = origin.build_reviewer_prompt(
+            authorship_receipt_sha256=authorship_sha256,
+            rubric_sha256=rubric_sha256,
+            packet_sha256=packet_sha256,
+            expected_seat=expected_seat,
+        )
+        task_id, run_id = origin.new_task_run_ids(slot_id=authorship_receipt_id, role="reviewer")
+        harness = origin.derive_harness(req.resolved_recipient)
+        binding = {
+            "request_id": request_id,
+            "task_id": task_id,
+            "run_id": run_id,
+            "role": "reviewer",
+            "slot_id": None,
+            "expected_seat_or_model": expected_seat,
+            "expected_harness": harness,
+            "prompt_profile": origin.REVIEWER_PROMPT_PROFILE,
+            "prompt_sha256": origin.prompt_digest(prompt),
+            "packet_sha256": packet_sha256,
+            "authorship_receipt_id": authorship_receipt_id,
+            "authorship_receipt_sha256": authorship_sha256,
+            "rubric_sha256": rubric_sha256,
+        }
+        v4_store.record_execution_dispatch_binding(binding, conn=conn, is_pg=executor._is_pg, commit=False)
+    return {**binding, "authorized_prompt": prompt}
+
+
+def claim_v4_runner_execution(executor: Any, *, request_id: str) -> dict[str, Any]:
+    """Atomically require the exact binding and ``queued -> running``
+    while creating the one-attempt capability. Called by the native
+    runner immediately before Popen."""
+    from lu_machinery.fleet_comms.request_executor import RequestExecutorError
+
+    from learn_ukrainian_v4_runtime.contracts import CompletionState
+
+    if executor._is_pg:
+        raise RequestExecutorError("legacy V4 runner claim is retired; use the protected packaged V4 service runtime")
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+    from learn_ukrainian_v4_runtime import v4_execution_origin as origin
+
+    now_s = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ph = "%s" if executor._is_pg else "?"
+    with executor.store._transaction() as conn:
+        req = _lock_queued_request(executor, request_id)
+        binding = v4_store.resolve_execution_dispatch_binding(request_id=request_id, conn=conn, is_pg=executor._is_pg)
+        if binding is None:
+            raise RequestExecutorError(f"request {request_id} has no V4 binding -- refusing to start")
+        cursor = conn.execute(
+            f"""UPDATE requests SET state = 'running', completion_state = {ph}, updated_at = {ph}
+               WHERE request_id = {ph} AND state = 'queued'""",
+            (CompletionState.UNKNOWN.value, now_s, request_id),
+        )
+        if cursor.rowcount != 1:
+            raise RequestExecutorError(f"request {request_id} could not be claimed for V4 execution")
+        token, digest = origin.mint_capability_token()
+        attempt_id = origin.new_attempt_id()
+        binding_sha256 = hashlib.sha256(
+            json.dumps(binding, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        v4_store.record_execution_attempt(
+            attempt_id=attempt_id,
+            request_id=request_id,
+            task_id=binding["task_id"],
+            run_id=binding["run_id"],
+            role=binding["role"],
+            capability_digest=digest,
+            binding_sha256=binding_sha256,
+            conn=conn,
+            is_pg=executor._is_pg,
+            commit=False,
+        )
+    return {
+        "attempt_id": attempt_id,
+        "capability_token": token,
+        "binding": binding,
+        "request": req,
+    }
+
+
+def resolve_v4_execution_observation(store: Any, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
+    """Read an observation through the supplied store's connection and dialect."""
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+
+    return v4_store.resolve_execution_observation(
+        task_id=task_id, run_id=run_id, role=role, conn=store.connection, is_pg=store.authority.value == "pg"
+    )
+
+
 def _open_canonical_authority_store() -> Any:
     """The single module-level indirection point for canonical-authority
     selection (PR #7662 repair 7). Production has exactly one implementation
@@ -536,7 +723,7 @@ def _resolve_execution_observation(*, task_id: str, run_id: str, role: str) -> d
             f"canonical V4 execution authority unavailable -- refusing (no key access): {exc}"
         ) from exc
     try:
-        return store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
+        return resolve_v4_execution_observation(store, task_id=task_id, run_id=run_id, role=role)
     except Exception as exc:
         raise FleetExecutionError("canonical V4 execution authority read failed -- refusing (no key access)") from exc
     finally:
