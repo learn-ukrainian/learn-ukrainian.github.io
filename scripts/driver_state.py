@@ -48,7 +48,9 @@ gate failure and record their typed cause when storage permits.
 after compaction. ``Stop`` applies the same policy, worker target and
 continuation cap as ``agy-stop-hook`` and answers ``{"decision": "block",
 "reason": ...}`` to keep the turn going; gate failures allow the stop with a
-visible ``systemMessage``. Both act only in the launcher's driver session:
+visible ``systemMessage``. In a turn the transcript shows a human prompt
+started, a final question or plan is conversation, so only that check is
+skipped; an unclassifiable turn keeps it. Both act only in the launcher's driver session:
 the Claude project directory must be the checkout that owns the state file.
 Uses the shared project interpreter and its installed CommonMark parser.
 """
@@ -396,6 +398,70 @@ def last_model_text(transcript_path: str | None) -> str:
     return ""
 
 
+# A human-started turn can be long; scan this far back for its opening prompt, then enforce.
+MAX_TRANSCRIPT_SCAN_BYTES = 64 * 1024 * 1024
+_TRANSCRIPT_BLOCK_BYTES = 512 * 1024
+
+
+def _reverse_jsonl_rows(path: Path):
+    """Yield complete JSONL rows from the end of ``path``; an undecodable complete row raises ValueError."""
+    with path.open("rb") as handle:
+        position = handle.seek(0, os.SEEK_END)
+        floor = max(0, position - MAX_TRANSCRIPT_SCAN_BYTES)
+        pending = b""
+        trailing = True  # the last line may still be being written
+        while position > floor:
+            size = min(_TRANSCRIPT_BLOCK_BYTES, position - floor)
+            position -= size
+            handle.seek(position)
+            lines = (handle.read(size) + pending).split(b"\n")
+            pending = lines.pop(0)
+            for raw in reversed(lines):
+                if trailing:
+                    trailing = False
+                    continue  # the text after the final newline is empty or still being written
+                if raw.strip():
+                    yield json.loads(raw.decode("utf-8"))
+        if position == 0 and pending.strip() and not trailing:
+            yield json.loads(pending.decode("utf-8"))
+
+
+def claude_turn_started_by_human(transcript_path: object) -> bool:
+    """True only when the Claude Code transcript shows the current turn began with a human prompt.
+
+    The turn's opening row is the newest main-chain ``user`` row that is neither
+    a tool result nor harness metadata (``isMeta``, such as Stop hook feedback).
+    Claude Code marks it ``origin.kind`` and ``turnOrigin``; both must say
+    human. Task notifications and other system-started turns, missing fields, an
+    unreadable or undecodable transcript, or a turn start beyond the scan bound
+    return False so the Stop policy keeps enforcing.
+    """
+    if not isinstance(transcript_path, str) or not transcript_path.strip():
+        return False
+    try:
+        path = Path(os.path.expanduser(transcript_path))
+        if not path.is_file():
+            return False
+        for row in _reverse_jsonl_rows(path):
+            if not isinstance(row, dict):
+                return False
+            if row.get("type") != "user" or row.get("isSidechain") is True or row.get("isMeta") is True:
+                continue
+            message = row.get("message")
+            content = message.get("content") if isinstance(message, dict) else None
+            if (
+                isinstance(content, list)
+                and content
+                and all(isinstance(block, dict) and block.get("type") == "tool_result" for block in content)
+            ):
+                continue
+            origin = row.get("origin")
+            return isinstance(origin, dict) and origin.get("kind") == "human" and row.get("turnOrigin") == "human"
+    except (OSError, ValueError, RecursionError):
+        return False
+    return False
+
+
 def minimum_workers() -> int | None:
     """Read the private worker target; absent or invalid configuration is unknown."""
     raw = os.environ.get(MIN_WORKERS_ENV, "").strip()
@@ -630,6 +696,8 @@ def cmd_claude_stop_hook(stdin_text: str) -> dict:
         text if isinstance(text, str) else "",
         fully_idle=False,
         hook="claude-stop-hook",
+        # Questions and plans are normal conversation in a turn the operator started.
+        allow_question_or_plan=claude_turn_started_by_human(payload.get("transcript_path")),
     )
     if verdict is None:
         return {}
@@ -638,7 +706,9 @@ def cmd_claude_stop_hook(stdin_text: str) -> dict:
     return verdict
 
 
-def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, hook: str) -> str | dict | None:
+def _stop_policy(
+    path: Path, conversation: str, text: str, *, fully_idle: bool, hook: str, allow_question_or_plan: bool = False
+) -> str | dict | None:
     """Shared Stop policy: None allows, a string is the continuation reason, a dict is a gate failure."""
     if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
@@ -652,7 +722,7 @@ def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, 
         reasons.append("live worker count is unknown; restore worker telemetry before stopping")
     elif workers is not None and workers < minimum:
         reasons.append("your running workers are below the privately configured target; dispatch ready work")
-    why = ends_on_question_or_plan(text)
+    why = None if allow_question_or_plan else ends_on_question_or_plan(text)
     if why:
         reasons.append(f"{why}; decide per the policy and execute it now")
     if not reasons and fully_idle:
