@@ -18,10 +18,13 @@ from typing import Any
 
 import pytest
 import yaml
+from lu_machinery.review import (
+    second_seat,  # the subjects record.py, fixloop.py and integration_check.py run the installed release
+)
 
 from scripts.build.fresh import assemble
 from scripts.build.fresh import plan_manifest as pm
-from scripts.review import findings_db, fixloop, record, second_seat, settle
+from scripts.review import findings_db, fixloop, record, settle
 from scripts.review import integration_check as ic
 from scripts.review.receipts import ledger
 from tests.build.test_fresh_plan_review import fake_verify

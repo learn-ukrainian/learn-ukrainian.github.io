@@ -19,6 +19,7 @@ import os
 import sqlite3
 import subprocess
 import sys
+import sysconfig
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -87,13 +88,19 @@ def _run(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _drop_repo(root: Path) -> None:
-    """Remove the repository so a file load cannot see the ``scripts`` package."""
+    """Remove the repository so a file load cannot see the ``scripts`` package.
+
+    The interpreter's own site-packages stay: the frontend build runs the project
+    interpreter, whose installed lu_machinery release the file imports, and CI keeps
+    that virtual environment inside the checkout.
+    """
+    installed = {Path(sysconfig.get_path(name)).resolve() for name in ("purelib", "platlib")}
     cleaned: list[str] = []
     for entry in sys.path:
         if not entry:
             continue
         resolved = Path(entry).resolve()
-        if resolved == root or root in resolved.parents:
+        if resolved not in installed and (resolved == root or root in resolved.parents):
             continue
         cleaned.append(entry)
     sys.path[:] = cleaned

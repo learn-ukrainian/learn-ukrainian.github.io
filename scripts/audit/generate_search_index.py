@@ -1,7 +1,8 @@
 """Generate compact Word Atlas search and browse indexes.
 
 The database-backed command is deliberately executable as a file with the
-system interpreter used by the frontend CI jobs. Keep that path stdlib-only.
+project interpreter used by the frontend CI jobs. Keep that path to the
+standard library and the installed lu_machinery release.
 """
 
 from __future__ import annotations
