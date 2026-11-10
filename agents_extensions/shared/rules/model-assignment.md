@@ -24,6 +24,7 @@ Cursor under those attestation, cross-family and subject-seat limits. Opus 5.5 a
 eligible. Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
 Operator decision 2026-11-01: Muse Wonder Full (`muse-wonder-full-1.0`) is the formal reviewer for low-risk and medium-risk code and infra reviews, placed ahead of the frontier seats in the low and medium review ladders when eligible and healthy.
+Operator order MUSE-REVIEW-1110 (2026-11-10): the routing budget reads `muse usage` into a Muse lane with the same cache, timeout and staleness rules as the other subscription lanes. A fresh weekly allowance below the near-cap line is healthy and admits this seat at low and medium risk; an unreadable reading stays unknown and is not treated as healthy. The medium and low ladder order is unchanged.
 It has no high, critical, security-final, Ukrainian, design or driver authority (AC-02).
 Private inputs require contributor mode off (operator order C-2401).
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of

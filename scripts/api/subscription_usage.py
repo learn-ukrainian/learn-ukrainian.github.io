@@ -1336,21 +1336,88 @@ def _muse_record_from_codexbar_payload(payload: Any) -> dict[str, Any]:
     return record
 
 
-def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
-    """Read Muse through CodexBar's supported ``usage --provider muse`` interface.
+def _muse_bin() -> str | None:
+    found = shutil.which("muse")
+    return found if found else None
 
-    The Muse CLI has no quota subcommand. This does not open auth files, and it
-    does not copy identity, account, or credit fields into the record.
+
+def _muse_epoch_iso(value: Any) -> str | None:
+    """Canonical UTC timestamp for a Muse ``*Ms`` field. Seconds and milliseconds are both accepted."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    epoch_ms = float(value) if float(value) > 10_000_000_000 else float(value) * 1000.0
+    return _agy_reset_or_none(epoch_ms)
+
+
+def _muse_cli_window(block: Any, *, minutes: int) -> dict[str, Any] | None:
+    if not isinstance(block, dict):
+        return None
+    used = _public_percent(block.get("usedPercent"))
+    if used is None:
+        return None
+    return {
+        "usedPercent": used,
+        "windowMinutes": minutes,
+        "resetsAt": _muse_epoch_iso(block.get("resetsAtMs")),
+    }
+
+
+def _muse_record_from_cli_payload(payload: Any) -> dict[str, Any]:
+    """Map ``muse usage --json`` onto the shared provider record.
+
+    Only the weekly and short-window percents and their reset times are kept.
+    A missing, stale, or non-numeric weekly reading is unknown, never healthy.
     """
-    codexbar_bin = _codexbar_bin()
-    if not codexbar_bin:
+    if not isinstance(payload, dict):
         return _normalize_provider_error(
             "muse",
-            {"message": "codexbar CLI not found", "kind": "unavailable", "code": "NO_PROBE"},
+            {"message": "Muse usage payload was not a JSON object", "kind": "fetch_error", "code": "BAD_JSON"},
         )
+    allowance = payload.get("allowance")
+    if not isinstance(allowance, dict):
+        return _normalize_provider_error(
+            "muse",
+            {"message": "Muse usage payload has no allowance object", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    observed = _parse_resets_at_any(_muse_epoch_iso(allowance.get("asOfMs")))
+    if observed is None:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "Muse observation timestamp is invalid", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    age = (datetime.now(UTC) - observed).total_seconds()
+    if age < 0 or age >= _codexbar_cache_ttl_s():
+        return _normalize_provider_error(
+            "muse",
+            {"message": "Muse observation is not current", "kind": "fetch_error", "code": "STALE_DATA"},
+        )
+    weekly = _muse_cli_window(allowance.get("weekly"), minutes=WEEKLY_WINDOW_MINUTES)
+    if weekly is None:
+        return _muse_quota_unsupported(
+            _normalize_provider_data("muse", {"provider": "muse", "source": "muse_usage", "usage": {}})
+        )
+    usage: dict[str, Any] = {"secondary": weekly}
+    window = _muse_cli_window(allowance.get("window"), minutes=300)
+    if window is not None:
+        usage["primary"] = window
+    record = _muse_record_from_codexbar_payload({"provider": "muse", "usage": usage})
+    if record.get("status") == "healthy":
+        record["source"] = "muse_usage"
+        record["observed_at"] = observed.isoformat().replace("+00:00", "Z")
+    return record
+
+
+# One headless step on the cheap Muse model, only when ``muse usage`` has no weekly
+# percent. Contributor mode is on for this run alone so the allowance can publish.
+# The prompt carries no repository text.
+_MUSE_ALLOWANCE_MODEL = "muse-spark-1.3"
+_MUSE_ALLOWANCE_PROMPT = "Reply with ok."
+
+
+def _read_muse_usage(muse_bin: str, timeout_s: float) -> dict[str, Any]:
     try:
         completed = subprocess.run(
-            [codexbar_bin, "usage", "--provider", "muse", "--json", "--no-credits"],
+            [muse_bin, "usage", "--json"],
             capture_output=True,
             text=True,
             timeout=max(float(timeout_s), 1.0),
@@ -1360,19 +1427,19 @@ def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
     except subprocess.TimeoutExpired:
         return _normalize_provider_error(
             "muse",
-            {"message": "CodexBar Muse probe timed out", "kind": "timeout", "code": "TIMEOUT"},
+            {"message": "Muse usage probe timed out", "kind": "timeout", "code": "TIMEOUT"},
         )
     except OSError:
         return _normalize_provider_error(
             "muse",
-            {"message": "CodexBar Muse probe failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+            {"message": "Muse usage probe failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
         )
     stdout = completed.stdout or ""
     if not stdout.strip():
         return _normalize_provider_error(
             "muse",
             {
-                "message": f"CodexBar Muse probe returned no JSON (exit {completed.returncode})",
+                "message": f"Muse usage probe returned no JSON (exit {completed.returncode})",
                 "kind": "provider" if completed.returncode else "fetch_error",
                 "code": completed.returncode or "EMPTY",
             },
@@ -1382,19 +1449,81 @@ def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
     except json.JSONDecodeError:
         return _normalize_provider_error(
             "muse",
-            {"message": "CodexBar Muse probe returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+            {"message": "Muse usage probe returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
         )
-    record = _muse_record_from_codexbar_payload(payload)
+    record = _muse_record_from_cli_payload(payload)
     if completed.returncode and record.get("status") == "healthy":
         return _normalize_provider_error(
             "muse",
             {
-                "message": f"CodexBar Muse probe failed (exit {completed.returncode})",
+                "message": f"Muse usage probe failed (exit {completed.returncode})",
                 "kind": "provider",
                 "code": completed.returncode,
             },
         )
     return record
+
+
+def _muse_open_allowance_session(muse_bin: str, timeout_s: float) -> bool:
+    """Start one cheap contributor-mode session so a following usage read can publish.
+
+    Returns whether the process exited 0. Output is discarded. A failure does not
+    invent a healthy allowance.
+    """
+    try:
+        completed = subprocess.run(
+            [
+                muse_bin,
+                "exec",
+                "--provider",
+                "meta",
+                "--model",
+                _MUSE_ALLOWANCE_MODEL,
+                "--contributor-mode",
+                "on",
+                "--reasoning-effort",
+                "minimal",
+                "--max-model-steps",
+                "1",
+                "--worktree",
+                "off",
+                "--disable-shell",
+                "--disable-web-tools",
+                "--disable-write",
+                "--disable-reminders",
+                _MUSE_ALLOWANCE_PROMPT,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=max(float(timeout_s), 1.0),
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
+    except (subprocess.TimeoutExpired, OSError):
+        return False
+    return completed.returncode == 0
+
+
+def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
+    """Read Muse allowance with ``muse usage --json``.
+
+    Uses the same timeout floor as the other subscription probes. When that
+    reading has no weekly percent, one ``muse-spark-1.3`` session with
+    contributor mode on is started and the allowance is read again. An
+    unreadable result stays unknown, never a healthy sample.
+    """
+    muse_bin = _muse_bin()
+    if not muse_bin:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "muse CLI not found", "kind": "unavailable", "code": "NO_PROBE"},
+        )
+    record = _read_muse_usage(muse_bin, timeout_s)
+    if record.get("error_code") != "NO_QUOTA":
+        return record
+    if not _muse_open_allowance_session(muse_bin, timeout_s):
+        return record
+    return _read_muse_usage(muse_bin, timeout_s)
 
 
 def project_muse_for_status(record: dict[str, Any]) -> dict[str, Any]:
