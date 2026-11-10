@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 369,
-    "probe_count": 738,
+    "cli_count": 366,
+    "probe_count": 732,
     "cli_paths": [
       "scripts/analytics/vocab_progression.py",
       "scripts/atlas/a1_slice3_inputs.py",
@@ -159,7 +159,6 @@
       "scripts/audit/sum11_sovietization_scan.py",
       "scripts/audit/text_difficulty.py",
       "scripts/audit/track_deterministic_audit.py",
-      "scripts/audit/typesafe_citation_verifier.py",
       "scripts/audit/ulp_fidelity_gate.py",
       "scripts/audit/validate_atlas_conformance.py",
       "scripts/audit/verbatim_overlap_gate.py",
@@ -178,7 +177,6 @@
       "scripts/build/generate_lesson_schema.py",
       "scripts/build/promote_quality_gate.py",
       "scripts/build/run_llm_qg_parity.py",
-      "scripts/build/typesafe_curriculum.py",
       "scripts/build/v7_build.py",
       "scripts/build/v7_review.py",
       "scripts/build/verify_shippable.py",
@@ -297,7 +295,6 @@
       "scripts/open_dataset/publish.py",
       "scripts/practice/author_densified_pairs.py",
       "scripts/practice/densify_paradigm_from_lexemes.py",
-      "scripts/practice/typesafe_distractor_validator.py",
       "scripts/practice_deck/publish.py",
       "scripts/projects/open_model_data/correction_protection_consumer.py",
       "scripts/projects/open_model_data/correction_protection_factory.py",

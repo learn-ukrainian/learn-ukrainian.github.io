@@ -90,7 +90,6 @@ _CORPUS_PATHS = [
         "docs/best-practices/strict-reviewer-persona.md",
         "docs/best-practices/task-quality.md",
         "docs/best-practices/track-architecture.md",
-        "docs/best-practices/typesafe-jev.md",
         "docs/best-practices/ulp-presentation-pattern.md",
         "docs/best-practices/universal-rules-registry.md",
         "docs/best-practices/v7-design-and-corpus.md",

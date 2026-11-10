@@ -3248,51 +3248,6 @@
       "message": "Incompatible return value type (got \"Connection\", expected \"SQLiteConnection\")"
     },
     {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "arg-type",
-      "message": "Argument \"probabilities\" to \"AlignmentEvaluation\" has incompatible type \"Any | None | dict[Any, Any]\"; expected \"dict[str, float]\""
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None | float\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None | int\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"type[Noul]\")"
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"type[Score]\")"
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"type[TypeSafeClient]\")"
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "misc",
-      "message": "Cannot assign to a type"
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "misc",
-      "message": "Cannot assign to a type"
-    },
-    {
-      "path": "scripts/atlas/typesafe_entity_aligner.py",
-      "code": "misc",
-      "message": "Cannot assign to a type"
-    },
-    {
       "path": "scripts/atlas/word_card_assembly.py",
       "code": "arg-type",
       "message": "Argument 1 to \"StoreBinding\" has incompatible type \"str\"; expected \"Literal['lexdata', 'sources', 'vesum']\""
@@ -6750,11 +6705,6 @@
     {
       "path": "scripts/audit/practice_quality_gate.py",
       "code": "arg-type",
-      "message": "Argument \"distractors\" to \"validate_practice_card\" has incompatible type \"list[Any | None | str]\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "code": "arg-type",
       "message": "Argument 1 to \"_normalize_plain\" has incompatible type \"Any | None | str\"; expected \"str\""
     },
     {
@@ -8991,66 +8941,6 @@
       "path": "scripts/build/session_analysis.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_readiness_to_dict\" has incompatible type \"EcItemEvaluation\"; expected \"LessonReadinessEvaluation\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_vocab_to_dict\" has incompatible type \"EcItemEvaluation\"; expected \"VocabRowEvaluation\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"GuardrailEvaluation\", variable has type \"EcItemEvaluation\")"
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"LessonReadinessEvaluation\", variable has type \"EcItemEvaluation\")"
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"VocabRowEvaluation\", variable has type \"EcItemEvaluation\")"
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"action\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"hazard_severity\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"hazard_severity\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"hazard_severity\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"immersion_leak\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"invented_upgrade_defect\""
-    },
-    {
-      "path": "scripts/build/typesafe_curriculum.py",
-      "code": "attr-defined",
-      "message": "\"EcItemEvaluation\" has no attribute \"russian_calque_suspect\""
     },
     {
       "path": "scripts/build/v7_build.py",
@@ -25851,56 +25741,6 @@
       "path": "scripts/projects/open_model_data/train_and_eval_real_model.py",
       "code": "dict-item",
       "message": "Dict entry 0 has incompatible type \"str\": \"Any | None\"; expected \"str\": \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_corpus_firewall.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_corpus_firewall.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_corpus_firewall.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"GrammaticalForm\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"GrammaticalForm\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"SyntacticRole\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"SyntacticRole\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Connection\", variable has type \"None | SQLiteConnection\")"
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"LexicalStratum\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Connection\", variable has type \"None | SQLiteConnection\")"
     },
     {
       "path": "scripts/projects/open_model_data/university_source_policy.py",
