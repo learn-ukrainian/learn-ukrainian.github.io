@@ -743,7 +743,7 @@ def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c
 
 def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
     """Verify that all 100 anti-surzhyk controls have zero SUM-11 headwords, inflected lemmas, or defined subentries."""
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
@@ -804,7 +804,7 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
 
 def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants() -> None:
     """Independently verify that the phrase matcher catches participle inflections and parenthesized dictionary variants."""
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"

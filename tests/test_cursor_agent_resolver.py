@@ -8,19 +8,17 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
+import lu_machinery.agent_runtime.binary_resolve as binary_resolve
 import pytest
-from lu_machinery.agent_runtime.adapters.cursor import CursorAgentMissingError as ReleaseCursorAgentMissingError
-
-import scripts.agent_runtime.binary_resolve as binary_resolve
-from scripts.agent_runtime import telemetry as telemetry_mod
-from scripts.agent_runtime.adapters import cursor as cursor_mod
-from scripts.agent_runtime.adapters.cursor import (
+from lu_machinery.agent_runtime import telemetry as telemetry_mod
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters.cursor import (
     CursorAdapter,
     CursorAgentMissingError,
     probe_cursor_login,
     resolve_cursor_agent_binary,
 )
-from scripts.ai_agent_bridge._cursor import _invoke_cursor
+
 from scripts.audit import cursor_judge_calibration as calibration
 
 
@@ -101,15 +99,13 @@ def test_resolver_uses_later_cursor_agent_and_never_executes_decoy(
         tool_config=None,
     )
     probe = probe_cursor_login()
-    reply = _invoke_cursor("hello", "grok-4.7-high")
     judged = calibration.call_cursor("judge this", "grok-4.7-high")
 
     cursor_path = cursor.resolve()
     assert Path(resolved) == cursor_path
     assert Path(plan.cmd[0]) == cursor_path
-    assert [Path(call[0]) for call in guard.argv] == [cursor_path, cursor_path, cursor_path]
+    assert [Path(call[0]) for call in guard.argv] == [cursor_path, cursor_path]
     assert probe["lane"] == "cursor"
-    assert reply
     assert judged["verdict"] == "clean"
     assert seen
     assert set(seen) == {"cursor-agent"}
@@ -143,9 +139,6 @@ def test_resolver_refuses_when_only_decoy_agent_exists(tmp_path: Path, monkeypat
             tool_config=None,
         )
     with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-        _invoke_cursor("hello", "grok-4.7-high")
-    # The product calibration tool runs the installed release's adapter.
-    with pytest.raises(ReleaseCursorAgentMissingError, match="cursor-agent"):
         calibration.call_cursor("judge this", "grok-4.7-high")
     probe = probe_cursor_login()
 

@@ -26,14 +26,15 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.lib.readonly_sqlite import open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage.paths import artifact_set
+
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     LinguisticNormalizer,
     _resolve_db_path,
 )
 from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
-from scripts.storage.paths import artifact_set
 from tests.projects.open_model_data.test_decolonization_withholding import (
     _healthy_source_schema,
     _query_dictionary,

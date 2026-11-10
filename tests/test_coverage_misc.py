@@ -2,7 +2,7 @@
 
 Targets:
   1. scripts/pipeline/screen.py
-  2. scripts/ai_agent_bridge/_gemini.py
+  2. lu_machinery/ai_agent_bridge/_gemini.py (the installed release)
   3. scripts/vocab_extract_proper.py
   4. scripts/generate_ipa.py
   5. scripts/migrate_audit_review_paths.py
@@ -34,26 +34,26 @@ class TestHandleGeminiError:
     """Test _handle_gemini_error."""
 
     def _import(self):
-        from scripts.ai_agent_bridge._gemini import _handle_gemini_error
+        from lu_machinery.ai_agent_bridge._gemini import _handle_gemini_error
 
         return _handle_gemini_error
 
     @patch("time.sleep")
     def test_rate_limit_returns_retry(self, mock_sleep):
         f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("lu_machinery.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("exhausted your capacity", "test-model", 0, 5, 30)
             assert result == "retry"
 
     def test_rate_limit_last_attempt_returns_stop(self):
         f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("lu_machinery.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("429 error", "test-model", 4, 5, 30)
             assert result == "stop"
 
     def test_unknown_error_returns_continue(self):
         f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
+        with patch("lu_machinery.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("some random error", "test-model", 0, 5, 30)
             assert result == "continue"
 
@@ -62,7 +62,7 @@ class TestSendGeminiError:
     """Test _send_gemini_error."""
 
     def _import(self):
-        from scripts.ai_agent_bridge._gemini import _send_gemini_error
+        from lu_machinery.ai_agent_bridge._gemini import _send_gemini_error
 
         return _send_gemini_error
 
@@ -70,9 +70,9 @@ class TestSendGeminiError:
         f = self._import()
         msg = {"task_id": "test-task"}
         with (
-            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=99) as sm,
-            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
-            patch("scripts.ai_agent_bridge._gemini.record_ask_failure"),
+            patch("lu_machinery.ai_agent_bridge._gemini.send_message", return_value=99) as sm,
+            patch("lu_machinery.ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("lu_machinery.ai_agent_bridge._gemini.record_ask_failure"),
         ):
             f(msg, 42)
             sm.assert_called_once()
@@ -82,7 +82,7 @@ class TestSendGeminiError:
     def test_exception_suppressed(self):
         f = self._import()
         msg = {"task_id": "test-task"}
-        with patch("scripts.ai_agent_bridge._gemini.send_message", side_effect=Exception("boom")):
+        with patch("lu_machinery.ai_agent_bridge._gemini.send_message", side_effect=Exception("boom")):
             f(msg, 42)  # Should not raise
 
 
@@ -90,15 +90,15 @@ class TestSendGeminiMessage:
     """Test _send_gemini_message."""
 
     def _import(self):
-        from scripts.ai_agent_bridge._gemini import _send_gemini_message
+        from lu_machinery.ai_agent_bridge._gemini import _send_gemini_message
 
         return _send_gemini_message
 
     def test_output_path_mode(self):
         f = self._import()
         with (
-            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st,
-            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("lu_machinery.ai_agent_bridge._gemini.send_to_gemini", return_value=10) as st,
+            patch("lu_machinery.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             result = f("content", "task-1", "query", None, None, None, "model", False, "/out")
             assert result == 10
@@ -107,8 +107,8 @@ class TestSendGeminiMessage:
     def test_normal_mode(self):
         f = self._import()
         with (
-            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=12),
-            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
+            patch("lu_machinery.ai_agent_bridge._gemini.send_to_gemini", return_value=12),
+            patch("lu_machinery.ai_agent_bridge._gemini.acknowledge") as ack,
         ):
             result = f("content", "task-1", "query", None, None, None, "model", False, None)
             assert result == 12
@@ -119,7 +119,7 @@ class TestDetectModelError:
     """Test _detect_model_error from _model.py."""
 
     def _import(self):
-        from scripts.ai_agent_bridge._model import _detect_model_error
+        from lu_machinery.ai_agent_bridge._model import _detect_model_error
 
         return _detect_model_error
 
