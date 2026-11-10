@@ -1140,7 +1140,6 @@ def report_runtime_source(rows: list[dict[str, Any]], parity: dict[str, Any] | N
     """The added report call; existing artifact and marker checks stay in main."""
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-    import scripts  # noqa: F401  (binds the product roots for the installed release)
     from scripts.deploy.runtime_source_report import emit_report, report_source_freshness
 
     emit_report(report_source_freshness(rows, parity, manifest_path=manifest))
@@ -1225,6 +1224,11 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}; pinned runs: site/.atlas-pinned/).",
     )
     args = parser.parse_args(argv)
+    # Bind before any mode runs and outside every report-only handler. Not at module level: the frontend
+    # build path-loads this file's helpers without the checkout on sys.path (tests/test_lexicon_path_loaders.py).
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
     pinned = args.runtime_tree is not None
     args.out = resolve_output_path(args.out, DEFAULT_SEARCH_OUT, pinned=pinned)
     args.aliases_out = resolve_output_path(args.aliases_out, DEFAULT_SEARCH_ALIASES_OUT, pinned=pinned)
@@ -1264,7 +1268,6 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         # projection. Import lazily so unpinned DB/manifest execution stays small.
         if str(PROJECT_ROOT) not in sys.path:
             sys.path.insert(0, str(PROJECT_ROOT))
-        import scripts  # noqa: F401  (binds the product roots for the installed release)
         from scripts.deploy.vendor_atlas_tree import build_pinned_search
 
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
