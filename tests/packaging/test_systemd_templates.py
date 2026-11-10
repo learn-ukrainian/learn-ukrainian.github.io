@@ -32,6 +32,19 @@ def test_systemd_templates_have_no_host_facts() -> None:
     ):
         command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=") and line != "ExecStart=")
         assert command.endswith("--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply")
+    # Units that launch npm or node through /usr/bin/env must prefer the pinned Node
+    # over the host Node. Without this line the Astro unit crash-loops on the older /usr/bin/node.
+    pinned_node_path = "Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin"
+    for path in sorted(PACKAGING.glob("*.service")):
+        lines = path.read_text(encoding="utf-8").splitlines()
+        launches_host_node = [
+            line
+            for line in lines
+            if line.startswith(("ExecStart=", "ExecStartPre=", "ExecStartPost="))
+            and ("/usr/bin/env npm" in line or "/usr/bin/env node" in line)
+        ]
+        if launches_host_node:
+            assert pinned_node_path in lines, path.name
 
 
 @pytest.mark.repo_wide
