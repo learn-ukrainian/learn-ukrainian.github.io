@@ -160,11 +160,11 @@ jobs:
         if: always()
         env:
           LU_FLAKE_DISABLE_RERUN: '1'
-          LU_PRODUCT_ROOT: ${{ github.workspace }}
-          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           set -euo pipefail
-          mapfile -t nodeids < <(.venv/bin/python -c 'from lu_machinery.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
+          # Only the registry lookup names the checkout for the release; pytest below inherits neither root.
+          mapfile -t nodeids < <(LU_PRODUCT_ROOT="$GITHUB_WORKSPACE" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$GITHUB_WORKSPACE" \
+            .venv/bin/python -c 'from lu_machinery.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
           if (( ${#nodeids[@]} )); then
             mkdir -p ci-artifacts
             .venv/bin/python -m pytest "${nodeids[@]}" --strict-markers \
