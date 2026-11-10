@@ -197,6 +197,15 @@ def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, mod
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
+def process_group_exists(pgid):
+    """Settlement's own liveness probe (worker._provider_alive): a group with any member, zombies included."""
+    try:
+        os.killpg(pgid, 0)
+    except ProcessLookupError:
+        return False
+    return True
+
+
 def test_scheduled_recovery_settles_terminal_task_left_by_crash(sandbox):
     """Defect: a supervisor killed before settlement left its worktree behind for good."""
     task = sandbox.dispatch("blocked")
@@ -208,6 +217,11 @@ def test_scheduled_recovery_settles_terminal_task_left_by_crash(sandbox):
         assert time.monotonic() < deadline, "supervisor survived SIGKILL"
         time.sleep(0.02)
     os.killpg(provider, signal.SIGKILL)
+    # The orphaned group exists, as zombies, until init reaps it; settlement rightly keeps the tree until then.
+    deadline = time.monotonic() + 10
+    while process_group_exists(provider):
+        assert time.monotonic() < deadline, "provider process group survived SIGKILL"
+        time.sleep(0.02)
     assert Path(record["worktree_path"]).is_dir()
     sandbox.sweep()
     crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())

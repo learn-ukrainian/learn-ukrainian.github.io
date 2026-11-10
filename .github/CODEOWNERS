@@ -1,7 +1,8 @@
-# Workflow files gate to a named human code owner: any PR touching
-# .github/workflows/** requires @krisztiankoos review (enable "Require review
-# from Code Owners" in branch protection). Agents may still *draft* workflow
-# PRs; the human review is the merge gate. No catch-all `*` rule — ordinary
-# code/docs/curriculum PRs get no extra reviewer.
+# A PR touching .github/workflows/** or this file needs a code-owner approval
+# ("Require review from Code Owners" in branch protection). The CTO seat is the
+# code owner: after an exact-head cross-family APPROVE and a green CI Gate on
+# that head, it posts the code-owner approval as an attributed agent approval
+# on the owner account below. The human is not the merge gate. No catch-all
+# `*` rule: ordinary code, docs and curriculum PRs get no extra reviewer.
 .github/workflows/**  @krisztiankoos
 .github/CODEOWNERS    @krisztiankoos
