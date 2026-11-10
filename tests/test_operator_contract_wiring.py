@@ -5,7 +5,7 @@ These tests pin the wiring so a refactor can't silently orphan the file:
 
 - Full API reference      -> contract first at /api/rules?scope=full
 - Unscoped API cold-start -> binding core, with boot-file contract digests
-- Codex / cursor / opencode slot-5 -> AGENTS.md digest section
+- Codex / cursor / opencode slot-5 -> AGENTS.md pointer to the contract
 - Deploy targets           -> excluded from .claude autoload, present in
                               .codex/.agent/.gemini rules (lock-step lists)
 """
@@ -52,7 +52,6 @@ def test_deploy_lock_step_lists_include_contract() -> None:
     )
     for relative in (
         "agents_extensions/shared/rules/operator-expectations.md",
-        "AGENTS.md",
         "CLAUDE.md",
     ):
         body = (REPO / relative).read_text(encoding="utf-8")
