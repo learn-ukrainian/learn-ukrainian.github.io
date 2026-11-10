@@ -51,6 +51,7 @@ def test_dispatcher_scan_timeout_returns_degraded_response(
     interpreter = tmp_path / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True)
     interpreter.write_text("", encoding="utf-8")
+    interpreter.chmod(0o755)  # the release resolver accepts only an executable interpreter
 
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["scan"], timeout=DISPATCHER_SCAN_TIMEOUT_S)

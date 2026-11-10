@@ -34,15 +34,13 @@ def _write_usage_rows(usage_dir: Path, *, day: str, rows: int, agent: str = "kim
     (usage_dir / f"usage_{agent}-delegate_{day}.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def test_empty_ledger_with_runtime_rows_flags_ledger_empty(tmp_path, monkeypatch):
+def test_empty_ledger_with_runtime_rows_flags_ledger_empty(tmp_path):
     curriculum = tmp_path / "curriculum"
     usage_dir = tmp_path / "api_usage"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", usage_dir)
     curriculum.mkdir()
     _write_usage_rows(usage_dir, day="2026-08-22", rows=28)
 
-    payload = cost_report.build_cost_windows(now=_NOW)
+    payload = cost_report.build_cost_windows(root=curriculum, usage_dir=usage_dir, now=_NOW)
 
     week = payload["windows"]["last_7_days"]
     assert week["records_total"] == 0
@@ -55,18 +53,16 @@ def test_empty_ledger_with_runtime_rows_flags_ledger_empty(tmp_path, monkeypatch
     assert payload["windows"]["all_time"]["ledger_empty"] is True
 
 
-def test_malformed_usage_lines_are_skipped(tmp_path, monkeypatch):
+def test_malformed_usage_lines_are_skipped(tmp_path):
     curriculum = tmp_path / "curriculum"
     usage_dir = tmp_path / "api_usage"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", usage_dir)
     curriculum.mkdir()
     usage_dir.mkdir()
     (usage_dir / "usage_kimi-delegate_2026-08-22.jsonl").write_text(
         '{"agent": "kimi", "outcome": "ok"}\nnot-json\n\n[]\n', encoding="utf-8"
     )
 
-    payload = cost_report.build_cost_windows(now=_NOW)
+    payload = cost_report.build_cost_windows(root=curriculum, usage_dir=usage_dir, now=_NOW)
 
     assert payload["windows"]["last_7_days"]["runtime_calls_total"] == 1
     assert payload["windows"]["last_7_days"]["ledger_empty"] is True

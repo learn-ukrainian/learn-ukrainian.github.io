@@ -40,14 +40,14 @@ def test_rule_sources_includes_all_unscoped_files():
         "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/model-assignment.md",
         "agents_extensions/shared/rules/fleet-driver-routing.md",
-        "docs/best-practices/fleet-shared-doctrine.md",
-        "docs/best-practices/fleet-role-scorecard.md",
+        "agents_extensions/shared/rules/fleet-shared-doctrine.md",
+        "agents_extensions/shared/rules/fleet-role-scorecard.md",
     }
     assert set(rules_router.RULE_SOURCES) == expected
     # Order: machine routing before living scorecard (#5529).
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/model-assignment.md"
-    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-role-scorecard.md")
+    ) < rules_router.RULE_SOURCES.index("agents_extensions/shared/rules/fleet-role-scorecard.md")
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/model-assignment.md"
     ) < rules_router.RULE_SOURCES.index(
@@ -55,7 +55,7 @@ def test_rule_sources_includes_all_unscoped_files():
     )
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/fleet-driver-routing.md"
-    ) < rules_router.RULE_SOURCES.index("docs/best-practices/fleet-shared-doctrine.md")
+    ) < rules_router.RULE_SOURCES.index("agents_extensions/shared/rules/fleet-shared-doctrine.md")
     # Fleet-comms mid-cutover rule sits with operational workflow, before model table.
     assert rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/workflow.md"
@@ -69,6 +69,16 @@ def test_rule_sources_includes_all_unscoped_files():
     )
 
 
+def _rules_from(monkeypatch, root) -> None:
+    """Point the release's rule-source resolver at synthetic files (hermetic).
+
+    The release reads fleet rules from its own package, never from the API
+    context root (machinery #126), so the context swap alone no longer
+    redirects them.
+    """
+    monkeypatch.setattr(rules_core, "source_path", lambda rel, _root=None: root / rel)
+
+
 def test_rules_markdown_default(monkeypatch, tmp_path):
     """GET /api/rules returns text/markdown with an X-Rules-Hash header."""
     # Redirect the router at synthetic rule files so the test is hermetic.
@@ -76,6 +86,7 @@ def test_rules_markdown_default(monkeypatch, tmp_path):
     rule_file.parent.mkdir(parents=True)
     rule_file.write_text("# Rule A\n\nBe excellent.\n", encoding="utf-8")
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    _rules_from(monkeypatch, tmp_path)
 
     resp = client.get("/api/rules")
     assert resp.status_code == 200
@@ -91,16 +102,19 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
     a.write_text("A body\n", encoding="utf-8")
     b.write_text("B body\n", encoding="utf-8")
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    _rules_from(monkeypatch, tmp_path)
+    # The release refuses an incomplete bundle instead of omitting a missing
+    # file (machinery #126); that refusal is covered below.
     monkeypatch.setattr(
         rules_router,
         "RULE_SOURCES",
-        ("a.md", "b.md", "does-not-exist.md"),
+        ("a.md", "b.md"),
     )
 
     resp = client.get("/api/rules?scope=full&format=json")
     assert resp.status_code == 200
     body = resp.json()
-    assert body["sources"] == ["a.md", "b.md"]  # missing file omitted, order preserved
+    assert body["sources"] == ["a.md", "b.md"]  # order preserved
     assert "A body" in body["markdown"] and "B body" in body["markdown"]
     # Hash is stable given the markdown string.
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
@@ -109,6 +123,7 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
 def test_rules_missing_core_refuses_instead_of_serving_archive(monkeypatch, tmp_path):
     """A readable archive never substitutes for a missing binding core."""
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    _rules_from(monkeypatch, tmp_path)
     (tmp_path / "archive.md").write_text("Full reference.\n", encoding="utf-8")
     monkeypatch.setattr(rules_router, "RULE_SOURCES", ("archive.md",))
     resp = client.get("/api/rules")
@@ -118,11 +133,14 @@ def test_rules_missing_core_refuses_instead_of_serving_archive(monkeypatch, tmp_
     assert client.get("/api/rules?scope=full").status_code == 200
 
 
-def test_rules_archive_500_when_no_sources_readable(monkeypatch, tmp_path):
+def test_rules_archive_refuses_when_a_source_is_unreadable(monkeypatch, tmp_path):
+    """An incomplete full-reference bundle refuses with 503 (machinery #126; it was 500)."""
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    _rules_from(monkeypatch, tmp_path)
     monkeypatch.setattr(rules_router, "RULE_SOURCES", ("missing.md",))
     resp = client.get("/api/rules?scope=full")
-    assert resp.status_code == 500
+    assert resp.status_code == 503
+    assert "missing.md" in resp.json()["detail"]
 
 
 def test_binding_rules_are_core_with_task_scoped_references():

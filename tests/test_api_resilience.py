@@ -35,7 +35,8 @@ def test_slow_sql_caller_never_exposes_absolute_filesystem_root(monkeypatch, tmp
         assert not caller.startswith("/"), caller
         assert "/home/" not in caller
         assert "/Users/" not in caller
-    assert any(caller.startswith("tests/test_api_resilience.py:") for caller in callers)
+    # The release tags frames outside its package with their basename.
+    assert any(caller.startswith("test_api_resilience.py:") for caller in callers)
 
 
 def test_connect_sqlite_refuses_writable_corpus_databases(tmp_path):
@@ -56,10 +57,12 @@ def test_connect_sqlite_refuses_writable_corpus_databases(tmp_path):
 def test_declared_writer_may_open_sources_db_through_connect_sqlite(tmp_path, monkeypatch):
     from lu_machinery.lib import readonly_sqlite
 
+    # The release reads product writers from the product declaration, keyed by
+    # product-relative path; declare this file there.
     monkeypatch.setattr(
         readonly_sqlite,
-        "_declared_writer_paths",
-        lambda: frozenset({readonly_sqlite._script_path(__file__)}),
+        "_product_writer_paths",
+        lambda _product: frozenset({Path(__file__).resolve().relative_to(ROOT).as_posix()}),
     )
     database = tmp_path / "sources.db"
     connection = connect_sqlite(str(database))
