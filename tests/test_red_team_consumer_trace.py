@@ -640,7 +640,7 @@ def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
     ownership = json.loads(installed.joinpath("lint/rename-map.json").read_text())
     product = (
         path for path in (root / "scripts").rglob("*.py")
-        if ownership.get(path.relative_to(root).as_posix()) == "product"
+        if ownership.get(path.relative_to(root).as_posix()) != "machinery"
     )
     consumers = {
         "lu_machinery/" + path.relative_to(installed).as_posix()
