@@ -10,6 +10,7 @@ import pytest
 from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.agent_runtime.attempt_boundary import AttemptBoundary
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
 from scripts.review.review_contract import captured_sources_events
@@ -583,7 +584,7 @@ def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path
     prompt = 'quoted "text"\n' + "x" * size
     plan = AgyAdapter().build_invocation(
         prompt=prompt,
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="large-prompt",
@@ -605,7 +606,7 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
     prompt = "before\ud800after"
     plan = AgyAdapter().build_invocation(
         prompt=prompt,
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="surrogate-prompt",
@@ -902,16 +903,37 @@ def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> Non
 # --- per-attempt scoped home (#8617) ---------------------------------------------------
 
 
-def _build_with(tmp_path: Path, tool_config: dict | None):
+def _build_with(tmp_path: Path, tool_config: dict | None, mode: str = "workspace-write"):
     return AgyAdapter().build_invocation(
         prompt="hello",
-        mode="read-only",
+        mode=mode,
         cwd=tmp_path,
         model=None,
         task_id="t-scoped",
         session_id=None,
         tool_config=tool_config,
     )
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [None, {"review_profile": "code"}, {"review_attempt_boundary": True}, {"review_isolation": True}],
+    ids=["no-config", "review-profile", "truthy-non-boundary", "isolation-flag"],
+)
+def test_agy_read_only_without_attempt_boundary_is_refused_not_run_unguarded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tool_config: dict | None
+) -> None:
+    """Defect class: AGY read-only without a verified boundary ran with skipped permissions.
+
+    The refusal comes before hook provisioning or any provider subprocess; the lane
+    health probe builds its version-only plan in a mode that needs no boundary.
+    """
+    from scripts.agent_runtime import lane_probe
+
+    monkeypatch.setattr(agy_module, "require_hook_config", lambda *a, **k: pytest.fail("hooks ran before refusal"))
+    with pytest.raises(ValueError, match="agy_read_only_boundary_required"):
+        _build_with(tmp_path, tool_config, "read-only")
+    assert lane_probe._mode_for_probe(AgyAdapter()) == "workspace-write"
 
 
 def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
@@ -921,7 +943,11 @@ def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
     (2026-09-24 evidence on #8516), so without ``--add-dir`` a read-only
     run's workspace is wherever agy drifted, not the pinned checkout.
     """
-    plan = _build_with(tmp_path, None)
+    # Read-only runs only inside an attempt boundary; only its type is read while building the argv.
+    home = tmp_path / "scoped-home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    bound = {"review_attempt_boundary": object.__new__(AttemptBoundary), "agy_home_override": str(home)}
+    plan = _build_with(tmp_path, bound, "read-only")
     assert "--add-dir" in plan.cmd
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 

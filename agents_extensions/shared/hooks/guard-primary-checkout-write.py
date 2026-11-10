@@ -48,6 +48,11 @@ Covered write surfaces
   or ``git -C``) is the protected primary checkout. Rescue clean forms
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
+* AGY (Antigravity CLI) ``toolCall`` payloads — ``write_file`` / ``edit_file``
+  ``args.Path`` and ``run_command`` ``args.CommandLine`` map onto the Write /
+  Bash rules above. AGY reads a denial only as ``{"decision": "deny", "reason"}``
+  on stdout, so an AGY payload exits 0 with that object; an allow prints nothing,
+  which leaves AGY's own permission flow unchanged.
 * Precise transfer parsing for rsync and git archive; conservative positional
   classification for long-tail writers (curl, wget, sort, SQLite, tar, unzip,
   patch, tee, truncate, split, csplit, ffmpeg, convert). Known short-option
@@ -2704,8 +2709,57 @@ def _sibling_git_refusal() -> int:
     return 2
 
 
-def _main() -> int:
-    payload = _read_payload()
+# AGY tool name -> (guarded tool name, AGY argument, guarded argument). Any non-shell name
+# takes the structured write rules. AGY 1.5.5 has no other file-writing tool; its remaining
+# tools (read_file, search, MCP, subagents) take no write target this guard can classify.
+_AGY_WRITE_TOOLS = {
+    "write_file": ("write_file", "Path", "file_path"),
+    "edit_file": ("edit_file", "Path", "file_path"),
+    "run_command": ("Bash", "CommandLine", "command"),
+}
+
+
+def _agy_payload(payload: dict) -> dict | None:
+    """The guarded shape of an AGY ``toolCall``; None when it cannot be classified."""
+    call = payload["toolCall"]
+    if not isinstance(call, dict) or not isinstance(call.get("name"), str):
+        return None
+    mapped = _AGY_WRITE_TOOLS.get(call["name"])
+    if mapped is None:
+        return {}
+    tool_name, source, key = mapped
+    args, cwd = call.get("args"), payload.get("cwd")
+    value = args.get(source) if isinstance(args, dict) else None
+    if not isinstance(value, str) or (key == "file_path" and not value) or not isinstance(cwd, str) or not cwd:
+        return None
+    tool_input = {key: value}
+    if "Cwd" in args:
+        if not isinstance(args["Cwd"], str) or not args["Cwd"]:
+            return None
+        tool_input["cwd"] = args["Cwd"]
+    return {"tool_name": tool_name, "cwd": cwd, "tool_input": tool_input}
+
+
+def _agy_main(payload: dict) -> int:
+    """Decide an AGY call and answer in AGY's stdout contract."""
+    import io
+    from contextlib import redirect_stderr
+
+    reason = io.StringIO()
+    with redirect_stderr(reason):
+        try:
+            guarded = _agy_payload(payload)
+            code = _block_uncertain("malformed_agy_tool_call") if guarded is None else _main(guarded)
+        except Exception:
+            code = _block_uncertain("agy_inspection_failed")
+    if code == 0:
+        sys.stderr.write(reason.getvalue())
+        return 0
+    print(json.dumps({"decision": "deny", "reason": reason.getvalue() or "BLOCKED by guard-primary-checkout-write."}))
+    return 0
+
+
+def _main(payload: dict | None) -> int:
     if payload is None:
         return _block_uncertain("malformed_hook_payload")
     tool_name = _tool_name(payload)
@@ -2905,7 +2959,10 @@ def _bypass_agent_shims() -> None:
 
 def main() -> int:
     try:
-        return _main()
+        payload = _read_payload()
+        if payload is not None and "toolCall" in payload:
+            return _agy_main(payload)
+        return _main(payload)
     except Exception:
         print("BLOCKED by guard-primary-checkout-write: cannot inspect command.", file=sys.stderr)
         return 2

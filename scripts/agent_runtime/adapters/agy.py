@@ -953,6 +953,8 @@ class AgyAdapter:
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+    # Read-only refuses without an attempt boundary; the lane probe only runs the version prefix.
+    probe_mode: str = "workspace-write"
     claude_model_slugs = _AGY_CLAUDE_SLUGS
 
     @staticmethod
@@ -1012,6 +1014,15 @@ class AgyAdapter:
         # depend on a subprocess.
         resolved_model = self._resolve_model_flag(model)
         tc = tool_config or {}
+        if mode == "read-only":
+            from ..attempt_boundary import AttemptBoundary
+
+            # AGY has no write lock of its own; outside the attempt boundary a read-only
+            # call would run with skipped permissions and full host write access.
+            if not isinstance(tc.get("review_attempt_boundary"), AttemptBoundary):
+                raise ValueError(
+                    "agy_read_only_boundary_required: AGY read-only runs only inside a verified attempt boundary"
+                )
         review_route = _agy_review_route(tc)
         if resolved_model in self.claude_model_slugs and not review_route:
             from scripts.review.security_paths import is_security_sensitive_change
