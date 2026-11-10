@@ -612,7 +612,6 @@ def test_legacy_callable_rejects_old_model_before_message_creation(model):
     with patch("scripts.ai_agent_bridge._codex.send_message") as send:
         expected = (
             r"approved models are gpt-6-luna, gpt-6\.1-sol" if model == "gpt-5.5"
-            else "restricted to red-team code review|red-team exception expired" if model == "gpt-6-astra"
             else "retired in the model catalog"
         )
         with pytest.raises(ValueError, match=expected):

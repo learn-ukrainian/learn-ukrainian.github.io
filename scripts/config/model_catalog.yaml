@@ -457,13 +457,12 @@ models:
     tier: frontier_authority
     lifecycle: retired
     replaced_by: gpt-6.1-sol
-    roles: [standard_review]
+    roles: [bounded_advisory_envelope, architecture, consequential_advisory]
     transports: []
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Historical records only. Its #10437 red-team review exception ended at
-      2026-11-04T00:00Z. Not routable.
+      Historical records only. Operator 2026-09-29 (#9230): gpt-6.1-sol took the advisory seat. Not routable.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
   gpt-6-sol:

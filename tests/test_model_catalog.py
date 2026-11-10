@@ -144,7 +144,7 @@ def test_execution_default_resolves_active_alias_and_rejects_hold():
     for activity in ("review", "consult"):
         assert activity_role_refusal("gpt-6.1-terra", activity, catalog=catalog)
     assert all(row["model_id"] != "gpt-6.1-terra" for row in catalog["review_candidates"].values())
-    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6.1-sol"]
     assert catalog["orchestrator_seats"]["codex"]["model_id"] == "gpt-6.1-sol"
     assert require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog) == "gemini-3.8-flash-high"
     catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] = "hold"
@@ -279,12 +279,6 @@ def test_fable_is_refused_every_review_and_consult_activity(model, activity):
     expected = "holds no review, critique or approval role" if activity == "review" else "holds no ACP ask, consult or discussion role"
     assert refusal and expected in refusal
     assert f"review_scheduler.activity_roles.{activity}" in refusal
-
-
-@pytest.mark.parametrize("activity", ["review", "consult"])
-def test_astra_holds_no_unscoped_activity_role(activity):
-
-    assert "red-team" in activity_role_refusal("gpt-6-astra", activity)
 
 
 @pytest.mark.parametrize("model", ["claude-opus-5-5", "gpt-6.1-sol", "gemini-3.8-flash-high", "claude-sonnet-5-5"])
@@ -830,13 +824,7 @@ def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
 )
 def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
     refusal = retired_model_refusal(model)
-    if retired_id == "gpt-6-astra":
-        assert refusal in {
-            f"model {model!r} is restricted to red-team code review of gpt-6.1-sol-authored PRs through native_codex (#10437)",
-            f"model {model!r} red-team exception expired at 2026-11-04T00:00:00Z",
-        }
-    else:
-        assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
+    assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
 
 
 @pytest.mark.parametrize("model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "grok-4.7", "auto"])
