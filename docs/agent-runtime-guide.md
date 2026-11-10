@@ -1075,8 +1075,7 @@ The worker creates `<scratch root>/learn-ukrainian/codex-read-only-<task>` (owne
 just before launch and removes it at settlement; `scripts/agent_runtime/read_only_tmp.py` names,
 creates, validates and discards it. The provider replaces `-s read-only` with the same permissions
 profile the legacy adapter uses (`_read_only_tmp_flags`): the root is read-only, the scratch is the
-single writable path, and network reaches any public host through Codex's network proxy, whose
-local/private-network guard stays on (operator decision 2026-11-10). The environment exports the scratch as
+single writable path, and network is limited to GitHub. The environment exports the scratch as
 `TMPDIR`, so `git`, `gh`, pytest and any plugin that opens a unix socket work without a writable
 checkout. Test slots are still reserved by the worker outside the sandbox
 (`admission.hold_review_test_slots`); a read-only run that is not review-typed holds none and so
