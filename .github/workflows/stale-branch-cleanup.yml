@@ -26,22 +26,26 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            scripts/__init__.py
-            scripts/hygiene/__init__.py
-            scripts/hygiene/remote_branch_cleanup.py
-            scripts/common/__init__.py
-            scripts/common/github_client.py
-            scripts/common/github_usage.py
-            scripts/common/scratch.py
-            scripts/opsec/__init__.py
-            scripts/opsec/gh_snapshot.py
-            scripts/opsec/prepublish.py
             .github/branch-cleanup-keep.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Remove eligible remote branches
         env:
           GH_TOKEN: ${{ github.token }}
@@ -50,7 +54,9 @@ jobs:
           GIT_CONFIG_COUNT: '1'
           GIT_CONFIG_KEY_0: credential.https://github.com.helper
           GIT_CONFIG_VALUE_0: '!gh auth git-credential'
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           git remote set-url origin "https://github.com/$REPO.git"
           git remote set-url --push origin "https://github.com/$REPO.git"
-          python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"
+          python -m lu_machinery.hygiene.remote_branch_cleanup --repo "$REPO"

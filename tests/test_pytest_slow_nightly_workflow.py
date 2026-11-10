@@ -422,4 +422,6 @@ def test_slow_selection_and_failure_reporting_are_preserved() -> None:
         "Upload slow pytest evidence",
     ):
         assert _step(workflow, name)["if"] == "always()"
-    assert "scripts/ci/flake_ledger.py" in _step(workflow, "Build flake ledger and update expired fix issues")["run"]
+    assert (
+        "-m lu_machinery.ci.flake_ledger" in _step(workflow, "Build flake ledger and update expired fix issues")["run"]
+    )

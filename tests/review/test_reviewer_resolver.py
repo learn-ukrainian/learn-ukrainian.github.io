@@ -3,9 +3,9 @@
 from dataclasses import replace
 
 import pytest
-
-from scripts.review.family_exclusions import family_exclusion
-from scripts.review.reviewer_resolver import (
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount
+from lu_machinery.review.family_exclusions import family_exclusion
+from lu_machinery.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
     evaluate_candidate,
@@ -14,7 +14,10 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
     review_task_id_comparison_keys,
 )
-from tests.claude_route_accounts import HOST_ACCOUNT
+
+# The release's own account type: the shared tests.claude_route_accounts binds the in-tree
+# copy's ClaudeAccount for held subjects (#10630 built-in default, which reads the lane row).
+HOST_ACCOUNT = ClaudeAccount("a", "builtin")
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
@@ -24,7 +27,7 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     import io
     import json
 
-    from scripts.agent_runtime import model_pause
+    from lu_machinery.agent_runtime import model_pause
 
     monkeypatch.setattr(
         model_pause,
@@ -161,7 +164,7 @@ def test_gemini_risk_boundary(profile, risk, entrypoint):
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
 @pytest.mark.parametrize(
-    "path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
+    "path", ["scripts/review/reviewer_resolver.py", "lu_machinery/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
 )
 def test_gemini_security_paths_override_declared_risk(risk, scope, path):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)}, claude_account=HOST_ACCOUNT)
@@ -495,10 +498,10 @@ def test_astra_exception_role_or_expiry_escape(monkeypatch, tmp_path, stage, cas
     """The operator exception never admits Astra outside its seat or at/after expiry."""
     from datetime import UTC, datetime, timedelta
 
-    from scripts.dispatcher import checks
-    from scripts.dispatcher.providers import codex
-    from scripts.dispatcher.types import TaskSpec
-    from scripts.review import model_catalog, record_cf_verdict
+    from lu_machinery.dispatcher import checks
+    from lu_machinery.dispatcher.providers import codex
+    from lu_machinery.dispatcher.types import TaskSpec
+    from lu_machinery.review import model_catalog, record_cf_verdict
 
     expiry = datetime(2026, 11, 4, tzinfo=UTC)
     clock = expiry if case == "at_expiry" else expiry + timedelta(seconds=1) if case == "after_expiry" else expiry - timedelta(microseconds=1)
