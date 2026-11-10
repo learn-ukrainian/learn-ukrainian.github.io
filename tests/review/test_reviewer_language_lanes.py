@@ -7,10 +7,10 @@ import subprocess
 from dataclasses import replace
 
 import pytest
-
-from scripts.common.git_context import sanitized_git_env
-from scripts.review.closeout_cli import main
-from scripts.review.reviewer_resolver import (
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount
+from lu_machinery.review.closeout_cli import main
+from lu_machinery.review.reviewer_resolver import (
     GROK_4_7_CURSOR_FALLBACK,
     REVIEW_CANDIDATES,
     ResolverInputs,
@@ -18,7 +18,10 @@ from scripts.review.reviewer_resolver import (
     is_ukrainian_content_change,
     resolve_reviewer,
 )
-from tests.claude_route_accounts import HOST_ACCOUNT
+
+# The host's built-in default account, as ``tests.claude_route_accounts.HOST_ACCOUNT`` names it,
+# built from the release's own account type: the release resolver refuses another type.
+HOST_ACCOUNT = ClaudeAccount("a", "builtin")
 
 
 @pytest.mark.parametrize(
@@ -44,7 +47,7 @@ def test_each_ukrainian_content_path_is_classified(path):
 
 @pytest.fixture(autouse=True)
 def isolated_live_snapshot(monkeypatch):
-    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+    monkeypatch.setattr("lu_machinery.fleet.credit_lane.read_routing_budget", lambda **_: None)
 
 
 def test_unrelated_paths_do_not_match_content_patterns():
