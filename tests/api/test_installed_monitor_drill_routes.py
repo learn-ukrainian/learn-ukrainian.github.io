@@ -78,9 +78,15 @@ def test_installed_monitor_does_not_drop_or_shadow_drill_routes(tmp_path: Path, 
         pytest.skip("requires the installed lu-machinery release")
 
     checkout = Path(__file__).resolve().parents[2]
-    # A fresh primary-shaped state fixture, not a clone or linked worktree.
+    # A fresh primary checkout as the state fixture, not a clone or linked worktree. The
+    # release refuses a configured primary whose .git is not a real Git directory (0.1.6).
     state = tmp_path / "state"
-    (state / ".git").mkdir(parents=True)
+    subprocess.run(
+        ["git", "init", "-q", str(state)],
+        check=True,
+        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        timeout=30,
+    )
     origins_path = tmp_path / "origins.json"
     env = {
         key: value

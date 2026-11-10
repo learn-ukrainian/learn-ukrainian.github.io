@@ -20,6 +20,8 @@ privacy allowlist, and window validation.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 import time
 from datetime import UTC, datetime, timedelta
@@ -777,7 +779,13 @@ def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
 # 4. Endpoint — ungated availability, fail-soft, privacy, validation
 # --------------------------------------------------------------------------- #
 def _primary_at(monkeypatch, root) -> None:
-    (root / ".git").mkdir(exist_ok=True)  # the release accepts only a primary-shaped checkout
+    # The release accepts only a primary checkout whose .git is a real Git directory (0.1.6).
+    subprocess.run(
+        ["git", "init", "-q", str(root)],
+        check=True,
+        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        timeout=30,
+    )
     monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
     monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
 
