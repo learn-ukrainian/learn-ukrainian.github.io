@@ -1820,14 +1820,18 @@ def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
     import subprocess
 
     calls: list[list[str]] = []
+    seen: list[dict] = []
 
     def fake_run(argv, **kwargs):
         calls.append(list(argv))
+        seen.append(kwargs)
         if argv[1] == "exec":
             return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
         weekly = None if sum(1 for item in calls if item[1] == "usage") == 1 else 3
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=weekly)), stderr="")
 
+    subscription_usage_mod._reset_muse_allowance_attempt_for_tests()
+    monkeypatch.setenv("GH_TOKEN", "SENTINEL_NOT_A_TOKEN")
     monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None)
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
 
@@ -1836,9 +1840,29 @@ def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
     assert missing_then_read["status"] == "healthy"
     exec_calls = [argv for argv in calls if argv[1] == "exec"]
     assert len(exec_calls) == 1
-    assert exec_calls[0][exec_calls[0].index("--model") + 1] == "muse-spark-1.3"
-    assert exec_calls[0][exec_calls[0].index("--contributor-mode") + 1] == "on"
-    assert "--disable-shell" in exec_calls[0]
+    argv = exec_calls[0]
+    assert argv[argv.index("--model") + 1] == "muse-spark-1.3"
+    assert argv[argv.index("--contributor-mode") + 1] == "on"
+    assert "--disable-shell" in argv
+    assert "--no-foreign-personal-context" in argv
+    assert "--disable-request-user-input" in argv
+    assert argv[argv.index("--permission-profile") + 1] == ":read-only"
+    exec_kwargs = seen[calls.index(exec_calls[0])]
+    assert exec_kwargs["cwd"]
+    assert argv[argv.index("--workspace") + 1] == str(exec_kwargs["cwd"])
+    assert "GH_TOKEN" not in exec_kwargs["env"]
+    assert "SENTINEL_NOT_A_TOKEN" not in exec_kwargs["env"].values()
+    assert all(kwargs["timeout"] <= 5 for kwargs in seen)
+
+    def still_missing(argv, **kwargs):
+        calls.append(list(argv))
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=None)), stderr="")
+
+    calls.clear()
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", still_missing)
+    held = subscription_usage_mod._probe_muse_native(timeout_s=5)
+    assert held["status"] != "healthy"
+    assert [argv[1] for argv in calls] == ["usage"]
 
     calls.clear()
 

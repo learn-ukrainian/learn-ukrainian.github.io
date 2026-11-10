@@ -26,6 +26,7 @@ from types import ModuleType
 from typing import Any
 
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
+from scripts.common.scratch import make_scratch_dir
 from scripts.fleet.credit_lane import SUBSCRIPTION_NEAR_CAP_USED_PCT
 
 try:
@@ -1416,11 +1417,16 @@ _MUSE_ALLOWANCE_PROMPT = "Reply with ok."
 
 def _read_muse_usage(muse_bin: str, timeout_s: float) -> dict[str, Any]:
     try:
+        if timeout_s <= 0:
+            return _normalize_provider_error(
+                "muse",
+                {"message": "Muse usage probe timed out", "kind": "timeout", "code": "TIMEOUT"},
+            )
         completed = subprocess.run(
             [muse_bin, "usage", "--json"],
             capture_output=True,
             text=True,
-            timeout=max(float(timeout_s), 1.0),
+            timeout=float(timeout_s),
             check=False,
             stdin=subprocess.DEVNULL,
         )
@@ -1464,12 +1470,52 @@ def _read_muse_usage(muse_bin: str, timeout_s: float) -> dict[str, Any]:
     return record
 
 
+_MUSE_SESSION_ENV_UNSET = (
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_ENTERPRISE_TOKEN",
+    "GITHUB_ENTERPRISE_TOKEN",
+    "SSH_AUTH_SOCK",
+)
+_muse_allowance_attempt_mono: float | None = None
+_muse_allowance_lock = threading.Lock()
+
+
+def _reset_muse_allowance_attempt_for_tests() -> None:
+    global _muse_allowance_attempt_mono
+    with _muse_allowance_lock:
+        _muse_allowance_attempt_mono = None
+
+
+def _muse_allowance_on_cooldown() -> bool:
+    with _muse_allowance_lock:
+        started = _muse_allowance_attempt_mono
+    return started is not None and (time.monotonic() - started) < _codexbar_cache_ttl_s()
+
+
+def _muse_mark_allowance_attempt() -> None:
+    global _muse_allowance_attempt_mono
+    with _muse_allowance_lock:
+        _muse_allowance_attempt_mono = time.monotonic()
+
+
+def _muse_session_env() -> dict[str, str]:
+    env = {key: value for key, value in os.environ.items() if key not in _MUSE_SESSION_ENV_UNSET}
+    env["MUSE_NO_AUTO_UPDATE"] = "1"
+    return env
+
+
 def _muse_open_allowance_session(muse_bin: str, timeout_s: float) -> bool:
     """Start one cheap contributor-mode session so a following usage read can publish.
 
-    Returns whether the process exited 0. Output is discarded. A failure does not
-    invent a healthy allowance.
+    The workspace is an empty scratch directory, not the caller's checkout. A second
+    attempt inside the usage-cache TTL does not start another session. Output is
+    discarded. A failure does not invent a healthy allowance.
     """
+    if timeout_s <= 0 or _muse_allowance_on_cooldown():
+        return False
+    _muse_mark_allowance_attempt()
+    scratch = make_scratch_dir("muse-allowance-")
     try:
         completed = subprocess.run(
             [
@@ -1485,32 +1531,44 @@ def _muse_open_allowance_session(muse_bin: str, timeout_s: float) -> bool:
                 "minimal",
                 "--max-model-steps",
                 "1",
+                "--workspace",
+                str(scratch),
                 "--worktree",
                 "off",
+                "--permission-profile",
+                ":read-only",
                 "--disable-shell",
                 "--disable-web-tools",
                 "--disable-write",
                 "--disable-reminders",
+                "--disable-request-user-input",
+                "--no-foreign-personal-context",
+                "--config",
+                "run.toolset=" + json.dumps(["read_file"]),
                 _MUSE_ALLOWANCE_PROMPT,
             ],
             capture_output=True,
             text=True,
-            timeout=max(float(timeout_s), 1.0),
+            timeout=float(timeout_s),
             check=False,
             stdin=subprocess.DEVNULL,
+            cwd=scratch,
+            env=_muse_session_env(),
         )
     except (subprocess.TimeoutExpired, OSError):
         return False
+    finally:
+        shutil.rmtree(scratch, ignore_errors=True)
     return completed.returncode == 0
 
 
 def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
     """Read Muse allowance with ``muse usage --json``.
 
-    Uses the same timeout floor as the other subscription probes. When that
-    reading has no weekly percent, one ``muse-spark-1.3`` session with
-    contributor mode on is started and the allowance is read again. An
-    unreadable result stays unknown, never a healthy sample.
+    The whole probe, including one optional spark session and the second read,
+    stays inside one timeout. When the first reading has no weekly percent, one
+    ``muse-spark-1.3`` session with contributor mode on is started and the
+    allowance is read again. An unreadable result stays unknown, never a healthy sample.
     """
     muse_bin = _muse_bin()
     if not muse_bin:
@@ -1518,12 +1576,17 @@ def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
             "muse",
             {"message": "muse CLI not found", "kind": "unavailable", "code": "NO_PROBE"},
         )
-    record = _read_muse_usage(muse_bin, timeout_s)
+    deadline = time.monotonic() + max(float(timeout_s), 1.0)
+
+    def remaining() -> float:
+        return deadline - time.monotonic()
+
+    record = _read_muse_usage(muse_bin, remaining())
     if record.get("error_code") != "NO_QUOTA":
         return record
-    if not _muse_open_allowance_session(muse_bin, timeout_s):
+    if not _muse_open_allowance_session(muse_bin, remaining()):
         return record
-    return _read_muse_usage(muse_bin, timeout_s)
+    return _read_muse_usage(muse_bin, remaining())
 
 
 def project_muse_for_status(record: dict[str, Any]) -> dict[str, Any]:
