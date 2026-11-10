@@ -69,3 +69,11 @@ repos:
     role: public-machinery
     verdict_recorder: true
     required_workflow: .github/workflows/ci-gate.yml
+  # Private sibling. The private- role prefix is what OPSEC and the publisher
+  # read as visibility. The row otherwise matches kubedojo-labs.
+  mnq-orb:
+    github: krisztiankoos/mnq-orb
+    local_name: mnq-orb
+    transport: https
+    role: private-labs
+    verdict_recorder: true
