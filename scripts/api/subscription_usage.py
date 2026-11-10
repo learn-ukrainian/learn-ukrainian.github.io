@@ -25,6 +25,11 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
+from scripts.agent_runtime.env_sanitize import (
+    _looks_sensitive_name,
+    _looks_sensitive_value,
+    build_probe_env,
+)
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
 from scripts.common.scratch import make_scratch_dir
 from scripts.fleet.credit_lane import SUBSCRIPTION_NEAR_CAP_USED_PCT
@@ -1429,6 +1434,7 @@ def _read_muse_usage(muse_bin: str, timeout_s: float) -> dict[str, Any]:
             timeout=float(timeout_s),
             check=False,
             stdin=subprocess.DEVNULL,
+            env=_muse_session_env(),
         )
     except subprocess.TimeoutExpired:
         return _normalize_provider_error(
@@ -1470,13 +1476,15 @@ def _read_muse_usage(muse_bin: str, timeout_s: float) -> dict[str, Any]:
     return record
 
 
-_MUSE_SESSION_ENV_UNSET = (
-    "GH_TOKEN",
-    "GITHUB_TOKEN",
-    "GH_ENTERPRISE_TOKEN",
-    "GITHUB_ENTERPRISE_TOKEN",
-    "SSH_AUTH_SOCK",
-)
+# The runner allowlist key is ``muse`` (``build_probe_env`` in the native
+# adapter's version probe). That allowlist already carries HOME, PATH and
+# MUSE_NO_AUTO_UPDATE. When the parent sets them, two more names change the
+# CLI's lookup: XDG_CONFIG_HOME is the credential directory preferred over
+# ``$HOME/.config``, and SSL_CERT_FILE replaces the TLS trust bundle. Pointing
+# either at a missing file makes ``muse usage --json`` fail; leaving them
+# unset does not. MUSE_AUTH_PATH, XDG_DATA_HOME and SSL_CERT_DIR are not
+# required for that read.
+_MUSE_CLI_ENV_EXTRAS = ("XDG_CONFIG_HOME", "SSL_CERT_FILE")
 _muse_allowance_attempt_mono: float | None = None
 _muse_allowance_lock = threading.Lock()
 
@@ -1500,8 +1508,17 @@ def _muse_mark_allowance_attempt() -> None:
 
 
 def _muse_session_env() -> dict[str, str]:
-    env = {key: value for key, value in os.environ.items() if key not in _MUSE_SESSION_ENV_UNSET}
-    env["MUSE_NO_AUTO_UPDATE"] = "1"
+    """Environment for one Muse child, from the Muse runner allowlist.
+
+    Parent secrets stay out. The two extras above are copied only when the
+    parent set a value the sensitive-name and sensitive-value filters accept.
+    """
+    env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
+    for name in _MUSE_CLI_ENV_EXTRAS:
+        value = os.environ.get(name)
+        if not value or _looks_sensitive_name(name) or _looks_sensitive_value(value):
+            continue
+        env[name] = value
     return env
 
 
