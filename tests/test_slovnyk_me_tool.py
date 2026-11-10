@@ -3,6 +3,7 @@
 import os
 import sqlite3
 import sys
+from urllib.parse import quote
 
 import pytest
 
@@ -239,9 +240,7 @@ def test_search_heritage_harazd_merges_grinchenko_slovnyk_and_esum(slovnyk_sourc
 
     assert {"grinchenko", "slovnyk_me", "esum"}.issubset(families)
     assert all(
-        hit["is_authentic_ukrainian"]
-        for hit in hits
-        if hit["source_family"] in {"grinchenko", "slovnyk_me", "esum"}
+        hit["is_authentic_ukrainian"] for hit in hits if hit["source_family"] in {"grinchenko", "slovnyk_me", "esum"}
     )
 
 
@@ -297,14 +296,52 @@ def test_parse_entry_html_accepts_corrected_dictionary_article_id():
     assert "пиття" in row["text"]
 
 
+def test_parse_entry_html_keeps_requested_https_url_when_canonical_scheme_drifts():
+    """Canonical scheme drift: an http rel=canonical must not become source_url.
+
+    parse_entry_html stored parser.canonical_url as source_url. slovnyk.me now
+    publishes that link as http, so a live https fetch recorded an http URL.
+    The stored source_url is the https URL the caller requested.
+    """
+    from wiki.slovnyk_me import parse_entry_html
+
+    lookup = "вода"
+    requested = f"https://slovnyk.me/dict/vts/{quote(lookup)}"
+    row = parse_entry_html(
+        """
+        <html>
+          <head>
+            <title>вода — тест</title>
+            <link rel="canonical" href="http://slovnyk.me/dict/vts/вода">
+          </head>
+          <body>
+            <section id="dictionary-article">
+              <article>
+                <h1>вода</h1>
+                <p>прозора рідина</p>
+              </article>
+            </section>
+          </body>
+        </html>
+        """,
+        query=lookup,
+        word=lookup,
+        dict_slug="vts",
+        url=requested,
+    )
+
+    assert row is not None
+    assert "прозора рідина" in row["text"]
+    assert row["source_url"] == requested
+    assert row["source_url"].startswith("https://")
+
+
 def test_primary_synonym_sense_text_cuts_later_groups():
     from wiki.slovnyk_me import primary_synonym_sense_text
 
     text = "місто д. город, ур. град, (головне) столиця, центр; (портове) порт; П. посада."
 
-    assert primary_synonym_sense_text(text, "karavansky") == (
-        "місто д. город, ур. град, (головне) столиця, центр"
-    )
+    assert primary_synonym_sense_text(text, "karavansky") == ("місто д. город, ур. град, (головне) столиця, центр")
 
 
 def _record_miss(db_path, word, slug):
@@ -341,7 +378,9 @@ def test_heritage_rows_carry_the_slovnyk_use_role(slovnyk_sources_db):
     with sqlite3.connect(str(slovnyk_sources_db)) as conn:
         conn.execute("UPDATE slovnyk_me_entries SET use_role = 'candidate-discovery' WHERE dictionary_slug = 'newsum'")
 
-    rows = [hit for hit in search_heritage("блакитний", include_live_slovnyk=False) if hit["source_family"] == "slovnyk_me"]
+    rows = [
+        hit for hit in search_heritage("блакитний", include_live_slovnyk=False) if hit["source_family"] == "slovnyk_me"
+    ]
 
     assert rows
     assert {hit["use_role"] for hit in rows} == {"candidate-discovery"}
