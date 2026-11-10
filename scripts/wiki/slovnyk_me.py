@@ -230,7 +230,6 @@ class _SlovnykHTMLParser(HTMLParser):
         }
         self.h1_parts: list[str] = []
         self.meta_description = ""
-        self.canonical_url = ""
         self._in_title = False
         self._in_h1 = False
         self._in_article = False
@@ -257,8 +256,6 @@ class _SlovnykHTMLParser(HTMLParser):
             self.section_parts[self._active_section].append("\n")
         if tag == "meta" and attr.get("name") == "description":
             self.meta_description = attr.get("content", "")
-        if tag == "link" and attr.get("rel") == "canonical":
-            self.canonical_url = attr.get("href", "")
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
@@ -374,12 +371,10 @@ def _classify_flags(dict_slug: str, text: str) -> tuple[bool, bool, bool, int, s
     lower = text.lower()
     is_modern = dict_slug in MODERN_DICTS
     is_dialect = dict_slug in DIALECT_OR_HERITAGE_DICTS or any(
-        marker in lower
-        for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
+        marker in lower for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
     )
     is_russianism = dict_slug in RUSSIANISM_GUIDE_DICTS and any(
-        marker in lower
-        for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
+        marker in lower for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
     )
     risk, keywords = classify_entry("", text)
     return is_modern, is_dialect, is_russianism, risk, ",".join(keywords)
@@ -404,7 +399,6 @@ def parse_entry_html(
 
     headword = _clean_text(" ".join(parser.h1_parts)) or normalize_word(word)
     title = _clean_text(" ".join(parser.title_parts)) or headword
-    canonical_url = parser.canonical_url or url
     text = _truncate(section_text, max_text_chars)
     snippet = _truncate(parser.meta_description or section_text, min(max_text_chars, 500))
     is_modern, is_dialect, is_russianism, risk, keywords = _classify_flags(dict_slug, text)
@@ -416,7 +410,9 @@ def parse_entry_html(
         "dictionary_slug": dict_slug,
         "dictionary_label": SLOVNYK_ME_DICTS.get(dict_slug, dict_slug),
         "source_type": _source_type(dict_slug, is_modern, is_dialect, is_russianism),
-        "source_url": canonical_url,
+        # The URL the caller requested. rel=canonical only ever fed source_url,
+        # and slovnyk.me now publishes that link as http.
+        "source_url": url,
         "title": title,
         "snippet": snippet,
         "text": text,
