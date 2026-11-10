@@ -7,7 +7,7 @@
 ## 2. Watching (reuse what runs today)
 
 - Dependabot stays the only updater for github-actions, pip and site npm: weekly, grouped non-major, 7-day cooldown for version updates, none for security updates. Add the root npm manifest.
-- One report-only step added to the existing weekly `security-audit.yml` run: pinned (from §1) vs latest stable upstream. Output: versions and repo-relative paths only, into the existing advisory issue. It never opens PRs, enqueues, arms merge or satisfies the workflows CODEOWNERS gate.
+- One report-only step added to the existing weekly `security-audit.yml` run: pinned (from §1) vs latest stable upstream. Output: versions and repo-relative paths only, into the existing advisory issue. It never opens PRs, enqueues or arms merge.
 - One small local drift check on the host (installed vs pinned vs running process), folded into an existing host check (DevOps picks which); private output, no new timer.
 - Collection is separate from publication: the collectors only write a local private report. Only the CI step publishes, with read-only repository permission plus write to the one advisory issue, and only versions and repo-relative paths.
 - Why not Renovate: it is a second app with regex parsing, and it cannot run the canaries that matter (privacy, fail-open). The report-only diff gives the same signal with no new machinery.

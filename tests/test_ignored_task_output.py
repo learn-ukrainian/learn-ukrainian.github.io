@@ -6,22 +6,313 @@ import os
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.fleet import ignored_task_output as output
+from lu_machinery.fleet import regenerable_output as patterns
+from lu_machinery.orchestration import merge_closeout, worktree_claims, worktree_git
 
-from scripts.fleet import ignored_task_output as output
-from scripts.fleet import regenerable_output as patterns
-from scripts.orchestration import worktree_claims
-from tests.orchestration import test_worktree_artifacts as fixtures
-from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
-from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
-from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
-from tests.test_reused_worktree_retention import cohort as cohort
+_closeout_REAL_RUN = subprocess.run
 
-checkout = fixtures.checkout
-artifact = fixtures.artifact
-assert_record_only = fixtures.assert_record_only
+
+def _closeout_git_env() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and (not key.startswith("PRE_COMMIT")) and (key != "AGENT_NO_MERGE")
+    }
+
+
+def _closeout_git(cwd: Path, *args: str) -> str:
+    proc = _closeout_REAL_RUN(
+        ["git", *args], cwd=cwd, capture_output=True, text=True, check=False, env=_closeout_git_env()
+    )
+    assert proc.returncode == 0, proc.stderr or proc.stdout
+    return (proc.stdout or "").strip()
+
+
+def _closeout_init_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    remote = tmp_path / "origin.git"
+    _closeout_git(tmp_path, "init", "--bare", str(remote))
+    _closeout_git(tmp_path, "init", "--initial-branch=main", str(repo))
+    _closeout_git(repo, "config", "user.email", "tester@example.com")
+    _closeout_git(repo, "config", "user.name", "Test User")
+    (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    _closeout_git(repo, "add", ".gitignore", "README.md")
+    _closeout_git(repo, "commit", "-m", "base")
+    _closeout_git(repo, "remote", "add", "origin", str(remote))
+    _closeout_git(repo, "push", "-u", "origin", "main")
+    return repo
+
+
+def _closeout_patch_gh(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    pr_number: int,
+    state: str,
+    head_ref_name: str | None,
+    head_sha: str | None,
+    branch_prs: dict[str, list[dict[str, Any]]] | None = None,
+    sha_prs: dict[str, list[dict[str, Any]]] | None = None,
+) -> list[list[str]]:
+    branch_prs = branch_prs or {}
+    sha_prs = sha_prs or {}
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "gh":
+            calls.append(args)
+            if args[1:3] == ["api", "-X"]:
+                payload = {
+                    "number": pr_number,
+                    "state": "closed" if state == "MERGED" else state.lower(),
+                    "merged_at": "2026-01-02T03:04:05Z" if state == "MERGED" else None,
+                    "head": {"ref": head_ref_name, "sha": head_sha},
+                }
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+            if args[1:3] == ["pr", "view"]:
+                payload = {"number": pr_number, "state": state, "headRefName": head_ref_name, "headRefOid": head_sha}
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+            if args[1:3] == ["pr", "list"]:
+                branch = args[args.index("--head") + 1]
+                return subprocess.CompletedProcess(args, 0, json.dumps(branch_prs.get(branch, [])), "")
+            if args[1:3] == ["search", "prs"]:
+                sha = args[3]
+                return subprocess.CompletedProcess(args, 0, json.dumps(sha_prs.get(sha, [])), "")
+        return _closeout_REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(worktree_git, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
+    monkeypatch.setattr(merge_closeout.github_client, "run", fake_run)
+    monkeypatch.setattr(worktree_git, "_run_gh", fake_run)
+    monkeypatch.setattr(worktree_git.subprocess, "run", fake_run)
+    return calls
+
+
+# Product fixtures retained from the machinery test consumers (C-5048).
+
+
+@pytest.fixture
+def _artifact_checkout(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True, env=env, timeout=30)
+    (repo / ".gitignore").write_text("batch_state/\nignored/\n.pytest_cache/\n__pycache__/\n")
+    subprocess.run(["git", "add", ".gitignore"], cwd=repo, check=True, env=env, timeout=30)
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    return (repo, primary, tasks)
+
+
+def _artifact_artifact(_artifact_checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xff"):
+    path = _artifact_checkout[0] / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(payload)
+    return path
+
+
+def _artifact_assert_record_only(receipt, expected):
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is False
+    assert receipt["count"] == len(expected) and receipt["bytes"] == sum(map(len, expected.values()))
+    assert not {"location", "manifest_path", "retrieval_proof_sha256"} & receipt.keys()
+    assert [{k: e[k] for k in ("path", "size", "sha256")} for e in receipt["paths"]] == [
+        {"path": n, "size": len(b), "sha256": hashlib.sha256(b).hexdigest()} for n, b in sorted(expected.items())
+    ]
+
+
+def _claims_git(cwd: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+
+
+def _claims_linked(primary: Path, branch: str, path: Path | None = None) -> Path:
+    worktree = path or primary / ".worktrees" / "dispatch" / branch
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    _claims_git(primary, "worktree", "add", "-b", branch, str(worktree))
+    return worktree
+
+
+def _claims_primary(tmp_path: Path) -> Path:
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _claims_git(primary, "init", "-b", "main")
+    _claims_git(primary, "config", "user.email", "claims@example.invalid")
+    _claims_git(primary, "config", "user.name", "Claims Test")
+    (primary / ".gitignore").write_text(".venv/\n.worktrees/\nbatch_state/\n", encoding="utf-8")
+    _claims_git(primary, "add", ".gitignore")
+    _claims_git(primary, "commit", "-m", "base")
+    return primary
+
+
+def _claims_record(primary: Path, task_id: str, **fields: object) -> None:
+    tasks = primary / "batch_state" / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **fields}), encoding="utf-8")
+
+
+_boundary_git = _claims_git
+
+_boundary_linked = _claims_linked
+
+_boundary_primary = _claims_primary
+
+_boundary_record = _claims_record
+
+
+@pytest.fixture
+def _boundary_boundary_tree(tmp_path, monkeypatch):
+    repo = _closeout_init_repo(tmp_path)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.cache/\n.pytest_cache/\n.venv/\nnode_modules/\nbatch_state/\n")
+    tree = repo / ".worktrees/dispatch/codex/boundary"
+    tree.parent.mkdir(parents=True)
+    _boundary_git(repo, "worktree", "add", "-b", "codex/boundary", str(tree), "main")
+    _boundary_git(tree, "push", "-u", "origin", "codex/boundary")
+    tasks = repo / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(worktree_git, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(worktree_git, "_active_task_ids", lambda: set())
+    head = _boundary_git(tree, "rev-parse", "HEAD")
+    _closeout_patch_gh(
+        monkeypatch,
+        pr_number=9645,
+        state="MERGED",
+        head_ref_name="codex/boundary",
+        head_sha=head,
+        branch_prs={"codex/boundary": [{"number": 9645, "state": "MERGED", "headRefOid": head}]},
+    )
+    record = {
+        "task_id": "boundary",
+        "agent": "codex",
+        "run_nonce": "creation-nonce",
+        "status": "done",
+        "worktree_reused": False,
+        "worktree_path": str(tree),
+        "keep_worktree": False,
+    }
+    record["ignored_output_baseline"] = output.creation_inventory(
+        tree, primary=repo, task_id=record["task_id"], run_nonce=record["run_nonce"]
+    )
+    (tasks / "boundary.json").write_text(json.dumps(record))
+    return (repo, tree, tasks, record)
+
+
+_retention_boundary_tree = _boundary_boundary_tree
+
+
+_retention_git = _claims_git
+
+
+def _retention_save(tasks, record):
+    path = tasks / f"{record['task_id']}.json"
+    path.write_text(json.dumps(record))
+    return path
+
+
+@pytest.fixture
+def _retention_cohort(_retention_boundary_tree):
+    repo, tree, tasks, creator = _retention_boundary_tree
+    head = _retention_git(tree, "rev-parse", "HEAD")
+    creator.update(keep_worktree=True, worktree_branch="codex/boundary", pid=999999999)
+    successor = dict(
+        creator, task_id="successor", run_nonce="successor-run", worktree_reused=True, final_branch_head_commit=head
+    )
+    for record in (creator, successor):
+        _retention_save(tasks, record)
+    source = tree / "ignored/output.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"current output")
+    return (repo, tree, tasks, creator, successor, source)
+
+
+_abandon_cohort = _retention_cohort
+
+
+_abandon_git = _claims_git
+
+_abandon_save = _retention_save
+
+
+@pytest.fixture
+def _abandon_same_branch_pending_cohort(_abandon_cohort):
+    repo, tree, tasks, creator, successor, source = _abandon_cohort
+    head = _abandon_git(tree, "rev-parse", "HEAD")
+    for member in (creator, successor):
+        member.update(keep_worktree=False, status="needs_finalize", final_branch_head_commit=head)
+        _abandon_save(tasks, member)
+    return (repo, tree, tasks, creator, successor, source)
+
+
+def _abandon_write_abandon_receipt(repo, tree, tasks, creator):
+    """Owner-authored, hash-bound real binary patches, including both dirty states."""
+    head = _abandon_git(tree, "rev-parse", "HEAD")
+    base = _abandon_git(tree, "rev-parse", "main")
+    destination = repo / "batch_state/abandon/boundary"
+    destination.mkdir(parents=True, exist_ok=True)
+
+    def entry(name, payload):
+        path = destination / name
+        path.write_bytes(payload)
+        return {"path": path.relative_to(repo).as_posix(), "sha256": hashlib.sha256(payload).hexdigest()}
+
+    manifest = {
+        "schema": "terminal-abandon-preservation.v1",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": head,
+        "base_sha": base,
+    }
+    for key, revisions in (("head_patch", [base, head]), ("index_patch", ["--cached", head]), ("working_patch", [])):
+        patch = subprocess.run(
+            ["git", "diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
+            cwd=tree,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        ).stdout
+        manifest[key] = entry(key + ".patch", patch)
+    creator["worktree_abandon"] = {
+        "schema": "terminal-abandon.v1",
+        "disposition": "ABANDON",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": head,
+        "reason": "superseded implementation",
+        "preservation": entry("manifest.json", json.dumps(manifest, sort_keys=True).encode()),
+    }
+    _abandon_save(tasks, creator)
+
+
+@pytest.fixture
+def _abandon_abandon_cohort(_abandon_same_branch_pending_cohort, monkeypatch):
+    repo, tree, tasks, creator, successor, source = _abandon_same_branch_pending_cohort
+    (tree / "README.md").write_bytes(b"unpublished abandoned implementation\n")
+    _abandon_git(tree, "add", "README.md")
+    _abandon_git(tree, "commit", "-m", "unpublished abandoned work")
+    head = _abandon_git(tree, "rev-parse", "HEAD")
+    for member in (creator, successor):
+        member["final_branch_head_commit"] = head
+        _abandon_save(tasks, member)
+    _abandon_write_abandon_receipt(repo, tree, tasks, creator)
+    monkeypatch.setattr(worktree_git, "_query_pr_states", lambda *_: ([], None))
+    return (repo, tree, tasks, creator, successor, source)
+
+checkout = _artifact_checkout
+artifact = _artifact_artifact
+assert_record_only = _artifact_assert_record_only
+boundary_tree = _boundary_boundary_tree
+abandon_cohort = _abandon_abandon_cohort
+same_branch_pending_cohort = _abandon_same_branch_pending_cohort
+cohort = _retention_cohort
 
 
 def tracked_lockfile(repo, directory):
@@ -778,8 +1069,10 @@ def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, mon
 
 
 def test_removal_does_not_follow_symlink(tmp_path):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
+    from lu_machinery.orchestration import worktree_claims as claims
+    _linked = _claims_linked
+    _primary = _claims_primary
+    _record = _claims_record
 
     primary = _primary(tmp_path)
     tree = _linked(primary, "codex/output-task")
@@ -809,7 +1102,7 @@ def test_removal_does_not_follow_symlink(tmp_path):
 
 
 def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
-    from tests.orchestration.test_worktree_claims_cli import _git
+    _git = _claims_git
 
     repo, primary, tasks = checkout
     baseline = output.creation_inventory(repo, primary=primary, task_id="output-task", run_nonce="creator-run")
@@ -840,8 +1133,10 @@ def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout
 
 @pytest.mark.parametrize("case", ["force_new", "vanished_copy", "internal_link", "changed_copy"])
 def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path, monkeypatch, case):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _linked, _primary, _record
+    from lu_machinery.orchestration import worktree_claims as claims
+    _linked = _claims_linked
+    _primary = _claims_primary
+    _record = _claims_record
 
     primary = _primary(tmp_path)
     tree = _linked(primary, "codex/output-task")
@@ -1035,7 +1330,7 @@ def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):
 
 def _write_legacy_merged_reuse_proof(repo, tree, tasks, head):
     """Write the ``merged-reuse-reap.v1`` proof the retired reaper left on creator records."""
-    from scripts.orchestration import worktree_git as wg
+    from lu_machinery.orchestration import worktree_git as wg
 
     matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
     cohort = output._current_reuse_records(matches, tasks)
@@ -1071,9 +1366,9 @@ def _write_legacy_merged_reuse_proof(repo, tree, tasks, head):
 
 @pytest.mark.parametrize("failure", [None, "missing", "head", "member", "pid", "keep"])
 def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pending_cohort, failure):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _git
-    from tests.test_reused_worktree_retention import save
+    from lu_machinery.orchestration import worktree_claims as claims
+    _git = _claims_git
+    save = _retention_save
 
     repo, tree, tasks, _, successor, source = same_branch_pending_cohort
     head = _git(tree, "rev-parse", "HEAD")
@@ -1108,9 +1403,9 @@ def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pen
 
 @pytest.mark.parametrize("mutation", ["pid", "keep", "head", "patch", "new_claim", "dirty"])
 def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _git
-    from tests.test_reused_worktree_retention import save
+    from lu_machinery.orchestration import worktree_claims as claims
+    _git = _claims_git
+    save = _retention_save
 
     repo, tree, tasks, creator, successor, source = abandon_cohort
     copy = output.artifacts._copy_verified
@@ -1152,9 +1447,9 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
 
 
 def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_cohort, monkeypatch):
-    from tests.orchestration.test_worktree_claims_cli import _git
-    from tests.test_continuation_worktree_reap import _write_abandon_receipt
-    from tests.test_reused_worktree_retention import save
+    _git = _claims_git
+    _write_abandon_receipt = _abandon_write_abandon_receipt
+    save = _retention_save
 
     repo, tree, tasks, creator, successor, _source = abandon_cohort
     (tree / "large-tracked.bin").write_bytes(b"x" * 4096)
@@ -1183,7 +1478,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
 @pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
 @pytest.mark.parametrize("present", [False, True])
 def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, flag, present):
-    from tests.orchestration.test_worktree_claims_cli import _git
+    _git = _claims_git
 
     repo, tree, tasks, _, _, _ = abandon_cohort
     _git(tree, "update-index", flag, "README.md")
@@ -1205,9 +1500,9 @@ def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, fl
 
 
 def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.orchestration.test_worktree_claims_cli import _git
-    from tests.test_continuation_worktree_reap import _write_abandon_receipt
+    from lu_machinery.orchestration import worktree_claims as claims
+    _git = _claims_git
+    _write_abandon_receipt = _abandon_write_abandon_receipt
 
     repo, tree, tasks, creator, _, source = abandon_cohort
     base = _git(tree, "rev-parse", "main:README.md")
@@ -1244,8 +1539,8 @@ def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
 
 
 def test_10303_abandon_patch_base_must_be_on_main(abandon_cohort):
-    from scripts.orchestration import worktree_claims as claims
-    from tests.test_reused_worktree_retention import save
+    from lu_machinery.orchestration import worktree_claims as claims
+    save = _retention_save
 
     repo, tree, tasks, creator, _, source = abandon_cohort
     receipt = creator["worktree_abandon"]

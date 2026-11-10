@@ -3,25 +3,41 @@
 import ast
 import asyncio
 import importlib.util
+import sys
 import tomllib
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime.adapters import claude, codex
-from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.review_mcp import (
+from lu_machinery.agent_runtime.adapters import claude, codex
+from lu_machinery.agent_runtime.adapters.codex import CodexAdapter
+from lu_machinery.agent_runtime.review_mcp import (
     _render_codex_review_config,
     agy_full_review_settings,
     review_tools_allowed_csv,
 )
-from scripts.agent_runtime.sources_read_only import (
-    SERVER_PATH,
-    sources_tool_sets,
-)
-from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
-from tests.agent_runtime.test_codex_sources_config_layers import layer
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+from lu_machinery.common.repo_root import product_root
 
+from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
+
+
+# Product fixtures retained from the machinery test consumers (C-5048).
+def _codex_layer(kind, servers, **source):
+    return {"name": {"type": kind, **source}, "config": {"mcp_servers": servers}, "version": "fixture"}
+
+
+def _codex_write_config_probe_binary(
+    path, *, signed_in_layer=None, refresh_auth=False, unavailable_when_signed_in=False
+):
+    """Model Codex's config/read protocol without running an installed engine."""
+    path.write_text(
+        f"""#!{sys.executable}\nimport json, os, sys\nfrom pathlib import Path\nassert sys.argv[1:] == ['app-server']\nassert 'UNRELATED_SECRET' not in os.environ\nassert 'ANTHROPIC_API_KEY' not in os.environ\nassert 'NODE_OPTIONS' not in os.environ\nfor line in sys.stdin:\n    request = json.loads(line)\n    if request.get('method') == 'config/read':\n        assert request['params']['cwd'] == os.getcwd()\n        assert request['params']['includeLayers'] is True\n        layers = [{{'name': {{'type': 'user', 'file': os.path.join(os.environ['CODEX_HOME'], 'config.toml')}}, 'config': {{}}}}]\n        auth = Path(os.environ['CODEX_HOME']) / 'auth.json'\n        if auth.exists():\n            if {signed_in_layer!r}:\n                layers.append({{'name': {{'type': {signed_in_layer!r}}}, 'config': {{'mcp_servers': {{'cloud_only': {{'command': 'foreign'}}}}}}}})\n            if {refresh_auth!r}:\n                refreshed = auth.with_suffix('.refresh')\n                refreshed.write_text('{{"session":"refreshed-fixture"}}')\n                refreshed.replace(auth)\n            if {unavailable_when_signed_in!r}:\n                layers = None\n        print(json.dumps({{'id': request['id'], 'result': {{'layers': layers}}}}), flush=True)\n"""
+    )
+    path.chmod(493)
+    return path
+
+
+layer = _codex_layer
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
 def test_formal_review_grants_cached_evidence(access):
@@ -38,6 +54,7 @@ def test_cached_wikipedia_name_does_not_match_claude_writer_deny():
     assert not fnmatch.fnmatchcase("mcp__sources__query_wikipedia_cached", "mcp__*__query_wikipedia")
     assert fnmatch.fnmatchcase("mcp__sources__query_wikipedia", "mcp__*__query_wikipedia")
 
+SERVER_PATH = product_root() / SERVER_RELATIVE_PATH
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 
 
@@ -222,7 +239,7 @@ def test_missing_server_fails_closed_and_can_be_retried(tmp_path):
 
 @pytest.mark.parametrize("session", [None, "resume-reader"])
 def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monkeypatch, session):
-    from scripts.agent_runtime.adapters import codex
+    from lu_machinery.agent_runtime.adapters import codex
 
     def missing():
         return sources_tool_sets(tmp_path / "missing.py")
@@ -243,8 +260,9 @@ def test_ad_hoc_codex_missing_server_refuses_even_hostile_grants(tmp_path, monke
 @pytest.mark.parametrize("access", ["isolated", "full"])
 @pytest.mark.parametrize("session", [None, "resume-reader"])
 def test_formal_codex_missing_server_keeps_explicit_contract(tmp_path, monkeypatch, access, session):
-    from scripts.agent_runtime import review_mcp
-    from scripts.agent_runtime.adapters import codex
+    from lu_machinery.agent_runtime import review_mcp
+    from lu_machinery.agent_runtime.adapters import codex
+
     from scripts.review.receipts import ledger
 
     def unexpected():
@@ -294,7 +312,7 @@ def test_formal_contract_refuses_reclassified_writer_at_call_time(tmp_path, monk
 
 
 def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
-    from scripts.agent_runtime import review_mcp
+    from lu_machinery.agent_runtime import review_mcp
 
     monkeypatch.setattr(review_mcp, "sources_tool_sets", lambda: sources_tool_sets(tmp_path / "missing.py"))
     with pytest.raises(FileNotFoundError):
@@ -303,7 +321,7 @@ def test_ad_hoc_config_missing_server_refuses(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("writer", SOURCES_PERSISTING_TOOLS)
 def test_claude_ad_hoc_reviewer_denies_every_writer(tmp_path, writer):
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from lu_machinery.agent_runtime.adapters.claude import ClaudeAdapter
 
     tc = {"reviewer_tools": True}
     plan = ClaudeAdapter().build_invocation(
@@ -350,8 +368,8 @@ def test_formal_sources_wire_hides_and_refuses_writers_before_handler(monkeypatc
 
 
 def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
-    from scripts.agent_runtime.errors import AgentUnavailableError
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.agent_runtime.errors import AgentUnavailableError
 
     def refused(*args, **kwargs):
         raise RuntimeError("filesystem_boundary_unverified")
@@ -359,15 +377,15 @@ def test_unverified_formal_codex_boundary_never_plans_or_launches_bypass(tmp_pat
     def unexpected(*args, **kwargs):
         pytest.fail("unverified parent must not construct or execute bypass argv")
 
-    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refused)
+    monkeypatch.setattr("lu_machinery.agent_runtime.attempt_boundary.prepare_attempt_boundary", refused)
     monkeypatch.setattr(runner, "_load_adapter", unexpected)
     with pytest.raises(AgentUnavailableError, match="filesystem boundary refused"):
         runner.invoke("codex", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
 
 
 def test_sealed_codex_keeps_bypass_without_defining_sources(tmp_path):
-    from scripts.review.isolation import review_isolation_tool_config
-    from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
+    from lu_machinery.review.isolation import review_isolation_tool_config
+    write_config_probe_binary = _codex_write_config_probe_binary
 
     fake = write_config_probe_binary(tmp_path / "codex")
     snapshot, write = tmp_path / "snapshot", tmp_path / "write"

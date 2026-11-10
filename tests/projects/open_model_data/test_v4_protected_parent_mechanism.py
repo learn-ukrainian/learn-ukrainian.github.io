@@ -23,9 +23,12 @@ from learn_ukrainian_v4_runtime import v4_fleet_execution_authority as fleet
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+    authorize_reviewer_execution,
+)
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import principal, role_connection
-
-from scripts.fleet_comms.request_executor import RequestExecutor
 
 
 def _run_real_pair(
@@ -103,7 +106,8 @@ def _run_real_pair(
 
             with RequestExecutor(root=tmp_path) as executor:
                 request = executor.create_request(recipient="claude", body="source-free fixture")
-                executor.authorize_author_execution(
+                authorize_author_execution(
+                    executor,
                     request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
                 )
             preparation = stored_preparation(conn, request.request_id, constraints)
@@ -120,7 +124,8 @@ def _run_real_pair(
                 row["answer"] = "fixture-one"
             with RequestExecutor(root=tmp_path) as executor:
                 reviewer = executor.create_request(recipient="codex", body="source-free reviewer")
-                binding = executor.authorize_reviewer_execution(
+                binding = authorize_reviewer_execution(
+                    executor,
                     request_id=reviewer.request_id,
                     authorship_receipt_id=authored["receipt_id"],
                     expected_seat="gpt-5.6-luna",
