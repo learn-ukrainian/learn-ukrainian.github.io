@@ -22,6 +22,7 @@ Practices used:
 5. At start and handoff decide what to stop, continue and start, in that order.
 6. Journal contestable decisions in `docs/decisions/decisions.yaml`
    (`docs/best-practices/decision-journal.md`); the journal records approval, never grants it.
+7. A change to a cross-repository contract (environment variables, file formats or CLI semantics shared by the product and the release) is new design, however small the diff: it goes to the designated panel before dispatch, never as a CTO "implementation fix".
 
 ## Tactical layer: per cycle
 
