@@ -1,17 +1,17 @@
 # lu-machinery consumer lock (machinery docs/release.md, "Dependency lock").
 # Install with --require-hashes only; never as an editable install.
 #
-# Release: learn-ukrainian/machinery v0.1.4
-# Tag object: 03bd043e0118d5d813b85c0d0a8c32185c5d4b6a
-# Tag commit: 96ccb64723f7e8a689f0650e9eba8ffe6108a58e
-# SHA256SUMS: https://github.com/learn-ukrainian/machinery/releases/download/v0.1.4/SHA256SUMS
+# Release: learn-ukrainian/machinery v0.1.6
+# Tag object: 8bcc6c4cd3f60d7d34c60969c487803289b95ee2
+# Tag commit: 1c9175fa532dd61521e171f601bf116eb76e5b0d
+# SHA256SUMS: https://github.com/learn-ukrainian/machinery/releases/download/v0.1.6/SHA256SUMS
 # The lu-machinery hash is the SHA256SUMS entry for
-# lu_machinery-0.1.4-py3-none-any.whl.
+# lu_machinery-0.1.6-py3-none-any.whl.
 # The pins below are machinery's requirements-machinery.lock at that tag.
 # A package listed here and in requirements-lock.txt must carry the same
 # version in both files.
-lu-machinery==0.1.4 \
-    --hash=sha256:72151c901e4967145d5599383aa492e7a4b6740c501b822cb337ce632a6adb83
+lu-machinery==0.1.6 \
+    --hash=sha256:1aac2693442386d6f1975ab8446d09b6ad5208efc0daef1b45ce3e7939e51379
 annotated-doc==0.0.5 \
     --hash=sha256:117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101
 annotated-types==0.8.0 \
