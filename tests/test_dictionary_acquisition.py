@@ -1192,6 +1192,70 @@ def durable_progress(tmp_path):
         )
 
 
+def test_pacing_rebind_preserves_stopped_progress_and_first_429_stops_supervisor(tmp_path):
+    """Pacing drift must rebind without resetting progress or allowing a 429 retry."""
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"), "--delay", "4", "--max-attempts", "4", "--max-restarts", "3")
+    failing = HTTP([response(), *[response(503) for _ in range(4)]], clock)
+    for expected in (75, 75, 75, 5):
+        assert invoke("run", argv, failing, clock) == expected
+    results, events, job = durable_progress(tmp_path)
+    before = status(tmp_path)
+    assert before["state"] == "exhausted"
+    changed = [*argv, "--delay", "5", "--timeout", "2", "--backoff", "3", "--max-attempts", "1", "--max-restarts", "0"]
+    for action in ("run", "resume", "supervise"):
+        assert invoke(action, changed, HTTP([], clock), clock) == 2
+        assert (
+            json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"]
+            == "frozen_input_mismatch"
+        )
+    assert invoke("rebind", changed, HTTP([], clock), clock) == 0
+    after_results, after_events, after_job = durable_progress(tmp_path)
+    assert after_results == results
+    assert after_job == job
+    assert after_events[:-1] == events
+    assert after_events[-1][3] == "transport_rebind"
+    after = status(tmp_path)
+    assert after["checkpoint"] == before["checkpoint"] == 1
+    assert after["request_attempts"] == before["request_attempts"] == 5
+    with database(tmp_path) as conn:
+        event = conn.execute("SELECT * FROM transport_rebinds").fetchone()
+        assert event["event_id"] == after_events[-1][0]
+        assert json.loads(event["old_pacing"]) == {
+            "delay": 4,
+            "timeout": 1,
+            "backoff": 2,
+            "max_attempts": 4,
+            "max_restarts": 3,
+        }
+        assert json.loads(event["new_pacing"]) == {
+            "delay": 5,
+            "timeout": 2,
+            "backoff": 3,
+            "max_attempts": 1,
+            "max_restarts": 0,
+        }
+    assert invoke("rebind", changed, HTTP([], clock), clock) == 0
+    assert durable_progress(tmp_path)[1] == after_events
+    assert invoke("resume", changed, HTTP([], clock), clock) == 0
+    http = HTTP([response(429), response()], clock)
+    launches = []
+
+    def launch(command, **_kwargs):
+        launches.append(command)
+        return SimpleNamespace(returncode=invoke("run", command[4:], http, clock))
+
+    assert invoke("supervise", changed, http, clock, launch=launch) == 5
+    assert len(launches) == len(http.calls) == 1
+    assert http.calls[0][1].endswith("/b")
+    stopped = status(tmp_path)
+    assert stopped["state"] == "exhausted"
+    assert stopped["terminal_reason"] == "attempt_budget"
+    assert stopped["checkpoint"] == 1
+    assert invoke("supervise", changed, http, clock, launch=launch) == 5
+    assert len(launches) == len(http.calls) == 1
+
+
 def test_changed_transport_is_refused_until_an_explicit_recorded_rebind(tmp_path):
     clock = Clock()
     argv = arguments(tmp_path, "vts", ("a", "b", "c"))
@@ -1214,7 +1278,12 @@ def test_changed_transport_is_refused_until_an_explicit_recorded_rebind(tmp_path
     assert after_events[:-1] == events
     assert after_events[-1][3] == "transport_rebind"
     with database(tmp_path) as conn:
-        rebinds = [tuple(r) for r in conn.execute("SELECT * FROM transport_rebinds")]
+        rebinds = [
+            tuple(r)
+            for r in conn.execute(
+                "SELECT event_id,old_sha256,new_sha256,old_parser_sha256,new_parser_sha256 FROM transport_rebinds"
+            )
+        ]
     current = current_transport_sha256()
     parser = current_parser_sha256()
     assert rebinds == [(after_events[-1][0], previous, current, parser, parser)]
@@ -1287,9 +1356,22 @@ def test_parser_hash_is_refused_by_initialize_until_rebind_records_it(tmp_path):
     assert after_events[-1][3] == "transport_rebind"
     with database(tmp_path) as conn:
         columns = [row["name"] for row in conn.execute("PRAGMA table_info(transport_rebinds)")]
-        rebinds = [tuple(row) for row in conn.execute("SELECT * FROM transport_rebinds")]
+        rebinds = [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT event_id,old_sha256,new_sha256,old_parser_sha256,new_parser_sha256 FROM transport_rebinds"
+            )
+        ]
         rebound_positive = conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0]
-    assert columns == ["event_id", "old_sha256", "new_sha256", "old_parser_sha256", "new_parser_sha256"]
+    assert columns == [
+        "event_id",
+        "old_sha256",
+        "new_sha256",
+        "old_parser_sha256",
+        "new_parser_sha256",
+        "old_pacing",
+        "new_pacing",
+    ]
     transport = current_transport_sha256()
     parser = current_parser_sha256()
     assert rebinds == [(after_events[-1][0], transport, transport, previous_parser, parser)]
@@ -1337,12 +1419,8 @@ def test_parser_hash_is_refused_by_initialize_until_rebind_records_it(tmp_path):
         assert conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0] == positive
 
 
-def test_rebind_refuses_spec_drift_other_than_transport_or_parser_hash(tmp_path):
-    """Defect: rebind accepts a frozen-spec difference other than the transport or parser hash.
-
-    A parser-hash or transport-hash change must not launder a delay or manifest change.
-    Those differences stay frozen_input_mismatch and write no audit row.
-    """
+def test_rebind_refuses_non_pacing_frozen_spec_drift(tmp_path):
+    """Rebind must not launder manifest drift through allowed hash or pacing changes."""
     clock = Clock()
     argv = arguments(tmp_path, "vts", ("a", "b"))
     assert invoke("run", argv, HTTP([response(503)], clock), clock) == 75
@@ -1350,7 +1428,6 @@ def test_rebind_refuses_spec_drift_other_than_transport_or_parser_hash(tmp_path)
     with database(tmp_path) as conn:
         original_spec = conn.execute("SELECT spec FROM job").fetchone()["spec"]
         original_fingerprint = conn.execute("SELECT fingerprint FROM job").fetchone()[0]
-    original = json.loads(original_spec)
 
     def restore():
         with database(tmp_path) as conn, conn:
@@ -1369,13 +1446,13 @@ def test_rebind_refuses_spec_drift_other_than_transport_or_parser_hash(tmp_path)
         with database(tmp_path) as conn:
             assert conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='transport_rebinds'").fetchone()[0] == 0
 
-    _rewrite_spec(tmp_path, delay=original["delay"] + 1)
+    _rewrite_spec(tmp_path, seed_identity="different-seed")
     refuse()
     restore()
 
     _rewrite_spec(
         tmp_path,
-        delay=original["delay"] + 1,
+        seed_identity="different-seed",
         parser_sha256=acquisition.digest(b"parser of the earlier checkout"),
     )
     with database(tmp_path) as conn:
@@ -1385,7 +1462,7 @@ def test_rebind_refuses_spec_drift_other_than_transport_or_parser_hash(tmp_path)
     refuse()
     restore()
 
-    _rewrite_spec(tmp_path, transport_sha256=acquisition.digest(b"transport of the earlier checkout"), delay=9)
+    _rewrite_spec(tmp_path, transport_sha256=acquisition.digest(b"transport of the earlier checkout"), denominator=9)
     refuse()
     restore()
 
@@ -1416,7 +1493,7 @@ def test_rebind_never_hides_other_drift_or_a_busy_job(tmp_path):
     assert invoke("rebind", argv, HTTP([], clock), clock) == 2
     assert json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "frozen_input_mismatch"
     manifest.write_text(original)
-    assert invoke("rebind", [*argv, "--max-attempts", "9"], HTTP([], clock), clock) == 2
+    assert invoke("rebind", [*argv, "--max-attempts", "11"], HTTP([], clock), clock) == 2
 
     directory = tmp_path / "staging" / "vts"
     for held in ("writer.lock", "supervisor.lock"):

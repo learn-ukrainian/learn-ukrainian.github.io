@@ -204,13 +204,12 @@ job, then accept it explicitly with the original options:
 ```
 
 `rebind` makes no request. It takes the same two locks as `resume`, so it refuses
-an active writer or supervisor. It accepts a changed transport identity, a changed
-parser code hash, or both, and refuses every other frozen field and any
-stored-target difference. It rewrites only those accepted hashes. It records one
-`transport_rebind` event and one `transport_rebinds` row holding the old and new
-transport hashes and the old and new parser hashes (the two values are equal when
-that hash did not change). A job whose `transport_rebinds` table predates the
-parser columns is altered in place; there is no second audit table. Unlike
+an active writer or supervisor. It accepts changed transport and parser hashes and
+pacing fields (`delay`, `timeout`, `backoff`, `max_attempts`, `max_restarts`),
+subject to the existing bounds, and refuses every other frozen field and any
+stored-target difference. It records one `transport_rebind` event and one
+`transport_rebinds` row with the old and new hashes and pacing values, adding
+missing audit columns in place for older jobs. Unlike
 `resume` it resets nothing: results, per-target attempts, launch counts and the
 no-progress budget stay exactly as they were. Already-positive, reused and
 proven-404 rows are not reparsed. Running it again when the spec already matches
