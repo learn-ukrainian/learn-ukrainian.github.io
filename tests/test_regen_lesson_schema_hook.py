@@ -11,9 +11,9 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 import yaml
+from lu_machinery.pre_commit import product_entry, regen_lesson_schema
 
 from scripts.build import generate_lesson_schema
-from scripts.pre_commit import product_entry, regen_lesson_schema
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -31,7 +31,7 @@ def entry_file(tmp_path):
     return path
 
 
-@pytest.mark.parametrize("name", [None, "sqlite3:main", "scripts.Bad:main", ".scripts.api:main", "scripts/a:main", "scripts.a", "scripts.a:main\n"])
+@pytest.mark.parametrize("name", [None, "sqlite3:main", "scripts.Bad:main", ".scripts.build:main", "scripts/a:main", "scripts.a", "scripts.a:main\n"])
 def test_pre_commit_loader_keeps_entry_grammar_refusals(entry_file, name):
     document = json.loads(entry_file.read_text())
     document["entry_points"]["test-hook"]["entry_point"] = name
@@ -66,9 +66,9 @@ def test_pre_commit_loader_keeps_document_refusals(entry_file, field, value):
 
 
 @pytest.mark.parametrize("entry", [
-    {}, [], {"entry_point": "scripts.api:main", "argv": "bad"},
-    {"entry_point": "scripts.api:main", "argv": [1]},
-    {"entry_point": "scripts.api:main", "argv": [], "extra": 1},
+    {}, [], {"entry_point": "scripts.build:main", "argv": "bad"},
+    {"entry_point": "scripts.build:main", "argv": [1]},
+    {"entry_point": "scripts.build:main", "argv": [], "extra": 1},
 ])
 def test_pre_commit_loader_refuses_malformed_siblings(entry_file, entry):
     document = json.loads(entry_file.read_text())
@@ -170,7 +170,7 @@ def test_lesson_schema_hook_regenerates_for_all_schema_inputs():
 
     assert hook["pass_filenames"] is False
     assert hook["stages"] == ["pre-commit"]
-    assert "scripts/pre_commit/regen_lesson_schema.py" in hook["entry"]
+    assert "lu_machinery.pre_commit.regen_lesson_schema" in hook["entry"]
     assert "git diff --exit-code docs/lesson-schema.yaml" in hook["entry"]
 
     pattern = hook["files"]

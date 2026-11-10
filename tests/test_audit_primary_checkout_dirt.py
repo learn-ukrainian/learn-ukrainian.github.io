@@ -4,7 +4,7 @@
 launched script that ``cd``s into the primary checkout and redirects to a
 relative path writes there unseen. The audit hook snapshots the primary
 checkout's ``git status`` before and after every shell call and attributes any
-new entry to the call; ``scripts.hygiene.primary_dirt_cleanup`` removes exactly
+new entry to the call; ``lu_machinery.hygiene.primary_dirt_cleanup`` removes exactly
 the untracked files an attribution record proves a session created.
 """
 
@@ -20,22 +20,22 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails import primary_dirt_audit as audit
-from scripts.hygiene import primary_dirt_cleanup as cleanup
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.guardrails import primary_dirt_audit as audit
+from lu_machinery.hygiene import primary_dirt_cleanup as cleanup
 
 REPO = Path(__file__).resolve().parent.parent
-HOOKS = REPO / "agents_extensions/shared/hooks"
+HOOKS = machinery_path("agents_extensions/shared/hooks")
 GUARD = HOOKS / "guard-primary-checkout-write.py"
 AUDIT = HOOKS / "audit-primary-checkout-dirt.py"
 SETTINGS = REPO / "agents_extensions/shared/settings.json"
-CODEX_ENTRY = REPO / "scripts/agent_runtime/codex_hook_entry.sh"
-CODEX_POLICY = REPO / "scripts/agent_runtime/codex_hook_policy.py"
+CODEX_ENTRY = machinery_path('agent_runtime/codex_hook_entry.sh')
+CODEX_POLICY = machinery_path('agent_runtime/codex_hook_policy.py')
 DEPLOYED_AUDIT = "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py"
 
 
 def _git(cwd: Path, *args: str) -> str:
-    # No inherited GIT_* variables: importing scripts.api.main in an earlier test on
+    # No inherited GIT_* variables: importing lu_machinery.api.main in an earlier test on
     # the same worker exports GIT_OPTIONAL_LOCKS=0, which would silence the
     # index-refresh control below (CI run 39616999527).
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
@@ -61,6 +61,7 @@ def _env(tmp_path: Path, primary: Path) -> dict[str, str]:
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["XDG_STATE_HOME"] = str(tmp_path / "state")
     env["CLAUDE_PROJECT_DIR"] = str(primary)
+    env["LEARN_UKRAINIAN_PYTHON"] = sys.executable
     return env
 
 
@@ -134,7 +135,7 @@ def _write_in_primary(tmp_path: Path, relpath: str, body: str = "x") -> str:
 
 def _cleanup_cli(*args: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "scripts.hygiene.primary_dirt_cleanup", *args],
+        [sys.executable, "-m", "lu_machinery.hygiene.primary_dirt_cleanup", *args],
         cwd=REPO,
         capture_output=True,
         text=True,
@@ -185,9 +186,9 @@ def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path
     assert record["record_id"] in post.stderr
 
     # AC-03: the printed command clears exactly this file, without any override.
-    (line,) = [text for text in post.stderr.splitlines() if "scripts.hygiene.primary_dirt_cleanup" in text]
+    (line,) = [text for text in post.stderr.splitlines() if "lu_machinery.hygiene.primary_dirt_cleanup" in text]
     argv = shlex.split(line.replace("[--apply]", ""))
-    assert argv[:3] == [".venv/bin/python", "-m", "scripts.hygiene.primary_dirt_cleanup"]
+    assert argv[:3] == [".venv/bin/python", "-m", "lu_machinery.hygiene.primary_dirt_cleanup"]
     dry = _cleanup_cli(*argv[3:], env=env)
     assert dry.returncode == 0, dry.stdout
     assert _outcomes(json.loads(dry.stdout)) == {"brief-review-10952.tmpl.resolved": "removable"}
@@ -478,7 +479,7 @@ def test_claude_settings_wire_the_audit_around_every_bash_call() -> None:
 
 
 def test_claude_workers_do_not_get_an_unpaired_snapshot() -> None:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     settings = json.loads(claude._worker_guard_settings())
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
@@ -556,4 +557,4 @@ def test_codex_entry_post_tool_use_reports_attributed_dirt(tmp_path: Path) -> No
         timeout=60,
     )
     assert completed.returncode == 2, completed.stderr
-    assert "?? codex.txt" in completed.stderr and "scripts.hygiene.primary_dirt_cleanup" in completed.stderr
+    assert "?? codex.txt" in completed.stderr and "lu_machinery.hygiene.primary_dirt_cleanup" in completed.stderr

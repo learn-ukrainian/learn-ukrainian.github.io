@@ -356,8 +356,9 @@ def _plan(**overrides):
 
 
 @pytest.fixture
-def surface_repo(tmp_path: Path) -> Path:
+def surface_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A real commit range without the unrelated remote-push fixture setup."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", sys.executable)
     root = tmp_path / "surface-repo"
     root.mkdir()
     _git(root, "init", "-b", "main")

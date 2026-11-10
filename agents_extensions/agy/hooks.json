@@ -3,7 +3,7 @@
     "PreInvocation": [
       {
         "type": "command",
-        "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh",
+        "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/pending_orders_inject.sh\")), *sys.argv[1:]])'",
         "timeout": 10
       }
     ]
@@ -12,7 +12,7 @@
     "PreInvocation": [
       {
         "type": "command",
-        "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-hook",
+        "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' agy-hook",
         "timeout": 10
       }
     ]
@@ -21,7 +21,7 @@
     "Stop": [
       {
         "type": "command",
-        "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-stop-hook",
+        "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' agy-stop-hook",
         "timeout": 20
       }
     ]
@@ -33,7 +33,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-pretool-hook",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' agy-pretool-hook",
             "timeout": 10
           }
         ]
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy",
+            "command": "../.venv/bin/python -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy",
             "timeout": 10
           }
         ]

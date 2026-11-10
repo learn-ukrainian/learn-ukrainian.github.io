@@ -11,7 +11,7 @@ Two layers:
   ``.worktrees/dispatch/**`` worktree + gitignored state), asserting the exit
   code and worktree-hint message. Explicit subprocess cases also pin process
   isolation. The decision itself is delegated to
-  ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
+  ``lu_machinery.guardrails.worktree_containment`` (#4444); these tests prove the
   provider payloads map onto it correctly.
 
 The hook filename has hyphens, so pure-function tests load it via importlib.
@@ -35,14 +35,24 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
-from tests.test_guard_benign_corpus import BENIGN_COMMANDS
+BENIGN_COMMANDS = (
+    "git status",
+    "git commit -F - <<'EOF'\nmessage with << text\nEOF\ngit status",
+    "git commit -m \"$(cat <<'EOF'\nmessage with << text\nEOF\n)\"\ngit status",
+    "python3 -c '\nprint(\"<<\")\n'\ngit status",
+    "gh pr create --body \"$(cat <<'EOF'\nbody with << text\nEOF\n)\"",
+    "cat > ./batch_state/guard-corpus.sh <<'EOF'\n#!/bin/bash\necho '<<'\nEOF",
+    "echo $((1<<3))\ngit status",
+    'for ((i=0;i<1<<1;i++)); do echo "$i"; done\ngit status',
+)
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
+HOOK_PATH = machinery_path("agents_extensions/shared/hooks/guard-primary-checkout-write.py")
 
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
@@ -142,7 +152,7 @@ def test_issue_9115_escaped_nested_backtick_write_is_visible():
 
 
 def test_issue_9115_backtick_depth_limit_blocks_write_hook(repo: Path, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setattr(sys.modules[hook.preprocess_shell_command.__module__], "_MAX_BACKTICK_DEPTH", 2)
     body = "tee AGENTS.md"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
@@ -242,7 +252,9 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)
     result = subprocess.run(
-        [sys.executable, str(guard_copy)],
+        [sys.executable, "-c",
+         "import runpy, sys; sys.modules['agents_extensions.shared.hooks.shell_shlex'] = None; "
+         f"runpy.run_path({str(guard_copy)!r}, run_name='__main__')"],
         input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
         text=True,
         capture_output=True,
@@ -448,9 +460,11 @@ def _materialize_repo(template: Path, main: Path) -> Path:
 
 
 @pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
+def repo(tmp_path: Path, repo_template: Path, monkeypatch) -> Path:
     """Fresh primary checkout and registered worktree for each case."""
-    return _materialize_repo(repo_template, tmp_path / "main")
+    root = _materialize_repo(repo_template, tmp_path / "main")
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(root))
+    return root
 
 
 @pytest.fixture
@@ -486,7 +500,7 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
-        patch.object(hook, "_protected_repo_anchor", return_value=repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=Path(os.environ.get("LU_PRODUCT_ROOT", str(repo)))),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -1044,7 +1058,7 @@ def test_issue_11381_protected_or_unresolved_git_target_blocked(
 
 
 def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
-    from scripts.guardrails import worktree_containment as wc
+    from lu_machinery.guardrails import worktree_containment as wc
 
     expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
     with chdir(tmp_path):
@@ -1790,7 +1804,7 @@ def test_issue_10633_nested_ansi_c_quoting_refused(repo: Path, shape: str):
         # the refusal comes first.
         pytest.param("git checkout -- $'curriculum/tracked.md'", "primary", id="git-rescue-allowlist"),
         pytest.param(
-            ".venv/bin/python -m scripts.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
+            ".venv/bin/python -m lu_machinery.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
         ),
     ],
 )

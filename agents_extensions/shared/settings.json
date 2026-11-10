@@ -27,16 +27,16 @@
       "Bash(gh run rerun *)",
       "Bash(gh run watch *)",
       "Bash(gh workflow run ci.yml *)",
-      "Bash(.venv/bin/python scripts/dispatch.py *)",
-      "Bash(.venv/bin/python scripts/ai_agent_bridge/__main__.py *)",
-      "Bash(.venv/bin/python -m scripts.orchestration.merge_closeout *)",
-      "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
-      "Bash(.venv/bin/python -m scripts.orchestration.worktree_claims *)",
-      "Bash(.venv/bin/python -m scripts.fleet.capacity_pick*)",
-      "Bash(.venv/bin/python -m scripts.storage.artifacts *)",
-      "Bash(.venv/bin/python -m scripts.gh_merge_queue_status *)",
-      "Bash(.venv/bin/python -m scripts.fleet_comms *)",
-      "Bash(.venv/bin/python -m scripts.ai_agent_bridge *)",
+      "Bash(.venv/bin/python -m lu_machinery.dispatch *)",
+      "Bash(.venv/bin/python -m lu_machinery.ai_agent_bridge *)",
+      "Bash(.venv/bin/python -m lu_machinery.orchestration.merge_closeout *)",
+      "Bash(.venv/bin/python -m lu_machinery.hygiene.branch_sweep *)",
+      "Bash(.venv/bin/python -m lu_machinery.orchestration.worktree_claims *)",
+      "Bash(.venv/bin/python -m lu_machinery.fleet.capacity_pick*)",
+      "Bash(.venv/bin/python -m lu_machinery.storage.artifacts *)",
+      "Bash(.venv/bin/python -m lu_machinery.gh_merge_queue_status *)",
+      "Bash(.venv/bin/python -m lu_machinery.fleet_comms *)",
+      "Bash(.venv/bin/python -m lu_machinery.ai_agent_bridge *)",
       "Bash(npm run agents:deploy)",
       "Bash(sudo systemctl *)",
       "Bash(sudo journalctl *)",
@@ -705,7 +705,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-hook",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git -C \"$CLAUDE_PROJECT_DIR\" rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' claude-hook",
             "timeout": 10
           }
         ]
@@ -853,7 +853,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-hook",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git -C \"$CLAUDE_PROJECT_DIR\" rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' claude-hook",
             "timeout": 10
           }
         ]
@@ -915,7 +915,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/scripts/agy_hooks/driver_state_inject.sh claude-stop-hook",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git -C \"$CLAUDE_PROJECT_DIR\" rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agy_hooks/driver_state_inject.sh\")), *sys.argv[1:]])' claude-stop-hook",
             "timeout": 10
           }
         ]

@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" pre-tool-use",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agent_runtime/codex_hook_entry.sh\")), *sys.argv[1:]])' pre-tool-use",
             "timeout": 45,
             "statusMessage": "Running Codex tool policy"
           }
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agent_runtime/codex_hook_entry.sh\")), *sys.argv[1:]])' post-tool-use",
             "timeout": 15,
             "statusMessage": "Recording Codex tool result"
           }
@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit",
+            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agent_runtime/codex_hook_entry.sh\")), *sys.argv[1:]])' user-prompt-submit",
             "timeout": 5,
             "statusMessage": "Checking cross-agent inbox"
           }

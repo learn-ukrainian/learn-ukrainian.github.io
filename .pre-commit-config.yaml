@@ -96,9 +96,10 @@ repos:
       # with a bumped `version` field and a sibling `.bak` snapshot of
       # the previous content. Run this in the commit-msg stage so the
       # pipeline's escape-hatch tag is available.
+      # C-5041, CTO decision 2026-11-10: use the installed plan-immutability module.
       - id: check-plan-immutability
         name: enforce plan version bump + .bak
-        entry: bash scripts/pre_commit/project_python.sh scripts/pre_commit/check_plan_immutability.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.pre_commit.check_plan_immutability "$@"' --
         language: system
         always_run: true
         stages: [commit-msg]
@@ -112,14 +113,14 @@ repos:
       # of ``-m venv`` does not exempt other bare-python commands.
       - id: no-bare-python
         name: block bare python/python3 in new scripts
-        entry: bash scripts/pre_commit/project_python.sh scripts/pre_commit/check_no_bare_python.py --staged
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.pre_commit.check_no_bare_python --staged "$@"' --
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: lint-tmp-paths
         name: block system-temp paths and unmanaged temp producers
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_tmp_paths
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.hygiene.lint_tmp_paths "$@"' --
         language: system
         pass_filenames: true
         files: ^(?:scripts|tests)/.*\.(?:py|sh|bash)$
@@ -127,7 +128,7 @@ repos:
 
       - id: lint-control-plane-sqlite
         name: block direct control-plane SQLite opens
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_control_plane_sqlite
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.hygiene.lint_control_plane_sqlite "$@"' --
         language: system
         pass_filenames: true
         files: ^(?!(?:scripts/control_plane|tests/))(?:scripts|agents_extensions/shared/session_streams)/.*\.py$
@@ -135,21 +136,21 @@ repos:
 
       - id: lint-raw-rm-rf
         name: block unscoped recursive shell deletion
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_raw_rm_rf
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.hygiene.lint_raw_rm_rf "$@"' --
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: no-private-source-review-exports
         name: block local-only private-source review exports
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_no_private_source_review_exports.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_no_private_source_review_exports.py "$@"' --
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: check-mdx-source-parity
         name: check MDX source parity
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_mdx_source_parity.py --files
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_mdx_source_parity.py --files "$@"' --
         language: system
         files: ^site/src/content/docs/.*\.mdx$
         stages: [pre-commit]
@@ -157,8 +158,8 @@ repos:
       - id: check-ua-eval-public-doc-language
         name: check public UA-eval English document language
         entry: >-
-          bash scripts/pre_commit/project_python.sh
-          scripts/audit/check_ua_eval_public_doc_language.py --files
+          bash -c 'exec "$LEARN_UKRAINIAN_PYTHON"
+          scripts/audit/check_ua_eval_public_doc_language.py --files "$@"' --
         language: system
         files: >-
           (?x)^docs/projects/ua-eval-harness/
@@ -168,7 +169,7 @@ repos:
 
       - id: check-mdx-forward-parity
         name: check forward MDX parity
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_mdx_forward_parity.py --files
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_mdx_forward_parity.py --files "$@"' --
         language: system
         files: >-
           (?x)^curriculum/l2-uk-en/(plans/)?
@@ -179,7 +180,7 @@ repos:
 
       - id: check-no-internal-ids
         name: check no internal IDs/register in learner surfaces
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_no_internal_ids.py --files
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_no_internal_ids.py --files "$@"' --
         language: system
         files: >-
           (?x)^(
@@ -194,7 +195,7 @@ repos:
         stages: [pre-commit]
       - id: check-locked-module-not-published
         name: check locked modules are not published
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_locked_module_not_published.py --files
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_locked_module_not_published.py --files "$@"' --
         language: system
         files: >-
           (?x)^site/src/content/docs/
@@ -204,8 +205,8 @@ repos:
       - id: lesson-schema-drift
         name: lesson schema drift gate
         entry: >-
-          bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/pre_commit/regen_lesson_schema.py && git diff --exit-code
+          bash -c 'export LU_PRODUCT_ROOT="$PWD"; "$LEARN_UKRAINIAN_PYTHON"
+          -P -m lu_machinery.pre_commit.regen_lesson_schema && git diff --exit-code
           docs/lesson-schema.yaml'
         language: system
         pass_filenames: false
@@ -226,8 +227,8 @@ repos:
       - id: atlas-lexicon-fingerprint-drift
         name: Atlas lexicon fingerprint freshness gate
         entry: >-
-          bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/pre_commit/regen_lexicon_fingerprint.py && git diff --exit-code
+          bash -c 'export LU_PRODUCT_ROOT="$PWD"; "$LEARN_UKRAINIAN_PYTHON"
+          -P -m lu_machinery.pre_commit.regen_lexicon_fingerprint && git diff --exit-code
           site/src/data/lexicon-manifest.fingerprint.json'
         language: system
         pass_filenames: false
@@ -238,7 +239,7 @@ repos:
       # regression class, #3658). Fires when the manifest itself is staged.
       - id: atlas-manifest-enrichment-depth
         name: Atlas manifest enrichment-depth gate
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_atlas_manifest_enrichment.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/check_atlas_manifest_enrichment.py "$@"' --
         language: system
         pass_filenames: false
         files: ^site/src/data/lexicon-manifest\.json$
@@ -247,7 +248,7 @@ repos:
       - id: lint-dispatch-brief-venv
         name: dispatch brief .venv worktree guardrail
         entry: >-
-          bash -c 'for f in "$@"; do bash scripts/pre_commit/project_python.sh
+          bash -c 'for f in "$@"; do "$LEARN_UKRAINIAN_PYTHON"
           scripts/audit/lint_dispatch_brief.py --brief "$f" || exit $?; done' --
         language: system
         files: ^docs/dispatch-briefs/.*\.md$
@@ -255,7 +256,7 @@ repos:
 
       - id: lint-session-state
         name: lint session-state env references
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_session_state.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/lint_session_state.py "$@"' --
         language: system
         files: ^docs/session-state/.*\.md$
         stages: [pre-commit]
@@ -263,7 +264,7 @@ repos:
       - id: lint-bio-dossier-xref
         name: bio dossier §7 cross-track path validator
         entry: >-
-          bash -c 'for f in "$@"; do bash scripts/pre_commit/project_python.sh
+          bash -c 'for f in "$@"; do "$LEARN_UKRAINIAN_PYTHON"
           scripts/audit/lint_bio_dossier_xref.py --paths "$f" || exit $?; done' --
         language: system
         files: ^docs/research/bio/.*\.md$
@@ -274,7 +275,7 @@ repos:
         # Blocking (was warn-only since the 2026-05-11 rollout). Trailers must
         # be `X-Agent: <agent>/<task-id>`; a bare model name such as
         # `claude-opus-5-5` is rejected, as record_cf_verdict.py rejects it too.
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_agent_trailer.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/lint_agent_trailer.py "$@"' --
         language: system
         pass_filenames: false
         # Commit messages, not files, are what is checked: an empty or
@@ -284,28 +285,32 @@ repos:
 
       - id: lint-opsec-leaks
         name: check staged and committed files for OPSEC leaks
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_opsec_leaks.py
+        entry: bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" scripts/audit/lint_opsec_leaks.py "$@"' --
         language: system
         pass_filenames: false
         stages: [pre-commit, pre-push]
 
       - id: subprocess-timeout-guard
         name: check subprocess calls for explicit timeout
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.ci.subprocess_timeout_guard
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.ci.subprocess_timeout_guard "$@"' --
         language: system
         files: ^(scripts|tests)/.*\.py$
         stages: [pre-commit]
 
       - id: no-secret-print-hook
         name: no-print hook blocks seeded secret echoes
-        entry: bash scripts/pre_commit/project_python.sh agents_extensions/shared/hooks/guard-secret-print.py --self-test
+        entry: >-
+          bash -c 'exec "$LEARN_UKRAINIAN_PYTHON" -P -c
+          "import runpy; from lu_machinery.common.repo_root import machinery_path;
+          runpy.run_path(str(machinery_path(\"agents_extensions/shared/hooks/guard-secret-print.py\")), run_name=\"__main__\")"
+          --self-test'
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: lint-test-assertions
         name: check test assertions for stale pinned epic IDs
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.lint_test_assertions
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.lint.lint_test_assertions "$@"' --
         language: system
         files: ^tests/.*\.py$
         stages: [pre-commit]
@@ -314,7 +319,7 @@ repos:
       # checked; staging only the baseline rechecks scripts/.
       - id: mypy-ratchet
         name: mypy ratchet (scripts/)
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.mypy_ratchet
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.lint.mypy_ratchet "$@"' --
         language: system
         files: ^scripts/.*\.py$|^scripts/lint/mypy_baseline\.json$
         pass_filenames: true
@@ -324,7 +329,7 @@ repos:
       # checked; staging only the baseline or the boundary file rechecks scripts/.
       - id: boundary-ratchet
         name: package boundary ratchet (scripts/)
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.boundary_ratchet
+        entry: bash -c 'export LU_PRODUCT_ROOT="$PWD"; exec "$LEARN_UKRAINIAN_PYTHON" -P -m lu_machinery.lint.boundary_ratchet "$@"' --
         language: system
         files: ^scripts/.*\.py$|^scripts/lint/boundary_baseline\.json$|^scripts/config/package_boundary\.yaml$
         pass_filenames: true
@@ -346,7 +351,7 @@ repos:
       #
       # Manual invocation still available:
       #
-      #     bash scripts/pre_push/dagger_pytest.sh
+      #     CI owns pytest execution.
       #
       # The script remains in-tree for ad-hoc GHA-replay debugging of a
       # CI-only failure. CI's `Test (pytest)` workflow remains the

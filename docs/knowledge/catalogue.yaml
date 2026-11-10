@@ -1626,7 +1626,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+      - {surface: cli, how: "LU_PRODUCT_ROOT=$PWD .venv/bin/python -m lu_machinery.storage.artifacts status"}
       - {surface: git_grep, how: "git grep -n -F '<group>' -- registry/artifacts"}
     content_searchable: true
 
@@ -1991,7 +1991,7 @@ entries:
     entrypoints:
       - {topic: open-model-data project entry, path: docs/projects/open-model-data/README.md}
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status (published groups)"}
+      - {surface: cli, how: "LU_PRODUCT_ROOT=$PWD .venv/bin/python -m lu_machinery.storage.artifacts status (published groups)"}
     content_searchable: false
 
   - id: data-eval-payloads
@@ -2059,7 +2059,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+      - {surface: cli, how: "LU_PRODUCT_ROOT=$PWD .venv/bin/python -m lu_machinery.storage.artifacts status"}
     content_searchable: false
 
   - id: data-backups
@@ -2087,7 +2087,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage status"}
+      - {surface: cli, how: "LU_PRODUCT_ROOT=$PWD .venv/bin/python -m lu_machinery.storage status"}
     content_searchable: false
 
   - id: data-corpus-audit
@@ -2147,7 +2147,7 @@ entries:
     kind: data_store
     store: [data/references/]
     producer: []
-    producer_note: Classified as A-class data by scripts/storage/build_classification_table.py; no writer or reader found in scripts/.
+    producer_note: Classified as A-class data by lu_machinery.storage.build_classification_table; no writer or reader found in scripts/.
     local_only: true
     purpose: Untracked reference data, currently an interference-patterns JSON.
     keywords: [interference patterns]
@@ -2800,7 +2800,7 @@ store_registry:
       kind: job_state
       activity: not_created
       presence: declared_absent
-      absent_reason: RUNS_DATABASE_PATH in scripts/orchestration/trail_runner.py; created on the first trail run.
+      absent_reason: RUNS_DATABASE_PATH in lu_machinery.orchestration.trail_runner; created on the first trail run.
       writers: [scripts/orchestration/trails/store.py:TrailStore._connect]
       journal: unknown
       busy_ms: 30000
@@ -2813,7 +2813,7 @@ store_registry:
       kind: operational
       activity: not_created
       presence: declared_absent
-      absent_reason: Default path in scripts/agent_runtime/failover.py; created on the first provider cooldown.
+      absent_reason: Default path in lu_machinery.agent_runtime.failover; created on the first provider cooldown.
       writers: [scripts/agent_runtime/failover.py:FailoverCooldownStore._connect]
       journal: unknown
       busy_ms: 5000
@@ -2908,7 +2908,7 @@ store_registry:
       retention: Benchmark fixture generated on demand.
   families:
     - id: review-findings
-      path_rule: batch_state/review-findings/<level>.sqlite (scripts/review/findings_db.py db_path)
+      path_rule: batch_state/review-findings/<level>.sqlite (lu_machinery.review.findings_db db_path)
       glob: batch_state/review-findings/*.sqlite
       example: batch_state/review-findings/a1.sqlite
       owner: core-quality
@@ -2975,7 +2975,7 @@ store_registry:
       backup: none
       retention: Shingle index rebuilt from sources.db; none on disk today.
     - id: trail-certification
-      path_rule: <case_root>/state.sqlite3 under a caller-chosen runner root (scripts/orchestration/trails/trail_certification.py run)
+      path_rule: <case_root>/state.sqlite3 under a caller-chosen runner root (lu_machinery.orchestration.trails.trail_certification run)
       glob: null
       owner: infra-harness
       kind: job_state

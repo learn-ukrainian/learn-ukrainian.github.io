@@ -1,4 +1,4 @@
-"""Tests for the Git hook delegator installer (scripts/install_git_hooks.sh)."""
+"""Tests for the installed Git hook delegator."""
 
 from __future__ import annotations
 
@@ -9,13 +9,11 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-INSTALLER_SCRIPT = REPO_ROOT / "scripts/install_git_hooks.sh"
-CHECK_HELPERS = (
-    "scripts/pre_commit/project_python.sh",
-    "scripts/pre_commit/declared_hook_stages.py",
-)
+INSTALLER_SCRIPT = machinery_path('install_git_hooks.sh')
+CHECK_HELPERS = ("lib/project_interpreter.sh", "pre_commit/declared_hook_stages.py")
 REQUIRED_HOOKS = (
     "pre-commit",
     "commit-msg",
@@ -82,8 +80,6 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     _git(repo, "config", "user.name", "Hook Test")
 
     (repo / "scripts").mkdir()
-    shutil.copy2(INSTALLER_SCRIPT, repo / "scripts/install_git_hooks.sh")
-    (repo / "scripts/install_git_hooks.sh").chmod(0o755)
 
     hook_log = tmp_path / "hook.log"
     env = {
@@ -111,8 +107,9 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, dict[str, str]]:
 
     # --check parses the config with the project interpreter; untracked, like a real .venv.
     for helper in CHECK_HELPERS:
-        (repo / helper).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPO_ROOT / helper, repo / helper)
+        destination = repo / "lu_machinery" / helper
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(machinery_path(helper), destination)
     _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
 
     return repo, env
@@ -124,7 +121,7 @@ def test_installer_unsets_core_hooks_path_and_creates_delegators(tmp_path: Path)
     _git(repo, "config", "core.hooksPath", ".githooks", env=env)
     assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == ".githooks"
 
-    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    result = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert result.returncode == 0
     for hook_name in REQUIRED_HOOKS:
         assert f"{hook_name}: installed" in result.stdout
@@ -150,7 +147,7 @@ def test_installer_unsets_core_hooks_path_and_creates_delegators(tmp_path: Path)
 
 def test_commit_in_linked_worktree_triggers_tracked_hook(tmp_path: Path) -> None:
     repo, env = _fixture_repository(tmp_path)
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
 
     worktree = tmp_path / "worktree"
     _git(repo, "worktree", "add", "-b", "feature", str(worktree), env=env)
@@ -170,13 +167,13 @@ def test_installer_is_idempotent(tmp_path: Path) -> None:
     repo, env = _fixture_repository(tmp_path)
 
     # First run: installed
-    run1 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    run1 = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert run1.returncode == 0
     for hook_name in REQUIRED_HOOKS:
         assert f"{hook_name}: installed" in run1.stdout
 
     # Second run: kept
-    run2 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    run2 = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert run2.returncode == 0
     for hook_name in REQUIRED_HOOKS:
         assert f"{hook_name}: kept" in run2.stdout
@@ -269,7 +266,7 @@ def _entire_chained(hook_name: str) -> str:
 def _install_retired_entire_wrappers(repo: Path, env: dict[str, str]) -> Path:
     """Leave the hooks directory as Entire did: its wrappers in front of moved delegators."""
     hooks_dir = repo / ".git/hooks"
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     for hook_name in ENTIRE_WRAPPERS:
         (hooks_dir / hook_name).rename(hooks_dir / f"{hook_name}.pre-entire")
         _write_executable(hooks_dir / hook_name, _entire_chained(hook_name))
@@ -308,7 +305,7 @@ def test_installer_refuses_symlinked_hook_destinations_without_mutation(
     (hooks_dir / link_name).symlink_to(outside)
     before = _hooks_snapshot(hooks_dir)
 
-    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+    install = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env, check=False)
 
     assert install.returncode == 1
     assert f"REFUSED: {hooks_dir / link_name} is a symlink" in install.stderr
@@ -320,7 +317,7 @@ def test_installer_refuses_symlinked_hook_destinations_without_mutation(
 
     _git(repo, "config", "--unset", "core.hooksPath", env=env)
     _write_pre_commit_config(repo, "default_install_hook_types: [pre-push]\nrepos: []\n")
-    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    check = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env, check=False)
     assert check.returncode == 1
     assert f"UNSAFE — {hooks_dir / link_name}" in check.stderr
 
@@ -332,7 +329,7 @@ def test_installer_refuses_a_symlinked_hooks_directory(tmp_path: Path) -> None:
     (repo / ".git/hooks").symlink_to(real_hooks)
     before = _hooks_snapshot(real_hooks)
 
-    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+    install = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env, check=False)
 
     assert install.returncode == 1
     assert "is a symlink; replace it with a regular file and rerun" in install.stderr
@@ -364,7 +361,7 @@ def test_check_fails_until_retired_entire_wrappers_are_replaced(tmp_path: Path) 
     hooks_dir = _install_retired_entire_wrappers(repo, env)
     (hooks_dir / "pre-commit").unlink()
 
-    before = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    before = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env, check=False)
     assert before.returncode == 1
     for hook_name in (*ENTIRE_WRAPPERS, *ENTIRE_UNCHAINED_WRAPPERS):
         assert f"{hook_name}: RETIRED" in before.stderr
@@ -374,7 +371,7 @@ def test_check_fails_until_retired_entire_wrappers_are_replaced(tmp_path: Path) 
     assert (hooks_dir / "pre-push").read_text(encoding="utf-8") == _entire_chained("pre-push")
     assert not (hooks_dir / "pre-commit").exists()
 
-    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    install = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     for hook_name in ENTIRE_WRAPPERS:
         assert f"{hook_name}: installed (replaced Entire CLI wrapper)" in install.stdout
         assert f"{hook_name}.pre-entire: removed" in install.stdout
@@ -383,7 +380,7 @@ def test_check_fails_until_retired_entire_wrappers_are_replaced(tmp_path: Path) 
         assert not (hooks_dir / hook_name).exists()
     assert not any(path.name.endswith(".pre-entire") for path in hooks_dir.iterdir())
 
-    after = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env)
+    after = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env)
     assert "commit-msg: ok (delegator)" in after.stdout
     assert "pre-push: ok (delegator)" in after.stdout
     assert "pre-commit: ok (delegator)" in after.stdout
@@ -392,9 +389,9 @@ def test_check_fails_until_retired_entire_wrappers_are_replaced(tmp_path: Path) 
 def test_check_rejects_a_declared_stage_without_a_tracked_hook(tmp_path: Path) -> None:
     repo, env = _fixture_repository(tmp_path)
     _write_pre_commit_config(repo, "default_install_hook_types: [pre-push, pre-merge-commit]\nrepos: []\n")
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
 
-    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    check = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env, check=False)
     assert check.returncode == 1
     assert "pre-push: ok (delegator)" in check.stdout
     assert "pre-merge-commit: UNREACHABLE — no executable tracked hook" in check.stderr
@@ -414,9 +411,9 @@ def test_check_covers_every_stage_the_repository_config_declares(tmp_path: Path)
 
     repo, env = _fixture_repository(tmp_path)
     _write_pre_commit_config(repo, config_text)
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
 
-    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env)
+    check = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env)
     reported = {line.split(":", 1)[0] for line in check.stdout.splitlines() if ": ok (" in line}
     assert reported == declared
 
@@ -450,13 +447,13 @@ PRE_PUSH_DECLARATIONS = {
 def test_check_fails_when_a_yaml_declared_stage_has_no_installed_hook(tmp_path: Path, config_text: str) -> None:
     repo, env = _fixture_repository(tmp_path)
     _write_pre_commit_config(repo, config_text)
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
 
-    installed = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env)
+    installed = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env)
     assert installed.stdout.splitlines() == ["pre-commit: ok (delegator)", "pre-push: ok (delegator)"]
 
     (repo / ".git/hooks/pre-push").unlink()
-    missing = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    missing = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env, check=False)
     assert missing.returncode == 1
     assert "pre-push: UNREACHABLE" in missing.stderr
 
@@ -474,9 +471,9 @@ def test_check_fails_when_a_yaml_declared_stage_has_no_installed_hook(tmp_path: 
 def test_check_fails_closed_when_the_config_cannot_be_parsed(tmp_path: Path, config_text: str) -> None:
     repo, env = _fixture_repository(tmp_path)
     _write_pre_commit_config(repo, config_text)
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
 
-    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    check = _run(["bash", str(INSTALLER_SCRIPT), "--check"], cwd=repo, env=env, check=False)
     assert check.returncode == 1
     assert "cannot determine declared hook stages" in check.stderr
     assert "failing closed" in check.stderr
@@ -492,7 +489,7 @@ def test_foreign_hook_is_preserved_and_skipped(tmp_path: Path) -> None:
     foreign_content = '#!/usr/bin/env bash\nset -euo pipefail\nprintf "foreign-commit-msg\\n" >> "$HOOK_LOG"\nexit 0\n'
     _write_executable(hooks_dir / "commit-msg", foreign_content)
 
-    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    result = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert result.returncode == 0
     assert "commit-msg: skipped" in result.stdout
     assert "WARN:" in result.stderr
@@ -520,7 +517,7 @@ def test_preserves_custom_core_hooks_path(tmp_path: Path) -> None:
     custom_path = tmp_path / "custom-hooks"
     _git(repo, "config", "core.hooksPath", str(custom_path), env=env)
 
-    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    result = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert result.returncode == 0
     assert f"Found explicit core.hooksPath={custom_path}" in result.stdout
     assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == str(custom_path)
@@ -533,7 +530,7 @@ def test_extra_executable_hook_gets_delegator(tmp_path: Path) -> None:
         '#!/usr/bin/env bash\nset -euo pipefail\nprintf "ref-tx:%s\\n" "$1" >> "$HOOK_LOG"\n',
     )
 
-    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    result = _run(["bash", str(INSTALLER_SCRIPT)], cwd=repo, env=env)
     assert result.returncode == 0
     assert "reference-transaction: installed" in result.stdout
 
@@ -552,7 +549,7 @@ def test_installer_refuses_incomplete_hook_directory_and_leaves_hooks_untouched(
         shutil.rmtree(hooks_dir)
 
     result = _run(
-        ["bash", "scripts/install_git_hooks.sh"],
+        ["bash", str(INSTALLER_SCRIPT)],
         cwd=repo,
         env=env,
         check=False,
@@ -573,7 +570,7 @@ def test_installer_refuses_missing_support_file_and_leaves_hooks_untouched(tmp_p
         shutil.rmtree(hooks_dir)
 
     result = _run(
-        ["bash", "scripts/install_git_hooks.sh"],
+        ["bash", str(INSTALLER_SCRIPT)],
         cwd=repo,
         env=env,
         check=False,
@@ -589,7 +586,7 @@ def test_installer_refuses_non_executable_hook(tmp_path: Path) -> None:
     (repo / ".githooks/pre-push").chmod(0o644)
 
     result = _run(
-        ["bash", "scripts/install_git_hooks.sh"],
+        ["bash", str(INSTALLER_SCRIPT)],
         cwd=repo,
         env=env,
         check=False,

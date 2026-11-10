@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import agy_hook_config
 
-from scripts.agent_runtime import agy_hook_config
 from tests.helpers.agy_inbox_fixtures import (
     BODY_MARKER,
     MESSAGE_ID,
@@ -396,12 +396,13 @@ def test_maximum_ids_and_line_budget(stores):
     assert "truncated" in line
 
 
-def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):
+def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(ROOT))
     path = ROOT / "agents_extensions/agy/hooks.json"
     config = json.loads(path.read_text())
     assert config["pending-orders-announce"] == {
         "PreInvocation": [
-            {"type": "command", "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh", "timeout": 10}
+            {"type": "command", "command": '"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}" -I -c \'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ["LEARN_UKRAINIAN_PYTHON"] = sys.executable; os.execv("/bin/bash", ["bash", str(machinery_path("agy_hooks/pending_orders_inject.sh")), *sys.argv[1:]])\'', "timeout": 10}
         ]
     }
     assert config[agy_hook_config.GUARD_NAME] == {
@@ -411,7 +412,7 @@ def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy",
+                        "command": '../.venv/bin/python -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy',
                         "timeout": 10,
                     }
                 ],

@@ -349,3 +349,44 @@ def test_installer_materializes_hooks_in_a_sparse_linked_worktree(tmp_path):
 def test_hook_scripts_have_valid_bash_syntax(hook_name):
     result = _run(["bash", "-n", str(HOOK_DIR / hook_name)], cwd=REPO_ROOT)
     assert result.returncode == 0
+
+
+def test_precommit_entry_does_not_fail_when_selected_interpreter_env_is_unset(tmp_path):
+    """The hook library must export its executable before an entry expands it."""
+    import shlex
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    (repo / ".githooks").mkdir()
+    shutil.copy2(HOOK_DIR / "_lib.sh", repo / ".githooks/_lib.sh")
+    launcher = repo / "scripts/pre_commit/project_python.sh"
+    launcher.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", launcher)
+    (repo / ".venv/bin").mkdir(parents=True)
+    _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
+    env = {"PRE_COMMIT_HOME": str(tmp_path / "pre-commit-cache")}
+    probe = tmp_path / "selected-interpreter"
+    program = (
+        "import os; from pathlib import Path; "
+        "Path(os.environ['HOOK_PYTHON_PROBE']).write_text(os.environ['LEARN_UKRAINIAN_PYTHON'])"
+    )
+    entry = "bash -c " + shlex.quote('exec "$LEARN_UKRAINIAN_PYTHON" -c ' + shlex.quote(program))
+    config = {
+        "repos": [{"repo": "local", "hooks": [{
+            "id": "interpreter-export-probe", "name": "interpreter export probe",
+            "entry": entry, "language": "system", "pass_filenames": False,
+            "always_run": True, "stages": ["pre-commit"],
+        }]}],
+    }
+    (repo / ".pre-commit-config.yaml").write_text(json.dumps(config), encoding="utf-8")
+    result = _run(
+        ["bash", "-c", 'source .githooks/_lib.sh; run_pre_commit pre-commit'],
+        cwd=repo,
+        env={**env, "LEARN_UKRAINIAN_PYTHON": "", "HOOK_PYTHON_PROBE": str(probe)},
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    selected = Path(probe.read_text(encoding="utf-8"))
+    assert selected == Path(_project_python())
+    assert selected.is_absolute() and selected.is_file() and os.access(selected, os.X_OK)

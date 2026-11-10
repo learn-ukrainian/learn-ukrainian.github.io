@@ -21,9 +21,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
 
 REPO = Path(__file__).resolve().parent.parent
-HOOKS = REPO / "agents_extensions/shared/hooks"
+HOOKS = machinery_path("agents_extensions/shared/hooks")
 SETTINGS = REPO / "agents_extensions/shared/settings.json"
 DEPLOYED_PREFIX = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
 
@@ -73,9 +74,16 @@ def test_redirect_guards_fail_closed_on_unusable_dependency(tmp_path: Path, name
     for source in HOOKS.glob("*.py"):
         if source.name != "shell_shlex.py":
             shutil.copy2(source, tmp_path / source.name)
-    (tmp_path / "scripts/opsec").mkdir(parents=True)
+    package = tmp_path / "agents_extensions/shared/hooks"
+    package.mkdir(parents=True)
+    for parent in (package, package.parent, package.parent.parent):
+        (parent / "__init__.py").touch()
+    for source in HOOKS.glob("*.py"):
+        if source.name != "shell_shlex.py":
+            shutil.copy2(source, package / source.name)
     if helper is not None:
         (tmp_path / "shell_shlex.py").write_text(helper)
+        (package / "shell_shlex.py").write_text(helper)
     result = subprocess.run(
         [sys.executable, str(tmp_path / name)],
         cwd=REPO,
@@ -191,7 +199,7 @@ def test_heal_core_bare_is_fail_open_and_bounded() -> None:
 
 def test_claude_worker_settings_inherit_the_failure_policy() -> None:
     """Dispatched Claude workers and Grok agents are built from the shared settings."""
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings())["hooks"]["PreToolUse"]
     guards = [hook for group in groups for hook in group["hooks"] if _is_refusing_guard(Path(hook["command"]).name)]
@@ -201,7 +209,7 @@ def test_claude_worker_settings_inherit_the_failure_policy() -> None:
 
 def test_reviewer_publish_guard_blocks_on_failure() -> None:
     """The adapter adds this guard to read-only runs; it follows the shared guards' failure policy."""
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
     publish = [
@@ -219,7 +227,7 @@ def test_reviewer_publish_guard_blocks_on_failure() -> None:
 
 def test_every_adapter_added_guard_blocks_on_failure() -> None:
     """Any refusing guard the adapter adds beyond the shared settings must carry the policy too."""
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
     guards = [hook for group in groups for hook in group["hooks"] if _is_refusing_guard(Path(hook["command"]).name)]
@@ -395,7 +403,7 @@ def test_branch_guard_prefilter_never_hides_a_dangerous_segment(segment: list[st
 
 
 def _shim_path(tmp_path: Path, log: Path) -> Path:
-    shims = tmp_path / "scripts/agent_runtime/shims"
+    shims = tmp_path / "lu_machinery/agent_runtime/shims"
     _recording_git(shims, log)
     return shims
 
@@ -502,23 +510,22 @@ def _heal_fixture(tmp_path: Path, bare: str) -> tuple[Path, Path]:
     hooks = root / ".claude/hooks"
     hooks.mkdir(parents=True)
     shutil.copy2(HOOKS / "heal-core-bare.py", hooks / "heal-core-bare.py")
-    common = root / "scripts/common"
-    common.mkdir(parents=True)
-    (root / "scripts/__init__.py").write_text("", encoding="utf-8")
-    (common / "__init__.py").write_text("", encoding="utf-8")
-    (common / "repo_root.py").write_text(
-        f"from pathlib import Path\n\ndef project_interpreter():\n    return Path({sys.executable!r})\n",
+    spawned = tmp_path / "spawned"
+    (root / ".git/objects").mkdir(parents=True)
+    (root / ".git/refs").mkdir()
+    (root / ".git/HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    (root / ".git/config").write_text(f"[core]\n\tbare = {bare}\n", encoding="utf-8")
+    runner = tmp_path / "heal-runner.py"
+    runner.write_text(
+        "import os, runpy\nfrom pathlib import Path\n"
+        "from lu_machinery.hygiene import check_core_bare as checker\n"
+        f"os.environ['LU_PRODUCT_ROOT'] = {str(root)!r}\n"
+        f"def probe(*args, **kwargs):\n    Path({str(spawned)!r}).write_text('yes')\n    return True, ''\n"
+        "checker.check_core_bare = probe\n"
+        f"runpy.run_path({str(HOOKS / 'heal-core-bare.py')!r}, run_name='__main__')\n",
         encoding="utf-8",
     )
-    spawned = tmp_path / "spawned"
-    hygiene = root / "scripts/hygiene"
-    hygiene.mkdir()
-    (hygiene / "check_core_bare.py").write_text(
-        f"from pathlib import Path\nPath({str(spawned)!r}).write_text('yes')\n", encoding="utf-8"
-    )
-    (root / ".git").mkdir()
-    (root / ".git/config").write_text(f"[core]\n\tbare = {bare}\n", encoding="utf-8")
-    return hooks / "heal-core-bare.py", spawned
+    return runner, spawned
 
 
 @pytest.mark.parametrize(("bare", "spawns"), [("false", False), ("true", True)])
@@ -541,7 +548,7 @@ def test_heal_core_bare_spawns_the_checker_only_on_possible_drift(tmp_path: Path
 
 
 def test_codex_outer_timeout_exceeds_the_inner_deadline_chain() -> None:
-    from scripts.agent_runtime import codex_hook_policy as policy
+    from lu_machinery.agent_runtime import codex_hook_policy as policy
 
     hooks = json.loads((REPO / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
     (pre,) = hooks["hooks"]["PreToolUse"]
@@ -555,18 +562,18 @@ def test_codex_outer_timeout_exceeds_the_inner_deadline_chain() -> None:
 
 
 def test_agy_outer_timeout_exceeds_the_secret_guard_deadline() -> None:
-    from scripts.agent_runtime import secret_print_hook
+    from lu_machinery.agent_runtime import secret_print_hook
 
     hooks = json.loads((REPO / "agents_extensions/agy/hooks.json").read_text(encoding="utf-8"))
     entry = hooks["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]
-    assert "secret_print_hook.py" in entry["command"]
+    assert "-I -m lu_machinery.agent_runtime.secret_print_hook" in entry["command"]
     assert entry["timeout"] >= secret_print_hook.DEFAULT_TIMEOUT + 2
 
 
 def test_grok_outer_timeout_exceeds_the_bridge_deadline() -> None:
     import ast
 
-    bridge = (REPO / "scripts/agent_runtime/grok_hook_bridge.py").read_text(encoding="utf-8")
+    bridge = (machinery_path('agent_runtime/grok_hook_bridge.py')).read_text(encoding="utf-8")
     deadlines = [
         keyword.value.value
         for node in ast.walk(ast.parse(bridge))
@@ -575,7 +582,7 @@ def test_grok_outer_timeout_exceeds_the_bridge_deadline() -> None:
         if keyword.arg == "timeout" and isinstance(keyword.value, ast.Constant)
     ]
     assert deadlines == [10]
-    source = (REPO / "scripts/agent_runtime/adapters/grok_build.py").read_text(encoding="utf-8")
+    source = (machinery_path('agent_runtime/adapters/grok_build.py')).read_text(encoding="utf-8")
     assert "timeout: {max(15, int(hook.get('timeout', 5)))}" in source
     assert deadlines[0] + 2 <= 15
 
@@ -590,7 +597,7 @@ def test_grok_bridge_denies_a_guard_that_times_out_or_crashes(
     """Grok fails open on any hook failure, so the bridge itself must turn one into a deny."""
     import io
 
-    from scripts.agent_runtime import grok_hook_bridge as bridge
+    from lu_machinery.agent_runtime import grok_hook_bridge as bridge
 
     real_run = subprocess.run
 
@@ -616,7 +623,7 @@ def test_grok_bridge_denies_a_guard_that_times_out_or_crashes(
 )
 def test_grok_interactive_seats_run_guards_through_a_deadline_to_deny_runner() -> None:
     """Visible gap: passes only once the Grok seat profile wires the guards through the bridge."""
-    profile = (REPO / "scripts/hooks/apply_grok_hook_profile.py").read_text(encoding="utf-8")
+    profile = (machinery_path('hooks/apply_grok_hook_profile.py')).read_text(encoding="utf-8")
     assert "grok_hook_bridge" in profile
 
 
@@ -669,10 +676,10 @@ def test_tracked_cursor_guard_hooks_fail_closed() -> None:
         ("gh api -X POST repos/o/r", True),
         ("gh release create v1", True),
         ("gh workflow run ci.yml", True),
-        ("python -m scripts.publish issue-comment --number 5 --body x", True),
+        ("python -m lu_machinery.publish issue-comment --number 5 --body x", True),
         ("gh pr view 5", False),
         ("gh api -X GET repos/o/r", False),
-        ("python -m scripts.publish --help", False),
+        ("python -m lu_machinery.publish --help", False),
         ("git status", False),
     ],
 )

@@ -12,9 +12,8 @@ import tomllib
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import codex_hook_policy
-from scripts.agent_runtime.codex_hook_policy import (
+from lu_machinery.agent_runtime import codex_hook_policy
+from lu_machinery.agent_runtime.codex_hook_policy import (
     ENFORCE_VENV_TIMEOUT,
     LOCAL_BASH_GUARDS,
     MERGE_GUARDS,
@@ -23,6 +22,8 @@ from scripts.agent_runtime.codex_hook_policy import (
     _run_enforce_venv,
     run_guard,
 )
+from lu_machinery.common.repo_root import machinery_path
+
 from tests.helpers.python import project_python
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -36,11 +37,11 @@ PRIMARY_ROOT = Path(
 ).parent
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
-ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
-VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
-INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
-SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
-POST_COMPACT_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "post-compact.sh"
+ENTRY = machinery_path('agent_runtime/codex_hook_entry.sh')
+VENV_HOOK = machinery_path('agents_extensions/shared/hooks/enforce-venv.sh')
+INBOX_HOOK = machinery_path('agents_extensions/shared/hooks/check-agent-inbox.sh')
+SESSION_SETUP_HOOK = machinery_path('agents_extensions/shared/hooks/session-setup.sh')
+POST_COMPACT_HOOK = machinery_path('agents_extensions/shared/hooks/post-compact.sh')
 
 
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -55,9 +56,12 @@ def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
 
 
 def _make_exact_python_checkout(root: Path, *, delegate: Path | None = None) -> None:
+    if not (root / ".git").exists():
+        _run(["git", "init", "-q", "-b", "main"], cwd=root)
     python = root / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
-    script = "#!/bin/bash\nprintf 'Python 3.12.15\\n'\n"
+    delegate = delegate or Path(project_python())
+    script = ""
     if delegate is not None:
         script = (
             "#!/bin/bash\n"
@@ -80,6 +84,8 @@ def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=primary)
     _run(["git", "config", "user.name", "Hook Tests"], cwd=primary)
     (primary / "README.md").write_text("hook test\n", encoding="utf-8")
+    (primary / ".githooks").mkdir()
+    shutil.copy2(REPO_ROOT / ".githooks/pytest_stamp.py", primary / ".githooks/pytest_stamp.py")
     _make_exact_python_checkout(
         primary,
         delegate=Path(project_python()),
@@ -163,6 +169,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     compact_hook = deployed_hooks / "post-compact.sh"
     shutil.copy2(SESSION_SETUP_HOOK, session_hook)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    shutil.copy2(machinery_path("agents_extensions/shared/hooks/context-rollover-lib.sh"), compact_hook.parent / "context-rollover-lib.sh")
 
     environment = os.environ.copy()
     for key in tuple(environment):
@@ -177,8 +184,9 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
         {
             "CLAUDE_PROJECT_DIR": os.fspath(PRIMARY_ROOT),
             "CODEX_CANONICAL_REPO_ROOT": os.fspath(PRIMARY_ROOT),
-            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
-            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
+            "LEARN_UKRAINIAN_PYTHON": sys.executable,
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(machinery_path('lib/profile_resolver.sh')),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(machinery_path('lib/context_profiles.py')),
             "HOME": os.fspath(tmp_path / "home"),
         }
     )
@@ -221,19 +229,13 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
 # A real Codex session id is a UUID; it lands in the capsule's orientation
 # URL, so the byte budget is measured with one rather than an empty id.
 _CODEX_SESSION_ID = "0199a5c1-1234-7abc-8def-0123456789ab"
-_SYNTHETIC_ROOT_GUARD = (
-    "import json\n"
-    "import pathlib\n"
-    "report = pathlib.Path(__file__).with_name('report.json').read_text(encoding='utf-8')\n"
-    "print(json.dumps(json.loads(report), indent=2))\n"
-)
-_ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+_ROOT_DETAIL = "Detail: .venv/bin/python -m lu_machinery.hygiene.root_entry_guard"
 # The lane self-test's literal verdict when the probed CLI is not on PATH.
 _CLI_MISSING_REASON = "FileNotFoundError while building or spawning the adapter"
 _CODEX_CLI_MISSING = f"DISPATCH LANE SELF-TEST FAILED for codex: {_CLI_MISSING_REASON}"
 # The hook's own text when run_bounded's outer bound exits 124 (#12725).
 _LANE_PROBE_TIMEOUT_REASON = "probe timed out after 3 s"
-# Stands in for scripts.agent_runtime.bounded_command only for the lane probe.
+# Stands in for lu_machinery.agent_runtime.bounded_command only for the lane probe.
 # Every other bounded command is the real runner, so root hygiene still runs.
 _LANE_PROBE_RUNNER = """\
 import os
@@ -244,7 +246,10 @@ if command[:1] == ["--timeout"]:
     command = command[2:]
 if command[:1] == ["--"]:
     command = command[1:]
-if "scripts.agent_runtime.lane_probe" in command:
+if "lu_machinery.hygiene.root_entry_guard" in command and os.environ.get("ROOT_GUARD_FIXTURE_JSON"):
+    print(os.environ["ROOT_GUARD_FIXTURE_JSON"])
+    raise SystemExit(0)
+if "lu_machinery.agent_runtime.lane_probe" in command:
     outcome = os.environ.get("LANE_PROBE_OUTCOME", "")
     if outcome == "timeout":
         raise SystemExit(124)
@@ -303,24 +308,13 @@ def _start_with_root_names(
     _run(["git", "add", ".gitignore", ".python-version", "README.md"], cwd=project)
     _run(["git", "commit", "-m", "fixture"], cwd=project)
     hook_cwd = project
+    report = None
     if synthetic:
-        # ``python -m`` puts its cwd first on sys.path. This shadow package
-        # serves only scripts.hygiene.root_entry_guard and resolves every
-        # other scripts.* module from the real tree.
-        hook_cwd = tmp_path / "shadow"
-        shadow_hygiene = hook_cwd / "scripts" / "hygiene"
-        shadow_hygiene.mkdir(parents=True)
-        (hook_cwd / "scripts" / "__init__.py").write_text(
-            f"__path__.append({os.fspath(REPO_ROOT / 'scripts')!r})\n", encoding="utf-8"
-        )
-        (shadow_hygiene / "__init__.py").write_text("", encoding="utf-8")
-        (shadow_hygiene / "root_entry_guard.py").write_text(_SYNTHETIC_ROOT_GUARD, encoding="utf-8")
         report = {
             "repo_root": os.fspath(project),
             "unexpected_count": len(names),
             "unexpected": [{"name": name, "kind": "dir", "git_invisible": True} for name in names],
         }
-        (shadow_hygiene / "report.json").write_text(json.dumps(report), encoding="utf-8")
     else:
         for name in names:
             (project / name).mkdir()
@@ -336,6 +330,7 @@ def _start_with_root_names(
     session_hook = deployed / "session-setup.sh"
     shutil.copy2(SESSION_SETUP_HOOK, session_hook)
     shutil.copy2(POST_COMPACT_HOOK, deployed / "post-compact.sh")
+    shutil.copy2(machinery_path("agents_extensions/shared/hooks/context-rollover-lib.sh"), deployed / "context-rollover-lib.sh")
     environment = os.environ.copy()
     for key in tuple(environment):
         if (
@@ -348,8 +343,9 @@ def _start_with_root_names(
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": os.fspath(project),
-            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
-            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
+            "LEARN_UKRAINIAN_PYTHON": sys.executable,
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(machinery_path('lib/profile_resolver.sh')),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(machinery_path('lib/context_profiles.py')),
             "HOME": os.fspath(tmp_path / "home"),
             "PATH": os.fspath(stub_bin) + os.pathsep + _path_without(agent),
         }
@@ -360,8 +356,10 @@ def _start_with_root_names(
     runner.write_text(_LANE_PROBE_RUNNER, encoding="utf-8")
     environment["SESSION_BOUNDED_RUNNER"] = os.fspath(runner)
     environment["LANE_PROBE_REAL_RUNNER"] = os.fspath(
-        REPO_ROOT / "scripts/agent_runtime/bounded_command.py"
+        machinery_path('agent_runtime/bounded_command.py')
     )
+    if report is not None:
+        environment["ROOT_GUARD_FIXTURE_JSON"] = json.dumps(report)
     environment["LANE_PROBE_OUTCOME"] = probe_outcome
     environment["LANE_PROBE_RESULT_JSON"] = json.dumps(
         {"probes": [{"agent": agent, "reason": _CLI_MISSING_REASON}]}
@@ -537,6 +535,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    shutil.copy2(machinery_path("agents_extensions/shared/hooks/context-rollover-lib.sh"), compact_hook.parent / "context-rollover-lib.sh")
     environment = os.environ.copy()
     environment.update(
         {
@@ -567,12 +566,13 @@ def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = F
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    shutil.copy2(machinery_path("agents_extensions/shared/hooks/context-rollover-lib.sh"), compact_hook.parent / "context-rollover-lib.sh")
     fake_python = tmp_path / "fake-python"
     selection_guard = ""
     if block_hydration_import:
         # Selection must not pay the unrelated hydration runtime's import cost.
         guarded_selection = (
-            "import sys; sys.modules['scripts.session_canary.shared_hydration'] = None; "
+            "import sys; sys.modules['lu_machinery.session_canary.shared_hydration'] = None; "
             "exec(sys.argv.pop(1))"
         )
         selection_guard = (
@@ -583,6 +583,7 @@ def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = F
         )
     fake_python.write_text(
         "#!/bin/bash\n"
+        'if [ "${1:-}" = "-I" ] && [ "${2:-}" = "-c" ] && [ "${5:-}" = "lu_machinery" ]; then shift 5; fi\n'
         "if [ \"${1:-}\" = '-m' ]; then\n"
         "  printf '%s\\n' '{\"schema_name\":\"HydrationCapsuleV1\",\"execution_allowed\":true}'\n"
         "  exit 0\n"
@@ -600,7 +601,8 @@ def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = F
             "SESSION_HANDOFF_AGENT": "codex-devops",
             "SESSION_EPIC": "devops",
             "THREAD_ROLLOVER_PYTHON": os.fspath(fake_python),
-            "SESSION_BOUNDED_RUNNER": os.fspath(REPO_ROOT / "scripts/agent_runtime/bounded_command.py"),
+            "LEARN_UKRAINIAN_PYTHON": os.fspath(fake_python),
+            "SESSION_BOUNDED_RUNNER": os.fspath(machinery_path('agent_runtime/bounded_command.py')),
             "CODEX_COMPACT_SESSION_START": "1",
         }
     )
@@ -697,13 +699,15 @@ def test_codex_tool_events_run_the_policy_and_result_hooks() -> None:
     assert pre_groups[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
-    assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
+    assert 'machinery_path("agent_runtime/codex_hook_entry.sh")' in pre_hook["command"]
+    assert pre_hook["command"].endswith(" pre-tool-use")
     assert pre_hook["timeout"] == 45
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
     assert len(post_groups[0]["hooks"]) == 1
-    assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
+    assert 'machinery_path("agent_runtime/codex_hook_entry.sh")' in post_groups[0]["hooks"][0]["command"]
+    assert post_groups[0]["hooks"][0]["command"].endswith(" post-tool-use")
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
@@ -924,6 +928,7 @@ def test_bare_python_rejection_blocks_a_canonical_version_mismatch(tmp_path: Pat
 
 def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     """Create a project interpreter that exposes only the live inbox CLI shape."""
+    _run(["git", "init", "-q", "-b", "main"], cwd=tmp_path)
     python = tmp_path / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True, exist_ok=True)
     fixtures = tmp_path / "inbox-fixtures"
@@ -931,7 +936,12 @@ def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     args_log = tmp_path / "inbox-cli-args.log"
     python.write_text(
         "#!/bin/sh\n"
-        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
+        'if [ "${1:-}" = "-I" ] && [ "${2:-}" = "-c" ]; then\n'
+        '  if [ "${6:-}" = "-m" ]; then shift 5; else\n'
+        f'    exec {shlex.quote(sys.executable)} "$@"\n'
+        "  fi\n"
+        "fi\n"
+        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"lu_machinery.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
         "  exit 64\n"
         "fi\n"
         "printf '%s\\n' \"$*\" >> \"$FAKE_INBOX_ARGS\"\n"
@@ -981,7 +991,7 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     assert "CODEX INBOX: 1 unread message" in context
     assert "codex-only message" in context
     assert "claude-only message" not in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for codex"
 
 
 def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
@@ -1055,11 +1065,11 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     assert all(len(path.stem.removeprefix("inbox-")) == 64 for path in state_files)
     assert all("message" not in path.read_text(encoding="utf-8") for path in state_files)
     assert args_log.read_text(encoding="utf-8").splitlines() == [
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for claude",
-        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for claude",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
     ]
 
 

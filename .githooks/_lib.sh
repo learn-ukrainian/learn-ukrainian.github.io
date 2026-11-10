@@ -23,6 +23,13 @@ if [[ ! -x "$project_python" ]]; then
 fi
 
 run_project_python() {
+  if [[ -z "${LEARN_UKRAINIAN_PYTHON:-}" ]]; then
+    local selected_python
+    selected_python="$(bash "$project_python" -c 'import os, sys; print(os.path.abspath(sys.executable))')" || return $?
+    export LEARN_UKRAINIAN_PYTHON="$selected_python"
+  else
+    export LEARN_UKRAINIAN_PYTHON
+  fi
   bash "$project_python" "$@"
 }
 
