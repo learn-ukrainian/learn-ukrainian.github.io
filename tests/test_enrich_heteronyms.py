@@ -643,7 +643,7 @@ def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(
                      "parser_version, quarantine_reason)")
         conn.execute("INSERT INTO sum20_articles VALUES (1, 'fixture', '', '', 'fixture', '')")
     monkeypatch.setenv("LU_SOURCES_DB", str(canonical_sum20_store))
-    from scripts.lib.readonly_sqlite import open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly
 
     def refused_read(**kwargs):
         conn = open_readonly(canonical_sum20_store)
