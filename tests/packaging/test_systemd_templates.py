@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shlex
 import sys
 from pathlib import Path
 
@@ -65,7 +66,14 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
         guarded = [line for line in dropin.splitlines() if line.startswith("ExecStart=") and line != "ExecStart="]
         assert len(guarded) == len(commands)
         for line, command in zip(guarded, commands, strict=True):
-            assert line.endswith(f"/data_volume_guard.sh -- {command}")
+            if "lu_machinery.storage" in line:
+                argv = shlex.split(line.removeprefix("ExecStart="))
+                assert argv[:3] == ["/usr/bin/env", "@REPO_ROOT@/.venv/bin/python", "-c"]
+                assert 'files("lu_machinery.storage").joinpath("data_volume_guard.sh")' in argv[3]
+                assert argv[4:] == ["--", *shlex.split(command)]
+                assert "Environment=LU_PRODUCT_ROOT=@REPO_ROOT@" in dropin
+            else:
+                assert line.endswith(f"/data_volume_guard.sh -- {command}")
         assert "RestartPreventExitStatus=78" in dropin
 
 
@@ -117,7 +125,7 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
 
 
 def test_git_maintenance_limits_and_schedule() -> None:
-    from scripts.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
+    from lu_machinery.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
 
     service = (PACKAGING / "learn-ukrainian-git-maintenance.service").read_text()
     assert GC_MEMORY_MAX == 2 * 1024**3

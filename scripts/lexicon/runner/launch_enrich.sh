@@ -65,7 +65,8 @@ for _arg in "$@"; do
 done
 
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
-SCOPE_ENTRY="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../lib" && pwd)/job_memory_scope.sh"
+export LU_PRODUCT_ROOT="$REPO"
+SCOPE_ENTRY="$("$REPO/.venv/bin/python" -c 'from importlib.resources import files; print(files("lu_machinery.lib").joinpath("job_memory_scope.sh"))')"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_ENRICH_UNIT:-atlas-20k-enrich.service}"
 LOG="$WORK_DIR/enrich.log"
@@ -106,7 +107,7 @@ if [[ ! -f "$KAIKKI_JSON" ]]; then
   exit 1
 fi
 if [[ "$KAIKKI_JSON" == "$REPO/data/lexicon/kaikki_uk_lookup.json" ]]; then
-  "$REPO/.venv/bin/python" -m scripts.storage.artifacts verify --group lexicon_kaikki
+  "$REPO/.venv/bin/python" -m lu_machinery.storage.artifacts verify --group lexicon_kaikki
 fi
 
 EXTRA_ARGS=("$@")
@@ -129,6 +130,7 @@ if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run 
     --working-directory="$REPO" \
     --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M" \
     --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M" \
+    --setenv="LU_PRODUCT_ROOT=$REPO" \
     --property=MemorySwapMax=0 \
     --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}" \
     --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}" \

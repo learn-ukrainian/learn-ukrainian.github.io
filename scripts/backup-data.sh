@@ -7,7 +7,7 @@
 # It uses restic's rclone backend so snapshots are versioned, deduplicated, and
 # transferred without hydrating Drive's local File Provider cache.
 #
-# Covers the allowlist in scripts/config/backup-allowlist.json, and nothing
+# Covers the allowlist in lu_machinery/config/backup-allowlist.json, and nothing
 # else under batch_state/ or data/. A path that is not on that list is not
 # walked. SQLite files on the list are copied with SQLite's online backup
 # into the same nightly run as the other files. A hard-linked SQLite file
@@ -42,6 +42,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly SCRIPT_DIR
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 readonly REPO_ROOT
+export LU_PRODUCT_ROOT="$REPO_ROOT"
 readonly PROJECT_ROOT="${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}"
 readonly SOURCE="$PROJECT_ROOT/data"
 readonly REPOSITORY="${LU_BACKUP_REPOSITORY:-${RESTIC_REPOSITORY:-}}"
@@ -100,9 +101,9 @@ RESTIC_EXCLUDES=()
 RESTIC_EXCLUDE_FILE=""
 LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
-# The allowlist lives next to this script, not under PROJECT_ROOT. Fixtures
-# override the project root and must still read the repository file.
-ALLOWLIST_FILE="$SCRIPT_DIR/config/backup-allowlist.json"
+# The allowlist comes from the installed machinery release, not PROJECT_ROOT. Fixtures
+# override the project root and must still read the release resource.
+ALLOWLIST_FILE="$("$REPO_ROOT/.venv/bin/python" -c 'from importlib.resources import files; print(files("lu_machinery").joinpath("config/backup-allowlist.json"))')"
 ENUMERATED_FILE_COUNT=0
 ENUMERATED_RELATIVE_PATHS=()
 STAGED_CANDIDATES=()
@@ -164,7 +165,7 @@ RESTORE_TARGET_ROOT=""
 RESTORE_COMPLETED_DATABASES=()
 RUN_ID=""
 LINUX_MODE=0
-# The Sources store selector (scripts/storage/generations.py). After the
+# The Sources store selector (lu_machinery/storage/generations.py). After the
 # bootstrap, data/sources.db is a relative link to exactly
 # sources-generations/<generation>; the backup carries that one generation
 # under its own name and records the selection in the receipt.
@@ -995,7 +996,7 @@ validate_tree_file_types() {
   done < <(allowlist_find "$tree" ! -type d ! -type f ! -type l -print0)
 }
 
-# The nightly walks only scripts/config/backup-allowlist.json keep entries.
+# The nightly walks only lu_machinery/config/backup-allowlist.json keep entries.
 # Drop entries are not exclusion rules: the script never opens them, so the
 # kept file data/lexicon/cache/ulif_raw.sqlite is not cancelled by the dropped
 # parent data/lexicon/cache.
@@ -1049,7 +1050,7 @@ refuse_leaf_symlink() {
 # selector, so the caller backs up the generation it selects instead. Return 1
 # when RELATIVE is not a link into the generation directory; the caller then
 # refuses any other symlink as before. A link into that directory that breaks
-# the selector rules of scripts/storage/generations.py is refused here.
+# the selector rules of lu_machinery/storage/generations.py is refused here.
 select_sources_generation() {
   local relative=$1
   local absolute="$PROJECT_ROOT/$relative" text name directory
@@ -3134,7 +3135,7 @@ restored_sources_generation() {
 }
 
 # Recreate the selector over the restored generation through the publisher
-# (python -m scripts.storage restore-generation), never by hand: it takes the
+# (python -m lu_machinery.storage restore-generation), never by hand: it takes the
 # store writer lock, holds the file read-only and switches the link atomically.
 restore_sources_selector() {
   local target_real=$1 generation=$2 project_python
@@ -3145,7 +3146,7 @@ restore_sources_selector() {
   info "Selecting the restored Sources generation: $generation"
   (
     cd "$REPO_ROOT" || exit 1
-    "$project_python" -m scripts.storage restore-generation \
+    "$project_python" -m lu_machinery.storage restore-generation \
       "$target_real/$generation" --store "$target_real/$SOURCES_SELECTOR_PATH"
   ) || die "Could not select the restored Sources generation: $generation"
 }
