@@ -199,7 +199,7 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example:\n"
-            "  bash scripts/pre_commit/project_python.sh scripts/lexicon/fill_slovnyk_sum20_cache.py "
+            "  .venv/bin/python -m scripts.lexicon.fill_slovnyk_sum20_cache "
             "--slugs-file words.json --limit 10\n"
             "Outputs: dictionary cache JSON; runtime blocked.md on refusal; progress and counts.\n"
             "Exit codes: 0 completed; 1 access denial, challenge or rate limit.\n"

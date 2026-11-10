@@ -3,13 +3,15 @@ Description=Learn Ukrainian sources MCP watchdog (dump, restart and report a hun
 After=learn-ukrainian-sources.service
 
 [Service]
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
 # Dump (py-spy up to 30 s, stacks 5 s) + kill/start + up to 90 s recovery wait
 # + one Fleet Comms publish (up to 120 s).
 TimeoutStartSec=300
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_watchdog run-once --apply
+ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.orchestration.sources_watchdog run-once --apply
 
 [Install]
 WantedBy=default.target

@@ -10,10 +10,10 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.ci.stall_watch import (
+from lu_machinery.ci.stall_watch import (
     StallWatcher,
 )
+
 from tests.conftest import pytest_runtest_logfinish, pytest_runtest_logstart
 
 

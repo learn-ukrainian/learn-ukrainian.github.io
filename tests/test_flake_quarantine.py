@@ -272,7 +272,7 @@ def test_ci_checks_job_enforces_admission_with_read_only_evidence_permissions():
     workflow = yaml.safe_load(Path(".github/workflows/ci.yml").read_text())
     checks = workflow["jobs"]["checks"]
     step = next(step for step in checks["steps"] if step.get("name") == "Verify flake quarantine admissions")
-    assert step["run"] == '.venv/bin/python -m scripts.common.flake_quarantine --base-ref "$BASE_SHA"'
+    assert step["run"] == '.venv/bin/python -m lu_machinery.common.flake_quarantine --base-ref "$BASE_SHA"'
     assert "github.event.pull_request.base.sha" in step["env"]["BASE_SHA"]
     assert "github.event.merge_group.base_sha" in step["env"]["BASE_SHA"]
     assert step["env"]["GH_TOKEN"] == "${{ github.token }}"

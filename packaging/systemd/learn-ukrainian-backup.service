@@ -4,6 +4,8 @@ Description=Learn Ukrainian data backup (restic via rclone remote)
 OnFailure=learn-ukrainian-backup-alert@%n.service
 
 [Service]
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env
@@ -17,7 +19,7 @@ Environment=LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging
 TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
-ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
+ExecStart=/usr/bin/env @REPO_ROOT@/.venv/bin/python -c 'import os, sys; from importlib.resources import files; os.execvp("bash", ["bash", str(files("lu_machinery.orchestration").joinpath("run_scheduled_backup.sh")), *sys.argv[1:]])'
 # Change-only recovery notice; runs only after a successful ExecStart=. A
 # failed notice never fails the run (leading '-').
-ExecStartPost=-/usr/bin/env @REPO_ROOT@/.venv/bin/python @REPO_ROOT@/scripts/orchestration/backup_failure_alert.py recovered %n
+ExecStartPost=-/usr/bin/env @REPO_ROOT@/.venv/bin/python -m lu_machinery.orchestration.backup_failure_alert --project-root @REPO_ROOT@ recovered %n
