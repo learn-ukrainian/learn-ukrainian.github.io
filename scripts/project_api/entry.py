@@ -69,8 +69,9 @@ PRELOAD_MODULES = (
     "audit.checks.activity_validation",
     "yaml_activities",
     "scripts.build.phase_constants",
-    "research_quality",
-    "research.research_markdown_utils",
+    # Release modules the product routers import (machinery, not product code).
+    "lu_machinery.research_quality",
+    "lu_machinery.research.research_markdown_utils",
 )
 
 OPTIONAL_PRELOAD_MODULES = (
