@@ -61,41 +61,60 @@ TASK_CACHE_DIRS = frozenset({"venv", ".venv", "buildvenv", "npm-cache", ".npm", 
                              "__pycache__"})
 
 
-def _task_cache_dirs(task_id: str) -> list[Path]:
-    """The TASK_CACHE_DIRS entries under ``<task_id>.artifacts`` and ``<task_id>.evidence``; links are never followed."""
-    tasks = store.record_path(task_id).parent
-    found: list[Path] = []
-    for suffix in (".artifacts", ".evidence"):
-        root = tasks / f"{task_id}{suffix}"
-        if root.is_symlink() or not root.is_dir():
-            continue
-        # os.walk lists a link to a directory among the names without descending into it.
-        for directory, names, _files in os.walk(root):
-            found.extend(Path(directory, name) for name in names if name in TASK_CACHE_DIRS)
-            names[:] = [name for name in names if name not in TASK_CACHE_DIRS]
-    return found
+def _task_caches(task_id: str, *, remove: bool) -> tuple[list[str], list[str]]:
+    """The cache directories in ``<task_id>.artifacts`` and ``<task_id>.evidence``, and what could not be walked or removed.
+
+    os.fwalk holds each directory open and checks it with lstat, open and fstat before it descends, so neither a
+    link nor an ancestor swapped during the walk takes it outside the task's outputs. Removal acts relative to the
+    held parent: a cache-named link is unlinked, never followed, and rmtree checks the directory again itself.
+    """
+    tasks = store.record_path(task_id).parent  # refuses an invalid task id before any path is built from it
+    found: list[str] = []
+    failed: list[str] = []
+
+    def refused(error: OSError) -> None:
+        failed.append(f"{error.filename}: {type(error).__name__}")
+
+    tasks_fd = os.open(tasks, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for root in (f"{task_id}.artifacts", f"{task_id}.evidence"):
+            try:
+                os.stat(root, dir_fd=tasks_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                continue
+            try:
+                for directory, names, _files, dir_fd in os.fwalk(root, onerror=refused, dir_fd=tasks_fd):
+                    for name in [name for name in names if name in TASK_CACHE_DIRS]:
+                        names.remove(name)
+                        found.append(f"{directory}/{name}")
+                        if not remove:
+                            continue
+                        try:
+                            if stat.S_ISLNK(os.stat(name, dir_fd=dir_fd, follow_symlinks=False).st_mode):
+                                os.unlink(name, dir_fd=dir_fd)
+                            else:
+                                shutil.rmtree(name, dir_fd=dir_fd)
+                        except OSError as exc:
+                            failed.append(f"{directory}/{name}: {type(exc).__name__}")
+            except OSError as exc:  # the root, or a listing os.fwalk does not pass to onerror
+                failed.append(f"{root}: {type(exc).__name__}")
+    finally:
+        os.close(tasks_fd)
+    return found, failed
 
 
 def _clear_task_caches(record: dict) -> bool:
     """Remove a finished task's re-creatable caches from its own output directories; True when the record changed.
 
-    A link named as a cache is removed as a link. The caller holds the task state lock. What cannot be
-    removed is recorded in ``task_cache_residue`` and retried by the scheduled settlement sweep.
+    The caller holds the task state lock. Whatever could not be walked or removed is recorded in
+    ``task_cache_residue`` and retried by the scheduled settlement sweep.
     """
     if record.get("status") in store.ACTIVE:
         return False
-    residue: list[str] = []
     try:
-        for path in _task_cache_dirs(record["task_id"]):
-            try:
-                if path.is_symlink():
-                    path.unlink()
-                else:
-                    shutil.rmtree(path)
-            except OSError as exc:
-                residue.append(f"{path.relative_to(store.tasks_dir())}: {type(exc).__name__}")
+        residue = _task_caches(record["task_id"], remove=True)[1]
     except Exception as exc:  # cache removal never stops the worktree settlement that follows it
-        residue.append(f"scan: {type(exc).__name__}")
+        residue = [f"scan: {type(exc).__name__}"]
     if residue == record.get("task_cache_residue", []):
         return False
     if residue:
@@ -879,12 +898,16 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
 
 
 def _holds_task_caches(record: dict) -> bool:
-    """Whether a finished task still has caches to remove (or an earlier removal's residue to retry)."""
-    try:
-        return record.get("status") not in store.ACTIVE and bool(
-            "task_cache_residue" in record or _task_cache_dirs(record["task_id"]))
-    except (KeyError, TypeError, ValueError, OSError):
+    """Whether a finished task still has caches to remove, or a walk or removal failure to retry."""
+    if record.get("status") in store.ACTIVE:
         return False
+    try:
+        found, failed = _task_caches(record["task_id"], remove=False)
+    except (KeyError, TypeError, ValueError):
+        return False  # no valid task identity, so no output directories of its own
+    except OSError:
+        return True
+    return bool(found or failed or "task_cache_residue" in record)
 
 
 def _unsettled(record: dict) -> bool:
@@ -908,7 +931,10 @@ def settle_left_worktrees(salvage: bool = False) -> None:
         reap = _unsettled(record) and Path(record.get("worktree_path") or "").is_dir()
         if not reap and not _holds_task_caches(record):
             continue
-        path = store.record_path(record["task_id"])
+        try:
+            path = store.record_path(record["task_id"])
+        except (KeyError, TypeError, ValueError):
+            continue  # a damaged identity never ends the sweep for the records after it
         # wait() takes this lock before it reports a terminal task, so it never returns mid-removal.
         with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
