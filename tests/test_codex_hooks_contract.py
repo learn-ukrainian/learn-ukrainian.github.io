@@ -1245,3 +1245,42 @@ def test_codex_manifest_bootstrap_failure_blocks_with_exit_two(
     assert result.stdout == ""
     if selection not in {"unset", "valid"}:
         assert "Codex hook bootstrap failed" in result.stderr
+
+
+@pytest.mark.parametrize("selection", ["relative", "missing", "no-wheel", "bad-root", "outside-git"])
+def test_agy_manifest_bootstrap_failure_does_not_drop_deny(
+    tmp_path: Path, selection: str,
+) -> None:
+    """Bootstrap failure must not drop AGY's required deny decision (F6)."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selector = primary / "scripts/pre_commit/project_python.sh"
+    selector.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", selector)
+    environment = {name: os.environ[name] for name in ("PATH", "HOME", "LANG") if name in os.environ}
+    environment["LU_PRODUCT_ROOT"] = str(primary)
+    cwd = worktree
+    if selection == "relative":
+        environment["LEARN_UKRAINIAN_PYTHON"] = "python3"
+    elif selection == "missing":
+        environment["LEARN_UKRAINIAN_PYTHON"] = str(tmp_path / "missing-python")
+    elif selection == "no-wheel":
+        no_wheel = tmp_path / "no-wheel-python"
+        no_wheel.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} -S "$@"\n')
+        no_wheel.chmod(0o755)
+        environment["LEARN_UKRAINIAN_PYTHON"] = str(no_wheel)
+    elif selection == "bad-root":
+        environment["LU_PRODUCT_ROOT"] = str(tmp_path / "missing-root")
+    else:
+        environment.pop("LU_PRODUCT_ROOT")
+        cwd = tmp_path
+    config = json.loads((REPO_ROOT / "agents_extensions/agy/hooks.json").read_text())
+    command = config["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"]
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=cwd, env=environment,
+        input=json.dumps({"toolCall": {"name": "run_command", "args": {"CommandLine": "echo hello"}}}),
+        text=True, capture_output=True, timeout=45,
+    )
+    reason = "BLOCKED by guard-secret-print (#M-5): hook bootstrap failed."
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == {"decision": "deny", "reason": reason}
+    assert reason in result.stderr

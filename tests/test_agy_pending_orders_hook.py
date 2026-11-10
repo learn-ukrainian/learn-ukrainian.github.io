@@ -412,7 +412,7 @@ def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path, monkeypat
                 "hooks": [
                     {
                         "type": "command",
-                        "command": 'hook_root="${LU_PRODUCT_ROOT:-}" && if [ -z "$hook_root" ]; then hook_common="$(git rev-parse --path-format=absolute --git-common-dir)" && hook_root="$(cd "$hook_common/.." && pwd -P)"; fi && export LU_PRODUCT_ROOT="$hook_root" && LEARN_UKRAINIAN_PYTHON="${LEARN_UKRAINIAN_PYTHON:-$hook_root/.venv/bin/python}" bash "$hook_root/scripts/pre_commit/project_python.sh" -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy',
+                        "command": 'hook_root="${LU_PRODUCT_ROOT:-}" && if [ -z "$hook_root" ]; then hook_common="$(git rev-parse --path-format=absolute --git-common-dir)" && hook_root="$(cd "$hook_common/.." && pwd -P)"; fi && export LU_PRODUCT_ROOT="$hook_root" && LEARN_UKRAINIAN_PYTHON="${LEARN_UKRAINIAN_PYTHON:-$hook_root/.venv/bin/python}" bash "$hook_root/scripts/pre_commit/project_python.sh" -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy || { printf \'%s\\n\' \'{"decision":"deny","reason":"BLOCKED by guard-secret-print (#M-5): hook bootstrap failed."}\'; printf \'%s\\n\' \'BLOCKED by guard-secret-print (#M-5): hook bootstrap failed.\' >&2; exit 0; }',
                         "timeout": 10,
                     }
                 ],
