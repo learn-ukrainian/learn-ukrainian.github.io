@@ -1,14 +1,17 @@
 # lu-machinery consumer lock (machinery docs/release.md, "Dependency lock").
 # Install with --require-hashes only; never as an editable install.
 #
-# Release: learn-ukrainian/machinery v0.1.3, tag commit
-# b22c1657b9a21d40c1a74c0cd69c18951906fba5. The lu-machinery hash is the
-# release's SHA256SUMS entry for lu_machinery-0.1.3-py3-none-any.whl.
+# Release: learn-ukrainian/machinery v0.1.4
+# Tag object: 03bd043e0118d5d813b85c0d0a8c32185c5d4b6a
+# Tag commit: 96ccb64723f7e8a689f0650e9eba8ffe6108a58e
+# SHA256SUMS: https://github.com/learn-ukrainian/machinery/releases/download/v0.1.4/SHA256SUMS
+# The lu-machinery hash is the SHA256SUMS entry for
+# lu_machinery-0.1.4-py3-none-any.whl.
 # The pins below are machinery's requirements-machinery.lock at that tag.
 # A package listed here and in requirements-lock.txt must carry the same
 # version in both files.
-lu-machinery==0.1.3 \
-    --hash=sha256:8b467fb593800a841ba543da01697f21fba585b5865647b3f07015e420e8baeb
+lu-machinery==0.1.4 \
+    --hash=sha256:72151c901e4967145d5599383aa492e7a4b6740c501b822cb337ce632a6adb83
 annotated-doc==0.0.5 \
     --hash=sha256:117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101
 annotated-types==0.8.0 \
@@ -21,12 +24,16 @@ blinker==1.9.0 \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
 cffi==2.1.1 \
     --hash=sha256:c1453022f490d2459a11819d83ad1d586e9ff65a12ac3e705ffebd46d3685dcf
+cfgv==3.5.0 \
+    --hash=sha256:a8dc6b26ad22ff227d2634a65cb388215ce6cc96bbcc5cfde7641ae87e8dacc0
 click==8.4.2 \
     --hash=sha256:e6f9f66136c816745b9d65817da91d61d957fb16e02e4dcd0552553c5a197b76
 coverage==7.17.0 \
     --hash=sha256:85932227e9dd38e62cd29c17fefdfecfb919eead6af1e3259522d03cf85de983
 cryptography==50.0.2 \
     --hash=sha256:9dab55f57c74c3cad24c323bacbbd04be4705ba6eb0d92e920b1fc4837ed5079
+distlib==0.4.4 \
+    --hash=sha256:cf09d55b1e85a89576b036aeb71550bfd68320f3f21761ca329eadadad918638
 execnet==2.1.2 \
     --hash=sha256:67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec
 fastapi==0.139.0 \
@@ -43,6 +50,8 @@ httpcore2==2.16.0 \
     --hash=sha256:5c4358319f2602d984ad93182c9fee5160f22e9da7babdda870a5e7c4e2dc34f
 httpx2==2.16.0 \
     --hash=sha256:fd2c5d7909e8d86fe92d53020c310ca0e4e431b838c207c5754b9bbf0308d49a
+identify==2.6.19 \
+    --hash=sha256:20e6a87f786f768c092a721ad107fc9df0eb89347be9396cadf3f4abbd1fb78a
 idna==3.20 \
     --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
 ijson==3.6.0 \
@@ -67,12 +76,18 @@ mcp-types==2.2.0 \
     --hash=sha256:ea476b73ee86709ab5abc9452385ed36cc05907e582355622e294595c9a04f13
 mdurl==0.1.2 \
     --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8
+nodeenv==1.10.0 \
+    --hash=sha256:5bb13e3eed2923615535339b3c620e76779af4cb4c6a90deccc9e36b274d3827
 opentelemetry-api==1.45.1 \
     --hash=sha256:b31553efa588ae44bc306f863c785c5333a9ecc091248c6ee68b4b6c87fdedfb
 packaging==26.3 \
     --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
+platformdirs==4.11.11 \
+    --hash=sha256:972ea6b2b387155a536226a0750e46923d731d459a387c4a255c583ed2f64547
 pluggy==1.6.0 \
     --hash=sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746
+pre-commit==4.6.0 \
+    --hash=sha256:e2cf246f7299edcabcf15f9b0571fdce06058527f0a06535068a86d38089f29b
 prometheus-client==0.26.0 \
     --hash=sha256:fa93d06737aa02bacd05794768508bb97d2fbee28cb3bca04eaae92f0ca953d6
 psutil==7.2.2 \
@@ -95,6 +110,8 @@ pytest==9.1.1 \
     --hash=sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c
 pytest-xdist==3.8.0 \
     --hash=sha256:202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88
+python-discovery==1.9.1 \
+    --hash=sha256:a78322b3b70c5d61dddc2f37ca1beffa9a5ce01cedf3526444e01bfc94f50b35
 python-multipart==0.0.32 \
     --hash=sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23
 pyyaml==6.0.3 \
@@ -115,5 +132,7 @@ typing-inspection==0.4.4 \
     --hash=sha256:65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147
 uvicorn==0.48.0 \
     --hash=sha256:48097851328b87ec36117d3d575234519eb58c2b22d79666e9bbc6c49a761dad
+virtualenv==21.14.13 \
+    --hash=sha256:5fbb04138a4861580b78ba9110d529a26bc48fcc93c8ec36bc0202eeed96a788
 werkzeug==3.1.9 \
     --hash=sha256:6392e50c78460ba618e5b21f08a71f59c99ce99cdc6cf6e3dd7e6ccca8754fab

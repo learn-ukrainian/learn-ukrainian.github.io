@@ -4,8 +4,8 @@ Each test builds a disposable product repository, installs the real delegators w
 ``scripts/install_git_hooks.sh`` and commits through them. Defect classes covered: a deleted
 tracked hook turning the delegator into a silent ``exit 0``; a missing or uninstalled owned-path
 checker (or an in-tree package shadowing it) skipping enforcement inside a dispatched task; and a
-crashing checker passing. The last test pins today's deliberate fail-open of the checker's own
-handled exceptions, which settlement backs (``ownership.main``), so a change to it is visible.
+crashing checker passing. Handled checker exceptions also refuse the commit when the task
+record is missing or damaged (machinery #274, C-5045).
 """
 
 from __future__ import annotations
@@ -209,19 +209,9 @@ def test_a_crashing_checker_refuses_inside_a_task(tmp_path):
     assert _head(repo, env) == base
 
 
-@pytest.mark.parametrize(
-    ("damage", "detail"),
-    [
-        ("malformed_grants", "invalid owned-path grants"),
-        ("record_missing", "task not found"),
-    ],
-)
-def test_a_handled_checker_exception_skips_today_and_settlement_stays_the_authority(tmp_path, damage, detail):
-    """Pins today's fail-open: the installed checker turns a handled exception into exit 0 (ownership.main).
-
-    The pre-commit hook lets the outside path through; only settlement (worker._enforce_delivery)
-    refuses the delivery. The commit-msg OPSEC gate needs the full checkout, so the delegator runs alone.
-    """
+@pytest.mark.parametrize("damage", ["malformed_grants", "record_missing"])
+def test_a_handled_checker_exception_refuses_the_commit_and_preserves_head(tmp_path, damage):
+    """A missing or damaged task record must not let an out-of-scope commit through."""
     env = _env(project_python())
     repo = _product_repo(tmp_path, env)
     fields = {"owned_path_grants": "not-a-list"} if damage == "malformed_grants" else {}
@@ -229,8 +219,11 @@ def test_a_handled_checker_exception_skips_today_and_settlement_stays_the_author
     if damage == "record_missing":
         (Path(task_env["LU_TASKS_DIR"]) / "hook-task.json").unlink()
     _stage_outside(repo, env)
+    base = _head(repo, env)
 
-    hook = _git(repo, "hook", "run", "pre-commit", env=task_env)
+    commit = _git(repo, "commit", "-q", "-m", "outside change", env=task_env)
 
-    assert hook.returncode == 0, hook.stderr
-    assert f"owned-path check skipped ({detail}); settlement still checks the delivery." in hook.stderr
+    assert commit.returncode != 0
+    assert "owned-path check could not run (" in commit.stderr
+    assert "task record or ownership verification failed); refusing" in commit.stderr
+    assert _head(repo, env) == base
