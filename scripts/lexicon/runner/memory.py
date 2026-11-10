@@ -49,8 +49,7 @@ from typing import ClassVar, Literal
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from lu_machinery.common.repo_root import project_interpreter
-
+from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.runner.contracts import DEFAULT_MEMORY_HIGH_BYTES, DEFAULT_MEMORY_MAX_BYTES
 
 EnforcementKind = Literal["cgroup_v2", "rlimit_as", "none"]

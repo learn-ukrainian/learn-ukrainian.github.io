@@ -1099,7 +1099,6 @@ def test_runner_spawns_use_primary_project_interpreter(
     primary_python = primary / ".venv" / "bin" / "python"
     primary_python.parent.mkdir(parents=True)
     primary_python.write_text("", encoding="utf-8")
-    primary_python.chmod(0o755)  # the release resolves only an executable interpreter
     assert memory_mod.project_interpreter(primary) == primary_python
 
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
