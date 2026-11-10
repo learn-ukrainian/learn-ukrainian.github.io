@@ -409,12 +409,14 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     """C-2916 P6 removed the lexical refusal; read-only is now held by each CLI's own write lock or refused."""
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
-    spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    # Dispatch admission refuses a model the catalog does not name (C-4967).
+    model = {"codex": "gpt-6.1-sol", "claude": "claude-sonnet-5-5"}.get(agent, "vendor/model")
+    spec = TaskSpec("ro", agent, model, None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
     refused: dict[str, str] = {}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
             providers.load(agent).build(spec, {})
-        result = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", expected=2)
+        result = sandbox.cli("dispatch", "--agent", agent, "--model", model, "--prompt", "Fix X", expected=2)
         assert f"read_only_unenforceable: {agent} cannot run --mode read-only" in result.stderr
         assert refused[agent] in result.stderr
         assert not sandbox.tasks.exists()
@@ -484,7 +486,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
                 allows |= set(json.loads(argv[argv.index("--settings") + 1]).get("permissions", {}).get("allow", []))
             assert write_rule not in allows, account
             assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob,Bash,WebFetch,WebSearch"
-        plan = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", "--dry-run")
+        plan = sandbox.cli("dispatch", "--agent", agent, "--model", model, "--prompt", "Fix X", "--dry-run")
         assert "--restricted" in json.loads(plan.stdout)["argv"]
     else:
         assert agent == "opencode" and "--auto" not in argv

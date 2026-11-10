@@ -74,6 +74,11 @@ def install_claude_doctor_stub(bin_dir, monkeypatch):
 
 
 SOURCE = Path(__file__).resolve().parents[2]
+# Model strings the sandbox stub provider (stub_provider.py) or a sandbox test dispatches with.
+STUB_MODELS = (
+    "blocked", "cancel", "capacity", "capacity-dirty", "crash", "dirty", "echo", "empty", "error", "escape", "fail",
+    "file", "governed", "pushed", "pushed-dirty", "pushed-nested", "requested-model-is-not-proof", "tree", "unpushed",
+)
 
 
 def run_git(repo, *args):
@@ -131,7 +136,12 @@ def sandbox(tmp_path, hermetic_monitor):
             }
         )
     )
-    shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    # Dispatch admission refuses a model the catalog does not name (C-4967). The stub provider reads its
+    # behaviour from the model string, so this disposable copy alone names each stub behaviour as an
+    # exact alias of the model the sandbox's --agent sol runs.
+    catalog = yaml.safe_load((SOURCE / "scripts/config/model_catalog.yaml").read_text())
+    catalog["models"]["gpt-6.1-sol"].setdefault("aliases", []).extend(STUB_MODELS)
+    (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
     # This checkout is the product checkout of the copied machinery (product_root, C-4746): it
     # carries the product marker, and the product files the dispatcher reads come from it, with

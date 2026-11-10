@@ -852,6 +852,8 @@ models:
     # Ukrainian seats are Gemini and Sol (scripts/review/ukrainian_seats.py).
     # Review routes list only code and infra profiles; the resolver refuses xAI.
     roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
+    # The native Grok CLI reports this exact runtime id; no other -build variant is an alias.
+    aliases: [grok-4.7-build]
     runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
