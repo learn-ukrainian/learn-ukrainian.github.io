@@ -373,7 +373,9 @@ def produce_author_record(root, pg, monkeypatch, wheel):
     from learn_ukrainian_v4_runtime.operation_store import OperationStore
     from test_v4_operation_lifecycle import principal, role_connection
 
-    from scripts.fleet_comms.request_executor import RequestExecutor
+    from scripts.fleet_comms.request_executor import (
+        RequestExecutor,  # TRANSITIONAL-PKG3-B2: held runtime needs authorize_author_execution.
+    )
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
