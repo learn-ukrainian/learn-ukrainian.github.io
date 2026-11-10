@@ -16,7 +16,7 @@ import yaml
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-import scripts  # noqa: F401  (binds the product roots for the installed release)
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 # Dual-flavor import: audit modules are importable as ``audit.*`` with only
 # ``scripts/`` on sys.path — keep both flavors resolvable (cf. #4931 fallout

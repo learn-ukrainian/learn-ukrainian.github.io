@@ -16,7 +16,7 @@ from typing import Any, TypedDict
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-import scripts  # noqa: F401  (binds the product roots for the installed release)
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 try:
     from lu_machinery.lib.readonly_sqlite import SQLiteConnection

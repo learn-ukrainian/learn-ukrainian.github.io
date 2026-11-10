@@ -19,9 +19,6 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
-import scripts  # noqa: F401  (binds the product roots for the installed release)
-
 try:
     from lu_machinery.lib.readonly_sqlite import SQLiteConnection
     from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
@@ -1143,6 +1140,7 @@ def report_runtime_source(rows: list[dict[str, Any]], parity: dict[str, Any] | N
     """The added report call; existing artifact and marker checks stay in main."""
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
     from scripts.deploy.runtime_source_report import emit_report, report_source_freshness
 
     emit_report(report_source_freshness(rows, parity, manifest_path=manifest))
@@ -1266,6 +1264,7 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         # projection. Import lazily so unpinned DB/manifest execution stays small.
         if str(PROJECT_ROOT) not in sys.path:
             sys.path.insert(0, str(PROJECT_ROOT))
+        import scripts  # noqa: F401  (binds the product roots for the installed release)
         from scripts.deploy.vendor_atlas_tree import build_pinned_search
 
         rows, aliases, parity = build_pinned_search(args.runtime_tree)
