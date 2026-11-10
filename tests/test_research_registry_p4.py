@@ -776,10 +776,18 @@ def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
 # --------------------------------------------------------------------------- #
 # 4. Endpoint — ungated availability, fail-soft, privacy, validation
 # --------------------------------------------------------------------------- #
+def _primary_at(monkeypatch, root) -> None:
+    (root / ".git").mkdir(exist_ok=True)  # the release accepts only a primary-shaped checkout
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
+
+
 @pytest.fixture
 def endpoint_root(tmp_path, monkeypatch):
     monkeypatch.setattr(app_reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(app_isa, "CACHE_PATH", tmp_path / "no-cache.json")
+    # The release reads the audit cache from the configured primary checkout,
+    # not a module constant; an empty fixture primary has no cache.
+    _primary_at(monkeypatch, tmp_path)
     monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     return tmp_path
 
@@ -915,7 +923,8 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         {"code": "closed_epic_reopened", "stream": "devops", "epic": 4000},
         {"code": "milestone_closed_issue", "stream": "devops", "issue": 77},
     ]
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    # The release writes and reads the cache under the configured primary (no ROOT/CACHE_PATH).
+    _primary_at(monkeypatch, tmp_path)
     monkeypatch.setattr(app_isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
     if publisher == "membership_writer":
         assert checker.write_membership_cache(report, repo, registry)
@@ -924,6 +933,8 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         (tmp_path / "scripts/config/issue_streams.yaml").write_text(
             "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
         )
+        # The release audits its packaged registry (REGISTRY_PATH), not one under the root.
+        monkeypatch.setattr(app_isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
         monkeypatch.setattr(app_isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
         monkeypatch.setattr(app_isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
         monkeypatch.setattr(
@@ -935,7 +946,6 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     cache = tmp_path / "batch_state/issue_stream_audit.json"
     assert json.loads(cache.read_text())["schema_version"] == 1
     assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
-    monkeypatch.setattr(app_isa, "CACHE_PATH", cache)
     monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
     monkeypatch.setattr(
         issues_router.audit,
