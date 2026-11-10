@@ -177,7 +177,7 @@ limits informed by those findings, not OpenAI product restrictions.
 Claude Haiku 5.5 (`claude-haiku-5-5`, existing `economical` tier, native Claude,
 `high` fleet effort) handles routine lockfile/pointer/smoke work first, with
 Sonnet 5.5 fallback; mechanical classification, extraction and triage
-(TypeSafe/Jev pre-LLM triage, CI failure classification and issue/DoR card checks);
+(CI failure classification and issue/DoR card checks);
 and read-only recon/search as a peer of Luna. Deterministic checks still precede
 model calls. Resolve catalog roles `routine_mechanical`, `mechanical_classification`
 and `readonly_recon`; never pin model IDs in routing consumers.

@@ -17,7 +17,6 @@ from jsonl_reader_cases import reader_case
         ("scripts.audit.score_judge_calibration", "load_gold", 67),
         ("scripts.audit.score_judge_calibration", "load_judgments", 85),
         ("scripts.audit.source_inventory_intake", "_read_jsonl_inventory", 320),
-        ("scripts.audit.typesafe_citation_verifier", "load_cases", 471),
     ],
     ids=lambda value: str(value),
 )
