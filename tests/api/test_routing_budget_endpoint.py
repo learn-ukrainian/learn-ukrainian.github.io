@@ -1815,9 +1815,11 @@ def test_routing_budget_muse_lane_is_cool_from_weekly_allowance_and_unknown_when
     assert unread["agents"]["muse"]["status"] != "healthy"
 
 
-def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
+def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch, tmp_path):
     """A weekly reading does not start a session. A missing weekly starts one spark step, then re-reads."""
     import subprocess
+
+    from tests.opsec_fixtures import TOKEN
 
     calls: list[list[str]] = []
     seen: list[dict] = []
@@ -1831,8 +1833,12 @@ def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=weekly)), stderr="")
 
     subscription_usage_mod._reset_muse_allowance_attempt_for_tests()
-    monkeypatch.setenv("GH_TOKEN", "SENTINEL_NOT_A_TOKEN")
-    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
+    monkeypatch.setenv("SYNTHETIC_TOKEN", TOKEN)
+    monkeypatch.setattr(
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None
+    )
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
 
     missing_then_read = subscription_usage_mod._probe_muse_native(timeout_s=5)
@@ -1850,12 +1856,19 @@ def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
     exec_kwargs = seen[calls.index(exec_calls[0])]
     assert exec_kwargs["cwd"]
     assert argv[argv.index("--workspace") + 1] == str(exec_kwargs["cwd"])
-    assert "GH_TOKEN" not in exec_kwargs["env"]
-    assert "SENTINEL_NOT_A_TOKEN" not in exec_kwargs["env"].values()
+    for kwargs in seen:
+        child_env = kwargs["env"]
+        assert "GH_TOKEN" not in child_env
+        assert "SYNTHETIC_TOKEN" not in child_env
+        assert TOKEN not in child_env.values()
+        assert child_env.get("MUSE_NO_AUTO_UPDATE") == "1"
     assert all(kwargs["timeout"] <= 5 for kwargs in seen)
 
     def still_missing(argv, **kwargs):
         calls.append(list(argv))
+        assert kwargs["env"].get("MUSE_NO_AUTO_UPDATE") == "1"
+        assert "GH_TOKEN" not in kwargs["env"]
+        assert TOKEN not in kwargs["env"].values()
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=None)), stderr="")
 
     calls.clear()
@@ -1868,6 +1881,9 @@ def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch):
 
     def usage_only(argv, **kwargs):
         calls.append(list(argv))
+        assert kwargs["env"].get("MUSE_NO_AUTO_UPDATE") == "1"
+        assert "GH_TOKEN" not in kwargs["env"]
+        assert TOKEN not in kwargs["env"].values()
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=3)), stderr="")
 
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", usage_only)
