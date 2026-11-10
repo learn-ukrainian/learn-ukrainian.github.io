@@ -211,7 +211,7 @@
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",
-        "sha256": "d7408e410f2276d8ab9b4982d467c113aafbb85980e8a0b44553066c04d5c35f"
+        "sha256": "47d3e159ff92dc1f3100fb09e984429860839667828a604aa7e91fb4adb7bfca"
       },
       {
         "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",

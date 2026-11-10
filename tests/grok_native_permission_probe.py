@@ -17,7 +17,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, REFUSAL_CODE
+from lu_machinery.agent_runtime import grok_reviewer_permissions
+from lu_machinery.agent_runtime.grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, REFUSAL_CODE
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -123,7 +124,7 @@ max_retries = 0
         for rule in ("Read", "Grep", *(f"Bash({command})" for command in GROK_REVIEWER_READ_COMMANDS)):
             cmd.extend(["--allow", rule])
         if hook != "removed":
-            command = shlex.join([str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--review-root", str(repo)])
+            command = shlex.join([str(grok_reviewer_permissions.__file__), "--review-root", str(repo)])
             # Use the interpreter supplied to the harness, never an unqualified Python.
             command = shlex.quote(os.environ["LU_PROBE_INTERPRETER"]) + " " + command
             if hook == "crashing":
