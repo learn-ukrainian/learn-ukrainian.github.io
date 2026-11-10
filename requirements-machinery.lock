@@ -1,16 +1,14 @@
 # lu-machinery consumer lock (machinery docs/release.md, "Dependency lock").
 # Install with --require-hashes only; never as an editable install.
 #
-# Release: learn-ukrainian/machinery v0.1.2, tag commit
-# 2d5196e541a188d97b4490b2102c6fedf687e16c. The lu-machinery hash is the
-# release's SHA256SUMS entry for lu_machinery-0.1.2-py3-none-any.whl.
-# The pins below are machinery's requirements-machinery.lock at that tag,
-# except httpcore2 and httpx2: machinery pins 2.12.0, requirements-lock.txt
-# pins 2.16.0, and mcp 2.2.0 needs only httpx2>=2.5.0, so this file carries
-# 2.16.0 with the PyPI wheel hashes. A package listed here and in
-# requirements-lock.txt must carry the same version in both files.
-lu-machinery==0.1.2 \
-    --hash=sha256:49f0245e2bc28f68021f74a24be07b984a127720e8e6ecb390c2fb8053fae088
+# Release: learn-ukrainian/machinery v0.1.3, tag commit
+# b22c1657b9a21d40c1a74c0cd69c18951906fba5. The lu-machinery hash is the
+# release's SHA256SUMS entry for lu_machinery-0.1.3-py3-none-any.whl.
+# The pins below are machinery's requirements-machinery.lock at that tag.
+# A package listed here and in requirements-lock.txt must carry the same
+# version in both files.
+lu-machinery==0.1.3 \
+    --hash=sha256:8b467fb593800a841ba543da01697f21fba585b5865647b3f07015e420e8baeb
 annotated-doc==0.0.5 \
     --hash=sha256:117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101
 annotated-types==0.8.0 \
