@@ -8,8 +8,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from scripts.dispatcher import site_deps
+from lu_machinery.dispatcher import site_deps
 
 
 def npm(*args, cwd):

@@ -12,11 +12,11 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 import pytest
-
-from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
-from scripts.fleet_comms.paths import (
+from lu_machinery.ai_agent_bridge import _acp_compat, _job_host_forward
+from lu_machinery.fleet_comms.paths import (
     RETIRED_LOCAL_MARKER,
 )
+
 from tests._host_path_guard import assert_no_host_paths
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -74,7 +74,7 @@ def test_resolve_ask_forward_target_host_without_repo_fails_closed(
 
 def test_forward_module_and_publish_help_have_no_baked_run_root() -> None:
     """OPSEC: production sources must not embed a concrete run-root."""
-    forward_source = (_REPO_ROOT / "scripts" / "ai_agent_bridge" / "_job_host_forward.py").read_text(encoding="utf-8")
+    forward_source = Path(_job_host_forward.__file__).read_text(encoding="utf-8")
     assert_no_host_paths(forward_source)
     assert not hasattr(_job_host_forward, "DEFAULT_SERVICES_REPO")
 
@@ -107,7 +107,7 @@ def test_run_compat_ask_forwards_instead_of_plane_root_error(tmp_path: Path, mon
     # Ensure AuthorityService is never opened on the notebook path.
     boom = MagicMock(side_effect=AssertionError("AuthorityService must not open locally"))
     monkeypatch.setattr(
-        "scripts.fleet_comms.authority.AuthorityService",
+        "lu_machinery.fleet_comms.authority.AuthorityService",
         boom,
     )
 

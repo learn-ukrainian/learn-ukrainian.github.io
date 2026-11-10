@@ -84,7 +84,8 @@ def test_fallback_chain_deduplicates_real_effective_agy_routes(monkeypatch):
 
 def test_dispatch_claude_phase_runs_without_background_work(monkeypatch, tmp_path):
     """The headless Claude phase call carries the #9690 controls from the adapter (#9750)."""
-    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+    from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+
     from scripts.pipeline import dispatch as dispatch_module
 
     calls = []
