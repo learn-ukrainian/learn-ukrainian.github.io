@@ -16,11 +16,10 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from scripts.common import repo_root as rr
-from scripts.dispatcher import primary as dispatcher_primary
-from scripts.lib import rules_core
-from scripts.orchestration import worktree_claims, worktree_git
+from lu_machinery.common import repo_root as rr
+from lu_machinery.dispatcher import primary as dispatcher_primary
+from lu_machinery.lib import rules_core
+from lu_machinery.orchestration import worktree_claims, worktree_git
 
 REPO = Path(__file__).resolve().parents[2]
 UNIT = REPO / "packaging" / "systemd" / "learn-ukrainian-project-state-reporter.service"
@@ -194,9 +193,8 @@ def _systemd_home(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def api_client():
+    import lu_machinery.api.main as api_main
     from fastapi.testclient import TestClient
-
-    import scripts.api.main as api_main
 
     return TestClient(api_main.app, raise_server_exceptions=False)
 

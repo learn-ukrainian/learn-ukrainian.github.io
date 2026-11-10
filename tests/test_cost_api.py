@@ -5,11 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import lu_machinery.telemetry.cost_report as cost_report
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.telemetry.cost_report as cost_report
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 pytestmark = pytest.mark.reads_content
 

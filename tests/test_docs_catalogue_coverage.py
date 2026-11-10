@@ -21,14 +21,14 @@ import re
 import subprocess
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.docs import catalogue as cat
+from lu_machinery.docs import find as find_module
+from lu_machinery.docs import store_census
+from lu_machinery.docs.find import find
 
-import scripts.api.main as api_main
-from scripts.docs import catalogue as cat
-from scripts.docs import find as find_module
-from scripts.docs import store_census
-from scripts.docs.find import find
 from tests.helpers.docs_find_lookups import (
     DEV_KINDS,
     DEV_LOOKUPS,

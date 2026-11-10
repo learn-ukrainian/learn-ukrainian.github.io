@@ -13,10 +13,10 @@ from urllib.request import urlopen
 
 import uvicorn
 from fastapi import FastAPI
+from lu_machinery.api.main import create_app
+from lu_machinery.api.monitor_context import fixture_context
 
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api.main import create_app
-from scripts.api.monitor_context import fixture_context
 
 
 @asynccontextmanager
