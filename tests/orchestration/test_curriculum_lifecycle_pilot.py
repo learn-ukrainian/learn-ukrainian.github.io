@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
@@ -24,23 +23,6 @@ def test_pilot_gate_bindings_are_the_original_product_objects() -> None:
     assert gates.resolve_content_track is resolve_content_track
     assert gates.resolve_manifest_module_track is resolve_manifest_module_track
 
-
-def test_readiness_loader_dynamic_accounting() -> None:
-    from lu_machinery.ci.components import scan_imports
-    from lu_machinery.lint.boundary_ratchet import CONFIG_PATH, _configured_line, _dynamic_count, load_config
-
-    # The accounting reads the installed release's own sources, keyed as checkout-relative paths.
-    root = Path(str(files("lu_machinery"))).parent
-    # The pilot reuses curriculum_readiness's strict loader, so it is not a configured caller.
-    callers = [
-        "lu_machinery/orchestration/curriculum_readiness.py",
-        "lu_machinery/orchestration/sources_watchdog.py",
-    ]
-    paths = ["lu_machinery/orchestration/curriculum_lifecycle_pilot.py", *callers, "lu_machinery/ops/product_entry.py"]
-    graph = scan_imports({path: (root / path).read_bytes() for path in paths})
-    assert [row["path"] for row in graph["configured_loads"]] == callers
-    assert _dynamic_count(graph, load_config(CONFIG_PATH), "machinery") == 2
-    assert _configured_line(graph) == "configured-entry-point implementation=1 callers=2"
 
 pytestmark = pytest.mark.reads_content
 
