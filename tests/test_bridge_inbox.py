@@ -257,30 +257,30 @@ def test_native_agy_inbox_uses_observation_not_requested_identity(monkeypatch, t
     monkeypatch.setattr(bottleneck_alerts, "scan_bottlenecks_at_inbox_checkpoint", lambda **k: None)
     thread = _make_thread("agy")
     _set_delivery_model(str(thread[0]["message_id"]), pin)
-    monkeypatch.setattr(_config, "REPO_ROOT", tmp_path)
-    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
-    results = []
+    with patch.object(_config, "REPO_ROOT", tmp_path):
+        launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
+        results = []
 
-    def invoke(*args, **kwargs):
-        assert not (kwargs.get("tool_config") or {}).get("run_nonce")
-        result = runner.invoke(*args, **kwargs)
-        results.append(result)
-        return result
+        def invoke(*args, **kwargs):
+            assert not (kwargs.get("tool_config") or {}).get("run_nonce")
+            result = runner.invoke(*args, **kwargs)
+            results.append(result)
+            return result
 
-    monkeypatch.setattr(_inbox, "runtime_invoke", invoke)
-    summary = _inbox.run_inbox("agy", max_messages=1, until_idle=False)
+        monkeypatch.setattr(_inbox, "runtime_invoke", invoke)
+        summary = _inbox.run_inbox("agy", max_messages=1, until_idle=False)
 
-    assert len(launches) == len(results) == 1
-    assert results[0].ok is ok
-    assert results[0].model_identity is None
-    assert results[0].model == pin
-    assert summary.deliveries_failed == (0 if ok else 1)
-    assert summary.deliveries_delivered == summary.replies_posted == (1 if ok else 0)
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert len(messages) == (2 if ok else 1)
-    if ok:
-        assert messages[-1]["from_model"] == "unattested-harness"
-        assert messages[-1]["body"] == "READY"
+        assert len(launches) == len(results) == 1
+        assert results[0].ok is ok
+        assert results[0].model_identity is None
+        assert results[0].model == pin
+        assert summary.deliveries_failed == (0 if ok else 1)
+        assert summary.deliveries_delivered == summary.replies_posted == (1 if ok else 0)
+        messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
+        assert len(messages) == (2 if ok else 1)
+        if ok:
+            assert messages[-1]["from_model"] == "unattested-harness"
+            assert messages[-1]["body"] == "READY"
 
 
 @patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
