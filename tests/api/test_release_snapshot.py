@@ -461,7 +461,14 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
     (repo_root / html_path).write_text("<title>Live release data</title>\n", encoding="utf-8")
     port = _free_port()
     log_path = tmp_path / "release-api.log"
-    environment = sanitized_git_env() | {
+    # The snapshot is another checkout: it is the product, as scripts/api/launchd_supervisor.py names
+    # it, and this test process's own product and primary roots are not its configuration.
+    environment = {
+        key: value
+        for key, value in sanitized_git_env().items()
+        if key not in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")
+    } | {
+        "LU_PRODUCT_ROOT": str(release_dir),
         "LEARN_UK_REPO_ROOT": str(repo_root),
         "GIT_DIR": _run_git(repo_root, "rev-parse", "--absolute-git-dir"),
         "GIT_WORK_TREE": str(repo_root),

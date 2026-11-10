@@ -167,6 +167,10 @@ def sandbox(tmp_path, hermetic_monitor):
     # manager and starts every stub worker in a real ``lu-worker-*`` scope.
     env = {**os.environ, "LU_TASKS_DIR": str(tasks), "LU_DISPATCH_ISOLATION": "fallback"}
     env.pop("PYTHONPATH", None)
+    # The sandbox is another checkout: the product and primary roots this test process named for
+    # its own checkout (scripts/__init__.py) are not the sandbox's configuration.
+    for name in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
+        env.pop(name, None)
 
     def cli(*args, expected=0, stdin=None):
         result = subprocess.run(
