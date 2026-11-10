@@ -6,6 +6,13 @@ boundaries. Adapters, preparation, leases and the provider are recording
 stand-ins. Terminal behaviour runs through a pseudo-terminal under a minimal
 job-control shell. Live containment stays the opt-in soak in
 tests/test_launcher_driver_scope.py.
+
+The per-wrapper scope test runs twice: on this checkout's machinery copy, and
+on the installed lu-machinery release (machinery#100), whose shell core,
+helpers, machinery wrappers and Python modules are linked from the release's
+recorded files (`_install_release`). Every other test here runs on the
+checkout's copy. tests/test_launcher_installed_helper_chain.py runs the
+release's Python helper chain with nothing replaced.
 """
 
 from __future__ import annotations
@@ -29,7 +36,13 @@ from pathlib import Path
 import pytest
 
 from tests.helpers import machinery_package
-from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
+from tests.launcher_libraries import (
+    freeze_product_wrapper,
+    installed_machinery,
+    launcher_catalog_files,
+    launcher_library_files,
+    link_installed_machinery,
+)
 from tests.launcher_sandbox import (
     copy_slot_registry,
     launcher_environment,
@@ -182,7 +195,12 @@ done
 """
 _PYTHON = """#!/usr/bin/env bash
 {event}
-case "${{1:-}}:${{2:-}}" in
+# `python -m <module> <command>`, or the release's isolated module bootstrap
+# `python -I -c <bootstrap> <code-root> <package> -m <module> <command>`, which
+# is matched on the arguments after its package; the real call keeps them all.
+argv=("$@")
+if [[ "${{1:-}}" == -I && "${{2:-}}" == -c && "${{3:-}}" == *"module bootstrap:"* ]]; then set -- "${{@:6}}"; fi
+{admission}case "${{1:-}}:${{2:-}}" in
   -m:{package}.session_supervisor)
     lu_test_event "lease-${{3:-}}"
     if [ "${{3:-}}" = open ]; then
@@ -193,9 +211,20 @@ JSON
     exit 0
     ;;
   -m:{package}.fleet_comms) lu_test_event publish; exit 0 ;;
+  -m:{package}.orchestration.thread_handoff) lu_test_event rollover-import; exit 0 ;;
 esac
 case "${{1:-}}" in */{package}/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
-exec {python} "$@"
+exec {python} "${{argv[@]}}"
+"""
+# The release reads only its own catalog, where GLM is retired, so the installed
+# runtime cannot take the patched catalog the checkout runtime copies. Its
+# interpreter instead admits exactly the two GLM identities at the retired-model
+# check, before the scope, as that catalog would; every other catalog command,
+# including the check for every other model, runs the release's own code.
+_RELEASE_GLM_ADMISSION = """case "${{1:-}}:${{2:-}}:${{3:-}}:${{4:-}}" in
+  -m:{package}.review.model_catalog:--check-retired-model:glm-5.3|\\
+  -m:{package}.review.model_catalog:--check-retired-model:glm-5.3-flash) exit 0 ;;
+esac
 """
 # A job-control shell for one foreground job, as a login shell runs a launcher:
 # it owns the terminal, gives the job its own foreground process group, records
@@ -268,60 +297,124 @@ os._exit(code)
 
 def _write(path: Path, body: str, mode: int = 0o644) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
+    # An installed-runtime fixture links release files; replace a link, never write through it.
+    path.unlink(missing_ok=True)
     path.write_text(body, encoding="utf-8")
     path.chmod(mode)
     return path
 
 
-def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
-    """Copy every tracked wrapper and the shared core; stub only the edges."""
-    root = tmp_path / "repo"
+# Where the launcher code under test comes from: this checkout's tracked copy,
+# or the installed lu-machinery release (`installed_machinery`).
+RUNTIMES = ("checkout", "installed")
+_PROVIDERS = ("claude", "codex", "cursor", "gemini", "glm", "grok", "kimi")
+# Package-relative boundary files each fixture replaces with a stub or redirect.
+_REPLACED = (
+    "lib/driver_scope.sh",
+    "lib/rules_core.sh",
+    "lib/deploy_extensions.sh",
+    "lib/claude_weekly_used.py",
+    "ai_agent_bridge/inbox_watch.sh",
+    *(f"launchers/{provider}.sh" for provider in _PROVIDERS),
+)
+
+
+def _runtime_wrapper(wrapper: str, runtime: str) -> str:
+    """The fixture path of tracked wrapper ``wrapper`` under ``runtime``.
+
+    A machinery wrapper lives in the package directory, which the installed
+    release names differently from this checkout.
+    """
+    if runtime == "installed" and wrapper.startswith(f"{MACHINERY}/"):
+        return f"{installed_machinery().name}/{wrapper.removeprefix(f'{MACHINERY}/')}"
+    return wrapper
+
+
+def _install_release(root: Path) -> tuple[Path, str]:
+    """Run the installed release: product wrappers are frozen data, machinery comes from the release.
+
+    Each product root wrapper is copied from this checkout with only its launcher-library
+    source line pointed at the package directory; the package directory links every other
+    file to the recorded release file, so the shell core, its helpers, the machinery
+    wrappers and every Python module the launcher runs are the release's own bytes.
+    """
+    release = link_installed_machinery(root / installed_machinery().name, _REPLACED)
+    core = root / release.name / "lib/launcher_core.sh"
+    assert core.resolve() == (release.directory / "lib/launcher_core.sh").resolve(), core
     for wrapper in tracked_launcher_wrappers():
-        destination = root / wrapper
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(launcher_wrapper_source(wrapper), destination)
-    for relative in (
-        f"{MACHINERY}/config/issue_streams.yaml",
-        f"{MACHINERY}/config/launcher_stream_aliases.tsv",
-        *launcher_library_files(REPO),
-        *launcher_catalog_files(REPO),
-    ):
-        destination = root / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPO / relative, destination)
-    # Recording adapters below model the retained wrapper ABI, independent of
-    # production retirement. Real GLM launch refusal remains covered separately.
-    import yaml
+        if "/" in wrapper:
+            # Machinery wrappers come from the release, linked above.
+            assert (root / _runtime_wrapper(wrapper, "installed")).is_symlink(), wrapper
+            continue
+        freeze_product_wrapper(launcher_wrapper_source(wrapper), root / wrapper, release.name)
+    return release.directory, release.name
 
-    from scripts.review.model_catalog import validate_catalog
 
-    catalog_path = root / MACHINERY / "config/model_catalog.yaml"
-    catalog = yaml.safe_load(catalog_path.read_text())
-    for identity in ("glm-5.3", "glm-5.3-flash"):
-        catalog["models"][identity]["lifecycle"] = "active"
-        catalog["models"][identity]["transports"] = ["opencode"]
-    validate_catalog(catalog)
-    catalog_path.write_text(yaml.safe_dump(catalog))
-    copy_slot_registry(root)
+def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str, str]]:
+    """Copy every tracked wrapper and the shared core; stub only the edges.
+
+    ``runtime="installed"`` runs the installed release instead of this checkout's copy
+    (`_install_release`); the same boundary stubs replace the same package files.
+    """
+    root = tmp_path / "repo"
+    if runtime == "installed":
+        machinery, package = _install_release(root)
+    else:
+        assert runtime == "checkout", runtime
+        machinery, package = REPO / MACHINERY, MACHINERY
+        for wrapper in tracked_launcher_wrappers():
+            destination = root / wrapper
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(launcher_wrapper_source(wrapper), destination)
+        for relative in (
+            f"{MACHINERY}/config/issue_streams.yaml",
+            f"{MACHINERY}/config/launcher_stream_aliases.tsv",
+            *launcher_library_files(REPO),
+            *launcher_catalog_files(REPO),
+        ):
+            destination = root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPO / relative, destination)
+        # Recording adapters below model the retained wrapper ABI, independent of
+        # production retirement. Real GLM launch refusal remains covered separately.
+        # (The installed runtime admits GLM at its interpreter: _RELEASE_GLM_ADMISSION.)
+        import yaml
+
+        from scripts.review.model_catalog import validate_catalog
+
+        catalog_path = root / MACHINERY / "config/model_catalog.yaml"
+        catalog = yaml.safe_load(catalog_path.read_text())
+        for identity in ("glm-5.3", "glm-5.3-flash"):
+            catalog["models"][identity]["lifecycle"] = "active"
+            catalog["models"][identity]["transports"] = ["opencode"]
+        validate_catalog(catalog)
+        catalog_path.write_text(yaml.safe_dump(catalog))
+        copy_slot_registry(root)
     # The real helper with only its kernel cgroup read redirected.
-    env = scope_sandbox(root, tmp_path)
+    env = scope_sandbox(root, tmp_path, machinery=machinery, package=package)
     _write(
-        root / MACHINERY / "lib/rules_core.sh",
+        root / package / "lib/rules_core.sh",
         _EVENT
         + 'rules_core_load() { lu_test_event rules; LC_RULES_CORE=""; LC_RULES_SEAT=core; LC_RULES_CORE_BYTES=0; }\n'
         + "rules_core_prefix() { printf '%s' \"$1\"; }\n",
     )
-    _write(root / MACHINERY / "lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
-    _write(root / MACHINERY / "lib/claude_weekly_used.py", "print('0')\n")
-    # The interpreter intercepts the rollover import by path; the slot registry
-    # may import the real module, so keep it when present.
-    handoff = root / MACHINERY / "orchestration/thread_handoff.py"
+    _write(root / package / "lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
+    _write(root / package / "lib/claude_weekly_used.py", "print('0')\n")
+    # The interpreter intercepts the rollover import by path or module name; the
+    # slot registry may import the real module, so keep it when present.
+    handoff = root / package / "orchestration/thread_handoff.py"
     if not handoff.exists():
         _write(handoff, "raise SystemExit('intercepted by the test interpreter')\n")
-    _write(root / MACHINERY / "ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
-    for provider in ("claude", "codex", "cursor", "gemini", "glm", "grok", "kimi"):
-        _write(root / MACHINERY / f"launchers/{provider}.sh", _ADAPTER)
-    _write(root / ".venv/bin/python", _PYTHON.format(event=_EVENT, python=shlex.quote(sys.executable), package=MACHINERY), 0o755)
+    _write(root / package / "ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
+    for provider in _PROVIDERS:
+        _write(root / package / f"launchers/{provider}.sh", _ADAPTER)
+    interpreter = _PYTHON.format(
+        event=_EVENT,
+        python=shlex.quote(sys.executable),
+        package=package,
+        admission=_RELEASE_GLM_ADMISSION.format(package=package) if runtime == "installed" else "",
+    )
+    _write(root / ".venv/bin/python", interpreter, 0o755)
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
     signal_provider = _write(root / "signal-provider.sh", _SIGNAL_PROVIDER, 0o755)
     subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30, env=launcher_environment())
@@ -406,12 +499,17 @@ def _expected_forward(wrapper: str) -> list[str]:
     return list(TRICKY)
 
 
+@pytest.mark.parametrize("runtime", RUNTIMES)
 @pytest.mark.parametrize("wrapper", sorted({**INTERACTIVE, **DRIVERS}))
-def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(tmp_path: Path, wrapper: str) -> None:
-    root, env = _checkout(tmp_path)
+def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
+    tmp_path: Path, wrapper: str, runtime: str
+) -> None:
+    root, env = _checkout(tmp_path, runtime)
     provider, label = {**INTERACTIVE, **DRIVERS}[wrapper]
     mode = "interactive" if wrapper in INTERACTIVE else "driver"
-    result = _launch(root, env, wrapper, *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC))
+    result = _launch(
+        root, env, _runtime_wrapper(wrapper, runtime), *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC)
+    )
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     assert _lines(env["FAKE_STARTS"]) == ["start"]
     start = re.search(
