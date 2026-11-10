@@ -36,7 +36,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 correction_factory = importlib.import_module("scripts.projects.open_model_data.correction_factory")
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"

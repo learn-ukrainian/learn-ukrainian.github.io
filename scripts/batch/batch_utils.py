@@ -14,9 +14,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 try:
-    from common.http_status import has_http_status
+    from lu_machinery.common.http_status import has_http_status
 except ModuleNotFoundError:
-    from scripts.common.http_status import has_http_status
+    from lu_machinery.common.http_status import has_http_status
 
 log = logging.getLogger("batch")
 

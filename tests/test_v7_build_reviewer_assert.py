@@ -279,7 +279,7 @@ def test_upgrade_allows_gemini_self_review_when_flagged(tmp_path: Path):
         with patch.dict(linear_pipeline.REVIEWER_DEFAULTS, {"agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"}}, clear=False):
             with patch("scripts.build.v7_build._reviewer_for_writer", return_value="agy-tools"):
                 with patch("scripts.build.linear_pipeline.render_review_prompt", return_value="prompt"):
-                    with patch("scripts.agent_runtime.runner.invoke") as invoke:
+                    with patch("lu_machinery.agent_runtime.runner.invoke") as invoke:
                         invoke.side_effect = RuntimeError("stop after assert")
                         with pytest.raises(RuntimeError, match="stop after assert"):
                             v7_build._run_llm_qg(
@@ -369,7 +369,7 @@ def test_llm_qg_retries_empty_dimension_response(
             return SimpleNamespace(response="")
         return SimpleNamespace(response=_llm_qg_response(dim))
 
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", invoke)
 
     module_dir = tmp_path / "module"
     module_dir.mkdir()
@@ -411,7 +411,7 @@ def test_llm_qg_resumes_current_successful_dimension_artifact(
         calls.append(dim)
         return SimpleNamespace(response=_llm_qg_response(dim))
 
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", invoke)
 
     report = v7_build._run_llm_qg(
         plan={"slug": "test-slug", "level": "a1"},
@@ -455,7 +455,7 @@ def test_llm_qg_retries_ungrounded_reviewer_evidence(
             )
         return SimpleNamespace(response=_llm_qg_response(dim))
 
-    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+    monkeypatch.setattr("lu_machinery.agent_runtime.runner.invoke", invoke)
 
     module_dir = tmp_path / "module"
     module_dir.mkdir()

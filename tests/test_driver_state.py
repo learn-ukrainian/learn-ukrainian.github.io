@@ -735,6 +735,8 @@ def test_running_workers_uses_shared_store_from_linked_worktree(tmp_path, monkey
     module.touch()
     monkeypatch.setattr(task_store_paths, "__file__", str(module))
     monkeypatch.delenv("LU_TASKS_DIR", raising=False)
+    # Importing the product package names this checkout's primary; the test resolves from its own tree.
+    monkeypatch.delenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", raising=False)
     monkeypatch.chdir(linked)
     _workers(primary, "synthetic-seat", SYNTHETIC_WORKER_TARGET)
     assert driver_state.running_workers("synthetic-seat") == SYNTHETIC_WORKER_TARGET

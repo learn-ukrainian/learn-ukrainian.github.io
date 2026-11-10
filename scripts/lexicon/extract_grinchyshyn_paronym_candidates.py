@@ -19,7 +19,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.storage.artifacts import write_artifact
+from lu_machinery.storage.artifacts import write_artifact
+
 from scripts.verification.vesum import verify_word
 
 DEFAULT_SOURCE = PROJECT_ROOT / "docs" / "references" / "private" / "grinchyshyn-slovnyk-paronimiv-1986.txt"

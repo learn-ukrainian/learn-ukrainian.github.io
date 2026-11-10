@@ -1070,6 +1070,8 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 
     monkeypatch.setattr(subprocess, "run", transport)
     monkeypatch.setattr(pub.github_client, "run", transport)
+    # Practice and dataset publishers send through the installed release.  # TRANSITIONAL-PKG3-B2
+    monkeypatch.setattr(importlib.import_module("lu_machinery.common.github_client"), "run", transport)  # TRANSITIONAL-PKG3-B2
     artifact = tmp_path / "unit.gz"
     artifact.write_bytes(b"\xffunit")
 

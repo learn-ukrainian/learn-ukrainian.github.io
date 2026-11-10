@@ -1090,7 +1090,7 @@ def test_ua_gec_only_missing_vesum_is_source_unavailable(monkeypatch):
 
 
 def test_ua_gec_network_sources_path_returns_source_unavailable(monkeypatch):
-    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from lu_machinery.storage.topology import ActiveDatabaseNetworkError  # check_text catches the release class
 
     def raise_network() -> Path:
         raise ActiveDatabaseNetworkError(

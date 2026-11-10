@@ -65,7 +65,10 @@ def _require_approved_model(model: str) -> str:
     """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin. Returns normalized wire model."""
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-    from scripts.review.model_catalog import (
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+    # isort: split
+    from lu_machinery.review.model_catalog import (
         ModelCatalogError,
         apply_cursor_model_pins,
         cursor_non_dispatch_model_refusal,
@@ -93,7 +96,7 @@ def call_cursor(prompt: str, model: str) -> dict:
     prompt does NOT instruct the model to read or write any files.
     """
     model = _require_approved_model(model)
-    from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
+    from lu_machinery.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
 
     cursor_bin = resolve_cursor_agent_binary()
     t0 = time.time()

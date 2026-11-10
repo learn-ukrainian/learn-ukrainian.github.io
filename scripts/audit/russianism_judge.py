@@ -53,8 +53,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -67,17 +70,17 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.repo_root import project_interpreter
 
 BRIDGE = PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"
-VENV_PY = project_interpreter()
+VENV_PY = project_interpreter(PROJECT_ROOT)
 
 # Per-family subprocess timeout. Calibrated empirically: gemini-judge
 # calls can exceed 240s under load; claude/codex consistently land under
@@ -95,7 +98,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

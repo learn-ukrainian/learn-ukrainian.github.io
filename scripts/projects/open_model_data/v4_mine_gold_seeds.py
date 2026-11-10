@@ -33,13 +33,13 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import jsonschema
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.gold_seeds_data import RAW_GOLD_SEEDS
 from scripts.projects.open_model_data.gold_seeds_types import CATEGORY_QUOTAS, RawGoldSeedSpec
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set
 
 
 def resolve_data_path(rel_path: str) -> Path:

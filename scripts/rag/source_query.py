@@ -386,8 +386,8 @@ def grac_db_path() -> Path:
     """
     import os
 
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.storage.topology import is_network_filesystem_path, require_local_active_sources_db
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.storage.topology import is_network_filesystem_path, require_local_active_sources_db
 
     override = os.environ.get("LU_GRAC_FREQUENCY_DB")
     path = Path(override).expanduser() if override else require_local_active_sources_db(
@@ -403,8 +403,8 @@ def _grac_local(query: str, attr: str, db_path: str | Path | None = None) -> dic
     import sqlite3
     from contextlib import closing
 
-    from scripts.lib.readonly_sqlite import open_readonly
-    from scripts.storage.topology import is_network_filesystem_path
+    from lu_machinery.lib.readonly_sqlite import open_readonly
+    from lu_machinery.storage.topology import is_network_filesystem_path
 
     try:
         path = Path(db_path) if db_path is not None else grac_db_path()

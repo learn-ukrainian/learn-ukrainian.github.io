@@ -1340,7 +1340,9 @@ def test_allowed_output_replaces_stale_cards(checkouts):
 
 
 def test_discovery_uncertainty_fails_closed(checkouts, monkeypatch, tmp_path):
-    monkeypatch.setattr(containment, "registered_worktrees", lambda root: [])
+    from lu_machinery.guardrails import worktree_containment as release_containment  # word_card_assembly's copy
+
+    monkeypatch.setattr(release_containment, "registered_worktrees", lambda root: [])
     with pytest.raises(wa.AssemblyError, match="registered worktrees"):
         wa.require_host_only([checkouts["external"] / "x"], checkouts["current"])
     monkeypatch.undo()

@@ -16,44 +16,58 @@ a test builds below ``tmp_path``.
 
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
+# Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+_API_PACKAGES = ("scripts.api", "lu_machinery.api")  # TRANSITIONAL-PKG3-B2
+
+
+def _api_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
+    return [importlib.import_module(f"{package}.{name}") for package in _API_PACKAGES]
+
 
 @pytest.fixture(autouse=True)
 def _judge_git_below_tmp_path(tmp_path, monkeypatch):
-    from scripts.api import claude_account_usage
-
     boundary = tmp_path.resolve()
 
-    def inside_git(path: Path) -> bool:
-        return any(
-            claude_account_usage._git_tree(directory)
-            for directory in (path, *path.parents)
-            if directory.is_relative_to(boundary)
-        )
+    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
 
-    monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+        def inside_git(path: Path, _module=claude_account_usage) -> bool:
+            return any(
+                _module._git_tree(directory)
+                for directory in (path, *path.parents)
+                if directory.is_relative_to(boundary)
+            )
+
+        monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
 
 
-def _no_provider(directory: int, account: str) -> None:
-    from scripts.api.claude_account_usage import ClaudeAccountRefused
+def _no_provider_for(claude_account_usage):  # TRANSITIONAL-PKG3-B2
+    def _no_provider(directory: int, account: str) -> None:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
 
-    raise ClaudeAccountRefused("claude_account_identity_unavailable")
+    return _no_provider
+
+
+def _reset_status_caches() -> None:
+    for state_helpers in _api_modules("state_helpers"):  # TRANSITIONAL-PKG3-B2
+        state_helpers.cache_invalidate()
+    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        claude_account_usage._reset_for_tests()
 
 
 @pytest.fixture(autouse=True)
 def _isolate_status_ttl_cache(monkeypatch):
-    from scripts.api import claude_account_usage
-    from scripts.api.state_helpers import cache_invalidate
-
-    cache_invalidate()
-    claude_account_usage._reset_for_tests()
-    monkeypatch.setattr(
-        claude_account_usage, "_private_usage", lambda: SimpleNamespace(prove_claude_owner=_no_provider)
-    )
+    _reset_status_caches()
+    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(
+            claude_account_usage,
+            "_private_usage",
+            lambda _module=claude_account_usage: SimpleNamespace(prove_claude_owner=_no_provider_for(_module)),
+        )
     yield
-    cache_invalidate()
-    claude_account_usage._reset_for_tests()
+    _reset_status_caches()

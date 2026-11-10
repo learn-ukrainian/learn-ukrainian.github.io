@@ -5,7 +5,8 @@ import re
 from dataclasses import asdict
 from pathlib import Path
 
-from scripts.common.task_store_paths import tasks_dir
+from lu_machinery.common.task_store_paths import tasks_dir
+
 from scripts.rag.word_identity import normalize_evidence_form
 
 from ..attribution import Attribution

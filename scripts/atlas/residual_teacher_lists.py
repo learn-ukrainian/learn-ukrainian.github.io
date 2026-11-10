@@ -38,7 +38,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.lexicon.curated_seed_atlas_admission import normalize_rows, prepare_practice_seed
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest
 

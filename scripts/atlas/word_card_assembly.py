@@ -34,6 +34,10 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import yaml
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.common.scratch import ensure_scratch_root
+from lu_machinery.guardrails import worktree_containment as containment
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, store_data_dir
 
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_meanings as meanings
@@ -48,11 +52,7 @@ from scripts.atlas.allocate_pilot_identities import (
     normalize_mwe_form,
 )
 from scripts.atlas.word_card_resolver import CONF_ORDER, _project, _recompute, aid, card_version
-from scripts.common.git_context import sanitized_git_env
-from scripts.common.scratch import ensure_scratch_root
-from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, store_data_dir
 
 ASSEMBLER_VERSION = "pilot-assembly-v8"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
@@ -1564,8 +1564,8 @@ def load_suppressions(path: Path | None) -> dict:
 
 def store_path(name: str, explicit: Path | None) -> Path:
     """An explicit path, else the primary checkout's store; a refused or missing store stops the build."""
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.storage.topology import StoreRefusal, resolve_store
+    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.storage.topology import StoreRefusal, resolve_store
 
     if explicit is not None:
         return explicit

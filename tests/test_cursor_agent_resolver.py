@@ -9,6 +9,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.agent_runtime.adapters.cursor import CursorAgentMissingError as ReleaseCursorAgentMissingError
 
 import scripts.agent_runtime.binary_resolve as binary_resolve
 from scripts.agent_runtime import telemetry as telemetry_mod
@@ -143,7 +144,8 @@ def test_resolver_refuses_when_only_decoy_agent_exists(tmp_path: Path, monkeypat
         )
     with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
         _invoke_cursor("hello", "grok-4.7-high")
-    with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
+    # The product calibration tool runs the installed release's adapter.
+    with pytest.raises(ReleaseCursorAgentMissingError, match="cursor-agent"):
         calibration.call_cursor("judge this", "grok-4.7-high")
     probe = probe_cursor_login()
 

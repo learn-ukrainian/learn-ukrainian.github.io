@@ -860,7 +860,9 @@ def _run_strict_adoption(
     # directory under a test project root).
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.append(str(PROJECT_ROOT))
-    from scripts.orchestration import issue_stream_audit as isa
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+    # isort: split
+    from lu_machinery.orchestration import issue_stream_audit as isa
 
     atlas_intake_registry = _load_atlas_intake_registry()
 
@@ -869,7 +871,8 @@ def _run_strict_adoption(
         message = (
             "strict adoption gate: no fresh issue-stream membership cache "
             f"(<= {max_age_s}s old). Refresh it first: "
-            ".venv/bin/python -m scripts.orchestration.issue_stream_audit --json"
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+            ".venv/bin/python -m lu_machinery.orchestration.issue_stream_audit --json"
         )
         if as_json:
             print(json.dumps({"ok": False, "errors": [message], "cache": "missing"}, indent=2))

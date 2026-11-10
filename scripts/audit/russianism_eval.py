@@ -24,9 +24,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
+from lu_machinery.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
+from lu_machinery.common.repo_root import project_interpreter
+
 from scripts.audit.checks.russicism_detection import check_russicisms
-from scripts.common.repo_root import project_interpreter
 
 PYTHON, BRIDGE = project_interpreter(), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0

@@ -19,9 +19,12 @@ import yaml
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-from scripts.orchestration import curriculum_readiness as readiness
-from scripts.orchestration.preparation_evidence import UniqueKeyLoader, load_manual_evidence
+# isort: split
+
+from lu_machinery.orchestration import curriculum_readiness as readiness
+from lu_machinery.orchestration.preparation_evidence import UniqueKeyLoader, load_manual_evidence
 
 REGISTRY_REL = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
 

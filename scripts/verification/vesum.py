@@ -33,8 +33,9 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+
 from scripts.rag import config as _rag_config
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None

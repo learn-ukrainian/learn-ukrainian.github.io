@@ -127,7 +127,7 @@ def test_page_analysis_does_not_retry_identifiers(monkeypatch, tmp_path, message
 
 @pytest.fixture()
 def plan_cli(monkeypatch):
-    from scripts.review import model_catalog
+    from lu_machinery.review import model_catalog  # convert_plans_v4 admits through the installed release
 
     # Isolate the existing admission boundary; no model is admitted or called.
     monkeypatch.setattr(model_catalog, "require_execution_model", Mock())

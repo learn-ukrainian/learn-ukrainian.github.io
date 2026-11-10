@@ -36,13 +36,14 @@ if str(ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.calque_corrections import (
     CURATED_CALQUES,
     PHRASAL_CALQUES,
 )
 from scripts.lexicon.load_relation_candidates import RelationHeritageLookup
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.verification.check_ru_morph import get_ru_confidence

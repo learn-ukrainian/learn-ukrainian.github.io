@@ -50,8 +50,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 

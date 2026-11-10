@@ -19,6 +19,7 @@ from __future__ import annotations
 import copy
 import gzip
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -35,6 +36,7 @@ from scripts.lexicon.manifest_io import DOWNLOAD_ATTEMPTS
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "pytest-slow-nightly.yml"
 REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
+MACHINERY_LOCK = REPO_ROOT / "requirements-machinery.lock"
 JOB = "pytest-slow"
 INSTALL_STEP = "Install dependencies"
 VERIFY_STEP = "Verify Atlas manifest matches pointer (rehydrate if stale)"
@@ -107,16 +109,25 @@ def _build_sandbox(root: Path, control: str) -> tuple[Path, dict[str, str]]:
     # Other submodules come from the real packages. The loader is local because
     # it resolves its own path to find site/src/data; the GitHub client is
     # synthetic so no hydrate attempt can reach the network.
+    # The loader imports its GitHub client from the installed lu_machinery release;
+    # the same synthetic client stands in there.
+    release = Path(importlib.util.find_spec("lu_machinery").submodule_search_locations[0])
+    release_common = workspace / "lu_machinery" / "common"
+    release_common.mkdir(parents=True)
     packages = (
         (scripts, REPO_ROOT / "scripts"),
         (lexicon, REPO_ROOT / "scripts" / "lexicon"),
         (common, REPO_ROOT / "scripts" / "common"),
+        (workspace / "lu_machinery", release),
+        (release_common, release / "common"),
     )
     for package, real in packages:
         (package / "__init__.py").write_text(f"__path__.append({str(real)!r})\n", encoding="utf-8")
     shutil.copy2(REPO_ROOT / "scripts" / "lexicon" / "manifest_io.py", lexicon / "manifest_io.py")
-    (common / "github_client.py").write_text(OFFLINE_GITHUB_CLIENT, encoding="utf-8")
+    for client_package in (common, release_common):
+        (client_package / "github_client.py").write_text(OFFLINE_GITHUB_CLIENT, encoding="utf-8")
     shutil.copy2(REQUIREMENTS_LOCK, workspace / "requirements-lock.txt")
+    shutil.copy2(MACHINERY_LOCK, workspace / "requirements-machinery.lock")
 
     data_dir = workspace / "site" / "src" / "data"
     data_dir.mkdir(parents=True)
@@ -181,6 +192,16 @@ if [[ "$1" == "-m" && "$2" == "venv" ]]; then
   exit 0
 fi
 exec '{real}' -S "$@"
+""",
+    )
+    # Offline stand-in for the lu-machinery wheel download: write the -o target, fetch nothing.
+    _write_executable(
+        bin_dir / "curl",
+        """#!/usr/bin/env bash
+while (( $# )); do
+  if [[ "$1" == "-o" ]]; then : > "$2"; shift; fi
+  shift
+done
 """,
     )
     runner_temp = root / "runner-temp"

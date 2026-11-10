@@ -56,7 +56,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
-from scripts.agent_runtime.telemetry import codex_model_identity  # isort: skip
+from lu_machinery.agent_runtime.telemetry import codex_model_identity  # isort: skip
 from scripts.audit import layerb_shadow, model_families  # isort: skip
 
 

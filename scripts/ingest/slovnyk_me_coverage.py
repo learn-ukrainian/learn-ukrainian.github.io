@@ -12,7 +12,8 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+
 from scripts.wiki.slovnyk_me import normalize_word
 
 PULS_LEVELS = ("A1", "A2", "B1")

@@ -44,12 +44,13 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon.vesum_form_key import (
     VESUM_FORM_SHARD_COUNT,
     vesum_form_key,
     vesum_shard_id,
 )
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"

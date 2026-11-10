@@ -13,10 +13,10 @@ from pathlib import Path
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.review.model_catalog import load_model_catalog, resolve_catalog_model_id
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.validate import a1_reference
-from scripts.review.model_catalog import load_model_catalog, resolve_catalog_model_id
 from scripts.review.receipts import ledger
 
 from . import formulas, lock, sources

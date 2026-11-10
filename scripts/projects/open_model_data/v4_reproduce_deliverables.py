@@ -24,10 +24,14 @@ from typing import Any
 
 import jsonschema
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set
+sys.path.append(str(Path(__file__).resolve().parents[3]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set
 
 _DELIVERY_RECEIPT = "registry/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
 

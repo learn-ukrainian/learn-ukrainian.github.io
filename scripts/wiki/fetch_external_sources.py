@@ -47,12 +47,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
-from common.http_status import has_http_status
-from common.repo_root import project_interpreter
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.common.http_status import has_http_status
+from lu_machinery.common.repo_root import project_interpreter
 
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(PROJECT_ROOT)
 
 # Rate limiting — requested in #1151.
 BLOG_DELAY = 1.5

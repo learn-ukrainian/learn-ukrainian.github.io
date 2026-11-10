@@ -7,9 +7,10 @@ import json
 import sys
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage import topology
+
 from scripts.lexdata import build_store, generation, transforms, verify
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage import topology
 
 RELATED = ("Related: design lexdata layer v1 r3 (§3, §4, §6, §8); "
            "agents_extensions/shared/rules/storage-topology.md; epic #8977.")

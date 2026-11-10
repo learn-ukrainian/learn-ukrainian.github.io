@@ -16,8 +16,8 @@ import re
 from pathlib import Path
 from typing import Any
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 _VESUM_CONN: SQLiteConnection | None = None
 

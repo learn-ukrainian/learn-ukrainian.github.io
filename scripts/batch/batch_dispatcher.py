@@ -48,7 +48,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 from batch.batch_dispatcher_config import (
     COOLDOWN_SECONDS,
     DISPATCHER_STATE_FILE,
@@ -770,7 +770,7 @@ def cmd_dispatch_one(args):
 
 def _drop_unneeded_dispatcher_secrets() -> None:
     """Drop unknown API keys, retaining recognized downstream provider keys."""
-    from agent_runtime.env_sanitize import unneeded_env_var_names
+    from lu_machinery.agent_runtime.env_sanitize import unneeded_env_var_names
 
     for name in unneeded_env_var_names(os.environ, "dispatcher"):
         os.environ.pop(name, None)

@@ -21,7 +21,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import unquote
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 
 _ENV_FLAG = "LEXICON_RUNNER_NETWORK_WORKER"
 _SOURCES_DB_ENV = "LEXICON_SOURCES_DB"

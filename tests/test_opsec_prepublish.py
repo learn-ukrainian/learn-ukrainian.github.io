@@ -589,15 +589,19 @@ def test_cli_block_is_typed_without_traceback(capsys):
 def test_publishers_translate_policy_refusals(module, function, args, error_type, monkeypatch, tmp_path):
     import importlib
     publisher = importlib.import_module(module)
+    # A product publisher translates the refusal of the gate it runs: the installed release's.
+    blocked = gate.PublishBlocked
+    if publisher.request_run.__module__.startswith('lu_machinery.'):
+        blocked = importlib.import_module('lu_machinery.opsec.prepublish').PublishBlocked
 
     def refuse(*args, **kwargs):
-        raise gate.PublishBlocked('synthetic refusal')
+        raise blocked('synthetic refusal')
     monkeypatch.setattr(publisher, 'request_run', refuse)
     kwargs = {}
     expected = 'publish_blocked:.*synthetic refusal'
     with pytest.raises(error_type, match=expected) as error:
         getattr(publisher, function)(*args, **kwargs)
-    assert not isinstance(error.value, gate.PublishBlocked)
+    assert not isinstance(error.value, (gate.PublishBlocked, blocked))
     assert error.value.__suppress_context__
 
 

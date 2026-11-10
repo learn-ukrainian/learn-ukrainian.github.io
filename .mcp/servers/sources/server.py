@@ -1754,7 +1754,7 @@ def _discard_retired_v4_evidence_args(arguments: dict[str, Any]) -> None:
 
 
 def _typed_identifier(namespace: str, typed_result: dict[str, Any]) -> str:
-    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
 
     return v4_store.immutable_evidence_identifier(
         namespace=namespace,

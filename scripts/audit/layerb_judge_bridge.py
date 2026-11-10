@@ -50,10 +50,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
-from scripts.agent_runtime.telemetry import codex_model_identity
-from scripts.agent_runtime.tool_calls import normalize_tool_calls
+from lu_machinery.agent_runtime.telemetry import codex_model_identity
+from lu_machinery.agent_runtime.tool_calls import normalize_tool_calls
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.audit import layerb_shadow
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
 PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
@@ -898,7 +899,7 @@ def _read_strict_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def _grok_session_dir(scoped_home: Path, scratch_dir: Path, session_id: str) -> Path:
     """Return the documented Grok session directory for this fresh invocation."""
-    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
+    from lu_machinery.agent_runtime.adapters.grok_build import grok_session_dir
 
     return grok_session_dir(scoped_home, scratch_dir, session_id)
 

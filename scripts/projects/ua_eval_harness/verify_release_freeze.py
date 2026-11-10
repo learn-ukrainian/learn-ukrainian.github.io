@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
 from scripts.projects.ua_eval_harness.build_heldout_manifest import (
     load_metadata,
     parse_m2,
