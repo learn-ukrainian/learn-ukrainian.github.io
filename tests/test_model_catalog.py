@@ -1047,6 +1047,11 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
+    """An active Gemini work model holds no review role, so it is refused any review of record.
+
+    Argon left retirement on 2026-11-10 as the second Gemini work option; the refusal now
+    comes from its catalog roles, not its lifecycle, and still precedes routing and launch.
+    """
     from scripts.agent_runtime import target_admission
 
     def forbidden(*args, **kwargs):
@@ -1054,7 +1059,10 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(target_admission.ReviewAdmissionRefused, match="is retired in the model catalog"):
+    with pytest.raises(
+        target_admission.ReviewAdmissionRefused,
+        match=r"\(gemini-4-argon\) holds no review, critique or approval role",
+    ):
         target_admission.resolve_and_admit(
             ("agy",),
             mode="read-only",
