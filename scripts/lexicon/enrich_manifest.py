@@ -1247,8 +1247,10 @@ class _SlovnykArticleParser(HTMLParser):
     Also records each top-level ``<p>`` as a ``paragraphs`` entry with whether it
     is wrapped in ``<strong>``/``<b>`` (the proverbs dictionary bolds the saying
     and leaves its plain-text gloss paragraph unbolded, #6462). This is additive:
-    ``article_parts``/``h1_parts``/``title_parts``/``canonical_url`` are unchanged,
-    so every other slug's flattened-text extraction keeps its existing behavior.
+    ``article_parts``/``h1_parts``/``title_parts`` are unchanged, so every other
+    slug's flattened-text extraction keeps its existing behavior. The page's
+    ``rel=canonical`` link is not retained: it only ever fed ``source_url``, and
+    slovnyk.me now publishes that link as ``http``.
     """
 
     def __init__(self) -> None:
@@ -1257,7 +1259,6 @@ class _SlovnykArticleParser(HTMLParser):
         self.h1_parts: list[str] = []
         self.article_parts: list[str] = []
         self.paragraphs: list[dict[str, Any]] = []
-        self.canonical_url = ""
         self._in_title = False
         self._in_article_section = False
         self._in_article = False
@@ -1270,8 +1271,6 @@ class _SlovnykArticleParser(HTMLParser):
         attr = {key: value or "" for key, value in attrs}
         if tag == "title":
             self._in_title = True
-        if tag == "link" and attr.get("rel") == "canonical":
-            self.canonical_url = attr.get("href", "")
         if tag == "section" and attr.get("id") in {"dictionary-acticle", "dictionary-article"}:
             self._in_article_section = True
         if tag == "article" and self._in_article_section:
@@ -1586,7 +1585,9 @@ def _parse_slovnyk_entry(
         "dictionary_slug": slug,
         "dictionary_label": _SLOVNYK_DICT_LABELS.get(slug, slug),
         "word": headword,
-        "source_url": parser.canonical_url or url,
+        # The https locator the caller requested. Never the page canonical:
+        # slovnyk.me publishes that as http, which _valid_slovnyk_positive rejects.
+        "source_url": url,
         "title": title,
         # Store the full attested article (#6736): the former 5000-char cap
         # amputated the longest multi-sense VTS/СУМ-20 articles mid-text, and
