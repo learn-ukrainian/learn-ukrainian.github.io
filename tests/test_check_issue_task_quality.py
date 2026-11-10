@@ -293,7 +293,10 @@ def _select_checkout(monkeypatch, checkout):
     with its own ``.git`` directory, so a bare fixture directory gets one.
     """
     primary = main_checkout_root(checkout)
-    (primary / ".git").mkdir(exist_ok=True)
+    # A real Git directory: Git needs HEAD, objects/ and refs/ before it treats .git as one.
+    for entry in ("objects", "refs"):
+        (primary / ".git" / entry).mkdir(parents=True, exist_ok=True)
+    (primary / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
     monkeypatch.setenv("LU_PRODUCT_ROOT", str(checkout))
     monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
     monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)

@@ -372,6 +372,7 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     writes = []
     reads = []
     enqueue_payloads = []
+    queue_proofs = []
     def spy(args, **kwargs):
         if args[1:3] == ["pr", "view"]:
             reads.append(args)
@@ -391,6 +392,13 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
                 writes.append(args)
                 enqueue_payloads.append(document)
                 return subprocess.CompletedProcess(args, 0, "{}", "")
+            if document["query"] == pub.QUEUE_ENTRY_QUERY:
+                # pr-merge proves the reviewed head's queue entry after the enqueue (machinery #281).
+                queue_proofs.append(args)
+                body = {"data": {"repository": {"pullRequest": {
+                    "headRefOid": "a" * 40, "isInMergeQueue": True,
+                    "mergeQueueEntry": {"headCommit": {"oid": "a" * 40}}, "autoMergeRequest": None}}}}
+                return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
             reads.append(args)
             body = {"data": {"repository": {"pullRequest": {
                 "id": "PR_fixture_1", "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
@@ -417,6 +425,7 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     # Read the head-bound checks; ready merges also read the default squash text
     # the recorded review seats (#12020), here an exact-head approval (#12031), and the PR's files (#12181).
     assert len(reads) == (7 if state == "ready" else 1 if state == "draft" else 3)
+    assert len(queue_proofs) == (1 if state == "ready" else 0)
 
 
 def test_review_contract_change_without_canary_evidence_is_refused_before_write(synthetic_opsec):
