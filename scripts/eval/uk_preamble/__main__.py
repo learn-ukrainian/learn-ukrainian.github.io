@@ -13,7 +13,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
     __package__ = "scripts.eval.uk_preamble"
 
-from lu_machinery.common.repo_root import project_interpreter
+from scripts.common.repo_root import project_interpreter
 
 from .common import (
     SEATS,

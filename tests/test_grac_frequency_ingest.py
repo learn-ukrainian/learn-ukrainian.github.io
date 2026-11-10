@@ -452,7 +452,7 @@ def test_default_path_storage_resolution_and_override(tmp_path, monkeypatch):
 
 
 def test_refuses_network_sqlite(tmp_path, monkeypatch):
-    monkeypatch.setattr('scripts.storage.topology.is_network_filesystem_path', lambda _: True)
+    monkeypatch.setattr('lu_machinery.storage.topology.is_network_filesystem_path', lambda _: True)
     with pytest.raises(ValueError):
         query.grac_db_path()
     assert query.grac_frequency('a', cache_only=True, db_path=tmp_path / 'absent.db') is None

@@ -22,8 +22,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from lu_machinery.common.scratch import ensure_scratch_root
-
+from scripts.common.scratch import ensure_scratch_root
 from scripts.eval.uk_preamble.common import tokenize
 
 from . import adapters, coverage, judge

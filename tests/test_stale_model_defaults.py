@@ -9,6 +9,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.review.model_catalog import ModelCatalogError  # the refusing subjects run the installed release
 
 from scripts.audit import (
     code_review_benchmark,
@@ -19,7 +20,7 @@ from scripts.audit.checks import content_quality
 from scripts.batch import batch_gemini_config
 from scripts.build import linear_pipeline
 from scripts.etymology import bulk_ocr_gemini
-from scripts.review.model_catalog import ModelCatalogError, require_execution_model
+from scripts.review.model_catalog import require_execution_model
 from scripts.tools import convert_plans_v4
 
 ROOT = Path(__file__).resolve().parents[1]

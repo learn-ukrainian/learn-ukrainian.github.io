@@ -8,7 +8,6 @@ cached packages therefore consult current withdrawals and snapshot bindings.
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
 import os
 from collections.abc import Iterator
@@ -18,30 +17,20 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
-from lu_machinery.common.jsonl import jsonl_lines
 
 from scripts.atlas import word_card_golden_set as gold
+from scripts.common.jsonl import jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-
-def machinery_module_file(name: str) -> Path:
-    """The installed file of a machinery module, located without executing it."""
-    spec = importlib.util.find_spec(name)
-    if spec is None or spec.origin is None:
-        raise ModuleNotFoundError(name)
-    return Path(spec.origin)
-
-
 REVIEW_EVIDENCE_PATH = PROJECT_ROOT / "docs/atlas/word-cards/review-evidence-ledger.json"
 PERMISSIONS_REGISTER_PATH = PROJECT_ROOT / "docs/sources/permissions-register.yaml"
 SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
     *sorted(PROJECT_ROOT.glob("scripts/review/**/*.py")),
-    machinery_module_file("lu_machinery.dispatcher.providers.agy"),
-    machinery_module_file("lu_machinery.dispatcher.types"),
-    machinery_module_file("lu_machinery.agent_runtime.adapters.agy"),
+    PROJECT_ROOT / "scripts/dispatcher/providers/agy.py",
+    PROJECT_ROOT / "scripts/dispatcher/types.py",
+    PROJECT_ROOT / "scripts/agent_runtime/adapters/agy.py",
     PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
     PROJECT_ROOT / "scripts/lexicon/teacher_deck_shard.py",
     PROJECT_ROOT / "scripts/practice/densify_paradigm_from_lexemes.py",
@@ -389,7 +378,7 @@ def _native50_scope(inspection: dict, packet: dict, spec: dict) -> str:
 
 
 def _native_task(actor: dict, task_root: Path, *, qualified_reviewer: bool = False) -> tuple[dict, str]:
-    from lu_machinery.review import record_cf_verdict as reviews
+    from scripts.review import record_cf_verdict as reviews
 
     task, reply = reviews._task(actor["task_id"], task_root)
     gold.require(task.get("run_nonce") == actor["run_nonce"] and bool(task.get("result_sha256"))
@@ -408,7 +397,7 @@ def _native_task(actor: dict, task_root: Path, *, qualified_reviewer: bool = Fal
 
 
 def _native50_freezer(freezer: dict, authors: list[dict], producer: dict, base: Path) -> None:
-    from lu_machinery.review.record_cf_verdict import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+    from scripts.review.record_cf_verdict import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
 
     gold.require(resolve_family(freezer["model"]) not in UNRESOLVED_AUTHOR_FAMILIES,
                  "original50_freezer_model_unknown")
@@ -426,8 +415,7 @@ def _native50_freezer(freezer: dict, authors: list[dict], producer: dict, base: 
 
 
 def _native50_sources(score: dict, facet: str, lemma: str, calls: dict) -> None:
-    from lu_machinery.agent_runtime.adapters.agy import _SAVED_OUTPUT_POINTER_RE
-
+    from scripts.agent_runtime.adapters.agy import _SAVED_OUTPUT_POINTER_RE
     from scripts.review.receipts.outcomes import classify_outcome
 
     gold.require(bool(score["reason"].strip()) and bool(score["calls"]), "original50_per_card_sources_missing")
@@ -459,8 +447,8 @@ def _native50_sources(score: dict, facet: str, lemma: str, calls: dict) -> None:
 def _verify_native50(inspection: dict, packet: dict, spec: dict, base: Path,
                      authority: CertificationAuthority) -> list[dict]:
     """Replay real task custody and per-card Sources evidence; write no authority."""
-    from lu_machinery.dispatcher.providers import agy
-    from lu_machinery.review import record_cf_verdict as reviews
+    from scripts.dispatcher.providers import agy
+    from scripts.review import record_cf_verdict as reviews
 
     scope = _native50_scope(inspection, packet, spec)
     primary = reviews._review_repository_root("learn-ukrainian/learn-ukrainian.github.io", PROJECT_ROOT)
@@ -665,7 +653,7 @@ def _evaluate_code_first(spec_path: Path, spec_sha256: str, spec: dict) -> dict:
     native_authors = []
     original50_refusal = None
     if spec["original50_receipt"] is not None:
-        from lu_machinery.review.record_cf_verdict import RecordError
+        from scripts.review.record_cf_verdict import RecordError
 
         try:
             original = gold.decode(gold.reference(spec["original50_receipt"], base))
