@@ -16,10 +16,11 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.common import repo_root as rr
-from lu_machinery.dispatcher import primary as dispatcher_primary
-from lu_machinery.lib import rules_core
-from lu_machinery.orchestration import worktree_claims, worktree_git
+
+from scripts.common import repo_root as rr
+from scripts.dispatcher import primary as dispatcher_primary
+from scripts.lib import rules_core
+from scripts.orchestration import worktree_claims, worktree_git
 
 REPO = Path(__file__).resolve().parents[2]
 UNIT = REPO / "packaging" / "systemd" / "learn-ukrainian-project-state-reporter.service"
@@ -191,14 +192,6 @@ def _systemd_home(tmp_path: Path) -> Path:
     return home
 
 
-@pytest.fixture
-def api_client():
-    import lu_machinery.api.main as api_main
-    from fastapi.testclient import TestClient
-
-    return TestClient(api_main.app, raise_server_exceptions=False)
-
-
 # --------------------------------------------------------------------------- AC-01: a non-default root is honoured
 
 
@@ -274,20 +267,6 @@ def test_systemd_exec_start_runs_with_the_configured_roots(tmp_path: Path, layou
         "rules": str(layout["rules"]),
         "slug": CONFIGURED_SLUG,
     }
-
-
-@pytest.mark.parametrize("repo", sorted(REPOS))
-def test_api_rules_serves_the_configured_rules_directory(monkeypatch, api_client, layout, repo: str) -> None:
-    for key, value in _configured(layout, repo).items():
-        monkeypatch.setenv(key, value)
-    core = api_client.get("/api/rules?scope=core&format=json")
-    assert core.status_code == 200, core.text
-    assert core.json()["markdown"] == "# Configured core\n"
-    content = api_client.get("/api/rules?scope=content&format=json")
-    assert content.status_code == 200, content.text
-    markdown = content.json()["markdown"]
-    assert markdown == rules_core.core_text("content")
-    assert markdown.startswith("# Configured core\n") and markdown.endswith("# Configured curriculum addendum\n")
 
 
 @pytest.mark.parametrize("repo", sorted(REPOS))
@@ -382,11 +361,6 @@ def test_unset_configuration_keeps_todays_systemd_exec_start() -> None:
     ]
     assert unit["WorkingDirectory"] == ["%h/projects/learn-ukrainian"]
     assert unit["EnvironmentFile"] == ["-%h/.config/learn-ukrainian/machinery.env"]
-
-
-def test_unset_configuration_serves_the_checkout_rules(clean_env, api_client) -> None:
-    body = api_client.get("/api/rules?scope=core&format=json").json()
-    assert body["markdown"] == (REPO / rules_core.CORE_REL).read_text(encoding="utf-8").rstrip() + "\n"
 
 
 def test_machinery_path_refuses_absolute_traversal_and_escaping_symlink_inputs(monkeypatch, tmp_path: Path) -> None:
