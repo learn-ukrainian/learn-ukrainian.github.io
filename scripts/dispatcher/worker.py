@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import signal
 import stat
 import subprocess
@@ -52,6 +53,56 @@ def _seal_advisory_result(record: dict, result: Path) -> None:
     record[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
         response, model=record.get("model"), run_nonce=record.get("run_nonce"), fence=fence
     )
+
+
+# Re-creatable caches a worker leaves in its own task output directories. Settlement removes these directories
+# and keeps every log, result, receipt and hand-off beside them (C-4946(a)).
+TASK_CACHE_DIRS = frozenset({"venv", ".venv", "buildvenv", "npm-cache", ".npm", "node_modules", "pip-cache", ".cache",
+                             "__pycache__"})
+
+
+def _task_cache_dirs(task_id: str) -> list[Path]:
+    """The TASK_CACHE_DIRS entries under ``<task_id>.artifacts`` and ``<task_id>.evidence``; links are never followed."""
+    tasks = store.record_path(task_id).parent
+    found: list[Path] = []
+    for suffix in (".artifacts", ".evidence"):
+        root = tasks / f"{task_id}{suffix}"
+        if root.is_symlink() or not root.is_dir():
+            continue
+        # os.walk lists a link to a directory among the names without descending into it.
+        for directory, names, _files in os.walk(root):
+            found.extend(Path(directory, name) for name in names if name in TASK_CACHE_DIRS)
+            names[:] = [name for name in names if name not in TASK_CACHE_DIRS]
+    return found
+
+
+def _clear_task_caches(record: dict) -> bool:
+    """Remove a finished task's re-creatable caches from its own output directories; True when the record changed.
+
+    A link named as a cache is removed as a link. The caller holds the task state lock. What cannot be
+    removed is recorded in ``task_cache_residue`` and retried by the scheduled settlement sweep.
+    """
+    if record.get("status") in store.ACTIVE:
+        return False
+    residue: list[str] = []
+    try:
+        for path in _task_cache_dirs(record["task_id"]):
+            try:
+                if path.is_symlink():
+                    path.unlink()
+                else:
+                    shutil.rmtree(path)
+            except OSError as exc:
+                residue.append(f"{path.relative_to(store.tasks_dir())}: {type(exc).__name__}")
+    except Exception as exc:  # cache removal never stops the worktree settlement that follows it
+        residue.append(f"scan: {type(exc).__name__}")
+    if residue == record.get("task_cache_residue", []):
+        return False
+    if residue:
+        record["task_cache_residue"] = residue
+    else:
+        record.pop("task_cache_residue")
+    return True
 
 
 def _identity(pid: int | None) -> str | None:
@@ -787,7 +838,7 @@ def _end_own_scope(record: dict):
 
 
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
-    """Record the task worktree's disposition; never changes the task's execution status.
+    """Record the task worktree's disposition and remove the task's caches; never changes its execution status.
 
     The worktree goes only once the provider's whole process tree is proven gone; liveness that
     cannot be proven either way keeps it. A finished scope launch first ends whatever that scope
@@ -798,6 +849,7 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
     stopped = _end_own_scope(record)
+    _clear_task_caches(record)
     if record.get("launch_mode") == "popen-fallback" and stopped is not None and not stopped.ok:
         # Only the process group's id is recorded for a fallback launch, so a descendant that left it is
         # invisible to the liveness check below. Name each survivor so a later retry still sees it.
@@ -826,13 +878,22 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
 
 
+def _holds_task_caches(record: dict) -> bool:
+    """Whether a finished task still has caches to remove (or an earlier removal's residue to retry)."""
+    try:
+        return record.get("status") not in store.ACTIVE and bool(
+            "task_cache_residue" in record or _task_cache_dirs(record["task_id"]))
+    except (KeyError, TypeError, ValueError, OSError):
+        return False
+
+
 def _unsettled(record: dict) -> bool:
     return record.get("status") not in store.ACTIVE and (
         "worktree_disposition" not in record or record.get("worktree_disposition_reason") in RETRY_REASONS)
 
 
 def settle_left_worktrees(salvage: bool = False) -> None:
-    """Retry finished tasks' worktrees during scheduled cleanup, including crash recovery.
+    """Retry finished tasks' worktrees and remove their caches during scheduled cleanup, including crash recovery.
 
     Admission and worker exit do not call this store-wide sweep. Each worker settles only
     its own task. The hourly hygiene run passes salvage for the trees settlement keeps.
@@ -844,13 +905,18 @@ def settle_left_worktrees(salvage: bool = False) -> None:
                 record = _observe(record)
             records.append(record)
     for record in records:
-        if not _unsettled(record) or not Path(record.get("worktree_path") or "").is_dir():
+        reap = _unsettled(record) and Path(record.get("worktree_path") or "").is_dir()
+        if not reap and not _holds_task_caches(record):
             continue
         path = store.record_path(record["task_id"])
         # wait() takes this lock before it reports a terminal task, so it never returns mid-removal.
         with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
-            if _unsettled(current):
+            if not reap or not _unsettled(current):
+                # A task settled without a worktree, or by an earlier pass, still sheds its caches.
+                if _clear_task_caches(current):
+                    store.replace(current, path)
+            else:
                 _reap_settled(current, salvage=salvage)
                 store.replace(current, path)
 
