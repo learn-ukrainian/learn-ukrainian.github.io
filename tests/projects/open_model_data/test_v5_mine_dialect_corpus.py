@@ -31,8 +31,8 @@ from typing import Any
 
 import jsonschema
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import ARTIFACT_RELEASE_DIR, REGISTRY_RELEASE_DIR
 from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     DEFAULT_VESUM_DB,
