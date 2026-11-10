@@ -390,3 +390,37 @@ def test_precommit_entry_does_not_fail_when_selected_interpreter_env_is_unset(tm
     selected = Path(probe.read_text(encoding="utf-8"))
     assert selected == Path(_project_python())
     assert selected.is_absolute() and selected.is_file() and os.access(selected, os.X_OK)
+
+
+def test_manual_precommit_entry_does_not_fail_when_selected_interpreter_env_is_unset(tmp_path):
+    """Manual pre-commit must resolve Python without going through a Git hook."""
+    import yaml
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    (repo / ".githooks").mkdir()
+    shutil.copy2(HOOK_DIR / "_lib.sh", repo / ".githooks/_lib.sh")
+    launcher = repo / "scripts/pre_commit/project_python.sh"
+    launcher.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", launcher)
+    (repo / ".venv/bin").mkdir(parents=True)
+    _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
+    config = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text(encoding="utf-8"))
+    hook = next(
+        hook for source in config["repos"] if source["repo"] == "local"
+        for hook in source["hooks"] if hook["id"] == "no-secret-print-hook"
+    )
+    (repo / ".pre-commit-config.yaml").write_text(
+        json.dumps({"repos": [{"repo": "local", "hooks": [hook]}]}), encoding="utf-8",
+    )
+    (repo / "README.md").write_text("manual hook fixture\n", encoding="utf-8")
+    _git(repo, "add", ".pre-commit-config.yaml", "README.md")
+    result = _run(
+        [_project_python(), "-m", "pre_commit", "run", "no-secret-print-hook", "--all-files"],
+        cwd=repo,
+        env={"LEARN_UKRAINIAN_PYTHON": "", "PRE_COMMIT_HOME": str(tmp_path / "pre-commit-cache")},
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Passed" in result.stdout
