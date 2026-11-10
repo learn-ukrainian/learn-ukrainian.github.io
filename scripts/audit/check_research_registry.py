@@ -59,11 +59,12 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.repo_root import machinery_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = PROJECT_ROOT / "docs" / "references" / "research-registry.yaml"
 SCHEMA_PATH = PROJECT_ROOT / "schemas" / "research_registry.schema.json"
-STREAMS_PATH = PROJECT_ROOT / "scripts" / "config" / "issue_streams.yaml"
+STREAMS_PATH = machinery_path("config/issue_streams.yaml")
 DECISIONS_PATH = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
 # Digest copyright policy (ADR-011 §"Digest content policy"). These are a
@@ -91,19 +92,11 @@ class ProvenanceError(ValueError):
 
 
 def _load_atlas_intake_registry():
-    """Load ``scripts/audit/atlas_intake_registry.py`` by file path, bypassing
-    the ``scripts.audit`` package ``__init__``.
+    """Load the product Atlas registry without running the audit initializer.
 
-    ``from scripts.audit import atlas_intake_registry`` would run
-    ``scripts/audit/__init__.py``, which imports ``scripts/audit/config.py``,
-    which does a bare ``from config import ...`` — resolved against
-    ``sys.path[0]``. When THIS file is invoked as a bare script
-    (``python scripts/audit/check_research_registry.py``, not ``-m``), Python
-    sets ``sys.path[0]`` to this file's own directory (``scripts/audit/``) —
-    so ``config`` self-shadows against ``scripts/audit/config.py`` instead of
-    the intended ``scripts/config.py``, crashing on a circular partial import.
-    Loading the sibling module directly by path sidesteps the whole package
-    init and is safe under both bare-script and ``-m``/import invocation.
+    Running this file directly places the audit directory first on sys.path.
+    Loading the sibling by path avoids configuration-name shadowing during
+    package initialization, in both direct and module invocation.
     """
     import importlib.util
 

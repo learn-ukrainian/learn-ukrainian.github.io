@@ -8,8 +8,8 @@ import re
 from pathlib import Path
 
 import pytest
+from lu_machinery.opsec import needles as nd
 
-from scripts.opsec import needles as nd
 from scripts.projects.open_model_data.v4_mine_stem_controls import ssh_or_host_re
 
 # Fictional deployment values; only their shape matters.
