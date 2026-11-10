@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${LEARN_UKRAINIAN_PYTHON:-$(git rev-parse --path-format=absolute --git-common-dir)/../.venv/bin/python}\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agent_runtime/codex_hook_entry.sh\")), *sys.argv[1:]])' pre-tool-use",
+            "command": "hook_root=\"${LU_PRODUCT_ROOT:-}\" && if [ -z \"$hook_root\" ]; then hook_common=\"$(git rev-parse --path-format=absolute --git-common-dir)\" && hook_root=\"$(cd \"$hook_common/..\" && pwd -P)\"; fi && export LU_PRODUCT_ROOT=\"$hook_root\" && LEARN_UKRAINIAN_PYTHON=\"${LEARN_UKRAINIAN_PYTHON:-$hook_root/.venv/bin/python}\" bash \"$hook_root/scripts/pre_commit/project_python.sh\" -I -c 'import os, sys; from lu_machinery.common.repo_root import machinery_path; os.environ[\"LEARN_UKRAINIAN_PYTHON\"] = sys.executable; os.execv(\"/bin/bash\", [\"bash\", str(machinery_path(\"agent_runtime/codex_hook_entry.sh\")), *sys.argv[1:]])' pre-tool-use || { printf \"Codex hook bootstrap failed; blocking the tool call\\n\" >&2; exit 2; }",
             "timeout": 45,
             "statusMessage": "Running Codex tool policy"
           }

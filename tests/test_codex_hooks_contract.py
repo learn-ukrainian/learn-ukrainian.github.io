@@ -700,7 +700,7 @@ def test_codex_tool_events_run_the_policy_and_result_hooks() -> None:
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
     assert 'machinery_path("agent_runtime/codex_hook_entry.sh")' in pre_hook["command"]
-    assert pre_hook["command"].endswith(" pre-tool-use")
+    assert " pre-tool-use || " in pre_hook["command"]
     assert pre_hook["timeout"] == 45
 
     post_groups = hooks["PostToolUse"]
@@ -1172,3 +1172,76 @@ def test_compact_hydrate_bound_fits_its_retries() -> None:
     ]
     # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
     assert compact and compact[0]["timeout"] > 2 + 2 + 6
+
+
+@pytest.mark.parametrize("provider", ["codex-bash", "codex-patch", "agy"])
+@pytest.mark.parametrize("root_mode", ["derived", "explicit"])
+def test_provider_manifest_missing_product_root_allows_benign_worktree_tools(
+    tmp_path: Path, provider: str, root_mode: str,
+) -> None:
+    """Missing worker root configuration must not deny every benign tool (F2)."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selector = primary / "scripts/pre_commit/project_python.sh"
+    selector.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", selector)
+    environment = {name: os.environ[name] for name in ("PATH", "HOME", "LANG") if name in os.environ}
+    if provider == "agy":
+        shutil.copytree(primary / ".venv", tmp_path / ".venv")
+        guard = primary / "agents_extensions/shared/hooks/guard-secret-print.py"
+        guard.parent.mkdir(parents=True)
+        shutil.copy2(machinery_path("agents_extensions/shared/hooks/guard-secret-print.py"), guard)
+        config = json.loads((REPO_ROOT / "agents_extensions/agy/hooks.json").read_text())
+        command = config["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"]
+        payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": "echo hello"}}}
+    else:
+        command = _manifest()["hooks"]["PreToolUse"][0]["hooks"][0]["command"]
+        patch = "*** Begin Patch\n*** Add File: benign.txt\n+hello\n*** End Patch"
+        payload = {
+            "hook_event_name": "PreToolUse", "cwd": str(worktree),
+            "tool_name": "apply_patch" if provider == "codex-patch" else "Bash",
+            "tool_input": {"command": patch if provider == "codex-patch" else "ls", "workdir": str(worktree)},
+        }
+    if root_mode == "explicit":
+        environment["LU_PRODUCT_ROOT"] = str(primary)
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=tmp_path if root_mode == "explicit" else worktree, env=environment,
+        input=json.dumps(payload), text=True, capture_output=True, timeout=45,
+    )
+    assert result.returncode == 0, result.stderr
+    if provider == "agy":
+        assert json.loads(result.stdout) == {"decision": "allow"}
+    else:
+        assert result.stdout == ""
+
+
+@pytest.mark.parametrize("selection", ["unset", "valid", "relative", "missing", "no-wheel"])
+def test_codex_manifest_bootstrap_failure_blocks_with_exit_two(
+    tmp_path: Path, selection: str,
+) -> None:
+    """Interpreter/bootstrap failures must refuse before a Codex tool can run (F3)."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selector = primary / "scripts/pre_commit/project_python.sh"
+    selector.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", selector)
+    environment = {name: os.environ[name] for name in ("PATH", "HOME", "LANG") if name in os.environ}
+    if selection == "valid":
+        environment["LEARN_UKRAINIAN_PYTHON"] = sys.executable
+    elif selection == "relative":
+        environment["LEARN_UKRAINIAN_PYTHON"] = "python3"
+    elif selection == "missing":
+        environment["LEARN_UKRAINIAN_PYTHON"] = str(tmp_path / "missing-python")
+    elif selection == "no-wheel":
+        no_wheel = tmp_path / "no-wheel-python"
+        no_wheel.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} -S "$@"\n')
+        no_wheel.chmod(0o755)
+        environment["LEARN_UKRAINIAN_PYTHON"] = str(no_wheel)
+    command = _manifest()["hooks"]["PreToolUse"][0]["hooks"][0]["command"]
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=worktree, env=environment,
+        input=json.dumps({"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": "ls"}}),
+        text=True, capture_output=True, timeout=45,
+    )
+    assert result.returncode == (0 if selection in {"unset", "valid"} else 2), result.stderr
+    assert result.stdout == ""
+    if selection not in {"unset", "valid"}:
+        assert "Codex hook bootstrap failed" in result.stderr
