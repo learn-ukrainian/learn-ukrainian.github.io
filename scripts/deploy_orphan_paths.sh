@@ -54,7 +54,7 @@ ORPHAN_PATHS_CODEX="settings.local.json retired-skills $ORPHAN_PATHS_RUNTIME"
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
 # the shared rsync/delete pass, then verify them with the overlay drift check.
 # hooks.json and config.toml are intentionally here, not in ORPHAN_PATHS_CODEX.
-CODEX_OVERLAY_PATHS="config.toml hooks.json memory"
+CODEX_OVERLAY_PATHS="config.toml hooks.json"
 
 # --- gemini_extensions → .gemini ---
 # tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
