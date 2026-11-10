@@ -5,12 +5,12 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.ai_agent_bridge import _gemini, _model
+from lu_machinery.ai_llm import fallback
 
-from ai_llm import fallback
 from build import dispatch as build_dispatch
 from pipeline import dispatch as pipeline_dispatch
 from rag import benchmark_embeddings
-from scripts.ai_agent_bridge import _gemini, _model
 from tools import analyze_textbook_pages, convert_plans_v4
 
 
@@ -223,7 +223,7 @@ def test_plan_conversion_offline_retry_control(monkeypatch, plan_cli, scenario, 
     ("run 7f3a429c9e1b2d44", False), ("HTTP429", True),
 ])
 def test_inbox_capacity_adapter_uses_corrected_classifier(message, expected):
-    from scripts.ai_agent_bridge._inbox import _is_gemini_capacity_error
+    from lu_machinery.ai_agent_bridge._inbox import _is_gemini_capacity_error
 
     assert _is_gemini_capacity_error(message) is expected
 
