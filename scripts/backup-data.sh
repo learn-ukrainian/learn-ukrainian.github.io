@@ -103,7 +103,8 @@ LEGACY_EXCLUDES=()
 BACKUP_PATHS=()
 # The allowlist comes from the installed machinery release, not PROJECT_ROOT. Fixtures
 # override the project root and must still read the release resource.
-ALLOWLIST_FILE="$("$REPO_ROOT/.venv/bin/python" -c 'from importlib.resources import files; print(files("lu_machinery").joinpath("config/backup-allowlist.json"))')"
+# Resolve only for data operations so help needs no interpreter.
+ALLOWLIST_FILE=""
 ENUMERATED_FILE_COUNT=0
 ENUMERATED_RELATIVE_PATHS=()
 STAGED_CANDIDATES=()
@@ -1001,6 +1002,11 @@ validate_tree_file_types() {
 # kept file data/lexicon/cache/ulif_raw.sqlite is not cancelled by the dropped
 # parent data/lexicon/cache.
 validate_allowlist_file() {
+  if [[ -z "$ALLOWLIST_FILE" ]]; then
+    local project_python
+    project_python="$(runner_mirror_python)" || exit 1
+    ALLOWLIST_FILE="$("$project_python" -c 'from importlib.resources import files; print(files("lu_machinery").joinpath("config/backup-allowlist.json"))')"
+  fi
   [[ -f "$ALLOWLIST_FILE" && ! -L "$ALLOWLIST_FILE" ]] ||
     die "Backup allowlist is missing: $ALLOWLIST_FILE"
   if ! jq -e '
