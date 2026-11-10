@@ -156,13 +156,22 @@ def manager_guard(directory: Path) -> Path:
     return directory
 
 
-def scope_sandbox(root: Path, tmp_path: Path) -> dict[str, str]:
-    """Copy the real helper, replacing only kernel reads with test-owned files."""
-    helper = root / machinery_package() / "lib/driver_scope.sh"
+def scope_sandbox(
+    root: Path, tmp_path: Path, *, machinery: Path | None = None, package: str | None = None
+) -> dict[str, str]:
+    """Copy the real helper, replacing only kernel reads with test-owned files.
+
+    ``machinery`` is the package directory whose helper is copied (the checkout's by
+    default, or an installed release's) and ``package`` the directory name it takes under
+    ``root``.
+    """
+    helper = root / (package or machinery_package()) / "lib/driver_scope.sh"
     helper.parent.mkdir(parents=True, exist_ok=True)
-    body = (REPO / machinery_package() / "lib/driver_scope.sh").read_text()
+    body = ((machinery or REPO / machinery_package()) / "lib/driver_scope.sh").read_text()
     assert body.count('"/proc/$$/cgroup"') == 1
     body = body.replace('"/proc/$$/cgroup"', '"$FAKE_CGROUP"')
+    # Never write through a link into the source tree.
+    helper.unlink(missing_ok=True)
     helper.write_text(body)
     bindir = tmp_path / "scope-bin"
     bindir.mkdir(exist_ok=True)
