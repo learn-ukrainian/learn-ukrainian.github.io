@@ -151,7 +151,7 @@ def test_task_store_consumers_use_call_time_resolver() -> None:
         tree = ast.parse((repo / relative).read_text(encoding="utf-8"))
         assert any(
             isinstance(node, ast.ImportFrom)
-            and node.module == "lu_machinery.common.task_store_paths"
+            and node.module == "scripts.common.task_store_paths"
             and any(alias.name == "tasks_dir" and (alias.asname or alias.name) == name for alias in node.names)
             for node in ast.walk(tree)
         ), relative

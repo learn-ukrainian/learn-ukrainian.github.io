@@ -13,7 +13,7 @@ the corpus writers.
 
 from __future__ import annotations
 
-import importlib
+from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -52,11 +52,46 @@ __all__ = [
 ]
 
 
+def _submodule(name: str) -> ModuleType:
+    # Static imports only: the SQLite boundary lint refuses an import whose
+    # module name is computed (scripts/hygiene/lint_source_db_writable_connects.py).
+    match name:
+        case "contracts":
+            from scripts.lexicon.runner import contracts
+
+            return contracts
+        case "finalize":
+            from scripts.lexicon.runner import finalize
+
+            return finalize
+        case "ledger":
+            from scripts.lexicon.runner import ledger
+
+            return ledger
+        case "network_cache":
+            from scripts.lexicon.runner import network_cache
+
+            return network_cache
+        case "offline_engine":
+            from scripts.lexicon.runner import offline_engine
+
+            return offline_engine
+        case "offline_reduce":
+            from scripts.lexicon.runner import offline_reduce
+
+            return offline_reduce
+        case "ulif_dictua_parse":
+            from scripts.lexicon.runner import ulif_dictua_parse
+
+            return ulif_dictua_parse
+    raise AssertionError(name)
+
+
 def __getattr__(name: str) -> Any:
     submodule = _EXPORTS.get(name)
     if submodule is None:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    value = getattr(importlib.import_module(f"{__name__}.{submodule}"), name)
+    value = getattr(_submodule(submodule), name)
     globals()[name] = value
     return value
 
