@@ -48,7 +48,7 @@ def epics_app_for_store(
 def epics_monitor_stub(store: SessionStreamStore) -> Iterator[str]:
     """Serve the production epics router on an owned loopback port.
 
-    The router is the same contract exercised in ``tests/api/test_epics_router.py``;
+    The router is the same contract exercised in learn-ukrainian/machinery ``tests/api/test_epics_router.py``;
     this wrapper adds a real socket so launcher subprocesses cannot bypass the
     remote lifecycle client with an in-process test adapter.
     """
