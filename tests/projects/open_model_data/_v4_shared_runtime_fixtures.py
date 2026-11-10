@@ -46,15 +46,17 @@ from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import ActionsPrincipal, canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
 from learn_ukrainian_v4_runtime.pg_schema import apply_pg_schema
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+)
+from lu_machinery.fleet_comms.request_executor import (
+    RequestExecutor,
+)
 from packaging.markers import Marker, default_environment
 from packaging.requirements import Requirement
 from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from psycopg.rows import dict_row
-
-from scripts.fleet_comms.request_executor import (
-    RequestExecutor,  # TRANSITIONAL-PKG3-B2: held runtime needs authorize_author_execution.
-)
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -231,7 +233,8 @@ def prepared(pg_cluster, monkeypatch, tmp_path):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     with RequestExecutor(root=tmp_path) as executor:
         request = executor.create_request(recipient="claude", body="source-free operation fixture")
-        binding = executor.authorize_author_execution(
+        binding = authorize_author_execution(
+            executor,
             request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
         )
     with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
