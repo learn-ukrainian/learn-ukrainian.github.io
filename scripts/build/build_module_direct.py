@@ -39,6 +39,8 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-direct"
 MANIFEST_PATH = CURRICULUM_DIR / "manifest.yaml"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases"
 sys.path.insert(0, str(SCRIPTS_DIR))
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 from batch_gemini_config import PRO_MODEL, VENV_PYTHON
 from validate_direct import ValidationResult, validate_file
 

@@ -21,6 +21,11 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+
+sys.path.append(str(Path(__file__).resolve().parents[3]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 from lu_machinery.storage.artifacts import write_artifact_set
 from lu_machinery.storage.paths import artifact_set
 

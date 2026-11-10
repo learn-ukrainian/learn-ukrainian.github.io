@@ -37,6 +37,9 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.common import github_client
 
@@ -492,8 +495,8 @@ def verify_dist(
         for marker in (*REFUSAL_MARKERS, *sentinels):
             if marker in html:
                 raise PreviewError(f"{relative}: contains refusal or fixture marker {marker!r}")
-    scripts = sorted(dist.rglob("*.js"))
-    for script in scripts:
+    js_files = sorted(dist.rglob("*.js"))
+    for script in js_files:
         text = script.read_text(encoding="utf-8", errors="replace")
         for marker in sentinels:
             if marker in text:
@@ -513,7 +516,7 @@ def verify_dist(
         "learner_pages": counts["learner_pages"],
         "visible_entries": counts["visible_entries"],
         "sitemaps": len(sitemaps),
-        "scripts_scanned": len(scripts),
+        "scripts_scanned": len(js_files),
     }
 
 

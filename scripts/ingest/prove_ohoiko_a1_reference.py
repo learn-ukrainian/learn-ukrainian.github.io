@@ -7,6 +7,7 @@ import hashlib
 import json
 import random
 import re
+import sys
 import unicodedata
 from collections import Counter
 from itertools import groupby, pairwise
@@ -14,6 +15,11 @@ from pathlib import Path
 
 import pymupdf
 import yaml
+
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 

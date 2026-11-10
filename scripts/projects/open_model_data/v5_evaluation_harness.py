@@ -32,6 +32,9 @@ from scipy.stats import beta
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 

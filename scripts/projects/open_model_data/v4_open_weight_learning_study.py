@@ -114,6 +114,7 @@ def _verified_set(repo: Path, group: str) -> storage_paths.ArtifactSet:
     except (FileNotFoundError, ValueError) as exc:
         raise ValueError(
             f"Cannot verify {group}: {exc}; hydrate with "
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
             f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
         ) from exc
 

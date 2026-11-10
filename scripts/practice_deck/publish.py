@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 from lu_machinery.common import github_client
 from lu_machinery.opsec.prepublish import publication_boundary, publication_cli
 from lu_machinery.publish.github import Asset, Request, request_run

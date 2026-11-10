@@ -26,23 +26,20 @@ import yaml
 from bs4 import BeautifulSoup
 
 try:
-    from lu_machinery.storage.topology import resolve_bulk_root
-
-    from scripts.wiki.textbook_subjects import (
-        AUTHOR_UK_BY_TRANSLIT,
-        normalize_subject_slug,
-        subject_for_source_file,
-    )
+    import scripts  # binds the product roots for the installed release
 except ModuleNotFoundError:
     # Preserve the documented direct-script entry point as well as ``-m``.
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from lu_machinery.storage.topology import resolve_bulk_root
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-    from scripts.wiki.textbook_subjects import (
-        AUTHOR_UK_BY_TRANSLIT,
-        normalize_subject_slug,
-        subject_for_source_file,
-    )
+# isort: split
+from lu_machinery.storage.topology import resolve_bulk_root
+
+from scripts.wiki.textbook_subjects import (
+    AUTHOR_UK_BY_TRANSLIT,
+    normalize_subject_slug,
+    subject_for_source_file,
+)
 
 BASE_URL = "https://pidruchnyk.com.ua"
 SELECTION_FILE = Path("docs/l2-uk-direct/textbook-selection.yaml")

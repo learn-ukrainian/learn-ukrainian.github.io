@@ -34,6 +34,9 @@ from pathlib import Path
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 

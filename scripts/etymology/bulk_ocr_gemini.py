@@ -25,6 +25,9 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 from lu_machinery.common.http_status import has_http_status
 
 RAW_ESUM = ROOT / "data/raw/esum"

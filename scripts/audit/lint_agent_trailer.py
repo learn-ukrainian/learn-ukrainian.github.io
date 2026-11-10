@@ -78,6 +78,9 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.common.jsonl import physical_lines
 from lu_machinery.common.repo_root import configured_primary_root, main_checkout_root

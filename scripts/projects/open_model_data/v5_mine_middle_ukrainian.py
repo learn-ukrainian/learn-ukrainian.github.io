@@ -976,6 +976,7 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
     except (FileNotFoundError, ValueError, KeyError) as exc:
         raise RuntimeError(
             "Middle Ukrainian replay requires the verified dialect artifact; hydrate with "
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
             ".venv/bin/python -m lu_machinery.storage.artifacts hydrate "
             "--group open_model_release_payload"
         ) from exc

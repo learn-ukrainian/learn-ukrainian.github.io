@@ -92,6 +92,7 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     "*",
+                    'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
                     f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     str(exc),
                 ) from exc
@@ -128,6 +129,7 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     f"projects/open_model_data/release/{pattern}",
+                    'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
                     f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     "no committed members match required selector; inspect manifest membership",
                 )

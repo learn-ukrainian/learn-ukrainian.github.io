@@ -45,6 +45,9 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 from lu_machinery.common.http_status import has_http_status
 
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"

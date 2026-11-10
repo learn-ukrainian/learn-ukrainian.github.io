@@ -19,6 +19,8 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
     from lu_machinery.lib.readonly_sqlite import SQLiteConnection
     from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly

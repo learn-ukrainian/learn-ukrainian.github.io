@@ -147,7 +147,7 @@
       },
       {
         "path": "scripts/lexicon/curated_membership_evidence.py",
-        "sha256": "635a404a2fc91d9619498c2e4e4c51506191e8d5bf81ecd018fbfc3fbf4eb833"
+        "sha256": "e9aab4e661452a1fff153af58be458a8b22824e7465e0a194dc9c3fccbd887a9"
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
@@ -219,7 +219,7 @@
       },
       {
         "path": "scripts/lexicon/generate_antonym_candidates.py",
-        "sha256": "b96b1134bd2c564a4d38319f13103d7ae1faa19284c4acae6e2bfa6c81fcc842"
+        "sha256": "70645a66a271ae00f17be319ed1bd80ed39786dcaefed9f8c0921be6aacf4621"
       },
       {
         "path": "scripts/lexicon/generate_needs_review_ledger.py",
@@ -291,11 +291,11 @@
       },
       {
         "path": "scripts/lexicon/mine_wikipedia_relations.py",
-        "sha256": "7a6b6e50a35d7060fb15345f3556791c566bbb9070c21742ea89d8414b551787"
+        "sha256": "c60386c829b900e74f1626327d97ba7e7b3cb15539ce56aac7d68e0525cce94e"
       },
       {
         "path": "scripts/lexicon/miyklas_relation_miner.py",
-        "sha256": "4c1bd54bb37678523fbc324cd818676ddf6cff5e318b4867e5358deaa83793f6"
+        "sha256": "bb8ff299fe39b7e15027a08dd74d74797ad701050fdad3777383f473665ab056"
       },
       {
         "path": "scripts/lexicon/monitor_jobs.py",

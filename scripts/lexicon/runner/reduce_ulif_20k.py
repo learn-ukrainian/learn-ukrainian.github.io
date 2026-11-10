@@ -27,6 +27,7 @@ EXPECTED_COHORT_COUNT = 20_323
 
 def _load_repo(repo: Path) -> None:
     sys.path.insert(0, str(repo))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 
 def _event(name: str, **fields: Any) -> None:

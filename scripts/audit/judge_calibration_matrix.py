@@ -7,6 +7,7 @@ import html
 import json
 import os
 import subprocess
+import sys
 import time
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -36,6 +37,9 @@ except ModuleNotFoundError:
         score_case,
         utc_timestamp,
     )
+
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 try:
     from lu_machinery.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude

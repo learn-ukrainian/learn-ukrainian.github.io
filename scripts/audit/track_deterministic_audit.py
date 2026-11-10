@@ -29,6 +29,9 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.common.repo_root import project_interpreter
 

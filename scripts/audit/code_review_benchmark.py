@@ -8,6 +8,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -21,6 +22,9 @@ try:
     from _judge_eval_lib import PROJECT_ROOT, utc_timestamp
 except ModuleNotFoundError:
     from scripts.audit._judge_eval_lib import PROJECT_ROOT, utc_timestamp
+
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 try:
     from lu_machinery.agent_runtime.adapters.claude import headless_claude_argv, run_headless_claude

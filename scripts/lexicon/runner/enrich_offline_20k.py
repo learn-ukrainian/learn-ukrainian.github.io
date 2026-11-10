@@ -28,6 +28,7 @@ DEFAULT_CHUNK_SIZE = 25
 
 def _load_repo(repo: Path) -> None:
     sys.path.insert(0, str(repo))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 
 def _resolve_job_memory_mib(args: argparse.Namespace) -> None:

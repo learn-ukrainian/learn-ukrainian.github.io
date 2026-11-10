@@ -65,6 +65,9 @@ def _require_approved_model(model: str) -> str:
     """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin. Returns normalized wire model."""
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+    # isort: split
     from lu_machinery.review.model_catalog import (
         ModelCatalogError,
         apply_cursor_model_pins,

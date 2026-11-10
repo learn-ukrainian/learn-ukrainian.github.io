@@ -26,7 +26,8 @@ _import_path = sys.path[:]
 try:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-        import scripts  # noqa: F401  # names this checkout as the lu_machinery product (scripts/__init__.py)
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+    # isort: split
     from lu_machinery.api.config import CURRICULUM_ROOT
 
     from scripts.audit.content_surface_gates import scan_module_surface

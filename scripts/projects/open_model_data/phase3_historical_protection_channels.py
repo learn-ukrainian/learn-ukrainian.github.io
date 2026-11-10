@@ -20,6 +20,9 @@ from typing import Any
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.storage.artifacts import write_artifact_set
 from lu_machinery.storage.paths import artifact_set

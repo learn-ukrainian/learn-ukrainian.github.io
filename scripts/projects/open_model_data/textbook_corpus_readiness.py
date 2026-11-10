@@ -71,6 +71,9 @@ except ModuleNotFoundError:
         normalize_subject_slug,
         subject_for_source_file,
     )
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 

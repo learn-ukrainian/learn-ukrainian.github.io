@@ -69,6 +69,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
     from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
     from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store

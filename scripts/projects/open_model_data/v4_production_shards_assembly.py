@@ -160,6 +160,7 @@ def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, Artifa
         except (FileNotFoundError, ValueError) as exc:
             raise RuntimeError(
                 f"Managed artifact group {group} is unavailable; hydrate with "
+                'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
                 f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
             ) from exc
     try:
@@ -167,6 +168,7 @@ def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, Artifa
     except KeyError as exc:
         raise RuntimeError(
             f"{path} is not a committed member of {group}; check the requested path or hydrate with "
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
             f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
         ) from exc
 

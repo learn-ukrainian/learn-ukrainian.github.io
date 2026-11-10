@@ -28,6 +28,9 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
 
 from build.text_utils import parse_vocab_hint
 
