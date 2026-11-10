@@ -105,9 +105,6 @@ DEPLOYED_COPY_SOURCES = (
     (".codex/", ("agents_extensions/shared/", "agents_extensions/codex/")),
     (".agents/", ("agents_extensions/agy/",)),
     (".agents/skills/", ("agents_extensions/shared/skills/",)),
-    (".gemini/", ("gemini_extensions/",)),
-    (".gemini/skills/", ("agents_extensions/shared/skills/",)),
-    (".gemini/rules/", ("agents_extensions/shared/rules/",)),
 )
 
 

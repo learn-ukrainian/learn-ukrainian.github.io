@@ -1246,7 +1246,7 @@ def test_overlays_outside_exact_node_modules_directories_remain_refused(
     assert relative in raised.value.detail
 
 
-DEPLOY_ROOTS_IGNORED = ".claude/\n.agent/*\n.codex/\n.agents/\n.gemini/\n"
+DEPLOY_ROOTS_IGNORED = ".claude/\n.agent/*\n.codex/\n.agents/\n"
 DEPLOYED_HOOK = "import sys\nsys.exit(0)\n"
 
 
@@ -1264,9 +1264,7 @@ def _commit_deploy_source(repo: Path, source: str, text: str = DEPLOYED_HOOK) ->
         ("agents_extensions/shared/hooks/guard.py", ".codex/hooks/guard.py"),
         ("agents_extensions/codex/hooks/guard.py", ".codex/hooks/guard.py"),
         ("agents_extensions/shared/skills/s/run.py", ".agents/skills/s/run.py"),
-        ("agents_extensions/shared/skills/s/run.py", ".gemini/skills/s/run.py"),
         ("agents_extensions/agy/hooks/guard.py", ".agents/hooks/guard.py"),
-        ("gemini_extensions/hooks/guard.py", ".gemini/hooks/guard.py"),
     ],
 )
 def test_deployed_copies_identical_to_the_commit_are_not_validation_overlays(
@@ -1292,7 +1290,7 @@ def test_a_deployed_copy_that_differs_from_its_committed_source_is_refused(repo:
 
 @pytest.mark.parametrize(
     "deployed",
-    [".claude/hooks/extra.py", ".claude/guard.py", ".gemini/rules/guard.py", ".agents/guard.py"],
+    [".claude/hooks/extra.py", ".claude/guard.py", ".agents/guard.py"],
 )
 def test_a_file_under_a_deploy_root_with_no_committed_source_is_refused(repo: Path, deployed: str) -> None:
     _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard.py")
@@ -1335,9 +1333,7 @@ def test_a_symlinked_deployed_copy_is_refused(repo: Path) -> None:
 
 DEPLOY_INPUTS = (
     ".gitignore",
-    ".gemini",
     "agents_extensions",
-    "gemini_extensions",
     "scripts/check_rules_deployment.sh",
     "scripts/agent_deploy",
     "scripts/deploy_orphan_paths.sh",

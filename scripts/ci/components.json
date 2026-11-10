@@ -843,12 +843,6 @@
       ]
     },
     {
-      "path": "gemini_extensions/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
       "path": "migrations/",
       "components": [
         "shared-core"
