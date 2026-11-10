@@ -329,6 +329,12 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     root.mkdir()
     for relative in ("batch_state", "stores", "curriculum", "dashboards", "data", "logs"):
         (root / relative).mkdir(parents=True, exist_ok=True)
+    # The release resolves only the checkout's executable interpreter (no
+    # sys.executable fallback); the sweep still denies running it below.
+    interpreter = root / ".venv" / "bin" / "python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text("", encoding="utf-8")
+    interpreter.chmod(0o755)
 
     # The API cache is process-global, while pytest-xdist gives each worker a
     # different fixture root. Replace the mutable stores rather than allowing

@@ -746,3 +746,27 @@ def test_workers_opsec_no_sensitive_tokens(monkeypatch: pytest.MonkeyPatch) -> N
         assert alias not in text
     assert "run_nonce" not in text
     assert "pid" not in text
+
+
+
+def test_release_app_task_reads_stay_in_the_isolated_batch_state(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """Defect class: a release-app test reading the live primary task store.
+
+    The shared fixtures must retarget the installed app's batch state as well
+    as the in-tree app's; otherwise ``workers_payload`` scans the primary
+    checkout's ``batch_state/tasks`` (NON_RECORD_FILE warnings for primary
+    files and live worker counts).
+    """
+    from lu_machinery.api import delegate_router
+
+    isolated = Path(os.environ["LU_TASKS_DIR"])
+    assert Path(app.state.ctx.roots.batch_state_dir) == isolated.parent
+    # The plain-caller fallback workers_payload uses reads the release config.
+    assert delegate_router._tasks_dir() == isolated
+    with caplog.at_level("WARNING"):
+        payload = workers_payload(session_db=_driver_lease_db(tmp_path))
+    scanned = [record.getMessage() for record in caplog.records if "NON_RECORD_FILE" in record.getMessage()]
+    assert all(str(isolated) in message for message in scanned), scanned
+    assert payload["counts"]["live"] == 0
