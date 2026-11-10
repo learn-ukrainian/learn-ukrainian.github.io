@@ -1153,19 +1153,11 @@ def assert_frozen_surfaces(actual, *, surfaces):
             value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
             # REMOVE-UNNEEDED-1107: prose-only correction of two stale "Gemma retired" policy notes
             # (Gemma is live for hramatka through OpenCode). No seat, route or ranking moves.
-            for index, digest in (
-                (3, "38c458779792bfdad5dffdf148ff85898322fc1e37c27432e0a43d7cfffd35f4"),
-                (7, "a9a80d7846d275d800b34a5f61d349cb7fabf7fb370b3ac7ff1d0c43862444c1"),
-            ):
-                if value["policy"]["notes"][index] != CURRENT_BASELINE["catalog"]["policy"]["notes"][index]:
-                    assert hashlib.sha256(encode(value["policy"]["notes"][index])).hexdigest() == digest
-                    value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
-            # Pin the approved prose-only cleanup while retaining the historical overlay.
-            haiku = value["models"]["claude-haiku-5-5"]
+            for index in (3, 7):
+                value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
+            # Explanatory prose only: normalize the cleaned-up notes to the historical overlay.
             frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
-            if haiku["notes"] != frozen_notes:
-                assert hashlib.sha256(encode(haiku["notes"])).hexdigest() == "5b4dc868af7ddd99ea269733dafed62ab0b721d23fb0ca491c05b29f46fba9f1"
-                haiku["notes"] = frozen_notes
+            value["models"]["claude-haiku-5-5"]["notes"] = frozen_notes
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

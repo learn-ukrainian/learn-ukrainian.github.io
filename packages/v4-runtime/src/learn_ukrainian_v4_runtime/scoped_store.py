@@ -45,14 +45,6 @@ class ScopedAuthorityStore:
     def close(self):
         self.connection.close()
 
-    def resolve_v4_execution_observation(self, *, task_id, run_id, role):
-        return records.resolve_execution_observation(
-            task_id=task_id, run_id=run_id, role=role, conn=self.connection, is_pg=True
-        )
-
-    def resolve_v4_sources_invocation(self, *, invocation_id):
-        return records.resolve_sources_invocation(invocation_id=invocation_id, conn=self.connection, is_pg=True)
-
     def persist_v4_authorship_receipt(self, receipt, *, task_id, run_id):
         return records.persist_authorship_receipt(
             receipt, task_id=task_id, run_id=run_id, conn=self.connection, is_pg=True

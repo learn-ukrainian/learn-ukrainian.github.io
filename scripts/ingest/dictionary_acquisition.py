@@ -89,6 +89,7 @@ EXIT = {
 # The code that decides what is requested, reused and parsed. Only these bodies are bound into
 # a job's frozen identity; logging, projection and retry plumbing elsewhere may change freely.
 HOST_POLL_SECONDS = 0.5
+PACING_FIELDS = ("delay", "timeout", "backoff", "max_attempts", "max_restarts")
 TRANSPORT_FUNCTIONS = ("dictionary_name", "make_spec", "valid_slovnyk", "seed_row", "retry_after", "fetch_once")
 
 
@@ -317,46 +318,49 @@ def initialize(
             )
 
 
-def only_transport_differs(stored: str, spec: dict[str, Any], *, allow_parser: bool = False) -> bool:
-    """True when every difference is a hash ``rebind`` may replace. No difference also matches.
+def only_transport_differs(
+    stored: str, spec: dict[str, Any], *, allow_parser: bool = False, allow_pacing: bool = False
+) -> bool:
+    """Match frozen fields while ignoring only the explicitly allowed rebind fields.
 
-    The default ignores only ``transport_sha256``. ``initialize`` uses that default, so a parser
-    change still refuses until ``rebind`` has stored the new hash. ``rebind`` passes
-    ``allow_parser=True``: a transport change, a parser change, or both match, and any other
-    field still does not.
+    The default ignores only the transport hash for initialize's drift diagnostic.
+    Rebind also allows the parser hash and pacing; ordinary actions still refuse them.
     """
     unbound = {"transport_sha256": None}
     if allow_parser:
         unbound["parser_sha256"] = None
+    if allow_pacing:
+        unbound.update(dict.fromkeys(PACING_FIELDS))
     return {**json.loads(stored), **unbound} == {**spec, **unbound}
 
 
 def _ensure_transport_rebinds(conn) -> None:
-    """Reuse ``transport_rebinds``. Add parser columns when an older job already created the table."""
+    """Extend the existing rebind audit in place for older jobs."""
     conn.execute(
         "CREATE TABLE IF NOT EXISTS transport_rebinds ("
         "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL, "
         "old_parser_sha256 TEXT, new_parser_sha256 TEXT)"
     )
     present = {row["name"] for row in conn.execute("PRAGMA table_info(transport_rebinds)")}
-    if "old_parser_sha256" not in present:
-        conn.execute("ALTER TABLE transport_rebinds ADD COLUMN old_parser_sha256 TEXT")
-    if "new_parser_sha256" not in present:
-        conn.execute("ALTER TABLE transport_rebinds ADD COLUMN new_parser_sha256 TEXT")
+    for column in ("old_parser_sha256", "new_parser_sha256", "old_pacing", "new_pacing"):
+        if column not in present:
+            conn.execute(f"ALTER TABLE transport_rebinds ADD COLUMN {column} TEXT")
 
 
 def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]], now: float) -> bool:
-    """Explicit operator action: accept the current transport and/or parser hash.
+    """Explicit operator action: accept the current transport, parser hash and pacing.
 
     Like ``resume`` it needs both locks (the caller holds them) and leaves one durable event, but
     it resets nothing: results, attempts, launches and the no-progress budget are untouched.
-    Already-positive rows are not reparsed. Every other frozen field, including the targets, must
+    Already-positive rows are not reparsed. Every other frozen field and the targets must
     already match. Returns False when already bound.
     """
     row = conn.execute("SELECT * FROM job").fetchone()
     # Validate the stored job completely before reporting "already bound": a job that `run` would
-    # refuse for any reason other than the transport or parser hash is never acceptable here.
-    if row["spec"] != packed(spec) and not only_transport_differs(row["spec"], spec, allow_parser=True):
+    # refuse for any reason other than the transport, parser hash or pacing is never acceptable here.
+    if row["spec"] != packed(spec) and not only_transport_differs(
+        row["spec"], spec, allow_parser=True, allow_pacing=True
+    ):
         raise JobError("frozen_input_mismatch")
     if row["fingerprint"] != digest(row["spec"].encode()):
         raise JobError("frozen_input_mismatch")
@@ -370,13 +374,16 @@ def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]],
         event = conn.execute("INSERT INTO events(time,kind) VALUES(?,'transport_rebind')", (now,)).lastrowid
         conn.execute(
             "INSERT INTO transport_rebinds("
-            "event_id,old_sha256,new_sha256,old_parser_sha256,new_parser_sha256) VALUES(?,?,?,?,?)",
+            "event_id,old_sha256,new_sha256,old_parser_sha256,new_parser_sha256,old_pacing,new_pacing) "
+            "VALUES(?,?,?,?,?,?,?)",
             (
                 event,
                 stored["transport_sha256"],
                 spec["transport_sha256"],
                 stored["parser_sha256"],
                 spec["parser_sha256"],
+                packed({field: stored[field] for field in PACING_FIELDS}),
+                packed({field: spec[field] for field in PACING_FIELDS}),
             ),
         )
         conn.execute("UPDATE job SET spec=?, fingerprint=?", (packed(spec), digest(packed(spec).encode())))
@@ -932,7 +939,7 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "action",
         choices=("run", "supervise", "status", "resume", "rebind"),
         help="run once, supervise bounded restarts, reconcile status, explicitly reset stopped work, "
-        "or explicitly accept a changed transport or parser identity for an existing job",
+        "or explicitly accept changed transport, parser identity or pacing for an existing job",
     )
     result.add_argument(
         "--root",
@@ -1018,7 +1025,7 @@ def main(
             if args.action == "rebind":
                 changed = rebind_transport(conn, spec, targets, clock())
                 progress.emit(
-                    "rebind: transport and/or parser identity accepted and recorded"
+                    "rebind: transport, parser identity and pacing accepted and recorded"
                     if changed
                     else "rebind: already bound"
                 )

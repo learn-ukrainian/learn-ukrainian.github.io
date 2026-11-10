@@ -75,7 +75,12 @@ def _link_tree(sources: tuple[Path, ...], view: Path, rel: tuple[str, ...], over
         for entry in source.iterdir():
             if entry.name != ".git":
                 entries.setdefault(entry.name, []).append(entry)
+    # importlib writes ``*.pyc.<id>`` inside ``__pycache__`` and then renames it.
+    # Copying that name races the rename (CI run 42870045503). Same ignore as copytree.
+    ignored = shutil.ignore_patterns("__pycache__", "*.pyc.*")(view, list(entries))
     for name, found in entries.items():
+        if name in ignored:
+            continue
         key = (*rel, name)
         directories = tuple(entry for entry in found if entry.is_dir())
         merged = len(found) > 1 and len(directories) == len(found) and not any(e.is_symlink() for e in found)

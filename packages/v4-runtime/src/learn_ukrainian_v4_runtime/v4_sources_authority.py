@@ -149,6 +149,40 @@ def _issue_verifier_attestation_from_evidence(
 # --- production entrypoint: opaque invocation_id only (PR #7662 repair 6) --
 
 
+def record_v4_sources_invocation_from_typed_outcome(
+    store: Any,
+    *,
+    attempt_id: str,
+    tool_name: str,
+    tool_version: str,
+    typed_outcome: dict[str, Any],
+) -> dict[str, Any] | None:
+    """The exclusive Sources-invocation writer: builds the record from
+    a typed handler outcome and an authenticated attempt."""
+    store._refuse_readonly_write("record_v4_sources_invocation_from_typed_outcome")
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+
+    with store._transaction() as conn:
+        return v4_store.record_sources_invocation_from_typed_outcome(
+            conn=conn,
+            is_pg=store.authority.value == "pg",
+            attempt_id=attempt_id,
+            tool_name=tool_name,
+            tool_version=tool_version,
+            typed_outcome=typed_outcome,
+            commit=False,
+        )
+
+
+def resolve_v4_sources_invocation(store: Any, *, invocation_id: str) -> dict[str, Any] | None:
+    """Read an invocation through the supplied store's connection and dialect."""
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+
+    return v4_store.resolve_sources_invocation(
+        invocation_id=invocation_id, conn=store.connection, is_pg=store.authority.value == "pg"
+    )
+
+
 def _open_canonical_authority_store() -> Any:
     """Fixed, argument-free canonical-authority selection -- see
     ``v4_fleet_execution_authority._open_canonical_authority_store``. The
@@ -173,7 +207,7 @@ def _resolve_sources_invocation(*, invocation_id: str) -> dict[str, Any] | None:
             f"canonical V4 Sources authority unavailable -- refusing (no key access): {exc}"
         ) from exc
     try:
-        return store.resolve_v4_sources_invocation(invocation_id=invocation_id)
+        return resolve_v4_sources_invocation(store, invocation_id=invocation_id)
     except Exception as exc:
         raise SourcesAuthorityError("canonical V4 Sources authority read failed -- refusing (no key access)") from exc
     finally:

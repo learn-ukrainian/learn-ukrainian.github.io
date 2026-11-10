@@ -125,6 +125,44 @@ def test_lingering_provider_process_is_ended_at_settlement_before_the_worktree_g
     assert not Path(record["worktree_path"]).exists()
 
 
+def test_settlement_removes_only_recreatable_caches_from_the_task_output_directories(sandbox):
+    """Defect (C-4946(a)): settled tasks kept venv, node_modules and __pycache__ copies in their .artifacts and
+    .evidence directories for good. Settlement and the scheduled sweep remove those caches from a finished
+    task only, keep every other file, and remove a cache-named link without following it."""
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    artifacts, evidence = sandbox.tasks / f"{task[0]}.artifacts", sandbox.tasks / f"{task[0]}.evidence"
+    caches = [artifacts / "venv", artifacts / "node_modules", artifacts / "probe/__pycache__"]
+    for cache in caches:
+        (cache / "sub").mkdir(parents=True)
+        (cache / "sub/file").write_text("re-creatable")
+    kept = {artifacts / "run.log": "log", artifacts / "probe/result.json": "{}", evidence / "receipt.json": "{}"}
+    evidence.mkdir()
+    for path, text in kept.items():
+        path.write_text(text)
+    elsewhere = sandbox.tasks.parent / "linked-cache"
+    elsewhere.mkdir()
+    (elsewhere / "outside.txt").write_text("not the task's")
+    (evidence / ".cache").symlink_to(elsewhere, target_is_directory=True)
+
+    sandbox.sweep()
+    assert all((cache / "sub/file").exists() for cache in caches)
+    assert (evidence / ".cache").is_symlink()
+
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert record["status"] == "done" and "task_cache_residue" not in record
+    assert not any(os.path.lexists(cache) for cache in [*caches, evidence / ".cache"])
+    assert {path: path.read_text() for path in kept} == kept
+    assert (elsewhere / "outside.txt").read_text() == "not the task's"
+
+    # A cache that appears once the task has settled is removed by the scheduled sweep.
+    (artifacts / ".venv/lib").mkdir(parents=True)
+    sandbox.sweep()
+    assert not (artifacts / ".venv").exists()
+    assert {path: path.read_text() for path in kept} == kept
+
+
 def test_settlement_after_a_dispatcher_module_changes_on_disk_removes_the_worktree(sandbox):
     """Defect (#12634): a worker running while a dispatcher change landed settled with old in-memory and new
     on-disk modules, so removal failed with an ImportError and left a clean tree. The worker now loads its
@@ -197,6 +235,15 @@ def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, mod
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
+def process_group_exists(pgid):
+    """Settlement's own liveness probe (worker._provider_alive): a group with any member, zombies included."""
+    try:
+        os.killpg(pgid, 0)
+    except ProcessLookupError:
+        return False
+    return True
+
+
 def test_scheduled_recovery_settles_terminal_task_left_by_crash(sandbox):
     """Defect: a supervisor killed before settlement left its worktree behind for good."""
     task = sandbox.dispatch("blocked")
@@ -208,6 +255,11 @@ def test_scheduled_recovery_settles_terminal_task_left_by_crash(sandbox):
         assert time.monotonic() < deadline, "supervisor survived SIGKILL"
         time.sleep(0.02)
     os.killpg(provider, signal.SIGKILL)
+    # The orphaned group exists, as zombies, until init reaps it; settlement rightly keeps the tree until then.
+    deadline = time.monotonic() + 10
+    while process_group_exists(provider):
+        assert time.monotonic() < deadline, "provider process group survived SIGKILL"
+        time.sleep(0.02)
     assert Path(record["worktree_path"]).is_dir()
     sandbox.sweep()
     crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
