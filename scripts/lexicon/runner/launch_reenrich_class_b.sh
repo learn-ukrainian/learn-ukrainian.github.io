@@ -179,6 +179,9 @@ if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
   exit 1
 fi
 
+export LU_PRODUCT_ROOT="$REPO"
+SCOPE_ENTRY="$("$RUNNER_PYTHON" -c 'from importlib.resources import files; print(files("lu_machinery.lib").joinpath("job_memory_scope.sh"))')"
+
 # Direct VPS invocation snapshots the live hydrated manifest into the work-dir
 # only when the Mac-side wrapper did not already sync one. Normal remote runs
 # receive a fresh Mac live-manifest sync before this launcher starts.
@@ -213,7 +216,7 @@ if [[ ! -f "$KAIKKI_JSON" ]]; then
   exit 1
 fi
 if [[ "$KAIKKI_JSON" == "$REPO/data/lexicon/kaikki_uk_lookup.json" ]]; then
-  "$RUNNER_PYTHON" -c 'from scripts.storage.paths import artifact_path; artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")'
+  "$RUNNER_PYTHON" -c 'from lu_machinery.storage.paths import artifact_path; artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")'
 fi
 COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
 
@@ -260,6 +263,7 @@ EOS
     --slice=lu.slice
     --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"
     --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M"
+    --setenv="LU_PRODUCT_ROOT=$REPO"
     --property=MemorySwapMax=0
     --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}"
     --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}"
@@ -273,7 +277,7 @@ EOS
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
     --working-directory="$REPO" \
     "${SYSTEMD_PROPS[@]}" \
-    /bin/bash "$CODE_ROOT/scripts/lib/job_memory_scope.sh" "$((JOB_MEMORY_MAX_MIB * 1024 * 1024))" -- \
+    /bin/bash "$SCOPE_ENTRY" "$((JOB_MEMORY_MAX_MIB * 1024 * 1024))" -- \
     /bin/bash -c "$WRAPPED" >> "$LOG" 2>&1 &
   wrapper_pid=$!
   printf '%s\n' "$wrapper_pid" > "$WRAPPER_PID_FILE"
