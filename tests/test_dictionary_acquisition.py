@@ -1165,6 +1165,14 @@ def test_transport_identity_binds_only_fetch_and_parse_code():
         acquisition.transport_identity(source.replace("def fetch_once(", "def fetch_other("))
 
 
+def current_parser_sha256():
+    return acquisition.digest(Path(acquisition._parse_slovnyk_entry.__code__.co_filename).read_bytes())
+
+
+def current_transport_sha256():
+    return acquisition.transport_identity(Path(acquisition.__file__).read_text(encoding="utf-8"))
+
+
 def freeze_previous_transport(tmp_path, dictionary="vts"):
     """Rewrite the stored identity to a different transport hash, as an older checkout would have frozen."""
     with database(tmp_path, dictionary) as conn, conn:
@@ -1207,8 +1215,9 @@ def test_changed_transport_is_refused_until_an_explicit_recorded_rebind(tmp_path
     assert after_events[-1][3] == "transport_rebind"
     with database(tmp_path) as conn:
         rebinds = [tuple(r) for r in conn.execute("SELECT * FROM transport_rebinds")]
-    current = acquisition.transport_identity(Path(acquisition.__file__).read_text(encoding="utf-8"))
-    assert rebinds == [(after_events[-1][0], previous, current)]
+    current = current_transport_sha256()
+    parser = current_parser_sha256()
+    assert rebinds == [(after_events[-1][0], previous, current, parser, parser)]
     now = status(tmp_path)
     assert now["retry"] == before["retry"]  # no budget reset
     assert now["counts"] == before["counts"]
@@ -1221,6 +1230,176 @@ def test_changed_transport_is_refused_until_an_explicit_recorded_rebind(tmp_path
     assert invoke("run", argv, HTTP([response(), response()], clock), clock) == 0
     assert status(tmp_path)["state"] == "complete"
     assert status(tmp_path)["retry"]["attempts"] == 0
+
+
+def _rewrite_spec(tmp_path, **updates):
+    with database(tmp_path) as conn, conn:
+        spec = json.loads(conn.execute("SELECT spec FROM job").fetchone()["spec"])
+        spec.update(updates)
+        text = acquisition.packed(spec)
+        conn.execute("UPDATE job SET spec=?, fingerprint=?", (text, acquisition.digest(text.encode())))
+    return spec
+
+
+def test_parser_hash_is_refused_by_initialize_until_rebind_records_it(tmp_path):
+    """Defect: initialize accepts a parser-hash change that rebind has not recorded.
+
+    A parser fix changes parser_sha256 only. run, supervise and resume must refuse
+    that drift until rebind writes the old and new parser hashes onto the existing
+    transport_rebinds audit, including when that table already exists without parser
+    columns. Rebind resets nothing, so a positive row is not reparsed. A later
+    checkout that changes both hashes is accepted the same way and still resets nothing.
+    """
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"))
+    assert invoke("run", argv, HTTP([response(), response(503)], clock), clock) == 75
+    with database(tmp_path) as conn:
+        positive = conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0]
+        with conn:
+            conn.execute(
+                "CREATE TABLE transport_rebinds ("
+                "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL)"
+            )
+    previous_parser = acquisition.digest(b"parser of the earlier checkout")
+    assert previous_parser != current_parser_sha256()
+    _rewrite_spec(tmp_path, parser_sha256=previous_parser)
+    results, events, job = durable_progress(tmp_path)
+    with database(tmp_path) as conn:
+        stored = conn.execute("SELECT spec FROM job").fetchone()["spec"]
+    spec, _targets = acquisition.make_spec(acquisition.parser().parse_args(["run", *argv]))
+    assert acquisition.only_transport_differs(stored, spec) is False
+    assert acquisition.only_transport_differs(stored, spec, allow_parser=True) is True
+
+    for action in ("run", "supervise", "resume"):
+        launch = lambda *_a, **_k: pytest.fail("launched against a drifted parser")  # noqa: E731
+        assert invoke(action, argv, HTTP([], clock), clock, launch=launch) == 2
+        refusal = json.loads((tmp_path / "staging" / "refusal.json").read_text())
+        assert refusal["terminal_reason"] == "frozen_input_mismatch"
+    assert durable_progress(tmp_path) == (results, events, job)
+    with database(tmp_path) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM transport_rebinds").fetchone()[0] == 0
+
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 0
+    after_results, after_events, after_job = durable_progress(tmp_path)
+    assert after_results == results
+    assert after_job == job
+    assert after_events[:-1] == events
+    assert after_events[-1][3] == "transport_rebind"
+    with database(tmp_path) as conn:
+        columns = [row["name"] for row in conn.execute("PRAGMA table_info(transport_rebinds)")]
+        rebinds = [tuple(row) for row in conn.execute("SELECT * FROM transport_rebinds")]
+        rebound_positive = conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0]
+    assert columns == ["event_id", "old_sha256", "new_sha256", "old_parser_sha256", "new_parser_sha256"]
+    transport = current_transport_sha256()
+    parser = current_parser_sha256()
+    assert rebinds == [(after_events[-1][0], transport, transport, previous_parser, parser)]
+    assert rebound_positive == positive
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 0
+    assert "rebind: already bound" in progress_lines(tmp_path)[-1]
+    assert durable_progress(tmp_path)[1] == after_events
+
+    both_transport = acquisition.digest(b"transport of a later checkout")
+    both_parser = acquisition.digest(b"parser of a later checkout")
+    _rewrite_spec(tmp_path, transport_sha256=both_transport, parser_sha256=both_parser)
+    with database(tmp_path) as conn:
+        drifted = conn.execute("SELECT spec FROM job").fetchone()["spec"]
+    assert acquisition.only_transport_differs(drifted, spec, allow_parser=True) is True
+    assert invoke("run", argv, HTTP([], clock), clock) == 2
+    assert json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "frozen_input_mismatch"
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 0
+    both_results, both_events, both_job = durable_progress(tmp_path)
+    assert both_results == results
+    assert both_job == job
+    assert both_events[-1][3] == "transport_rebind"
+    with database(tmp_path) as conn:
+        recorded = [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT old_sha256, new_sha256, old_parser_sha256, new_parser_sha256 "
+                "FROM transport_rebinds ORDER BY event_id"
+            )
+        ]
+        assert conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0] == positive
+    assert recorded[-1] == (both_transport, transport, both_parser, parser)
+
+    assert invoke("resume", argv, HTTP([], clock), clock) == 0
+    assert durable_progress(tmp_path)[1][-1][3] == "operator_resume"
+    with database(tmp_path) as conn:
+        rows = conn.execute("SELECT target, status, payload FROM results ORDER BY position").fetchall()
+    assert [(row["target"], row["status"]) for row in rows] == [("a", "positive"), ("b", "pending")]
+    assert rows[0]["payload"] == positive
+    http = HTTP([response()], clock)
+    assert invoke("run", argv, http, clock) == 0
+    assert len(http.calls) == 1
+    assert status(tmp_path)["state"] == "complete"
+    assert status(tmp_path)["counts"]["positive"] == 2
+    with database(tmp_path) as conn:
+        assert conn.execute("SELECT payload FROM results WHERE target='a'").fetchone()[0] == positive
+
+
+def test_rebind_refuses_spec_drift_other_than_transport_or_parser_hash(tmp_path):
+    """Defect: rebind accepts a frozen-spec difference other than the transport or parser hash.
+
+    A parser-hash or transport-hash change must not launder a delay or manifest change.
+    Those differences stay frozen_input_mismatch and write no audit row.
+    """
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"))
+    assert invoke("run", argv, HTTP([response(503)], clock), clock) == 75
+    frozen = durable_progress(tmp_path)
+    with database(tmp_path) as conn:
+        original_spec = conn.execute("SELECT spec FROM job").fetchone()["spec"]
+        original_fingerprint = conn.execute("SELECT fingerprint FROM job").fetchone()[0]
+    original = json.loads(original_spec)
+
+    def restore():
+        with database(tmp_path) as conn, conn:
+            conn.execute(
+                "UPDATE job SET spec=?, fingerprint=?",
+                (original_spec, original_fingerprint),
+            )
+
+    def refuse():
+        assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+        assert (
+            json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"]
+            == "frozen_input_mismatch"
+        )
+        assert durable_progress(tmp_path) == frozen
+        with database(tmp_path) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='transport_rebinds'").fetchone()[0] == 0
+
+    _rewrite_spec(tmp_path, delay=original["delay"] + 1)
+    refuse()
+    restore()
+
+    _rewrite_spec(
+        tmp_path,
+        delay=original["delay"] + 1,
+        parser_sha256=acquisition.digest(b"parser of the earlier checkout"),
+    )
+    with database(tmp_path) as conn:
+        drifted = conn.execute("SELECT spec FROM job").fetchone()["spec"]
+    live, _targets = acquisition.make_spec(acquisition.parser().parse_args(["rebind", *argv]))
+    assert acquisition.only_transport_differs(drifted, live, allow_parser=True) is False
+    refuse()
+    restore()
+
+    _rewrite_spec(tmp_path, transport_sha256=acquisition.digest(b"transport of the earlier checkout"), delay=9)
+    refuse()
+    restore()
+
+    manifest = tmp_path / "manifest.json"
+    raw = manifest.read_text()
+    manifest.write_text(raw + " ")
+    try:
+        refuse()
+        _rewrite_spec(tmp_path, parser_sha256=acquisition.digest(b"parser of the earlier checkout"))
+        refuse()
+    finally:
+        manifest.write_text(raw)
+    restore()
+    assert durable_progress(tmp_path) == frozen
 
 
 def test_rebind_never_hides_other_drift_or_a_busy_job(tmp_path):

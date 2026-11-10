@@ -191,8 +191,11 @@ and pin the checkout for the run.
 A checkout whose transport identity differs from the one frozen in the job
 (including any job frozen before the identity was narrowed to these functions,
 which hashed the whole file) is refused with `transport_changed` (exit 2) and
-makes no request. Review the change to those functions, stop the job, then accept
-it explicitly with the original options:
+makes no request. A checkout whose parser code hash differs is refused with
+`frozen_input_mismatch` (exit 2) and makes no request, including when the
+transport identity is unchanged. `run`, `resume` and `supervise` all refuse that
+parser drift until `rebind` has stored the new hash. Review the change, stop the
+job, then accept it explicitly with the original options:
 
 ```bash
 "$ACQ_PY" -m scripts.ingest.dictionary_acquisition rebind \
@@ -201,18 +204,45 @@ it explicitly with the original options:
 ```
 
 `rebind` makes no request. It takes the same two locks as `resume`, so it refuses
-an active writer or supervisor. It requires every other frozen field and the
-stored targets to match, rewrites only the stored transport identity, and records
-a `transport_rebind` event and a `transport_rebinds` row holding the old and new
-hashes. Unlike `resume` it resets nothing: results, per-target attempts, launch
-counts and the no-progress budget stay exactly as they were. Running it again is a
-no-op. Then rerun the same `supervise` command from the new checkout.
+an active writer or supervisor. It accepts a changed transport identity, a changed
+parser code hash, or both, and refuses every other frozen field and any
+stored-target difference. It rewrites only those accepted hashes. It records one
+`transport_rebind` event and one `transport_rebinds` row holding the old and new
+transport hashes and the old and new parser hashes (the two values are equal when
+that hash did not change). A job whose `transport_rebinds` table predates the
+parser columns is altered in place; there is no second audit table. Unlike
+`resume` it resets nothing: results, per-target attempts, launch counts and the
+no-progress budget stay exactly as they were. Already-positive, reused and
+proven-404 rows are not reparsed. Running it again when the spec already matches
+is a no-op.
 
-To move a running job onto newer code: stop it with Ctrl-C (or `SIGTERM`), wait
-for the process to exit, run `rebind` from the new checkout, then start the
-original `supervise` command from the new checkout. `status` needs no manifest and reconciles from
-the durable store. A busy writer returns conflict instead of competing for data;
-read the last atomic `status.json` until that writer exits.
+To move a running job onto a checkout that changed only the transport identity:
+stop it with Ctrl-C (or `SIGTERM`), wait for the process to exit, run `rebind`
+from the new checkout, then start the original `supervise` command from the new
+checkout. Do not `resume` for a transport-only change; that would reopen
+unresolved rows.
+
+After a parser fix, `rebind` alone leaves a `parse_error` latch and the recorded
+unusable rows in place, so the job still will not continue. Run `rebind`, then
+`resume`, then the original `supervise` command. `resume` reopens unusable rows and other unresolved rows, so they are fetched
+again with the fixed parser. It
+does not reparse rows already stored as positive, reused or a proven 404. The
+parser fix changes `source_url` on rows fetched after it: the stored locator is
+the https URL the job requested. Rows already stored keep the locator they have.
+
+```bash
+"$ACQ_PY" -m scripts.ingest.dictionary_acquisition rebind \
+  --root "$ACQ_ROOT" --dictionary vts --manifest "$ACQ_MANIFEST" \
+  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+"$ACQ_PY" -m scripts.ingest.dictionary_acquisition resume \
+  --root "$ACQ_ROOT" --dictionary vts --manifest "$ACQ_MANIFEST" \
+  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+```
+
+Then start the original `supervise` command from the new checkout. `status` needs
+no manifest and reconciles from the durable store. A busy writer returns conflict
+instead of competing for data; read the last atomic `status.json` until that
+writer exits.
 
 `--seed-cache "$REVIEWED_CACHE"` is optional for slovnyk. It only reads positive
 rows with the current cache schema, matching lemma/lookup/dictionary, valid direct
@@ -268,7 +298,10 @@ The response text of an unusable article is kept only in that row's payload in
 Successful articles live only in local staging.
 
 After the driver has investigated a stop and the operator authorizes another
-attempt, use an **explicit** resume action with the original frozen options:
+attempt, use an **explicit** resume action with the original frozen options.
+If the checkout's parser code hash or transport identity differs from the frozen
+job, run `rebind` first. `resume` uses the same admission check and refuses that
+drift before it clears any row.
 
 ```bash
 "$ACQ_PY" -m scripts.ingest.dictionary_acquisition resume \
