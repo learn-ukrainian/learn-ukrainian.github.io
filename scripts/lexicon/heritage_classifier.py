@@ -29,16 +29,16 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 try:
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
-    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # File execution puts only scripts/ on sys.path, so the top-level package
     # is absent (exc.name == "scripts"). A failure inside readonly_sqlite
     # carries another name, or is not ModuleNotFoundError, and must propagate.
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "registry" / "lt_replacements.json"

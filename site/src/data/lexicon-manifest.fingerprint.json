@@ -243,7 +243,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "e219aa7df48acd6f15cd0d072571c4f1034c339dd5ee4885bef5c41b4ba1c002"
+        "sha256": "4a6a1dba8046d085cc643c1bab5853e10c8bdde22784adda65ce764483ce9f0f"
       },
       {
         "path": "scripts/lexicon/import_ohoiko_vocab.py",

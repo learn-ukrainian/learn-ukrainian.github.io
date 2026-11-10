@@ -1192,6 +1192,8 @@ def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
 
 
 def test_asset_limit_does_not_fall_back_to_another_http_request(monkeypatch):
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
+
     from scripts.open_dataset import hydrate
 
     def limited(args, **kwargs):
@@ -1650,6 +1652,8 @@ def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
 
 
 def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
+
     from scripts.open_dataset import hydrate
 
     monkeypatch.setattr("sys.argv", ["hydrate"])
@@ -1668,6 +1672,8 @@ def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
 )
 def test_release_pointer_limit_never_retries(module_name, function_name, monkeypatch):
     import importlib
+
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
 
     module = importlib.import_module(module_name)
     calls = []

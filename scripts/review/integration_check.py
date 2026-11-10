@@ -50,11 +50,11 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 try:
-    from lu_machinery.lib.readonly_sqlite import open_readonly
+    from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lu_machinery.lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 from lu_machinery.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
