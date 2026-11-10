@@ -7,11 +7,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
-from scripts.orchestration import integration_sweep as sweep
-from scripts.publish.merge_guard import bound_rollup_states
-from scripts.review.record_cf_verdict import build_comment
+from lu_machinery.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.publish.merge_guard import bound_rollup_states
+from lu_machinery.review.record_cf_verdict import build_comment
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -19,15 +18,19 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 
 @pytest.fixture(autouse=True)
-def _advisory_fixture_workflow(monkeypatch):
-    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
-    from scripts.ci import advisory_checks
+def _advisory_fixture_workflow(monkeypatch, tmp_path):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow.
 
-    monkeypatch.setattr(
-        advisory_checks,
-        "CI_WORKFLOW_PATH",
-        Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
-    )
+    The release reads ``.github/workflows/ci.yml`` under ``product_root()``, so the
+    fixture workflow stands at that path in a stand-in product root.
+    """
+    from lu_machinery.ci import advisory_checks
+
+    workflow = tmp_path / "advisory-product-root/.github/workflows/ci.yml"
+    workflow.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml"
+    workflow.write_bytes(fixture.read_bytes())
+    monkeypatch.setattr(advisory_checks, "product_root", lambda *_args, **_kwargs: workflow.parents[2])
 
 
 def comment(
@@ -780,8 +783,8 @@ def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, cap
         def comments(self, repository, number):
             return [*issue_11127_markers(), recorded(5000), malformed]
 
-        def pr_files(self, repository, number):
-            return ["scripts/example.py"]
+        def pr_file_rows(self, repository, number):
+            return [{"filename": "scripts/example.py"}]
 
         def queue_membership(self, repository, item):
             return False

@@ -12,10 +12,9 @@ from typing import Any
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
-
-from scripts.fleet import credit_lane
-from scripts.orchestration import curriculum_coordinator as coordinator
-from tests.claude_route_accounts import bound
+from lu_machinery.fleet import credit_lane
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount, bind_snapshot
+from lu_machinery.orchestration import curriculum_coordinator as coordinator
 
 pytestmark = pytest.mark.reads_content
 
@@ -30,9 +29,14 @@ sys.modules[BOUNDED_SPEC.name] = bounded_completion
 BOUNDED_SPEC.loader.exec_module(bounded_completion)
 
 
+# The host's built-in default account, as ``tests.claude_route_accounts.HOST_ACCOUNT`` names it,
+# built from the release's own account type: the release subject refuses another type.
+_HOST_ACCOUNT = ClaudeAccount("a", "builtin")
+
+
 def _assess(snapshot, *args, **kwargs):
     """The wave gate on a raw fixture bound as the default account, as ``_probe_health`` binds it (#10770)."""
-    return coordinator._health_assessment(bound(snapshot), *args, **kwargs)
+    return coordinator._health_assessment(bind_snapshot(snapshot, account=_HOST_ACCOUNT), *args, **kwargs)
 
 
 @pytest.fixture
@@ -540,7 +544,7 @@ def test_published_credit_relief_is_not_reused_after_a_new_rate_limit(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """The wave gate re-reads the shared runtime log: a rate limit after publication fails the gate."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)

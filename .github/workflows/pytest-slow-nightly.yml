@@ -162,7 +162,9 @@ jobs:
           LU_FLAKE_DISABLE_RERUN: '1'
         run: |
           set -euo pipefail
-          mapfile -t nodeids < <(.venv/bin/python -c 'from scripts.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
+          # Only the registry lookup names the checkout for the release; pytest below inherits neither root.
+          mapfile -t nodeids < <(LU_PRODUCT_ROOT="$GITHUB_WORKSPACE" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$GITHUB_WORKSPACE" \
+            .venv/bin/python -c 'from lu_machinery.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
           if (( ${#nodeids[@]} )); then
             mkdir -p ci-artifacts
             .venv/bin/python -m pytest "${nodeids[@]}" --strict-markers \
@@ -174,13 +176,15 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           set -euo pipefail
           reports=(--nightly-junit ci-artifacts/slow-junit.xml)
           if [[ -f ci-artifacts/quarantine-junit.xml ]]; then
             reports+=(--nightly-junit ci-artifacts/quarantine-junit.xml)
           fi
-          .venv/bin/python scripts/ci/flake_ledger.py "${reports[@]}" \
+          .venv/bin/python -m lu_machinery.ci.flake_ledger "${reports[@]}" \
             --fetch-queue --output ci-artifacts/flake-ledger.json
 
       - name: Upload slow pytest evidence

@@ -33,7 +33,7 @@ runs:
         # producing an unknown cache key before a matching environment exists.
         python-version: ${{ steps.python-pin.outputs.version }}
         enable-cache: true
-        # Hash of both locks, in this order (scripts/ci/cache_hygiene.py
+        # Hash of both locks, in this order (lu_machinery.ci.cache_hygiene
         # recomputes it). setup-uv restores that exact key and passes no
         # restore-keys; a different lock cannot satisfy --offline.
         cache-dependency-glob: |

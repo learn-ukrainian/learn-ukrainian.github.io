@@ -579,7 +579,7 @@ def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     ):
         assert flag in script
     assert "-n auto" not in script
-    assert "scripts.ci.pg_skip_guard" in script
+    assert "lu_machinery.ci.pg_skip_guard" in script
     assert (
         'export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}'
         + pytest_report.COLLECTED_SUFFIX
@@ -611,7 +611,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     steps = report["steps"]
     assert any(step.get("with", {}).get("pattern") == "pytest-junit-shard-*" for step in steps)
-    report_step = next(step for step in steps if "scripts.ci.pytest_report" in str(step.get("run", "")))
+    report_step = next(step for step in steps if "lu_machinery.ci.pytest_report" in str(step.get("run", "")))
     # The audit record identifies the exact candidate and run.
     assert report_step["env"] == {"PR_NUMBER": "${{ github.event.pull_request.number }}"}
     assert any(step.get("with", {}).get("name") == "ci-tested-tree" for step in steps)
@@ -647,7 +647,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     assert steps.index(checkout) < steps.index(setup) < steps.index(metadata) < steps.index(scan)
     assert setup["with"] == {"python-version-file": ".python-version"}
     record = next(step for step in steps if step.get("name") == "Record original queue candidate")
-    assert "scripts.ci.gate --record-queue" in record["run"]
+    assert "lu_machinery.ci.gate --record-queue" in record["run"]
     upload = next(step for step in steps if step.get("with", {}).get("name") == "ci-queue-candidate")
     assert upload["with"]["if-no-files-found"] == "error"
     assert steps.index(record) < steps.index(upload) < steps.index(metadata)
@@ -655,11 +655,11 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
         "persist-credentials": False,
         "fetch-depth": 0,
         "filter": "blob:none",
-        "sparse-checkout": "scripts/\n.python-version\n",
+        "sparse-checkout": "requirements-machinery.lock\n.python-version\n",
         "sparse-checkout-cone-mode": False,
     }
     assert metadata["id"] == "metadata"
-    assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]
+    assert "python3 -m lu_machinery.ci.metadata_commit --commit HEAD" in metadata["run"]
     full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
     assert scan["uses"] == full_scan["uses"]
     assert scan["with"] == {

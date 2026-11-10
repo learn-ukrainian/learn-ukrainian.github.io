@@ -281,7 +281,7 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
     assert "frontend" in jobs["ci-gate"]["needs"]
     steps = frontend["steps"]
     scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")
-    assert "scripts/ci/frontend_change_scope.py" in steps[scope_index]["run"]
+    assert "-m lu_machinery.ci.frontend_change_scope" in steps[scope_index]["run"]
     assert "github.event.merge_group.base_sha" in steps[scope_index]["env"]["BASE_SHA"]
     for step in steps[scope_index + 1 :]:
         assert step.get("if") == "steps.scope.outputs.run == 'true'", step

@@ -912,7 +912,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "d64d82cb31fdde0a19f6b2c97ffa913f9a7225e32b9130f9a277882dfe2d0bbc",
+      "sha256": "b64585f50cece627842034b9541b78482ab19953e2ba5ebf5248c40016aaec93",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -1314,7 +1314,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "d14296dfe55fd4c306afeb717739e6ba4ff6af71e1614eb81c02465886ceaa28"
+        "sha256": "ea980a9d374a4f1ed9ca182b63ea28f72584ed75e9dd04197ad219acac0f8061"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",

@@ -3,10 +3,13 @@
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import review_mcp
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
 
-from scripts.agent_runtime import review_mcp
-from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
 from scripts.review.receipts import ledger
+
+# The Sources server is product-owned: this checkout's copy.
+SERVER_PATH = Path(__file__).resolve().parents[2] / SERVER_RELATIVE_PATH
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
@@ -93,7 +96,8 @@ def test_attempt_launch_resolution_is_shared_by_validation_and_config(tmp_path, 
     import json
 
     assert launches == [server]
-    assert json.loads(plan.config_path.read_text())["mcpServers"]["sources"]["args"] == [str(server)]
+    # The release starts the Sources server isolated (-I).
+    assert json.loads(plan.config_path.read_text())["mcpServers"]["sources"]["args"] == ["-I", str(server)]
 
 
 @pytest.mark.parametrize("problem", ["unreadable", "mismatch"])

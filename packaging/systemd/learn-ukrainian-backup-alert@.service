@@ -4,7 +4,9 @@ Description=Learn Ukrainian backup failure alert for %i (change-only, Fleet Comm
 # learn-ukrainian-backup-retention.service; %i is the failed unit's name.
 
 [Service]
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 TimeoutStartSec=300
-ExecStart=/usr/bin/env @REPO_ROOT@/.venv/bin/python @REPO_ROOT@/scripts/orchestration/backup_failure_alert.py failed %i
+ExecStart=/usr/bin/env @REPO_ROOT@/.venv/bin/python -m lu_machinery.orchestration.backup_failure_alert --project-root @REPO_ROOT@ failed %i

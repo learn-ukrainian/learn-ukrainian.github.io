@@ -27,17 +27,21 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
-
-from scripts.agent_runtime import npm_guard
-from scripts.common.scratch import ensure_scratch_root
+from lu_machinery.agent_runtime import npm_guard
+from lu_machinery.common.scratch import ensure_scratch_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "npm"
+# The installed release's shims, guard and interpreter library. Layouts copy them into a
+# scratch package directory, as installed: <root>/lu_machinery/{agent_runtime,lib}/.
+RELEASE_PACKAGE = Path(str(files("lu_machinery")))
+SHIM_SOURCE = RELEASE_PACKAGE / "agent_runtime" / "shims" / "npm"
 NPX_SOURCE = SHIM_SOURCE.parent / "npx"
-GUARD_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "npm_guard.py"
+GUARD_SOURCE = RELEASE_PACKAGE / "agent_runtime" / "npm_guard.py"
+INTERPRETER_LIBRARY = RELEASE_PACKAGE / "lib" / "project_interpreter.sh"
 SENTINEL = "sentinel.txt"
 # Ancestor -> "has an outward node_modules link". Parents repeat across tests.
 _OUTWARD_ANCESTOR: dict[Path, bool] = {}
@@ -441,6 +445,16 @@ def _root_outside_protected_ancestors(preferred_root: Path) -> tuple[Path, bool]
     return candidate, True
 
 
+def _release_shim_dir(root: Path) -> Path:
+    """The shim directory of a release package copied under ``root``, with the interpreter library it sources."""
+    shim_dir = root / "lu_machinery" / "agent_runtime" / "shims"
+    shim_dir.mkdir(parents=True)
+    library = root / "lu_machinery" / "lib"
+    library.mkdir()
+    shutil.copy2(INTERPRETER_LIBRARY, library / INTERPRETER_LIBRARY.name)
+    return shim_dir
+
+
 def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path]:
     """Scratch primary + dispatch worktree with symlinked node_modules folders.
 
@@ -449,12 +463,11 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     """
     root, relocated = _root_outside_protected_ancestors(tmp_path)
     tooling = root / "tooling"
-    shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
-    shim_dir.mkdir(parents=True)
+    shim_dir = _release_shim_dir(tooling)
     _git(tooling, "init", "-q", "-b", "main")
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
-    shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
+    shutil.copy2(GUARD_SOURCE, shim_dir.parent / "npm_guard.py")
     (tooling / ".venv" / "bin").mkdir(parents=True)
     (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
 
@@ -709,7 +722,7 @@ def test_npx_and_npm_exec_launching_a_tool_pass_through(layout, tool, args, rela
 
 def test_claude_adapter_npx_fallback_passes_through(layout, monkeypatch):
     """The adapter's own npx command line (no native claude), as build_invocation assembles it."""
-    from scripts.agent_runtime.adapters import claude as claude_adapter
+    from lu_machinery.agent_runtime.adapters import claude as claude_adapter
 
     monkeypatch.setattr(claude_adapter, "_default_claude_bin", lambda: None)
     monkeypatch.setattr(claude_adapter.shutil, "which", lambda name, *a, **k: "/usr/bin/npx" if name == "npx" else None)
@@ -936,9 +949,9 @@ def test_real_npm_escaped_shell_call_is_refused(layout, case, relative_cwd):
 def test_missing_project_interpreter_fails_closed(layout, enclosing_checkout):
     """Exit 127 when the tooling checkout has no project interpreter.
 
-    The shim resolves that checkout through Git and drops every ``GIT_*``
-    variable before the lookup, so a ceiling on the temp directory cannot
-    keep the lookup there. A git root on the tooling checkout does.
+    The shim resolves that checkout from its own ``.git`` marker without asking
+    Git, so an enclosing checkout's interpreter is never borrowed: a ``.git``
+    directory on the tooling checkout makes it the primary.
     """
     if enclosing_checkout:
         _git(layout["tmp"], "init", "-q", "-b", "main")
@@ -1188,11 +1201,10 @@ def test_walk_survives_deep_paths_and_unreadable_ancestors(layout):
 def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
     """A primary checkout holding the shim and a .venv, plus a linked worktree without a .venv."""
     main_root = tmp_path / "shim-primary"
-    shim_dir = main_root / "scripts" / "agent_runtime" / "shims"
-    shim_dir.mkdir(parents=True)
+    shim_dir = _release_shim_dir(main_root)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
-    shutil.copy2(GUARD_SOURCE, main_root / "scripts" / "agent_runtime" / "npm_guard.py")
+    shutil.copy2(GUARD_SOURCE, shim_dir.parent / "npm_guard.py")
     (main_root / ".gitignore").write_text(".venv/\n", encoding="utf-8")
     _git(main_root, "init", "-q", "-b", "main")
     _git(main_root, "add", ".")
@@ -1202,7 +1214,7 @@ def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
     linked = main_root / ".worktrees" / "dispatch" / "agent" / "task"
     _git(main_root, "worktree", "add", "-q", "--detach", str(linked))
     assert not (linked / ".venv").exists()
-    return main_root, linked / "scripts" / "agent_runtime" / "shims"
+    return main_root, linked / shim_dir.relative_to(main_root)
 
 
 @pytest.mark.parametrize("git_env", [{}, {"GIT_DIR": "/nonexistent", "GIT_WORK_TREE": "/nonexistent"}], ids=str)
@@ -1227,9 +1239,10 @@ def test_linked_worktree_shim_uses_the_main_checkout_interpreter(layout, git_env
     assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
 
 
-@pytest.mark.parametrize("stamped", [True, False], ids=["stamped-interpreter", "common-dir-lookup"])
+@pytest.mark.parametrize("stamped", [True, False], ids=["stamped-interpreter", "gitfile-lookup"])
 def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stamped):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
+    from lu_machinery.common.repo_root import project_interpreter
 
     _, linked_shims = _linked_shim_checkout(layout["tmp"])
     env = runner._apply_merge_guard(
@@ -1241,9 +1254,10 @@ def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stam
             "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         },
     )
-    assert env["AGENT_GIT_SHIM_PYTHON"] == sys.executable
+    # The runner stamps the project interpreter; unstamped, the shim reads the worktree's gitfile.
+    assert env["LEARN_UKRAINIAN_PYTHON"] == str(project_interpreter())
     if not stamped:
-        env.pop("AGENT_GIT_SHIM_PYTHON")
+        env.pop("LEARN_UKRAINIAN_PYTHON")
     env["PATH"] = env["PATH"].replace(str(runner._SHIMS_DIR), str(linked_shims), 1)
     npm = shutil.which("npm", path=env["PATH"])
     assert npm == str(linked_shims / "npm")
@@ -1291,11 +1305,10 @@ def test_npx_wrapper_runs_its_sibling_shim_whatever_path_says(layout):
 def _copied_npx(layout: dict[str, Path], sibling: str, *, guard: bool = True) -> Path:
     """The npx wrapper copied into another shim directory whose sibling `npm` is ``sibling``."""
     tooling = layout["tmp"] / "copied-tooling"
-    shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
-    shim_dir.mkdir(parents=True)
+    shim_dir = _release_shim_dir(tooling)
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     if guard:
-        shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
+        shutil.copy2(GUARD_SOURCE, shim_dir.parent / "npm_guard.py")
     (tooling / ".venv" / "bin").mkdir(parents=True)
     (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
     npm = shim_dir / "npm"
@@ -1386,7 +1399,7 @@ def test_real_tool_never_inherits_the_shim_tool_variable(layout, tool, extra_env
 
 
 def test_runner_merge_guard_path_resolves_npm_to_the_shim():
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     env = runner._apply_merge_guard(mode="danger", env={"PATH": "/usr/bin:/bin"})
     assert shutil.which("npm", path=env["PATH"]) == str(runner._SHIMS_DIR / "npm")

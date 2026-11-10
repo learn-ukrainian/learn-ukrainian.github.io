@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 def build(spec, env):
-    from scripts.dispatcher.types import Invocation
+    from lu_machinery.dispatcher.types import Invocation
 
     stdin = spec.prompt_file.read_bytes()
     if spec.agent == "agy":
@@ -26,7 +26,7 @@ def build(spec, env):
 
 
 def parse(stdout, stderr, returncode, final_text):
-    from scripts.dispatcher.types import ParsedResult
+    from lu_machinery.dispatcher.types import ParsedResult
 
     return ParsedResult(
         final_text if final_text is not None else stdout.strip(),
@@ -51,7 +51,7 @@ os.wait()
 
 GOVERNED_RUN = """import os, sys, time
 from pathlib import Path
-from scripts.common import test_slots
+from lu_machinery.common import test_slots
 pool = Path(os.environ[test_slots.HOLDER_ENV].split(":", 2)[2]).parent.parent
 hold = test_slots.join_inherited({**os.environ, test_slots.DIR_ENV: str(pool)}, wait_s=5)
 Path(sys.argv[1]).write_text("joined" if hold is not None else "refused")

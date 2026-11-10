@@ -35,7 +35,12 @@ LOCAL_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_clas
 # The "broken" one fails exactly that probe (simulating a venv without the
 # deps) and succeeds otherwise so the launcher's own resolution order is the
 # only variable under test.
-_STUB_OK = "#!/bin/bash\nexit 0\n"
+_STUB_OK = (
+    "#!/bin/bash\n"
+    "if [[ ${1:-} == -c && ${2:-} == *importlib.resources* ]]; then\n"
+    "  echo /test-wheel/lu_machinery/lib/job_memory_scope.sh\n"
+    "fi\nexit 0\n"
+)
 _STUB_BROKEN = '#!/bin/bash\nfor a in "$@"; do\n  if [[ "$a" == *"import yaml"* ]]; then exit 1; fi\ndone\nexit 0\n'
 
 
@@ -167,7 +172,11 @@ def test_detached_launcher_requests_pool_and_verifies_before_driver(tmp_path: Pa
     argv = record.read_text().splitlines()
     assert "--slice=lu.slice" in argv
     assert "--property=MemorySwapMax=0" in argv
-    entry_at = next(i for i, arg in enumerate(argv) if arg.endswith("/scripts/lib/job_memory_scope.sh"))
+    entry_at = next(i for i, arg in enumerate(argv) if arg.endswith("/job_memory_scope.sh"))
+    if launcher != "launch_reduce.sh":
+        assert f"--setenv=LU_PRODUCT_ROOT={env['ATLAS_REPO']}" in argv
+    expected_package = "scripts" if launcher == "launch_reduce.sh" else "lu_machinery"
+    assert argv[entry_at].endswith(f"/{expected_package}/lib/job_memory_scope.sh")
     assert argv[entry_at + 1:entry_at + 3] == [str(1792 * 1024**2), "--"]
     assert argv[entry_at + 3] in ("/usr/bin/nice", "/bin/bash")
 

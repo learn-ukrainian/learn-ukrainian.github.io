@@ -9,8 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-from scripts.common.git_context import sanitized_git_env
+from lu_machinery.common.git_context import sanitized_git_env
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -36,7 +35,10 @@ def init_review_repo(tmp_path: Path) -> tuple[Path, str]:
 
 def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Real ordinary Git scope, even when a dispatch test stubs process spawning."""
-    from scripts.review import security_paths, target_resolution
+    from lu_machinery.review import security_paths, target_resolution
+
+    from scripts.review import security_paths as held_paths  # TRANSITIONAL-PKG3-B2: held spawn isolation.
+    from scripts.review import target_resolution as held_target  # TRANSITIONAL-PKG3-B2: held spawn isolation.
 
     repo, _base = init_review_repo(tmp_path)
     file = repo / "ordinary.py"
@@ -52,14 +54,14 @@ def make_ordinary_review_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         with patch.object(subprocess, "run", real_run), patch.object(subprocess, "Popen", real_popen):
             return run_git(args, cwd, timeout=timeout)
 
-    monkeypatch.setattr(target_resolution, "_run_git", fixture_git)
-    monkeypatch.setattr(security_paths, "_run_git", fixture_git)
+    for module in (target_resolution, security_paths, held_target, held_paths):
+        monkeypatch.setattr(module, "_run_git", fixture_git)
     return repo
 
 
 def write_code_review_manifest(repo: Path, path: Path) -> Path:
     """Freeze a real code target in the shape admission reads."""
-    from scripts.review.target_resolution import resolve_branch_target
+    from lu_machinery.review.target_resolution import resolve_branch_target
 
     target = resolve_branch_target(repo, "refs/remotes/origin/review-target", "refs/remotes/origin/main")
     path.write_text(json.dumps({"target": asdict(target)}))

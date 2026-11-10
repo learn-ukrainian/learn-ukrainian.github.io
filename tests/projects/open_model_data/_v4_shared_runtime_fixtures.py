@@ -52,7 +52,9 @@ from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from psycopg.rows import dict_row
 
-from scripts.fleet_comms.request_executor import RequestExecutor
+from scripts.fleet_comms.request_executor import (
+    RequestExecutor,  # TRANSITIONAL-PKG3-B2: held runtime needs authorize_author_execution.
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 

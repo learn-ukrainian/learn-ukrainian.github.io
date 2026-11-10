@@ -3,14 +3,14 @@
 
 Reads docs/decisions/decisions.yaml, flags any active decision past its
 expiry date, and optionally creates GH issues for them. Also reads
-scripts/config/stack_pins.yaml and reports rows whose review_by is before
+the installed machinery config/stack_pins.yaml and reports rows whose review_by is before
 today as overdue reviews beside expired decisions. An overdue review does
 not invalidate the accepted pin.
 
 Usage:
-    .venv/bin/python scripts/check_decisions.py              # full report
-    .venv/bin/python scripts/check_decisions.py --quiet       # one-liner for session-setup
-    .venv/bin/python scripts/check_decisions.py --create-issues  # create GH issues for stale
+    .venv/bin/python scripts/audit/check_decisions.py              # full report
+    .venv/bin/python scripts/audit/check_decisions.py --quiet       # one-liner for session-setup
+    .venv/bin/python scripts/audit/check_decisions.py --create-issues  # create GH issues for stale
 
 Exit codes:
     0 = no stale decisions and no overdue stack reviews
@@ -27,6 +27,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 import yaml
+from lu_machinery.common.repo_root import machinery_path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -40,7 +41,7 @@ from lu_machinery.orchestration import issue_stream_audit
 from lu_machinery.publish.github import Request, request_run
 
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
-STACK_PINS_FILE = PROJECT_ROOT / "scripts" / "config" / "stack_pins.yaml"
+STACK_PINS_FILE = machinery_path("config/stack_pins.yaml")
 
 BUDGET_WARN = 40
 BUDGET_MAX = 50

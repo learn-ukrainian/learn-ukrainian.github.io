@@ -218,7 +218,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert report["needs"] == ["pytest"]
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     report_steps = report["steps"]
-    proof = next(i for i, step in enumerate(report_steps) if "scripts.ci.pytest_report" in step.get("run", ""))
+    proof = next(i for i, step in enumerate(report_steps) if "lu_machinery.ci.pytest_report" in step.get("run", ""))
     record = next(i for i, step in enumerate(report_steps) if step.get("name") == "Record pytest durations")
     assert proof < record
     assert "split_tests durations --shards ci-artifacts/shards" in report_steps[record]["run"]
