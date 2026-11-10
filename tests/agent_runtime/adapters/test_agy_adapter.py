@@ -10,7 +10,6 @@ import pytest
 from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.attempt_boundary import AttemptBoundary
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
 from scripts.review.review_contract import captured_sources_events
@@ -917,16 +916,16 @@ def _build_with(tmp_path: Path, tool_config: dict | None, mode: str = "workspace
 
 @pytest.mark.parametrize(
     "tool_config",
-    [None, {"review_profile": "code"}, {"review_attempt_boundary": True}, {"review_isolation": True}],
-    ids=["no-config", "review-profile", "truthy-non-boundary", "isolation-flag"],
+    [None, {"output_format": "stream-json"}, {"bridge_repo_read": True}, {"mcp_server_names": ["sources"]}],
+    ids=["no-config", "pipeline-config", "bridge-read", "sources-mcp"],
 )
 def test_agy_read_only_without_attempt_boundary_is_refused_not_run_unguarded(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tool_config: dict | None
 ) -> None:
-    """Defect class: AGY read-only without a verified boundary ran with skipped permissions.
+    """Defect class: AGY read-only off the review route ran with skipped permissions.
 
     The refusal comes before hook provisioning or any provider subprocess; the lane
-    health probe builds its version-only plan in a mode that needs no boundary.
+    health probe builds its version-only plan in a mode that needs no review route.
     """
     from scripts.agent_runtime import lane_probe
 
@@ -943,11 +942,10 @@ def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
     (2026-09-24 evidence on #8516), so without ``--add-dir`` a read-only
     run's workspace is wherever agy drifted, not the pinned checkout.
     """
-    # Read-only runs only inside an attempt boundary; only its type is read while building the argv.
+    # Read-only runs only on the review route, which needs a scoped home.
     home = tmp_path / "scoped-home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
-    bound = {"review_attempt_boundary": object.__new__(AttemptBoundary), "agy_home_override": str(home)}
-    plan = _build_with(tmp_path, bound, "read-only")
+    plan = _build_with(tmp_path, {"review_profile": "code", "agy_home_override": str(home)}, "read-only")
     assert "--add-dir" in plan.cmd
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 

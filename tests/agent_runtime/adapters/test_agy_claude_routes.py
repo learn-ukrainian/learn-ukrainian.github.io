@@ -10,7 +10,6 @@ import pytest
 
 from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.agent_runtime.attempt_boundary import AttemptBoundary
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.claude_route_accounts import HOST_ACCOUNT
@@ -76,7 +75,7 @@ def test_other_claude_names_stay_unsupported(model):
         agy.AgyAdapter()._resolve_model_flag(model)
 
 
-# Read-only refuses without an attempt boundary; the review route below carries one.
+# Read-only off the review route is refused; the review route is pinned below.
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
 def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypatch, mode, model):
@@ -105,9 +104,7 @@ def test_review_route_denies_commands_and_writes_without_effort(tmp_path, monkey
     register_agy_hooks(tmp_path, home=home)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
-    boundary = object.__new__(AttemptBoundary)  # Only its type is read while building the argv.
-    config = {"review_profile": "code", "agy_home_override": str(home), "review_attempt_boundary": boundary}
-    plan = build(tmp_path, model, config=config)
+    plan = build(tmp_path, model, config={"review_profile": "code", "agy_home_override": str(home)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
     assert "--effort" not in plan.cmd

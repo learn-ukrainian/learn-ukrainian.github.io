@@ -446,10 +446,12 @@ the secret guard passes the gate above, the primary guard member equals the
 absolute registration, and the guard script exists. A dry run plans before
 the worktree exists and provisions nothing.
 
-`AgyAdapter` refuses a `read-only` call unless `review_attempt_boundary` is
-an `AttemptBoundary`, because AGY has no write lock of its own. The lane
-health probe builds its version-only plan in `AgyAdapter.probe_mode`
-(`workspace-write`).
+AGY has no write lock of its own, so `AgyAdapter` refuses a `read-only` call
+off the review route. Without it, the call would run with
+`--dangerously-skip-permissions`. The review route runs with `--sandbox`, the
+validated native denials above and a scoped home, or inside an attempt
+boundary. The lane health probe builds its version-only plan in
+`AgyAdapter.probe_mode` (`workspace-write`).
 
 Bridge asks explicitly provision an absolute guard into their caller-owned
 scratch workspace when its hooks file is absent. Existing invalid scratch

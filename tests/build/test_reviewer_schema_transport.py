@@ -118,9 +118,11 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
 
 def build_plan(adapter, cwd: Path, config: dict[str, Any], *, model=None):
     if adapter.name == "agy":
+        # AGY read-only runs only on the review route, which needs a scoped home.
         home = cwd / "agy-home"
         register_agy_hooks(cwd, home=home)
-        config = {**config, "agy_home_override": str(home)}
+        (home / ".gemini" / "antigravity-cli").mkdir(parents=True, exist_ok=True)
+        config = {**config, "agy_home_override": str(home), "review_profile": "code"}
     return adapter.build_invocation(
         prompt="Public mechanical schema fixture.",
         mode="read-only",

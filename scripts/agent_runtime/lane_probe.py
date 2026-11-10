@@ -66,7 +66,7 @@ def _mode_for_probe(adapter: Any) -> str:
     """Choose a supported mode without executing an agent request.
 
     An adapter that refuses a mode without caller context names the mode its
-    probe plan builds in as ``probe_mode`` (AGY read-only needs an attempt boundary).
+    probe plan builds in as ``probe_mode`` (AGY read-only needs the review route).
     """
     supported = getattr(adapter, "supported_modes", frozenset())
     declared: str | None = getattr(adapter, "probe_mode", None)
