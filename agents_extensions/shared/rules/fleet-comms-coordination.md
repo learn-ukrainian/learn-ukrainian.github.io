@@ -3,7 +3,7 @@
 <critical>
 
 **Cutover issue:** #6159 · **Stream:** #4707 (infra-harness) · **Operator GO:** 2026-08-01
-**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Kimi, Cursor, wrappers; AGY/Gemini only as a standalone TUI seat, never an epic-driver seat) — not only agents that load a skill.
+**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Cursor, AGY/Gemini, wrappers) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
 served in `GET /api/rules?scope=task:fleet-comms`, `scope=task:driver`, or `scope=full`.
