@@ -120,8 +120,6 @@ INTERACTIVE = {
     "start-codex.sh": ("codex", "codex"),
     "start-gemini.sh": ("gemini", "gemini"),
     "start-grok.sh": ("grok", "grok"),
-    "start-glm.sh": ("glm", "glm"),
-    "start-glmcc.sh": ("glm", "glmcc"),
     f"{MACHINERY}/start-bio-driver.sh": ("claude", "bio"),
 }
 DRIVERS = {
@@ -151,8 +149,8 @@ launcher_adapter_exec() {
   {
     printf 'wrapper=%s\\nprovider=%s\\nmode=%s\\nharness=%s\\nepic=%s\\n' \\
       "${0##*/}" "$LC_PROVIDER" "$LC_MODE" "$LC_HARNESS" "${LC_EPIC:-}"
-    printf 'glm_flash=%s\\nunit=%s\\nscope_pid=%s\\npid=%s\\n' \\
-      "${GLM_OPENCODE_FLASH-unset}" "${LU_DRIVER_SCOPE_UNIT:-}" "${LU_DRIVER_SCOPE_PID:-}" "$$"
+    printf 'unit=%s\\nscope_pid=%s\\npid=%s\\n' \\
+      "${LU_DRIVER_SCOPE_UNIT:-}" "${LU_DRIVER_SCOPE_PID:-}" "$$"
     printf 'model=%s\\neffort=%s\\n' "$LC_MODEL" "$LC_EFFORT"
   } > "$TEST_IDENTITY"
   launcher_exec_command "$TEST_PROVIDER" ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}
@@ -200,7 +198,7 @@ _PYTHON = """#!/usr/bin/env bash
 # is matched on the arguments after its package; the real call keeps them all.
 argv=("$@")
 if [[ "${{1:-}}" == -I && "${{2:-}}" == -c && "${{3:-}}" == *"module bootstrap:"* ]]; then set -- "${{@:6}}"; fi
-{admission}case "${{1:-}}:${{2:-}}" in
+case "${{1:-}}:${{2:-}}" in
   -m:{package}.session_supervisor)
     lu_test_event "lease-${{3:-}}"
     if [ "${{3:-}}" = open ]; then
@@ -215,16 +213,6 @@ JSON
 esac
 case "${{1:-}}" in */{package}/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
 exec {python} "${{argv[@]}}"
-"""
-# The release reads only its own catalog, where GLM is retired, so the installed
-# runtime cannot take the patched catalog the checkout runtime copies. Its
-# interpreter instead admits exactly the two GLM identities at the retired-model
-# check, before the scope, as that catalog would; every other catalog command,
-# including the check for every other model, runs the release's own code.
-_RELEASE_GLM_ADMISSION = """case "${{1:-}}:${{2:-}}:${{3:-}}:${{4:-}}" in
-  -m:{package}.review.model_catalog:--check-retired-model:glm-5.3|\\
-  -m:{package}.review.model_catalog:--check-retired-model:glm-5.3-flash) exit 0 ;;
-esac
 """
 # A job-control shell for one foreground job, as a login shell runs a launcher:
 # it owns the terminal, gives the job its own foreground process group, records
@@ -307,7 +295,7 @@ def _write(path: Path, body: str, mode: int = 0o644) -> Path:
 # Where the launcher code under test comes from: this checkout's tracked copy,
 # or the installed lu-machinery release (`installed_machinery`).
 RUNTIMES = ("checkout", "installed")
-_PROVIDERS = ("claude", "codex", "cursor", "gemini", "glm", "grok", "kimi")
+_PROVIDERS = ("claude", "codex", "cursor", "gemini", "grok")
 # Package-relative boundary files each fixture replaces with a stub or redirect.
 _REPLACED = (
     "lib/driver_scope.sh",
@@ -375,20 +363,6 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
             destination = root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(REPO / relative, destination)
-        # Recording adapters below model the retained wrapper ABI, independent of
-        # production retirement. Real GLM launch refusal remains covered separately.
-        # (The installed runtime admits GLM at its interpreter: _RELEASE_GLM_ADMISSION.)
-        import yaml
-
-        from scripts.review.model_catalog import validate_catalog
-
-        catalog_path = root / MACHINERY / "config/model_catalog.yaml"
-        catalog = yaml.safe_load(catalog_path.read_text())
-        for identity in ("glm-5.3", "glm-5.3-flash"):
-            catalog["models"][identity]["lifecycle"] = "active"
-            catalog["models"][identity]["transports"] = ["opencode"]
-        validate_catalog(catalog)
-        catalog_path.write_text(yaml.safe_dump(catalog))
         copy_slot_registry(root)
     # The real helper with only its kernel cgroup read redirected.
     env = scope_sandbox(root, tmp_path, machinery=machinery, package=package)
@@ -412,7 +386,6 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
         event=_EVENT,
         python=shlex.quote(sys.executable),
         package=package,
-        admission=_RELEASE_GLM_ADMISSION.format(package=package) if runtime == "installed" else "",
     )
     _write(root / ".venv/bin/python", interpreter, 0o755)
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
@@ -571,24 +544,18 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
 
 
 @pytest.mark.parametrize(
-    ("wrapper", "flash", "harness", "forward_head"),
+    ("wrapper", "harness", "forward_head"),
     [
-        # The provider-derived name would replay start-glm.sh and export the flag.
-        ("start-glmcc.sh", "unset", "claude-code", []),
-        ("start-glm.sh", "1", "claude-code", []),
-        (f"{MACHINERY}/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
+        (f"{MACHINERY}/start-bio-driver.sh", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
     ],
 )
-def test_route_identity_survives_reentry(
-    tmp_path: Path, wrapper: str, flash: str, harness: str, forward_head: list[str]
-) -> None:
+def test_route_identity_survives_reentry(tmp_path: Path, wrapper: str, harness: str, forward_head: list[str]) -> None:
     """Wrapper identity and provider argv are checked separately, injections once."""
     root, env = _checkout(tmp_path)
     result = _launch(root, env, wrapper, "--", *TRICKY)
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     identity = _identity(env)
     assert identity["wrapper"] == Path(wrapper).name
-    assert identity["glm_flash"] == flash
     assert identity["harness"] == harness
     assert _argv(env) == [*forward_head, *TRICKY]
 
@@ -621,7 +588,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     ("wrapper", "args", "weekly", "code", "message"),
     [
         ("start-claude.sh", ("--does-not-exist",), "0", 2, "unknown launcher flag"),
-        ("start-glmcc.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
+        ("start-grok.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
         ("start-claude-driver.sh", ("--epic", "devops", "--model", "not-certified"), "0", 4, "not certified"),
         ("start-gemini-driver.sh", ("--epic", "devops", "--model", "gemini-unknown"), "0", 4, "not certified"),
         ("start-claude.sh", ("--model", "opus"), "0", 7, "Opus is blocked"),
@@ -702,19 +669,15 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
 
 
 def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> None:
-    """A wrapper must refuse a provider that does not match its filename.
-
-    The stand-in is an active provider. Kimi's default model is retired and
-    refused in ``launcher_normalize_model``, before this scope gate.
-    """
+    """A wrapper must refuse a provider that does not match its filename."""
     root, env = _checkout(tmp_path)
-    wrapper = root / "start-glmcc.sh"
+    wrapper = root / "start-gemini.sh"
     wrapper.write_text(
         wrapper.read_text().replace(
-            "launcher_main glm interactive", "launcher_main grok interactive"
+            "launcher_main gemini interactive", "launcher_main grok interactive"
         )
     )
-    result = _launch(root, env, "start-glmcc.sh")
+    result = _launch(root, env, "start-gemini.sh")
     assert result.returncode == 6, result.stdout + result.stderr
     assert "DRIVER_SCOPE_REFUSED reason=entrypoint-mismatch;" in result.stderr
     assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
@@ -752,8 +715,7 @@ def _forged_reentry(
         # A driver adopting an interactive scope, and the reverse.
         ("start-claude-driver.sh", "lu-interactive-claude-claude-{uuid}.scope", "mode-mismatch"),
         ("start-claude.sh", "lu-driver-claude-devops-{uuid}.scope", "mode-mismatch"),
-        # The right mode, another wrapper's identity: glm into a glmcc scope.
-        ("start-glm.sh", "lu-interactive-glm-glmcc-{uuid}.scope", "identity-mismatch"),
+        # The right mode, another wrapper's identity: claude into a bio scope.
         ("start-claude.sh", "lu-interactive-claude-bio-{uuid}.scope", "identity-mismatch"),
         ("start-claude-driver.sh", "lu-driver-claude-devops-x-{uuid}.scope", "identity-mismatch"),
         ("start-claude.sh", "lu-interactive-claude-claude-not-a-uuid.scope", "mode-mismatch"),
@@ -774,8 +736,8 @@ def test_same_pid_reentry_refuses_mode_or_identity_mismatch(
 
 def test_matching_same_pid_reentry_is_accepted(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    unit = f"lu-interactive-glm-glmcc-{_PARENT}.scope"
-    result = _forged_reentry(root, env, "start-glmcc.sh", unit)
+    unit = f"lu-interactive-claude-bio-{_PARENT}.scope"
+    result = _forged_reentry(root, env, f"{MACHINERY}/start-bio-driver.sh", unit)
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     assert not Path(env["FAKE_STARTS"]).exists()
     assert _identity(env)["unit"] == unit

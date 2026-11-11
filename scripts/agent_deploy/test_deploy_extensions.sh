@@ -87,18 +87,20 @@ grep -q 'last-deploy-status' "$SESSION_SETUP" \
 grep -q 'PREDEPLOY FAILED' "$SESSION_SETUP" \
   || fail "session-setup.sh no longer reports a failed predeploy"
 
-# --- missing npm script: explicit skip warning, exit 0 ---
+# --- missing npm script: refuses (a stale deploy is never success) ---
 mkdir -p "$WORK_DIR/bare"
 printf '{"scripts": {}}\n' > "$WORK_DIR/bare/package.json"
-out="$(deploy_agent_extensions "$WORK_DIR/bare" agents:deploy)" \
-  || fail "missing-script case: expected exit 0, got $?"
-contains "$out" "not found" "missing script warns instead of failing"
+rc=0
+out="$(deploy_agent_extensions "$WORK_DIR/bare" agents:deploy 2>&1)" || rc=$?
+[ "$rc" -ne 0 ] || fail "missing-script case: expected non-zero exit, got 0"
+contains "$out" "not found" "missing script names the missing deploy script"
 
-# --- missing package.json: explicit skip warning, exit 0 ---
+# --- missing package.json: refuses ---
 mkdir -p "$WORK_DIR/empty"
-out="$(deploy_agent_extensions "$WORK_DIR/empty" agents:deploy)" \
-  || fail "no-package-json case: expected exit 0, got $?"
-contains "$out" "not found" "missing package.json warns instead of failing"
+rc=0
+out="$(deploy_agent_extensions "$WORK_DIR/empty" agents:deploy 2>&1)" || rc=$?
+[ "$rc" -ne 0 ] || fail "no-package-json case: expected non-zero exit, got 0"
+contains "$out" "not found" "missing package.json names the missing deploy script"
 
 # --- launchers actually use the helper (regression guard on the wiring) ---
 # Post-cutover (#5958) the deploy gate lives in the SHARED core so every

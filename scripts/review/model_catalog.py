@@ -1588,20 +1588,9 @@ def _checkout_relative(relative: str) -> str:
 
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
-    launcher = _checkout_relative("launchers/kimi.sh")
     route_helper = _checkout_relative("lib/kimicc_route.sh")
     adapter_file = _checkout_relative("agent_runtime/adapters/kimi.py")
     consumers = {
-        # BOTH kimi harness branches must resolve aliases through the catalog:
-        # the native branch via --resolve-kimi-model --format native (review
-        # finding on #5958 r3 — this requirement was narrowed away in the
-        # cutover, blinding the guard while the native branch regressed), the
-        # claude-code branch via kimicc_configure_route.
-        launcher: (
-            "kimicc_configure_route",
-            "--resolve-kimi-model",
-            "--format native",
-        ),
         route_helper: ("--resolve-kimi-model", "--format kimicc"),
         adapter_file: ("kimi_model_aliases()",),
     }
@@ -1617,33 +1606,12 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
                 f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
             )
 
-    kimi_adapter = (project_root / launcher).read_text(encoding="utf-8")
-    if "resolve_kimi_model() {\n  case" in kimi_adapter:
-        raise ModelCatalogError("Kimi launcher adapter contains a local Kimi alias case map")
     adapter = (project_root / adapter_file).read_text(encoding="utf-8")
     if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
         raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
     kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
     if 'case "$MODEL_ALIAS"' in kimicc_helper:
         raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
-
-
-def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
-    """Reject local alias maps so all GLM surfaces stay catalog-backed."""
-    consumers = {
-        _checkout_relative("lib/glmcc_route.sh"): ("--resolve-glm-model", "--format glmcc"),
-    }
-    for relative_path, required_snippets in consumers.items():
-        path = project_root / relative_path
-        try:
-            source = path.read_text(encoding="utf-8")
-        except OSError as exc:
-            raise ModelCatalogError(f"cannot read GLM alias consumer {relative_path}: {exc}") from exc
-        missing = [snippet for snippet in required_snippets if snippet not in source]
-        if missing:
-            raise ModelCatalogError(
-                f"{relative_path} must resolve GLM aliases through model_catalog.yaml; missing {missing}"
-            )
 
 
 def _main() -> int:

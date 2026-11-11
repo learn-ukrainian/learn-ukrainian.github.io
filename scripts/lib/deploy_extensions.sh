@@ -11,8 +11,8 @@
 #
 # This helper runs the deploy with output captured, prints one line on
 # success, and on failure prints a loud banner plus the tail of the real
-# output. It returns the npm exit code so callers can choose whether to abort;
-# start-claude.sh refuses to launch against stale definitions.
+# output. It returns non-zero when npm or the deploy script is missing and the
+# npm exit code otherwise; the shared launcher core refuses to launch on failure.
 #
 # Usage: deploy_agent_extensions <project_dir> <npm_script>
 # Load-bearing tests: scripts/agent_deploy/test_deploy_extensions.sh (wrapped by
@@ -30,24 +30,26 @@ deploy_agent_extensions() {
     local npm_script="$2"
 
     if ! command -v npm >/dev/null 2>&1; then
-        echo "⚠️  npm not found — skipping agent-extensions deploy (targets may be stale)"
-        return 0
+        echo "Error: npm not found; cannot deploy agent extensions (targets may be stale)." >&2
+        return 1
     fi
     if [ ! -f "$project_dir/package.json" ] \
         || ! grep -q "\"$npm_script\"" "$project_dir/package.json" 2>/dev/null; then
-        echo "⚠️  npm script '$npm_script' not found in $project_dir/package.json — skipping deploy"
-        return 0
+        echo "Error: npm script '$npm_script' not found in $project_dir/package.json; cannot deploy agent extensions." >&2
+        return 1
     fi
 
+    # Command-line values override every npm config source (environment, user,
+    # global and project npmrc), so ambient config cannot skip the deploy script.
     local log_file
     log_file="$(mktemp "${TMPDIR:-/tmp}/agents-deploy.XXXXXX")" || {
         echo "⚠️  mktemp failed — running deploy without output capture"
-        (cd "$project_dir" && npm run --silent "$npm_script")
+        (cd "$project_dir" && npm run --silent --if-present=false --script-shell=/bin/sh "$npm_script")
         return $?
     }
 
     local exit_code=0
-    (cd "$project_dir" && npm run --silent "$npm_script" >"$log_file" 2>&1) || exit_code=$?
+    (cd "$project_dir" && npm run --silent --if-present=false --script-shell=/bin/sh "$npm_script" >"$log_file" 2>&1) || exit_code=$?
 
     # Durable status breadcrumb. Printing the banner to the terminal is NOT
     # enough: the launcher hands the terminal to the agent CLI, which clears

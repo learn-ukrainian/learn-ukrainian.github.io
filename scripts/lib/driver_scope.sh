@@ -21,8 +21,7 @@ fi
 
 # Tracked entry points a scope may replay, each with its provider, mode and
 # interactive unit label (drivers use their lane). Re-entry replays the wrapper
-# the caller invoked, never a name derived from the provider: start-glmcc.sh
-# must not become start-glm.sh, which selects another route (#9624).
+# the caller invoked, never a name derived from the provider (#9624).
 driver_scope_entrypoint() {
   local row
   case "$1" in
@@ -30,10 +29,6 @@ driver_scope_entrypoint() {
     start-codex.sh) row='codex interactive codex' ;;
     start-gemini.sh) row='gemini interactive gemini' ;;
     start-grok.sh) row='grok interactive grok' ;;
-    start-kimi.sh) row='kimi interactive kimi' ;;
-    start-kimicc.sh) row='kimi interactive kimicc' ;;
-    start-glm.sh) row='glm interactive glm' ;;
-    start-glmcc.sh) row='glm interactive glmcc' ;;
     "$DS_PACKAGE/start-bio-driver.sh") row='claude interactive bio' ;;
     start-claude-driver.sh|start-claude-cto.sh|"$DS_PACKAGE/start-kube-dojo-driver.sh") row='claude driver -' ;;
     start-codex-driver.sh|start-codex-cto.sh) row='codex driver -' ;;

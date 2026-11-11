@@ -4,7 +4,7 @@
 # uniform public CLI and driver lifecycle.
 
 # Fixed arguments a public wrapper adds to its caller's argv: launcher options
-# (the CTO lane, the kimicc harness) and leading provider arguments (the bio
+# (the CTO lane) and leading provider arguments (the bio
 # agent). A wrapper sets them after sourcing this file. Scope re-entry and
 # supervisory successors replay the caller's argv alone, so the wrapper adds
 # them exactly once (#9624). Sourcing resets them; arrays are never inherited.
@@ -88,16 +88,9 @@ launcher_usage() {
   case "${0##*/}" in
     start-claude-cto.sh|start-codex-cto.sh) name="${0##*/}" ;;
   esac
-  case "$LC_PROVIDER" in
-    kimi|glm)
-      driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
-      ;;
-    *)
-      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
+  driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
                semantic canary where available (otherwise reports not run),
                then injects the drive-epic binding."
-      ;;
-  esac
   case "$LC_PROVIDER" in
     claude) provider_env='  Claude weekly cap: every Claude launch stops at 99% weekly used.
                              Opus is always blocked outside start-claude-cto.sh on epics:
@@ -112,17 +105,9 @@ launcher_usage() {
     gemini) provider_env='  AGY_*                    AGY-managed Gemini authentication and configuration.' ;;
     grok) provider_env='  GROK_*                   Grok CLI authentication and configuration.' ;;
     cursor) provider_env='  CURSOR_API_KEY           Optional Cursor API key (otherwise CLI login / oauth).' ;;
-    kimi) provider_env='  KIMICC_AUTH_TOKEN, MOONSHOT_API_KEY, KIMI_API_KEY
-                             Explicit Kimi credentials for --harness claude-code.' ;;
-    glm) provider_env='  GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY
-                             Explicit GLM credentials (preferred over the secret file).
-  ~/.secret/zai.key        Owner-only fallback (mode 0600/0400) when env is unset.
-  GLMCC_SECRET_FILE        Override path for the file-backed Z.AI key.' ;;
   esac
   case "$LC_PROVIDER:$LC_MODE" in
-    gemini:interactive) example_three='./start-gemini.sh --model gemini-3.8-flash-high' ;;
-    kimi:interactive) example_three='./start-kimicc.sh --endpoint coding' ;;
-    glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
+    gemini:interactive) example_three='./start-gemini.sh --model gemini-4-carbon-medium' ;;
     *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
@@ -153,7 +138,7 @@ Options:
                              an empty model or a forwarded --model. Gemini driver
                              default: gemini-3.8-flash-high (only certified id);
                              Gemini interactive default:
-                             gemini-3.8-flash-high. Claude interactive: omit to use
+                             gemini-4-carbon-medium. Claude interactive: omit to use
                              project settings (Sonnet 5.5). Grok: omit to keep
                              last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
@@ -166,9 +151,6 @@ Options:
                              driver did not hand off. Live drivers must not pass it.
                              CTO wrappers reject it with exit 2.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
-  --endpoint NAME            Kimi/GLM route endpoint: coding or platform.
-  --isolate-config           Kimi/GLM Claude-Code config isolation (default).
-  --no-isolate-config        Use the existing Claude-Code config only when route-safe.
   --                         Pass all remaining arguments verbatim to the provider CLI.
                              Native Grok drivers take prompt words before this separator;
                              after it, only supported session options are accepted.
@@ -343,7 +325,6 @@ launcher_clear_foreign_route_state() {
   unset CLAUDE_CODE_USE_MANTLE CLAUDE_CODE_USE_ANTHROPIC_AWS
   unset LEARN_UKRAINIAN_TRANSPORT LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
   unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
-  unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
 }
 
 launcher_export_git_identity() {
@@ -375,8 +356,13 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
-      # Both modes use the subscribed Flash pin (operator 2026-10-23).
-      LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
+      # The driver keeps the certified Flash seat; interactive sessions use the
+      # Carbon medium work route (operator 2026-11-10).
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-gemini-4-carbon-medium}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     muse)
@@ -398,14 +384,6 @@ launcher_defaults() {
       LC_MODEL="${LAUNCHER_MODEL:-$LC_CURSOR_SEAT_PIN}"
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
-    kimi)
-      LC_MODEL="${LAUNCHER_MODEL:-k3-256k}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-kimi-code}"
-      ;;
-    glm)
-      LC_MODEL="${LAUNCHER_MODEL:-glm-5.3}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
-      ;;
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
@@ -418,14 +396,11 @@ launcher_defaults() {
     # Opus 5.5 API default is medium; orchestrating seats run at high.
     LC_EFFORT=high
   fi
-  LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
-  LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
   LC_EPIC=""
   LC_GOVERNOR="0"
   LC_DRIVER_FORCE=0
   LC_DRIVER_LEASE_CLAIMED=0
-  LC_HARNESS_EXPLICIT=0
   LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
   LC_CALLER_PROMPT_ARGS=()
@@ -504,11 +479,10 @@ launcher_parse() {
       --effort=*) LC_EFFORT="${1#*=}"; shift ;;
       --harness)
         launcher_need_value "$1" "${2:-}"
-        LC_HARNESS_EXPLICIT=1
         LC_HARNESS="$2"
         shift 2
         ;;
-      --harness=*) LC_HARNESS_EXPLICIT=1; LC_HARNESS="${1#*=}"; shift ;;
+      --harness=*) LC_HARNESS="${1#*=}"; shift ;;
       --epic)
         launcher_need_value "$1" "${2:-}"
         LC_EPIC="$2"
@@ -529,14 +503,6 @@ launcher_parse() {
         shift 2
         ;;
       --governor=*) LC_GOVERNOR="1"; LC_EPIC="${1#*=}"; shift ;;
-      --endpoint)
-        launcher_need_value "$1" "${2:-}"
-        LC_ENDPOINT="$2"
-        shift 2
-        ;;
-      --endpoint=*) LC_ENDPOINT="${1#*=}"; shift ;;
-      --isolate-config) LC_ISOLATE_CONFIG=1; shift ;;
-      --no-isolate-config) LC_ISOLATE_CONFIG=0; shift ;;
       -*)
         # A driver selector consumes the first positional argument. Preserve
         # the former driver's compatibility contract by forwarding subsequent
@@ -1694,8 +1660,6 @@ launcher_main() {
   launcher_refuse_uncertified_gemini_driver
   launcher_drop_force_from_successor_args
   launcher_normalize_effort
-  # Provider adapters are sourced dynamically and consume these values.
-  export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
   launcher_publication_path
   launcher_normalize_model

@@ -34,11 +34,9 @@ _COPIED = (
     "scripts/lib/project_interpreter.sh",
     "scripts/lib/handoff_identity.sh",
     "scripts/lib/session_supervisor.sh",
-    "scripts/lib/kimicc_route.sh",
     "scripts/lib/claude_route_guard.sh",
     "scripts/lib/profile_resolver.sh",
     "scripts/launchers/claude.sh",
-    "scripts/launchers/kimi.sh",
     "scripts/launchers/codex.sh",
     "scripts/config/issue_streams.yaml",
     "scripts/config/launcher_stream_aliases.tsv",
@@ -46,9 +44,7 @@ _COPIED = (
 # Helper scripts the sites name by path; the stub interpreters never run them.
 _PLACEHOLDERS = (
     "scripts/orchestration/thread_handoff.py",
-    "scripts/lib/kimi_coding_oauth.py",
     "scripts/lib/context_profiles.py",
-    "scripts/review/model_catalog.py",
 )
 _SITES = (
     "import_bundle",
@@ -58,7 +54,6 @@ _SITES = (
     "driver_agent_type",
     "slot_registry",
     "claude_profile",
-    "kimi_route",
 )
 _EXPECTED_HONEST = {
     "import_bundle": "scripts/orchestration/thread_handoff.py",
@@ -68,7 +63,6 @@ _EXPECTED_HONEST = {
     "driver_agent_type": "scripts.orchestration.driver_agent_type",
     "slot_registry": "scripts.orchestration.handoff_slot_registry",
     "claude_profile": "scripts/lib/context_profiles.py",
-    "kimi_route": "scripts/lib/kimi_coding_oauth.py",
 }
 
 
@@ -100,9 +94,6 @@ def _stub_python(root: Path, owner: str, log: Path) -> None:
     python.write_text(
         "#!/usr/bin/env bash\n"
         f"printf '%s %s\\n' {owner} \"$*\" >> {str(log)!r}\n"
-        # The Kimi route asks the catalog for a route before reaching its
-        # OAuth helper; answer that one call so the helper line is reached.
-        'case "$1" in *model_catalog.py) printf \'k3\\tplat\\tcoding\\tkimicc_k3\\n\' ;; esac\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -197,12 +188,6 @@ site slot_registry
 ( launcher_require_registered_slot claude devops ) >/dev/null 2>&1
 site claude_profile
 ( LC_MODEL=claude-opus-5-5 source "$LC_ROOT/scripts/launchers/claude.sh"; launcher_adapter_preflight ) >/dev/null 2>&1
-site kimi_route
-(
-  LC_HARNESS=claude-code LC_ENDPOINT=coding LC_MODEL=k3 LC_ISOLATE_CONFIG=0
-  source "$LC_ROOT/scripts/launchers/kimi.sh"
-  launcher_adapter_preflight
-) >/dev/null 2>&1
 exit 0
 """
 
@@ -249,8 +234,6 @@ def _assert_every_site_ran_the_primary(
     # Helper scripts named by path come from the validated primary.
     joined = "\n".join(layout.lines())
     assert f"{layout.primary}/scripts/orchestration/thread_handoff.py" in joined
-    if "kimi_route" in sites:
-        assert f"{layout.primary}/scripts/lib/kimi_coding_oauth.py" in joined
 
 
 def _assert_refused_before_any_site(layout: Layout, result: subprocess.CompletedProcess[str]) -> None:
@@ -292,7 +275,7 @@ def test_ambient_git_dir_does_not_redirect_any_site(layout: Layout) -> None:
 
 
 def test_worktree_local_venv_never_runs(layout: Layout) -> None:
-    """The driver-agent and Kimi sites used to try the worktree's own .venv first."""
+    """The driver-agent site used to try the worktree's own .venv first."""
     _stub_python(layout.worktree, "WORKTREE", layout.log)
     result = _run_sites(layout, **_hostile_env(layout))
     _assert_every_site_ran_the_primary(layout, result)
@@ -525,8 +508,6 @@ def _assert_override_refused(layout: Layout, result: subprocess.CompletedProcess
     assert layout.lines() == [], layout.lines()
 
 
-# The Kimi route belongs to Kimi launches, which never read the override.
-_CODEX_REACHABLE_SITES = tuple(name for name in _SITES if name != "kimi_route")
 
 
 def test_override_names_a_separate_git_dir_primary(layout: Layout) -> None:
@@ -534,7 +515,7 @@ def test_override_names_a_separate_git_dir_primary(layout: Layout) -> None:
     refused = _run_codex_sites(sgd, None)
     _assert_refused_before_any_site(sgd, refused)
 
-    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _SITES)
 
 
 def test_codex_adapter_uses_the_validated_override(layout: Layout) -> None:
@@ -638,7 +619,7 @@ def test_override_copied_separate_git_dir_gitfile_residual(layout: Layout) -> No
     _assert_override_refused(
         sgd, _run_codex_sites(sgd, copy), f"is not the core.worktree Git records ({sgd.primary}): {copy}"
     )
-    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _SITES)
 
 
 def test_override_is_read_only_on_codex_launches(layout: Layout) -> None:
