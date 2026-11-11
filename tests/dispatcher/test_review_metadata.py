@@ -89,16 +89,25 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
 ])
 def test_subject_self_review_effective_identity_or_unknown_refused_before_launch(dispatch, capsys, agent, model, flag, value):
     dispatch(flag, value, agent=agent, model=model, expected=2)
-    assert "subject" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    if agent == "cursor":
+        # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the subject check.
+        assert "cursor_no_approved_model_pin" in err
+    elif model.startswith("grok-"):
+        # Every Grok model is retired (GROK-CANCEL-1110): refused before the subject check.
+        assert "is retired in the model catalog" in err
+    else:
+        assert "subject" in err
 
 
 @pytest.mark.parametrize("model,flags", [
-    ("grok-4.7-high", ("--subject-seat", "claude")),
     ("gpt-6.1-sol", ()),
     ("auto", ()),
 ])
-def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, model, flags):
-    assert dispatch(*flags, agent="cursor", model=model)["model"] == model
+def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, capsys, model, flags):
+    # Cursor has no approved model pin (GROK-CANCEL-1110), so no Cursor model is admitted at all.
+    dispatch(*flags, agent="cursor", model=model, expected=2)
+    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
 
 
 def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatch, capsys):
@@ -106,7 +115,8 @@ def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatc
 
     monkeypatch.setattr(model_catalog, "substitution_default_model", lambda _: "unknown-model")
     dispatch("--subject-seat", "claude", agent="cursor", expected=2)
-    assert "subject" in capsys.readouterr().err
+    # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the fallback identity is read.
+    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
 
 
 def test_verdict_requirement_in_write_mode_refused_before_launch(dispatch, capsys):
@@ -176,8 +186,9 @@ SOL = ("sol", "gpt-6.1-sol")
 @pytest.mark.parametrize(
     "trailers,flags,reviewer,refusal",
     [
-        # Sol is outside the declared author's family but authored a commit on the branch.
-        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--review-author-model", "claude-opus-5-5", "--risk", "high"),
+        # Sol is outside the declared author's family but authored a commit on the branch. Medium risk: with
+        # Grok retired, no third family reviews high-risk work (only Opus 5.5 and Sol 6.1 are admitted there).
+        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--review-author-model", "claude-opus-5-5", "--risk", "medium"),
          SOL, "['anthropic', 'openai']"),
         # Any review flag types a read-only review, dry runs included (F2).
         (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family"), SOL, "['openai']"),
@@ -235,15 +246,17 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
     review = ("--mode", "read-only", *flags)
     dispatch(*review, agent=reviewer[0], model=reviewer[1], expected=2)
     assert refusal in capsys.readouterr().err
-    grok = ("--agent", "cursor", "--model", "grok-4.7-high")
+    # A reviewer from a third family (Google; Grok is retired, GROK-CANCEL-1110) is outside every author family.
+    outside = ("agy", "gemini-3.8-flash-high")
     if trailers and refusal.startswith("["):
         if "--dry-run" in flags:
-            assert cli.main(["dispatch", *grok, "--prompt", "Review this change", *review]) == 0
+            assert cli.main(["dispatch", "--agent", outside[0], "--model", outside[1],
+                             "--prompt", "Review this change", *review]) == 0
         else:
-            assert dispatch(*review, agent="cursor", model="grok-4.7-high")["model"] == "grok-4.7-high"
+            assert dispatch(*review, agent=outside[0], model=outside[1])["model"] == outside[1]
     else:
         # Unresolvable authorship and an empty range refuse every reviewer family.
-        dispatch(*review, agent="cursor", model="grok-4.7-high", expected=2)
+        dispatch(*review, agent=outside[0], model=outside[1], expected=2)
 
 
 @pytest.mark.parametrize("flags", [("--language-lane", "ukrainian"), ("--risk", "low"), ("--review-profile", "ukrainian")])

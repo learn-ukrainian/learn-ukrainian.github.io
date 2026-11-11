@@ -57,8 +57,10 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
 @pytest.mark.parametrize(
     "second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning", "unconfident"]
 )
-def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
-    """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
+def test_schemaless_reviewer_missing_verdict_gets_one_correction_turn(sandbox, second):
+    """Case 3: a reply from a reviewer that cannot bind a schema, with no recognised VERDICT line, gets one
+    format correction. Muse is that reviewer now; Cursor, which had this path, has no approved pin while
+    Grok is retired (GROK-CANCEL-1110).
 
     The second reply is accepted only when it is valid findings JSON and keeps the
     first reply's decision. A changed or still-invalid second reply fails closed,
@@ -102,7 +104,7 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     count = binary_dir / "launches"
     count.write_text("0")
     prompts = binary_dir / "prompts"
-    executable = binary_dir / "cursor-agent"
+    executable = binary_dir / "muse"
     executable.write_text(
         f"#!{sys.executable}\n"
         "import json, pathlib, sys\n"
@@ -110,22 +112,17 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
         f"prompts = pathlib.Path({str(prompts)!r})\n"
         "n = int(count.read_text()) + 1\n"
         "count.write_text(str(n))\n"
-        "prompt = sys.stdin.read()\n"
+        "prompt = pathlib.Path(sys.argv[sys.argv.index('--prompt-file') + 1]).read_text()\n"
         "prompts.write_text(prompts.read_text() + '\\n---\\n' + prompt if prompts.exists() else prompt)\n"
         f"reply = {first!r} if n == 1 else {reply!r}\n"
-        "events = [\n"
-        '    {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},\n'
-        '    {"type": "assistant", "message": {"content": [{"type": "text", "text": reply}]}},\n'
-        '    {"type": "result", "subtype": "success", "result": reply},\n'
-        "]\n"
-        "print('\\n'.join(json.dumps(event) for event in events))\n"
+        "event = {'payload_type': 'run.terminal.completed', 'payload': {'text': reply}}\n"
+        "print(json.dumps(event))\n"
     )
     executable.chmod(0o755)
     schema_dir = sandbox.repo / "schemas"
     schema_dir.mkdir(exist_ok=True)
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     head = run_git(
         sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
         "authored change\n\nX-Agent: claude/claude-opus-5-5",
@@ -133,7 +130,7 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     run_git(sandbox.repo, "branch", "review-source", head)
     run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
-        "dispatch", "--agent", "cursor", "--model", "grok-4.7-high",
+        "dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0",
         "--prompt", "Review the change", "--mode", "read-only",
         "--branch", "review-source", "--require-review-verdict", "--review-profile", "code",
         "--review-author-model", "claude-opus-5-5",

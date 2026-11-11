@@ -108,14 +108,14 @@ def test_committed_projections_match_machine_authorities():
     assert issues == [], [i.as_dict() for i in issues]
     seats = load_orchestrator_seats()
     assert "codex" in seats
-    assert "cursor" in seats
-    assert set(seats) == {"claude", "codex", "grok", "agy", "cursor"}
+    # Grok is retired and Cursor has no approved pin (GROK-CANCEL-1110): neither holds a seat.
+    assert set(seats) == {"claude", "codex", "agy"}
     eligible = load_formal_review_eligible()
     assert eligible["codex"] is True
     assert eligible["claude"] is True
-    assert eligible["grok"] is True
-    # #9488: Cursor is formal only for its catalog-pinned, runtime-attested model.
-    assert eligible["cursor"] is True
+    assert eligible["grok"] is False
+    # #9488: Cursor is formal only for a catalog-pinned, runtime-attested model; it pins none.
+    assert eligible["cursor"] is False
     for name in ("agy", "kimi"):
         assert eligible[name] is False
 

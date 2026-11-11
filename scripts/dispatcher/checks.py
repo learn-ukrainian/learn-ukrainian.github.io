@@ -151,9 +151,22 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
     starts; the verdict recorder's later refusal would only discard a run that already happened.
     """
     from scripts.agent_runtime.model_pause import dispatch_roles
-    from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+    from scripts.review.model_catalog import (
+        CURSOR_APPROVED_WIRE_PINS,
+        CURSOR_NO_APPROVED_PIN_CODE,
+        REVIEW_ACTIVITY,
+        activity_role_refusal,
+        cursor_pinned_models,
+    )
 
     catalog = load_model_catalog()
+    # Cursor's only pin, grok-4.7, retired with every Grok model (GROK-CANCEL-1110). With no
+    # approved pin, no Cursor dispatch runs, Auto included; a new pin is an operator decision.
+    if agent == "cursor" and not (cursor_pinned_models(catalog) or CURSOR_APPROVED_WIRE_PINS):
+        raise ValueError(
+            f"there is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
     identity = execution_identity(agent, model, catalog)
     if identity is None:
         if agent == "cursor" and is_cursor_auto_selector(model):

@@ -87,7 +87,7 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
 
     assert first["state"] == "COMPLETE"
     assert first["rounds_completed"] == 2
-    assert sorted(calls) == ["acpx-codex-shadow", "acpx-codex-shadow", "acpx-grok-shadow", "acpx-grok-shadow"]
+    assert sorted(calls) == ["acpx-claude-shadow", "acpx-claude-shadow", "acpx-codex-shadow", "acpx-codex-shadow"]
     assert second["duplicate_suppressed"] is True
     assert second["synthesis"] == "authoritative synthesis"
     assert second["participant_outcomes"] == first["participant_outcomes"]
@@ -96,7 +96,7 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     assert second["tokens"] == first["tokens"]
     assert duplicate_events == 1
     edges = {(str(row[0]), str(row[1])) for row in rows}
-    assert {("root", "codex"), ("root", "grok"), ("codex", "root"), ("grok", "root"), ("codex", "grok"), ("grok", "codex")} <= edges
+    assert {("root", "codex"), ("root", "claude"), ("codex", "root"), ("claude", "root"), ("codex", "claude"), ("claude", "codex")} <= edges
     assert any(row[2] is not None for row in rows)
 
 
@@ -125,7 +125,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
             correlation_id="corr-8463",
             idempotency_key="idem-8463-three",
             rounds=2,
-            participants=("claude", "cursor", "grok"),
+            participants=("claude", "cursor", "codex"),
         )
         rows = controller.conn.execute(
             "SELECT sender, recipient FROM comms_messages WHERE conversation_id = ?",
@@ -139,22 +139,22 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
     assert sorted(agent for agent, _prompt in prompts) == [
         "acpx-claude-shadow",
         "acpx-claude-shadow",
+        "acpx-codex-shadow",
+        "acpx-codex-shadow",
         "acpx-cursor-shadow",
         "acpx-cursor-shadow",
-        "acpx-grok-shadow",
-        "acpx-grok-shadow",
     ]
     round_two = {
         agent: prompt for agent, prompt in prompts if "prior response" in prompt
     }
     assert "cursor's prior response" in round_two["acpx-claude-shadow"]
-    assert "grok's prior response" in round_two["acpx-claude-shadow"]
+    assert "codex's prior response" in round_two["acpx-claude-shadow"]
     assert "claude's prior response" in round_two["acpx-cursor-shadow"]
-    assert "grok's prior response" in round_two["acpx-cursor-shadow"]
-    assert "claude's prior response" in round_two["acpx-grok-shadow"]
-    assert "cursor's prior response" in round_two["acpx-grok-shadow"]
+    assert "codex's prior response" in round_two["acpx-cursor-shadow"]
+    assert "claude's prior response" in round_two["acpx-codex-shadow"]
+    assert "cursor's prior response" in round_two["acpx-codex-shadow"]
     edges = {(str(row[0]), str(row[1])) for row in rows}
-    seats = ("claude", "cursor", "grok")
+    seats = ("claude", "cursor", "codex")
     for seat in seats:
         assert ("root", seat) in edges
         assert (seat, "root") in edges
@@ -166,7 +166,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
         root=tmp_path / "plane", conversation_id=result["conversation_id"]
     )
     assert receipt["checks"]["fixed_participants"] is True
-    assert receipt["participants"] == ["claude", "cursor", "grok"]
+    assert receipt["participants"] == ["claude", "cursor", "codex"]
 
 
 def test_controller_adopts_exact_authority_reservation_without_second_conversation(
@@ -181,7 +181,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt=prompt,
-            participants=("cursor", "grok"),
+            participants=("cursor", "claude"),
             rounds=1,
             task_digest=hashlib.sha256(task_id.encode()).hexdigest(),
             correlation_id=correlation_id,
@@ -205,7 +205,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
             correlation_id=correlation_id,
             idempotency_key=idempotency_key,
             rounds=1,
-            participants=("cursor", "grok"),
+            participants=("cursor", "claude"),
             source="codex",
             reserved_conversation_id=job.subject_id,
         )
@@ -234,7 +234,7 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt="Recover without calling providers.",
-            participants=("cursor", "grok"),
+            participants=("cursor", "claude"),
             rounds=1,
             task_digest=hashlib.sha256(b"task-6243-orphan").hexdigest(),
             correlation_id="correlation-6243-orphan",
@@ -544,7 +544,7 @@ def test_cancellation_settles_current_wave_and_persists_terminal_state(tmp_path,
 
 def test_one_participant_failure_is_partial_and_synthesis_uses_available_evidence(tmp_path, monkeypatch):
     def participant(agent: str, _prompt: str, **_kwargs):
-        if agent.endswith("grok-shadow"):
+        if agent.endswith("claude-shadow"):
             raise AgentTimeoutError("fixture timeout")
         return _result(agent, "codex-only evidence")
 
@@ -893,7 +893,7 @@ def test_terminal_replay_bypasses_repository_busy_admission(tmp_path, monkeypatc
     assert first["state"] == "COMPLETE"
     assert replay["conversation_id"] == first["conversation_id"]
     assert replay["duplicate_suppressed"] is True
-    assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
+    assert sorted(calls) == ["acpx-claude-shadow", "acpx-codex-shadow"]
 
 
 def test_crashed_process_releases_repository_admission_lock(tmp_path):
@@ -959,7 +959,7 @@ def test_body_free_receipt_verifies_complete_replayed_conversation(tmp_path, mon
 
 def test_body_free_receipt_reports_partial_without_claiming_success(tmp_path, monkeypatch):
     def participant(agent: str, _prompt: str, **_kwargs):
-        if agent.endswith("grok-shadow"):
+        if agent.endswith("claude-shadow"):
             raise AgentTimeoutError("fixture timeout")
         return _result(agent, "private codex body")
 
@@ -999,7 +999,7 @@ def test_body_free_receipt_never_reflects_poisoned_storage_text(tmp_path, monkey
             """UPDATE acp_conversation_events
                SET outcome = 'PRIVATE_PROMPT', created_at = 'PRIVATE_RESPONSE'
                WHERE conversation_id = ? AND event_type = 'CALL_TERMINAL'
-                 AND sender = 'grok'""",
+                 AND sender = 'claude'""",
             (result["conversation_id"],),
         )
         controller.conn.execute(
@@ -1060,7 +1060,7 @@ def test_errors_are_terminal_once_per_leg_without_retry_or_failover(tmp_path, mo
     finally:
         controller.close()
 
-    assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
+    assert sorted(calls) == ["acpx-claude-shadow", "acpx-codex-shadow"]
     assert payload["state"] == "PARTIAL_COMPLETE"
     assert {item["outcome"] for item in payload["participant_outcomes"]} == {"error"}
 
@@ -1079,7 +1079,7 @@ def test_fast_participant_is_persisted_before_slow_participant_finishes(tmp_path
 
     def observing_append(*args, **kwargs):
         original_append(*args, **kwargs)
-        if kwargs.get("event_type") == "CALL_TERMINAL" and kwargs.get("sender") == "grok":
+        if kwargs.get("event_type") == "CALL_TERMINAL" and kwargs.get("sender") == "claude":
             fast_recorded.set()
 
     controller._append = observing_append  # type: ignore[method-assign]
@@ -1096,8 +1096,8 @@ def test_fast_participant_is_persisted_before_slow_participant_finishes(tmp_path
             idempotency_key="idem",
             cwd=Path.cwd(),
             round_no=1,
-            prompts={"codex": "prompt", "grok": "prompt"},
-            deliveries={"codex": ("root", "prompt", None), "grok": ("root", "prompt", None)},
+            prompts={"codex": "prompt", "claude": "prompt"},
+            deliveries={"codex": ("root", "prompt", None), "claude": ("root", "prompt", None)},
             state="INITIAL_FANOUT",
             deadline=controller.clock() + 10,
         )
@@ -1105,7 +1105,7 @@ def test_fast_participant_is_persisted_before_slow_participant_finishes(tmp_path
         controller.close()
 
     assert fast_recorded.is_set()
-    assert [outcome.participant for outcome in outcomes] == ["codex", "grok"]
+    assert [outcome.participant for outcome in outcomes] == ["claude", "codex"]
 
 
 def test_recovery_ignores_authority_native_discussion_rows(tmp_path, monkeypatch):
@@ -1128,7 +1128,7 @@ def test_recovery_ignores_authority_native_discussion_rows(tmp_path, monkeypatch
                    rounds_requested, participants_json, created_at, deadline_at,
                    token_budget, content_budget_bytes
                ) VALUES (?, 'task', 'correlation', 'authority-idempotency', 1,
-                         '["codex","grok"]', '2000-01-01T00:00:00Z',
+                         '["codex","claude"]', '2000-01-01T00:00:00Z',
                          '2000-01-01T00:00:00Z', 100, 100)""",
             (authority_conversation_id,),
         )
@@ -1179,7 +1179,7 @@ def test_next_admitted_discussion_recovers_expired_reservation_before_new_calls(
 
     assert expired_state == "PARTIAL_COMPLETE"
     assert fresh["state"] == "COMPLETE"
-    assert sorted(calls) == ["acpx-codex-shadow", "acpx-grok-shadow"]
+    assert sorted(calls) == ["acpx-claude-shadow", "acpx-codex-shadow"]
 
 
 def test_racing_reservations_never_expose_a_conversation_without_created_event(tmp_path, monkeypatch):

@@ -1,7 +1,10 @@
-"""OO-58 amendment: parked Fable pins and a single Grok/Cursor allowance.
+"""OO-58 amendment: parked Fable pins and a single shared usage allowance.
 
 Defect classes: default routing spends on Fable, retirement blocks an explicit
 Fable pin, or a second transport escapes the shared meter's reserve.
+
+The live Grok/Cursor pool retired with Grok (GROK-CANCEL-1110), so the catalog
+lists no usage pool; the shared-meter cases install a simulated two-seat pool.
 """
 from __future__ import annotations
 
@@ -19,6 +22,23 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 FABLE = "claude-fable-5-1"
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _simulate_usage_pool(monkeypatch, seats=("grok", "cursor")):
+    """Install one shared usage pool in the catalog every reader loads."""
+    from scripts.review import model_catalog, reviewer_scheduler
+
+    assert load_model_catalog()["usage_pools"] == {}
+    catalog = deepcopy(load_model_catalog())
+    catalog["usage_pools"] = {"shared_meter": {"seats": list(seats)}}
+    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *args, **kwargs: catalog)
+    monkeypatch.setattr(reviewer_scheduler, "load_model_catalog", lambda *args, **kwargs: catalog)
+    return catalog
+
+
+@pytest.fixture
+def shared_pool(monkeypatch):
+    return _simulate_usage_pool(monkeypatch)
 
 
 def snapshot(grok=1, cursor=95):
@@ -89,19 +109,22 @@ def test_explicit_fable_pin_requires_native_claude_transport(transport):
             require_execution_model(FABLE, transport=transport)
 
 
-def test_reviewer_capacity_and_ranking_read_shared_allowance():
+def test_reviewer_capacity_and_ranking_read_shared_allowance(monkeypatch):
     from scripts.review.capacity import review_capacity
     from scripts.review.reviewer_scheduler import _route_record, metrics_for
 
+    # The Cursor Grok candidate retired; the Muse route shares a simulated meter instead.
+    _simulate_usage_pool(monkeypatch, ("grok", "muse"))
     budget = snapshot()
-    candidate = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
+    budget["agents"]["muse"] = {**budget["agents"]["cursor"]}
+    candidate = REVIEW_CANDIDATES["muse"]
     record = _route_record(candidate, budget, prefer_route=True)
     assert review_capacity(record, budget["diagnostics"]).remaining_pct == 1
     assert review_capacity(record, budget["diagnostics"]).near_cap
     assert metrics_for(candidate, budget).quota_remaining_pct == 1
 
 
-def test_pool_mirroring_preserves_route_health_and_does_not_mutate_snapshot():
+def test_pool_mirroring_preserves_route_health_and_does_not_mutate_snapshot(shared_pool):
     budget = snapshot(80, 95)
     budget["agents"]["cursor"]["health"] = {"healthy": False}
     original = deepcopy(budget)
@@ -125,12 +148,12 @@ def test_retired_kimi_cannot_win_budget_recommendation_or_capacity_pick():
     assert recommendation["primary_agent_for_code"] in {"grok", "cursor", "codex"}
 
 
-def test_capacity_picker_lists_each_cool_usage_pool_once():
+def test_capacity_picker_lists_each_cool_usage_pool_once(shared_pool):
     rows = capacity_pick.build_lane_rows(snapshot(80, 95), reset_reserve={"enabled": False})
     assert capacity_pick.cooler_lanes(rows) == ["codex", "grok"]
 
 
-def test_route_runtime_failure_does_not_block_the_other_shared_transport():
+def test_route_runtime_failure_does_not_block_the_other_shared_transport(shared_pool):
     budget = snapshot(80, 95)
     budget["agents"]["grok"].update(status="hot", runtime={"headroom_blocked": True})
     rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"enabled": False})}
@@ -139,7 +162,7 @@ def test_route_runtime_failure_does_not_block_the_other_shared_transport():
     assert rows["cursor"]["remaining_pct"] == 80
 
 
-def test_missing_transport_meter_uses_shared_allowance_without_inventing_health():
+def test_missing_transport_meter_uses_shared_allowance_without_inventing_health(shared_pool):
     budget = snapshot(1, 95)
     del budget["agents"]["cursor"]
     rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"enabled": False})}
@@ -156,7 +179,7 @@ def test_kimi_registry_defaults_refuse_before_runtime_attribution(agent):
         _refuse_retired_launch_model(agent, None, None)
 
 
-def test_shared_allowance_does_not_invent_capacity_for_an_unobserved_transport():
+def test_shared_allowance_does_not_invent_capacity_for_an_unobserved_transport(shared_pool):
     budget = snapshot(80, 95)
     del budget["agents"]["grok"]
     rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"enabled": False})}
@@ -166,7 +189,7 @@ def test_shared_allowance_does_not_invent_capacity_for_an_unobserved_transport()
 
 
 @pytest.mark.parametrize("lane", ["grok", "cursor"])
-def test_malformed_runtime_telemetry_keeps_the_shared_retirement_reserve(lane):
+def test_malformed_runtime_telemetry_keeps_the_shared_retirement_reserve(lane, shared_pool):
     """Partial runtime telemetry cannot crash the shared allowance reader."""
     budget = snapshot(1, 95)
     budget["agents"][lane]["runtime"] = "unknown"

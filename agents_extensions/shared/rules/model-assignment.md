@@ -2,44 +2,37 @@
 
 <critical>
 
-**Review admission:** `claude-fable-5` and `grok-4.6` are retired.
-Fable (5.1, 5.2): explicit pin only, per task, CTO-decided and recorded (FABLE-NEED-ONLY-1109); never default, routine, review, advisory or approval (catalog rows). Operator decision 2026-10-05 (#9769):
-Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through
-Cursor `--agent cursor --model grok-4.7-high`. Native Grok dispatch is retired;
-`dispatch.py` has no `grok` agent and rejects `--agent grok`; callers use
-`--agent cursor --model grok-4.7-high`. `grok-build` is the Grok TUI, not a dispatch v2 provider.
-Operator decision 2026-10-07 (#9987): Grok reviewers have no sandbox and are
-read-only: tracked-file reads only, with no shell, tests or scripts. Route
-execution-dependent reviews to Opus 5.5 or Sol 6.1. Grok review briefs supply
-the diff and CI evidence and never ask for execution. Risk admission is unchanged.
-Grok never ranks ahead of an eligible, healthy Sol 6.1 or Opus 5.5.
-Cursor Grok is the surviving Grok dispatch route.
+**Review admission:** `claude-fable-5` is retired.
+Fable (5.1, 5.2): explicit pin only, per task, CTO-decided and recorded (FABLE-NEED-ONLY-1109); never default, routine, review, advisory or approval (catalog rows).
+Grok models are retired (operator order GROK-CANCEL-1110, 2026-11-10): the project stopped using
+Grok. No Grok model authors, drives, advises or reviews; `grok-4.7`, `grok-4.6` and `grok-4.5` stay in
+the catalog as retired rows with no transport, so dispatch and review admission refuse them by name and
+recorded verdicts still resolve. `dispatch.py` has no `grok` agent and rejects `--agent grok`.
+Cursor has no approved model pin while Grok is retired (its only pin was `grok-4.7`); any new
+Cursor pin is an operator decision.
 The resolver chooses an eligible, healthy Sol 6.1 first at low,
 medium and high risk; Sonnet is chosen at medium and low risk only when Sol is excluded (for example a
 Sol-authored change), and at critical risk Opus 5.5 is chosen for non-Anthropic authors.
-Cursor Grok never reviews an xAI-authored change or its own subject seat.
-Verdicts count only when Cursor reports its pinned high-effort model itself.
-Operator decision 2026-10-25 (C-1949): Grok 4.7 may give critical-risk final sign-off through
-Cursor under those attestation, cross-family and subject-seat limits. Opus 5.5 and Sol 6.1 remain
-eligible. Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
+High-risk and critical review admit only Opus 5.5 and Sol 6.1, so an Anthropic-authored high or
+critical change has one eligible reviewer (Sol 6.1) and an OpenAI-authored one has one (Opus 5.5).
+Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
 Operator decision 2026-11-01: Muse Wonder Full (`muse-wonder-full-1.0`) is the formal reviewer for low-risk and medium-risk code and infra reviews, placed ahead of the frontier seats in the low and medium review ladders when eligible and healthy.
 Operator order MUSE-REVIEW-1110 (2026-11-10): the routing budget reads `muse usage` into a Muse lane with the same cache, timeout and staleness rules as the other subscription lanes. A fresh weekly allowance below the near-cap line is healthy and admits this seat at low and medium risk; an unreadable reading stays unknown and is not treated as healthy. The medium and low ladder order is unchanged.
 It has no high, critical, security-final, Ukrainian, design or driver authority (AC-02).
 Private inputs require contributor mode off (operator order C-2401).
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
-Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5,
-Sol 6.1, or Grok 4.7. Gemini code review runs directly through native AGY in the exact-head dispatch
+Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5
+or Sol 6.1. Gemini code review runs directly through native AGY in the exact-head dispatch
 worktree, at low or medium risk only; security-sensitive paths raise the risk floor and exclude Gemini.
 The source-blind AGY ACP wrapper is not the formal review route. Ukrainian reviews retain the Sources MCP gate.
 This interim seat stands until a code-capable Gemini model is admitted.
 
-**Grok language routing:** native Grok dispatch is retired. The former native measurement
-exception supplies no executable dispatch route. Cursor `grok-4.7-high` stays off language seats.
-Route Ukrainian language, culture and heritage authoring through Claude, GPT or Gemini with the
-Sources MCP. Review and judging seats are GPT or Gemini. Review of Grok-authored work stays cross-family and non-xAI.
+**Language routing:** route Ukrainian language, culture and heritage authoring through Claude, GPT
+or Gemini with the Sources MCP. Review and judging seats are GPT or Gemini. Review of historical
+Grok-authored work stays cross-family and non-xAI.
 Critical and security final sign-off retain the review admission limits above.
-`review_scheduler.risk_reviewer_models` admits Opus 5.5, Sol 6.1 and Grok 4.7 at high;
+`review_scheduler.risk_reviewer_models` admits Opus 5.5 and Sol 6.1 at high;
 critical eligibility requires the catalog's `critical_review` role. These eligibility gates
 apply to automatic ladders, explicit pins, custom ladders and surviving reviewer admission.
 The legacy force-agent and budget substitution switches are retired. DeepSeek V4.1 Flash coding
@@ -138,13 +131,13 @@ seats; its review eligibility is unchanged. Use Claude workers through the nativ
 Claude CLI as heavily as their subscription allows, within task fit, provider
 health and hard gates. Operator 2026-10-16: native Claude workers use Sonnet 5.5
 by default and Opus 5.5 only for complex or security work; Claude-lane Ukrainian
-stays Opus 5.5. Cursor Grok or Gemini routes are language-free overflow
-only. Native Grok dispatch is retired. Live catalog
+stays Opus 5.5. Gemini routes are language-free overflow
+only. Grok is retired (GROK-CANCEL-1110). Live catalog
 admission and headroom/load evidence decide availability.
 Luna/Haiku read-only recon/classification and workspace-write bounded implementation accept the #10919 driver brief. Other Luna
 and bounded Flash routes retain their mandatory Sol envelope. The 2026-10-09 order changed worker defaults, not reviewer
 resolution or Ukrainian-content routing; the 2026-10-16 order adds the Sonnet
-default. Native Grok dispatch has since retired; surviving gates stay.
+default. Grok has since retired; surviving gates stay.
 
 ### Terra coder boundary
 
@@ -237,8 +230,9 @@ Cost never lowers the quality floor. An `unhealthy` route is unavailable. Review
 and dispatch ignore remaining weekly or five-hour usage, pace, near-cap state and usage
 headroom forecasts. Claude retains its existing weekly-cap protection. `cursor:auto` is never an acceptable formal-review identity;
 Composer is retired, not subscribed (operator 2026-10-23). The Cursor review endpoint is
-formal only for the models it pins (`grok-4.7-high` today); other third-party non-Anthropic models Cursor
-exposes may be added under the same runtime attestation rules (#9488).
+formal only for the models it pins; it pins none while Grok is retired (GROK-CANCEL-1110). Another
+third-party non-Anthropic model Cursor exposes may be added, by operator decision, under the same
+runtime attestation rules (#9488).
 
 **Measuring a model change** ("Which Claude model should you build with?", Addy Osmani, claude.dev blog, 2026-11-09): use real tasks with an outcome check, each candidate at two or three effort levels in separate sessions; score outcomes independently; take cost from each run's `usage`, with subscription consumption recorded apart from estimated API dollars; keep a mixed setup only if it beats every single-model point on score per spend within the same task family; shadow-test before cutover. Cost never overrides the selection order above or the authority, security, review and Ukrainian-quality gates.
 
@@ -264,13 +258,13 @@ is historical evidence only; live seats and ladders come from the catalog.
 
 **Cursor Auto authors:** the resolver attributes Auto authors to the Cursor family,
 even if a concrete runtime model is reported (#9951). Require a reviewer outside that
-family. Concrete Grok pins retain xAI attribution. The active Auto allowlist contains
-only Grok 4.7. Historical Composer identities retain Moonshot attribution.
+family. Historical concrete Grok pins retain xAI attribution. The Auto allowlist is empty while
+Grok is retired. Historical Composer identities retain Moonshot attribution.
 
 **Designated approval (operator decisions 2026-10-03, #9583, #9616):** a new architecture,
 layout, process or policy decision is approved by the operator, or when two frontier families
 agree through `claude-opus-5-5` and `gpt-6.1-sol`: when one of them authored the proposal, the
-other's approval completes it; a proposal by any other agent (Gemini, Grok or another seat)
+other's approval completes it; a proposal by any other agent (Gemini or another seat)
 needs both; if they disagree, the operator decides.
 
 **Claude interactive default: Sonnet 5.5 with Opus 5.5 advisor (#10083):**
@@ -358,7 +352,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 * **Everyday Routine Formal Reviews** (practical roles; Codex and other seats @ `high` effort):
   * **Claude seat**: `claude-sonnet-5-5` (preserves frontier window; fast & efficient). For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive.
   * **Codex seat**: `gpt-6.1-sol` @ `high` (standard review)
-  * **Gemini seat**: `gemini-3.8-flash-high`. Ukrainian language/content review with the Sources MCP. The 2026-10-08 approval adds low-risk and medium-risk code review; high-risk and critical review use Opus 5.5, Sol 6.1, or Grok 4.7. Native AGY dispatch enforces resolver admission; the ACP bridge refuses code review.
+  * **Gemini seat**: `gemini-3.8-flash-high`. Ukrainian language/content review with the Sources MCP. The 2026-10-08 approval adds low-risk and medium-risk code review; high-risk and critical review use Opus 5.5 or Sol 6.1. Native AGY dispatch enforces resolver admission; the ACP bridge refuses code review.
 Every `code` or `infra` review-typed dispatch, including `ask-* --review`, resolves its target before admission:
 branch/PR reviews collect literal changes from the base-branch merge-base to the pinned head;
 attempts require the record's `target.changed_paths`. An unresolved target refuses with
@@ -377,7 +371,7 @@ Code-profile `closeout_cli resolve-reviewer` requires a resolved target or an ow
   * **Top advisors**: Opus 5.5 / Sol 6.1 for advice, critiques and design input; they hold
     designated approval by agreeing; when one authored the proposal, the other's approval
     completes it, and any other author needs both (#9583, #9616).
-  * **Other advisors**: `grok-4.7` @ `high`. Gemini 3.8 Flash is not an advisor for
+  * **Other advisors**: none (Grok is retired, GROK-CANCEL-1110). Gemini 3.8 Flash is not an advisor for
     planning or design (operator decision 2026-10-03, #9584); its task-level uses stay as listed in the routing tables. (Kimi is retired, OO-58.)
   * Legacy Terra review qualification does not authorize GPT-6.1 Terra review
     or advisory work; its current admission is routine coding only.
@@ -408,17 +402,18 @@ the canonical reviewer resolver. A routing-table change must never grant approva
 or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
-* **grok**: dispatch runs Grok 4.7 through Cursor at `grok-4.7-high`.
-  Native Grok dispatch is retired. Code/infra review retains runtime attestation at every risk
-  under *Review admission*.
+* **grok**: **retired** (operator order GROK-CANCEL-1110, 2026-11-10; the project stopped using
+  Grok). No executable route, review seat, advisory seat or substitution. Historical record:
+  Grok 4.7 ran through Cursor at `grok-4.7-high` and reviewed code/infra at every risk (#9769).
 * **cursor** (operator 2026-09-22; Auto scope operator decision 2026-09-30, #9274): pass an
   explicit `--model`. `auto` is allowed only for a well-defined coding task — a write-capable
   implementation dispatch with `--owned-path` and a PASS DoR issue card. The driver
   checks that policy; the legacy Cursor Auto DoR admission gate is retired. The driver seat, formal or advisory review, design,
-  consults, discussions, recon and any unclear or under-specified task pin a concrete approved model:
-  `grok-4.7` (mechanical work in the Cursor Models pool: `--model grok-4.7-high`).
-  Do not send Fast, `grok-4.6` or `grok-4.5`. A review of a Grok author runs the reviewer resolver's
-  non-xAI pick; no Claude model reviews through Cursor (D-129, #10464).
+  consults, discussions, recon and any unclear or under-specified task pin a concrete approved model.
+  Cursor has no approved model pin while Grok is retired (its only pin was `grok-4.7`), so do not
+  dispatch Cursor until the operator approves a pin. Never send a Grok model. A review of
+  historical Grok-authored work runs the reviewer resolver's non-xAI pick; no Claude model
+  reviews through Cursor (D-129, #10464).
   Pools and prices: `fleet-driver-routing.md` § Cursor pools. `cursor:auto` is **never**
   a formal-review identity. **Gate history #6469:**
   workspace-write defaulted to `--mode plan` (read-only) — fixed in the same utilization PR
@@ -461,7 +456,7 @@ or count as a formal review.
   Gemini 3.1 Pro and Qwen (Gemma is live for hramatka through OpenCode,
   operator 2026-11-07, REMOVE-UNNEEDED-1107). No executable routing, reviewer
   ladder or substitution may select the retired ones. GLM is neither local nor free.
-* **Current subscriptions:** Codex Sol 6.1 and Luna, native/ Cursor Grok 4.7,
+* **Current subscriptions:** Codex Sol 6.1 and Luna,
   AGY Gemini 3.8 Flash High, 4 Carbon and 4 Argon, OpenCode DeepSeek V4.1 Flash on OpenCode credit,
   and native Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5.
   Muse uses the native dispatch route under the review limits above.
@@ -472,11 +467,11 @@ or count as a formal review.
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
 | Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, mechanical English wiki fixes, mechanical PR babysitting; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | **Sonnet 5.5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Route authoring of security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) to **Opus 5.5 or Codex Sol**, not Sonnet 5.5; Claude-lane Ukrainian curriculum uses **Opus 5.5**. Reserve the frontier Claude tier (Opus 5.5 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates**. **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
-| Code change >5 LOC, mechanical / pattern-applying / fixtures | use **Codex Terra 6.1 @ `high`** for routine non-security coding and **Sol 6.1 @ `high`** for hard tasks, or **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Terra is the default Codex coder, including `multi_agent_v2`; the Terra boundary above binds; the C-2903 paragraph at the top of this file sets the default code author (a Claude author; Codex coding when the routing card says why). Explicit **Luna @ `high`** bounded implementation uses exact owned paths and the #10919 driver brief or a bound Sol envelope; read-only recon/classification accepts the same brief; other Luna work needs that envelope. Cursor `grok-4.7-high` is language-free overflow when fit and live capacity favor it; `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card), never as a model identity. Escalate consequential ambiguity to Opus / Sol @ `high` for advice while Sol retains disposition. |
-| Code Review (PR diff) | Low-risk and medium-risk defaults include native AGY Gemini alongside Sol 6.1 and Sonnet 5.5, subject to resolver ordering and cross-family eligibility. High-risk and critical reviews use Opus 5.5, Sol 6.1, or Grok 4.7; security-sensitive paths exclude Gemini. Critical final sign-off admits Opus 5.5, Sol 6.1 or Grok 4.7 under the review admission limits above (operator 2026-10-25, C-1949). Security final sign-off (`security_review`) stays Opus 5.5 or Sol 6.1 (operator 2026-10-16). Resolve the target first with `closeout_cli target` in the same state file (or supply `--owned-path`); code-profile resolution without either refuses. Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile <profile> --risk <low\|medium\|high\|critical>`, deriving `<profile>` from the target as the `review-loop` skill (step 2) does; its `ukrainian` profile seats reviewers without the resolver. When the diff governs a seat's adapter or reviewer hooks, also pass repeatable `--owned-path` (inferred when unambiguous) or `--subject-seat` / `--subject-family`; that seat is excluded and the trace records why. Ambiguous paths require the explicit argument. The resolver applies hard filters first, then suitability for the review profile and risk, then the #5293 quality prior within equally suitable candidates. A lower tier can precede an eligible higher tier when it is more suitable; ladder order breaks remaining ties. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
-| Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (operator 2026-09-27)** — dispatch the reviewer from the review-loop ukrainian seats: Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat, with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). Native Grok dispatch is retired; Cursor Grok stays off language seats. A Grok author needs a non-xAI reviewer. ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
+| Code change >5 LOC, mechanical / pattern-applying / fixtures | use **Codex Terra 6.1 @ `high`** for routine non-security coding and **Sol 6.1 @ `high`** for hard tasks, or **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Terra is the default Codex coder, including `multi_agent_v2`; the Terra boundary above binds; the C-2903 paragraph at the top of this file sets the default code author (a Claude author; Codex coding when the routing card says why). Explicit **Luna @ `high`** bounded implementation uses exact owned paths and the #10919 driver brief or a bound Sol envelope; read-only recon/classification accepts the same brief; other Luna work needs that envelope. Cursor has no approved model pin while Grok is retired; `auto` is never a model identity. Escalate consequential ambiguity to Opus / Sol @ `high` for advice while Sol retains disposition. |
+| Code Review (PR diff) | Low-risk and medium-risk defaults include native AGY Gemini alongside Sol 6.1 and Sonnet 5.5, subject to resolver ordering and cross-family eligibility. High-risk and critical reviews use Opus 5.5 or Sol 6.1; security-sensitive paths exclude Gemini. Critical final sign-off admits Opus 5.5 or Sol 6.1 under the review admission limits above. Security final sign-off (`security_review`) stays Opus 5.5 or Sol 6.1 (operator 2026-10-16). Resolve the target first with `closeout_cli target` in the same state file (or supply `--owned-path`); code-profile resolution without either refuses. Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile <profile> --risk <low\|medium\|high\|critical>`, deriving `<profile>` from the target as the `review-loop` skill (step 2) does; its `ukrainian` profile seats reviewers without the resolver. When the diff governs a seat's adapter or reviewer hooks, also pass repeatable `--owned-path` (inferred when unambiguous) or `--subject-seat` / `--subject-family`; that seat is excluded and the trace records why. Ambiguous paths require the explicit argument. The resolver applies hard filters first, then suitability for the review profile and risk, then the #5293 quality prior within equally suitable candidates. A lower tier can precede an eligible higher tier when it is more suitable; ladder order breaks remaining ties. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
+| Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (operator 2026-09-27)** — dispatch the reviewer from the review-loop ukrainian seats: Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat, with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). Grok is retired (GROK-CANCEL-1110). Historical Grok-authored work needs a non-xAI reviewer. ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `dispatch.py dispatch --model <catalog-model> --agent agy` (write) or `ab ask-agy --to-model gemini-3.8-flash-high` (review default for routine and deep). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
-| Ukrainian CONTENT (authoring · russicism/quality review) — **we AUTHOR UK content, we do NOT translate EN→UK** | Written in Ukrainian, immersion-first, grounded in VESUM/`sources` MCP. **Per-profile authoring — BAKEOFF-BACKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/`, deterministic VESUM + russian-shadow, 5 candidates):** all of codex (historical benchmark models: gpt-5.6-terra and gpt-5.5)/agy/claude/deepseek/cursor wrote **0-russicism, 95-100%-VESUM** content on all 3 profiles → **gpt-5.5 is not uniquely best; it can and should delegate.** A1-A2 English-support → **agy** (best immersion teaching-voice) ≈ **codex**; B1-C2 pure → **codex ≈ agy ≈ claude**. **Seminars — FACT-CHECKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/SEMINAR-SCORECARD.md`; tool-backed vs uk.wikipedia + VESUM, cross-verified by an independent 3-family review codex/agy/deepseek):** the probe can't rank seminar content (all clean), so the «Веснянки» sample was fact-verified. **Writers → codex + claude + agy** (all factually clean, mutually cross-family). **deepseek + cursor are NOT seminar writers:** deepseek made 1 hard error (царинні conflated with юр'ївські cattle-drive songs — confident scholarly specificity that was wrong; it conceded on review), cursor made 2 (веснянки «від хати до хати» = over-generalised риндзівки/волочебні; «мелодії легкі, м'які, співочі» = inverted musicology). **Seminar review uses the review-loop ukrainian seats: Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat (LANGUAGE-LANES RULE, operator 2026-09-27; the former deepseek seat is retired — its царинні hard error stands as supporting evidence)**, **always paired with a source-enforced fact-check gate** (`seminar-content-review` skill + `sources` MCP) — never a bare LLM pass. FOLK review uses those same seats, with no Claude seat (`docs/folk-epic/folk-review-rubric.md`). **Lesson: "sounds scholarly" ≠ "is accurate" — verify confident specificity, don't trust it.** **Review (russicism/surzhyk/CEFR):** the review-loop ukrainian seats, with the Sources tools (`verify_words`, `check_russian_shadow`, `query_cefr_level`); agy strong here. ⚠️ **cursor: EXCLUDED from all language seats (LANGUAGE-LANES RULE)** — its bakeoff history (non-canonical apostrophes U+2019, text-dependent russicism «перекатні») stands as supporting evidence only. **Never pool/glm/gemma/kimi/deepseek for UK content either** (same rule). Native Grok dispatch is retired; cursor, pool, glm, gemma, kimi and deepseek stay excluded. |
+| Ukrainian CONTENT (authoring · russicism/quality review) — **we AUTHOR UK content, we do NOT translate EN→UK** | Written in Ukrainian, immersion-first, grounded in VESUM/`sources` MCP. **Per-profile authoring — BAKEOFF-BACKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/`, deterministic VESUM + russian-shadow, 5 candidates):** all of codex (historical benchmark models: gpt-5.6-terra and gpt-5.5)/agy/claude/deepseek/cursor wrote **0-russicism, 95-100%-VESUM** content on all 3 profiles → **gpt-5.5 is not uniquely best; it can and should delegate.** A1-A2 English-support → **agy** (best immersion teaching-voice) ≈ **codex**; B1-C2 pure → **codex ≈ agy ≈ claude**. **Seminars — FACT-CHECKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/SEMINAR-SCORECARD.md`; tool-backed vs uk.wikipedia + VESUM, cross-verified by an independent 3-family review codex/agy/deepseek):** the probe can't rank seminar content (all clean), so the «Веснянки» sample was fact-verified. **Writers → codex + claude + agy** (all factually clean, mutually cross-family). **deepseek + cursor are NOT seminar writers:** deepseek made 1 hard error (царинні conflated with юр'ївські cattle-drive songs — confident scholarly specificity that was wrong; it conceded on review), cursor made 2 (веснянки «від хати до хати» = over-generalised риндзівки/волочебні; «мелодії легкі, м'які, співочі» = inverted musicology). **Seminar review uses the review-loop ukrainian seats: Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat (LANGUAGE-LANES RULE, operator 2026-09-27; the former deepseek seat is retired — its царинні hard error stands as supporting evidence)**, **always paired with a source-enforced fact-check gate** (`seminar-content-review` skill + `sources` MCP) — never a bare LLM pass. FOLK review uses those same seats, with no Claude seat (`docs/folk-epic/folk-review-rubric.md`). **Lesson: "sounds scholarly" ≠ "is accurate" — verify confident specificity, don't trust it.** **Review (russicism/surzhyk/CEFR):** the review-loop ukrainian seats, with the Sources tools (`verify_words`, `check_russian_shadow`, `query_cefr_level`); agy strong here. ⚠️ **cursor: EXCLUDED from all language seats (LANGUAGE-LANES RULE)** — its bakeoff history (non-canonical apostrophes U+2019, text-dependent russicism «перекатні») stands as supporting evidence only. **Never pool/glm/gemma/kimi/deepseek for UK content either** (same rule). Grok is retired; cursor, pool, glm, gemma, kimi and deepseek stay excluded. |
 | Adversarial review of design / ADR / architecture / code — the **Claude reviewer seat** | **Prefer IN-SESSION INLINE for cost** — the interactive orchestrator reads the artifact, verifies claims, writes the verdict + fix notes on the main quota (cheapest path; economics below). Use Opus / Sol. Dispatching Claude (`claude -p` / `--agent claude` / `review-deep` / an `Agent` review subagent) **is permitted when it adds value or inline isn't feasible** — the `-p` sunset was cancelled (user 2026-06-22). For routine reviews still prefer inline or a non-Claude lane; reserve dispatched Claude for catches that need it. Context heavy → DEFER to the next interactive session, or dispatch if it must clear now. |
 | Q&A or single-shot Ukrainian language/content review without commit | `ab ask-codex` / `ab ask-agy --to-model gemini-3.8-flash-high` for routine AND deep (top AGY default; gemini-cli retired → agy) |
 | Live web fact-check (current version / pricing / URL & citation currency, "is this API still live") | **opencode + lightpanda-MCP HARNESS capability — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); it is NOT model-specific. Route by fit: `ask-deepseek` is consult-only for non-language questions; DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. |
@@ -539,7 +534,7 @@ The CLI reports `balance: needs management key` when it cannot read that balance
 Follow-up naming debt: retain `CODEXBAR_*` environment and `codexbar` payload keys
 for compatibility; a global rename is outside this change.
 
-**Model-by-harness intent:** operator-authorized Grok orchestration from Hermes
+**Model-by-harness intent:** operator-authorized orchestration from Hermes (historically the now-retired Grok)
 keeps model family, model ID, harness, and functional role as separate axes. Hermes
 is the harness, not a model family or an independent review identity. Resolve the
 current supported model and launcher route from the live catalog and launcher help;
@@ -582,9 +577,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- |
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus and Sol take advice. Sol takes Ukrainian judgment; Claude takes no Ukrainian review or judging seat. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
-  | **grok** | `grok-4.7` @ high | same SKU | Native interactive/bridge callers retain their interfaces; detached dispatch uses `--agent cursor --model grok-4.7-high` (no `grok` agent) |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to and accepts only `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737) |
-  | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; Auto authors use the Cursor family (#9951); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -592,10 +585,9 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
   | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
   | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-  | cursor | grok-4.7 | high | gpt-6.1-sol | high |
-  | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
-  *(Note: for the `cursor` seat, the catalog identity is `grok-4.7`, the Cursor CLI wire argument is `grok-4.7-high`.)*
+  *(The `grok` and `cursor` seats were removed when Grok retired, GROK-CANCEL-1110; Grok 4.7 was
+  the Cursor seat's only pin. A new Cursor pin is an operator decision.)*
 
   **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
   not for routine queue grind. Machine fields: `escalate_model_id` / `escalate_effort` /
@@ -603,13 +595,15 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
 ### Cursor driver seat — identity contract and attestation (#6952 / #6955)
 
-* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed. The driver must verify that scope; dispatch v2 does not provide the retired Cursor Auto DoR admission gate. The driver seat (`start-cursor-driver.sh` → `scripts/lib/launcher_core.sh`), interactive Cursor sessions launched through the same launcher (not a typed implementation dispatch, so no Auto exception; default `grok-4.7-high`), and ACP consults and discussions (`acpx-cursor-shadow`) pin `grok-4.7` . A review on Cursor runs the approved concrete model the reviewer resolver selects (`closeout_cli resolve-reviewer`), never Auto. Catalog: `orchestrator_seats.cursor.model_id: grok-4.7` (Cursor wire argument `grok-4.7-high`), `auto_scope: write_implementation_dispatch_with_green_dor`.
-* **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat pinned to the concrete `grok-4.7` (launcher and Cursor wire argument `grok-4.7-high`). A Cursor driver session still requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/dispatch.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
+Cursor has no orchestrator seat and no approved model pin while Grok is retired
+(GROK-CANCEL-1110, 2026-11-10); its only pin was `grok-4.7`. The rules below still bind when the
+operator approves a new pin.
+
+* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed, and only within the catalog's Auto allowlist (empty while Grok is retired). The driver seat, interactive Cursor sessions, and ACP consults and discussions pin a concrete approved model. A review on Cursor runs the approved concrete model the reviewer resolver selects (`closeout_cli resolve-reviewer`), never Auto.
+* **Driver-of-record requires attested `resolved_model`:** a Cursor driver session requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/dispatch.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
 * **Auto attribution:** Auto authors use the Cursor family, even with concrete runtime
   reports (#9951). A declared conflicting author family fails closed.
-* **Auto allowlist:** only `grok-4.7` is active. Every non-coding session pins
-  `grok-4.7-high`; reviews always use an attested concrete identity.
-* **Concrete attribution:** attested Cursor Grok pins use xAI. Historical Composer
+* **Concrete attribution:** historical Cursor Grok pins use xAI. Historical Composer
   records keep Moonshot identity and confer no routing permission.
 
 ## Orchestration operating pattern (operator 2026-07-26 — binding)
@@ -618,10 +612,10 @@ The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat hold
 system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
 the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
 
-* **Daily driver: `grok-4.7`** — owns the epic loops (dispatch, babysit, settle,
-  re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
-  merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
-  orchestrator currently available.
+* **Daily drivers: Sol 6.1 and Opus 5.5** (rules core P2 driver row) own the epic loops
+  (dispatch, babysit, settle, re-fire) under the mechanical rails (evidence-mandatory reviews,
+  lease lifecycle, merge/stamp guards, delegate origin-sync). Grok 4.7 held this role until
+  it retired (GROK-CANCEL-1110).
 * **Claude driver seat: `claude-opus-5-5` @ `high`** (operator 2026-09-22) — what
   `start-claude-driver.sh` launches when a Claude session drives an epic. Same
   dispatch-heavy discipline as below; it is not the advisor and holds no approval authority.
@@ -661,9 +655,9 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | agy | false |
   | claude | true |
   | codex | true |
-  | cursor | true |
+  | cursor | false |
   | gemini | false |
-  | grok | true |
+  | grok | false |
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
@@ -710,7 +704,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   output never satisfies the independent cross-family review gate.
 * **Workers = every other lane** — `gpt-6-luna` @ `high` (Codex bounded work / scout),
   `gpt-6.1-sol` @ `high` (Codex broader coding / red-team),
-  Cursor Grok, AGY Gemini, native Claude and DeepSeek coding through OpenCode,
+  AGY Gemini, native Claude and DeepSeek coding through OpenCode,
   plus non-orchestrating use of the seats above. They do the build /
   implementation / mechanical / review work. Keep lanes busy; queue rather than idle.
   **AGY/gemini-flash as worker (#5737):** always dispatch with a complete brief (one shippable
@@ -725,26 +719,18 @@ above, and the Codex role table below retain the same independence boundary — 
 
 ### No-idle utilization + transport map (operator 2026-08-08 — binding; builds on #6468)
 
-**Canonical issue:** #6468 (Claude hramatka survey + operator refinements; Grok owns folding
-into this topology). **Do not fork a parallel table** — update this section + activity-matrix §2b.
+**Canonical issue:** #6468 (Claude hramatka survey + operator refinements). **Do not fork a parallel table** — update this section + activity-matrix §2b.
 
-**Cursor mechanical pin (operator 2026-09-22):** pass `--agent cursor --model grok-4.7-high`.
-Do not pass Fast, `grok-4.6` or `grok-4.5`; `auto` only for a well-defined coding dispatch
-(owned paths, PASS DoR card; operator decision 2026-09-30). Drivers use that pin
-for infra/code implement when the work is not language-lane and not advisor/authority.
-**First pick when fit allows** for mechanical + ordinary infra/code implement; spread still
-required. A review of a Grok author runs the reviewer resolver's non-xAI pick, never a Claude
-model on Cursor. `cursor:auto` is never
-review-of-record. The same `grok-4.7-high` pin is the formal code/infra review seat when the
-resolver selects it at any risk (#9769); a bare `grok-4.7` runs the Fast variant, whose verdict is refused.
+**Cursor:** no approved model pin while Grok is retired (GROK-CANCEL-1110, 2026-11-10); its
+only pin was `grok-4.7-high`. Do not dispatch Cursor until the operator approves a pin; never send
+a Grok model. A review of historical Grok-authored work runs the reviewer resolver's non-xAI pick,
+never a Claude model on Cursor. `cursor:auto` is never review-of-record.
 DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; historical catalog identities confer no additional routing permission.
 
 **Failure mode this prevents:** concurrent drivers default everything to Codex/Claude while
-**Cursor (`grok-4.7-high`)** and **AGY** sit
-free — then ask whether subscriptions are "too much." **Operator policy: utilize, do not trim.**
-The portfolio is sized for cross-family quality; **idle paid capacity with open in-scope work is
-a process defect.** Idle Cursor while mechanical jobs burn other seats is the same
-class of defect.
+**AGY** sits free — then ask whether subscriptions are "too much." **Operator policy: utilize, do
+not trim.** The portfolio is sized for cross-family quality; **idle paid capacity with open
+in-scope work is a process defect.**
 
 #### Concurrent driver layout (operator seat reality 2026-08-08)
 
@@ -752,20 +738,19 @@ Typical live driver count (names rotate; count is the constraint):
 
 | Driver seat | Typical concurrency | Role |
 | --- | --- | --- |
-| **Grok** | **~2** concurrent | Daily epic/topology drivers; dispatch-heavy, not solo multi-file |
 | **Claude** | **~1** | Judgment / hard epic / Opus |
 | **Codex** | **1–4** concurrent | Novel/hard impl + Sol-advised bounded work; **not** the dump for every mechanical job |
 
 **Multi-driver rules:**
 1. Drivers share the **same free worker pools** — before dispatch, read `/api/delegate/active`
-   and native usage so two Groks + four Codexes do not all stampede one near_cap lane.
+   and native usage so several Claude and Codex drivers do not all stampede one near_cap lane.
 2. Claim **disjoint** work (stream epic / issue / owned paths); no duplicate branches.
 3. **Timed pause, not permanent neglect:** a lane at near_cap or operator-paused carries an
    explicit **return-at** timestamp from the current usage probe or operator pause.
    Recheck live health and headroom at that time before returning it to rotation.
 4. Verify delivery against **git/PR state**, not only task `no_deliverable` flags (#6426 class
    false negatives poison utilization metrics).
-5. Cursor mechanical tier is **active** once the #6469 adapter fix is on main; substitute with NOTE only on live adapter regression.
+5. Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110); do not route to it.
 
 **Before every dispatch / CF spend**, read live headroom (do not cache percentages into policy):
 
@@ -780,13 +765,13 @@ df -h /; du -sh "$repo_root/.worktrees"
 
 | Prefer when free / behind | Typical fit | Never / caveats |
 | --- | --- | --- |
-| **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; language-free overflow when fit and live capacity favor it. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | formal CF identity only as the resolver's `grok-4.7-high` code/infra seat at every risk (#9769); not language seats; not advisor/authority; `concurrency_limit: 1` |
+| **cursor** | none while Grok is retired (its only pin was `grok-4.7-high`) | no approved model pin; a new pin is an operator decision |
 | **deepseek** | Latest `deepseek-v4.1-flash` coding through opencode | No private-repository content or secrets; review-of-record and Ukrainian work need measured evidence first; Pro and older retired |
 | **claude** (Sonnet for well-scoped non-security routine work and polished English deliverables; Opus for security-sensitive code; Opus for Ukrainian curriculum) | native Claude CLI implementation as subscription headroom allows (Sonnet 5.5 by default; Opus 5.5 only for complex or security work, operator 2026-10-16; Claude-lane Ukrainian stays Opus 5.5); hard judgment, CF, architecture briefs | don't burn Opus on queue grind |
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
-| **grok-4.7** | daily driver (Cursor `grok-4.7-high` code/infra CF at every risk with runtime attestation; never a QG judge) | native Grok dispatch is retired; don't solo multi-file when free workers exist |
+| **grok-4.7** (**retired**, GROK-CANCEL-1110) | no dispatch, review or driver seat | catalog refuses every Grok id; do not substitute |
 | **kimi** (**retired**, OO-58) | no dispatch | catalog refuses every Kimi id; do not substitute |
-| **codex** Sol (1–4 drivers) | Sol drivers and review; Terra 6.1 default routine non-security Codex coder, including `multi_agent_v2` (default author: the C-2903 paragraph at the top of this file); explicit Luna read-only recon/classification and workspace-write bounded implementation under a driver brief; other bounded work under a Sol envelope; Opus / Sol for advice | **throttle the depleted account when near_cap / paused unless its verified operator reset reserve applies**; new Sol work uses b-sub first, then an admitted sub; shed implementation to Cursor `grok-4.7-high`; code/infra review goes to the resolver's pick (native or attested Cursor Grok at every risk, #9769) |
+| **codex** Sol (1–4 drivers) | Sol drivers and review; Terra 6.1 default routine non-security Codex coder, including `multi_agent_v2` (default author: the C-2903 paragraph at the top of this file); explicit Luna read-only recon/classification and workspace-write bounded implementation under a driver brief; other bounded work under a Sol envelope; Opus / Sol for advice | **throttle the depleted account when near_cap / paused unless its verified operator reset reserve applies**; new Sol work uses b-sub first, then an admitted sub; shed implementation to another admitted lane; code/infra review goes to the resolver's pick |
 
 **Throttle (do not feed more mechanical work):** any lane at/ahead of pace, thin reserve, or
 timed-paused (e.g. Codex near_cap until return-at). **Widen:** `farBehind` + meaningful reserve +
@@ -796,9 +781,9 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 
 | Path | Use for | Do not use for |
 | --- | --- | --- |
-| **Native CLIs** (claude, codex, cursor, agy) | default dispatch + ask for those families; native Grok dispatch is retired, with Grok dispatched through Cursor at `grok-4.7-high` | Kimi is retired (OO-58); do not dispatch `--agent kimi` |
+| **Native CLIs** (claude, codex, agy) | default dispatch + ask for those families | Kimi (OO-58) and Grok (GROK-CANCEL-1110) are retired; do not dispatch `--agent kimi` or a Grok model; Cursor has no approved pin |
 | **DeepSeek first-party** (`deepseek` via OpenCode) | latest `deepseek-v4.1-flash` coding; no private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; the dispatcher's `--provider openrouter` endpoint uses the US provider allow-list above (#12376), and `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` for bridge routing |
-| **Cursor multi-model pin** | mechanical work: `grok-4.7-high`; `auto` only for a well-defined coding dispatch | review of record by a Claude model (D-129, #10464); `auto` outside a well-defined coding dispatch, Fast, `grok-4.6`, `grok-4.5`; formal CF as `auto` |
+| **Cursor multi-model pin** | none while Grok is retired; a new pin is an operator decision | review of record by a Claude model (D-129, #10464); any Grok model; formal CF as `auto` |
 
 After merge: run `merge_closeout` and free branch holds so the next free lane can attach (the dispatcher removes each settled task's worktree;
 no multi-GB shielded `lu-review-*` trees — formal CF is direct `ask-*` only).
@@ -831,16 +816,16 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
-| **Coding / impl / fixtures** | **Codex Terra 6.1 @ `high`** for routine non-security coding; **Sol 6.1 @ `high`** for hard tasks; **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Terra is the default Codex coder, including `multi_agent_v2`; the Terra boundary above binds; the C-2903 paragraph at the top of this file sets the default code author (a Claude author; Codex coding when the routing card says why); explicit **Luna @ `high`** bounded implementation and read-only recon/classification accept the #10919 driver brief; other bounded work requires a Sol envelope (`--advisory-task`, #9275). Cursor `grok-4.7-high` is language-free overflow when live capacity and fit favor it; pin the model (`auto` only for a well-defined coding dispatch) | **agy** `gemini-3.8-flash-high` for read-only and workspace-write work, with no advisory task (#12291) · Cursor when fit allows | grok | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, shed mechanical work unless a verified operator reset reserve applies; native Claude CLI workers eligible within subscription headroom and task fit (Sonnet 5.5 by default; Opus 5.5 only for complex or security work, operator 2026-10-16; Claude-lane Ukrainian stays Opus 5.5); Workers never sole authority; retired Pro pins are historical only |
-| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus, Sol, or qualified Grok 4.7 (#9769); critical final sign-off admits Opus 5.5, Sol 6.1 or Grok 4.7 under the review admission limits above (operator 2026-10-25, C-1949); security final sign-off (`security_review`) stays Opus 5.5 or Sol 6.1 (operator 2026-10-16) | **high:** `gpt-6.1-sol`, `claude-opus-5-5`, or `grok-4.7`, subject to the review admission rules at the top of this file · **medium/low formal CF defaults:** native AGY `gemini-3.8-flash-high` · `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` | **second dissent:** resolver-selected cross-family seat | For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive. **Gemini code review (2026-10-08 approval): Gemini-family seats may formally review low-risk and medium-risk code, and Ukrainian work with the Sources MCP; high-risk and critical review use Opus 5.5, Sol 6.1, or Grok 4.7. Native AGY dispatch is admitted at low/medium risk; the source-blind ACP wrapper remains excluded.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
+| **Coding / impl / fixtures** | **Codex Terra 6.1 @ `high`** for routine non-security coding; **Sol 6.1 @ `high`** for hard tasks; **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Terra is the default Codex coder, including `multi_agent_v2`; the Terra boundary above binds; the C-2903 paragraph at the top of this file sets the default code author (a Claude author; Codex coding when the routing card says why); explicit **Luna @ `high`** bounded implementation and read-only recon/classification accept the #10919 driver brief; other bounded work requires a Sol envelope (`--advisory-task`, #9275). Cursor has no approved model pin while Grok is retired | **agy** `gemini-3.8-flash-high` for read-only and workspace-write work, with no advisory task (#12291) | — | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, shed mechanical work unless a verified operator reset reserve applies; native Claude CLI workers eligible within subscription headroom and task fit (Sonnet 5.5 by default; Opus 5.5 only for complex or security work, operator 2026-10-16; Claude-lane Ukrainian stays Opus 5.5); Workers never sole authority; retired Pro pins are historical only |
+| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus 5.5 or Sol 6.1; critical final sign-off admits Opus 5.5 or Sol 6.1 under the review admission limits above; security final sign-off (`security_review`) stays Opus 5.5 or Sol 6.1 (operator 2026-10-16) | **high:** `gpt-6.1-sol` or `claude-opus-5-5`, subject to the review admission rules at the top of this file · **medium/low formal CF defaults:** native AGY `gemini-3.8-flash-high` · `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` | **second dissent:** resolver-selected cross-family seat | For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive. **Gemini code review (2026-10-08 approval): Gemini-family seats may formally review low-risk and medium-risk code, and Ukrainian work with the Sources MCP; high-risk and critical review use Opus 5.5 or Sol 6.1. Native AGY dispatch is admitted at low/medium risk; the source-blind ACP wrapper remains excluded.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: claude, codex (GPT), or agy (Gemini). Native Grok dispatch is retired; Cursor Grok remains excluded |
-| **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | — | **LANGUAGE-LANES RULE below binds**; native Grok dispatch is retired, Cursor Grok stays excluded, and a Grok author needs a non-xAI reviewer; an Anthropic author, or any author outside OpenAI and Google, is Gemini (AGY) and Sol; an OpenAI author is Gemini (AGY) alone; a Google author is Sol alone; no Claude seat |
+| **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | — | **LANGUAGE-LANES RULE below binds**; Grok is retired (GROK-CANCEL-1110), and historical Grok-authored work needs a non-xAI reviewer; an Anthropic author, or any author outside OpenAI and Google, is Gemini (AGY) and Sol; an OpenAI author is Gemini (AGY) alone; a Google author is Sol alone; no Claude seat |
 | **Research / recon / triage** | **Haiku 5.5** alongside **Luna @ `high`**: `readonly_recon` and `mechanical_classification` use the #10919 driver brief or an explicit Sol envelope; broader Luna investigation keeps its Sol envelope | Sol @ `high` for broader work and ordinary advice | agy `gemini-3.8-flash-high`, no advisory task (#12291) | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible fleet lanes with browsing tools; DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
 **Gemini code-review gate — accepted residuals.** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` with no review-typing flag is an implementation dispatch and is not gated; code-profile review-typed dispatches to AGY apply the low/medium risk and security-path gates. A copy of code into a content path is out of scope: the Ukrainian profile does not grant code-review eligibility, and a file under a content path is content by definition and is not executed.
 
-**LANGUAGE-LANES RULE (HARD, operator order 2026-09-27): “only claude, gpt and gemini should be invlved in ukrainina content. no other models allowed if it is about ukrainina lang. culture, heritage.” Every seat that authors Ukrainian language, culture, or heritage content routes ONLY to claude, codex (GPT), or agy (Gemini).** **The former native Grok measurement exception has no dispatch route after native dispatch retirement.** deepseek, glm, kimi, cursor (including Cursor Grok), pool, gemma, and every other model family stay excluded from every language seat (DeepSeek review-of-record needs measured evidence). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), Ukrainian review uses the review-loop ukrainian seats, with no Claude seat. Native Grok dispatch is retired. The reviewer resolver does not admit Cursor Grok for Ukrainian work.
+**LANGUAGE-LANES RULE (HARD, operator order 2026-09-27): “only claude, gpt and gemini should be invlved in ukrainina content. no other models allowed if it is about ukrainina lang. culture, heritage.” Every seat that authors Ukrainian language, culture, or heritage content routes ONLY to claude, codex (GPT), or agy (Gemini).** **Grok is retired (GROK-CANCEL-1110); its former measurement exception has no route.** deepseek, glm, kimi, grok, cursor, pool, gemma, and every other model family stay excluded from every language seat (DeepSeek review-of-record needs measured evidence). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), Ukrainian review uses the review-loop ukrainian seats, with no Claude seat. Native Grok dispatch is retired. The reviewer resolver does not admit Cursor Grok for Ukrainian work.
 
 **Sources MCP by dispatch mode (checked 2026-09-22).** A language review that names `mcp__sources__*` has to run in a mode that can call that server. Codex `read-only` keeps the filesystem sandbox and sets `mcp_servers.sources.default_tools_approval_mode="approve"`. Without that approval, `approval_policy=never` cancels the stdio call (`MCP tool call requires approval, but approval policy is never`) before the tool runs. Codex `workspace-write` and `danger` already pass `--dangerously-bypass-approvals-and-sandbox`; the dispatch worktree is the write boundary. The sources server marks every tool `readOnlyHint`, so Codex does not treat a lookup as a destructive approval. Claude `read-only` and `workspace-write` share one invocation and can call sources when the seat's MCP config includes the server. AGY `workspace-write` sees sources when the AGY catalog lists the server. AGY `read-only` runs inside the dispatcher's bubblewrap boundary (`scripts/dispatcher/agy_sandbox.py`, C-3027), which provisions a private home whose only MCP server is a dispatcher-owned Sources relay: it forwards only the tools the server annotates read-only and counts completed calls for the task record. On a host where that boundary cannot start, dispatch refuses AGY read-only (`read_only_unenforceable`). A Codex plan that names `mcp__sources__*` and can neither approve nor bypass those calls fails before spawn.
 
@@ -852,10 +837,10 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 Drive high-judgment work (design, architecture, in-the-loop review, brief authoring) YOURSELF in-context — the frontier Claude lane does not brain-rot in-session (canary-verified on Opus 4.8; a NEWLY rotated model must mint its own canary at cold-start per workflow.md — rot evidence is per-model, names rotate). But for any SUBSTANTIVE design / decision, **actively DISCUSS + cross-verify with the fleet BEFORE committing** — not solo dispatch-and-merge. Default to ≥1 other agent per substantive task; solo only for trivial work. Convene by lane:
 
-* **Module-content panel** (writers — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.8 Flash default for routine and deep) · **GPT-6.1 Sol @ high** · **claude** for authoring only. Content review uses the review-loop ukrainian seats, and no Claude seat. Native Grok dispatch is retired. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review uses the review-loop ukrainian seats, with no Claude seat (`docs/folk-epic/folk-review-rubric.md`) — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
-* **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon; CF follows the Code review row): **GPT-6.1 Sol @ high** · **cursor `grok-4.7-high`** (concrete pin, never `auto` in review). Native Grok dispatch is retired. Pin Cursor's concrete model whenever family independence matters — never `auto` as CF identity.
+* **Module-content panel** (writers — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.8 Flash default for routine and deep) · **GPT-6.1 Sol @ high** · **claude** for authoring only. Content review uses the review-loop ukrainian seats, and no Claude seat. Grok is retired. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review uses the review-loop ukrainian seats, with no Claude seat (`docs/folk-epic/folk-review-rubric.md`) — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
+* **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon; CF follows the Code review row): **GPT-6.1 Sol @ high** · **claude-opus-5-5** for hard Claude-lane infra. Grok is retired, and Cursor has no approved pin; never `auto` as CF identity.
 
-Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.8-flash-high` (Ukrainian-language review only; implementation routing above is unchanged) · `ask-cursor --model grok-4.7-high` (a review of a Grok author runs the reviewer resolver's non-xAI pick, never `auto` or a Claude model on Cursor) · `ask-grok` (alias `ask-grok-build`; non-Ukrainian work only) · `ask-deepseek` (consult-only for non-language work, LOCAL-ONLY; alias `ask-hermes`; first-party Flash @ high via opencode ACP, #6805) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; Pro is retired; Flash remains active in the catalog, with `ask-deepseek` restricted to consultation; coding uses opencode, and review-of-record needs measured evidence first. Non-review bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`); formal review asks use native dispatch/wait and print reply text (drive-epic §6).
+Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.8-flash-high` (Ukrainian-language review only; implementation routing above is unchanged) · `ask-deepseek` (consult-only for non-language work, LOCAL-ONLY; alias `ask-hermes`; first-party Flash @ high via opencode ACP, #6805) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; Pro is retired; Flash remains active in the catalog, with `ask-deepseek` restricted to consultation; coding uses opencode, and review-of-record needs measured evidence first. Non-review bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`); formal review asks use native dispatch/wait and print reply text (drive-epic §6).
 
 **OpenCode:** DeepSeek V4.1 Flash coding uses OpenCode credit. Pool and GLM are not subscribed (operator 2026-10-23), so their seats are unavailable for review or consultation. Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107); it is not a review or consultation seat.
 
@@ -879,7 +864,7 @@ seats rotate — operator wording; the catalog-refresh contract §above owns nam
 | Architecture & process design | Sol (designer) · Opus (counter-reader); designated approval needs the non-author's approval when Opus or Sol authored the proposal, both otherwise | fleet topology §above |
 | Code & infrastructure review | Opus 5.5 · GPT-6.1 Sol | Historical Terra review arcs on #5896/#5925/#5926/#5931 (defect-finding record) |
 | Security-sensitive changes | Sol · Opus | ambient-Anthropic-token→z.ai leak caught pre-merge (#5931 arc) |
-| Debugging & forensics | Grok · Sol | Grok: #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
+| Debugging & forensics | Sol · Opus | Historical: retired Grok found the #5932 root cause (#5950 workaround); GLM: operator statement, #5933 comment 2026-07-28 |
 | Long-context sweeps & harness infra | Gemini (sweeps and recon only; not planning or design input, operator decision 2026-10-03, #9584) | model catalog §above (window/tooling) |
 
 Historical Terra findings support the evidence record, not a current routing choice.
@@ -907,9 +892,8 @@ sign-off on this section approves them):**
    debugging, long-context), the anchor joins as the outside-pool overlay seat per above.
 
 **Standing constraints:** GLM, Pool, Composer and Qwen are retired, not
-subscribed (operator 2026-10-23). Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107). Kimi remains retired. Native Grok dispatch is retired; Cursor Grok stays off Ukrainian seats. Designated approval and security final sign-off
-stay with Opus 5.5 and Sol 6.1. Critical final sign-off also admits Grok 4.7 under the review
-admission limits above (operator 2026-10-25, C-1949).
+subscribed (operator 2026-10-23). Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107). Kimi and Grok are retired (OO-58; GROK-CANCEL-1110). Designated approval, critical final sign-off
+and security final sign-off stay with Opus 5.5 and Sol 6.1.
 
 *Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
 seat (§panels above) · Kimi is retired and is on no panel · on any ask
@@ -924,7 +908,7 @@ in `/api/rules`):
 - **ROUTING_CARD_V1** before every implement dispatch (tier · model×harness · advisor packet · alternatives).
 - **Default code author:** the C-2903 pair under § Worker resource policy. **Routine non-security Codex coder:** Terra 6.1 @ high through Codex and `multi_agent_v2`; Sol @ high for hard tasks and reserved roles. Native Claude CLI workers run within
   task fit and subscription headroom (Sonnet 5.5 by default; Opus 5.5 only for complex or
-  security work, operator 2026-10-16); Cursor Grok or Gemini routes are language-free
+  security work, operator 2026-10-16); Gemini routes are language-free
   overflow only. Luna/Haiku read-only recon/classification and workspace-write bounded implementation may use the complete driver brief below. Other Luna
   or bounded Flash work uses the catalog Sol envelope and `--advisory-task`. A complete envelope defines the work;
   it does not turn the Sol advisor (`gpt-6.1-sol` @ high) into an implementer.
@@ -943,7 +927,7 @@ several models are reachable through more than one. Know both axes before routin
 | --- | --- | --- | --- |
 | **hermes** — REMOVED from this host (operator order 2026-08-16); row kept for history only | (was: SOUL.md persona · `sources` MCP · 16 toolsets · session store) | (was: deepseek · zai/GLM · OpenRouter catalog) | DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. `ab ask-deepseek` is consult-only for non-language work (opencode ACP seat, #6805); Pro is retired |
 | **opencode** | Tool-capable coding transport | `deepseek-v4.1-flash` on OpenCode credit | No private-repository content or secrets. Review-of-record and Ukrainian work need measured evidence first. |
-| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes or opencode. Native Grok dispatch is retired; `dispatch.py` rejects `--agent grok`; callers use `--agent cursor --model grok-4.7-high`, and `grok-build` is the Grok TUI, not a dispatch v2 provider. The native Grok CLI remains available to its other callers; `kimi` is retired (OO-58) and is not a worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `dispatch.py dispatch --model <catalog-model> --agent <a> --mode workspace-write --worktree` (Kimi is retired, OO-58; do not dispatch it; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
+| **native CLIs** (codex, cursor, agy, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok is retired (GROK-CANCEL-1110): `dispatch.py` rejects `--agent grok` and the catalog refuses every Grok id; Cursor has no approved pin. `kimi` is retired (OO-58) and is not a worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-agy` / `ask-claude` · `dispatch.py dispatch --model <catalog-model> --agent <a> --mode workspace-write --worktree` (Kimi is retired, OO-58; do not dispatch it; no `ask-kimi`) |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -969,15 +953,9 @@ Consequences:
   often reachable through another harness, but
   **GPT/Codex and Claude are hard exceptions**: keep both on their native CLIs (operator
   ruling 2026-07-27 for Claude) and never substitute a Codex OAuth-backed Hermes model or a
-  non-native Claude host. **Grok (operator order 2026-08-16, #6865 — retires the 2026-07-27
-  ruling below):** never Hermes (`grok-hermes`/`grok-tools` stay banned) and **opencode is no
-  longer sanctioned for any grok seat, including orchestrator** — "we have grok cli"
-  (operator, verbatim). Native `grok` remains available to its non-dispatch callers.
-  Detached dispatch and resolver-selected code/infra review use Cursor at `grok-4.7-high`.
-  Native Grok dispatch is retired. Never
-  route grok via OpenRouter model ids (`openrouter/x-ai/*`) — only the first-party `xai/*`
-  provider is sub-backed, and as of this order that first-party access is native-CLI-only,
-  not opencode-hosted. Check `/api/orient` headroom.
+  non-native Claude host. **Grok is retired** (operator order GROK-CANCEL-1110, 2026-11-10):
+  no harness, including Hermes, opencode, OpenRouter, Cursor or the native CLI, routes a Grok
+  model. History: #6865 (2026-08-16) had already banned Hermes and opencode Grok routes. Check `/api/orient` headroom.
   For writer dispatches with Claude/Codex budget buckets at `near_cap`, substitute per
   `scripts/config/agent_fallback_substitutions.yaml` (that file is the budget-bucket map, not a
   general outage map); Codex substitutions must never use Hermes. ALWAYS note a substitution
@@ -1092,7 +1070,7 @@ permitted — the `-p` sunset was cancelled, user 2026-06-22 — but it costs th
 3. **Inline-now despite heavy context** only when latency is unacceptable (the review must clear THIS session
    to unblock something).
 
-Non-Claude reviewers are UNAFFECTED for NON-LANGUAGE work (LANGUAGE-LANES RULE binds for anything judging Ukrainian text) — resolve CODE/infra reviews through `closeout_cli resolve-reviewer` on a qualified outside-family route. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `ask-deepseek` is consult-only for non-language work. (VESUM/content review = language work → the review-loop ukrainian seats, never a Claude seat. Native Grok dispatch is retired, and Cursor Grok stays excluded.) The *Claude* seat is **preferred** in-session for cost.
+Non-Claude reviewers are UNAFFECTED for NON-LANGUAGE work (LANGUAGE-LANES RULE binds for anything judging Ukrainian text) — resolve CODE/infra reviews through `closeout_cli resolve-reviewer` on a qualified outside-family route. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `ask-deepseek` is consult-only for non-language work. (VESUM/content review = language work → the review-loop ukrainian seats, never a Claude seat. Grok is retired.) The *Claude* seat is **preferred** in-session for cost.
 (The headless `--agent claude` / `claude -p` lane is AVAILABLE again — the mid-June 2026 sunset / "native binary not
 installed" fiasco was cancelled, user 2026-06-22; Claude may be used for ANY task, incl. dispatched review, when needed.
 The cost economics above stand regardless: dispatched Claude is far pricier than inline, so route by need, not by ban.)

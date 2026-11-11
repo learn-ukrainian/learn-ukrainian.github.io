@@ -63,7 +63,7 @@ from scripts.lib import rules_core
 
 logger = logging.getLogger(__name__)
 
-PARTICIPANTS = ("codex", "grok")
+PARTICIPANTS = ("codex", "claude")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 MIN_PARTICIPANTS = 2
 MAX_PARTICIPANTS = 4
@@ -390,9 +390,7 @@ class AcpxDiscussionController:
             """SELECT sender, outcome, duration_ms, token_count, round
                FROM acp_conversation_events
                WHERE conversation_id = ? AND event_type = 'CALL_TERMINAL'
-               ORDER BY round,
-                        CASE sender WHEN 'codex' THEN 0 WHEN 'grok' THEN 1 ELSE 2 END,
-                        sequence""",
+               ORDER BY round, sender, sequence""",
             (conversation_id,),
         ).fetchall()
         participant_outcomes = [

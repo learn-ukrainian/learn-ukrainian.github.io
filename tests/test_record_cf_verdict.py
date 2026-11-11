@@ -475,9 +475,10 @@ def test_red_team_ukrainian_task_refused_before_publication(monkeypatch, tmp_pat
 @pytest.mark.parametrize(
     "agent,reviewer_id,author_id",
     [
-        ("cursor", "claude-impl-x", "impl-x"),
+        # These rows ran on Cursor's Grok pin before Grok retired (GROK-CANCEL-1110).
+        ("claude", "claude-impl-x", "impl-x"),
         ("claude", "codex/author-one", "author-one"),
-        ("cursor", " CLAUDE-IMPL-X ", "impl-x"),
+        ("claude", " CLAUDE-IMPL-X ", "impl-x"),
         ("claude", "codex/gpt-6.1-sol", "gpt-6.1-sol"),
     ],
 )
@@ -2438,13 +2439,13 @@ def cursor_receipt(tasks, **updates):
 
 
 def test_cursor_display_name_receipt_records_the_concrete_slug_and_family(monkeypatch, tmp_path):
+    """Grok 4.7 was the only formal Cursor pin; with every Grok model retired (GROK-CANCEL-1110), its
+    attested receipt maps to its catalog id and is refused, so nothing is posted."""
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     cursor_receipt(tasks, resolved_model="Grok 4.7 256K High", resolved_model_known=True)
-    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert result["comment"] == "posted"
-    assert "Reviewer family: xai" in comments[0]["body"]
-    assert "Reviewer model: grok-4.7" in comments[0]["body"]
-    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown: 'grok-4\.7' is not a formal reviewer"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
 
 
 @pytest.mark.parametrize("model", ["Composer 2.5", "composer-2.5"])
@@ -2511,13 +2512,13 @@ def test_cursor_receipt_without_a_runtime_reported_source_is_refused(monkeypatch
 
 @pytest.mark.parametrize("source", sorted(recorder.RUNTIME_REPORTED_MODEL_SOURCES))
 def test_cursor_display_name_receipt_accepts_each_runtime_reported_source(monkeypatch, tmp_path, source):
+    """Each runtime-reported source passes attestation; the retired Grok model is then refused as a
+    reviewer (GROK-CANCEL-1110), never as unattested."""
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
     cursor_receipt(tasks, resolved_model="Grok 4.7 256K High", resolved_model_known=True, resolved_model_source=source)
-    assert (
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["comment"]
-        == "posted"
-    )
-    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown: 'grok-4\.7' is not a formal reviewer"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
 
 
 def test_cursor_receipt_with_a_non_ascii_look_alike_name_is_refused(monkeypatch, tmp_path):
@@ -2996,7 +2997,14 @@ def test_red_team_recorded_and_resolved_model_refused_before_publication(
         resolved_model_known=True,
         resolved_model_source="cursor-stream-json",
     )
-    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: reviewer model equals a branch author model"):
+    # A Cursor receipt attesting the retired Grok model is refused as a reviewer before the red-team
+    # comparison (GROK-CANCEL-1110); either way nothing is published.
+    refusal = (
+        r"reviewer model unknown: 'grok-4\.7' is not a formal reviewer"
+        if agent == "cursor"
+        else "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    )
+    with pytest.raises(recorder.RecordError, match=refusal):
         recorder.record(
             "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
         )

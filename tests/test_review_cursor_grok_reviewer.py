@@ -1,4 +1,8 @@
-"""Cursor Grok admission, independence and attestation (#9769)."""
+"""Retired Cursor Grok review seat: refusal, independence and attestation.
+
+#9769 admitted Grok 4.7 through Cursor; operator order GROK-CANCEL-1110 (2026-11-10) retired every
+Grok model, so the seat, its candidate and its ladder rows are gone and every Grok verdict is refused.
+"""
 
 from __future__ import annotations
 
@@ -43,28 +47,18 @@ def test_denominator_admission_and_independence(profile, risk, author, health):
         assert resolution.selected.route != "cursor"
     if author == "gpt-6.1-sol":
         assert resolution.selected.family != "openai"
-    for name in GROK_SEATS:
-        result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        excluded = author == "grok-4.7" or (author in {"composer-2.5", "cursor:auto"} and name == GROK_SEAT) or health == "cursor_dark"
-        assert result.status == ("excluded" if excluded else "eligible")
-        if author == "grok-4.7":
-            assert "same family as author" in result.reason or "union" in result.reason
-        elif author == "cursor:auto":
-            if health != "healthy":
-                assert "unhealthy" in result.reason or "Cursor-as-reviewer" in result.reason
-            elif name == GROK_SEAT:
-                assert "Cursor-as-reviewer" in result.reason
-            else:
-                assert result.family == "xai"
+    # The retired Grok seat is no candidate and never appears in the trace.
+    assert GROK_SEAT not in REVIEW_CANDIDATES
+    assert all(item.family != "xai" and item.name != GROK_SEAT for item in resolution.trace)
 
 
 @pytest.mark.parametrize("risk", RISKS)
-def test_cursor_grok_fallback_when_opus_unavailable(risk):
-    # Isolate the Grok fallback: AGY precedes it at low/medium risk (#10073).
+def test_no_cursor_grok_fallback_when_opus_unavailable(risk):
+    # Grok was the fallback here; with it retired the resolver fails closed instead.
     snapshot = {"claude": "unhealthy", "agy": "unhealthy"}
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert result.selected.name == GROK_SEAT
-    assert result.selected.family == "xai"
+    assert result.selected is None
+    assert all(item.family != "xai" for item in result.trace)
 
 
 @pytest.mark.parametrize("risk", RISKS)
@@ -73,38 +67,35 @@ def test_cursor_grok_refuses_subject_seats_and_families(risk, subject):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **subject, claude_account=HOST_ACCOUNT)
     result = resolve_reviewer(inputs)
     assert result.selected.family != "xai"
-    for name in GROK_SEATS:
-        candidate = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert candidate.status == "excluded" and "subject exclusion" in candidate.reason
+    assert all(item.family != "xai" for item in result.trace)
 
 
 def test_grok_never_reviews_its_own_adapter():
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="critical", owned_paths=("scripts/agent_runtime/adapters/grok_build.py",), claude_account=HOST_ACCOUNT))
     assert result.selected.name == "claude-opus-5-5"
-    for name in GROK_SEATS:
-        assert next(item for item in result.trace if item.name == name).status == "excluded"
+    assert all(item.family != "xai" and item.name not in GROK_SEATS for item in result.trace)
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("risk", RISKS)
 @pytest.mark.parametrize("name", GROK_SEATS)
-def test_pins_and_custom_ladders_admit_grok(profile, risk, name):
+def test_pins_of_the_retired_grok_seat_are_refused(profile, risk, name):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, review_profile=profile, claude_account=HOST_ACCOUNT)
     pinned = resolve_reviewer(replace(inputs, pinned_candidate=name, pressure_override_reason="admission probe"))
-    assert pinned.selected.name == name
-    custom = resolve_reviewer(inputs, ladder=((REVIEW_CANDIDATES[name],),))
-    assert custom.selected.name == name
+    assert pinned.selected is None
+    assert "unknown explicit reviewer pin" in pinned.fail_closed_reason
+    assert name not in REVIEW_CANDIDATES
 
 
-def test_closeout_cli_selects_cursor_grok_with_a_durable_receipt(tmp_path, capsys):
+def test_closeout_cli_fails_closed_without_a_cursor_grok_fallback(tmp_path, capsys):
     snapshot = tmp_path / "routing.json"
     snapshot.write_text(json.dumps({"claude": "unhealthy", "agy": "unhealthy"}))
     state = tmp_path / "state.json"
     code = closeout_cli.main(["--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--review-profile", "code", "--owned-path", "site/src/app.ts", "--risk", "critical", "--routing-snapshot-file", str(snapshot)])
     payload = json.loads(capsys.readouterr().out)
-    assert code == 0
-    assert payload["selected"]["name"] == GROK_SEAT
-    assert json.loads(state.read_text())["resolved_reviewer"]["selected"] == payload["selected"]
+    assert code == 1
+    assert payload["selected"] is None
+    assert all(entry["family"] != "xai" for entry in payload["trace"])
 
 
 def _catalog():
@@ -112,30 +103,36 @@ def _catalog():
 
 
 @pytest.mark.parametrize("risk", RISKS)
-def test_catalog_admits_cursor_grok_directly_after_opus(risk):
+def test_catalog_lists_no_cursor_grok_after_opus(risk):
     catalog = load_model_catalog()
     ladder = [name for rung in catalog["review_ladders"][risk] for name in rung]
     opus = ladder.index("claude-opus-5-5")
-    assert ladder[opus:opus + 3] == ["claude-opus-5-5", "claude-opus-5-5-agy", *GROK_SEATS]
+    assert ladder[opus:opus + 2] == ["claude-opus-5-5", "claude-opus-5-5-agy"]
     for name in GROK_SEATS:
-        candidate = catalog["review_candidates"][name]
-        assert candidate.get("last_resort", False) is False
-        assert "critical_review" in catalog["models"][candidate["model_id"]]["roles"]
+        assert name not in ladder
+        assert name not in catalog["review_candidates"]
+    grok = catalog["models"]["grok-4.7"]
+    assert (grok["lifecycle"], grok["transports"], grok["roles"]) == ("retired", [], ["historical_record_resolution"])
     validate_catalog(_catalog())
 
 
 @pytest.mark.parametrize("model", ["composer-2.5", "kimi-code/k3", "gemini-3.8-flash-high"])
 def test_catalog_refuses_a_cursor_review_pin_outside_policy(model):
     catalog = _catalog()
+    catalog["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     catalog["review_scheduler"]["endpoints"]["cursor"]["models"].append(model)
     with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor"):
         validate_catalog(catalog)
 
 
-def test_catalog_requires_the_cursor_grok_high_effort_slug():
+def test_catalog_refuses_a_restored_cursor_grok_review_seat():
     catalog = _catalog()
-    catalog["review_candidates"][GROK_SEAT]["invocation"] = ".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7"
-    with pytest.raises(ModelCatalogError, match="runtime-attestable Cursor slug"):
+    catalog["review_candidates"][GROK_SEAT] = {
+        "model_id": "grok-4.7", "route": "cursor", "transport": "cursor",
+        "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high",
+        "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["critical_review"],
+    }
+    with pytest.raises(ModelCatalogError, match=r"retired model 'grok-4\.7'"):
         validate_catalog(catalog)
 
 
@@ -225,11 +222,9 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
 
 
 @pytest.mark.usefixtures("_publishing")
-def test_runtime_reported_grok_high_receipt_records_the_concrete_model_and_xai(monkeypatch, tmp_path):
-    result, comments = _record(monkeypatch, tmp_path, resolved_model="Grok 4.7 256K High")
-    assert result["comment"] == "posted"
-    assert "Reviewer model: grok-4.7" in comments[0]["body"]
-    assert "model=grok-4.7 family=xai" in comments[0]["body"]
+def test_runtime_reported_grok_high_receipt_is_refused_after_retirement(monkeypatch, tmp_path):
+    with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
+        _record(monkeypatch, tmp_path, resolved_model="Grok 4.7 256K High")
 
 
 @pytest.mark.usefixtures("_publishing")
@@ -244,7 +239,7 @@ def test_a_grok_receipt_that_is_not_the_pinned_high_variant_is_refused(monkeypat
 
 @pytest.mark.usefixtures("_publishing")
 def test_a_grok_verdict_on_a_grok_authored_change_is_refused(monkeypatch, tmp_path):
-    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
+    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown|reviewer family equals an author family"):
         _record(monkeypatch, tmp_path, resolved_model="Grok 4.7 256K High", families=frozenset({"xai"}))
 
 
@@ -310,7 +305,7 @@ def test_requested_roles_preserve_author_independence_at_critical(role):
         for name in GROK_SEATS:
             result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", requested_role=role, pinned_candidate=name, pressure_override_reason="self-review probe", claude_account=HOST_ACCOUNT))
             assert result.selected is None
-            assert next(entry for entry in result.trace if entry.name == name).status == "excluded"
+            assert all(entry.name != name for entry in result.trace)
 
 
 @pytest.mark.parametrize("role", _all_catalog_roles())

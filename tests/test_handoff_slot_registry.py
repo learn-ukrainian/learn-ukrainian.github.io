@@ -539,6 +539,13 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
         timeout=60,
         check=False,
     )
+    if provider == "cursor":
+        # No approved Cursor pin (GROK-CANCEL-1110): the launcher refuses its retired seat pin
+        # before any scope, lease or provider start.
+        assert result.returncode == 2, result.stdout + result.stderr
+        assert "model 'grok-4.7-high' is retired in the model catalog" in result.stderr
+        assert "would claim" not in result.stdout
+        return
     assert result.returncode == 0, result.stdout + result.stderr
     assert f"would claim lease stream={curriculum_upgrade_stream}" in result.stdout
     handoff = ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md"

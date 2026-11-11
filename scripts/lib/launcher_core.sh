@@ -133,7 +133,7 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
-                             Cursor default (driver and interactive): grok-4.7-high;
+                             Cursor: no certified model while Grok is retired;
                              never Auto, a Fast variant,
                              an empty model or a forwarded --model. Gemini driver
                              default: gemini-3.8-flash-high (only certified id);
@@ -162,7 +162,7 @@ Environment:
   LU_RULES_SEAT              Rules core seat: core or content (default: content for a
                              curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
-                             claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
+                             claude-opus-5-5[1m]; Cursor: none certified; empty
                              for Claude interactive = project settings (Sonnet 5.5);
                              empty for Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
@@ -853,11 +853,12 @@ except catalog.ModelCatalogError as exc:
   fi
 }
 
-# Cursor CLI pins: only Grok high is certified. Composer is retired, not subscribed.
+# Cursor CLI pins: none is certified. Its only pin, grok-4.7-high, retired with every
+# Grok model (GROK-CANCEL-1110); Composer is retired, not subscribed. A new pin is an
+# operator decision.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    grok-4.7-high) return 0 ;;
   esac
   return 1
 }
