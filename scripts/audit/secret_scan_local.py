@@ -464,8 +464,28 @@ def _exclude_args(repo: Path) -> list[str]:
     return [f"--exclude-paths={ignore}"] if ignore.is_file() else []
 
 
+def _ignore_patterns(repo: Path) -> list[re.Pattern[str]]:
+    """Regexes from .trufflehogignore (one per line, `#` comments), as TruffleHog applies them."""
+    ignore = repo / IGNORE_FILE
+    if not ignore.is_file():
+        return []
+    patterns: list[re.Pattern[str]] = []
+    for line in ignore.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        try:
+            patterns.append(re.compile(line))
+        except re.error as exc:
+            raise ScanError(f"invalid {IGNORE_FILE} pattern ({exc.msg})") from exc
+    return patterns
+
+
 def scan_tree(binary: str, repo: Path, out_fd: int, log_fd: int, timeout: int) -> int:
-    files = tree_candidates(repo)
+    # TruffleHog applies --exclude-paths only while walking a directory, not to explicit file
+    # arguments, so drop ignored files here for parity with the CI range scan.
+    patterns = _ignore_patterns(repo)
+    files = [rel for rel in tree_candidates(repo) if not any(p.search(rel) for p in patterns)]
     for chunk in batches(files):
         cmd = [binary, "filesystem", *SAFE_FLAGS, *_exclude_args(repo), "--", *chunk]
         _run_trufflehog(cmd, repo, out_fd, log_fd, timeout)

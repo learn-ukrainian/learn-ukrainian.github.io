@@ -938,6 +938,18 @@ def test_tree_never_scans_denied_areas_or_symlinks(
     assert Path(call["cwd"]).resolve() == repo.resolve()
 
 
+def test_tree_scan_drops_files_listed_in_trufflehogignore(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """Defect class: local tree scan ignores .trufflehogignore for explicitly listed files."""
+    (repo / "gen.lock").write_text("x\n", encoding="utf-8")
+    ssl.main(["--repo", str(repo), "tree"])
+    (call,) = _calls(stub)
+    files = call["argv"][call["argv"].index("--") + 1 :]
+    assert "gen.lock" not in files
+    assert "app.py" in files
+
+
 def test_tree_splits_long_file_lists_into_batches() -> None:
     paths = [f"dir/file-{i:04d}.txt" for i in range(30)]
     chunks = ssl.batches(paths, budget=100)
