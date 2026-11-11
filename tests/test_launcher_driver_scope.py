@@ -83,7 +83,6 @@ LC_PROVIDER=claude
 LC_DRIVER_CHILD_PID=$!
 sleep 300 & LC_SUPERVISORY_WATCH_PID=$!
 sleep 300 & LC_DRIVER_RENEW_PID=$!
-sleep 300 & LC_OBSERVER_HEARTBEAT_PID=$!
 trap 'launcher_forward_driver_signal {name} {expected}' {name}
 printf 'armed\\n' > armed
 IFS= read -r _ < "$TEST_GATE"
