@@ -57,6 +57,8 @@ def confined_muse_argv(
     cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
 ) -> list[str]:
     """Use the existing governed scratch and file sandbox for every Muse run."""
+    if mode == "workspace-write":
+        raise ValueError("muse_write_mode_unconfined")
     from scripts.common.repo_root import project_interpreter
     from scripts.common.scratch import ensure_scratch_root
 
@@ -79,6 +81,8 @@ def sandbox_main(args: list[str]) -> int:
     from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
 
     phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
+    if mode == "workspace-write":
+        raise ValueError("muse_write_mode_unconfined")
     workspace = Path(raw_workspace).resolve(strict=True)
     if mode not in _TOOLS or phase not in {"govern", "child"}:
         raise ValueError("muse_sandbox_launch_refused")
@@ -94,7 +98,6 @@ def sandbox_main(args: list[str]) -> int:
     home.mkdir(mode=0o700)
     temporary = runtime / "tmp"
     temporary.mkdir(mode=0o700)
-    auth_env = stage_engine_auth("muse", write_home=home)
     binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
     reads = [binary]
     with binary.open("rb") as stream:
@@ -117,22 +120,32 @@ def sandbox_main(args: list[str]) -> int:
     prompt.write_bytes(Path(cmd[prompt_index]).read_bytes())
     cmd = [str(binary), *cmd[1:]]
     cmd[prompt_index] = str(prompt)
-    sandbox = prepare_host_sandbox(
-        engine="muse", snapshot_root=workspace, write_root=runtime,
-        reject_root=workspace, runtime_reads=reads, network_allowed=True,
-    )
-    argv = wrap_argv_with_sandbox(cmd, sandbox)
-    if sandbox.mechanism == "linux-bwrap":
+    if not hasattr(os, "memfd_create"):
+        raise ValueError("muse_anonymous_auth_unavailable")
+    auth_fd = os.memfd_create("muse-auth", os.MFD_CLOEXEC)
+    try:
+        auth_env = stage_engine_auth("muse", write_home=home, muse_auth_fd=auth_fd)
+        os.lseek(auth_fd, 0, os.SEEK_SET)
+        sandbox = prepare_host_sandbox(
+            engine="muse", snapshot_root=workspace, write_root=runtime,
+            reject_root=workspace, runtime_reads=reads, network_allowed=True,
+        )
+        if sandbox.mechanism != "linux-bwrap":
+            raise ValueError("muse_anonymous_auth_sandbox_unavailable")
+        argv = wrap_argv_with_sandbox(cmd, sandbox)
         extra = ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
-        if mode == "workspace-write":
-            extra += ["--bind", str(workspace), str(workspace)]
+        if os.fstat(auth_fd).st_size:
+            # bwrap copies this fd into its private tmpfs and closes it before
+            # exec. A killed run leaves no named host credential copy.
+            extra += ["--perms", "0400", "--ro-bind-data", str(auth_fd), str(home / ".config/muse/auth.json")]
         argv[-len(cmd):-len(cmd)] = extra
-    elif mode == "workspace-write":
-        raise ValueError("muse_writable_workspace_sandbox_unavailable")
-    env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
-    env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
-    env.pop("MUSE_AUTH_PATH", None)
-    os.execve(argv[0], argv, env)
+        env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
+        env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
+        env.pop("MUSE_AUTH_PATH", None)
+        os.set_inheritable(auth_fd, bool(os.fstat(auth_fd).st_size))
+        os.execve(argv[0], argv, env)
+    finally:
+        os.close(auth_fd)
 
 
 def resolve_muse_model(model: str | None) -> str:
@@ -255,6 +268,8 @@ class MuseAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         model = resolve_muse_model(model)
         config = tool_config or {}
         if mode not in self.supported_modes:
@@ -303,6 +318,8 @@ class MuseAdapter:
         effort: str | None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         return self._plan(
             prompt=prompt,
             mode=mode,
@@ -330,6 +347,8 @@ class MuseAdapter:
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:

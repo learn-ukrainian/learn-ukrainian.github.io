@@ -1478,11 +1478,20 @@ def test_auth_stage_rejects_symlink_and_permissive_source(tmp_path: Path) -> Non
     muse_auth.chmod(0o600)
     (muse_config / "settings.json").write_text("must not stage")
     muse_home = tmp_path / "muse-home"
-    assert stage_engine_auth("muse", write_home=muse_home, source_home=source_home) == {}
-    staged = muse_home / ".config" / "muse" / "auth.json"
-    assert staged.read_bytes() == muse_auth.read_bytes()
-    assert staged.stat().st_mode & 0o777 == 0o400
-    assert not (staged.parent / "settings.json").exists()
+    if hasattr(os, "memfd_create"):
+        auth_fd = os.memfd_create("synthetic-muse-auth", os.MFD_CLOEXEC)
+        try:
+            assert stage_engine_auth("muse", write_home=muse_home, source_home=source_home,
+                                     muse_auth_fd=auth_fd) == {}
+            os.lseek(auth_fd, 0, os.SEEK_SET)
+            assert os.read(auth_fd, 4096) == muse_auth.read_bytes()
+            assert os.fstat(auth_fd).st_nlink == 0
+            assert not (muse_home / ".config/muse/auth.json").exists()
+            assert not (muse_home / ".config/muse/settings.json").exists()
+        finally:
+            os.close(auth_fd)
+    with pytest.raises(ReviewIsolationError, match="muse_anonymous_auth_fd_required"):
+        stage_engine_auth("muse", write_home=muse_home, source_home=source_home)
 
 
 def test_grok_oauth_store_is_never_staged_into_model_read_scope(

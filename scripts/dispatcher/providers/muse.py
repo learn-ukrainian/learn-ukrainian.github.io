@@ -10,16 +10,15 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    if spec.mode == "workspace-write":
+        raise ValueError("muse_write_mode_unconfined")
     argv = ["muse", "exec", "--json", "--model", spec.model, "--disable-web-tools"]
     argv += ["--workspace", str(spec.worktree), "--worktree", "off", "--prompt-file", str(spec.prompt_file)]
     # The admission check forces this option off for every private input class.
     argv += ["--contributor-mode", spec.options.get("contributor_mode", "off")]
     if spec.effort:
         argv += ["--reasoning-effort", spec.effort]
-    if spec.mode == "workspace-write":
-        argv += ["--permission-profile", ":unrestricted"]
-    else:
-        argv += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
+    argv += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
     return Invocation(
         confined_muse_argv(argv, spec.worktree, spec.mode, spec.task_id),
         None, {**env, "MUSE_NO_AUTO_UPDATE": "1"}, None,

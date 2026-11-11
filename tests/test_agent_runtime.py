@@ -4455,9 +4455,9 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     monkeypatch.setattr(usage, "_usage_dir", lambda: store)
 
     result = runner.invoke(
-        "muse", "fixture", mode="workspace-write", cwd=workspace, model="muse-wonder-full-1.0",
+        "muse", "fixture", mode="read-only", cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", effort="high", hard_timeout=45,
-        tool_config={"muse_worker": True, "muse_role": "implementation",
+        tool_config={"muse_worker": True, "muse_role": "investigation",
                      "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
                      "max_model_steps": 8, "max_tool_output_bytes": 8192},
     )
@@ -4478,7 +4478,7 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert plan.cwd == workspace
     assert records[2]["payload"]["record"]["workspace_root"] == str(workspace)
     assert durable["muse_run"]["total_tokens"] == 120
-    assert durable["muse_run"]["declared_mode"] == "workspace-write"
+    assert durable["muse_run"]["declared_mode"] == "read-only"
     assert len(probes) == 1
     assert plan.cmd[plan.cmd.index("--max-model-steps") + 1] == "8"
     assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
@@ -4495,6 +4495,16 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
+            adapter.build_invocation(
+                prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
+                task_id="muse-interface", session_id=None, effort="high",
+                tool_config={"muse_worker": True, "muse_role": role,
+                             "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+            )
+        assert probes == []
+        return
     plan = adapter.build_invocation(
         prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", session_id=None, effort="high",
