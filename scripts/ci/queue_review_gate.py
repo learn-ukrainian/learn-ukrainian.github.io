@@ -17,7 +17,9 @@ therefore proven, never guessed:
    commit must belong to the PR the ref names.
 4. The PR's current head must be the head the candidate included: merging that head into
    the squash commit's parent with ``git merge-tree --write-tree`` must reproduce the
-   squash commit's tree.
+   squash commit's tree, and GitHub must have a check suite for that head created before the
+   entry's ``enqueuedAt``: no GitHub field names the entry's source head, and a head pushed
+   after the enqueue (even one with an identical tree, or an empty commit) fails.
 5. GitHub's latest ``fleet/cross-family-review`` status on that head must be ``success``.
    GitHub keeps one current state per context (the newest wins), so an older success
    never overrides a later failure, and a moved head carries no approval at all.
@@ -43,6 +45,7 @@ import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 
 STATUS_CONTEXT = "fleet/cross-family-review"
@@ -67,6 +70,7 @@ query($owner: String!, $name: String!, $branch: String!, $qualified: String!, $a
         pageInfo { hasNextPage endCursor }
         nodes {
           position
+          enqueuedAt
           headCommit { oid }
           pullRequest { number state baseRefName headRefOid }
         }
@@ -108,6 +112,13 @@ class Member:
     squash: Squash
     position: int
     head: str
+    enqueued_at: datetime
+
+
+@dataclass(frozen=True)
+class HeadFacts:
+    state: str | None
+    seen_before_enqueue: bool
 
 
 def parse_event(payload: object) -> Event:
@@ -275,6 +286,19 @@ def read_queue(post: Post, event: Event) -> tuple[str, list[dict]]:
     return tip, entries
 
 
+def _timestamp(value: object) -> datetime:
+    """A GitHub server timestamp (``2026-11-11T09:30:37Z``), timezone-aware."""
+    try:
+        if not isinstance(value, str) or not value.endswith("Z"):
+            raise ValueError
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        raise Retryable("GitHub timestamp missing or malformed") from None
+    if parsed.tzinfo is None:
+        raise Retryable("GitHub timestamp has no timezone")
+    return parsed
+
+
 def resolve_members(event: Event, chain: list[Squash], entries: list[dict]) -> list[Member]:
     """Map every unlanded chain commit to exactly one queue entry and its PR's current head."""
     by_commit: dict[str, dict] = {}
@@ -292,9 +316,11 @@ def resolve_members(event: Event, chain: list[Squash], entries: list[dict]) -> l
     for squash in chain:
         if squash.sha not in by_commit:
             raise Retryable(f"queue commit {squash.sha[:12]} (#{squash.pr}) has no queue entry and has not landed")
-        pr, position = by_commit[squash.sha].get("pullRequest"), by_commit[squash.sha].get("position")
+        entry = by_commit[squash.sha]
+        pr, position = entry.get("pullRequest"), entry.get("position")
         if not isinstance(pr, dict) or type(position) is not int:
             raise Retryable("queue entry pull request malformed")
+        enqueued_at = _timestamp(entry.get("enqueuedAt"))
         number, head = pr.get("number"), pr.get("headRefOid")
         if number != squash.pr:
             raise GateError(f"queue commit {squash.sha[:12]} says #{squash.pr} but its entry is #{number}")
@@ -302,7 +328,7 @@ def resolve_members(event: Event, chain: list[Squash], entries: list[dict]) -> l
             raise Retryable(f"#{number} is not open against {event.branch}")
         if not isinstance(head, str) or not _SHA.fullmatch(head):
             raise Retryable(f"#{number} head unreadable")
-        members.append(Member(squash, position, head))
+        members.append(Member(squash, position, head, enqueued_at))
     numbers = [member.squash.pr for member in members]
     if len(set(numbers)) != len(numbers):
         raise GateError("a pull request appears twice in the candidate")
@@ -323,22 +349,32 @@ def includes_head(member: Member) -> bool:
     )
 
 
-def review_states(post: Post, event: Event, heads: list[str]) -> dict[str, str | None]:
-    """GitHub's current state of the review context on each head; None when it has none."""
+def head_facts(post: Post, event: Event, members: list[Member]) -> dict[str, HeadFacts]:
+    """Each member head's current review state, and whether GitHub saw that head before the enqueue.
+
+    No GitHub field names the source head a queue entry was built from. A head that differs from
+    the included one reached the repository after the entry was enqueued, and so did every check
+    suite GitHub created for it. A check suite created before ``enqueuedAt`` (a server timestamp)
+    therefore shows the current head predates the entry; a head pushed afterwards, even with an
+    identical tree, fails.
+    """
     owner, name = event.repository.split("/", 1)
-    declarations = "".join(f", $h{index}: GitObjectID!" for index in range(len(heads)))
+    declarations = "".join(f", $h{index}: GitObjectID!" for index in range(len(members)))
     fields = "".join(
-        f" h{index}: object(oid: $h{index}) {{ ... on Commit {{ oid status {{ context(name: $context) {{ state }} }} }} }}"
-        for index in range(len(heads))
+        f" h{index}: object(oid: $h{index}) {{ ... on Commit {{ oid"
+        " status { context(name: $context) { state } }"
+        " checkSuites(first: 100) { totalCount nodes { createdAt } } } }"
+        for index in range(len(members))
     )
     query = f"query($owner: String!, $name: String!, $context: String!{declarations}) {{ repository(owner: $owner, name: $name) {{{fields} }} }}"
     variables = {"owner": owner, "name": name, "context": STATUS_CONTEXT}
-    variables.update({f"h{index}": head for index, head in enumerate(heads)})
+    variables.update({f"h{index}": member.head for index, member in enumerate(members)})
     repository = _data(post(query, variables)).get("repository")
     if not isinstance(repository, dict):
         raise Retryable("review status read returned no repository")
-    states: dict[str, str | None] = {}
-    for index, head in enumerate(heads):
+    facts: dict[str, HeadFacts] = {}
+    for index, member in enumerate(members):
+        head = member.head
         try:
             commit = repository[f"h{index}"]
             if commit["oid"] != head:
@@ -346,26 +382,35 @@ def review_states(post: Post, event: Event, heads: list[str]) -> dict[str, str |
             status = commit["status"]
             context = None if status is None else status["context"]
             state = None if context is None else context["state"]
+            suites = commit["checkSuites"]
+            created = [_timestamp(node["createdAt"]) for node in suites["nodes"]]
+            total = suites["totalCount"]
         except (KeyError, TypeError, ValueError):
             raise Retryable(f"review status unreadable for {head[:12]}") from None
         if state is not None and not isinstance(state, str):
             raise Retryable(f"review status malformed for {head[:12]}")
-        states[head] = state
-    return states
+        seen = any(moment < member.enqueued_at for moment in created)
+        if not seen and type(total) is int and total > len(created):
+            raise Retryable(f"check suites for {head[:12]} exceed one page")
+        facts[head] = HeadFacts(state, seen)
+    return facts
 
 
 def evaluate(event: Event, post: Post) -> list[str]:
     """Findings for one complete read; an empty list means every member is approved."""
     tip, entries = read_queue(post, event)
     members = resolve_members(event, squash_chain(event, tip), entries)
-    states = review_states(post, event, [member.head for member in members])
+    facts = head_facts(post, event, members)
     findings: list[str] = []
     for member in members:
         label = f"#{member.squash.pr} (queue position {member.position}, candidate commit {member.squash.sha[:12]}, head {member.head})"
         if not includes_head(member):
             findings.append(f"{label}: the candidate was not built from this PR's current head")
             continue
-        state = states[member.head]
+        if not facts[member.head].seen_before_enqueue:
+            findings.append(f"{label}: the current head reached GitHub after the PR was enqueued")
+            continue
+        state = facts[member.head].state
         if state is None:
             findings.append(f"{label}: no {STATUS_CONTEXT} status on the current head")
         elif state != "SUCCESS":

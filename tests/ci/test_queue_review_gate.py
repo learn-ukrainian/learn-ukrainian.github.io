@@ -19,6 +19,7 @@ from scripts.ci import queue_review_gate as gate
 
 _GIT_BIN = os.environ.get("AGENT_REAL_GIT", "git")  # the agent shim refuses some plumbing
 REPOSITORY = "owner/repo"
+ENQUEUED_AT = "2026-11-11T10:00:00Z"
 
 
 def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> str:
@@ -76,6 +77,7 @@ class Candidate:
     def entry(self, number: int, *, commit: str | None = None, head: str | None = None, position: int = 0) -> dict:
         return {
             "position": position or number,
+            "enqueuedAt": ENQUEUED_AT,
             "headCommit": {"oid": commit or {1: self.s1, 2: self.s2}[number]},
             "pullRequest": {
                 "number": number,
@@ -94,6 +96,7 @@ class FakeGitHub:
         self.total = sum(len(page) for page in pages) if total is None else total
         self.calls: list[str] = []
         self.failures = 0
+        self.pushed_after_enqueue: set[str] = set()
 
     def __call__(self, query: str, variables: dict) -> dict:
         if self.failures:
@@ -123,8 +126,10 @@ class FakeGitHub:
         for key, head in variables.items():
             if key.startswith("h"):
                 state = self.states.get(head)
+                created = "2026-11-11T10:05:00Z" if head in self.pushed_after_enqueue else "2026-11-11T09:55:00Z"
                 repository[key] = {
                     "oid": head,
+                    "checkSuites": {"totalCount": 1, "nodes": [{"createdAt": created}]},
                     "status": None
                     if state is None
                     else {"context": None if state == "NO_CONTEXT" else {"state": state}},
@@ -194,6 +199,26 @@ def test_approval_on_a_head_the_candidate_did_not_include_fails(
     assert _run(candidate, github) == 1
     assert "#1 (queue position 1, candidate commit" in (out := capsys.readouterr().out)
     assert "not built from this PR's current head" in out
+
+
+@pytest.mark.parametrize("change", ["identical-tree", "empty-commit"])
+def test_head_pushed_after_the_enqueue_fails_even_with_an_identical_tree(
+    candidate: Candidate, capsys: pytest.CaptureFixture[str], change: str
+) -> None:
+    """Defect: tree equality standing in for head identity, so an approved later head vouches for
+    the unapproved head the candidate was built from (review round 1, F1)."""
+    if change == "identical-tree":
+        moved = candidate.commit(candidate.heads[2], {"one.txt": "1\n"}, "copy the earlier change")
+    else:
+        moved = candidate.commit(candidate.heads[2], {}, "empty head move")
+    github = FakeGitHub(
+        candidate.tip,
+        [[candidate.entry(1), candidate.entry(2, head=moved)]],
+        {candidate.heads[1]: "SUCCESS", candidate.heads[2]: "FAILURE", moved: "SUCCESS"},
+    )
+    github.pushed_after_enqueue.add(moved)
+    assert _run(candidate, github) == 1
+    assert "the current head reached GitHub after the PR was enqueued" in capsys.readouterr().out
 
 
 def test_entries_on_a_later_page_are_members(candidate: Candidate) -> None:
