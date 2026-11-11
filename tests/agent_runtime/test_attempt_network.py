@@ -344,3 +344,36 @@ def test_forwarder_cli_success_refusal_and_argument_contract(proxy, tmp_path, mo
     with pytest.raises(SystemExit) as error:
         attempt_forwarder.main()
     assert error.value.code == 2
+
+
+@pytest.mark.parametrize("shell", [False, True])
+def test_sandbox_cleanup_preserves_egress_overflow_count(proxy, monkeypatch, tmp_path, shell):
+    """Defect class: the shared cap silently truncates AGY and Claude sandbox receipts."""
+    import json
+
+    from scripts.dispatcher import agy_sandbox
+
+    async def refuse_dns(host):
+        raise ValueError("planted DNS failure")
+
+    monkeypatch.setattr(proxy, "_resolve", refuse_dns)
+    hosts = [f"audit-{index}.example" for index in range(259)]
+    hosts += ["audit-0.example", "audit-256.example"]
+    for host in hosts:
+        assert request(proxy, f"CONNECT {host}:443 HTTP/1.1\r\n\r\n".encode()).startswith(b"HTTP/1.1 403")
+
+    boundary = object.__new__(agy_sandbox._Boundary)
+    boundary.process = boundary.relay = boundary.gh = boundary.fixture = None
+    boundary.egress = proxy
+    boundary.receipt = {}
+    boundary.created = False
+    boundary.shell = shell
+    boundary.cleanup()
+    receipt_path = tmp_path / "sandbox-receipt.json"
+    agy_sandbox._write_receipt(receipt_path, boundary.receipt)
+    receipt = json.loads(receipt_path.read_bytes())
+    assert receipt["egress"] == [
+        {"destination": f"audit-{index}.example:443", "bytes": 0} for index in range(256)
+    ]
+    assert receipt["egress_overflow_count"] == 4
+    assert not proxy.thread.is_alive()
