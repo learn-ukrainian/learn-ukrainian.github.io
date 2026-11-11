@@ -4487,7 +4487,8 @@ def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
         assert result.stderr_excerpt == "muse_event_schema_unknown: cli_version=" + plan.metadata["cli_version"]
 
 
-@pytest.mark.parametrize("case", ["dispatch-parent", "agent-parent", "uninitialized", "forged-outside-git"])
+@pytest.mark.parametrize("case", ["dispatch-parent", "agent-parent", "uninitialized", "forged-outside-git",
+                                  "planned", "planned-symlink"])
 def test_muse_workspace_rejects_unregistered_mount_roots(tmp_path, monkeypatch, write_guard_repo, case):
     """Defect class: broad or forged workspace roots expose sibling worktrees to writes."""
     from scripts.agent_runtime.adapters.muse import _workspace_path, confined_muse_argv, sandbox_main
@@ -4502,17 +4503,29 @@ def test_muse_workspace_rejects_unregistered_mount_roots(tmp_path, monkeypatch, 
     elif case == "uninitialized":
         candidate = dispatch / "codex/uninitialized"
         candidate.mkdir()
-    else:
+    elif case == "forged-outside-git":
         outside = tmp_path / "not-a-repo"
         candidate = outside / ".worktrees/dispatch/muse/task"
         candidate.mkdir(parents=True)
         (candidate / ".git").write_text(f"gitdir: {outside}/.git/worktrees/task\n")
+    elif case == "planned":
+        candidate = dispatch / "codex/planned"
+    else:
+        (dispatch / "linked-agent").symlink_to(dispatch / "codex", target_is_directory=True)
+        candidate = dispatch / "linked-agent/planned"
     assert _workspace_path(write_guard_repo.dispatch_wt) == write_guard_repo.dispatch_wt
     for preview in (False, True):
+        if case == "planned" and preview:
+            assert _workspace_path(candidate, preview=True) == candidate
+            assert confined_muse_argv(["sentinel-never-executed"], candidate, "workspace-write",
+                                      "boundary-probe")[-1] == "sentinel-never-executed"
+            assert not candidate.exists()
+            continue
         with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
             _workspace_path(candidate, preview=preview)
-    with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
-        confined_muse_argv(["sentinel-never-executed"], candidate, "workspace-write", "boundary-probe")
+    if case != "planned":
+        with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+            confined_muse_argv(["sentinel-never-executed"], candidate, "workspace-write", "boundary-probe")
     with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
         sandbox_main(["child", "boundary-probe", "workspace-write", str(candidate), str(tmp_path),
                       "sentinel-never-executed"])

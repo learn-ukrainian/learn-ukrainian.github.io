@@ -203,7 +203,7 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
 
 
 def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
-    """Require an existing linked task root, including for preview and direct callers."""
+    """Require a linked task root; preview alone may plan a missing task root."""
     if (
         not cwd.is_absolute()
         or any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in str(cwd))
@@ -213,11 +213,19 @@ def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
         # Select the authority from runtime configuration, never candidate Git metadata.
         primary = primary_root()
         _require_real_directories(primary)
-        _require_real_directories(cwd)
-        workspace = cwd.resolve(strict=True)
+        workspace = Path(os.path.normpath(cwd))
         relative = workspace.relative_to(primary / ".worktrees/dispatch")
         if cwd != workspace or len(relative.parts) != 2:
             raise ValueError("not an exact dispatch task root")
+        existing = workspace
+        if preview:
+            while not os.path.lexists(existing):
+                existing = existing.parent
+        _require_real_directories(existing)
+        if existing != workspace:
+            # A dry-run plan mounts nothing. sandbox_main rechecks strictly
+            # after creation, before scratch ownership or mount planning.
+            return workspace
         # Validates the pointer, primary-side gitdir backlink, commondir and
         # shared store without Git subprocesses or symlink-following metadata reads.
         if resolve_main_root_without_git(workspace) != primary:
