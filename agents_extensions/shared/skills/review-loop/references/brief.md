@@ -79,12 +79,14 @@ denial it retries once with a simple literal read-only form before it replies BL
 
 A review gets a shell and the project interpreter only inside an OS boundary (decision
 REVIEW-BOUNDARY-1101, #12378). Today there are two such routes. A read-only AGY dispatch runs
-whole in bubblewrap with a read-only checkout, scratch-only writes and provider-allowlisted
-egress. A read-only native Claude dispatch runs each shell command in the same boundary with no
-network; its `gh pr view`, `gh pr diff`, `gh pr checks`, `gh issue view` and `gh run view` still
-work. Either brief may name `.venv/bin/python` probes and test files (for example
+whole in bubblewrap with a read-only checkout and scratch-only writes. A read-only native Claude
+dispatch runs each shell command in the same boundary. Both shells reach any public host over
+HTTPS through the parent egress proxy (operator decision 2026-11-10); host, loopback and private
+addresses stay unreachable. In both, `gh pr view`, `gh pr diff`, `gh pr checks`, `gh issue view`
+and `gh run view` run through the host's gh relay, with `--repo OWNER/REPO` allowed. Either brief
+may name `.venv/bin/python` probes and test files (for example
 `.venv/bin/python -m pytest -q -p no:cacheprovider tests/x.py`) and ask for their actual output.
-Neither route has public internet from its shell. Every other route keeps the read-only command set above.
+Every other route keeps the read-only command set above.
 
 ## Wording that read-only admission accepts
 

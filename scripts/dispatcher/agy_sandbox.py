@@ -6,12 +6,15 @@ launches AGY directly. ``providers/agy.py`` returns this module's launcher, whic
 
 * stages a private scratch with two parts. The writable runtime holds AGY's HOME (a regular-file copy
   of the AGY OAuth token, a Sources-only MCP config, AGY state and caches), TMPDIR and the AGY log.
-  The read-only boundary directory holds the projected canary, egress forwarder and Sources stdio
-  client, the namespace's passwd and group files, the canary plan and both sockets;
+  The read-only boundary directory holds the projected canary, egress forwarder, Sources stdio
+  client and ``gh`` shim, the namespace's passwd and group files, the canary plan and its sockets;
 * serves Sources through a parent-owned relay that forwards only the tools the server annotates
   read-only (``sources_read_only``) and counts completed calls by matching call and result ids;
-* lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts
-  (exact allowlisted hosts; host and loopback addresses refused);
+* lets AGY reach the network only through the CONNECT-only egress proxy of formal review attempts:
+  any public host over HTTPS (operator decision 2026-11-10), each destination recorded in the
+  receipt, host, loopback and private addresses refused;
+* runs the read-only ``gh`` forms on the host through ``_GhBroker`` (argv only, no shell, no token
+  inside), so AGY can read GitHub issues, pull requests and runs;
 * runs AGY under bubblewrap (``review.isolation``). The root is empty except for read-only binds of
   the system runtime, the AGY binary, the task worktree, its Git metadata, the project virtual environment
   (exposed as the worktree's untracked ``.venv`` link so reviews can run the interpreter and tests) and the selected primary databases and their existing sidecars. PID, IPC, UTS and network namespaces and procfs are private, every capability is
@@ -38,11 +41,11 @@ REVIEW-BOUNDARY-1101). The Claude process and its credentials stay outside: ``pr
 sets ``CLAUDE_CODE_SHELL_PREFIX`` to ``claude_review_shell``, so Claude Code hands every Bash command
 to ``shell_main`` as one script string, and the script runs as ``/bin/bash -c`` in a fresh boundary
 per command. That boundary has the same binds, venv link, canary and before/after check, but no AGY
-home or token, no Sources relay (Claude's own Sources server runs outside) and no network at all.
-Its writable runtime is private to the command and removed with it. Two narrow paths cross it: the
-read-only ``gh`` forms the route allowed before run on the host through ``_GhBroker`` (argv only, no
-shell, ``--web`` refused), and the file in which Claude Code's wrapper records the shell's working
-directory is copied back to Claude's temporary directory.
+home or token and no Sources relay (Claude's own Sources server runs outside). It reaches public
+hosts through the same egress proxy, started per command. Its writable runtime is private to the
+command and removed with it. Two narrow paths cross it: the read-only ``gh`` forms run on the host
+through ``_GhBroker`` (argv only, no shell, ``--web`` refused), and the file in which Claude Code's
+wrapper records the shell's working directory is copied back to Claude's temporary directory.
 """
 
 from __future__ import annotations
@@ -117,7 +120,7 @@ SHELL_ENV_PYTHON, SHELL_ENV_TASK, SHELL_ENV_WORKTREE, SHELL_ENV_LOG = (
 )
 # The wrapper Claude Code puts around each command ends with ``pwd -P >| <tmp>/claude-<hex>-cwd``.
 _CLAUDE_CWD_FILE = re.compile(r"claude-[0-9a-f]{1,32}-cwd")
-# The read-only gh forms the route allowed before it had a shell; nothing else reaches the host's gh.
+# The read-only gh forms both routes relay; nothing else reaches the host's gh.
 _GH_READS = frozenset({("pr", "view"), ("pr", "diff"), ("pr", "checks"), ("issue", "view"), ("run", "view")})
 _GH_TIMEOUT = 300
 # Flags of those forms that take a separate value; every other argument is a flag or an operand.
@@ -125,6 +128,8 @@ _GH_VALUE_FLAGS = frozenset({"--json", "-q", "--jq", "-t", "--template", "--job"
                              "--color", "--interval", "-i"})
 # A number, #number or branch name: never a host, URL or OWNER/REPO#N selector.
 _GH_OPERAND = re.compile(r"#?[A-Za-z0-9._/-]+")
+# The one value --repo/-R accepts: OWNER/REPO on github.com. HOST/OWNER/REPO and URLs name another host.
+_GH_REPO = re.compile(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}")
 _GH_SHIM = '''#!{interpreter} -I
 import json, os, socket, sys
 directory = os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir), os.O_RDONLY)
@@ -891,26 +896,41 @@ def gh_refusal(argv) -> str | None:
         return "the gh request is malformed"
     if (argv[0], argv[1]) not in _GH_READS:
         return "only gh pr view, gh pr diff, gh pr checks, gh issue view and gh run view are relayed"
-    # gh runs on the host's network, so nothing may choose its destination: the repository comes from
-    # the worktree's own remote. A URL operand or --repo/-R (any form) names another host; --web/-w
-    # (also inside a cluster such as -cw) opens a browser on the host.
+    # gh runs on the host's network with the host's login, so nothing may choose another host: the
+    # repository is the worktree's own remote or an OWNER/REPO on github.com given as ``--repo X``,
+    # ``--repo=X`` or ``-R X``. A URL operand or any other repository form names another host;
+    # --web/-w (also inside a cluster such as -cw) opens a browser on the host.
     if any("://" in arg for arg in argv[2:]):
-        return "a URL operand is refused; the relay reads only the worktree's repository"
-    expect_value = False
+        return "a URL operand is refused; name a repository with --repo OWNER/REPO"
+    expect_value = expect_repo = False
     for arg in argv[2:]:
-        if expect_value:  # a flag's value: --json fields, a --jq or --template expression, a job id
+        if expect_repo:
+            if not _GH_REPO.fullmatch(arg):
+                return "--repo/-R accepts only OWNER/REPO on github.com"
+            expect_repo = False
+        elif expect_value:  # a flag's value: --json fields, a --jq or --template expression, a job id
             expect_value = False
         elif arg.startswith("--"):
-            name = arg.split("=", 1)[0]
-            if name.startswith(("--web", "--repo")):
+            name, equals, value = arg.partition("=")
+            if name == "--repo":
+                if equals and not _GH_REPO.fullmatch(value):
+                    return "--repo/-R accepts only OWNER/REPO on github.com"
+                expect_repo = not equals
+            elif name.startswith(("--web", "--repo")):
                 return f"gh {name} is refused"
-            expect_value = "=" not in arg and name in _GH_VALUE_FLAGS
+            else:
+                expect_value = not equals and name in _GH_VALUE_FLAGS
         elif arg.startswith("-") and len(arg) > 1:
-            if "w" in arg or "R" in arg:
+            if arg == "-R":
+                expect_repo = True
+            elif "w" in arg or "R" in arg:
                 return f"gh {arg} is refused"
-            expect_value = len(arg) == 2 and arg in _GH_VALUE_FLAGS
+            else:
+                expect_value = len(arg) == 2 and arg in _GH_VALUE_FLAGS
         elif not _GH_OPERAND.fullmatch(arg):
             return "an operand naming another repository or host is refused"
+    if expect_repo:
+        return "--repo/-R needs an OWNER/REPO value"
     return None
 
 
@@ -927,7 +947,10 @@ class _GhBroker:
         self.gh = shutil.which("gh")
         self.env = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "XDG_CONFIG_HOME", "GH_CONFIG_DIR")
                     if name in os.environ}
-        self.env.update(GH_PROMPT_DISABLED="1", GH_NO_UPDATE_NOTIFIER="1", GH_PAGER="cat", GIT_ALLOW_PROTOCOL="file")
+        # GH_HOST pins an unqualified OWNER/REPO to github.com: without it, gh's default host comes from
+        # the host's own config and could be another server.
+        self.env.update(GH_PROMPT_DISABLED="1", GH_NO_UPDATE_NOTIFIER="1", GH_PAGER="cat", GIT_ALLOW_PROTOCOL="file",
+                        GH_HOST="github.com")
         self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
         try:  # the descriptor path avoids the sockaddr_un length limit, as in SourcesRelay
@@ -1034,7 +1057,7 @@ class _Boundary:
 
     def run(self) -> int:
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
-        from scripts.agent_runtime.attempt_network import AttemptEgress, load_allowlist
+        from scripts.agent_runtime.attempt_network import AttemptEgress
         from scripts.agent_runtime.review_mcp import _real_agy_token
         from scripts.agent_runtime.sources_read_only import sources_tool_sets
         from scripts.dispatcher import runtime_context
@@ -1098,8 +1121,7 @@ class _Boundary:
             _write_private(app / "antigravity-oauth-token", token)  # a regular-file copy: no shared link or inode
         interpreter = project_interpreter().resolve(strict=True)
         projected = {name: source.read_bytes() for name, source in _PROJECTED.items()}
-        if self.shell:
-            projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
+        projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
         # The canary imports these trusted contracts, never branch-controlled code.
         # They keep their package-relative places under the machinery package's own name.
         for relative in ("storage/topology.py", "lib/readonly_sqlite.py", "common/repo_root.py"):
@@ -1183,12 +1205,11 @@ class _Boundary:
             ])
         self.receipt["canary"] = {"targets": sorted({probe["path"] for probe in probes}), "passed": False}
 
-        if self.shell:
-            self.gh = _GhBroker(boundary / "gh.sock", self.worktree)
-        else:
+        self.gh = _GhBroker(boundary / "gh.sock", self.worktree)
+        self.egress = AttemptEgress(boundary / "egress.sock")
+        if not self.shell:
             env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
             self.relay = SourcesRelay(boundary / "sources.sock", frozenset(readers), env_keep)
-            self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="claude" if self.shell else "agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
             runtime_reads=[*runtime_files(agy), *_venv_reads(), *reads, *(target for _, target in databases), *sidecars,
@@ -1200,8 +1221,8 @@ class _Boundary:
         go_read, go_write = os.pipe()
         plan = {"report_fd": report_write, "go_fd": go_read, "probes": probes}
         _write_private(boundary / "plan.json", json.dumps(plan).encode(), 0o444)
-        # A shell runs with no network at all; AGY reaches its provider hosts only through the egress proxy.
-        forwarder = [] if self.shell else [str(interpreter), str(boundary / "forwarder.py"), str(boundary / "egress.sock")]
+        # The private network namespace has no route out: every connection goes through the egress proxy.
+        forwarder = [str(interpreter), str(boundary / "forwarder.py"), str(boundary / "egress.sock")]
         inner = [str(interpreter), str(boundary / "canary.py"), str(boundary / "plan.json"), "--",
                  *forwarder, str(agy), *command[1:]]
         argv = wrap_argv_with_sandbox(inner, sandbox)
@@ -1240,15 +1261,17 @@ class _Boundary:
         ]
         self.receipt["argv_sha256"] = hashlib.sha256(json.dumps(argv).encode()).hexdigest()
         env = {
-            "HOME": str(home), "TMPDIR": str(tmp), "PATH": f"/usr/bin:/bin:{agy.parent}",
+            "HOME": str(home), "TMPDIR": str(tmp), "PATH": f"{boundary / 'bin'}:/usr/bin:/bin:{agy.parent}",
             "LANG": os.environ.get("LANG", "C.UTF-8"), "USER": "review", "LOGNAME": "review", "SHELL": "/bin/bash",
             "LU_TASKS_DIR": str(runtime_context.read_roots()[1]),
             # The project's scratch root (scripts.common.scratch) defaults to a host path that is
             # read-only here; tests and probes run by a review write their scratch under TMPDIR.
             "LU_SCRATCH_ROOT": str(tmp),
+            # The sandbox holds no Git credentials; a remote asking for them fails instead of prompting.
+            "GIT_TERMINAL_PROMPT": "0",
         }
         if self.shell:
-            env.update(PATH=f"{boundary / 'bin'}:/usr/bin:/bin", GIT_ALLOW_PROTOCOL="file")
+            env.update(PATH=f"{boundary / 'bin'}:/usr/bin:/bin", GIT_ALLOW_PROTOCOL="file:https")
         else:
             env.update(AGY_APP_DATA_DIR=str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ})
         try:
