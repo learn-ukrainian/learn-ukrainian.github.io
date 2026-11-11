@@ -68,9 +68,10 @@ Three reasonable approaches (Phase 8 driver picks):
    already done; the writer focuses on integrating with the new
    contract / immersion ratio / activity schema.
 
-2. **Use the knowledge packet only.** Skip the module prose; feed the
-   knowledge packet to the writer as research context. Lets the writer
-   produce fresh prose with the same source grounding.
+2. **Use the knowledge packet only.** The packet was removed from the tree;
+   recover it from Git history first (see its section above), skip the
+   module prose, and feed it to the writer as research context. Lets the
+   writer produce fresh prose with the same source grounding.
 
 3. **Ignore entirely.** Phase 8 starts from the reboot's Lesson Contract
    + North Star and writes from scratch. Reasonable if the reboot's
