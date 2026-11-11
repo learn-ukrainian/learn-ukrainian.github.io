@@ -386,9 +386,20 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     assert not list(scratch.glob("task-scratch/*/scratch"))
 
     # The same OS boundary permits only task-worktree writes in write mode.
+    host_git = tmp_path / "host-git"
+    host_git.mkdir()
+    (host_git / "private-marker").write_text("host-only")
+    original_pointer = f"gitdir: {host_git}\n"
+    (workspace / ".git").write_text(original_pointer)
     native.write_text(
         '#!/bin/sh\n'
         'test "$(cat "$HOME/.config/muse/auth.json")" = synthetic-auth-only || exit 19\n'
+        'pointer=$(cat .git)\n'
+        'gitdir=${pointer#gitdir: }\n'
+        'test -d "$gitdir" || exit 29\n'
+        'test ! -e "$gitdir/private-marker" || exit 30\n'
+        'if printf bad > .git 2>/dev/null; then exit 31; fi\n'
+        'if printf bad > "$gitdir/config" 2>/dev/null; then exit 32; fi\n'
         'printf changed > inside.txt || exit 23\n'
         f'if printf bad > "{outside}" 2>/dev/null; then exit 24; fi\n'
         'if printf bad > ../outside.txt 2>/dev/null; then exit 25; fi\n'
@@ -406,4 +417,6 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     assert (workspace / "inside.txt").read_text() == "changed"
     assert outside.read_text() == "outside"
     assert auth.read_text() == "synthetic-auth-only"
+    assert (workspace / ".git").read_text() == original_pointer
+    assert (host_git / "private-marker").read_text() == "host-only"
     assert not list(scratch.glob("task-scratch/*/scratch"))

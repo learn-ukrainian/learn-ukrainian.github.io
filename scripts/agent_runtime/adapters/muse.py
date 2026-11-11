@@ -113,6 +113,17 @@ def sandbox_main(args: list[str]) -> int:
         if native.is_symlink() or not native.is_file():
             raise ValueError("muse_native_runtime_refused")
         reads.extend([version_file, native])
+    git_metadata = None
+    git_marker = workspace / ".git"
+    if mode == "workspace-write" and (git_marker.exists() or git_marker.is_symlink()):
+        if git_marker.is_symlink() or not git_marker.is_file():
+            raise ValueError("muse_worktree_git_pointer_refused")
+        # Muse resolves the linked-worktree pointer before every file write.
+        # Provide only private metadata, never the shared host Git directory.
+        git_metadata = runtime / "git-metadata"
+        git_metadata.mkdir(mode=0o700)
+        (git_metadata / "gitdir").mkdir(mode=0o700)
+        (git_metadata / "pointer").write_text(f"gitdir: {git_metadata / 'gitdir'}\n")
     prompt_index = cmd.index("--prompt-file") + 1
     prompt = runtime / "prompt.txt"
     prompt.write_bytes(Path(cmd[prompt_index]).read_bytes())
@@ -136,6 +147,11 @@ def sandbox_main(args: list[str]) -> int:
             # Only this task worktree becomes writable; auth stays a separate
             # read-only mount and host paths remain absent from the namespace.
             extra += ["--bind", str(workspace), str(workspace)]
+        if git_metadata is not None:
+            extra += [
+                "--ro-bind", str(git_metadata), str(git_metadata),
+                "--ro-bind", str(git_metadata / "pointer"), str(git_marker),
+            ]
         extra += ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
         if os.fstat(auth_fd).st_size:
             # bwrap copies this fd into its private tmpfs and closes it before
