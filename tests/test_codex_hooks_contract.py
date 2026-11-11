@@ -1237,14 +1237,11 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         planted.chmod(0o755)
         commands = [("printf safe", False), ("echo $OPENAI_API_KEY", True)]
         commands.extend(
-            (shlex.join([str(primary / ".venv/bin/python"), "-I", "-m", name, "worker-env", "--all"]), True)
-            for name in ("lu_machinery.session_supervisor",)
+            (shlex.join([str(primary / ".venv/bin/python"), "-m", name, "worker-env", "--all"]), True)
+            for name in ("scripts.session_supervisor", "lu_machinery.session_supervisor")
         )
-        legacy_worker_env = shlex.join([
-            str(primary / ".venv/bin/python"), "-I", "-m", "scripts.session_supervisor", "worker-env", "--all",
-        ])
         for root_env in ({}, {"LU_PRODUCT_ROOT": str(worktree)}):
-            for text, blocked in [*commands, (legacy_worker_env, True)]:
+            for text, blocked in commands:
                 payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": text}}}
                 result = run(native("agy-secret-print"), payload, extra=root_env)
                 assert result.returncode == 0, result.stderr
