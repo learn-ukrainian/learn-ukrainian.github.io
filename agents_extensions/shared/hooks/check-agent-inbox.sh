@@ -18,7 +18,20 @@ if [ "${GEMINI_SESSION:-}" = "1" ] || [ "${LEARN_UKRAINIAN_PIPELINE:-}" = "1" ];
 fi
 
 HOOK_INPUT=$(cat)
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+# This location supplies code only. Product and shared state follow the common
+# hook boundary, independently of this deployed hook's directory.
+code_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" || exit 1
+code_root="$(cd "$code_dir/../../.." && pwd -P)" || exit 1
+if [ ! -f "$code_root/scripts/lib/project_interpreter.sh" ]; then
+  code_root="$(cd "$code_dir/../.." && pwd -P)" || exit 1
+fi
+source "$code_root/scripts/lib/project_interpreter.sh" || exit 1
+project_hook_context_resolve 2>/dev/null || {
+  echo "HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable." >&2
+  exit 1
+}
+PROJECT_DIR="$LU_PRODUCT_ROOT"
+INBOX_PYTHON="$LEARN_UKRAINIAN_PYTHON"
 RECIPIENT="${LEARN_UK_HOOK_RECIPIENT:-claude}"
 
 case "$RECIPIENT" in
@@ -27,12 +40,6 @@ case "$RECIPIENT" in
 esac
 
 RECIPIENT_LABEL=$(printf '%s' "$RECIPIENT" | tr '[:lower:]' '[:upper:]')
-
-# The inbox CLI is optional in hook contexts. A missing project interpreter or
-# a CLI failure must never block the provider's prompt submission.
-if [ ! -x "$PROJECT_DIR/.venv/bin/python" ]; then
-  exit 0
-fi
 
 # Fast path: probe the same broker DB the bridge CLI reads
 # (scripts/ai_agent_bridge/_config.py DB_PATH → _messaging.py check_inbox)
@@ -66,7 +73,7 @@ if [ -n "$DB_FILE" ] && [ -f "$DB_FILE" ]; then
   else
     # stdlib-only fallback for hosts without the sqlite3 CLI; prints nothing
     # on any error so the live CLI below stays the authority.
-    UNREAD_COUNT=$("$PROJECT_DIR/.venv/bin/python" - "$DB_FILE" "$RECIPIENT" <<'PYEOF'
+    UNREAD_COUNT=$("$INBOX_PYTHON" -I - "$DB_FILE" "$RECIPIENT" <<'PYEOF'
 import sqlite3
 import sys
 from pathlib import Path
@@ -99,7 +106,7 @@ fi
 # Ask the live CLI for the recipient's inbox. Keep its existing output as the
 # source of both the count and the bounded preview; the fast path above only
 # ever short-circuits a proven-empty inbox, never replaces this listing.
-INBOX_OUTPUT=$("$PROJECT_DIR/.venv/bin/python" -m scripts.ai_agent_bridge inbox --for "$RECIPIENT" 2>/dev/null) || exit 0
+INBOX_OUTPUT=$("$INBOX_PYTHON" -I -m lu_machinery.ai_agent_bridge inbox --for "$RECIPIENT" 2>/dev/null) || exit 0
 
 # The legacy human listing emits `N unread`; the live channel listing emits a
 # `pending: N` line. Accept both existing CLI shapes without creating a new
@@ -193,7 +200,7 @@ if [ -n "$PREVIEWS" ]; then
 ${PREVIEWS}"
 fi
 
-INBOX_MODULE=scripts.ai_agent_bridge
+INBOX_MODULE=lu_machinery.ai_agent_bridge
 CONTEXT="${CONTEXT}
 ---
 .venv/bin/python -m ${INBOX_MODULE} inbox --for ${RECIPIENT}"

@@ -26,7 +26,7 @@ RELEASE_CLI_BOOTSTRAP = (
 
 # TRANSITIONAL-PKG3-B2: held shell hooks must still execute their in-tree subject.
 CLI_BOOTSTRAP = (
-    "import os, runpy; from pathlib import Path; "
+    f"import os, runpy, sys; from pathlib import Path; sys.path.insert(0, {str(ROOT)!r}); "
     "from scripts.ai_agent_bridge import _channels; "  # TRANSITIONAL-PKG3-B2: held roster reader.
     "_channels.ASSIGNMENTS_PATH = Path(os.environ['TEST_INBOX_ROSTER']); "
     "runpy.run_module('scripts.inbox_pending', run_name='__main__')"  # TRANSITIONAL-PKG3-B2: held CLI.
@@ -48,14 +48,14 @@ def roster(tmp_path, monkeypatch):
     interpreter = tmp_path / "roster-interpreter"
     interpreter.write_text(
         f"#!{sys.executable}\nimport os, sys\n"
-        f"if sys.argv[1:3] == ['-m', 'scripts.inbox_pending']:\n"  # TRANSITIONAL-PKG3-B2: held shell hooks.
-        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {CLI_BOOTSTRAP!r}, *sys.argv[3:]])\n"
-        f"if sys.argv[1:3] == ['-m', 'lu_machinery.inbox_pending']:\n"
-        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {RELEASE_CLI_BOOTSTRAP!r}, *sys.argv[3:]])\n"
+        f"if 'scripts.inbox_pending' in sys.argv:\n"  # TRANSITIONAL-PKG3-B2: held shell hooks.
+        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {CLI_BOOTSTRAP!r}, *sys.argv[sys.argv.index('scripts.inbox_pending') + 1:]])\n"
+        f"if 'lu_machinery.inbox_pending' in sys.argv:\n"
+        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {RELEASE_CLI_BOOTSTRAP!r}, *sys.argv[sys.argv.index('lu_machinery.inbox_pending') + 1:]])\n"
         f"os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n"
     )
     interpreter.chmod(0o700)
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", str(interpreter))
     return path
 
 
@@ -95,7 +95,7 @@ def stores(tmp_path, monkeypatch):
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path))
     monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "gemini-infra")
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", sys.executable)
     return legacy, authority
 
 

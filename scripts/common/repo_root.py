@@ -341,9 +341,10 @@ def product_root(explicit: Path | str | None = None, *, env: Mapping[str, str] |
 
     The candidate is ``explicit`` when given, else ``LU_PRODUCT_ROOT`` when set and not
     empty, else the checkout that holds this package, found from the unresolved module
-    location. Only that one candidate is checked: it must be an absolute path and carry
-    ``PRODUCT_MARKER``; the derived checkout may instead be a linked worktree of a checkout
-    that carries it (see :func:`_carries_product_marker`). A candidate that fails raises at
+    location. An explicit or configured candidate must be an absolute existing
+    directory, including a sparse worktree. Only the derived source default must
+    carry ``PRODUCT_MARKER``, directly or through its primary checkout
+    (see :func:`_carries_product_marker`). A candidate that fails raises at
     once instead of falling through to a later one. The path is returned as given (symlinks
     are not resolved), so a release snapshot stays the snapshot.
 
@@ -360,7 +361,7 @@ def product_root(explicit: Path | str | None = None, *, env: Mapping[str, str] |
     if not isinstance(value, str) or "\x00" in value or not os.path.isabs(value):
         raise ProductRootError(f"{source} must be an absolute path, got {value!r}")
     candidate = Path(value)
-    if not _carries_product_marker(candidate, through_primary=derived):
+    if not candidate.is_dir() or (derived and not _carries_product_marker(candidate, through_primary=True)):
         raise ProductRootError(
             f"{source} ({candidate}) is not a product checkout: it has no {PRODUCT_MARKER}; "
             f"name the product checkout with {PRODUCT_ROOT_ENV} or an explicit product root"
@@ -605,3 +606,73 @@ def resolve_repo_root(script_path: Path, parents: int) -> Path:
     if configured is not None:
         return configured
     return main_checkout_root(script_path.resolve().parents[parents])
+
+
+# Hook-boundary bridge (machinery #100, E3a). Fixed texts every native hook entry
+# uses for a context that cannot resolve; they hold no payload or environment value.
+HOOK_BOOTSTRAP_DIAGNOSTIC = "HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable."
+HOOK_BOOTSTRAP_REASON = "HOOK-BOOTSTRAP-FAILED: hook context unavailable."
+# Sources the packaged library ($1) and prints the two roots NUL-terminated.
+_HOOK_ROOTS_SCRIPT = (
+    'source "$1" || exit 1; project_hook_roots_resolve || exit 1; '
+    'printf "%s\\0%s\\0" "$LU_PRODUCT_ROOT" "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"'
+)
+# The only environment the shell rule reads (PATH for dirname/basename).
+_HOOK_ROOTS_ENV = ("PATH", PRODUCT_ROOT_ENV, "CLAUDE_PROJECT_DIR", PRIMARY_ROOT_ENV, STATE_ROOT_ENV)
+
+
+def native_hook_roots(invocation_dir: Path) -> tuple[Path, Path]:
+    """The product and shared-state roots for ``invocation_dir`` by the one hook rule; read-only.
+
+    Glue only: it runs ``project_hook_roots_resolve`` from the packaged
+    ``lib/project_interpreter.sh`` with an argv (no shell text from data), stdin
+    disconnected, ``invocation_dir`` as the working directory and only the variables
+    that rule reads. Configured roots take part as the rule says; nothing is set
+    here. A refusal, a timeout or a malformed answer raises :class:`ProductRootError`.
+    """
+    import subprocess
+
+    library = machinery_path("lib/project_interpreter.sh")
+    env = {name: os.environ[name] for name in _HOOK_ROOTS_ENV if name in os.environ}
+    try:
+        # Fixed /bin/bash argv; the library path and directory are arguments, never shell text.
+        result = subprocess.run(  # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit
+            ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots", os.fspath(library)],
+            cwd=invocation_dir,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        raise ProductRootError(f"no hook context resolves from {invocation_dir}: the root resolver did not run") from None
+    fields = result.stdout.split(b"\0")
+    if result.returncode != 0 or len(fields) != 3 or fields[2] or not all(fields[:2]):
+        raise ProductRootError(
+            f"no hook context resolves from {invocation_dir}: set {PRODUCT_ROOT_ENV} to the product checkout "
+            f"and {PRIMARY_ROOT_ENV} to its primary checkout"
+        )
+    product, primary = (Path(os.fsdecode(field)) for field in fields[:2])
+    if not product.is_absolute() or not primary.is_absolute():
+        raise ProductRootError(f"no hook context resolves from {invocation_dir}: the resolver answered a relative root")
+    return product, primary
+
+
+def configure_native_hook_roots(invocation_dir: Path) -> None:
+    """At a direct hook or provider boundary, set missing product and shared-state roots.
+
+    ``LU_PRODUCT_ROOT`` and ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` that are already set are
+    kept and validated in process (no shell runs when both are set); an invalid one
+    raises :class:`MachineryConfigError`. Missing ones come from :func:`native_hook_roots`
+    for ``invocation_dir``, the caller's explicit invocation directory, never a payload's
+    working directory. Call it only from a hook or launch boundary, never at import.
+    """
+    if not (os.environ.get(PRODUCT_ROOT_ENV) and os.environ.get(PRIMARY_ROOT_ENV)):
+        product, primary = native_hook_roots(invocation_dir)
+        if not os.environ.get(PRODUCT_ROOT_ENV):
+            os.environ[PRODUCT_ROOT_ENV] = os.fspath(product)
+        if not os.environ.get(PRIMARY_ROOT_ENV):
+            os.environ[PRIMARY_ROOT_ENV] = os.fspath(primary)
+    product_root()
+    state_root()

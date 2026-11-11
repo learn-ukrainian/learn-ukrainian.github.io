@@ -291,13 +291,13 @@ retain the schema on that invocation's plan for result validation:
 ### AGY pending supervisory orders
 
 The `pending-orders-announce` overlay runs
-`scripts/agy_hooks/pending_orders_inject.sh` on every `PreInvocation`,
+the installed `agy-pending-orders` entry on every `PreInvocation`,
 independently of `driver-state-pin`. It uses the launcher's
 `SESSION_HANDOFF_AGENT` registered slot, including worker slots, and injects
 `{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: ..."}]}` before
 the next model call. It never falls back to the `claude` inbox.
 
-`scripts.inbox_pending` opens the configured legacy broker and Fleet Comms
+`lu_machinery.inbox_pending` opens the configured legacy broker and Fleet Comms
 authority SQLite stores read-only. It counts unacknowledged, non-live-consumed
 legacy messages and queued or running authority deliveries without durable
 generation-bound supervisory consumption or an expired deadline. A consumed
@@ -324,7 +324,7 @@ it includes as many full IDs as fit and marks truncation. A `legacy:` pointer
 names `ai_agent_bridge inbox --for` with the resolved legacy recipient. Legacy
 stores are read-only migration projections in authority mode; the notice does
 not recommend legacy acknowledgement writes. An `authority:` pointer names
-`.venv/bin/python -m scripts.fleet_comms deliveries --help`, the existing fenced
+`.venv/bin/python -m lu_machinery.fleet_comms deliveries --help`, the existing fenced
 delivery workflow. Both pointers appear when both stores have pending work.
 The authority workflow uses delivery IDs returned by claim, the lease owner's
 worker ID and fence token, and a driver generation for supervisory consumption.
@@ -333,8 +333,9 @@ Announcement message IDs are not legacy integer ack IDs or authority delivery
 IDs. The hook only prints guidance; it never executes this workflow. In a linked
 worktree, run the documented help with the prescribed shared project interpreter.
 Missing or unreadable stores, invalid hook JSON,
-an invalid or missing slot, and interpreter failures inject `PENDING ORDERS:
-unknown` with exit 0. Hook input and output are never written to temporary files.
+and an invalid or missing slot inject `PENDING ORDERS: unknown` with exit 0.
+A context or interpreter resolution failure emits the native bootstrap refusal.
+Hook input and output are never written to temporary files.
 
 Deploy the canonical overlay with `npm run agents:deploy`, which copies
 `agents_extensions/agy/hooks.json` into the workspace `.agents/hooks.json`
@@ -372,17 +373,32 @@ These repo-local outputs do not establish native blocking.
 
 The tracked `agents_extensions/agy/hooks.json` overlay adds the named
 `shell-secret-print-guard` to `PreToolUse`, matcher `run_command`, timeout
-10 seconds. It invokes the entry point directly, separately from the
-fail-open driver wrapper. Existing driver hooks keep their behavior.
+10 seconds. It invokes the installed detector entry separately from the driver
+wrapper. Ordinary-session and cancellation controls remain in the driver policy.
 
-Hook commands resolve from the directory containing `hooks.json`.
-After deployment in the primary checkout's workspace `.agents/`, the
-overlay's `../.venv/bin/python` and `../scripts/agent_runtime/secret_print_hook.py`
-resolve within that checkout. Worker installation uses
-`scripts.common.repo_root.project_interpreter` to name the shared primary
-interpreter and an absolute entry-point path, so a dispatch worktree needs
-no local `.venv`. A guarded workspace suffices when ordinary HOME has no
-`.gemini/config/hooks.json`; the gate never writes the user's home.
+Hook manifests use the exact command returned by
+`lu_machinery.agent_runtime.agy_hook_config.native_hook_command(mode)`.
+The generated Bash command embeds the marked shared resolver block and a fixed
+mode dispatcher. It selects `LU_PRODUCT_ROOT`, then `CLAUDE_PROJECT_DIR`, then
+the nearest checkout above the invocation directory. An invalid nonempty root
+refuses. It keeps product files separate from primary shared state and validates
+Git worktree backlinks before selecting the primary's interpreter. A worktree's
+`.venv` is never selected. An interpreter override must be absolute and executable;
+relative values are refused before PATH lookup. The command then runs the
+installed release under `-I`.
+
+Both source and installed validators compare the guard command byte for byte.
+Raw deployment must pass before any installer rewrites a registration. A changed
+command, appended shell text or different outer quoting refuses. A guarded
+workspace suffices when ordinary HOME has no `.gemini/config/hooks.json`; the
+gate never writes the user's home.
+
+Bootstrap failure drains stdin and emits `HOOK-BOOTSTRAP-FAILED` without payload
+or environment values. AGY PreToolUse emits deny JSON, AGY Stop emits continue,
+Claude Stop emits block, and Codex exits 2. Claude driver injection emits
+`continue: false`. These are local protocol contracts. Native AGY PreInvocation
+enforcement of deny JSON and outer harness timeout behavior remain unverified;
+local shell probes do not certify them.
 Scoped review homes receive the same absolute registration through the
 `review_mcp.py` and `attempt_boundary.py` provisioners, for isolated and full
 review access. On the review route, the load-bearing control is the exact

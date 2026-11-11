@@ -15,7 +15,7 @@ closes that observation gap for every shell call. The payload's
   2 so the agent sees the paths, the command and the cleanup command for
   exactly those files (``scripts.hygiene.primary_dirt_cleanup``).
 
-The hook refuses nothing: the call already ran when the post phase fires, and
+With a resolved product root, the hook refuses nothing: the call already ran when the post phase fires, and
 a failing snapshot must not stall a session, so both phases fail open. An
 internal error in the post phase exits 1, which the harness shows as a hook
 error.
@@ -32,34 +32,32 @@ import shlex
 import sys
 from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
-
-from tool_names import is_shell_tool
+try:
+    from agents_extensions.shared.hooks.tool_names import is_shell_tool
+except ImportError:
+    print("audit-primary-checkout-dirt: installed machinery unavailable; audit skipped.", file=sys.stderr)
+    raise SystemExit(0) from None
 
 MAX_LISTED = 20
-# The machinery modules this hook loads and names, by import name; under a checkout their files
-# are at the same dotted path (this hook is outside the package).
-_AUDIT_MODULE = "scripts.guardrails.primary_dirt_audit"
-_CLEANUP_MODULE = "scripts.hygiene.primary_dirt_cleanup"
+_CLEANUP_MODULE = "lu_machinery.hygiene.primary_dirt_cleanup"
 # The phase comes from the payload, so the wired command stays a plain hook path.
 PHASES = {"PreToolUse": "pre", "PostToolUse": "post", "PostToolUseFailure": "post"}
 
 
-def _repo_root() -> Path | None:
-    here = Path(__file__).resolve()
-    audit_file = Path(*_AUDIT_MODULE.split(".")).with_suffix(".py")
-    for candidate in (here.parent, *here.parents):
-        if (candidate / audit_file).exists():
-            return candidate
-    return None
+def _repo_root() -> Path:
+    from lu_machinery.common.repo_root import configure_native_hook_roots, product_root
+    from lu_machinery.guardrails.worktree_containment import resolve_main_root
+
+    # The direct hook boundary: missing roots come from the working directory by the
+    # shared shell rule, whichever harness started this hook.
+    configure_native_hook_roots(Path.cwd())
+    return resolve_main_root(product_root())
 
 
-def _load_audit(root: Path):
-    # The owning checkout comes first, even when PYTHONPATH already lists it later.
-    sys.path[:] = [str(root), *(entry for entry in sys.path if entry != str(root))]
-    from scripts.guardrails import primary_dirt_audit
+def _load_audit():
+    from lu_machinery.guardrails import primary_dirt_audit
 
     return primary_dirt_audit
 
@@ -141,17 +139,16 @@ def main() -> int:
         return 0
 
     cwd = _payload_cwd(payload)
-    repo_root = _repo_root()
-    if repo_root is None:
-        if phase == "post":
-            sys.stderr.write("audit-primary-checkout-dirt: audit library not found; this call was not audited.\n")
-            return 1
-        return 0
+    try:
+        repo_root = _repo_root()
+    except Exception as exc:
+        sys.stderr.write(f"BLOCKED: audit product root unavailable: {exc}\n")
+        return 2
     candidates = [cwd, os.environ.get("CLAUDE_PROJECT_DIR") or str(repo_root)]
 
     if phase == "pre":
         try:
-            audit = _load_audit(repo_root)
+            audit = _load_audit()
             state = audit.state_dir()
             audit.collect_stale_snapshots(state)
             audit.take_snapshot(state, session_id, tool_use_id, candidates)
@@ -160,7 +157,7 @@ def main() -> int:
         return 0
 
     try:
-        audit = _load_audit(repo_root)
+        audit = _load_audit()
         command = _tool_input(payload).get("command")
         result = audit.finish_call(
             audit.state_dir(),

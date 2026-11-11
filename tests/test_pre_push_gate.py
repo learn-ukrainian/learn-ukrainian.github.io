@@ -132,6 +132,8 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     shutil.copytree(HOOK_DIR, root / ".githooks")
+    (root / "scripts/lib").mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", root / "scripts/lib/project_interpreter.sh")
     launcher = root / "scripts/pre_commit/project_python.sh"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
@@ -4352,6 +4354,23 @@ def test_a_receipt_for_a_different_tool_or_base_fallback_is_never_reused(tmp_pat
     gate.write_receipt(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1000.0)
     assert gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
     assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+    # A resolver-only change invalidates a real launcher fingerprint. Otherwise
+    # cached pre-push validation could trust a newly planted interpreter rule.
+    launcher = tmp_path / "scripts/pre_commit/project_python.sh"
+    resolver = tmp_path / "scripts/lib/project_interpreter.sh"
+    launcher.parent.mkdir(parents=True)
+    resolver.parent.mkdir(parents=True)
+    launcher.write_text("#!/bin/bash\nexit 0\n")
+    resolver.write_text("original resolver\n")
+    config = tmp_path / "config.yaml"
+    config.write_text("repos: []\n")
+    before = gate.tool_versions(str(launcher), str(config))
+    gate.write_receipt(tmp_path, _plan(tools=before), 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(tools=before), 1001.0)
+    resolver.write_text("changed interpreter selection\n")
+    after = gate.tool_versions(str(launcher), str(config))
+    assert before["interpreter_resolver"] != after["interpreter_resolver"]
+    assert not gate.receipt_is_fresh(tmp_path, _plan(tools=after), 1001.0)
 
 
 # ---- the tree that runs is the outgoing commit -----------------------------------------------------------

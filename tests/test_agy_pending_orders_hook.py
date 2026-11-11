@@ -35,7 +35,7 @@ SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
 
 def run_hook(payload="{}", *, env=None, cwd=ROOT):
     proc = subprocess.run(
-        ["sh", str(SCRIPT)], input=payload, text=True, capture_output=True, cwd=cwd, env=env, timeout=20
+        ["bash", str(SCRIPT)], input=payload, text=True, capture_output=True, cwd=cwd, env=env, timeout=20
     )
     assert proc.returncode == 0
     assert proc.stderr == ""
@@ -401,7 +401,7 @@ def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):
     config = json.loads(path.read_text())
     assert config["pending-orders-announce"] == {
         "PreInvocation": [
-            {"type": "command", "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh", "timeout": 10}
+            {"type": "command", "command": agy_hook_config.native_hook_command("agy-pending-orders"), "timeout": 10}
         ]
     }
     assert config[agy_hook_config.GUARD_NAME] == {
@@ -411,17 +411,16 @@ def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy",
+                        "command": agy_hook_config.native_hook_command("agy-secret-print"),
                         "timeout": 10,
                     }
                 ],
             }
         ]
     }
-    # Model the established dispatch installer without changing its validation.
+    # Validate raw deploy bytes before any installer registration rewrite.
     deployed = tmp_path / ".agents/hooks.json"
     deployed.parent.mkdir()
-    config[agy_hook_config.GUARD_NAME] = agy_hook_config.guard_registration()
     deployed.write_text(json.dumps(config))
     assert agy_hook_config.check_hook_config((deployed,)).passed
     text = (ROOT / "docs/agent-runtime-guide.md").read_text()

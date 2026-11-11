@@ -78,6 +78,12 @@ if __package__ in (None, ""):
 
 from scripts.common.epic_selector import validate_epic
 from scripts.common.jsonl import jsonl_lines
+from scripts.common.repo_root import (
+    HOOK_BOOTSTRAP_DIAGNOSTIC,
+    HOOK_BOOTSTRAP_REASON,
+    MachineryConfigError,
+    configure_native_hook_roots,
+)
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.task_record_store import read_task_record
@@ -664,6 +670,22 @@ def _gate_failure(
     return {"decision": "allow" if hook == "agy-stop-hook" else "deny", "reason": reason}
 
 
+def _context_refusal(hook: str) -> dict:
+    """The native refusal of ``hook`` when its product or shared-state context cannot resolve.
+
+    Never an allow: AGY Stop continues, the other AGY hooks deny, Claude Stop blocks
+    and Claude SessionStart/UserPromptSubmit stops. No counter or failure record is
+    written, since no task state could be located.
+    """
+    if hook == "agy-stop-hook":
+        return {"decision": "continue", "reason": HOOK_BOOTSTRAP_REASON}
+    if hook == "claude-stop-hook":
+        return {"decision": "block", "reason": HOOK_BOOTSTRAP_REASON}
+    if hook == "claude-hook":
+        return {"continue": False, "stopReason": HOOK_BOOTSTRAP_REASON}
+    return {"decision": "deny", "reason": HOOK_BOOTSTRAP_REASON}
+
+
 def cmd_agy_stop_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     path = _driver_session(payload)
@@ -857,8 +879,19 @@ Related: {_MACHINERY}/agy_hooks/driver_state_inject.sh; #10201, #10297.
     }
     if args.cmd in hooks:
         stdin_text = sys.stdin.read()
+        # The direct hook boundary: missing roots come from the working directory by the
+        # shared shell rule before any task state is read; invalid configured roots refuse.
+        try:
+            configure_native_hook_roots(Path.cwd())
+        except (OSError, ValueError):
+            sys.stderr.write(HOOK_BOOTSTRAP_DIAGNOSTIC + "\n")
+            sys.stdout.write(json.dumps(_context_refusal(args.cmd)))
+            return 0
         try:
             result = hooks[args.cmd](stdin_text)
+        except MachineryConfigError:
+            sys.stderr.write(HOOK_BOOTSTRAP_DIAGNOSTIC + "\n")
+            result = _context_refusal(args.cmd)
         except Exception:  # keep the hook protocol valid and expose driver errors
             payload = _payload(stdin_text)
             claude = args.cmd.startswith("claude-")

@@ -8,7 +8,7 @@ alwaysApply: true
 **At session start, before other work:**
 
 ```bash
-.venv/bin/python scripts/cursor_cold_start.py
+LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.cursor_cold_start
 ```
 
 The script fetches `/api/rules`. Cursor already has `AGENTS.md` + `CLAUDE.md` as workspace rules (~50k tokens); those are digests, not a substitute for `/api/rules`.

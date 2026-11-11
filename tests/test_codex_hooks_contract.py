@@ -697,13 +697,16 @@ def test_codex_tool_events_run_the_policy_and_result_hooks() -> None:
     assert pre_groups[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
-    assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
+    from scripts.agent_runtime.agy_hook_config import native_hook_command
+
+    assert pre_hook["command"] == native_hook_command("codex-pre-tool-use")
     assert pre_hook["timeout"] == 45
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
     assert len(post_groups[0]["hooks"]) == 1
-    assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
+    assert post_groups[0]["hooks"][0]["command"] == native_hook_command("codex-post-tool-use")
+    assert hooks["UserPromptSubmit"][0]["hooks"][0]["command"] == native_hook_command("codex-user-prompt-submit")
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:
@@ -795,6 +798,7 @@ def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
         capture_output=True,
         check=False,
         timeout=30,
+        env=_stamp_environment(tmp_path),
     )
 
     assert completed.returncode == 2
@@ -924,6 +928,7 @@ def test_bare_python_rejection_blocks_a_canonical_version_mismatch(tmp_path: Pat
 
 def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     """Create a project interpreter that exposes only the live inbox CLI shape."""
+    _run(["git", "init", "-q", "-b", "main"], cwd=tmp_path)
     python = tmp_path / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True, exist_ok=True)
     fixtures = tmp_path / "inbox-fixtures"
@@ -931,7 +936,8 @@ def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     args_log = tmp_path / "inbox-cli-args.log"
     python.write_text(
         "#!/bin/sh\n"
-        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
+        'if [ "$1" = "-I" ]; then shift; fi\n'
+        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"lu_machinery.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
         "  exit 64\n"
         "fi\n"
         "printf '%s\\n' \"$*\" >> \"$FAKE_INBOX_ARGS\"\n"
@@ -955,11 +961,13 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "codex", "codex-only message")
     _write_inbox_fixture(fixtures, "claude", "claude-only message")
-    environment = os.environ.copy()
+    environment = _stamp_environment(tmp_path)
     environment.pop("AB_DB_PATH", None)
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LU_PRODUCT_ROOT": str(tmp_path),
+            "LEARN_UKRAINIAN_PYTHON": str(tmp_path / ".venv/bin/python"),
             "LEARN_UK_HOOK_RECIPIENT": "codex",
             "FAKE_INBOX_FIXTURES": str(fixtures),
             "FAKE_INBOX_ARGS": str(args_log),
@@ -981,7 +989,7 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     assert "CODEX INBOX: 1 unread message" in context
     assert "codex-only message" in context
     assert "claude-only message" not in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"
+    assert args_log.read_text(encoding="utf-8").strip() == "-m lu_machinery.ai_agent_bridge inbox --for codex"
 
 
 def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
@@ -990,11 +998,13 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "codex", "codex-only message")
     _write_inbox_fixture(fixtures, "claude", "claude-only message")
-    environment = os.environ.copy()
+    environment = _stamp_environment(tmp_path)
     environment.pop("AB_DB_PATH", None)
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LU_PRODUCT_ROOT": str(tmp_path),
+            "LEARN_UKRAINIAN_PYTHON": str(tmp_path / ".venv/bin/python"),
             "LEARN_UK_HOOK_RECIPIENT": "codex",
             "CODEX_THREAD_ID": "codex-native-session",
             "FAKE_INBOX_FIXTURES": str(fixtures),
@@ -1055,11 +1065,11 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     assert all(len(path.stem.removeprefix("inbox-")) == 64 for path in state_files)
     assert all("message" not in path.read_text(encoding="utf-8") for path in state_files)
     assert args_log.read_text(encoding="utf-8").splitlines() == [
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for claude",
-        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
+        "-m lu_machinery.ai_agent_bridge inbox --for claude",
+        "-m lu_machinery.ai_agent_bridge inbox --for codex",
     ]
 
 
@@ -1097,6 +1107,8 @@ def _post_tool_use_pytest_payload(worktree: Path, tool_name: str) -> dict:
 
 def _stamp_environment(stamps: Path) -> dict[str, str]:
     environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    for name in ("LU_PRODUCT_ROOT", "CLAUDE_PROJECT_DIR", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", "LEARN_UKRAINIAN_STATE_ROOT", "LEARN_UKRAINIAN_PYTHON"):
+        environment.pop(name, None)
     environment["TMPDIR"] = str(stamps)
     return environment
 
@@ -1162,3 +1174,230 @@ def test_compact_hydrate_bound_fits_its_retries() -> None:
     ]
     # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
     assert compact and compact[0]["timeout"] > 2 + 2 + 6
+
+
+@pytest.mark.parametrize("implementation", ["source", "installed"])
+@pytest.mark.parametrize("defect_class", ["S1", "S2", "S3", "S4", "S5", "S6"])
+def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
+    tmp_path: Path, implementation: str, defect_class: str,
+) -> None:
+    """Reject untrusted interpreters, validator drift and missing-root native allow.
+
+    Exercise missing product/state bootstrap separately from transport errors.
+    Both layouts use a real primary and linked worktree, genuine secret detection,
+    raw deployment and known body-free inbox state.
+    """
+    from tests.helpers.agy_inbox_fixtures import BODY_MARKER, add_authority, add_legacy
+
+    primary, worktree = _make_linked_worktree(tmp_path)
+    # No inherited task, interpreter, product, state or Git context may select a
+    # checkout outside this fixture. Native Git created the backlink above.
+    env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(tmp_path),
+           "TMPDIR": str(tmp_path), "LANG": "C.UTF-8", "XDG_STATE_HOME": str(tmp_path / "state")}
+    hooks_dir = worktree / "agents_extensions/shared/hooks"
+    shutil.copytree(REPO_ROOT / "agents_extensions/shared/hooks", hooks_dir)
+    marker = worktree / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: []\n")
+    if implementation == "source":
+        (worktree / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
+    prefix = "scripts" if implementation == "source" else "lu_machinery"
+
+    def module(name: str, *args: str) -> list[str]:
+        if implementation == "source":
+            return [str(primary / ".venv/bin/python"), "-I", "-c",
+                    f"import sys,runpy; sys.path.insert(0,{str(worktree)!r}); "
+                    f"sys.argv[0]={prefix + '.' + name!r}; runpy.run_module({prefix + '.' + name!r},run_name='__main__')",
+                    *args]
+        return [str(primary / ".venv/bin/python"), "-I", "-m", prefix + "." + name, *args]
+
+    def run(command: list[str], payload: dict | None = None, *, extra: dict | None = None,
+            cwd: Path = worktree) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(command, cwd=cwd, env=env | (extra or {}),
+                              input=json.dumps(payload or {}), text=True, capture_output=True, timeout=45)
+
+    def native(mode: str) -> list[str]:
+        if implementation == "installed":
+            from lu_machinery.agent_runtime.agy_hook_config import native_hook_command
+            return ["/bin/bash", "-c", native_hook_command(mode)]
+        if mode == "agy-secret-print":
+            return module("agent_runtime.secret_print_hook", "--harness", "agy")
+        if mode.startswith("codex-"):
+            return ["/bin/bash", str(ENTRY), mode.removeprefix("codex-")]
+        if mode == "agy-pending-orders":
+            return ["/bin/bash", str(REPO_ROOT / "scripts/agy_hooks/pending_orders_inject.sh")]
+        return ["/bin/bash", str(REPO_ROOT / "scripts/agy_hooks/driver_state_inject.sh"), mode]
+
+    if defect_class == "S1":
+        sentinel = tmp_path / "planted-executed"
+        planted = worktree / ".venv/bin/python"
+        planted.parent.mkdir(parents=True)
+        planted.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(sentinel))}\nprintf '%s\\n' '{{\"decision\":\"allow\"}}'\n")
+        planted.chmod(0o755)
+        for root_env in ({}, {"LU_PRODUCT_ROOT": str(worktree)}):
+            for text, decision in [("printf safe", "allow"), ("echo $OPENAI_API_KEY", "deny")]:
+                payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": text}}}
+                result = run(native("agy-secret-print"), payload, extra=root_env)
+                assert result.returncode == 0, result.stderr
+                answer = json.loads(result.stdout)
+                assert answer["decision"] == decision, result
+                if decision == "deny":
+                    assert "BLOCKED by guard-secret-print" in answer["reason"]
+                    assert "unavailable" not in answer["reason"]
+            for text, expected in [("printf safe", 0), ("echo $OPENAI_API_KEY", 2)]:
+                payload = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "cwd": str(worktree),
+                           "tool_input": {"command": text, "workdir": str(worktree)}}
+                result = run(native("codex-pre-tool-use"), payload, extra=root_env)
+                assert result.returncode == expected, result
+                if expected:
+                    assert "BLOCKED by guard-secret-print" in result.stderr
+            assert not sentinel.exists(), "a worktree-controlled interpreter executed"
+        admin = Path((worktree / ".git").read_text().strip().removeprefix("gitdir: "))
+        common = (admin / "commondir").read_text()
+        (admin / "commondir").write_text(str(tmp_path / "decoy.git"))
+        payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": "printf safe"}}}
+        result = run(native("agy-secret-print"), payload)
+        assert result.returncode == 0 and json.loads(result.stdout)["decision"] == "allow", result
+        assert not sentinel.exists()
+        (admin / "commondir").write_text(common)
+        backlink = (admin / "gitdir").read_text()
+        (admin / "gitdir").write_text(str(primary / ".git"))
+        result = run(native("agy-secret-print"), payload)
+        assert json.loads(result.stdout)["decision"] == "deny", result
+        assert not sentinel.exists()
+        (admin / "gitdir").write_text(backlink)
+    elif defect_class == "S2":
+        overlay = json.loads((REPO_ROOT / "agents_extensions/agy/hooks.json").read_text())
+        path = worktree / ".agents/hooks.json"
+        path.parent.mkdir()
+        path.write_text(json.dumps(overlay))
+        code = (f"from pathlib import Path; from {prefix}.agent_runtime.agy_hook_config import check_hook_config; "
+                f"r=check_hook_config((Path({str(path)!r}),)); print(r.status); raise SystemExit(0 if r.passed else 2)")
+        command = module("agent_runtime.agy_hook_config")
+        # Evaluate the public API in the same isolated source/installed layout.
+        if implementation == "source":
+            command = [str(primary / ".venv/bin/python"), "-I", "-c",
+                       f"import sys; sys.path.insert(0,{str(worktree)!r}); " + code]
+        else:
+            command = [str(primary / ".venv/bin/python"), "-I", "-c", code]
+        result = run(command)
+        assert (result.returncode, result.stdout.strip()) == (0, "PASS"), result
+        original = overlay["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"]
+        for tampered in [original + " ; true", original.replace("/bin/bash", "/bin/sh", 1),
+                         '"/bin/bash" -c "$(printf bypass)" lu-machinery-hook-v1 agy-secret-print']:
+            overlay["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"] = tampered
+            path.write_text(json.dumps(overlay))
+            assert run(command).returncode == 2
+    elif defect_class == "S3":
+        state = primary / ".claude/infra-epic/DRIVER-STATE.md"
+        state.parent.mkdir(parents=True)
+        state.write_text("# Driver state: infra\n\n## Epic\n- Stream: infra\n\n## Current goals\n1. fixture\n\n## Next step\n- fixture\n")
+        (primary / "batch_state/tasks").mkdir(parents=True)
+        extra = {"LU_DRIVER_STATE_FILE": str(state), "SESSION_EPIC": "infra",
+                 "SESSION_HANDOFF_AGENT": "gemini-infra", "LU_DRIVER_MIN_WORKERS": "2"}
+        payload = {"conversationId": "fixture", "workspacePaths": [str(primary)], "fullyIdle": True}
+        for command in [native("agy-stop-hook"), module("driver_state", "agy-stop-hook")]:
+            result = run(command, payload, extra=extra)
+            assert result.returncode == 0, result.stderr
+            answer = json.loads(result.stdout)
+            assert answer["decision"] == "continue", result
+            assert "BOOTSTRAP" not in answer.get("reason", ""), result
+            assert "workers are below" in answer["reason"] and "unknown" not in answer["reason"], result
+        for invalid in [{"LEARN_UKRAINIAN_PYTHON": str(tmp_path / "absent")},
+                        {"LU_PRODUCT_ROOT": str(tmp_path / "absent")}]:
+            result = run(native("agy-stop-hook"), payload, extra=extra | invalid)
+            assert json.loads(result.stdout)["decision"] == "continue", result
+    elif defect_class == "S4":
+        import sqlite3
+
+        from lu_machinery.fleet_comms.migrations import apply_migrations
+
+        # Known populated stores and a registered recipient, not an empty-store
+        # unknown result. Registration uses the existing shipped infra roster.
+        legacy = tmp_path / "messages.db"
+        plane = tmp_path / "plane"
+        plane.mkdir()
+        with sqlite3.connect(legacy) as connection:
+            connection.execute("CREATE TABLE messages(id INTEGER PRIMARY KEY, to_llm TEXT, acknowledged INTEGER, consumed_by_live_driver INTEGER, content TEXT)")
+        with sqlite3.connect(plane / "comms.sqlite3") as connection:
+            apply_migrations(connection)
+        add_legacy(legacy, recipient="gemini-infra")
+        add_authority(plane / "comms.sqlite3", recipient="gemini-infra")
+        extra = {"AB_DB_PATH": str(legacy), "FLEET_COMMS_ROOT": str(plane),
+                 "FLEET_COMMS_ALLOW_LOCAL_SHADOW": "1", "SESSION_HANDOFF_AGENT": "gemini-infra"}
+        result = run(native("agy-pending-orders"), extra=extra)
+        assert result.returncode == 0, result.stderr
+        notice = json.loads(result.stdout)["injectSteps"][0]["ephemeralMessage"]
+        assert "PENDING ORDERS: 2" in notice and "unknown" not in notice, result
+        assert BODY_MARKER not in result.stdout
+        payload = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "cwd": str(worktree),
+                   "session_id": "e3a-fixture", "tool_use_id": "call-1", "tool_input": {"command": "printf safe"}}
+        from lu_machinery.common.repo_root import machinery_path
+        audit = machinery_path("agents_extensions/shared/hooks/audit-primary-checkout-dirt.py") if implementation == "installed" else REPO_ROOT / "agents_extensions/shared/hooks/audit-primary-checkout-dirt.py"
+        before = run([str(primary / ".venv/bin/python"), "-I", str(audit)], payload)
+        assert before.returncode == 0, before.stderr
+        (primary / "created-by-call.txt").write_text("fixture\n")
+        payload["hook_event_name"] = "PostToolUse"
+        result = run(native("codex-post-tool-use"), payload)
+        assert result.returncode == 2, result
+        assert "PRIMARY CHECKOUT DIRTIED" in result.stdout + result.stderr
+        assert "created-by-call.txt" in result.stdout + result.stderr
+        assert "e3a-fixture" in str(list((tmp_path / "state").rglob("*"))) or "attribution record" in result.stdout + result.stderr
+    elif defect_class == "S5":
+        relative = tmp_path / "relative-python"
+        sentinel = tmp_path / "relative-executed"
+        relative.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(sentinel))}\nexit 0\n")
+        relative.chmod(0o755)
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        no_wheel = tmp_path / "no-wheel"
+        created = subprocess.run([sys.executable, "-m", "venv", "--without-pip", str(no_wheel)],
+                                 text=True, capture_output=True, timeout=30)
+        assert created.returncode == 0, created.stderr
+        for invalid, cwd in [({"LEARN_UKRAINIAN_PYTHON": "relative-python", "PATH": str(tmp_path) + ":/usr/bin:/bin"}, worktree),
+                             ({"LEARN_UKRAINIAN_PYTHON": str(tmp_path / "missing")}, worktree),
+                             ({"LU_PRODUCT_ROOT": str(tmp_path / "missing")}, worktree),
+                             ({"LEARN_UKRAINIAN_PYTHON": str(no_wheel / "bin/python")}, worktree), ({}, outside)]:
+            for mode in ["agy-secret-print", "agy-pretool-hook", "codex-pre-tool-use"]:
+                # The generated boundary validates interpreter selection before
+                # Python starts; source generation must carry identical bytes.
+                from lu_machinery.agent_runtime.agy_hook_config import native_hook_command as installed_command
+
+                from scripts.agent_runtime.agy_hook_config import native_hook_command as source_command
+                writer = source_command if implementation == "source" else installed_command
+                result = run(["/bin/bash", "-c", writer(mode)], extra=invalid, cwd=cwd)
+                if mode.startswith("agy-"):
+                    assert result.returncode == 0 and json.loads(result.stdout)["decision"] == "deny", result
+                else:
+                    assert result.returncode == 2 and result.stdout == "", result
+                assert "HOOK-BOOTSTRAP-FAILED" in result.stderr
+        assert not sentinel.exists(), "relative interpreter was looked up through PATH"
+    else:
+        tests = worktree / "tests"
+        tests.mkdir()
+        target = tests / "existing_target.py"
+        target.write_text("VALUE = 1\n")
+        code = (f"from pathlib import Path; from {prefix}.ci.pytest_dispatch_cap import path_covers_full_suite; "
+                "print(path_covers_full_suite('tests/existing_target.py',invocation_dir=Path.cwd())); "
+                "print(path_covers_full_suite('tests',invocation_dir=Path.cwd()))")
+        command = [str(primary / ".venv/bin/python"), "-I", "-c", code]
+        if implementation == "source":
+            command[-1] = f"import sys; sys.path.insert(0,{str(worktree)!r}); " + code
+        result = run(command)
+        assert result.returncode == 0 and result.stdout.splitlines() == ["False", "True"], result
+        collect = [str(primary / ".venv/bin/python"), "-I", "-m", "pytest"]
+        if implementation == "source":
+            collect = [str(primary / ".venv/bin/python"), "-I", "-c",
+                       f"import sys,runpy; sys.path.insert(0,{str(worktree)!r}); runpy.run_module('pytest',run_name='__main__')"]
+        result = run([*collect, "--collect-only", "--noconftest",
+                      "-p", prefix + ".ci.pytest_dispatch_cap", str(target)],
+                     extra={"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "fixture-worker"})
+        assert result.returncode == 5 and "no tests collected" in result.stdout, result
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        refusal = code.replace("print(path_covers_full_suite('tests/existing_target.py',invocation_dir=Path.cwd())); ", "")
+        refusal = refusal.replace("print(path_covers_full_suite", "import os; os.environ.pop('LU_PRODUCT_ROOT',None); os.environ.pop('LEARN_UKRAINIAN_PRIMARY_REPO_ROOT',None); print(path_covers_full_suite", 1)
+        command[-1] = (f"import sys; sys.path.insert(0,{str(worktree)!r}); " if implementation == "source" else "") + refusal
+        result = run(command, cwd=outside)
+        assert result.returncode != 0 and "no product checkout" in result.stderr, result
+        assert "ProductRootError" not in result.stderr, result

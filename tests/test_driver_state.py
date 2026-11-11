@@ -165,7 +165,7 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
         interpreter.write_text(
             f"#!{sys.executable}\n"
             "import os\nimport sys\n"
-            "if sys.argv[1] == '-m':\n"
+            "if 'scripts.driver_state' in sys.argv:\n"
             f"    print({output!r})\n"
             f"    sys.exit({exit_code})\n"
             + (
@@ -178,14 +178,14 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
         if failure == "interpreter-error":
             interpreter.write_text("#!missing-synthetic-interpreter\n", encoding="utf-8")
         interpreter.chmod(0o600 if failure == "not-executable" else 0o700)
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", str(interpreter))
     # Exceed a pipe buffer; the child deliberately never reads its input.
     payload = " " * (256 * 1024) + "{}\n\n"
     input_path = tmp_path / "hook-input.json"
     input_path.write_text(payload, encoding="utf-8")
     with input_path.open(encoding="utf-8") as hook_input:
         proc = subprocess.run(
-            ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
+            ["bash", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
             stdin=hook_input,
             capture_output=True,
             text=True,
@@ -195,8 +195,14 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
         )
         assert hook_input.tell() == len(payload)
     assert proc.returncode == 0
-    assert json.loads(proc.stdout) == ({"decision": "allow"} if mode != "agy-hook" else {})
-    assert proc.stderr == ""
+    if failure in {"missing", "not-executable"}:
+        answer = json.loads(proc.stdout)
+        assert answer["decision"] == ("continue" if mode == "agy-stop-hook" else "deny")
+        assert "HOOK-BOOTSTRAP-FAILED" in answer["reason"]
+        assert "HOOK-BOOTSTRAP-FAILED" in proc.stderr
+    else:
+        assert json.loads(proc.stdout) == ({"decision": "allow"} if mode != "agy-hook" else {})
+        assert proc.stderr == ""
 
 
 @pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
@@ -205,7 +211,7 @@ def test_hook_shell_preserves_input_bytes(state, tmp_path, monkeypatch, mode):
     interpreter.write_text(
         f"#!{sys.executable}\n"
         "import json\nimport os\nimport sys\n"
-        "if sys.argv[1] == '-m':\n"
+        "if 'scripts.driver_state' in sys.argv:\n"
         "    print(json.dumps({'input_hex': sys.stdin.buffer.read().hex()}))\n"
         "else:\n"
         "    os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n",
@@ -215,10 +221,10 @@ def test_hook_shell_preserves_input_bytes(state, tmp_path, monkeypatch, mode):
     temporary = tmp_path / "synthetic-temporary"
     temporary.mkdir()
     monkeypatch.setenv("TMPDIR", str(temporary))
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", str(interpreter))
     payload = b'\x00{"value": "before\x00after"}\x00\r\n\n'
     proc = subprocess.run(
-        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), mode],
+        ["bash", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), mode],
         input=payload,
         capture_output=True,
         cwd=tmp_path,
@@ -232,14 +238,14 @@ def test_hook_shell_preserves_input_bytes(state, tmp_path, monkeypatch, mode):
 
 @pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
 def test_hook_shell_normal_path(state, tmp_path, monkeypatch, mode):
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", sys.executable)
     payload = {
         "workspacePaths": [str(tmp_path)],
         "terminationReason": "ERROR",
         "toolCall": {"name": "ask_question"},
     }
     proc = subprocess.run(
-        ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
+        ["bash", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
         input=json.dumps(payload) + "\n\n",
         capture_output=True,
         text=True,
@@ -271,9 +277,9 @@ def test_claude_banner_for_cto_state_never_says_update_pointer_when_goal_lands(t
     monkeypatch.setenv("SESSION_EPIC", "epics")
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-epics")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(tmp_path))
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", sys.executable)
     proc = subprocess.run(
-        ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), "claude-hook"],
+        ["bash", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), "claude-hook"],
         input=json.dumps({"hook_event_name": event, "session_id": "s1", "cwd": str(tmp_path)}),
         capture_output=True,
         text=True,
@@ -295,21 +301,18 @@ def test_claude_banner_for_cto_state_never_says_update_pointer_when_goal_lands(t
 
 def test_agy_hooks_json_wires_all_driver_hooks():
     config = json.loads((REPO / "agents_extensions" / "agy" / "hooks.json").read_text(encoding="utf-8"))
-    commands = {
-        config["driver-state-pin"]["PreInvocation"][0]["command"],
-        config["driver-keep-driving"]["Stop"][0]["command"],
-        config["driver-no-ask-question"]["PreToolUse"][0]["hooks"][0]["command"],
-    }
-    assert config["driver-no-ask-question"]["PreToolUse"][0]["matcher"] == "ask_question"
-    modes = set()
-    for command in commands:
-        _, script, mode = command.split()
-        modes.add(mode)
-        # AGY runs hooks from the deployed hooks.json directory (.agents/).
-        assert (REPO / ".agents" / script).resolve() == (
-            REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"
-        ).resolve()
-    assert modes == {"agy-hook", "agy-stop-hook", "agy-pretool-hook"}
+    from lu_machinery.agent_runtime.agy_hook_config import native_hook_command
+
+    for name, event, matcher, mode, timeout in [
+        ("driver-state-pin", "PreInvocation", None, "agy-hook", 10),
+        ("driver-keep-driving", "Stop", None, "agy-stop-hook", 20),
+        ("driver-no-ask-question", "PreToolUse", "ask_question", "agy-pretool-hook", 10),
+    ]:
+        group = config[name][event][0]
+        if matcher:
+            assert group["matcher"] == matcher
+        hook = group["hooks"][0] if matcher else group
+        assert hook == {"type": "command", "command": native_hook_command(mode), "timeout": timeout}
 
 
 def _transcript(tmp_path, content, tool_calls=None):

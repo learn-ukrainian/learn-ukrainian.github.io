@@ -13,7 +13,7 @@ Run this one command from the primary checkout, after every process has left the
 target worktree(s):
 
 ```bash
-.venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
+LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.merge_closeout <PR_NUMBER> --repo-root . --apply
 ```
 
 It proves the PR is `MERGED`, finds every worktree tied to it (by branch or exact

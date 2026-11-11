@@ -18,7 +18,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-GUARD_PATH = ROOT / "agents_extensions/shared/hooks/guard-secret-print.py"
 HARNESSES = frozenset({"claude", "codex", "grok", "kimi", "cursor", "agy", "opencode"})
 DEFAULT_TIMEOUT = 5.0
 MAX_STDIN_BYTES = 1_048_576
@@ -66,16 +65,17 @@ def run_guard(command: str, *, timeout: float = DEFAULT_TIMEOUT, harness: str = 
         if str(ROOT) not in sys.path:
             sys.path.insert(0, str(ROOT))
         from scripts.agent_runtime.codex_hook_policy import run_guard as run_guard_process
-        from scripts.common.repo_root import project_interpreter
+        from scripts.common.repo_root import product_root
 
-        if not GUARD_PATH.is_file():
+        guard_path = product_root() / "agents_extensions/shared/hooks/guard-secret-print.py"
+        if not guard_path.is_file():
             return False, BLOCK_PREFIX + "shared guard unavailable.\n"
         payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
         if harness == "agy":
             env = dict(os.environ)
             env.pop("LEARN_UK_SECRETS_OK", None)
             result = subprocess.run(
-                [str(project_interpreter(ROOT)), str(GUARD_PATH)],
+                [sys.executable, "-I", str(guard_path)],
                 input=payload,
                 text=True,
                 capture_output=True,
@@ -84,7 +84,7 @@ def run_guard(command: str, *, timeout: float = DEFAULT_TIMEOUT, harness: str = 
                 env=env,
             )
         else:
-            result = run_guard_process(project_interpreter(ROOT), GUARD_PATH, payload, timeout)
+            result = run_guard_process(Path(sys.executable), guard_path, payload, timeout)
     except subprocess.TimeoutExpired:
         return False, BLOCK_PREFIX + "shared guard deadline exceeded.\n"
     except (OSError, ValueError, UnicodeError):
@@ -155,6 +155,14 @@ def main(argv: list[str] | None = None) -> int:
         else:
             raw = sys.stdin.read()
         command = extract_command(harness, json.loads(raw))
+        if command is not None and not os.environ.get("LU_PRODUCT_ROOT"):
+            if str(ROOT) not in sys.path:
+                sys.path.insert(0, str(ROOT))
+            from scripts.common.repo_root import configure_native_hook_roots
+
+            # The direct native boundary: missing roots come from the working directory by the
+            # shared shell rule before the product guard is located; failure denies below.
+            configure_native_hook_roots(Path.cwd())
         allowed, message = (
             (True, "") if command is None else run_guard(command, timeout=options.timeout, harness=harness)
         )

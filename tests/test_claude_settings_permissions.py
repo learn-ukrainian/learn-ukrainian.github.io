@@ -137,7 +137,7 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
             # pytest imports any file it is pointed at, so an allow rule can
             # never shape-match "-m pytest ..." — that goes back to the
             # classifier (#9030 Grok review).
-            assert target.startswith(("scripts/", "-m scripts."))
+            assert target.startswith(("scripts/", "-m scripts.", "-m lu_machinery."))
             assert "pytest" not in target, pattern
 
 
@@ -155,6 +155,7 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
         ("gh pr merge 9030 --squash", "allow"),
         ("gh workflow run ci.yml --ref claude/x", "allow"),
         (".venv/bin/python -m scripts.fleet.capacity_pick --json", "allow"),
+        (".venv/bin/python -m lu_machinery.fleet.capacity_pick --json", "allow"),
         ("npm run agents:deploy", "allow"),
         ("sudo systemctl restart caddy", "allow"),
         ("sudo caddy reload --config /etc/caddy/Caddyfile", "allow"),

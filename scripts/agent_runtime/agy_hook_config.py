@@ -13,15 +13,75 @@ from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root, product_root, project_interpreter
+from scripts.common.repo_root import (
+    configure_native_hook_roots,
+    machinery_path,
+    main_checkout_root,
+    product_root,
+)
 from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
-# Checkout-relative: the machinery package directory as this file was imported from it
-# (unresolved, whatever the package is called), then the hook.
-ENTRY_POINT = Path(Path(__file__).absolute().parents[1].name, "agent_runtime", "secret_print_hook.py")
 GUARD_TIMEOUT_FLOOR = 10
+GUARD_MODE = "agy-secret-print"
+# Every mode a product hook manifest may name, in the order of the tail's case.
+NATIVE_HOOK_MODES = (
+    GUARD_MODE,
+    "agy-pending-orders",
+    "agy-hook",
+    "agy-stop-hook",
+    "agy-pretool-hook",
+    "claude-hook",
+    "claude-stop-hook",
+    "codex-pre-tool-use",
+    "codex-post-tool-use",
+    "codex-user-prompt-submit",
+)
+# $0 of the generated command, so the contract version shows in process listings.
+NATIVE_HOOK_NAME = "lu-machinery-hook-v1"
+_RESOLVERS_FILE = "lib/project_interpreter.sh"
+_RESOLVERS_BEGIN = "# LU_HOOK_RESOLVERS_BEGIN"
+_RESOLVERS_END = "# LU_HOOK_RESOLVERS_END"
+# Runs after the resolver block, with the mode as $1. A bootstrap failure answers
+# in the mode's native shape: AGY Stop continues, other AGY entries deny, Claude
+# Stop blocks, Claude SessionStart/UserPromptSubmit stops, Codex exits 2. Once
+# the context resolves, the installed entry replaces this shell, so its own
+# output and exit status are the hook's.
+_HOOK_TAIL = r"""_lu_hook_fail() {
+    cat >/dev/null 2>&1
+    printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+    case "$1" in
+        agy-stop-hook) printf '%s\n' '{"decision":"continue","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
+        agy-*) printf '%s\n' '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
+        claude-stop-hook) printf '%s\n' '{"decision":"block","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
+        claude-hook) printf '%s\n' '{"continue":false,"stopReason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
+        *) exit 2 ;;
+    esac
+    exit 0
+}
+_lu_hook_mode="$1"
+project_hook_context_resolve 2>/dev/null || _lu_hook_fail "$_lu_hook_mode"
+case "$_lu_hook_mode" in
+    agy-secret-print)
+        "$LEARN_UKRAINIAN_PYTHON" -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy \
+            || _lu_hook_fail "$_lu_hook_mode"
+        exit 0 ;;
+    agy-pending-orders) _lu_hook_entry=agy_hooks/pending_orders_inject.sh; set -- ;;
+    agy-hook|agy-stop-hook|agy-pretool-hook|claude-hook|claude-stop-hook)
+        _lu_hook_entry=agy_hooks/driver_state_inject.sh; set -- "$_lu_hook_mode" ;;
+    codex-pre-tool-use|codex-post-tool-use|codex-user-prompt-submit)
+        _lu_hook_entry=agent_runtime/codex_hook_entry.sh; set -- "${_lu_hook_mode#codex-}" ;;
+    *) _lu_hook_fail "$_lu_hook_mode" ;;
+esac
+_lu_hook_entry="$("$LEARN_UKRAINIAN_PYTHON" -I -c 'import sys
+from lu_machinery.common.repo_root import machinery_path
+print(machinery_path(sys.argv[1]))' "$_lu_hook_entry" </dev/null 2>/dev/null)" || _lu_hook_fail "$_lu_hook_mode"
+[ -f "$_lu_hook_entry" ] || _lu_hook_fail "$_lu_hook_mode"
+shopt -s execfail
+exec /bin/bash "$_lu_hook_entry" "$@"
+_lu_hook_fail "$_lu_hook_mode"
+"""
 
 
 @dataclass(frozen=True)
@@ -70,7 +130,35 @@ def _read_config(path: Path) -> dict:
     return data
 
 
-def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) -> None:
+def _hook_resolvers() -> str:
+    """The marked resolver block of the packaged shell library, read as data."""
+    try:
+        lines = machinery_path(_RESOLVERS_FILE).read_text(encoding="utf-8").splitlines(keepends=True)
+    except (OSError, UnicodeError):
+        raise AgyHookConfigError("hook_resolvers_unavailable") from None
+    begins = [index for index, line in enumerate(lines) if line.rstrip("\n") == _RESOLVERS_BEGIN]
+    ends = [index for index, line in enumerate(lines) if line.rstrip("\n") == _RESOLVERS_END]
+    if len(begins) != 1 or len(ends) != 1 or ends[0] < begins[0]:
+        raise AgyHookConfigError("hook_resolvers_unmarked")
+    return "".join(lines[begins[0] + 1 : ends[0]])
+
+
+def native_hook_command(mode: str) -> str:
+    """The one native hook command for ``mode``; every product manifest uses these bytes.
+
+    ``/bin/bash -c <body> lu-machinery-hook-v1 <mode>``, serialized with ``shlex.join``.
+    The body is ``set -u``, the packaged resolver block and a fixed tail. It holds no
+    host path: it resolves the product, shared-state anchor and interpreter by the
+    shell rule before any Python starts, then runs the installed entry for ``mode``
+    under ``-I``. Validators compare these exact bytes, never an equivalent argv.
+    """
+    if mode not in NATIVE_HOOK_MODES:
+        raise AgyHookConfigError("unsupported_hook_mode")
+    body = "set -u\n" + _hook_resolvers() + _HOOK_TAIL
+    return shlex.join(["/bin/bash", "-c", body, NATIVE_HOOK_NAME, mode])
+
+
+def _check_file(path: Path, command: str) -> None:
     guard = _read_config(path).get(GUARD_NAME)
     if not isinstance(guard, dict):
         raise AgyHookConfigError("missing_guard")
@@ -100,28 +188,9 @@ def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) 
         raise AgyHookConfigError("invalid_timeout")
     if any(item.get("enabled", True) is not True or item.get("disabled", False) is not False for item in (group, hook)):
         raise AgyHookConfigError("disabled")
-    if hook.get("type") != "command" or not isinstance(hook.get("command"), str):
+    # Byte equality: a differently quoted equivalent could expand before argv forms.
+    if hook.get("type") != "command" or hook.get("command") != command:
         raise AgyHookConfigError("invalid_command")
-    try:
-        argv = shlex.split(hook["command"])
-    except ValueError:
-        raise AgyHookConfigError("invalid_command") from None
-    if len(argv) != 4 or argv[2:] != ["--harness", "agy"]:
-        raise AgyHookConfigError("invalid_command")
-    paths = [Path(arg) for arg in argv[:2]]
-    if absolute and not all(p.is_absolute() for p in paths):
-        raise AgyHookConfigError("relative_home_command")
-    resolved = [Path(os.path.abspath(path.parent / p)) for p in paths]
-    # Compare interpreter spelling too: resolving its final symlink would accept
-    # a system Python that bypasses the project's environment.
-    if (
-        resolved[0] != Path(os.path.abspath(interpreter))
-        or not resolved[0].is_file()
-        or not os.access(resolved[0], os.X_OK)
-    ):
-        raise AgyHookConfigError("invalid_interpreter")
-    if resolved[1].resolve() != script.resolve() or not resolved[1].is_file():
-        raise AgyHookConfigError("missing_script")
 
 
 def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) -> HookConfigResult:
@@ -141,14 +210,14 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
     UNKNOWN. It can only fire on ``run_command``, which the settings deny.
     """
     try:
-        interpreter = project_interpreter(repo_root)
+        command = native_hook_command(GUARD_MODE)
         checked = 0
         for path in locations:
             try:
                 path.lstat()
             except FileNotFoundError:
                 continue
-            _check_file(path, interpreter, repo_root / ENTRY_POINT, absolute=path.parent.name == "config")
+            _check_file(path, command)
             checked += 1
         if not checked:
             raise AgyHookConfigError("missing_file")
@@ -160,16 +229,15 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
 
 
 def guard_registration(*, repo_root: Path = ROOT) -> dict:
-    """Use the tracked overlay, with absolute interpreter and entry-point paths.
+    """The tracked overlay's guard, with the one generated guard command.
 
     The overlay is product configuration, read from the product checkout ``product_root``
-    selects (C-4746). The guard entry point and its interpreter are machinery: they come from
-    ``repo_root``, the trusted machinery checkout, never from product configuration.
+    selects (C-4746); its other hook metadata is kept. The command is
+    ``native_hook_command(GUARD_MODE)``, the exact bytes ``_check_file`` accepts, so the
+    hook resolves its interpreter by the shared shell rule, never from this process.
     """
     guard = copy.deepcopy(_read_config(product_root() / "agents_extensions/agy/hooks.json")[GUARD_NAME])
-    guard["PreToolUse"][0]["hooks"][0]["command"] = shlex.join(
-        [str(project_interpreter(repo_root)), str((repo_root / ENTRY_POINT).absolute()), "--harness", "agy"]
-    )
+    guard["PreToolUse"][0]["hooks"][0]["command"] = native_hook_command(GUARD_MODE)
     return guard
 
 
@@ -180,7 +248,7 @@ def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
     dispatch = (primary / ".worktrees/dispatch").resolve(strict=True) if primary != target else primary
     if ".." in cwd.parts or primary == target or target == dispatch or not target.is_relative_to(dispatch):
         raise AgyHookConfigError("install_requires_dispatch_worktree")
-    provision_workspace_guard(cwd, repo_root=repo_root)
+    provision_workspace_guard(cwd)
 
 
 def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
@@ -224,7 +292,7 @@ def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
             return  # Preserve explicitly disabled or invalid user wiring.
         # Insert only the new member, keeping unrelated hook bytes unchanged.
         end = original.rindex("}")
-        member = json.dumps({GUARD_NAME: guard_registration(repo_root=repo_root)}, indent=2)[1:-1]
+        member = json.dumps({GUARD_NAME: guard_registration()}, indent=2)[1:-1]
         payload = original[:end] + ("," if data else "") + member + original[end:]
         temporary = f".hooks-{uuid.uuid4().hex}.tmp"
         fd = safe_open_below(directory_fd, temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
@@ -247,7 +315,15 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
     Every existing candidate must validate, and at least one must contain the
     guard. Never repair an existing invalid candidate or write ordinary HOME.
+    ``cwd`` is the invocation boundary: missing product and shared-state roots are
+    configured from it by the shared shell rule before anything is provisioned, so
+    the provider and its hooks inherit them. Configured roots are kept; invalid
+    ones refuse.
     """
+    try:
+        configure_native_hook_roots(cwd)
+    except (OSError, ValueError):
+        raise AgyHookConfigError("hook_context_unavailable") from None
     try:
         if install and not os.path.lexists(cwd / ".agents/hooks.json") and main_checkout_root(cwd) != cwd:
             install_worktree_guard(cwd)

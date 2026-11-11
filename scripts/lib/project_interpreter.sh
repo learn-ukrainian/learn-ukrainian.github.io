@@ -41,9 +41,87 @@
 #   stdout: absolute interpreter path (exit 0)
 #   stderr: "Error: project interpreter not found: <paths tried>" (exit 1)
 #
+# project_python_command <python>
+#   sets PROJECT_PYTHON_COMMAND to the argv prefix that starts <python> isolated
+#   on this library's own machinery tree; append `-m <module> [args...]` or
+#   `-c <code> [args...]`, exactly as after `python`
+#
+# project_python_run <python> (-m <module> | -c <code>) [args...]
+#   runs that command; exit status and streams are the child's
+#
+# project_hook_roots_resolve / project_hook_context_resolve [<product-root>]
+#   the one hook-boundary rule for the product, shared-state and interpreter
+#   roots (see their definitions); exit 0 with the roots exported, else 1
+#
 # Load-bearing tests: tests/test_deploy_extensions.py (real temporary repos),
-# tests/test_launcher_helper_root.py (every launcher helper site).
+# tests/test_launcher_helper_root.py (every launcher helper site),
+# tests/hooks/test_session_setup_isolation.py (every launcher-library child).
 
+# The machinery tree that holds this file, from its unresolved location
+# (design-v1 amendment 1): PROJECT_PACKAGE is the package directory's name,
+# which is its import name, and PROJECT_CODE_ROOT the directory that holds it.
+_project_interpreter_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" \
+    || _project_interpreter_lib_dir=''
+PROJECT_PACKAGE="${_project_interpreter_lib_dir%/*}"
+PROJECT_CODE_ROOT="${PROJECT_PACKAGE%/*}"
+PROJECT_PACKAGE="${PROJECT_PACKAGE##*/}"
+unset _project_interpreter_lib_dir
+
+# Shell counterpart of common.repo_root.product_root's explicit selection.
+# Installed resources have no implicit consumer. Keep the selected spelling,
+# including symlinks, as the Python resolver does.
+project_product_root_resolve() {
+    local root="${1-${LU_PRODUCT_ROOT:-}}"
+    if [[ "$root" != /* || ! -d "$root" ]]; then
+        printf '%s\n' 'Error: product root requires an absolute existing directory (set LU_PRODUCT_ROOT or pass an explicit root)' >&2
+        return 1
+    fi
+    printf '%s\n' "$root"
+}
+
+# The one module bootstrap for every launcher-library Python child (#100 R68).
+# The child starts with -I, so the caller's PYTHONPATH, user site and cwd stay
+# off its import path. The bootstrap loads only the package from
+# PROJECT_CODE_ROOT by spec, so that directory never goes on sys.path and no
+# other name can resolve there; the tree that holds the library supplies the
+# code, whatever the interpreter or project has installed. It then runs
+# `-m <module>` as __main__, or `-c <code>` with sys.argv[0] == "-c", as Python
+# itself would. The environment is passed on unchanged.
+PROJECT_MODULE_BOOTSTRAP='
+import importlib.util, os, runpy, sys
+root, name, mode, target = sys.argv[1:5]
+del sys.argv[1:5]
+pkg = os.path.join(root, name)
+init = os.path.join(pkg, "__init__.py")
+if mode not in ("-m", "-c"):
+    sys.exit("module bootstrap: expected -m <module> or -c <code>, got %s" % mode)
+if not os.path.isfile(init):
+    sys.exit("module bootstrap: no %s package at %s" % (name, pkg))
+spec = importlib.util.spec_from_file_location(name, init, submodule_search_locations=[pkg])
+sys.modules[name] = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sys.modules[name])
+if mode == "-m":
+    runpy.run_module(target, run_name="__main__", alter_sys=True)
+else:
+    exec(compile(target, "<string>", "exec"), {"__name__": "__main__"})
+'
+
+project_python_command() {
+    PROJECT_PYTHON_COMMAND=("${1:?project_python_command: interpreter required}" -I -c "$PROJECT_MODULE_BOOTSTRAP" \
+        "$PROJECT_CODE_ROOT" "$PROJECT_PACKAGE")
+}
+
+project_python_run() {
+    project_python_command "$1" || return 1
+    shift
+    "${PROJECT_PYTHON_COMMAND[@]}" "$@"
+}
+
+# The block between the two marker lines is also the resolver of every native
+# hook command: agent_runtime/agy_hook_config.native_hook_command embeds it
+# verbatim, so a hook validates its interpreter before any Python starts. It
+# must stay self-contained: no function or variable defined outside it.
+# LU_HOOK_RESOLVERS_BEGIN
 # Collapse "." and ".." segments of an absolute path without following
 # symlinks (a symlinked .git must stay visible to the checks below).
 _project_interpreter_normalize() {
@@ -203,3 +281,58 @@ project_interpreter_resolve() {
     echo "Error: project interpreter not found: $tried" >&2
     return 1
 }
+
+# project_hook_roots_resolve [<product-root>]
+#   exports LU_PRODUCT_ROOT and LEARN_UKRAINIAN_PRIMARY_REPO_ROOT (exit 0), or
+#   exports nothing (exit 1). The product is the argument when one is given,
+#   else LU_PRODUCT_ROOT, else CLAUDE_PROJECT_DIR, else the nearest physical
+#   ancestor of the working directory that has a .git entry; never this
+#   library's location. The first candidate given is the only one considered.
+#   The shared-state anchor is LEARN_UKRAINIAN_PRIMARY_REPO_ROOT when set, else
+#   the product's validated primary; it must be a primary checkout (a real .git
+#   directory without commondir), and a set LEARN_UKRAINIAN_STATE_ROOT must name
+#   that same directory. A release snapshot (no .git) therefore needs an explicit
+#   anchor.
+project_hook_roots_resolve() {
+    local root="${1-${LU_PRODUCT_ROOT:-${CLAUDE_PROJECT_DIR:-}}}"
+    local primary state_root state_config
+    if [[ -z "$root" ]]; then
+        root="$(pwd -P)" || return 1
+        while [[ ! -e "$root/.git" && ! -L "$root/.git" ]]; do
+            [[ "$root" != / ]] || return 1
+            root="${root%/*}"
+            [[ -n "$root" ]] || root=/
+        done
+    fi
+    [[ "$root" = /* && -d "$root" ]] || return 1
+    primary="$(project_primary_root_resolve "$root")" || return 1
+    state_root="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
+    [[ "$state_root" = /* && -d "$state_root/.git" && ! -L "$state_root/.git" ]] || return 1
+    [[ ! -e "$state_root/.git/commondir" && ! -L "$state_root/.git/commondir" ]] || return 1
+    state_root="$(cd -P "$state_root" 2>/dev/null && pwd)" || return 1
+    if [[ -n "${LEARN_UKRAINIAN_STATE_ROOT:-}" ]]; then
+        [[ "$LEARN_UKRAINIAN_STATE_ROOT" = /* ]] || return 1
+        state_config="$(cd -P "$LEARN_UKRAINIAN_STATE_ROOT" 2>/dev/null && pwd)" || return 1
+        [[ "$state_config" = "$state_root" ]] || return 1
+    fi
+    export LU_PRODUCT_ROOT="$root"
+    export LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$state_root"
+}
+
+# project_hook_context_resolve [<product-root>]
+#   project_hook_roots_resolve, then exports LEARN_UKRAINIAN_PYTHON: the
+#   configured absolute executable, else the product primary's .venv python
+#   (exit 0); exit 1 otherwise. A linked worktree's .venv is never used, and a
+#   product root without a .git entry (a release snapshot, or a configured
+#   subdirectory) never supplies its own: the shared-state primary does.
+project_hook_context_resolve() {
+    local interpreter checkout
+    project_hook_roots_resolve "$@" || return 1
+    checkout="$LU_PRODUCT_ROOT"
+    if [[ ! -e "$checkout/.git" && ! -L "$checkout/.git" ]]; then
+        checkout="$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+    fi
+    interpreter="$(project_interpreter_resolve "$checkout")" || return 1
+    export LEARN_UKRAINIAN_PYTHON="$interpreter"
+}
+# LU_HOOK_RESOLVERS_END

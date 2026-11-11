@@ -52,12 +52,13 @@ from types import ModuleType
 import pytest
 
 try:
+    from scripts.common.repo_root import PRODUCT_ROOT_ENV, native_hook_roots, product_root
     from scripts.common.test_thread_caps import THREAD_CAPS
     from scripts.common.test_thread_caps import apply as apply_thread_caps
 except ImportError:
+    from common.repo_root import PRODUCT_ROOT_ENV, native_hook_roots, product_root  # type: ignore[no-redef]
     from common.test_thread_caps import THREAD_CAPS
     from common.test_thread_caps import apply as apply_thread_caps
-
 
 DISPATCH_TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 LOCK_ENV = "LU_PYTEST_FULL_SUITE_LOCK"
@@ -70,6 +71,10 @@ LOCK_PATH = LOCK_DIR / "pytest-full-suite.lock"
 FULL_SUITE_BUSY = "full suite already running on this host; run targeted tests — CI runs the full suite"
 CAP_LINE = f"dispatch xdist cap: maxprocesses={MAX_PROCESSES}"
 TX_TOO_MANY = "dispatch xdist cap: --tx specifies {count} workers; at most {max} are allowed"
+PRODUCT_UNRESOLVED = (
+    "dispatch xdist cap: no product checkout for this pytest invocation; "
+    f"run pytest inside the product checkout or set {PRODUCT_ROOT_ENV} to it"
+)
 _LOCK_ATTR = "_lu_dispatch_full_suite_lock_fd"
 _CLAMP_ATTR = "_lu_dispatch_cap_clamped"
 _SLOTS_ATTR = "_lu_test_slots_hold"
@@ -115,16 +120,21 @@ def _resolved(path: Path) -> Path:
     return path.resolve()
 
 
-def repository_root() -> Path:
-    """Checkout that owns this plugin, from its path and the git toplevel.
+def repository_root(invocation_dir: Path) -> Path:
+    """Product checkout whose ``tests`` tree this plugin bounds.
 
-    ``pytest --rootdir`` and the process cwd are not the suite boundary.
+    A configured ``LU_PRODUCT_ROOT`` names it. Without one, the product comes from
+    pytest's ``invocation_dir`` by the shared hook-root rule, read-only and without an
+    interpreter; the environment is not changed. ``pytest --rootdir`` is not the suite
+    boundary, and the installed package does not walk ancestors from its own file.
+    An unresolvable product raises ``pytest.UsageError``, so the cap is never waived.
     """
-    start = Path(__file__).resolve().parent
-    for candidate in (start, *start.parents):
-        if (candidate / "pyproject.toml").is_file() and (candidate / ".git").exists():
-            return candidate
-    raise RuntimeError("pytest dispatch cap cannot locate the repository root from its module path")
+    try:
+        if os.environ.get(PRODUCT_ROOT_ENV):
+            return product_root()
+        return native_hook_roots(invocation_dir)[0]
+    except (OSError, ValueError):
+        raise pytest.UsageError(PRODUCT_UNRESOLVED) from None
 
 
 def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
@@ -141,7 +151,7 @@ def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
         candidate = invocation_dir / candidate
     try:
         resolved = _resolved(candidate)
-        root = repository_root()
+        root = repository_root(invocation_dir)
         tests_root = _resolved(root / "tests")
     except OSError:
         return False
