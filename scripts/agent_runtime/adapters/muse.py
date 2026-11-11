@@ -31,8 +31,8 @@ MUSE_MODELS = frozenset({"muse-wonder-full-1.0", "muse-spark-1.3"})
 _EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 _MAX_JSONL_BYTES = 16 * 1024 * 1024
 _TOOLS = {
-    "read-only": ("read_file",),
-    "workspace-write": ("read_file", "write_file", "edit_file"),
+    "read-only": ("read_file", "web_fetch", "web_search"),
+    "workspace-write": ("read_file", "write_file", "edit_file", "web_fetch", "web_search"),
 }
 _PROFILES = {"read-only": ":read-only", "workspace-write": ":ask-me"}
 _PASSIVE_EVENTS = frozenset(
@@ -154,7 +154,7 @@ class MuseParseResult(ParseResult):
 
 
 class MuseAdapter:
-    """File-tool workers with native profiles, no shell or subordinate agents."""
+    """File and web-tool workers with native profiles, no shell or subordinate agents."""
 
     name = "muse"
     default_model = "muse-wonder-full-1.0"
@@ -305,7 +305,6 @@ class MuseAdapter:
             "--permission-profile",
             _PROFILES[mode],
             "--disable-shell",
-            "--disable-web-tools",
             "--disable-reminders",
             "--disable-request-user-input",
             "--no-foreign-personal-context",

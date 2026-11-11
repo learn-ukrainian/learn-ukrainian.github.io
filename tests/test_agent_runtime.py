@@ -4149,7 +4149,8 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
     plan = InvocationPlan(cmd=["fixture-muse"], cwd=tmp_path, metadata={
         "task_id": "muse-interface", "run_nonce": "0123456789abcdef",
         "provider_session_id": session, "model": model, "workspace": str(tmp_path),
-        "mode": "read-only", "permission_profile": ":read-only", "toolset": ["read_file"],
+        "mode": "read-only", "permission_profile": ":read-only",
+        "toolset": ["read_file", "web_fetch", "web_search"],
         "cli_version": "Muse Code 1.4.11 (1.4.11-R6667.1)",
         "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
     })
@@ -4510,10 +4511,11 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     assert plan.cmd[plan.cmd.index("--worktree") + 1] == "off"
     assert plan.cmd[plan.cmd.index("--contributor-mode") + 1] == "off"
     assert plan.cmd[plan.cmd.index("--config") + 1] == (
-        'run.toolset=["read_file"]' if mode == "read-only"
-        else 'run.toolset=["read_file", "write_file", "edit_file"]'
+        'run.toolset=["read_file", "web_fetch", "web_search"]' if mode == "read-only"
+        else 'run.toolset=["read_file", "write_file", "edit_file", "web_fetch", "web_search"]'
     )
-    assert {"--disable-shell", "--disable-web-tools", "--disable-reminders",
+    assert "--disable-web-tools" not in plan.cmd
+    assert {"--disable-shell", "--disable-reminders",
             "--disable-request-user-input", "--no-foreign-personal-context"} <= set(plan.cmd)
     assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
     assert "GH_TOKEN" in plan.env_unsets
