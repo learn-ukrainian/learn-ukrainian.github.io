@@ -1471,6 +1471,19 @@ def test_auth_stage_rejects_symlink_and_permissive_source(tmp_path: Path) -> Non
     with pytest.raises(ReviewIsolationError, match="permissions"):
         stage_engine_auth("codex", write_home=write_home, source_home=source_home)
 
+    muse_config = source_home / ".config" / "muse"
+    muse_config.mkdir(parents=True)
+    muse_auth = muse_config / "auth.json"
+    muse_auth.write_text('{"account":"fixture"}\n')
+    muse_auth.chmod(0o600)
+    (muse_config / "settings.json").write_text("must not stage")
+    muse_home = tmp_path / "muse-home"
+    assert stage_engine_auth("muse", write_home=muse_home, source_home=source_home) == {}
+    staged = muse_home / ".config" / "muse" / "auth.json"
+    assert staged.read_bytes() == muse_auth.read_bytes()
+    assert staged.stat().st_mode & 0o777 == 0o400
+    assert not (staged.parent / "settings.json").exists()
+
 
 def test_grok_oauth_store_is_never_staged_into_model_read_scope(
     tmp_path: Path,

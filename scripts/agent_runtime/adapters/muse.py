@@ -53,6 +53,88 @@ _PASSIVE_EVENTS = frozenset(
 )
 
 
+def confined_muse_argv(
+    cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
+) -> list[str]:
+    """Use the existing governed scratch and file sandbox for every Muse run."""
+    from scripts.common.repo_root import project_interpreter
+    from scripts.common.scratch import ensure_scratch_root
+
+    package = Path(__file__).absolute().parents[2].name
+    bootstrap = (
+        "import sys; sys.path.insert(0, sys.argv[1]); "
+        f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
+        "raise SystemExit(sandbox_main(sys.argv[2:]))"
+    )
+    return [
+        str(project_interpreter()), "-I", "-c", bootstrap,
+        str(Path(__file__).resolve().parents[3]),
+        "govern", task_id, mode, str(workspace), str(scratch_root or ensure_scratch_root()), *cmd,
+    ]
+
+
+def sandbox_main(args: list[str]) -> int:
+    """Launch through existing scratch ownership, then exec the verified sandbox."""
+    from scripts.common import task_scratch
+    from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
+
+    phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
+    workspace = Path(raw_workspace).resolve(strict=True)
+    if mode not in _TOOLS or phase not in {"govern", "child"}:
+        raise ValueError("muse_sandbox_launch_refused")
+    if phase == "govern":
+        launcher = confined_muse_argv(cmd, workspace, mode, task_id, scratch_root)
+        launcher[5] = "child"
+        outcome = task_scratch.run_task(task_id, launcher, root=Path(scratch_root), cwd=workspace)
+        return outcome.exit_status if outcome.action == "removed" else 125
+
+    runtime = Path(os.environ[task_scratch.SCRATCH_DIR_ENV_VAR]) / "runtime"
+    runtime.mkdir(mode=0o700)
+    home = runtime / "home"
+    home.mkdir(mode=0o700)
+    temporary = runtime / "tmp"
+    temporary.mkdir(mode=0o700)
+    auth_env = stage_engine_auth("muse", write_home=home)
+    binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
+    reads = [binary]
+    with binary.open("rb") as stream:
+        script = stream.read(2) == b"#!"
+    if script:
+        # Muse's installed launcher selects one native release. Grant exact
+        # files, never the installation directory or adjacent user programs.
+        version_file = binary.parent / ".muse-version"
+        if version_file.is_symlink():
+            raise ValueError("muse_runtime_metadata_refused")
+        version = version_file.read_text().strip()
+        if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+-R[0-9]+(?:\.[0-9]+)?", version) is None:
+            raise ValueError("muse_runtime_version_refused")
+        native = binary.parent / ("muse-bin-" + version)
+        if native.is_symlink() or not native.is_file():
+            raise ValueError("muse_native_runtime_refused")
+        reads.extend([version_file, native])
+    prompt_index = cmd.index("--prompt-file") + 1
+    prompt = runtime / "prompt.txt"
+    prompt.write_bytes(Path(cmd[prompt_index]).read_bytes())
+    cmd = [str(binary), *cmd[1:]]
+    cmd[prompt_index] = str(prompt)
+    sandbox = prepare_host_sandbox(
+        engine="muse", snapshot_root=workspace, write_root=runtime,
+        reject_root=workspace, runtime_reads=reads, network_allowed=True,
+    )
+    argv = wrap_argv_with_sandbox(cmd, sandbox)
+    if sandbox.mechanism == "linux-bwrap":
+        extra = ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
+        if mode == "workspace-write":
+            extra += ["--bind", str(workspace), str(workspace)]
+        argv[-len(cmd):-len(cmd)] = extra
+    elif mode == "workspace-write":
+        raise ValueError("muse_writable_workspace_sandbox_unavailable")
+    env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
+    env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
+    env.pop("MUSE_AUTH_PATH", None)
+    os.execve(argv[0], argv, env)
+
+
 def resolve_muse_model(model: str | None) -> str:
     requested = model or MuseAdapter.default_model
     if requested not in MUSE_MODELS:
@@ -320,7 +402,7 @@ class MuseAdapter:
             cmd.extend(["--max-tool-output-bytes", str(max_tool_output_bytes)])
         cmd.extend(["--prompt-file", prompt_path])
         return InvocationPlan(
-            cmd=cmd,
+            cmd=confined_muse_argv(cmd, workspace, mode, task_id, scratch),
             cwd=workspace,
             env_overrides={"MUSE_NO_AUTO_UPDATE": "1"},
             env_unsets=("GH_TOKEN", "GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN", "GITHUB_ENTERPRISE_TOKEN", "SSH_AUTH_SOCK"),

@@ -71,7 +71,9 @@ def run_stub(invocation, spec):
 @pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("effort", (None, "high"))
 @pytest.mark.parametrize("contributor", (None, "on", "off"))
-def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
+def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch):
+    # Transport flags are independent of the file sandbox, exercised below.
+    monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
     options = {} if contributor is None else {"contributor_mode": contributor}
     spec = replace(spec, model=model, mode=mode, effort=effort, options=options)
     invocation = muse.build(spec, stub_env)
@@ -80,6 +82,7 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
         "--json",
         "--model",
         model,
+        "--disable-web-tools",
         "--workspace",
         str(spec.worktree),
         "--worktree",
@@ -322,3 +325,51 @@ def test_cursor_text_deltas_do_not_displace_the_result_or_duplicate_assistant_te
     assert cursor.parse(stream(*deltas, result), "", 0, None).text == "Checking.\n\nVERDICT: APPROVE"
     mixed = [*deltas, _assistant("VERDICT: APPROVE"), result]
     assert cursor.parse(stream(*mixed), "", 0, None).text == "VERDICT: APPROVE"
+
+
+def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
+    """Defect class: Muse provider bypasses file sandbox and reads host files."""
+    import shutil
+
+    from scripts.agent_runtime.adapters.muse import confined_muse_argv
+
+    if not shutil.which("bwrap"):
+        pytest.skip("bubblewrap is required for the real file boundary")
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside")
+    (workspace / "inside.txt").write_text("inside")
+    (workspace / "escape").symlink_to(outside)
+    install = tmp_path / "install"
+    install.mkdir()
+    launcher = install / "muse"
+    launcher.write_text('#!/bin/sh\nexec "$(dirname "$0")/muse-bin-1.0.0-R1" "$@"\n')
+    launcher.chmod(0o700)
+    (install / ".muse-version").write_text("1.0.0-R1")
+    native = install / "muse-bin-1.0.0-R1"
+    native.write_text(
+        '#!/bin/sh\n'
+        'cat inside.txt\n'
+        f'if cat "{outside}" 2>/dev/null; then exit 20; fi\n'
+        'if cat ../outside.txt 2>/dev/null; then exit 21; fi\n'
+        'if cat escape 2>/dev/null; then exit 22; fi\n'
+        'if printf changed > inside.txt 2>/dev/null; then exit 23; fi\n'
+    )
+    native.chmod(0o700)
+    source_home = tmp_path / "empty-home"
+    source_home.mkdir()
+    monkeypatch.setenv("HOME", str(source_home))
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
+    prompt = tmp_path / "brief.txt"
+    prompt.write_text("fixture")
+    spec = TaskSpec("muse-containment", "muse", MODELS[0], None, "read-only", workspace, prompt, tmp_path / "final")
+    invocation = muse.build(spec, {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
+    assert invocation.argv[:6] == confined_muse_argv([], workspace, "read-only", spec.task_id)[:6]
+    result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "inside"
+    assert (workspace / "inside.txt").read_text() == "inside"
+    assert not list(scratch.glob("task-scratch/*/scratch"))

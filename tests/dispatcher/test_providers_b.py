@@ -26,6 +26,7 @@ from scripts.lib import rules_core
 def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, provider, mode, correction):
     """Defect class: provider transports omit the trusted core in instruction-free checkouts."""
     from scripts.dispatcher.environment import child_env
+    from scripts.dispatcher.providers import muse
 
     checkout = tmp_path / "empty checkout"
     checkout.mkdir()
@@ -35,6 +36,7 @@ def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, 
     spec = TaskSpec("core-delivery", provider, "grok-4.7-high" if provider == "cursor" else "gpt-6.1-sol",
                     "high", mode, checkout, brief, tmp_path / "result")
     monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
+    monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
     binary = tmp_path / ("cursor-agent" if provider == "cursor" else provider)
     binary.write_text(f"#!{sys.executable}\n" + r'''
 import json, pathlib, sys, tomllib

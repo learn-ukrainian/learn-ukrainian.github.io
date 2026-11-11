@@ -961,6 +961,7 @@ _NETWORK_READ_PATHS = (
 _ENGINE_AUTH_STAGE_FILES: dict[str, tuple[str, ...]] = {
     "claude": (),  # subscription token is staged in env; no host .claude tree
     "codex": (".codex/auth.json",),
+    "muse": (".config/muse/auth.json",),
     "agy": (
         ".gemini/oauth_creds.json",
         ".gemini/google_accounts.json",
