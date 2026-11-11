@@ -53,12 +53,9 @@ PUBLIC = (
     "start-codex.sh",
     "start-codex-driver.sh",
     "start-codex-cto.sh",
-    "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
     "start-muse-driver.sh",
-    "start-grok.sh",
-    "start-grok-driver.sh",
 )
 
 
@@ -200,7 +197,6 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
         ("start-claude.sh", "interactive launchers reject --epic"),
         ("start-codex.sh", "interactive launchers reject --epic"),
         ("start-gemini.sh", "interactive launchers reject --epic"),
-        ("start-grok.sh", "interactive launchers reject --epic"),
     ),
 )
 def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> None:
@@ -216,7 +212,6 @@ def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> No
         ("start-claude.sh", "interactive launchers reject --force"),
         ("start-codex.sh", "interactive launchers reject --force"),
         ("start-gemini.sh", "interactive launchers reject --force"),
-        ("start-grok.sh", "interactive launchers reject --force"),
     ),
 )
 def test_interactive_launchers_reject_force(name: str, message: str) -> None:
@@ -231,9 +226,7 @@ def test_interactive_launchers_reject_force(name: str, message: str) -> None:
     (
         "start-claude-driver.sh",
         "start-codex-driver.sh",
-        "start-cursor-driver.sh",
         "start-gemini-driver.sh",
-        "start-grok-driver.sh",
     ),
 )
 def test_driver_help_lists_force(name: str) -> None:
@@ -244,7 +237,7 @@ def test_driver_help_lists_force(name: str) -> None:
 
 
 def test_driver_dry_run_force_announces_release_then_claim() -> None:
-    result = run_launcher("start-grok-driver.sh", "--epic", "infra", "--force")
+    result = run_launcher("start-codex-driver.sh", "--epic", "infra", "--force")
     assert result.returncode == 0, result.stderr
     assert "would force-release any live holder on epic:" in result.stdout
     assert "then claim" in result.stdout

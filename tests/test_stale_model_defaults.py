@@ -101,16 +101,10 @@ def test_enabled_content_quality_records_model_refusal_and_preserves_determinist
     assert len(violations) == 2
 
 
-def test_shell_defaults_and_retired_plan_enrichment():
-    paths = [ROOT / "scripts" / rel for rel in (
-        "enrich_a2_plans_gemini.sh", "agent_runtime/_smoke_pty_agents.sh",
-    )]
-    for path in paths:
-        subprocess.run(["bash", "-n", str(path)], check=True, timeout=30)
-    result = subprocess.run(["bash", str(paths[0])], capture_output=True, text=True, cwd=ROOT, timeout=30)
-    assert result.returncode == 2
-    assert "Refused: legacy Gemini CLI" in result.stderr
-    smoke = paths[1].read_text().split("<<'PYDRIVER'\n", 1)[1].split("\nPYDRIVER", 1)[0]
+def test_shell_defaults():
+    path = ROOT / "scripts" / "agent_runtime/_smoke_pty_agents.sh"
+    subprocess.run(["bash", "-n", str(path)], check=True, timeout=30)
+    smoke = path.read_text().split("<<'PYDRIVER'\n", 1)[1].split("\nPYDRIVER", 1)[0]
     tree = ast.parse(smoke)
     models = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign) and
                   any(isinstance(target, ast.Name) and target.id == "MODEL_BY_AGENT" for target in node.targets))

@@ -503,9 +503,6 @@
     "UI-REVIEW-FINDINGS.md": [
       "shared-core"
     ],
-    "commit.sh": [
-      "harness"
-    ],
     "dagger.json": [
       "shared-core"
     ],
@@ -614,19 +611,10 @@
     "start-codex.sh": [
       "harness"
     ],
-    "start-cursor-driver.sh": [
-      "harness"
-    ],
     "start-gemini-driver.sh": [
       "harness"
     ],
     "start-gemini.sh": [
-      "harness"
-    ],
-    "start-grok-driver.sh": [
-      "harness"
-    ],
-    "start-grok.sh": [
       "harness"
     ],
     "tests/build/test_build_landing_pages.py": [

@@ -332,7 +332,7 @@ def test_claim_without_force_prints_monitor_expiry_hint(tmp_path: Path) -> None:
     script = f"""
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-codex-driver.sh" "infra"
 """
     result = subprocess.run(
         ["bash", "-c", script],
@@ -361,7 +361,7 @@ def test_claim_with_force_releases_then_opens(tmp_path: Path) -> None:
 set -euo pipefail
 source "{project}/scripts/lib/session_supervisor.sh"
 LC_DRIVER_FORCE=1
-claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-codex-driver.sh" "infra"
 printf 'SESSION=%s\\n' "$SESSION_STREAM_SESSION_ID"
 """
     result = subprocess.run(
@@ -379,7 +379,7 @@ printf 'SESSION=%s\\n' "$SESSION_STREAM_SESSION_ID"
     assert log.count("CMD:open") == 2
     assert log.count("CMD:release") == 1
     assert "--reason" in log
-    assert "operator force takeover via start-grok-driver.sh (#8229)" in log
+    assert "operator force takeover via start-codex-driver.sh (#8229)" in log
     assert "--actor-agent" in log
     assert "test-agent" in log
 
@@ -401,7 +401,7 @@ source "{project}/scripts/lib/session_supervisor.sh"
 LC_DRIVER_FORCE=1
 SESSION_SUPERVISOR_WAKE_DELIVERY=delivery-wake-1
 SESSION_SUPERVISOR_WAKE_STREAM=epic:9999
-claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-codex-driver.sh" "infra"
 """
     result = subprocess.run(
         ["bash", "-c", script],
