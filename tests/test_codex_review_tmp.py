@@ -102,7 +102,7 @@ def test_review_permissions_only_write_lease(tmp_path, session_id):
     profile = config["permissions"][config["default_permissions"]]
     assert profile["filesystem"] == {":root": "read", str(lease): "write"}
     assert profile["network"]["enabled"] is True
-    assert profile["network"]["domains"] == {"github.com": "allow", "api.github.com": "allow"}
+    assert profile["network"]["domains"] == {"*": "allow"}
     assert config["features"]["network_proxy"] is True
     assert config["approval_policy"] == "never"
     assert config["mcp_servers"]["sources"]["default_tools_approval_mode"] == "prompt"

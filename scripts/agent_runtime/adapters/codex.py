@@ -245,6 +245,8 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
     # writable paths. The legacy mode is a fail-closed fallback for old CLIs.
     # HOME and the checkout remain read-only; gh authentication is inherited
     # through the existing runtime environment. Only scratch needs writes.
+    # Network: any public host through Codex's network proxy (operator decision
+    # 2026-11-10); the proxy's local/private-network guard stays on.
     return [
         "-c",
         'sandbox_mode="read-only"',
@@ -253,7 +255,7 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         "-c",
         'permissions={lu_review={filesystem={":root"="read",'
         + _json.dumps(str(root), ensure_ascii=False)
-        + '="write"},network={enabled=true,domains={"github.com"="allow","api.github.com"="allow"}}}}',
+        + '="write"},network={enabled=true,domains={"*"="allow"}}}}',
         "-c",
         "features.network_proxy=true",
         "-c",

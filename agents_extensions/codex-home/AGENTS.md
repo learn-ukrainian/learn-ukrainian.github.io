@@ -13,23 +13,6 @@
 - If a configured route or telemetry source is unavailable, report it as unknown.
   Do not infer that the route is healthy, exhausted, authorized, or forbidden.
 
-## Quota and health
-
-- Use the installed CodexBar CLI as a quota and provider-health probe before
-  substantive fan-out or provider-routing decisions. On macOS its bundled
-  executable is `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`;
-  otherwise use the configured executable if available.
-- Query `usage --provider <provider> --format json --no-color`. Report only
-  aggregate percentages and timestamps; omit account identifiers and credits.
-- Reuse an existing configured telemetry endpoint for long runs. Do not start
-  another service or assume an occupied port belongs to CodexBar. If the probe
-  is unavailable, record usage and health as unknown.
-- Below 50% weekly Codex usage, use the best-fit workers normally. At 50%, keep
-  work packets bounded and prefer efficient worker lanes. At 75%, reserve the
-  strongest lead lane for the critical path and final judgment. At 90%, prefer
-  deterministic local work and avoid new model fan-out unless the user explicitly
-  authorizes more usage.
-
 ## Orchestration
 
 - Appoint exactly one accountable lead for each substantive stream. The lead
