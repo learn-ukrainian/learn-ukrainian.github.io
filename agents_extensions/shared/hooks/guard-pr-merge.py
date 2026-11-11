@@ -651,7 +651,7 @@ def _quote_after_line(line: str, quote: str) -> str:
 
 
 def _without_quoted_heredoc_data(command: str) -> str:
-    """Drop only the bodies of closed here-docs whose delimiters are all quoted (`<<'EOF'`).
+    """Drop quoted here-doc bodies only for one standalone literal cat/tee command.
 
     Bash expands nothing in such a body and reads it by physical lines, so its
     backticks and `$(` are text and a trailing backslash does not join the closer.
@@ -694,6 +694,19 @@ def _without_quoted_heredoc_data(command: str) -> str:
             if index == len(lines):
                 return command
             index += 1
+    # A quoted delimiter prevents expansion by the outer shell, not execution by
+    # the reader. Only a standalone literal data-copy command proves these bodies
+    # inert: interpreters, pipelines, prior function definitions and later script
+    # execution must keep the raw check's existing refusal.
+    executable = [text for line in kept if (text := strip_shell_comments(line).strip())]
+    if len(executable) != 1 or any(char in executable[0] for char in ";&|()$`"):
+        return command
+    try:
+        reader = shlex.split(executable[0])
+    except ValueError:
+        return command
+    if not reader or reader[0] not in {"cat", "tee"}:
+        return command
     return "\n".join(kept)
 
 

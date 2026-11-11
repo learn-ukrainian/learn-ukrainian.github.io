@@ -1660,6 +1660,13 @@ def test_quoted_heredoc_backticks_are_data_not_unreadable_shell(monkeypatch):
     assert _run(monkeypatch, brief.replace("<<'EOF'", "<<EOF"), checks=(["CI Gate"], [])) == 2
     assert _run(monkeypatch, brief + "\ngh pr merge 5", checks=(["CI Gate"], [])) == 2
     assert _run(monkeypatch, "cat <<'EOF'\nx\\\nEOF\necho `gh pr merge 5`\nEOF", checks=([], [])) == 2
+    # Quoting the delimiter does not make a shell/interpreter reader's stdin inert.
+    for reader in ("bash", "sh", "cat | bash", "bash -s", "source /dev/stdin", f"{sys.executable} -"):
+        body = "import os; os.system('echo `gh pr merge 5`')" if reader.endswith(" -") else "echo `gh pr merge 5`"
+        assert _run(monkeypatch, f"{reader} <<'EOF'\n{body}\nEOF", checks=(["CI Gate"], [])) == 2, reader
+    assert _run(monkeypatch, "cat <<'EOF' | bash\necho `gh pr merge 5`\nEOF", checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, brief + "\nbash brief.md", checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, "function cat { bash; }\n" + brief, checks=(["CI Gate"], [])) == 2
 
 
 def test_unclosed_heredoc_does_not_hide_merge():

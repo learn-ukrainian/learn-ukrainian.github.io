@@ -839,11 +839,20 @@ class ShellWord(str):
 class ShellSegment(list):
     """Expanded words with their shell scope and neighboring control operators."""
 
-    def __init__(self, words: list[ShellWord], scope: tuple[int, ...], prev_op: str, next_op: str) -> None:
+    def __init__(
+        self,
+        words: list[ShellWord],
+        scope: tuple[int, ...],
+        prev_op: str,
+        next_op: str,
+        *,
+        simple_command: bool = False,
+    ) -> None:
         super().__init__(words)
         self.scope = scope
         self.prev_op = prev_op
         self.next_op = next_op
+        self.simple_command = simple_command
 
 
 Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
@@ -1077,10 +1086,20 @@ class _Expander:
                 current.append(tok)
                 continue
             if current:
+                # Reserved words and compound frames can defer or repeat this command.
+                simple_command = not self.frames and not self.poisoned
                 words = self._segment(current, prev_op, tok)
                 if words:
                     scope = tuple(int(frame.split(":", 1)[1]) for frame in self.frames if frame.startswith("paren:"))
-                    segments.append(ShellSegment(words, scope, prev_op, tok))
+                    segments.append(
+                        ShellSegment(
+                            words,
+                            scope,
+                            prev_op,
+                            tok,
+                            simple_command=simple_command and not self.frames and len(words) == len(current),
+                        )
+                    )
                 current = []
             elif tok == "\n" and prev_op in _CONTINUING_OPS:
                 continue
@@ -1785,9 +1804,11 @@ def _writer_targets(
     """Targets of the writer in one expanded segment, including exec wrappers."""
     # GNU tar also reads options from TAR_OPTIONS (a --checkpoint-action can run a program), so
     # list mode is proven read-only only where nothing can have set it: the command's first
-    # top-level segment, outside any nested shell or template, and an unset harness value.
+    # simple top-level segment, outside compound syntax, nested shells or templates,
+    # and an unset harness value.
     tar_environment_fixed = (
         depth == 0
+        and getattr(segment, "simple_command", False)
         and getattr(segment, "prev_op", None) == ""
         and getattr(segment, "scope", None) == ()
         and getattr(segment, "next_op", None) != "("  # ``tar tf A @(x)``: an extended glob
