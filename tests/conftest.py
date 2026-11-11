@@ -1158,16 +1158,23 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return isolated_path
 
 
-_SHARED_SIBLING_MODULE_KEYS = ("_venv_integrity_check_primary_integrity",)  # TRANSITIONAL-PKG3-B2
+# Every by-path sibling key both copies cache and reuse (an AST scan of scripts/ and the
+# installed lu_machinery/ for literal loader names; the two OPSEC loader keys re-execute
+# their private file on every load and never read the cache).  # TRANSITIONAL-PKG3-B2
+_SHARED_SIBLING_MODULE_KEYS = (
+    "_node_modules_integrity_check_primary_integrity",
+    "_venv_integrity_check_primary_integrity",
+    "_worktree_cleanup_integrity_check_primary_integrity",
+)
 
 
 @pytest.fixture(autouse=True)
 def _drop_shared_sibling_module_keys() -> None:
     """Let each machinery copy load its own by-path sibling module.
 
-    The in-tree ``scripts/hygiene/check_venv_integrity.py`` and the installed
-    release's copy both cache ``check_primary_integrity.py`` under one fixed
-    ``sys.modules`` key. In one pytest process the copy imported second gets the
+    The in-tree ``scripts/hygiene/check_{venv,node_modules,worktree_cleanup}_integrity.py``
+    and the installed release's copies each cache ``check_primary_integrity.py`` under
+    a fixed ``sys.modules`` key. In one pytest process the copy imported second gets the
     other copy's module (merge-group run 42931243455: the release app's preload
     raised ``AttributeError: ... has no attribute 'product_root'``). A copy keeps
     the reference it bound at import, so dropping the key only affects the next
