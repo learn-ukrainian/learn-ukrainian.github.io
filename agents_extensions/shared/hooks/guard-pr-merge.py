@@ -127,7 +127,7 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import literal_lines, scope_events
+    from shell_redirects import _split_scopes, literal_lines, scope_events
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -242,7 +242,7 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-def _scope_events(command: str, *, mark_redirect_unreadable: bool = True) -> list[tuple[str, list[str]]]:
+def _scope_events(command: str, *, mark_redirect_unreadable: bool = True, keep_separators: bool = False) -> list[tuple[str, list[str]]]:
     """Preserve the PR guard's existing event and unreadability policy."""
     try:
         visible = _without_quoted_heredoc_data(command, executable=True)
@@ -254,6 +254,7 @@ def _scope_events(command: str, *, mark_redirect_unreadable: bool = True) -> lis
         unreadable_marker=_UNREADABLE_MARKER,
         unparsed=_UNPARSED,
         may_match=_merge_candidate,
+        keep_separators=keep_separators,
     )
 
 
@@ -899,65 +900,84 @@ def _literal_reads_only(command: str) -> bool:
     return found_read
 
 
-def _refuse_generated_execution(
-    command: str,
-    events: list[tuple[str, list[str]]],
-    *,
-    wrote_data: bool = False,
-    depth: int = 0,
-) -> None:
-    """Fail closed on merge-bearing generated code without adding a parser.
+def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]]) -> None:
+    """Refuse unreadable generated code using the existing nested-command walk.
 
-    Script-file execution after a data writer is deliberately conservative:
-    we do not try to prove file identity across redirects, aliases or cwd changes.
-    Ordinary data files followed by git/publisher commands remain inspectable.
+    The writer check is deliberately order-independent: a function can be
+    defined before a data writer and invoked afterwards. Proven data/message
+    consumers remain allowed; unknown execution after a writer is refused.
     """
-    if not wrote_data and not _merge_candidate(command):
+    if not _merge_candidate(command):
         return
-    for kind, argv in events:
-        if kind != "segment" or not argv:
-            continue
-        invoked, _ = _invoked_start(argv)
-        args = argv[invoked:]
-        if not args:
-            continue
+    commands: list[tuple[str, list[str], bool, str | None, bool, bool]] = []
+    pending = [(command, events, 0)]
+    redirects: dict[str, set[str]] = {}
+    while pending:
+        text, nested_events, depth = pending.pop()
+        # Reuse the shared quote-aware lexer. Quoted >/< characters and
+        # heredoc data must not invent file writes or interpreter stdin.
+        visible = _without_quoted_heredoc_data(text, executable=True)
+        redirects[text] = {
+            raw
+            for line in literal_lines(preprocess_shell_command(visible))
+            for kind, raw in _split_scopes(line)
+            if kind == "redirect"
+        }
+        pipe_input = False
+        for kind, argv in nested_events:
+            if kind == "separator":
+                pipe_input = bool(argv and argv[0] in {"|", "|&"})
+                continue
+            if kind != "segment" or not argv:
+                continue
+            invoked, xargs = _invoked_start(argv)
+            args = argv[invoked:]
+            if not args:
+                continue
+            payload = _shell_c_payload(argv)
+            if args[0] == "eval":
+                operands = args[1:]
+                if operands[:1] == ["--"]:
+                    operands = operands[1:]
+                payload = " ".join(operands)
+            commands.append((text, args, xargs, payload, pipe_input, _merge_args(argv) is not None))
+            pipe_input = False
+            if payload:
+                if depth >= _MAX_SHELL_DEPTH:
+                    raise ShellPreprocessLimit("generated script nesting cannot be read safely")
+                pending.append((payload, _scope_events(payload, mark_redirect_unreadable=False, keep_separators=True), depth + 1))
+
+    data_commands = {"cat", "tee", "printf", "echo"}
+    wrote_data = any(
+        Path(args[0]).name in data_commands and (Path(args[0]).name == "tee" or any(">" in op for op in redirects[text]))
+        for text, args, _, _, _, _ in commands
+    )
+    for text, args, xargs, payload, pipe_input, direct_merge in commands:
         name = Path(args[0]).name
-        shell = name in _SHELLS
-        payload = _shell_c_payload(argv)
-        if shell and payload is None and ("|" in command or "<<<" in command):
-            raise ShellPreprocessLimit("generated shell stdin cannot be read safely")
-        if (
-            re.fullmatch(r"(?:python(?:3(?:\.\d+)?)?|perl|ruby|node(?:js)?)", name)
-            and any(arg in {"-c", "-e", "--eval"} for arg in args[1:])
+        python = re.fullmatch(r"python(?:[23](?:\.\d+)?)?", name) is not None
+        publisher = python and args[1:3] == ["-m", _PUBLISHER]
+        interpreter = python or name in {"perl", "ruby", "node", "nodejs", "awk", "gawk", "mawk", "nawk", "php", "lua", "luajit"}
+        generated_input = pipe_input or any(
+            op == "<<<" or ("<" in op and not op.startswith("<<")) for op in redirects[text]
+        )
+        wrapped_reader = not publisher and name not in data_commands | {"git", "gh"} and any(
+            Path(arg).name in _SHELLS | {"python", "python3", "perl", "ruby", "node", "nodejs", "awk", "php"}
+            for arg in args[1:]
+        )
+        xargs_input = xargs and not direct_merge and name not in data_commands and not publisher
+        if ((name in _SHELLS and (payload is None or pipe_input)) or (interpreter and not publisher) or xargs_input or wrapped_reader) and generated_input:
+            raise ShellPreprocessLimit("generated interpreter stdin cannot be read safely")
+        if interpreter and not publisher and (
+            name in {"awk", "gawk", "mawk", "nawk"}
+            or any(
+                (arg.startswith("-") and not arg.startswith("--") and any(flag in arg[1:] for flag in "ceEp" + ("r" if name == "php" else "")))
+                or arg.split("=", 1)[0] in {"--eval", "--print"}
+                for arg in args[1:]
+            )
         ):
             raise ShellPreprocessLimit("interpreter command string cannot be read safely")
-        publisher = (
-            re.fullmatch(r"python(?:3(?:\.\d+)?)?", name) is not None
-            and args[1:3] == ["-m", _PUBLISHER]
-        )
-        file_execution = (
-            (shell and payload is None and (len(args) > 1 or "<" in command))
-            or args[0] in {"source", "."}
-            or (
-                args[0].startswith(("./", "../", "/"))
-                and not shell
-                and not publisher
-                and name not in {"cat", "tee", "printf", "echo", "gh", "git"}
-            )
-        )
-        if wrote_data and file_execution:
+        if wrote_data and (xargs_input or (not payload and not publisher and name not in data_commands | {"git", "gh", "chmod", ":", "true", "false", "pwd", "ls", "wc", "stat", "sha256sum"})):
             raise ShellPreprocessLimit("same-command generated script execution cannot be read safely")
-        if name in {"cat", "tee", "printf", "echo"} and (name == "tee" or ">" in command):
-            wrote_data = True
-        if payload and wrote_data:
-            if depth >= _MAX_SHELL_DEPTH:
-                raise ShellPreprocessLimit("generated script nesting cannot be read safely")
-            _refuse_generated_execution(
-                payload,
-                _scope_events(payload, mark_redirect_unreadable=False),
-                wrote_data=True,
-                depth=depth + 1,
-            )
 
 
 def _may_merge(command: str, depth: int = 0) -> bool:
@@ -979,7 +999,9 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     if _literal_reads_only(command):
         return False
     events = _scope_events(command, mark_redirect_unreadable=False)
-    _refuse_generated_execution(command, events)
+    _refuse_generated_execution(
+        command, _scope_events(command, mark_redirect_unreadable=False, keep_separators=True)
+    )
     # The reader starts each physical line outside any quote. After a line it
     # cannot tokenize, Bash may still be inside that line's quote, so no later
     # line is read as Bash reads it: refuse rather than call it data. Count raw
