@@ -90,7 +90,10 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
 def test_subject_self_review_effective_identity_or_unknown_refused_before_launch(dispatch, capsys, agent, model, flag, value):
     dispatch(flag, value, agent=agent, model=model, expected=2)
     err = capsys.readouterr().err
-    if model.startswith("grok-"):
+    if agent == "cursor":
+        # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the subject check.
+        assert "cursor_no_approved_model_pin" in err
+    elif model.startswith("grok-"):
         # Every Grok model is retired (GROK-CANCEL-1110): refused before the subject check.
         assert "is retired in the model catalog" in err
     else:
@@ -101,8 +104,10 @@ def test_subject_self_review_effective_identity_or_unknown_refused_before_launch
     ("gpt-6.1-sol", ()),
     ("auto", ()),
 ])
-def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, model, flags):
-    assert dispatch(*flags, agent="cursor", model=model)["model"] == model
+def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, capsys, model, flags):
+    # Cursor has no approved model pin (GROK-CANCEL-1110), so no Cursor model is admitted at all.
+    dispatch(*flags, agent="cursor", model=model, expected=2)
+    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
 
 
 def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatch, capsys):
@@ -110,7 +115,8 @@ def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatc
 
     monkeypatch.setattr(model_catalog, "substitution_default_model", lambda _: "unknown-model")
     dispatch("--subject-seat", "claude", agent="cursor", expected=2)
-    assert "subject" in capsys.readouterr().err
+    # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the fallback identity is read.
+    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
 
 
 def test_verdict_requirement_in_write_mode_refused_before_launch(dispatch, capsys):

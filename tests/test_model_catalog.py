@@ -840,7 +840,11 @@ def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, exp
     if spelling is None:
         return
     prompt = b"implement the brief"
-    if agent == "codex" and expected is None:
+    if agent == "cursor":
+        # Cursor has no approved model pin (GROK-CANCEL-1110): every Cursor dispatch is refused first.
+        with pytest.raises(ValueError, match="cursor_no_approved_model_pin"):
+            checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
+    elif agent == "codex" and expected is None:
         # An unknown explicit pin is refused at dispatch admission with the catalog's unknown-model text.
         with pytest.raises(ValueError, match=re.escape(unknown_model_refusal(spelling))):
             checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)

@@ -10,7 +10,7 @@ from unittest.mock import Mock
 import pytest
 
 from scripts.dispatcher import worker
-from tests.dispatcher.conftest import await_file, run_git
+from tests.dispatcher.conftest import await_file
 
 
 def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
@@ -51,55 +51,16 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
-@pytest.mark.parametrize("models", [[], ["Grok 4.7 256K High"], ["Grok 4.7 256K High", "different"]])
-def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, models, mode):
-    from scripts.review import record_cf_verdict as recorder
+def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, mode):
+    """A Cursor record never attests a model the runtime did not report.
 
-    binary_dir = sandbox.repo.parent / "bin"
-    binary_dir.mkdir()
-    executable = binary_dir / "cursor-agent"
-    events = [{"type": "system", "subtype": "init", "model": model} for model in models]
-    events.append({"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"})
-    stdout = "\n".join(json.dumps(event) for event in events)
-    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
-    executable.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
-    # A read-only --branch dispatch is a review (C-2902 F10): it needs a reviewed commit outside its family.
-    source = sandbox.review_target("requested-model-is-not-proof")[-1] if mode == "read-only" else "HEAD"
-    run_git(sandbox.repo, "branch", "review-source", source)
-    run_git(sandbox.repo, "push", "origin", "review-source")
-    dispatched = sandbox.cli(
-        "dispatch",
-        "--agent",
-        "cursor",
-        "--model",
-        "requested-model-is-not-proof",
-        "--prompt",
-        "The prompt claims Grok 4.7 256K High",
-        "--mode",
-        mode,
-        "--branch",
-        "review-source",
-    )
-    record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if mode == "read-only" else 1)
-    known = len(models) == 1
-    assert record["schema_version"] == 2
-    assert record["model"] == "requested-model-is-not-proof"
-    assert record["resolved_model"] == ("Grok 4.7 256K High" if known else "unknown")
-    assert record["resolved_model_known"] is known
-    assert record["resolved_model_source"] == ("cursor-stream-json" if known else "pending")
-    if mode == "read-only":
-
-        def stop_before_forge(*_args):
-            raise recorder.RecordError("synthetic stop before forge")
-
-        monkeypatch.setattr(recorder, "_pr", stop_before_forge)
-        # The attested Grok model passes attestation and is then refused as a reviewer: Grok is retired
-        # (GROK-CANCEL-1110). An unattested run is refused as unknown.
-        reason = r"'grok-4\.7' is not a formal reviewer" if known else "Cursor reviewer model unknown"
-        with pytest.raises(recorder.RecordError, match=reason):
-            recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
+    Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110), so no Cursor
+    run starts: dispatch refuses before any provider, record or attestation exists. Restore the
+    runtime-report attestation check when the operator approves a new Cursor pin.
+    """
+    dispatched = sandbox.cli("dispatch", "--agent", "cursor", "--model", "requested-model-is-not-proof",
+                             "--prompt", "The prompt claims Grok 4.7 256K High", "--mode", mode, expected=2)
+    assert "cursor_no_approved_model_pin" in dispatched.stderr
 
 
 def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_attestation(sandbox):
@@ -111,7 +72,7 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
     """
     author = sandbox.cli("dispatch", "--agent", "cursor", "--model", "grok-4.7-high", "--prompt", "Author a change",
                          "--mode", "workspace-write", expected=2)
-    assert "is retired in the model catalog" in author.stderr
+    assert "cursor_no_approved_model_pin" in author.stderr
 
 
 def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
