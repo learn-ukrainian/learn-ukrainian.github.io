@@ -423,7 +423,7 @@ def test_launcher_drops_force_from_successor_args() -> None:
     script = f"""
 set -euo pipefail
 source "{_REPO_ROOT}/scripts/lib/launcher_core.sh"
-LC_DRIVER_ORIGINAL_ARGS=(--epic infra --force --model grok-4.7 -- --force)
+LC_DRIVER_ORIGINAL_ARGS=(--epic infra --force --model gpt-6.1-sol -- --force)
 launcher_drop_force_from_successor_args
 printf 'COUNT=%s\\n' "${{#LC_DRIVER_ORIGINAL_ARGS[@]}}"
 printf 'ARGS=%s\\n' "${{LC_DRIVER_ORIGINAL_ARGS[*]}}"
@@ -438,7 +438,7 @@ printf 'ARGS=%s\\n' "${{LC_DRIVER_ORIGINAL_ARGS[*]}}"
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert "COUNT=6" in result.stdout
-    assert "ARGS=--epic infra --model grok-4.7 -- --force" in result.stdout
+    assert "ARGS=--epic infra --model gpt-6.1-sol -- --force" in result.stdout
 
 
 def test_claim_fails_closed_on_missing_required_fields(tmp_path: Path) -> None:
@@ -592,7 +592,6 @@ LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1 LC_DRY_RUN=0
 LC_DRIVER_ORIGINAL_ARGS=(--fixture 'two words')
 export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test SESSION_STREAM_GENERATION=30
 launcher_driver_renew_loop() {{ :; }}
-launcher_cursor_observer_renew_loop() {{ :; }}
 if [ '{widen_wait_window}' = True ]; then
   launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3 || true; }}
 fi

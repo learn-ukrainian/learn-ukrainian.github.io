@@ -114,7 +114,7 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_start_muse_driver.py::test_dry_run_argv_and_capsule_binding": "Muse launch builder and public-route fakes",
     "tests/test_launcher_driver_scope.py::test_forwarder_finishes_close_and_reaps_children_after_repeated_signal": "direct forwarder environment and process cleanup",
     "tests/orchestration/test_thread_restart_e2e.py::test_real_codex_devops_launcher_injects_board_and_binds_exact_fresh_rollover": "restart run helper and direct launcher environment",
-    "tests/orchestration/test_thread_restart_e2e.py::test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl": "provider_environment builder and local Monitor stub",
+    "tests/orchestration/test_thread_restart_e2e.py::test_real_claude_driver_recovers_expired_app_thread_holder_via_remote_ttl": "provider_environment builder and local Monitor stub",
     "tests/orchestration/test_thread_restart_e2e.py::test_monitor_outage_and_dirty_replacement_never_unlock_cleanup": "private GitHub-cache root preserves clean-checkout and cleanup guards",
     "tests/test_fleet_comms_launcher_awareness.py::test_cold_clause_resolves_live_mode_when_env_unset": "Fleet clause and fallback shell consumers",
     "tests/test_fleet_taxonomy_aliases.py::test_hermetic_launcher_unknown_selector_fails_closed_contract": "direct wrapper and clean_env builder",
