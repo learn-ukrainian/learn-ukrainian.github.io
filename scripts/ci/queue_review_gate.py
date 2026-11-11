@@ -41,14 +41,11 @@ import re
 import subprocess
 import sys
 import time
-import urllib.error
-import urllib.request
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
 STATUS_CONTEXT = "fleet/cross-family-review"
-GRAPHQL_URL = "https://api.github.com/graphql"
 GITHUB_HTTPS = "https://github.com/"
 GIT_TIMEOUT_SECONDS = 300
 API_TIMEOUT_SECONDS = 30
@@ -209,25 +206,29 @@ def squash_chain(event: Event, tip: str) -> list[Squash]:
     return chain
 
 
-def graphql_post(token: str) -> Post:
-    """A GraphQL transport that raises Retryable on any HTTP, JSON or GraphQL error."""
+def graphql_post() -> Post:
+    """GraphQL through the shared GitHub client; any failure raises Retryable.
+
+    The client authenticates from ``GITHUB_TOKEN`` in the environment, so the credential
+    never appears on argv, and ``fresh=True`` never answers from its cache.
+    """
+    from scripts.common import github_client
 
     def post(query: str, variables: dict) -> object:
-        request = urllib.request.Request(
-            GRAPHQL_URL,
-            data=json.dumps({"query": query, "variables": variables}).encode(),
-            headers={
-                "Authorization": f"bearer {token}",
-                "Content-Type": "application/json",
-                "User-Agent": "queue-review-gate",
-            },
-            method="POST",
-        )
+        argv = ["gh", "api", "graphql", "-f", f"query={query}"]
+        for name, value in variables.items():
+            if value is not None:
+                argv += ["-f", f"{name}={value}"]
         try:
-            with urllib.request.urlopen(request, timeout=API_TIMEOUT_SECONDS) as response:
-                document: object = json.loads(response.read())
-        except (urllib.error.URLError, OSError, ValueError) as error:
+            completed = github_client.run(argv, fresh=True, capture_output=True, text=True, timeout=API_TIMEOUT_SECONDS)
+        except Exception as error:  # rate limit, transport or client refusal: never an answer
             raise Retryable(f"GraphQL request failed: {type(error).__name__}") from None
+        if completed.returncode != 0:
+            raise Retryable(f"GraphQL request failed (exit {completed.returncode})")
+        try:
+            document: object = json.loads(completed.stdout)
+        except ValueError:
+            raise Retryable("GraphQL response undecodable") from None
         return document
 
     return post
@@ -449,7 +450,7 @@ def main(argv: list[str] | None = None) -> int:
     except GateError as error:
         print(f"::error::queue review gate: {error}")
         return 1
-    return run(event, graphql_post(token), attempts=args.attempts, delay=args.retry_delay)
+    return run(event, graphql_post(), attempts=args.attempts, delay=args.retry_delay)
 
 
 if __name__ == "__main__":
