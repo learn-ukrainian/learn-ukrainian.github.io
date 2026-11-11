@@ -69,7 +69,9 @@ def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
             review_profile="ukrainian",
             claude_account=HOST_ACCOUNT,
         )
-    assert "--review-profile ukrainian" in str(refused.value)
+    assert "REVIEW_ROUTE_REFUSED" in str(refused.value)
+    assert "model 'grok-4.7' is retired" in str(refused.value)
+    assert "--review-profile ukrainian" not in str(refused.value)
     assert "--review-author-model" not in str(refused.value)
 
 
@@ -99,12 +101,15 @@ def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5
 @pytest.mark.parametrize("model", ["grok-4.7-high[fast]", "grok-4.7-high[1m]", "grok-4.7-high[]"])
 def test_a_suffixed_cursor_grok_slug_is_never_an_attempt_identity(model):
     """#9488: eligibility is decided on the exact string the adapter would send as --model."""
-    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED") as refused:
         _review_target(model, attempt=True)
+    assert "model 'grok-4.7' is retired" in str(refused.value)
 
 
-def test_the_exact_cursor_grok_slug_is_kept_as_requested():
-    assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
+def test_the_exact_cursor_grok_slug_is_refused_after_retirement():
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED") as refused:
+        _review_target("grok-4.7-high", attempt=True)
+    assert "model 'grok-4.7' is retired" in str(refused.value)
 
 
 def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():
