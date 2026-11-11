@@ -31,12 +31,10 @@ phonetic spelling principle), and the introduction to голосні звуки.
 Includes `<!-- VERIFY -->` markers showing source-checking discipline
 applied during authoring.
 
-### `sounds-letters-and-hello-knowledge-packet.md` (~1.2 KLOC)
+### `sounds-letters-and-hello-knowledge-packet.md` (removed)
 
-The research/RAG knowledge packet that fed module authoring: textbook
-excerpts, dictionary entries, decolonization notes, prior-art links.
-The Phase 8 writer (whichever agent is chosen) can re-use the same
-research packet rather than re-running the retrieval step.
+The research/RAG knowledge packet that fed module authoring was removed from the tree
+(REMOVE-UNNEEDED-1107); it remains in Git history.
 
 ---
 
