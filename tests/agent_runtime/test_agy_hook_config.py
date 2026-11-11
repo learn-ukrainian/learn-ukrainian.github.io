@@ -329,7 +329,7 @@ def test_overlay_keeps_existing_driver_hooks():
     assert primary["matcher"] == "write_file|edit_file|run_command"
     assert primary["hooks"][0] == {
         "type": "command",
-        "command": f"../.venv/bin/python ../{config.PRIMARY_GUARD_ENTRY.as_posix()}",
+        "command": config.native_hook_command("agy-primary-write"),
         "timeout": 10,
     }
 

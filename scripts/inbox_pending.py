@@ -27,7 +27,6 @@ from scripts.fleet_comms.paths import default_plane_root
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
-ROOT = Path(__file__).resolve().parents[1]
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.
 _MACHINERY = Path(os.path.abspath(__file__)).parents[0].name
@@ -75,8 +74,9 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
             return unknown
         placeholders = ",".join("?" for _ in legacy_recipients)
         legacy_where = f"to_llm IN ({placeholders}) AND {LEGACY_PENDING}"
-        legacy = configured_bridge_db_path(state_root())
-        authority = default_plane_root(repo_root=state_root()) / "comms.sqlite3"
+        state = state_root()
+        legacy = configured_bridge_db_path(state)
+        authority = default_plane_root(repo_root=state) / "comms.sqlite3"
         stores = {}
         ids = []
         now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")

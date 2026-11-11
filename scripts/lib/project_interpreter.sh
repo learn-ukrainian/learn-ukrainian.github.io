@@ -282,6 +282,28 @@ project_interpreter_resolve() {
     return 1
 }
 
+# _project_hook_git_layout <checkout>
+#   true when <checkout>/.git passes Git's own repository test, as
+#   repo_root._is_primary_git_layout applies it (stricter here: a symlinked HEAD
+#   refuses): a real directory without commondir, with objects, refs and a valid
+#   HEAD (`ref: refs/...` or a 40/64-hex object id). An empty or stray .git is not
+#   a primary.
+_project_hook_git_layout() {
+    local git_dir="$1/.git" head=""
+    [[ -d "$git_dir" && ! -L "$git_dir" ]] || return 1
+    [[ ! -e "$git_dir/commondir" && ! -L "$git_dir/commondir" ]] || return 1
+    [[ -d "$git_dir/objects" && -d "$git_dir/refs" ]] || return 1
+    [[ -f "$git_dir/HEAD" && ! -L "$git_dir/HEAD" ]] || return 1
+    IFS= read -r head < "$git_dir/HEAD" || true
+    case "$head" in
+        ref:*)
+            head="${head#ref:}"
+            [[ "${head#"${head%%[![:space:]]*}"}" = refs/* ]]
+            ;;
+        *) [[ "$head" =~ ^[0-9a-fA-F]{40}([0-9a-fA-F]{24})?$ ]] ;;
+    esac
+}
+
 # project_hook_roots_resolve [<product-root>]
 #   exports LU_PRODUCT_ROOT and LEARN_UKRAINIAN_PRIMARY_REPO_ROOT (exit 0), or
 #   exports nothing (exit 1). The product is the argument when one is given,
@@ -289,13 +311,13 @@ project_interpreter_resolve() {
 #   ancestor of the working directory that has a .git entry; never this
 #   library's location. The first candidate given is the only one considered.
 #   The shared-state anchor is LEARN_UKRAINIAN_PRIMARY_REPO_ROOT when set, else
-#   the product's validated primary; it must be a primary checkout (a real .git
-#   directory without commondir, with objects, refs and a valid HEAD), and a set
-#   LEARN_UKRAINIAN_STATE_ROOT must name that same directory. A release snapshot
+#   the product's validated primary. A product with a .git entry must resolve
+#   to a primary, and the anchor must be one: both pass _project_hook_git_layout.
+#   A set LEARN_UKRAINIAN_STATE_ROOT must name the anchor. A release snapshot
 #   (no .git) therefore needs an explicit anchor.
 project_hook_roots_resolve() {
     local root="${1-${LU_PRODUCT_ROOT:-${CLAUDE_PROJECT_DIR:-}}}"
-    local primary state_root state_config head=""
+    local primary state_root state_config
     if [[ -z "$root" ]]; then
         root="$(pwd -P)" || return 1
         while [[ ! -e "$root/.git" && ! -L "$root/.git" ]]; do
@@ -306,21 +328,14 @@ project_hook_roots_resolve() {
     fi
     [[ "$root" = /* && -d "$root" ]] || return 1
     primary="$(project_primary_root_resolve "$root")" || return 1
+    # A product with a .git entry must resolve to a real primary, whatever
+    # anchor is configured: an empty or stray .git directory would otherwise
+    # make the product its own primary and its .venv the interpreter.
+    if [[ -e "$root/.git" || -L "$root/.git" ]]; then
+        _project_hook_git_layout "$primary" || return 1
+    fi
     state_root="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
-    [[ "$state_root" = /* && -d "$state_root/.git" && ! -L "$state_root/.git" ]] || return 1
-    [[ ! -e "$state_root/.git/commondir" && ! -L "$state_root/.git/commondir" ]] || return 1
-    # Git's own repository test, as repo_root._is_primary_git_layout applies it
-    # (stricter here: a symlinked HEAD refuses): objects, refs and a valid HEAD.
-    [[ -d "$state_root/.git/objects" && -d "$state_root/.git/refs" ]] || return 1
-    [[ -f "$state_root/.git/HEAD" && ! -L "$state_root/.git/HEAD" ]] || return 1
-    IFS= read -r head < "$state_root/.git/HEAD" || true
-    case "$head" in
-        ref:*)
-            head="${head#ref:}"
-            [[ "${head#"${head%%[![:space:]]*}"}" = refs/* ]] || return 1
-            ;;
-        *) [[ "$head" =~ ^[0-9a-fA-F]{40}([0-9a-fA-F]{24})?$ ]] || return 1 ;;
-    esac
+    [[ "$state_root" = /* ]] && _project_hook_git_layout "$state_root" || return 1
     state_root="$(cd -P "$state_root" 2>/dev/null && pwd)" || return 1
     if [[ -n "${LEARN_UKRAINIAN_STATE_ROOT:-}" ]]; then
         [[ "$LEARN_UKRAINIAN_STATE_ROOT" = /* ]] || return 1

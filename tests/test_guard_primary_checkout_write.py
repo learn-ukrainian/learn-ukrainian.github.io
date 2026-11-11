@@ -243,8 +243,8 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)
     result = subprocess.run(
-        [sys.executable, str(guard_copy)],
-        input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
+        [sys.executable, "-I", "-S", str(guard_copy)],
+        input=json.dumps({"tool_name": "Bash", "tool_input": {"command": "tee AGENTS.md"}}),
         text=True,
         capture_output=True,
         check=False,
@@ -319,7 +319,10 @@ def test_leading_redirect_cannot_hide_primary_cd(repo: Path, tmp_path: Path, red
     )
     assert oracle.returncode == 0, oracle.stderr
     assert oracle.stdout.strip() == str(target)
-    result = _run(tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}})
+    result = _run(
+        tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}},
+        protected_root=repo,
+    )
     assert result.returncode == (2 if primary else 0), result.stderr
 
 
@@ -481,13 +484,15 @@ def outside_dir() -> Iterator[Path]:
         shutil.rmtree(path)
 
 
-def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    repo: Path, payload: dict, env_extra: dict[str, str] | None = None, *, protected_root: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
-        patch.object(hook, "_protected_repo_anchor", return_value=repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=protected_root or repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),

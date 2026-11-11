@@ -1220,7 +1220,7 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         if implementation == "installed":
             from lu_machinery.agent_runtime.agy_hook_config import native_hook_command
             return ["/bin/bash", "-c", native_hook_command(mode)]
-        if mode == "agy-secret-print":
+        if mode in {"agy-secret-print", "agy-primary-write"}:
             from scripts.agent_runtime.agy_hook_config import native_hook_command
             return ["/bin/bash", "-c", native_hook_command(mode)]
         if mode.startswith("codex-"):
@@ -1235,22 +1235,40 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         planted.parent.mkdir(parents=True)
         planted.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(sentinel))}\nprintf '%s\\n' '{{\"decision\":\"allow\"}}'\n")
         planted.chmod(0o755)
+        commands = [("printf safe", False), ("echo $OPENAI_API_KEY", True)]
+        commands.extend(
+            (shlex.join([str(primary / ".venv/bin/python"), "-I", "-m", name, "worker-env", "--all"]), True)
+            for name in ("lu_machinery.session_supervisor",)
+        )
+        legacy_worker_env = shlex.join([
+            str(primary / ".venv/bin/python"), "-I", "-m", "scripts.session_supervisor", "worker-env", "--all",
+        ])
         for root_env in ({}, {"LU_PRODUCT_ROOT": str(worktree)}):
-            for text, decision in [("printf safe", "allow"), ("echo $OPENAI_API_KEY", "deny")]:
+            for text, blocked in [*commands, (legacy_worker_env, True)]:
                 payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": text}}}
                 result = run(native("agy-secret-print"), payload, extra=root_env)
                 assert result.returncode == 0, result.stderr
                 answer = json.loads(result.stdout)
-                assert answer["decision"] == decision, result
-                if decision == "deny":
+                assert answer["decision"] == ("deny" if blocked else "allow"), result
+                if blocked:
                     assert "BLOCKED by guard-secret-print" in answer["reason"]
                     assert "unavailable" not in answer["reason"]
-            for text, expected in [("printf safe", 0), ("echo $OPENAI_API_KEY", 2)]:
+            for target, blocked in [(worktree / "README.md", False), (primary / "README.md", True)]:
+                payload = {"cwd": str(worktree), "toolCall": {"name": "write_file", "args": {"Path": str(target)}}}
+                result = run(native("agy-primary-write"), payload, extra=root_env)
+                assert result.returncode == 0, result
+                if blocked:
+                    answer = json.loads(result.stdout)
+                    assert answer["decision"] == "deny" and "worktree" in answer["reason"], result
+                    assert "HOOK-BOOTSTRAP-FAILED" not in answer["reason"]
+                else:
+                    assert result.stdout == "", result
+            for text, blocked in commands:
                 payload = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "cwd": str(worktree),
                            "tool_input": {"command": text, "workdir": str(worktree)}}
                 result = run(native("codex-pre-tool-use"), payload, extra=root_env)
-                assert result.returncode == expected, result
-                if expected:
+                assert result.returncode == (2 if blocked else 0), f"{shlex.split(text)[-4:]}: {result}"
+                if blocked:
                     assert "BLOCKED by guard-secret-print" in result.stderr
             assert not sentinel.exists(), "a worktree-controlled interpreter executed"
         admin = Path((worktree / ".git").read_text().strip().removeprefix("gitdir: "))
@@ -1268,10 +1286,14 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         assert not sentinel.exists()
         (admin / "gitdir").write_text(backlink)
     elif defect_class == "S2":
-        overlay = json.loads((REPO_ROOT / "agents_extensions/agy/hooks.json").read_text())
+        raw_overlay = (REPO_ROOT / "agents_extensions/agy/hooks.json").read_bytes()
+        overlay = json.loads(raw_overlay)
+        product_overlay = worktree / "agents_extensions/agy/hooks.json"
+        product_overlay.parent.mkdir(parents=True)
+        product_overlay.write_bytes(raw_overlay)
         path = worktree / ".agents/hooks.json"
         path.parent.mkdir()
-        path.write_text(json.dumps(overlay))
+        path.write_bytes(raw_overlay)
         code = (f"from pathlib import Path; from {prefix}.agent_runtime.agy_hook_config import check_hook_config; "
                 f"r=check_hook_config((Path({str(path)!r}),)); print(r.status); raise SystemExit(0 if r.passed else 2)")
         command = module("agent_runtime.agy_hook_config")
@@ -1283,12 +1305,28 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
             command = [str(primary / ".venv/bin/python"), "-I", "-c", code]
         result = run(command)
         assert (result.returncode, result.stdout.strip()) == (0, "PASS"), result
+        preflight_code = (f"from pathlib import Path; from {prefix}.agent_runtime.agy_hook_config import require_dispatch_guards; "
+                          f"require_dispatch_guards(Path({str(worktree)!r}),Path({str(tmp_path)!r})); print('PASS')")
+        if implementation == "source":
+            preflight_code = f"import sys; sys.path.insert(0,{str(worktree)!r}); " + preflight_code
+        preflight = [str(primary / ".venv/bin/python"), "-I", "-c", preflight_code]
+        result = run(preflight)
+        assert (result.returncode, result.stdout.strip()) == (0, "PASS"), result
+        assert path.read_bytes() == raw_overlay, "startup rewrote the raw deployment"
         original = overlay["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"]
         for tampered in [original + " ; true", original.replace("/bin/bash", "/bin/sh", 1),
                          '"/bin/bash" -c "$(printf bypass)" lu-machinery-hook-v1 agy-secret-print']:
             overlay["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"] = tampered
             path.write_text(json.dumps(overlay))
             assert run(command).returncode == 2
+        overlay["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]["command"] = original
+        primary_hook = overlay["primary-checkout-write-guard"]["PreToolUse"][0]["hooks"][0]
+        primary_hook["command"] += " ; true"
+        path.write_text(json.dumps(overlay))
+        invalid_overlay = path.read_bytes()
+        result = run(preflight)
+        assert result.returncode != 0 and "primary_guard_mismatch" in result.stderr, result
+        assert path.read_bytes() == invalid_overlay, "startup repaired an invalid existing guard"
     elif defect_class == "S3":
         state = primary / ".claude/infra-epic/DRIVER-STATE.md"
         state.parent.mkdir(parents=True)
@@ -1337,13 +1375,16 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         notice = json.loads(result.stdout)["injectSteps"][0]["ephemeralMessage"]
         assert "PENDING ORDERS: 2" in notice and "unknown" not in notice, result
         assert BODY_MARKER not in result.stdout
+        writer = worktree / "audit-writer.sh"
+        writer.write_text(f"#!/bin/bash\ncd -- {shlex.quote(str(primary))}\nprintf fixture >created-by-call.txt\n")
         payload = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "cwd": str(worktree),
-                   "session_id": "e3a-fixture", "tool_use_id": "call-1", "tool_input": {"command": "printf safe"}}
+                   "session_id": "e3a-fixture", "tool_use_id": "call-1", "tool_input": {"command": "bash audit-writer.sh"}}
         from lu_machinery.common.repo_root import machinery_path
         audit = machinery_path("agents_extensions/shared/hooks/audit-primary-checkout-dirt.py") if implementation == "installed" else REPO_ROOT / "agents_extensions/shared/hooks/audit-primary-checkout-dirt.py"
         before = run([str(primary / ".venv/bin/python"), "-I", str(audit)], payload)
         assert before.returncode == 0, before.stderr
-        (primary / "created-by-call.txt").write_text("fixture\n")
+        effect = run(["/bin/bash", "-c", payload["tool_input"]["command"]])
+        assert effect.returncode == 0, effect
         payload["hook_event_name"] = "PostToolUse"
         result = run(native("codex-post-tool-use"), payload)
         assert result.returncode == 2, result
@@ -1356,7 +1397,7 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         record = records[0][1]
         assert record["session_id"] == "e3a-fixture"
         assert record["tool_use_id"] == "call-1"
-        assert record["command"] == "printf safe"
+        assert record["command"] == "bash audit-writer.sh"
         assert record["primary_root"] == str(primary)
     elif defect_class == "S5":
         relative = tmp_path / "relative-python"
@@ -1373,7 +1414,7 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
                              ({"LEARN_UKRAINIAN_PYTHON": str(tmp_path / "missing")}, worktree),
                              ({"LU_PRODUCT_ROOT": str(tmp_path / "missing")}, worktree),
                              ({"LEARN_UKRAINIAN_PYTHON": str(no_wheel / "bin/python")}, worktree), ({}, outside)]:
-            for mode in ["agy-secret-print", "agy-pretool-hook", "codex-pre-tool-use"]:
+            for mode in ["agy-secret-print", "agy-primary-write", "agy-pretool-hook", "codex-pre-tool-use"]:
                 # The generated boundary validates interpreter selection before
                 # Python starts; source generation must carry identical bytes.
                 if implementation == "source":

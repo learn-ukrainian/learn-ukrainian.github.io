@@ -138,6 +138,13 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
+    # The tracked hook resolves the fixture primary's interpreter before using
+    # its launcher. Keep the real shared Python environment behind that path.
+    fixture_python = root / ".venv/bin/python"
+    fixture_python.parent.mkdir(parents=True)
+    fixture_python.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
+    fixture_python.chmod(0o755)
+    _write(root, ".gitignore", "/.venv/\n")
     from tests.githooks import install_message_scanner
 
     install_message_scanner(root)
@@ -4533,7 +4540,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     shim = push_repo / "scripts/agent_runtime/shims/git"
     shim.parent.mkdir(parents=True)
     shutil.copy2(REPO_ROOT / "scripts/agent_runtime/shims/git", shim)
-    (push_repo / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)
     _commit(push_repo, "install the agent push entry point", "scripts/agent_runtime/shims/git")
     chained = subprocess.run(
         [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
