@@ -1401,6 +1401,7 @@ class _Boundary:
             self.receipt["sources"] = self.relay.evidence()
         if self.egress is not None:
             self.receipt["egress"] = list(self.egress.records)
+            self.receipt["egress_overflow_count"] = self.egress.overflow_count
         if self.fixture is not None:
             with contextlib.suppress(FileNotFoundError):
                 self.fixture.unlink()
