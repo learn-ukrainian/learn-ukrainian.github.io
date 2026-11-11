@@ -4140,7 +4140,7 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
 
 
-def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
+def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations=False):
     """Native envelope shared only by the granted Muse protocol cases."""
     from scripts.agent_runtime.adapters.base import InvocationPlan
 
@@ -4169,16 +4169,30 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
 
     event("runtime.command.accepted", {"kind": "command_accepted", "command_kind": "turn.submit"})
     event("session.run.linked", {})
+    if observations:
+        event("run.model.configured", {"kind": "run_model_configured", "model_id": model, "provider_id": "meta"})
     event("session.workspace_branch.observed", {
         "record": {"command_id": command, "workspace_root": str(tmp_path)},
     })
     event("run.lifecycle.started", {})
     event("task.stream.linked", {"task_id": task, "task_stream": {"kind": "task", "id": task}})
     for stage in ("proposed", "accepted", "scheduled", "side_effect_intent", "started", "completed"):
+        task_event = {"task_id": task, "kind": stage}
+        if observations and stage == "side_effect_intent":
+            task_event.update(operation="tool:read_file", idempotency_key="tool:call_fixture")
         event(f"task.lifecycle.{stage}", {
-            "task_id": task, "task_stream": {"kind": "task", "id": task},
-            "event": {"task_id": task, "kind": stage},
+            "task_id": task, "task_stream": {"kind": "task", "id": task}, "event": task_event,
         })
+        if observations and stage == "started":
+            for kind, detail in (("status", {"message": "reading"}),
+                                 ("output", {"chunk": "fixture file text", "final_result": True})):
+                event(f"task.lifecycle.{kind}", {
+                    "kind": "task_lifecycle", "task_id": task, "task_stream": {"kind": "task", "id": task},
+                    "event": {"task_id": task, "kind": kind, **detail},
+                })
+    if observations:
+        event("tool.result", {"kind": "tool_result", "call_id": "call_fixture", "text": "fixture file text",
+                              "correlation_facts": {"outcome": "success", "tool_name": "read_file"}})
     event("run.usage", {
         "kind": "run_usage", "children_included": False, "failed_calls": 0, "cancelled_calls": 0,
         "calls": 1, "completed_calls": 1,
@@ -4196,11 +4210,40 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
 
     from scripts.agent_runtime.adapters.muse import MuseAdapter
 
-    plan, records = _muse_stream_fixture(tmp_path, model)
-    result = MuseAdapter().parse_response(
-        stdout="\n".join(json.dumps(record) for record in records),
+    # Legacy and Muse 1.4.15 observation shapes, qualified from the synthetic
+    # native exec capture. MSP notifications are not the exec contract.
+    for observations in (False, True):
+        plan, records = _muse_stream_fixture(tmp_path, model, observations=observations)
+        result = MuseAdapter().parse_response(
+            stdout="\n".join(json.dumps(record) for record in records),
+            stderr="", returncode=0, output_file=None, plan=plan,
+        )
+        assert result.ok is True
+        assert result.response == "READY\n"
+        assert result.tokens == 120
+    import copy
+
+    for kind, field, value in (
+        ("run.model.configured", "model_id", "foreign-model"),
+        ("task.lifecycle.status", "message", None),
+        ("task.lifecycle.output", "final_result", 1),
+        ("tool.result", "call_id", "foreign-call"),
+    ):
+        invalid = copy.deepcopy(records)
+        payload = next(r["payload"] for r in invalid if r["payload_type"] == kind)
+        (payload["event"] if kind.startswith("task.") else payload)[field] = value
+        rejected = MuseAdapter().parse_response(
+            stdout="\n".join(json.dumps(record) for record in invalid),
+            stderr="", returncode=0, output_file=None, plan=plan,
+        )
+        assert rejected.ok is False
+        assert rejected.tokens is None
+    unknown = copy.deepcopy(records)
+    unknown[2]["payload_type"] = "future.unknown"
+    assert MuseAdapter().parse_response(
+        stdout="\n".join(json.dumps(record) for record in unknown),
         stderr="", returncode=0, output_file=None, plan=plan,
-    )
+    ).ok is False
 
     assert result.ok is True
     assert result.response == "READY\n"

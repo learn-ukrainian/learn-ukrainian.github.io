@@ -49,6 +49,8 @@ _PASSIVE_EVENTS = frozenset(
         "task.lifecycle.side_effect_intent",
         "task.lifecycle.started",
         "task.lifecycle.completed",
+        "task.lifecycle.status",
+        "task.lifecycle.output",
     }
 )
 
@@ -470,8 +472,10 @@ class MuseAdapter:
             session = plan.metadata["provider_session_id"]
             UUID(str(session))
             command = None
-            linked = started = False
+            linked = started = configured = False
             tasks: dict[str, str | None] = {}
+            tool_intents: dict[str, tuple[str, str]] = {}
+            tool_results: set[str] = set()
             usage = terminal = workspace = None
             sequences: dict[tuple[str, str], int] = {}
             ids: set[str] = set()
@@ -553,13 +557,47 @@ class MuseAdapter:
                             "side_effect_intent": "scheduled", "started": "side_effect_intent",
                             "completed": "started",
                         }
-                        if stage not in previous or tasks[task] != previous[stage]:
-                            raise ValueError("muse_task_order_invalid")
-                        tasks[task] = stage
+                        if stage in {"status", "output"}:
+                            if payload.get("kind") != "task_lifecycle" or tasks[task] != "started" or (
+                                stage == "status" and not isinstance(event.get("message"), str)
+                            ) or (
+                                stage == "output" and (
+                                    not isinstance(event.get("chunk"), str) or type(event.get("final_result")) is not bool
+                                )
+                            ):
+                                raise ValueError("muse_task_observation_invalid")
+                        else:
+                            if stage not in previous or tasks[task] != previous[stage]:
+                                raise ValueError("muse_task_order_invalid")
+                            tasks[task] = stage
+                        if stage == "side_effect_intent" and str(event.get("operation", "")).startswith("tool:"):
+                            tool_name = event["operation"].removeprefix("tool:")
+                            intent = event.get("idempotency_key", "")
+                            if tool_name not in _TOOLS[mode] or not isinstance(intent, str) or not intent.startswith("tool:"):
+                                raise ValueError("muse_tool_binding_invalid")
+                            call = intent.removeprefix("tool:")
+                            if not call or call in tool_intents:
+                                raise ValueError("muse_tool_binding_invalid")
+                            tool_intents[call] = (task, tool_name)
                 if kind == "session.workspace_branch.observed":
                     if workspace is not None or payload["record"]["command_id"] != command:
                         raise ValueError("muse_workspace_changed")
                     workspace = payload["record"]["workspace_root"]
+                elif kind == "run.model.configured":
+                    if (configured or started or payload.get("kind") != "run_model_configured"
+                            or payload.get("model_id") != plan.metadata["model"] or payload.get("provider_id") != "meta"):
+                        raise ValueError("muse_model_configuration_invalid")
+                    configured = True
+                elif kind == "tool.result":
+                    call = payload.get("call_id")
+                    if not isinstance(call, str) or call not in tool_intents or call in tool_results:
+                        raise ValueError("muse_tool_binding_invalid")
+                    task, tool_name = tool_intents[call]
+                    if (tasks[task] != "completed" or payload.get("kind") != "tool_result"
+                            or not isinstance(payload.get("text"), str)
+                            or payload.get("correlation_facts") != {"outcome": "success", "tool_name": tool_name}):
+                        raise ValueError("muse_tool_binding_invalid")
+                    tool_results.add(call)
                 elif kind == "run.usage":
                     if (
                         usage is not None
