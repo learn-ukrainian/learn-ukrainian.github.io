@@ -485,10 +485,9 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     result = _launch(
         root, env, _runtime_wrapper(wrapper, runtime), *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC)
     )
-    if wrapper == "start-cursor-driver.sh" and runtime == "checkout":
-        # No approved Cursor pin (GROK-CANCEL-1110): the checkout's launcher refuses its retired
-        # seat pin before any scope, lease or provider start. The installed release keeps its
-        # pin until the machinery twin of this change lands.
+    if wrapper == "start-cursor-driver.sh":
+        # Both checkout and installed release refuse the retired Cursor pin before any
+        # scope, lease or provider start (GROK-CANCEL-1110).
         assert result.returncode == 2, result.stdout + result.stderr
         assert "model 'grok-4.7-high' is retired in the model catalog" in result.stderr
         assert _lines(env["FAKE_STARTS"]) == []

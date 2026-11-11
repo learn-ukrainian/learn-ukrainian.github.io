@@ -226,9 +226,6 @@ flag against the index; all other stores exist only in the local `data/` directo
 | --- | --- | --- |
 | `docs/research/INVESTIGATION_9_VS_10_SCORE_REQUIREMENTS.md` | core-quality | Dated 2026-07-23, no banner; whether the review gate it discusses still applies is unverified. |
 | `docs/dispatch-briefs/luna-max-closeout-contract.md` | infra-harness | Reusable brief fragment; whether the Luna closeout contract still matches current routing is unverified. |
-| `docs/dispatch-briefs/qg-bakeoff-claude-1x17-sweep.md` | core-quality | Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified. |
-| `docs/dispatch-briefs/qg-bakeoff-gemini-1x17-sweep.md` | core-quality | Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified. |
-| `docs/dispatch-briefs/qg-bakeoff-gpt-1x17-sweep.md` | core-quality | Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified. |
 | `docs/plans/MASTER_ENGINEERING_ROADMAP.md` | infra-harness | July 2026 roadmap with no confirmed status or tracking issue. |
 | `docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md` | open-model-data | July 2026 spec; its relation to the retired fine-tuning guides is unconfirmed. |
 | `docs/plans/primary-text-acquisition-hosting-system.md` | corpus-channels | No status line; whether it is the plan of record for primary-text hosting is unverified. |
@@ -246,7 +243,6 @@ flag against the index; all other stores exist only in the local `data/` directo
 | `docs/bio-epic/phase-4-wiki-queue.md` | seminars-bio | Queue says to update status per merged wiki but last changed 2026-06-04; not checked against wiki state. |
 | `docs/bio-epic/phase-2-sequence-allocation.yaml` | seminars-bio | No consumer found; whether the allocation is still driven is unverified. |
 | `docs/playbooks/anti-hallucination-review-protocol.md` | infra-harness | April 2026 portable protocol; relation to current exact-head review rules unstated. |
-| `docs/reference/folk-micro-genres.md` | seminars-folk | Harvested proverbs and riddles are unverified against sources (a sibling audit found fabricated proverbs). |
 | `docs/folk-epic/folk-wiki-compile-grounding-register-gap.md` | seminars-folk | Own status 'OPEN finding' (2026-06-12); closure unverified. |
 | `docs/folk-epic/phase-folk-queue.md` | seminars-folk | Stage-0 queue (2026-06-06); whether still driven is unverified. |
 | `docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md` | hramatka | Header calls it the master roadmap (2026-07-24, #5699) but states no draft or accepted status, and no tracked file links to it. |
@@ -315,8 +311,8 @@ The remaining 29 `active` hits were each read and are false positives: "proposal
 field or in prose (19, including ten open-model-data contracts, prompts and receipts), "WIP" caps and a
 WIP commit (2), an `Original status: DRAFT` line (1), lesson-contract history (1), an ADR
 template listing every status (1), and approved, accepted or deferred records that
-quote the original proposal (5). The one `draft` path without a marker,
-`docs/rules-core-draft-notes.md`, says "draft" in its title and is kept draft. The Hramatka
+quote the original proposal (5). The one `draft` path without a marker
+(a draft rules-core notes file) has since been removed. The Hramatka
 roadmap, previously draft by family default, has no draft evidence and is now residual; its
 family stays draft on the strength of `lesson-document-v1.md` ("Status: DRAFT").
 
