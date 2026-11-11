@@ -118,6 +118,7 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
     review_task_id_comparison_keys,
 )
+from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
@@ -2584,12 +2585,20 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
         raise RecordError("RED_TEAM_REFUSED: task ledger unavailable") from exc
 
 
+def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
+    """Resolve the native review holder and its own runtime attestations."""
+    catalog = load_model_catalog()
+    holder = resolve_routing_reference({"role": "legacy_reviewers", "seat": "xai_reviewer"}, catalog)
+    return holder, catalog["models"][holder].get("runtime_model_ids", [])
+
+
 def _require_formal_reviewer(
     *,
     cursor: bool,
     reported: object,
     model: str,
     family: str,
+    native_grok: bool = False,
     review_context: Mapping[str, Any] | None = None,
 ) -> None:
     """Refuse a verdict from an identity the reviewer resolver never selects (#9488).
@@ -2597,15 +2606,17 @@ def _require_formal_reviewer(
     Through Cursor only a pinned formal seat counts, and only when the runtime
     reported its display name (``"Grok 4.7 256K High"``): a bare or other-variant
     slug (``grok-4.7``, ``grok-4.7-high-fast``) attests no variant, and Composer,
-    Auto and Cursor-routed Claude are unpinned. Grok (GROK-CANCEL-1110) and Kimi
-    are retired and never review.
+    Auto and Cursor-routed Claude are unpinned. Native Grok requires an attested
+    runtime model (operator decision 2026-10-05, #9769); Kimi never reviews.
     On every harness the model must also
     hold a catalog review role (#9583), so Fable and retired models never approve.
     """
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
     else:
-        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES
+        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (
+            native_grok and model == _native_grok_reviewer_identity()[0]
+        )
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
     # #9583: a model the catalog gives no review role never approves, on any harness.
@@ -2622,16 +2633,22 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     if any(task.get(key) for key in ("trial_label", "trial_role", "trial_qualified_task")):
         raise RecordError("MODEL_ROLE_TRIAL_REFUSED: a trial never supplies review of record")
     cursor = task.get("agent") == "cursor"
-    if task.get("agent") in {"grok", "grok-build"}:
-        raise RecordError("native Grok reviewer refused: Grok is retired (GROK-CANCEL-1110)")
-    reported = task.get("resolved_model") if cursor else task.get("model")
+    native_grok = task.get("agent") in {"grok", "grok-build"}
+    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
     if cursor and task.get("resolved_model_known") is not True:
         raise RecordError("Cursor reviewer model unknown")
     source = task.get("resolved_model_source")
     if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
         raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
+        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
     # Only Cursor's runtime reports display names; record its catalog id.
     model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
+    if native_grok:
+        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
+        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
+            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
+        model = holder
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)
@@ -2642,6 +2659,7 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
         reported=reported,
         model=model,
         family=family,
+        native_grok=native_grok,
         review_context={
             "review_mode": task.get("review_mode"),
             "review_profile": task.get("review_profile"),

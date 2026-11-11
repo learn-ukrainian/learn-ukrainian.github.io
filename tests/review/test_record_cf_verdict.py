@@ -601,8 +601,7 @@ def test_detached_review_refuses_wrong_pr_identity(monkeypatch, tmp_path, pr, re
     ({"worktree_base_sha": None}, {"google"}, "reviewed SHA"),
     ({"pinned_head": "b" * 40}, {"google"}, "conflicts with pinned head"),
     ({"pinned_head": "a" * 7}, {"google"}, "conflicts with pinned head"),
-    # Grok is retired (GROK-CANCEL-1110): a native Grok review is refused before attestation.
-    ({"agent": "grok", "model": "grok-4.7"}, {"google"}, "native Grok reviewer refused: Grok is retired"),
+    ({"agent": "grok", "model": "grok-4.7"}, {"google"}, "unattested"),
     ({"review_risk": "critical", "model": "claude-sonnet-5-5", "agent": "claude"},
      {"google"}, "not qualified"),
     ({}, {"openai"}, "equals an author family"),

@@ -282,7 +282,7 @@ def test_a_runtime_attested_cursor_identity_the_resolver_never_selects_is_refuse
     ],
 )
 def test_a_grok_or_kimi_verdict_through_any_other_harness_is_refused(monkeypatch, tmp_path, agent, model, extra):
-    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown|native Grok reviewer refused: Grok is retired"):
+    with pytest.raises(recorder.RecordError, match=r"reviewer model unknown|native Grok reviewer model unattested"):
         _record(monkeypatch, tmp_path, resolved_model=model, agent=agent, **extra)
 
 
