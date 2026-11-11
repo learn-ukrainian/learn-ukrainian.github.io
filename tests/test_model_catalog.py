@@ -1150,3 +1150,11 @@ def test_driver_brief_population_follows_catalog_capabilities():
     catalog["models"]["claude-haiku-5-5"]["roles"].append("bounded_implementation")
     catalog["models"]["claude-haiku-5-5"]["lifecycle"] = "hold"
     assert driver_brief_models(catalog) == {"gpt-6-luna"}
+
+
+@pytest.mark.parametrize("model", ["gemini-4-argon-xhigh", "gemini-4-carbon-max", "claude-opus-5-5-low"])
+def test_agy_admission_refuses_unattestable_catalog_variants(model):
+    """Defect class: generic catalog variants launch on AGY without an attestable selector."""
+    assert canonical_model_id(model) is not None
+    with pytest.raises(ValueError, match="not an AGY selector"):
+        checks.check_model_admission("agy", model, "workspace-write", {}, b"implement the brief")

@@ -159,6 +159,15 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
         if agent == "cursor" and is_cursor_auto_selector(model):
             return
         raise ValueError(unknown_model_refusal(model))
+    if agent == "agy":
+        from scripts.dispatcher.providers.agy import _agy_model_ids, transport_model
+
+        # Generic effort suffixes can resolve to a catalog model that AGY cannot attest.
+        listed = _agy_model_ids()
+        if transport_model(model) not in listed:
+            names = sorted(name for name in listed if canonical_model_id(name, catalog) == identity)
+            raise ValueError(f"model {model!r} is not an AGY selector the model catalog lists for "
+                             f"{identity}; listed: {', '.join(names) or 'none'}")
     if not catalog["models"][identity].get("red_team_only"):
         # Review typing is the one dispatch role admission infers: every review flag, --risk,
         # --review-mode, --language-lane, the subject selectors and a review research role.
