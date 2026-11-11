@@ -18,6 +18,7 @@ from scripts.review.model_catalog import (
     ModelCatalogError,
     bounded_execution_policy,
     cursor_pinned_models,
+    load_model_catalog,
     validate_catalog,
 )
 from scripts.review.role_resolution import expand_routing_references, resolve_routing_reference
@@ -99,22 +100,18 @@ def test_one_holder_edit_moves_all_consumer_references(seat, new_id):
         assert result["formal_cf_defaults"]["codex"]["model_id"] == new_id
         assert result["review_scheduler"]["endpoints"]["codex"]["models"] == [new_id]
         assert result["budget_substitution_models"]["codex"][old_id] == new_id
-    if seat == "xai_reviewer":
-        assert cursor_pinned_models(result)[0] == new_id
-        assert result["review_scheduler"]["endpoints"]["cursor"]["models"] == [new_id]
     if seat == "anthropic_authority":
         # D-129 (#10464): no Claude model reviews through Cursor, so Opus has no Cursor substitution row.
-        assert not {old_id, new_id} & set(result["budget_substitution_models"]["cursor"])
+        assert not {old_id, new_id} & set(result["budget_substitution_models"].get("cursor", {}))
     if seat == "bounded_worker":
         assert bounded_execution_policy(result).bounded_worker_model_id == new_id
     if seat == "google_bounded":
         assert result["orchestrator_seats"]["agy"]["model_id"] == new_id
         assert result["orchestrator_seats"]["agy"]["escalate_model_id"] == new_id
         assert result["formal_cf_defaults"]["agy"]["model_id"] == new_id
-    assert (
-        resolve_routing_reference({"role": "legacy_reviewers", "seat": "xai_reviewer"}, result)
-        == result["orchestrator_seats"]["cursor"]["model_id"]
-    )
+    # The xai_reviewer seat and the Cursor seat it pinned retired with Grok (GROK-CANCEL-1110).
+    assert "cursor" not in result["orchestrator_seats"]
+    assert cursor_pinned_models(result) == ()
 
 
 @pytest.mark.parametrize(
@@ -173,47 +170,50 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
 
 
 def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
-    from tests.review.test_model_catalog import CURRENT_BASELINE as APPROVED_BASELINE
-    from tests.review.test_model_catalog import with_advisory_roles
-
-    catalog = with_advisory_roles(APPROVED_BASELINE["catalog"])
+    # The approved Cursor allowlist is empty since Grok retired (GROK-CANCEL-1110); injecting an
+    # active Cursor model, its review candidate and an allowlisted seat must not widen it.
+    catalog = deepcopy(load_model_catalog())
     new_id = "grok-99"
-    catalog["models"][new_id] = deepcopy(catalog["models"]["grok-4.7"])
-    catalog["models"][new_id]["aliases"] = []
-    candidate = deepcopy(catalog["review_candidates"]["grok-4.7-cursor-fallback"])
-    candidate["model_id"] = new_id
-    candidate["invocation"] = candidate["invocation"].replace("grok-4.7", new_id)
-    catalog["review_candidates"][new_id] = candidate
-    catalog["orchestrator_seats"]["cursor"]["auto_allowlist"].append(new_id)
+    model = deepcopy(catalog["models"]["grok-4.7"])
+    model.update(
+        aliases=[], lifecycle="active", transports=["cursor"],
+        routing_wire_ids={"cursor": new_id + "-high"}, roles=["coding", "critical_review"],
+    )
+    model.pop("retirement_reason", None)
+    model.pop("runtime_model_ids", None)
+    catalog["models"][new_id] = model
+    catalog["review_candidates"][new_id] = {
+        "model_id": new_id, "route": "cursor", "transport": "cursor",
+        "invocation": f".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {new_id}-high",
+        "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["critical_review"],
+    }
+    catalog["orchestrator_seats"]["cursor"] = {
+        "model_id": new_id, "effort": "high", "escalate_model_id": "gpt-6.1-sol", "escalate_effort": "high",
+        "escalate_when": "deep_single_shot_or_architecture", "auto_allowlist": [new_id],
+        "auto_scope": "write_implementation_dispatch_with_green_dor",
+        "attestation_rule": "driver_of_record_requires_attested_resolved_model",
+        "unknown_auto_family_resolution": "cursor_family", "unknown_auto_union_families": ["xai"],
+    }
     with pytest.raises(ModelCatalogError, match="auto_allowlist must equal exactly"):
         validate_catalog(catalog)
 
 
-def test_verdict_recorder_follows_rotated_holder_and_own_runtime_ids(monkeypatch):
-    from scripts.review import model_catalog, record_cf_verdict
+def test_verdict_recorder_refuses_every_retired_grok_reviewer_identity():
+    # The native Grok holder this recorder followed retired with every Grok model (GROK-CANCEL-1110).
+    from scripts.review import record_cf_verdict
 
-    raw = raw_catalog()
-    new_id = "grok-99"
-    replacement = deepcopy(raw["models"]["grok-4.7"])
-    replacement["aliases"] = []
-    replacement["runtime_model_ids"] = [new_id + "-build"]
-    replacement["routing_wire_ids"] = {
-        transport: new_id + ("-high" if transport == "cursor" else "")
-        for transport in replacement["routing_wire_ids"]
-    }
-    raw["models"][new_id] = replacement
-    raw["seats"]["xai_reviewer"]["model_id"] = new_id
-    catalog = validate_catalog(raw)
-    monkeypatch.setattr(record_cf_verdict, "load_model_catalog", lambda: catalog)
-    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: catalog)
-    assert record_cf_verdict._native_grok_reviewer_identity() == (new_id, [new_id + "-build"])
-    record_cf_verdict._require_formal_reviewer(
-        cursor=False, reported=new_id + "-build", model=new_id, family="xai", native_grok=True
-    )
-    with pytest.raises(record_cf_verdict.RecordError, match="not a formal reviewer"):
-        record_cf_verdict._require_formal_reviewer(
-            cursor=False, reported="grok-4.7-build", model="grok-4.7", family="xai", native_grok=True
-        )
+    for agent in ("grok", "grok-build"):
+        task = {
+            "agent": agent, "model": "grok-4.7", "resolved_model": "grok-4.7-build",
+            "resolved_model_known": True, "resolved_model_source": "grok-model-usage",
+        }
+        with pytest.raises(record_cf_verdict.RecordError, match="native Grok reviewer refused: Grok is retired"):
+            record_cf_verdict.reviewer_identity(task)
+    for reported, model in (("grok-4.7-build", "grok-4.7"), ("Grok 4.7 256K High", "grok-4.7")):
+        with pytest.raises(record_cf_verdict.RecordError, match="not a formal reviewer"):
+            record_cf_verdict._require_formal_reviewer(cursor=False, reported=reported, model=model, family="xai")
+        with pytest.raises(record_cf_verdict.RecordError, match="not a formal reviewer"):
+            record_cf_verdict._require_formal_reviewer(cursor=True, reported=reported, model=model, family="xai")
 
 
 @pytest.mark.parametrize(

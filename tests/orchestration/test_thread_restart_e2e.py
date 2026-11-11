@@ -1338,7 +1338,8 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
 @pytest.mark.parametrize(
     ("first_provider", "second_provider", "first_model", "second_model"),
     (
-        ("grok", "codex", "grok-4.7", "gpt-6.1-sol"),
+        # The grok-4.7 row was dropped: every Grok model is retired (GROK-CANCEL-1110), so a Grok
+        # driver pinned to it never reaches its provider.
         ("claude", "codex", "claude-fable-5-1", "gpt-6.1-sol"),
     ),
 )

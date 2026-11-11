@@ -504,9 +504,10 @@ def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_
         ("claude",), model="claude-opus-5-5", review_facts=facts, **trusted, claude_account=HOST_ACCOUNT
     )
     assert scoped.recipient == "claude"
+    # A third-family seat (Google; Grok is retired, GROK-CANCEL-1110) is refused for a mixed-family branch.
     with pytest.raises(ReviewAdmissionRefused, match="mixed-family review requires"):
         resolve_and_admit(
-            ("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted, claude_account=HOST_ACCOUNT
+            ("agy",), model="gemini-3.8-flash-high", review_facts=lambda: facts, **trusted, claude_account=HOST_ACCOUNT
         )
 
     # The recorder reaches the same verdicts on the same facts.
@@ -515,7 +516,7 @@ def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_
     )
     with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
         recorder._require_qualified_reviewer(
-            facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+            facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
         )
 
 

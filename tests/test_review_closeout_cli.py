@@ -283,21 +283,24 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 
 @pytest.mark.parametrize("injected_grok", [False, True])
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
+    from dataclasses import replace
+
     from scripts.review import reviewer_resolver
 
     # The adapter path raises either requested risk to critical, so inject
     # Grok into the effective ladder that the resolver actually walks.
     risk = "high" if injected_grok else "medium"
     if injected_grok:
-        # Subject exclusion must still refuse a caller-supplied Grok ladder;
-        # automatic ladders list only the attested Cursor Grok seat (#9488).
+        # Grok retired (GROK-CANCEL-1110) and has no candidate: a caller-supplied
+        # rung restoring the former Cursor Grok seat must still be refused.
+        restored = replace(
+            reviewer_resolver.REVIEW_CANDIDATES["openai_frontier"],
+            name="grok-4.7-cursor-fallback", concrete_model="grok-4.7", family="xai", route="cursor", transport="cursor",
+        )
         monkeypatch.setitem(
             reviewer_resolver.REVIEW_LADDERS,
             "critical",
-            (
-                *reviewer_resolver.REVIEW_LADDERS["critical"],
-                (reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,),
-            ),
+            (*reviewer_resolver.REVIEW_LADDERS["critical"], (restored,)),
         )
     state_file = tmp_path / "state.json"
     proc = _run_cli(
@@ -321,13 +324,11 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         assert {entry["name"] for entry in grok_entries} == {"grok-4.7-cursor-fallback"}
         for grok in grok_entries:
             assert grok["status"] == "excluded"
-            assert "subject exclusion" in grok["reason"]
-            assert "grok_build.py" in grok["reason"]
+            assert "is retired" in grok["reason"]
     else:
-        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
-        assert grok_entries[0]["status"] == "excluded"
-        assert "subject exclusion" in grok_entries[0]["reason"]
-        assert "grok_build.py" in grok_entries[0]["reason"]
+        # The automatic ladders list no Grok seat at all.
+        assert grok_entries == []
+    assert payload["selected"] is None or payload["selected"]["family"] != "xai"
     selected = payload["selected"]
     assert selected is None or selected["family"] not in {"openai", "xai"}
     assert proc.returncode == (1 if selected is None else 0)
@@ -1095,17 +1096,18 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "cannot partition a commit authored by both families" in body["fail_closed_reason"]
 
 
-# Re-pinned for the added b-sub trace/advisory row; every other receipt field is unchanged.
+# Re-pinned for the added b-sub trace/advisory row, then for GROK-CANCEL-1110: each receipt only
+# drops its retired grok-4.7-cursor-fallback trace row; every other field is unchanged.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "a98c84f5ee425271460b56334404a6a23a1151c2ef8ee970a3efeb93028757bc"),
-        ("claude-opus-5-5", "low", "ordinary.py", "6f682db78cc0e58e84a0845e718327df2704a22e3b313ab409657e86c4bbc103"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "3ef1b5e5e38272f51b4813eff0fa38e2019dbfe3143d5a6362bf07d69ff9ecc6"),
+        ("claude-opus-5-5", "low", "ordinary.py", "91c9fff9a1e9206c124b48016a08de47e41246d471c02ec3c553fc0be2e04cba"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "38c2b1c6a728246c3fdeade34fa141381bde4a0617b50f0cfed7cddcd0c2df6d",
+            "37fd748851cb622b86adff843cd98ef3fda46c8dc363b54af472603bafbc8dd8",
         ),
     ],
 )

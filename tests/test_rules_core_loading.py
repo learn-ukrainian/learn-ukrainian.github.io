@@ -335,7 +335,9 @@ LAUNCHER_ROWS = (
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
     ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
-    ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
+    # No cursor-driver row: Cursor has no approved model pin while Grok is retired
+    # (GROK-CANCEL-1110), so its launcher refuses every model before the core is read;
+    # tests/test_start_cursor_launcher.py pins that refusal.
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
 )
@@ -559,6 +561,9 @@ def test_acp_discussion_without_the_core_refuses_before_admission(
                 task_id="task-core",
                 correlation_id="corr-core",
                 idempotency_key="idem-core",
+                # The default pair names the retired grok seat (GROK-CANCEL-1110), which is refused
+                # before the core check; name active seats so the core gate is what refuses.
+                participants=("codex", "claude"),
             )
         count = controller.conn.execute("SELECT COUNT(*) FROM acp_conversation_events").fetchone()[0]
     finally:
@@ -601,6 +606,14 @@ def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core
         build()
 
 
+def _stand_in_cursor_pin(monkeypatch: pytest.MonkeyPatch) -> str:
+    """Install a stand-in approved Cursor pin: none is approved while Grok is retired (GROK-CANCEL-1110)."""
+    pin = "stand-in-cursor-pin-high"
+    monkeypatch.setattr("scripts.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({pin}))
+    monkeypatch.setattr("scripts.review.model_catalog.cursor_pinned_models", lambda catalog=None: (pin,))
+    return pin
+
+
 def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
@@ -614,8 +627,9 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
     # Binary lookup is the shared resolver on the bridge module.
     monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
+    pin = _stand_in_cursor_pin(monkeypatch)
     with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
-        _cursor._invoke_cursor("hello", "grok-4.7-high")
+        _cursor._invoke_cursor("hello", pin)
     with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
         _opencode._run_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
@@ -644,11 +658,12 @@ def test_conflicting_core_prefix_refuses_before_transport_spawn(who: str, monkey
 
     monkeypatch.setattr(_cursor.subprocess, "run", spawn)
     monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
+    pin = _stand_in_cursor_pin(monkeypatch)
     monkeypatch.setattr(_opencode.shutil, "which", lambda _name: "/stub/opencode")
     conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
     with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
         if who == "ask-cursor":
-            _cursor._invoke_cursor(conflict, "grok-4.7-high")
+            _cursor._invoke_cursor(conflict, pin)
         else:
             _opencode._run_opencode(conflict, "deepseek/deepseek-flash")
 

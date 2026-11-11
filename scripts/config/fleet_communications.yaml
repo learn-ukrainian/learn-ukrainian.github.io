@@ -95,7 +95,7 @@ endpoints:
     # parent supplies a validated exact-head MCP config. Native and Cursor
     # Grok are code/infra reviewers at every risk with runtime attestation
     # and cross-family eligibility (#9769).
-    formal_review_eligible: true
+    formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: kimi
     aliases: [kimi]
@@ -123,7 +123,7 @@ endpoints:
     # on review_scheduler.endpoints.cursor (grok-4.7 dispatched as grok-4.7-high,
     # its verdict accepted only from the runtime-reported model; #9488). Cursor
     # auto, Composer and Cursor-routed Claude are never formal review identities.
-    formal_review_eligible: true
+    formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: gemini
     aliases: [gemini]

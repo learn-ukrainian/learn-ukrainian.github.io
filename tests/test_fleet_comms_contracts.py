@@ -38,16 +38,16 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
     assert by_name["claude"].formal_review_eligible is True
     assert by_name["codex"].formal_review_eligible is True
     assert "glm-local" not in by_name
-    assert by_name["grok"].formal_review_eligible is True
-    # #9488: Cursor is formal only for the models the catalog pins on its
-    # review endpoint (grok-4.7, runtime-attested); Auto and Composer never.
-    assert by_name["cursor"].formal_review_eligible is True
+    # Grok is retired (GROK-CANCEL-1110), and Cursor pins no review model (#9488):
+    # neither endpoint is formal review.
+    assert by_name["grok"].formal_review_eligible is False
+    assert by_name["cursor"].formal_review_eligible is False
 
     for name in ("agy", "gemini", "kimi"):
         assert name in by_name, f"missing registry endpoint: {name}"
         assert by_name[name].formal_review_eligible is False, name
 
-    for name, eligible in (("agy", False), ("cursor", True)):
+    for name, eligible in (("agy", False), ("cursor", False)):
         endpoint, resolved = registry.resolve(name)
         assert resolved == name
         assert endpoint.state == "live"

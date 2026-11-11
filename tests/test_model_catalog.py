@@ -41,7 +41,7 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 @pytest.mark.parametrize("seat,route,launcher,agent,model,effort", [
     ("openai_frontier", "native", "dispatch.py", "codex", "gpt-6.1-sol", "high"),
-    ("xai_reviewer", "cursor_fallback", "dispatch.py", "cursor", "grok-4.7-high", None),
+    ("anthropic_authority", "agy", "dispatch.py", "agy", "claude-opus-5-5", None),
     ("anthropic_authority", "native", "dispatch.py", "claude", "claude-opus-5-5", None),
     ("anthropic_practical", "native", "dispatch.py", "claude", "claude-sonnet-5-5", None),
     ("mechanical_worker", "native", "dispatch.py", "claude", "claude-haiku-5-5", "high"),
@@ -72,10 +72,10 @@ def test_runtime_model_ids_require_nonempty_strings(value):
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("runtime", ["grok-4.7-build-fast", "grok-4.7-build-FAST", "grok-4.7-fast-high", "grok-4.7_build_fast"])
+@pytest.mark.parametrize("runtime", ["claude-sonnet-5-5-fast", "claude-sonnet-5-5-FAST", "claude-sonnet-fast-high", "claude_sonnet_5_5_fast"])
 def test_review_runtime_model_ids_reject_fast_variants(runtime):
     catalog = deepcopy(load_model_catalog())
-    catalog["models"]["grok-4.7"]["runtime_model_ids"] = [runtime]
+    catalog["models"]["claude-sonnet-5-5"]["runtime_model_ids"] = [runtime]
     with pytest.raises(ModelCatalogError, match="must not admit fast review variants"):
         validate_catalog(catalog)
 
@@ -94,18 +94,18 @@ def test_runtime_substitution_matches_only_requested_model_ids(requested, runtim
     assert runtime_model_matches_requested(requested, runtime) is expected
 
 
-@pytest.mark.parametrize("roles", [[], ["not-a-role"], ["standard_review"]])
+@pytest.mark.parametrize("roles", [[], ["not-a-role"], ["critical_review"]])
 def test_candidate_suitability_roles_must_be_nonempty_and_held(roles):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["suitability_roles"] = roles
+    catalog["review_candidates"]["muse"]["suitability_roles"] = roles
     with pytest.raises(ModelCatalogError, match="suitability_roles"):
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("primary", ["unknown", "openai_frontier", "grok-4.7-cursor-fallback"])
+@pytest.mark.parametrize("primary", ["unknown", "openai_frontier", "claude-sonnet-5-5-agy"])
 def test_transport_fallback_must_reference_primary_of_same_model(primary):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["transport_fallback_for"] = primary
+    catalog["review_candidates"]["claude-sonnet-5-5-agy"]["transport_fallback_for"] = primary
     with pytest.raises(ModelCatalogError, match="transport_fallback_for"):
         validate_catalog(catalog)
 
@@ -261,7 +261,7 @@ def test_fable_holds_no_review_or_advisory_role():
         assert all(c["model_id"] != model_id for c in catalog["review_candidates"].values())
         assert model_id not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
         assert model_id not in catalog["formal_cf_defaults"]["claude"]["family_models"]
-        assert model_id not in catalog["budget_substitution_models"]["cursor"]
+        assert model_id not in catalog["budget_substitution_models"].get("cursor", {})
     for risk, ladder in catalog["review_ladders"].items():
         assert not any(name.startswith("claude-fable") for rung in ladder for name in rung), risk
 
@@ -350,10 +350,11 @@ def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candida
         validate_catalog(broken)
 
 
-def test_risk_reviewer_models_names_sol_opus_grok_at_high():
-    """Critical eligibility uses critical_review without another allowlist."""
+def test_risk_reviewer_models_names_sol_and_opus_at_high():
+    """Critical eligibility uses critical_review without another allowlist; retired Grok is not named (GROK-CANCEL-1110)."""
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["risk_reviewer_models"] == {"high": ["gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"]}
+    assert catalog["review_scheduler"]["risk_reviewer_models"] == {"high": ["gpt-6.1-sol", "claude-opus-5-5"]}
+    assert risk_reviewer_refusal("grok-4.7", "high", catalog) is not None
     assert risk_reviewer_refusal("claude-opus-5-5-high", "high", catalog) is None
     assert risk_reviewer_refusal("gpt-6.1-sol", "HIGH", catalog) is None
     assert "performed only by" in risk_reviewer_refusal("claude-sonnet-5-5", "high", catalog)
@@ -410,39 +411,69 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.7-cursor-fallback"]["transport"] = "native_claude"
+    broken["review_candidates"]["claude-opus-5-5"]["transport"] = "native_codex"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 
 
-def test_catalog_rejects_cursor_orchestrator_without_allowlist():
-    broken = deepcopy(load_model_catalog())
+# GROK-CANCEL-1110: the live catalog has no Cursor seat (its only pin, grok-4.7, is retired).
+# The seat validator still guards a future operator-approved pin, so these cases install one
+# simulated approved pin and its seat, then mutate that seat.
+_SIMULATED_CURSOR_PIN = "gpt-6.1-sol"
+
+
+def _cursor_seat(pin: str, family: str) -> dict:
+    return {
+        "model_id": pin,
+        "effort": "high",
+        "escalate_model_id": "gpt-6.1-sol",
+        "escalate_effort": "high",
+        "escalate_when": "deep_single_shot_or_architecture",
+        "auto_allowlist": [pin],
+        "auto_scope": "write_implementation_dispatch_with_green_dor",
+        "attestation_rule": "driver_of_record_requires_attested_resolved_model",
+        "unknown_auto_family_resolution": "cursor_family",
+        "unknown_auto_union_families": [family],
+    }
+
+
+def _catalog_with_approved_cursor_pin(monkeypatch, pin: str = _SIMULATED_CURSOR_PIN) -> dict:
+    from scripts.review import model_catalog as model_catalog_module
+
+    monkeypatch.setattr(model_catalog_module, "_cursor_role_pins", lambda _catalog: (pin,))
+    catalog = deepcopy(load_model_catalog())
+    catalog["orchestrator_seats"]["cursor"] = _cursor_seat(pin, catalog["models"][pin]["family"])
+    return catalog
+
+
+def test_catalog_rejects_cursor_orchestrator_without_allowlist(monkeypatch):
+    broken = _catalog_with_approved_cursor_pin(monkeypatch)
     del broken["orchestrator_seats"]["cursor"]["auto_allowlist"]
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist"):
         validate_catalog(broken)
 
 
-def test_catalog_rejects_cursor_orchestrator_foreign_allowlist_entry():
+def test_catalog_rejects_cursor_orchestrator_foreign_allowlist_entry(monkeypatch):
     # Reviewer mutation (a): adding kimi-code/k3 to allowlist must fail
-    broken = deepcopy(load_model_catalog())
+    broken = _catalog_with_approved_cursor_pin(monkeypatch)
     broken["orchestrator_seats"]["cursor"]["auto_allowlist"].append("kimi-code/k3")
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist must equal exactly"):
         validate_catalog(broken)
 
-    broken_foreign = deepcopy(load_model_catalog())
+    broken_foreign = _catalog_with_approved_cursor_pin(monkeypatch)
     broken_foreign["orchestrator_seats"]["cursor"]["auto_allowlist"] = ["grok-4.6", "claude-sonnet-5"]
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist must equal exactly"):
         validate_catalog(broken_foreign)
 
 
-def test_catalog_rejects_cursor_orchestrator_without_or_weakened_attestation_rule():
-    broken = deepcopy(load_model_catalog())
+def test_catalog_rejects_cursor_orchestrator_without_or_weakened_attestation_rule(monkeypatch):
+    broken = _catalog_with_approved_cursor_pin(monkeypatch)
     del broken["orchestrator_seats"]["cursor"]["attestation_rule"]
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.attestation_rule"):
         validate_catalog(broken)
 
     # Reviewer mutation (b): replacing attestation_rule with driver_of_record_allows_unknown must fail
-    broken_weak = deepcopy(load_model_catalog())
+    broken_weak = _catalog_with_approved_cursor_pin(monkeypatch)
     broken_weak["orchestrator_seats"]["cursor"]["attestation_rule"] = "driver_of_record_allows_unknown"
     with pytest.raises(
         ModelCatalogError,
@@ -451,15 +482,16 @@ def test_catalog_rejects_cursor_orchestrator_without_or_weakened_attestation_rul
         validate_catalog(broken_weak)
 
 
-def test_cursor_orchestrator_auto_resolves_to_cursor_family():
-    catalog = load_model_catalog()
-    cursor_seat = catalog["orchestrator_seats"]["cursor"]
-    assert cursor_seat["unknown_auto_family_resolution"] == "cursor_family"
-    assert cursor_seat["unknown_auto_union_families"] == ["xai"]
-    assert cursor_seat["auto_allowlist"] == ["grok-4.7"]
-    models = catalog["models"]
+def test_cursor_orchestrator_auto_resolves_to_cursor_family(monkeypatch):
+    live = load_model_catalog()
+    assert "cursor" not in live["orchestrator_seats"]
+    models = live["models"]
     assert models["grok-4.6"]["family"] == "xai"
     assert models["composer-2.5"]["family"] == "moonshot"
+    catalog = _catalog_with_approved_cursor_pin(monkeypatch)
+    cursor_seat = catalog["orchestrator_seats"]["cursor"]
+    validate_catalog(catalog)
+    assert cursor_seat["unknown_auto_family_resolution"] == "cursor_family"
 
     # Reject missing unknown_auto_family_resolution
     broken_missing_res = deepcopy(catalog)
@@ -483,7 +515,7 @@ def test_cursor_orchestrator_auto_resolves_to_cursor_family():
 
     # Reject mismatched unknown_auto_union_families (e.g. wrong family or missing family)
     broken_mismatched_fams = deepcopy(catalog)
-    broken_mismatched_fams["orchestrator_seats"]["cursor"]["unknown_auto_union_families"] = ["openai", "moonshot"]
+    broken_mismatched_fams["orchestrator_seats"]["cursor"]["unknown_auto_union_families"] = ["xai", "moonshot"]
     with pytest.raises(
         ModelCatalogError,
         match=r"orchestrator_seats\.cursor\.unknown_auto_union_families must match allowlist model families",
@@ -492,23 +524,26 @@ def test_cursor_orchestrator_auto_resolves_to_cursor_family():
 
 
 @pytest.mark.parametrize("model_id", ["auto", "Auto", "cursor:auto", "grok-4.7-fast", "grok-4.6", "kimi-code/k3"])
-def test_catalog_rejects_cursor_orchestrator_without_concrete_allowlisted_pin(model_id: str):
-    broken = deepcopy(load_model_catalog())
+def test_catalog_rejects_cursor_orchestrator_without_concrete_allowlisted_pin(model_id: str, monkeypatch):
+    broken = _catalog_with_approved_cursor_pin(monkeypatch)
     broken["orchestrator_seats"]["cursor"]["model_id"] = model_id
     with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be a concrete pin"):
         validate_catalog(broken)
 
 
-def test_catalog_accepts_each_allowlisted_cursor_orchestrator_pin():
-    for model_id in ("grok-4.7",):
-        catalog = deepcopy(load_model_catalog())
-        catalog["orchestrator_seats"]["cursor"]["model_id"] = model_id
-        validate_catalog(catalog)
+def test_catalog_accepts_each_allowlisted_cursor_orchestrator_pin(monkeypatch):
+    # The live allowlist is empty: the retired Grok seat no longer validates (GROK-CANCEL-1110).
+    historical = deepcopy(load_model_catalog())
+    historical["orchestrator_seats"]["cursor"] = _cursor_seat("grok-4.7", "xai")
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_allowlist must equal exactly \[\]"):
+        validate_catalog(historical)
+    # An approved pin and its seat validate.
+    validate_catalog(_catalog_with_approved_cursor_pin(monkeypatch))
 
 
 @pytest.mark.parametrize("scope", [None, "any", "driver_seat"])
-def test_catalog_rejects_cursor_orchestrator_missing_or_widened_auto_scope(scope: str | None):
-    broken = deepcopy(load_model_catalog())
+def test_catalog_rejects_cursor_orchestrator_missing_or_widened_auto_scope(scope: str | None, monkeypatch):
+    broken = _catalog_with_approved_cursor_pin(monkeypatch)
     if scope is None:
         del broken["orchestrator_seats"]["cursor"]["auto_scope"]
     else:
@@ -553,16 +588,28 @@ def test_is_cursor_auto_selector(model: str | None, expected: bool):
         ("claude-opus-5-5", "cursor_model_not_approved"),
     ],
 )
-def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str):
-    refusal = cursor_non_dispatch_model_refusal(model)
+def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str, monkeypatch):
+    # Live catalog: Cursor has no approved pin, so every model is refused with that typed reason.
+    live = cursor_non_dispatch_model_refusal(model)
+    assert live is not None
+    assert "(cursor_no_approved_model_pin)" in live
+    # With an approved pin the finer typed refusals still apply.
+    catalog = _catalog_with_approved_cursor_pin(monkeypatch)
+    refusal = cursor_non_dispatch_model_refusal(model, catalog)
     assert refusal is not None
     assert f"({code})" in refusal
-    assert "pin grok-4.7" in refusal
+    assert f"pin {_SIMULATED_CURSOR_PIN}" in refusal
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
-def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
-    assert cursor_non_dispatch_model_refusal(model) is None
+def test_cursor_non_dispatch_model_refusal_refuses_the_retired_grok_pins(model: str, monkeypatch):
+    refusal = cursor_non_dispatch_model_refusal(model)
+    assert refusal is not None
+    assert "(cursor_no_approved_model_pin)" in refusal
+    # Even with another approved pin, a retired Grok id is not an approved Cursor pin.
+    catalog = _catalog_with_approved_cursor_pin(monkeypatch)
+    assert "(cursor_model_not_approved)" in cursor_non_dispatch_model_refusal(model, catalog)
+    assert cursor_non_dispatch_model_refusal(_SIMULATED_CURSOR_PIN, catalog) is None
 
 
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():
@@ -573,7 +620,11 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
     with pytest.raises(ModelCatalogError, match="references retired model"):
         validate_catalog(broken_ep)
+    # The live Cursor endpoint is not formal (no approved pin, GROK-CANCEL-1110); making it
+    # formal without a pin must fail.
+    assert load_model_catalog()["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] is False
     unpinned_ep = deepcopy(load_model_catalog())
+    unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
     with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor needs an explicit models pin"):
         validate_catalog(unpinned_ep)
@@ -802,15 +853,16 @@ def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, exp
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
-    """#8855: GPT-6 stays native Codex. D-129 (#10464): Opus has no Cursor substitution row."""
+    """#8855: GPT-6 stays native Codex. D-129 (#10464): Opus has no Cursor substitution row.
+
+    GROK-CANCEL-1110: the Cursor row held only retired Grok, so Cursor has no substitution row.
+    """
     catalog = load_model_catalog()
     table = catalog["budget_substitution_models"]
-    assert "gpt-6.1-sol" not in table["cursor"]
-    assert "claude-opus-5-5" not in table["cursor"]
-    assert "claude-fable-5-1" not in table["cursor"]
+    assert "cursor" not in table
     assert table["codex"]["gpt-6.1-sol"] == "gpt-6.1-sol"
     broken = deepcopy(catalog)
-    broken["budget_substitution_models"]["cursor"]["gpt-6.1-sol"] = "gpt-6.1-sol"
+    broken["budget_substitution_models"]["cursor"] = {"gpt-6.1-sol": "gpt-6.1-sol"}
     with pytest.raises(ModelCatalogError, match=r"gpt-6\.1-sol"):
         validate_catalog(broken)
 
@@ -829,7 +881,7 @@ def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
     assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
 
 
-@pytest.mark.parametrize("model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "grok-4.7", "auto"])
+@pytest.mark.parametrize("model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "claude-opus-5-5", "auto"])
 def test_retired_model_refusal_admits_non_retired_ids(model):
     assert retired_model_refusal(model) is None
 
@@ -914,7 +966,7 @@ def test_reviewer_invocation_rejects_malformed_shell_quoting():
 @pytest.mark.parametrize("model", ["grok-4.6", "unknown-model", ""])
 def test_orchestrator_seat_rejects_unroutable_fallback_model(model):
     catalog = deepcopy(load_model_catalog())
-    catalog["orchestrator_seats"]["grok"]["fallback_model_id"] = model
+    catalog["orchestrator_seats"]["claude"]["fallback_model_id"] = model
     with pytest.raises(ModelCatalogError, match="fallback_model_id"):
         validate_catalog(catalog)
 
@@ -991,9 +1043,9 @@ def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, 
     elif reference == "family":
         catalog["formal_cf_defaults"]["claude"]["family_models"].append(model)
     elif reference == "substitution_source":
-        catalog["budget_substitution_models"]["cursor"][model] = "grok-4.7"
+        catalog["budget_substitution_models"]["codex"][model] = "gpt-6.1-sol"
     else:
-        catalog["budget_substitution_models"]["cursor"]["grok-4.7"] = model
+        catalog["budget_substitution_models"]["codex"]["gpt-6.1-sol"] = model
     with pytest.raises(ModelCatalogError):
         validate_catalog(catalog)
 
@@ -1019,9 +1071,9 @@ def test_deepseek_flash_catalog_class_is_opencode_execution_only():
         elif reference == "endpoint":
             changed["review_scheduler"]["endpoints"]["claude"]["models"].append(model)
         elif reference == "substitution_source":
-            changed["budget_substitution_models"]["cursor"][model] = "grok-4.7"
+            changed["budget_substitution_models"]["codex"][model] = "gpt-6.1-sol"
         else:
-            changed["budget_substitution_models"]["cursor"]["grok-4.7"] = model
+            changed["budget_substitution_models"]["codex"]["gpt-6.1-sol"] = model
         with pytest.raises(ModelCatalogError, match=r"DeepSeek|does not admit"):
             validate_catalog(changed)
 
@@ -1102,7 +1154,8 @@ def test_sol_defaults_and_escalations_use_high_across_catalog():
                 visit(child, f"{path}[{index}]")
 
     visit(load_model_catalog(), "catalog")
-    assert len(bindings) == 8
+    # Seven bindings since the Cursor seat (escalation to Sol) retired with Grok (GROK-CANCEL-1110).
+    assert len(bindings) == 7
 
 
 def test_live_claude_caller_defaults_are_active_catalog_models():
@@ -1116,16 +1169,16 @@ def test_live_claude_caller_defaults_are_active_catalog_models():
 
 def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["last_resort"] = True
-    catalog["review_ladders"]["critical"] = [["grok-4.7-cursor-fallback"], ["claude-opus-5-5"]]
+    catalog["review_candidates"]["claude-sonnet-5-5"]["last_resort"] = True
+    catalog["review_ladders"]["medium"] = [["claude-sonnet-5-5"], ["claude-opus-5-5"]]
     with pytest.raises(ModelCatalogError, match="improves quality in a later rung"):
         validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
-def test_grok_cannot_repeat_in_any_code_review_ladder(risk):
+def test_a_candidate_cannot_repeat_in_any_code_review_ladder(risk):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_ladders"][risk].append(["grok-4.7-cursor-fallback"])
+    catalog["review_ladders"][risk].append(["claude-opus-5-5"])
     with pytest.raises(ModelCatalogError, match="repeats candidate"):
         validate_catalog(catalog)
 

@@ -90,16 +90,14 @@ def test_authorities_have_one_native_holder_per_family():
 
 
 def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
-    """Opus has native and AGY review routes, and neither uses Cursor."""
+    """Opus has native and AGY review routes, and neither uses Cursor.
+
+    No review seat uses Cursor: its only pin, grok-4.7, retired (GROK-CANCEL-1110).
+    """
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
-    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
-    assert catalog["models"]["grok-4.7"]["routing_wire_ids"] == {
-        "native_grok": "grok-4.7", "cursor": "grok-4.7-high",
-    }
-    assert cursor.wire_id == "grok-4.7-high"
-    assert not cursor.exclusion_reasons
-    assert cursor.argv[-1] == cursor.wire_id
-    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"].get("last_resort", False) is False
+    assert all(row.exclusion_reasons for row in result.candidates)
+    assert "xai_reviewer" not in catalog["seats"]
+    assert "routing_wire_ids" not in catalog["models"]["grok-4.7"]
     opus_routes = resolve_role("anthropic_authority_reviewer", purpose="launch", transport="cursor").candidates
     assert [(row.wire_id, row.transport, row.exclusion_reasons) for row in opus_routes] == [
         ("claude-opus-5-5", "native_claude", ("transport_mismatch",)),
@@ -119,7 +117,6 @@ def test_launch_explicitly_pins_current_review_models():
     launched = resolve_role("legacy_reviewers", purpose="launch")
     assert {row.model_id for row in launched.candidates} == {
         "gpt-6.1-sol",
-        "grok-4.7",
         "claude-opus-5-5",
         "claude-sonnet-5-5",
         "gemini-3.8-flash-high",
@@ -199,13 +196,14 @@ def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
         assert ("isolation_required" in opus.exclusion_reasons) == (opus.route_name == "agy")
     result = resolve_role("legacy_reviewers", purpose="inspect", family="openai", context={
         "required_capabilities": ["unsupported"], "isolation_required": True,
-        "excluded_seats": ["xai_reviewer"], "excluded_families": ["xai"],
+        "excluded_seats": ["anthropic_practical"], "excluded_families": ["anthropic"],
         "pinned_model": "gpt-6.1-sol",
     })
-    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
+    (sonnet_agy,) = (row for row in result.candidates
+                     if row.seat == "anthropic_practical" and row.route_name == "agy")
     assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
-            "required_capability_missing", "explicit_pin_mismatch"} <= set(cursor.exclusion_reasons)
-    assert "isolation_required" in cursor.exclusion_reasons
+            "required_capability_missing", "explicit_pin_mismatch"} <= set(sonnet_agy.exclusion_reasons)
+    assert "isolation_required" in sonnet_agy.exclusion_reasons
 
 
 def test_risk_roles_use_existing_hard_gate_evidence():
@@ -341,17 +339,17 @@ def test_duplicate_routes_labels_and_missing_legacy_coverage(catalog):
     with pytest.raises(ModelCatalogError, match="duplicate expanded routes"):
         validate_catalog(catalog)
     catalog = deepcopy(load_model_catalog())
-    catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["legacy_name"] = "openai_frontier"
+    catalog["seats"]["anthropic_practical"]["routes"]["agy"]["legacy_name"] = "openai_frontier"
     with pytest.raises(ModelCatalogError, match="legacy receipt labels"):
         validate_catalog(catalog)
     catalog = deepcopy(load_model_catalog())
-    del catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["legacy_name"]
+    del catalog["seats"]["anthropic_practical"]["routes"]["agy"]["legacy_name"]
     with pytest.raises(ModelCatalogError, match="cover every legacy"):
         validate_catalog(catalog)
 
 
 def test_moving_last_resort_or_any_legacy_routing_value_is_rejected(catalog):
-    catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["last_resort"] = True
+    catalog["seats"]["anthropic_practical"]["routes"]["agy"]["last_resort"] = True
     with pytest.raises(ModelCatalogError, match="changes the legacy candidate"):
         validate_catalog(catalog)
 

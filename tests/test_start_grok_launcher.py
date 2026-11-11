@@ -32,10 +32,12 @@ def test_grok_explicit_retired_model_is_refused() -> None:
     assert "--model grok-4.5" not in result.stdout
 
 
-def test_grok_explicit_certified_model_still_pins() -> None:
+def test_grok_explicit_former_pin_is_refused() -> None:
+    """Every Grok model is retired (GROK-CANCEL-1110): the former pin grok-4.7 no longer launches."""
     result = run_launcher("start-grok.sh", "--model", "grok-4.7")
-    assert result.returncode == 0, result.stderr
-    assert "--model grok-4.7" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "model 'grok-4.7' is retired in the model catalog" in result.stderr
+    assert "--model grok-4.7" not in result.stdout
 
 
 def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:

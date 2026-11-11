@@ -22,7 +22,6 @@ MODELS = {
     "agy": "gemini-3.8-flash-high",
     "claude": "claude-sonnet-5-5",
     "codex": "gpt-6.1-sol",
-    "cursor": "grok-4.7-high",
     "muse": "muse-wonder-full-1.0",
 }
 
@@ -83,10 +82,7 @@ def task(route: str, head: str, **changes: object) -> dict:
         "result_sha256": hashlib.sha256(RECEIPT.encode()).hexdigest(),
     }
     # The providers that attest the model from their own stream, as the live records show.
-    if route == "cursor":
-        record.update(resolved_model="Grok 4.7 256K High", resolved_model_known=True,
-                      resolved_model_source="cursor-stream-json")
-    elif route == "agy":
+    if route == "agy":
         record.update(resolved_model=MODELS["agy"], resolved_model_known=True, resolved_model_source="agy-stream-json")
     record.update(changes)
     return record
@@ -104,15 +100,16 @@ def write_all(root: Path, head: str) -> None:
 
 def test_routes_come_from_the_catalog_and_an_empty_list_blocks(repo, monkeypatch: pytest.MonkeyPatch) -> None:
     root, head = repo
-    # Muse is required too: the catalog, not the issue text, names the routes.
-    assert canary.required_routes() == ("agy", "claude", "codex", "cursor", "muse")
+    # Muse is required too: the catalog, not the issue text, names the routes. Cursor is not: it has
+    # no formal review pin while Grok is retired (GROK-CANCEL-1110).
+    assert canary.required_routes() == ("agy", "claude", "codex", "muse")
     monkeypatch.setattr(canary, "_formal_candidates", lambda: {})
     assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: reviewer routes unavailable"
 
 
 def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> None:
     root, head = repo
-    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: agy,claude,codex,cursor,muse"
+    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: agy,claude,codex,muse"
     write_all(root, head)
     (canary.receipt_root(root) / head / "muse.json").unlink()
     assert canary.refusal([CONTRACT_FILE], head, root) == "missing: muse"
@@ -135,6 +132,7 @@ def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> Non
         ({"dispatcher_code": {"head": "f" * 40, "clean": True}}, "candidate's clean dispatcher"),
         ({"dispatcher_code": None}, "candidate's clean dispatcher"),
         ({"agent": "kimi"}, "not a required reviewer route"),
+        ({"agent": "cursor"}, "not a required reviewer route"),
         ({"model": "claude-fable-5-1"}, "not a formal reviewer"),
         ({"language_lane": True}, "did not settle through the receipt gate"),
         ({"dispatcher_code_start": {"root": "/other", "head": "f" * 40, "clean": True}}, "candidate's clean dispatcher"),
@@ -151,8 +149,6 @@ def test_record_refuses_a_task_that_is_not_canary_evidence(repo, changes: dict, 
 @pytest.mark.parametrize(
     ("route", "changes"),
     [
-        ("cursor", {"resolved_model": "Claude Fable 5.1"}),
-        ("cursor", {"resolved_model_known": False}),
         ("agy", {"resolved_model": "claude-fable-5-1"}),
         ("agy", {"resolved_model_known": False}),
     ],

@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import sys
-import time
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -96,58 +95,23 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
             raise recorder.RecordError("synthetic stop before forge")
 
         monkeypatch.setattr(recorder, "_pr", stop_before_forge)
-        reason = "synthetic stop before forge" if known else "Cursor reviewer model unknown"
+        # The attested Grok model passes attestation and is then refused as a reviewer: Grok is retired
+        # (GROK-CANCEL-1110). An unattested run is refused as unknown.
+        reason = r"'grok-4\.7' is not a formal reviewer" if known else "Cursor reviewer model unknown"
         with pytest.raises(recorder.RecordError, match=reason):
             recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
 
 
-@pytest.mark.parametrize("attested", [True, False])
-def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_attestation(sandbox, attested):
-    """Defect (#12014): a running Cursor author's PR was unreviewable until its task exited."""
-    binary_dir = sandbox.repo.parent / "bin"
-    binary_dir.mkdir()
-    release = sandbox.tasks / "cursor.release"
-    # An unattested run names its model only where no attestation is read: a self-declared claim.
-    first = ({"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"} if attested
-             else {"type": "assistant", "model": "Grok 4.7 256K High", "content": "I am Grok 4.7 256K High"})
-    result = {"type": "result", "subtype": "success", "result": "done"}
-    executable = binary_dir / "cursor-agent"
-    executable.write_text(
-        f"#!{sys.executable}\nimport pathlib, sys, time\nsys.stdin.read()\nprint({json.dumps(first)!r}, flush=True)\n"
-        f"while not pathlib.Path({str(release)!r}).exists():\n    time.sleep(0.02)\nprint({json.dumps(result)!r})\n"
-    )
-    executable.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
+def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_attestation(sandbox):
+    """Defect (#12014): a running Cursor author's PR was unreviewable until its task exited.
+
+    Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110), so no Cursor
+    author can start: its former pin is refused before spawn. Restore the stream-attestation
+    check when the operator approves a new Cursor pin.
+    """
     author = sandbox.cli("dispatch", "--agent", "cursor", "--model", "grok-4.7-high", "--prompt", "Author a change",
-                         "--mode", "workspace-write").stdout.splitlines()
-    await_file(sandbox.tasks / "logs" / f"{author[0]}.stdout.log", ready=lambda content: content.endswith("\n"))
-    if attested:
-        await_file(sandbox.tasks / f"{author[0]}.json", ready=lambda content: json.loads(content)["resolved_model_known"])
-    else:
-        time.sleep(0.5)  # several observer polls: an unattested stream must stay unattested
-    running = json.loads(sandbox.cli("status", author[0]).stdout)
-    assert running["status"] == "running"
-    assert (running["resolved_model"], running["resolved_model_known"], running["resolved_model_source"]) == (
-        ("Grok 4.7 256K High", True, "cursor-stream-json") if attested else ("unknown", False, "pending"))
-    sandbox.review_models("echo")
-    head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
-                   f"authored change\n\nX-Agent: cursor/{author[0]}")
-    run_git(sandbox.repo, "branch", "review-source", head)
-    run_git(sandbox.repo, "push", "origin", "review-source")
-    review = sandbox.cli(
-        "dispatch", "--agent", "sol", "--model", "echo", "--prompt",
-        '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},"findings":[]}',
-        "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
-        expected=0 if attested else 2,
-    )
-    if attested:
-        assert sandbox.settle(review.stdout.splitlines())["status"] == "done"
-    else:
-        assert "AUTHOR_UNRESOLVED" in review.stderr
-    release.touch()
-    settled = sandbox.settle(author, expected=1)
-    assert settled["resolved_model_known"] is attested
+                         "--mode", "workspace-write", expected=2)
+    assert "is retired in the model catalog" in author.stderr
 
 
 def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
