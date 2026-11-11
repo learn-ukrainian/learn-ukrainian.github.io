@@ -39,8 +39,10 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
             ("agy-tools", "agy"),
         ):
             require_execution_model(defaults[lane]["model"], transport=transport)
+    # Grok retired (GROK-CANCEL-1110): both writer lanes' Grok defaults are refused, never admitted.
     for lane, transport in (("grok-tools", "native_grok"), ("cursor-tools", "cursor")):
-        require_execution_model(linear_pipeline.WRITER_DEFAULTS[lane]["model"], transport=transport)
+        with pytest.raises(ValueError, match=r"is retired in the model catalog \(grok-4\.7\)"):
+            require_execution_model(linear_pipeline.WRITER_DEFAULTS[lane]["model"], transport=transport)
     require_execution_model(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_MODEL_ID, transport="native_claude")
     for model in (batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL):
         require_execution_model(model, transport="agy")
