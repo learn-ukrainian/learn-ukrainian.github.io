@@ -4263,6 +4263,24 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
         )
         assert rejected.ok is False
         assert rejected.tokens is None
+    # Defect class: read-only or unbound tasks attest write-patch observations.
+    for mismatch in ("read-only", "read-intent", "foreign-session"):
+        invalid = copy.deepcopy(records)
+        invalid_plan = copy.deepcopy(plan)
+        if mismatch == "read-only":
+            invalid_plan.metadata.update(mode="read-only", permission_profile=":read-only", toolset=["read_file"])
+        if mismatch in {"read-only", "read-intent"}:
+            next(r["payload"]["event"] for r in invalid
+                 if r["payload_type"] == "task.lifecycle.side_effect_intent")["operation"] = "tool:read_file"
+            next(r["payload"] for r in invalid if r["payload_type"] == "tool.result")[
+                "correlation_facts"]["tool_name"] = "read_file"
+        else:
+            next(r for r in invalid if r["payload_type"] == "task.lifecycle.tool_output_ref")[
+                "stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+        assert MuseAdapter().parse_response(
+            stdout="\n".join(json.dumps(record) for record in invalid),
+            stderr="", returncode=0, output_file=None, plan=invalid_plan,
+        ).ok is False
     unknown = copy.deepcopy(records)
     unknown[2]["payload_type"] = "future.unknown"
     assert MuseAdapter().parse_response(
@@ -4559,7 +4577,7 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])
 def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch, mode, role):
-    """M05: CLI changes must preserve explicit profiles and confinement without a version pin."""
+    """M05: preserve permissions and prevent symlink-package bootstrap or interpreter-anchor loss."""
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
@@ -4587,3 +4605,21 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
     assert "GH_TOKEN" in plan.env_unsets
     assert Path(plan.cmd[-1]).read_text() == "fixture"
+    from scripts.agent_runtime.adapters import muse as muse_module
+
+    package = tmp_path / "machinery/lu_machinery"
+    (package / "agent_runtime/adapters").mkdir(parents=True)
+    for directory in (package, package / "agent_runtime", package / "agent_runtime/adapters"):
+        (directory / "__init__.py").write_text("")
+    (package / "agent_runtime/adapters/muse.py").write_text(
+        'import os\ndef sandbox_main(args):\n'
+        '    return 0 if os.environ.get("LEARN_UKRAINIAN_PYTHON") else 23\n'
+    )
+    product = tmp_path / "product"
+    product.mkdir()
+    (product / "scripts").symlink_to(package, target_is_directory=True)
+    monkeypatch.setattr(muse_module, "__file__", str(product / "scripts/agent_runtime/adapters/muse.py"))
+    bootstrap = muse_module.confined_muse_argv(["fixture"], workspace, mode, "symlink-bootstrap", scratch)
+    completed = subprocess.run(bootstrap, cwd=workspace, env={"PATH": os.defpath},
+                               capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 0, completed.stderr

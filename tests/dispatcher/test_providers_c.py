@@ -80,6 +80,8 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch
     expected = [
         "exec",
         "--json",
+        "--provider",
+        "meta",
         "--model",
         model,
         "--disable-web-tools",
@@ -90,15 +92,17 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch
         "--prompt-file",
         str(spec.prompt_file),
         "--contributor-mode",
-        contributor or "off",
+        "off",
     ]
     if effort:
         expected += ["--reasoning-effort", effort]
     if mode == "workspace-write":
         expected += ["--permission-profile", ":ask-me", "--disable-shell",
+                     "--disable-reminders", "--disable-request-user-input", "--no-foreign-personal-context",
                      "--config", 'run.toolset=["read_file", "write_file", "edit_file"]']
     else:
         expected += ["--permission-profile", ":read-only", "--disable-shell",
+                     "--disable-reminders", "--disable-request-user-input", "--no-foreign-personal-context",
                      "--config", 'run.toolset=["read_file"]', "--disable-write"]
     assert run_stub(invocation, spec) == expected
     assert invocation.env["MUSE_NO_AUTO_UPDATE"] == "1"
@@ -334,11 +338,13 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     import shutil
 
     from scripts.agent_runtime.adapters.muse import confined_muse_argv
+    from scripts.guardrails.worktree_containment import NotAGitRepositoryError
 
     if not shutil.which("bwrap"):
         pytest.skip("bubblewrap is required for the real file boundary")
-    workspace = tmp_path / "workspace"
-    workspace.mkdir()
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees/dispatch/muse/containment"
+    workspace.mkdir(parents=True)
     outside = tmp_path / "outside.txt"
     outside.write_text("outside")
     (workspace / "inside.txt").write_text("inside")
@@ -377,6 +383,14 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     prompt = tmp_path / "brief.txt"
     prompt.write_text("fixture")
     spec = TaskSpec("muse-containment", "muse", MODELS[0], None, "read-only", workspace, prompt, tmp_path / "final")
+    # Defect class: direct sandbox callers mount a primary or symlink target writable.
+    for rejected in (tmp_path, tmp_path / ".worktrees", tmp_path / "install"):
+        with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+            muse.build(replace(spec, mode="workspace-write", worktree=rejected), {})
+    linked = tmp_path / "linked-workspace"
+    linked.symlink_to(workspace, target_is_directory=True)
+    with pytest.raises(NotAGitRepositoryError, match="symlink or not a directory"):
+        muse.build(replace(spec, mode="workspace-write", worktree=linked), {})
     invocation = muse.build(spec, {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
     assert invocation.argv[:6] == confined_muse_argv([], workspace, "read-only", spec.task_id)[:6]
     result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env, capture_output=True, text=True, timeout=30)
@@ -390,6 +404,20 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     host_git.mkdir()
     (host_git / "private-marker").write_text("host-only")
     original_pointer = f"gitdir: {host_git}\n"
+    # Defect class: invalid Git markers permit a workspace-write launch.
+    marker = workspace / ".git"
+    for invalid in ("directory", "symlink"):
+        if invalid == "directory":
+            marker.mkdir()
+        else:
+            marker.symlink_to(host_git, target_is_directory=True)
+        invocation = muse.build(replace(spec, mode="workspace-write"),
+                                {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
+        result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env,
+                                capture_output=True, text=True, timeout=30)
+        assert result.returncode != 0
+        assert "muse_worktree_git_pointer_refused" in result.stderr
+        marker.rmdir() if invalid == "directory" else marker.unlink()
     (workspace / ".git").write_text(original_pointer)
     native.write_text(
         '#!/bin/sh\n'

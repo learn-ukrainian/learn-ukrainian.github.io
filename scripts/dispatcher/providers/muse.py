@@ -12,13 +12,13 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.mode not in _TOOLS:
         raise ValueError("muse_worker_mode_refused")
-    argv = ["muse", "exec", "--json", "--model", spec.model, "--disable-web-tools"]
+    argv = ["muse", "exec", "--json", "--provider", "meta", "--model", spec.model, "--disable-web-tools"]
     argv += ["--workspace", str(spec.worktree), "--worktree", "off", "--prompt-file", str(spec.prompt_file)]
-    # The admission check forces this option off for every private input class.
-    argv += ["--contributor-mode", spec.options.get("contributor_mode", "off")]
+    argv += ["--contributor-mode", "off"]
     if spec.effort:
         argv += ["--reasoning-effort", spec.effort]
     argv += ["--permission-profile", _PROFILES[spec.mode], "--disable-shell",
+             "--disable-reminders", "--disable-request-user-input", "--no-foreign-personal-context",
              "--config", "run.toolset=" + json.dumps(_TOOLS[spec.mode])]
     if spec.mode == "read-only":
         argv.append("--disable-write")

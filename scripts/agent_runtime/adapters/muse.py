@@ -20,7 +20,7 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
+from scripts.guardrails.worktree_containment import _require_real_directories, classify_repo_path
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -63,15 +63,18 @@ def confined_muse_argv(
     from scripts.common.repo_root import project_interpreter
     from scripts.common.scratch import resolve_scratch_root
 
+    workspace = _workspace_path(workspace, preview=True)
+    interpreter = str(project_interpreter())
     package = Path(__file__).absolute().parents[2].name
     bootstrap = (
-        "import sys; sys.path.insert(0, sys.argv[1]); "
+        "import os, sys; sys.path.insert(0, sys.argv[1]); "
+        f"os.environ['LEARN_UKRAINIAN_PYTHON'] = {interpreter!r}; "
         f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
         "raise SystemExit(sandbox_main(sys.argv[2:]))"
     )
     return [
-        str(project_interpreter()), "-I", "-c", bootstrap,
-        str(Path(__file__).resolve().parents[3]),
+        interpreter, "-I", "-c", bootstrap,
+        str(Path(__file__).absolute().parents[3]),
         "govern", task_id, mode, str(workspace), str(scratch_root or resolve_scratch_root()), *cmd,
     ]
 
@@ -82,7 +85,7 @@ def sandbox_main(args: list[str]) -> int:
     from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
 
     phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
-    workspace = Path(raw_workspace).resolve(strict=True)
+    workspace = _workspace_path(Path(raw_workspace))
     if mode not in _TOOLS or phase not in {"govern", "child"}:
         raise ValueError("muse_sandbox_launch_refused")
     if phase == "govern":
@@ -190,6 +193,11 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
     """Validate both the existing and planned dispatch paths before resolution."""
     if not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{16}", nonce) is None:
         raise ValueError("muse_worker_nonce_required")
+    return _workspace_path(cwd, preview=preview)
+
+
+def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
+    """Enforce the same path boundary for adapter and direct sandbox callers."""
     if (
         not cwd.is_absolute()
         or any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in str(cwd))
@@ -201,7 +209,9 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
             existing = existing.parent
     _require_real_directories(existing)
     workspace = cwd.resolve(strict=not preview)
-    if cwd != workspace or not is_dispatch_worktree(workspace):
+    # Anchor outside the candidate's own Git marker: it is untrusted and
+    # independently checked before mounting synthetic Git metadata.
+    if cwd != workspace or classify_repo_path(workspace, cwd=existing.parent) != "dispatch_worktree":
         raise ValueError("muse_dispatch_worktree_required")
     return workspace
 
@@ -586,7 +596,10 @@ class MuseAdapter:
                                 # This is an observation only. Never follow its
                                 # path or URI, or count it as a tool result.
                                 ref = event.get("output_ref")
-                                if (event.get("availability") != "available" or not isinstance(ref, dict)
+                                if (mode != "workspace-write"
+                                        or not any(bound_task == task and tool in {"write_file", "edit_file"}
+                                                   for bound_task, tool in tool_intents.values())
+                                        or event.get("availability") != "available" or not isinstance(ref, dict)
                                         or ref.get("kind") != "tool_patch"
                                         or ref.get("media_type") != "application/json"
                                         or any(not isinstance(ref.get(key), str) or not ref[key]
