@@ -163,6 +163,7 @@ def test_success_is_byte_only_and_logs_no_payload(proxy, monkeypatch):
         while proxy.records[0]["bytes"] < 30 and time.monotonic() < deadline:
             time.sleep(.01)
         assert proxy.records == [{"destination": "api.provider.example:443", "bytes": 30}]
+        assert proxy.overflow_count == 0
     finally:
         stopped.set()
         listener.close()
