@@ -31,7 +31,7 @@ else:  # run by path or imported top-level: the resolver is in the package direc
 # named by ``--project-root`` (the deploy gate, #12818), else the product checkout that
 # ``product_root`` selects when the scan runs (C-4746); never to this file.
 # Directories to scan for prompt/skill files (deploy gate)
-PROMPT_SCAN_RELS = ("gemini_extensions/skills", "agents_extensions/shared/phases")
+PROMPT_SCAN_RELS = ("agents_extensions/shared/phases",)
 ORCHESTRATOR_PROMPT_REL = "docs/prompts/orchestrators"
 CURRICULUM_MANIFEST_REL = "curriculum/l2-uk-en/curriculum.yaml"
 LEGACY_PROMPT_MIGRATION_REL = "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"

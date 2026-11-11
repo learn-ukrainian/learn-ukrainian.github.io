@@ -1740,7 +1740,6 @@
   "tests/test_rules_core_loading.py": 81.683,
   "tests/test_rules_core_structural_coverage.py": 0.635,
   "tests/test_run_archive.py": 0.237,
-  "tests/test_run_otaman_serial_tmp.py": 1.573,
   "tests/test_runner_tool_calls.py": 0.85,
   "tests/test_runtime_agents_dedupe.py": 0.1,
   "tests/test_runtime_api.py": 1.697,
