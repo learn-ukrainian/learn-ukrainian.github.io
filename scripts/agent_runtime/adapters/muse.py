@@ -62,7 +62,7 @@ def confined_muse_argv(
     if mode == "workspace-write":
         raise ValueError("muse_write_mode_unconfined")
     from scripts.common.repo_root import project_interpreter
-    from scripts.common.scratch import ensure_scratch_root
+    from scripts.common.scratch import resolve_scratch_root
 
     package = Path(__file__).absolute().parents[2].name
     bootstrap = (
@@ -73,7 +73,7 @@ def confined_muse_argv(
     return [
         str(project_interpreter()), "-I", "-c", bootstrap,
         str(Path(__file__).resolve().parents[3]),
-        "govern", task_id, mode, str(workspace), str(scratch_root or ensure_scratch_root()), *cmd,
+        "govern", task_id, mode, str(workspace), str(scratch_root or resolve_scratch_root()), *cmd,
     ]
 
 

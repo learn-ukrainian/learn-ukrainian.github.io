@@ -5,6 +5,7 @@ import contextlib
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import signal
 import subprocess
@@ -101,24 +102,34 @@ def test_schemaless_reviewer_missing_verdict_gets_one_correction_turn(sandbox, s
         first = "The change is sound.\n" + findings
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir()
-    count = binary_dir / "launches"
-    count.write_text("0")
-    prompts = binary_dir / "prompts"
+    version = "0.0.0-R1"
+    (binary_dir / ".muse-version").write_text(version)
     executable = binary_dir / "muse"
-    executable.write_text(
-        f"#!{sys.executable}\n"
-        "import json, pathlib, sys\n"
-        f"count = pathlib.Path({str(count)!r})\n"
-        f"prompts = pathlib.Path({str(prompts)!r})\n"
-        "n = int(count.read_text()) + 1\n"
-        "count.write_text(str(n))\n"
-        "prompt = pathlib.Path(sys.argv[sys.argv.index('--prompt-file') + 1]).read_text()\n"
-        "prompts.write_text(prompts.read_text() + '\\n---\\n' + prompt if prompts.exists() else prompt)\n"
-        f"reply = {first!r} if n == 1 else {reply!r}\n"
-        "event = {'payload_type': 'run.terminal.completed', 'payload': {'text': reply}}\n"
-        "print(json.dumps(event))\n"
-    )
+    executable.write_text('#!/bin/sh\nexec "$(dirname "$0")/muse-bin-0.0.0-R1" "$@"\n')
+    native = binary_dir / f"muse-bin-{version}"
+    first_event = json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": first}})
+    correction_event = json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": reply}})
+    # The real sandbox permits no host counter writes. The dispatcher already
+    # captures stderr across launches, so use it to observe the native calls.
+    native.write_text(r'''#!/bin/sh
+set -eu
+while [ "$#" -gt 0 ]; do
+    if [ "$1" = "--prompt-file" ]; then
+        shift
+        prompt=$(cat "$1")
+        break
+    fi
+    shift
+done
+printf 'TEST_PROMPT_BEGIN\n%s\nTEST_PROMPT_END\n' "$prompt" >&2
+case "$prompt" in
+''' + f"*'Keep the same verdict'*) printf '%s\\n' {shlex.quote(correction_event)} ;;\n"
+        + f"*) printf '%s\\n' {shlex.quote(first_event)} ;;\nesac\n")
     executable.chmod(0o755)
+    native.chmod(0o755)
+    home = sandbox.repo.parent / "synthetic-home"
+    home.mkdir()
+    sandbox.env.update(HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"))
     schema_dir = sandbox.repo / "schemas"
     schema_dir.mkdir(exist_ok=True)
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
@@ -137,9 +148,13 @@ def test_schemaless_reviewer_missing_verdict_gets_one_correction_turn(sandbox, s
     )
     record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if second == "kept" else 1)
     launches = 1 if second in {"ambiguous", "quoted"} else 2
-    assert int(count.read_text()) == launches
+    trace = (sandbox.tasks / "logs" / f"{record['task_id']}.stderr.log").read_text()
+    frames = trace.split("TEST_PROMPT_BEGIN\n")[1:]
+    assert len(frames) == launches
+    assert all("\nTEST_PROMPT_END\n" in frame for frame in frames)
+    prompts = [frame.split("\nTEST_PROMPT_END\n", 1)[0] for frame in frames]
     if launches == 2:
-        correction = prompts.read_text().split("\n---\n", 1)[1]
+        correction = prompts[1]
         assert correction.startswith('<rules-core seat="core"')
         assert "</rules-core>" in correction
         assert "Keep the same verdict" in correction
