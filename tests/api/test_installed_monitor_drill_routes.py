@@ -147,7 +147,8 @@ def test_installed_monitor_does_not_drop_or_shadow_drill_routes(tmp_path: Path, 
                 source = Path(origin["file"]).resolve()
                 if module.startswith("lu_machinery."):
                     assert source in installed_files, (path, origin)
-                    assert not source.is_relative_to(checkout), (path, origin)
+                    # Not the checkout's in-tree copy; a venv inside the checkout (CI) is the release.
+                    assert not source.is_relative_to(checkout / "scripts"), (path, origin)
                 else:
                     assert source == checkout / Path(*module.split(".")).with_suffix(".py"), (path, origin)
                 record_property(f"origin:{path}", json.dumps(origin, sort_keys=True))

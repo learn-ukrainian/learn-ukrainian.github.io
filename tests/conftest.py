@@ -1158,6 +1158,25 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return isolated_path
 
 
+_SHARED_SIBLING_MODULE_KEYS = ("_venv_integrity_check_primary_integrity",)  # TRANSITIONAL-PKG3-B2
+
+
+@pytest.fixture(autouse=True)
+def _drop_shared_sibling_module_keys() -> None:
+    """Let each machinery copy load its own by-path sibling module.
+
+    The in-tree ``scripts/hygiene/check_venv_integrity.py`` and the installed
+    release's copy both cache ``check_primary_integrity.py`` under one fixed
+    ``sys.modules`` key. In one pytest process the copy imported second gets the
+    other copy's module (merge-group run 42931243455: the release app's preload
+    raised ``AttributeError: ... has no attribute 'product_root'``). A copy keeps
+    the reference it bound at import, so dropping the key only affects the next
+    import. TRANSITIONAL-PKG3-B2: delete with the in-tree copy.
+    """
+    for key in _SHARED_SIBLING_MODULE_KEYS:
+        sys.modules.pop(key, None)
+
+
 @pytest.fixture(autouse=True)
 def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
     """Fail the test that tries to open the live bridge DB with write access."""
