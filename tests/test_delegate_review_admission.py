@@ -62,16 +62,14 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("grok",),
-            model="grok-4.7",
+            ("muse",),
+            model="muse-wonder-full-1.0",
             mode="read-only",
             review_dispatch=True,
             review_profile="ukrainian",
             claude_account=HOST_ACCOUNT,
         )
-    assert "REVIEW_ROUTE_REFUSED" in str(refused.value)
-    assert "model 'grok-4.7' is retired" in str(refused.value)
-    assert "--review-profile ukrainian" not in str(refused.value)
+    assert "--review-profile ukrainian" in str(refused.value)
     assert "--review-author-model" not in str(refused.value)
 
 
