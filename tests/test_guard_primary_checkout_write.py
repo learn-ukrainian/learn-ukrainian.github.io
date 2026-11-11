@@ -11,7 +11,7 @@ Two layers:
   ``.worktrees/dispatch/**`` worktree + gitignored state), asserting the exit
   code and worktree-hint message. Explicit subprocess cases also pin process
   isolation. The decision itself is delegated to
-  ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
+  ``lu_machinery.guardrails.worktree_containment`` (#4444); these tests prove the
   provider payloads map onto it correctly.
 
 The hook filename has hyphens, so pure-function tests load it via importlib.
@@ -35,14 +35,15 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
+HOOK_PATH = machinery_path("agents_extensions/shared/hooks/guard-primary-checkout-write.py")
 
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
@@ -1078,7 +1079,7 @@ def test_issue_11381_protected_or_unresolved_git_target_blocked(
 
 
 def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
-    from scripts.guardrails import worktree_containment as wc
+    from lu_machinery.guardrails import worktree_containment as wc
 
     expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
     with chdir(tmp_path):
