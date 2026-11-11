@@ -20,7 +20,7 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
+from scripts.guardrails.worktree_containment import _require_real_directories, classify_repo_path
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -51,6 +51,7 @@ _PASSIVE_EVENTS = frozenset(
         "task.lifecycle.completed",
         "task.lifecycle.status",
         "task.lifecycle.output",
+        "task.lifecycle.tool_output_ref",
     }
 )
 
@@ -59,20 +60,21 @@ def confined_muse_argv(
     cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
 ) -> list[str]:
     """Use the existing governed scratch and file sandbox for every Muse run."""
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
     from scripts.common.repo_root import project_interpreter
     from scripts.common.scratch import resolve_scratch_root
 
+    workspace = _workspace_path(workspace, preview=True)
+    interpreter = str(project_interpreter())
     package = Path(__file__).absolute().parents[2].name
     bootstrap = (
-        "import sys; sys.path.insert(0, sys.argv[1]); "
+        "import os, sys; sys.path.insert(0, sys.argv[1]); "
+        f"os.environ['LEARN_UKRAINIAN_PYTHON'] = {interpreter!r}; "
         f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
         "raise SystemExit(sandbox_main(sys.argv[2:]))"
     )
     return [
-        str(project_interpreter()), "-I", "-c", bootstrap,
-        str(Path(__file__).resolve().parents[3]),
+        interpreter, "-I", "-c", bootstrap,
+        str(Path(__file__).absolute().parents[3]),
         "govern", task_id, mode, str(workspace), str(scratch_root or resolve_scratch_root()), *cmd,
     ]
 
@@ -83,9 +85,7 @@ def sandbox_main(args: list[str]) -> int:
     from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
 
     phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
-    workspace = Path(raw_workspace).resolve(strict=True)
+    workspace = _workspace_path(Path(raw_workspace))
     if mode not in _TOOLS or phase not in {"govern", "child"}:
         raise ValueError("muse_sandbox_launch_refused")
     if phase == "govern":
@@ -117,6 +117,17 @@ def sandbox_main(args: list[str]) -> int:
         if native.is_symlink() or not native.is_file():
             raise ValueError("muse_native_runtime_refused")
         reads.extend([version_file, native])
+    git_metadata = None
+    git_marker = workspace / ".git"
+    if mode == "workspace-write" and (git_marker.exists() or git_marker.is_symlink()):
+        if git_marker.is_symlink() or not git_marker.is_file():
+            raise ValueError("muse_worktree_git_pointer_refused")
+        # Muse resolves the linked-worktree pointer before every file write.
+        # Provide only private metadata, never the shared host Git directory.
+        git_metadata = runtime / "git-metadata"
+        git_metadata.mkdir(mode=0o700)
+        (git_metadata / "gitdir").mkdir(mode=0o700)
+        (git_metadata / "pointer").write_text(f"gitdir: {git_metadata / 'gitdir'}\n")
     prompt_index = cmd.index("--prompt-file") + 1
     prompt = runtime / "prompt.txt"
     prompt.write_bytes(Path(cmd[prompt_index]).read_bytes())
@@ -135,11 +146,25 @@ def sandbox_main(args: list[str]) -> int:
         if sandbox.mechanism != "linux-bwrap":
             raise ValueError("muse_anonymous_auth_sandbox_unavailable")
         argv = wrap_argv_with_sandbox(cmd, sandbox)
-        extra = ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
+        extra = []
+        if mode == "workspace-write":
+            # Only this task worktree becomes writable; auth stays a separate
+            # read-only mount and host paths remain absent from the namespace.
+            extra += ["--bind", str(workspace), str(workspace)]
+        if git_metadata is not None:
+            extra += [
+                "--ro-bind", str(git_metadata), str(git_metadata),
+                "--ro-bind", str(git_metadata / "pointer"), str(git_marker),
+            ]
+        extra += ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
         if os.fstat(auth_fd).st_size:
             # bwrap copies this fd into its private tmpfs and closes it before
             # exec. A killed run leaves no named host credential copy.
             extra += ["--perms", "0400", "--ro-bind-data", str(auth_fd), str(home / ".config/muse/auth.json")]
+        # Ancestor directories live on the private root tmpfs. Seal that
+        # mount too, so traversal cannot create even ephemeral outside files.
+        # Existing runtime and workspace submounts retain their own permissions.
+        extra += ["--remount-ro", "/"]
         argv[-len(cmd):-len(cmd)] = extra
         env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
         env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
@@ -168,6 +193,11 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
     """Validate both the existing and planned dispatch paths before resolution."""
     if not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{16}", nonce) is None:
         raise ValueError("muse_worker_nonce_required")
+    return _workspace_path(cwd, preview=preview)
+
+
+def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
+    """Enforce the same path boundary for adapter and direct sandbox callers."""
     if (
         not cwd.is_absolute()
         or any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in str(cwd))
@@ -179,7 +209,9 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
             existing = existing.parent
     _require_real_directories(existing)
     workspace = cwd.resolve(strict=not preview)
-    if cwd != workspace or not is_dispatch_worktree(workspace):
+    # Anchor outside the candidate's own Git marker: it is untrusted and
+    # independently checked before mounting synthetic Git metadata.
+    if cwd != workspace or classify_repo_path(workspace, cwd=existing.parent) != "dispatch_worktree":
         raise ValueError("muse_dispatch_worktree_required")
     return workspace
 
@@ -270,8 +302,6 @@ class MuseAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         model = resolve_muse_model(model)
         config = tool_config or {}
         if mode not in self.supported_modes:
@@ -320,8 +350,6 @@ class MuseAdapter:
         effort: str | None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         return self._plan(
             prompt=prompt,
             mode=mode,
@@ -349,8 +377,6 @@ class MuseAdapter:
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:
@@ -557,7 +583,7 @@ class MuseAdapter:
                             "side_effect_intent": "scheduled", "started": "side_effect_intent",
                             "completed": "started",
                         }
-                        if stage in {"status", "output"}:
+                        if stage in {"status", "output", "tool_output_ref"}:
                             if payload.get("kind") != "task_lifecycle" or tasks[task] != "started" or (
                                 stage == "status" and not isinstance(event.get("message"), str)
                             ) or (
@@ -566,6 +592,24 @@ class MuseAdapter:
                                 )
                             ):
                                 raise ValueError("muse_task_observation_invalid")
+                            if stage == "tool_output_ref":
+                                # This is an observation only. Never follow its
+                                # path or URI, or count it as a tool result.
+                                ref = event.get("output_ref")
+                                if (mode != "workspace-write"
+                                        or not any(bound_task == task and tool in {"write_file", "edit_file"}
+                                                   for bound_task, tool in tool_intents.values())
+                                        or event.get("availability") != "available" or not isinstance(ref, dict)
+                                        or ref.get("kind") != "tool_patch"
+                                        or ref.get("media_type") != "application/json"
+                                        or any(not isinstance(ref.get(key), str) or not ref[key]
+                                               for key in ("id", "path", "uri"))
+                                        or ref.get("digest") is not None
+                                        or not isinstance(ref.get("patch_summary"), dict)):
+                                    raise ValueError("muse_task_observation_invalid")
+                                _counter(ref.get("byte_len"))
+                                for field in ("added", "files", "removed"):
+                                    _counter(ref["patch_summary"].get(field))
                         else:
                             if stage not in previous or tasks[task] != previous[stage]:
                                 raise ValueError("muse_task_order_invalid")
