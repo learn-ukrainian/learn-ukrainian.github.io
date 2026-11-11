@@ -143,10 +143,12 @@ def execution_identity(agent: str, model: str, catalog: dict | None = None) -> s
 
 
 def check_model_admission(agent: str, model: str, mode: str, options: dict, prompt: bytes) -> None:
-    """Refuse an unknown model, a reviewer without a review role, and keep the temporary reviewer exception closed.
+    """Refuse an unknown model, an unlisted AGY selector, a reviewer without a review role, and keep the temporary reviewer exception closed.
 
     An unknown explicit pin is refused before any model-specific exemption, so it can never run
     under another model's identity. Cursor's ``auto`` selector names no model and stays admitted.
+    An AGY dispatch must name a selector the provider attests. A generic effort suffix can still
+    name a catalog model (``gemini-4-argon-xhigh``) that attestation will never recognise.
     A review-typed request needs a catalog review role (#9583) before any worktree or provider
     starts; the verdict recorder's later refusal would only discard a run that already happened.
     """
@@ -159,6 +161,16 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
         if agent == "cursor" and is_cursor_auto_selector(model):
             return
         raise ValueError(unknown_model_refusal(model))
+    if agent == "agy":
+        from scripts.dispatcher.providers.agy import _agy_model_ids, transport_model
+
+        # A generic effort suffix still names a catalog model (gemini-4-argon-xhigh), but agy
+        # attests only the selectors the catalog lists, so that run could never succeed.
+        listed = _agy_model_ids()
+        if transport_model(model) not in listed:
+            names = sorted(name for name in listed if canonical_model_id(name, catalog) == identity)
+            raise ValueError(f"model {model!r} is not an AGY selector the model catalog lists for "
+                             f"{identity}; listed: {', '.join(names) or 'none'}")
     if not catalog["models"][identity].get("red_team_only"):
         # Review typing is the one dispatch role admission infers: every review flag, --risk,
         # --review-mode, --language-lane, the subject selectors and a review research role.

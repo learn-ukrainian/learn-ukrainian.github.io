@@ -1096,6 +1096,32 @@ def test_work_only_model_is_refused_a_review_typed_dispatch_before_launch(agent,
     checks.check_model_admission(agent, model, "read-only", {}, b"implement the change")
 
 
+@pytest.mark.parametrize(
+    ("model", "identity"),
+    [
+        ("gemini-4-argon-xhigh", "gemini-4-argon"),
+        ("gemini-4-carbon-max", "gemini-4-carbon"),
+        ("claude-opus-5-5-low", "claude-opus-5-5"),
+    ],
+)
+def test_agy_admission_refuses_a_selector_attestation_cannot_recognise(model, identity):
+    """Defect class: AGY admission admits a selector identity attestation can never recognise.
+
+    A generic effort suffix still names a catalog model, so dispatch used to start a run
+    that ``_agy_model_ids()`` can never attest. Work and review-typed requests both refuse.
+    """
+    match = re.escape(
+        f"model {model!r} is not an AGY selector the model catalog lists for {identity}"
+    )
+    review = {
+        "pr": 12935, "require_review_verdict": True, "review_profile": "infra",
+        "review_author_model": "gpt-6.1-sol", "risk": "high",
+    }
+    for options, prompt in (({}, b"implement the change"), (review, b"review the change")):
+        with pytest.raises(ValueError, match=match):
+            checks.check_model_admission("agy", model, "read-only", options, prompt)
+
+
 def test_sol_defaults_and_escalations_use_high_across_catalog():
     bindings = []
 
