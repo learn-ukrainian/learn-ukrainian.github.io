@@ -17,12 +17,10 @@ on:
       - 'scripts/lint/**/*.py'
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
-      - 'gemini_extensions/**'
       - '.claude/**'
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
-      - '.gemini/**'
       - 'tests/test_deploy_script_idempotency.py'
   pull_request:
     paths:
@@ -36,12 +34,10 @@ on:
       - 'scripts/lint/**/*.py'
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
-      - 'gemini_extensions/**'
       - '.claude/**'
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
-      - '.gemini/**'
       - 'tests/test_deploy_script_idempotency.py'
   workflow_dispatch:
 

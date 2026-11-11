@@ -253,7 +253,6 @@ def copy_launcher_sources(root: Path) -> None:
             "package.json",
             machinery_package(),
             "agents_extensions",
-            "gemini_extensions",
             ".gemini/config.yaml",
             "docs/l2-uk-en",
             "docs/prompts/orchestrators",

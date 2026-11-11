@@ -71,21 +71,15 @@ _SYNTHETIC_SOURCE_DIRS = (
     "agents_extensions/shared/rules",
     "agents_extensions/shared/hooks",
     "agents_extensions/codex",
-    "gemini_extensions",
-    # Shared skills land in .gemini/skills. Synthetic checkouts carry
-    # gemini_extensions/skills like learn-ukrainian does; a project without it
-    # is test_consumer_without_provider_skills_redeploys_and_passes_checker.
-    "gemini_extensions/skills",
 )
 _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
-    "test_tracked_mirror_drift_is_detected_before_deploy": ("gemini_extensions/hooks/check-claude-inbox.sh",),
+    "test_tracked_mirror_drift_is_detected_before_deploy": ("agents_extensions/shared/hooks/auto-audit.sh",),
     "test_tracked_mirror_resolves_each_deploy_source": (
         "agents_extensions/shared/hooks/auto-audit.sh",
         "agents_extensions/shared/skills/post-build-review/SKILL.md",
         "agents_extensions/shared/hooks/session-setup.sh",
         "agents_extensions/codex/hooks.json",
         "agents_extensions/shared/rules/fleet-comms-coordination.md",
-        "gemini_extensions/skills/full-rebuild-bio/SKILL.md",
     ),
     "test_tracked_agents_skill_declared_orphan_is_skipped": (),
     "test_tracked_claude_glob_orphan_is_skipped": (),
@@ -102,14 +96,6 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     ),
     "test_second_deploy_is_noop_for_codex_target": (),
     "test_missing_codex_hooks_json_is_drift": ("agents_extensions/codex/hooks.json",),
-    "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills": (
-        "agents_extensions/shared/skills/post-build-review/SKILL.md",
-        "gemini_extensions/skills/final-review/SKILL.md",
-    ),
-    "test_gemini_shared_skill_exclusion_does_not_mask_root_drift": ("gemini_extensions/settings.json",),
-    "test_gemini_shared_skill_name_collision_fails_closed": (
-        "agents_extensions/shared/skills/post-build-review/SKILL.md",
-    ),
     "test_codex_orphan_is_caught": (),
     "test_bytecode_cache_is_not_an_orphan_and_is_not_declared": (),
     "test_pyc_named_symlink_is_deployed": (),
@@ -334,7 +320,6 @@ def _copy_deploy_harness(target: Path) -> None:
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
-        Path(".gemini/config.yaml"),
     ):
         destination = target / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -367,7 +352,7 @@ def _copy_declared_paths(target: Path, paths: tuple[str, ...]) -> None:
 
 
 def _copy_full_tree(target: Path) -> None:
-    for directory in ("agents_extensions/shared", "agents_extensions/codex", "agents_extensions/agy", "gemini_extensions"):
+    for directory in ("agents_extensions/shared", "agents_extensions/codex", "agents_extensions/agy"):
         shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
     _copy_deploy_harness(target)
 
@@ -822,15 +807,11 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         repo / "agents_extensions" / "codex" / "hooks.json"
     ).read_text(encoding="utf-8")
     assert (repo / ".codex" / "memory" / "MEMORY.md").exists()
-    assert (repo / ".gemini/config.yaml").exists()
-    assert (repo / ".gemini/skills/final-review/SKILL.md").exists()
-    assert (repo / ".gemini/skills/post-build-review/SKILL.md").exists()
     deployed_claude_rules = sorted(path.name for path in (repo / ".claude" / "rules").glob("*.md"))
     assert deployed_claude_rules == sorted(CLAUDE_RULE_FILES)
     for filename in UNSCOPED_RULE_FILES:
         assert not (repo / ".claude" / "rules" / filename).exists()
         assert (repo / ".agent" / "rules" / filename).exists()
-        assert (repo / ".gemini" / "rules" / filename).exists()
         assert (repo / ".codex" / "rules" / filename).exists()
     for shared_file in (PROMPT_CONTRACT_MANIFEST, READINESS_PROFILE_CONFIG, COORDINATOR_CONFIG):
         canonical = repo / "agents_extensions/shared" / shared_file
@@ -838,7 +819,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
             assert (repo / mirror_root / shared_file).read_bytes() == canonical.read_bytes()
     for skill_name in SHARED_CURRICULUM_SKILLS:
         canonical_skill = repo / "agents_extensions" / "shared" / "skills" / skill_name
-        for mirror_root in (".claude", ".agent", ".agents", ".gemini"):
+        for mirror_root in (".claude", ".agent", ".agents"):
             deployed_skill = repo / mirror_root / "skills" / skill_name
             assert (deployed_skill / "SKILL.md").read_bytes() == (canonical_skill / "SKILL.md").read_bytes()
             assert (deployed_skill / "agents" / "openai.yaml").read_bytes() == (
@@ -857,8 +838,8 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
 def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
     """A committed mirror mismatch must fail before deploy can overwrite it."""
     repo = _init_checkout(tmp_path)
-    source = repo / "gemini_extensions/hooks/check-claude-inbox.sh"
-    mirror = repo / ".gemini/hooks/check-claude-inbox.sh"
+    source = repo / "agents_extensions/shared/hooks/auto-audit.sh"
+    mirror = repo / ".claude/hooks/auto-audit.sh"
     mirror.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, mirror)
     _init_git_history(repo)
@@ -876,7 +857,7 @@ def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
     output = drift.stdout + drift.stderr
     assert drift.returncode != 0
     assert "Committed deploy-mirror drift" in output
-    assert "gemini_extensions/hooks/check-claude-inbox.sh -> .gemini/hooks/check-claude-inbox.sh" in output
+    assert "agents_extensions/shared/hooks/auto-audit.sh -> .claude/hooks/auto-audit.sh" in output
 
     deploy = _run(repo, DEPLOY_SCRIPT)
     assert deploy.returncode == 0, deploy.stderr + deploy.stdout
@@ -894,18 +875,6 @@ def test_tracked_mirror_drift_is_detected_before_deploy(tmp_path: Path) -> None:
         ),
         (".codex/hooks/session-setup.sh", "agents_extensions/shared/hooks/session-setup.sh"),
         (".codex/hooks.json", "agents_extensions/codex/hooks.json"),
-        (
-            ".gemini/rules/fleet-comms-coordination.md",
-            "agents_extensions/shared/rules/fleet-comms-coordination.md",
-        ),
-        (
-            ".gemini/skills/post-build-review/SKILL.md",
-            "agents_extensions/shared/skills/post-build-review/SKILL.md",
-        ),
-        (
-            ".gemini/skills/full-rebuild-bio/SKILL.md",
-            "gemini_extensions/skills/full-rebuild-bio/SKILL.md",
-        ),
     ),
 )
 def test_tracked_mirror_resolves_each_deploy_source(
@@ -1175,7 +1144,6 @@ echo "CLAUDE:${ORPHAN_PATHS_CLAUDE} ${CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS}"
 echo "AGENT:${ORPHAN_PATHS_AGENT}"
 echo "AGENTS:${ORPHAN_PATHS_AGENTS}"
 echo "CODEX:${ORPHAN_PATHS_CODEX} ${CODEX_OVERLAY_PATHS}"
-echo "GEMINI:${ORPHAN_PATHS_GEMINI}"
 """
     result = subprocess.run(
         ["bash", "-c", bash],
@@ -1229,102 +1197,6 @@ def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
     assert "Missing deployed overlay file: .codex/hooks.json" in combined_output
 
 
-def test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills(
-    tmp_path: Path,
-) -> None:
-    """Shared skills overlay into Gemini without replacing Gemini-only skills."""
-    repo = _init_checkout(tmp_path)
-    deploy_result = _run(repo, DEPLOY_SCRIPT)
-    assert deploy_result.returncode == 0, deploy_result.stderr
-
-    shared = repo / ".gemini" / "skills" / "post-build-review" / "SKILL.md"
-    provider = repo / ".gemini" / "skills" / "final-review" / "SKILL.md"
-    assert shared.exists()
-    assert provider.exists()
-
-    unauthorized = repo / ".gemini" / "unauthorized-target-file.txt"
-    unauthorized.write_text("not source-owned\n", encoding="utf-8")
-    unauthorized_check = _run(repo, CHECK_SCRIPT)
-    unauthorized_output = f"{unauthorized_check.stdout}\n{unauthorized_check.stderr}"
-    assert unauthorized_check.returncode != 0
-    assert "Unowned deployed Gemini file" in unauthorized_output
-    assert "unauthorized-target-file.txt" in unauthorized_output
-    unauthorized.unlink()
-
-    shared.write_text(shared.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
-    check_result = _run(repo, CHECK_SCRIPT)
-    combined_output = f"{check_result.stdout}\n{check_result.stderr}"
-    assert check_result.returncode != 0
-    assert ("agents_extensions/shared/skills/post-build-review and .gemini/skills/post-build-review") in combined_output
-
-    shutil.copy2(
-        repo / "agents_extensions" / "shared" / "skills" / "post-build-review" / "SKILL.md",
-        shared,
-    )
-    provider.write_text(provider.read_text(encoding="utf-8") + "\n# provider drift\n", encoding="utf-8")
-    provider_check = _run(repo, CHECK_SCRIPT)
-    provider_output = f"{provider_check.stdout}\n{provider_check.stderr}"
-    assert provider_check.returncode != 0
-    assert ("gemini_extensions/skills/final-review and .gemini/skills/final-review") in provider_output
-    assert "SKILL.md" in provider_output
-
-    provider_source = repo / "gemini_extensions" / "skills" / "final-review" / "SKILL.md"
-    provider_source.write_text(
-        provider_source.read_text(encoding="utf-8") + "\n# provider source update\n",
-        encoding="utf-8",
-    )
-    redeploy = _run(repo, DEPLOY_SCRIPT)
-    assert redeploy.returncode == 0, redeploy.stderr
-    assert "deleting skills/post-build-review" not in redeploy.stdout
-    assert shared.exists()
-
-    stale = shared.parent / "stale-resource.txt"
-    stale.write_text("stale shared mirror file\n", encoding="utf-8")
-    stale_redeploy = _run(repo, DEPLOY_SCRIPT)
-    assert stale_redeploy.returncode == 0, stale_redeploy.stderr
-    assert not stale.exists()
-
-    shutil.rmtree(repo / "agents_extensions" / "shared" / "skills" / "post-build-review")
-    for mirror in (".claude/skills", ".agent/skills", ".agents/skills", ".codex/skills"):
-        shutil.rmtree(repo / mirror / "post-build-review", ignore_errors=True)
-    removed_redeploy = _run(repo, DEPLOY_SCRIPT)
-    assert removed_redeploy.returncode == 0, removed_redeploy.stderr
-    assert not shared.parent.exists()
-    assert provider.exists()
-
-
-def test_gemini_shared_skill_exclusion_does_not_mask_root_drift(tmp_path: Path) -> None:
-    """The skills/* overlay exclusion must not become diff's match-all '*'."""
-    repo = _init_checkout(tmp_path)
-    deploy_result = _run(repo, DEPLOY_SCRIPT)
-    assert deploy_result.returncode == 0, deploy_result.stderr
-
-    settings = repo / ".gemini" / "settings.json"
-    settings.write_text(
-        settings.read_text(encoding="utf-8") + "\n",
-        encoding="utf-8",
-    )
-
-    check_result = _run(repo, CHECK_SCRIPT)
-    combined_output = f"{check_result.stdout}\n{check_result.stderr}"
-    assert check_result.returncode != 0
-    assert "Deploy-script drift between gemini_extensions and .gemini" in combined_output
-    assert "settings.json" in combined_output
-
-
-def test_gemini_shared_skill_name_collision_fails_closed(tmp_path: Path) -> None:
-    """A provider-specific duplicate cannot shadow the canonical shared skill."""
-    repo = _init_checkout(tmp_path)
-    duplicate = repo / "gemini_extensions" / "skills" / "post-build-review" / "SKILL.md"
-    duplicate.parent.mkdir(parents=True)
-    duplicate.write_text("provider duplicate\n", encoding="utf-8")
-
-    deploy_result = _run(repo, DEPLOY_SCRIPT)
-    combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
-    assert deploy_result.returncode != 0
-    assert "shared/Gemini skill collision: post-build-review" in combined_output
-
-
 # The machinery resolver a consumer carries with the deploy scripts. The consumer
 # tests below copy it so the linter imports the consumer's own copy, as a real
 # consumer deploy does.
@@ -1333,10 +1205,9 @@ _CONSUMER_LINT_SOURCE = Path("agents_extensions/shared/phases/consumer-phase.md"
 
 
 def _init_consumer(tmp_path: Path) -> Path:
-    """A project that is not learn-ukrainian: no product marker, no gemini_extensions/skills.
+    """A project that is not learn-ukrainian: no product marker.
 
-    It has one shared skill, so the Gemini overlay creates .gemini/skills itself. Its
-    interpreter execs the real one: the warm broker would import this checkout's
+    It has one shared skill. Its interpreter execs the real one: the warm broker would import this checkout's
     resolver, which finds the product marker, instead of the consumer's own copy.
     """
     repo = tmp_path / "consumer"
@@ -1356,13 +1227,11 @@ def _init_consumer(tmp_path: Path) -> Path:
         "agents_extensions/shared/rules/consumer.md": "# Consumer rule\n",
         str(_CONSUMER_LINT_SOURCE): "# Consumer phase\n\nDo the phase.\n",
         "agents_extensions/codex/hooks.json": "{}\n",
-        "gemini_extensions/settings.json": "{}\n",
     }
     for relative, text in files.items():
         (repo / relative).parent.mkdir(parents=True, exist_ok=True)
         (repo / relative).write_text(text, encoding="utf-8")
     assert not (repo / "curriculum/l2-uk-en/curriculum.yaml").exists()
-    assert not (repo / "gemini_extensions/skills").exists()
     _init_git_history(repo)
     return repo
 
@@ -1416,39 +1285,6 @@ def test_consumer_deploy_lints_its_own_prompt_files(tmp_path: Path, monkeypatch,
     assert check.returncode == 0, f"checker failed:\n{check.stdout}\n{check.stderr}"
 
 
-def test_consumer_without_provider_skills_redeploys_and_passes_checker(tmp_path: Path, monkeypatch) -> None:
-    """Defect class: deploy idempotency, overlay parent ownership (#12818 fault 2).
-
-    With shared skills and no gemini_extensions/skills, the first deploy creates
-    .gemini/skills. The skills/* overlay entry matches its children but not the
-    directory itself, so the old preflight called it an undeclared orphan and aborted
-    the repeat deploy. LU_PRODUCT_ROOT names a clean product checkout so the old lint
-    passes and the old code fails at that repeat deploy.
-    """
-    repo = _init_consumer(tmp_path)
-    monkeypatch.setenv("LU_PRODUCT_ROOT", str(_init_other_product_checkout(tmp_path)))
-
-    first = _run(repo, DEPLOY_SCRIPT)
-    assert first.returncode == 0, f"first deploy failed:\n{first.stdout}\n{first.stderr}"
-    assert (repo / ".gemini/skills/consumer-hello/SKILL.md").exists()
-
-    second = _run(repo, DEPLOY_SCRIPT)
-    assert second.returncode == 0, f"repeat deploy failed:\n{second.stdout}\n{second.stderr}"
-    assert "undeclared orphan" not in second.stdout
-    assert "No changes to deploy." in second.stdout
-
-    check = _run(repo, CHECK_SCRIPT)
-    assert check.returncode == 0, f"checker failed after repeat deploy:\n{check.stdout}\n{check.stderr}"
-
-    # The parent directory is owned, its unowned children are not.
-    rogue = repo / ".gemini/skills/rogue-skill/SKILL.md"
-    rogue.parent.mkdir()
-    rogue.write_text("unowned\n", encoding="utf-8")
-    rogue_check = _run(repo, CHECK_SCRIPT)
-    assert rogue_check.returncode != 0
-    assert "Unowned deployed Gemini skill: .gemini/skills/rogue-skill" in rogue_check.stdout
-
-
 def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> None:
     """Stray hook bytecode must not abort deploy and is not an ORPHAN_PATHS entry.
 
@@ -1471,8 +1307,6 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
         repo / ".codex" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
         repo / ".agent" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
         repo / ".agents" / "skills" / "__pycache__" / "x.cpython-312.pyc",
-        repo / ".gemini" / "hooks" / "__pycache__" / "x.cpython-314.pyc",
-        repo / ".gemini" / "rules" / "__pycache__" / "x.cpython-314.pyc",
         repo / ".claude" / "hooks" / "legacy.pyc",
     ]
     for cache in caches:
@@ -1493,9 +1327,6 @@ def test_bytecode_cache_is_not_an_orphan_and_is_not_declared(tmp_path: Path) -> 
     kept = repo / "agents_extensions" / "shared" / "hooks" / "kept.sh"
     kept.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     kept.chmod(0o755)
-    # .gemini/hooks is not created by the empty fixture. The directory itself
-    # must exist in source so the stray cache inside it is the only extra path.
-    (repo / "gemini_extensions" / "hooks").mkdir(parents=True, exist_ok=True)
 
     second = _run(repo, DEPLOY_SCRIPT)
     combined = f"{second.stdout}\n{second.stderr}"
@@ -1650,13 +1481,12 @@ def test_driver_runtime_state_is_preserved(tmp_path: Path) -> None:
     """Driver runtime files in deploy targets survive deploy and never block it.
 
     Runtime state (dispatch briefs, handoff notes, pinned driver state) may live
-    in .claude/, .codex/ and .gemini/. It is gitignored and machine-local, so the
+    in .claude/ and .codex/. It is gitignored and machine-local, so the
     preflight guard must not abort on it and rsync --delete must keep it.
     """
     repo = _init_checkout(tmp_path)
     runtime = []
-    for target, source in ((".claude", "agents_extensions/shared"), (".codex", "agents_extensions/shared"),
-                           (".gemini", "gemini_extensions")):
+    for target, source in ((".claude", "agents_extensions/shared"), (".codex", "agents_extensions/shared")):
         # */briefs: a briefs dir under any source-owned directory of the target.
         owned = sorted(p.name for p in (repo / source).iterdir() if p.is_dir() and p.name != "briefs")
         assert owned, f"{source} has no directory"
@@ -1677,8 +1507,8 @@ def test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs(tmp_path:
     """The root-level ``*-epic`` exclusion must not reach ``skills/drive-epic``.
 
     Regression: the unanchored rsync exclude ``*-epic`` matched every path
-    component, so ``.claude/skills/drive-epic`` was never deployed while the
-    Codex and Gemini targets had it. The drift checker used the same basename
+    component, so ``.claude/skills/drive-epic`` was never deployed while
+    the Codex target had it. The drift checker used the same basename
     exclusion and stayed silent. Runtime ``.claude/<name>-epic/`` handoff dirs
     must still survive ``rsync --delete``.
     """
@@ -1723,7 +1553,6 @@ emit() { declared_diff_excludes "$1" "$2" "$3" | sed "s|^|$1\t$3\t|"; }
 emit "$shared" .claude "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
 emit "$shared" .codex "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES"
 emit "$shared/skills" .agents/skills "$ORPHAN_PATHS_AGENTS"
-emit gemini_extensions .gemini "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS"
 """
     result = subprocess.run(
         ["bash", "-c", bash], cwd=REPO_ROOT, capture_output=True, check=True, text=True, timeout=30
@@ -1782,7 +1611,7 @@ def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_pa
     assert not legacy.exists()
     for skill in source.glob("*/SKILL.md"):
         relative = skill.relative_to(source)
-        for mirror in (".agents/skills", ".claude/skills", ".agent/skills", ".gemini/skills"):
+        for mirror in (".agents/skills", ".claude/skills", ".agent/skills"):
             assert (repo / mirror / relative).read_bytes() == skill.read_bytes()
     assert _run(repo, CHECK_SCRIPT).returncode == 0
     assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout

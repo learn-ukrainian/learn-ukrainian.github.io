@@ -869,15 +869,13 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
     import asyncio
     import ssl
 
-    from scripts.agent_runtime.attempt_network import load_allowlist
-
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent, review_access=access)
     tc.update(review_access=access, review_cwd=str(root))
     if access == "full":
         subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
-    allowed = sorted(load_allowlist(agent))[0]
+    allowed = "provider.example"
 
     class Forbidden(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -902,7 +900,8 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
             return ["8.8.8.8", "::ffff:127.0.0.1"] if denial == "mixed" else ["127.0.0.1"]
 
         monkeypatch.setattr(boundary.egress, "_resolve", resolve)
-        url = "https://not-allowed.example/" if denial == "hostname" else f"https://{allowed}/"
+        # Any hostname is admitted; an address literal would skip the parent's DNS answer validation.
+        url = "https://127.0.0.1/" if denial == "hostname" else f"https://{allowed}/"
         if denial in {"redirect", "allowed"}:
             # A provider-shaped TLS fixture redirects the native HTTP client
             # toward a forbidden host service; the redirect never reaches it.

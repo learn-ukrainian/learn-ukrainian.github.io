@@ -72,14 +72,6 @@ build_excludes() {
     echo "$args"
 }
 
-build_shared_skill_overlay_excludes() {
-    local shared_skill
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        echo "--exclude=/skills/$(basename "$shared_skill")/"
-    done
-}
-
 # A manifest entry is TYPE<TAB>PATH, where TYPE is d, f, or l.  Paths are
 # source-controlled, but validate persisted entries before acting on them so a
 # corrupt local state file can never escape .agent/.
@@ -393,7 +385,7 @@ git_source_deleted() {
 
 # Preflight assertion: warn if an undeclared orphan is in the destination
 # but missing from source. This catches "someone dropped a new file in
-# .gemini/ without updating ORPHAN_PATHS_GEMINI" situations before the
+# .codex/ without updating ORPHAN_PATHS_CODEX" situations before the
 # next deploy silently deletes it.
 check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
@@ -445,20 +437,6 @@ check_orphans() {
     return 0
 }
 
-check_shared_skill_collisions() {
-    local shared_skill skill_name
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        skill_name="$(basename "$shared_skill")"
-        if [[ -e "gemini_extensions/skills/$skill_name" ]]; then
-            echo "  ⚠️  shared/Gemini skill collision: $skill_name"
-            echo "     Keep one canonical source; rename or remove the provider-specific duplicate."
-            return 1
-        fi
-    done
-    return 0
-}
-
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
@@ -470,9 +448,6 @@ check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXT
 # is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
-check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $(gemini_shared_skill_overlay_paths "$SHARED_EXTENSIONS/skills")" "gemini_extensions → .gemini" || orphan_fail=true
-check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
-check_shared_skill_collisions || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
     echo "❌ Deploy aborted: undeclared orphan paths would be deleted."
@@ -490,7 +465,7 @@ echo ""
 # Verify that all hooks in source directories are executable on disk
 echo "=== Verify hook permissions ==="
 hook_perm_fail=false
-for hook_dir in "$SHARED_EXTENSIONS/hooks" "gemini_extensions/hooks"; do
+for hook_dir in "$SHARED_EXTENSIONS/hooks"; do
     if [[ -d "$hook_dir" ]]; then
         for hook in "$hook_dir"/*; do
             if [[ -f "$hook" && ! -x "$hook" ]]; then
@@ -591,32 +566,6 @@ diff_overlay_files() {
     fi
 }
 
-diff_shared_skill_overlays() {
-    local shared_skill skill_name
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        skill_name="$(basename "$shared_skill")"
-        diff_dirs \
-            "$shared_skill" \
-            ".gemini/skills/$skill_name" \
-            "$shared_skill → .gemini/skills/$skill_name" \
-            ""
-    done
-}
-
-diff_gemini_skill_owners() {
-    local deployed_skill skill_name
-    [[ -d .gemini/skills ]] || return 0
-    for deployed_skill in .gemini/skills/*; do
-        [[ -d "$deployed_skill" ]] || continue
-        skill_name="$(basename "$deployed_skill")"
-        if [[ ! -d "$SHARED_EXTENSIONS/skills/$skill_name" && ! -d "gemini_extensions/skills/$skill_name" ]]; then
-            echo "  .gemini/skills: stale unowned skill '$skill_name' (will be removed)"
-            has_changes=true
-        fi
-    done
-}
-
 diff_dirs \
     "$SHARED_EXTENSIONS" \
     ".claude" \
@@ -632,10 +581,6 @@ fi
 if [[ -d "$AGY_EXTENSIONS" ]]; then
     diff_overlay_files "$AGY_EXTENSIONS" ".agents" "$AGY_EXTENSIONS → .agents"
 fi
-diff_overlay_files "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
-diff_shared_skill_overlays
-diff_gemini_skill_owners
-diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules → .gemini/rules" ""
 echo ""
 
 if [[ -d .codex/skills ]]; then
@@ -695,23 +640,11 @@ mkdir -p .agents
 if [[ -d "$AGY_EXTENSIONS" ]]; then
     "$RSYNC" -av "$AGY_EXTENSIONS/" .agents/
 fi
-# shellcheck disable=SC2046
-"$RSYNC" -av --delete \
-    $(build_excludes "$ORPHAN_PATHS_GEMINI") \
-    $(build_shared_skill_overlay_excludes) \
-    gemini_extensions/ .gemini/
-for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-    [[ -d "$shared_skill" ]] || continue
-    skill_name="$(basename "$shared_skill")"
-    mkdir -p ".gemini/skills/$skill_name"
-    "$RSYNC" -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
-done
-"$RSYNC" -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination
 echo "=== Ensuring deployed hooks are executable ==="
-for dest_hooks in .claude/hooks .agent/hooks .codex/hooks .gemini/hooks; do
+for dest_hooks in .claude/hooks .agent/hooks .codex/hooks; do
     if [[ -d "$dest_hooks" ]]; then
         chmod +x "$dest_hooks"/* 2>/dev/null || true
     fi

@@ -18,7 +18,6 @@ from tests.test_context_rollover_guard import lane_environment
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
-GEMINI_STATUSLINE = PROJECT_ROOT / "agents_extensions/gemini/statusline/statusline.sh"
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
 def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
     return {
@@ -274,7 +273,7 @@ def test_statusline_account_and_remaining_budget_are_not_missing_or_misattribute
     assert completed.stderr == ""
 
 
-@pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE], ids=["shared", "gemini"])
+@pytest.mark.parametrize("script", [STATUSLINE], ids=["shared"])
 @pytest.mark.parametrize("source", ["transcript", "current_usage", "host_total"])
 @pytest.mark.parametrize("layout", ["source", "deployed"])
 def test_statusline_uses_current_main_usage(tmp_path: Path, script: Path, source: str, layout: str) -> None:

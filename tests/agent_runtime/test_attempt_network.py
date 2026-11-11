@@ -17,12 +17,10 @@ from scripts.agent_runtime.attempt_network import (
     AttemptEgress,
     Limits,
     canonical_host,
+    connect_target,
     host_addresses,
-    load_allowlist,
     validate_answers,
 )
-
-ALLOWED = frozenset({"api.provider.example"})
 
 # Liveness guard (#9549): the longest a test waits on a child process, socket or
 # event-loop call before declaring it hung. It is never a performance
@@ -49,7 +47,6 @@ def proxy():
     with tempfile.TemporaryDirectory(prefix="eg-", dir="/tmp") as directory:
         result = AttemptEgress(
             Path(directory) / "egress.sock",
-            ALLOWED,
             limits=replace(Limits(), header_seconds=0.2, resolve_seconds=0.2, idle_seconds=0.2),
         )
         try:
@@ -60,7 +57,7 @@ def proxy():
 
 
 @pytest.mark.parametrize("target", [
-    "other.example:443", "api.provider.example.evil.example:443", "api.provider.example:80",
+    "api.provider.example:80",
     "127.0.0.1:443", "[::1]:443", "user@api.provider.example:443", "API.provider.example:443",
     "api.provider.example.:443", "api.provider.example:0443", "api.provider.example:443/path",
     "api.provider.example:443:443", "api.provider.example:443?x", "api.provider.example:443#x",
@@ -249,8 +246,9 @@ def test_slow_client_large_header_and_flood_are_bounded(proxy):
 
 
 def test_config_and_validation_contract():
-    for agent in ("agy", "codex", "claude"):
-        assert all(canonical_host(host) for host in load_allowlist(agent))
+    # Any public hostname is a destination (operator decision 2026-11-10); addresses are checked after DNS.
+    for host in ("api.github.com", "www.example.org", "api.provider.example"):
+        assert connect_target(f"CONNECT {host}:443 HTTP/1.1\r\n\r\n".encode()) == host
     assert not canonical_host("1.2.3.4")
     assert not canonical_host("provider.example.")
     assert not canonical_host("a" * 64 + ".example")
@@ -278,7 +276,7 @@ def test_proxy_start_failure_and_forwarder_help(tmp_path, monkeypatch):
 
     bad = tmp_path / "missing" / "egress.sock"
     with pytest.raises(ReviewIsolationError, match="start_failed"):
-        AttemptEgress(bad, ALLOWED)
+        AttemptEgress(bad)
     forwarder = Path(__file__).resolve().parents[2] / "scripts/agent_runtime/attempt_forwarder.py"
     help_run = subprocess.run([sys.executable, str(forwarder), "--help"], capture_output=True, text=True, timeout=LIVENESS_SECONDS)
     assert help_run.returncode == 0
