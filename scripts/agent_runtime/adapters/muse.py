@@ -20,7 +20,12 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.guardrails.worktree_containment import _require_real_directories, classify_repo_path
+from scripts.common.repo_root import primary_root
+from scripts.guardrails.worktree_containment import (
+    NotAGitRepositoryError,
+    _require_real_directories,
+    resolve_main_root_without_git,
+)
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -69,6 +74,7 @@ def confined_muse_argv(
     bootstrap = (
         "import os, sys; sys.path.insert(0, sys.argv[1]); "
         f"os.environ['LEARN_UKRAINIAN_PYTHON'] = {interpreter!r}; "
+        f"os.environ['LEARN_UKRAINIAN_PRIMARY_REPO_ROOT'] = {str(primary_root())!r}; "
         f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
         "raise SystemExit(sandbox_main(sys.argv[2:]))"
     )
@@ -197,22 +203,27 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
 
 
 def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
-    """Enforce the same path boundary for adapter and direct sandbox callers."""
+    """Require an existing linked task root, including for preview and direct callers."""
     if (
         not cwd.is_absolute()
         or any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in str(cwd))
     ):
         raise ValueError("muse_dispatch_worktree_required")
-    existing = cwd
-    if preview:
-        while not existing.exists() and not existing.is_symlink():
-            existing = existing.parent
-    _require_real_directories(existing)
-    workspace = cwd.resolve(strict=not preview)
-    # Anchor outside the candidate's own Git marker: it is untrusted and
-    # independently checked before mounting synthetic Git metadata.
-    if cwd != workspace or classify_repo_path(workspace, cwd=existing.parent) != "dispatch_worktree":
-        raise ValueError("muse_dispatch_worktree_required")
+    try:
+        # Select the authority from runtime configuration, never candidate Git metadata.
+        primary = primary_root()
+        _require_real_directories(primary)
+        _require_real_directories(cwd)
+        workspace = cwd.resolve(strict=True)
+        relative = workspace.relative_to(primary / ".worktrees/dispatch")
+        if cwd != workspace or len(relative.parts) != 2:
+            raise ValueError("not an exact dispatch task root")
+        # Validates the pointer, primary-side gitdir backlink, commondir and
+        # shared store without Git subprocesses or symlink-following metadata reads.
+        if resolve_main_root_without_git(workspace) != primary:
+            raise ValueError("worktree belongs to another primary")
+    except (OSError, ValueError, NotAGitRepositoryError) as exc:
+        raise ValueError("muse_dispatch_worktree_required") from exc
     return workspace
 
 

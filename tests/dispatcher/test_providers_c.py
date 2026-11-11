@@ -336,15 +336,20 @@ def test_cursor_text_deltas_do_not_displace_the_result_or_duplicate_assistant_te
 def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     """Defect class: Muse provider bypasses file sandbox and reads host files."""
     import shutil
+    from pathlib import Path
 
     from scripts.agent_runtime.adapters.muse import confined_muse_argv
-    from scripts.guardrails.worktree_containment import NotAGitRepositoryError
 
     if not shutil.which("bwrap"):
         pytest.skip("bubblewrap is required for the real file boundary")
     subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
     workspace = tmp_path / ".worktrees/dispatch/muse/containment"
-    workspace.mkdir(parents=True)
+    subprocess.run(["git", "-C", str(tmp_path), "-c", "user.name=T", "-c", "user.email=t@example.com",
+                    "commit", "--allow-empty", "-m", "fixture"],
+                   check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "-C", str(tmp_path), "worktree", "add", "-b", "muse-fixture", str(workspace)],
+                   check=True, capture_output=True, timeout=30)
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(tmp_path))
     outside = tmp_path / "outside.txt"
     outside.write_text("outside")
     (workspace / "inside.txt").write_text("inside")
@@ -389,7 +394,7 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
             muse.build(replace(spec, mode="workspace-write", worktree=rejected), {})
     linked = tmp_path / "linked-workspace"
     linked.symlink_to(workspace, target_is_directory=True)
-    with pytest.raises(NotAGitRepositoryError, match="symlink or not a directory"):
+    with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
         muse.build(replace(spec, mode="workspace-write", worktree=linked), {})
     invocation = muse.build(spec, {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
     assert invocation.argv[:6] == confined_muse_argv([], workspace, "read-only", spec.task_id)[:6]
@@ -400,23 +405,20 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     assert not list(scratch.glob("task-scratch/*/scratch"))
 
     # The same OS boundary permits only task-worktree writes in write mode.
-    host_git = tmp_path / "host-git"
-    host_git.mkdir()
-    (host_git / "private-marker").write_text("host-only")
-    original_pointer = f"gitdir: {host_git}\n"
-    # Defect class: invalid Git markers permit a workspace-write launch.
     marker = workspace / ".git"
+    original_pointer = marker.read_text()
+    host_git = Path(original_pointer.removeprefix("gitdir:").strip())
+    (host_git / "private-marker").write_text("host-only")
+    # Defect class: invalid Git markers permit a workspace-write launch.
+    marker.unlink()
     for invalid in ("directory", "symlink"):
         if invalid == "directory":
             marker.mkdir()
         else:
             marker.symlink_to(host_git, target_is_directory=True)
-        invocation = muse.build(replace(spec, mode="workspace-write"),
-                                {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
-        result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env,
-                                capture_output=True, text=True, timeout=30)
-        assert result.returncode != 0
-        assert "muse_worktree_git_pointer_refused" in result.stderr
+        with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+            muse.build(replace(spec, mode="workspace-write"),
+                       {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
         marker.rmdir() if invalid == "directory" else marker.unlink()
     (workspace / ".git").write_text(original_pointer)
     native.write_text(

@@ -4487,12 +4487,46 @@ def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
         assert result.stderr_excerpt == "muse_event_schema_unknown: cli_version=" + plan.metadata["cli_version"]
 
 
+@pytest.mark.parametrize("case", ["dispatch-parent", "agent-parent", "uninitialized", "forged-outside-git"])
+def test_muse_workspace_rejects_unregistered_mount_roots(tmp_path, monkeypatch, write_guard_repo, case):
+    """Defect class: broad or forged workspace roots expose sibling worktrees to writes."""
+    from scripts.agent_runtime.adapters.muse import _workspace_path, confined_muse_argv, sandbox_main
+
+    primary = write_guard_repo.main
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
+    dispatch = primary / ".worktrees/dispatch"
+    if case == "dispatch-parent":
+        candidate = dispatch
+    elif case == "agent-parent":
+        candidate = dispatch / "codex"
+    elif case == "uninitialized":
+        candidate = dispatch / "codex/uninitialized"
+        candidate.mkdir()
+    else:
+        outside = tmp_path / "not-a-repo"
+        candidate = outside / ".worktrees/dispatch/muse/task"
+        candidate.mkdir(parents=True)
+        (candidate / ".git").write_text(f"gitdir: {outside}/.git/worktrees/task\n")
+    assert _workspace_path(write_guard_repo.dispatch_wt) == write_guard_repo.dispatch_wt
+    for preview in (False, True):
+        with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+            _workspace_path(candidate, preview=preview)
+    with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+        confined_muse_argv(["sentinel-never-executed"], candidate, "workspace-write", "boundary-probe")
+    with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+        sandbox_main(["child", "boundary-probe", "workspace-write", str(candidate), str(tmp_path),
+                      "sentinel-never-executed"])
+
+
 def _muse_planning_fixture(tmp_path, monkeypatch, version):
     from scripts.agent_runtime.adapters import muse
 
     subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
     workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
-    workspace.mkdir(parents=True)
+    _git_wt(tmp_path, "-c", "user.name=T", "-c", "user.email=t@example.com",
+            "commit", "--allow-empty", "-m", "fixture")
+    _git_wt(tmp_path, "worktree", "add", "-b", "muse-fixture", str(workspace))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(tmp_path))
     scratch = tmp_path / "private-scratch"
     scratch.mkdir()
     binary = tmp_path / "fixture-muse"
