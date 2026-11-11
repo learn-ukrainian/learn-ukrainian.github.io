@@ -600,3 +600,4 @@ PR head can be rerun, and reservations are not refunded after a crash or uncerta
 transport. The legacy-table edge case fails closed. These limits remain
 documented residuals, not additional recovery paths.
 <!-- AC3 demo D3: throwaway, never lands -->
+<!-- AC3 demo D3: head moved after review -->
