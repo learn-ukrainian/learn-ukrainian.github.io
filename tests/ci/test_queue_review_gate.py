@@ -198,7 +198,7 @@ def test_approval_on_a_head_the_candidate_did_not_include_fails(
     )
     assert _run(candidate, github) == 1
     assert "#1 (queue position 1, candidate commit" in (out := capsys.readouterr().out)
-    assert "not built from this PR's current head" in out
+    assert "tree mismatch" in out
 
 
 @pytest.mark.parametrize("change", ["identical-tree", "empty-commit"])
@@ -218,7 +218,7 @@ def test_head_pushed_after_the_enqueue_fails_even_with_an_identical_tree(
     )
     github.pushed_after_enqueue.add(moved)
     assert _run(candidate, github) == 1
-    assert "the current head reached GitHub after the PR was enqueued" in capsys.readouterr().out
+    assert "no pre-enqueue check-suite witness" in capsys.readouterr().out
 
 
 def test_entries_on_a_later_page_are_members(candidate: Candidate) -> None:

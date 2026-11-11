@@ -15,11 +15,12 @@ therefore proven, never guessed:
 3. Every chain commit must be the ``headCommit`` of exactly one entry, whose pull request
    is open against the branch and has the number in the commit subject. The chain's last
    commit must belong to the PR the ref names.
-4. The PR's current head must be the head the candidate included: merging that head into
-   the squash commit's parent with ``git merge-tree --write-tree`` must reproduce the
-   squash commit's tree, and GitHub must have a check suite for that head created before the
-   entry's ``enqueuedAt``: no GitHub field names the entry's source head, and a head pushed
-   after the enqueue (even one with an identical tree, or an empty commit) fails.
+4. The candidate must be the PR's current head merged onto the queue parent: merging that
+   head into the squash commit's parent with ``git merge-tree --write-tree`` must reproduce
+   the squash commit's tree, and GitHub must hold a check suite for that head created before
+   the entry's ``enqueuedAt`` (a pre-enqueue witness). No GitHub field names an entry's source
+   head, so this proves tree equivalence and the head's age, not the source SHA's identity,
+   history or attribution; that residual is recorded on learn-ukrainian/machinery#100.
 5. GitHub's latest ``fleet/cross-family-review`` status on that head must be ``success``.
    GitHub keeps one current state per context (the newest wins), so an older success
    never overrides a later failure, and a moved head carries no approval at all.
@@ -350,13 +351,11 @@ def includes_head(member: Member) -> bool:
 
 
 def head_facts(post: Post, event: Event, members: list[Member]) -> dict[str, HeadFacts]:
-    """Each member head's current review state, and whether GitHub saw that head before the enqueue.
+    """Each member head's current review state, and whether it has a pre-enqueue check-suite witness.
 
-    No GitHub field names the source head a queue entry was built from. A head that differs from
-    the included one reached the repository after the entry was enqueued, and so did every check
-    suite GitHub created for it. A check suite created before ``enqueuedAt`` (a server timestamp)
-    therefore shows the current head predates the entry; a head pushed afterwards, even with an
-    identical tree, fails.
+    The witness is a check suite on the head whose server ``createdAt`` is earlier than the
+    entry's ``enqueuedAt``: it shows the head existed on GitHub before the enqueue. It does not
+    show the PR pointed at that head when it was enqueued; no GitHub field records that.
     """
     owner, name = event.repository.split("/", 1)
     declarations = "".join(f", $h{index}: GitObjectID!" for index in range(len(members)))
@@ -405,10 +404,12 @@ def evaluate(event: Event, post: Post) -> list[str]:
     for member in members:
         label = f"#{member.squash.pr} (queue position {member.position}, candidate commit {member.squash.sha[:12]}, head {member.head})"
         if not includes_head(member):
-            findings.append(f"{label}: the candidate was not built from this PR's current head")
+            findings.append(
+                f"{label}: tree mismatch: the current head merged onto the queue parent is not the candidate"
+            )
             continue
         if not facts[member.head].seen_before_enqueue:
-            findings.append(f"{label}: the current head reached GitHub after the PR was enqueued")
+            findings.append(f"{label}: no pre-enqueue check-suite witness for the current head")
             continue
         state = facts[member.head].state
         if state is None:

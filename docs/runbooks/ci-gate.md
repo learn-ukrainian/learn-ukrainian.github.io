@@ -235,10 +235,11 @@ in it has `fleet/cross-family-review` = `success`, GitHub's newest state for tha
 This applies whichever command enqueued the PR. The event's `base_sha` is the previous entry's candidate, not
 `main`, so the ref's PR number and `base..head` name only the last PR. Membership is the first-parent chain from
 the candidate's merge base with the live `main` tip. Each squash commit there must be the `headCommit` of exactly
-one paginated merge-queue entry with the same `(#N)`. No GitHub field names an entry's source head. Two checks bind
-the approved head to the included head instead: merging the PR's current head into the squash parent must
-reproduce the squash tree, and GitHub must hold a check suite for that head created before the entry's
-`enqueuedAt`, so a head pushed after the enqueue fails even with an identical tree. API errors and
+one paginated merge-queue entry with the same `(#N)`. Acceptance (AC1 as amended under designated approval): the
+squash tree must equal the PR's current head merged onto the queue parent (`git merge-tree`), that head must carry
+the approval, and GitHub must hold a check suite on it created before the entry's `enqueuedAt`. No GitHub field
+names an entry's source head, so this proves tree equivalence, not source-SHA identity, history or attribution
+(residual on learn-ukrainian/machinery#100). API errors and
 membership disagreements get three fresh reads, then fail closed. This guards against accidental landings without
 review. It is not a trust boundary: a status forged with the shared credential, or a candidate that edits this
 workflow, is outside it.
