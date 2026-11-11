@@ -160,6 +160,8 @@ def check_model_admission(agent: str, model: str, mode: str, options: dict, prom
             return
         raise ValueError(unknown_model_refusal(model))
     if not catalog["models"][identity].get("red_team_only"):
+        if refusal := retired_model_refusal(model, catalog):
+            raise ValueError(refusal)
         # Review typing is the one dispatch role admission infers: every review flag, --risk,
         # --review-mode, --language-lane, the subject selectors and a review research role.
         reviewed = "review" in dispatch_roles(options)

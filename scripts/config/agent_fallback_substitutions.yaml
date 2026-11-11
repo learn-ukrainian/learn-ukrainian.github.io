@@ -131,8 +131,7 @@ worker_resource_policy: |
   route availability. Native Grok may do all work, including Ukrainian, under
   measurement; its Ukrainian work requires the Sources MCP, and language-lane
   admission refuses it until the native Grok harness wires that server.
-  Gemini Pro and Argon are retired, not subscribed (operator 2026-10-23). Critical and
-  security final sign-off stays Opus 5.5 or Sol 6.1 (2026-10-13 frozen eval:
+  Critical and security final sign-off stays Opus 5.5 or Sol 6.1 (2026-10-13 frozen eval:
   Grok approved a change with 0 of 8 known blockers).
   Writer selection follows core rules and the canonical writer policy, with no
   excluded-writer recommendation in this substitution table.
