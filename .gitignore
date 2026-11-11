@@ -304,6 +304,7 @@ embed-venv/
 site/dist
 site/node_modules
 site/.astro
+.astro/
 site/src/data/lexicon-manifest.json
 site/src/data/lexicon-manifest.json.gz
 site/src/data/lexicon-manifest.staged*

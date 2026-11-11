@@ -246,9 +246,6 @@ packages:
   vocab:
     reason: operator classification
     role: product
-  vocab_audit:
-    reason: operator classification
-    role: product
   wiki:
     reason: operator classification
     role: product

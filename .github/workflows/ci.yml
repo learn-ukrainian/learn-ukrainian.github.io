@@ -772,6 +772,10 @@ jobs:
     needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read  # checkout, PR head and branch-tip fetches
+      pull-requests: read  # merge-queue entries and their pull requests
+      statuses: read  # fleet/cross-family-review on each member's head
     steps:
       # Full history, but sparse: checkout then implies filter blob:none, so only the
       # commits, trees and the gate's own scripts are downloaded, not the 700 MB tree.
@@ -845,3 +849,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
         run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'
+      # No PR lands without a current cross-family review, whatever command enqueued it.
+      # Every PR in the candidate (earlier entries included, not just the ref's PR) needs
+      # fleet/cross-family-review = success on its current head, read last so a verdict
+      # posted while the queue run was testing still counts. See docs/runbooks/ci-gate.md.
+      - name: Require a current cross-family review for every queued PR
+        if: github.event_name == 'merge_group'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" -m scripts.ci.queue_review_gate'

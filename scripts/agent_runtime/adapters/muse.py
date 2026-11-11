@@ -49,8 +49,105 @@ _PASSIVE_EVENTS = frozenset(
         "task.lifecycle.side_effect_intent",
         "task.lifecycle.started",
         "task.lifecycle.completed",
+        "task.lifecycle.status",
+        "task.lifecycle.output",
     }
 )
+
+
+def confined_muse_argv(
+    cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
+) -> list[str]:
+    """Use the existing governed scratch and file sandbox for every Muse run."""
+    if mode == "workspace-write":
+        raise ValueError("muse_write_mode_unconfined")
+    from scripts.common.repo_root import project_interpreter
+    from scripts.common.scratch import resolve_scratch_root
+
+    package = Path(__file__).absolute().parents[2].name
+    bootstrap = (
+        "import sys; sys.path.insert(0, sys.argv[1]); "
+        f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
+        "raise SystemExit(sandbox_main(sys.argv[2:]))"
+    )
+    return [
+        str(project_interpreter()), "-I", "-c", bootstrap,
+        str(Path(__file__).resolve().parents[3]),
+        "govern", task_id, mode, str(workspace), str(scratch_root or resolve_scratch_root()), *cmd,
+    ]
+
+
+def sandbox_main(args: list[str]) -> int:
+    """Launch through existing scratch ownership, then exec the verified sandbox."""
+    from scripts.common import task_scratch
+    from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
+
+    phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
+    if mode == "workspace-write":
+        raise ValueError("muse_write_mode_unconfined")
+    workspace = Path(raw_workspace).resolve(strict=True)
+    if mode not in _TOOLS or phase not in {"govern", "child"}:
+        raise ValueError("muse_sandbox_launch_refused")
+    if phase == "govern":
+        launcher = confined_muse_argv(cmd, workspace, mode, task_id, scratch_root)
+        launcher[5] = "child"
+        outcome = task_scratch.run_task(task_id, launcher, root=Path(scratch_root), cwd=workspace)
+        return outcome.exit_status if outcome.action == "removed" else 125
+
+    runtime = Path(os.environ[task_scratch.SCRATCH_DIR_ENV_VAR]) / "runtime"
+    runtime.mkdir(mode=0o700)
+    home = runtime / "home"
+    home.mkdir(mode=0o700)
+    temporary = runtime / "tmp"
+    temporary.mkdir(mode=0o700)
+    binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
+    reads = [binary]
+    with binary.open("rb") as stream:
+        script = stream.read(2) == b"#!"
+    if script:
+        # Muse's installed launcher selects one native release. Grant exact
+        # files, never the installation directory or adjacent user programs.
+        version_file = binary.parent / ".muse-version"
+        if version_file.is_symlink():
+            raise ValueError("muse_runtime_metadata_refused")
+        version = version_file.read_text().strip()
+        if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+-R[0-9]+(?:\.[0-9]+)?", version) is None:
+            raise ValueError("muse_runtime_version_refused")
+        native = binary.parent / ("muse-bin-" + version)
+        if native.is_symlink() or not native.is_file():
+            raise ValueError("muse_native_runtime_refused")
+        reads.extend([version_file, native])
+    prompt_index = cmd.index("--prompt-file") + 1
+    prompt = runtime / "prompt.txt"
+    prompt.write_bytes(Path(cmd[prompt_index]).read_bytes())
+    cmd = [str(binary), *cmd[1:]]
+    cmd[prompt_index] = str(prompt)
+    if not hasattr(os, "memfd_create"):
+        raise ValueError("muse_anonymous_auth_unavailable")
+    auth_fd = os.memfd_create("muse-auth", os.MFD_CLOEXEC)
+    try:
+        auth_env = stage_engine_auth("muse", write_home=home, muse_auth_fd=auth_fd)
+        os.lseek(auth_fd, 0, os.SEEK_SET)
+        sandbox = prepare_host_sandbox(
+            engine="muse", snapshot_root=workspace, write_root=runtime,
+            reject_root=workspace, runtime_reads=reads, network_allowed=True,
+        )
+        if sandbox.mechanism != "linux-bwrap":
+            raise ValueError("muse_anonymous_auth_sandbox_unavailable")
+        argv = wrap_argv_with_sandbox(cmd, sandbox)
+        extra = ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
+        if os.fstat(auth_fd).st_size:
+            # bwrap copies this fd into its private tmpfs and closes it before
+            # exec. A killed run leaves no named host credential copy.
+            extra += ["--perms", "0400", "--ro-bind-data", str(auth_fd), str(home / ".config/muse/auth.json")]
+        argv[-len(cmd):-len(cmd)] = extra
+        env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
+        env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
+        env.pop("MUSE_AUTH_PATH", None)
+        os.set_inheritable(auth_fd, bool(os.fstat(auth_fd).st_size))
+        os.execve(argv[0], argv, env)
+    finally:
+        os.close(auth_fd)
 
 
 def resolve_muse_model(model: str | None) -> str:
@@ -173,6 +270,8 @@ class MuseAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         model = resolve_muse_model(model)
         config = tool_config or {}
         if mode not in self.supported_modes:
@@ -221,6 +320,8 @@ class MuseAdapter:
         effort: str | None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         return self._plan(
             prompt=prompt,
             mode=mode,
@@ -248,6 +349,8 @@ class MuseAdapter:
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
+        if mode == "workspace-write":
+            raise ValueError("muse_write_mode_unconfined")
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:
@@ -320,7 +423,7 @@ class MuseAdapter:
             cmd.extend(["--max-tool-output-bytes", str(max_tool_output_bytes)])
         cmd.extend(["--prompt-file", prompt_path])
         return InvocationPlan(
-            cmd=cmd,
+            cmd=confined_muse_argv(cmd, workspace, mode, task_id, scratch),
             cwd=workspace,
             env_overrides={"MUSE_NO_AUTO_UPDATE": "1"},
             env_unsets=("GH_TOKEN", "GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN", "GITHUB_ENTERPRISE_TOKEN", "SSH_AUTH_SOCK"),
@@ -369,8 +472,10 @@ class MuseAdapter:
             session = plan.metadata["provider_session_id"]
             UUID(str(session))
             command = None
-            linked = started = False
+            linked = started = configured = False
             tasks: dict[str, str | None] = {}
+            tool_intents: dict[str, tuple[str, str]] = {}
+            tool_results: set[str] = set()
             usage = terminal = workspace = None
             sequences: dict[tuple[str, str], int] = {}
             ids: set[str] = set()
@@ -452,13 +557,47 @@ class MuseAdapter:
                             "side_effect_intent": "scheduled", "started": "side_effect_intent",
                             "completed": "started",
                         }
-                        if stage not in previous or tasks[task] != previous[stage]:
-                            raise ValueError("muse_task_order_invalid")
-                        tasks[task] = stage
+                        if stage in {"status", "output"}:
+                            if payload.get("kind") != "task_lifecycle" or tasks[task] != "started" or (
+                                stage == "status" and not isinstance(event.get("message"), str)
+                            ) or (
+                                stage == "output" and (
+                                    not isinstance(event.get("chunk"), str) or type(event.get("final_result")) is not bool
+                                )
+                            ):
+                                raise ValueError("muse_task_observation_invalid")
+                        else:
+                            if stage not in previous or tasks[task] != previous[stage]:
+                                raise ValueError("muse_task_order_invalid")
+                            tasks[task] = stage
+                        if stage == "side_effect_intent" and str(event.get("operation", "")).startswith("tool:"):
+                            tool_name = event["operation"].removeprefix("tool:")
+                            intent = event.get("idempotency_key", "")
+                            if tool_name not in _TOOLS[mode] or not isinstance(intent, str) or not intent.startswith("tool:"):
+                                raise ValueError("muse_tool_binding_invalid")
+                            call = intent.removeprefix("tool:")
+                            if not call or call in tool_intents:
+                                raise ValueError("muse_tool_binding_invalid")
+                            tool_intents[call] = (task, tool_name)
                 if kind == "session.workspace_branch.observed":
                     if workspace is not None or payload["record"]["command_id"] != command:
                         raise ValueError("muse_workspace_changed")
                     workspace = payload["record"]["workspace_root"]
+                elif kind == "run.model.configured":
+                    if (configured or started or payload.get("kind") != "run_model_configured"
+                            or payload.get("model_id") != plan.metadata["model"] or payload.get("provider_id") != "meta"):
+                        raise ValueError("muse_model_configuration_invalid")
+                    configured = True
+                elif kind == "tool.result":
+                    call = payload.get("call_id")
+                    if not isinstance(call, str) or call not in tool_intents or call in tool_results:
+                        raise ValueError("muse_tool_binding_invalid")
+                    task, tool_name = tool_intents[call]
+                    if (tasks[task] != "completed" or payload.get("kind") != "tool_result"
+                            or not isinstance(payload.get("text"), str)
+                            or payload.get("correlation_facts") != {"outcome": "success", "tool_name": tool_name}):
+                        raise ValueError("muse_tool_binding_invalid")
+                    tool_results.add(call)
                 elif kind == "run.usage":
                     if (
                         usage is not None
