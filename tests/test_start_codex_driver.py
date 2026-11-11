@@ -103,6 +103,8 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (root / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(root)
     install_loader_bypass(root)
 

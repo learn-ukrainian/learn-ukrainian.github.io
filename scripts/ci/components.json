@@ -623,22 +623,10 @@
     "start-gemini.sh": [
       "harness"
     ],
-    "start-glm.sh": [
-      "harness"
-    ],
-    "start-glmcc.sh": [
-      "harness"
-    ],
     "start-grok-driver.sh": [
       "harness"
     ],
     "start-grok.sh": [
-      "harness"
-    ],
-    "start-kimi.sh": [
-      "harness"
-    ],
-    "start-kimicc.sh": [
       "harness"
     ],
     "tests/build/test_build_landing_pages.py": [

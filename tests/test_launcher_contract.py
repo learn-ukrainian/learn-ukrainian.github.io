@@ -59,12 +59,7 @@ PUBLIC = (
     "start-muse-driver.sh",
     "start-grok.sh",
     "start-grok-driver.sh",
-    "start-glm.sh",
-    "start-glmcc.sh",
 )
-# Compat wrappers forward into the shared adapters; they are part of PUBLIC.
-COMPAT = ("start-glmcc.sh",)
-assert set(COMPAT).issubset(PUBLIC)
 
 
 def _install_claude_usage_fixture(root: Path) -> None:
@@ -206,8 +201,6 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
         ("start-codex.sh", "interactive launchers reject --epic"),
         ("start-gemini.sh", "interactive launchers reject --epic"),
         ("start-grok.sh", "interactive launchers reject --epic"),
-        ("start-glm.sh", "is retired in the model catalog"),
-        ("start-glmcc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> None:
@@ -224,8 +217,6 @@ def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> No
         ("start-codex.sh", "interactive launchers reject --force"),
         ("start-gemini.sh", "interactive launchers reject --force"),
         ("start-grok.sh", "interactive launchers reject --force"),
-        ("start-glm.sh", "is retired in the model catalog"),
-        ("start-glmcc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_force(name: str, message: str) -> None:
@@ -341,6 +332,8 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (root / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(root)
     install_loader_bypass(root)
     _install_claude_usage_fixture(root)
@@ -497,6 +490,8 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (root / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(root)
     install_loader_bypass(root)
     _install_claude_usage_fixture(root)
@@ -1176,22 +1171,6 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     assert [session["state"] for session in recovered_history["sessions"]] == ["closed", "open"]
     assert "force_closed" in [event["event_type"] for event in recovered_history["lease_events"]]
     assert supervisor.close_driver(role=LaunchRole.DRIVER, lease=rerouted) == "closed"
-
-
-def test_harness_contracts_and_redacted_glm_credentials(tmp_path: Path) -> None:
-    home = tmp_path / "home"
-    glm_secret = "glm-secret-must-not-appear"
-    glm = run_launcher(
-        "start-glmcc.sh",
-        env={"HOME": str(home), "ZAI_API_KEY": glm_secret},
-    )
-    assert glm.returncode == 2, glm.stderr
-    assert "is retired in the model catalog" in glm.stderr
-    assert glm_secret not in glm.stdout + glm.stderr
-
-    unsupported = run_launcher("start-glm.sh", "--harness", "native")
-    assert unsupported.returncode == 2
-    assert "is retired in the model catalog" in unsupported.stderr
 
 
 def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) -> None:

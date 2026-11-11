@@ -318,8 +318,6 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
 
 # --------------------------------------------------------------------------- launchers
 
-_GLM_CREDENTIALS = {"GLMCC_AUTH_TOKEN": "", "ZAI_API_KEY": "test-key", "ZHIPU_API_KEY": "", "GLM_API_KEY": ""}
-
 # (row, launcher, args, extra env kind, carrier, seat)
 LAUNCHER_ROWS = (
     ("claude-interactive", "start-claude.sh", (), None, "--append-system-prompt", "core"),
@@ -340,8 +338,6 @@ LAUNCHER_ROWS = (
     ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
-    ("glm-opencode", "start-glm.sh", (), None, "positional", "core"),
-    ("glmcc", "start-glmcc.sh", (), "glm", "--append-system-prompt", "core"),
 )
 
 
@@ -357,8 +353,6 @@ def _launch(
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
     env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
-    if env_kind == "glm":
-        env.update({**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")})
     env.update(extra_env or {})
     result = subprocess.run(
         [str(root / name), *args], cwd=root, env=env, text=True, capture_output=True, check=False, timeout=120
@@ -397,11 +391,6 @@ def _carrier(argv: list[str], carrier: str) -> str:
     ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
 )
 def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat, tmp_path: Path, core_root) -> None:
-    if row in {"glm-opencode", "glmcc"}:
-        result, argv = _launch(core_root, name, args, tmp_path, env_kind, expect_launch=False)
-        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
-        assert argv == []
-        return
     result, argv = _launch(core_root, name, args, tmp_path, env_kind)
     text = _carrier(argv, carrier)
     _assert_core(text, seat, row)
@@ -440,11 +429,6 @@ def test_launcher_without_the_core_refuses_before_any_side_effect(
     row, name, args, env_kind, carrier, seat, tmp_path: Path, absent_root: Path
 ) -> None:
     result, _ = _launch(absent_root, name, args, tmp_path, env_kind, expect_launch=False)
-    if row in {"glm-opencode", "glmcc"}:
-        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
-        assert "would exec" not in result.stdout
-        assert "would deploy agent extensions" not in result.stdout
-        return
     assert result.returncode == 1, (result.stdout, result.stderr)
     assert "refusing to launch" in result.stderr
     assert "agents_extensions/shared/rules/core.md" in result.stderr
