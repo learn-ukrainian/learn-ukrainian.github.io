@@ -78,7 +78,7 @@ SOURCE_CHECKED_CHUNKS: dict[str, tuple[str, str, tuple[str, ...], str]] = {
     "9-klas-ukrajinska-mova-avramenko-2017_s0159": ("sense", "являтися", ("бути",), "c437d36c0c3beab3a697dc1bc6b126b8a3ecf5a595032c8772ad2bbf0fc3babf"),
     "10-klas-ukrmova-glazova-2018_s0075": ("sense", "неділя", ("тиждень",), "fab2108c6c08df5d904b21e04e4753d8bb30bce5a87d2b530ae294e3f5a4f47f"),
     "11-klas-ukrajinska-mova-glazova-2019_s0071": ("sense", "діючий", ("чинний (закон)",), "971b0f054d0644ff03975a71fd511f74574bb138ef0c9415ae87958bf1488bfd"),
-    "11-klas-ukrajinska-mova-glazova-2019_s0078": ("phrase", "при допомозі", ("за допомогою",), "2ba4469f4ba178a3ff07c9a20e1237a41761f850573000cba2f426bf8a8d2692"),
+    "11-klas-ukrajinska-mova-glazova-2019_s0078": ("phrase", "при допомозі", ("за допомогою",), "2ba4469f4ba178a3ff07c9a20e1237a41761f850573000cba2f426bf8a8d2692"),  # trufflehog:ignore
 }
 
 # Confirmed active-participle calques → recommended Ukrainian replacement(s).

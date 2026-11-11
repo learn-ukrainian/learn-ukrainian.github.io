@@ -71,7 +71,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "6ce1c30ab262f275c0ad864fa9d33e45b2281a81f74d7c90462487223df32c1a"
+        "sha256": "c6e2e3bb46847d0508977ad191dd87ef66c8fbe477cfe54cc59bc23c49b7412e"
       },
       {
         "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
