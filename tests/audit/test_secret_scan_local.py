@@ -948,6 +948,14 @@ def test_tree_scan_drops_files_listed_in_trufflehogignore(
     files = call["argv"][call["argv"].index("--") + 1 :]
     assert "gen.lock" not in files
     assert "app.py" in files
+    # Pattern whitespace is significant, and non-RE2 syntax fails closed instead of hiding files.
+    (repo / ".trufflehogignore").write_text(" app\\.py$\n", encoding="utf-8")
+    assert "app.py" in ssl.tree_candidates(repo)
+    kept = [p for p in ssl.tree_candidates(repo) if not any(r.search(p) for r in ssl._ignore_patterns(repo))]
+    assert "app.py" in kept
+    (repo / ".trufflehogignore").write_text("(?=.)\n", encoding="utf-8")
+    with pytest.raises(ssl.ScanError):
+        ssl._ignore_patterns(repo)
 
 
 def test_tree_splits_long_file_lists_into_batches() -> None:

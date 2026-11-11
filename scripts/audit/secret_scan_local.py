@@ -464,18 +464,25 @@ def _exclude_args(repo: Path) -> list[str]:
     return [f"--exclude-paths={ignore}"] if ignore.is_file() else []
 
 
+# Python `re` accepts constructs TruffleHog's RE2 engine rejects (lookaround, backreferences,
+# conditionals, atomic groups, `\Z`). Refuse them up front so the local filter fails closed.
+_NON_RE2 = re.compile(r"\(\?(?:=|!|<=|<!|>|P=|\()|\\[1-9]|\\Z|[*+?}][+]")
+
+
 def _ignore_patterns(repo: Path) -> list[re.Pattern[str]]:
-    """Regexes from .trufflehogignore (one per line, `#` comments), as TruffleHog applies them."""
+    """Regexes from .trufflehogignore as TruffleHog reads them: one per line, whitespace kept,
+    blank and `#` lines skipped, RE2 character classes (`re.ASCII`)."""
     ignore = repo / IGNORE_FILE
     if not ignore.is_file():
         return []
     patterns: list[re.Pattern[str]] = []
     for line in ignore.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
         if not line or line.startswith("#"):
             continue
+        if _NON_RE2.search(line):
+            raise ScanError(f"unsupported {IGNORE_FILE} pattern (not valid RE2)")
         try:
-            patterns.append(re.compile(line))
+            patterns.append(re.compile(line, re.ASCII))
         except re.error as exc:
             raise ScanError(f"invalid {IGNORE_FILE} pattern ({exc.msg})") from exc
     return patterns
