@@ -39,15 +39,17 @@ deploy_agent_extensions() {
         return 1
     fi
 
+    # Command-line values override every npm config source (environment, user,
+    # global and project npmrc), so ambient config cannot skip the deploy script.
     local log_file
     log_file="$(mktemp "${TMPDIR:-/tmp}/agents-deploy.XXXXXX")" || {
         echo "⚠️  mktemp failed — running deploy without output capture"
-        (cd "$project_dir" && npm run --silent "$npm_script")
+        (cd "$project_dir" && npm run --silent --if-present=false --script-shell=/bin/sh "$npm_script")
         return $?
     }
 
     local exit_code=0
-    (cd "$project_dir" && npm run --silent "$npm_script" >"$log_file" 2>&1) || exit_code=$?
+    (cd "$project_dir" && npm run --silent --if-present=false --script-shell=/bin/sh "$npm_script" >"$log_file" 2>&1) || exit_code=$?
 
     # Durable status breadcrumb. Printing the banner to the terminal is NOT
     # enough: the launcher hands the terminal to the agent CLI, which clears
