@@ -426,6 +426,7 @@ def test_install_atomic_publication_preserves_unrelated_bytes(tmp_path, monkeypa
 
 
 def test_gate_and_cli(tmp_path, capsys):
+    (tmp_path / "cwd").mkdir()
     paths = config.hook_locations(tmp_path / "cwd", tmp_path / "home")
     assert config.check_hook_config(()).reason == "missing_file"
     with pytest.raises(config.AgyHookConfigError, match="missing_file"):

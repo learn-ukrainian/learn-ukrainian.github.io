@@ -155,13 +155,13 @@ def main(argv: list[str] | None = None) -> int:
         else:
             raw = sys.stdin.read()
         command = extract_command(harness, json.loads(raw))
-        if command is not None and not os.environ.get("LU_PRODUCT_ROOT"):
+        if command is not None:
             if str(ROOT) not in sys.path:
                 sys.path.insert(0, str(ROOT))
             from scripts.common.repo_root import configure_native_hook_roots
 
-            # The direct native boundary: missing roots come from the working directory by the
-            # shared shell rule before the product guard is located; failure denies below.
+            # The direct native boundary validates the hook context and supplies missing roots
+            # before the product guard is located; failure denies below.
             configure_native_hook_roots(Path.cwd())
         allowed, message = (
             (True, "") if command is None else run_guard(command, timeout=options.timeout, harness=harness)

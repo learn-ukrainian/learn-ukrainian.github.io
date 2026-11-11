@@ -53,7 +53,7 @@ case "$MODE" in
       # Primary-checkout dirt audit (#11253): exit 2 hands the attribution
       # report to the model; Codex runs PostToolUse for non-zero exits too.
       AUDIT_HOOK="$HOOKS_DIR/audit-primary-checkout-dirt.py"
-      printf '%s' "$PAYLOAD" | "$PYTHON_BIN" "$AUDIT_HOOK"
+      printf '%s' "$PAYLOAD" | "$PYTHON_BIN" -I "$AUDIT_HOOK"
       audit_rc=$?
       [ "$audit_rc" -eq 0 ] || exit "$audit_rc"
     fi

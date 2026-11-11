@@ -25,6 +25,10 @@ else
     child_ok=0
 fi
 cat >/dev/null
+# The child's own context refusal stays a refusal, never an "unknown" announcement.
+if [ "$child_ok" = 1 ] && [ "$output" = '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ]; then
+    bootstrap_failed
+fi
 if [ "$child_ok" = 1 ] && validated=$(printf '%s' "$output" | "$py" -I -c '
 import json, sys
 value = json.load(sys.stdin)

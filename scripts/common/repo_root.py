@@ -660,19 +660,20 @@ def native_hook_roots(invocation_dir: Path) -> tuple[Path, Path]:
 
 
 def configure_native_hook_roots(invocation_dir: Path) -> None:
-    """At a direct hook or provider boundary, set missing product and shared-state roots.
+    """At a direct hook or provider boundary, validate the hook context and set missing roots.
 
-    ``LU_PRODUCT_ROOT`` and ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` that are already set are
-    kept and validated in process (no shell runs when both are set); an invalid one
-    raises :class:`MachineryConfigError`. Missing ones come from :func:`native_hook_roots`
-    for ``invocation_dir``, the caller's explicit invocation directory, never a payload's
-    working directory. Call it only from a hook or launch boundary, never at import.
+    Every call applies the shared shell rule (:func:`native_hook_roots` for
+    ``invocation_dir``, the caller's explicit invocation directory, never a payload's
+    working directory), so configured roots get the same Git-metadata checks as the
+    generated hook command; a refusal raises :class:`ProductRootError`. Configured
+    ``LU_PRODUCT_ROOT`` and ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` values are kept; only
+    missing ones are set. The in-process validators then run as well. Call it only from
+    a hook or launch boundary, never at import.
     """
-    if not (os.environ.get(PRODUCT_ROOT_ENV) and os.environ.get(PRIMARY_ROOT_ENV)):
-        product, primary = native_hook_roots(invocation_dir)
-        if not os.environ.get(PRODUCT_ROOT_ENV):
-            os.environ[PRODUCT_ROOT_ENV] = os.fspath(product)
-        if not os.environ.get(PRIMARY_ROOT_ENV):
-            os.environ[PRIMARY_ROOT_ENV] = os.fspath(primary)
+    product, primary = native_hook_roots(invocation_dir)
+    if not os.environ.get(PRODUCT_ROOT_ENV):
+        os.environ[PRODUCT_ROOT_ENV] = os.fspath(product)
+    if not os.environ.get(PRIMARY_ROOT_ENV):
+        os.environ[PRIMARY_ROOT_ENV] = os.fspath(primary)
     product_root()
     state_root()
