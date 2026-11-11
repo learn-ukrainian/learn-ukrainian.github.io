@@ -1,4 +1,5 @@
 # CI Gate
+<!-- AC3 demo D1: throwaway, never lands -->
 
 `.github/workflows/ci.yml` emits the required `CI Gate` context in two tiers.
 PR events run admission checks: file-content secret scanning, the large-file
