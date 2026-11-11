@@ -675,12 +675,6 @@
       ]
     },
     {
-      "path": ".astro/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
       "path": ".cursor/",
       "components": [
         "harness"
@@ -756,12 +750,6 @@
       "path": "bin/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "briefs/",
-      "components": [
-        "harness"
       ]
     },
     {
@@ -896,12 +884,6 @@
       "path": "review/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "reviews/",
-      "components": [
-        "harness"
       ]
     },
     {
@@ -1056,12 +1038,6 @@
       "path": "status/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "tasks/",
-      "components": [
-        "harness"
       ]
     },
     {
