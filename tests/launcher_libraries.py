@@ -69,7 +69,8 @@ def installed_machinery() -> InstalledMachinery:
 def freeze_product_wrapper(source: Path, destination: Path, package: str) -> None:
     """Copy product wrapper ``source`` as fixture data, its launcher core taken from ``package``.
 
-    The source line is the only change, and the wrapper may name no other machinery path.
+    The source line and product-root export adapt the wrapper to the installed core.
+    The wrapper may name no other machinery path.
     """
     body = source.read_text(encoding="utf-8")
     old = f'"$ROOT/{machinery_package()}/lib/launcher_core.sh"'
@@ -77,7 +78,10 @@ def freeze_product_wrapper(source: Path, destination: Path, package: str) -> Non
     assert body.count(old) == 1 and not [line for line in code if f"{machinery_package()}/" in line], source
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.unlink(missing_ok=True)
-    destination.write_text(body.replace(old, f'"$ROOT/{package}/lib/launcher_core.sh"'), encoding="utf-8")
+    destination.write_text(
+        body.replace(f"source {old}", f'export LU_PRODUCT_ROOT="$ROOT"\nsource "$ROOT/{package}/lib/launcher_core.sh"'),
+        encoding="utf-8",
+    )
     destination.chmod(0o755)
 
 

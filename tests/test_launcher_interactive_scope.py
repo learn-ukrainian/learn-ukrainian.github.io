@@ -405,6 +405,8 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
         "TEST_SIGNAL_PROVIDER": str(signal_provider),
         "TEST_SIGNAL_LOG": str(tmp_path / "signal-log"),
     }
+    if runtime == "installed":
+        env["LU_PRODUCT_ROOT"] = str(root)
     return root, env
 
 
