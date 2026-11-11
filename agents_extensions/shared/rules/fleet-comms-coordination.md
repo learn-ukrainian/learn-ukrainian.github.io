@@ -19,7 +19,7 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | Layer | Role | Where |
 | --- | --- | --- |
 | **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules?scope=task:fleet-comms` (or `scope=task:driver` / `scope=full`) + offline path |
-| **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
+| **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
 | **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules?scope=task:routing` (or `scope=full`) model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `.venv/bin/python -m scripts.fleet_comms plane-status` |
@@ -151,10 +151,10 @@ Every epic driver session (any harness) MUST:
    and same-family chat are still not the gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
-   - **grok / gemini / kimi:** canary mint/score with the seat lane
+   - **grok / gemini / codex:** canary mint/score with the seat lane
      (`.venv/bin/python -m scripts.session_canary.grok_lane …`,
      `.venv/bin/python -m scripts.session_canary.gemini_lane …` or
-     `.venv/bin/python -m scripts.session_canary.kimi_lane …`); end on
+     `.venv/bin/python -m scripts.session_canary.codex_lane …`); end on
      FAIL-HANDOFF (&lt;8/10), not compact count.
    - **Claude / Sonnet:** SessionStart / PostCompact + thread-handoff — **no** canary lane
      (do not invent `<model>_lane`).

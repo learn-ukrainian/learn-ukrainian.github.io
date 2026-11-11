@@ -795,6 +795,10 @@ def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, exp
         # An unknown explicit pin is refused at dispatch admission with the catalog's unknown-model text.
         with pytest.raises(ValueError, match=re.escape(unknown_model_refusal(spelling))):
             checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
+    elif refusal := retired_model_refusal(spelling):
+        # A retired catalog model is refused at dispatch admission with the catalog's retired text.
+        with pytest.raises(ValueError, match=re.escape(refusal)):
+            checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
     else:
         checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
 
