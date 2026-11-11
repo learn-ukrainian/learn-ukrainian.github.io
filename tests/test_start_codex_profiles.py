@@ -68,6 +68,8 @@ def _prepare_repo(tmp_path: Path, *, separate_git_dir: bool = False) -> tuple[Pa
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (primary / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(primary)
     install_loader_bypass(primary)
     # Driver launches check their handoff slot against the real roster (#8303).
