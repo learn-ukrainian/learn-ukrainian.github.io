@@ -464,23 +464,83 @@ def _exclude_args(repo: Path) -> list[str]:
     return [f"--exclude-paths={ignore}"] if ignore.is_file() else []
 
 
-# Python `re` accepts constructs TruffleHog's RE2 engine rejects (lookaround, backreferences,
-# conditionals, atomic groups, `\Z`). Refuse them up front so the local filter fails closed.
-_NON_RE2 = re.compile(r"\(\?(?:=|!|<=|<!|>|P=|\()|\\[1-9]|\\Z|[*+?}][+]")
+_COUNT = re.compile(r"\{(\d{1,3})(?:,(\d{0,3}))?\}")
+_ESCAPE_LETTERS = "dwsDWS"  # ASCII-only in both RE2 and `re.ASCII`
+
+
+def _is_plain_re2(pattern: str) -> bool:
+    """True only for the syntax that Python `re` (ASCII) and TruffleHog's RE2 read identically.
+
+    A blacklist of Python-only constructs cannot be exhaustive (inline flags, comments, `\\u`/`\\N`
+    escapes, repeat counts above RE2's limit, ...), so this admits literals, `\\`-escaped punctuation,
+    `\\d\\w\\s`, anchors, `.`, `|`, groups (`(`, `(?:`), plain classes and `* + ? {n,m}` quantifiers.
+    """
+    i, n, quant = 0, len(pattern), 0  # quant: 1 after a quantifier, 2 after its lazy `?`
+    while i < n:
+        c = pattern[i]
+        if ord(c) < 32 or ord(c) == 127:
+            return False
+        if c == "\\":
+            nxt = pattern[i + 1 : i + 2]
+            if not nxt or (nxt.isalnum() and nxt not in _ESCAPE_LETTERS) or nxt.isspace():
+                return False
+            i, quant = i + 2, 0
+            continue
+        if c == "[":
+            i += 1
+            if pattern[i : i + 1] == "^":
+                i += 1
+            if pattern[i : i + 1] == "]":
+                i += 1
+            while i < n and pattern[i] != "]":
+                if pattern[i] in "[" or ord(pattern[i]) < 32:
+                    return False
+                if pattern[i] == "\\":
+                    nxt = pattern[i + 1 : i + 2]
+                    if not nxt or (nxt.isalnum() and nxt not in _ESCAPE_LETTERS) or nxt.isspace():
+                        return False
+                    i += 1
+                i += 1
+            if i >= n:
+                return False
+            i, quant = i + 1, 0
+            continue
+        if c == "(":
+            if pattern[i + 1 : i + 2] == "?" and not pattern.startswith("(?:", i):
+                return False
+            i, quant = i + (3 if pattern.startswith("(?:", i) else 1), 0
+            continue
+        if c in "*+?{":
+            if c == "{":
+                m = _COUNT.match(pattern, i)
+                if not m or any(g and int(g) > 1000 for g in m.groups()):
+                    return False
+                i = m.end() - 1
+            if quant == 0:
+                quant = 1
+            elif quant == 1 and c == "?":
+                quant = 2
+            else:
+                return False
+        else:
+            quant = 0
+        i += 1
+    return True
 
 
 def _ignore_patterns(repo: Path) -> list[re.Pattern[str]]:
-    """Regexes from .trufflehogignore as TruffleHog reads them: one per line, whitespace kept,
-    blank and `#` lines skipped, RE2 character classes (`re.ASCII`)."""
+    """Regexes from .trufflehogignore as TruffleHog reads them: one per line (split on `\\n`),
+    whitespace kept, empty and `#` lines skipped, ASCII character classes (`re.ASCII`)."""
     ignore = repo / IGNORE_FILE
     if not ignore.is_file():
         return []
     patterns: list[re.Pattern[str]] = []
-    for line in ignore.read_text(encoding="utf-8").splitlines():
+    for line in ignore.read_text(encoding="utf-8").split("\n"):
+        line = line.removesuffix("\r")
         if not line or line.startswith("#"):
             continue
-        if _NON_RE2.search(line):
-            raise ScanError(f"unsupported {IGNORE_FILE} pattern (not valid RE2)")
+        if not _is_plain_re2(line):
+            raise ScanError(f"unsupported {IGNORE_FILE} pattern (outside the plain RE2 subset)")
         try:
             patterns.append(re.compile(line, re.ASCII))
         except re.error as exc:

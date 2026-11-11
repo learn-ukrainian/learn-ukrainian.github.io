@@ -953,9 +953,13 @@ def test_tree_scan_drops_files_listed_in_trufflehogignore(
     assert "app.py" in ssl.tree_candidates(repo)
     kept = [p for p in ssl.tree_candidates(repo) if not any(r.search(p) for r in ssl._ignore_patterns(repo))]
     assert "app.py" in kept
-    (repo / ".trufflehogignore").write_text("(?=.)\n", encoding="utf-8")
-    with pytest.raises(ssl.ScanError):
-        ssl._ignore_patterns(repo)
+    for bad in ("(?=.)", "(?x).*", "(?a).*", "(?#c).*", "\\u002e*", "\\N{FULL STOP}*", "a{1001}", "a*+", "(a)\\1"):
+        (repo / ".trufflehogignore").write_text(f"{bad}\n", encoding="utf-8")
+        with pytest.raises(ssl.ScanError):
+            ssl._ignore_patterns(repo)
+    committed = "^starlight/astro\\.config\\.mjs$\n\\.lock$\n(^|/)requirements-lock\\.txt$\n[a-z]+/x{1,3}(?:y|z)?\\d\n"
+    (repo / ".trufflehogignore").write_text(committed, encoding="utf-8")
+    assert len(ssl._ignore_patterns(repo)) == 4
 
 
 def test_tree_splits_long_file_lists_into_batches() -> None:
