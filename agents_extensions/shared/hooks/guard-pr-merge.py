@@ -910,10 +910,10 @@ def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]
     if not _merge_candidate(command):
         return
     commands: list[tuple[str, list[str], bool, str | None, bool, bool]] = []
-    pending = [(command, events, 0)]
+    pending = [(command, events, 0, False)]
     redirects: dict[str, set[str]] = {}
     while pending:
-        text, nested_events, depth = pending.pop()
+        text, nested_events, depth, inherited_input = pending.pop()
         # Reuse the shared quote-aware lexer. Quoted >/< characters and
         # heredoc data must not invent file writes or interpreter stdin.
         visible = _without_quoted_heredoc_data(text, executable=True)
@@ -923,49 +923,65 @@ def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]
             for kind, raw in _split_scopes(line)
             if kind == "redirect"
         }
+        redirected_input = any(
+            op == "<<<" or ("<" in op and not op.startswith("<<")) for op in redirects[text]
+        )
         pipe_input = False
         for kind, argv in nested_events:
             if kind == "separator":
-                pipe_input = bool(argv and argv[0] in {"|", "|&"})
+                # The shared lexer emits |& as two adjacent separators.
+                pipe_input = bool(argv and (
+                    argv[0] in {"|", "|&"} or (argv[0] == "&" and pipe_input)
+                ))
                 continue
             if kind != "segment" or not argv:
                 continue
             invoked, xargs = _invoked_start(argv)
             args = argv[invoked:]
+            if args[:1] == ["builtin"]:
+                args = args[1:]
+                if args[:1] == ["--"]:
+                    args = args[1:]
             if not args:
                 continue
-            payload = _shell_c_payload(argv)
+            payload = _shell_c_payload(args)
             if args[0] == "eval":
                 operands = args[1:]
                 if operands[:1] == ["--"]:
                     operands = operands[1:]
                 payload = " ".join(operands)
-            commands.append((text, args, xargs, payload, pipe_input, _merge_args(argv) is not None))
+            generated_input = inherited_input or redirected_input or pipe_input
+            commands.append((text, args, xargs, payload, generated_input, _merge_args(argv) is not None))
             pipe_input = False
             if payload:
                 if depth >= _MAX_SHELL_DEPTH:
                     raise ShellPreprocessLimit("generated script nesting cannot be read safely")
-                pending.append((payload, _scope_events(payload, mark_redirect_unreadable=False, keep_separators=True), depth + 1))
+                pending.append((
+                    payload,
+                    _scope_events(payload, mark_redirect_unreadable=False, keep_separators=True),
+                    depth + 1,
+                    generated_input,
+                ))
 
     data_commands = {"cat", "tee", "printf", "echo"}
     wrote_data = any(
         Path(args[0]).name in data_commands and (Path(args[0]).name == "tee" or any(">" in op for op in redirects[text]))
         for text, args, _, _, _, _ in commands
     )
-    for text, args, xargs, payload, pipe_input, direct_merge in commands:
+    for _text, args, xargs, payload, generated_input, direct_merge in commands:
         name = args[0] if args[0] == "." else Path(args[0]).name
         python = re.fullmatch(r"python(?:[23](?:\.\d+)?)?", name) is not None
         publisher = python and args[1:3] == ["-m", _PUBLISHER]
         interpreter = python or name in {"perl", "ruby", "node", "nodejs", "awk", "gawk", "mawk", "nawk", "php", "lua", "luajit"}
-        generated_input = pipe_input or any(
-            op == "<<<" or ("<" in op and not op.startswith("<<")) for op in redirects[text]
+        # Stdin is data only for a proven consumer. Unknown readers include
+        # shell variables, restricted shells and versioned interpreters.
+        data_sink = (
+            name in data_commands | {"grep", "egrep", "fgrep", "wc", "head", "tail", "jq", ":", "true", "false"}
+            or _literal_heredoc_data_reader(shlex.join(args))
+            or _literal_gh_read(args)
         )
-        wrapped_reader = not publisher and name not in data_commands | {"git", "gh"} and any(
-            Path(arg).name in _SHELLS | {"python", "python3", "perl", "ruby", "node", "nodejs", "awk", "php"}
-            for arg in args[1:]
-        )
-        xargs_input = xargs and not direct_merge and name not in data_commands and not publisher
-        if ((name in _SHELLS | {"source", "."} and (payload is None or pipe_input)) or (interpreter and not publisher) or xargs_input or wrapped_reader) and generated_input:
+        xargs_input = xargs and not direct_merge and not data_sink
+        if generated_input and not payload and not data_sink and not direct_merge:
             raise ShellPreprocessLimit("generated interpreter stdin cannot be read safely")
         if interpreter and not publisher and (
             name in {"awk", "gawk", "mawk", "nawk"}
