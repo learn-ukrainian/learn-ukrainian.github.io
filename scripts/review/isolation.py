@@ -961,6 +961,7 @@ _NETWORK_READ_PATHS = (
 _ENGINE_AUTH_STAGE_FILES: dict[str, tuple[str, ...]] = {
     "claude": (),  # subscription token is staged in env; no host .claude tree
     "codex": (".codex/auth.json",),
+    "muse": (".config/muse/auth.json",),
     "agy": (
         ".gemini/oauth_creds.json",
         ".gemini/google_accounts.json",
@@ -2863,14 +2864,21 @@ def stage_engine_auth(
     write_home: Path,
     source_home: Path | None = None,
     source_env: Mapping[str, str] | None = None,
+    muse_auth_fd: int | None = None,
 ) -> dict[str, str]:
-    """Copy only selected auth files into disposable HOME.
+    """Copy selected auth into disposable HOME, or anonymous memory for Muse.
 
     Returns selected auth/runtime env overrides (e.g. CODEX_HOME or one Claude
     OAuth access token). Never stages whole provider trees (history, sessions,
     skills, plugins, neighboring state). Values never enter evidence or logs.
     """
     engine_key = normalize_engine_name(engine)
+    if engine_key == "muse":
+        if muse_auth_fd is None:
+            raise ReviewIsolationError("muse_anonymous_auth_fd_required")
+        target_stat = os.fstat(muse_auth_fd)
+        if not stat.S_ISREG(target_stat.st_mode) or target_stat.st_nlink != 0 or target_stat.st_size:
+            raise ReviewIsolationError("muse_anonymous_auth_fd_required")
     src_home = (source_home or Path.home()).expanduser().resolve()
     source = os.environ if source_env is None else source_env
     configured_codex_home: Path | None = None
@@ -2909,11 +2917,15 @@ def stage_engine_auth(
                 opened_stat = os.fstat(source_fd)
                 if (opened_stat.st_dev, opened_stat.st_ino) != (source_stat.st_dev, source_stat.st_ino):
                     raise ReviewIsolationError(f"auth_stage_source_raced:{engine_key}:{rel}")
-                dest_fd = os.open(
-                    dest,
-                    os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
-                    0o400,
-                )
+                if engine_key == "muse":
+                    assert muse_auth_fd is not None
+                    dest_fd = os.dup(muse_auth_fd)
+                else:
+                    dest_fd = os.open(
+                        dest,
+                        os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                        0o400,
+                    )
                 try:
                     while True:
                         chunk = os.read(source_fd, 1024 * 1024)

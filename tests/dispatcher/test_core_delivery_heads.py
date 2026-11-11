@@ -3,7 +3,6 @@
 import json
 import os
 import signal
-import sys
 from pathlib import Path
 
 import pytest
@@ -183,19 +182,34 @@ def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, 
     assert not sandbox.tasks.exists()
     assert not Path(plan["worktree"]).exists()
 
-    # Keep the real file transport and parser; only the paid executable is replaced.
+    # Keep the real confinement, file transport and parser; replace only the
+    # paid runtime with the launcher's supported exact native-file layout.
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir(exist_ok=True)
+    version = "0.0.0-R1"
+    (binary_dir / ".muse-version").write_text(version)
     executable = binary_dir / "muse"
-    executable.write_text(f"#!{sys.executable}\n" + r'''
-import json,pathlib,sys
-args = sys.argv[1:]
-prompt = pathlib.Path(args[args.index("--prompt-file") + 1]).read_bytes().decode()
-assert prompt.startswith('<rules-core seat="core"')
-assert "</rules-core>" in prompt and prompt.endswith("public input")
-print(json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": "Finished."}}))
+    executable.write_text('#!/bin/sh\nexec "$(dirname "$0")/muse-bin-0.0.0-R1" "$@"\n')
+    native = binary_dir / f"muse-bin-{version}"
+    native.write_text(r'''#!/bin/sh
+set -eu
+while [ "$#" -gt 0 ]; do
+    if [ "$1" = "--prompt-file" ]; then
+        shift
+        prompt=$(cat "$1")
+        break
+    fi
+    shift
+done
+case "$prompt" in '<rules-core seat="core"'*) ;; *) exit 1 ;; esac
+case "$prompt" in *'</rules-core>'*'public input') ;; *) exit 1 ;; esac
+printf '%s\n' '{"payload_type":"run.terminal.completed","payload":{"text":"Finished."}}'
 ''')
     executable.chmod(0o755)
+    native.chmod(0o755)
+    home = sandbox.repo.parent / "synthetic-home"
+    home.mkdir()
+    sandbox.env.update(HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"))
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + sandbox.env["PATH"]
     task = sandbox.cli(*args).stdout.splitlines()
     record = sandbox.settle(task)
