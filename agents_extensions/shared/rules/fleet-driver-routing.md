@@ -1,6 +1,6 @@
 # Fleet driver routing — mandatory card + breadth (operator GO 2026-08-06)
 
-**Failure prevented:** Epic drivers (especially Grok) fixate on a small subset of
+**Failure prevented:** Epic drivers fixate on a small subset of
 seats (e.g. Claude Sonnet only), under-use heap/economical workers, and rarely
 use **advisor → cheap implement** even when a Sol advisory envelope would unlock Luna
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
@@ -30,7 +30,7 @@ and ≥2 tiers for 14 consecutive days. A review does not expire the standing ru
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high); bounded envelopes use Sol only (§2) |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Grok 4.7 (code/infra CF through native CLI and Cursor at every risk with runtime attestation, operator decision 2026-10-05 (#9769); never a content judge) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
@@ -56,11 +56,10 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
 card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. The driver seat, design, consults, discussions, recon and
-unclear work pin `grok-4.7-high`; a review runs the approved concrete model the reviewer
-resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
-For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
-advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
-pool has headroom. A review of a Grok author runs the reviewer resolver's non-xAI pick
+unclear work pin an approved concrete model; a review runs the approved concrete model the reviewer
+resolver selects. Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110,
+2026-11-10; its only pin was `grok-4.7-high`), so do not dispatch Cursor until the operator
+approves a pin. A review of historical Grok-authored work runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
 through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
@@ -87,14 +86,14 @@ lists cool/idle free seats
 (Cursor, AGY, …). Dispatch v2 does not substitute lanes from budget signals;
 choose the eligible lane explicitly and record any substitution.
 
-**Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
+**Concurrent drivers (typical):** ~**1 Claude** + **1–4 Codex**. Shared free
 worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
 stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
-| **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
+| **Cursor, included pool** | none while Grok is retired (GROK-CANCEL-1110) | no approved pin; never a Grok model |
+| **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review goes to the `resolve-reviewer` pick instead. |
 | **DeepSeek V4.1 Flash** | Latest `deepseek-v4.1-flash` coding through opencode | Direct DeepSeek API or OpenRouter with a named US provider allow-list; never private-repository content or secrets. Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. `ask-deepseek` remains consult-only for non-language work. |
 | **Kimi** | retired (OO-58, #11327) | do not dispatch; every Kimi id is refused |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
@@ -109,9 +108,9 @@ still bind. An observed rate-limit cluster (`runtime.headroom_blocked`) excludes
 the lane at selection time. A run-time `rate_limited` outcome ends the review
 without an automatic fallback dispatch.
 
-**Codex writer near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high`
-(`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
-`resolve-reviewer` pick, which may be native or attested Cursor Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
+**Codex writer near_cap / timed pause / deficit:** shed mechanical CI to another admitted lane;
+Cursor has no approved pin while Grok is retired. Code/infra review goes to the
+`resolve-reviewer` pick. A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
 
@@ -145,15 +144,10 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
-**Cursor Models pool.** More included usage. Grok is exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
+**Cursor Models pool.** More included usage. We have no pin in this pool: our only pin was
+`grok-4.7-high`, and every Grok model is retired (GROK-CANCEL-1110). Send no Grok model.
 
-| Model | Input | Cache read | Output | Send |
-| --- | --- | --- | --- | --- |
-| Grok 4.7 | $2 | $0.50 | $6 | `grok-4.7-high` |
-| Grok 4.7 Fast | $4 | $1 | $12 | do not send |
-| Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
-
-**Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. It serves non-review third-party work only: no Claude model reviews through Cursor (D-129, #10464), so a reviewer who must be outside xAI comes from the reviewer resolver, not from this pool. The Claude rows below are price facts about the pool.
+**Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. It serves non-review third-party work only: no Claude model reviews through Cursor (D-129, #10464), so a reviewer comes from the reviewer resolver, not from this pool. The Claude rows below are price facts about the pool.
 
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
@@ -284,8 +278,8 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 
 ```bash
 .venv/bin/python -m scripts.fleet.driver_breadth_report --help
-.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24
-.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
+.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator claude --since-hours 24
+.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator claude --since-hours 24 --enforce
 ```
 
 `--enforce` exits **2** when the breadth floor fails without a recorded NOTE file

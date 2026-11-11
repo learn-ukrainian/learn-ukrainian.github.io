@@ -109,9 +109,9 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 )
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
-# Fixed v1-only compatibility policy; role-bearing catalogs derive these pins.
-# Retired with the legacy catalog interface in #9302 PR 4.
-CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7",)
+# Cursor has no approved model pin: its only pin, grok-4.7, retired with every Grok
+# model (operator order GROK-CANCEL-1110, 2026-11-10). A new pin is an operator decision.
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ()
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
@@ -120,7 +120,9 @@ CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 # Wire pins shared with the launcher contract; its test rejects any drift.
-CURSOR_APPROVED_WIRE_PINS = frozenset({"grok-4.7-high"})
+CURSOR_APPROVED_WIRE_PINS: frozenset[str] = frozenset()
+# Typed refusal when Cursor has no approved model pin at all.
+CURSOR_NO_APPROVED_PIN_CODE = "cursor_no_approved_model_pin"
 # Families never pinned as formal reviewers on the Cursor endpoint (#9488):
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
@@ -520,7 +522,6 @@ def _validate_cursor_review_seats(catalog: dict[str, Any]) -> None:
     Cursor reports the model the run actually used; ``record_cf_verdict`` maps
     only that high-effort report back to the catalog id, so the seat must
     dispatch ``<model>-high`` (a bare id runs a different variant).
-    Operator decision 2026-10-05 (#9769) admits Grok as a regular reviewer.
     """
     endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
     if endpoint.get("formal_review_eligible") is not True:
@@ -696,8 +697,7 @@ def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> N
 def _validate_ukrainian_seat_catalog(models: Mapping[str, Any]) -> None:
     """The catalog may not grant a Claude model a Ukrainian seat.
 
-    Eligible families come from ``ukrainian_seats``. Grok may keep the role
-    because that role grants it no language route.
+    Eligible families come from ``ukrainian_seats``.
     """
     from scripts.review.ukrainian_seats import UKRAINIAN_SEAT_FAMILIES
 
@@ -1120,7 +1120,7 @@ def _catalog_match(model: Any, catalog: dict[str, Any] | None, *, variants_only:
 
 
 def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = None) -> str | None:
-    """Apply Cursor harness model rules: Grok pinning, Claude refusal, and explicit allowlist."""
+    """Apply Cursor harness model rules: Claude refusal and the explicit allowlist."""
     if not model:
         return None
 
@@ -1129,16 +1129,6 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
 
     if is_cursor_auto_selector(text):
         return text
-
-    if "grok-4.7" in text_lower:
-        if text_lower == "grok-4.7" or text_lower == "grok-4.7-high":
-            text = "grok-4.7-high"
-            text_lower = "grok-4.7-high"
-        else:
-            raise ModelCatalogError(
-                f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
-                "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
-            )
 
     source = catalog or load_model_catalog()
     model_id = canonical_model_id(text, source)
@@ -1159,6 +1149,12 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
     allowed_pins = set(cursor_pinned_models(catalog))
     allowed_pins.update(CURSOR_APPROVED_WIRE_PINS)
 
+    if not allowed_pins:
+        raise ModelCatalogError(
+            f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
+            f"There is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
     if text not in allowed_pins:
         raise ModelCatalogError(
             f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
@@ -1169,14 +1165,9 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
 
 
 def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
-    """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
-    if "roles" not in catalog:
-        return CURSOR_AUTO_EXPECTED_ALLOWLIST
-    from scripts.review.role_resolution import resolve_routing_reference
-
-    return tuple(
-        resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, catalog) for seat in ("xai_reviewer",)
-    )
+    """The approved Cursor Auto allowlist; empty while Cursor has no approved pin."""
+    del catalog
+    return CURSOR_AUTO_EXPECTED_ALLOWLIST
 
 
 def routing_model(section: str, lane: str, field: str = "model_id") -> str:
@@ -1191,7 +1182,8 @@ def routing_model(section: str, lane: str, field: str = "model_id") -> str:
 def substitution_default_model(lane: str) -> str | None:
     """Role-backed substitution defaults; registry-only lanes migrate in PR 3c."""
     if lane == "cursor":
-        return routing_model("orchestrator_seats", lane)
+        seat = load_model_catalog()["orchestrator_seats"].get(lane)
+        return seat["model_id"] if seat else None
     if lane in {"codex", "claude", "agy"}:
         return routing_model("formal_cf_defaults", lane)
     return None
@@ -1279,7 +1271,9 @@ def advisory_role_policy(role: str, catalog: dict[str, Any] | None = None) -> Ad
 def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     source = catalog or load_model_catalog()
-    seat = source["orchestrator_seats"]["cursor"]
+    seat = source["orchestrator_seats"].get("cursor")
+    if not seat:
+        return ()
     pin = seat["model_id"]
 
     def _gen():
@@ -1299,6 +1293,11 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
     default was Auto (operator decision 2026-09-30, #9274).
     """
     pins = cursor_pinned_models(catalog)
+    if not pins:
+        return (
+            f"there is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
     fix = f"pin {' or '.join(pins)} (operator decision 2026-09-30, #9274)"
     text = str(model or "").strip()
     if not text:

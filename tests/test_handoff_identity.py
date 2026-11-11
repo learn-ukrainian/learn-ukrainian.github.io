@@ -253,7 +253,8 @@ def test_unknown_selector_fails_closed() -> None:
         ("start-grok-driver.sh", ["unknown"], 2),
         ("start-claude-driver.sh", ["unknown"], 2),
         ("start-codex-driver.sh", ["unknown"], 2),
-        ("start-cursor-driver.sh", ["unknown"], 2),
+        # start-cursor-driver.sh refuses its retired Grok seat pin before it reads any selector
+        # (GROK-CANCEL-1110); tests/test_start_cursor_launcher.py covers that refusal.
     ],
 )
 def test_launcher_unknown_selector_fails_closed(launcher: str, arguments: list[str], expected_code: int) -> None:

@@ -22,10 +22,22 @@ def adapter():
     return CursorAdapter()
 
 
+# Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110). Mechanism tests
+# that need an admitted concrete pin install this stand-in as the only approved pin.
+STAND_IN_PIN = "stand-in-cursor-pin-high"
+
+
+@pytest.fixture
+def stand_in_pin(monkeypatch):
+    monkeypatch.setattr("scripts.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({STAND_IN_PIN}))
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor.cursor_pinned_models", lambda: (STAND_IN_PIN,))
+    return STAND_IN_PIN
+
+
 @pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
 @pytest.mark.parametrize("file_key", [None, "stub-file-key"])
 def test_cursor_adapter_missing_or_blank_process_key_falls_back_to_file(
-    adapter, tmp_path, monkeypatch, process_key, file_key
+    adapter, tmp_path, monkeypatch, process_key, file_key, stand_in_pin
 ):
     if process_key is None:
         monkeypatch.delenv("CURSOR_API_KEY", raising=False)
@@ -39,7 +51,7 @@ def test_cursor_adapter_missing_or_blank_process_key_falls_back_to_file(
         prompt="Review",
         mode="read-only",
         cwd=tmp_path,
-        model="grok-4.7-high",
+        model=stand_in_pin,
         task_id="stub-key-fallback",
         session_id=None,
         tool_config=None,
@@ -114,8 +126,12 @@ def test_cursor_adapter_does_not_disguise_unexpected_pin_errors(adapter, tmp_pat
         )
 
 
-@pytest.mark.parametrize(("model", "wire"), [("composer-2.5", None), ("grok-4.7", "grok-4.7-high")])
-def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model, wire):
+@pytest.mark.parametrize(
+    ("model", "wire"),
+    [("composer-2.5", None), ("grok-4.7", None), ("grok-4.7-high", None), (STAND_IN_PIN, STAND_IN_PIN)],
+)
+def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model, wire, stand_in_pin):
+    """Only an approved pin is forwarded; the retired Grok pins are refused (GROK-CANCEL-1110)."""
     if wire is None:
         with pytest.raises(ValueError, match="CURSOR_MODEL_NOT_APPROVED"):
             adapter.build_invocation(prompt="review", mode="read-only", cwd=tmp_path, model=model,
@@ -145,11 +161,11 @@ def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model,
     ],
 )
 def test_cursor_adapter_refuses_auto_without_delegate_admission(
-    adapter, tmp_path, monkeypatch, model, mode, tool_config
+    adapter, tmp_path, monkeypatch, model, mode, tool_config, stand_in_pin
 ):
     """#9274: Auto runs only a write dispatch delegate admitted as a well-defined coding task."""
     monkeypatch.setattr(adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("Auto reached workspace setup"))
-    with pytest.raises(ValueError, match=r"cursor_auto_outside_coding_task.*grok-4\.7"):
+    with pytest.raises(ValueError, match=rf"cursor_auto_outside_coding_task.*pin {stand_in_pin}"):
         adapter.build_invocation(
             prompt="implement",
             mode=mode,
@@ -246,12 +262,12 @@ def test_cursor_adapter_read_only_mcp_config_writes_workspace_file(
     }
 
 
-def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
+def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, stand_in_pin):
     plan = adapter.build_invocation(
         prompt="Fix bug",
         mode="workspace-write",
         cwd=tmp_path,
-        model="grok-4.7-high",
+        model=stand_in_pin,
         task_id="task-123",
         session_id=None,
         tool_config={
@@ -272,7 +288,7 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
     assert "--sandbox" in plan.cmd
     assert "enabled" in plan.cmd
     assert "--model" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
+    assert plan.cmd[plan.cmd.index("--model") + 1] == stand_in_pin
     assert "--yolo" not in plan.cmd
 
 
@@ -293,13 +309,13 @@ def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_pat
     assert plan.cmd[plan.cmd.index("--sandbox") + 1] == "disabled"
 
 
-def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp_path, monkeypatch):
+def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp_path, monkeypatch, stand_in_pin):
     """Callers may still force plan mode for intentional non-write runs on a concrete pin."""
     monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/cursor-agent")
     plan = adapter.build_invocation(
         prompt="only plan",
         mode="workspace-write",
-        model="grok-4.7",
+        model=stand_in_pin,
         cwd=tmp_path,
         task_id="task-6469-plan",
         session_id=None,
@@ -695,17 +711,19 @@ def test_cursor_adapter_parse_response_separates_distinct_v2026_05_27_messages(a
     assert result.response == "First message.\n\nSecond message."
 
 
-def test_cursor_adapter_plan_is_headless_and_passes_the_requested_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cursor_adapter_plan_is_headless_and_passes_the_requested_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stand_in_pin: str
+) -> None:
     monkeypatch.setattr("shutil.which", lambda _name: "/fake/cursor-agent")
     for mode in ("read-only", "workspace-write", "danger"):
         plan = CursorAdapter().build_invocation(
             prompt="fixture",
             mode=mode,
             cwd=tmp_path,
-            model="grok-4.7",
+            model=stand_in_pin,
             task_id="cursor-headless-fixture",
             session_id=None,
             tool_config={},
         )
         assert "-p" in plan.cmd
-        assert "grok-4.7-high" in plan.cmd
+        assert stand_in_pin in plan.cmd

@@ -321,8 +321,9 @@ def test_auto_and_unknown_authors_preserve_review_independence(
     repo.publish()
     expected = "cursor" if trailer == "cursor/auto" else "unknown"
     assert facts(repo, tasks).existing_families == {expected}
-    if expected == "cursor" and agent == "cursor":
-        with pytest.raises(recorder.RecordError, match="Cursor-authored work"):
+    if agent == "cursor":
+        # The Cursor Grok seat retired (GROK-CANCEL-1110): its verdict is refused for every author shape.
+        with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
             record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
         return
     if expected == "unknown":
@@ -445,7 +446,7 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
     assert resolution.selected is None and not resolution.quorum
     assert "cannot partition a commit authored by both families" in resolution.fail_closed_reason
     with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
-        record_verdict(monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT)
+        record_verdict(monkeypatch, tmp_path, repo, agent="agy", model="gemini-3.8-flash-high", review_risk="medium")
     # Neither family can review the shared commit independently.
     for agent, model in (("codex", "gpt-6.1-sol"), ("claude", "claude-opus-5-5")):
         with pytest.raises(recorder.RecordError, match="cannot partition a commit authored by both families"):
@@ -483,8 +484,8 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
 
     assert auto.incoming_family == "cursor"
     assert auto.excluded_families == {"anthropic", "openai", "cursor"}
-    # AGY remains independent. The surviving Grok Cursor route cannot review
-    # a Cursor-authored branch.
+    # AGY remains independent. No Cursor review route remains (the Grok one
+    # retired, GROK-CANCEL-1110), so none can review a Cursor-authored branch.
     pair = recorder.structural_review_route(facts(repo, tasks, writer=OPUS), risk="medium", claude_account=HOST_ACCOUNT)
     assert pair.selected is None and {seat.family for seat in pair.quorum} == {"anthropic", "openai"}
     assert {scope.reviewer_family: scope.commits for scope in pair.review_scopes} == {
@@ -494,7 +495,8 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
     assert resolution.selected.name == "gemini-3.8-flash-high"
     trace = {entry.name: entry for entry in resolution.trace}
     assert "grok-4.7" not in trace
-    assert trace["grok-4.7-cursor-fallback"].status == "excluded"
+    assert "grok-4.7-cursor-fallback" not in trace
+    assert all(entry.transport != "cursor" for entry in resolution.trace)
 
 
 @pytest.mark.parametrize(

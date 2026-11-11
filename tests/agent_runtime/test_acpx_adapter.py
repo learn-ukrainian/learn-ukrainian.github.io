@@ -1751,13 +1751,25 @@ def test_grok_parse_response_cancel_crash_malformed_replay_fail_closed():
         assert needle.lower() in (result.stderr_excerpt or "").lower()
 
 
+# Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110). Cursor ACP mechanism
+# tests install this stand-in as the only approved pin.
+CURSOR_STAND_IN_PIN = "stand-in-cursor-pin-high"
+
+
+def _install_cursor_stand_in_pin(monkeypatch):
+    monkeypatch.setattr("scripts.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({CURSOR_STAND_IN_PIN}))
+    monkeypatch.setattr(AcpxCursorShadowAdapter, "allowed_models", frozenset({CURSOR_STAND_IN_PIN}))
+    monkeypatch.setattr(AcpxCursorShadowAdapter, "default_model", CURSOR_STAND_IN_PIN)
+    return CURSOR_STAND_IN_PIN
+
+
 @pytest.mark.parametrize(
     ("adapter_class", "participant", "acpx_agent", "fixed_model", "auth_env"),
     [
         (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
-        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7", None),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", CURSOR_STAND_IN_PIN, None),
         (AcpxPoolShadowAdapter, "pool", "pool", None, None),
     ],
 )
@@ -1765,6 +1777,8 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
     tmp_path, monkeypatch, adapter_class, participant, acpx_agent, fixed_model, auth_env
 ):
     _stub_binary(monkeypatch, tmp_path)
+    if participant == "cursor":
+        _install_cursor_stand_in_pin(monkeypatch)
     adapter = adapter_class()
     tool_config = {
         "acpx_discussion": True,
@@ -1815,9 +1829,8 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert "--model" not in plan.cmd
         assert "model" not in plan.metadata
     else:
-        expected_wire_model = "grok-4.7-high" if participant == "cursor" and fixed_model == "grok-4.7" else fixed_model
-        assert ("--model", expected_wire_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
-        assert plan.metadata["model"] == expected_wire_model
+        assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
+        assert plan.metadata["model"] == fixed_model
     if participant == "claude":
         assert "--system-prompt" not in plan.cmd
         assert plan.metadata["effort"] == "high"
@@ -1834,6 +1847,7 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
 
 def test_cursor_acp_uses_existing_key_without_interactive_auth(tmp_path, monkeypatch):
     _stub_binary(monkeypatch, tmp_path)
+    _install_cursor_stand_in_pin(monkeypatch)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     monkeypatch.setenv("CURSOR_API_KEY", "fixture-cursor-key")
     adapter = AcpxCursorShadowAdapter()
@@ -1878,16 +1892,22 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
 
 
 @pytest.mark.parametrize(
-    ("model", "sent"),
+    ("model", "sent", "stand_in"),
     [
-        (None, "grok-4.7-high"),
-        ("grok-4.7", "grok-4.7-high"),
-        ("grok-4.7-high", "grok-4.7-high"),
-        ("composer-2.5", None),
+        # The real catalog has no approved Cursor pin (GROK-CANCEL-1110): the former default and the
+        # retired Grok pins are refused.
+        (None, None, False),
+        ("grok-4.7", None, False),
+        ("grok-4.7-high", None, False),
+        ("composer-2.5", None, False),
+        (None, CURSOR_STAND_IN_PIN, True),
+        (CURSOR_STAND_IN_PIN, CURSOR_STAND_IN_PIN, True),
     ],
 )
-def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
+def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent, stand_in):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
+    if stand_in:
+        _install_cursor_stand_in_pin(monkeypatch)
     if sent is None:
         with pytest.raises(AcpxShadowRefusalError, match="CURSOR_MODEL_NOT_APPROVED"):
             _cursor_acp_plan(tmp_path, monkeypatch, model)
@@ -1905,7 +1925,7 @@ def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, mod
         ("Auto", "adapter_refused"),
         ("cursor:auto", "adapter_refused"),
         ("default", "adapter_refused"),
-        ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
+        ("grok-4.7-fast", "CURSOR_MODEL_NOT_APPROVED"),
     ],
 )
 def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model, code):
@@ -1926,7 +1946,7 @@ def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypa
     )
     monkeypatch.setattr(runner, "write_record", records.append)
 
-    with pytest.raises(AcpxShadowRefusalError, match="CURSOR_UNATTESTED_GROK_VARIANT"):
+    with pytest.raises(AcpxShadowRefusalError, match="CURSOR_MODEL_NOT_APPROVED"):
         runner._invoke_direct_only(
             "acpx-cursor-shadow",
             "ping",
@@ -2050,7 +2070,8 @@ def test_acp_consult_route_refuses_a_fable_pin_before_dispatch(participant, mode
 
 @pytest.mark.parametrize(
     "participant,model",
-    [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-luna"), ("cursor", "grok-4.7")],
+    # No cursor row: Cursor's only pin, grok-4.7, is retired (GROK-CANCEL-1110).
+    [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-luna")],
 )
 def test_acp_consult_route_still_admits_opus_sol_and_recon_pins(participant, model):
     from scripts.agent_runtime import runner

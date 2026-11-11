@@ -180,8 +180,8 @@ def test_advisory_role_dispatch_refuses_unbound_or_writable_decisions(launch, ca
 
 def test_advisory_role_dispatch_runs_only_on_a_native_harness(launch, capsys):
     """Defect: a runtime-reported harness seals the requested model, not the one that ran (review F1)."""
-    launch[launch.index("--agent") + 1] = "cursor"
-    launch[launch.index("--model") + 1] = "gpt-6.1-sol"
+    launch[launch.index("--agent") + 1] = "agy"
+    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
     assert cli.main([*launch[:-2], "--advisory-role", "bounded_advisory_envelope", "--advisory-binding", "e" * 64]) == 2
     assert "native harness" in capsys.readouterr().err
     worker.start.assert_not_called()

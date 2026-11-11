@@ -6,6 +6,23 @@
 > resolver functions; it launched no worker. Live tests compare those functions
 > against the literal fixture. Native Grok dispatch and budget admission are retired.
 
+## Grok retirement (operator order GROK-CANCEL-1110, 2026-11-10)
+
+`v2-baseline.json.gz` was recaptured with pure resolver calls, the frozen
+clock and no live usage (the `refresh_current_baseline` receipt loop). Its
+catalog surface is the live expanded catalog after the existing
+`assert_frozen_surfaces` normalization. The 1,432 reviewer inputs are
+byte-identical (inputs SHA-256 `a18702fb…bbb69` before and after). Every
+change is Grok-caused:
+
+- catalog: 26 changed paths, all the Grok rows (`grok-4.7` retired, the
+  `xai_reviewer` candidate, ladder rungs, `risk_reviewer_models.high`, the
+  `grok` and `cursor` endpoints, orchestrator seats and formal default, the
+  `grok_cursor` usage pool, the Cursor substitution row) and their notes;
+- receipts: 288 identical, 1,106 differ only by removed Grok trace rows,
+  28 previously selected Grok, and 10 pinned the Grok candidate explicitly
+  (now `unknown explicit reviewer pin`).
+
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
 ## Pinned Claude model on a shed lane (#11110)

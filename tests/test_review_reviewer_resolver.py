@@ -18,7 +18,6 @@ from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
-    GROK_4_7_CURSOR_FALLBACK,
     OPENAI_FRONTIER,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
@@ -65,7 +64,7 @@ def test_explicit_red_team_allows_same_family_without_changing_default(candidate
     [
         (OPENAI_FRONTIER, "gpt-6.1-sol", "RED_TEAM_REFUSED: reviewer model equals a branch author model"),
         (
-            GROK_4_7_CURSOR_FALLBACK,
+            SONNET_5_5,
             "cursor:auto",
             "RED_TEAM_REFUSED: --review-author-model is not a catalog model; the flag only adds a comparison model",
         ),
@@ -336,8 +335,9 @@ def test_auto_author_excludes_cursor_transport_candidates():
             assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
-# Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464).
-CURSOR_TRANSPORT_REVIEWERS = ("grok-4.7-cursor-fallback",)
+# Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464), and the
+# only one, Grok 4.7, retired (GROK-CANCEL-1110), so none remains.
+CURSOR_TRANSPORT_REVIEWERS: tuple[str, ...] = ()
 
 
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
@@ -464,7 +464,8 @@ def test_critical_review_never_falls_back_to_fable(author):
             routing_snapshot={"claude": "unhealthy", "agy": "unhealthy", "codex": "unhealthy", "cursor": "healthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    assert resolution.selected.concrete_model == "grok-4.7"
+    # Grok was the last healthy fallback; it is retired (GROK-CANCEL-1110), so the resolver fails closed.
+    assert resolution.selected is None
     assert not any(entry.name.startswith("claude-fable") for entry in resolution.trace)
     pinned = resolve_reviewer(
         ResolverInputs(
@@ -724,7 +725,7 @@ def test_glm_retirement_cannot_be_bypassed_by_egress_policy_or_pin():
 
 def test_required_capabilities_and_isolation_fail_closed():
     missing = evaluate_candidate(
-        GROK_4_7_CURSOR_FALLBACK,
+        OPENAI_FRONTIER,
         ResolverInputs(
             author_model="claude",
             required_capabilities=frozenset({"vesum_mcp"}),
@@ -737,7 +738,7 @@ def test_required_capabilities_and_isolation_fail_closed():
     assert "capabilities" in missing.reason
 
     isolation = evaluate_candidate(
-        REVIEW_CANDIDATES["grok-4.7-cursor-fallback"],
+        REVIEW_CANDIDATES["claude-sonnet-5-5-agy"],
         ResolverInputs(author_model="codex", isolation_required=True, formal_review=False, claude_account=HOST_ACCOUNT),
         author_family="openai",
     )
@@ -959,7 +960,7 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(pr
             pressure_override_reason="native capacity incident",
             claude_account=HOST_ACCOUNT,
         ),
-        ladder=((GROK_4_7_CURSOR_FALLBACK,),),
+        ladder=((REVIEW_CANDIDATES["claude-sonnet-5-5-agy"],),),
     )
     assert unsafe.selected is None
     assert "unknown explicit reviewer pin" in unsafe.fail_closed_reason
@@ -1094,27 +1095,28 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 
 
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
-def test_ladders_place_cursor_grok_directly_after_opus(risk):
+def test_ladders_end_the_frontier_rungs_with_opus(risk):
     ladder = REVIEW_LADDERS[risk]
-    # No Claude model reviews through Cursor (D-129, #10464): Grok's Cursor route is the last frontier rung.
-    assert [rung[0].name for rung in ladder[:5]] == [
+    # No Claude model reviews through Cursor (D-129, #10464), and the Cursor Grok rung retired
+    # (GROK-CANCEL-1110): Opus on AGY is the last frontier rung.
+    assert [rung[0].name for rung in ladder[:4]] == [
         "openai_frontier_b",
         "openai_frontier",
         "claude-opus-5-5",
         "claude-opus-5-5-agy",
-        "grok-4.7-cursor-fallback",
     ]
+    assert "grok-4.7-cursor-fallback" not in {c.name for rung in ladder for c in rung}
     if risk == "critical":
-        assert len(ladder) == 5
+        assert len(ladder) == 4
     elif risk == "high":
-        assert len(ladder) == 5
-        assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
+        assert len(ladder) == 4
+        assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5"}
     else:
-        assert ladder[5][0].name == "claude-sonnet-5-5"
-        assert ladder[6][0].name == "claude-sonnet-5-5-agy"
-        assert ladder[7][0].name == "gemini-3.8-flash-high"
-        assert ladder[8][0].name == "muse"
-        assert len(ladder) == 9
+        assert ladder[4][0].name == "claude-sonnet-5-5"
+        assert ladder[5][0].name == "claude-sonnet-5-5-agy"
+        assert ladder[6][0].name == "gemini-3.8-flash-high"
+        assert ladder[7][0].name == "muse"
+        assert len(ladder) == 8
         assert "muse" in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
@@ -1191,80 +1193,75 @@ def test_sealed_executable_catalog_and_resolver_parity():
             assert _hard_exclusion_reason(mismatched, inputs) == expected
 
 
-def _grok_trace(resolution):
-    return {entry.name: entry for entry in resolution.trace if entry.name.startswith("grok")}
+def _seat_trace(resolution, prefix):
+    return {entry.name: entry for entry in resolution.trace if entry.name.startswith(prefix)}
 
 
-def test_resolve_reviewer_subject_seat_for_grok_adapter_never_selects_grok():
-    """AC-01: a Grok adapter change excludes every Grok seat and says why."""
+# The Grok seat these subject-seat cases used retired (GROK-CANCEL-1110); they now exercise the same
+# subject exclusions on surviving seats: Muse (meta) and Codex (openai).
+def test_resolve_reviewer_subject_seat_for_muse_adapter_never_selects_muse():
+    """AC-01: an adapter change excludes that seat's reviewers and says why."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="claude",
-            risk="high",
-            owned_paths=("scripts/agent_runtime/adapters/grok_build.py",), claude_account=HOST_ACCOUNT,
+            risk="medium",
+            owned_paths=("scripts/agent_runtime/adapters/muse.py",), claude_account=HOST_ACCOUNT,
         ),
-        ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
+        ladder=REVIEW_LADDERS["medium"],
     )
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
-    assert resolution.selected.family != "xai"
-    assert not resolution.selected.name.startswith("grok")
-    assert resolution.selected.name == "openai_frontier"
-    grok = _grok_trace(resolution)
-    assert set(grok) == {"grok-4.7-cursor-fallback"}
-    for entry in grok.values():
+    assert resolution.selected.family != "meta"
+    assert resolution.selected.family == "openai"
+    muse = _seat_trace(resolution, "muse")
+    assert set(muse) == {"muse"}
+    for entry in muse.values():
         assert entry.status == "excluded"
         assert entry.reason is not None
         assert "subject exclusion" in entry.reason
-        assert "subject seat grok" in entry.reason
-        assert "scripts/agent_runtime/adapters/grok_build.py" in entry.reason
+        assert "subject seat muse" in entry.reason
+        assert "scripts/agent_runtime/adapters/muse.py" in entry.reason
 
 
-def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy():
-    """The #8912 shape (Grok adapter, codex author, infra domain) at medium risk, where Grok may review (#9538)."""
+def test_resolve_reviewer_subject_seat_blocks_codex_for_its_adapter():
+    """The #8912 shape (an adapter change, infra domain) at medium risk."""
     without = resolve_reviewer(
         ResolverInputs(
-            author_model="codex:gpt-6.1-sol",
+            author_model="claude-opus-5-5",
             domain="infra",
             risk="medium",
-            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            claude_account=HOST_ACCOUNT,
         ),
-        ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
     )
-    # The surviving Cursor route is available when Anthropic is unavailable.
-    assert without.selected.concrete_model == "grok-4.7"
-    assert _grok_trace(without)["grok-4.7-cursor-fallback"].status in {"eligible", "selected"}
+    assert without.selected.concrete_model == "gpt-6.1-sol"
 
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="codex:gpt-6.1-sol",
+            author_model="claude-opus-5-5",
             domain="infra",
             risk="medium",
-            routing_snapshot={"claude": "unhealthy", "agy": "unhealthy"},
-            owned_paths=("scripts/agent_runtime/adapters/grok_build.py",), claude_account=HOST_ACCOUNT,
+            owned_paths=("scripts/agent_runtime/adapters/codex.py",), claude_account=HOST_ACCOUNT,
         ),
-        ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
     )
-    assert resolution.selected is None
-    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
-    assert grok.status == "excluded"
-    assert "subject exclusion" in grok.reason
-    fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
-    assert fallback.status == "excluded"
-    assert "subject seat grok" in fallback.reason
+    assert resolution.selected is None or resolution.selected.family != "openai"
+    for name in ("openai_frontier", "openai_frontier_b"):
+        entry = next(entry for entry in resolution.trace if entry.name == name)
+        assert entry.status == "excluded"
+        assert "subject exclusion" in entry.reason
+        assert "subject seat codex" in entry.reason
 
 
-def test_resolve_reviewer_explicit_subject_family_excludes_xai_without_guessing_paths():
+def test_resolve_reviewer_explicit_subject_family_excludes_meta_without_guessing_paths():
     resolution = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="medium", subject_families=frozenset({"xai"}), claude_account=HOST_ACCOUNT),
-        ladder=(*REVIEW_LADDERS["high"], (GROK_4_7_CURSOR_FALLBACK,)),
+        ResolverInputs(author_model="claude", risk="medium", subject_families=frozenset({"meta"}), claude_account=HOST_ACCOUNT),
+        ladder=REVIEW_LADDERS["medium"],
     )
     assert resolution.selected is not None
-    assert resolution.selected.family != "xai"
-    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
-    assert grok.status == "excluded"
-    assert "subject family xai" in grok.reason
-    assert "paths=" not in grok.reason
+    assert resolution.selected.family != "meta"
+    muse = next(entry for entry in resolution.trace if entry.name == "muse")
+    assert muse.status == "excluded"
+    assert "subject family meta" in muse.reason
+    assert "paths=" not in muse.reason
 
 
 def test_resolve_reviewer_without_subject_information_matches_empty_subject_fields():
@@ -1356,12 +1353,10 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
             claude_account=HOST_ACCOUNT,
         )
     )
-    # The surviving Grok dispatch route uses Cursor and is excluded by the Cursor subject seat.
+    # No Cursor-transport reviewer remains (GROK-CANCEL-1110); native seats are not subject-excluded.
     native = next(entry for entry in resolution.trace if entry.name == "claude-opus-5-5")
-    fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
     assert "subject exclusion" not in (native.reason or "")
-    assert fallback.status == "excluded"
-    assert "subject seat cursor" in fallback.reason
+    assert all(entry.transport != "cursor" for entry in resolution.trace)
     assert "composer-2.5" not in {entry.name for entry in resolution.trace}
 
 
@@ -1584,18 +1579,19 @@ def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
 def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="codex",
+            author_model="claude",
             risk="high",
-            subject_seats=frozenset({"grok-4.7"}),
-            pinned_candidate="grok-4.7-cursor-fallback",
+            subject_seats=frozenset({"codex-desktop"}),
+            pinned_candidate="openai_frontier",
             pressure_override_reason="operator pin", claude_account=HOST_ACCOUNT,
         )
     )
+    # The retired Grok seat this case used (GROK-CANCEL-1110) is replaced by the Codex seat and alias.
     assert resolution.selected is None
     assert "hard eligibility" in resolution.fail_closed_reason
-    grok = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
-    assert grok.status == "excluded"
-    assert "subject seat grok" in grok.reason
+    codex = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
+    assert codex.status == "excluded"
+    assert "subject seat codex" in codex.reason
 
 
 @pytest.mark.repo_wide
@@ -1689,7 +1685,8 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     assert resolution.selected.family != family
 
 
-# This matrix isolates the Grok fallback; Gemini fallback is covered separately.
+# This matrix isolated the Grok fallback; with Grok retired (GROK-CANCEL-1110) every
+# authorities-down state fails closed. Gemini fallback is covered separately.
 _AUTHORITY_DOWN = {
     "agy": "unhealthy",
     "codex": "unhealthy",
@@ -1718,11 +1715,8 @@ _AUTHORITY_DOWN = {
 def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
     """Whole-ladder choices preserve other models' suitability at every risk."""
     if fallback:
-        if author == "grok-4.7" or state == "all-down":
-            expected = None
-        else:
-            # Cursor's allowlist-union independence excludes Moonshot authors.
-            expected = None if author == "kimi-code/k3" else "grok-4.7-cursor-fallback"
+        # No Cursor Grok fallback remains, so no reviewer is selected.
+        expected = None
     elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
         expected = "openai_frontier"
     elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
@@ -1748,7 +1742,7 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("primary", ["openai_frontier", "claude-opus-5-5"])
 def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
-    fallback = replace(GROK_4_7_CURSOR_FALLBACK, last_resort=True)
+    fallback = replace(REVIEW_CANDIDATES["claude-sonnet-5-5-agy"], last_resort=True)
     first = REVIEW_CANDIDATES[primary]
     inputs = ResolverInputs(author_model="gemini-3.8-flash-high", risk="medium", review_profile=profile, claude_account=HOST_ACCOUNT)
     # Higher load and a reversed ladder must not put the last resort first.
@@ -1763,34 +1757,34 @@ def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     assert "last resort" in resolution.substitution_note
 
 
-@pytest.mark.parametrize("candidate", [GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize("candidate", ["grok-4.7-cursor-fallback"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_grok_critical_review_admitted_with_explicit_pin_and_custom_ladder(candidate, profile):
+def test_grok_critical_review_pin_is_refused_after_retirement(candidate, profile):
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol",
         risk="critical",
         review_profile=profile,
-        pinned_candidate=candidate.name,
+        pinned_candidate=candidate,
         pressure_override_reason="admission probe", claude_account=HOST_ACCOUNT,
     )
-    resolution = resolve_reviewer(inputs, ladder=((candidate,),))
-    assert resolution.selected.name == candidate.name
-    assert resolution.trace[0].status == "selected"
+    resolution = resolve_reviewer(inputs)
+    assert candidate not in REVIEW_CANDIDATES
+    assert resolution.selected is None
+    assert resolution.fail_closed_reason == f"unknown explicit reviewer pin {candidate!r}"
 
 
-_SOL_OPUS_GROK = {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
+_SOL_OPUS = {"gpt-6.1-sol", "claude-opus-5-5"}
 _HIGH_SEATS = {
     "openai_frontier_b",
     "openai_frontier",
     "claude-opus-5-5",
     "claude-opus-5-5-agy",
-    "grok-4.7-cursor-fallback",
 }
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
 # (author, Sol state, profile) -> expected concrete reviewer; None = no reviewer.
 _HIGH_DENOMINATOR = {
     (author, sol, profile): (
-        ("gpt-6.1-sol" if sol == "healthy" else "grok-4.7")
+        ("gpt-6.1-sol" if sol == "healthy" else None)
         if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
         else (
             "gpt-6.1-sol"
@@ -1805,8 +1799,8 @@ _HIGH_DENOMINATOR = {
 
 
 @pytest.mark.parametrize("key", sorted(_HIGH_DENOMINATOR))
-def test_high_risk_resolves_to_sol_opus_or_grok(key):
-    """#9769: the denominator admits Sol, Opus and the Cursor Grok transport."""
+def test_high_risk_resolves_to_sol_or_opus(key):
+    """The denominator admits only Sol and Opus; the Cursor Grok transport (#9769) retired (GROK-CANCEL-1110)."""
     author, sol, profile = key
     snapshot = _SOL_UNAVAILABLE if sol == "unavailable" else None
     resolution = resolve_reviewer(
@@ -1824,8 +1818,8 @@ def test_high_risk_resolves_to_sol_opus_or_grok(key):
         return
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected
-    assert resolution.selected.concrete_model in _SOL_OPUS_GROK
-    assert resolution.selected.transport in {"native_codex", "native_claude", "native_grok", "cursor", "agy"}
+    assert resolution.selected.concrete_model in _SOL_OPUS
+    assert resolution.selected.transport in {"native_codex", "native_claude", "agy"}
 
 
 _HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5"
@@ -1937,7 +1931,8 @@ def test_security_subject_seat_exclusion_still_binds(launcher_path):
         )
     )
     assert result.resolved_risk == "critical"
-    assert result.selected.concrete_model == "grok-4.7"
+    # Grok was the remaining critical reviewer; it is retired (GROK-CANCEL-1110), so the resolver fails closed.
+    assert result.selected is None
     assert all(entry.status == "excluded" for entry in result.trace if entry.family == "anthropic")
 
 
@@ -2204,7 +2199,7 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     assert {scope.reviewer_family: scope.commits for scope in complete.review_scopes} == {
         "anthropic": ("b" * 40,), "openai": ("a" * 40,),
     }
-    # Grok reviews at every risk (#9769); an xAI member removes it too.
+    # Grok is retired (GROK-CANCEL-1110); an xAI member still leaves no reviewer at critical.
     assert _complete({"anthropic", "openai", "xai"}, risk="critical").selected is None
 
 
@@ -2234,12 +2229,12 @@ def test_complete_set_with_an_unresolved_member_fails_closed(families, author_mo
 
 def test_cursor_auto_member_keeps_cursor_transport_restrictions():
     resolution = _complete({"openai", "cursor"})
-    reasons = {entry.name: entry.reason for entry in resolution.trace}
-    assert "Cursor-authored work" in reasons["grok-4.7-cursor-fallback"]
+    # No Cursor-transport reviewer remains (GROK-CANCEL-1110), so none can review Cursor-authored work.
+    assert all(entry.transport != "cursor" for entry in resolution.trace)
     assert resolution.selected.family == "anthropic"
 
 
-@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, REVIEW_CANDIDATES["claude-opus-5-5-agy"]])
 @pytest.mark.parametrize("author_model", ["", "unmapped"])
 def test_unknown_committed_author_accepts_any_qualified_known_family(candidate, author_model):
     inputs = ResolverInputs(author_model=author_model, author_families=frozenset({"unknown"}), risk="medium", claude_account=HOST_ACCOUNT)
@@ -2265,7 +2260,7 @@ def test_unknown_committed_author_does_not_hide_known_author_exclusions():
 
 def test_unknown_committed_author_does_not_hide_incoming_cursor_family():
     inputs = ResolverInputs(author_model="cursor:auto", author_families=frozenset({"unknown", "cursor"}), claude_account=HOST_ACCOUNT)
-    assert evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs).status == "excluded"
+    assert all(candidate.transport != "cursor" for candidate in REVIEW_CANDIDATES.values())
     selected = resolve_reviewer(inputs).selected
     assert selected is not None and selected.family in {"anthropic", "openai"}
 

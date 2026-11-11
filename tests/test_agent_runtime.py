@@ -1160,7 +1160,8 @@ def test_invoke_admits_active_explicit_model_past_retirement_gate(tmp_path):
         patch("agent_runtime.runner.write_record"),
         pytest.raises(RateLimitedError, match="probe"),
     ):
-        invoke("cursor", "hello", mode="read-only", cwd=tmp_path, model="grok-4.7")
+        # An active catalog model (Grok is retired, GROK-CANCEL-1110) passes the retirement gate.
+        invoke("codex", "hello", mode="read-only", cwd=tmp_path, model="gpt-6.1-sol")
 
 
 def test_invoke_requires_cwd_for_write_mode():

@@ -3,14 +3,16 @@ import pytest
 from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
 
 
-def test_cursor_routing_pins_grok_rewrite():
-    assert apply_cursor_model_pins("grok-4.7") == "grok-4.7-high"
-    assert apply_cursor_model_pins("grok-4.7-high") == "grok-4.7-high"
+def test_cursor_routing_pins_refuse_the_retired_grok_pins():
+    """Grok 4.7 was Cursor's only pin; every Grok model is retired (GROK-CANCEL-1110)."""
+    for model in ("grok-4.7", "grok-4.7-high"):
+        with pytest.raises(ModelCatalogError, match=r"CURSOR_MODEL_NOT_APPROVED.*cursor_no_approved_model_pin"):
+            apply_cursor_model_pins(model)
 
 def test_cursor_routing_pins_grok_refusal():
-    with pytest.raises(ModelCatalogError, match="CURSOR_UNATTESTED_GROK_VARIANT"):
+    with pytest.raises(ModelCatalogError, match="CURSOR_MODEL_NOT_APPROVED"):
         apply_cursor_model_pins("grok-4.7[fast]")
-    with pytest.raises(ModelCatalogError, match="CURSOR_UNATTESTED_GROK_VARIANT"):
+    with pytest.raises(ModelCatalogError, match="CURSOR_MODEL_NOT_APPROVED"):
         apply_cursor_model_pins("grok-4.7-build")
 
 def test_cursor_routing_pins_claude_refusal(monkeypatch):

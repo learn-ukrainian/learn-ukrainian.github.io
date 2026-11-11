@@ -359,7 +359,6 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 # Compatibility constants for direct candidate evaluation and callers that
 # explicitly imported the old default. Medium is the balanced default risk.
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
-GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
 SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 # Medium = practical formal CF default ladder (not authority-first).
 DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]

@@ -12,6 +12,7 @@ pin, so a bare ``ask-gemini`` can never drift stale against the agy pin.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -776,6 +777,18 @@ def cursor_provider(monkeypatch):
     return run
 
 
+# Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110). Drain mechanism tests
+# install this stand-in as the only approved pin.
+CURSOR_STAND_IN_PIN = "stand-in-cursor-pin-high"
+
+
+@pytest.fixture
+def cursor_stand_in_pin(monkeypatch):
+    monkeypatch.setattr("scripts.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({CURSOR_STAND_IN_PIN}))
+    monkeypatch.setattr("scripts.review.model_catalog.cursor_pinned_models", lambda catalog=None: (CURSOR_STAND_IN_PIN,))
+    return CURSOR_STAND_IN_PIN
+
+
 @pytest.mark.parametrize(
     ("to_model", "code"),
     [
@@ -784,16 +797,20 @@ def cursor_provider(monkeypatch):
         ("cursor:auto", "cursor_auto_outside_coding_task"),
         ("default", "cursor_auto_outside_coding_task"),
         ("composer-2.5-fast", "cursor_model_not_approved"),
+        ("grok-4.7", "cursor_model_not_approved"),
+        ("grok-4.7-high", "cursor_model_not_approved"),
     ],
 )
-def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cursor_provider, to_model, code):
+def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(
+    bridge_db, cursor_provider, cursor_stand_in_pin, to_model, code
+):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
     message_id = _cursor_review(to_model)
     expected = (
-        r"ask-cursor: refused: CURSOR_MODEL_NOT_APPROVED: model 'composer-2\.5-fast' is not an approved Cursor pin"
+        rf"ask-cursor: refused: CURSOR_MODEL_NOT_APPROVED: model '{re.escape(to_model)}' is not an approved Cursor pin"
         if code == "cursor_model_not_approved"
-        else rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7"
+        else rf"ask-cursor: refused: .*\({code}\); pin {re.escape(cursor_stand_in_pin)}"
     )
     with pytest.raises(SystemExit, match=expected):
         _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
@@ -814,19 +831,21 @@ def test_detached_cursor_review_records_the_typed_refusal(bridge_db, cursor_prov
 
     cursor_provider.assert_not_called()
     status = _ask_lifecycle._ask_status(message_id)
-    assert status.startswith("failed:ask-cursor: refused: no concrete Cursor model is pinned (cursor_model_unpinned)")
+    # The real catalog has no approved Cursor pin (GROK-CANCEL-1110).
+    assert status.startswith(
+        "failed:ask-cursor: refused: there is no approved Cursor model pin (cursor_no_approved_model_pin)"
+    )
 
 
-@pytest.mark.parametrize("to_model", ["grok-4.7", "grok-4.7-high"])
-def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, to_model):
+def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, cursor_stand_in_pin):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
-    message_id = _cursor_review(to_model)
+    message_id = _cursor_review(cursor_stand_in_pin)
     _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
 
     cursor_provider.assert_called_once()
     argv = cursor_provider.call_args.args[0]
-    assert argv[argv.index("--model") + 1] == ("grok-4.7-high" if to_model == "grok-4.7" else to_model)
+    assert argv[argv.index("--model") + 1] == cursor_stand_in_pin
     assert _row(message_id)[0] == 1
     replies = _replies(message_id, task_id="review-9274")
     assert [(sender, kind, content) for sender, _to, kind, content in replies] == [("cursor", "response", "LGTM")]

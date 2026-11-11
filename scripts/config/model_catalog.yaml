@@ -44,14 +44,12 @@ policy:
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 reviews and drives through native Claude only; no Claude model
       reviews through Cursor (operator decision D-129, #10464).
-      Grok dispatch uses Cursor at grok-4.7-high. Native Grok dispatch is retired.
-      The native CLI remains available to direct interactive and ACP callers.
-      The Cursor seat pinned to grok-4.7-high is a regular code/infra reviewer at
-      every risk, including critical;
-      verdicts require runtime model attestation and exclude xAI-authored changes.
-      Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
-      first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
-      OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
+      Grok models are retired (operator order GROK-CANCEL-1110, 2026-11-10): the
+      project stopped using Grok. No Grok model authors, drives or reviews; the
+      ids stay in the catalog with empty transports so dispatch refuses them by
+      name and recorded verdicts still resolve. History: grok-4.7 reviewed
+      code/infra through Cursor at grok-4.7-high (#9769) after rotating from
+      grok-4.6 (#8464).
     - >-
       Kimi models are retired (OO-58, #11327, 2026-10-21; unused since
       2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses
@@ -152,7 +150,7 @@ review_scheduler:
   # natively; no Claude model through Cursor, #10464). This is an eligibility gate: ladders, explicit
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
-    high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}, {role: legacy_reviewers, seat: xai_reviewer}]
+    high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}]
   endpoints:
     claude:
       formal_review_eligible: true
@@ -196,10 +194,11 @@ review_scheduler:
       credential_limit: 2
       capacity_weight: 1.0
     grok:
-      # Operator decision 2026-10-05 (#9769): native code/infra review at every risk.
-      # Verdict recording requires runtime modelUsage attestation.
-      formal_review_eligible: true
-      models: [{role: legacy_reviewers, seat: xai_reviewer}]
+      # Grok is retired (GROK-CANCEL-1110, 2026-11-10); no routable grok model.
+      # History: native code/infra review at every risk (#9769).
+      formal_review_eligible: false
+      formal_review_exclusion_reason: "Grok is retired; reviews are refused"
+      models: []
       participant: grok
       adapter_transport: acp
       catalog_transport: native_grok
@@ -257,8 +256,11 @@ review_scheduler:
       # exact Cursor slug and record_cf_verdict accepts its verdict only from the
       # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
       # Claude stay unpinned, so the resolver excludes them as unattested.
-      formal_review_eligible: true
-      models: [{role: legacy_reviewers, seat: xai_reviewer}]
+      # Its only pinned reviewer, grok-4.7, is retired (GROK-CANCEL-1110), so no
+      # Cursor model is a formal review identity.
+      formal_review_eligible: false
+      formal_review_exclusion_reason: "no approved Cursor review pin; Grok is retired"
+      models: []
       participant: cursor
       adapter_transport: acp
       catalog_transport: cursor
@@ -715,10 +717,7 @@ models:
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
     # The first-choice Ukrainian reviewer (core.md P2). The 2026-10-08 approval adds low-risk and
     # medium-risk code review through native AGY; high/critical and security paths remain excluded.
-    # Low/medium code suitability ranks long_context_review before Grok's
-    # critical_review-only routes, even though Grok appears earlier in the ladder.
-    # Thus native AGY can precede Grok when higher-fit Sol/Claude seats are unavailable;
-    # hard gates, suitability and quality still precede health/quota tie-breaks.
+    # Hard gates, suitability and quality still precede health/quota tie-breaks.
     roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review, long_context_review]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
@@ -889,35 +888,34 @@ models:
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
   grok-4.7:
-    routing_wire_ids:
-      native_grok: grok-4.7
-      cursor: grok-4.7-high
     family: xai
     tier: frontier_practical
-    lifecycle: active
-    # Dispatch v2 uses Cursor at grok-4.7-high; native Grok dispatch is retired.
-    # grok-4.7-build-fast is not an alias. grok-4.6 is not admitted.
-    # The retained ukrainian_review role confers no language route.
-    # Ukrainian seats are Gemini and Sol (scripts/review/ukrainian_seats.py).
-    # Review routes list only code and infra profiles; the resolver refuses xAI.
-    roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
-    # The native Grok CLI reports this exact runtime id; no other -build variant is an alias.
-    aliases: [grok-4.7-build]
+    lifecycle: retired
+    # Operator order GROK-CANCEL-1110 (2026-11-10): the project stopped using
+    # Grok. Historical model identity only, with no executable transport and no
+    # role, so dispatch and review admission refuse it by name. The aliases and
+    # runtime id stay so recorded verdicts and historical task records keep xAI
+    # attribution: grok-4.7-high was the Cursor wire id, grok-4.7-build the native
+    # Grok CLI runtime id; no other -build variant is an alias.
+    aliases: [grok-4.7-build, grok-4.7-high]
     runtime_model_ids: [grok-4.7-build]
-    transports: [native_grok, cursor]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
+    retirement_reason: "Operator order GROK-CANCEL-1110 (2026-11-10): the project stopped using Grok; never route or select."
     notes: >-
-      Native `grok models` default. grok-4.7-build-fast is not admitted.
+      History: grok-4.7 reviewed code and infra at every risk through Cursor at
+      grok-4.7-high (#9769) and was the Cursor seat pin (#8464). Retired
+      2026-11-10.
     sources:
       - https://docs.x.ai/docs/models
   grok-4.6:
     family: xai
     tier: frontier_practical
     lifecycle: retired
-    replaced_by: grok-4.7
-    # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
-    # adapter. Defaults and ladders use grok-4.7.
+    # Prior pin (operator order 2026-08-16 / #6865), superseded by grok-4.7, which
+    # retired with every Grok model (GROK-CANCEL-1110); no successor.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: []
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
@@ -934,7 +932,7 @@ models:
     # Retired as the sanctioned grok pin by operator order 2026-08-16 (#6865)
     # in favor of grok-4.6. Historical model identity only, with no executable
     # transport. Never referenced by an active review_candidate, ladder,
-    # orchestrator_seat, or formal_cf_default; live routes use grok-4.7.
+    # orchestrator_seat, or formal_cf_default. Every Grok model is retired (GROK-CANCEL-1110).
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: []
     strengths: [strong_coding, sharp_review, agentic_work]
@@ -1262,7 +1260,6 @@ review_candidates:
   muse: {role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: candidate}
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
   openai_frontier_b: {role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: candidate}
-  grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
   claude-opus-5-5-agy: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: candidate}
   claude-sonnet-5-5: {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: candidate}
@@ -1272,8 +1269,8 @@ review_candidates:
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane).
 # Native AGY reviews low/medium code in an exact-head worktree; its ACP wrapper cannot consume the
-# parent-owned sealed MCP. Native and Cursor Grok review code/infra with runtime
-# attestation at every risk (#9769); Kimi: web, UI and backend coding only, never review.
+# parent-owned sealed MCP. Grok is retired (GROK-CANCEL-1110) and holds no seat;
+# Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1291,8 +1288,8 @@ orchestrator_seats:
       Sol 6.1 take review, critique, design input and Ukrainian work and hold
       designated approval: the non-author's approval when one of them authored the
       proposal, both for any other author (#9583, #9616). Orchestration alone does not
-      confer approval authority. grok-4.7 owns the daily epic
-      loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
+      confer approval authority. Claude driver sessions stay dispatch-heavy,
+      never inline-heavy.
       Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
       not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
       step down to medium/low for routine turns; xhigh for hard turns and pinned
@@ -1313,16 +1310,6 @@ orchestrator_seats:
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
-  grok:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    # grok-4.7 only. grok-4.7-build-fast is not admitted.
-    escalate_model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    escalate_effort: high
-    escalate_when: n/a_same_sku
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
   agy:
     model_id: {role: legacy_reviewers, seat: google_bounded}
     effort: high
@@ -1336,36 +1323,9 @@ orchestrator_seats:
       the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 under the current qualification policy. Security-path code reviews remain excluded.
       Native AGY review dispatches run directly in the exact-head worktree. Design input and designated approval stay
       with Opus 5.5 and Sol 6.1.
-  cursor:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    escalate_model_id: {role: openai_frontier_coder}
-    escalate_effort: high
-    escalate_when: deep_single_shot_or_architecture
-    auto_allowlist:
-      - {role: legacy_reviewers, seat: xai_reviewer}
-    auto_scope: write_implementation_dispatch_with_green_dor
-    attestation_rule: driver_of_record_requires_attested_resolved_model
-    unknown_auto_family_resolution: cursor_family
-    unknown_auto_union_families:
-      - xai
-    note: >-
-      Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
-      grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
-      Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
-      (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
-      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI]; refresh under the catalog ~30-day contract). The driver
-      seat, review, design, consults, discussions and recon never run Auto.
-      Cursor Auto selectors use the Cursor author family (#9951), even when the
-      runtime reports a concrete model. Reviewers from other families can review
-      Cursor-authored work; Cursor reviewers cannot. The legacy
-      unknown_auto_union_families field describes the concrete allowlist only.
-      A concrete Cursor grok-4.7 pin uses the xAI family; it is
-      a regular formal code/infra reviewer at every risk, including critical
-      (operator decision 2026-10-05, #9769).
-      Driver-of-record still requires an attested concrete resolved_model from the run.
-      Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
-      from within the driver session).
+  # The cursor seat was removed with Grok (GROK-CANCEL-1110, 2026-11-10): grok-4.7
+  # was its only pin and its whole Auto allowlist. Cursor has no approved model pin,
+  # so Cursor dispatch fails closed; a new pin is an operator decision.
 
 # Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
 # roles use their catalog effort; Sol high fills the routine Codex reviewer role.
@@ -1387,11 +1347,6 @@ formal_cf_defaults:
     family_models:
       - {role: legacy_reviewers, seat: anthropic_practical}
       - {role: anthropic_authority_reviewer}
-  grok:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
     # #10073: native low/medium code review; Ukrainian review needs Sources MCP.
     model_id: {role: legacy_reviewers, seat: google_bounded}
@@ -1400,18 +1355,14 @@ formal_cf_defaults:
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
-  # Grok dispatch reviews use the surviving Cursor route.
-  # Runtime attestation and xAI author exclusions still apply.
+  # Grok is retired (GROK-CANCEL-1110) and appears on no ladder.
   # No Claude model reviews through Cursor (D-129, #10464).
   # Unsubscribed models have no review candidates. Fable holds no review role (#9583).
-  # Grok reviews security code statically: CI is its execution proof and the
-  # review requests no execution (core.md P2; D-129, #10464).
   critical:
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
@@ -1419,13 +1370,11 @@ review_ladders:
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
   medium: &practical_first_code_review
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: agy, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
@@ -1435,25 +1384,18 @@ review_ladders:
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
 # Keyed by the substitute lane. A source model with a row rewrites to that
 # target. No explicit --model, or an explicit model the substitute adapter
-# does not reject, uses that lane's registry default — the dispatch pin named
-# on orchestrator_seats (cursor: grok-4.7), not the driver launcher's
-# grok-4.7-high slug.
+# does not reject, uses that lane's registry default.
 # An explicit model with no row that the substitute adapter rejects is
 # refused before spawn (agy rejects an unknown Gemini slug; codex rejects
-# anything outside gpt-6.1-sol/gpt-6-luna). Cursor forwards an unrecognized
-# --model, so an unmapped slug such as gpt-6.1-sol still uses grok-4.7.
+# anything outside gpt-6.1-sol/gpt-6-luna).
 # GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
-# Operator 2026-10-21 (OO-58, #11327): native Grok and Cursor draw from one usage
-# meter. Budget routing reads this record; the two seats are not two pools.
-usage_pools:
-  grok_cursor:
-    seats: [grok, cursor]
+# The grok_cursor usage pool and the cursor substitution row were removed with
+# Grok (GROK-CANCEL-1110).
+usage_pools: {}
 budget_substitution_models:
   codex:
     gpt-6.1-sol: {role: openai_frontier_coder}
     gpt-6-luna: {role: bounded_recon}
-  cursor:
-    grok-4.7: {role: legacy_reviewers, seat: xai_reviewer}
 
 
 # #9302 role references resolve to the v1 consumer view until PR 4.
@@ -1516,26 +1458,6 @@ seats:
         - sealed_evidence
         advisory_only_for_author_families:
         - openai
-  xai_reviewer:
-    model_id: grok-4.7
-    bindings:
-    - legacy_review_candidate
-    priority: 20
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      cursor_fallback:
-        legacy_name: grok-4.7-cursor-fallback
-        effort: high
-        suitability_roles:
-        - critical_review
-        route: cursor
-        transport: cursor
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id}
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
   anthropic_authority:
     model_id: claude-opus-5-5
     bindings:
@@ -1682,7 +1604,6 @@ roles:
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
@@ -1695,7 +1616,6 @@ roles:
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
@@ -1707,7 +1627,6 @@ roles:
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     cardinality: many
     risk: high
   code_review_critical:
@@ -1716,7 +1635,6 @@ roles:
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     cardinality: many
     risk: critical
     required_model_roles:

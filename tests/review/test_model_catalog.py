@@ -893,16 +893,12 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
-    """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
+    """No Grok review route exists, so none lists the ukrainian profile (#10835; GROK-CANCEL-1110)."""
     source = Path(__file__).resolve().parents[2]
     catalog = yaml.safe_load((source / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
-    assert "ukrainian_review" in catalog["models"]["grok-4.7"]["roles"]
-    xai = [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
-    assert xai, "grok-4.7 reviewer seat missing"
-    routes = [route for candidate in xai for route in candidate["routes"].values()]
-    assert {route["transport"] for route in routes} == {"cursor"}
-    for route in routes:
-        assert route["review_profiles"] == ["code", "infra"]
+    assert "ukrainian_review" not in catalog["models"]["grok-4.7"]["roles"]
+    assert catalog["models"]["grok-4.7"]["lifecycle"] == "retired"
+    assert not [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
 
 
 def guard_policy(settings):
@@ -965,22 +961,20 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
                 assert not (family[name] == "anthropic" and candidates[name]["transport"] == "cursor"), (risk, name)
         on_ladder = {name for rung in ladders[risk] for name in rung}
         assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
-        assert {"claude-opus-5-5", "grok-4.7-cursor-fallback"} <= on_ladder, risk
+        assert "claude-opus-5-5" in on_ladder, risk
+        assert not [name for name in on_ladder if candidates[name]["transport"] == "cursor"], risk
     for risk in ("low", "medium", "high", "critical"):
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
-        assert "anthropic_authority/cursor_fallback" not in routes
-        assert "xai_reviewer/cursor_fallback" in routes
+        assert not [route for route in routes if route.endswith("/cursor_fallback")]
     assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
-    assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"cursor_fallback"}
-    assert "transport_fallback_for" not in catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]
+    assert "xai_reviewer" not in catalog["seats"]
     opus = catalog["models"]["claude-opus-5-5"]
     assert (opus["routing_wire_ids"], opus["transports"]) == (
         {"native_claude": "claude-opus-5-5", "agy": "claude-opus-5-5-high"},
         ["native_claude", "agy"],
     )
-    cursor = catalog["budget_substitution_models"]["cursor"]
-    assert "claude-opus-5-5" not in cursor
-    assert "claude-fable-5-1" not in cursor
+    # No Cursor substitution row exists, so no Claude model substitutes onto Cursor (GROK-CANCEL-1110).
+    assert "cursor" not in catalog["budget_substitution_models"]
     assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
     assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude"]
     assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
@@ -990,10 +984,10 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "827a3045a73365fb45b9626cfadc22d17ee4aa4a59204b1287d4eb669f225d76",
+    "v2-baseline.json.gz": "0785d3963aae8da5bfad29ef03aa46942ea5816e1ec8bb57f32d3f2131a90765",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
+    "SPEC.md": "ed7438340b60df7dcf51271dac1b03952fe96617edd249f14aaed1ecb33a0ede",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
@@ -1043,7 +1037,7 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "827a3045a73365fb45b9626cfadc22d17ee4aa4a59204b1287d4eb669f225d76"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "0785d3963aae8da5bfad29ef03aa46942ea5816e1ec8bb57f32d3f2131a90765"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
@@ -1132,9 +1126,6 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # joins no seat, review route, ladder or ranking; every other field stays frozen.
             fable52 = value["models"].pop("claude-fable-5-2")
             assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
-            # C-4967: the native Grok runtime id becomes an exact alias of its holder, so it keeps its
-            # identity once only effort suffixes count as variants; no seat, route or ranking moves.
-            assert value["models"]["grok-4.7"].pop("aliases") == ["grok-4.7-build"]
             # The advisory_roles section moves no seat, route or review ranking.
             _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off

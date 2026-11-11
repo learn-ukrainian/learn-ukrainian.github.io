@@ -36,6 +36,7 @@ def _active_acp(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_inter_agent_defaults_to_acp_and_seals_provenance(tmp_path, monkeypatch) -> None:
+    # Any active participant serves; these tests used Grok before it was retired (GROK-CANCEL-1110).
     _active_acp(monkeypatch)
     observed: dict[str, object] = {}
 
@@ -49,7 +50,7 @@ def test_inter_agent_defaults_to_acp_and_seals_provenance(tmp_path, monkeypatch)
     monkeypatch.setattr(runner, "_invoke_direct_only", fake_direct)
 
     result = runner.invoke_inter_agent(
-        "GROK",
+        "CLAUDE",
         "Compare the two bounded choices.",
         cwd=tmp_path,
         task_id="task-6159",
@@ -58,25 +59,25 @@ def test_inter_agent_defaults_to_acp_and_seals_provenance(tmp_path, monkeypatch)
         source="Codex",
     )
 
-    assert observed["agent"] == "acpx-grok-shadow"
+    assert observed["agent"] == "acpx-claude-shadow"
     kwargs = observed["kwargs"]
     assert isinstance(kwargs, dict)
     assert kwargs["entrypoint"] == "acpx-transport"
     assert kwargs["tool_config"] == {
         "acpx_transport": True,
-        "target_agent": "grok",
+        "target_agent": "claude",
         "correlation_id": "corr-6159",
         "idempotency_key": "idem-6159",
     }
     assert observed["runner_provenance"].metadata() == {
         "source": "codex",
-        "agent": "grok",
+        "agent": "claude",
         "via": "acp",
     }
     assert observed["adapter_provenance"].metadata() == result.transport_metadata
     assert result.transport_metadata == {
         "source": "codex",
-        "agent": "grok",
+        "agent": "claude",
         "via": "acp",
     }
     assert result.transport_outcome == "ok"
@@ -142,14 +143,14 @@ def test_inter_agent_rejects_spoofed_provenance_and_unknown_source_before_spawn(
     }
     with pytest.raises(runner.InterAgentTransportError, match="runner-sealed"):
         runner.invoke_inter_agent(
-            "grok",
+            "claude",
             "prompt",
             source="codex",
             metadata={"Source": "forged"},
             **kwargs,
         )
     with pytest.raises(runner.InterAgentTransportError, match="trusted initiating Source"):
-        runner.invoke_inter_agent("grok", "prompt", **kwargs)
+        runner.invoke_inter_agent("claude", "prompt", **kwargs)
 
     assert spawned == []
 
@@ -167,7 +168,7 @@ def test_inter_agent_does_not_forward_or_return_raw_credentials(tmp_path, monkey
 
     monkeypatch.setattr(runner, "_invoke_direct_only", fake_direct)
     result = runner.invoke_inter_agent(
-        "grok",
+        "claude",
         "Prompt text has no credential.",
         cwd=tmp_path,
         task_id="task-6159",
@@ -430,12 +431,11 @@ def test_resolve_inter_agent_route_refuses_cursor_auto(model: str) -> None:
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
-def test_resolve_inter_agent_route_admits_cursor_concrete_pins(model: str) -> None:
-    if model == "composer-2.5":
-        with pytest.raises(runner.InterAgentTransportError, match="refuses non-active model"):
-            runner.resolve_inter_agent_route("cursor", model=model)
-    else:
-        assert runner.resolve_inter_agent_route("cursor", model=model).model == model
+def test_resolve_inter_agent_route_refuses_the_retired_cursor_pins(model: str) -> None:
+    # Cursor's only pin, grok-4.7, is retired with every Grok model (GROK-CANCEL-1110), so no
+    # Cursor pin is admitted.
+    with pytest.raises(runner.InterAgentTransportError, match="refuses non-active model"):
+        runner.resolve_inter_agent_route("cursor", model=model)
 
 
 @pytest.mark.parametrize("seat", ["acpx-kimi-shadow", "acpx-kimicc-shadow"])
