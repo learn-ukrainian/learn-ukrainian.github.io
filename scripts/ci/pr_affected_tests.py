@@ -16,6 +16,7 @@ import time
 import unicodedata
 import xml.etree.ElementTree as ET
 from functools import lru_cache
+from importlib.metadata import files
 from pathlib import Path, PurePosixPath
 
 from scripts.ci.gate import event_tier
@@ -261,7 +262,17 @@ def importing_tests(
     """
     from scripts.ci import components
 
-    scan = candidate_scan(tuple(components.python_sources().items()), tuple(components.tracked_paths()))
+    sources = components.python_sources()
+    if "requirements-machinery.lock" in targets:
+        # Give the existing import scanner targets for the installed dependency.
+        # Only test/conftest sources are parsed; package files need names, not bytes.
+        machinery = {str(p) for p in files("lu-machinery") or ()
+                     if str(p).startswith("lu_machinery/") and str(p).endswith(".py")}
+        if not machinery:
+            raise ValueError("installed lu-machinery Python files are missing")
+        sources = {**dict.fromkeys(machinery, b""), **sources}
+        targets = targets | machinery
+    scan = candidate_scan(tuple(sources.items()), tuple(components.tracked_paths()))
     edges, directories = scan["file_edges"], scan["directory_edges"]
     if deleted:
         tree = {}

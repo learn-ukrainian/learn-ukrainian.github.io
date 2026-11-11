@@ -992,6 +992,56 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     assert affected.CAP_SECONDS == 600
 
 
+def test_pr_machinery_lock_only_diff_runs_consumers_within_fill_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Defect class: a dependency lock bump selects no external-package importers."""
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    repo = tmp_path / 'lock'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    sources = {
+        'tests/test_guard.py': b'def test_guard(): pass\n',
+        'tests/test_consumer.py': b'from lu_machinery.ci import gate\n',
+        'tests/test_heavy.py': b'import lu_machinery.ci.gate\n',
+        'tests/test_unrelated.py': b'import json\n',
+    }
+    for name, source in sources.items():
+        (repo / name).write_bytes(source)
+    (repo / affected.GUARDS).write_text('tests/test_guard.py\n')
+    (repo / affected.DURATIONS).write_text(json.dumps({
+        'tests/test_guard.py': 5, 'tests/test_consumer.py': 10,
+        'tests/test_heavy.py': 400, 'tests/test_unrelated.py': 1,
+    }))
+    lock = repo / 'requirements-machinery.lock'
+    lock.write_text('old\n')
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    lock.write_text('new\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'lock only')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(components, 'python_sources', lambda: sources)
+    monkeypatch.setattr(components, 'tracked_paths', lambda: list(sources))
+    monkeypatch.setattr(affected, 'files', lambda _: [
+        'lu_machinery/__init__.py', 'lu_machinery/ci/__init__.py', 'lu_machinery/ci/gate.py',
+    ])
+    selected = affected.plan(base, candidate)
+    assert selected['changed_test_files'] == []
+    assert selected['importing_test_files'] == ['tests/test_consumer.py', 'tests/test_heavy.py']
+    assert selected['run_files'] == ['tests/test_consumer.py', 'tests/test_guard.py']
+    assert selected['deferred_files'] == ['tests/test_heavy.py']
+    assert selected['estimate_seconds'] == 75
+    assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
+    assert selected['timeout_seconds'] == 480
+
+
 def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypatch: pytest.MonkeyPatch) -> None:
     """Defect class: a conftest's import edges are invisible to the selector.
 
