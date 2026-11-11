@@ -4538,16 +4538,6 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
-    if mode == "workspace-write":
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            adapter.build_invocation(
-                prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
-                task_id="muse-interface", session_id=None, effort="high",
-                tool_config={"muse_worker": True, "muse_role": role,
-                             "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
-            )
-        assert probes == []
-        return
     plan = adapter.build_invocation(
         prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", session_id=None, effort="high",

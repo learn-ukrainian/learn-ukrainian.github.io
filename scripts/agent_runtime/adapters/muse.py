@@ -59,8 +59,6 @@ def confined_muse_argv(
     cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
 ) -> list[str]:
     """Use the existing governed scratch and file sandbox for every Muse run."""
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
     from scripts.common.repo_root import project_interpreter
     from scripts.common.scratch import resolve_scratch_root
 
@@ -83,8 +81,6 @@ def sandbox_main(args: list[str]) -> int:
     from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
 
     phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
     workspace = Path(raw_workspace).resolve(strict=True)
     if mode not in _TOOLS or phase not in {"govern", "child"}:
         raise ValueError("muse_sandbox_launch_refused")
@@ -135,11 +131,20 @@ def sandbox_main(args: list[str]) -> int:
         if sandbox.mechanism != "linux-bwrap":
             raise ValueError("muse_anonymous_auth_sandbox_unavailable")
         argv = wrap_argv_with_sandbox(cmd, sandbox)
-        extra = ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
+        extra = []
+        if mode == "workspace-write":
+            # Only this task worktree becomes writable; auth stays a separate
+            # read-only mount and host paths remain absent from the namespace.
+            extra += ["--bind", str(workspace), str(workspace)]
+        extra += ["--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(workspace)]
         if os.fstat(auth_fd).st_size:
             # bwrap copies this fd into its private tmpfs and closes it before
             # exec. A killed run leaves no named host credential copy.
             extra += ["--perms", "0400", "--ro-bind-data", str(auth_fd), str(home / ".config/muse/auth.json")]
+        # Ancestor directories live on the private root tmpfs. Seal that
+        # mount too, so traversal cannot create even ephemeral outside files.
+        # Existing runtime and workspace submounts retain their own permissions.
+        extra += ["--remount-ro", "/"]
         argv[-len(cmd):-len(cmd)] = extra
         env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
         env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
@@ -270,8 +275,6 @@ class MuseAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         model = resolve_muse_model(model)
         config = tool_config or {}
         if mode not in self.supported_modes:
@@ -320,8 +323,6 @@ class MuseAdapter:
         effort: str | None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         return self._plan(
             prompt=prompt,
             mode=mode,
@@ -349,8 +350,6 @@ class MuseAdapter:
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:

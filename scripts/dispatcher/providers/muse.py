@@ -4,21 +4,24 @@ from __future__ import annotations
 
 import json
 
-from scripts.agent_runtime.adapters.muse import confined_muse_argv
+from scripts.agent_runtime.adapters.muse import _PROFILES, _TOOLS, confined_muse_argv
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
-    if spec.mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
+    if spec.mode not in _TOOLS:
+        raise ValueError("muse_worker_mode_refused")
     argv = ["muse", "exec", "--json", "--model", spec.model, "--disable-web-tools"]
     argv += ["--workspace", str(spec.worktree), "--worktree", "off", "--prompt-file", str(spec.prompt_file)]
     # The admission check forces this option off for every private input class.
     argv += ["--contributor-mode", spec.options.get("contributor_mode", "off")]
     if spec.effort:
         argv += ["--reasoning-effort", spec.effort]
-    argv += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
+    argv += ["--permission-profile", _PROFILES[spec.mode], "--disable-shell",
+             "--config", "run.toolset=" + json.dumps(_TOOLS[spec.mode])]
+    if spec.mode == "read-only":
+        argv.append("--disable-write")
     return Invocation(
         confined_muse_argv(argv, spec.worktree, spec.mode, spec.task_id),
         None, {**env, "MUSE_NO_AUTO_UPDATE": "1"}, None,

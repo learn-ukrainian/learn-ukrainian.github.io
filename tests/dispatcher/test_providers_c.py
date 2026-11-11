@@ -76,10 +76,6 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch
     monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
     options = {} if contributor is None else {"contributor_mode": contributor}
     spec = replace(spec, model=model, mode=mode, effort=effort, options=options)
-    if mode == "workspace-write":
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            muse.build(spec, stub_env)
-        return
     invocation = muse.build(spec, stub_env)
     expected = [
         "exec",
@@ -99,9 +95,11 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch
     if effort:
         expected += ["--reasoning-effort", effort]
     if mode == "workspace-write":
-        expected += ["--permission-profile", ":unrestricted"]
+        expected += ["--permission-profile", ":ask-me", "--disable-shell",
+                     "--config", 'run.toolset=["read_file", "write_file", "edit_file"]']
     else:
-        expected += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
+        expected += ["--permission-profile", ":read-only", "--disable-shell",
+                     "--config", 'run.toolset=["read_file"]', "--disable-write"]
     assert run_stub(invocation, spec) == expected
     assert invocation.env["MUSE_NO_AUTO_UPDATE"] == "1"
     assert "MUSE_NO_AUTO_UPDATE" not in stub_env
@@ -360,6 +358,10 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
         'if cat ../outside.txt 2>/dev/null; then exit 21; fi\n'
         'if cat escape 2>/dev/null; then exit 22; fi\n'
         'if printf changed > inside.txt 2>/dev/null; then exit 23; fi\n'
+        f'if printf bad > "{outside}" 2>/dev/null; then exit 24; fi\n'
+        'if printf bad > ../outside.txt 2>/dev/null; then exit 25; fi\n'
+        'if printf bad > escape 2>/dev/null; then exit 26; fi\n'
+        'if printf bad > "$HOME/.config/muse/auth.json" 2>/dev/null; then exit 27; fi\n'
     )
     native.chmod(0o700)
     source_home = tmp_path / "empty-home"
@@ -375,33 +377,33 @@ def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
     prompt = tmp_path / "brief.txt"
     prompt.write_text("fixture")
     spec = TaskSpec("muse-containment", "muse", MODELS[0], None, "read-only", workspace, prompt, tmp_path / "final")
-    from scripts.agent_runtime.adapters import muse as adapter_module
-
-    def no_provider_execution(*args, **kwargs):
-        raise AssertionError("write refusal must precede provider execution")
-
-    with monkeypatch.context() as refusal:
-        refusal.setattr(subprocess, "run", no_provider_execution)
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            muse.build(replace(spec, mode="workspace-write"), {})
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            adapter_module.MuseAdapter().build_invocation(
-                prompt="", mode="workspace-write", cwd=workspace, model=None,
-                task_id=None, session_id=None, tool_config=None,
-            )
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            adapter_module.MuseAdapter().preview_invocation(
-                prompt="", mode="workspace-write", cwd=workspace, model=None,
-                task_id="refused", run_nonce="0123456789abcdef", scratch_root=str(scratch), effort=None,
-            )
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            confined_muse_argv([], workspace, "workspace-write", "refused")
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
-            adapter_module.sandbox_main(["govern", "refused", "workspace-write", str(workspace), str(scratch)])
     invocation = muse.build(spec, {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
     assert invocation.argv[:6] == confined_muse_argv([], workspace, "read-only", spec.task_id)[:6]
     result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
     assert result.stdout == "inside"
     assert (workspace / "inside.txt").read_text() == "inside"
+    assert not list(scratch.glob("task-scratch/*/scratch"))
+
+    # The same OS boundary permits only task-worktree writes in write mode.
+    native.write_text(
+        '#!/bin/sh\n'
+        'test "$(cat "$HOME/.config/muse/auth.json")" = synthetic-auth-only || exit 19\n'
+        'printf changed > inside.txt || exit 23\n'
+        f'if printf bad > "{outside}" 2>/dev/null; then exit 24; fi\n'
+        'if printf bad > ../outside.txt 2>/dev/null; then exit 25; fi\n'
+        'if printf bad > escape 2>/dev/null; then exit 26; fi\n'
+        'if printf bad > "$HOME/.config/muse/auth.json" 2>/dev/null; then exit 27; fi\n'
+        'if rm "$HOME/.config/muse/auth.json" 2>/dev/null; then exit 28; fi\n'
+        'cat inside.txt\n'
+    )
+    invocation = muse.build(replace(spec, mode="workspace-write"),
+                            {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
+    result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "changed"
+    assert (workspace / "inside.txt").read_text() == "changed"
+    assert outside.read_text() == "outside"
+    assert auth.read_text() == "synthetic-auth-only"
     assert not list(scratch.glob("task-scratch/*/scratch"))
