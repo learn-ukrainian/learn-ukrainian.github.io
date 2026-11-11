@@ -953,7 +953,7 @@ def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]
         for text, args, _, _, _, _ in commands
     )
     for text, args, xargs, payload, pipe_input, direct_merge in commands:
-        name = Path(args[0]).name
+        name = args[0] if args[0] == "." else Path(args[0]).name
         python = re.fullmatch(r"python(?:[23](?:\.\d+)?)?", name) is not None
         publisher = python and args[1:3] == ["-m", _PUBLISHER]
         interpreter = python or name in {"perl", "ruby", "node", "nodejs", "awk", "gawk", "mawk", "nawk", "php", "lua", "luajit"}
@@ -965,7 +965,7 @@ def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]
             for arg in args[1:]
         )
         xargs_input = xargs and not direct_merge and name not in data_commands and not publisher
-        if ((name in _SHELLS and (payload is None or pipe_input)) or (interpreter and not publisher) or xargs_input or wrapped_reader) and generated_input:
+        if ((name in _SHELLS | {"source", "."} and (payload is None or pipe_input)) or (interpreter and not publisher) or xargs_input or wrapped_reader) and generated_input:
             raise ShellPreprocessLimit("generated interpreter stdin cannot be read safely")
         if interpreter and not publisher and (
             name in {"awk", "gawk", "mawk", "nawk"}

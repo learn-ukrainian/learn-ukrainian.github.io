@@ -2604,6 +2604,8 @@ def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command, failures
     "bash < <(echo 'gh pr merge 5')",
     "echo 'gh pr merge 5' | timeout 60 bash",
     "echo 'gh pr merge 5' | bash -c 'bash'",
+    "echo 'gh pr merge 5' | source /dev/stdin",
+    ". /dev/stdin <<< 'gh pr merge 5'",
     "printf 'gh pr merge 5\\n' | sh",
     "bash <<< 'gh pr merge 5'",
     'python3 -c "import os; os.system(\'gh pr merge 5\')"',
