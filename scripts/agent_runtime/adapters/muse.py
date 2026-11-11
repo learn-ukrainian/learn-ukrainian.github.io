@@ -51,6 +51,7 @@ _PASSIVE_EVENTS = frozenset(
         "task.lifecycle.completed",
         "task.lifecycle.status",
         "task.lifecycle.output",
+        "task.lifecycle.tool_output_ref",
     }
 )
 
@@ -572,7 +573,7 @@ class MuseAdapter:
                             "side_effect_intent": "scheduled", "started": "side_effect_intent",
                             "completed": "started",
                         }
-                        if stage in {"status", "output"}:
+                        if stage in {"status", "output", "tool_output_ref"}:
                             if payload.get("kind") != "task_lifecycle" or tasks[task] != "started" or (
                                 stage == "status" and not isinstance(event.get("message"), str)
                             ) or (
@@ -581,6 +582,21 @@ class MuseAdapter:
                                 )
                             ):
                                 raise ValueError("muse_task_observation_invalid")
+                            if stage == "tool_output_ref":
+                                # This is an observation only. Never follow its
+                                # path or URI, or count it as a tool result.
+                                ref = event.get("output_ref")
+                                if (event.get("availability") != "available" or not isinstance(ref, dict)
+                                        or ref.get("kind") != "tool_patch"
+                                        or ref.get("media_type") != "application/json"
+                                        or any(not isinstance(ref.get(key), str) or not ref[key]
+                                               for key in ("id", "path", "uri"))
+                                        or ref.get("digest") is not None
+                                        or not isinstance(ref.get("patch_summary"), dict)):
+                                    raise ValueError("muse_task_observation_invalid")
+                                _counter(ref.get("byte_len"))
+                                for field in ("added", "files", "removed"):
+                                    _counter(ref["patch_summary"].get(field))
                         else:
                             if stage not in previous or tasks[task] != previous[stage]:
                                 raise ValueError("muse_task_order_invalid")
