@@ -152,6 +152,7 @@ Atlas vocabulary coverage report.
 
 For an offline local TruffleHog scan of the work tree or the whole public history
 (before a credential, identity, transport or hook change, or after a suspected leak),
+<!-- AC3 demo D2: throwaway, never lands -->
 see [`secret-scanning.md`](secret-scanning.md).
 
 ## Gate inventory
