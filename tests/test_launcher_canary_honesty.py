@@ -10,7 +10,7 @@ import pytest
 from tests.launcher_sandbox import launcher_environment
 
 REPO = Path(__file__).resolve().parents[1]
-PROVIDERS = ("gemini", "cursor", "grok", "claude", "kimi", "glm", "codex")
+PROVIDERS = ("gemini", "cursor", "grok", "claude", "codex")
 
 
 def _canary_binding_probe(
@@ -58,7 +58,7 @@ def test_noop_adapter_does_not_claim_a_canary(provider: str, dry_run: str, tmp_p
     assert "provider canary: not run" in _driver_prompt(result)
     assert "provider canary: ran" not in result.stdout
     assert "ran its provider canary" not in result.stdout
-    if provider in ("gemini", "cursor") or (provider in ("claude", "kimi") and dry_run == "1"):
+    if provider in ("gemini", "cursor") or (provider == "claude" and dry_run == "1"):
         assert f"{provider} adapter: provider canary: not run" in result.stdout
         assert "would run provider canary" not in result.stdout
 

@@ -252,8 +252,6 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-glm.sh         # Claude Code routed to Z.AI GLM
-./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
 ./start-codex-driver.sh --epic devops
 ./start-grok-driver.sh --epic devops
@@ -270,8 +268,7 @@ Every launcher starts its seat with the rules core
 `scripts/lib/rules_core.sh`. The core always comes from the checkout the code
 runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
 native Codex `-c developer_instructions=…`, Grok `--rules`; AGY, Cursor, OpenCode and Hermes
-receive the core at the head of the initial prompt. A Kimi launcher exits 2 on the catalog
-retirement before rules attachment, so it never starts a coding task. ACP calls
+receive the core at the head of the initial prompt. ACP calls
 and legacy bridge prompts prepend the same block unless the prompt already
 starts with it. Dispatch v2 checks core availability but does not prepend the
 core or support rules-seat selection; the one exception is read-only Claude, which
@@ -288,15 +285,14 @@ and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
 
 ### Parallel routes and original Claude config
 
-`start-codex.sh --harness claude-code` and
-`start-glmcc.sh` / `start-glm.sh` route through process-scoped
+`start-codex.sh --harness claude-code` routes through process-scoped
 configuration. They **never rewrite** the live `~/.claude/settings.json`. That means:
 
 - `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
 - You can run native Claude and a routed provider in **parallel terminals**
 - Tools like [cc-switch](https://github.com/farion1231/cc-switch) that pin
   `ANTHROPIC_*` into `settings.json env` will **block** these launchers until
-  those keys are removed (or you use `--isolate-config` / `CLAUDE_CONFIG_DIR`)
+  those keys are removed (or you use `CLAUDE_CONFIG_DIR`)
 
 ### Codex through Claude Code
 
@@ -325,35 +321,6 @@ The adapter uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
 client token by default. `CODEX_CC_BASE_URL` is restricted to that local
 endpoint; `CODEX_CC_AUTH_TOKEN` is process-scoped and never written to the
 repository.
-
-### GLM through Claude Code (Z.AI)
-
-`start-glmcc.sh` / `start-glm.sh` routes Claude Code to the Z.AI Anthropic-compatible
-endpoint (`https://api.z.ai/api/anthropic`) per
-[Z.AI Claude Code docs](https://docs.z.ai/scenario-example/develop-tools/claude).
-
-```bash
-./start-glmcc.sh                     # coding endpoint + isolated ~/.claude-glmcc
-./start-glmcc.sh --endpoint platform
-./start-glm.sh --model glm-5.3
-```
-
-**Credentials (first match wins):** `GLMCC_AUTH_TOKEN`, `ZAI_API_KEY`,
-`ZHIPU_API_KEY`, `GLM_API_KEY`, then owner-only `~/.secret/zai.key`
-(mode `0600` or `0400`). Override the file path with `GLMCC_SECRET_FILE`.
-File-backed keys are loaded into process-scoped `ANTHROPIC_AUTH_TOKEN` only —
-they are never re-exported as `ZAI_*`, never written to
-`~/.claude/settings.json`, and never printed by dry-run. Ambient
-`ANTHROPIC_AUTH_TOKEN` is deliberately rejected as a GLM credential.
-
-Create the secret file once (avoid putting the key on the shell command line
-or in shell history):
-
-```bash
-mkdir -p ~/.secret
-touch ~/.secret/zai.key && chmod 600 ~/.secret/zai.key
-${EDITOR:-nano} ~/.secret/zai.key   # paste the key alone, save, quit
-```
 
 The trusted `agents_extensions/codex/config.toml` overlay leaves the root model
 and reasoning effort user-selectable while giving Codex App and CLI the same

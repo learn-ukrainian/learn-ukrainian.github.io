@@ -11,8 +11,8 @@
 #
 # This helper runs the deploy with output captured, prints one line on
 # success, and on failure prints a loud banner plus the tail of the real
-# output. It returns the npm exit code so callers can choose whether to abort;
-# start-claude.sh refuses to launch against stale definitions.
+# output. It returns non-zero when npm or the deploy script is missing and the
+# npm exit code otherwise; the shared launcher core refuses to launch on failure.
 #
 # Usage: deploy_agent_extensions <project_dir> <npm_script>
 # Load-bearing tests: scripts/agent_deploy/test_deploy_extensions.sh (wrapped by
@@ -30,13 +30,13 @@ deploy_agent_extensions() {
     local npm_script="$2"
 
     if ! command -v npm >/dev/null 2>&1; then
-        echo "⚠️  npm not found — skipping agent-extensions deploy (targets may be stale)"
-        return 0
+        echo "Error: npm not found; cannot deploy agent extensions (targets may be stale)." >&2
+        return 1
     fi
     if [ ! -f "$project_dir/package.json" ] \
         || ! grep -q "\"$npm_script\"" "$project_dir/package.json" 2>/dev/null; then
-        echo "⚠️  npm script '$npm_script' not found in $project_dir/package.json — skipping deploy"
-        return 0
+        echo "Error: npm script '$npm_script' not found in $project_dir/package.json; cannot deploy agent extensions." >&2
+        return 1
     fi
 
     local log_file

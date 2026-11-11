@@ -34,7 +34,6 @@ from scripts.review.model_catalog import (
     runtime_model_matches_requested,
     unknown_model_refusal,
     validate_catalog,
-    validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
@@ -219,7 +218,6 @@ def test_glm_retirement_refuses_aliases_and_keeps_historical_identity() -> None:
         with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
             resolve_glm_model(alias)
     assert model_aliases()["glm52"] == "glm-5.2"
-    validate_glm_alias_consumers()
 
 
 def test_catalog_rejects_kimi_route_without_its_friendly_alias():

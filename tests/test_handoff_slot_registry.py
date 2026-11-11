@@ -580,9 +580,9 @@ def test_muse_identity_refuses_other_streams(selector: str) -> None:
         ("--epic", "devops"),
         ("--epic=devops",),
         ("--governor", "devops"),
-        # `--` here is the --endpoint value, not the separator, so --epic is still a launcher flag.
-        ("--endpoint", "--", "--epic", "devops"),
-        ("--endpoint", "--", "--epic=devops"),
+        # `--` here is the --harness value, not the separator, so --epic is still a launcher flag.
+        ("--harness", "--", "--epic", "devops"),
+        ("--harness", "--", "--epic=devops"),
     ],
 )
 def test_kube_dojo_wrapper_refuses_a_caller_lane(caller_epic: tuple[str, ...], launch_root: Path) -> None:
