@@ -261,14 +261,14 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-lexicon-slovnyk-cache` | `data/lexicon/slovnyk_cache/` | current | mcp: sources MCP search_slovnyk_me / query_slovnyk_me (sources.db table, not this cache) |
 | `data-lexicon-source-inventory` | `data/lexicon/source-inventory/`, `data/lexicon/textbook-end-dictionaries/` | current | git_grep: git grep -n -F '<word>' -- registry/lexicon/source-inventory (tracked counterpart) |
 | `data-lexicon-working` | `data/lexicon/intake/`, `data/lexicon/parked/`, `data/lexicon/recovery-audit/`, `data/lexicon/runner_work/`, `data/lexicon/side/`, `data/lexicon/*.json` | current | sqlite: read the JSON or side SQLite files directly; no search tool |
-| `data-open-model-data-payloads` | `data/projects/open_model_data/` | current | cli: LU_PRODUCT_ROOT="$PWD" bash scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status (published groups) |
+| `data-open-model-data-payloads` | `data/projects/open_model_data/` | current | cli: scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status (published groups) |
 | `data-eval-payloads` | `data/projects/ua_eval_harness/`, `data/projects/ua_open_weight_eval/` | current | cli: .venv/bin/python -m scripts.projects.ua_open_weight_eval.suite_cli --help |
 | `data-embeddings` | `data/embeddings/` | current | sqlite: read-only SQL on data/embeddings/manifest.db |
 | `data-textbook-chunks` | `data/textbook_chunks/` | current | mcp: sources MCP search_text (sources.db copy) |
 | `data-ua-gec` | `data/ua-gec/` | current | mcp: sources MCP search_ua_gec_errors (sources.db copy) |
-| `data-artifact-store` | `data/.artifact-store/` | current | cli: LU_PRODUCT_ROOT="$PWD" bash scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status |
+| `data-artifact-store` | `data/.artifact-store/` | current | cli: scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status |
 | `data-backups` | `data/backups/` | current | api: GET /api/admin/backup/list |
-| `data-backups-staging` | `data/.backup-staging/` | current | cli: LU_PRODUCT_ROOT="$PWD" bash scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status |
+| `data-backups-staging` | `data/.backup-staging/` | current | cli: scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status |
 | `data-corpus-audit` | `data/corpus_audit/` | current | sqlite: read the JSON files directly (jq) |
 | `data-datasets` | `data/datasets/` | current | sqlite: read README.md in each dataset directory |
 | `data-processed-esum` | `data/processed/` | current | mcp: sources MCP search_esum (sources.db copy) |

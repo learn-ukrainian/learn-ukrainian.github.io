@@ -18,7 +18,7 @@ hash and source list; it does not reprint the rules blob.
 ## Sequence (every session)
 
 ```bash
-LU_PRODUCT_ROOT="$PWD" bash scripts/pre_commit/project_python.sh -I -m lu_machinery.cursor_cold_start
+scripts/pre_commit/project_python.sh -I -m lu_machinery.cursor_cold_start
 ```
 
 Equivalent manual calls:

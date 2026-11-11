@@ -50,11 +50,21 @@
       "Bash(.venv/bin/python -m lu_machinery.orchestration.merge_closeout *)",
       "Bash(.venv/bin/python -m lu_machinery.hygiene.branch_sweep *)",
       "Bash(.venv/bin/python -m lu_machinery.orchestration.worktree_claims *)",
-      "Bash(.venv/bin/python -m lu_machinery.fleet.capacity_pick*)",
+      "Bash(.venv/bin/python -m lu_machinery.fleet.capacity_pick *)",
       "Bash(.venv/bin/python -m lu_machinery.storage.artifacts *)",
       "Bash(.venv/bin/python -m lu_machinery.gh_merge_queue_status *)",
       "Bash(.venv/bin/python -m lu_machinery.fleet_comms *)",
-      "Bash(.venv/bin/python -m lu_machinery.dispatch *)"
+      "Bash(.venv/bin/python -m lu_machinery.dispatch *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.ai_agent_bridge *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.orchestration.merge_closeout *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.hygiene.branch_sweep *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.orchestration.worktree_claims *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.fleet.capacity_pick *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.gh_merge_queue_status *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.fleet_comms *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.dispatch *)",
+      "Bash(scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status)"
     ],
     "deny": [
       "Bash(git fetch *--upload-pack*)",
