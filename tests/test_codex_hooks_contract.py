@@ -1221,7 +1221,8 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
             from lu_machinery.agent_runtime.agy_hook_config import native_hook_command
             return ["/bin/bash", "-c", native_hook_command(mode)]
         if mode == "agy-secret-print":
-            return module("agent_runtime.secret_print_hook", "--harness", "agy")
+            from scripts.agent_runtime.agy_hook_config import native_hook_command
+            return ["/bin/bash", "-c", native_hook_command(mode)]
         if mode.startswith("codex-"):
             return ["/bin/bash", str(ENTRY), mode.removeprefix("codex-")]
         if mode == "agy-pending-orders":
@@ -1307,6 +1308,10 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
                         {"LU_PRODUCT_ROOT": str(tmp_path / "absent")}]:
             result = run(native("agy-stop-hook"), payload, extra=extra | invalid)
             assert json.loads(result.stdout)["decision"] == "continue", result
+        ordinary = run(native("agy-stop-hook"), payload)
+        assert json.loads(ordinary.stdout) == {"decision": "allow"}, ordinary
+        cancelled = run(native("agy-stop-hook"), payload | {"terminationReason": "ERROR"}, extra=extra)
+        assert json.loads(cancelled.stdout) == {"decision": "allow"}, cancelled
     elif defect_class == "S4":
         import sqlite3
 
@@ -1325,7 +1330,9 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         add_authority(plane / "comms.sqlite3", recipient="gemini-infra")
         extra = {"AB_DB_PATH": str(legacy), "FLEET_COMMS_ROOT": str(plane),
                  "FLEET_COMMS_ALLOW_LOCAL_SHADOW": "1", "SESSION_HANDOFF_AGENT": "gemini-infra"}
+        store_bytes = (legacy.read_bytes(), (plane / "comms.sqlite3").read_bytes())
         result = run(native("agy-pending-orders"), extra=extra)
+        assert (legacy.read_bytes(), (plane / "comms.sqlite3").read_bytes()) == store_bytes
         assert result.returncode == 0, result.stderr
         notice = json.loads(result.stdout)["injectSteps"][0]["ephemeralMessage"]
         assert "PENDING ORDERS: 2" in notice and "unknown" not in notice, result
@@ -1342,7 +1349,15 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         assert result.returncode == 2, result
         assert "PRIMARY CHECKOUT DIRTIED" in result.stdout + result.stderr
         assert "created-by-call.txt" in result.stdout + result.stderr
-        assert "e3a-fixture" in str(list((tmp_path / "state").rglob("*"))) or "attribution record" in result.stdout + result.stderr
+        import importlib
+        audit_reader = importlib.import_module(prefix + ".guardrails.primary_dirt_audit")
+        records = list(audit_reader.iter_records(audit_reader.state_dir(env)))
+        assert len(records) == 1
+        record = records[0][1]
+        assert record["session_id"] == "e3a-fixture"
+        assert record["tool_use_id"] == "call-1"
+        assert record["command"] == "printf safe"
+        assert record["primary_root"] == str(primary)
     elif defect_class == "S5":
         relative = tmp_path / "relative-python"
         sentinel = tmp_path / "relative-executed"
@@ -1361,10 +1376,10 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
             for mode in ["agy-secret-print", "agy-pretool-hook", "codex-pre-tool-use"]:
                 # The generated boundary validates interpreter selection before
                 # Python starts; source generation must carry identical bytes.
-                from lu_machinery.agent_runtime.agy_hook_config import native_hook_command as installed_command
-
-                from scripts.agent_runtime.agy_hook_config import native_hook_command as source_command
-                writer = source_command if implementation == "source" else installed_command
+                if implementation == "source":
+                    from scripts.agent_runtime.agy_hook_config import native_hook_command as writer
+                else:
+                    from lu_machinery.agent_runtime.agy_hook_config import native_hook_command as writer
                 result = run(["/bin/bash", "-c", writer(mode)], extra=invalid, cwd=cwd)
                 if mode.startswith("agy-"):
                     assert result.returncode == 0 and json.loads(result.stdout)["decision"] == "deny", result

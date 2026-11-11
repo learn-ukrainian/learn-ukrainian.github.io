@@ -33,15 +33,17 @@ EXPECTED_UNKNOWN_NOTICE = (
 SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
 
 
-def run_hook(payload="{}", *, env=None, cwd=ROOT):
+def run_hook(payload="{}", *, env=None, cwd=ROOT, bootstrap_refusal=False):
     proc = subprocess.run(
         ["bash", str(SCRIPT)], input=payload, text=True, capture_output=True, cwd=cwd, env=env, timeout=20
     )
     assert proc.returncode == 0
-    assert proc.stderr == ""
+    assert proc.stderr == ("HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.\n" if bootstrap_refusal else "")
     assert BODY_MARKER not in proc.stdout
     result = json.loads(proc.stdout)
-    if result:
+    if bootstrap_refusal:
+        assert result == {"decision": "deny", "reason": "HOOK-BOOTSTRAP-FAILED: hook context unavailable."}
+    elif result:
         line = result["injectSteps"][0]["ephemeralMessage"]
         assert len(line) <= 200
         assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
@@ -337,7 +339,7 @@ def test_root_resolution_failure_unknown(stores, tmp_path, monkeypatch):
     monkeypatch.setenv("PATH", f"{commands}:{os.environ['PATH']}")
     before = snapshot(stores)
     files = set(tmp_path.rglob("*"))
-    assert run_hook(BODY_MARKER) == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    assert run_hook(BODY_MARKER, bootstrap_refusal=True)["decision"] == "deny"
     assert snapshot(stores) == before
     assert set(tmp_path.rglob("*")) == files
 
@@ -360,19 +362,23 @@ def test_interpreter_failure_unknown(stores, tmp_path, monkeypatch, mode):
             "nonascii": json.dumps({"injectSteps": [{"ephemeralMessage": "PENDING ORDERS: \u202e"}]}),
         }[mode]
         interpreter.write_text(
-            f"#!{sys.executable}\nimport os, sys\nif sys.argv[1] == '-c':\n os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\nsys.stdin.read()\nprint({output!r})\nsys.exit({1 if mode in {'crash', 'nonzero-empty'} else 0})\n"
+            f"#!{sys.executable}\nimport os, sys\nif 'scripts.inbox_pending' not in sys.argv:\n os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\nsys.stdin.read()\nprint({output!r})\nsys.exit({1 if mode in {'crash', 'nonzero-empty'} else 0})\n"
         )
         interpreter.chmod(0o700)
-    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", str(interpreter))
     before = snapshot(stores)
     files = set(tmp_path.rglob("*"))
-    assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    if mode == "missing":
+        assert run_hook(bootstrap_refusal=True)["decision"] == "deny"
+    else:
+        shell_notice = EXPECTED_UNKNOWN_NOTICE.replace(".venv/bin/python", "project interpreter")
+        assert run_hook() == {"injectSteps": [{"ephemeralMessage": shell_notice}]}
     assert snapshot(stores) == before
     assert set(tmp_path.rglob("*")) == files
 
 
 def test_shared_interpreter_resolution(stores, monkeypatch):
-    monkeypatch.delenv("LU_DRIVER_STATE_PYTHON")
+    monkeypatch.delenv("LEARN_UKRAINIAN_PYTHON")
     add_legacy(stores[0])
     assert "PENDING ORDERS: 1" in run_hook()["injectSteps"][0]["ephemeralMessage"]
 
