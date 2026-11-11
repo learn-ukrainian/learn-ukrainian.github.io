@@ -139,17 +139,22 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
         assert "retired" in result.reason
+    candidate = REVIEW_CANDIDATES["muse"]
+    result = evaluate_candidate(candidate, inputs)
+    assert result.status == "excluded"
+    assert "Ukrainian-content language-lanes exclusion" in result.reason
     pinned = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             changed_paths=("curriculum/A1/lesson.mdx",),
-            pinned_candidate="grok-4.7",
+            pinned_candidate="muse",
             pressure_override_reason="test pin",
             claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None
-    assert pinned.fail_closed_reason
+    assert "failed a hard eligibility gate" in pinned.fail_closed_reason
+    assert any(row.name == "muse" and "Ukrainian-content language-lanes exclusion" in row.reason for row in pinned.trace)
     deepseek_pin = resolve_reviewer(
         ResolverInputs(
             author_model="codex",

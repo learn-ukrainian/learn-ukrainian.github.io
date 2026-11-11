@@ -464,6 +464,12 @@ def test_critical_grok_is_absent_and_frontier_authority_is_selected(author):
 
 
 def test_critical_grok_is_excluded_for_an_xai_author():
+    # An active stand-in reaches independence rather than the retired-model guard.
+    candidate = replace(REVIEW_CANDIDATES["openai_frontier"], name="stand-in-xai", family="xai")
+    result = evaluate_candidate(candidate, ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
+    assert result.status == "excluded"
+    assert "same family" in result.reason.lower()
+
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
     assert "grok-4.7" not in trace
