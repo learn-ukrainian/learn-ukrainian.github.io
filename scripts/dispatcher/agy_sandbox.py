@@ -947,7 +947,10 @@ class _GhBroker:
         self.gh = shutil.which("gh")
         self.env = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "XDG_CONFIG_HOME", "GH_CONFIG_DIR")
                     if name in os.environ}
-        self.env.update(GH_PROMPT_DISABLED="1", GH_NO_UPDATE_NOTIFIER="1", GH_PAGER="cat", GIT_ALLOW_PROTOCOL="file")
+        # GH_HOST pins an unqualified OWNER/REPO to github.com: without it, gh's default host comes from
+        # the host's own config and could be another server.
+        self.env.update(GH_PROMPT_DISABLED="1", GH_NO_UPDATE_NOTIFIER="1", GH_PAGER="cat", GIT_ALLOW_PROTOCOL="file",
+                        GH_HOST="github.com")
         self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
         try:  # the descriptor path avoids the sockaddr_un length limit, as in SourcesRelay
