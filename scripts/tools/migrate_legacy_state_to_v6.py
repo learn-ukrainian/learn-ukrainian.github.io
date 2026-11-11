@@ -453,8 +453,7 @@ def _verify_dry_run(report: MigrationReport) -> None:
         verify_v6_state(report.candidate.track, report.candidate.slug, orch_dir, report.v6_state)
 
     from fastapi.testclient import TestClient
-
-    from api.main import app
+    from lu_machinery.api.main import app
 
     client = TestClient(app)
     track = report.candidate.track

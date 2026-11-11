@@ -2,7 +2,7 @@
 
 Curriculum module builds report their writer and reviewer token use here,
 including explicit swarm/solo reporting. The machinery
-``scripts.api.telemetry_router`` keeps tool timings and legacy usage summaries
+``lu_machinery.api.telemetry_router`` keeps tool timings and legacy usage summaries
 under the same prefix and owns the shared telemetry database opener (Monitor
 split, C-4687).
 """
@@ -18,18 +18,10 @@ from typing import Any
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, Query
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.api.telemetry_router import _clean_text, _isoformat_z, _now_z, _open_telemetry_db, _required_text
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 from pydantic import BaseModel, Field
-
-try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-
-
-from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from scripts.api.telemetry_router import _clean_text, _isoformat_z, _now_z, _open_telemetry_db, _required_text
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
 

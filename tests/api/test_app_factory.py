@@ -16,12 +16,13 @@ from fastapi.exception_handlers import websocket_request_validation_exception_ha
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import fixture_context, production_context
+from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
+from lu_machinery.api.resilience import TimedSQLiteConnection, resilience_middleware
+from lu_machinery.session_streams import inventory as stream_inventory
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context, production_context
-from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
 from scripts.project_api import dashboard_comms
 from scripts.project_api.context import product_roots, sources_db
 
@@ -188,16 +189,16 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         assert "Second instance orchestrator state" in second_session.text
         assert "First instance" not in second_session.text
 
-        # Rules endpoint isolation
+        # Rules: the release serves its packaged rules; a context root never
+        # selects them (machinery #126), so neither planted body leaks in.
         first_rules = first_client.get("/api/rules")
         assert first_rules.status_code == 200
-        assert "First rule body" in first_rules.text
-        assert "Second rule body" not in first_rules.text
-
         second_rules = second_client.get("/api/rules")
         assert second_rules.status_code == 200
-        assert "Second rule body" in second_rules.text
-        assert "First rule body" not in second_rules.text
+        assert first_rules.headers["X-Rules-Hash"] == second_rules.headers["X-Rules-Hash"]
+        for rules in (first_rules, second_rules):
+            assert "First rule body" not in rules.text
+            assert "Second rule body" not in rules.text
 
         # Rollovers endpoint
         assert first_client.get("/api/rollovers").status_code == 200
@@ -472,10 +473,14 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
         assert second_worktrees["worktrees"][0]["path"] == REDACTED_ABSOLUTE_PATH
 
 
-def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
+def test_step12e_work_epics_cluster_isolation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     @asynccontextmanager
     async def no_lifespan(_app):
         yield
+
+    # The release reads the stream registry from its own package; resolve it
+    # under each context's checkout instead, so each app sees only its plant.
+    monkeypatch.setattr(stream_inventory, "DEFAULT_STREAMS_YAML", Path("scripts", "config", "issue_streams.yaml"))
 
     def _plant(root: Path, stream_id: str, epic: int, title: str) -> None:
         config = root / "scripts" / "config"

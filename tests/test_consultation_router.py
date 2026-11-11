@@ -11,9 +11,9 @@ from unittest.mock import patch
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api.main import app
-from scripts.api.monitor_context import fixture_context
 from scripts.project_api.curriculum_state import monitor_surface
 
 client = TestClient(app, raise_server_exceptions=False)

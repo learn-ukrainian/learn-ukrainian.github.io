@@ -55,11 +55,11 @@ def test_isolate_dispatch_task_store_is_not_the_live_dir(
     _isolate_dispatch_task_store: Path,
 ) -> None:
     """The autouse redirect is ``<session base>/<n>/tasks``, so its parent is also per-test."""
-    import scripts.api.config as api_config
-    import scripts.api.delegate_router as delegate_router
-    import scripts.api.main as api_main
-    from scripts.common.task_store_paths import tasks_dir
-    from scripts.dispatcher import store
+    import lu_machinery.api.config as api_config
+    import lu_machinery.api.delegate_router as delegate_router
+    import lu_machinery.api.main as api_main
+    from lu_machinery.common.task_store_paths import tasks_dir
+    from lu_machinery.dispatcher import store
 
     assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
     assert _isolate_dispatch_task_store.name == "tasks"
@@ -79,7 +79,7 @@ def test_test_level_override_wins_over_autouse(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A test-level ``LU_TASKS_DIR`` override wins."""
-    from scripts.common.task_store_paths import tasks_dir
+    from lu_machinery.common.task_store_paths import tasks_dir
 
     override = _isolate_dispatch_task_store.parent / "override-tasks"
     override.mkdir()
@@ -160,7 +160,7 @@ def test_task_store_consumers_use_call_time_resolver() -> None:
             for node in ast.walk(tree)
         ), relative
 
-    from scripts.orchestration import worktree_claims
+    from lu_machinery.orchestration import worktree_claims
 
     parent = _REAL_TASKS_DIR.parent
     assert (parent / "preflight_fast_fail.jsonl").resolve() in _DERIVED_LIVE_TASK_PATHS

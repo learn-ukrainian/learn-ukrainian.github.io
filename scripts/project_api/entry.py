@@ -1,11 +1,11 @@
 """The configured product entry of the Monitor API (Monitor split, C-4687).
 
 ``scripts/curriculum/monitor_paths.v1.json`` names this module as
-``product_api``. The machinery loader (``scripts.api.product_contribution``)
+``product_api``. The machinery loader (``lu_machinery.api.product_contribution``)
 imports it through the configured entry point and calls :func:`build_api`.
 
 Example:
-  .venv/bin/python -c "from scripts.api.monitor_context import production_context as c; from scripts.project_api.entry import build_api; print(len(build_api(c()).routers))"
+  .venv/bin/python -c "from lu_machinery.api.monitor_context import production_context as c; from scripts.project_api.entry import build_api; print(len(build_api(c()).routers))"
 """
 
 from __future__ import annotations
@@ -14,8 +14,8 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
-from scripts.api.monitor_context import MonitorContext
-from scripts.api.product_contribution import ProductContribution, RouterMount
+from lu_machinery.api.monitor_context import MonitorContext
+from lu_machinery.api.product_contribution import ProductContribution, RouterMount
 
 from . import (
     admin_router,
@@ -69,8 +69,9 @@ PRELOAD_MODULES = (
     "audit.checks.activity_validation",
     "yaml_activities",
     "scripts.build.phase_constants",
-    "research_quality",
-    "research.research_markdown_utils",
+    # Release modules the product routers import (machinery, not product code).
+    "lu_machinery.research_quality",
+    "lu_machinery.research.research_markdown_utils",
 )
 
 OPTIONAL_PRELOAD_MODULES = (

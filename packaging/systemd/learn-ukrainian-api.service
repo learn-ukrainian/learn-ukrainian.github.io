@@ -11,7 +11,12 @@ Environment=PYTHONUNBUFFERED=1
 # Optional: EnvironmentFile=-%h/.config/learn-ukrainian/monitor.env
 # (MONITOR_OCCUPANCY_HOST_IDS=canonical=opaque-id,...). Never put IPs or SSH
 # hostnames in the JSON; default glance opaque id is host-teacher (+ mac-operator).
-ExecStart=@REPO_ROOT@/.venv/bin/python -m uvicorn scripts.api.main:app --host 127.0.0.1 --port 8765 --log-config scripts/api/logging.json --timeout-graceful-shutdown 8
+# The installed lu_machinery release serves the app; it reads its roots from the
+# environment, and `import scripts` binds this checkout as the product. The
+# log configuration ships inside the release, so its path is resolved at start.
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
+ExecStart=@REPO_ROOT@/.venv/bin/python -c "import sys, scripts, uvicorn; from lu_machinery.common.repo_root import machinery_path; sys.argv[1:1] = ['--log-config', str(machinery_path('api/logging.json'))]; uvicorn.main()" lu_machinery.api.main:app --host 127.0.0.1 --port 8765 --timeout-graceful-shutdown 8
 Restart=on-failure
 RestartSec=5
 

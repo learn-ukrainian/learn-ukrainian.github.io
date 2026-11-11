@@ -883,7 +883,7 @@ Owned test paths:
 - `tests/orchestration/test_task_record_store.py`
 - `tests/orchestration/test_task_lifecycle.py`
 - `tests/orchestration/test_task_closeout.py`
-- `tests/orchestration/test_task_lifecycle_carriers.py`
+- learn-ukrainian/machinery `tests/orchestration/test_task_lifecycle_carriers.py`
 - `tests/orchestration/test_stale_task_records.py`
 - `tests/orchestration/test_orchestrator_control.py`
 - `tests/orchestration/test_integration_sweep.py`
@@ -912,14 +912,14 @@ Owned test paths:
 - `tests/orchestration/test_interrupted_caller_matrix.py`
 - `tests/review/test_attempt_artifact_binding.py`
 - `tests/test_delegate_admission.py`
-- `tests/test_delegate_api.py`
+- learn-ukrainian/machinery `tests/api/test_delegate_api.py`
 - `tests/test_delegate_bounded_advisory.py`
 - `tests/test_delegate_check_budget.py`
 - `tests/test_dispatch_isolation.py`
 - `tests/test_reconcile_sweep.py`
-- `tests/test_remote_supervisor.py`
+- learn-ukrainian/machinery `tests/agents_extensions/test_remote_supervisor.py`
 - `tests/test_sibling_git.py`
-- `tests/test_work_contract.py`
+- learn-ukrainian/machinery `tests/work/test_work_contract.py`
 - `tests/trails/test_rb2_rb5_v11.py`
 
 | AC | Acceptance criterion | Verification |

@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Any
 
 import psutil
+from lu_machinery.api import agent_monitor_router, project_state_router
 
 from agents_extensions.shared.session_streams.model import LeaseHolder
-from scripts.api import agent_monitor_router, project_state_router
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import batch_router
 from scripts.project_api.context import image_store
@@ -36,7 +36,7 @@ ATLAS_JOB_ID = "opsec-atlas-job"
 ATLAS_CLOSE_JOB_ID = "opsec-atlas-close"
 LOOPBACK_CLIENT = ("127.0.0.1", 50000)
 LOOPBACK_BASE_URL = "http://127.0.0.1"
-# Synthetic stream ids (scripts/lint/lint_test_assertions.py::_SYNTHETIC_EPIC_IDS):
+# Synthetic stream ids (lu_machinery/lint/lint_test_assertions.py::_SYNTHETIC_EPIC_IDS):
 # the fixture epics store is empty, so no id may name a real epic.
 EPIC_CLAIM_STREAM = "epic:1001"
 EPIC_HANDOFF_STREAM = "epic:1002"

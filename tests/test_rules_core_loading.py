@@ -31,6 +31,7 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib import rules_core as release_rules_core
 
 from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
 from scripts.lib import rules_core
@@ -790,9 +791,13 @@ def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
 
 @pytest.fixture
 def api_client():
-    from fastapi.testclient import TestClient
+    """The installed Monitor app: the in-tree app no longer loads the product (slice F).
 
-    import scripts.api.main as api_main
+    The release serves its packaged fleet rules (machinery #126), so the
+    cases below compare with the release's rules_core and rules_router.
+    """
+    from fastapi.testclient import TestClient
+    from lu_machinery.api import main as api_main
 
     return TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -801,8 +806,8 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
     body = api_client.get("/api/rules?format=json").json()
     assert body == api_client.get("/api/rules?scope=core&format=json").json()
     assert body["scope"] == "core"
-    assert body["sources"] == [rules_core.CORE_REL]
-    assert body["markdown"] == rules_core.core_text()
+    assert body["sources"] == [release_rules_core.CORE_REL]
+    assert body["markdown"] == release_rules_core.core_text()
     assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_960
     plain = api_client.get("/api/rules")
     assert plain.text == body["markdown"]
@@ -811,12 +816,12 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
 
 
 def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get("/api/rules?scope=full&format=json").json()
     assert set(body) >= {"hash", "bytes", "sources", "markdown"}
     assert body["scope"] == "full"
-    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if rules_core.source_path(rel, REPO).is_file()]
+    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if release_rules_core.source_path(rel, REPO).is_file()]
     expected, sources, digest = rules_router._assemble_rules(REPO)
     assert (body["markdown"], body["sources"], body["hash"]) == (expected, sources, digest)
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
@@ -831,12 +836,12 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
 
 @pytest.mark.parametrize("scope", ("core", "content"))
 def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get(f"/api/rules?scope={scope}&format=json").json()
-    offline = rules_core.core_text(scope)
+    offline = release_rules_core.core_text(scope)
     assert body["markdown"] == offline
-    assert body["sources"] == list(rules_core.seat_sources(scope))
+    assert body["sources"] == list(release_rules_core.seat_sources(scope))
     assert body["scope"] == scope
     assert body["hash"] == rules_router.scope_digest(scope, offline)
     assert body["hash"] != hashlib.sha256(offline.encode("utf-8")).hexdigest()
@@ -853,13 +858,21 @@ def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
 def test_task_scope_serves_its_row_sources(api_client) -> None:
     body = api_client.get("/api/rules?scope=task:cli&format=json").json()
     assert body["sources"] == ["agents_extensions/shared/rules/cli-help-standard.md"]
-    assert body["markdown"] == (REPO / body["sources"][0]).read_text(encoding="utf-8").rstrip() + "\n"
+    # Changed: the release reads the task source from its package, not the checkout.
+    assert body["markdown"] == release_rules_core.source_path(body["sources"][0]).read_text(encoding="utf-8").rstrip() + "\n"
     assert api_client.get("/api/rules?scope=task:nope").status_code == 400
     assert api_client.get("/api/rules?scope=everything").status_code == 400
 
 
 def test_missing_core_scope_is_unavailable_not_empty(api_client, monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
+    # Changed: the release has no core_dir; hide its core files behind source_path.
+    real_source_path = release_rules_core.source_path
+    core_files = {release_rules_core.CORE_REL, release_rules_core.CONTENT_ADDENDUM_REL}
+    monkeypatch.setattr(
+        release_rules_core,
+        "source_path",
+        lambda rel, root=None: tmp_path / "missing" / rel if rel in core_files else real_source_path(rel, root),
+    )
     for scope in ("core", "content"):
         response = api_client.get(f"/api/rules?scope={scope}")
         assert response.status_code == 503

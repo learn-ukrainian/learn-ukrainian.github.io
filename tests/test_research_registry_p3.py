@@ -23,14 +23,14 @@ import urllib.error
 from pathlib import Path
 from typing import Any
 
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.research import consumption
+from lu_machinery.research import registry as reg
 
-import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
-from scripts.research import consumption
-from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -247,7 +247,7 @@ def test_cold_start_endpoint_etag_304(reg_root):
 @pytest.fixture
 def task_store(tmp_path, monkeypatch):
     """Redirect the delegate task store (read via delegate_router) to tmp_path."""
-    from scripts.api import delegate_router
+    from lu_machinery.api import delegate_router
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
@@ -344,7 +344,7 @@ def test_task_id_collision_requires_exact_stored_match(reg_root, emit_sink, task
     # A state file exists at a sanitized path, but its stored task_id differs from
     # the request → no attribution (defeats collisions via path sanitization).
     _write_registry(reg_root, [_make_record(reg_root, "r1")])
-    from scripts.api import delegate_router
+    from lu_machinery.api import delegate_router
 
     (delegate_router._tasks_dir() / "collide.json").write_text(
         json.dumps({"task_id": "other-id", "status": "running", "pid": os.getpid()}), "utf-8"
@@ -371,7 +371,7 @@ def test_monitor_research_first_all_then_304_empty_then_changed_only(tmp_path, m
     # ADR-011 P3 changed-pointer semantics: the on-disk cache stores the complete
     # latest projection, but research()/cold_start() return only added/changed
     # pointers. [a, b] -> 304 (empty) -> only 'a' changes -> returns only 'a'.
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -411,8 +411,8 @@ def test_monitor_research_first_all_then_304_empty_then_changed_only(tmp_path, m
 
 
 def test_monitor_research_context_isolation_by_fingerprint(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import _monitor_cache as cache
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import _monitor_cache as cache
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -430,7 +430,7 @@ def test_monitor_research_context_isolation_by_fingerprint(tmp_path, monkeypatch
 
 
 def test_monitor_cache_key_never_embeds_raw_consumer_and_is_full_sha256(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -450,7 +450,7 @@ def test_monitor_cache_key_never_embeds_raw_consumer_and_is_full_sha256(tmp_path
 
 
 def test_monitor_research_fails_open_on_transport_urlerror(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -465,8 +465,8 @@ def test_monitor_research_fails_open_on_transport_urlerror(tmp_path, monkeypatch
 
 
 def test_monitor_research_fails_open_on_cache_oserror(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import _monitor_cache as cache
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import _monitor_cache as cache
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -486,7 +486,7 @@ def test_monitor_defensive_304_without_cache_degrades_safely(tmp_path, monkeypat
     # branch was unreachable (we only ever send If-None-Match when a cached
     # snapshot exists, so the server has no ETag to 304 against otherwise).
     # Removed in favor of an explicit, safe fallback for a rogue/buggy server.
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
     cli = mc.MonitorClient(base_url="http://test")
@@ -497,7 +497,7 @@ def test_monitor_defensive_304_without_cache_degrades_safely(tmp_path, monkeypat
 
 
 def test_bootstrap_role_only_routes_to_cold_start_never_and_manifest(monkeypatch):
-    from scripts.ai_agent_bridge import monitor_client as mc
+    from lu_machinery.ai_agent_bridge import monitor_client as mc
 
     cli = mc.MonitorClient(base_url="http://test")
     monkeypatch.setattr(cli, "manifest", lambda: {})

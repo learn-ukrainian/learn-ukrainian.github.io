@@ -18,9 +18,8 @@ from pathlib import Path
 from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-
-from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from scripts.api.state_helpers import cache_get, cache_set
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.api.state_helpers import cache_get, cache_set
 
 from .config import LEVELS
 from .context import sources_db
@@ -29,12 +28,10 @@ from .curriculum_state import monitor_surface
 # path_safety is a top-level module when scripts/ is on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
+from lu_machinery.path_safety import safe_join
 
-# scripts/api/main.py orient calls wiki_state.get_status_summary() on this
+
+# The product orient section (orient.py) calls wiki_state.get_status_summary() on this
 # module. The name stays; the function is the product one, through the wrapper.
 class _WikiState:
     @staticmethod

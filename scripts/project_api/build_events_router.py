@@ -9,13 +9,8 @@ from pathlib import Path
 from typing import Any, cast
 
 from fastapi import APIRouter, Depends, Query
-
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.path_safety import safe_join
 
 router = APIRouter(tags=["build-events"])
 

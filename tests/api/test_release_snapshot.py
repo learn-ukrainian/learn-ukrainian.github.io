@@ -16,6 +16,7 @@ import urllib.request
 from pathlib import Path
 
 import pytest
+from lu_machinery.api import release_snapshot as installed_release_snapshot
 
 from scripts.api import release_snapshot
 from scripts.common.git_context import sanitized_git_env
@@ -451,7 +452,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
 ) -> None:
     """Boot a snapshot of this worktree and exercise each live-data route class."""
     repo_root, sha = real_release_live_checkout
-    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+    release_dir, _ = installed_release_snapshot.build_release(repo_root, sha)
     # Write after snapshot publication to prove these routes read live data,
     # while keeping discovery independent of the growing repository corpus.
     doc_path = "docs/research/release-live-data.md"
@@ -461,8 +462,9 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
     (repo_root / html_path).write_text("<title>Live release data</title>\n", encoding="utf-8")
     port = _free_port()
     log_path = tmp_path / "release-api.log"
-    # As scripts/api/launchd_supervisor.py starts it: the snapshot is the product, and its shared-state
-    # primary is the live checkout it was built from. This test process's own roots name neither.
+    # As lu_machinery.api.launchd_supervisor starts it: the snapshot is the product, the installed
+    # release serves the app, and the shared-state primary is the live checkout the snapshot was
+    # built from. This test process's own roots name neither.
     environment = {
         key: value
         for key, value in sanitized_git_env().items()
@@ -482,7 +484,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                 str(VENV_PYTHON),
                 "-m",
                 "uvicorn",
-                "scripts.api.main:app",
+                "lu_machinery.api.main:app",
                 "--host",
                 "127.0.0.1",
                 "--port",
