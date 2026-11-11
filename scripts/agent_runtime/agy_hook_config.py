@@ -18,6 +18,7 @@ from scripts.common.repo_root import (
     machinery_path,
     main_checkout_root,
     product_root,
+    project_interpreter,
 )
 from scripts.common.safe_open import safe_open_below
 
@@ -82,6 +83,10 @@ shopt -s execfail
 exec /bin/bash "$_lu_hook_entry" "$@"
 _lu_hook_fail "$_lu_hook_mode"
 """
+# The shared primary-checkout write guard, by its product-checkout path. AGY reads the
+# guard's toolCall decision from stdout; the guard file protects the checkout that owns it.
+PRIMARY_GUARD_NAME = "primary-checkout-write-guard"
+PRIMARY_GUARD_ENTRY = Path("agents_extensions/shared/hooks/guard-primary-checkout-write.py")
 
 
 @dataclass(frozen=True)
@@ -241,8 +246,47 @@ def guard_registration(*, repo_root: Path = ROOT) -> dict:
     return guard
 
 
+def primary_guard_registration(*, repo_root: Path = ROOT) -> dict:
+    """The overlay's primary-checkout write guard with absolute interpreter and guard paths.
+
+    The guard is product configuration from ``product_root``; its interpreter is the
+    machinery checkout's, as for ``guard_registration``.
+    """
+    root = product_root()
+    guard: dict = copy.deepcopy(_read_config(root / "agents_extensions/agy/hooks.json")[PRIMARY_GUARD_NAME])
+    guard["PreToolUse"][0]["hooks"][0]["command"] = shlex.join(
+        [str(project_interpreter(repo_root)), str((root / PRIMARY_GUARD_ENTRY).absolute())]
+    )
+    return guard
+
+
+def require_dispatch_guards(worktree: Path, home: Path) -> None:
+    """Provision and verify both guards before a dispatched workspace-write AGY run.
+
+    That run skips AGY's permission prompts on the host, so the primary-checkout write
+    guard is its boundary on the primary checkout. Missing members are merged; an existing
+    primary-guard member must equal the absolute registration exactly, and the secret
+    guard passes the same gate as every other launch.
+    """
+    try:
+        install_worktree_guard(worktree)
+        result = check_hook_config(hook_locations(worktree, home))
+        if result.passed:
+            registered = _read_config(worktree / ".agents/hooks.json").get(PRIMARY_GUARD_NAME)
+            if registered != primary_guard_registration():
+                result = HookConfigResult("REFUSE", "primary_guard_mismatch")
+            elif not (product_root() / PRIMARY_GUARD_ENTRY).is_file():
+                result = HookConfigResult("REFUSE", "missing_primary_guard_script")
+    except AgyHookConfigError:
+        raise
+    except (OSError, ValueError):
+        raise AgyHookConfigError("install_failed") from None
+    if not result.passed:
+        raise AgyHookConfigError(result.reason)
+
+
 def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
-    """Merge only a missing guard into a dispatch workspace; never write homes."""
+    """Merge only missing guards into a dispatch workspace; never write homes."""
     target = cwd.resolve(strict=True)
     primary = main_checkout_root(target).resolve(strict=True)
     dispatch = (primary / ".worktrees/dispatch").resolve(strict=True) if primary != target else primary
@@ -256,7 +300,8 @@ def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
 
     The caller owns the directory and its lifecycle. Walk real directories and
     atomically merge a missing guard, retaining unrelated bytes. Published files
-    have mode 0600. This is not an implicit repair of existing gate candidates.
+    have mode 0600. This is not an implicit repair of existing gate candidates: an
+    existing member, even a disabled or invalid one, is kept as written.
     """
     if ".." in cwd.parts:
         raise AgyHookConfigError("unsafe_install_path")
@@ -288,11 +333,16 @@ def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
             raise AgyHookConfigError("invalid_json") from None
         if not isinstance(data, dict):
             raise AgyHookConfigError("invalid_json")
-        if GUARD_NAME in data:
-            return  # Preserve explicitly disabled or invalid user wiring.
-        # Insert only the new member, keeping unrelated hook bytes unchanged.
+        missing = {
+            name: register(repo_root=repo_root)
+            for name, register in ((GUARD_NAME, guard_registration), (PRIMARY_GUARD_NAME, primary_guard_registration))
+            if name not in data  # Preserve explicitly disabled or invalid user wiring.
+        }
+        if not missing:
+            return
+        # Insert only the new members, keeping unrelated hook bytes unchanged.
         end = original.rindex("}")
-        member = json.dumps({GUARD_NAME: guard_registration()}, indent=2)[1:-1]
+        member = json.dumps(missing, indent=2)[1:-1]
         payload = original[:end] + ("," if data else "") + member + original[end:]
         temporary = f".hooks-{uuid.uuid4().hex}.tmp"
         fd = safe_open_below(directory_fd, temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL)

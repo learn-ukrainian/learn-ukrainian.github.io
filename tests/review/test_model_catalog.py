@@ -1116,15 +1116,6 @@ def assert_frozen_surfaces(actual, *, surfaces):
     for surface in surfaces:
         value = approved_dispatcher_spelling(deepcopy(actual[surface]))
         if surface == "catalog":
-            # Assert the entire operator-approved exception before comparing every other field.
-            if "red_team_only" in value["models"]["gpt-6-astra"]:
-                assert hashlib.sha256(encode(value["models"]["gpt-6-astra"])).hexdigest() == "80bcd99f8ecf8e25423683302239e2cdb26e0ea48abdbcb5e7848d31e6a690a6"
-                exception = value["review_candidates"].pop("openai_red_team_exception")
-                assert hashlib.sha256(encode(exception)).hexdigest() == "ba9c4c63a08db1d9173ace99f6f6da2735f4e5c5402f305d24300c29fbde4a5c"
-                endpoint = value["review_scheduler"]["endpoints"]["codex"]
-                assert endpoint["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
-                endpoint["models"] = ["gpt-6.1-sol"]
-                value["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
             # Operator decision 2026-11-10: Carbon and Argon are active AGY work models with no
             # review or advisory role, so they join no seat, review route, ladder or ranking and
             # every other field stays frozen. Argon's frozen row is its retired record, which
@@ -1164,6 +1155,7 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # Explanatory prose only: normalize the cleaned-up notes to the historical overlay.
             frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
             value["models"]["claude-haiku-5-5"]["notes"] = frozen_notes
+            value["orchestrator_seats"]["agy"]["note"] = CURRENT_BASELINE["catalog"]["orchestrator_seats"]["agy"]["note"]
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 
@@ -1184,9 +1176,6 @@ def refresh_current_baseline():
     catalog["models"].pop("gpt-6.1-terra")
     _pop_advisory_roles(catalog)
     # Keep the previously approved overlays outside this current-baseline refresh.
-    catalog["review_candidates"].pop("openai_red_team_exception")
-    catalog["review_scheduler"]["endpoints"]["codex"]["models"] = ["gpt-6.1-sol"]
-    catalog["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
     for risk in ("low", "medium"):
         assert catalog["review_ladders"][risk].pop() == ["muse"]
     catalog["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])

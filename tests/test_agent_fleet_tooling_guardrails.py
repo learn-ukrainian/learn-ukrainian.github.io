@@ -99,7 +99,7 @@ def test_guardrail_documents_current_agy_model_names() -> None:
 
     assert "Gemini CLI and Gemini Code Assist are unsupported" in guardrail
     assert "gemini-3.8-flash-high" in guardrail
-    assert "Gemini Pro and Argon are retired, not subscribed" in guardrail
+    assert "gemini-4-carbon-medium" in guardrail
     assert "gemini-3.1-pro-high" not in guardrail
 
 

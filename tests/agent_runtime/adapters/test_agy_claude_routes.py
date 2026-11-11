@@ -75,7 +75,8 @@ def test_other_claude_names_stay_unsupported(model):
         agy.AgyAdapter()._resolve_model_flag(model)
 
 
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+# Read-only off the review route is refused; the review route is pinned below.
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
 def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypatch, mode, model):
     monkeypatch.setattr(agy, "require_hook_config", lambda *args, **kwargs: None)

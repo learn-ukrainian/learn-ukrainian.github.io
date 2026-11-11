@@ -63,8 +63,17 @@ def resolve_handoff_agent(identity: str) -> str:
 
 
 def _mode_for_probe(adapter: Any) -> str:
-    """Choose a supported mode without executing an agent request."""
+    """Choose a supported mode without executing an agent request.
+
+    An adapter that refuses a mode without caller context names the mode its
+    probe plan builds in as ``probe_mode`` (AGY read-only needs the review route).
+    """
     supported = getattr(adapter, "supported_modes", frozenset())
+    declared: str | None = getattr(adapter, "probe_mode", None)
+    if declared is not None:
+        if declared not in supported:
+            raise ValueError("adapter probe_mode is not a supported invocation mode")
+        return declared
     if "read-only" in supported:
         return "read-only"
     if "workspace-write" in supported:

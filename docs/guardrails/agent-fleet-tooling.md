@@ -77,12 +77,6 @@ and one independent review are cheaper and safer.
 ## Command Examples
 
 ```bash
-printf '%s\n' "<review prompt>" | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-    --task-id review-123 \
-    --to-model gemini-3.8-flash-high \
-    --review
-
 scripts/dispatch.py dispatch --model <catalog-model> \
   --agent agy \
   --prompt-file docs/dispatch-briefs/example.md \
@@ -97,6 +91,6 @@ environment before relying on it.
 
 ## AGY Model Names
 
-AGY uses `gemini-3.8-flash-high`. Direct calls and bridge/runtime requests
-accept that slug. Gemini Pro and Argon are retired, not subscribed (operator
-2026-10-23); do not select them. Older Flash generations remain retired.
+AGY model ids come from `scripts/config/model_catalog.yaml`: Gemini work uses
+`gemini-4-carbon-medium`, then `gemini-4-argon-medium`; the driver and review
+seats use `gemini-3.8-flash-high`. Gemini Pro and older Flash generations are retired.

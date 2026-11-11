@@ -53,5 +53,19 @@
         ]
       }
     ]
+  },
+  "primary-checkout-write-guard": {
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file|run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "../.venv/bin/python ../agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

@@ -437,6 +437,38 @@ through directory descriptors while preserving unrelated hook bytes. A newly
 published or merged file has mode 0600; an existing guard left untouched
 retains its file mode.
 
+### AGY primary-checkout write guard
+
+AGY's `PreToolUse` payload is `{"toolCall":{"name":...,"args":{...}},"cwd":...}`.
+AGY 1.5.5 writes files only through `write_file` and `edit_file` (`args.Path`)
+and runs shell through `run_command` (`args.CommandLine`).
+`agents_extensions/shared/hooks/guard-primary-checkout-write.py` maps these
+onto its Write and Bash rules. For a denial it prints
+`{"decision":"deny","reason":"..."}` and exits 0. For an allow it prints
+nothing, so AGY's own permission flow is unchanged. A malformed call is denied.
+Live probes of AGY 1.5.5 established three behaviours. Empty hook stdout lets
+the tool run. A hook that exits non-zero fails the tool call. The deny object
+blocks the call.
+
+The overlay registers the guard as `primary-checkout-write-guard`, with
+matcher `write_file|edit_file|run_command` and a timeout of 10 seconds.
+Workspace provisioning (the adapter's worktree install, the explicit
+provisioner and bridge scratch) merges both guards when they are missing,
+using absolute paths.
+A dispatched `workspace-write` AGY worker skips AGY's permission prompts on
+the host, so before launch the dispatcher provisions both guards into its
+worktree with `require_dispatch_guards`. It then refuses the launch unless
+the secret guard passes the gate above, the primary guard member equals the
+absolute registration, and the guard script exists. A dry run plans before
+the worktree exists and provisions nothing.
+
+AGY has no write lock of its own, so `AgyAdapter` refuses a `read-only` call
+off the review route. Without it, the call would run with
+`--dangerously-skip-permissions`. The review route runs with `--sandbox`, the
+validated native denials above and a scoped home, or inside an attempt
+boundary. The lane health probe builds its version-only plan in
+`AgyAdapter.probe_mode` (`workspace-write`).
+
 Bridge asks explicitly provision an absolute guard into their caller-owned
 scratch workspace when its hooks file is absent. Existing invalid scratch
 files remain untouched and refuse in the adapter. Attempt workspaces need

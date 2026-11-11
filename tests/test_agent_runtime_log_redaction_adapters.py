@@ -208,7 +208,7 @@ def _build_plan(
     ("adapter_type", "mode", "model"),
     [
         (GeminiAdapter, "workspace-write", "gemini-3.1-pro-high"),
-        (AgyAdapter, "read-only", None),
+        (AgyAdapter, "workspace-write", None),
     ],
 )
 def test_non_claude_max_budget_warning_is_constant(tmp_path, monkeypatch, caplog, adapter_type, mode, model):
@@ -231,7 +231,7 @@ def test_non_claude_max_budget_warning_is_constant(tmp_path, monkeypatch, caplog
         ),
         (
             AgyAdapter,
-            "read-only",
+            "workspace-write",
             None,
             "agy effort not yet wired through CLI — using TUI-selected model default (#1396 follow-up)",
         ),
