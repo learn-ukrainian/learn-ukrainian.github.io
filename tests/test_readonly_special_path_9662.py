@@ -28,7 +28,7 @@ def _assert_exact_readonly(connection: sqlite3.Connection, path: Path) -> None:
 
 
 def test_named_module_boundary_refuses_sqlite_and_imports_json():
-    from scripts.lib.readonly_sqlite import import_named_module
+    from lu_machinery.lib.readonly_sqlite import import_named_module
 
     with pytest.raises(ImportError):
         import_named_module("sqlite3")
@@ -40,7 +40,7 @@ def test_named_module_boundary_refuses_sqlite_and_imports_json():
 
 
 def test_preload_keeps_stdlib_sqlite_off_the_named_loader(monkeypatch):
-    from scripts.api import preload
+    from lu_machinery.api import preload
 
     monkeypatch.setattr(preload, "PRELOAD_MODULES", ["sqlite3", "json"])
     monkeypatch.setattr(preload, "OPTIONAL_MODULES", [])
@@ -53,9 +53,9 @@ def test_preload_keeps_stdlib_sqlite_off_the_named_loader(monkeypatch):
 
 
 def test_loader_modules_bind_the_named_module_boundary():
-    from scripts.agent_runtime import lane_probe, runner
-    from scripts.api import preload, runtime_router
-    from scripts.lib.readonly_sqlite import import_named_module
+    from lu_machinery.agent_runtime import lane_probe, runner
+    from lu_machinery.api import preload, runtime_router
+    from lu_machinery.lib.readonly_sqlite import import_named_module
 
     assert lane_probe.import_named_module is import_named_module
     assert runner.import_named_module is import_named_module
@@ -66,7 +66,7 @@ def test_loader_modules_bind_the_named_module_boundary():
 
 
 def test_monitor_read_only_open_keeps_special_path(tmp_path):
-    from scripts.api.monitor_context import MonitorContext
+    from lu_machinery.api.monitor_context import MonitorContext
 
     db = _write_db(_special(tmp_path), "CREATE TABLE evidence (value TEXT); INSERT INTO evidence VALUES ('kept');")
     ctx = MonitorContext.__new__(MonitorContext)
@@ -120,9 +120,10 @@ def test_practice_deck_readers_keep_special_path(tmp_path):
 
 
 def test_atlas_and_codex_readers_keep_special_path(tmp_path):
+    from lu_machinery.hygiene.codex_rollout_reconcile import _db_uri
+    from lu_machinery.hygiene.codex_rollout_reconcile import _open_readonly as codex_open
+
     from scripts.benchmarks.generate_synthetic_atlas import _open_readonly as atlas_open
-    from scripts.hygiene.codex_rollout_reconcile import _db_uri
-    from scripts.hygiene.codex_rollout_reconcile import _open_readonly as codex_open
 
     db = _write_db(_special(tmp_path), "CREATE TABLE evidence (value TEXT);")
     uri = _db_uri(db)
@@ -136,7 +137,7 @@ def test_atlas_and_codex_readers_keep_special_path(tmp_path):
 
 
 def test_control_plane_store_reads_special_path(tmp_path, monkeypatch):
-    from scripts.control_plane.storage import StoreId, connect
+    from lu_machinery.control_plane.storage import StoreId, connect
 
     db = _write_db(_special(tmp_path), "CREATE TABLE evidence (value TEXT);")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY", "sqlite")

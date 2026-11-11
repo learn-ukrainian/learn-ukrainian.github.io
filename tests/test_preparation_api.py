@@ -12,10 +12,10 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
+from lu_machinery.api.main import app
+from lu_machinery.api.repository_authority import build_repository_authority, cwd_role
+from lu_machinery.orchestration import curriculum_readiness
 
-from scripts.api.main import app
-from scripts.api.repository_authority import build_repository_authority, cwd_role
-from scripts.orchestration import curriculum_readiness
 from scripts.project_api import preparation_state
 
 pytestmark = pytest.mark.reads_content
@@ -241,7 +241,7 @@ def test_bio_uses_bio_profile_and_dossier_alone_never_means_build() -> None:
 
 def test_strong_etag_returns_bodyless_304_for_unchanged_sources(tmp_path: Path, monkeypatch) -> None:
     # The payload hashes ``authority.primary_checkout.dirty_count``, a live
-    # ``git status`` read of the serving checkout (scripts/api/repository_authority.py
+    # ``git status`` read of the serving checkout (lu_machinery/api/repository_authority.py
     # ``_dirty_count``). Serving straight off ``app.state.ctx``'s real checkout races any
     # co-scheduled test that leaves a stray file there — e.g. test_ci_attribution.py's
     # subprocess-breadcrumb tests, which write and then unlink ``tests/_temp_breadcrumb_test.py``

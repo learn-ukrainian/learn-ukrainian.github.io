@@ -5,9 +5,8 @@ from __future__ import annotations
 import asyncio
 
 from fastapi import APIRouter, Depends, Query
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
-from scripts.telemetry.cost_report import build_cost_windows
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.telemetry.cost_report import build_cost_windows
 
 router = APIRouter(tags=["cost"])
 

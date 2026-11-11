@@ -5,10 +5,9 @@ from urllib.parse import quote
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import docs_router
-from scripts.api.main import app
-from scripts.api.monitor_context import fixture_context, production_context
+from lu_machinery.api import docs_router
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import fixture_context, production_context
 
 
 @pytest.fixture()

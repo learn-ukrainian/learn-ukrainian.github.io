@@ -10,8 +10,8 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api.monitor_context import fixture_context
 from scripts.project_api import batch_router as batch_router_mod
 from scripts.project_api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
 from scripts.project_api.batch_router import router as batch_router
@@ -51,6 +51,7 @@ def test_dispatcher_scan_timeout_returns_degraded_response(
     interpreter = tmp_path / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True)
     interpreter.write_text("", encoding="utf-8")
+    interpreter.chmod(0o755)  # the release resolver accepts only an executable interpreter
 
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["scan"], timeout=DISPATCHER_SCAN_TIMEOUT_S)

@@ -26,17 +26,10 @@ logger = logging.getLogger(__name__)
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import JSONResponse
 from jsonschema import Draft7Validator
+from lu_machinery.api.config import BATCH_STATE_DIR, PROJECT_ROOT
+from lu_machinery.api.resilience import connect_sqlite
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 from pydantic import BaseModel, Field, field_validator
-
-try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-
-from scripts.api.config import BATCH_STATE_DIR, PROJECT_ROOT
-from scripts.api.resilience import connect_sqlite
 
 from .curriculum_state import monitor_surface
 

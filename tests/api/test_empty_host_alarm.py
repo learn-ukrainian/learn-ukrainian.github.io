@@ -10,26 +10,25 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
-
-from scripts.api import occupancy as occupancy_mod
-from scripts.api import state_router
-from scripts.api.codexbar_usage import compute_weekly_pace_delta_pct, lane_is_under_weekly_pace
-from scripts.api.main import app
-from scripts.api.observer_presence import reset_observer_presence
-from scripts.api.project_state_sanitize import (
+from lu_machinery.api import occupancy as occupancy_mod
+from lu_machinery.api import state_router
+from lu_machinery.api.codexbar_usage import compute_weekly_pace_delta_pct, lane_is_under_weekly_pace
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import reset_observer_presence
+from lu_machinery.api.project_state_sanitize import (
     ProjectStateValidationError,
     sanitize_lane_usage_entry,
     validate_lane_usage_block,
 )
-from scripts.api.project_state_store import (
+from lu_machinery.api.project_state_store import (
     REPORT_TTL_SECONDS,
     get_freshest_lane_usage,
     reset_project_state_store,
     upsert_report,
 )
+
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import atlas_jobs_router as load_mod
-from tests.api.test_project_state import SHA_HEAD, SHA_MAIN, _document, _primary, _service
 
 loop_client = TestClient(
     app,
@@ -40,6 +39,63 @@ loop_client = TestClient(
 client = TestClient(app, raise_server_exceptions=False)
 
 _PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
+
+# Report builders ported from the machinery-classified tests/api/test_project_state.py
+# (C-5048 disposition b); that file loads the in-tree app.
+SHA_MAIN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+SHA_HEAD = "cccccccccccccccccccccccccccccccccccccccc"
+
+
+def _primary(
+    *,
+    origin_main_sha: str = SHA_MAIN,
+    head_sha: str = SHA_HEAD,
+    origin_main_age_s: float = 120.0,
+    dirty_count: int = 0,
+) -> dict[str, Any]:
+    return {
+        "head_sha": head_sha,
+        "origin_main_sha": origin_main_sha,
+        "origin_main_age_s": origin_main_age_s,
+        "ahead": 1,
+        "behind": 0,
+        "dirty_count": dirty_count,
+    }
+
+
+def _service(
+    name: str,
+    *,
+    state: str = "running",
+    repo: str = "learn-ukrainian",
+    serving_mode: str = "release",
+    serving_sha: str | None = SHA_MAIN,
+    checkout_sha: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "name": name,
+        "state": state,
+        "repo": repo,
+        "serving_mode": serving_mode,
+        "serving_sha": serving_sha,
+        "checkout_sha": checkout_sha,
+    }
+
+
+def _document(
+    host_id: str = "host-worker",
+    *,
+    primary: dict[str, Any] | None = None,
+    services: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    return {
+        "host_id": host_id,
+        "primary": primary or _primary(),
+        "worktrees": {"count": 2},
+        "services": services or [_service("api")],
+        "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+
 
 PII_CODEXBAR_FIXTURE = {
     "provider": "claude",
@@ -158,8 +214,8 @@ def _seed_host_worker_empty_host_alarm(
 
 
 def test_collector_allowlist_strips_pii_from_codexbar_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.api import project_state_collect as collect_mod
-    from scripts.api.codexbar_usage import _normalize_provider_data
+    from lu_machinery.api import project_state_collect as collect_mod
+    from lu_machinery.api.codexbar_usage import _normalize_provider_data
 
     normalized = _normalize_provider_data("claude", PII_CODEXBAR_FIXTURE)
     monkeypatch.setattr(collect_mod, "fetch_codexbar_usage", lambda _provider: normalized)

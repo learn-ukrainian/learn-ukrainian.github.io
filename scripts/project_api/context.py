@@ -1,6 +1,6 @@
 """Product roots and stores the curriculum half of the Monitor attaches to a MonitorContext.
 
-The machinery :class:`~scripts.api.monitor_context.MonitorContext` owns
+The machinery :class:`~lu_machinery.api.monitor_context.MonitorContext` owns
 generic roots and fleet stores. The textbook image store, the textbook and
 image roots and the sources database belong to product routes, so they are
 built here, lazily, on the context's runtime holder. A resource created
@@ -14,9 +14,9 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
-from scripts.api.monitor_context import DatabaseHandle, MonitorContext, resolve_context
-from scripts.api.resilience import connect_sqlite
-from scripts.storage.topology import (
+from lu_machinery.api.monitor_context import DatabaseHandle, MonitorContext, resolve_context
+from lu_machinery.api.resilience import connect_sqlite
+from lu_machinery.storage.topology import (
     StoreBinding,
     StoreRefusal,
     resolve_active_sources_db,

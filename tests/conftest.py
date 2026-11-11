@@ -1147,13 +1147,41 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is not None:
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
         if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
             monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
     return isolated_path
+
+
+# Every by-path sibling key both copies cache and reuse (an AST scan of scripts/ and the
+# installed lu_machinery/ for literal loader names; the two OPSEC loader keys re-execute
+# their private file on every load and never read the cache).  # TRANSITIONAL-PKG3-B2
+_SHARED_SIBLING_MODULE_KEYS = (
+    "_node_modules_integrity_check_primary_integrity",
+    "_venv_integrity_check_primary_integrity",
+    "_worktree_cleanup_integrity_check_primary_integrity",
+)
+
+
+@pytest.fixture(autouse=True)
+def _drop_shared_sibling_module_keys() -> None:
+    """Let each machinery copy load its own by-path sibling module.
+
+    The in-tree ``scripts/hygiene/check_{venv,node_modules,worktree_cleanup}_integrity.py``
+    and the installed release's copies each cache ``check_primary_integrity.py`` under
+    a fixed ``sys.modules`` key. In one pytest process the copy imported second gets the
+    other copy's module (merge-group run 42931243455: the release app's preload
+    raised ``AttributeError: ... has no attribute 'product_root'``). A copy keeps
+    the reference it bound at import, so dropping the key only affects the next
+    import. TRANSITIONAL-PKG3-B2: delete with the in-tree copy.
+    """
+    for key in _SHARED_SIBLING_MODULE_KEYS:
+        sys.modules.pop(key, None)
 
 
 @pytest.fixture(autouse=True)
@@ -2027,19 +2055,20 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
-    api_config = _loaded_module("scripts", "api", "config")
-    if api_config is not None:
-        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-    monitor_context = _loaded_module("scripts", "api", "monitor_context")
-    if monitor_context is not None:
-        monitor_context.production_context.cache_clear()
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is None:
-        return
-    app = vars(api_main).get("app")
-    context = getattr(getattr(app, "state", None), "ctx", None)
-    if context is not None:
-        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_config = _loaded_module(package, "api", "config")
+        if api_config is not None:
+            monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+        monitor_context = _loaded_module(package, "api", "monitor_context")
+        if monitor_context is not None:
+            monitor_context.production_context.cache_clear()
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
+        app = vars(api_main).get("app")
+        context = getattr(getattr(app, "state", None), "ctx", None)
+        if context is not None:
+            monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
 
 
 # Per-process, not per-test: ``mktemp`` scans the base directory for the next

@@ -21,16 +21,10 @@ logger = logging.getLogger(__name__)
 from typing import Any
 
 from fastapi import APIRouter, Depends
-
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.project_api package import (production)
-
-
-from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from scripts.api.state_helpers import cache_get, cache_set
-from scripts.api.telemetry.legacy_comms import LegacyCommsTelemetryRoute
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.api.state_helpers import cache_get, cache_set
+from lu_machinery.api.telemetry.legacy_comms import LegacyCommsTelemetryRoute
+from lu_machinery.path_safety import safe_join
 
 router = APIRouter(tags=["comms"], route_class=LegacyCommsTelemetryRoute)
 
@@ -137,7 +131,7 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
             "last_created": None,
         }
 
-    research_files = []
+    research_files: list[dict[str, Any]] = []
     if research_dir.exists():
         for rf in research_dir.glob("*-research.md"):
             research_files.append(

@@ -20,26 +20,28 @@ privacy allowlist, and window validation.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+# TRANSITIONAL-PKG3-B2: the release API cannot load the in-tree product factory until F lands,
+# so the endpoint sections (4 and 6) drive the in-tree app with the copies that app reads.
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.orchestration import issue_stream_audit as app_isa  # TRANSITIONAL-PKG3-B2
 from lu_machinery.orchestration import issue_stream_audit as isa
 from lu_machinery.research import consumption
 from lu_machinery.research import observability as obs
+from lu_machinery.research import registry as app_reg  # TRANSITIONAL-PKG3-B2
 from lu_machinery.research import registry as reg
 
-# TRANSITIONAL-PKG3-B2: the release API cannot load the in-tree product factory until F lands,
-# so the endpoint sections (4 and 6) drive the in-tree app with the copies that app reads.
-import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
-from scripts.orchestration import issue_stream_audit as app_isa  # TRANSITIONAL-PKG3-B2
-from scripts.research import registry as app_reg  # TRANSITIONAL-PKG3-B2
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -776,10 +778,24 @@ def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
 # --------------------------------------------------------------------------- #
 # 4. Endpoint — ungated availability, fail-soft, privacy, validation
 # --------------------------------------------------------------------------- #
+def _primary_at(monkeypatch, root) -> None:
+    # The release accepts only a primary checkout whose .git is a real Git directory (0.1.6).
+    subprocess.run(
+        ["git", "init", "-q", str(root)],
+        check=True,
+        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        timeout=30,
+    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
+
+
 @pytest.fixture
 def endpoint_root(tmp_path, monkeypatch):
     monkeypatch.setattr(app_reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(app_isa, "CACHE_PATH", tmp_path / "no-cache.json")
+    # The release reads the audit cache from the configured primary checkout,
+    # not a module constant; an empty fixture primary has no cache.
+    _primary_at(monkeypatch, tmp_path)
     monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     return tmp_path
 
@@ -869,7 +885,7 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
-    from scripts.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     calls = []
     monkeypatch.setattr(
@@ -901,9 +917,9 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     """#10793: a cache published by either writer (the strict checker's validated
     publication or a Monitor ``run_audit`` refresh) leaks no private key through
     the route or the Work projection, and keeps run_audit's warnings."""
-    from scripts.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
-    from scripts.ci import check_issue_task_quality as checker  # TRANSITIONAL-PKG3-B2
-    from scripts.work import sources_public  # TRANSITIONAL-PKG3-B2
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.ci import check_issue_task_quality as checker  # TRANSITIONAL-PKG3-B2
+    from lu_machinery.work import sources_public  # TRANSITIONAL-PKG3-B2
 
     repo = "learn-ukrainian/learn-ukrainian.github.io"
     registry = {"devops": [5703], "harness": [6943]}
@@ -915,7 +931,8 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         {"code": "closed_epic_reopened", "stream": "devops", "epic": 4000},
         {"code": "milestone_closed_issue", "stream": "devops", "issue": 77},
     ]
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    # The release writes and reads the cache under the configured primary (no ROOT/CACHE_PATH).
+    _primary_at(monkeypatch, tmp_path)
     monkeypatch.setattr(app_isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
     if publisher == "membership_writer":
         assert checker.write_membership_cache(report, repo, registry)
@@ -924,6 +941,8 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         (tmp_path / "scripts/config/issue_streams.yaml").write_text(
             "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
         )
+        # The release audits its packaged registry (REGISTRY_PATH), not one under the root.
+        monkeypatch.setattr(app_isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
         monkeypatch.setattr(app_isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
         monkeypatch.setattr(app_isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
         monkeypatch.setattr(
@@ -935,7 +954,6 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     cache = tmp_path / "batch_state/issue_stream_audit.json"
     assert json.loads(cache.read_text())["schema_version"] == 1
     assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
-    monkeypatch.setattr(app_isa, "CACHE_PATH", cache)
     monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
     monkeypatch.setattr(
         issues_router.audit,
@@ -995,7 +1013,7 @@ def test_strict_adoption_gate_runs_as_bare_script():
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
-    from scripts.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     def _fake_read_cache(max_age_s):
         if max_age_s == 3600:
@@ -1019,7 +1037,7 @@ def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monke
 
 
 def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):
-    from scripts.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
     monkeypatch.setattr(
@@ -1048,7 +1066,7 @@ def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch
 
 
 def test_issues_streams_no_cache_schedules_once_and_returns_immediately(monkeypatch):
-    from scripts.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     calls = []
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)

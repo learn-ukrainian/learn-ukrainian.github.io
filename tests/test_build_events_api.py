@@ -7,8 +7,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi.testclient import TestClient
-
-from scripts.api.main import app
+from lu_machinery.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
 

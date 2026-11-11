@@ -1,7 +1,7 @@
 """Product half of the State API: curriculum pipeline state, coverage, scores and issues.
 
 Mounted at /api/state/ by the product entry, next to the machinery
-``scripts.api.state_router`` (routing and GitHub budgets, manifest).
+``lu_machinery.api.state_router`` (routing and GitHub budgets, manifest).
 
 Endpoints:
   GET /api/state/summary              Full project snapshot
@@ -39,16 +39,14 @@ from typing import Any, Literal, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
-
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
-
-from scripts.api.monitor_context import MonitorContext, get_ctx
-from scripts.api.repository_authority import RepositoryAuthorityError, build_repository_authority, preparation_data_root
-from scripts.api.rules_router import _matches_etag
-from scripts.api.state_helpers import (
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx
+from lu_machinery.api.repository_authority import (
+    RepositoryAuthorityError,
+    build_repository_authority,
+    preparation_data_root,
+)
+from lu_machinery.api.rules_router import _matches_etag
+from lu_machinery.api.state_helpers import (
     cache_get,
     cache_get_or_compute,
     cache_get_or_compute_async,
@@ -57,6 +55,7 @@ from scripts.api.state_helpers import (
     cache_set,
     ctx_scoped_ttl_key,
 )
+from lu_machinery.path_safety import safe_join
 
 from . import preparation_state
 from .config import LEVELS
@@ -242,7 +241,7 @@ def warm_state_scans(ctx: MonitorContext) -> None:
     """Populate the default expensive curriculum state-scan caches after process start.
 
     Runs in the machinery state-scan warmup thread, after the routing-budget
-    warm (``scripts.api.state_router.schedule_state_scan_warmup``).
+    warm (``lu_machinery.api.state_router.schedule_state_scan_warmup``).
     """
     try:
         cache_get_or_compute(

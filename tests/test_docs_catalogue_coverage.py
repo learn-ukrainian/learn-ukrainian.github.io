@@ -21,14 +21,17 @@ import re
 import subprocess
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.docs import find as find_module
+from lu_machinery.docs.find import find
 
-import scripts.api.main as api_main
+# The tree gate stays on the in-tree checker until B2b: the product's generated README block
+# names its command, and the product keeps its backup allowlist at scripts/config/. The
+# Monitor's knowledge route and the find checks below use the installed release.
 from scripts.docs import catalogue as cat
-from scripts.docs import find as find_module
 from scripts.docs import store_census
-from scripts.docs.find import find
 from tests.helpers.docs_find_lookups import (
     DEV_KINDS,
     DEV_LOOKUPS,

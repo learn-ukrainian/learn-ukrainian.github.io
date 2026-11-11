@@ -13,17 +13,18 @@ static no-side-effects guard.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.research import registry as reg
 
-import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
-from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -389,9 +390,11 @@ def test_no_network_or_subprocess_imports():
     import ast
 
     forbidden = {"subprocess", "socket", "sqlite3", "requests", "httpx", "urllib", "http"}
-    root = Path(__file__).resolve().parents[1]
-    for rel in ("scripts/research/registry.py", "scripts/api/knowledge_router.py"):
-        tree = ast.parse((root / rel).read_text("utf-8"))
+    # The subjects are the installed release modules the API serves.
+    for rel in ("lu_machinery.research.registry", "lu_machinery.api.knowledge_router"):
+        spec = importlib.util.find_spec(rel)
+        assert spec is not None and spec.origin is not None, rel
+        tree = ast.parse(Path(spec.origin).read_text("utf-8"))
         imported: set[str] = set()
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
