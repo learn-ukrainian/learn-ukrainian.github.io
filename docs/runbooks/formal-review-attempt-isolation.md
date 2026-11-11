@@ -42,6 +42,28 @@ does not create a host network route. Claude stages only selected provider
 authentication, including a fresh Linux OAuth access token, into the private
 seat environment; it receives no real-home credential directory.
 
+### Attempt egress evidence
+
+The dispatcher task record stores `review_attempt_egress` after runtime cleanup,
+including success, provider failure, timeout and cancellation. Its `records` list
+retains the first 256 distinct canonical CONNECT destinations as
+`{"destination": "hostname:443", "bytes": 0}` entries. Repeated requests to a
+retained destination aggregate the bytes relayed in both directions. A record
+means a CONNECT destination was requested, not that DNS, connection or TLS
+succeeded; refused or failed requests can have zero bytes. Malformed CONNECT
+requests have no canonical destination and produce no entry.
+
+`overflow_count` counts CONNECT requests to destinations outside that retained
+set, including repeats. It does not count distinct overflow hosts. Those hosts
+are not retained, so both the list and its deduplication state stay bounded.
+Overflow requests still follow exactly the same destination checks and proxy
+behavior. Records contain no resolved addresses, URLs, headers or payloads.
+They use the existing task record, not the Sources receipt ledger or a new
+store. A refusal before boundary creation has no proxy evidence. Abrupt loss
+of the supervisor before Python cleanup cannot certify an egress summary.
+
+### Runtime checks
+
 Missing Bubblewrap refuses with `sandbox_unavailable:linux_bwrap_missing`;
 failed namespace/read/write probes refuse with `sandbox_probe_*`, and a
 missing proxy refuses with `attempt_egress_unavailable`. There is no weaker
