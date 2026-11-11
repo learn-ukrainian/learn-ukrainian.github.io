@@ -611,6 +611,8 @@ HANDLING = {
     "lu_machinery/review/review_lineage.py": "accept-as-approval",
     "lu_machinery/fleet_comms/cli.py": "ignore",
     "lu_machinery/fleet_comms/efficiency_metrics.py": "ignore",
+    # The merge-queue gate lands nothing unless the recorder's status is success on each member's head.
+    "scripts/ci/queue_review_gate.py": "accept-as-approval",
 }
 
 
