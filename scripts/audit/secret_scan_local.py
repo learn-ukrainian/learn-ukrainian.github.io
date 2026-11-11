@@ -465,7 +465,7 @@ def _exclude_args(repo: Path) -> list[str]:
 
 
 _COUNT = re.compile(r"\{(\d{1,3})(?:,(\d{0,3}))?\}")
-_ESCAPE_LETTERS = "dwsDWS"  # ASCII-only in both RE2 and `re.ASCII`
+_ESCAPE_LETTERS = "dwDW"  # ASCII-only in both RE2 and `re.ASCII`
 
 
 def _is_plain_re2(pattern: str) -> bool:
@@ -473,7 +473,7 @@ def _is_plain_re2(pattern: str) -> bool:
 
     A blacklist of Python-only constructs cannot be exhaustive (inline flags, comments, `\\u`/`\\N`
     escapes, repeat counts above RE2's limit, ...), so this admits literals, `\\`-escaped punctuation,
-    `\\d\\w\\s`, anchors, `.`, `|`, groups (`(`, `(?:`), plain classes and `* + ? {n,m}` quantifiers.
+    `\\d\\w`, anchors, `.`, `|`, groups (`(`, `(?:`), plain classes and `* + ? {n,m}` quantifiers.
     """
     i, n, quant = 0, len(pattern), 0  # quant: 1 after a quantifier, 2 after its lazy `?`
     while i < n:
