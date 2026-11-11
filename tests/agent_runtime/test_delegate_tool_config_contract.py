@@ -75,7 +75,7 @@ def test_agy_stub_without_supported_version_is_still_refused(stub_body, code, tm
     with pytest.raises(ValueError, match=code):
         AgyAdapter().build_invocation(
             prompt="read-only contract",
-            mode="read-only",
+            mode="workspace-write",
             cwd=checkout,
             model=None,
             task_id="tool-config-contract",

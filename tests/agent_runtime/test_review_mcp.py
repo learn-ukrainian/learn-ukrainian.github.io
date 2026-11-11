@@ -1590,7 +1590,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
 
     ordinary = AgyAdapter().build_invocation(
         prompt="ordinary",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="ordinary-agy-task",

@@ -291,15 +291,16 @@ def test_install_does_not_reenable_guard(tmp_path):
     data = write_guard(path)
     data[config.GUARD_NAME]["enabled"] = False
     path.write_text(json.dumps(data))
-    before = path.read_bytes()
     config.install_worktree_guard(cwd)
-    assert path.read_bytes() == before
+    installed = json.loads(path.read_text())
+    assert installed[config.GUARD_NAME] == data[config.GUARD_NAME]
+    assert installed[config.PRIMARY_GUARD_NAME] == config.primary_guard_registration()
     assert config.check_hook_config((path,)).reason == "disabled"
 
 
 def test_overlay_keeps_existing_driver_hooks():
     data = json.loads((ROOT / "agents_extensions/agy/hooks.json").read_text())
-    assert len(data) == 5
+    assert len(data) == 6
     assert data["pending-orders-announce"] == {
         "PreInvocation": [
             {
@@ -323,6 +324,13 @@ def test_overlay_keeps_existing_driver_hooks():
     guard = data[config.GUARD_NAME]["PreToolUse"][0]
     assert guard["matcher"] == "run_command"
     assert guard["hooks"][0]["timeout"] == config.GUARD_TIMEOUT_FLOOR
+    primary = data[config.PRIMARY_GUARD_NAME]["PreToolUse"][0]
+    assert primary["matcher"] == "write_file|edit_file|run_command"
+    assert primary["hooks"][0] == {
+        "type": "command",
+        "command": f"../.venv/bin/python ../{config.PRIMARY_GUARD_ENTRY.as_posix()}",
+        "timeout": 10,
+    }
 
 
 @pytest.mark.parametrize("timeout", [None, 1, 9, True, "10", 10, 30])

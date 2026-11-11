@@ -32,7 +32,8 @@ def build(tmp_path: Path, mode: str, tool_config: dict | None = None):
     )
 
 
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+# Read-only off the review route is refused before any argv is built.
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_noninteractive_command_selects_auto_mode(tmp_path: Path, adapter_home: Path, mode: str) -> None:
     plan = build(tmp_path, mode)
 
@@ -86,7 +87,7 @@ def test_native_sources_config_selected_from_effective_home(
     if scoped:
         tc["agy_home_override"] = str(home)
 
-    plan = build(tmp_path, "read-only", tc)
+    plan = build(tmp_path, "workspace-write", tc)
 
     effective_home = Path(plan.env_overrides.get("HOME", str(adapter_home)))
     assert effective_home == home
