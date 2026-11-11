@@ -11,9 +11,9 @@ from lu_machinery.common.git_context import sanitized_git_env
 from lu_machinery.fleet.claude_account_lane import ClaudeAccount
 from lu_machinery.review.closeout_cli import main
 from lu_machinery.review.reviewer_resolver import (
-    GROK_4_7_CURSOR_FALLBACK,
     REVIEW_CANDIDATES,
     ResolverInputs,
+    ReviewerCandidate,
     evaluate_candidate,
     is_ukrainian_content_change,
     resolve_reviewer,
@@ -22,6 +22,15 @@ from lu_machinery.review.reviewer_resolver import (
 # The host's built-in default account, as ``tests.claude_route_accounts.HOST_ACCOUNT`` names it,
 # built from the release's own account type: the release resolver refuses another type.
 HOST_ACCOUNT = ClaudeAccount("a", "builtin")
+RETIRED_GROK_CANDIDATE = ReviewerCandidate(
+    name="grok-4.7-cursor-fallback",
+    family="xai",
+    concrete_model="grok-4.7",
+    route="cursor",
+    transport="cursor",
+    invocation="",
+    quality_tier="frontier_practical",
+)
 
 
 @pytest.mark.parametrize(
@@ -59,9 +68,12 @@ def test_unrelated_paths_do_not_match_content_patterns():
 def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path, capsys):
     inputs = ResolverInputs(author_model="codex", owned_paths=("curriculum/a.mdx",), claude_account=HOST_ACCOUNT)
     assert is_ukrainian_content_change(inputs)
-    result = evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs)
+    result = evaluate_candidate(REVIEW_CANDIDATES["muse"], inputs)
     assert result.status == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in result.reason
+    retired = evaluate_candidate(RETIRED_GROK_CANDIDATE, inputs)
+    assert retired.status == "excluded"
+    assert "retired" in retired.reason
 
     state_file = tmp_path / "review.json"
     assert (
@@ -82,11 +94,8 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(
         item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
     )
-    # #9769: both Grok transports stay excluded from Ukrainian content.
-    xai = [item for item in payload["trace"] if item["family"] == "xai"]
-    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
-    assert xai[0]["status"] == "excluded"
-    assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
+    assert not [item for item in payload["trace"] if item["family"] == "xai"]
+    assert "grok-4.7-cursor-fallback" not in REVIEW_CANDIDATES
     assert "composer-2.5" not in {item["name"] for item in payload["trace"]}
 
 
@@ -123,13 +132,13 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     # DeepSeek is excluded from every review, not just language review.
     assert "deepseek-v4.1-flash" not in REVIEW_CANDIDATES
     for candidate in (
-        GROK_4_7_CURSOR_FALLBACK,
-        replace(GROK_4_7_CURSOR_FALLBACK, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"),
-        replace(GROK_4_7_CURSOR_FALLBACK, name="composer-2.5", concrete_model="composer-2.5", family="moonshot"),
+        RETIRED_GROK_CANDIDATE,
+        replace(RETIRED_GROK_CANDIDATE, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"),
+        replace(RETIRED_GROK_CANDIDATE, name="composer-2.5", concrete_model="composer-2.5", family="moonshot"),
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
-        assert ("Ukrainian-content language-lanes exclusion" if candidate is GROK_4_7_CURSOR_FALLBACK else "retired") in result.reason
+        assert "retired" in result.reason
     pinned = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -168,7 +177,7 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
     assert resolution.selected.concrete_model == "muse-wonder-full-1.0"
     assert resolution.selected.route == "muse"
     assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
-    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
+    assert not [item for item in resolution.trace if item.family == "xai"]
     dark = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
