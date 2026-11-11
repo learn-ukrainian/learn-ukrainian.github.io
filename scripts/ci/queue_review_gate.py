@@ -11,7 +11,7 @@ therefore proven, never guessed:
 2. Git gives the first-parent chain from the candidate's merge base with that tip to the
    candidate. Commits below the merge base have landed, each after its own candidate
    passed this gate. Each chain commit must be one squash commit (exactly one parent, the
-   previous commit) whose subject ends in ``(#N)``, and the event's base must lie on it.
+   previous commit) whose subject ends in ``(#N)``; the event's base must be an ancestor.
 3. Every chain commit must be the ``headCommit`` of exactly one entry, whose pull request
    is open against the branch and has the number in the commit subject. The chain's last
    commit must belong to the PR the ref names.
@@ -193,8 +193,8 @@ def squash_chain(event: Event, tip: str) -> list[Squash]:
     shas = _git_out("rev-list", "--first-parent", "--reverse", f"{boundary}..{event.head}").split()
     if not shas or shas[-1] != event.head:
         raise GateError("the candidate is already on the branch or its chain does not end at it")
-    if event.base != boundary and event.base not in shas[:-1]:
-        raise GateError("the event base is not on the candidate's unlanded chain")
+    if _git("merge-base", "--is-ancestor", event.base, event.head).returncode != 0:
+        raise GateError("the event base is not an ancestor of the candidate")
     chain: list[Squash] = []
     previous = boundary
     for sha in shas:
