@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -32,7 +33,10 @@ AUDIT = HOOKS / "audit-primary-checkout-dirt.py"
 SETTINGS = REPO / "agents_extensions/shared/settings.json"
 CODEX_ENTRY = machinery_path("agent_runtime/codex_hook_entry.sh")
 CODEX_POLICY = machinery_path("agent_runtime/codex_hook_policy.py")
-DEPLOYED_AUDIT = "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py"
+AUDIT_COMMAND = (
+    '/bin/bash "$CLAUDE_PROJECT_DIR/scripts/pre_commit/project_python.sh"'
+    " -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt"
+)
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -91,12 +95,23 @@ def _payload(
     )
 
 
-def _hook(hook: Path, payload: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _hook(
+    hook: Path, payload: str, env: dict[str, str], *, registered: bool = False,
+) -> subprocess.CompletedProcess[str]:
     # The guard requires an explicit product. The audit owns its root boundary,
     # so its tests keep the product and shared-state variables absent.
     hook_env = env | {"LU_PRODUCT_ROOT": env["CLAUDE_PROJECT_DIR"]} if hook == GUARD else env
+    argv = [sys.executable, str(hook)]
+    if registered:
+        event = json.loads(payload)["hook_event_name"]
+        groups = json.loads(SETTINGS.read_text(encoding="utf-8"))["hooks"][event]
+        command = next(
+            entry["command"] for group in groups for entry in group["hooks"]
+            if "audit-primary-checkout-dirt" in entry["command"]
+        )
+        argv = ["/bin/bash", "-c", command]
     return subprocess.run(
-        [sys.executable, str(hook)], input=payload, capture_output=True, text=True, env=hook_env, check=False, timeout=60
+        argv, input=payload, capture_output=True, text=True, env=hook_env, check=False, timeout=60
     )
 
 
@@ -165,6 +180,12 @@ def _outcomes(report: dict) -> dict[str, str]:
 
 def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path: Path) -> None:
     primary = _make_primary(tmp_path)
+    for relative in ("scripts/pre_commit/project_python.sh", "scripts/lib/project_interpreter.sh"):
+        target = primary / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, target)
+    _git(primary, "add", "scripts")
+    _git(primary, "commit", "-q", "-m", "fixture audit launcher")
     scratch = tmp_path / "scratch"
     script = _script(
         scratch,
@@ -172,20 +193,23 @@ def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path
         name="refresh-and-push.sh",
     )
     env = _env(tmp_path, primary)
+    # Exercise the real Claude registration when env python3 is the system
+    # interpreter, rather than letting the test runner select the audit Python.
+    env["PATH"] = "/usr/bin:/bin"
     command = f"bash {script} {primary} brief-review-10952.tmpl"
 
     # The static guard cannot see the redirect executed inside the script.
     guard = _hook(GUARD, _payload("PreToolUse", command, scratch), env)
     assert guard.returncode == 0, guard.stderr
 
-    pre = _hook(AUDIT, _payload("PreToolUse", command, scratch), env)
+    pre = _hook(AUDIT, _payload("PreToolUse", command, scratch), env, registered=True)
     assert pre.returncode == 0, pre.stderr
     ran = _run_bash(command, scratch, env)
     assert ran.returncode != 0  # sed fails on the missing relative brief ...
     assert (primary / "brief-review-10952.tmpl.resolved").exists()  # ... but the redirect wrote
 
     # Claude routes a non-zero Bash exit to PostToolUseFailure.
-    post = _hook(AUDIT, _payload("PostToolUseFailure", command, scratch), env)
+    post = _hook(AUDIT, _payload("PostToolUseFailure", command, scratch), env, registered=True)
     assert post.returncode == 2, post.stderr
     assert "?? brief-review-10952.tmpl.resolved" in post.stderr
     assert f"command: {command}" in post.stderr
@@ -544,7 +568,7 @@ def test_claude_settings_wire_the_audit_around_every_bash_call() -> None:
             (group.get("matcher"), hook)
             for group in hooks[event]
             for hook in group["hooks"]
-            if hook["command"] == DEPLOYED_AUDIT
+            if hook["command"] == AUDIT_COMMAND
         ]
         assert [matcher for matcher, _ in wired] == ["Bash"], event
         (_, hook) = wired[0]

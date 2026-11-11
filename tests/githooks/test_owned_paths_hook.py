@@ -24,6 +24,11 @@ def test_dispatched_commit_outside_owned_paths_is_refused_at_commit_time(tmp_pat
     shutil.copytree(REPO_ROOT / ".githooks", repo / ".githooks", ignore=shutil.ignore_patterns("__pycache__"))
     # The tracked hooks resolve the project interpreter and the dispatcher package from the worktree.
     (repo / machinery_package()).symlink_to(REPO_ROOT / machinery_package(), target_is_directory=True)
+    # The product hook needs its resolver even when machinery has a different package name.
+    resolver = repo / "scripts" / "lib" / "project_interpreter.sh"
+    if not resolver.is_file():
+        resolver.parent.mkdir(parents=True)
+        shutil.copy2(REPO_ROOT / "scripts" / "lib" / "project_interpreter.sh", resolver)
     (repo / ".venv").symlink_to(Path(project_python()).parents[1], target_is_directory=True)
     (repo / ".pre-commit-config.yaml").write_text("repos: []\n", encoding="utf-8")
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}

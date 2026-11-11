@@ -783,7 +783,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "command": "/bin/bash \"$CLAUDE_PROJECT_DIR/scripts/pre_commit/project_python.sh\" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt",
             "timeout": 10
           }
         ]
@@ -825,7 +825,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "command": "/bin/bash \"$CLAUDE_PROJECT_DIR/scripts/pre_commit/project_python.sh\" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt",
             "timeout": 10
           }
         ]
@@ -851,7 +851,7 @@
           },
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "command": "/bin/bash \"$CLAUDE_PROJECT_DIR/scripts/pre_commit/project_python.sh\" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt",
             "timeout": 10
           }
         ]
