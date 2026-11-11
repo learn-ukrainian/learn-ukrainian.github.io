@@ -18,6 +18,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -305,6 +306,71 @@ def test_stale_snapshots_are_collected(tmp_path: Path) -> None:
     os.utime(stale, (old, old))
     assert audit.collect_stale_snapshots(state) == 1
     assert not stale.exists() and fresh.exists()
+
+
+def test_concurrent_fast_forward_of_the_primary_is_not_attributed_as_dirt(tmp_path: Path, monkeypatch) -> None:
+    """Defect class: another process moving the primary's HEAD reported as dirt from this call.
+
+    A fast-forward rewrites tracked files under ``index.lock`` before it commits
+    the index and moves the branch, so a status taken in that window lists them
+    as modified although the tree is clean once it finishes. Controls: a file the
+    call itself created is still attributed, also when it is renamed while the
+    audit waits for the lock.
+    """
+    primary = _make_primary(tmp_path)
+    base = _git(primary, "rev-parse", "HEAD").strip()
+    (primary / "tracked.txt").write_text("fast-forwarded\n", encoding="utf-8")
+    _git(primary, "commit", "-q", "-am", "upstream")
+    _git(primary, "branch", "upstream")
+    upstream_index = tmp_path / "upstream.index"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    subprocess.run(
+        ["git", "-C", str(primary), "read-tree", "upstream"],
+        env={**env, "GIT_INDEX_FILE": str(upstream_index)},
+        check=True,
+        timeout=30,
+    )
+    lock = primary / ".git" / "index.lock"
+    moves: list[tuple[str, str]] = []
+
+    def fast_forward_finishes(_seconds: float) -> None:
+        if lock.exists():
+            _git(primary, "update-ref", "refs/heads/main", "upstream")
+            lock.replace(primary / ".git" / "index")
+            for source, target in moves:
+                (primary / source).rename(primary / target)
+
+    # Only the audit's own clock: subprocess polls with the global time.sleep.
+    monkeypatch.setattr(
+        audit, "time", SimpleNamespace(monotonic=time.monotonic, time=time.time, sleep=fast_forward_finishes)
+    )
+    state = _state(tmp_path)
+    calls = (("toolu_ff", None, None), ("toolu_ff_and_write", "new.txt", None), ("toolu_rename", "new.txt", "moved.txt"))
+    for tool_use, created, moved in calls:
+        _git(primary, "reset", "-q", "--hard", base)
+        _git(primary, "clean", "-fdq")
+        audit.take_snapshot(state, "sess-a", tool_use, [str(primary)])
+        moves[:] = [(created, moved)] if moved else []
+        if created:
+            (primary / created).write_text("written by the call\n", encoding="utf-8")
+        # The other process is mid-checkout: new file content, index and HEAD not yet moved.
+        lock.write_bytes(upstream_index.read_bytes())
+        (primary / "tracked.txt").write_text("fast-forwarded\n", encoding="utf-8")
+        result = audit.finish_call(
+            state,
+            session_id="sess-a",
+            tool_use_id=tool_use,
+            command="cat notes.txt",
+            cwd=str(primary),
+            hook_event="PostToolUse",
+            tool_name="Bash",
+            candidates=[str(primary)],
+        )
+        assert result["unaudited"] == {}
+        assert [[entry["path"] for entry in record["entries"]] for record in result["records"]] == (
+            [[moved or created]] if created else []
+        )
+        assert _git(primary, "rev-parse", "HEAD") == _git(primary, "rev-parse", "upstream")
 
 
 def test_overlapping_calls_both_record_the_new_path(tmp_path: Path) -> None:
