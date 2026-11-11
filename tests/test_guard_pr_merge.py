@@ -2609,6 +2609,8 @@ def test_r36_generated_merge_execution_refused(monkeypatch, command):
     ("cat > s.sh <<'EOF'\ngh pr merge 5\nEOF\nchmod +x s.sh; ./s.sh", 2),
     ("cat > s.sh <<'EOF'\ngh pr merge 5\nEOF\nsh < s.sh", 2),
     ("printf 'gh pr merge 5\\n' > s.sh\nbash s.sh", 2),
+    ("printf 'gh pr merge 5\\n' > s.sh\nbash -c 'bash s.sh'", 2),
+    ("printf 'gh pr merge 5\\n' > s.sh\nbash -c 'git add s.sh'", 0),
     ("cat > msg <<'EOF'\ngh pr merge 5\nEOF\n/usr/bin/python3 -m scripts.publish issue-comment --number 7 --body-file msg", 0),
     ("cat > msg <<'EOF'\ngh pr merge 5\nEOF\n/usr/bin/git add msg", 0),
 ])

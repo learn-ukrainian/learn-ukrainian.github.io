@@ -899,16 +899,21 @@ def _literal_reads_only(command: str) -> bool:
     return found_read
 
 
-def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]]) -> None:
+def _refuse_generated_execution(
+    command: str,
+    events: list[tuple[str, list[str]]],
+    *,
+    wrote_data: bool = False,
+    depth: int = 0,
+) -> None:
     """Fail closed on merge-bearing generated code without adding a parser.
 
     Script-file execution after a data writer is deliberately conservative:
     we do not try to prove file identity across redirects, aliases or cwd changes.
     Ordinary data files followed by git/publisher commands remain inspectable.
     """
-    if not _merge_candidate(command):
+    if not wrote_data and not _merge_candidate(command):
         return
-    wrote_data = False
     for kind, argv in events:
         if kind != "segment" or not argv:
             continue
@@ -944,6 +949,15 @@ def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]
             raise ShellPreprocessLimit("same-command generated script execution cannot be read safely")
         if name in {"cat", "tee", "printf", "echo"} and (name == "tee" or ">" in command):
             wrote_data = True
+        if payload and wrote_data:
+            if depth >= _MAX_SHELL_DEPTH:
+                raise ShellPreprocessLimit("generated script nesting cannot be read safely")
+            _refuse_generated_execution(
+                payload,
+                _scope_events(payload, mark_redirect_unreadable=False),
+                wrote_data=True,
+                depth=depth + 1,
+            )
 
 
 def _may_merge(command: str, depth: int = 0) -> bool:
