@@ -585,7 +585,8 @@ def _dispatch(args) -> int:
         record.update(advisory_fields, **account_fields, **trial_fields)
         record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
-            record["contributor_mode"] = spec.options.get("contributor_mode", "off")
+            record["requested_contributor_mode"] = args.contributor_mode or "off"
+            record["contributor_mode"] = "off"
         try:
             # Attach to a borrowed worktree under the lock its settlement removes it under, so an
             # active record names it before any removal can start.
