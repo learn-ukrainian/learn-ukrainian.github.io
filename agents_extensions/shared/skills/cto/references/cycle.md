@@ -15,6 +15,10 @@ never fine.
    recipient: claim it with your session identity as `--worker-id`, and a worker escalation
    waits there at most one cycle. Any backlog still queued at a `claude-cto-<id>` name is a
    leftover to drain once, then report it as a producer defect.
+   Also search the operator's mail for replies to the CTO's notification threads (Gmail
+   connector `search_threads` with `from:me newer_than:2d subject:Re:`), record any answer as an
+   operator order in driver state before deciding anything on that item, and never treat an item
+   as waiting on the operator until that search ran in the same turn.
 2. **Every pool's usage**, from the scorecard metrics when present, including unused ones:
    each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
