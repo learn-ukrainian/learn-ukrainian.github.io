@@ -324,7 +324,7 @@ it includes as many full IDs as fit and marks truncation. A `legacy:` pointer
 names `ai_agent_bridge inbox --for` with the resolved legacy recipient. Legacy
 stores are read-only migration projections in authority mode; the notice does
 not recommend legacy acknowledgement writes. An `authority:` pointer names
-`.venv/bin/python -m lu_machinery.fleet_comms deliveries --help`, the existing fenced
+`bash scripts/pre_commit/project_python.sh -I -m lu_machinery.fleet_comms deliveries --help`, the existing fenced
 delivery workflow. Both pointers appear when both stores have pending work.
 The authority workflow uses delivery IDs returned by claim, the lease owner's
 worker ID and fence token, and a driver generation for supervisory consumption.
