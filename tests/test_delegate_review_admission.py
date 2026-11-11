@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -62,8 +63,8 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("grok",),
-            model="grok-4.7",
+            ("muse",),
+            model="muse-wonder-full-1.0",
             mode="read-only",
             review_dispatch=True,
             review_profile="ukrainian",
@@ -96,15 +97,27 @@ def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5
     )
 
 
-@pytest.mark.parametrize("model", ["grok-4.7-high[fast]", "grok-4.7-high[1m]", "grok-4.7-high[]"])
-def test_a_suffixed_cursor_grok_slug_is_never_an_attempt_identity(model):
-    """#9488: eligibility is decided on the exact string the adapter would send as --model."""
+@pytest.mark.parametrize("suffix", ["[fast]", "[1m]", "[]"])
+def test_a_suffixed_cursor_slug_is_never_an_attempt_identity(monkeypatch, suffix):
+    """#9488: exact wire identity must bind even when the base pin is eligible."""
+    from lu_machinery.review import reviewer_resolver
+
+    pin = "gpt-6.1-sol"
+    candidate = replace(
+        reviewer_resolver.REVIEW_CANDIDATES["openai_frontier"],
+        name="stand-in-cursor", route="cursor", endpoint="cursor", transport="cursor",
+        participant="cursor", catalog_transport="cursor", invocation=f"--model {pin}",
+    )
+    monkeypatch.setattr(reviewer_resolver, "REVIEW_CANDIDATES", {candidate.name: candidate})
+    assert _review_target(pin, attempt=True) == ("cursor", pin)
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
-        _review_target(model, attempt=True)
+        _review_target(pin + suffix, attempt=True)
 
 
-def test_the_exact_cursor_grok_slug_is_kept_as_requested():
-    assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
+def test_the_exact_cursor_grok_slug_is_refused_after_retirement():
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED") as refused:
+        _review_target("grok-4.7-high", attempt=True)
+    assert "model 'grok-4.7' is retired" in str(refused.value)
 
 
 def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():
