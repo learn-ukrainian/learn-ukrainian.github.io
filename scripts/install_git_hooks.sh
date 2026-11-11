@@ -72,7 +72,10 @@ generate_delegator() {
 set -euo pipefail
 root="\$(git rev-parse --show-toplevel)"
 hook="\$root/.githooks/$hook_name"
-[[ -x "\$hook" ]] || exit 0
+if [[ ! -x "\$hook" ]]; then
+  echo "Git hook error: tracked hook is missing or not executable: \$hook" >&2
+  exit 1
+fi
 exec "\$hook" "\$@"
 EOF
 }

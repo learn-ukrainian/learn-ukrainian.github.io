@@ -23,7 +23,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.build_grammar_component_8342 import (
     DEFAULT_FIREWALL_MANIFEST,
     DEFAULT_UA_GEC_TEST_M2,

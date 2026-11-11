@@ -13,15 +13,16 @@ import re
 import shutil
 import sqlite3
 import tempfile
+from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
+from lu_machinery.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 
 from scripts.projects.open_model_data import v4_source_custody_access as custody
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 from tests._host_path_guard import (
     FIXTURE_HOME,
     FIXTURE_USER,
@@ -190,7 +191,7 @@ def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
         Path("scripts/projects/open_model_data/validate_source_records.py"),
         Path("scripts/projects/open_model_data/model_view_exporter.py"),
         Path("docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md"),
-        Path("scripts/config/fleet_repos.yaml"),
+        files("lu_machinery") / "config" / "fleet_repos.yaml",
     )
     for path in production_paths:
         text = path.read_text(encoding="utf-8")

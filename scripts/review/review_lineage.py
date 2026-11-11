@@ -10,6 +10,11 @@ stops refusing only when its seat recorded a later verdict at another head
 WITH CHANGES, advisory task cto-e08a-advlineage-sol). A finished run whose
 only outcome is a published capability failure
 (``scripts/review/capability_failure.py``) has no verdict and fills no seat.
+A terminal run that is not ``done`` and has no reply carries no verdict only
+when its record proves no provider ran (``provider_pgid`` absent or null, and
+no ``result_sha256``). Every other missing reply is refused, a ``done`` run
+is unchanged, and a published verdict that names a run which never ran is
+refused.
 The approval carry-over and the repair-verification round
 (``scripts/review/repair_round.py``) both apply it before anything else. Ported from the carry-over's reviewed reader (#11907) so the two
 share one implementation.
@@ -22,6 +27,7 @@ login is outside it.
 from __future__ import annotations
 
 import hashlib
+import logging
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -38,7 +44,12 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, read_task_record
+from scripts.orchestration.task_record_store import (
+    ARCHIVE_DIR_NAME,
+    TaskIdentityMismatch,
+    candidate_task_record_names,
+    read_task_record,
+)
 from scripts.review import capability_failure
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.capability_failure import run_started as _started
@@ -51,6 +62,7 @@ from scripts.review.ukrainian_seats import (
 )
 from scripts.review.verdict_parser import recognized_verdicts
 
+_LOG = logging.getLogger(__name__)
 UNATTESTED_FAMILIES = frozenset({"unknown", "unattested", "ambiguous", "conflicting"})
 
 
@@ -166,23 +178,37 @@ def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
         raise LineageRefused(f"task ledger unavailable: {exc}") from None
-    records = []
+    records, named, misnamed = [], set(), []
     for path in paths:
         try:
             record = read_task_record(path)
+        except TaskIdentityMismatch as exc:
+            # A copy (a worker's saved `dispatch.py wait` output) never joins the lineage; it
+            # must match a correctly named record below, or a record was renamed or forged.
+            misnamed.append((path, exc.record))
+            continue
         except (OSError, ValueError) as exc:
             raise LineageRefused(f"task record {path.name} unreadable: {exc}") from None
-        if (
-            not isinstance(record, dict)
-            or record.get("status") in {"dry_run", "dry-run"}
-            or not _is_review_task(record)
+        if not isinstance(record, dict):
+            continue
+        task_id, nonce = record.get("task_id"), record.get("run_nonce")
+        # Only a record whose file name is its task_id's can vouch for a copy.
+        if isinstance(task_id, str) and isinstance(nonce, str) and nonce and candidate_task_record_names(
+            task_id, (path.name,)
         ):
+            named.add((task_id, nonce))
+        if record.get("status") in {"dry_run", "dry-run"} or not _is_review_task(record):
             continue
         if not isinstance(record.get("repository"), str) or normalize_repository(
             record["repository"]
         ) != normalize_repository(repository):
             continue
         records.append((path, record))
+    for path, record in misnamed:
+        nonce = record.get("run_nonce")
+        if not isinstance(nonce, str) or not nonce or (record["task_id"], nonce) not in named:
+            raise LineageRefused(f"task record {path.name} has invalid task identity and no correctly named record")
+        _LOG.warning("NON_RECORD_FILE: %s copies task record %s", path, record["task_id"])
     return records
 
 
@@ -425,6 +451,17 @@ def dispatched_rounds(
     return rounds
 
 
+def _provider_never_ran(record: Mapping[str, Any]) -> bool:
+    """Whether the task record proves no provider process ran.
+
+    The supervisor stores ``provider_pgid`` as null, or omits it, and leaves
+    ``result_sha256`` unset when it dies before launching a provider. A recorded
+    pgid or a result digest means a provider may have run, so a missing reply
+    stays a refusal.
+    """
+    return record.get("provider_pgid") is None and record.get("result_sha256") is None
+
+
 def check_lineage(
     *,
     runs: Sequence[ReviewRun],
@@ -435,15 +472,20 @@ def check_lineage(
 ) -> list[str]:
     """Return the seats (reviewer families) whose latest verdict is the approved head's APPROVE.
 
-    Every published verdict must belong to a run on record, and every run must
-    be terminal with a reply: a finished run's verdict, model, family and start
+    Every published verdict must belong to a finished run on record, and every
+    run must be terminal. A ``done`` run's verdict, model, family and start
     must match its published marker, unless a later verdict of its seat
     supersedes it (:func:`superseded_runs`), and any other run's reply must
-    carry no verdict at all. A finished run may instead have exactly one capability-failure
-    event that its record and reply re-derive (``capability_failure.require_bound``),
-    never beside a published verdict. ``exclude_head`` drops the runs, verdicts
-    and events of one later head, the round being recorded, which is not part of
-    the lineage before it.
+    carry no verdict at all. A terminal run whose status is not ``done`` and
+    whose reply is missing is accepted as carrying no verdict only when
+    :func:`_provider_never_ran` holds. Every other missing reply is refused,
+    and a ``done`` run still needs its reply. A published verdict that names
+    a run which never started a provider is refused: that run is not claimed,
+    so the verdict has no finished review on record. A finished run may instead
+    have exactly one capability-failure event that its record and reply
+    re-derive (``capability_failure.require_bound``), never beside a published
+    verdict. ``exclude_head`` drops the runs, verdicts and events of one later
+    head, the round being recorded, which is not part of the lineage before it.
     """
     markers = [item for item in _trusted_markers(comments, login) if item[1]["sha"] != exclude_head]
     try:
@@ -462,6 +504,9 @@ def check_lineage(
         if status not in TERMINAL_TASK_STATUSES:
             raise LineageRefused(f"review task {run.task_id} is not terminal (status {status!r})")
         if run.reply is None:
+            # A supervisor crash before launch can never grow a reply. Admit only that shape.
+            if status != "done" and _provider_never_ran(run.record):
+                continue
             raise LineageRefused(f"review task {run.task_id} ({status}) has no reply on record")
         if status != "done":
             if recognized_verdicts(run.reply):

@@ -20,9 +20,12 @@ TRUFFLEHOG_LINUX_AMD64_BINARY_SHA256=bcbdd2627c3f96e641edec60e3ccf36fc12afa4ffea
 #   The trufflehog executable inside that tarball (checked 2026-11-04 after
 #   verifying the tarball against the pin above). prepublication-gate.sh
 #   refuses any other executable.
-TRUFFLEHOG_ACTION_SHA=31ce31ee1abbcc7dc8eee5764c17121c3044c8b2
-#   Commit of tag v3.99.7 of trufflesecurity/trufflehog (2026-10-24), the
-#   action script the source repository's .github/workflows/ci.yml pins.
+TRUFFLEHOG_ACTION_SHA=ea68ca03c865c5f324e86e849ced20ed3cf9dbbb
+#   Commit of tag v3.99.8 of trufflesecurity/trufflehog (2026-11-02; checked
+#   2026-11-10 with `gh api repos/trufflesecurity/trufflehog/git/ref/tags/v3.99.8`),
+#   the action script the source repository's .github/workflows/ci.yml pins.
+#   Its action.yml is unchanged from the v3.99.7 pin (31ce31ee...), so the
+#   command line below is the same.
 #   The secret-scan job of ci-gate.yml runs the CLI with the command line this
 #   script builds (git file://, --since-commit, --branch, --fail, --no-update)
 #   without its `docker run` wrapper: it runs the checksum-verified release

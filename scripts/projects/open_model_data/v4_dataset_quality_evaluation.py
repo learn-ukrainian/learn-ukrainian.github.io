@@ -22,8 +22,12 @@ from typing import Any
 
 import jsonschema
 
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set
+sys.path.append(str(Path(__file__).resolve().parents[3]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set
 
 _ASSESSMENT = "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
 

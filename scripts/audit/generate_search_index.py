@@ -1,7 +1,8 @@
 """Generate compact Word Atlas search and browse indexes.
 
 The database-backed command is deliberately executable as a file with the
-system interpreter used by the frontend CI jobs. Keep that path stdlib-only.
+project interpreter used by the frontend CI jobs. Keep that path to the
+standard library and the installed lu_machinery release.
 """
 
 from __future__ import annotations
@@ -20,8 +21,8 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -34,8 +35,8 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -1224,6 +1225,11 @@ Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-ap
         help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}; pinned runs: site/.atlas-pinned/).",
     )
     args = parser.parse_args(argv)
+    # Bind before any mode runs and outside every report-only handler. Not at module level: the frontend
+    # build path-loads this file's helpers without the checkout on sys.path (tests/test_lexicon_path_loaders.py).
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
     pinned = args.runtime_tree is not None
     args.out = resolve_output_path(args.out, DEFAULT_SEARCH_OUT, pinned=pinned)
     args.aliases_out = resolve_output_path(args.aliases_out, DEFAULT_SEARCH_ALIASES_OUT, pinned=pinned)

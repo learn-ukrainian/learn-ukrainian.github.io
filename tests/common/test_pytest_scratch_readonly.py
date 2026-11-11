@@ -1049,6 +1049,5 @@ def test_payload(tmp_path):
     (used,) = [base for base in (temp, shm) if any(base.iterdir())]
     (private,) = used.iterdir()
     assert stat.S_IMODE(private.stat().st_mode) == 0o700
-    (run,) = (private / pytest_scratch.RUNS_DIRNAME).iterdir()
-    assert json.loads((run / "lease.json").read_text())["state"] == "preserved"
-    assert list((run / "scratch" / "base").rglob("payload"))
+    # The session ended, so its run went with it, removed through the fallback's descriptors.
+    assert list((private / pytest_scratch.RUNS_DIRNAME).iterdir()) == []

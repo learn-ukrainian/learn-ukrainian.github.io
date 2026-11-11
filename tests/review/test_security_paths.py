@@ -5,37 +5,56 @@ from __future__ import annotations
 import json
 import subprocess
 from fnmatch import fnmatchcase
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
-
-from scripts.common.git_context import sanitized_git_env
-from scripts.review.closeout_cli import main
-from scripts.review.security_paths import (
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.review.closeout_cli import main
+from lu_machinery.review.security_paths import (
     SECURITY_SENSITIVE_PATHS,
     effective_review_risk,
     git_changed_paths,
     is_security_sensitive_change,
 )
-from scripts.review.target_resolution import TargetResolutionError
+from lu_machinery.review.target_resolution import TargetResolutionError
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# The installed release spells machinery files with its package directory; `scripts/` entries are product files.
+MACHINERY = "lu_machinery"
+RELEASE_PARENT = Path(str(files(MACHINERY))).parent
 
 
 @pytest.fixture(autouse=True)
 def isolated_live_snapshot(monkeypatch):
-    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+    monkeypatch.setattr("lu_machinery.fleet.credit_lane.read_routing_budget", lambda **_: None)
 
 
 def _git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30)
 
 
+def _release_files() -> list[str]:
+    root = RELEASE_PARENT / MACHINERY
+    return [
+        path.relative_to(RELEASE_PARENT).as_posix()
+        for path in root.rglob("*")
+        if path.is_file() and "__pycache__" not in path.parts
+    ]
+
+
 # The deleted launcher locator remains classified for historical diffs, but has no tracked witness.
-@pytest.mark.parametrize("pattern", [p for p in SECURITY_SENSITIVE_PATHS if p != "scripts/delegate.py"])
+# The release keeps its launchd pattern though it ships no launchd file (reported for machinery).
+@pytest.mark.parametrize(
+    "pattern", [p for p in SECURITY_SENSITIVE_PATHS if p not in {"scripts/delegate.py", f"{MACHINERY}/launchd/**"}]
+)
 def test_every_security_glob_matches_a_tracked_file(pattern):
-    tracked = _git(REPO_ROOT, "ls-files", "-z").split("\0")
-    witnesses = [path for path in tracked if fnmatchcase(path, pattern)]
+    """Product patterns match tracked product files; machinery patterns match files the installed release ships."""
+    if pattern.startswith(f"{MACHINERY}/"):
+        candidates = _release_files()
+    else:
+        candidates = _git(REPO_ROOT, "ls-files", "-z").split("\0")
+    witnesses = [path for path in candidates if fnmatchcase(path, pattern)]
     assert witnesses, f"security coverage lost: {pattern} matches no tracked file"
     assert is_security_sensitive_change((witnesses[0],))
 
@@ -50,22 +69,22 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         (("scripts/ocr/_credentials.py",), ("!scripts/ocr/_credentials.py",), True),
         (("./scripts/delegate.py",), (), True),
         ((), ("./scripts/delegate.py",), True),
-        (("./scripts/dispatch.py",), (), True),
-        ((), ("./scripts/dispatch.py",), True),
-        (("scripts/dispatcher/cli.py",), (), True),
-        (("scripts/dispatcher/providers/codex.py",), (), True),
-        ((), ("scripts/dispatcher",), True),
-        ((), ("scripts/dispatcher/",), True),
-        ((), ("scripts/agent_runtime",), True),
-        ((), ("scripts/agent_runtime/",), True),
-        ((), ("scripts/hooks",), True),
+        ((f"./{MACHINERY}/dispatch.py",), (), True),
+        ((), (f"./{MACHINERY}/dispatch.py",), True),
+        ((f"{MACHINERY}/dispatcher/cli.py",), (), True),
+        ((f"{MACHINERY}/dispatcher/providers/codex.py",), (), True),
+        ((), (f"{MACHINERY}/dispatcher",), True),
+        ((), (f"{MACHINERY}/dispatcher/",), True),
+        ((), (f"{MACHINERY}/agent_runtime",), True),
+        ((), (f"{MACHINERY}/agent_runtime/",), True),
+        ((), (f"{MACHINERY}/hooks",), True),
         ((), ("scripts",), True),
         ((), ("scripts/",), True),
         ((), ("././scripts/",), True),
         ((), ("agents_extensions/shared",), True),
-        ((), ("scripts/lib/nested",), True),
-        ((), ("scripts/launchers-other",), False),
-        ((), ("scripts/reviewer",), False),
+        ((), (f"{MACHINERY}/lib/nested",), True),
+        ((), (f"{MACHINERY}/launchers-other",), False),
+        ((), (f"{MACHINERY}/reviewer",), False),
         ((), ("docs/",), False),
     ],
 )
@@ -75,13 +94,13 @@ def test_changed_paths_are_authoritative_with_owned_scope_fallback(paths, owned,
         assert effective_review_risk(risk, paths, owned) == ("critical" if expected else risk)
 
 
-@pytest.mark.parametrize("path", ["scripts/delegate.py", "scripts/dispatch.py", "scripts/dispatcher/cli.py"])
+@pytest.mark.parametrize("path", ["scripts/delegate.py", f"{MACHINERY}/dispatch.py", f"{MACHINERY}/dispatcher/cli.py"])
 @pytest.mark.parametrize("profile", ["code", "infra", "ukrainian"])
 def test_security_floor_is_scoped_to_code_and_infra(profile, path):
     assert effective_review_risk("low", (path,), profile=profile) == (
         "low" if profile == "ukrainian" else "critical"
     )
-    assert effective_review_risk("medium", (), ("scripts/agent_runtime",), profile=profile) == (
+    assert effective_review_risk("medium", (), (f"{MACHINERY}/agent_runtime",), profile=profile) == (
         "medium" if profile == "ukrainian" else "critical"
     )
 
@@ -176,14 +195,14 @@ def test_invalid_sha_refuses_before_git(repo, monkeypatch, base, head):
     def unexpected(*_args):
         pytest.fail("invalid state-file endpoints must never reach git")
 
-    monkeypatch.setattr("scripts.review.security_paths._run_git", unexpected)
+    monkeypatch.setattr("lu_machinery.review.security_paths._run_git", unexpected)
     with pytest.raises(TargetResolutionError, match="target_sha_invalid"):
         git_changed_paths(repo, base, head)
 
 
 @pytest.mark.parametrize("error", [OSError("unavailable"), subprocess.TimeoutExpired("git", 30)])
 def test_git_collection_launch_or_timeout_is_a_refusal(repo, monkeypatch, error):
-    from scripts.review import security_paths
+    from lu_machinery.review import security_paths
 
     def fail(*_args):
         raise error

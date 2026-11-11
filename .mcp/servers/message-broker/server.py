@@ -32,7 +32,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.fleet_comms.migrations import apply_migrations
+from lu_machinery.fleet_comms.migrations import apply_migrations
 
 # MCP protocol imports
 try:

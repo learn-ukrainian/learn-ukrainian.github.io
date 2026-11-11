@@ -80,7 +80,12 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
 
     ``context`` names the call site for the error message (and telemetry).
     """
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import (
+        canonical_model_id,
+        load_model_catalog,
+        retired_model_refusal,
+        unknown_model_refusal,
+    )
 
     if refusal := retired_model_refusal(model):
         raise RoutingGuardError(f"{context}: {refusal}")
@@ -152,6 +157,15 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             "the agy subscription seat). "
             f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
+    if ais_prefix:
+        # Fail closed (C-4967): google-ais carries only a Gemma model the catalog names and whose
+        # catalog row admits routing. The catalog row decides; no model id is hard-coded here.
+        catalog = load_model_catalog()
+        identity = canonical_model_id(text, catalog)
+        if identity is None:
+            raise RoutingGuardError(f"{context}: {unknown_model_refusal(text)}")
+        if catalog["models"][identity]["lifecycle"] not in {"active", "fallback"}:
+            raise RoutingGuardError(f"{context}: model {text!r} is not admitted for routing")
 
 
 def assert_agent_routing_allowed(agent: str | None, *, context: str) -> None:

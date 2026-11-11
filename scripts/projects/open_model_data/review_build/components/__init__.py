@@ -7,7 +7,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Protocol
 
-from scripts.lib.readonly_sqlite import import_named_module
+from lu_machinery.lib.readonly_sqlite import import_named_module
 
 from ..attribution import AttributionAdapter
 from ..contract import Candidate

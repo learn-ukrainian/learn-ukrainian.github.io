@@ -32,11 +32,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from jsonschema import Draft202012Validator
+from lu_machinery.storage.paths import artifact_set
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = REGISTRY_OPEN_MODEL_DATA_DIR

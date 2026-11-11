@@ -16,12 +16,12 @@ PROMPTS_DIR = Path(__file__).parent / "prompts"
 def _import_resolve_bulk_root():
     """Load the shared bulk-root resolver (project root or scripts/ on path)."""
     try:
-        from scripts.storage.topology import (
+        from lu_machinery.storage.topology import (
             resolve_bulk_root,
             unresolved_bulk_placeholder,
         )
     except ImportError:  # pragma: no cover - legacy ``scripts/``-on-path imports
-        from storage.topology import (  # type: ignore
+        from lu_machinery.storage.topology import (  # type: ignore
             resolve_bulk_root,
             unresolved_bulk_placeholder,
         )

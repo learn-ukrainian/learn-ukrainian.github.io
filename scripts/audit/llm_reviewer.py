@@ -48,14 +48,14 @@ def invoke_reviewer_with_schema(
     schema errors on supported routes propagate; they cannot select fallback.
     The second return value preserves the runtime's existing tool telemetry.
     """
-    from scripts.agent_runtime.adapters._output_schema import json_value, validate_output
+    from lu_machinery.agent_runtime.adapters._output_schema import json_value, validate_output
 
     schema = qg_schema.reviewer_output_schema(profile)
     supported = agent in SCHEMA_HARNESSES
     if not supported and agent not in UNSUPPORTED_SCHEMA_HARNESSES:
         raise ValueError(f"reviewer schema capability unknown or route not selectable: {agent}")
     if invoker is None:
-        from scripts.agent_runtime.runner import invoke as invoker
+        from lu_machinery.agent_runtime.runner import invoke as invoker
 
     config = dict(tool_config or {})
     # The reviewer cwd can be a curriculum directory or a read-only checkout.

@@ -22,6 +22,9 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.content_lexicon_reconciler import (
     LEXICON_MANIFEST_PATH,
@@ -31,8 +34,6 @@ from scripts.lexicon.content_lexicon_reconciler import (
     reconcile_content,
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 DEFAULT_CHECKPOINT_INTERVAL = 10

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 
+from lu_machinery.lib.redacted_environ import RedactedEnvDict as ReleaseRedactedEnvDict  # TRANSITIONAL-PKG3-B2
+
 from scripts.lib.redacted_environ import RedactedEnvDict, install_redacted_environ_repr
 
 _CANARY = "LU_REPR_CANARY"
@@ -29,7 +31,9 @@ def test_environ_copy_formats_without_values_and_still_copies(monkeypatch) -> No
     monkeypatch.setenv(_CANARY, _SECRET)
     install_redacted_environ_repr()
     copied = os.environ.copy()
-    assert isinstance(copied, RedactedEnvDict)
+    # Importing the scripts package installs the release's copy first, so os.environ.copy() returns  # TRANSITIONAL-PKG3-B2
+    # the release's class and the in-tree install is a no-op until B2 removes the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    assert isinstance(copied, (RedactedEnvDict, ReleaseRedactedEnvDict))  # TRANSITIONAL-PKG3-B2
     assert copied[_CANARY] == _SECRET
     assert _SECRET not in repr(copied)
     assert _SECRET not in repr(copied.copy())

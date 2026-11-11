@@ -771,20 +771,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/practice/typesafe_distractor_validator.py",
-      "kind": "store_path",
-      "scope": "_resolve_sources_db_path",
-      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/practice/typesafe_distractor_validator.py",
-      "kind": "store_path",
-      "scope": "_resolve_sources_db_path",
-      "fingerprint": "cd9a6f301fe17127da8f609b54b5e0269a683f19e7846cedee42e75f55282f29",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/practice_deck/end_dictionaries.py",
       "kind": "store_path",
       "scope": "resolve_sources_db",
@@ -1013,34 +999,6 @@
       "kind": "store_path",
       "scope": "build_silver",
       "fingerprint": "1c35b07b3eb670653ddbbf250112272bdcbe684df6c18db6f531a910cf0f4df4",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "kind": "store_path",
-      "scope": "_resolve_vesum_path",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
-      "kind": "store_path",
-      "scope": "_resolve_vesum_path",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 1
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
-      "kind": "store_path",
-      "scope": "TypeSafeWordQualifier.__init__",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
-      "kind": "store_path",
-      "scope": "TypeSafeWordQualifier.__init__",
-      "fingerprint": "f6f792886e474ffc6f9306a9067be7826d3dfcac45daca1ead12f6cb1491d3c9",
       "occurrence": 0
     },
     {

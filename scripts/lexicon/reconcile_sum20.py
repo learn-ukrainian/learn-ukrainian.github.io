@@ -11,9 +11,10 @@ from collections import defaultdict
 from contextlib import closing
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.storage.topology import main_checkout_root
+
 from scripts.lexicon.sum20_store import Sum20StoreError, open_sources
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.storage.topology import main_checkout_root
 from scripts.wiki.sum20_official import normalize_sum20_lookup
 
 DIFFERENCE_EXAMPLE_LIMIT = 20

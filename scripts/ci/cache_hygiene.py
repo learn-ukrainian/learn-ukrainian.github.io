@@ -13,7 +13,9 @@ Two entry kinds are pruned; every other entry is left alone.
   rest are deleted. Entries with the full TRAP key shape on any other ref are
   deleted. Keys that do not match the shape are left alone.
 - ``setup-uv-<...>-<lock hash>`` on ``refs/heads/main``: the entry for the
-  current ``requirements-lock.txt`` and the newest entry per family are kept.
+  current lock files (``--lock-file``, repeatable, in the order of the
+  composite action's ``cache-dependency-glob``) and the newest entry per
+  family are kept.
   A superseded entry is deleted only once it has not been read for
   ``--uv-grace-hours`` (default 24), so PRs still based on the previous lock
   keep restoring it for a day. ``last_accessed_at`` is never earlier than
@@ -108,14 +110,17 @@ def _parse_time(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
-def lock_hash(lock_file: Path) -> str:
+def lock_hash(*lock_files: Path) -> str:
     """Hash setup-uv puts at the end of its cache key for ``cache-dependency-glob``.
 
     Same algorithm as ``hashFiles()``: SHA-256 over each matched file's
-    SHA-256 digest. The composite action matches exactly one file.
+    SHA-256 digest, in match order. The composite action matches
+    requirements-lock.txt, then requirements-machinery.lock.
     """
-    file_digest = hashlib.sha256(lock_file.read_bytes()).digest()
-    return hashlib.sha256(file_digest).hexdigest()
+    combined = hashlib.sha256()
+    for lock_file in lock_files:
+        combined.update(hashlib.sha256(lock_file.read_bytes()).digest())
+    return combined.hexdigest()
 
 
 def _gh_api(args: list[str]) -> str:
@@ -274,7 +279,12 @@ def delete_entries(repo: str, deletions: list[Deletion], gh_api: GhApi = _gh_api
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--repo", required=True, help="owner/name")
-    parser.add_argument("--lock-file", type=Path, default=Path("requirements-lock.txt"))
+    parser.add_argument(
+        "--lock-file",
+        type=Path,
+        action="append",
+        help="lock file in cache-dependency-glob order; repeat for each (default: requirements-lock.txt)",
+    )
     parser.add_argument("--uv-grace-hours", type=float, default=DEFAULT_UV_GRACE_HOURS)
     parser.add_argument("--apply", action="store_true", help="delete the planned entries (default: dry run)")
     args = parser.parse_args(argv)
@@ -296,7 +306,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     plan = plan_deletions(
         entries,
-        current_lock_hash=lock_hash(args.lock_file),
+        current_lock_hash=lock_hash(*(args.lock_file or [Path("requirements-lock.txt")])),
         now=datetime.now(UTC),
         pr_base_shas=pr_base_shas,
         uv_grace=timedelta(hours=args.uv_grace_hours),

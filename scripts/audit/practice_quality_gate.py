@@ -23,7 +23,7 @@ Enforces:
   Typed ``answers`` accept the correction and its listed readings, never the error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
-- TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
+- Deterministic Sources/VESUM grounding for sampled practice cards
 """
 
 from __future__ import annotations
@@ -35,8 +35,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -49,13 +52,19 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+
+from scripts.verification.vesum import (
+    InspectionStatus,
+    inspect_word,
+    verify_words,
+)
 
 try:
     from scripts.verification.vesum import verify_word
@@ -151,7 +160,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))
@@ -1017,19 +1026,67 @@ def audit_practice_shards(
     return counts, violations
 
 
+def ground_with_sources(
+    target: str,
+    *,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Preserve the offline caller's target attestation against VESUM."""
+    # 1. Target morphology check in VESUM
+    target_clean = target.strip()
+    target_tokens = [t.strip(",.?!;:\"'«»") for t in target_clean.split() if t.strip()]
+    target_in_vesum = False
+    target_status = "UNKNOWN"
+    target_analyses: list[dict[str, Any]] = []
+
+    try:
+        if len(target_tokens) == 1:
+            target_analyses = verify_word(target_tokens[0], db_path=vesum_db_path)
+            if target_analyses:
+                target_in_vesum = True
+                target_status = "CLEAN"
+            else:
+                try:
+                    insp = inspect_word(target_tokens[0], db_path=vesum_db_path)
+                    target_in_vesum = insp.status not in (
+                        InspectionStatus.NOT_FOUND,
+                        InspectionStatus.UNAVAILABLE,
+                    )
+                    target_status = insp.status.value
+                    target_analyses = insp.clean_analyses or insp.marked_analyses
+                except Exception:
+                    target_in_vesum = False
+                    target_status = "NOT_FOUND"
+        elif len(target_tokens) > 1:
+            v_res = verify_words(target_tokens, db_path=vesum_db_path)
+            target_in_vesum = all(bool(v_res.get(t)) for t in target_tokens)
+            target_status = "CLEAN" if target_in_vesum else "PARTIAL_OR_NOT_FOUND"
+            target_analyses = [a for t in target_tokens for a in v_res.get(t, [])]
+    except Exception as exc:
+        target_status = f"ERROR: {exc}"
+        target_in_vesum = False  # fail-closed on VESUM exception
+
+    return {
+        "target": {
+            "word": target,
+            "in_vesum": target_in_vesum,
+            "status": target_status,
+            "analyses": target_analyses,
+        },
+    }
+
+
 def audit_card_ambiguity(
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
     sample_size: int = 5,
     vesum_db: Path | str | None = None,
     *,
-    mock_response: dict[str, Any] | None = None,
     strict_ambiguity: bool = False,
-    client: Any | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Validate sample practice cards for target exclusivity and distractor plausibility.
+    """Ground sampled practice cards and report unavailable semantic validation.
 
-    Uses TypeSafe System One (Jev 1.13) when available, or deterministic Sources/VESUM fallback.
-    Fails closed in strict mode if online semantic validation is unavailable.
+    Uses deterministic Sources/VESUM grounding.
+    Strict mode fails closed because semantic ambiguity validation is unavailable.
     """
     p_dir = Path(shards_dir)
     violations: list[dict[str, Any]] = []
@@ -1037,13 +1094,6 @@ def audit_card_ambiguity(
 
     if not p_dir.exists():
         return verdicts, violations
-
-    from scripts.practice.typesafe_distractor_validator import (
-        get_typesafe_client,
-        ground_with_sources,
-        resolve_api_key,
-        validate_practice_card,
-    )
 
     candidate_cards: list[tuple[str, dict[str, Any]]] = []
     mode_cards: dict[str, list[tuple[str, dict[str, Any]]]] = {
@@ -1085,14 +1135,6 @@ def audit_card_ambiguity(
         if added_in_round == 0:
             break
 
-    ts_client = client
-    if ts_client is None and mock_response is None:
-        try:
-            if resolve_api_key():
-                ts_client = get_typesafe_client()
-        except Exception:
-            ts_client = None
-
     for mode, card in candidate_cards[:sample_size]:
         cid = card.get(f"{mode}Id") or card.get("id") or "card"
         stem = card.get("prompt") or card.get("sentence") or card.get("cueSentence", "")
@@ -1103,110 +1145,56 @@ def audit_card_ambiguity(
             if _normalize_plain(l) != _normalize_plain(target):
                 distractors.append(l)
 
-        if ts_client is not None or mock_response is not None:
-            try:
-                v = validate_practice_card(
-                    stem=stem,
-                    target=target,
-                    distractors=distractors,
-                    grammar_focus=f"{mode.capitalize()} Practice",
-                    client=ts_client,
-                    mock_response=mock_response,
-                    vesum_db_path=vesum_db,
-                )
-                verdicts.append(
-                    {
-                        "cardId": cid,
-                        "mode": mode,
-                        "stem": stem,
-                        "target": target,
-                        "distractors": distractors,
-                        "verdict": v.verdict,
-                        "unambiguous_prob": v.is_unambiguous_prob,
-                        "plausibility_score": v.plausibility_score,
-                        "model": v.model,
-                        "findings": v.findings,
-                    }
-                )
-                if v.verdict == "fail_broken":
-                    target_in_vesum = True
-                    if v.grounded and v.grounding:
-                        target_in_vesum = v.grounding.get("target", {}).get("in_vesum", True)
-                    if v.verdict_confidence >= 0.50 or not target_in_vesum:
-                        violations.append(
-                            {
-                                "type": "CARD_BROKEN",
-                                "item": cid,
-                                "message": f"Card failed validation: {'; '.join(v.findings)}",
-                            }
-                        )
-                elif strict_ambiguity and v.verdict == "fail_ambiguous":
-                    violations.append(
-                        {
-                            "type": "CARD_AMBIGUOUS",
-                            "item": cid,
-                            "message": f"Target exclusivity low (P={v.is_unambiguous_prob:.2f}): {'; '.join(v.findings)}",
-                        }
-                    )
-            except Exception as exc:
+        # Deterministic offline fallback using Sources/VESUM grounding
+        if vesum_db and Path(vesum_db).exists():
+            g = ground_with_sources(target=target, vesum_db_path=vesum_db)
+            t_ok = g.get("target", {}).get("in_vesum", False)
+            if not t_ok:
+                verdict = "fail_broken"
+                findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
                 violations.append(
                     {
-                        "type": "AMBIGUITY_CHECK_EXCEPTION",
+                        "type": "CARD_BROKEN",
                         "item": cid,
-                        "message": f"Validator raised exception: {exc}",
+                        "message": f"Target '{target}' not attested in VESUM",
                     }
                 )
-        else:
-            # Deterministic offline fallback using Sources/VESUM grounding
-            if vesum_db and Path(vesum_db).exists():
-                g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
-                t_ok = g.get("target", {}).get("in_vesum", False)
-                if not t_ok:
-                    verdict = "fail_broken"
-                    findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
-                    violations.append(
-                        {
-                            "type": "CARD_BROKEN",
-                            "item": cid,
-                            "message": f"Target '{target}' not attested in VESUM",
-                        }
-                    )
-                else:
-                    verdict = "unverified_offline"
-                    findings = [
-                        "Semantic ambiguity validation unavailable offline; morphological attestation verified via VESUM"
-                    ]
-                model_used = "deterministic-vesum-grounding"
             else:
                 verdict = "unverified_offline"
                 findings = [
-                    "Semantic ambiguity validation unavailable offline; morphological verification unavailable (VESUM database not found)"
+                    "Semantic ambiguity validation unavailable offline; morphological attestation verified via VESUM"
                 ]
-                model_used = "unavailable"
+            model_used = "deterministic-vesum-grounding"
+        else:
+            verdict = "unverified_offline"
+            findings = [
+                "Semantic ambiguity validation unavailable offline; morphological verification unavailable (VESUM database not found)"
+            ]
+            model_used = "unavailable"
 
-            if strict_ambiguity:
-                violations.append(
-                    {
-                        "type": "AMBIGUITY_VALIDATION_UNAVAILABLE",
-                        "item": cid,
-                        "message": "Semantic ambiguity validation requires TypeSafe System One (unavailable offline in strict mode)",
-                    }
-                )
-
-            verdicts.append(
+        if strict_ambiguity:
+            violations.append(
                 {
-                    "cardId": cid,
-                    "mode": mode,
-                    "stem": stem,
-                    "target": target,
-                    "distractors": distractors,
-                    "verdict": verdict,
-                    "unambiguous_prob": None,
-                    "plausibility_score": None,
-                    "model": model_used,
-                    "findings": findings,
+                    "type": "AMBIGUITY_VALIDATION_UNAVAILABLE",
+                    "item": cid,
+                    "message": "Semantic ambiguity validation is unavailable in strict mode",
                 }
             )
+
+        verdicts.append(
+            {
+                "cardId": cid,
+                "mode": mode,
+                "stem": stem,
+                "target": target,
+                "distractors": distractors,
+                "verdict": verdict,
+                "unambiguous_prob": None,
+                "plausibility_score": None,
+                "model": model_used,
+                "findings": findings,
+            }
+        )
 
     return verdicts, violations
 
@@ -1233,7 +1221,6 @@ def run_all_practice_audits(
     check_ambiguity: bool = False,
     sample_ambiguity: int = 5,
     strict_ambiguity: bool = False,
-    mock_ambiguity: dict[str, Any] | None = None,
 ) -> PracticeAuditResults:
     """Run all Practice Hub audits, returning a mapped dictionary of violations."""
     results = PracticeAuditResults(
@@ -1261,7 +1248,6 @@ def run_all_practice_audits(
             shards_dir=shards_dir,
             sample_size=sample_ambiguity,
             vesum_db=vesum_db,
-            mock_response=mock_ambiguity,
             strict_ambiguity=strict_ambiguity,
         )
         results["ambiguity_violations"] = amb_violations
@@ -1294,7 +1280,7 @@ def main() -> int:
     parser.add_argument("--sources-db", type=Path, help="Verify error-correction rows against this sources.db (default: snapshot-only)")
     parser.add_argument("--all-modes", action="store_true", help="Audit all 10 practice-shard modes (default: off)")
     parser.add_argument("--verify-vesum", action="store_true", help="Verify morphological attestation in VESUM (default: off)")
-    parser.add_argument("--check-ambiguity", action="store_true", help="Validate sample cards with TypeSafe System One (default: off)")
+    parser.add_argument("--check-ambiguity", action="store_true", help="Ground sample cards with Sources/VESUM (default: off)")
     parser.add_argument(
         "--sample-ambiguity", type=int, default=5, help="Number of cards to sample for ambiguity validation (default: 5)"
     )
@@ -1331,7 +1317,7 @@ def main() -> int:
             print(f"  - {mode:12s}: {cnt:5d} cards{threshold_note}")
 
     if args.check_ambiguity and results.ambiguity_verdicts:
-        print("\nTypeSafe System One Target Exclusivity & Distractor Evaluation:")
+        print("\nSample Card Sources/VESUM Grounding:")
         for v in results.ambiguity_verdicts:
             p_str = f"{v['unambiguous_prob']:.2f}" if v.get("unambiguous_prob") is not None else "N/A"
             s_str = f"{v['plausibility_score']:.2f}" if v.get("plausibility_score") is not None else "N/A"

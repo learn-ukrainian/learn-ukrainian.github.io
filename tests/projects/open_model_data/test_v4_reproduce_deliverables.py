@@ -10,8 +10,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import v4_reproduce_deliverables
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     _get_language_usage_masks,

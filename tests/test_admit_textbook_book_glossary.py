@@ -172,7 +172,7 @@ def test_resolve_sources_db_explicit_override(tmp_path: Path) -> None:
 
 
 def test_resolve_primary_checkout_matches_git_common_dir() -> None:
-    from scripts.guardrails.worktree_containment import (
+    from lu_machinery.guardrails.worktree_containment import (
         NotAGitRepositoryError,
         resolve_main_root,
     )

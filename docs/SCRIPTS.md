@@ -252,8 +252,6 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-kimi.sh        # retired catalog ids; the wrapper refuses (OO-58)
-./start-kimicc.sh      # retired catalog ids; the wrapper refuses (OO-58)
 ./start-glm.sh         # Claude Code routed to Z.AI GLM
 ./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
@@ -262,8 +260,7 @@ Project-local wrappers for interactive agent sessions:
 ```
 
 Kimi models are retired (OO-58, #11327). Do not dispatch `--agent kimi` or start a Kimi model.
-The bridge refuses every Kimi recipient, ask, inbox and discussion. Launcher names remain
-so a short name resolves and is refused.
+The bridge refuses every Kimi recipient, ask, inbox and discussion. There is no Kimi launcher.
 
 ### Rules core loading
 
@@ -328,16 +325,6 @@ The adapter uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
 client token by default. `CODEX_CC_BASE_URL` is restricted to that local
 endpoint; `CODEX_CC_AUTH_TOKEN` is process-scoped and never written to the
 repository.
-
-### Kimi through Claude Code
-
-Retired (OO-58, #11327). `start-kimi.sh` and `start-kimicc.sh` remain so a short
-name resolves, then the catalog refusal exits 2. There is no default Kimi model,
-no KimiCC opt-in, and no headless `--agent kimi` route. Do not log in or point a
-job at these wrappers. Historically the Claude Code UI reached Kimi models through
-an isolated config and an explicit Kimi credential, never an ambient
-`ANTHROPIC_AUTH_TOKEN`. Every Kimi catalog id now has empty transports.
-See [`agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
 
 ### GLM through Claude Code (Z.AI)
 
@@ -861,8 +848,6 @@ At `scripts/audit/checks/`:
 Additional audit guardrails:
 
 - `scripts/audit/lint_dispatch_brief.py` - dispatch brief `.venv/bin/python` worktree guardrail
-- `scripts/audit/typesafe_citation_verifier.py` - fail-closed TypeSafe citation and source-grounding check (#8192): deterministic quote match, then one System One Choice; only `supports` at confidence ≥ 0.80 is an accept. CLI: `.venv/bin/python -m scripts.audit.typesafe_citation_verifier --input cases.jsonl --out receipt.json`
-- `scripts/typesafe/client.py` - shared TypeSafe key load and `system_one` HTTP helper (`load_typesafe_api_key`, `system_one`); not a CLI
 - `scripts/audit/atlas_source_census.py` - aggregate-only Word Atlas source intake census; public reports must not include raw source text, private paths, or candidate lemma lists
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
 - `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
@@ -1248,8 +1233,6 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
 | `scripts/audit/lint_word_atlas.py` | Advisory sense-first Atlas entry lint (LINT-001–004, LINT-101, LINT-102, #6437; exit 0 unless `--strict`) | `.venv/bin/python scripts/audit/lint_word_atlas.py --manifest path/to/manifest.json` |
-| `scripts/audit/typesafe_citation_verifier.py` | Fail-closed citation grounding: quote must occur in the source, then one TypeSafe Choice (#8192) | `.venv/bin/python -m scripts.audit.typesafe_citation_verifier --input cases.jsonl --out receipt.json` |
-| `scripts/typesafe/client.py` | Shared TypeSafe API-key load and System One POST (library, not a CLI) | import `load_typesafe_api_key` / `system_one` from `scripts.typesafe.client` |
 | `scripts/lexicon/admit_teacher_table.py` | Locally admit a current teacher table and fill missing English cards; leaves VESUM failures in a private residual ledger | `.venv/bin/python -m scripts.lexicon.admit_teacher_table --extract path/to/current-table.json --manifest-in path/to/manifest.json --manifest-out batch_state/atlas/teacher-table/lexicon-manifest.staged.json --write` |
 | `scripts/atlas/atlas_db.py` | Rebuild `data/atlas.db`, materialize article payloads, and validate public alias targets | `.venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db` |
 | `scripts/atlas/fill_local.py` | Fill `data/atlas.db` with Phase-1 local Atlas enrichment rows | `.venv/bin/python -m scripts.atlas.fill_local --db data/atlas.db --report-json /tmp/atlas-fill-local-report.json` |

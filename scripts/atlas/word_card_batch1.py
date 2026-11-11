@@ -18,12 +18,12 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import yaml
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.common.scratch import ensure_scratch_root
 
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_verify as verifier
-from scripts.common.repo_root import main_checkout_root
-from scripts.common.scratch import ensure_scratch_root
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT = Path("registry/atlas/pilot/pilot-v1.json")

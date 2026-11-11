@@ -13,8 +13,8 @@ from .config import PROJECT_ROOT
 from .sources_schema import _infer_source_type, normalize_source_filename
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -27,8 +27,8 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
@@ -385,9 +385,9 @@ def _maybe_text(value: object) -> str | None:
 
 def _import_is_network_filesystem_path():
     try:
-        from scripts.storage.topology import is_network_filesystem_path
+        from lu_machinery.storage.topology import is_network_filesystem_path
     except ImportError:  # pragma: no cover - legacy ``scripts/``-on-path imports
-        from storage.topology import is_network_filesystem_path  # type: ignore
+        from lu_machinery.storage.topology import is_network_filesystem_path  # type: ignore
     return is_network_filesystem_path
 
 

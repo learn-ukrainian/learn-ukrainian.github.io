@@ -20,7 +20,7 @@ help:
 
 # Linux parity probe for filesystem-sensitive guardrails. See docs/runbooks/ci-gate.md.
 test-linux-fs:
-	bash scripts/ci/linux_fs_parity.sh
+	LU_PRODUCT_ROOT="$(CURDIR)" bash "$$($(PYTHON) -I -c 'import importlib.resources as r; print(r.files("lu_machinery").joinpath("ci", "linux_fs_parity.sh"))')"
 
 # Refresh practice JSON API copies + /atlas runtime for local/dev word-page CTA.
 atlas-practice-api-hydrate:

@@ -27,8 +27,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from lu_machinery.storage.artifacts import write_artifact
+
 from scripts.lexicon.assess_kaikki_fillability import is_clean_lemma, normalize_stress
-from scripts.storage.artifacts import write_artifact
 
 DEFAULT_KAIKKI = Path.home() / ".cache" / "learn-ukrainian-kaikki" / "kaikki-uk.jsonl"
 DEFAULT_OUTPUT = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"

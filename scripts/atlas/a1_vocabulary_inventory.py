@@ -21,13 +21,14 @@ import yaml
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.common.jsonl import physical_lines
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_sources as pilot_sources
-from scripts.common.jsonl import physical_lines
-from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import ulif_raw_cache
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 from scripts.verification import vesum
 
 ROOT = Path(__file__).resolve().parents[2]

@@ -15,8 +15,11 @@ from pathlib import Path
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+# isort: split
+
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 REFERENCE_TOOLS = frozenset({
     "verify_word", "verify_words", "verify_lemma", "verify_stress", "search_text",

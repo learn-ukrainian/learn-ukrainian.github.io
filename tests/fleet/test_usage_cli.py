@@ -6,6 +6,7 @@ import copy
 import io
 import json
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -1268,10 +1269,13 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
         }
     original = copy.deepcopy(routing)
     payloads = {
-        "/fixture/codexbar": {
-            "provider": "muse",
-            "usage": {"primary": {"usedPercent": 60}},
-            "account": "PRIVATE_ACCOUNT account@example.invalid",
+        "/usr/bin/muse": {
+            "allowance": {
+                "asOfMs": int(time.time() * 1000),
+                "tier": "PRIVATE_ACCOUNT account@example.invalid",
+                "weekly": {"usedPercent": 30},
+                "window": {"usedPercent": 60},
+            },
             "credits": 987654321,
         },
         "/fixture/agy": {
@@ -1289,10 +1293,20 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
             "credits": 987654321,
         },
     }
-    monkeypatch.setattr(su, "_codexbar_bin", lambda: "/fixture/codexbar")
+    real_which = su.shutil.which
+
+    def which(name, *args, **kwargs):
+        if name == "muse":
+            return "/usr/bin/muse"
+        return real_which(name, *args, **kwargs)
+
+    monkeypatch.setattr(su.shutil, "which", which)
     monkeypatch.setattr(su, "_agy_cli_bin", lambda: "/fixture/agy")
 
     def run(argv, **kwargs):
+        if argv[0] == "/usr/bin/muse":
+            assert argv[1:] == ["usage", "--json"]
+            assert kwargs.get("stdin") is subprocess.DEVNULL
         assert argv[0] in payloads
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payloads[argv[0]]), stderr="PRIVATE_STDERR")
 
@@ -1335,7 +1349,7 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
                 assert public.out.splitlines()[0] == "QA PASS: 1 subscription lane(s) have usable allotment signal(s)"
             if diagnostic in {"muse", "both"}:
                 assert "muse | healthy | 40.0 | fresh |" in public.out
-                assert "  primary (window): used=60.0% rem=40.0% resets=unknown" in public.out
+                assert "  primary (5h): used=60.0% rem=40.0% resets=unknown" in public.out
             if diagnostic in {"agy", "both"}:
                 assert "agy | healthy | unknown | fresh |" in public.out
                 assert "  Claude and GPT models (5h): used=50.0% rem=50.0% resets=unknown" in public.out

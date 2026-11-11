@@ -10,14 +10,14 @@ import time
 from datetime import datetime
 
 import yaml
-
-from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+from lu_machinery.agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.runner import invoke as runtime_invoke
+from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
+
 from batch_gemini_config import PROJECT_ROOT
 from batch_utils import ErrorCategory, ExponentialBackoff, classify_error
 from gemini_output import (

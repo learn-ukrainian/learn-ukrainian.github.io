@@ -19,8 +19,9 @@ from urllib.parse import quote
 import requests
 
 try:
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+
     from scripts.audit.sum11_sovietization_scan import classify_entry
-    from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -30,8 +31,9 @@ except ModuleNotFoundError as exc:
     _scripts_dir = Path(__file__).resolve().parents[1]
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
     from audit.sum11_sovietization_scan import classify_entry  # type: ignore[no-redef]
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 DEFAULT_USER_AGENT = (
@@ -230,7 +232,6 @@ class _SlovnykHTMLParser(HTMLParser):
         }
         self.h1_parts: list[str] = []
         self.meta_description = ""
-        self.canonical_url = ""
         self._in_title = False
         self._in_h1 = False
         self._in_article = False
@@ -257,8 +258,6 @@ class _SlovnykHTMLParser(HTMLParser):
             self.section_parts[self._active_section].append("\n")
         if tag == "meta" and attr.get("name") == "description":
             self.meta_description = attr.get("content", "")
-        if tag == "link" and attr.get("rel") == "canonical":
-            self.canonical_url = attr.get("href", "")
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
@@ -374,12 +373,10 @@ def _classify_flags(dict_slug: str, text: str) -> tuple[bool, bool, bool, int, s
     lower = text.lower()
     is_modern = dict_slug in MODERN_DICTS
     is_dialect = dict_slug in DIALECT_OR_HERITAGE_DICTS or any(
-        marker in lower
-        for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
+        marker in lower for marker in (" діал.", " зах.", " заст.", " маловжив", "регіон", "говір", "жарґ", "львів")
     )
     is_russianism = dict_slug in RUSSIANISM_GUIDE_DICTS and any(
-        marker in lower
-        for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
+        marker in lower for marker in ("росіянізм", "російськ", "кальк", "неправильно", "не слід", "краще")
     )
     risk, keywords = classify_entry("", text)
     return is_modern, is_dialect, is_russianism, risk, ",".join(keywords)
@@ -404,7 +401,6 @@ def parse_entry_html(
 
     headword = _clean_text(" ".join(parser.h1_parts)) or normalize_word(word)
     title = _clean_text(" ".join(parser.title_parts)) or headword
-    canonical_url = parser.canonical_url or url
     text = _truncate(section_text, max_text_chars)
     snippet = _truncate(parser.meta_description or section_text, min(max_text_chars, 500))
     is_modern, is_dialect, is_russianism, risk, keywords = _classify_flags(dict_slug, text)
@@ -416,7 +412,9 @@ def parse_entry_html(
         "dictionary_slug": dict_slug,
         "dictionary_label": SLOVNYK_ME_DICTS.get(dict_slug, dict_slug),
         "source_type": _source_type(dict_slug, is_modern, is_dialect, is_russianism),
-        "source_url": canonical_url,
+        # The URL the caller requested. rel=canonical only ever fed source_url,
+        # and slovnyk.me now publishes that link as http.
+        "source_url": url,
         "title": title,
         "snippet": snippet,
         "text": text,

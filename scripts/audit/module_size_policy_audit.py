@@ -46,11 +46,12 @@ def _data_repo_root() -> Path:
 
 PROJECT_ROOT = _data_repo_root()
 
-from scripts.level_config import base_level, resolve_content_track
-from scripts.orchestration.prompt_contracts import (
+from lu_machinery.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
 )
+
+from scripts.level_config import base_level, resolve_content_track
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 RESEARCH_ROOT = PROJECT_ROOT / "docs" / "research"

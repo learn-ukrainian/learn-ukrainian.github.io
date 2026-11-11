@@ -16,7 +16,7 @@ When grepping `.bash_secrets` / `.envrc` / `.env*` / `~/.aws/credentials` / any 
 **Every verifiable claim must be backed by a tool call.** The pre-trained guess feels right; it's wrong often enough to break Ukrainian curriculum, code, and orchestration. Skipping the tool = hallucinating with confidence. We have VESUM (6.7M forms), СУМ-20, ВТС, Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts (СУМ-11 is strictly for Soviet colonization detection/context, never modern verification) — pretending otherwise is malpractice. Strict scope: word validity / stress / Russianisms / file contents / SHAs / build status / module gates / word counts / test pass-fail / module plans → run the tool. Exempt: creative output generation (narrative, dialogue, design proposals) — but every claim about an artifact inside that output is still tool-backed. Decision test: if you introduce a number, name, path, SHA, or Ukrainian word that wasn't in your very recent tool output and you didn't run a tool to confirm — STOP, run it. Full rule + anti-pattern catalog + per-agent enforcement: **`docs/best-practices/deterministic-over-hallucination.md`**. Applies to: Claude · Codex · Gemini · all dispatched sub-agents · all sessions.
 
 ## #M-3 — DON'T ASSUME COLLEAGUE TOOL CAPABILITIES OR WORK STATE — ASK
-Don't design mitigations around imagined gaps in Codex/Gemini tooling (ask via `ab ask-codex` / `ab ask-agy` first — one round-trip), and don't classify uncommitted edits in a colleague's worktree as phantom or suspicious: the default reading of modifications you didn't make is WIP on their own dispatch. Codex Desktop runs `UserPromptSubmit` hooks but does not inject `additionalContext` (only Codex CLI does); its own Automations feature is the polling primitive there. ADR addendum: `docs/decisions/pending/2026-05-06-multi-ui-channel-participation.md`.
+Don't design mitigations around imagined gaps in Codex/Gemini tooling (ask via `ab ask-codex` / `ab ask-agy` first — one round-trip), and don't classify uncommitted edits in a colleague's worktree as phantom or suspicious: the default reading of modifications you didn't make is WIP on their own dispatch. Codex Desktop runs `UserPromptSubmit` hooks but does not inject `additionalContext` (only Codex CLI does); its own Automations feature is the polling primitive there.
 
 ## #M-2 — HTML/MD BY FLOW DIRECTION (REFINED 2026-05-09 morning)
 **Format depends on the flow, not the file:**
@@ -44,7 +44,6 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 
 | Task | Tool + model |
 |---|---|
-| Inline code edit ≤5 LOC, only when fixing a CI failure I just caused | Me, current model |
 | Code change >5 LOC, mechanical / pattern / fixtures | Dispatch — 3:3:3 split: codex (`--agent codex --mode workspace-write --worktree --base main`), claude-headless (architectural / cross-file), gemini (tests, schema migrations, docs-near-code). NOT gemini for: cross-file refactor, security/concurrency, GH-auth, mass mechanical |
 | Wiki/content writing | `dispatch.py dispatch --model <catalog-model> --agent agy` (Gemini sub, unmetered) |
 | Adversarial review of design / ADR / architecture | `dispatch.py dispatch --agent claude --mode read-only --model <formal CF pin from model-assignment.md> --effort xhigh` (headless, separate billing) |
@@ -52,9 +51,8 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 | Single-shot code review without need to commit | `ab ask-codex` or another qualified cross-family seat. Native AGY admits low/medium risk code reviews through `dispatch.py`; high/critical, infra and security reviews exclude Gemini. The bridge refuses Gemini code reviews. Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
 | Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
 | Status check on running dispatches | Monitor API curl, never inline file scans |
-| Memory / rules / Claude-owned text | Me, inline. Claude's brain = Claude's job. Never deflect to user. |
 
-If I'm about to write code inline and it doesn't match the first row, STOP and dispatch instead. The dispatch script enforces worktree + commits — memory does not. Note: `--base main` not `--base origin/main` — runtime prepends `origin/` itself.
+If I'm about to write code inline, STOP and dispatch instead. The dispatch script enforces worktree + commits — memory does not. Note: `--base main` not `--base origin/main` — runtime prepends `origin/` itself.
 
 ## #0J — LOCAL REFERENCE CORPUS IS RIGHT THERE — STOP ASKING FOR MORE (2026-05-06)
 Before EVER asking the user for additional pedagogical material, check: `docs/references/private/` (ULP 1-00→4-00 + Ohoiko June preview + 1000 words + 500 verbs, gitignored), `docs/references/textbooks-txt/` (committed), `data/textbooks/` (561 MB PDFs, gitignored), MCP `mcp__sources__search_text`. Anna Ohoiko rule: align with pedagogy/methodology, never "book-based"; her materials are IP; unknown constructs may appear before explicit teaching to avoid shallow content; never copy/quote/frame materials as source text. User quote: "we have so many content, but it is never enough for you."
@@ -64,7 +62,7 @@ Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off q
 
 ## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
 **Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
-- Run CF on the pushed branch (the PR may open before approval so CI runs, OO-53; steps: the `full-send` / `review-loop` skills) — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** resolve the qualified reviewer lane/model with `scripts.review.closeout_cli ... resolve-reviewer` (outside the author's model family), then `printf '%s\n' "Cross-family review of branch <branch> at head <SHA>: verdict + code-review-findings.v1 findings." | .venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <resolved-model> --task-id review-<id> --prompt-file - --mode read-only --worktree --branch <branch> --pinned-head <SHA> --require-review-verdict --effort high`. This uses toolful native `dispatch.py dispatch`/wait. Dispatch v2 resolves a locally available branch or explicit SHA; it does not fetch or freeze the live remote branch. Verify the pushed tip before launch and again before publishing the verdict. Verify settled task `pinned_head` and `worktree_base_sha` against the unchanged pushed tip (ask stdout is reply text, not SHA evidence). Only completed qualified exact-head CF APPROVE counts as approval; once the PR exists, post that review with `.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>`. Follow `skills/drive-epic/references/review-merge-cleanup.md` §6 for settlement, detached dispatch and route-required silence timeouts.
+- Run CF on the pushed branch (the PR may open before approval so CI runs, OO-53; steps: the `full-send` / `review-loop` skills) — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** resolve the qualified reviewer lane/model with `scripts.review.closeout_cli ... resolve-reviewer` (outside the author's model family), then `printf '%s\n' "Cross-family review of branch <branch> at head <SHA>: verdict + code-review-findings.v1 findings." | .venv/bin/python -m lu_machinery.dispatch dispatch --agent <lane> --model <resolved-model> --task-id review-<id> --prompt-file - --mode read-only --worktree --branch <branch> --pinned-head <SHA> --require-review-verdict --effort high`. This uses toolful native `dispatch.py dispatch`/wait. Dispatch v2 resolves a locally available branch or explicit SHA; it does not fetch or freeze the live remote branch. Verify the pushed tip before launch and again before publishing the verdict. Verify settled task `pinned_head` and `worktree_base_sha` against the unchanged pushed tip (ask stdout is reply text, not SHA evidence). Only completed qualified exact-head CF APPROVE counts as approval; once the PR exists, post that review with `.venv/bin/python -m lu_machinery.review.record_cf_verdict --task-id review-<id> --pr <N>`. Follow `skills/drive-epic/references/review-merge-cleanup.md` §6 for settlement, detached dispatch and route-required silence timeouts.
 - Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without CF review; operator had to ask.
 - After exact-head CF pass + green blocking CI on that same head: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). A moved head requires fresh CF and CI; hold for CF fail or blocking CI.
 
@@ -134,7 +132,7 @@ Reviewer dim scoring low? FIRST read pipeline code producing the writer's input 
 School Grade 1-4 ≠ A1/A2. Orthogonal. ADR-007 killed grade→CEFR SQL filter. The 24K-chunk textbook corpus is L1 native education; A1/A2 thin-source is absence-of-L2-pedagogy, not filter problem.
 
 ## #0D — CORPUS BOOTSTRAP = A1/A2 BUILD-ORDER PLAN
-NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bootstrap.md` BEFORE discussing. Flow: UK wikis → UK A1/A2 → those become source → English A1/A2 immersion against enriched corpus.
+NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Flow: UK wikis → UK A1/A2 → those become source → English A1/A2 immersion against enriched corpus.
 
 ## Critical Behavioral Rules (condensed)
 - **PRE-COMMIT AUTO:** Done + tests pass → ruff, then request the cross-family review per #0H (`resolve-reviewer` picks the seat). User never reminds.
@@ -143,19 +141,16 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
-- **WORD TARGETS (legacy module workflows):** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand. Core fresh-build lessons follow their own sizing contract (`non-negotiable-rules.md` rule 4).
 
-## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
-**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
+## Fleet Comms + Delegation + Local API Cold-Start (2026-07-09)
+**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven and disk-bound, not fixed caps. Use the full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
-- One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)
+- One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-cursor...)
 - Multi-agent discuss: `discuss <chan> "topic-or-stdin" --with codex,claude,agy --max-rounds 3 [--review]`
 - Broker: inbox / send / post / channel / converse / process-*
 
 **Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --task-id bar --prompt-file docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Providers: codex/claude/agy/cursor/muse/opencode/hermes; `grok` is not an agent (use `--agent cursor --model grok-4.7-high`). Follow with `status`, `wait`, `list`.
-
-**CodexBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. (Agents query `.venv/bin/python -m scripts.fleet.capacity_pick` and `.venv/bin/python -m scripts.fleet.usage show`; `codexbar usage` is retired.)
 
 Project-side:
 - `... ai_agent_bridge/__main__.py codex-usage`
@@ -178,9 +173,3 @@ Project-side:
 **Dependabot:** `.github/dependabot.yml` (weekly Mon, 7d cooldown, groups + targeted ignores for pins like pydantic-core, lxml, starlette...). Triage via `gh pr list --search dependabot`, view #N, verify (only lock changes common), merge if CI green + safe. Security-audit.yml for visibility.
 
 See: `docs/guardrails/agent-fleet-tooling.md`, `docs/MONITOR-API.md`, `agents_extensions/shared/quick-ref/monitor-api.md`, `docs/best-practices/agent-activity-matrix.md`, `docs/best-practices/agent-cooperation.md`
-
-## See Also (topic files in `memory/`)
-- `gpt-5.5-rollout.md`, `agent-debug.md`, `data-inventory.md`, `cooperation-tooling.md`, `l1-uk-corpus-bootstrap.md`
-- `textbook-research.md`, `textbook-exercises.md`, `reference_ukrainian_dictionaries_online.md`, `reference_awesome_ukrainian_nlp.md`
-- `project_goals_and_frustrations.md`, `project-pitch.md`, `user_teachers_and_learning.md`, `wiki-knowledge-base-plan.md`, `fact-corrections.md`
-- `feedback_*.md` — pre-V7-reboot lessons (Mar-Apr 2026), kept for reference; new feedback goes inline here

@@ -29,8 +29,11 @@ from typing import Any, Protocol
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-from scripts.common.repo_root import project_interpreter
+# isort: split
+
+from lu_machinery.common.repo_root import project_interpreter
 
 SCHEMA = "atlas-job.v1"
 RESULT_SCHEMA = "atlas-job-result.v1"
@@ -989,7 +992,7 @@ def _python_bin() -> str:
     override = os.environ.get("ATLAS_RE_ENRICH_PYTHON")
     if override:
         return override
-    return str(project_interpreter())
+    return str(project_interpreter(Path(__file__).resolve().parents[3]))
 
 
 def _expand_env_value(value: str, env: dict[str, str]) -> str:

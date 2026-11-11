@@ -27,6 +27,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.artifacts import write_artifact
+from lu_machinery.storage.paths import artifact_path, load_manifest
+
 from scripts.atlas.atlas_db import migrate_manifest, validate_alias_targets
 from scripts.audit import generate_search_index
 from scripts.lexicon import enrich_manifest
@@ -39,9 +43,6 @@ from scripts.lexicon.enrich_manifest import (
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path, load_manifest
 
 DEFAULT_CANDIDATES_PATH = PROJECT_ROOT / "data/lexicon/stem_slice_2a_candidates.json"
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"

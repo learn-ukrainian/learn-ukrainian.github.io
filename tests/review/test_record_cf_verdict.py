@@ -50,6 +50,58 @@ def test_trial_never_becomes_review_of_record(tmp_path, monkeypatch, marker):
     assert review_records(tasks, repository="owner/repo") == []
 
 
+def _misnamed_copy(tasks, name, **updates):
+    record = json.loads((tasks / "review-one.json").read_text())
+    (tasks / name).write_text(json.dumps({**record, **updates}))
+
+
+def test_saved_wait_output_beside_its_record_neither_blocks_nor_counts(tmp_path):
+    """Defect class: a worker's saved `dispatch.py wait` stdout stopped every review fleet-wide."""
+    from scripts.review.review_lineage import review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    _misnamed_copy(tasks, "review-one.review-wait.json", status="running")
+    assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
+
+
+def test_renamed_review_record_with_no_correctly_named_record_refuses(tmp_path):
+    """Defect class: a renamed or orphaned review record silently drops out of the lineage."""
+    from scripts.review.review_lineage import LineageRefused, review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    _misnamed_copy(tasks, "review-one.saved.json", run_nonce="nonce-2")
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity and no correctly named record"):
+        review_records(tasks, repository="owner/repo")
+    (tasks / "review-one.saved.json").unlink()
+    (tasks / "review-one.json").rename(tasks / "review-one.saved.json")
+    with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity and no correctly named record"):
+        review_records(tasks, repository="owner/repo")
+    # A legacy or schema-1 record under another name never vouches for the copy (round-1 F1).
+    for anchor in ({}, {"schema_version": 1}):
+        (tasks / "unrelated.json").write_text(json.dumps({**anchor, "task_id": "review-one", "run_nonce": "nonce-1"}))
+        with pytest.raises(LineageRefused, match=r"review-one\.saved\.json has invalid task identity"):
+            review_records(tasks, repository="owner/repo")
+
+
+def test_copies_of_other_repository_and_non_review_records_do_not_refuse(tmp_path):
+    """Defect class: a stray copy of any record beside its original blocks this repository's reviews."""
+    from scripts.review.review_lineage import review_records
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="other-review", schema_version=2, pr=7, run_nonce="nonce-2", repository="owner/other")
+    (tasks / "other-review.wait.json").write_text((tasks / "other-review.json").read_text())
+    worker = json.dumps({"schema_version": 2, "task_id": "worker", "run_nonce": "nonce-3", "status": "done"})
+    (tasks / "worker.json").write_text(worker)
+    (tasks / "worker.status.json").write_text(worker)
+    # A list or object nonce in any record is never hashed into a crash (round-1 F2).
+    (tasks / "listed.json").write_text(json.dumps({"schema_version": 2, "task_id": "listed", "run_nonce": []}))
+    write_task(tasks, task_id="mapped", schema_version=2, pr=8, run_nonce={}, repository="owner/other")
+    write_task(tasks, schema_version=2, pr=42, run_nonce="nonce-1")
+    assert [path.name for path, _ in review_records(tasks, repository="owner/repo")] == ["review-one.json"]
+
+
 @pytest.fixture
 def scanned_recorder(monkeypatch, tmp_path):
     """Exercise the supported publisher; fake only GitHub reads and transport."""

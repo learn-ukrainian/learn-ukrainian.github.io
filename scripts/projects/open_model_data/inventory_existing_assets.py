@@ -53,10 +53,9 @@ WORD_PATTERN = r"[^\W\d_]+(?:[’'][^\W\d_]+)*"
 WORD_RE = re.compile(WORD_PATTERN, re.UNICODE)
 
 from learn_ukrainian_v4_runtime.inventory_existing_assets import PRIVATE_TEXTBOOK_SOURCES
-
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PRIVATE_RAW_PATHS = {
     "anna-ohoiko-1000-words-2nd-ed": "private_curriculum/ohoiko/1000-words-2nd-ed.jsonl",

@@ -24,8 +24,9 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 

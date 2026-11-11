@@ -573,6 +573,27 @@ models:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
+  claude-fable-5-2:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    # #9583: no architecture/advisory or review role; launchable model only.
+    # Explicit pin only (C-4965); no resolver, ladder or default routes it.
+    roles: [long_horizon_coding, orchestration]
+    transports: [native_claude]
+    strengths: [long_horizon_work, always_on_thinking]
+    weaknesses: [no_zero_data_retention, forced_tool_choice_unsupported]
+    notes: >-
+      Operator order C-4965 (2026-11-09): Fable 5.2 is prepared for use by explicit
+      pin only and is not routed by default until the operator decides after
+      evaluation. Probe 2026-11-09 (Claude Code 2.1.321, account a):
+      claude -p --model claude-fable-5-2 succeeded with modelUsage key
+      claude-fable-5-2. Like claude-fable-5-1 (#9583) it holds no advisory,
+      approval, review or critique role and is not a last resort for any of them.
+      claude-fable-5-1 stays active alongside it. Thinking is always on and the
+      API default effort is high; it requires 30-day data retention (no ZDR).
+    sources:
+      - https://platform.claude.com/docs/en/models/fable-5-2/overview
   claude-opus-5-5:
     routing_wire_ids:
       native_claude: claude-opus-5-5
@@ -649,7 +670,7 @@ models:
     strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
     weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver]
     notes: >-
-      #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
+      #9996: routine lockfile, pointer and smoke work; mechanical
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
       owned paths and non-Ukrainian inputs. #10919: bounded implementation also
@@ -730,42 +751,102 @@ models:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
   gemini-4-carbon:
-    family: google
-    tier: compatibility
-    lifecycle: hold
-    roles: [inventory_only]
-    transports: []
-    strengths: [inventory_placeholder]
-    weaknesses: [unreleased, unofficial_evidence_only, provisional_id, unavailable_on_agy]
-    notes: >-
-      Unreleased model reported only by unofficial sources. The catalog id
-      gemini-4-carbon is provisional, not a verified provider selector or wire id.
-      A live `agy models` probe on 2026-10-29 listed no Carbon selector.
-      No execution, resolver, ladder, dispatch or role placement is authorized.
-      Promotion requires a new live `agy models` probe listing the exact Carbon
-      selector, recording the real wire id(s) from that listing, then designated
-      approval before lifecycle: active and any role or ladder placement.
-    sources:
-      - https://testingcatalog.com/gemini-4-carbon-early-test-results
-      - https://letsdatascience.com/news/gemini-4-carbon-checkpoint-reportedly-appears-on-chatbot-are-ee165ebf
-      - https://pasqualepillitteri.it/de/news/22309/gemini-4-carbon-leak-mitarbeiter-opus-5-5
-  gemini-4-argon-high:
+    routing_wire_ids:
+      agy: gemini-4-carbon-medium
     family: google
     tier: frontier_practical
-    lifecycle: retired
-    aliases: [gemini-4-argon-medium, gemini-4-argon-low]
-    # Direct listed AGY slugs. Not a base name plus an effort suffix.
-    # Historical trial metadata. Retirement bars all execution.
-    roles: [explicit_bakeoff_only]
-    transports: []
-    strengths: [listed_agy_selector]
+    lifecycle: active
+    # The listed AGY selectors are separate wire values. -medium is the routing
+    # wire id (the Gemini work route); -high and -low are runtime ids, which dispatch
+    # passes through unchanged and identity attestation recognises, for explicit
+    # selection only. They are not aliases: dispatch rewrites an alias to the wire
+    # id, so an alias would run -medium.
+    runtime_model_ids: [gemini-4-carbon-high, gemini-4-carbon-low]
+    # Work roles only. Review, Ukrainian review and advisory roles stay with the
+    # existing seats until a held-out review test reports.
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
+    transports: [agy]
+    strengths: [listed_agy_selector, one_million_token_context, terminal_bench_coding]
     weaknesses:
-      - supervised_trial_not_advisor_quality
+      - provider_listing_is_not_qualification
+      - no_published_code_review_benchmark
+      - no_published_ukrainian_quality_result
+      - more_thinking_tokens_than_argon
+      - occasional_slowness_or_timeouts
+      - cyber_scores_via_fairwind_program_access
+      - agy_selector_thinking_level_mapping_unverified
+    notes: >-
+      Operator decision 2026-11-10: Gemini 4 Carbon at medium is the Gemini work
+      route over AGY, preferred over Gemini 4 Argon, which is the second Gemini
+      option; both are used on medium and measured in use (hallucination, code
+      writing, pricing; Ukrainian later). Live `agy models` probes on 2026-11-10
+      (19:50Z and 20:03Z) list gemini-4-carbon-high, gemini-4-carbon-medium and
+      gemini-4-carbon-low. Dispatch: `scripts/dispatch.py dispatch --agent agy
+      --model gemini-4-carbon-medium`; -high and -low are explicit selections
+      only. Review ladders, review seats, the Ukrainian review route and advisory
+      roles are unchanged until the held-out review test reports; Carbon holds no
+      review role, so it is refused for any review of record. The certified
+      Gemini driver seat (orchestrator_seats.agy) is unchanged. Model card
+      (published November 2026): based on Gemini 4 Argon, one 1M-token window
+      shared by input and output, knowledge cutoff March 2026, more thinking
+      tokens than Argon with configurable thinking levels, occasional slowness or
+      timeouts and higher token use at higher thinking levels; Terminal-Bench 4.0
+      (AA) 65.2% in Google's table; its cybersecurity results reflect access
+      through the Fairwind Program. Gemini API docs: API id gemini-4-carbon,
+      generally available 2026-11-10, thinking levels low, medium and high
+      (default medium). Google publishes no code-review benchmark and no
+      Ukrainian result, and does not state how the AGY selectors map to API
+      thinking levels. A 2026-10-29 probe listed no Carbon selector; the earlier
+      leak-based sources are superseded by the official card.
+    sources:
+      - https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-4-Carbon-Model-Card.pdf
+      - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/
+      - https://aistudio.google.com/docs/changelog
+      - https://aistudio.google.com/docs/thinking
+  gemini-4-argon:
+    routing_wire_ids:
+      agy: gemini-4-argon-medium
+    family: google
+    tier: frontier_practical
+    lifecycle: active
+    # Same selector shape as gemini-4-carbon. The former catalog id
+    # gemini-4-argon-high still resolves here as an effort variant.
+    runtime_model_ids: [gemini-4-argon-high, gemini-4-argon-low]
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
+    transports: [agy]
+    strengths: [listed_agy_selector, one_million_token_context, terminal_bench_coding]
+    weaknesses:
+      - second_to_carbon_for_gemini_work
       - not_admitted_for_critical_security_or_advisor
       - provider_listing_is_not_qualification
+      - no_published_code_review_benchmark
+      - no_published_ukrainian_quality_result
+      - agy_selector_thinking_level_mapping_unverified
+    notes: >-
+      Operator decision 2026-11-10: Gemini 4 Argon at medium is the second Gemini
+      work option over AGY, used after Gemini 4 Carbon at medium and never ahead
+      of it. Live `agy models` probes on 2026-11-10 (19:50Z and 20:03Z) list
+      gemini-4-argon-high, gemini-4-argon-medium and gemini-4-argon-low.
+      Dispatch: `scripts/dispatch.py dispatch --agent agy --model
+      gemini-4-argon-medium`; -high and -low are explicit selections only.
+      Review ladders, review seats, the Ukrainian review route and advisory roles
+      are unchanged until the held-out review test reports; Argon holds no review
+      role. History: catalog id gemini-4-argon-high until 2026-11-10; retired by
+      operator decision 2026-10-23 (not subscribed; never route or select); a
+      2026-11-09 dispatch failed agy_model_identity_unverified because the
+      retired row carried no AGY wire id; the 2026-11-10 decision reinstates it.
+      Model card (published 2026-10-13): sparse mixture-of-experts, combined
+      input-output window up to 1M tokens, knowledge cutoff March 2026;
+      Terminal-bench 4.0 57.4% and DeepSWE v1.1 77.9% in Google's table. Gemini
+      API docs: API id gemini-4-argon, generally available 2026-10-13, thinking
+      levels low, medium and high (default medium). Google publishes no
+      code-review benchmark and no Ukrainian result, and does not state how the
+      AGY selectors map to API thinking levels.
     sources:
+      - https://deepmind.google/models/model-cards/gemini-4-argon/
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/
-    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
+      - https://aistudio.google.com/docs/changelog
+      - https://aistudio.google.com/docs/thinking
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
@@ -831,6 +912,8 @@ models:
     # Ukrainian seats are Gemini and Sol (scripts/review/ukrainian_seats.py).
     # Review routes list only code and infra profiles; the resolver refuses xAI.
     roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
+    # The native Grok CLI reports this exact runtime id; no other -build variant is an alias.
+    aliases: [grok-4.7-build]
     runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]

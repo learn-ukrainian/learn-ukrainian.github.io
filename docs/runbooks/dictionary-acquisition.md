@@ -16,7 +16,8 @@ The companion keeps its one-request transport local: internal legacy retries
 and process-local pacing cannot durably reserve every attempt across jobs. It
 reuses dictionary identities, lookup normalization, URL construction, identifying
 headers and the existing article parsers. There is no transport framework or
-parser fork. Valid 200s yield positives; unusable 200s stop as parse errors; only
+parser fork. Valid 200s yield positives; one unusable 200 is recorded on that
+row and the job continues; five consecutive unusable 200s stop as a parse error; only
 404 proves a miss; 401/403 and other unsupported non-200s stop immediately;
 408/425/429/5xx and network exceptions are transient. Numeric HTTP evidence is
 retained even when legacy storage labels are lossy. Redirects are unsupported.
@@ -190,8 +191,11 @@ and pin the checkout for the run.
 A checkout whose transport identity differs from the one frozen in the job
 (including any job frozen before the identity was narrowed to these functions,
 which hashed the whole file) is refused with `transport_changed` (exit 2) and
-makes no request. Review the change to those functions, stop the job, then accept
-it explicitly with the original options:
+makes no request. A checkout whose parser code hash differs is refused with
+`frozen_input_mismatch` (exit 2) and makes no request, including when the
+transport identity is unchanged. `run`, `resume` and `supervise` all refuse that
+parser drift until `rebind` has stored the new hash. Review the change, stop the
+job, then accept it explicitly with the original options:
 
 ```bash
 "$ACQ_PY" -m scripts.ingest.dictionary_acquisition rebind \
@@ -200,18 +204,44 @@ it explicitly with the original options:
 ```
 
 `rebind` makes no request. It takes the same two locks as `resume`, so it refuses
-an active writer or supervisor. It requires every other frozen field and the
-stored targets to match, rewrites only the stored transport identity, and records
-a `transport_rebind` event and a `transport_rebinds` row holding the old and new
-hashes. Unlike `resume` it resets nothing: results, per-target attempts, launch
-counts and the no-progress budget stay exactly as they were. Running it again is a
-no-op. Then rerun the same `supervise` command from the new checkout.
+an active writer or supervisor. It accepts changed transport and parser hashes and
+pacing fields (`delay`, `timeout`, `backoff`, `max_attempts`, `max_restarts`),
+subject to the existing bounds, and refuses every other frozen field and any
+stored-target difference. It records one `transport_rebind` event and one
+`transport_rebinds` row with the old and new hashes and pacing values, adding
+missing audit columns in place for older jobs. Unlike
+`resume` it resets nothing: results, per-target attempts, launch counts and the
+no-progress budget stay exactly as they were. Already-positive, reused and
+proven-404 rows are not reparsed. Running it again when the spec already matches
+is a no-op.
 
-To move a running job onto newer code: stop it with Ctrl-C (or `SIGTERM`), wait
-for the process to exit, run `rebind` from the new checkout, then start the
-original `supervise` command from the new checkout. `status` needs no manifest and reconciles from
-the durable store. A busy writer returns conflict instead of competing for data;
-read the last atomic `status.json` until that writer exits.
+To move a running job onto a checkout that changed only the transport identity:
+stop it with Ctrl-C (or `SIGTERM`), wait for the process to exit, run `rebind`
+from the new checkout, then start the original `supervise` command from the new
+checkout. Do not `resume` for a transport-only change; that would reopen
+unresolved rows.
+
+After a parser fix, `rebind` alone leaves a `parse_error` latch and the recorded
+unusable rows in place, so the job still will not continue. Run `rebind`, then
+`resume`, then the original `supervise` command. `resume` reopens unusable rows and other unresolved rows, so they are fetched
+again with the fixed parser. It
+does not reparse rows already stored as positive, reused or a proven 404. The
+parser fix changes `source_url` on rows fetched after it: the stored locator is
+the https URL the job requested. Rows already stored keep the locator they have.
+
+```bash
+"$ACQ_PY" -m scripts.ingest.dictionary_acquisition rebind \
+  --root "$ACQ_ROOT" --dictionary vts --manifest "$ACQ_MANIFEST" \
+  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+"$ACQ_PY" -m scripts.ingest.dictionary_acquisition resume \
+  --root "$ACQ_ROOT" --dictionary vts --manifest "$ACQ_MANIFEST" \
+  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+```
+
+Then start the original `supervise` command from the new checkout. `status` needs
+no manifest and reconciles from the durable store. A busy writer returns conflict
+instead of competing for data; read the last atomic `status.json` until that
+writer exits.
 
 `--seed-cache "$REVIEWED_CACHE"` is optional for slovnyk. It only reads positive
 rows with the current cache schema, matching lemma/lookup/dictionary, valid direct
@@ -222,13 +252,14 @@ refetched; null is not proof of a 404. Seed files are never rewritten. The seed
 snapshot is retained in staging after creation; changing a seed file later does
 not alter an existing job.
 
-`run` processes resolved targets until it encounters a transient failure or a
-terminal stop. `supervise` launches `run` and retries transient/unexpected crash
+`run` records each unusable article and continues until a transient failure, a
+blocked response, five consecutive unusable articles, or the end of the target
+list. `supervise` launches `run` and retries transient/unexpected crash
 exits with a quiet interval of at least two seconds. Per-target attempts and
 supervisor launches are reserved **durably before execution**. A restart of either
 process cannot reset the budget. Defaults allow four attempts per unresolved
 target and four child launches **without durable target progress** (initial plus
-three restarts). Each committed positive article or proven 404 starts a new
+three restarts). Each committed positive article, proven 404, or recorded unusable article starts a new
 no-progress launch budget; transient results, in-flight attempts and process
 startup do not. Launch reservations and resolved outcomes share the persisted
 event sequence, so progress remains effective across a supervisor restart,
@@ -244,21 +275,32 @@ lifetime launch or request-attempt history. Retryable network failures and
 | 0 | `complete`, or successful `status`/explicit `resume`; supervisor stops |
 | 2 | Invalid arguments, dictionary, storage, frozen-input mismatch; stop |
 | 3 | First 401/403 or other unsupported HTTP/redirect; `blocked`, stop immediately |
-| 4 | HTTP 200 without a usable parsed article; `parse_error`, stop |
+| 4 | Five consecutive HTTP 200s without a usable article; `parse_error`, reason `consecutive_unusable_articles`, stop |
 | 5 | Persistent attempt or supervisor budget exhausted; stop |
 | 6 | Conflicting writer/supervisor; stop |
 | 75 | One transient result from `run`; supervisor may retry within persisted caps |
 | Unexpected child exit | Supervisor may restart within persisted caps, after checking durable terminal state |
 
-Blocked, parse-error, exhausted and complete jobs do not automatically resume,
-including when a child commits a terminal state and dies before returning its
-exit code. The failed wordid/lemma stays unresolved; checkpoint does not advance.
-A 404 is the only observed HTTP miss. Parser/schema ambiguity stops rather than
-guessing or changing parser semantics. Raw response bodies and request secrets
-are never emitted to logs/status; successful articles live only in local staging.
+Blocked, consecutive-parse-error, exhausted and complete jobs do not automatically
+resume, including when a child commits a terminal state and dies before returning
+its exit code. A job stopped by the older single-article rule (`parse_error`,
+reason `unusable_article`, fewer than five consecutive unusable rows) continues
+on the next `run` or `supervise`; those rows stay recorded and are not fetched
+again. Five consecutive unusable articles latch `parse_error` with reason
+`consecutive_unusable_articles`. An unusable article is not a miss: a 404 is the
+only observed HTTP miss. The checkpoint advances over positives, reused rows,
+proven 404s and recorded unusable articles, and it stops on anything still open.
+The parser is unchanged; an unusable article is stored, not reinterpreted.
+Raw response bodies and request secrets are never emitted to logs or status.
+The response text of an unusable article is kept only in that row's payload in
+`staging.sqlite3` (a valid UTF-8 prefix of at most 1 MiB of bytes, with the SHA-256 of the full text).
+Successful articles live only in local staging.
 
 After the driver has investigated a stop and the operator authorizes another
-attempt, use an **explicit** resume action with the original frozen options:
+attempt, use an **explicit** resume action with the original frozen options.
+If the checkout's parser code hash or transport identity differs from the frozen
+job, run `rebind` first. `resume` uses the same admission check and refuses that
+drift before it clears any row.
 
 ```bash
 "$ACQ_PY" -m scripts.ingest.dictionary_acquisition resume \
@@ -268,19 +310,25 @@ attempt, use an **explicit** resume action with the original frozen options:
 
 `resume` makes no requests. It resets unresolved attempt/no-progress launch budgets, records
 an `operator_resume` event and preserves resolved articles/misses and historical
-events. It refuses an active writer or supervisor. Then deliberately launch the
+events. Recorded unusable rows are unresolved for `resume`: it clears them so a
+parser fix can refetch them. A plain `run` does not. It refuses an active writer
+or supervisor. Then deliberately launch the
 same reviewed `supervise` command again. The supervisor never passes `resume` to
 a child. A new root requires separate driver scheduling so the shared-host budget
 is preserved; do not use a new root to circumvent a stop or reset a budget.
 
 ## Coverage and evidence
 
-`counts.positive`, `miss`, `pending`, `error`, `reused` partition the frozen
-denominator and are recomputed from durable result rows. `checkpoint` is the
-length of the contiguous resolved prefix; official status also names `next_wordid`.
+`counts.positive`, `miss`, `pending`, `error`, `reused`, `unusable` partition the
+frozen denominator and are recomputed from durable result rows. `unusable` is a
+recorded article the parser could not use. `error` is every other non-success,
+non-pending row (blocked, exhausted, transient). `checkpoint` is the length of
+the contiguous classified prefix (positive, reused, miss, unusable); official
+status also names `next_wordid`.
 Positive official rows are unique by requested wordid. `complete` means every
-target in this manifest/range has a positive/reused article or proven 404, including
-the possible all-miss case; it never claims all upstream articles were acquired.
+target in this manifest/range has a positive/reused article, a proven 404, or a
+recorded unusable article, including the possible all-miss case; it never claims
+all upstream articles were acquired.
 
 `request_attempts` counts historical durable attempt reservations, including
 interrupted requests; it cannot prove that every reserved request reached upstream.
@@ -288,8 +336,9 @@ interrupted requests; it cannot prove that every reserved request reached upstre
 `retry` reports the next unresolved target's attempts/deadline.
 `retry.supervisor_launches` and `supervisor_restarts` are lifetime counters;
 `retry.no_progress_launches` is the current launch budget used, bounded by
-`retry.max_no_progress_launches` (`max_restarts + 1`). A resolved target resets
-only that current launch budget, never per-target attempts or historical counts.
+`retry.max_no_progress_launches` (`max_restarts + 1`). A positive, a proven 404, or a
+recorded unusable article resets only that current launch budget, never per-target
+attempts or historical counts.
 The structured log includes the same retry and attempt counters as status.
 Elapsed time includes interruptions. ETA is `null` until at least two
 network targets resolve, and remains unknown for terminal errors. A supported ETA

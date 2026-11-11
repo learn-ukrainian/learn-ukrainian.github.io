@@ -30,8 +30,12 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.agent_runtime.registry import AGENTS
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.task_store_paths import tasks_dir
+from lu_machinery.dispatcher.store import read as read_task_record
+from lu_machinery.orchestration.task_record_store import locate_task_record
 
-from scripts.agent_runtime.registry import AGENTS
 from scripts.build.fresh.draft_schema import (
     DraftError,
     DraftValidationError,
@@ -47,11 +51,7 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
-from scripts.common.jsonl import jsonl_lines
-from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
-from scripts.dispatcher.store import read as read_task_record
-from scripts.orchestration.task_record_store import locate_task_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy")

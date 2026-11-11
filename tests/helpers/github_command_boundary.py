@@ -9,13 +9,14 @@ import pytest
 
 def install_github_command_boundary(monkeypatch):
     """Point ``github_client.run`` at ``subprocess.run`` without a collection import."""
-    from scripts.common import github_client
+    import importlib
 
     def run(args, **kwargs):
         kwargs.pop("fresh", None)
         return subprocess.run(args, timeout=kwargs.pop("timeout", 30), **kwargs)
 
-    monkeypatch.setattr(github_client, "run", run)
+    for name in ("scripts.common.github_client", "lu_machinery.common.github_client"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(importlib.import_module(name), "run", run)
 
 
 @pytest.fixture

@@ -28,6 +28,9 @@ from _v4_linguistic_context_fixture import stored_preparation
 from learn_ukrainian_v4_runtime import child_runtime, scoped_store, service_runtime, sources_handlers, sources_transport
 from learn_ukrainian_v4_runtime.operation_auth import digest
 from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+)
 from test_v4_preserved_provenance import LexicalResources
 
 CHILD = """#!/runtime/py/bin/python
@@ -371,9 +374,10 @@ def produce_author_record(root, pg, monkeypatch, wheel):
     from learn_ukrainian_v4_runtime import v4_trust_authority as trust
     from learn_ukrainian_v4_runtime.operation_auth import canonical_bytes
     from learn_ukrainian_v4_runtime.operation_store import OperationStore
+    from lu_machinery.fleet_comms.request_executor import (
+        RequestExecutor,
+    )
     from test_v4_operation_lifecycle import principal, role_connection
-
-    from scripts.fleet_comms.request_executor import RequestExecutor
 
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
@@ -381,7 +385,8 @@ def produce_author_record(root, pg, monkeypatch, wheel):
     try:
         with RequestExecutor(root=root) as executor:
             request = executor.create_request(recipient="claude", body="source-free operation")
-            executor.authorize_author_execution(
+            authorize_author_execution(
+                executor,
                 request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
             )
         with role_connection(pg, "hramatka_v4_control_writer") as conn:

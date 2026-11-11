@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.repo_root import main_checkout_root
 
 from ..errors import require
 from .ua_gec_split import UaGecAttribution, UaGecFileStore

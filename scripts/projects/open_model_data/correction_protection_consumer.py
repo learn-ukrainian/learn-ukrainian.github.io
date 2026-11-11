@@ -24,12 +24,13 @@ from jsonschema import Draft202012Validator
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.storage.artifacts import write_artifact_set
+from lu_machinery.storage.paths import artifact_set, manifest_path
+
 from scripts.projects.open_model_data import correction_factory as evaluation
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
-from scripts.storage.artifacts import write_artifact_set
-from scripts.storage.paths import artifact_set, manifest_path
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"

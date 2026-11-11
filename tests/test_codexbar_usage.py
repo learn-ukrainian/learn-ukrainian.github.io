@@ -1891,39 +1891,92 @@ def test_muse_fresh_projection_keeps_binding_headroom():
     assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] == 70.0
 
 
-def test_muse_probe_invokes_supported_codexbar_interface(monkeypatch):
+def test_muse_probe_reads_muse_usage_json(monkeypatch):
     import subprocess
 
     captured: dict = {}
+    now_ms = int(time.time() * 1000)
+    payload = {
+        "allowance": {
+            "asOfMs": now_ms,
+            "tier": _MUSE_EMAIL,
+            "weekly": {"usedPercent": 30, "resetsAtMs": now_ms + 5 * 24 * 3600 * 1000},
+            "window": {"usedPercent": 10, "resetsAtMs": now_ms + 300 * 1000},
+        }
+    }
 
     def fake_run(argv, **kwargs):
         captured["argv"] = argv
         captured["kwargs"] = kwargs
-        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps([_MUSE_KNOWN]), stderr=_MUSE_EMAIL)
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payload), stderr=_MUSE_EMAIL)
 
+    from tests.opsec_fixtures import TOKEN
+
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
     monkeypatch.setattr(
-        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar" if name == "codexbar" else None
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None
     )
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
     record = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
-    assert captured["argv"] == [
-        "/usr/bin/codexbar",
-        "usage",
-        "--provider",
-        "muse",
-        "--json",
-        "--no-credits",
-    ]
+    assert captured["argv"] == ["/usr/bin/muse", "usage", "--json"]
     assert captured["kwargs"]["stdin"] is subprocess.DEVNULL
+    usage_env = captured["kwargs"]["env"]
+    assert usage_env["MUSE_NO_AUTO_UPDATE"] == "1"
+    assert "GH_TOKEN" not in usage_env
+    assert TOKEN not in usage_env.values()
+    assert record["status"] == "healthy"
+    assert record["source"] == "muse_usage"
+    assert record["weekly_used_pct"] == 30.0
     assert record["headroom_pct"] == 70.0
-    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
     _assert_muse_has_no_account_material(record)
+
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: None)
+    missing = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
+    assert missing["error_code"] == "NO_PROBE"
+    assert missing["status"] == "unavailable"
+    assert missing["status"] != "healthy"
+    assert missing["weekly_used_pct"] is None
+    assert missing["weekly_remaining_pct"] is None
+
+
+def test_muse_allowance_session_drops_secret_shaped_parent_env(monkeypatch):
+    """A secret-shaped parent variable must not reach the Muse allowance session.
+
+    The value is the synthetic OPSEC sentinel, never a credential-shaped literal.
+    The session env is the runner allowlist for provider ``muse`` plus the two
+    CLI lookups that ``muse usage`` honors when they are set.
+    """
+    from tests.opsec_fixtures import TOKEN
+
+    monkeypatch.setenv("SYNTHETIC_TOKEN", TOKEN)
+    monkeypatch.setenv("LU_OPSEC_OVERRIDE", TOKEN)
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
+    monkeypatch.setenv("XDG_CONFIG_HOME", "/fixture/xdg")
+    monkeypatch.setenv("SSL_CERT_FILE", "/fixture/ca.pem")
+    monkeypatch.setenv("MUSE_FLAGS", "1")
+    monkeypatch.setenv("MUSE_AUTH_PATH", "/fixture/muse-auth")
+    monkeypatch.setenv("XDG_DATA_HOME", "/fixture/xdg-data")
+    monkeypatch.setenv("SSL_CERT_DIR", "/fixture/certs")
+
+    env = subscription_usage_mod._muse_session_env()
+
+    assert env["MUSE_NO_AUTO_UPDATE"] == "1"
+    assert env["XDG_CONFIG_HOME"] == "/fixture/xdg"
+    assert env["SSL_CERT_FILE"] == "/fixture/ca.pem"
+    assert "SYNTHETIC_TOKEN" not in env
+    assert "LU_OPSEC_OVERRIDE" not in env
+    assert "GH_TOKEN" not in env
+    assert "MUSE_FLAGS" not in env
+    assert "MUSE_AUTH_PATH" not in env
+    assert "XDG_DATA_HOME" not in env
+    assert "SSL_CERT_DIR" not in env
+    assert TOKEN not in env.values()
 
 
 def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
     import subprocess
 
-    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar")
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None)
 
     def timeout_run(argv, **kwargs):
         raise subprocess.TimeoutExpired(argv, kwargs.get("timeout"))

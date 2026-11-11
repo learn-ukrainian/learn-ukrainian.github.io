@@ -43,11 +43,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
-      - name: Setup Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version-file: '.python-version'
-          cache: 'pip'
 
       - name: Collect changed activity and vocab YAML
         id: changed-yaml
@@ -85,11 +80,11 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Install dependencies
+      - name: Python CI environment
         if: steps.changed-yaml.outputs.files != ''
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml jsonschema pytest yamllint regex==2026.5.9
+        uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Lint YAML Files
         if: steps.changed-yaml.outputs.files != ''
@@ -97,11 +92,11 @@ jobs:
           CHANGED_FILES: ${{ steps.changed-yaml.outputs.files }}
         run: |
           mapfile -t files <<< "$CHANGED_FILES"
-          yamllint "${files[@]}"
+          .venv/bin/yamllint "${files[@]}"
 
       - name: Run Activity Tests
         if: steps.changed-yaml.outputs.files != ''
-        run: python -m pytest tests/test_yaml_activities.py -v
+        run: .venv/bin/python -m pytest tests/test_yaml_activities.py -v
 
       - name: Validate Activity YAMLs
         if: steps.changed-yaml.outputs.files != ''
@@ -120,7 +115,7 @@ jobs:
           fi
 
           for file in "${activity_files[@]}"; do
-            python scripts/validate_yaml.py "$file"
+            .venv/bin/python scripts/validate_yaml.py "$file"
           done
 
   validate-plans:
@@ -138,11 +133,6 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
-      - name: Setup Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version-file: '.python-version'
-          cache: 'pip'
 
       - name: Block tracked plan backup artifacts
         run: |
@@ -209,17 +199,17 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml jsonschema regex==2026.5.9
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Validate Plan YAMLs
         if: steps.changed-plans.outputs.files != ''
         env:
           CHANGED_FILES: ${{ steps.changed-plans.outputs.files }}
         run: |
-          python - <<'PY'
+          .venv/bin/python - <<'PY'
           import os
           import sys
           from pathlib import Path
@@ -257,11 +247,11 @@ jobs:
           for file in "${files[@]}"; do
             level="$(echo "$file" | cut -d/ -f4)"
             slug="$(basename "$file" .yaml)"
-            python scripts/validate_plan_config.py "${level}/${slug}"
+            .venv/bin/python scripts/validate_plan_config.py "${level}/${slug}"
           done
 
       - name: Validate Plan Ordering
-        run: python scripts/validate_plan_ordering.py
+        run: .venv/bin/python scripts/validate_plan_ordering.py
 
   schema-check:
     name: Schema JSON Syntax

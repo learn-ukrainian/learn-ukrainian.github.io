@@ -24,7 +24,8 @@ from jsonschema import Draft202012Validator
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.frozen_k_outputs import publish_frozen_k_bundle
 
 ROOT = Path(__file__).resolve().parents[3]

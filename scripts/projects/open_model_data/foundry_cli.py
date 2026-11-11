@@ -912,7 +912,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "prepare":
-            from scripts.api.occupancy_local import occupancy_marker_scope
+            from lu_machinery.api.occupancy_local import occupancy_marker_scope
 
             with occupancy_marker_scope(
                 kind="service",

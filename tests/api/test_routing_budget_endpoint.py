@@ -1729,3 +1729,164 @@ def test_startup_warmup_fills_dispatch_routing_budget_key_cold_start_timeout(mon
     state_router._run_state_scan_warmup(ctx)
 
     assert state_helpers.cache_get(key, state_router.ROUTING_BUDGET_TTL_S) is not None
+
+
+def _muse_cli_allowance(*, weekly: int | None, age_s: float = 0) -> dict:
+    now_ms = int(datetime.now(UTC).timestamp() * 1000) - int(age_s * 1000)
+    weekly_block = None if weekly is None else {"usedPercent": weekly, "resetsAtMs": now_ms + 5 * 24 * 3600 * 1000}
+    return {
+        "schemaVersion": 1,
+        "allowance": {
+            "asOfMs": now_ms,
+            "tier": "PRIVATE_TIER",
+            "source": "PRIVATE_SOURCE",
+            "weekly": weekly_block,
+            "window": {"usedPercent": 5, "resetsAtMs": now_ms + 44 * 60 * 1000},
+        },
+    }
+
+
+def test_muse_usage_json_publishes_weekly_percent_without_identity():
+    record = subscription_usage_mod._muse_record_from_cli_payload(_muse_cli_allowance(weekly=3))
+    blob = json.dumps(record)
+    assert "PRIVATE_" not in blob
+    assert record["status"] == "healthy"
+    assert record["source"] == "muse_usage"
+    assert record["weekly_used_pct"] == 3.0
+    assert record["weekly_remaining_pct"] == 97.0
+    assert record["primary_used_pct"] == 5.0
+
+
+def test_muse_usage_without_weekly_or_when_stale_is_not_healthy():
+    missing = subscription_usage_mod._muse_record_from_cli_payload(_muse_cli_allowance(weekly=None))
+    assert missing["status"] == "unknown"
+    assert missing["weekly_used_pct"] is None
+    stale = subscription_usage_mod._muse_record_from_cli_payload(_muse_cli_allowance(weekly=3, age_s=3600))
+    assert stale["status"] == "unavailable"
+    assert stale["error_code"] == "STALE_DATA"
+    assert stale["weekly_used_pct"] is None
+    assert subscription_usage_mod._muse_record_from_cli_payload({"allowance": "nope"})["status"] == "unavailable"
+
+
+def test_routing_budget_muse_lane_is_cool_from_weekly_allowance_and_unknown_when_unreadable(monkeypatch, tmp_path):
+    """MUSE-REVIEW-1110: a readable weekly allowance admits the lane; a miss stays unknown."""
+    now = datetime(2026, 11, 10, 8, 0, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+
+    def readable(provider: str, kick_refresh: bool = True) -> dict:
+        if provider != "muse":
+            return {"freshness": "unavailable", "weekly_used_pct": None}
+        return {
+            "weekly_used_pct": 3.0,
+            "weekly_remaining_pct": 97.0,
+            "weekly_resets_at": "2026-11-16T00:00:00Z",
+            "freshness": "fresh",
+            "stale": False,
+            "age_s": 0,
+            "source": "muse_usage",
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", readable)
+    budget = state_router.compute_routing_budget(
+        now,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    muse = budget["agents"]["muse"]
+    assert muse["status"] == "cool"
+    assert muse["remaining_pct"] == 97.0
+    assert muse["health"]["healthy"] is True
+
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider, kick_refresh=True: {"freshness": "unavailable", "weekly_used_pct": None, "status": "unavailable"},
+    )
+    unread = state_router.compute_routing_budget(
+        now,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+    assert unread["agents"]["muse"]["status"] == "unknown"
+    assert unread["agents"]["muse"]["status"] != "healthy"
+
+
+def test_muse_probe_starts_spark_only_when_weekly_is_missing(monkeypatch, tmp_path):
+    """A weekly reading does not start a session. A missing weekly starts one spark step, then re-reads."""
+    import subprocess
+
+    from tests.opsec_fixtures import TOKEN
+
+    calls: list[list[str]] = []
+    seen: list[dict] = []
+
+    def fake_run(argv, **kwargs):
+        calls.append(list(argv))
+        seen.append(kwargs)
+        if argv[1] == "exec":
+            return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+        weekly = None if sum(1 for item in calls if item[1] == "usage") == 1 else 3
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=weekly)), stderr="")
+
+    subscription_usage_mod._reset_muse_allowance_attempt_for_tests()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
+    monkeypatch.setenv("SYNTHETIC_TOKEN", TOKEN)
+    monkeypatch.setattr(
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None
+    )
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
+
+    missing_then_read = subscription_usage_mod._probe_muse_native(timeout_s=5)
+    assert missing_then_read["weekly_used_pct"] == 3.0
+    assert missing_then_read["status"] == "healthy"
+    exec_calls = [argv for argv in calls if argv[1] == "exec"]
+    assert len(exec_calls) == 1
+    argv = exec_calls[0]
+    assert argv[argv.index("--model") + 1] == "muse-spark-1.3"
+    assert argv[argv.index("--contributor-mode") + 1] == "on"
+    assert "--disable-shell" in argv
+    assert "--no-foreign-personal-context" in argv
+    assert "--disable-request-user-input" in argv
+    assert argv[argv.index("--permission-profile") + 1] == ":read-only"
+    exec_kwargs = seen[calls.index(exec_calls[0])]
+    assert exec_kwargs["cwd"]
+    assert argv[argv.index("--workspace") + 1] == str(exec_kwargs["cwd"])
+    for kwargs in seen:
+        child_env = kwargs["env"]
+        assert "GH_TOKEN" not in child_env
+        assert "SYNTHETIC_TOKEN" not in child_env
+        assert TOKEN not in child_env.values()
+        assert child_env.get("MUSE_NO_AUTO_UPDATE") == "1"
+    assert all(kwargs["timeout"] <= 5 for kwargs in seen)
+
+    def still_missing(argv, **kwargs):
+        calls.append(list(argv))
+        assert kwargs["env"].get("MUSE_NO_AUTO_UPDATE") == "1"
+        assert "GH_TOKEN" not in kwargs["env"]
+        assert TOKEN not in kwargs["env"].values()
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=None)), stderr="")
+
+    calls.clear()
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", still_missing)
+    held = subscription_usage_mod._probe_muse_native(timeout_s=5)
+    assert held["status"] != "healthy"
+    assert [argv[1] for argv in calls] == ["usage"]
+
+    calls.clear()
+
+    def usage_only(argv, **kwargs):
+        calls.append(list(argv))
+        assert kwargs["env"].get("MUSE_NO_AUTO_UPDATE") == "1"
+        assert "GH_TOKEN" not in kwargs["env"]
+        assert TOKEN not in kwargs["env"].values()
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_muse_cli_allowance(weekly=3)), stderr="")
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", usage_only)
+    ready = subscription_usage_mod._probe_muse_native(timeout_s=5)
+    assert ready["weekly_used_pct"] == 3.0
+    assert [argv[1] for argv in calls] == ["usage"]

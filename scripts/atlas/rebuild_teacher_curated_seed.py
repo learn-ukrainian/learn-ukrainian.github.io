@@ -20,10 +20,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from scripts.atlas.teacher_vesum_attest import VesumAttestation, attest_lemmas
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_SCHEMA = "teacher-curated-seed-recovery-v1"

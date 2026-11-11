@@ -32,7 +32,8 @@ import requests
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import project_interpreter
+from lu_machinery.common.repo_root import project_interpreter
+
 from scripts.ingest.acquisition_log import (
     DEFAULT_INTERVAL_SECONDS,
     PROGRESS_FILE,
@@ -66,6 +67,15 @@ from scripts.wiki.sum20_official import (
 
 SCHEMA = "dictionary-acquisition.v1"
 SUCCESS = {"positive", "not_found", "reused"}
+# A recorded unusable article is settled for the crawl (not refetched) but it is not a hit or a miss.
+CLASSIFIED = SUCCESS | {"parse_error"}
+# One bad page is a row. This many in a row means the parser or the page shape broke, so the job
+# stops. Five is past a short cluster of odd pages and, at the default four-second delay, stops a
+# broken parser in about twenty seconds. The streak is consecutive in target order and durable.
+CONSECUTIVE_UNUSABLE_LIMIT = 5
+# Inspection payload bound, in UTF-8 bytes. A character count would keep several mebibytes of Cyrillic.
+_UNUSABLE_TEXT_LIMIT = 1_048_576
+_CRAWL_SETTLED_SQL = "'positive','not_found','reused','parse_error'"
 EXIT = {
     "complete": 0,
     "invalid": 2,
@@ -79,6 +89,7 @@ EXIT = {
 # The code that decides what is requested, reused and parsed. Only these bodies are bound into
 # a job's frozen identity; logging, projection and retry plumbing elsewhere may change freely.
 HOST_POLL_SECONDS = 0.5
+PACING_FIELDS = ("delay", "timeout", "backoff", "max_attempts", "max_restarts")
 TRANSPORT_FUNCTIONS = ("dictionary_name", "make_spec", "valid_slovnyk", "seed_row", "retry_after", "fetch_once")
 
 
@@ -284,7 +295,9 @@ def initialize(
     fingerprint = digest(packed(spec).encode())
     if row is not None:
         if row["fingerprint"] != fingerprint or row["spec"] != packed(spec):
-            # Only a changed transport identity is recoverable, and only through `rebind`.
+            # Transport drift is recoverable only through `rebind`, and is the one difference
+            # reported as `transport_changed`. A parser-hash change is also recoverable only
+            # through `rebind`: until that command stores the new hash, initialize refuses it.
             raise JobError(
                 "transport_changed" if only_transport_differs(row["spec"], spec) else "frozen_input_mismatch"
             )
@@ -305,22 +318,49 @@ def initialize(
             )
 
 
-def only_transport_differs(stored: str, spec: dict[str, Any]) -> bool:
+def only_transport_differs(
+    stored: str, spec: dict[str, Any], *, allow_parser: bool = False, allow_pacing: bool = False
+) -> bool:
+    """Match frozen fields while ignoring only the explicitly allowed rebind fields.
+
+    The default ignores only the transport hash for initialize's drift diagnostic.
+    Rebind also allows the parser hash and pacing; ordinary actions still refuse them.
+    """
     unbound = {"transport_sha256": None}
+    if allow_parser:
+        unbound["parser_sha256"] = None
+    if allow_pacing:
+        unbound.update(dict.fromkeys(PACING_FIELDS))
     return {**json.loads(stored), **unbound} == {**spec, **unbound}
 
 
-def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]], now: float) -> bool:
-    """Explicit operator action: accept the current transport code for an existing job.
+def _ensure_transport_rebinds(conn) -> None:
+    """Extend the existing rebind audit in place for older jobs."""
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS transport_rebinds ("
+        "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL, "
+        "old_parser_sha256 TEXT, new_parser_sha256 TEXT)"
+    )
+    present = {row["name"] for row in conn.execute("PRAGMA table_info(transport_rebinds)")}
+    for column in ("old_parser_sha256", "new_parser_sha256", "old_pacing", "new_pacing"):
+        if column not in present:
+            conn.execute(f"ALTER TABLE transport_rebinds ADD COLUMN {column} TEXT")
 
-    Like `resume` it needs both locks (the caller holds them) and leaves a durable event, but it
-    resets nothing: results, attempts, launches and the no-progress budget are untouched. Every
-    other frozen field, including the targets, must already match. Returns False when already bound.
+
+def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]], now: float) -> bool:
+    """Explicit operator action: accept the current transport, parser hash and pacing.
+
+    Like ``resume`` it needs both locks (the caller holds them) and leaves one durable event, but
+    it resets nothing: results, attempts, launches and the no-progress budget are untouched.
+    Already-positive rows are not reparsed. Every other frozen field and the targets must
+    already match. Returns False when already bound.
     """
     row = conn.execute("SELECT * FROM job").fetchone()
     # Validate the stored job completely before reporting "already bound": a job that `run` would
-    # refuse for any reason other than the transport hash is never acceptable here.
-    if row["spec"] != packed(spec) and not only_transport_differs(row["spec"], spec):
+    # refuse for any reason other than the transport, parser hash or pacing is never acceptable here.
+    if row["spec"] != packed(spec) and not only_transport_differs(
+        row["spec"], spec, allow_parser=True, allow_pacing=True
+    ):
         raise JobError("frozen_input_mismatch")
     if row["fingerprint"] != digest(row["spec"].encode()):
         raise JobError("frozen_input_mismatch")
@@ -328,25 +368,38 @@ def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]],
         raise JobError("durable_targets_mismatch")
     if row["spec"] == packed(spec):
         return False
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS transport_rebinds ("
-        "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL)"
-    )
+    stored = json.loads(row["spec"])
+    _ensure_transport_rebinds(conn)
     with conn:
         event = conn.execute("INSERT INTO events(time,kind) VALUES(?,'transport_rebind')", (now,)).lastrowid
         conn.execute(
-            "INSERT INTO transport_rebinds(event_id,old_sha256,new_sha256) VALUES(?,?,?)",
-            (event, json.loads(row["spec"])["transport_sha256"], spec["transport_sha256"]),
+            "INSERT INTO transport_rebinds("
+            "event_id,old_sha256,new_sha256,old_parser_sha256,new_parser_sha256,old_pacing,new_pacing) "
+            "VALUES(?,?,?,?,?,?,?)",
+            (
+                event,
+                stored["transport_sha256"],
+                spec["transport_sha256"],
+                stored["parser_sha256"],
+                spec["parser_sha256"],
+                packed({field: stored[field] for field in PACING_FIELDS}),
+                packed({field: spec[field] for field in PACING_FIELDS}),
+            ),
         )
         conn.execute("UPDATE job SET spec=?, fingerprint=?", (packed(spec), digest(packed(spec).encode())))
     return True
 
 
 def no_progress_launches(conn: sqlite3.Connection) -> int:
-    """Count durable launch reservations since the last resolved target or explicit resume."""
+    """Count durable launch reservations since the last classified target or explicit resume.
+
+    A recorded unusable article is classified progress and starts a new budget, as a positive
+    or a proven 404 does. Transient results and in-flight attempts do not.
+    """
     return conn.execute(
         "SELECT COUNT(*) FROM events WHERE kind='supervisor_launch' AND id > "
-        "COALESCE((SELECT MAX(id) FROM events WHERE kind IN ('positive','not_found','operator_resume')),0)"
+        "COALESCE((SELECT MAX(id) FROM events WHERE kind IN "
+        "('positive','not_found','parse_error','operator_resume')),0)"
     ).fetchone()[0]
 
 
@@ -357,14 +410,14 @@ def project_status(conn: sqlite3.Connection, directory: Path, now: float) -> dic
     rows = conn.execute(
         "SELECT position, status, attempts, next_attempt_at, target FROM results ORDER BY position"
     ).fetchall()
-    counts = dict.fromkeys(("positive", "miss", "pending", "error", "reused"), 0)
+    counts = dict.fromkeys(("positive", "miss", "pending", "error", "reused", "unusable"), 0)
     checkpoint = 0
     requests_count = 0
     for row in rows:
-        key = {"not_found": "miss"}.get(row["status"], row["status"])
+        key = {"not_found": "miss", "parse_error": "unusable"}.get(row["status"], row["status"])
         counts[key if key in counts else "error"] += 1
         requests_count += row["attempts"]
-        if row["position"] == checkpoint and row["status"] in SUCCESS:
+        if row["position"] == checkpoint and row["status"] in CLASSIFIED:
             checkpoint += 1
     next_row = rows[checkpoint] if checkpoint < len(rows) else None
     elapsed = max(0, now - job["started"])
@@ -526,6 +579,90 @@ def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float)
     return "positive", code, payload, 0
 
 
+class _LastGet:
+    """Remember the last GET so an unusable article can be stored without changing ``fetch_once``.
+
+    ``fetch_once`` is part of the frozen transport identity. Keeping the body here leaves that
+    identity, and an already running job, unchanged.
+    """
+
+    def __init__(self, inner: Any) -> None:
+        self._inner = inner
+        self.text: str | None = None
+        self.url: str | None = None
+
+    def get(self, url: str, **kwargs: Any) -> Any:
+        self.text = None
+        self.url = None
+        response = self._inner.get(url, **kwargs)
+        text = getattr(response, "text", None)
+        self.text = text if isinstance(text, str) else None
+        self.url = url if isinstance(url, str) else None
+        return response
+
+
+def unusable_payload(capture: _LastGet, http: int | None, now: float) -> dict[str, Any]:
+    """Inspection copy of one unusable response. Logs and status never receive this body."""
+    text = capture.text if isinstance(capture.text, str) else ""
+    raw = text.encode()
+    # A cut may land inside a character. Drop that partial character and keep valid UTF-8.
+    stored = text if len(raw) <= _UNUSABLE_TEXT_LIMIT else raw[:_UNUSABLE_TEXT_LIMIT].decode("utf-8", errors="ignore")
+    payload: dict[str, Any] = {
+        "source_url": capture.url,
+        "fetched_at": datetime.fromtimestamp(now, UTC).isoformat(),
+        "http_status": http,
+        "provenance": "observed_http_unusable",
+        "content_sha256": digest(raw),
+        "response_text": stored,
+    }
+    if len(raw) > _UNUSABLE_TEXT_LIMIT:
+        payload["response_truncated"] = True
+    return payload
+
+
+def consecutive_unusable_before(conn, position: int) -> int:
+    """How many settled unusable rows sit immediately before ``position``."""
+    rows = conn.execute(
+        "SELECT status FROM results WHERE position < ? ORDER BY position DESC LIMIT ?",
+        (position, CONSECUTIVE_UNUSABLE_LIMIT),
+    ).fetchall()
+    streak = 0
+    for item in rows:
+        if item["status"] != "parse_error":
+            break
+        streak += 1
+    return streak
+
+
+def open_unusable_streak(conn) -> int:
+    """Consecutive unusable rows immediately before the first row the crawl would still request."""
+    first_open = conn.execute(
+        f"SELECT position FROM results WHERE status NOT IN ({_CRAWL_SETTLED_SQL}) ORDER BY position LIMIT 1"
+    ).fetchone()
+    if first_open is None:
+        position = int(conn.execute("SELECT COALESCE(MAX(position), -1) + 1 FROM results").fetchone()[0])
+    else:
+        position = int(first_open["position"])
+    return consecutive_unusable_before(conn, position)
+
+
+def release_isolated_unusable_latch(conn, now: float) -> None:
+    """Continue a job the old single-article rule stopped.
+
+    Those jobs are ``parse_error`` / ``unusable_article`` with fewer than
+    ``CONSECUTIVE_UNUSABLE_LIMIT`` consecutive unusable rows. The rows stay recorded.
+    A consecutive-break stop uses another reason and stays stopped.
+    """
+    job = conn.execute("SELECT state, reason FROM job").fetchone()
+    if job is None or job["state"] != "parse_error" or job["reason"] != "unusable_article":
+        return
+    if open_unusable_streak(conn) >= CONSECUTIVE_UNUSABLE_LIMIT:
+        return
+    with conn:
+        conn.execute("UPDATE job SET state='running', reason=''")
+        conn.execute("INSERT INTO events(time,kind) VALUES(?,'unusable_latch_released')", (now,))
+
+
 def acquire(
     conn: sqlite3.Connection,
     directory: Path,
@@ -538,11 +675,12 @@ def acquire(
 ) -> int:
     """Run until resolved, terminal stop, or one transient result (exit 75); narrate it to `progress`."""
     progress = progress or ProgressLog(directory / PROGRESS_FILE, label=directory.name, clock=clock)
+    release_isolated_unusable_latch(conn, clock())
     total, done = conn.execute(
-        "SELECT COUNT(*), COALESCE(SUM(status IN ('positive','not_found','reused')),0) FROM results"
+        f"SELECT COUNT(*), COALESCE(SUM(status IN ({_CRAWL_SETTLED_SQL})),0) FROM results"
     ).fetchone()
     pending = conn.execute(
-        "SELECT attempts FROM results WHERE status NOT IN ('positive','not_found','reused') ORDER BY position LIMIT 1"
+        f"SELECT attempts FROM results WHERE status NOT IN ({_CRAWL_SETTLED_SQL}) ORDER BY position LIMIT 1"
     ).fetchone()
     progress.begin(
         done=done,
@@ -580,9 +718,10 @@ def resolve_targets(
     host = "sum20ua" if official else "slovnyk"
     # Apply the current minimum to persisted jobs too, without rewriting their identity.
     request_delay = max(spec["delay"], MIN_CRAWL_DELAY_S if official else 0)
+    capture = _LastGet(session)
     while True:
         row = conn.execute(
-            "SELECT * FROM results WHERE status NOT IN ('positive','not_found','reused') ORDER BY position LIMIT 1"
+            f"SELECT * FROM results WHERE status NOT IN ({_CRAWL_SETTLED_SQL}) ORDER BY position LIMIT 1"
         ).fetchone()
         if row is None:
             code = stop(conn, "complete", "target_resolved")
@@ -619,19 +758,21 @@ def resolve_targets(
                 conn.execute("INSERT INTO events(position,time,kind) VALUES(?,?,'attempt')", (row["position"], now))
             report(conn, directory, now)
             with heartbeat(progress):
-                status, http, payload, retry = fetch_once(session, spec, row, now)
+                status, http, payload, retry = fetch_once(capture, spec, row, now)
             finished = clock()
             delay = max(request_delay, spec["backoff"] * 2 ** row["attempts"], retry)
-            state = {"blocked": "blocked", "parse_error": "parse_error", "transient_error": "transient"}.get(
-                status, "running"
-            )
-            reason = {
-                "blocked": "access_or_http_stop",
-                "parse_error": "unusable_article",
-                "transient_error": "retryable_request",
-            }.get(status, "")
+            state = {"blocked": "blocked", "transient_error": "transient"}.get(status, "running")
+            reason = {"blocked": "access_or_http_stop", "transient_error": "retryable_request"}.get(status, "")
+            entry_reason = reason
             if status == "transient_error" and row["attempts"] + 1 >= spec["max_attempts"]:
-                status, state, reason = "exhausted", "exhausted", "attempt_budget"
+                status, state, reason, entry_reason = "exhausted", "exhausted", "attempt_budget", "attempt_budget"
+            if status == "parse_error":
+                entry_reason = "unusable_article"
+                payload = unusable_payload(capture, http, now)
+                if 1 + consecutive_unusable_before(conn, int(row["position"])) >= CONSECUTIVE_UNUSABLE_LIMIT:
+                    state, reason = "parse_error", "consecutive_unusable_articles"
+                else:
+                    state, reason = "running", ""
             with conn:
                 conn.execute(
                     "UPDATE results SET status=?,http_status=?,payload=?,reason=?,next_attempt_at=? WHERE position=?",
@@ -639,7 +780,7 @@ def resolve_targets(
                         status,
                         http,
                         packed(payload) if payload else None,
-                        reason,
+                        entry_reason,
                         finished + delay if status in {"transient_error", "exhausted"} else 0,
                         row["position"],
                     ),
@@ -652,8 +793,10 @@ def resolve_targets(
             # Hold the host lock until outcome is durable, then permit the next host slot.
             atomic_json(throttle, {"next_request_at": finished + max(request_delay, retry)})
         report(conn, directory, clock())
-        if status in {"positive", "not_found"}:
-            progress.resolved(status, row["target"], http)
+        if status in {"positive", "not_found"} or status == "parse_error":
+            progress.resolved("unusable" if status == "parse_error" else status, row["target"], http)
+            if status == "parse_error" and state != "running":
+                progress.failed(status, row["target"], reason, http)
         elif status == "transient_error":
             progress.retry(row["target"], row["attempts"] + 1, spec["max_attempts"], http, delay)
         else:
@@ -664,7 +807,11 @@ def resolve_targets(
 
 
 def manual_resume(conn: sqlite3.Connection, now: float) -> None:
-    """Explicit operator action; never forwarded by the unattended supervisor."""
+    """Explicit operator action; never forwarded by the unattended supervisor.
+
+    Reopens unusable rows as well as retries and stops, so a parser fix can refetch them.
+    A plain ``run`` leaves a recorded unusable article in place.
+    """
     with conn:
         conn.execute(
             "UPDATE results SET status='pending',attempts=0,next_attempt_at=0,reason='',http_status=NULL,payload=NULL WHERE status NOT IN ('positive','not_found','reused')"
@@ -691,6 +838,7 @@ def supervise(
         while True:
             with lock(directory / "writer.lock"), contextlib.closing(connect(directory)) as conn:
                 initialize(conn, spec, targets, args.seed_cache, clock())
+                release_isolated_unusable_latch(conn, clock())
                 job = conn.execute("SELECT * FROM job").fetchone()
                 report(conn, directory, clock())
                 if job["state"] not in {"running", "transient"}:
@@ -781,8 +929,8 @@ def parser() -> argparse.ArgumentParser:
   .venv/bin/python -m scripts.ingest.dictionary_acquisition rebind --root batch_state/acquisition --dictionary vts --manifest manifest.json
 Outputs: <root>/<dictionary>/{staging.sqlite3,status.json,job.log,progress.log}; persistent locks and host throttle files.
 Progress: run/supervise print one line per resolved target or retry plus a periodic summary to stderr and progress.log.
-Exit codes: 0 complete/status/resume; 2 invalid/mismatch; 3 blocked HTTP; 4 parse error; 5 exhausted;
-            6 conflicting writer/supervisor; 75 transient (run only). No terminal state resumes implicitly.
+Exit codes: 0 complete/status/resume; 2 invalid/mismatch; 3 blocked HTTP; 4 five consecutive unusable articles; 5 exhausted;
+            6 conflicting writer/supervisor; 75 transient (run only). One unusable article is recorded and skipped; other terminal states stay stopped.
 Interrupt (Ctrl-C, SIGTERM, SIGHUP) exits 128+signal; rerun the same command to continue from the checkpoint.
 Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_mirror (foreground shared-cache tool).
 """,
@@ -791,7 +939,7 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "action",
         choices=("run", "supervise", "status", "resume", "rebind"),
         help="run once, supervise bounded restarts, reconcile status, explicitly reset stopped work, "
-        "or explicitly accept changed transport code for an existing job",
+        "or explicitly accept changed transport, parser identity or pacing for an existing job",
     )
     result.add_argument(
         "--root",
@@ -876,7 +1024,11 @@ def main(
         with guard, lock(directory / "writer.lock"), contextlib.closing(connect(directory)) as conn:
             if args.action == "rebind":
                 changed = rebind_transport(conn, spec, targets, clock())
-                progress.emit("rebind: transport code accepted and recorded" if changed else "rebind: already bound")
+                progress.emit(
+                    "rebind: transport, parser identity and pacing accepted and recorded"
+                    if changed
+                    else "rebind: already bound"
+                )
                 print(packed(report(conn, directory, clock())))
                 return 0
             if spec is not None:

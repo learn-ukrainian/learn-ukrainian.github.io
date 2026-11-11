@@ -1,4 +1,4 @@
-"""Expand scripts/config/backup-allowlist.json the way scripts/backup-data.sh does.
+"""Expand lu_machinery/config/backup-allowlist.json the way scripts/backup-data.sh does.
 
 The script is the authority. This helper exists so tests can compare a selection
 manifest with the same keep entries, prune rules, sidecars, and task-record
@@ -11,10 +11,10 @@ from __future__ import annotations
 import json
 import os
 import re
+from importlib.resources import files
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-ALLOWLIST_PATH = REPO_ROOT / "scripts" / "config" / "backup-allowlist.json"
+ALLOWLIST_PATH = Path(str(files("lu_machinery").joinpath("config/backup-allowlist.json")))
 SQLITE_HEADER = b"SQLite format 3\x00"
 EPIC_LABEL = re.compile(r"^[a-z0-9-]+-epic$")
 TRANSIENT_SQLITE = re.compile(r"(^|.*/)pytest-[^/]+/")

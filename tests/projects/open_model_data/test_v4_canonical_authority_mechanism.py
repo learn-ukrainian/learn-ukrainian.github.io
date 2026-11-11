@@ -13,13 +13,22 @@ from typing import Any
 import _v4_a7_real_slot_fixture as fx
 import pytest
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as v4_store
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+    claim_v4_runner_execution,
+    resolve_v4_execution_observation,
+)
+from learn_ukrainian_v4_runtime.v4_sources_authority import (
+    record_v4_sources_invocation_from_typed_outcome,
+    resolve_v4_sources_invocation,
+)
+from lu_machinery.fleet_comms.artifacts import ArtifactStore
+from lu_machinery.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 from test_v4_runner_origin_mechanism import (
     FIXTURE_MODEL,
     FIXTURE_SESSION,
 )
 
-from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
 from scripts.projects.open_model_data import v4_a3_reference_check as reference_check
 from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
@@ -50,7 +59,8 @@ def _capture_events(*, model: str = FIXTURE_MODEL, session_id: str = FIXTURE_SES
 
 def _authorized_author_request(executor: RequestExecutor, *, model: str = FIXTURE_MODEL) -> tuple[str, dict[str, Any]]:
     request = executor.create_request(recipient="claude", body="source-free fixture prompt")
-    binding = executor.authorize_author_execution(
+    binding = authorize_author_execution(
+        executor,
         request_id=request.request_id,
         slot_id=fx.TARGET_SLOT_ID,
         expected_seat=model,
@@ -89,7 +99,8 @@ def test_execute_capture_never_writes_a_v4_observation(tmp_path: Path) -> None:
         request_id, binding = _authorized_author_request(executor)
         result = executor.execute_capture(request_id, events=_capture_events(), returncode=0)
         assert result.state in {"complete", "incomplete", "failed"}
-        assert executor.resolve_v4_execution_observation(
+        assert resolve_v4_execution_observation(
+            executor.store,
             task_id=binding["task_id"], run_id=binding["run_id"], role="author"
         ) is None
         rows = executor._conn.execute("SELECT COUNT(*) AS n FROM v4_execution_observations").fetchone()
@@ -99,11 +110,11 @@ def test_execute_capture_never_writes_a_v4_observation(tmp_path: Path) -> None:
 def test_authorize_author_execution_takes_no_caller_hashes() -> None:
     import inspect
 
-    params = inspect.signature(RequestExecutor.authorize_author_execution).parameters
+    params = inspect.signature(authorize_author_execution).parameters
     assert "prompt_sha256" not in params
     assert "row_content_sha256" not in params
     assert "packet_sha256" not in params
-    assert list(params) == ["self", "request_id", "slot_id", "expected_seat"]
+    assert list(params) == ["executor", "request_id", "slot_id", "expected_seat"]
 
 
 def test_a_slot_cannot_be_authorized_after_execution_starts(tmp_path: Path) -> None:
@@ -113,7 +124,8 @@ def test_a_slot_cannot_be_authorized_after_execution_starts(tmp_path: Path) -> N
         request = executor.create_request(recipient="claude", body="late-binding fixture prompt")
         executor.execute_capture(request.request_id, events=_capture_events(), returncode=0)
         with pytest.raises(RequestExecutorError, match="not authorizable"):
-            executor.authorize_author_execution(
+            authorize_author_execution(
+                executor,
                 request_id=request.request_id,
                 slot_id=fx.TARGET_SLOT_ID,
                 expected_seat=FIXTURE_MODEL,
@@ -124,7 +136,8 @@ def test_an_already_bound_request_cannot_be_rebound(tmp_path: Path) -> None:
     with RequestExecutor(root=tmp_path) as executor:
         request_id, _binding = _authorized_author_request(executor)
         with pytest.raises(v4_store.ExecutionDispatchBindingConflictError):
-            executor.authorize_author_execution(
+            authorize_author_execution(
+                executor,
                 request_id=request_id,
                 slot_id="v4p-standard-correct-002",
                 expected_seat=FIXTURE_MODEL,
@@ -310,12 +323,12 @@ def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: P
         with pytest.raises(v4_store.ExecutionObservationConflictError, match="different execution observation"):
             v4_store._persist_execution_observation({**base, "status": "failed"}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="author") == base
+        assert resolve_v4_execution_observation(store, task_id=binding["task_id"], run_id=binding["run_id"], role="author") == base
 
 
 def test_execution_observation_resolves_none_for_an_unknown_key(tmp_path: Path) -> None:
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="nope", run_id="nope", role="author") is None
+        assert resolve_v4_execution_observation(store, task_id="nope", run_id="nope", role="author") is None
 
 
 def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
@@ -328,7 +341,7 @@ def test_execution_observation_write_rejects_a_malformed_record_before_any_persi
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="exactly"):
             v4_store._persist_execution_observation(malformed, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="task-malformed", run_id=base["run_id"], role="author") is None
+        assert resolve_v4_execution_observation(store, task_id="task-malformed", run_id=base["run_id"], role="author") is None
 
 
 def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
@@ -349,7 +362,7 @@ def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_p
 def test_execution_observation_store_is_isolated_by_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owned_resources) -> None:
     binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="reviewer") is None
+        assert resolve_v4_execution_observation(store, task_id=binding["task_id"], run_id=binding["run_id"], role="reviewer") is None
 
 
 # --- the real Sources recording boundary -----------------------------------
@@ -368,14 +381,15 @@ TYPED_SUPPORTED = {
 def _running_attempt(tmp_path: Path) -> dict[str, Any]:
     with RequestExecutor(root=tmp_path) as executor:
         request_id, binding = _authorized_author_request(executor)
-        claim = executor.claim_v4_runner_execution(request_id=request_id)
+        claim = claim_v4_runner_execution(executor, request_id=request_id)
     return {**claim, "binding": binding, "request_id": request_id}
 
 
 def _record_invocation(tmp_path: Path, *, tool_name: str = "verify_word", typed_outcome: dict[str, Any] | None = None) -> dict[str, Any] | None:
     claim = _running_attempt(tmp_path)
     with ArtifactStore(root=tmp_path) as store:
-        return store.record_v4_sources_invocation_from_typed_outcome(
+        return record_v4_sources_invocation_from_typed_outcome(
+            store,
             attempt_id=claim["attempt_id"],
             tool_name=tool_name,
             tool_version=TOOL_VERSION,
@@ -392,7 +406,7 @@ def test_sources_invocation_records_a_typed_call(tmp_path: Path) -> None:
     assert record["tool_version"] == TOOL_VERSION
     assert record["success"] is True
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_sources_invocation(invocation_id=record["invocation_id"]) == record
+        assert resolve_v4_sources_invocation(store, invocation_id=record["invocation_id"]) == record
 
 
 def test_sources_invocation_identifier_cannot_be_declared_by_the_caller() -> None:
@@ -458,7 +472,7 @@ def test_sources_invocation_is_idempotent_on_a_canonical_retry(tmp_path: Path) -
     with ArtifactStore(root=tmp_path) as store:
         rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
         assert int(rows["n"]) == 1
-        assert store.resolve_v4_sources_invocation(invocation_id=first["invocation_id"]) == first
+        assert resolve_v4_sources_invocation(store, invocation_id=first["invocation_id"]) == first
 
 
 def test_sources_invocation_conflicting_duplicate_leaves_prior_evidence_unchanged(tmp_path: Path) -> None:
@@ -468,12 +482,12 @@ def test_sources_invocation_conflicting_duplicate_leaves_prior_evidence_unchange
         with store._transaction() as conn:
             with pytest.raises(v4_store.SourcesInvocationConflictError, match="different sources invocation"):
                 v4_store._persist_sources_invocation({**original, "success": False}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
-        assert store.resolve_v4_sources_invocation(invocation_id=original["invocation_id"]) == original
+        assert resolve_v4_sources_invocation(store, invocation_id=original["invocation_id"]) == original
 
 
 def test_sources_invocation_resolves_none_for_an_unknown_invocation_id(tmp_path: Path) -> None:
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_sources_invocation(invocation_id="nope") is None
+        assert resolve_v4_sources_invocation(store, invocation_id="nope") is None
 
 
 def test_verification_tool_ids_join_attempt_not_request() -> None:

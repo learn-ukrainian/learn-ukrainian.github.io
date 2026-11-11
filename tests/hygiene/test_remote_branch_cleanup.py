@@ -18,8 +18,8 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 import yaml
+from lu_machinery.hygiene import remote_branch_cleanup as m
 
-from scripts.hygiene import remote_branch_cleanup as m
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -1044,9 +1044,13 @@ def test_workflow_default_source_shared_entrypoint_and_permissions():
     assert checkout["with"]["ref"] == "${{ github.sha }}"
     assert checkout["with"]["persist-credentials"] is False
     invocations = [step for step in job["steps"] if "run" in step]
-    assert len(invocations) == 1
-    assert invocations[0]["run"].splitlines() == [
+    assert len(invocations) == 2
+    # The locked release wheel alone, hash-checked, before the shared entry point runs.
+    install = invocations[0]["run"]
+    assert "--no-index --no-deps --require-hashes" in install
+    assert "requirements-machinery.lock" in install
+    assert invocations[1]["run"].splitlines() == [
         'git remote set-url origin "https://github.com/$REPO.git"',
         'git remote set-url --push origin "https://github.com/$REPO.git"',
-        'python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"',
+        'python -m lu_machinery.hygiene.remote_branch_cleanup --repo "$REPO"',
     ]

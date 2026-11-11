@@ -50,8 +50,8 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.orchestration import curriculum_readiness
-from scripts.orchestration.prompt_contracts import (
+from lu_machinery.orchestration import curriculum_readiness
+from lu_machinery.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
     resolve_profile_selectors,

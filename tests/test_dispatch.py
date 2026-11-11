@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -18,11 +19,17 @@ from build.dispatch import (
     dispatch_agent,
 )
 
+# The installed release reads its product and shared-state roots from the environment
+# (bound by scripts/__init__); a cleared environment keeps them.
+_PRODUCT_ROOTS = {
+    name: os.environ[name] for name in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT") if name in os.environ
+}
+
 
 @pytest.fixture(autouse=True)
 def _isolate_usage_log(tmp_path):
     """Ensure no test writes to the real batch_state/api_usage/ log."""
-    with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
+    with patch("lu_machinery.agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
 
@@ -116,12 +123,12 @@ class TestSaveDispatchLog:
 class TestDispatchAgent:
     """Test dispatch_agent with mocked subprocess."""
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_gemini_dispatch(self, mock_invoke, tmp_path):
         # Post Phase 3: dispatch routes Gemini through agent_runtime.
         # We mock runtime_invoke and assert the glue translates dispatch
         # args into the right runtime call.
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=True, agent="gemini", model="gemini-test", mode="workspace-write",
             response="## Section 1\nContent...", stderr_excerpt=None,
@@ -144,12 +151,12 @@ class TestDispatchAgent:
         assert call_kwargs["tool_config"] == {"auth_mode": "subscription"}
 
     @patch("build.dispatch._pace_gemini_calls")
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_gemini_dispatch_exhausts_agy_without_flash_cli(
         self, mock_invoke, _mock_pace, tmp_path,
     ):
         """The subscribed Flash route exhausts once through AGY, never native CLI."""
-        from agent_runtime.errors import RateLimitedError
+        from lu_machinery.agent_runtime.errors import RateLimitedError
 
         mock_invoke.side_effect = RateLimitedError("agy", "gemini-3.8-flash-high", "agy 429")
         ok, raw = dispatch_agent(
@@ -165,11 +172,11 @@ class TestDispatchAgent:
         assert mock_invoke.call_args.kwargs["tool_config"] is None
 
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_claude_tools_dispatch(self, mock_invoke, tmp_path):
         """Post Phase 5: Claude routes through runtime. MCP tool config
         travels via tool_config dict, not argv assertions."""
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=True, agent="claude", model="claude-opus-4-7", mode="read-only",
             response="content here", stderr_excerpt=None, duration_s=1.0,
@@ -191,13 +198,13 @@ class TestDispatchAgent:
         assert kwargs["entrypoint"] == "dispatch"
         assert kwargs["effort"] == "xhigh"
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_claude_dispatch_writes_started_marker_and_forwards_startup_timeout(
         self,
         mock_invoke,
         tmp_path,
     ):
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
 
         mock_invoke.return_value = Result(
             ok=True, agent="claude", model="claude-haiku-4-7", mode="read-only",
@@ -232,11 +239,11 @@ class TestDispatchAgent:
         assert started["initial_response_timeout_s"] == 180
         assert started["prompt_chars"] == len("activity prompt")
 
-    @patch.dict("os.environ", {}, clear=True)
-    @patch("agent_runtime.runner.invoke")
+    @patch.dict("os.environ", _PRODUCT_ROOTS, clear=True)
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_codex_dispatch_read_only_mode(self, mock_invoke, tmp_path):
         """Post Phase 3: agent='codex' → mode='read-only' in runtime."""
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=True, agent="codex", model="gpt-5.4", mode="read-only",
             response="Codex final answer", stderr_excerpt=None,
@@ -254,11 +261,11 @@ class TestDispatchAgent:
         assert kwargs["entrypoint"] == "dispatch"
         assert kwargs["session_id"] is None
 
-    @patch.dict("os.environ", {}, clear=True)
-    @patch("agent_runtime.runner.invoke")
+    @patch.dict("os.environ", _PRODUCT_ROOTS, clear=True)
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_codex_tools_dispatch_workspace_write_mode(self, mock_invoke, tmp_path):
         """Post Phase 3: agent='codex-tools' → mode='workspace-write'."""
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=True, agent="codex", model="gpt-5.4", mode="workspace-write",
             response="OK", stderr_excerpt=None, duration_s=1.0,
@@ -275,10 +282,10 @@ class TestDispatchAgent:
         assert kwargs["mode"] == "workspace-write"
 
     @patch.dict("os.environ", {"CODEX_DISPATCH_MODE": "danger"}, clear=False)
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_codex_dispatch_honors_danger_override(self, mock_invoke, tmp_path):
         """Post Phase 3: CODEX_DISPATCH_MODE=danger → mode='danger'."""
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=True, agent="codex", model="gpt-5.4", mode="danger",
             response="OK", stderr_excerpt=None, duration_s=1.0,
@@ -294,10 +301,10 @@ class TestDispatchAgent:
         kwargs = mock_invoke.call_args.kwargs
         assert kwargs["mode"] == "danger"
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_timeout_logged(self, mock_invoke, tmp_path):
         """Post Phase 3: runtime raises AgentTimeoutError → dispatch logs failure."""
-        from agent_runtime.errors import AgentTimeoutError
+        from lu_machinery.agent_runtime.errors import AgentTimeoutError
         mock_invoke.side_effect = AgentTimeoutError("gemini", 300)
 
         recorded_sleeps: list[tuple[int, str]] = []
@@ -317,11 +324,11 @@ class TestDispatchAgent:
         retry_backoffs = [s for s, r in recorded_sleeps if "retry backoff" in r]
         assert retry_backoffs == [10, 10]
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_gemini_dispatch_honors_custom_per_call_cap(self, mock_invoke, tmp_path):
         """A custom Gemini per-call cap should bound both the first attempt and fallback."""
-        from agent_runtime.errors import AgentTimeoutError
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.errors import AgentTimeoutError
+        from lu_machinery.agent_runtime.result import Result
 
         mock_invoke.side_effect = [
             AgentTimeoutError("gemini", 120),
@@ -364,11 +371,11 @@ class TestDispatchAgent:
         retry_backoffs = [s for s, r in recorded_sleeps if "retry backoff" in r]
         assert retry_backoffs == [10]
 
-    @patch("agent_runtime.runner.invoke")
+    @patch("lu_machinery.agent_runtime.runner.invoke")
     def test_failure_logged(self, mock_invoke, tmp_path):
         """Post Phase 5: Claude routes through runtime. Runtime returns
         Result(ok=False) with stderr_excerpt; dispatch writes it to log."""
-        from agent_runtime.result import Result
+        from lu_machinery.agent_runtime.result import Result
         mock_invoke.return_value = Result(
             ok=False, agent="claude", model="test", mode="read-only",
             response="", stderr_excerpt="Error: model overloaded",

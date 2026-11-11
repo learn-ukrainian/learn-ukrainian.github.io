@@ -1077,12 +1077,13 @@ def test_runner_spawns_use_primary_project_interpreter(
 
     A primary checkout uses its own ``.venv/bin/python``. A linked worktree
     uses that same primary interpreter even when the worktree has a local
-    virtualenv. When neither checkout has a ``.venv``, ``sys.executable``
-    is accepted unless it lives in some other checkout's ``.venv``.
+    virtualenv. Each selected interpreter must be executable. When neither
+    checkout has a supported ``.venv``, resolution refuses ``sys.executable``.
     """
     import inspect
 
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
+
     from scripts.lexicon.runner import memory as memory_mod
     from scripts.lexicon.runner import worker as worker_mod
 
@@ -1099,6 +1100,7 @@ def test_runner_spawns_use_primary_project_interpreter(
     primary_python = primary / ".venv" / "bin" / "python"
     primary_python.parent.mkdir(parents=True)
     primary_python.write_text("", encoding="utf-8")
+    primary_python.chmod(0o755)
     assert memory_mod.project_interpreter(primary) == primary_python
 
     worktree = primary / ".worktrees" / "dispatch" / "grok" / "task"
@@ -1109,6 +1111,7 @@ def test_runner_spawns_use_primary_project_interpreter(
     local_python = worktree / ".venv" / "bin" / "python"
     local_python.parent.mkdir(parents=True)
     local_python.write_text("", encoding="utf-8")
+    local_python.chmod(0o755)
     assert memory_mod.project_interpreter(worktree) == primary_python
 
     bare = tmp_path / "bare"
@@ -1121,7 +1124,8 @@ def test_runner_spawns_use_primary_project_interpreter(
         memory_mod.project_interpreter(bare)
 
     monkeypatch.setattr(memory_mod.sys, "executable", "/usr/bin/python3")
-    assert memory_mod.project_interpreter(bare) == Path("/usr/bin/python3")
+    with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+        memory_mod.project_interpreter(bare)
 
 
 def test_import_succeeds_when_project_interpreter_resolution_would_fail() -> None:

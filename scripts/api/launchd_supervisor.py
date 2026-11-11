@@ -517,6 +517,9 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
         "GIT_DISCOVERY_ACROSS_FILESYSTEM",
     ):
         environment.pop(key, None)
+    # The API serves launch_dir (the release snapshot, or the checkout in live mode), so that is its
+    # product; the value this supervisor inherited names the supervisor's own checkout.
+    environment["LU_PRODUCT_ROOT"] = str(launch_dir)
     environment["LEARN_UK_REPO_ROOT"] = str(repo_root)
     environment["GIT_DIR"] = str(repo_root / ".git")
     environment["GIT_WORK_TREE"] = str(repo_root)

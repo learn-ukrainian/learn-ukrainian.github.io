@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import shlex
 import subprocess
 import sys
@@ -11,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime.registry import AGENTS
+from scripts.dispatcher import checks
 from scripts.review.model_catalog import (
     ModelCatalogError,
     activity_role_refusal,
@@ -30,6 +32,7 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     risk_reviewer_refusal,
     runtime_model_matches_requested,
+    unknown_model_refusal,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -246,24 +249,28 @@ def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():
 
 
 def test_fable_holds_no_review_or_advisory_role():
-    """#9583 roles still bar review/advice while OO-58 parks the active model."""
+    """#9583 roles still bar review/advice while OO-58 parks the active model.
+
+    C-4965 adds Fable 5.2 under the same roles as an explicit pin only.
+    """
     catalog = load_model_catalog()
-    fable = catalog["models"]["claude-fable-5-1"]
-    assert fable["lifecycle"] == "active"
-    assert fable["transports"] == ["native_claude"]
-    assert "replaced_by" not in fable
-    assert not {"architecture", "critical_review", "consequential_advisory", "bounded_advisory_envelope"} & set(
-        fable["roles"]
-    )
-    assert all(c["model_id"] != "claude-fable-5-1" for c in catalog["review_candidates"].values())
+    for model_id in ("claude-fable-5-1", "claude-fable-5-2"):
+        fable = catalog["models"][model_id]
+        assert fable["lifecycle"] == "active"
+        assert fable["transports"] == ["native_claude"]
+        assert "replaced_by" not in fable
+        assert fable["roles"] == ["long_horizon_coding", "orchestration"]
+        assert all(c["model_id"] != model_id for c in catalog["review_candidates"].values())
+        assert model_id not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
+        assert model_id not in catalog["formal_cf_defaults"]["claude"]["family_models"]
+        assert model_id not in catalog["budget_substitution_models"]["cursor"]
     for risk, ladder in catalog["review_ladders"].items():
         assert not any(name.startswith("claude-fable") for rung in ladder for name in rung), risk
-    assert "claude-fable-5-1" not in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
-    assert "claude-fable-5-1" not in catalog["formal_cf_defaults"]["claude"]["family_models"]
-    assert "claude-fable-5-1" not in catalog["budget_substitution_models"]["cursor"]
 
 
-@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high"])
+@pytest.mark.parametrize(
+    "model", ["claude-fable-5-1", "claude-fable-5-1[1m]", "claude-fable-5-1-thinking-high", "claude-fable-5-2"]
+)
 @pytest.mark.parametrize("activity", ["review", "consult"])
 def test_fable_is_refused_every_review_and_consult_activity(model, activity):
     """#9583: activity admission reads the catalog roles, so every Fable spelling is refused."""
@@ -746,8 +753,8 @@ def test_catalog_refuses_a_direct_bounded_worker_route():
 
 
 @pytest.mark.parametrize(
-    ("spelling", "expected"),
-    [
+    ("spelling", "expected", "agent"),
+    [(spelling, expected, "codex") for spelling, expected in [
         ("gpt-6-luna", "gpt-6-luna"),
         ("GPT-6-Luna", "gpt-6-luna"),
         ("codex:gpt-6-luna", "gpt-6-luna"),
@@ -756,12 +763,46 @@ def test_catalog_refuses_a_direct_bounded_worker_route():
         ("gemini-3.8-flash", "gemini-3.8-flash-high"),
         ("gemini-3.8-flash-low", "gemini-3.8-flash-high"),
         ("claude-opus-5-5[1m]", "claude-opus-5-5"),
+        # C-4965: a new minor version is its own id, never a variant of retired Fable 5.
+        ("claude-fable-5-2", "claude-fable-5-2"),
+        ("claude-fable-5-2[1m]", "claude-fable-5-2"),
+        ("claude-fable-5-1", "claude-fable-5-1"),
+        ("claude-fable-5", "claude-fable-5"),
+        # C-4967: only a whole effort or thinking suffix is a variant; an unknown newer version is
+        # no model at all, never its retired predecessor.
+        ("gpt-6.1-sol-high", "gpt-6.1-sol"),
+        ("claude-opus-5-5-high", "claude-opus-5-5"),
+        ("claude-opus-5-5-thinking-xhigh", "claude-opus-5-5"),
+        ("claude-fable-5-1-thinking-high", "claude-fable-5-1"),
+        ("grok-4.7-build", "grok-4.7"),
+        ("grok-4.7-build-fast", None),
+        ("gpt-6-luna-highest", None),
+        ("claude-opus-5-6", None),
+        ("claude-sonnet-5-6", None),
+        ("claude-fable-5-3", None),
+        ("claude-opus-5-6[1m]", None),
         ("not-a-model", None),
         (None, None),
+    ]] + [
+        # Dispatch admission normalizes a native Claude alias first; Cursor's Auto selector names no model.
+        ("opus", None, "claude"),
+        ("sonnet[1m]", None, "claude"),
+        ("fable", None, "claude"),
+        ("auto", None, "cursor"),
+        ("grok-4.7-high", "grok-4.7", "cursor"),
     ],
 )
-def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected):
+def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected, agent):
     assert canonical_model_id(spelling) == expected
+    if spelling is None:
+        return
+    prompt = b"implement the brief"
+    if agent == "codex" and expected is None:
+        # An unknown explicit pin is refused at dispatch admission with the catalog's unknown-model text.
+        with pytest.raises(ValueError, match=re.escape(unknown_model_refusal(spelling))):
+            checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
+    else:
+        checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
@@ -1006,6 +1047,11 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
+    """An active Gemini work model holds no review role, so it is refused any review of record.
+
+    Argon left retirement on 2026-11-10 as the second Gemini work option; the refusal now
+    comes from its catalog roles, not its lifecycle, and still precedes routing and launch.
+    """
     from scripts.agent_runtime import target_admission
 
     def forbidden(*args, **kwargs):
@@ -1013,7 +1059,10 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(target_admission.ReviewAdmissionRefused, match="is retired in the model catalog"):
+    with pytest.raises(
+        target_admission.ReviewAdmissionRefused,
+        match=r"\(gemini-4-argon\) holds no review, critique or approval role",
+    ):
         target_admission.resolve_and_admit(
             ("agy",),
             mode="read-only",
@@ -1025,6 +1074,26 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
             route=forbidden,
             claude_account=HOST_ACCOUNT,
         )
+
+
+@pytest.mark.parametrize(
+    ("agent", "model"),
+    [("agy", "gemini-4-carbon-medium"), ("agy", "gemini-4-argon-low"), ("claude", "claude-fable-5-2")],
+)
+def test_work_only_model_is_refused_a_review_typed_dispatch_before_launch(agent, model):
+    """Defect class: a model with no catalog review role admitted to a review-typed dispatch.
+
+    Dispatch admission must refuse it before any worktree or provider starts; the verdict
+    recorder's later refusal only discards a run that already happened (#9583). The same
+    model stays admitted for work.
+    """
+    review = {
+        "pr": 12935, "require_review_verdict": True, "review_profile": "infra",
+        "review_author_model": "gpt-6.1-sol", "risk": "high",
+    }
+    with pytest.raises(ValueError, match="holds no review"):
+        checks.check_model_admission(agent, model, "read-only", review, b"review the change")
+    checks.check_model_admission(agent, model, "read-only", {}, b"implement the change")
 
 
 def test_sol_defaults_and_escalations_use_high_across_catalog():

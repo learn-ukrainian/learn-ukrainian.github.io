@@ -33,6 +33,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
 from scripts.audit.source_inventory_intake import read_source_inventory, source_inventory_candidates
@@ -42,7 +44,6 @@ from scripts.lexicon.content_lexicon_reconciler import extract_ukrainian_tokens
 from scripts.lexicon.enrich_manifest import _sum20_definition_card, _vts_definition_card
 from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skeleton_entry, write_candidates
 from scripts.lexicon.lemma_normalization import strip_acute_stress
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.verification.vesum import verify_word
 
 SOURCE_ID = "textbook-jsonl-curated-2026-07-19-bulk"
@@ -460,7 +461,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.lexicon.curated_textbook_jsonl_repromote --apply --report\n"
             "Outputs: inventory/decision YAML when requested; --apply writes candidates and plan JSON.\n"
             "Scratch defaults use caller TMPDIR (else the system temp directory); caller owns cleanup.\n"
-            "Standalone runs can use scripts.tools.task_scratch run for managed scratch.\n"
+            "Standalone runs can use lu_machinery.tools.task_scratch run for managed scratch.\n"
             "Only --apply --write updates manifest/fingerprint; no surface-admission changes.\n"
             "Exit codes: 0 success; nonzero on input, validation or write errors.\n"
             "Related: #9702; scripts.audit.plan_source_inventory_promotion."

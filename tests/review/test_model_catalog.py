@@ -1125,12 +1125,25 @@ def assert_frozen_surfaces(actual, *, surfaces):
                 assert endpoint["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
                 endpoint["models"] = ["gpt-6.1-sol"]
                 value["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
-            # Carbon is held inventory only; every prior seat and route stays frozen.
+            # Operator decision 2026-11-10: Carbon and Argon are active AGY work models with no
+            # review or advisory role, so they join no seat, review route, ladder or ranking and
+            # every other field stays frozen. Argon's frozen row is its retired record, which
+            # held the catalog id gemini-4-argon-high before that decision.
             carbon = value["models"].pop("gemini-4-carbon")
-            assert hashlib.sha256(encode(carbon)).hexdigest() == "5e7dd56ff656759fae9e85e0120c0eb74ae49ea78122db95c288ad3631c960b7"
+            assert hashlib.sha256(encode(carbon)).hexdigest() == "d8d515834ddc850490fb2e2a9bd7b9b0cdf77b2184254ca6db765b5b92f510d5"
+            argon = value["models"].pop("gemini-4-argon")
+            assert hashlib.sha256(encode(argon)).hexdigest() == "487d0e7e81d157689031dc8c804f1a3323773e0ed5b4486a8e2f1af793909d3e"
+            value["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
+            # C-4965: Fable 5.2 is an explicit-pin model with no review or advisory role, so it
+            # joins no seat, review route, ladder or ranking; every other field stays frozen.
+            fable52 = value["models"].pop("claude-fable-5-2")
+            assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
+            # C-4967: the native Grok runtime id becomes an exact alias of its holder, so it keeps its
+            # identity once only effort suffixes count as variants; no seat, route or ranking moves.
+            assert value["models"]["grok-4.7"].pop("aliases") == ["grok-4.7-build"]
             # The advisory_roles section moves no seat, route or review ranking.
             _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
@@ -1146,13 +1159,11 @@ def assert_frozen_surfaces(actual, *, surfaces):
             value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
             # REMOVE-UNNEEDED-1107: prose-only correction of two stale "Gemma retired" policy notes
             # (Gemma is live for hramatka through OpenCode). No seat, route or ranking moves.
-            for index, digest in (
-                (3, "38c458779792bfdad5dffdf148ff85898322fc1e37c27432e0a43d7cfffd35f4"),
-                (7, "a9a80d7846d275d800b34a5f61d349cb7fabf7fb370b3ac7ff1d0c43862444c1"),
-            ):
-                if value["policy"]["notes"][index] != CURRENT_BASELINE["catalog"]["policy"]["notes"][index]:
-                    assert hashlib.sha256(encode(value["policy"]["notes"][index])).hexdigest() == digest
-                    value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
+            for index in (3, 7):
+                value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
+            # Explanatory prose only: normalize the cleaned-up notes to the historical overlay.
+            frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
+            value["models"]["claude-haiku-5-5"]["notes"] = frozen_notes
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 
@@ -1168,6 +1179,8 @@ def refresh_current_baseline():
     capture = deepcopy(_V2_BASELINE)
     catalog = plain(expanded_legacy_view())
     catalog["models"].pop("gemini-4-carbon")
+    catalog["models"].pop("gemini-4-argon")
+    catalog["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
     catalog["models"].pop("gpt-6.1-terra")
     _pop_advisory_roles(catalog)
     # Keep the previously approved overlays outside this current-baseline refresh.

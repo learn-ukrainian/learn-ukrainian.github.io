@@ -59,15 +59,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version-file: '.python-version'
-
-      - name: Create local test venv
-        run: |
-          python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest pyyaml "jsonschema==4.26.0" "psutil==7.2.2"
+      - name: Python CI environment
+        uses: ./.github/actions/python-ci-env
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Verify committed mirrors before deploy
         run: bash scripts/check_rules_deployment.sh --tracked-mirrors-only
@@ -77,11 +72,5 @@ jobs:
           bash scripts/deploy_prompts.sh
           bash scripts/check_rules_deployment.sh
 
-      # tests/conftest.py imports learn_ukrainian_v4_runtime, and the agent
-      # runtime adapters import jsonschema and psutil; this slim venv installs
-      # only those runtime deps, so expose the src layout via PYTHONPATH
-      # (same approach as hygiene.yml's focused agent config tests).
       - name: Regression tests for deploy drift check
-        env:
-          PYTHONPATH: packages/v4-runtime/src
         run: .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -v

@@ -197,7 +197,7 @@ def evaluate_core_gates(ctx: AuditContext, state: AuditState, structure_gate: Ga
     meta_violations.extend(research_violations)
 
     try:
-        from research_quality import assess_research_compat, find_research_path
+        from lu_machinery.research_quality import assess_research_compat, find_research_path
         _md_path = Path(ctx.file_path)
         _bare_slug = to_bare_slug(_md_path.stem)
         _research_path = find_research_path(_md_path.parent, _bare_slug)

@@ -984,12 +984,12 @@ def _resolve_primary_checkout() -> Path | None:
     Returns None outside a git repo so callers fall back honestly.
     """
     try:
-        from guardrails.worktree_containment import (
+        from lu_machinery.guardrails.worktree_containment import (
             NotAGitRepositoryError,
             resolve_main_root,
         )
     except ImportError:  # repo root on sys.path instead of scripts/
-        from scripts.guardrails.worktree_containment import (  # type: ignore[no-redef]
+        from lu_machinery.guardrails.worktree_containment import (  # type: ignore[no-redef]
             NotAGitRepositoryError,
             resolve_main_root,
         )

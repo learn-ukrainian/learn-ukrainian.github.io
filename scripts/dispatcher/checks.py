@@ -15,8 +15,10 @@ from scripts.dispatcher.types import TaskSpec
 from scripts.review.model_catalog import (
     advisory_role_policy,
     canonical_model_id,
+    is_cursor_auto_selector,
     load_model_catalog,
     retired_model_refusal,
+    unknown_model_refusal,
 )
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
@@ -126,11 +128,43 @@ def check_trial_shadow(agent: str, model: str, record: dict) -> dict:
     return {"trial_label": "trial", "trial_qualified_nonce": qualified["run_nonce"]}
 
 
+def execution_identity(agent: str, model: str, catalog: dict | None = None) -> str | None:
+    """The catalog id a dispatched ``--model`` runs, after native Claude alias normalization.
+
+    A native alias (``opus``, ``sonnet[1m]``) runs its family's newest catalog model. None means
+    the string names no catalog model.
+    """
+    alias = model.strip().casefold().split("[", 1)[0]
+    if agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
+        from scripts.agent_runtime.model_pause import _newest_claude
+
+        return _newest_claude(alias)
+    return canonical_model_id(model, catalog)
+
+
 def check_model_admission(agent: str, model: str, mode: str, options: dict, prompt: bytes) -> None:
-    """Keep the temporary reviewer exception closed at admission and again at spawn."""
+    """Refuse an unknown model, a reviewer without a review role, and keep the temporary reviewer exception closed.
+
+    An unknown explicit pin is refused before any model-specific exemption, so it can never run
+    under another model's identity. Cursor's ``auto`` selector names no model and stays admitted.
+    A review-typed request needs a catalog review role (#9583) before any worktree or provider
+    starts; the verdict recorder's later refusal would only discard a run that already happened.
+    """
+    from scripts.agent_runtime.model_pause import dispatch_roles
+    from scripts.review.model_catalog import REVIEW_ACTIVITY, activity_role_refusal
+
     catalog = load_model_catalog()
-    identity = canonical_model_id(model, catalog)
-    if not catalog["models"].get(identity, {}).get("red_team_only"):
+    identity = execution_identity(agent, model, catalog)
+    if identity is None:
+        if agent == "cursor" and is_cursor_auto_selector(model):
+            return
+        raise ValueError(unknown_model_refusal(model))
+    if not catalog["models"][identity].get("red_team_only"):
+        # Review typing is the one dispatch role admission infers: every review flag, --risk,
+        # --review-mode, --language-lane, the subject selectors and a review research role.
+        reviewed = "review" in dispatch_roles(options)
+        if reviewed and (refusal := activity_role_refusal(identity, REVIEW_ACTIVITY, catalog)):
+            raise ValueError(refusal)
         return
     context = {key: options.get(key) for key in ("review_mode", "review_profile", "requested_role")}
     context.update(author_model=options.get("review_author_model"),
@@ -161,14 +195,7 @@ def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:
 def check_bounded_advisory(args, model: str, repo: Path, prompt: bytes) -> dict:
     """Apply the legacy bounded-worker policy before creating a worktree or starting a provider."""
     try:
-        alias = model.strip().casefold().split("[", 1)[0]
-        if args.agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
-            from scripts.agent_runtime.model_pause import _newest_claude
-
-            model = _newest_claude(alias)
-            if model is None:
-                raise ValueError("cannot resolve native Claude model alias for bounded admission")
-        model = canonical_model_id(model)
+        model = execution_identity(args.agent, model)
         requirement = advisory.bounded_requirement(
             model, mode=args.mode, task_family=args.research_task_family, review_profile=args.review_profile,
             owned_paths=[*args.owned_path, *args.research_owned_path], repo_root=repo,

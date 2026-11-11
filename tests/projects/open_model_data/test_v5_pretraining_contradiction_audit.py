@@ -7,8 +7,8 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v5_pretraining_contradiction_audit import (
     DEFAULT_DPO_DIR,
     DEFAULT_PROTECTION_SUITE,

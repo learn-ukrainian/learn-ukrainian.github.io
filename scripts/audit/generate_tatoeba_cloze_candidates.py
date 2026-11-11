@@ -24,6 +24,7 @@ _import_path = sys.path[:]
 try:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
     from scripts.audit.generate_practice_deck import (
         CASE_RULES,
         CEFR_ORDER,
@@ -120,7 +121,7 @@ def _store_path(store, path=None, *, root=None, required=False):
     repository = Path(__file__).resolve().parents[2]
     if str(repository) not in sys.path:
         sys.path.append(str(repository))
-    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store, unavailable_store_path
 
     result = resolve_store(store, root or repository,
                            binding=None if path is None else StoreBinding(store, Path(path)))

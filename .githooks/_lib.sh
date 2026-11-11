@@ -38,12 +38,21 @@ run_pre_commit() {
 }
 
 # A dispatched write task learns at commit or push time that it changed a path outside its
-# owned paths; settlement still refuses such a delivery (#12113). Work outside a task skips it.
+# owned paths; settlement still refuses such a delivery (#12113). Work outside a task skips
+# it. Inside a task the checker is the installed lu-machinery release (requirements-machinery.lock);
+# -P keeps a stray in-tree package from shadowing it. A checker that cannot be imported refuses
+# the commit or push: a missing checker must not skip enforcement.
 check_owned_paths() {
-  if [[ -z "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" || ! -f "$source_root/scripts/dispatcher/ownership.py" ]]; then
+  if [[ -z "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]]; then
     return 0
   fi
-  (cd "$source_root" && run_project_python -m scripts.dispatcher.ownership --worktree "$worktree_root" "$@")
+  local import_error
+  if ! import_error="$(cd "$source_root" && run_project_python -P -c 'import lu_machinery.dispatcher.ownership' 2>&1 >/dev/null </dev/null)"; then
+    echo "Git hook error: owned-path checker is not installed; refusing to skip enforcement." >&2
+    [[ -n "$import_error" ]] && echo "  ${import_error##*$'\n'}" >&2
+    exit 1
+  fi
+  (cd "$source_root" && run_project_python -P -m lu_machinery.dispatcher.ownership --worktree "$worktree_root" "$@") || exit 1
 }
 
 require_git_lfs() {

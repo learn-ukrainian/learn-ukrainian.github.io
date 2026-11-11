@@ -59,10 +59,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_set
+
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
-from scripts.storage.paths import artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
@@ -975,7 +976,8 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
     except (FileNotFoundError, ValueError, KeyError) as exc:
         raise RuntimeError(
             "Middle Ukrainian replay requires the verified dialect artifact; hydrate with "
-            ".venv/bin/python -m scripts.storage.artifacts hydrate "
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+            ".venv/bin/python -m lu_machinery.storage.artifacts hydrate "
             "--group open_model_release_payload"
         ) from exc
     with io.StringIO(dialect_bytes.decode("utf-8")) as f:

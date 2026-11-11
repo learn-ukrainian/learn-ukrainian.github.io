@@ -181,7 +181,7 @@ class Reaper:
 
     @classmethod
     def start(cls) -> Reaper:
-        from scripts.common.scratch import ensure_scratch_root
+        from lu_machinery.common.scratch import ensure_scratch_root
 
         temp = tempfile.TemporaryDirectory(prefix="dispatcher-worker-reap-", dir=ensure_scratch_root())
         try:

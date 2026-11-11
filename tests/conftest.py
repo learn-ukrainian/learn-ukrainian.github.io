@@ -146,7 +146,8 @@ def _patch_sources_free_disk(module: Any) -> None:
     current = sources_cls.free_disk_bytes
     if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
         return
-    evidence_config = sys.modules["scripts.storage.generations"]
+    # The product module reads its evidence store configuration from the installed release.
+    evidence_config = sys.modules["lu_machinery.storage.generations"]
     if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
         raise RuntimeError(
             f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"
@@ -299,7 +300,11 @@ class _TelemetryIsolation:
         frame = sys._getframe(1)
         try:
             while frame is not None:
-                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                if frame.f_globals.get("__name__") in {
+                    "telemetry.emit",
+                    "scripts.telemetry.emit",
+                    "lu_machinery.telemetry.emit",  # TRANSITIONAL-PKG3-B2: installed release beside the in-tree copy
+                }:
                     self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
                     # emit_event swallows ordinary write errors. Retain the
                     # attempt for sessionfinish as well as preventing the write.
@@ -913,7 +918,11 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     return detector
 
 
-_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_CLAUDE_ADAPTER_ALIASES = (
+    "scripts.agent_runtime.adapters.claude",
+    "agent_runtime.adapters.claude",
+    "lu_machinery.agent_runtime.adapters.claude",  # TRANSITIONAL-PKG3-B2: product code runs the installed adapter
+)
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
 # Bridge package the rules-workflow venv does not install. The Claude adapter
 # reaches it through fleet_comms contracts; its absence is not an alias typo.
@@ -1016,21 +1025,23 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
     state: dict[str, Any] = {"ready": False, "reason": "test stub: host slice probe disabled"}
     if request.node.get_closest_marker("host_dispatch_probe") is not None:
         return state
-    from scripts.orchestration import dispatch_isolation
-
     monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
         state["ready"] = True
         state["reason"] = None
 
-    def _probe(env: Any = None, **_kwargs: Any) -> Any:
-        source = os.environ if env is None else env
-        forced = dispatch_isolation._forced_fallback(source)
-        if forced is not None:
-            return forced
-        return dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
+    # Both machinery copies: the in-tree one and the installed release.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.orchestration.dispatch_isolation", "lu_machinery.orchestration.dispatch_isolation"):  # TRANSITIONAL-PKG3-B2
+        dispatch_isolation = importlib.import_module(name)
 
-    monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
+        def _probe(env: Any = None, _module: Any = dispatch_isolation, **_kwargs: Any) -> Any:
+            source = os.environ if env is None else env
+            forced = _module._forced_fallback(source)
+            if forced is not None:
+                return forced
+            return _module.ProbeResult(ready=state["ready"], reason=state["reason"])
+
+        monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
     return state
 
 
@@ -1685,14 +1696,14 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     records hold real rate limits. Credit-lane tests monkeypatch both readers
     themselves.
     """
-    from scripts.fleet import credit_lane
-
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
-    monkeypatch.setattr(
-        credit_lane,
-        "read_recent_rate_limits",
-        lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
-    )
+    for name in ("scripts.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
+        credit_lane = importlib.import_module(name)
+        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+        monkeypatch.setattr(
+            credit_lane,
+            "read_recent_rate_limits",
+            lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
+        )
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the
@@ -1767,14 +1778,14 @@ class _RedirectRefreshSidecarLoader:
 class _IssueStreamRefreshImportHook:
     """Redirect refresh sidecars on the audit module's first import (#10519)."""
 
-    _MODULE = "scripts.orchestration.issue_stream_audit"
+    _MODULES = ("scripts.orchestration.issue_stream_audit", "lu_machinery.orchestration.issue_stream_audit")  # TRANSITIONAL-PKG3-B2
 
     def __init__(self, state: Path, lock: Path) -> None:
         self._state = state
         self._lock = lock
 
     def find_spec(self, fullname, path, target=None):
-        if fullname != self._MODULE:
+        if fullname not in self._MODULES:  # TRANSITIONAL-PKG3-B2
             return None
         spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
         if spec is None or spec.loader is None:
@@ -1799,10 +1810,11 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
     state_dir = _write_ownership_base / f"issue-audit-refresh-{next(_WRITE_OWNERSHIP_SEQ)}"
     state = state_dir / "issue_stream_audit_refresh.json"
     lock = state_dir / "issue_stream_audit_refresh.lock"
-    module = sys.modules.get(_IssueStreamRefreshImportHook._MODULE)
-    if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
-        monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
-        monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
+    for name in _IssueStreamRefreshImportHook._MODULES:  # TRANSITIONAL-PKG3-B2
+        module = sys.modules.get(name)
+        if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
+            monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
+            monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
     hook = _IssueStreamRefreshImportHook(state, lock)
     sys.meta_path.insert(0, hook)
     try:
@@ -4043,14 +4055,14 @@ def _hermetic_agy_claude_window(monkeypatch):
     which catalog seat those tests select. The default reading is a fresh
     empty window. A test of the real reader restores ``__wrapped__``.
     """
-    from scripts.agent_runtime import model_pause as mp
+    for name in ("scripts.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
+        mp = importlib.import_module(name)
+        real = mp.routing_budget_used_pct
 
-    real = mp.routing_budget_used_pct
+        def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):
+            if lane == _window:
+                return 0.0
+            return _real(lane, account=account)
 
-    def wrapped(lane, *, account):
-        if lane == mp.AGY_CLAUDE_WINDOW_LANE:
-            return 0.0
-        return real(lane, account=account)
-
-    wrapped.__wrapped__ = real
-    monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)
+        wrapped.__wrapped__ = real
+        monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)

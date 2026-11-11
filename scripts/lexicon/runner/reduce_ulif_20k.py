@@ -27,6 +27,7 @@ EXPECTED_COHORT_COUNT = 20_323
 
 def _load_repo(repo: Path) -> None:
     sys.path.insert(0, str(repo))
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 
 def _event(name: str, **fields: Any) -> None:
@@ -268,7 +269,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.sources_db is None:
             args.sources_db = args.repo / "data" / "sources.db"
         if args.kaikki_json is None:
-            from scripts.storage.paths import artifact_path
+            from lu_machinery.storage.paths import artifact_path
 
             args.kaikki_json = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=args.repo)
     return _run(args)

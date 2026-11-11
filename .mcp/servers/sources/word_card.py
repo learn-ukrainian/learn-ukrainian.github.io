@@ -45,9 +45,9 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from jsonschema.validators import extend
+from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.nofollow_walk import ComponentOpenError, open_directory_component
 
-from scripts.common.jsonl import jsonl_lines
-from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
 from scripts.deploy.prepare_word_card_preview import CARD_SCHEMA, DEFAULT_PIN, PreviewError, check_release
 
 ENV_WORD_CARDS_DIR = "LU_WORD_CARDS_DIR"
@@ -216,7 +216,7 @@ def normalize_query(word: Any) -> tuple[str | None, str | None]:
 
 def _local_target(path: Path, *, directory: bool) -> LocalTarget:
     """Resolve ``path`` through its symlinks and require a local directory (or regular file) there."""
-    from scripts.storage.topology import is_network_filesystem_path
+    from lu_machinery.storage.topology import is_network_filesystem_path
 
     try:
         resolved = path.resolve(strict=True)

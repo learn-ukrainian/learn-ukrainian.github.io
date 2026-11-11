@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from scripts.agent_runtime.tool_calls import TRUNCATION_SUFFIX
+from lu_machinery.agent_runtime.tool_calls import TRUNCATION_SUFFIX
+
 from scripts.audit.runtime_tool_events import map_runtime_tool_calls
 
 

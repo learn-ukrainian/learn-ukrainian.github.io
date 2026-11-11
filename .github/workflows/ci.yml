@@ -47,26 +47,45 @@ jobs:
     if: github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # The installed release has no implicit product or state anchor: name this checkout for both,
+    # as scripts/__init__.py does for the in-tree copy.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # Commits and trees, and only the job's own scripts (FR-58): the ancestry
+          # Commits and trees, and only the job's own inputs (FR-58): the ancestry
           # check and the empty-diff metadata commit read no file content.
           fetch-depth: 0  # verify the original group base is an ancestor of the candidate
           filter: blob:none
           sparse-checkout: |
-            scripts/
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies): the release entry points this
+      # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Record original queue candidate
         env:
           EVENT_NAME: ${{ github.event_name }}
           QUEUE_RECORD: ${{ runner.temp }}/queue-candidate.json
-        run: python3 -m scripts.ci.gate --record-queue
+        run: python3 -m lu_machinery.ci.gate --record-queue
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ci-queue-candidate
@@ -74,18 +93,18 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - id: metadata
-        run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
+        run: python3 -m lu_machinery.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
       - name: Fetch and verify the blobs the scan reads
         env:
           SCAN_BASE: ${{ steps.metadata.outputs.parent }}
           SCAN_HEAD: ${{ steps.metadata.outputs.commit }}
-        run: python3 -m scripts.ci.secret_scan_scope materialize
+        run: python3 -m lu_machinery.ci.secret_scan_scope materialize
       # `version` is the scanner image tag. The uses SHA pins this action's
       # script only; omitting version pulls :latest. Bump: set both TruffleHog
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
       # newer — never an older tag to clear a finding) and re-scan with
       # scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2 # action v3.99.7
+      - uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # action v3.99.8
         with:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
@@ -103,6 +122,11 @@ jobs:
     runs-on: ubuntu-latest
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
+    # The installed release has no implicit product or state anchor: name this checkout for both,
+    # as scripts/__init__.py does for the in-tree copy.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       # Full history, blobless (FR-58): the step after the scope fetches the blobs
       # of the scanned range. The full-history audit reads every blob, so it keeps
@@ -115,6 +139,20 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies): the release entry points this
+      # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Scan publication fields
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         env:
@@ -139,14 +177,14 @@ jobs:
           DISPATCH_REF: ${{ github.ref }}
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
           GH_TOKEN: ${{ github.event_name == 'schedule' && github.token || '' }}
-        run: python3 -m scripts.ci.secret_scan_scope
+        run: python3 -m lu_machinery.ci.secret_scan_scope
       # The range TruffleHog scans: the scope above, or the action's own
       # pull_request base and head. Fails unless every blob it reads is local.
       - name: Fetch and verify the blobs the scan reads
         env:
           SCAN_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || steps.secret-scan-scope.outputs.trufflehog_base }}
           SCAN_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || steps.secret-scan-scope.outputs.trufflehog_head }}
-        run: python3 -m scripts.ci.secret_scan_scope materialize
+        run: python3 -m lu_machinery.ci.secret_scan_scope materialize
       - name: Gate scrubbed public identifiers
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -165,7 +203,7 @@ jobs:
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
       # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2 # action v3.99.7
+      - uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # action v3.99.8
         with:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
@@ -225,6 +263,11 @@ jobs:
         uses: ./.github/actions/python-ci-env
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Report lu-machinery
+        # Isolated mode: the installed release from requirements-machinery.lock,
+        # never a checkout path. Every job installs through the same action;
+        # this import fails CI Gate when the lock was missing or not installed.
+        run: .venv/bin/python -I -c "import lu_machinery, importlib.metadata as m; print('lu-machinery', m.version('lu-machinery'), 'from', lu_machinery.__file__)"
       # mypy ratchet (#12642). One cache key, saved on main only: a pull_request
       # save is visible only to that PR and the scripts/ cache is large.
       # A miss rechecks scripts/ inside this job; a hit reuses incremental results.
@@ -233,7 +276,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Mypy ratchet
         run: .venv/bin/python -m scripts.lint.mypy_ratchet
       - name: Save mypy cache
@@ -241,7 +284,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .mypy_cache
-          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'pyproject.toml') }}
+          key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Package boundary ratchet
         run: .venv/bin/python -m scripts.lint.boundary_ratchet
       - name: Collect pytest for PR admission
@@ -254,7 +297,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'origin/main' }}
-        run: .venv/bin/python -m scripts.common.flake_quarantine --base-ref "$BASE_SHA"
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: .venv/bin/python -m lu_machinery.common.flake_quarantine --base-ref "$BASE_SHA"
       - name: Lint and content contracts
         env:
           GH_TOKEN: ${{ github.token }}
@@ -315,7 +360,9 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: python3 scripts/ci/frontend_change_scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: .venv/bin/python -m lu_machinery.ci.frontend_change_scope --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
       # Hydrate and build once (#9718). The record binds the build's log, exit code and
       # dist/ to the hydrated inputs; test:unit:ci, the verify below and build-renders
       # fail closed unless that exact build and those inputs are still current.
@@ -505,13 +552,13 @@ jobs:
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
           # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
-          .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
+          .venv/bin/python -m lu_machinery.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
             --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: List failing tests in job summary
         if: failure()
         env:
           SHARD: ${{ matrix.shard }}
-        run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
+        run: .venv/bin/python -m lu_machinery.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
       - name: Show pytest cancellation diagnostics
         if: ${{ failure() || cancelled() }}
         timeout-minutes: 1
@@ -554,18 +601,33 @@ jobs:
             tests/
             scripts/
             registry/artifacts/needs-artifact-expected.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies): the release entry points this
+      # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: pytest-junit-shard-*
           path: ci-artifacts/shards
       - env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
+        run: python3 -m lu_machinery.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
       # Future runs learn only from a full, successful partition. The refresher
       # further requires the entire merge-group workflow to have passed.
       # Seconds are divided by each shard's runner speed; files that ran no test record 0.
@@ -658,6 +720,11 @@ jobs:
     # otherwise the scope step cheap-exits and the job still ends success (#9871).
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # The installed release has no implicit product or state anchor: name this checkout for both,
+    # as scripts/__init__.py does for the in-tree copy.
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -667,12 +734,26 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies): the release entry points this
+      # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: python3 scripts/ci/dependency_change_scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: python3 -m lu_machinery.ci.dependency_change_scope --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
       - if: steps.scope.outputs.run == 'true'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -681,7 +762,7 @@ jobs:
         name: Run dependency vulnerability audit
         run: |
           python -m pip install --upgrade pip pip-audit PyYAML
-          python scripts/ci/audit_dependencies.py
+          python -m lu_machinery.ci.audit_dependencies
 
   ci-gate:
     name: CI Gate

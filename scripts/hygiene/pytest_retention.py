@@ -1,38 +1,35 @@
-"""Delete inactive pytest scratch whose owner is provably gone (#11297, #11409).
+"""Delete abandoned pytest scratch (#11297, #11409; DISK-1109).
 
 Within the managed pytest namespaces only (``pytest-runs/runs`` and the
-legacy ``pytest-runs/task-scratch``), a run folder is deleted once its newest
-change anywhere inside (write or inode change, so freshly extracted files
-with old mtimes stay young) is more than two hours old, no live process holds
-it through its working directory, an open descriptor, a mapped file, its
-command line or its environment, and its recorded lease owner is dead. A run
-is abandoned only when the owner cannot be alive on this host: the lease
-names this run (directory identity, invocation id and uid; any other lease
-preserves), records the same kernel boot id, and the recorded pid is absent or now
-reports a different start time (the number was reused). The lease lock must
-also be acquired exclusively, so a live writer is never raced.
+legacy ``pytest-runs/task-scratch``), a run folder is abandoned, and deleted,
+when its lease owner is provably dead and nothing inside it has changed
+(write or inode change) for two hours. The owner is dead when the lease names
+this run (directory identity, invocation id and uid) and either records an
+earlier kernel boot, or records this boot and the recorded pid is absent or
+now reports a different start time (the number was reused). The run's lease
+lock must also be acquired exclusively. The owner holds it shared for its
+lifetime, and so do the pytest processes that work inside the run (xdist
+workers, nested sessions), so a run whose owner was killed is kept while any
+of them lives. A folder with no lease, or a malformed one, records no owner:
+it is the residue of an interrupted removal (the lease is written before
+anything else exists) and goes once idle, when its lock (if any) is free. An
+unreadable lease, a parsed lease without its lock, a live or unknown owner, a
+mount or a foreign-owned node inside, an unreadable tree or a registered
+worktree keeps the folder. With ``--apply``, a directory of an abandoned run
+that its owner cannot list (a test can leave mode 000) gets owner rwx back,
+and the run is kept in that sweep; the change makes it young, so a later sweep
+judges its whole tree.
 
-Any live process that cannot be fully read, except an allowlisted same-uid
-session daemon, leaves the snapshot incomplete,
-whatever its owner, and holder evidence read before the failure still counts.
-An incomplete snapshot preserves every run, except that a lease whose owner
-is provably dead on this boot takes the bounded quarantine rename and
-recheck: the lock is held by the sweep and the tree must be unchanged. Like
-any process inspection, these checks have limits; they are layered defences,
-not a proof that no holder exists.
-
-A missing or malformed lease carries no owner, so the older evidence applies:
-the run lock, a readable live holder, and a trusted process snapshot. A
-lease that exists but cannot be read (permission, not a regular file, foreign
-owner, oversized or a read error) preserves as ``lease_unreadable``. Ownership
-metadata, completion state, retention counts and the seven-day quarantine
-play no part in the decision (the operator's retention decision for #11297).
+No snapshot of other processes is taken: on this host an unprivileged sweep
+can never read every process, so requiring one kept every run (machinery
+#30, #57). The contents of a run are pytest's own scratch, so checkouts,
+hard links (virtual environments) and sockets inside it do not keep it.
 
 Deletion reuses the sweep's primitives: an atomic no-replace rename into a
-locked holding directory, a holder and tree-fingerprint recheck of both the
-original and the renamed path, then the descriptor-safe common remover. A
-failed recheck renames the folder back; a crash leaves it in an unlocked
-holding directory, which the next run's recovery returns to its name.
+locked holding directory, a recheck that the renamed folder is the same
+inode with an unchanged tree fingerprint, then the descriptor-safe common
+remover. A failed recheck renames the folder back; a crash leaves it in an
+unlocked holding directory, which the next run's recovery returns to its name.
 """
 
 from __future__ import annotations
@@ -42,19 +39,16 @@ import fcntl
 import os
 import stat
 from collections import Counter
-from collections.abc import Iterable
-from contextlib import ExitStack, suppress
-from dataclasses import dataclass, field
+from contextlib import ExitStack
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from scripts.common import task_scratch as ownership
 from scripts.common.pytest_scratch import NAMESPACE, RUNS_DIRNAME
 from scripts.common.scratch import ScratchScanRootError, scratch_scan_roots
-from scripts.common.session_daemons import allowed_session_daemon
 from scripts.hygiene import tmp_sweep as sweep
 from scripts.hygiene.tmp_sweep_ledger import Ledger
-from scripts.orchestration.tmp_leak_sweep import _process_state, _process_vanished
 
 INACTIVE_S = 2 * 3600
 LARGEST_PRESERVED_RUNS = 10
@@ -80,165 +74,6 @@ def _same(path: Path, fd: int) -> bool:
         return path.absolute() == path.resolve(strict=True) and os.path.samestat(path.lstat(), os.fstat(fd))
     except OSError:
         return False
-
-
-@dataclass
-class Holders:
-    """One pass over every process: path references and raw argv/environment, never emitted.
-
-    ``paths`` holds descriptor, cwd and map targets plus every path an
-    absolute argument or environment value names; ``relative`` holds the
-    paths their relative spellings name from the process cwd; ``texts``
-    keeps the raw blobs so an absolute path embedded anywhere in a value
-    still counts.
-    ``complete`` is False when a live process could not be fully read and is
-    not an allowlisted same-uid daemon. Paths read before the failure are
-    still kept. Only a lease that proves the owner dead bypasses an incomplete
-    snapshot and falls back to the bounded quarantine/recheck path.
-    ``unreadable`` counts unreadable live processes outside that allowlist
-    for the privacy-safe report; ``unreadable_foreign`` and ``unreadable_root``
-    split that count.
-    ``allowed_session_daemons`` records excused same-uid pid/identity pairs.
-    ``descriptor_errors`` counts resource failures separately from process
-    visibility failures; callers report them as sweep errors.
-    """
-
-    paths: list[tuple[int, str, str]] = field(default_factory=list)
-    relative: list[tuple[int, str, str]] = field(default_factory=list)
-    texts: list[tuple[int, str, bytes]] = field(default_factory=list)
-    complete: bool = True
-    unreadable: int = 0
-    unreadable_foreign: int = 0
-    unreadable_root: int = 0
-    descriptor_errors: int = 0
-    allowed_session_daemons: set[tuple[int, str]] = field(default_factory=set)
-
-    def holding(self, paths: Iterable[Path]) -> tuple[list[int], list[str]]:
-        """PIDs and channels that reach any of ``paths`` or a path below it."""
-        found: set[tuple[int, str]] = set()
-        for path in paths:
-            needle = str(path)
-            prefix = needle + "/"
-            encoded = os.fsencode(needle)
-            for pid, channel, target in self.paths:
-                if target == needle or target.startswith(prefix):
-                    found.add((pid, channel))
-            for pid, channel, blob in self.texts:
-                if encoded in blob:
-                    found.add((pid, channel))
-            for pid, channel, target in self.relative:
-                # Inside a held cwd every word reads as a path below it; the cwd already says so.
-                if (target == needle or target.startswith(prefix)) and (pid, "cwd") not in found:
-                    found.add((pid, channel))
-        return sorted({pid for pid, _ in found}), sorted({channel for _, channel in found})
-
-
-def _named_paths(blob: bytes, cwd: str, forms: dict[str, set[Path]]) -> tuple[set[str], set[str]]:
-    """Paths an argument, ``VAR=value`` value or ``:`` list entry names: (absolute, relative to the cwd).
-
-    Each spelling gets the general sweep's reference forms (``..`` and ``.``
-    folded lexically, plus the form the kernel resolves, which follows a
-    symlink before a later ``..``), so ancestor-relative, dot-dot and aliased
-    spellings, alone or combined, reach the same run as its canonical path.
-    ``forms`` caches them across processes for one snapshot.
-    """
-    base = cwd.removesuffix(" (deleted)")
-    absolute: set[str] = set()
-    relative: set[str] = set()
-    for token in blob.split(b"\0"):
-        for value in {token, token.partition(b"=")[2]}:
-            for item in value.split(b":"):
-                if not item:
-                    continue
-                spelling = os.path.join(base, os.fsdecode(item))
-                if spelling not in forms:
-                    forms[spelling] = sweep._reference_forms(spelling)
-                (absolute if item.startswith(b"/") else relative).update(map(str, forms[spelling]))
-    return absolute, relative
-
-
-def _process_uid(entry: Path) -> int | None:
-    """The uid owning a ``/proc/<pid>`` entry, or ``None`` when even that is unreadable."""
-    try:
-        return entry.stat().st_uid
-    except OSError:
-        return None
-
-
-def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
-    """Read cwd, descriptors, maps, argv and environment of every process.
-
-    The caller is inspected like any other process, except for the
-    descriptors in ``own_fds``: the sweep's own inspection handles (a held
-    run lock) are not external holders, while its working directory,
-    arguments, environment and every other descriptor still count. Zombies
-    and processes that exit during the scan hold nothing. An unreadable
-    allowlisted same-uid daemon is recorded without making the snapshot
-    incomplete. Every other read failure leaves the snapshot incomplete,
-    and what was read before it still names a holder.
-    """
-    holders = Holders()
-    try:
-        entries = [name for name in os.listdir(PROC_ROOT) if name.isdigit()]
-    except OSError as error:
-        holders.complete = False
-        holders.descriptor_errors += error.errno in _DESCRIPTOR_ERRORS
-        return holders
-    me = os.getpid()
-    forms: dict[str, set[Path]] = {}
-    for name in entries:
-        entry = PROC_ROOT / name
-        pid = int(name)
-        state = _process_state(entry)
-        if state in {"Z", "X"}:
-            continue
-        found: list[tuple[int, str, str]] = []
-        texts: list[tuple[int, str, bytes]] = []
-        cwd = ""
-        try:
-            if state is None:
-                # The shared state reader hides OSError. Preserve resource failures
-                # separately from genuinely unreadable live processes.
-                (entry / "stat").read_bytes()
-                raise OSError(errno.EIO, "unknown process state")
-            cwd = os.readlink(entry / "cwd")
-            found.append((pid, "cwd", cwd))
-            for fd in os.listdir(entry / "fd"):
-                if pid == me and int(fd) in own_fds:
-                    continue
-                with suppress(FileNotFoundError):  # closed during the scan
-                    found.append((pid, "fd", os.readlink(entry / "fd" / fd)))
-            for line in (entry / "maps").read_bytes().splitlines():
-                fields = line.split(maxsplit=5)
-                if len(fields) == 6:
-                    found.append((pid, "maps", os.fsdecode(fields[5])))
-            texts.append((pid, "argv", (entry / "cmdline").read_bytes()))
-            texts.append((pid, "environ", (entry / "environ").read_bytes()))
-        except (OSError, ValueError) as error:
-            if isinstance(error, OSError) and error.errno in _DESCRIPTOR_ERRORS:
-                holders.complete = False
-                holders.descriptor_errors += 1
-            elif not _process_vanished(entry):
-                identity = allowed_session_daemon(entry) if state is not None else None
-                if identity is not None:
-                    holders.allowed_session_daemons.add((pid, identity))
-                else:
-                    # No other owner rules a holder out; the split only feeds the report.
-                    holders.complete = False
-                    holders.unreadable += 1
-                    uid = _process_uid(entry)
-                    if uid == 0:
-                        holders.unreadable_root += 1
-                    elif uid is not None and uid != os.geteuid():
-                        holders.unreadable_foreign += 1
-        # Evidence read before a failure still names a holder.
-        holders.paths.extend((p, channel, target.removesuffix(" (deleted)")) for p, channel, target in found)
-        for p, channel, blob in texts:
-            absolute, relative = _named_paths(blob, cwd, forms)
-            holders.paths.extend((p, channel, named) for named in absolute)
-            holders.relative.extend((p, channel, named) for named in relative)
-        holders.texts.extend(texts)
-    return holders
 
 
 def _lock(run_fd: int) -> tuple[int | None, str | None]:
@@ -269,46 +104,43 @@ def _lock(run_fd: int) -> tuple[int | None, str | None]:
     return lock, None
 
 
-def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None, bool]:
-    """Read ``lease.json`` relative to the run: ``(lease, error, present)``.
+def _read_lease(run_fd: int) -> tuple[dict[str, Any] | None, str | None]:
+    """Read ``lease.json`` relative to the run: ``(lease, error)``.
 
     A missing lease records no owner. A lease that exists but cannot be read as
     a regular, owner-owned file of bounded size is unknown and preserves. A
     malformed lease, including one the parser fails on outright, also records
-    no owner but is not an I/O failure, so the lock and holder evidence decide
-    like an unleased run.
+    no owner but is not an I/O failure, so the lock and idle time decide like
+    an unleased run.
     """
     try:
         info = os.stat(ownership.LEASE_FILENAME, dir_fd=run_fd, follow_symlinks=False)
     except FileNotFoundError:
-        return None, None, False
+        return None, None
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_size > ownership.LEASE_MAX_BYTES:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     try:
         fd = os.open(ownership.LEASE_FILENAME, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=run_fd)
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     try:
         if not os.path.samestat(os.fstat(fd), info):
-            return None, "lease_unreadable", True
+            return None, "lease_unreadable"
         data = bytearray()
         while chunk := os.read(fd, 65536):
             data += chunk
             if len(data) > ownership.LEASE_MAX_BYTES:
-                return None, "lease_unreadable", True
+                return None, "lease_unreadable"
     except OSError:
-        return None, "lease_unreadable", True
+        return None, "lease_unreadable"
     finally:
         os.close(fd)
     try:
-        lease = ownership.parse_lease(bytes(data))
+        return ownership.parse_lease(bytes(data)), None
     except Exception:  # any parser failure, e.g. RecursionError, is a malformed lease
-        lease = None
-    if lease is None:
-        return None, None, True
-    return lease, None, True
+        return None, None
 
 
 def _pid_present(pid: int) -> bool | None:
@@ -341,18 +173,18 @@ def _process_start_time(pid: int) -> int | None:
 
 
 def _owner_status(lease: dict[str, Any], boot_id: str | None) -> str:
-    """Classify the recorded owner: ``owner_dead``, ``owner_alive``, ``different_boot`` or unknown.
+    """Classify the recorded owner: ``owner_dead``, ``owner_alive`` or ``owner_liveness_unknown``.
 
-    Only the same kernel boot and a matching recorded start time prove the
-    process is the owner. A missing boot id, start time or process table is
-    unknown, never dead.
+    An earlier kernel boot proves the owner dead. On this boot the recorded
+    pid must be absent, or report a start time other than the recorded one.
+    A missing boot id, start time or process table is unknown, never dead.
     """
     owner = lease["owner"]
     recorded_boot = owner.get("boot_id")
     if boot_id is None or recorded_boot is None:
         return "owner_liveness_unknown"
     if recorded_boot != boot_id:
-        return "different_boot"
+        return "owner_dead"
     if not PROC_ROOT.is_dir():
         return "owner_liveness_unknown"
     pid = int(owner["pid"])
@@ -382,8 +214,6 @@ class Candidate:
     locked: bool = False
     lease: dict[str, Any] | None = None
     lease_error: str | None = None
-    lease_present: bool = False
-    owner_dead: bool = False
 
 
 def _names_run(lease: dict[str, Any], candidate: Candidate) -> bool:
@@ -401,91 +231,121 @@ def _names_run(lease: dict[str, Any], candidate: Candidate) -> bool:
     )
 
 
-def _abandonment(candidate: Candidate, *, boot_id: str | None) -> tuple[str | None, bool]:
-    """Why the recorded owner does not prove abandonment, and whether it does.
+def _abandonment(candidate: Candidate, *, boot_id: str | None) -> str | None:
+    """Why the owner evidence keeps the run, or ``None`` when it is abandoned.
 
-    A run with a lease must also have had its lock acquired exclusively; a
-    missing or malformed lease records no owner and falls back to the lock and
-    holder evidence. An unreadable lease always preserves, and so does a lease
-    that does not name this run, since its owner's liveness says nothing about
-    this run's owner. ``True`` means the owner is provably dead on this boot, so
-    an unreadable process snapshot no longer blocks the deletion; the
-    quarantine/recheck still proves the tree.
+    A run with a lease must have had its lock acquired exclusively, and the
+    lease must name this run and prove its owner dead. A missing or malformed
+    lease records no owner: the lock, when present, must be free, and only the
+    idle time decides.
     """
     if candidate.lease_error:
-        return candidate.lease_error, False
-    if candidate.lease is not None:
-        if not candidate.locked:
-            return "lock_missing", False
-        if not _names_run(candidate.lease, candidate):
-            return "owner_liveness_unknown", False
-        status = _owner_status(candidate.lease, boot_id)
-        if status == "owner_dead":
-            return None, True
-        return ("live_owner" if status == "owner_alive" else status), False
-    if candidate.lease_present and not candidate.locked:
-        return "lock_missing", False
-    return None, False
+        return candidate.lease_error
+    if candidate.lease is None:
+        return None
+    if not candidate.locked:
+        return "lock_missing"
+    if not _names_run(candidate.lease, candidate):
+        return "owner_liveness_unknown"
+    status = _owner_status(candidate.lease, boot_id)
+    if status == "owner_dead":
+        return None
+    return "live_owner" if status == "owner_alive" else status
+
+
+def _unlock_owned_dirs(dir_fd: int, *, device: int, mount_id: int) -> int:
+    """Give owner rwx to each of our directories below ``dir_fd`` that the owner cannot list or enter.
+
+    A test can leave such a directory (mode 000), which no scan can see into, so
+    the run could never be judged. This runs only in apply mode, on a run whose
+    owner is proven gone and whose lock the sweep holds. Each repair goes
+    through a descriptor proven to be that directory, on this device and mount
+    (``task_scratch.grant_owner_rwx``); a directory that cannot be proven is
+    left as it is, and the tree scan then reports it. The repair changes each
+    directory's ctime, and the run is kept in this sweep, so a later sweep
+    judges its whole tree from that change on. Returns how many directories it
+    repaired.
+    """
+    listable = stat.S_IRUSR | stat.S_IXUSR
+    repaired = 0
+    with os.scandir(dir_fd) as entries:
+        children = [(entry.name, entry.stat(follow_symlinks=False)) for entry in entries]
+    for name, info in children:
+        if not stat.S_ISDIR(info.st_mode) or info.st_dev != device:
+            continue
+        if info.st_uid == os.geteuid() and stat.S_IMODE(info.st_mode) & listable != listable:
+            try:
+                ownership.grant_owner_rwx(dir_fd, name, info, device=device, mount_id=mount_id)
+            except (OSError, ownership.TaskScratchError):
+                continue
+            repaired += 1
+        try:
+            child = os.open(name, sweep._DIR_FLAGS, dir_fd=dir_fd)
+        except PermissionError:
+            continue  # not ours to repair; the tree scan reports it
+        try:
+            if os.path.samestat(os.fstat(child), info) and ownership.fd_mount_id(child) == mount_id:
+                repaired += _unlock_owned_dirs(child, device=device, mount_id=mount_id)
+        finally:
+            os.close(child)
+    return repaired
 
 
 def _classify(
-    name: str, namespace: Path, ns_fd: int, *, holders: Holders, worktrees: set[Path] | None, now: float,
+    name: str, namespace: Path, ns_fd: int, *, worktrees: set[Path] | None, now: float,
     apply: bool, stack: ExitStack,
 ) -> Candidate:
     """Decide one run folder; transfer only eligible apply locks to the deletion scope."""
     path = namespace / name
+    boot_id = ownership.current_boot_id()
     row = sweep._bare_row(name, "symlink_or_not_directory", kind="other", bytes=None)
     info = os.stat(name, dir_fd=ns_fd, follow_symlinks=False)
     candidate = Candidate(name, namespace, ns_fd, row, (info.st_dev, info.st_ino))
     if not stat.S_ISDIR(info.st_mode):
         return candidate
     row.update(kind="directory", identity=[info.st_dev, info.st_ino, info.st_uid])
-    run_fd = os.open(name, sweep._DIR_FLAGS, dir_fd=ns_fd)
-    try:
-        if not os.path.samestat(os.fstat(run_fd), info):
-            row["reason"] = "identity_changed"
-            return candidate
-        candidate.lock, reason = _lock(run_fd)
-        candidate.locked = candidate.lock is not None
-        candidate.lease, candidate.lease_error, candidate.lease_present = _read_lease(run_fd)
-    finally:
-        os.close(run_fd)
     with ExitStack() as inspection:
-        if candidate.lock is not None:
-            inspection.callback(os.close, candidate.lock)
-            if not apply:  # a dry run only observes the lock
-                inspection.close()
-                candidate.lock = None
+        run_fd = os.open(name, sweep._DIR_FLAGS, dir_fd=ns_fd)
+        try:
+            if not os.path.samestat(os.fstat(run_fd), info):
+                row["reason"] = "identity_changed"
+                return candidate
+            candidate.lock, reason = _lock(run_fd)
+            if candidate.lock is not None:
+                # Registered at once, so any failure below still releases it.
+                inspection.callback(os.close, candidate.lock)
+            candidate.locked = candidate.lock is not None
+            candidate.lease, candidate.lease_error = _read_lease(run_fd)
+            mount_id = ownership.fd_mount_id(run_fd)
+            if apply and not reason and mount_id is not None and _abandonment(candidate, boot_id=boot_id) is None:
+                row["permissions_repaired"] = _unlock_owned_dirs(run_fd, device=info.st_dev, mount_id=mount_id)
+        finally:
+            os.close(run_fd)
+        if candidate.lock is not None and not apply:  # a dry run only observes the lock
+            inspection.close()
+            candidate.lock = None
         if reason:
             row["reason"] = reason
             return candidate
         # Fingerprint first: a write after it shows at the post-rename comparison,
         # a write before it is seen by the age scan below.
         candidate.before = sweep.tree_fingerprint(path) if apply else None
-        owner_reason, candidate.owner_dead = _abandonment(
-            candidate, boot_id=ownership.current_boot_id()
-        )
-        facts = sweep.tree_facts(path, disposable_git=True) if candidate.owner_dead else sweep.tree_facts(path)
-        row["bytes"], _newest, changed, problem = facts
+        owner_reason = _abandonment(candidate, boot_id=boot_id)
+        row["bytes"], _newest, changed, problem = sweep.tree_facts(path, run_contents=True)
         row["newest_change"] = changed
         row["idle_hours"] = round(max(0.0, now - changed) / 3600, 2)
-        pids, channels = holders.holding([path])
-        row.update(live_pids=pids, holders=channels)
         if problem:
             row["reason"] = problem
             row["bytes"] = None
         elif apply and candidate.before is None:
             row["reason"] = "tree_unknown"
+        elif row.get("permissions_repaired"):
+            # What the repair uncovered is judged by a later sweep, from this change on.
+            row["reason"] = "permissions_repaired"
         elif now - changed <= INACTIVE_S:
             row["reason"] = "too_young"
-        elif pids:
-            row["reason"] = "live_process"
-        elif holders.descriptor_errors:
-            row["reason"] = "descriptor_exhausted"
         elif owner_reason:
             row["reason"] = owner_reason
-        elif not candidate.owner_dead and not holders.complete:
-            row["reason"] = "liveness_unknown"
         elif worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
             row["reason"] = "git_registration_unknown" if worktrees is None else "registered_worktree"
         else:
@@ -511,8 +371,8 @@ def _return(candidate: Candidate, quarantine: sweep.Quarantine, reason: str) -> 
     return 0
 
 
-def _recheck(candidate: Candidate, quarantine: sweep.Quarantine, holders: Holders) -> str | None:
-    """Re-prove a held folder: same inode, no holder of either path, an unchanged tree."""
+def _recheck(candidate: Candidate, quarantine: sweep.Quarantine) -> str | None:
+    """Re-prove a held folder: the same inode in the same directories, with an unchanged tree."""
     held = quarantine.path / candidate.name
     try:
         info = os.stat(candidate.name, dir_fd=quarantine.fd, follow_symlinks=False)
@@ -522,87 +382,59 @@ def _recheck(candidate: Candidate, quarantine: sweep.Quarantine, holders: Holder
         return "identity_changed"
     if not _same(candidate.namespace, candidate.ns_fd) or not _same(quarantine.path, quarantine.fd):
         return "identity_changed"
-    pids, channels = holders.holding([candidate.namespace / candidate.name, held])
-    if pids:
-        candidate.row.update(live_pids=pids, holders=channels)
-        return "live_process"
-    if holders.descriptor_errors:
-        return "descriptor_exhausted"
-    if not candidate.owner_dead and not holders.complete:
-        return "liveness_unknown"
     return None if sweep.tree_fingerprint(held) == candidate.before else "recent_write"
 
 
-def _delete(
-    candidates: list[Candidate], namespace: Path, ns_fd: int, *, repo_root: Path, scan_holders: Holders,
-) -> int:
-    """Rename every proven folder aside, recheck once for all of them, then delete or return each."""
-    errors = 0
+def _delete(candidate: Candidate, namespace: Path, ns_fd: int, *, repo_root: Path) -> int:
+    """Rename a proven folder aside, recheck it, then delete it or return it."""
+    row = candidate.row
+    try:
+        info = os.stat(candidate.name, dir_fd=ns_fd, follow_symlinks=False)
+    except OSError:
+        info = None
+    if info is None or (info.st_dev, info.st_ino) != candidate.identity or not _same(namespace, ns_fd):
+        row.update(decision="preserve", reason="identity_changed", bytes=None)
+        return 0
     quarantine = sweep.open_quarantine(namespace, ns_fd)
     try:
-        held = []
-        for candidate in candidates:
-            row = candidate.row
-            try:
-                info = os.stat(candidate.name, dir_fd=ns_fd, follow_symlinks=False)
-            except OSError:
-                info = None
-            if info is None or (info.st_dev, info.st_ino) != candidate.identity or not _same(namespace, ns_fd):
-                row.update(decision="preserve", reason="identity_changed", bytes=None)
-                continue
-            try:
-                sweep.rename_noreplace(ns_fd, candidate.name, quarantine.fd, candidate.name)
-            except OSError as error:
-                row.update(decision="preserve", reason="rename_refused", error=sweep._errno_name(error), bytes=None)
-                errors += 1
-                continue
-            sweep._sync_rename(ns_fd, quarantine.fd)
-            held.append(candidate)
-        # Nothing can newly reach a held folder by its old name. Our run locks are inspection handles.
-        holders = holder_snapshot(frozenset(c.lock for c in held if c.lock is not None))
-        scan_holders.complete = scan_holders.complete and holders.complete
-        scan_holders.unreadable = max(scan_holders.unreadable, holders.unreadable)
-        scan_holders.unreadable_foreign = max(scan_holders.unreadable_foreign, holders.unreadable_foreign)
-        scan_holders.unreadable_root = max(scan_holders.unreadable_root, holders.unreadable_root)
-        scan_holders.descriptor_errors += holders.descriptor_errors
-        scan_holders.allowed_session_daemons.update(holders.allowed_session_daemons)
-        errors += holders.descriptor_errors
-        for candidate in held:
-            reason = _recheck(candidate, quarantine, holders)
-            if reason:
-                errors += _return(candidate, quarantine, reason)
-                continue
-            try:
-                sweep.reap_attributed_temp(
-                    quarantine.path / candidate.name, repo_root=repo_root, temp_root=quarantine.path,
-                    expected_dev=candidate.identity[0], expected_ino=candidate.identity[1],
-                )
-                if os.path.lexists(quarantine.path / candidate.name):
-                    raise OSError(errno.ENOTEMPTY, "common reaper left residue")
-            except (OSError, ValueError, ownership.TaskScratchError) as error:
-                detail = sweep._errno_name(error) if isinstance(error, OSError) else type(error).__name__
-                # Whatever the remover left goes back under its own name.
-                blocked = os.path.lexists(quarantine.path / candidate.name) and _return(
-                    candidate, quarantine, "delete_refused"
-                )
-                errors += 1 + blocked
-                if not blocked:
-                    candidate.row.update(decision="preserve", reason="delete_refused", error=detail, bytes=None)
-                continue
-            sweep.sync_directory(quarantine.fd)
-            candidate.row.update(decision="deleted")
+        try:
+            sweep.rename_noreplace(ns_fd, candidate.name, quarantine.fd, candidate.name)
+        except OSError as error:
+            row.update(decision="preserve", reason="rename_refused", error=sweep._errno_name(error), bytes=None)
+            return 1
+        sweep._sync_rename(ns_fd, quarantine.fd)
+        reason = _recheck(candidate, quarantine)
+        if reason:
+            return _return(candidate, quarantine, reason)
+        try:
+            sweep.reap_attributed_temp(
+                quarantine.path / candidate.name, repo_root=repo_root, temp_root=quarantine.path,
+                expected_dev=candidate.identity[0], expected_ino=candidate.identity[1],
+            )
+            if os.path.lexists(quarantine.path / candidate.name):
+                raise OSError(errno.ENOTEMPTY, "common reaper left residue")
+        except (OSError, ValueError, ownership.TaskScratchError) as error:
+            detail = sweep._errno_name(error) if isinstance(error, OSError) else type(error).__name__
+            # Whatever the remover left goes back under its own name.
+            blocked = os.path.lexists(quarantine.path / candidate.name) and _return(
+                candidate, quarantine, "delete_refused"
+            )
+            if not blocked:
+                row.update(decision="preserve", reason="delete_refused", error=detail, bytes=None)
+            return 1 + blocked
+        sweep.sync_directory(quarantine.fd)
+        row.update(decision="deleted")
+        return 0
     finally:
         sweep.close_quarantine(quarantine, ns_fd)
-    return errors
 
 
 def _namespace(
     namespaces: tuple[Path, ...], *, apply: bool, ledger: Ledger, run_id: str, task_root: Path,
     quarantine_s: float, repo_root: Path,
-) -> tuple[list[dict[str, Any]], int, Holders | None]:
+) -> tuple[list[dict[str, Any]], int]:
     rows: list[dict[str, Any]] = []
     errors = 0
-    holders = None
     with ExitStack() as stack:
         opened = []
         for namespace in namespaces:
@@ -643,9 +475,7 @@ def _namespace(
             rows.extend(purged)
             opened.append((namespace, ns_fd))
         if not opened:
-            return rows, errors, holders
-        holders = holder_snapshot()
-        errors += holders.descriptor_errors
+            return rows, errors
         worktrees = sweep.registered_worktrees(repo_root)
         for namespace, ns_fd in opened:
             for name in sorted(os.listdir(ns_fd)):
@@ -654,18 +484,16 @@ def _namespace(
                 candidate = None
                 try:
                     # One candidate owns its lock through its complete disposition.
-                    # Releasing it here leaves headroom for the next fresh holder scan,
-                    # independently of cohort size or namespace order.
                     with ExitStack() as disposition:
                         candidate = _classify(
-                            name, namespace, ns_fd, holders=holders, worktrees=worktrees, now=sweep.time.time(),
+                            name, namespace, ns_fd, worktrees=worktrees, now=sweep.time.time(),
                             apply=apply, stack=disposition,
                         )
                         rows.append(candidate.row)
-                        if candidate.row["reason"] == "descriptor_exhausted" and not holders.descriptor_errors:
+                        if candidate.row["reason"] == "descriptor_exhausted":
                             errors += 1
                         if apply and candidate.row["decision"] == "would_delete":
-                            errors += _delete([candidate], namespace, ns_fd, repo_root=repo_root, scan_holders=holders)
+                            errors += _delete(candidate, namespace, ns_fd, repo_root=repo_root)
                 except OSError as error:
                     errors += 1
                     reason = "descriptor_exhausted" if error.errno in _DESCRIPTOR_ERRORS else "scan_error"
@@ -674,7 +502,7 @@ def _namespace(
                     elif candidate.row["decision"] != "deleted":
                         candidate.row.update(decision="preserve", reason=reason,
                                              error=sweep._errno_name(error), bytes=None)
-    return rows, errors, holders
+    return rows, errors
 
 
 def sweep_pytest_runs(
@@ -688,11 +516,6 @@ def sweep_pytest_runs(
     """
     rows = []
     errors = 0
-    unreadable = 0
-    unreadable_foreign = 0
-    unreadable_root = 0
-    allowed_daemons: set[tuple[int, str]] = set()
-    complete = True
     try:
         roots = set(scratch_scan_roots())
     except ScratchScanRootError:
@@ -711,18 +534,12 @@ def sweep_pytest_runs(
                     if name.startswith("pytest-") and name != NAMESPACE:
                         size, _newest, _changed, problem = sweep.tree_facts(root / name)
                         rows.append(sweep._bare_row(name, "legacy_ownership_unknown", bytes=None if problem else size))
-            found, step_errors, holders = _namespace(
+            found, step_errors = _namespace(
                 namespaces, apply=apply, ledger=ledger, run_id=run_id,
                 task_root=task_root, quarantine_s=quarantine_s, repo_root=repo_root,
             )
             rows.extend(found)
             errors += step_errors
-            if holders is not None:
-                complete = complete and holders.complete
-                unreadable = max(unreadable, holders.unreadable)
-                unreadable_foreign = max(unreadable_foreign, holders.unreadable_foreign)
-                unreadable_root = max(unreadable_root, holders.unreadable_root)
-                allowed_daemons.update(holders.allowed_session_daemons)
         except FileNotFoundError:
             continue
         except (OSError, ValueError) as error:
@@ -760,10 +577,6 @@ def sweep_pytest_runs(
         row["largest_preserved_rank"] = rank
     return {
         "inactive_hours": INACTIVE_S / 3600, "rows": rows, "errors": errors,
-        "liveness_complete": complete, "liveness_unreadable_processes": unreadable,
-        "liveness_unreadable_foreign_processes": unreadable_foreign,
-        "liveness_unreadable_root_processes": unreadable_root,
-        "allowed_session_daemons": [{"pid": pid, "identity": identity} for pid, identity in sorted(allowed_daemons)],
         "runs": len(rows), "bytes": sum(row["bytes"] or 0 for row in rows),
         "bytes_complete": unmeasured == 0, "unmeasured_entries": unmeasured,
         "protected_bytes_complete": protected_unmeasured == 0,

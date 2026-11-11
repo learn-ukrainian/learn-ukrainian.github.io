@@ -121,10 +121,12 @@ def make_tooling(directory):
 
 @pytest.fixture
 def synthetic_opsec(tmp_path, monkeypatch):
-    from scripts.opsec import prepublish
+    import importlib
 
     directory = make_tooling(tmp_path / "tooling")
-    monkeypatch.setattr(prepublish, "private_tooling", lambda: directory)
+    # Product publishers run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.opsec.prepublish", "lu_machinery.opsec.prepublish"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(importlib.import_module(name), "private_tooling", lambda: directory)
     return directory
 
 
@@ -224,8 +226,13 @@ def gh_shim_sandbox(tmp_path):
 @pytest.fixture
 def publisher_transport(monkeypatch):
     """Explicitly inject existing subprocess spies at the typed transport boundary."""
-    from scripts.publish import github
-    original = github._send
-    def send(argv, *, runner, **kwargs):
-        return original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
-    monkeypatch.setattr(github, "_send", send)
+    import importlib
+
+    # Product publishers send through the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.publish.github", "lu_machinery.publish.github"):  # TRANSITIONAL-PKG3-B2
+        github = importlib.import_module(name)
+
+        def send(argv, *, runner, _original=github._send, **kwargs):
+            return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
+
+        monkeypatch.setattr(github, "_send", send)

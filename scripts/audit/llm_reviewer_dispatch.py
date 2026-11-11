@@ -25,10 +25,10 @@ from typing import Any
 from uuid import uuid4
 
 import yaml
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, model_families, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DAILY_SPEND_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_reviewer_spend.jsonl"
@@ -461,7 +461,7 @@ def assert_route_allowed(route: ReviewerRoute) -> None:
     )
     if normalize_family(haystack) == "deepseek":
         raise ReviewerRouteError("DeepSeek reviewer routes are forbidden")
-    from scripts.review.model_catalog import retired_model_refusal
+    from lu_machinery.review.model_catalog import retired_model_refusal
 
     if refusal := retired_model_refusal(route.reviewer_model_id):
         raise ReviewerRouteError(refusal)
@@ -1164,7 +1164,8 @@ def _invoke_output_path_bridge(
 
 def _invoke_agent_runtime(agent: str, route: ReviewerRoute, prompt: str, task_id: str) -> DispatchResult:
     try:
-        from scripts.agent_runtime import runner as agent_runner
+        from lu_machinery.agent_runtime import runner as agent_runner
+
         from scripts.audit.llm_reviewer import invoke_reviewer_with_schema
 
         _payload, result = invoke_reviewer_with_schema(
@@ -1272,12 +1273,12 @@ def _invoke_opencode_reviewer(
     # would reach OpenRouter unguarded from the reviewer/bakeoff paths.
     # RoutingGuardError deliberately propagates (config error, not a per-cell
     # provider flake).
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+    from lu_machinery.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
     assert_model_routing_allowed(route.reviewer_model_id, context="reviewer opencode transport")
     if require_mcp:
         _assert_sources_mcp_available()
-    from scripts.ai_agent_bridge._opencode import _invoke_opencode_detailed
+    from lu_machinery.ai_agent_bridge._opencode import _invoke_opencode_detailed
 
     # #4642 second leak path: the reviewer is a TOOL-USING model with default
     # write/edit tools, and opencode resolves both its project root and any

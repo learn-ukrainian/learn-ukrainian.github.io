@@ -91,8 +91,8 @@ from typing import Any
 from unittest.mock import patch
 
 import _v4_synthetic_chain_fixture as base_fixture
+from learn_ukrainian_v4_runtime.contracts import CompletionState, ResponseEnvelope
 
-from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
 from scripts.projects.open_model_data import v4_a3_reference_check as reference_check

@@ -61,7 +61,9 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 2. **Make the smallest change that achieves the outcome**, in a dispatch worktree on a branch,
    never on `main`. Implementation and fixes go to the authoring lane: a worker makes them
    itself, a driver dispatches them (rules core P1). Fix the case that happened, not every case
-   that could.
+   that could. Save command output (for example `dispatch.py wait` or `status`) only under
+   `batch_state/tasks/<task-id>.artifacts/` or the session scratch, never as `*.json` beside the
+   task records, which every ledger scan reads as records.
 3. **Prove it** ([delivery](references/delivery.md#proof)): reproduce, fix, the same check
    passes; behaviour proof for a user-visible surface. Add a test only with the CTO's approval
    of that specific test.

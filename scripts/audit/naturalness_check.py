@@ -21,10 +21,14 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from agent_runtime.json_parse import extract_json_object
-from common.repo_root import project_interpreter
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-VENV_PYTHON = project_interpreter()
+# isort: split
+from lu_machinery.agent_runtime.json_parse import extract_json_object
+from lu_machinery.common.repo_root import project_interpreter
+
+VENV_PYTHON = project_interpreter(PROJECT_ROOT.resolve())
 
 # Structured prompt that returns JSON (reliable parsing)
 NATURALNESS_PROMPT = """Evaluate the naturalness of this Ukrainian educational text.

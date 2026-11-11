@@ -50,8 +50,9 @@ if str(_REPO_ROOT / "scripts") not in sys.path:
 if str(_REPO_ROOT) not in sys.path:
     sys.path.append(str(_REPO_ROOT))
 
-from agent_runtime.json_parse import extract_json_object
-from common.http_status import has_http_status
+from lu_machinery.agent_runtime.json_parse import extract_json_object
+from lu_machinery.common.http_status import has_http_status
+
 from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

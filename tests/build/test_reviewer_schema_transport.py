@@ -557,7 +557,7 @@ def direct_context(tmp_path: Path) -> direct.DirectModuleContext:
 
 @pytest.mark.parametrize("damage", ("none", "defect", "missing", "invalid", "truncated", "failed", "contradiction"))
 def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner  # the product review phase runs the installed runner
 
     monkeypatch.setattr(direct, "PROJECT_ROOT", tmp_path)
     ctx = direct_context(tmp_path)
@@ -592,7 +592,8 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
 
 
 def test_audit_claude_schema_and_embedded_fence_survive_consumption(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner  # the product dispatch runs the installed runner
+
     from scripts.audit import llm_reviewer_dispatch as dispatch
 
     payload = mechanical_payload("audit")

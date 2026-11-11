@@ -43,11 +43,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
 from scripts.lexicon import enrich_manifest as enrich_module
 from scripts.lexicon import verify_manifest
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_INTAKE_DIR = PROJECT_ROOT / "data" / "lexicon" / "intake"
 DEFAULT_JOURNAL = DEFAULT_INTAKE_DIR / "private_teacher_lesson_intake_journal.json"

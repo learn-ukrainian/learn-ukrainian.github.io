@@ -28,6 +28,10 @@ DEFAULT_CANARY_LEMMAS = ["вода", "аби", "хліб", "свіжий"]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.audit.audit_atlas_poc_richness import poc_thin_entries
 from scripts.audit.audit_atlas_thin_enriched import (
     has_learner_english_anchor,
@@ -47,13 +51,10 @@ from scripts.lexicon.publish_manifest import (
     gzip_manifest,
     write_pointer,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.rag.source_query import (
     _wiki_title_candidates,
     _wiki_title_matches_candidates,
 )
-from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_word
 
 
