@@ -2533,3 +2533,26 @@ def test_status_rollup_returns_the_bound_response(monkeypatch):
     assert guard._status_rollup("5") == payload
     _fake_gh(monkeypatch, returncode=0, stdout="[]")
     assert guard._status_rollup("5") is None
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "bash <<'EOF'\ngh pr merge 5\nEOF",
+        "sh -s <<EOF\ngh pr merge 5\nEOF",
+        "cat <<'EOF' | bash\ngh pr merge 5\nEOF",
+        "cat <<'EOF' | cat | sh -s\ngh pr merge 5\nEOF",
+        "cat | bash <<'EOF'\ngh pr merge 5\nEOF",
+        "python3 - <<'EOF'\nimport os; os.system('gh pr merge 5')\nEOF",
+        "cat <<'EOF' | cat | python3 -\nimport os; os.system('gh pr merge 5')\nEOF",
+        "source /dev/stdin <<'EOF'\ngh pr merge 5\nEOF",
+        "bash <<-EOF\n\tgh pr merge 5\n\tEOF",
+        "cat <<'EOF' | sed -n p | bash\ngh pr merge 5\nEOF",
+        "env -C / bash <<'EOF'\ngh pr merge 5\nEOF",
+        "cat prefix.sh <<'EOF' | bash\ngh pr merge 5\nEOF",
+        "bash -c \"bash <<'EOF'\ngh pr merge 5\nEOF\"",
+    ],
+)
+def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command):
+    """R33: interpreter stdin is executable, including a pipeline's heredoc."""
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2

@@ -38,7 +38,10 @@ Covered write surfaces
   targets; uncertain navigation blocks those targets. Common command wrappers,
   ``find -exec`` writers, and executable substitutions in unquoted heredocs
   feed the same writer parser. Decidable ``eval`` strings are parsed
-  recursively; undecidable ones always block. ``xargs`` / ``parallel`` writers block when their
+  recursively; undecidable ones always block. Literal ``trap`` actions and
+  simple ``coproc`` commands use the same nested writer and Git walks. Trap
+  cwd is unknown because execution is deferred; compound coprocess scopes
+  fail closed. ``xargs`` / ``parallel`` writers block when their
   generated arguments can supply a primary target.
 * ``Bash`` / Cursor ``Shell`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
   ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
@@ -101,7 +104,8 @@ Bash expands ``$'...'`` escapes, so a Bash command holding an unquoted marker
 ``$'`` — raw, or after backslash-newline removal (Bash joins ``$\\<newline>'``
 into ``$'``) — is blocked before parsing, target inference or any allowlisted
 early return, and so is every nested command string the parser re-reads
-(``eval`` / ``sh -c``). Bash performs ANSI-C quoting only for an unquoted
+(``eval`` / ``sh -c`` / ``trap`` / ``coproc``). Bash performs ANSI-C quoting
+only for an unquoted
 ``$'``: inside single quotes every character is literal and inside double quotes
 ``'`` is literal (bash(1), QUOTING), so ``grep -v '^\\s*$'`` and ``"end$'"`` are
 plain text and allowed. Quotes are tracked only when the command holds none of
@@ -1803,6 +1807,34 @@ def _find_targets(args: list[str], *, cwd: str | None, main_root: Path | None, d
     return targets
 
 
+def _trap_coproc_script(segment: list[str]) -> str | None:
+    """Expose literal deferred/async actions to both existing nested walks."""
+    cmd, idx = _command_word(segment)
+    args = segment[idx + 1 :]
+    if cmd == "trap":
+        if args[:1] == ["--"]:
+            args = args[1:]
+        if not args or args[0] in {"", "-", "-p", "-l"}:
+            return None
+        action = args[0]
+        if getattr(action, "unresolved_at", None) is not None or action.startswith("-"):
+            raise ShellPreprocessLimit("trap action cannot be read safely")
+        # The action inherits future shell bindings, including HOME. Quoted
+        # literal dollars/tildes are masked by the existing tokenizer.
+        if any("$" in word or "~" in word or "`" in word for word in _tokenize(str(action))):
+            raise ShellPreprocessLimit("deferred trap expansion cannot be read safely")
+        # Cwd is deliberately unknown when this script is walked: a trap runs
+        # later, after arbitrary cwd changes. Absolute targets remain decidable.
+        return str(action)
+    if not args or any(getattr(arg, "unresolved_at", None) is not None for arg in args):
+        raise ShellPreprocessLimit("coproc command cannot be read safely")
+    if any(arg in _COMPOUND_OPENERS | _COMPOUND_CLOSERS | _COMPOUND_PREFIXES | {"function"} for arg in args):
+        # Named and compound coprocesses need a subshell scope the bounded
+        # parser cannot attribute. Never let their cd/assignments affect the parent.
+        raise ShellPreprocessLimit("compound coproc scope cannot be read safely")
+    return shlex.join(args)
+
+
 def _writer_targets(
     segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
 ) -> list[str]:
@@ -1871,6 +1903,12 @@ def _writer_targets(
                     word.decision_reason = "unresolved_shell_variable"
                 word.base = str(git_base) if git_base is not None else None
                 targets.append(word)
+    elif cmd in {"trap", "coproc"}:
+        script = _trap_coproc_script(segment)
+        if script is not None:
+            targets.extend(
+                bash_write_targets(script, cwd=None if cmd == "trap" else cwd, main_root=main_root, depth=depth + 1)
+            )
     elif cmd == "eval":
         args = segment[idx + 1 :]
         if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
@@ -2299,6 +2337,20 @@ def bash_git_write_intents(
     for segment, effective_cwd, _shell_cwd in segments:
         segment = _without_redirects(segment)
         cmd, idx = _command_word(segment)
+        if cmd in {"trap", "coproc"}:
+            script = _trap_coproc_script(segment)
+            if script is not None:
+                if depth >= _MAX_SHELL_DEPTH:
+                    raise ShellPreprocessLimit("nested trap/coproc recursion limit")
+                intents.extend(
+                    bash_git_write_intents(
+                        script,
+                        cwd=None if cmd == "trap" else effective_cwd,
+                        depth=depth + 1,
+                        git_environment=git_environment,
+                    )
+                )
+            continue
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
