@@ -2536,23 +2536,55 @@ def test_status_rollup_returns_the_bound_response(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "command",
+    "command,failures,expected",
     [
-        "bash <<'EOF'\ngh pr merge 5\nEOF",
-        "sh -s <<EOF\ngh pr merge 5\nEOF",
-        "cat <<'EOF' | bash\ngh pr merge 5\nEOF",
-        "cat <<'EOF' | cat | sh -s\ngh pr merge 5\nEOF",
-        "cat | bash <<'EOF'\ngh pr merge 5\nEOF",
-        "python3 - <<'EOF'\nimport os; os.system('gh pr merge 5')\nEOF",
-        "cat <<'EOF' | cat | python3 -\nimport os; os.system('gh pr merge 5')\nEOF",
-        "source /dev/stdin <<'EOF'\ngh pr merge 5\nEOF",
-        "bash <<-EOF\n\tgh pr merge 5\n\tEOF",
-        "cat <<'EOF' | sed -n p | bash\ngh pr merge 5\nEOF",
-        "env -C / bash <<'EOF'\ngh pr merge 5\nEOF",
-        "cat prefix.sh <<'EOF' | bash\ngh pr merge 5\nEOF",
-        "bash -c \"bash <<'EOF'\ngh pr merge 5\nEOF\"",
+        ("bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("sh -s <<EOF\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | cat | sh -s\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat | bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("python3 - <<'EOF'\nimport os; os.system('gh pr merge 5')\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | cat | python3 -\nimport os; os.system('gh pr merge 5')\nEOF", ["CI Gate"], 2),
+        ("source /dev/stdin <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("bash <<-EOF\n\tgh pr merge 5\n\tEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | sed -n p | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("env -C / bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat prefix.sh <<'EOF' | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("bash -c \"bash <<'EOF'\ngh pr merge 5\nEOF\"", ["CI Gate"], 2),
+        (
+            ".venv/bin/python -m scripts.publish issue-comment --repo o/r --number 7 --body-file - <<'EOF'\nApproved through review; the keeper will merge once CI is green.\nEOF",
+            ["CI Gate"],
+            0,
+        ),
+        (
+            ".venv/bin/python -m scripts.publish pr-comment --number 7 --body-file=- <<'EOF'\nUse `gh pr merge` after review.\nEOF",
+            ["CI Gate"],
+            0,
+        ),
+        ("gh pr create --title t --body-file - <<'EOF'\nfix(hooks): high-risk merge path proven\nEOF", ["CI Gate"], 0),
+        ("git commit -F - <<'EOF'\nfix(hooks): refuse gh pr merge via heredoc\nEOF", ["CI Gate"], 0),
+        ("git commit --file=- <<'EOF'\nfix(hooks): high-risk merge path proven\nEOF", ["CI Gate"], 0),
+        (
+            ".venv/bin/python -m scripts.publish pr-merge --number 5 --body-file - <<'EOF'\nApproved through review; merge when green.\nEOF",
+            [],
+            0,
+        ),
+        (
+            ".venv/bin/python -m scripts.publish pr-merge --number 5 --body-file - <<'EOF'\nApproved through review; merge when green.\nEOF",
+            ["CI Gate"],
+            2,
+        ),
+        ("cat > n.md <<'EOF'\nmerge note for gh pr\nEOF\ngit add n.md", ["CI Gate"], 0),
+        ("tee n.md <<'EOF'\nmerge note for gh pr\nEOF\ngit add n.md", ["CI Gate"], 0),
+        ("cat <<'EOF'\nmerge note for gh pr\nEOF\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        (
+            "cat > msg.txt <<'EOF'\nApproved through review; merge when green.\nEOF\n.venv/bin/python -m scripts.publish issue-comment --number 7 --body-file msg.txt",
+            ["CI Gate"],
+            0,
+        ),
+        ("function cat { bash; }\ncat <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
     ],
 )
-def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command):
+def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command, failures, expected):
     """R33: interpreter stdin is executable, including a pipeline's heredoc."""
-    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, command, checks=(failures, [])) == expected

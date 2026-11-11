@@ -654,6 +654,54 @@ def _quote_after_line(line: str, quote: str) -> str:
     return quote
 
 
+def _literal_heredoc_data_reader(line: str) -> bool:
+    """Prove one wrapper-free command consumes stdin as literal data."""
+    if any(char in line for char in ";&|()$`"):
+        return False
+    try:
+        argv = shlex.split(line)
+    except ValueError:
+        return False
+    if not argv:
+        return False
+    if argv[0] in {"cat", "tee"}:
+        return True
+
+    def stdin_option(options: set[str]) -> bool:
+        return any(
+            (arg in options and argv[index + 1 : index + 2] == ["-"])
+            or any(arg == option + "=-" for option in options if option.startswith("--"))
+            or ("-F" in options and arg == "-F-")
+            for index, arg in enumerate(argv)
+        )
+
+    if argv[:2] == ["git", "commit"]:
+        return stdin_option({"-F", "--file"})
+    if argv[:2] in (["gh", "pr"], ["gh", "issue"]) and argv[2:3] in (
+        ["create"],
+        ["comment"],
+        ["edit"],
+        ["merge"],
+    ):
+        return stdin_option({"--body-file", "-F"})
+    return (
+        re.fullmatch(r"python(?:3(?:\.\d+)?)?", Path(argv[0]).name) is not None
+        and argv[1:3] == ["-m", _PUBLISHER]
+        and argv[3:4]
+        in (
+            ["pr-create"],
+            ["pr-edit"],
+            ["pr-comment"],
+            ["pr-merge"],
+            ["issue-create"],
+            ["issue-edit"],
+            ["issue-comment"],
+            ["comment-edit"],
+        )
+        and stdin_option({"--body-file"})
+    )
+
+
 def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> str:
     """Prove literal data input, or expose a shell stdin script as a -c payload.
 
@@ -680,13 +728,17 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
         return uncertain()
     lines = command.split("\n")
     kept: list[str] = []
+    body_free: list[str] = []
     bodies: list[str] = []
+    data_only = True
+    prefix_data_only = True
     quote = ""
     joined = False  # this line continues the previous one (`cat <\` + `<<'EOF'` is `<<<`)
     index = 0
     while index < len(lines):
         line = lines[index]
         kept.append(line)
+        body_free.append(line)
         index += 1
         if quote:
             quote = _quote_after_line(line, quote)
@@ -701,6 +753,8 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
             return uncertain()
         if not delimiters:
             quote = _quote_after_line(opener, "")
+            if opener.strip():
+                prefix_data_only = False
             continue
         if (
             _quote_after_line(opener, "")
@@ -708,21 +762,27 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
             or (not executable and not all(quoted for _, _, quoted in delimiters))
         ):
             return uncertain()
+        reader_is_data = prefix_data_only and _literal_heredoc_data_reader(opener)
         for delimiter, strip_tabs, _ in delimiters:
             start = index
             while index < len(lines) and (lines[index].lstrip("\t") if strip_tabs else lines[index]) != delimiter:
                 index += 1
             if index == len(lines):
                 return uncertain()
-            bodies.append("\n".join(lines[start:index]))
+            body = "\n".join(lines[start:index])
+            bodies.append(body)
+            data_only = data_only and reader_is_data
+            # Preserve an empty, closed heredoc in the executable view. Without
+            # its closer, shared preprocessing could swallow later commands.
+            body_free.append(lines[index])
             index += 1
+        prefix_data_only = reader_is_data
     if executable and bodies and any(_merge_candidate(body) for body in bodies):
         # Only the existing standalone data-reader proof can dismiss a body.
         # A shell stdin script uses the same nested-command walk as bash -c.
         # Other readers (including Python) require a parser we do not have.
-        inert = _without_quoted_heredoc_data(command)
-        if inert != command:
-            return inert
+        if data_only:
+            return "\n".join(body_free)
         openers = [text for line in kept if (text := strip_shell_comments(line).strip())]
         if len(openers) != 1:
             raise ShellPreprocessLimit("heredoc execution context cannot be read safely")
@@ -764,14 +824,8 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
     # the reader. Only a standalone literal data-copy command proves these bodies
     # inert: interpreters, pipelines, prior function definitions and later script
     # execution must keep the raw check's existing refusal.
-    executable = [text for line in kept if (text := strip_shell_comments(line).strip())]
-    if len(executable) != 1 or any(char in executable[0] for char in ";&|()$`"):
-        return command
-    try:
-        reader = shlex.split(executable[0])
-    except ValueError:
-        return command
-    if not reader or reader[0] not in {"cat", "tee"}:
+    commands = [text for line in kept if (text := strip_shell_comments(line).strip())]
+    if len(commands) != 1 or not _literal_heredoc_data_reader(commands[0]):
         return command
     return "\n".join(kept)
 
