@@ -2924,6 +2924,11 @@ def _main(payload: dict | None) -> int:
 
     tool_input = _tool_input(payload)
     cwd = _payload_cwd(payload)
+    # Relative execution cwd can be joined again by containment classification,
+    # moving a real primary target outside the repository. Match the absolute
+    # cwd contract used at provider boundaries rather than guess a base.
+    if not os.path.isabs(cwd):
+        return _block_uncertain("relative_execution_cwd")
     command = ""
 
     if is_shell_tool(tool_name):

@@ -2588,3 +2588,30 @@ def test_status_rollup_returns_the_bound_response(monkeypatch):
 def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command, failures, expected):
     """R33: interpreter stdin is executable, including a pipeline's heredoc."""
     assert _run(monkeypatch, command, checks=(failures, [])) == expected
+
+
+@pytest.mark.parametrize("command", [
+    "echo 'gh pr merge 5' | bash",
+    "printf 'gh pr merge 5\\n' | sh",
+    "bash <<< 'gh pr merge 5'",
+    'python3 -c "import os; os.system(\'gh pr merge 5\')"',
+    "xargs gh <<'EOF'\npr merge 5\nEOF",
+    'bash -s gh <<\'EOF\'\n"$1" pr merge 5\nEOF',
+])
+def test_r36_generated_merge_execution_refused(monkeypatch, command):
+    """R36: generated shell input and interpreter strings cannot hide a merge."""
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize("command,expected", [
+    ("cat > s.sh <<'EOF'\ngh pr merge 5\nEOF\nbash s.sh", 2),
+    ("tee s.sh <<'EOF'\ngh pr merge 5\nEOF\nsource s.sh", 2),
+    ("cat > s.sh <<'EOF'\ngh pr merge 5\nEOF\nchmod +x s.sh; ./s.sh", 2),
+    ("cat > s.sh <<'EOF'\ngh pr merge 5\nEOF\nsh < s.sh", 2),
+    ("printf 'gh pr merge 5\\n' > s.sh\nbash s.sh", 2),
+    ("cat > msg <<'EOF'\ngh pr merge 5\nEOF\n/usr/bin/python3 -m scripts.publish issue-comment --number 7 --body-file msg", 0),
+    ("cat > msg <<'EOF'\ngh pr merge 5\nEOF\n/usr/bin/git add msg", 0),
+])
+def test_r40_written_merge_script_execution_refused(monkeypatch, command, expected):
+    """R40: writing a merge script then executing it cannot bypass readiness."""
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == expected

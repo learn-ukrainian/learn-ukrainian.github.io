@@ -33,8 +33,8 @@ refuses `eval` in merge commands because its re-evaluation can change both argv 
 cannot stop an agent that sets out to evade it: `gh api -X PUT repos/{o}/{r}/pulls/{n}/merge`
 never says "gh pr merge" at all, and neither does a Python script hitting the REST API.
 Nothing matching on Bash commands can close that, so the job is to make the CARELESS path
-refuse, not the deliberate path impossible. A shell here-string (`sh <<< '<cmd>'`) is
-likewise unread — a deliberate-only shape, documented rather than papered over.
+refuse, not the deliberate path impossible. Generated interpreter input that carries
+merge words is refused when the existing command walker cannot inspect it safely.
 """
 
 from __future__ import annotations
@@ -777,7 +777,7 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
             body_free.append(lines[index])
             index += 1
         prefix_data_only = reader_is_data
-    if executable and bodies and any(_merge_candidate(body) for body in bodies):
+    if executable and bodies and _merge_candidate(command):
         # Only the existing standalone data-reader proof can dismiss a body.
         # A shell stdin script uses the same nested-command walk as bash -c.
         # Other readers (including Python) require a parser we do not have.
@@ -822,8 +822,8 @@ def _without_quoted_heredoc_data(command: str, *, executable: bool = False) -> s
         return command
     # A quoted delimiter prevents expansion by the outer shell, not execution by
     # the reader. Only a standalone literal data-copy command proves these bodies
-    # inert: interpreters, pipelines, prior function definitions and later script
-    # execution must keep the raw check's existing refusal.
+    # inert for the raw quoting check. This check catches expansion markers;
+    # the executable walk separately refuses generated script-file execution.
     commands = [text for line in kept if (text := strip_shell_comments(line).strip())]
     if len(commands) != 1 or not _literal_heredoc_data_reader(commands[0]):
         return command
@@ -899,6 +899,53 @@ def _literal_reads_only(command: str) -> bool:
     return found_read
 
 
+def _refuse_generated_execution(command: str, events: list[tuple[str, list[str]]]) -> None:
+    """Fail closed on merge-bearing generated code without adding a parser.
+
+    Script-file execution after a data writer is deliberately conservative:
+    we do not try to prove file identity across redirects, aliases or cwd changes.
+    Ordinary data files followed by git/publisher commands remain inspectable.
+    """
+    if not _merge_candidate(command):
+        return
+    wrote_data = False
+    for kind, argv in events:
+        if kind != "segment" or not argv:
+            continue
+        invoked, _ = _invoked_start(argv)
+        args = argv[invoked:]
+        if not args:
+            continue
+        name = Path(args[0]).name
+        shell = name in _SHELLS
+        payload = _shell_c_payload(argv)
+        if shell and payload is None and ("|" in command or "<<<" in command):
+            raise ShellPreprocessLimit("generated shell stdin cannot be read safely")
+        if (
+            re.fullmatch(r"(?:python(?:3(?:\.\d+)?)?|perl|ruby|node(?:js)?)", name)
+            and any(arg in {"-c", "-e", "--eval"} for arg in args[1:])
+        ):
+            raise ShellPreprocessLimit("interpreter command string cannot be read safely")
+        publisher = (
+            re.fullmatch(r"python(?:3(?:\.\d+)?)?", name) is not None
+            and args[1:3] == ["-m", _PUBLISHER]
+        )
+        file_execution = (
+            (shell and payload is None and (len(args) > 1 or "<" in command))
+            or args[0] in {"source", "."}
+            or (
+                args[0].startswith(("./", "../", "/"))
+                and not shell
+                and not publisher
+                and name not in {"cat", "tee", "printf", "echo", "gh", "git"}
+            )
+        )
+        if wrote_data and file_execution:
+            raise ShellPreprocessLimit("same-command generated script execution cannot be read safely")
+        if name in {"cat", "tee", "printf", "echo"} and (name == "tee" or ">" in command):
+            wrote_data = True
+
+
 def _may_merge(command: str, depth: int = 0) -> bool:
     """Recognize merge operations before applying cwd or readiness refusals.
 
@@ -918,6 +965,7 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     if _literal_reads_only(command):
         return False
     events = _scope_events(command, mark_redirect_unreadable=False)
+    _refuse_generated_execution(command, events)
     # The reader starts each physical line outside any quote. After a line it
     # cannot tokenize, Bash may still be inside that line's quote, so no later
     # line is read as Bash reads it: refuse rather than call it data. Count raw

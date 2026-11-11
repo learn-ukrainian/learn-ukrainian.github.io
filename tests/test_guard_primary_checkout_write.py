@@ -2862,3 +2862,18 @@ def test_trap_coproc_primary_write_bypass_refused(repo: Path, command: str, expe
     payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
     result = _run(repo, payload)
     assert result.returncode == expected, result.stderr
+
+
+@pytest.mark.parametrize("tool_input", [
+    {"cwd": "../../../..", "command": "echo x > curriculum/tracked.md"},
+    {"cwd": "../../../..", "file_path": "curriculum/tracked.md"},
+    {"cwd": "../../../../curriculum", "file_path": "tracked.md"},
+])
+def test_r39_relative_tool_cwd_cannot_hide_primary_write(repo: Path, tool_input):
+    """R39: relative execution cwd must never be joined twice and allowed."""
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(dispatch, {
+        "tool_name": "Bash" if "command" in tool_input else "Write",
+        "cwd": str(dispatch), "tool_input": tool_input,
+    })
+    assert result.returncode == 2, result.stderr
