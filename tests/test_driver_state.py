@@ -410,6 +410,55 @@ def test_stop_allows_cto_escalation(driver):
     assert _stop(driver, _transcript(driver, text)) == {"decision": "allow"}
 
 
+_HUMAN_PROMPT = {"type": "user", "origin": {"kind": "human"}, "turnOrigin": "human", "promptSource": "typed"}
+_NOTIFICATION_PROMPT = {
+    "type": "user",
+    "origin": {"kind": "task-notification", "producer": "session-task"},
+    "turnOrigin": "task_notification",
+    "promptSource": "system",
+}
+_TOOL_RESULT = {"type": "user", "message": {"role": "user", "content": [{"type": "tool_result", "content": "ok"}]}}
+_STOP_FEEDBACK = {"type": "user", "isMeta": True, "message": {"role": "user", "content": "Stop hook feedback: ..."}}
+
+
+@pytest.mark.parametrize(
+    ("turn", "blocked"),
+    [
+        pytest.param([_HUMAN_PROMPT, _TOOL_RESULT, _STOP_FEEDBACK], False, id="operator-turn-allows-question"),
+        pytest.param([_HUMAN_PROMPT, _NOTIFICATION_PROMPT, _TOOL_RESULT], True, id="notification-turn-blocks"),
+        pytest.param(None, True, id="unreadable-transcript-blocks"),
+        pytest.param([_HUMAN_PROMPT, "not json"], True, id="undecodable-row-blocks"),
+    ],
+)
+def test_claude_stop_hook_blocks_operator_conversation_or_goes_silent_on_autonomous_turns(
+    driver, monkeypatch, turn, blocked
+):
+    """Defect class: the Stop hook nags the operator's own turn, or falls silent on an autonomous one."""
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(driver))
+    transcript = driver / "claude-transcript.jsonl"
+    if turn is not None:
+        rows = [{**row, "message": {"role": "user", "content": "go"}} if "origin" in row else row for row in turn]
+        rows.append({"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": "?"}]}})
+        transcript.write_text(
+            "".join(f"{r if isinstance(r, str) else json.dumps(r)}\n" for r in rows), encoding="utf-8"
+        )
+    payload = {
+        "session_id": "s1",
+        "transcript_path": str(transcript),
+        "cwd": str(driver),
+        "hook_event_name": "Stop",
+        "stop_hook_active": False,
+        "last_assistant_message": "Option A or option B for #10117. Which should I take?",
+    }
+    out = driver_state.cmd_claude_stop_hook(json.dumps(payload))
+    if blocked:
+        assert out["decision"] == "block"
+        assert "ends on a question" in out["reason"]
+    else:
+        assert out == {}
+
+
 def test_stop_caps_consecutive_continues(driver):
     _workers(driver, "gemini-infra", 0)
     transcript = _transcript(driver, "Which should I take?")

@@ -163,6 +163,119 @@ def test_settlement_removes_only_recreatable_caches_from_the_task_output_directo
     assert {path: path.read_text() for path in kept} == kept
 
 
+def _owner_rwx(path: Path) -> None:
+    """Give owner rwx so a failed case cannot leave a mode-0555 tree for tmp cleanup."""
+    if path.is_symlink() or not path.exists():
+        return
+    path.chmod(0o755)
+    if path.is_dir():
+        for child in path.iterdir():
+            _owner_rwx(child)
+
+
+def test_settlement_removes_a_read_only_cache_subtree(sandbox):
+    """Defect class: read-only cache residue. A cache directory whose children are mode 0555
+    (the Go module-cache layout) made removal raise PermissionError, so the residue was
+    retried every hour and never cleared. Settlement and the hourly sweep remove that tree
+    from a finished task, leave an active task's tree in place, and do not change a sibling
+    directory's mode or a file outside the task outputs."""
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    artifacts, evidence = sandbox.tasks / f"{task[0]}.artifacts", sandbox.tasks / f"{task[0]}.evidence"
+    evidence.mkdir()
+    (evidence / "receipt.json").write_text("{}")
+    trees = []
+    for root_name, cache_name in ((artifacts, ".cache"), (evidence, "pip-cache")):
+        sub = root_name / cache_name / "ro" / "sub"
+        sub.mkdir(parents=True)
+        (sub / "mod").write_text("module")
+        (root_name / cache_name / "ro").chmod(0o555)
+        sub.chmod(0o555)
+        trees.append(root_name / cache_name)
+    (artifacts / "run.log").write_text("log")
+    sibling = artifacts / "notes"
+    sibling.mkdir()
+    (sibling / "keep.txt").write_text("keep")
+    outside = sandbox.tasks.parent / "outside-keep.txt"
+    outside.write_text("outside")
+    try:
+        sibling.chmod(0o555)
+        sandbox.sweep()
+        assert all((tree / "ro/sub/mod").read_text() == "module" for tree in trees)
+        assert sibling.stat().st_mode & 0o777 == 0o555
+
+        (sandbox.tasks / f"{task[0]}.release").touch()
+        record = sandbox.settle(task)
+        assert record["status"] == "done"
+        assert [tree.exists() for tree in trees] == [False, False], record.get("task_cache_residue")
+        assert "task_cache_residue" not in record
+        for root_name, cache_name in ((artifacts, ".cache"), (evidence, "pip-cache")):
+            sub = root_name / cache_name / "ro" / "sub"
+            sub.mkdir(parents=True)
+            (sub / "mod").write_text("module")
+            (root_name / cache_name / "ro").chmod(0o555)
+            sub.chmod(0o555)
+        sandbox.sweep()
+        disk = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+        assert [tree.exists() for tree in trees] == [False, False], disk.get("task_cache_residue")
+        assert "task_cache_residue" not in disk
+        assert (artifacts / "run.log").read_text() == "log"
+        assert (evidence / "receipt.json").read_text() == "{}"
+        assert (sibling / "keep.txt").read_text() == "keep"
+        assert sibling.stat().st_mode & 0o777 == 0o555
+        assert outside.read_text() == "outside"
+    finally:
+        _owner_rwx(sibling)
+        for tree in trees:
+            _owner_rwx(tree)
+
+
+def test_settlement_removes_a_dangling_or_file_cache_link(sandbox):
+    """Defect class: cache-named link kept. fwalk puts a dangling link and a link to a file in
+    ``files``, which cache removal never inspected, so both stayed. Settlement and the hourly
+    sweep unlink those names and leave the file target, a non-cache symlink, and an active
+    task's links in place."""
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    artifacts, evidence = sandbox.tasks / f"{task[0]}.artifacts", sandbox.tasks / f"{task[0]}.evidence"
+    artifacts.mkdir()
+    evidence.mkdir()
+    (evidence / "receipt.json").write_text("{}")
+    (artifacts / "run.log").write_text("log")
+    target = sandbox.tasks.parent / "cache-file-target"
+    target.write_text("target-bytes")
+    note_target = sandbox.tasks.parent / "note-target"
+    note_target.write_text("note")
+    dangling = artifacts / "node_modules"
+    file_link = evidence / "venv"
+    other = artifacts / "notes"
+    dangling.symlink_to("/nonexistent")
+    file_link.symlink_to(target)
+    other.symlink_to(note_target)
+    links = (dangling, file_link)
+
+    sandbox.sweep()
+    assert all(link.is_symlink() for link in links)
+    assert target.read_text() == "target-bytes"
+
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert record["status"] == "done"
+    assert [os.path.lexists(link) for link in links] == [False, False], record.get("task_cache_residue")
+    assert "task_cache_residue" not in record
+    dangling.symlink_to("/nonexistent")
+    file_link.symlink_to(target)
+    sandbox.sweep()
+    disk = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert [os.path.lexists(link) for link in links] == [False, False], disk.get("task_cache_residue")
+    assert "task_cache_residue" not in disk
+    assert target.read_text() == "target-bytes"
+    assert note_target.read_text() == "note"
+    assert other.is_symlink() and other.read_text() == "note"
+    assert (artifacts / "run.log").read_text() == "log"
+    assert (evidence / "receipt.json").read_text() == "{}"
+
+
 def test_settlement_after_a_dispatcher_module_changes_on_disk_removes_the_worktree(sandbox):
     """Defect (#12634): a worker running while a dispatcher change landed settled with old in-memory and new
     on-disk modules, so removal failed with an ImportError and left a clean tree. The worker now loads its

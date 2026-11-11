@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 import re
-import shutil
 import signal
 import stat
 import subprocess
@@ -21,6 +20,7 @@ import psutil
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
+from scripts.common import task_scratch
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -61,12 +61,47 @@ TASK_CACHE_DIRS = frozenset({"venv", ".venv", "buildvenv", "npm-cache", ".npm", 
                              "__pycache__"})
 
 
+def _remove_cache_entry(dir_fd: int, name: str) -> None:
+    """Unlink a cache-named link, or remove one cache directory, relative to ``dir_fd``.
+
+    A link is unlinked and never followed. A directory is removed by the same remover
+    ``_remove_task_scratch`` uses: this directory gets owner rwx when it lacks it, children
+    are repaired on descent, and another device or a mount point is refused before anything
+    is unlinked. The chmod and the deletion stay inside ``name``.
+    """
+    info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    if stat.S_ISLNK(info.st_mode):
+        os.unlink(name, dir_fd=dir_fd)
+        return
+    if not stat.S_ISDIR(info.st_mode):
+        return
+    parent = os.fstat(dir_fd)
+    mount_id = task_scratch.fd_mount_id(dir_fd)
+    if info.st_dev != parent.st_dev:
+        raise task_scratch.ContainmentError(f"cache {name!r} is on another filesystem")
+    if mount_id is None:
+        raise task_scratch.ContainmentError("mount information unavailable")
+    if stat.S_IMODE(info.st_mode) & stat.S_IRWXU != stat.S_IRWXU:
+        # A read-only top directory would refuse to give up its entries; children are repaired on descent.
+        task_scratch.grant_owner_rwx(dir_fd, name, info, device=parent.st_dev, mount_id=mount_id)
+    # The held descriptor's path is what mountinfo names. The scratch remover refuses a mount
+    # below this directory before it unlinks anything, and it never chmods outside the directory.
+    task_scratch._remove_invocation_dir(
+        dir_fd,
+        name,
+        namespace=Path(os.readlink(f"/proc/self/fd/{dir_fd}")),
+        expected_dev=info.st_dev,
+        expected_ino=info.st_ino,
+    )
+
+
 def _task_caches(task_id: str, *, remove: bool) -> tuple[list[str], list[str]]:
     """The cache directories in ``<task_id>.artifacts`` and ``<task_id>.evidence``, and what could not be walked or removed.
 
     os.fwalk holds each directory open and checks it with lstat, open and fstat before it descends, so neither a
     link nor an ancestor swapped during the walk takes it outside the task's outputs. Removal acts relative to the
-    held parent: a cache-named link is unlinked, never followed, and rmtree checks the directory again itself.
+    held parent. ``DirEntry.is_dir`` follows links, so a dangling cache link or a link to a file is listed in
+    ``files``; those names are unlinked too. A real directory goes through the scratch remover.
     """
     tasks = store.record_path(task_id).parent  # refuses an invalid task id before any path is built from it
     found: list[str] = []
@@ -74,6 +109,15 @@ def _task_caches(task_id: str, *, remove: bool) -> tuple[list[str], list[str]]:
 
     def refused(error: OSError) -> None:
         failed.append(f"{error.filename}: {type(error).__name__}")
+
+    def drop(directory: str, dir_fd: int, name: str) -> None:
+        found.append(f"{directory}/{name}")
+        if not remove:
+            return
+        try:
+            _remove_cache_entry(dir_fd, name)
+        except (OSError, task_scratch.ContainmentError) as exc:
+            failed.append(f"{directory}/{name}: {type(exc).__name__}")
 
     tasks_fd = os.open(tasks, os.O_RDONLY | os.O_DIRECTORY)
     try:
@@ -83,19 +127,20 @@ def _task_caches(task_id: str, *, remove: bool) -> tuple[list[str], list[str]]:
             except FileNotFoundError:
                 continue
             try:
-                for directory, names, _files, dir_fd in os.fwalk(root, onerror=refused, dir_fd=tasks_fd):
+                for directory, names, files, dir_fd in os.fwalk(root, onerror=refused, dir_fd=tasks_fd):
                     for name in [name for name in names if name in TASK_CACHE_DIRS]:
-                        names.remove(name)
-                        found.append(f"{directory}/{name}")
-                        if not remove:
+                        names.remove(name)  # do not descend into a directory this pass is removing
+                        drop(directory, dir_fd, name)
+                    for name in files:
+                        if name not in TASK_CACHE_DIRS:
                             continue
                         try:
-                            if stat.S_ISLNK(os.stat(name, dir_fd=dir_fd, follow_symlinks=False).st_mode):
-                                os.unlink(name, dir_fd=dir_fd)
-                            else:
-                                shutil.rmtree(name, dir_fd=dir_fd)
+                            linked = stat.S_ISLNK(os.stat(name, dir_fd=dir_fd, follow_symlinks=False).st_mode)
                         except OSError as exc:
                             failed.append(f"{directory}/{name}: {type(exc).__name__}")
+                            continue
+                        if linked:
+                            drop(directory, dir_fd, name)
             except OSError as exc:  # the root, or a listing os.fwalk does not pass to onerror
                 failed.append(f"{root}: {type(exc).__name__}")
     finally:

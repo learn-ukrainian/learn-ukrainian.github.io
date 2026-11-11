@@ -1125,9 +1125,15 @@ def assert_frozen_surfaces(actual, *, surfaces):
                 assert endpoint["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
                 endpoint["models"] = ["gpt-6.1-sol"]
                 value["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
-            # Carbon is held inventory only; every prior seat and route stays frozen.
+            # Operator decision 2026-11-10: Carbon and Argon are active AGY work models with no
+            # review or advisory role, so they join no seat, review route, ladder or ranking and
+            # every other field stays frozen. Argon's frozen row is its retired record, which
+            # held the catalog id gemini-4-argon-high before that decision.
             carbon = value["models"].pop("gemini-4-carbon")
-            assert hashlib.sha256(encode(carbon)).hexdigest() == "5e7dd56ff656759fae9e85e0120c0eb74ae49ea78122db95c288ad3631c960b7"
+            assert hashlib.sha256(encode(carbon)).hexdigest() == "d8d515834ddc850490fb2e2a9bd7b9b0cdf77b2184254ca6db765b5b92f510d5"
+            argon = value["models"].pop("gemini-4-argon")
+            assert hashlib.sha256(encode(argon)).hexdigest() == "487d0e7e81d157689031dc8c804f1a3323773e0ed5b4486a8e2f1af793909d3e"
+            value["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
@@ -1173,6 +1179,8 @@ def refresh_current_baseline():
     capture = deepcopy(_V2_BASELINE)
     catalog = plain(expanded_legacy_view())
     catalog["models"].pop("gemini-4-carbon")
+    catalog["models"].pop("gemini-4-argon")
+    catalog["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
     catalog["models"].pop("gpt-6.1-terra")
     _pop_advisory_roles(catalog)
     # Keep the previously approved overlays outside this current-baseline refresh.

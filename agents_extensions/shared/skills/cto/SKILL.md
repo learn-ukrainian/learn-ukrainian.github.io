@@ -62,6 +62,10 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
   residual with a workaround. Before naming anything operator-only, verify it with a command
   and cite the output.
 - Never wait for a quota reset: seat the next eligible reviewer the resolver returns.
+- Write to the operator in plain, simple English: lead with what changed and what they must
+  know or do, say what each piece of work is for in everyday words, and keep it short. No
+  task ids, tracker ids, hashes, nonces or abbreviations unless asked; a PR number only next
+  to a plain description. The codes stay in driver state and worker messages.
 - Timestamps come only from `date -u`, in the same command that uses them.
 
 ## Routing
