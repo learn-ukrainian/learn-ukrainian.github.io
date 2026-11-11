@@ -2432,6 +2432,29 @@ def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str)
     assert reason in result.stderr
 
 
+def test_tar_list_mode_option_word_is_not_a_primary_write(repo: Path, outside_dir: Path):
+    """Defect class: tar's dash-less option word (``tar tzf``) read as a file written in the primary.
+
+    ``-t`` lists the archive named by ``-f`` and writes nothing; later words are
+    member names. Controls: extracting or creating into the primary is still
+    refused, and so is a listing whose ``TAR_OPTIONS`` the command sets or whose
+    words Bash can expand into other options.
+    """
+
+    def decision(command: str) -> int:
+        return _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}).returncode
+
+    archive = outside_dir / "a.tgz"
+    assert decision(f"tar tzf {archive}") == 0
+    assert decision(f"tar tvzf {archive} curriculum/tracked.md") == 0
+    assert decision(f"tar xzf {archive}") == 2
+    assert decision(f"tar -xzf {archive} -C {repo}") == 2
+    assert decision(f"tar czf {repo}/out.tgz curriculum") == 2
+    assert decision(f"TAR_OPTIONS=--checkpoint-action=exec=touch tar tzf {archive}") == 2
+    assert decision(f"tar tzf {archive} {{--checkpoint=1,--checkpoint-action=exec=touch}}") == 2
+    assert decision(f"tar tzf {archive} *") == 2
+
+
 @pytest.mark.parametrize(
     "template",
     [

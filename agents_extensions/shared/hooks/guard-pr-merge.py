@@ -636,6 +636,67 @@ class _SplitQuoting(ShellPreprocessLimit):
     """A merge candidate whose quoting the line reader cannot group as Bash does."""
 
 
+def _quote_after_line(line: str, quote: str) -> str:
+    """The quote still open after ``line`` when it starts inside ``quote``."""
+    index = 0
+    while index < len(line):
+        char = line[index]
+        if char == "\\" and quote != "'":
+            index += 2
+            continue
+        if char in "\"'" and (not quote or quote == char):
+            quote = "" if quote else char
+        index += 1
+    return quote
+
+
+def _without_quoted_heredoc_data(command: str) -> str:
+    """Drop only the bodies of closed here-docs whose delimiters are all quoted (`<<'EOF'`).
+
+    Bash expands nothing in such a body and reads it by physical lines, so its
+    backticks and `$(` are text and a trailing backslash does not join the closer.
+    The whole command is kept, for the raw check to read, whenever a body's start
+    or end is not certain: an ambiguous opener (the shared parser's rule), an
+    unquoted delimiter, an opener line ending inside a quote or with a backslash
+    continuation (Bash then starts the body after a later line), an unclosed
+    body, an ANSI-C `$'` quote, or a carriage return.
+    """
+    if "<<" not in command or "\r" in command or "$'" in command:
+        return command
+    lines = command.split("\n")
+    kept: list[str] = []
+    quote = ""
+    joined = False  # this line continues the previous one (`cat <\` + `<<'EOF'` is `<<<`)
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        kept.append(line)
+        index += 1
+        if quote:
+            quote = _quote_after_line(line, quote)
+            joined = not quote and (len(line) - len(line.rstrip("\\"))) % 2 == 1
+            continue
+        if joined and "<<" in line:
+            return command
+        opener = strip_shell_comments(line)
+        joined = (len(line) - len(line.rstrip("\\"))) % 2 == 1
+        delimiters = skippable_heredoc_delimiters(opener) if "<<" in opener else []
+        if delimiters is None:
+            return command
+        if not delimiters:
+            quote = _quote_after_line(opener, "")
+            continue
+        if _quote_after_line(opener, "") or joined or not all(quoted for _, _, quoted in delimiters):
+            return command
+        for delimiter, strip_tabs, _ in delimiters:
+            while index < len(lines) and (lines[index].lstrip("\t") if strip_tabs else lines[index]) != delimiter:
+                index += 1
+            if index == len(lines):
+                return command
+            index += 1
+    return "\n".join(kept)
+
+
 def _unmodeled_quoting(command: str) -> bool:
     """Stop before Bash-only quote contexts can desynchronize shlex."""
     # Comments, heredoc data and continuing quotes can disagree about state
@@ -714,8 +775,10 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     """
     # Keep both representations: preprocessing may expose split syntax or
     # remove quote-bearing data, and may rewrite Bash-only syntax itself.
+    # Quoted here-doc bodies are data in both: a brief that mentions a merge in
+    # Markdown backticks is not shell syntax.
     if _merge_candidate(command) and (
-        _unmodeled_quoting(command)
+        _unmodeled_quoting(_without_quoted_heredoc_data(command))
         or _unmodeled_quoting(preprocess_shell_command(command))
     ):
         raise ShellPreprocessLimit("shell quoting cannot be read safely")
