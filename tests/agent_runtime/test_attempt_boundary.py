@@ -573,7 +573,10 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
     monkeypatch.setattr(runner, "_load_adapter", lambda *args, **kwargs: Adapter())
     monkeypatch.setattr(runner, "has_headroom", lambda *args, **kwargs: (True, "fixture"))
     monkeypatch.setattr(runner, "write_record", lambda record: None)
-    result = runner.invoke(agent, "probe", cwd=root, tool_config=tc, model="fixture-model", hard_timeout=30)
+    evidence = {}
+    result = runner.invoke(agent, "probe", cwd=root, tool_config=tc, model="fixture-model", hard_timeout=30,
+                           attempt_evidence=evidence)
+    assert evidence == {"records": [], "overflow_count": 0}
     assert result.ok and result.response == "own return"
     assert observed and not observed[0].workspace.exists()
 

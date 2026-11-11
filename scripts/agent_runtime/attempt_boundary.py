@@ -1280,6 +1280,7 @@ class AttemptBoundary:
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
         self.egress = None
+        self.egress_evidence: dict = {}
         self.agent = agent
         try:
             if platform.system() != "Linux":
@@ -1484,16 +1485,23 @@ class AttemptBoundary:
                 boundary=self,
             )
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> dict:
         try:
             if self.egress is not None:
-                self.egress.cleanup()
+                try:
+                    self.egress.cleanup()
+                finally:
+                    self.egress_evidence = {
+                        "records": [dict(record) for record in self.egress.records],
+                        "overflow_count": self.egress.overflow_count,
+                    }
         finally:
             try:
                 if self.connection is not None:
                     self.connection.cleanup()
             finally:
                 self.temp.cleanup()
+        return self.egress_evidence
 
 
 def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:

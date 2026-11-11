@@ -125,6 +125,7 @@ class Limits:
 
 
 DEFAULT_LIMITS = Limits()
+MAX_EGRESS_DESTINATIONS = 256
 
 
 class AttemptEgress:
@@ -134,6 +135,7 @@ class AttemptEgress:
         self.endpoint, self.limits = endpoint, limits
         self.local_addresses = host_addresses()
         self.records: list[dict] = []  # destination + byte count only; no payloads or addresses
+        self.overflow_count = 0
         self.ready = threading.Event()
         self.error = None
         self.loop = asyncio.new_event_loop()
@@ -264,7 +266,12 @@ class AttemptEgress:
             # One aggregate per requested destination: the receipt's audit of which hosts were contacted.
             existing = next((r for r in self.records if r["destination"] == record["destination"]), None)
             if existing is None:
-                self.records.append(record)
+                if len(self.records) < MAX_EGRESS_DESTINATIONS:
+                    self.records.append(record)
+                else:
+                    # Count omitted requests, not unique overflow hosts: deduplicating
+                    # those hosts would itself require unbounded memory.
+                    self.overflow_count += 1
             else:
                 record = existing
             answers = await asyncio.wait_for(self._resolve(host), self.limits.resolve_seconds)
