@@ -1828,7 +1828,8 @@ def _trap_coproc_script(segment: list[str]) -> str | None:
         return str(action)
     if not args or any(getattr(arg, "unresolved_at", None) is not None for arg in args):
         raise ShellPreprocessLimit("coproc command cannot be read safely")
-    if any(arg in _COMPOUND_OPENERS | _COMPOUND_CLOSERS | _COMPOUND_PREFIXES | {"function"} for arg in args):
+    compound_starts = _COMPOUND_OPENERS | _COMPOUND_PREFIXES | {"function"}
+    if args[0] in compound_starts or (len(args) > 1 and args[1] in compound_starts):
         # Named and compound coprocesses need a subshell scope the bounded
         # parser cannot attribute. Never let their cd/assignments affect the parent.
         raise ShellPreprocessLimit("compound coproc scope cannot be read safely")
