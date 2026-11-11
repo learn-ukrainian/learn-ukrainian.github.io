@@ -353,21 +353,6 @@ PY
     return "$status"
 }
 
-# The Gemini CLI deploy target is retired. Earlier deploys left copies in .gemini/
-# that no deploy refreshes now, and the pre-push gate would refuse their stale
-# files. Remove only the names the old deploy wrote, with rsync (the deploy's only
-# deleter); the tracked config.yaml and any runtime state stay.
-retire_gemini_deploy_target() {
-    [[ -d .gemini && ! -L .gemini ]] || return 0
-    local rsync_bin empty
-    rsync_bin="$("$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/sync_agent_mirror.py" --resolve-rsync)"
-    empty="$DEPLOY_STATE_DIR/gemini-retire-empty"
-    mkdir -p "$empty"
-    "$rsync_bin" -r --delete --include='/skills/***' --include='/rules/***' --include='/hooks/***' \
-        --include='/docs/***' --include=/settings.json --exclude='*' "$empty/" .gemini/
-    rmdir "$empty"
-}
-
 remove_claude_autoload_rules() {
     local p
     for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
@@ -504,7 +489,6 @@ echo ""
 
 if [[ "$DRY_RUN" == false ]]; then
     remove_claude_autoload_rules
-    retire_gemini_deploy_target
 fi
 
 # Step 2: Show diffs before sync
