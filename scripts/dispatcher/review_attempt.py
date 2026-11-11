@@ -165,6 +165,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     except (OSError, ValueError, ReviewIsolationError) as exc:
         return Outcome("failed", f"review_attempt_refused: {exc}"[:500], None, None, unknown)
     hard, silence, initial = deadlines
+    egress_evidence: dict = {}
     try:
         result = runner.invoke(
             spec.agent, prompt, mode="read-only", cwd=workspace, model=spec.model, task_id=record["task_id"],
@@ -172,6 +173,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
             stdout_silence_timeout=silence or None, initial_response_timeout=initial or None, effort=spec.effort,
             allow_runner_failover=False,
             rules_core_delivery=runner.RulesCoreDelivery.BOUND,
+            attempt_evidence=egress_evidence,
         )
     except (AgentTimeoutError, AgentStalledError) as exc:
         return Outcome("timeout", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
@@ -179,6 +181,10 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         return Outcome("rate_limited", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
     except AgentRuntimeError as exc:
         return Outcome("failed", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
+    finally:
+        # Cancellation unwinds past Outcome. The supervisor still settles this
+        # same record, so preserve cleanup's evidence here on every exit.
+        record["review_attempt_egress"] = egress_evidence
     # Only an identity the runtime observed from the provider is attested; a requested model never is.
     known = result.identity_state == "observed"
     identity = dict(

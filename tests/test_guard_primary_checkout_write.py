@@ -2826,3 +2826,40 @@ def test_issue_8785_review_allowed_cases(repo: Path, command: str):
         },
     )
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("trap 'touch tracked.txt' EXIT", 2),
+        ("trap -- 'touch tracked.txt' EXIT", 2),
+        ("trap 'git reset --hard' EXIT", 2),
+        ("trap 'touch $HOME/tracked.txt' EXIT; HOME=<primary>", 2),
+        ("trap 'touch ~/tracked.txt' EXIT; HOME=<primary>", 2),
+        ("coproc git reset --hard", 2),
+        ("coproc cd <dispatch>; touch tracked.txt", 2),
+        ("trap 'tar xzf archive.tgz' EXIT", 2),
+        ("coproc touch tracked.txt", 2),
+        ("coproc tar xzf archive.tgz", 2),
+        ("coproc { touch tracked.txt; }", 2),
+        ("coproc WORKER { touch tracked.txt; }", 2),
+        ("coproc WORKER { tar xzf archive.tgz; }", 2),
+        ("coproc WORKER while touch tracked.txt; do :; done", 2),
+        ("coproc WORKER if tar xzf archive.tgz; then :; fi", 2),
+        ("coproc ( touch tracked.txt )", 2),
+        ("bash -c \"trap 'touch tracked.txt' EXIT\"", 2),
+        ("eval \"coproc touch tracked.txt\"", 2),
+        ("coproc { coproc touch tracked.txt; }", 2),
+        ("coproc printf done", 0),
+        ("trap -p", 0),
+        ("trap '' EXIT", 0),
+    ],
+)
+def test_trap_coproc_primary_write_bypass_refused(repo: Path, command: str, expected: int):
+    """R34: deferred trap actions and asynchronous coprocesses must expose writers."""
+    command = command.replace("<dispatch>", str(repo / ".worktrees/dispatch/claude/task-1")).replace(
+        "<primary>", str(repo)
+    )
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    result = _run(repo, payload)
+    assert result.returncode == expected, result.stderr

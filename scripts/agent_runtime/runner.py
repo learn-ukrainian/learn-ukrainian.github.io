@@ -4034,6 +4034,7 @@ def invoke(
     allow_runner_failover: bool = True,
     rules_seat: str | None = None,
     rules_core_delivery: RulesCoreDelivery = RulesCoreDelivery.INJECT,
+    attempt_evidence: dict | None = None,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
 
@@ -4041,6 +4042,9 @@ def invoke(
     a valid explicit value wins over ``LU_RULES_SEAT``, then defaults to core.
     ``BOUND`` references this task's durable admitted review contract. The
     runtime verifies its provenance and complete prompt hash without rewriting.
+
+    ``attempt_evidence`` receives the boundary's egress summary after cleanup,
+    even when invocation raises or cancellation unwinds past this call.
 
     ``tool_config={"trail_isolation": ...}`` is handled before adapter
     planning. Unsupported adapters refuse before spawn, while supported
@@ -4119,10 +4123,16 @@ def invoke(
         raise
     finally:
         try:
-            if launch is not None:
-                launch.cleanup()
-            if attempt is not None:
-                attempt.cleanup()
+            try:
+                if launch is not None:
+                    launch.cleanup()
+            finally:
+                if attempt is not None:
+                    try:
+                        attempt.cleanup()
+                    finally:
+                        if attempt_evidence is not None:
+                            attempt_evidence.update(attempt.egress_evidence)
         except BaseException as exc:
             if agent_name == "agy":
                 exc.model_identity = _AGY_OBSERVED_IDENTITY.get()
@@ -4133,6 +4143,7 @@ def invoke(
             _AGY_OBSERVED_IDENTITY.reset(identity_token)
             _REQUESTED_SELECTOR.reset(selector_token)
             _INVOCATION_NONCE.reset(nonce_token)
+
 
 
 @dataclass(frozen=True)
