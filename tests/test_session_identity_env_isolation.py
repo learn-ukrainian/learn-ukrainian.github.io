@@ -59,6 +59,9 @@ _HOST_CONFIG_EXPORTS = frozenset(
         "LU_AGENT_GITHUB_IDENTITY_SOURCE",  # credential provenance label
         "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS",  # SessionStart-local subprocess bound
         "LU_DRIVER_STATE_PYTHON",  # interpreter configuration, shared across sessions
+        "LEARN_UKRAINIAN_PYTHON",  # shared project interpreter, validated at hook boundaries
+        "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT",  # primary checkout holding shared runtime state
+        "LU_PRODUCT_ROOT",  # selected product files, independent of session identity
         "LU_AGENT_COMM_TRANSPORT",  # fleet comms transport choice
         "LU_MONITOR_HOST_ID",  # this host, shared by every session on it
         "LU_RUNTIME_TMP_BASE_ROOT",  # storage root

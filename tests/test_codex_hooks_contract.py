@@ -74,7 +74,7 @@ def _make_exact_python_checkout(root: Path, *, delegate: Path | None = None) -> 
 
 def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
     primary = tmp_path / "primary"
-    worktree = tmp_path / "linked"
+    worktree = primary / ".worktrees/dispatch/codex/hooks-test"
     primary.mkdir()
     _run(["git", "init", "-b", "main"], cwd=primary)
     _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=primary)
