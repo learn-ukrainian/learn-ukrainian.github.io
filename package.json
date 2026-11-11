@@ -94,7 +94,7 @@
   "homepage": "https://github.com/krisztiankoos/learn-ukrainian#readme",
   "devDependencies": {
     "@agentclientprotocol/claude-agent-acp": ">=0.64.2 <1",
-    "@agentclientprotocol/sdk": "1.8.0",
+    "@agentclientprotocol/sdk": "2.2.0",
     "@eslint/js": "^10.0.1",
     "@types/better-sqlite3": "^9.6.0",
     "@types/js-yaml": "^4.0.9",
