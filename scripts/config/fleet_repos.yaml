@@ -69,6 +69,14 @@ repos:
     role: public-machinery
     verdict_recorder: true
     required_workflow: .github/workflows/ci-gate.yml
+  # ukrainian-llm-eval: the public model-evaluation repository (EVAL-PROJECT-1103). Reuses the
+  # public-labs role: consumers only read the "public-" / "private" prefix, and it runs studies.
+  ukrainian-llm-eval:
+    github: learn-ukrainian/ukrainian-llm-eval
+    local_name: ukrainian-llm-eval
+    transport: https
+    role: public-labs
+    verdict_recorder: true
   # Private sibling. The private- role prefix is what OPSEC and the publisher
   # read as visibility. The row otherwise matches kubedojo-labs.
   mnq-orb:
