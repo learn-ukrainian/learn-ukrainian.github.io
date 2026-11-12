@@ -440,11 +440,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "b2b6de688b012b416c9798b4fcb3a0557a8c4817750ba5c4b2155f8134050fc1:1",
     ),
     (
-        _mp("ci/cursor_cloud_full_pytest.sh"),
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "afa3da731cde6c7643e80f802690aaa2b564113125b1fc3c4e9b45ee570bb7bf:1",
-    ),
-    (
         _mp("ci/data_tier.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "775208f8feb1fc5c7f37b3bc5e78a7170b870f112c25ed1ba44bf1d4d3234e17:1",

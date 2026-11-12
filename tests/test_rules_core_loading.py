@@ -335,11 +335,6 @@ LAUNCHER_ROWS = (
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
     ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
-    # No cursor-driver row: Cursor has no approved model pin while Grok is retired
-    # (GROK-CANCEL-1110), so its launcher refuses every model before the core is read;
-    # tests/test_start_cursor_launcher.py pins that refusal.
-    ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
-    ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
 )
 
 
