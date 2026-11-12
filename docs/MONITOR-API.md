@@ -40,7 +40,9 @@ for the operator and for agents.
   consultation, cost and admin pages, the shared `monitor.css` and
   `product-nav.js`, and `data/status.json`). They are served only when the entry
   declares them. The machinery pages (fleet, epics, work, runtime, routing,
-  delegate, ACP, orient) are served by machinery at `/machinery`.
+  delegate, ACP, orient) are served by machinery at `/machinery`. `dashboards/`
+  stays only as an empty placeholder, because the machinery release builder still
+  lists it as a required live-data path.
 
 ## Where agents onboard (not the HTML dashboards)
 

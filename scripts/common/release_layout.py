@@ -23,6 +23,9 @@ LIVE_DATA_PATHS: tuple[str, ...] = (
     "logs",
     "site",
     "tests/fixtures",
+    # Only an empty placeholder since the machinery pages left this checkout;
+    # the installed machinery release builder still requires the path.
+    "dashboards",
     ".mcp",
     "agents_extensions",
     "plans",

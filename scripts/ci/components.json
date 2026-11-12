@@ -759,6 +759,12 @@
       ]
     },
     {
+      "path": "dashboards/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
       "path": "data/",
       "components": [
         "shared-core"

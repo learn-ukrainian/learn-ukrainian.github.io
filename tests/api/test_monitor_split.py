@@ -128,7 +128,7 @@ def _pages() -> list[tuple[str, Path]]:
 
 @pytest.mark.parametrize(("page", "source"), _pages(), ids=[page for page, _ in _pages()])
 def test_every_dashboard_page_loads_from_its_owner(tmp_path: Path, page: str, source: Path) -> None:
-    # This checkout has no machinery dashboards directory; every page is the product's.
+    # This checkout has no machinery pages; every page is the product's.
     ctx = fixture_context(tmp_path).with_roots(dashboards_dir=tmp_path / "dashboards")
     app = api_main.create_app(ctx, lifespan=_no_lifespan)
     with TestClient(app) as client:
@@ -147,7 +147,8 @@ def test_product_static_map_is_explicit_and_complete() -> None:
     declared = set(entry.STATIC_FILES)
     on_disk = {path.relative_to(PRODUCT_STATIC).as_posix() for path in PRODUCT_STATIC.rglob("*") if path.is_file()}
     assert declared == on_disk
-    assert not (REPO_ROOT / "dashboards").exists()
+    # dashboards/ holds only the placeholder the machinery release builder requires.
+    assert [path.name for path in (REPO_ROOT / "dashboards").iterdir()] == [".gitkeep"]
     assert len(declared) == 14
 
 
