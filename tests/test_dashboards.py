@@ -105,6 +105,17 @@ def _channel(value: float) -> float:
     return ((value + 0.055) / 1.055) ** 2.4
 
 
+def _blend(background: str, ink: str, alpha: float) -> str:
+    """Composite ``ink`` at ``alpha`` over an opaque ``#rrggbb`` background."""
+
+    def channels(color: str) -> tuple[int, int, int]:
+        return (int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16))
+
+    base, layer = channels(background), channels(ink)
+    mixed = tuple(round(base[i] * (1 - alpha) + layer[i] * alpha) for i in range(3))
+    return "#" + "".join(f"{channel:02x}" for channel in mixed)
+
+
 def _contrast(foreground: str, background: str) -> float:
     """WCAG 2.x contrast ratio for two ``#rrggbb`` colors."""
 
@@ -129,12 +140,22 @@ def test_muted_text_tokens_clear_wcag_aa_on_every_surface():
     ``#8a8377`` (the old ``--gray``) was 3.48:1 on the page background. Both
     tokens have to clear 4.5:1 on ``--bg``, ``--bg2`` and ``--bg3`` in light
     and dark. A 0.4 opacity on legacy rows dimmed every color in the row.
+    The pending and unknown build badges painted ``--text3`` on
+    ``rgba(72,79,88,0.2)``, which composites to about 4.32:1 on ``--bg``.
     """
     assert _contrast("#7a736a", "#f5efde") < 4.5
     assert _contrast("#7a736a", "#faf6ef") < 4.5
     assert _contrast("#8a8377", "#faf6ef") < 4.5
+    # The gray wash over the page background, the pair the badge used to paint.
+    assert _contrast("#665e56", _blend("#faf6ef", "#484f58", 0.2)) < 4.5
     dashboard = (PRODUCT_PAGES_DIR / "curriculum-dashboard.html").read_text()
     assert "opacity: 0.4" not in dashboard
+    pending = re.search(r"\.module-table \.ver-pending \{([^}]+)\}", dashboard)
+    assert pending is not None
+    rule = pending.group(1)
+    assert "rgba(" not in rule
+    assert "background: var(--bg3)" in rule
+    assert "color: var(--text3)" in rule
 
     css = (PRODUCT_PAGES_DIR / "monitor.css").read_text()
     light_css, dark_css = css.split("@media (prefers-color-scheme: dark)", 1)
