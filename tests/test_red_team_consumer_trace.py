@@ -611,6 +611,9 @@ HANDLING = {
     "lu_machinery/review/review_lineage.py": "accept-as-approval",
     "lu_machinery/fleet_comms/cli.py": "ignore",
     "lu_machinery/fleet_comms/efficiency_metrics.py": "ignore",
+    # The merge-queue gate lands nothing unless the recorder's status is success on each member's head.
+    "lu_machinery/ci/queue_review_gate.py": "accept-as-approval",
+    "scripts/ci/queue_review_gate.py": "accept-as-approval",
 }
 
 
@@ -641,6 +644,7 @@ def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
     product = (
         path for path in (root / "scripts").rglob("*.py")
         if ownership.get(path.relative_to(root).as_posix()) != "machinery"
+        or path.relative_to(root).as_posix() == "scripts/ci/queue_review_gate.py"
     )
     consumers = {
         "lu_machinery/" + path.relative_to(installed).as_posix()

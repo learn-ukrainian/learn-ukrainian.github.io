@@ -270,9 +270,6 @@ def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path
         ("start-claude-driver.sh", "invalid_selector_xyz", 2),
         ("start-codex-driver.sh", "invalid_selector_xyz", 2),
         ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
-        ("start-grok-driver.sh", "invalid_selector_xyz", 2),
-        # start-cursor-driver.sh refuses its retired Grok seat pin before it reads any selector
-        # (GROK-CANCEL-1110); tests/test_start_cursor_launcher.py covers that refusal.
     ],
 )
 def test_hermetic_launcher_unknown_selector_fails_closed_contract(

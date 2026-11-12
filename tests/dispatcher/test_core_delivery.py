@@ -18,7 +18,10 @@ from scripts.lib import rules_core
 
 def spec_at(tmp_path, provider):
     checkout = tmp_path / "checkout"
-    checkout.mkdir()
+    if provider == "muse":
+        subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+        checkout = tmp_path / ".worktrees/dispatch/muse/delivery"
+    checkout.mkdir(parents=True)
     brief = tmp_path / "brief"
     brief.write_bytes(b"Original brief\r\n")
     return TaskSpec("delivery", provider, "gpt-6.1-sol", "high", "workspace-write", checkout, brief, tmp_path / "result")
@@ -88,7 +91,7 @@ print(json.dumps(history))
 
 def test_launch_reads_current_core_instead_of_preflight_snapshot(tmp_path, monkeypatch):
     """Defect class: a changed or removed core after preflight launches stale instructions."""
-    spec = spec_at(tmp_path, "muse")
+    spec = replace(spec_at(tmp_path, "muse"), mode="read-only")
     source = tmp_path / "rules" / "core.md"
     source.parent.mkdir()
     source.write_text("First trusted core\n")
@@ -132,6 +135,8 @@ def test_dispatch_uses_preflight_content_seat_despite_sanitized_child_environmen
 def test_dry_run_constructs_context_transport_without_writes(tmp_path, provider):
     """Defect class: planning a file-backed core transport writes files or requires a task directory."""
     spec = spec_at(tmp_path, provider)
+    if provider == "muse":
+        spec = replace(spec, mode="read-only")
     spec = replace(spec, final_file=tmp_path / "absent-tasks" / "result", options={"dry_run": "True"})
     before = sorted(tmp_path.rglob("*"))
     invocation = runtime_context.build(spec, {})

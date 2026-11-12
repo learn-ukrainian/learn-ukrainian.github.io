@@ -137,8 +137,8 @@ survivors on success, error, or timeout. The fake smoke always runs.
 ### Lint
 
 ```bash
-.venv/bin/ruff check scripts/ tests/ agents_extensions/ dashboards/          # Check
-.venv/bin/ruff check --fix scripts/ tests/ agents_extensions/ dashboards/    # Auto-fix
+.venv/bin/ruff check scripts/ tests/ agents_extensions/          # Check
+.venv/bin/ruff check --fix scripts/ tests/ agents_extensions/    # Auto-fix
 ```
 
 ### Pre-commit hooks
@@ -152,7 +152,7 @@ pre-commit install
 
 After that, every `git commit` runs:
 
-- `ruff check` on changed `scripts/`, `tests/`, `agents_extensions/`, and `dashboards/` files (blocks bad imports, multi-statement lines, etc.)
+- `ruff check` on changed `scripts/`, `tests/`, and `agents_extensions/` files (blocks bad imports, multi-statement lines, etc.)
 - `gitleaks` secret scan on staged changes
 - YAML syntax check + large-file / merge-conflict detection
 - Block accidental `.yaml.bak` / `.yaml.orig` commits. Plan history lives in git, and content-bearing plan edits must bump `version:`.

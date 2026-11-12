@@ -271,6 +271,10 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
             expected = (
                 policy[policy_name]["formal_review_eligible"] and policy[policy_name]["adapter_transport"] == "acp"
             )
+            if policy_name == "cursor":
+                # C-5307 restores Cursor formal review only for the dispatcher's exact grok-4.7-high pin;
+                # machinery#390 left the Fleet ACP endpoint non-formal, so the projection stays false.
+                expected = False
             assert endpoint["formal_review_eligible"] is expected
         else:
             assert endpoint["formal_review_eligible"] is False
@@ -335,9 +339,9 @@ def test_auto_author_excludes_cursor_transport_candidates():
             assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
-# Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464), and the
-# only one, Grok 4.7, retired (GROK-CANCEL-1110), so none remains.
-CURSOR_TRANSPORT_REVIEWERS: tuple[str, ...] = ()
+# Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464).
+# C-5307 restores Grok 4.7's exact Cursor review pin.
+CURSOR_TRANSPORT_REVIEWERS = ("grok-4.7-cursor-fallback",)
 
 
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
@@ -1759,7 +1763,8 @@ def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
 
 @pytest.mark.parametrize("candidate", ["grok-4.7-cursor-fallback"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_grok_critical_review_pin_is_refused_after_retirement(candidate, profile):
+def test_grok_critical_review_pin_fails_the_risk_gate(candidate, profile):
+    """C-5307 restores Grok's explicit pin without high or critical final sign-off."""
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol",
         risk="critical",
@@ -1767,10 +1772,9 @@ def test_grok_critical_review_pin_is_refused_after_retirement(candidate, profile
         pinned_candidate=candidate,
         pressure_override_reason="admission probe", claude_account=HOST_ACCOUNT,
     )
-    resolution = resolve_reviewer(inputs)
-    assert candidate not in REVIEW_CANDIDATES
+    resolution = resolve_reviewer(inputs, ladder=((REVIEW_CANDIDATES[candidate],),))
     assert resolution.selected is None
-    assert resolution.fail_closed_reason == f"unknown explicit reviewer pin {candidate!r}"
+    assert resolution.fail_closed_reason == f"explicit reviewer pin {candidate!r} failed a hard eligibility gate"
 
 
 _SOL_OPUS = {"gpt-6.1-sol", "claude-opus-5-5"}
@@ -2260,7 +2264,7 @@ def test_unknown_committed_author_does_not_hide_known_author_exclusions():
 
 def test_unknown_committed_author_does_not_hide_incoming_cursor_family():
     inputs = ResolverInputs(author_model="cursor:auto", author_families=frozenset({"unknown", "cursor"}), claude_account=HOST_ACCOUNT)
-    assert all(candidate.transport != "cursor" for candidate in REVIEW_CANDIDATES.values())
+    assert evaluate_candidate(REVIEW_CANDIDATES["grok-4.7-cursor-fallback"], inputs).status == "excluded"
     selected = resolve_reviewer(inputs).selected
     assert selected is not None and selected.family in {"anthropic", "openai"}
 

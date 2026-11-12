@@ -11,22 +11,6 @@ from typing import Any, cast
 import yaml
 from lu_machinery.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 
-# Textbook PDFs live under the resolved bulk raw-source root, never a
-# repository symlink (#8803; docs/runbooks/storage-topology.md).
-# Resolved on first use: curriculum_state imports this module before it has
-# finished loading the product wrapper.
-
-
-def __getattr__(name: str) -> Path:
-    if name != "TEXTBOOKS_DIR":
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    from .curriculum_state import monitor_surface  # noqa: PLC0415
-
-    value = cast(Path, monitor_surface.textbook_pdfs_dir())
-    globals()["TEXTBOOKS_DIR"] = value
-    return value
-
-
 _KNOWN_LEVEL_NAMES = {
     "a1": "A1 - Beginner",
     "a2": "A2 - Elementary",

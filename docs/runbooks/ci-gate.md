@@ -230,6 +230,20 @@ it reports after failed or cancelled dependencies.
 Queue runs never reuse PR results. The tested-tree artifact remains an audit
 record of the candidate and its partition results.
 
+On `merge_group`, the gate's final step (`scripts/ci/queue_review_gate.py`) fails the candidate unless every PR
+in it has `fleet/cross-family-review` = `success`, GitHub's newest state for that context, on its current head.
+This applies whichever command enqueued the PR. The event's `base_sha` is the previous entry's candidate, not
+`main`, so the ref's PR number and `base..head` name only the last PR. Membership is the first-parent chain from
+the candidate's merge base with the live `main` tip. Each squash commit there must be the `headCommit` of exactly
+one paginated merge-queue entry with the same `(#N)`. Acceptance (AC1 as amended under designated approval): the
+squash tree must equal the PR's current head merged onto the queue parent (`git merge-tree`), that head must carry
+the approval, and GitHub must hold a check suite on it created before the entry's `enqueuedAt`. No GitHub field
+names an entry's source head, so this proves tree equivalence, not source-SHA identity, history or attribution
+(residual on learn-ukrainian/machinery#100). API errors and
+membership disagreements get three fresh reads, then fail closed. This guards against accidental landings without
+review. It is not a trust boundary: a status forged with the shared credential, or a candidate that edits this
+workflow, is outside it.
+
 The gate's checkout keeps full history but is sparse (`scripts/` and
 `.python-version`). `actions/checkout` then fetches with `filter: blob:none`, so
 it downloads commits and trees, not the 700 MB working tree: in run
@@ -314,10 +328,9 @@ files; those are imported only with `import type`, which the compiler erases.
 - Within a shard, `-n logical --dist=worksteal` spreads single tests over the
   runner's cores, so one long file no longer pins a shard. The old workflow
   used `--dist=loadfile`, so tests of one file never overlapped. Tests that
-  share a fixed resource must now serialize themselves: the two fixed-port
-  smokes in `tests/test_work_dashboard_private_integration.py` take a file
-  lock in the run's shared temp root. Without the lock, one of them skipped
-  with "ports busy" in every new-workflow run.
+  share a fixed resource must now serialize themselves, for example with a
+  file lock in the run's shared temp root. Two fixed-port smokes without such
+  a lock once skipped with "ports busy" in every new-workflow run.
 - Weights never change which files run; a wrong weight only costs balance.
   `Refresh pytest durations` takes the median of the last five successful
   merge-group `pytest-file-durations` artifacts (downloaded concurrently),

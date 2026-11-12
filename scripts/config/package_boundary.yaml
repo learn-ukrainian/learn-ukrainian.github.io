@@ -246,9 +246,6 @@ packages:
   vocab:
     reason: operator classification
     role: product
-  vocab_audit:
-    reason: operator classification
-    role: product
   wiki:
     reason: operator classification
     role: product
@@ -285,9 +282,6 @@ modules:
     role: product
   batch_utils.py:
     reason: Shim for scripts/batch, which is product.
-    role: product
-  build_dashboards.py:
-    reason: Shim for scripts/build, which is product.
     role: product
   build_landing_pages.py:
     reason: Site landing-page generation.
@@ -354,9 +348,6 @@ modules:
     role: product
   generate_curriculum_stats.py:
     reason: Site curriculum-stats data from the manifest.
-    role: product
-  generate_dashboard_data.py:
-    reason: Shim for scripts/generate_mdx, which is product.
     role: product
   generate_ipa.py:
     reason: Shim for scripts/generate_mdx, which is product.

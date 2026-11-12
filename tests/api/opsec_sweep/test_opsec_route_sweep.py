@@ -58,9 +58,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 # test_known_leak_table_rejects_unmatched_dead_and_expired_rows can exercise
 # _validate_known_leaks without pointing at a real emitter regression.
 FROZEN_IDS = frozenset({"opsec-sweep-test-row"})
-# dashboard-work-loopback is ADR-019's permanent loopback constant, not a
-# burn-down obligation; see the `[[approved_exemptions]]` table instead.
-FROZEN_EXEMPTION_IDS = frozenset({"dashboard-work-loopback"})
+# No production approved exemption exists since the machinery pages left this
+# checkout (dashboards/work.html carried the only one). This sentinel id exists
+# solely so the exemption tests can exercise _validate_approved_exemptions.
+FROZEN_EXEMPTION_IDS = frozenset({"opsec-sweep-test-exemption"})
 PATH_CANARY = "opsec-fixture-canary"
 HOST_ALIAS_CANARY = "opsec-host-alias"
 # The real host name an operator's MONITOR_OCCUPANCY_HOST_IDS mapping stands
@@ -484,12 +485,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     dashboards_root.mkdir(parents=True, exist_ok=True)
     for filename in ("index.html", "artifacts.html"):
         (dashboards_root / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
-    shutil.copytree(
-        Path(__file__).resolve().parents[3] / "dashboards",
-        dashboards_root,
-        dirs_exist_ok=True,
-    )
-    # The product pages moved to the product package (C-4687); scan them too.
+    # The product pages live in the product package (C-4687); scan them.
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "scripts" / "project_api" / "static",
         dashboards_root,
@@ -825,7 +821,6 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
     assert {
-        "GET /api/images/textbooks",
         "GET /api/sources/search_literary",
         "GET /api/sources/search_text",
     } == registry.FIXTURE_EMPTY_ROUTE_KEYS
@@ -878,12 +873,12 @@ def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
 
 
 def test_registry_refuses_a_mutation_without_a_recipe(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
-    with pytest.raises(AssertionError, match="no disposable-store recipe: POST /api/images/reload"):
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/batch/dispatcher/scan")
+    with pytest.raises(AssertionError, match="no disposable-store recipe: POST /api/batch/dispatcher/scan"):
         registry.build_registry(api_main.app)
 
 
-def _skip_images_reload(
+def _skip_dispatcher_scan(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     *,
@@ -893,12 +888,12 @@ def _skip_images_reload(
     tracking = tmp_path / "tracking_issues.toml"
     tracking.write_text(f'checked_on = "{checked_on.isoformat()}"\n[issues]\n8542 = "{state}"\n', encoding="utf-8")
     monkeypatch.setattr(tracking_issues, "TRACKING_ISSUES_PATH", tracking)
-    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/batch/dispatcher/scan")
     monkeypatch.setitem(
         registry.MUTATION_SKIPS,
-        "POST /api/images/reload",
+        "POST /api/batch/dispatcher/scan",
         registry.MutationSkip(
-            owner="monitor-images",
+            owner="monitor-batch",
             reason="synthetic skip for the closed-issue forcing function",
             expiry=(date.today() + timedelta(days=7)).isoformat(),
             issue=8542,
@@ -907,14 +902,14 @@ def _skip_images_reload(
 
 
 def test_registry_accepts_a_skip_citing_an_open_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today())
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="open", checked_on=date.today())
     records = {record.key: record for record in registry.build_registry(api_main.app)}
-    assert records["POST /api/images/reload"].fixture == "skip"
-    assert records["POST /api/images/reload"].as_dict()["skip"]["issue"] == 8542
+    assert records["POST /api/batch/dispatcher/scan"].fixture == "skip"
+    assert records["POST /api/batch/dispatcher/scan"].as_dict()["skip"]["issue"] == 8542
 
 
 def test_registry_fails_a_skip_citing_a_closed_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="closed", checked_on=date.today())
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="closed", checked_on=date.today())
     with pytest.raises(AssertionError, match="cites closed issue #8542"):
         registry.build_registry(api_main.app)
 
@@ -922,7 +917,7 @@ def test_registry_fails_a_skip_citing_a_closed_issue(monkeypatch: pytest.MonkeyP
 def test_registry_fails_a_skip_renewed_without_refreshing_issue_states(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today() - timedelta(days=40))
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="open", checked_on=date.today() - timedelta(days=40))
     with pytest.raises(AssertionError, match="refresh_opsec_tracking_issues"):
         registry.build_registry(api_main.app)
 
@@ -1112,7 +1107,7 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
 
 def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() -> None:
     finding = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:8769",
@@ -1122,7 +1117,7 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
 
     undeclared = {
         "id": "not-a-frozen-exemption-id",
-        "operation": "dashboard:work.html",
+        "operation": "dashboard:sample.html",
         "field": "body",
         "kind": "ipv4",
         "token": "127.0.0.1:8769",
@@ -1133,8 +1128,8 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
         _validate_approved_exemptions([undeclared], [finding])
 
     missing_adr = {
-        "id": "dashboard-work-loopback",
-        "operation": "dashboard:work.html",
+        "id": "opsec-sweep-test-exemption",
+        "operation": "dashboard:sample.html",
         "field": "body",
         "kind": "ipv4",
         "token": "127.0.0.1:8769",
@@ -1159,13 +1154,13 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
 def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_body() -> None:
     """A row pinned to one token must not excuse a different finding sharing its operation/field.
 
-    `dashboard:work.html` / `body` covers the whole dashboard file as one
+    `dashboard:sample.html` / `body` covers the whole dashboard file as one
     scanned leaf. Before this row pinned `kind`/`token`, any second loopback
     (a new leak, or the cited ADR URL swapped for a different one) sharing
     that operation and field was silently absorbed by the same row.
     """
     known = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:8769",
@@ -1173,25 +1168,24 @@ def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_
         end=14,
     )
     second_loopback = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:9769",
         start=200,
         end=214,
     )
-    remaining = _validate_approved_exemptions(_load_approved_exemptions(), [known, second_loopback])
+    row = {
+        "id": "opsec-sweep-test-exemption",
+        "operation": "dashboard:sample.html",
+        "field": "body",
+        "kind": "ipv4",
+        "token": "127.0.0.1:8769",
+        "adr": "docs/decisions/ADR-019-work-control-plane.md",
+        "reason": "test",
+    }
+    remaining = _validate_approved_exemptions([row], [known, second_loopback])
     assert remaining == [second_loopback]
-
-
-def test_dashboard_work_loopback_exemption_is_pinned_to_the_exact_token() -> None:
-    """A glob edit to this row's operation, field, kind, or token must fail this test."""
-    rows = _load_approved_exemptions()
-    row = next(row for row in rows if row["id"] == "dashboard-work-loopback")
-    assert row["operation"] == "dashboard:work.html"
-    assert row["field"] == "body"
-    assert row["kind"] == "ipv4"
-    assert row["token"] == "127.0.0.1:8769"
 
 
 def test_sweep_seam_honesty_requires_real_cold_start_board_producer(

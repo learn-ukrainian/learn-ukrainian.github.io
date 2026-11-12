@@ -16,19 +16,19 @@ CALLERS = [
 ]
 
 MODELS_ALLOWED = [
-    ("grok-4.7", "grok-4.7-high"),
-    ("grok-4.7-high", "grok-4.7-high"),
+    ("stand-in-cursor-pin-high", "stand-in-cursor-pin-high"),
+    ("stand-in-cursor-pin", "stand-in-cursor-pin"),
     ("composer-2.5", None),
     ("composer-2.5[fast=false]", None),
 ]
 
 MODELS_REFUSED = [
-    ("grok-4.7-low", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-medium", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-xhigh", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7[context=500k]", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7[fast=false]", "CURSOR_UNATTESTED_GROK_VARIANT"),
+    ("grok-4.7-low", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-medium", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-xhigh", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-fast", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7[context=500k]", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7[fast=false]", "CURSOR_MODEL_NOT_APPROVED"),
     ("opus", "CURSOR_CLAUDE_REFUSED"),
     ("sonnet", "CURSOR_CLAUDE_REFUSED"),
     ("haiku", "CURSOR_CLAUDE_REFUSED"),
@@ -40,6 +40,13 @@ MODELS_REFUSED = [
     ("composer-2.5[arbitrary=value]", "CURSOR_MODEL_NOT_APPROVED"),
     ("composer-2.5-heavy", "CURSOR_MODEL_NOT_APPROVED"),
 ]
+
+@pytest.fixture(autouse=True)
+def stand_in_cursor_pin(monkeypatch):
+    """Preserve wire checks without approving a retired provider model."""
+    monkeypatch.setattr("lu_machinery.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({"stand-in-cursor-pin", "stand-in-cursor-pin-high"}))
+    monkeypatch.setattr("lu_machinery.review.model_catalog.cursor_pinned_models", lambda catalog=None: ("stand-in-cursor-pin", "stand-in-cursor-pin-high"))
+
 
 def extract_argv(caller, model, tmp_path):
     if caller == "adapter":

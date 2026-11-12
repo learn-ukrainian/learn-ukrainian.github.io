@@ -440,11 +440,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "b2b6de688b012b416c9798b4fcb3a0557a8c4817750ba5c4b2155f8134050fc1:1",
     ),
     (
-        _mp("ci/cursor_cloud_full_pytest.sh"),
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "afa3da731cde6c7643e80f802690aaa2b564113125b1fc3c4e9b45ee570bb7bf:1",
-    ),
-    (
         _mp("ci/data_tier.py"),
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "775208f8feb1fc5c7f37b3bc5e78a7170b870f112c25ed1ba44bf1d4d3234e17:1",
@@ -2152,11 +2147,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_video_discovery.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:4",
-    ),
-    (
-        "tests/test_work_dashboard_private_integration.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "549434b400a8d842ea86f04481428a08beab8704f734cf6f7d7e94668e77a774:1",
     ),
     (
         "tests/test_yaml_validation.py",

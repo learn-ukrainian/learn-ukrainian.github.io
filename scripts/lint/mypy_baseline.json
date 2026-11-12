@@ -8968,21 +8968,6 @@
       "message": "Returning Any from function declared to return \"str\""
     },
     {
-      "path": "scripts/build_dashboards.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/build_dashboards.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/build_dashboards.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
       "path": "scripts/build_landing_pages.py",
       "code": "arg-type",
       "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
@@ -14284,21 +14269,6 @@
     },
     {
       "path": "scripts/generate_a2_plans.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
@@ -30891,46 +30861,6 @@
       "path": "scripts/vocab/vocab_extract_proper.py",
       "code": "operator",
       "message": "Unsupported operand types for + (\"str\" and \"int\")"
-    },
-    {
-      "path": "scripts/vocab_audit/analyzer.py",
-      "code": "attr-defined",
-      "message": "\"tuple[str, str]\" has no attribute \"split\""
-    },
-    {
-      "path": "scripts/vocab_audit/analyzer.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"dict[str, dict[str, float]]\", expected \"dict[str, dict[str, int]]\")"
-    },
-    {
-      "path": "scripts/vocab_audit/main.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/vocab_audit/main.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/vocab_audit/main.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/vocab_audit/main.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/vocab_audit/reporter.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"sorted\" has incompatible type \"list[tuple[str, str]]\"; expected \"Iterable[str]\""
-    },
-    {
-      "path": "scripts/vocab_audit/reporter.py",
-      "code": "attr-defined",
-      "message": "\"tuple[str, str]\" has no attribute \"split\""
     },
     {
       "path": "scripts/vocab_init.py",

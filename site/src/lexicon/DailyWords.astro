@@ -209,6 +209,8 @@ const dailyCount = Math.max(1, Math.floor(count));
 
     const renderDailyWords = () => {
       if (!dailyList) return;
+      // Sync before any early return: an empty level must still show as selected (#12984).
+      syncLevelButtons();
       // #6727: level tabs filter the pool to the selected CEFR, then shuffle
       // only that subset — never re-rank-and-reshuffle the full 300.
       const seed = dateSeed(new Date());
@@ -242,7 +244,6 @@ const dailyCount = Math.max(1, Math.floor(count));
       } else {
         markDailyLoadSuccess(dailySection, null);
       }
-      syncLevelButtons();
     };
 
     for (const button of levelButtons) {
@@ -265,7 +266,6 @@ const dailyCount = Math.max(1, Math.floor(count));
           return;
         }
         pool = data;
-        syncLevelButtons();
         renderDailyWords();
       } catch {
         showLoadError();

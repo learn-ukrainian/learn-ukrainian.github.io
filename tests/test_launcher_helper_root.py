@@ -48,7 +48,6 @@ _PLACEHOLDERS = (
 )
 _SITES = (
     "import_bundle",
-    "observer_heartbeat",
     "renew_heartbeat",
     "lease_close",
     "driver_agent_type",
@@ -57,7 +56,6 @@ _SITES = (
 )
 _EXPECTED_HONEST = {
     "import_bundle": "scripts/orchestration/thread_handoff.py",
-    "observer_heartbeat": "scripts.orchestration.observer_heartbeat",
     "renew_heartbeat": "scripts.session_supervisor heartbeat",
     "lease_close": "scripts.session_supervisor close",
     "driver_agent_type": "scripts.orchestration.driver_agent_type",
@@ -169,8 +167,6 @@ site() { printf 'SITE %s\n' "$1" >> "$SITE_LOG"; }
 
 site import_bundle
 ( LC_EPIC=devops; launcher_import_rollover_bundle ) >/dev/null 2>&1
-site observer_heartbeat
-( LC_PROVIDER=cursor LC_MODE=driver LC_DRY_RUN=0 LC_EPIC=devops; launcher_cursor_observer_presence ) >/dev/null 2>&1
 site renew_heartbeat
 (
   LC_MODE=driver LC_DRIVER_LEASE_CLAIMED=1 LC_DRY_RUN=0

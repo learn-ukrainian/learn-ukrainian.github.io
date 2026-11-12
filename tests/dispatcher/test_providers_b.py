@@ -26,6 +26,7 @@ from scripts.lib import rules_core
 def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, provider, mode, correction):
     """Defect class: provider transports omit the trusted core in instruction-free checkouts."""
     from scripts.dispatcher.environment import child_env
+    from scripts.dispatcher.providers import muse
 
     checkout = tmp_path / "empty checkout"
     checkout.mkdir()
@@ -35,6 +36,7 @@ def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, 
     spec = TaskSpec("core-delivery", provider, "grok-4.7-high" if provider == "cursor" else "gpt-6.1-sol",
                     "high", mode, checkout, brief, tmp_path / "result")
     monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
+    monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
     binary = tmp_path / ("cursor-agent" if provider == "cursor" else provider)
     binary.write_text(f"#!{sys.executable}\n" + r'''
 import json, pathlib, sys, tomllib
@@ -56,6 +58,12 @@ print(json.dumps({"argv": args, "layers": layers}))
     binary.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path) + os.pathsep + os.environ["PATH"])
     selected = b"Keep the same verdict.\r\n" if correction else original
+    if provider == "muse" and mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
+        assert brief.read_bytes() == original
+        assert list(checkout.iterdir()) == []
+        return
     invocation = runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
     result = subprocess.run(invocation.argv, input=invocation.stdin, env=invocation.env, cwd=checkout,
                             capture_output=True, timeout=10)

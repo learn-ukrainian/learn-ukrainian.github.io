@@ -232,13 +232,12 @@ entries:
       - docs/cleanup-plan-2026-q2.md
       - docs/orchestrator-frictions.md
       - docs/prompt-budgets.md
-      - docs/rules-core-draft-notes.md
       - docs/salvage-manifest.md
       - docs/session-state-2026-04-04.md
       - docs/state-reconciliation.md
       - docs/v5-v3-to-v6-phase-mapping.md
       - docs/wiki-rebuild-plan.md
-    purpose: Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot and draft rule notes kept for history.
+    purpose: Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot kept for history.
     keywords: [master plan, cleanup plan, salvage manifest, prompt budgets, V6, wiki rebuild plan]
     lifecycle: archive
     owner: infra-harness
@@ -246,7 +245,6 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MASTER-PLAN.md docs/cleanup-plan-2026-q2.md docs/salvage-manifest.md"}
     content_searchable: true
     overrides:
-      - {path: docs/rules-core-draft-notes.md, lifecycle: draft, evidence: "Draft notes for the rules core (2026-09-30); no consumer found."}
       - {path: docs/MASTER-PLAN.md, lifecycle: superseded, superseded_by: docs/WORKSTREAMS.md, evidence: "The census records it as a March 2026 snapshot (catalogue-census-2026-10-01.md, Misleading names); CLAUDE.md names docs/WORKSTREAMS.md the workstreams and priorities document, which calls itself the living once-per-session orientation layer."}
 
   # ================================================================ architecture, decisions, design
@@ -491,12 +489,11 @@ entries:
   - id: test-prune-selections
     kind: doc_family
     paths: [docs/test-prune/**]
-    purpose: Low-signal test prune (#11226) rubric and phase report. The 2026-10-21 selection ledgers and apply script were removed in REMOVE-UNNEEDED-1107; see git history.
+    purpose: Low-signal test prune (#11226) classification rubric. The 2026-10-21 selection ledgers and apply script were removed in REMOVE-UNNEEDED-1107; see git history.
     keywords: [test prune, low-signal tests, t3code rubric, test selection, haiku swarm, restore pass]
     lifecycle: active
     owner: infra-harness
     entrypoints:
-      - {topic: phase report and restores, path: docs/test-prune/README.md}
       - {topic: classification rubric, path: docs/test-prune/rubric.md}
     query:
       - {surface: git_grep, how: "git grep -n -i -F '<test name>' -- docs/test-prune"}
@@ -504,26 +501,26 @@ entries:
 
   - id: small-harness-docs
     kind: doc_family
-    paths: [docs/guardrails/**, docs/ops/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
-    purpose: Fleet tooling guardrail, fleet session-awareness charter, launchd example, task-family manager spec and vendored third-party licence text.
+    paths: [docs/guardrails/**, docs/ops/**, docs/examples/**, docs/third-party/**, docs/playbooks/**]
+    purpose: Fleet tooling guardrail, fleet session-awareness charter, launchd example and vendored third-party licence text.
     keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, launchd example, task family manager, third-party licence, fleet agent eyes]
     lifecycle: active
     owner: infra-harness
     entrypoints:
       - {topic: supported agent fleet entry points, path: docs/guardrails/agent-fleet-tooling.md}
     query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guardrails docs/ops docs/specs"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guardrails docs/ops"}
     content_searchable: true
 
   - id: legacy-agent-docs
     kind: doc_family
-    paths: [docs/agents/**, docs/ai_team/**, docs/dispatch-queue/**, docs/evidence/**, docs/workflows/**]
-    purpose: Legacy agent-team docs - the May 2026 capability snapshot, Blue/Yellow team personas, a fired May dispatch queue, a Gemini CLI dry-run receipt and the old /review-content command.
+    paths: [docs/agents/**, docs/dispatch-queue/**, docs/workflows/**]
+    purpose: Legacy agent-team docs - the May 2026 capability snapshot, a fired May dispatch queue and the old /review-content command.
     keywords: [agent capability matrix, team personas, dispatch queue, review-content command]
     lifecycle: archive
     owner: infra-harness
     query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/agents docs/ai_team docs/dispatch-queue docs/workflows"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/agents docs/dispatch-queue docs/workflows"}
     content_searchable: true
     overrides:
       - {path: docs/agents/AGENT-CAPABILITY-MATRIX.md, lifecycle: superseded, superseded_by: docs/best-practices/agent-activity-matrix.md, evidence: "Own banner: historical capability snapshot; routing lives in the activity matrix and model catalog."}
@@ -599,13 +596,13 @@ entries:
 
   - id: dispatch-briefs-reusable
     kind: doc_family
-    paths: [docs/dispatch-briefs/luna-max-closeout-contract.md, docs/dispatch-briefs/qg-bakeoff-*-1x17-sweep.md]
-    purpose: Reusable brief fragments - the GPT-6 Luna closeout contract and three QG bake-off 1x17 sweep instructions.
-    keywords: [closeout contract, Luna, QG bake-off sweep]
+    paths: [docs/dispatch-briefs/luna-max-closeout-contract.md]
+    purpose: Reusable brief fragment - the GPT-6 Luna closeout contract.
+    keywords: [closeout contract, Luna]
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/dispatch-briefs/luna-max-closeout-contract.md 'docs/dispatch-briefs/qg-bakeoff-*'"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/dispatch-briefs/luna-max-closeout-contract.md"}
     content_searchable: true
 
   - id: dispatch-briefs-upgrade-pilot
@@ -636,32 +633,9 @@ entries:
   - id: plans-plan-mode-files
     kind: doc_family
     paths:
-      - docs/plans/abstract-pondering-hopper.md
-      - docs/plans/agile-baking-harp.md
-      - docs/plans/composed-sleeping-spring.md
-      - docs/plans/cryptic-tickling-meteor.md
-      - docs/plans/encapsulated-honking-abelson.md
       - docs/plans/euphony-engine.md
-      - docs/plans/floating-herding-sonnet.md
-      - docs/plans/fluttering-painting-crayon.md
-      - docs/plans/giggly-exploring-crescent.md
       - docs/plans/glowing-petting-aho.md
-      - docs/plans/greedy-bouncing-gizmo.md
       - docs/plans/jiggly-soaring-forest.md
-      - docs/plans/lovely-soaring-iverson.md
-      - docs/plans/mellow-munching-biscuit.md
-      - docs/plans/moonlit-finding-popcorn.md
-      - docs/plans/partitioned-plotting-bachman.md
-      - docs/plans/partitioned-stirring-ullman.md
-      - docs/plans/peaceful-coalescing-glacier.md
-      - docs/plans/peaceful-coalescing-glacier-agent-a6cf894859709c20c.md
-      - docs/plans/robust-dancing-candle.md
-      - docs/plans/soft-wiggling-rabin.md
-      - docs/plans/sprightly-brewing-nest.md
-      - docs/plans/tranquil-cooking-muffin.md
-      - docs/plans/witty-hopping-puddle.md
-      - docs/plans/wondrous-toasting-pumpkin.md
-      - docs/plans/zippy-watching-moore.md
     purpose: Auto-named Claude plan-mode files and the Euphony plan from the V4 to V6 era (February to April 2026).
     keywords: [plan mode, V4 pipeline, V6 pipeline, euphony engine, B1 redesign]
     lifecycle: archive
@@ -1303,21 +1277,10 @@ entries:
       - {surface: cli, how: ".venv/bin/python -m scripts.eval.zno_nmt --help"}
     content_searchable: true
 
-  - id: content-review-reports
-    kind: evidence
-    paths: [docs/reviews/**]
-    purpose: February/April 2026 dialogue-situations review and hallucinated-proverbs audit of pre-rebuild modules.
-    keywords: [dialogue review, proverb audit, hallucination audit]
-    lifecycle: archive
-    owner: core-quality
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/reviews"}
-    content_searchable: true
-
   - id: folk-epic-specs
     kind: doc_family
-    paths: [docs/folk-epic/**, docs/reference/**]
-    purpose: FOLK seminar standards, review rubric, dossier and text-layer specs, quality-gate designs and queue, plus a folk micro-genre reference list.
+    paths: [docs/folk-epic/**]
+    purpose: FOLK seminar standards, review rubric, dossier and text-layer specs, quality-gate designs and queue.
     keywords: [folk framing standard, exemplar standard, folk review rubric, folk dossier schema, folk queue, riddles, proverbs]
     lifecycle: active
     owner: seminars-folk
@@ -2066,14 +2029,14 @@ entries:
     kind: data_store
     store: [data/backups/]
     producer: []
-    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. The Monitor admin router (scripts/project_api/admin_router.py, BACKUP_DIR) lists and deletes them.
+    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. No tool lists or deletes them since the Monitor admin router was removed.
     local_only: true
     purpose: Pre-migration safety copies of local SQLite stores, plus leftover migration-rehearsal sidecar files.
     keywords: [backups, pre-migration copy, migration rehearsal]
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: api, how: "GET /api/admin/backup/list"}
+      - {surface: cli, how: "ls -l data/backups/ (local only)"}
     content_searchable: false
 
   - id: data-backups-staging
@@ -3111,9 +3074,6 @@ store_literal_exemptions:
 residual:
   - {path: docs/research/INVESTIGATION_9_VS_10_SCORE_REQUIREMENTS.md, owner: core-quality, reason: "Dated 2026-07-23, no banner; whether the review gate it discusses still applies is unverified."}
   - {path: docs/dispatch-briefs/luna-max-closeout-contract.md, owner: infra-harness, reason: "Reusable brief fragment; whether the Luna closeout contract still matches current routing is unverified."}
-  - {path: docs/dispatch-briefs/qg-bakeoff-claude-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
-  - {path: docs/dispatch-briefs/qg-bakeoff-gemini-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
-  - {path: docs/dispatch-briefs/qg-bakeoff-gpt-1x17-sweep.md, owner: core-quality, reason: "Bake-off sweep runbook tied to PRs #4762/#4763; current harness fit unverified."}
   - {path: docs/plans/MASTER_ENGINEERING_ROADMAP.md, owner: infra-harness, reason: "July 2026 roadmap with no confirmed status or tracking issue."}
   - {path: docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md, owner: open-model-data, reason: "July 2026 spec; its relation to the retired fine-tuning guides is unconfirmed."}
   - {path: docs/plans/primary-text-acquisition-hosting-system.md, owner: corpus-channels, reason: "No status line; whether it is the plan of record for primary-text hosting is unverified."}
@@ -3131,7 +3091,6 @@ residual:
   - {path: docs/bio-epic/phase-4-wiki-queue.md, owner: seminars-bio, reason: "Queue says to update status per merged wiki but last changed 2026-06-04; not checked against wiki state."}
   - {path: docs/bio-epic/phase-2-sequence-allocation.yaml, owner: seminars-bio, reason: "No consumer found; whether the allocation is still driven is unverified."}
   - {path: docs/playbooks/anti-hallucination-review-protocol.md, owner: infra-harness, reason: "April 2026 portable protocol; relation to current exact-head review rules unstated."}
-  - {path: docs/reference/folk-micro-genres.md, owner: seminars-folk, reason: "Harvested proverbs and riddles are unverified against sources (a sibling audit found fabricated proverbs)."}
   - {path: docs/folk-epic/folk-wiki-compile-grounding-register-gap.md, owner: seminars-folk, reason: "Own status 'OPEN finding' (2026-06-12); closure unverified."}
   - {path: docs/folk-epic/phase-folk-queue.md, owner: seminars-folk, reason: "Stage-0 queue (2026-06-06); whether still driven is unverified."}
   - {path: docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md, owner: hramatka, reason: "Header calls it the master roadmap (2026-07-24, #5699) but states no draft or accepted status, and no tracked file links to it; currency against epic #4542 unverified."}

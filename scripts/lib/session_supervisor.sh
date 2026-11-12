@@ -11,8 +11,8 @@
 # Usage:
 #   source "${PROJECT_DIR}/scripts/lib/session_supervisor.sh"
 #   claim_session_supervisor_env \
-#       "epic:4707" "grok" "grok-tui" "5512-pr-j1-launchers" "grok-$$" \
-#       "${PROJECT_DIR}" "start-grok.sh" "harness"
+#       "epic:4707" "codex" "codex-tui" "5512-pr-j1-launchers" "codex-$$" \
+#       "${PROJECT_DIR}" "start-codex.sh" "harness"
 #
 # The helper fails the launch closed (exit 1) if the supervisor returns an
 # error or if the exported lease envelope is incomplete.

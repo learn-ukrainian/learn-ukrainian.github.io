@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Curriculum Dashboard - ukraine-ops</title>
+<title>Curriculum Dashboard - Learn Ukrainian</title>
 <link rel="icon" href="data:,">
 <style>
 :root {
@@ -105,19 +105,12 @@ a:hover { text-decoration: underline; }
   <h1>Curriculum Dashboard</h1>
   <div class="spacer"></div>
   <span class="refresh-indicator" id="refresh-info"></span>
-  <nav class="monitor-nav" aria-label="Ops API sections">
-    <a href="/">Home</a>
-    <a href="/orient.html">Orient</a>
-    <a href="/fleet.html">Fleet</a>
-    <a href="/work.html">Work</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/runtime.html">Runtime</a>
-    <a href="/docs">API</a>
-  </nav>
+  <nav class="monitor-nav" id="product-nav" aria-label="Products"></nav>
+  <script src="/product-nav.js"></script>
 </div>
 <nav class="ops-nav" aria-label="Operations pages">
-  <a href="/progress.html">Progress</a>
-  <a href="/quality.html">Quality</a>
+  <a href="/">Home</a>
+  <a href="/artifacts/">Artifacts</a>
 </nav>
 
 <div class="main">
@@ -135,16 +128,28 @@ let overviewData = null;
 let selectedTrack = null;
 let trackDetailCache = {};
 
+const API_TIMEOUT_MS = 20000;
+
 async function fetchJson(url, options) {
-  const res = await fetch(url, options);
-  let data = null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+    let res;
+    let data = null;
+    try {
+      res = await fetch(url, { ...options, signal: controller.signal });
+      data = await res.json();
+    } catch (e) {
+      if (controller.signal.aborted) throw new Error(`no response within ${API_TIMEOUT_MS / 1000} s`);
+      if (!res) throw e;
+    }
+    if (!res.ok) {
+      throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
   }
-  return data;
 }
 
 function pctColor(pct) {
@@ -177,8 +182,21 @@ function operationalTracks(tracks) {
   return (tracks || []).filter(track => track.module_source !== 'plans-fallback');
 }
 
+function showUnavailable(el, what, error) {
+  const note = document.createElement('div');
+  note.className = 'empty';
+  note.textContent = `${what} unavailable: ${error.message}`;
+  el.replaceChildren(note);
+}
+
 async function fetchOverview() {
-  overviewData = await fetchJson(`${API}/overview`);
+  try {
+    overviewData = await fetchJson(`${API}/overview`);
+  } catch (e) {
+    document.getElementById('refresh-info').textContent = `Refresh failed at ${new Date().toLocaleTimeString()}`;
+    if (!overviewData) showUnavailable(document.getElementById('left-panel'), 'Curriculum overview', e);
+    return;
+  }
   overviewData.tracks = operationalTracks(overviewData.tracks);
   if (selectedTrack && !overviewData.tracks.some(track => track.id === selectedTrack)) selectedTrack = null;
   renderTreemap(overviewData.tracks);
@@ -197,7 +215,7 @@ function renderTreemap(tracks) {
       <div class="treemap-cell ${sel}" style="width:${w}px;min-height:${h}px;background:${pctColor(t.pct_complete)}"
            onclick="selectTrack('${t.id}')">
         <span class="name">${t.id.toUpperCase()}</span>
-        <span class="count">${t.module_count} modules &middot; ${t.pct_complete}%</span>
+        <span class="count">${t.module_count} modules &middot; ${t.published_mdx ?? 0} published</span>
       </div>
     `;
   }).join('');
@@ -226,7 +244,12 @@ async function loadTrackDetail(trackId) {
 
   let data = trackDetailCache[trackId];
   if (!data) {
-    data = await fetchJson(`${API}/track/${trackId}`);
+    try {
+      data = await fetchJson(`${API}/track/${trackId}`);
+    } catch (e) {
+      showUnavailable(container, 'Track detail', e);
+      return;
+    }
     trackDetailCache[trackId] = data;
   }
 
@@ -248,9 +271,20 @@ async function loadTrackDetail(trackId) {
     researchStat = `<span style="color:var(--text3)">${rs.total || 0}/${data.module_count} researched</span>`;
   }
 
+  const published = t.published_mdx ?? s.published_mdx ?? 0;
+  // A cold start serves placeholder counts before the full track scan; plan
+  // reviews are not in that placeholder, so they are unknown until the scan.
+  const planStat = overviewData.meta?.track_scan === 'skipped'
+    ? 'plan reviews unknown until the track scan finishes'
+    : s.plan_reviewed
+      ? `${s.plan_reviewed} plans reviewed (${s.plan_pass || 0} pass, ${s.plan_needs_fixes || 0} needs fixes, ${s.plan_fail || 0} fail)`
+      : 'no plan reviews';
+
   container.innerHTML = `
     <div class="track-title">${t.name}</div>
     <div class="track-stats">
+      <span style="color:var(--cyan)" title="Modules with a published MDX page for the learner site">${published} published</span>
+      <span style="color:var(--purple)">${planStat}</span>
       <span style="color:var(--green)">${s.pass} pass</span>
       <span style="color:var(--blue)">${s.content_complete} prose</span>
       <span style="color:var(--red)">${s.fail} fail</span>
@@ -302,7 +336,13 @@ async function loadModuleDetail(trackId, slug) {
   const panel = document.getElementById('right-panel');
   panel.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
-  const m = await fetchJson(`${API}/module/${trackId}/${slug}`);
+  let m;
+  try {
+    m = await fetchJson(`${API}/module/${trackId}/${slug}`);
+  } catch (e) {
+    showUnavailable(panel, 'Module detail', e);
+    return;
+  }
 
   let planHtml = '<div class="empty">No plan</div>';
   if (m.plan) {

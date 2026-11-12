@@ -2,6 +2,9 @@ import {
   normalize,
   rankSearchResults,
   highlight,
+  isSearchAlias,
+  isSearchRow,
+  isShardManifest,
   searchShardForQuery,
   type SearchAlias,
   type SearchResult,
@@ -12,33 +15,6 @@ import {
   resolveTypeaheadEnterSelection,
   resolveTypeaheadEscapeAction,
 } from "./atlas-typeahead-keys";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isSearchRow(value: unknown): value is SearchRow {
-  return isRecord(value) && typeof value.l === "string" && typeof value.s === "string" &&
-    (value.g === null || typeof value.g === "string") &&
-    ["r", "k", "c", "cls", "t"].every((key) => value[key] === undefined || typeof value[key] === "string");
-}
-
-function isSearchAlias(value: unknown): value is SearchAlias {
-  return isRecord(value) && ["a", "k", "s", "h"].every((key) => typeof value[key] === "string");
-}
-
-function isShardMeta(value: unknown): value is SearchShardManifest["fullIndex"] {
-  return isRecord(value) && typeof value.path === "string" && typeof value.count === "number" &&
-    typeof value.bytes === "number" && typeof value.sha256 === "string";
-}
-
-function isShardManifest(value: unknown): value is SearchShardManifest {
-  return isRecord(value) && value.schema === "atlas-search-shards" && value.schemaVersion === 1 &&
-    typeof value.total === "number" && typeof value.shardCount === "number" &&
-    isShardMeta(value.fullIndex) && isRecord(value.prefixMap) && isRecord(value.shards) &&
-    Object.values(value.prefixMap).every((key) => typeof key === "string") &&
-    Object.values(value.shards).every(isShardMeta);
-}
 
 const EMPTY_MESSAGE = "Нічого не знайдено — спробуйте українською, латиницею або англійською";
 const LOADING_MESSAGE = "Завантажуємо…";

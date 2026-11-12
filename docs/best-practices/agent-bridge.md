@@ -511,10 +511,9 @@ stays open until measured zero use and operator approval permit retirement.
 
 ## Web dashboard
 
-The Fleet observer at `http://localhost:8765/fleet.html`
-(`dashboards/fleet.html`) is the browser view of channels and
-deliveries. The former `channels.html` and `comms.html`
-pages were removed in the Monitor cull (C-4686, C-4687). The browser POST
+The machinery overview at `http://localhost:8765/machinery` shows Fleet Comms
+counts. Use the CLI for channels, deliveries and conversations. The former
+Fleet, Channels and Comms pages were removed in the Monitor cull. The browser POST
 endpoint `/api/comms/channels/{name}/post` stays: user-only, gated
 by localhost binding. Agents still post via CLI.
 

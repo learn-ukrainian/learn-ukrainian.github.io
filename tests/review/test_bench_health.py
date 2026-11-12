@@ -22,7 +22,7 @@ from scripts.review.reviewer_resolver import (
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
 
-# The Cursor Grok seat retired with every Grok model (GROK-CANCEL-1110) and counts for no family.
+# The restored Cursor Grok pin stays outside ordinary reviewer-of-record ladders.
 GROK = "grok-4.7-cursor-fallback"
 DEFAULT_COUNTS = {
     "anthropic": ["openai_frontier"],
@@ -113,8 +113,8 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
             assert results[family] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-agy"]
         # The resolver names the single eligibility rule, not a bench-local list.
         rule = "performed only by gpt-6.1-sol, claude-opus-5-5"
-        assert not {GROK}.intersection(exclusions["anthropic"])
-        assert not {GROK}.intersection(exclusions["openai"])
+        assert rule in exclusions["anthropic"][GROK]
+        assert rule in exclusions["openai"][GROK]
         assert rule in exclusions["openai"]["claude-sonnet-5-5"]
         return
     if risk != "critical":
@@ -123,7 +123,7 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     assert results["openai"] == ["claude-opus-5-5", "claude-opus-5-5-agy"]
     assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier"}
     assert not {"glm-5.3", "composer-2.5", "pool", "pool-xs"} & set(exclusions["anthropic"])
-    assert not {GROK}.intersection(exclusions["anthropic"])
+    assert "missing required review role suitability" in exclusions["anthropic"][GROK]
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])

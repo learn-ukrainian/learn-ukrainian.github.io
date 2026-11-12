@@ -2016,7 +2016,7 @@ def _handle_discuss(args) -> int:
                     idempotency_key=f"discussion-result:{authority_job.job_id}",
                 )
         print(f"   transport: ACP ({', '.join(with_agents)})")
-        print(f"   conversation: /fleet.html?conversation={conversation_id}")
+        print(f"   conversation: {conversation_id}")
         print(f"   state: {state}; rounds completed: {payload.get('rounds_completed', 0)}")
         return 0 if state == "COMPLETE" else 1
 

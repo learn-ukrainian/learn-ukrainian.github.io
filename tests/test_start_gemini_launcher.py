@@ -101,7 +101,6 @@ def test_gemini_driver_refuses_forwarded_model_before_lifecycle(forwarded: tuple
         ("codex", ("--governor", "AUTO", "--model", "gemini-3.8-flash-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini-3.1-pro-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini:gemini-3.1-pro-high"), "is a Gemini model"),
-        ("grok", ("--epic", "devops", "--model", "gemini-3.8-flash-high"), "is a Gemini model"),
     ),
 )
 def test_shared_core_refuses_uncertified_gemini_driver_before_any_startup(

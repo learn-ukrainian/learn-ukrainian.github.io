@@ -482,6 +482,7 @@ def test_registry_opts_in_exactly_the_private_sibling(https_world, tmp_path, mon
         "kubedojo-labs",
         "machinery",
         "mnq-orb",
+        "ukrainian-llm-eval",
     }
     assert {key: body.get("transport") for key, body in real_registry.items()} == {
         "public": "ssh",
@@ -491,6 +492,7 @@ def test_registry_opts_in_exactly_the_private_sibling(https_world, tmp_path, mon
         "kubedojo-labs": "https",
         "machinery": "https",
         "mnq-orb": "https",
+        "ukrainian-llm-eval": "https",
     }
     shipped = load_fleet_repos()["infra-private"]
     monkeypatch.setattr(sg, "_REGISTRY_PATH", _REAL_REGISTRY)

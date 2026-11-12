@@ -503,9 +503,6 @@
     "UI-REVIEW-FINDINGS.md": [
       "shared-core"
     ],
-    "commit.sh": [
-      "harness"
-    ],
     "dagger.json": [
       "shared-core"
     ],
@@ -614,19 +611,10 @@
     "start-codex.sh": [
       "harness"
     ],
-    "start-cursor-driver.sh": [
-      "harness"
-    ],
     "start-gemini-driver.sh": [
       "harness"
     ],
     "start-gemini.sh": [
-      "harness"
-    ],
-    "start-grok-driver.sh": [
-      "harness"
-    ],
-    "start-grok.sh": [
       "harness"
     ],
     "tests/build/test_build_landing_pages.py": [
@@ -684,12 +672,6 @@
       "path": ".agent/",
       "components": [
         "harness"
-      ]
-    },
-    {
-      "path": ".astro/",
-      "components": [
-        "shared-core"
       ]
     },
     {
@@ -768,12 +750,6 @@
       "path": "bin/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "briefs/",
-      "components": [
-        "harness"
       ]
     },
     {
@@ -908,12 +884,6 @@
       "path": "review/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "reviews/",
-      "components": [
-        "harness"
       ]
     },
     {
@@ -1068,12 +1038,6 @@
       "path": "status/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "tasks/",
-      "components": [
-        "harness"
       ]
     },
     {

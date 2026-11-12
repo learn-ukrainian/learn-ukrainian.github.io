@@ -199,7 +199,7 @@ NOT_REPO_WIDE = {
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_dashboards.py::TestApiEndpoints.test_fetch_calls_in_html": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
+        "Scans only the product pages in scripts/project_api/static/, one fixed directory, not a repository tree."
     ),
     "tests/test_layerb_candidates.py::test_ci_differential_replays_all_unit_fixtures_at_pinned_base_values": (
         "Scans tests/fixtures/qg_bakeoff; fixture files are not test modules, so any change "

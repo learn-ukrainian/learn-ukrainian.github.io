@@ -1,5 +1,5 @@
 commit 55d577887d7eac40238de0562673bab68e22d9d0
-Author: Krisztian oos <krisztian.koos@gmail.com>
+Author: Project Maintainer <maintainer@example.invalid>
 Date:   Sat May 16 01:31:52 2026 +0200
 
     feat(qg): activity schema gate rejects forbidden field aliases
