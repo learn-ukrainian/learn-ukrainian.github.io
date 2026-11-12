@@ -15,7 +15,7 @@ pytestmark = pytest.mark.repo_invariant
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / "scripts" / "ci" / "checks.sh"
 _PRE_COMMIT = _REPO_ROOT / ".pre-commit-config.yaml"
-# Required trees for the PR-tier Ruff job (dashboards/ may be empty).
+# Required trees for the PR-tier Ruff job.
 _REQUIRED_RUFF_PATHS = ("scripts/", "tests/", "agents_extensions/")
 
 

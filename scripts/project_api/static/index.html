@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ukraine-ops</title>
+<title>Learn Ukrainian — curriculum operations</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="/monitor.css">
 <style>
@@ -28,12 +28,9 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 .card h2 { font-family: Charter, Georgia, serif; font-size:18px; line-height:1.2; margin-bottom:6px; }
 .card p { color:var(--text2); font-size:13px; line-height:1.4; }
 .card .card-stat { color:var(--text3); font-size:12px; margin-top:12px; }
-.card.audit { border-left-color:var(--green); }
 .card.progress { border-left-color:var(--orange); }
 .card.curriculum { border-left-color:var(--cyan); }
 .card.quality { border-left-color:var(--purple); }
-.card.api { border-left-color:var(--gray); }
-.card.comms { border-left-color:var(--accent); }
 @media (max-width: 820px) {
   .hero { grid-template-columns:1fr; }
 }
@@ -43,51 +40,24 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 
 <div class="top-bar">
   <div class="top-left">
-    <h1>ukraine-ops</h1>
-    <span>Operational dashboards for the Ukrainian curriculum pipeline</span>
+    <h1>Learn Ukrainian</h1>
+    <span>Curriculum build, quality and publishing dashboards</span>
   </div>
-  <nav class="monitor-nav" aria-label="Ops API sections">
-    <a class="active" href="/">Home</a>
-    <a href="/orient.html">Orient</a>
-    <a href="/fleet.html">Fleet</a>
-    <a href="/work.html">Work</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/runtime.html">Runtime</a>
-    <a href="/docs">API</a>
-  </nav>
+  <nav class="monitor-nav" id="product-nav" aria-label="Products"></nav>
+  <script src="/product-nav.js"></script>
 </div>
 
 <main class="wrap">
 <section class="hero">
   <div>
-    <h2>Operations launchpad</h2>
-    <p>All Ops API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
+    <h2>Curriculum operations</h2>
+    <p>Module progress, quality, builds, wiki, artifacts, images, template proposals, build spend and local maintenance for the Ukrainian curriculum.</p>
   </div>
 </section>
 
 <div class="stats-row" id="stats-row"></div>
 
-<div id="api-surfaces" class="contracts-note" hidden style="font-size:12px;color:var(--text3);margin:0 0 16px 0;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"></div>
-
 <div class="cards">
-  <a class="card comms" href="/fleet.html" style="border-left-color: var(--purple);">
-    <div class="icon">&#128451;</div>
-    <h2>Fleet Observer</h2>
-    <p>Consolidated read-only durable-plane evidence: requests, ACP rounds, formal reviews, dead letters, and Source / Agent / Via provenance. Pre-flip only.</p>
-    <div class="card-stat">read-only fleet evidence</div>
-  </a>
-  <a class="card" href="/epics.html" style="border-left: 3px solid var(--green);">
-    <div class="icon">&#128737;</div>
-    <h2>Epics</h2>
-    <p>Remote TTL-fenced epic claims, active driver seats, heartbeats, and handoff digests. Read-only lifecycle overview.</p>
-    <div class="card-stat">remote epic lifecycle</div>
-  </a>
-  <a class="card" href="/work.html" style="border-left: 3px solid var(--accent);">
-    <div class="icon">&#9881;</div>
-    <h2>Work</h2>
-    <p>Public attention projection: open issues/PRs, stream hygiene, dispatch/review summaries, health, and safe next actions. Read-only foundation.</p>
-    <div class="card-stat">FOUNDATION_COMPLETE · no mutations</div>
-  </a>
   <a class="card" href="/admin.html" style="border-left: 3px solid var(--gray);">
     <div class="icon">&#128295;</div>
     <h2>Admin</h2>
@@ -118,18 +88,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
     <div class="card-stat" id="curriculum-stat"></div>
   </a>
-  <a class="card" href="/delegate.html" style="border-left: 3px solid var(--yellow);">
-    <div class="icon">&#129309;</div>
-    <h2>Delegate</h2>
-    <p>Delegation task list with zombie detection, active counts, and full task detail modal.</p>
-    <div class="card-stat" id="card-stat-delegate"></div>
-  </a>
-  <a class="card" href="/routing.html" style="border-left: 3px solid var(--blue);">
-    <div class="icon">&#129518;</div>
-    <h2>Agent Routing</h2>
-    <p>Cursor Auto / API monthly + other lane subscriptions, dispatch usage, and routing recommendations.</p>
-    <div class="card-stat">routing &amp; usage</div>
-  </a>
   <a class="card" href="/artifacts/" style="border-left: 3px solid var(--accent);">
     <div class="icon">&#128196;</div>
     <h2>Artifacts</h2>
@@ -141,12 +99,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <h2>Images</h2>
     <p>Page context with bounding boxes, annotation editor, RAG search, quality stats & cleanup.</p>
     <div class="card-stat" id="images-stat"></div>
-  </a>
-  <a class="card" href="/orient.html" style="border-left: 3px solid var(--cyan);">
-    <div class="icon">&#128506;</div>
-    <h2>Orient</h2>
-    <p>One-page glance: epic drivers and leases, host occupancy, AI seats, and serving SHA drift. Session details below.</p>
-    <div class="card-stat" id="card-stat-orient"></div>
   </a>
   <a class="card progress" href="/progress.html">
     <div class="icon">&#9654;</div>
@@ -160,12 +112,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
     <div class="card-stat" id="quality-stat"></div>
   </a>
-  <a class="card" href="/runtime.html" style="border-left: 3px solid var(--purple);">
-    <div class="icon">&#9201;</div>
-    <h2>Runtime</h2>
-    <p>Agent binaries, 7-day usage, default-model headroom, and recent runtime call history.</p>
-    <div class="card-stat" id="card-stat-runtime"></div>
-  </a>
   <a class="card" href="/wiki.html" style="border-left: 3px solid var(--green);">
     <div class="icon">&#128214;</div>
     <h2>Wiki</h2>
@@ -174,7 +120,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   </a>
 </div>
 
-<div class="footer">Serving from <span id="footer-origin">this host</span> — <a href="/docs">API docs</a> • <a href="/api/contracts/routes">contracts</a></div>
+<div class="footer">Serving from <span id="footer-origin">this host</span></div>
 </main>
 
 <script>
@@ -206,21 +152,6 @@ async function safeFetch(path) {
   } catch {
     return null;
   }
-}
-
-function taskTouchedToday(task) {
-  if (!task || !task.started_at) return false;
-  const start = new Date(task.started_at);
-  const now = new Date();
-  const sameDay = (d) => d && !Number.isNaN(d.getTime())
-    && d.getFullYear() === now.getFullYear()
-    && d.getMonth() === now.getMonth()
-    && d.getDate() === now.getDate();
-  if (sameDay(start)) return true;
-  if (typeof task.duration_s === 'number' && !Number.isNaN(start.getTime())) {
-    return sameDay(new Date(start.getTime() + task.duration_s * 1000));
-  }
-  return false;
 }
 
 function setStat(id, text) {
@@ -334,31 +265,20 @@ async function loadWeakPointsStat() {
   document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
 }
 
-async function loadOrientStat() {
-  // /api/orient is ~4–5s; keep it off Home first-paint Promise.all (#7975 residual).
-  const orient = await safeFetch('/api/orient');
-  if (!orient) return;
-  setStat('card-stat-orient', orient.git?.branch || 'no branch');
-}
-
 async function loadStats() {
   let buildState = { pending: true, current: null, backlog: null, builtPct: null };
   let pendingConsultations = 0;
-  // Quality + Orient are often multi-second; defer so they cannot gate first paint.
-  const [data, pv, cMetrics, summary, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
+  // Quality is often multi-second; defer it so it cannot gate first paint.
+  const [data, pv, cMetrics, summary, buildEvents, wiki, cost] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
     safeFetch('/api/state/summary'),
-    safeFetch('/api/runtime/agents'),
-    safeFetch('/api/delegate/tasks?limit=100'),
     safeFetch('/api/build/events/active'),
     safeFetch('/api/wiki/status'),
     safeFetch('/api/analytics/cost'),
-    safeFetch('/api/contracts/routes'),
   ]);
   void loadWeakPointsStat();
-  void loadOrientStat();
 
   try {
     if (!data) throw new Error('overview unavailable');
@@ -407,21 +327,6 @@ async function loadStats() {
       `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
   } catch(e) {}
 
-  if (runtimeAgents) {
-    setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
-  }
-
-  if (delegate) {
-    const tasks = delegate.tasks || [];
-    const active = tasks.filter(task => task.status === 'running' || task.status === 'spawning').length;
-    const zombies = tasks.filter(task => task.status === 'zombie').length;
-    const finishedToday = tasks.filter(task => ['done', 'failed'].includes(task.status) && taskTouchedToday(task)).length;
-    const parts = [`${active} active`];
-    if (zombies) parts.push(`${zombies} zombie`);
-    if (!active && finishedToday) parts.push(`${finishedToday} finished today`);
-    setStat('card-stat-delegate', parts.join(' · '));
-  }
-
   if (buildEvents) {
     setStat('card-stat-build-events', `${(buildEvents.active || []).length} active`);
   }
@@ -446,24 +351,6 @@ async function loadStats() {
       setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
     }
   }
-
-  // Visualize the contracts (definition authority for public surface) per Claude review.
-  try {
-    const el = document.getElementById('api-surfaces');
-    if (el && contracts && contracts.route_contracts) {
-      const routes = contracts.route_contracts || [];
-      const pages = contracts.page_contracts || [];
-      const families = routes.length;
-      const dashboards = pages.length;
-      // Show a compact summary of key sources + link to full contracts.
-      const sample = routes.slice(0, 3).map(r => r.source_of_truth || r.pattern).filter(Boolean);
-      el.hidden = false;
-      el.innerHTML = `API surface: <strong>${families} route families</strong> • <strong>${dashboards} dashboard pages</strong>. ` +
-        `Sources include ${sample.join(', ')}… ` +
-        `<a href="/api/contracts/routes">full contracts</a> • <a href="/docs">Swagger</a>. ` +
-        `See definition authority in route_contracts.py and MONITOR-API.md.`;
-    }
-  } catch (e) { /* non-fatal */ }
 }
 
 loadStats();

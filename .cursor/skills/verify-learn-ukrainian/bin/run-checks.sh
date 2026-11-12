@@ -69,7 +69,7 @@ fi
 # Ruff — use the lockfile pin (requirements-lock.txt). A newer ruff from an
 # unpinned requirements.txt install can fail rules CI does not yet enforce.
 run_check "Ruff (CI Gate)" \
-  "$PYTHON" -m ruff check scripts/ tests/ agents_extensions/ dashboards/
+  "$PYTHON" -m ruff check scripts/ tests/ agents_extensions/
 
 # Curriculum manifest canary
 run_check "Curriculum manifest canary" \

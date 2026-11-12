@@ -54,10 +54,11 @@ STATIC_FILES = (
     "cost.html",
     "curriculum-dashboard.html",
     "image-explorer.html",
-    "orient.html",
     "progress.html",
     "quality.html",
     "wiki.html",
+    "monitor.css",
+    "product-nav.js",
     "data/status.json",
 )
 

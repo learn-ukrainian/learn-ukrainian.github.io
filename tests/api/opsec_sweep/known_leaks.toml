@@ -5,21 +5,19 @@
 # `issue` (checked against tracking_issues.toml).
 #
 # #8542 burn-down is complete (2026-09-28):
-# - dashboard-index-localhost was fixed first (dashboards/index.html now
+# - dashboard-index-localhost was fixed first (the home page index.html now
 #   derives its footer label from location.host).
 # - fleet-workers-host-id and occupancy-host-id were scanner false positives:
 #   they matched the already-public opaque self host id, which real
-#   consumers (fleet.html/orient.html/epics.html/epics-map.html) depend on
+#   consumers (the machinery fleet, orient and epics pages) depend on
 #   verbatim. HOST_ID_CANARY was dropped from the sweep's canary tuple in
 #   test_opsec_route_sweep.py; HOST_ALIAS_CANARY (the real host name the
 #   opaque id stands for) remains a canary everywhere.
 # - health-instance-host is fixed at the emitter:
 #   occupancy_local.resolve_launcher_host_id now rejects a non-opaque
 #   LU_MONITOR_HOST_ID and falls back to "local" instead of echoing it.
-# - dashboard-work-loopback was never a burn-down candidate: ADR-019 fixes
-#   dashboards/work.html's private-adapter URL as a permanent design
-#   constant, so it now lives in `[[approved_exemptions]]` below instead of
-#   an expiring known-leak row.
+# - dashboard-work-loopback, the only approved exemption, left with
+#   dashboards/work.html when the machinery pages moved out of this checkout.
 #
 # `[[approved_exemptions]]` rows never expire and take no `owner`/`issue`:
 # they stay valid only while the cited `adr` file exists and the finding
@@ -30,12 +28,3 @@
 # field alone match the whole dashboard file body, so any other finding in
 # that body (a new leak, a swapped URL) would otherwise be absorbed too.
 version = 1
-
-[[approved_exemptions]]
-id = "dashboard-work-loopback"
-operation = "dashboard:work.html"
-field = "body"
-kind = "ipv4"
-token = "127.0.0.1:8769"
-adr = "docs/decisions/ADR-019-work-control-plane.md"
-reason = "ADR-019 fixes dashboards/work.html's browser-local private-adapter URL to the literal loopback constant http://127.0.0.1:8769/v1/projection; it is a permanent design choice, not an owned burn-down leak."

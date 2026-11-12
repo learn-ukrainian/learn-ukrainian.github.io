@@ -10,10 +10,9 @@ from typing import ClassVar
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-DASHBOARDS_DIR = ROOT / "dashboards"
-# Product pages moved to the product package (Monitor split, C-4687).
+# The learn-ukrainian pages live in the product package (Monitor split, C-4687).
 PRODUCT_PAGES_DIR = ROOT / "scripts" / "project_api" / "static"
-PAGE_DIRS = (DASHBOARDS_DIR, PRODUCT_PAGES_DIR)
+PAGE_DIRS = (PRODUCT_PAGES_DIR,)
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "generate_mdx"))
 
@@ -63,7 +62,6 @@ class TestApiEndpoints:
 
     # All endpoints referenced in dashboard HTML files
     EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
-        "/api/agent-monitor/status",
         "/api/artifacts/html",
         "/api/build/events/active",
         "/api/build/events/recent",

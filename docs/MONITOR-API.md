@@ -34,14 +34,19 @@ for the operator and for agents.
   routers, with the static catch-all last), the explicit static-file map,
   route and page contracts, orient sections, preload names, warmup hooks,
   and the Atlas provider and fleet batch projection that fleet views read.
-- **Pages** — the 12 machinery files stay in `dashboards/`. The 13 product
-  files (the home `index.html`, progress, quality, orient and the others, plus
-  `data/status.json`) live in `scripts/project_api/static/`. They are served only
-  when the entry declares them.
+- **Pages** — this checkout serves only the learn-ukrainian product pages: the
+  14 files in `scripts/project_api/static/` (the home `index.html`, progress,
+  quality, curriculum dashboard, build events, wiki, artifacts, image explorer,
+  consultation, cost and admin pages, the shared `monitor.css` and
+  `product-nav.js`, and `data/status.json`). They are served only when the entry
+  declares them. The machinery pages (fleet, epics, work, runtime, routing,
+  delegate, ACP, orient) are served by machinery at `/machinery`. `dashboards/`
+  stays only as an empty placeholder, because the machinery release builder still
+  lists it as a required live-data path.
 
 ## Where agents onboard (not the HTML dashboards)
 
-Agents learn the Ops API from **live HTTP surfaces**, not from `dashboards/*.html`
+Agents learn the Ops API from **live HTTP surfaces**, not from the HTML pages
 (those are human chrome over the same contracts).
 
 | Step | Surface | Why |
@@ -114,7 +119,7 @@ curl -s http://localhost:8765/openapi.json | jq .info
 
 ## Work control plane — `/api/work/v1`
 
-Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation only; no mutations). Operator detail: [`docs/monitor-api/work.md`](monitor-api/work.md). UI: `/work.html`. ADR: [`docs/decisions/ADR-019-work-control-plane.md`](decisions/ADR-019-work-control-plane.md).
+Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation only; no mutations). Operator detail: [`docs/monitor-api/work.md`](monitor-api/work.md). UI: served by machinery at `/machinery`. ADR: [`docs/decisions/ADR-019-work-control-plane.md`](decisions/ADR-019-work-control-plane.md).
 
 | Method | Path | Notes |
 | --- | --- | --- |
@@ -226,7 +231,7 @@ The PR-tier invariant in
 enumerates the public FastAPI route tree at test time. Its denominator is the
 OpenAPI method/template set (276 operations in the reviewed snapshot) plus the
 WebSocket route set, cross-checked against a frozen route-tree digest. Every
-dashboard file under `dashboards/` is scanned as a static consumer as well.
+product page under `scripts/project_api/static/` is scanned as a static consumer as well.
 
 The test uses `TestClient(app)` without entering the lifespan context. Existing
 module seams are redirected to an isolated temporary store whose absolute path
@@ -539,7 +544,7 @@ Liveness map:
 curl -s http://localhost:8765/api/fleet/workers/v1 | python3 -m json.tool
 ```
 
-`fleet.html` includes an **AI workers** panel bound to this route.
+The machinery fleet page, served by machinery at `/machinery`, includes an **AI workers** panel bound to this route.
 
 ## Remote epic lifecycle v1 — `/api/epics/v1`
 
@@ -701,7 +706,7 @@ errors.
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The default payload always enumerates opaque hosts `host-teacher` and observer-only `mac-operator` (plus any additional mapped hosts). Ghost `host-job` is not a default glance row and is not queryable unless mapped via `MONITOR_OCCUPANCY_HOST_IDS`. When the map is empty, the Linux API process fills `host-teacher` in-process (local load + seats) instead of `unavailable/unreachable`. The Mac row stays visible when the observer store is empty or Monitor just restarted; with no live observer or load it is `status: "unavailable"` and is never rendered idle by omission. Live observer heartbeats still merge into that row. Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped remote hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
-The Hosts panel on `orient.html` displays each host's observation status, source age
+The Hosts panel of the machinery orient page (served by machinery at `/machinery`) displays each host's observation status, source age
 at lookup, occupancy, and error. Null or missing source age displays as unknown.
 Unavailable observations display unknown age even when the API supplies a placeholder
 zero. Stale and unavailable observations display unknown occupancy.
@@ -2090,7 +2095,7 @@ artifact bodies. Stale `reserved`/`running` activity means only that the ledger
 has not changed recently; it is not proof that the provider is alive or dead.
 Corroborate provider headroom with CodexBar and durable authority job state.
 
-The `/runtime.html` **Routing overview** consumes this projection. Its summary
+The **Routing overview** on the machinery runtime page (served by machinery at `/machinery`) consumes this projection. Its summary
 cards, filters, search, lifecycle groups, decision-path cards, details, and
 load-more control are presentation-only.
 
@@ -3635,7 +3640,7 @@ Dashboard consolidation status:
 - The redirect-only pages `/audit-dashboard.html`, `/track-health.html`,
   `/channels.html`, `/comms.html` and `/images.html` were removed in the
   Monitor cull (C-4686, C-4687) and now return 404. Use `/quality.html`,
-  `/progress.html`, `/fleet.html` and `/image-explorer.html` instead.
+  `/progress.html` and `/image-explorer.html` instead; the fleet view is served by machinery at `/machinery`.
 
 ---
 

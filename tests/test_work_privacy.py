@@ -23,13 +23,10 @@ PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
 WORK_OWNED = [
     ROOT / "scripts" / "work",
     ROOT / "scripts" / "api" / "work_router.py",
-    ROOT / "dashboards" / "work.html",
     ROOT / "tests" / "fixtures" / "work",
     ROOT / "docs" / "decisions" / "ADR-019-work-control-plane.md",
     ROOT / "docs" / "monitor-api" / "work.md",
-    ROOT / "tests" / "test_work_dashboard.py",
     ROOT / "tests" / "test_work_privacy.py",
-    ROOT / "tests" / "test_work_dashboard_private_integration.py",
 ]
 
 client = TestClient(app, raise_server_exceptions=False)

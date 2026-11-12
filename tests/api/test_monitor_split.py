@@ -123,15 +123,13 @@ PRODUCT_STATIC = REPO_ROOT / "scripts" / "project_api" / "static"
 
 
 def _pages() -> list[tuple[str, Path]]:
-    machinery = REPO_ROOT / "dashboards"
-    rows = [(path.relative_to(machinery).as_posix(), path) for path in machinery.rglob("*") if path.is_file()]
-    rows += [(path.relative_to(PRODUCT_STATIC).as_posix(), path) for path in PRODUCT_STATIC.rglob("*") if path.is_file()]
-    return sorted(rows)
+    return sorted((path.relative_to(PRODUCT_STATIC).as_posix(), path) for path in PRODUCT_STATIC.rglob("*") if path.is_file())
 
 
 @pytest.mark.parametrize(("page", "source"), _pages(), ids=[page for page, _ in _pages()])
 def test_every_dashboard_page_loads_from_its_owner(tmp_path: Path, page: str, source: Path) -> None:
-    ctx = fixture_context(tmp_path).with_roots(dashboards_dir=REPO_ROOT / "dashboards")
+    # This checkout has no machinery pages; every page is the product's.
+    ctx = fixture_context(tmp_path).with_roots(dashboards_dir=tmp_path / "dashboards")
     app = api_main.create_app(ctx, lifespan=_no_lifespan)
     with TestClient(app) as client:
         response = client.get(f"/{page}")
@@ -143,22 +141,22 @@ def test_every_dashboard_page_loads_from_its_owner(tmp_path: Path, page: str, so
             assert client.get("/").content == response.content
 
 
-def test_product_static_map_is_explicit_complete_and_disjoint_from_machinery_pages() -> None:
+def test_product_static_map_is_explicit_and_complete() -> None:
     from scripts.project_api import entry
 
     declared = set(entry.STATIC_FILES)
     on_disk = {path.relative_to(PRODUCT_STATIC).as_posix() for path in PRODUCT_STATIC.rglob("*") if path.is_file()}
-    machinery = {path.relative_to(REPO_ROOT / "dashboards").as_posix() for path in (REPO_ROOT / "dashboards").rglob("*") if path.is_file()}
     assert declared == on_disk
-    assert declared.isdisjoint(machinery)
-    assert len(machinery) == 12 and len(declared) == 13
+    # dashboards/ holds only the placeholder the machinery release builder requires.
+    assert [path.name for path in (REPO_ROOT / "dashboards").iterdir()] == [".gitkeep"]
+    assert len(declared) == 14
 
 
 def test_undeclared_and_escaping_product_files_are_not_served(tmp_path: Path, monkeypatch) -> None:
     product = load_product(fixture_context(tmp_path / "ctx"))
     assert product_contribution.product_file(product, "../entry.py") is None
     assert product_contribution.product_file(product, "entry.py") is None
-    assert product_contribution.product_file(product, "orient") == (PRODUCT_STATIC / "orient.html").resolve()
+    assert product_contribution.product_file(product, "progress") == (PRODUCT_STATIC / "progress.html").resolve()
 
     root = tmp_path / "product"
     (root / "static").mkdir(parents=True)
