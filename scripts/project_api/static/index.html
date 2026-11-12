@@ -16,7 +16,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 .hero { border-bottom:1.5px solid var(--text); display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; margin-bottom:24px; padding-bottom:18px; }
 .hero h2 { font-family: Charter, Georgia, serif; font-size:34px; line-height:1.1; margin:0 0 8px; }
 .hero p { color:var(--text2); font-size:15px; line-height:1.45; max-width:680px; }
-.footer { color:var(--text3); font-size:12px; margin-top:32px; text-align:center; }
 .stats-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:10px; margin-bottom:24px; }
 .stat { background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:14px 16px; }
 .stat .value { color:var(--accent); font-family: Charter, Georgia, serif; font-size:30px; font-weight:700; line-height:1; }
@@ -30,13 +29,14 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 .card .card-stat { color:var(--text3); font-size:12px; margin-top:12px; }
 .card.curriculum { border-left-color:var(--cyan); }
 .card.artifacts { border-left-color:var(--accent); }
-.freshness { color:var(--text3); font-size:12px; margin:-14px 0 24px; }
+.freshness { color:var(--text3); font-size:12px; margin:-14px 0 24px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 @media (max-width: 820px) {
   .hero { grid-template-columns:1fr; }
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <div class="top-bar">
   <div class="top-left">
@@ -47,7 +47,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   <script src="/product-nav.js"></script>
 </div>
 
-<main class="wrap">
+<main class="wrap" id="main" tabindex="-1">
 <section class="hero">
   <div>
     <h2>Curriculum operations</h2>
@@ -72,13 +72,10 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <div class="card-stat">Documents and reports</div>
   </a>
 </div>
-
-<div class="footer">Serving from <span id="footer-origin">this host</span></div>
 </main>
 
 <script>
 const API_TIMEOUT_MS = 20000;
-document.getElementById('footer-origin').textContent = location.host || 'this host';
 
 async function fetchJson(path) {
   const controller = new AbortController();
@@ -97,6 +94,17 @@ async function fetchJson(path) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+function freshnessLine(meta) {
+  const raw = meta && meta.generated_at;
+  const when = raw ? new Date(raw) : null;
+  const known = when instanceof Date && !Number.isNaN(when.getTime());
+  const clock = known
+    ? when.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+    : null;
+  const lead = clock ? `Updated ${clock}` : 'Updated at an unknown time';
+  return meta && meta.stale ? `${lead} · saved earlier` : lead;
 }
 
 function stat(value, label, color) {
@@ -134,9 +142,7 @@ async function loadStats() {
       stat(t.research, 'Research docs', '--blue'),
     ].join('');
     document.getElementById('curriculum-stat').textContent = `${tracks.length} tracks · ${t.published} published modules`;
-    freshness.textContent = meta.generated_at
-      ? `Computed ${meta.generated_at}${meta.stale ? ` · cached copy older than ${meta.stale_after_s ?? 'its'} s limit` : ''}`
-      : 'Computed at an unknown time';
+    freshness.textContent = freshnessLine(meta);
   } catch (e) {
     row.innerHTML = [
       stat(null, 'Tracks', '--text3'),
