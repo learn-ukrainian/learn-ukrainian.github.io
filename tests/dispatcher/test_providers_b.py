@@ -58,6 +58,12 @@ print(json.dumps({"argv": args, "layers": layers}))
     binary.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path) + os.pathsep + os.environ["PATH"])
     selected = b"Keep the same verdict.\r\n" if correction else original
+    if provider == "muse" and mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
+        assert brief.read_bytes() == original
+        assert list(checkout.iterdir()) == []
+        return
     invocation = runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
     result = subprocess.run(invocation.argv, input=invocation.stdin, env=invocation.env, cwd=checkout,
                             capture_output=True, timeout=10)

@@ -20,8 +20,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv += ["--permission-profile", _PROFILES[spec.mode], "--disable-shell",
              "--disable-reminders", "--disable-request-user-input", "--no-foreign-personal-context",
              "--config", "run.toolset=" + json.dumps(_TOOLS[spec.mode])]
-    if spec.mode == "read-only":
-        argv.append("--disable-write")
+    argv.append("--disable-write")
     return Invocation(
         confined_muse_argv(argv, spec.worktree, spec.mode, spec.task_id),
         None, {**env, "MUSE_NO_AUTO_UPDATE": "1"}, None,
