@@ -62,6 +62,10 @@ def assert_private_input_policy(spec, repo_key, error):
     if spec.agent == "muse":
         spec = dataclasses.replace(spec, options={**spec.options, "contributor_mode": "on"})
         checks.check_private_input(spec, repo_key)
+        if spec.mode == "workspace-write":
+            with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+                muse.build(spec, {})
+            return
         argv = muse.build(spec, {}).argv
         assert argv[argv.index("--contributor-mode") + 1] == "off"
     else:
@@ -131,8 +135,12 @@ def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, s
 
     checks.check_private_input(spec, "private" if source == "repo" else "public")
 
-    argv = muse.build(spec, {}).argv
-    assert argv[argv.index("--contributor-mode") + 1] == "off"
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            muse.build(spec, {})
+    else:
+        argv = muse.build(spec, {}).argv
+        assert argv[argv.index("--contributor-mode") + 1] == "off"
     assert spec.options == expected_options
     assert spec.prompt_file.read_bytes() == before
 

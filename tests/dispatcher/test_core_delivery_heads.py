@@ -173,9 +173,12 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox, mode):
 @pytest.mark.parametrize("contributor", ["on", "off", None])
 def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, contributor):
     """Defect class: forced-off execution loses the requested mode or misstates the effective mode."""
-    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input"]
+    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input", "--mode", "read-only"]
     if contributor is not None:
         args += ["--contributor-mode", contributor]
+    refused = sandbox.cli(*args, "--mode", "workspace-write", "--dry-run", expected=2)
+    assert refused.stderr == "dispatcher: muse_worker_mode_refused\n"
+    assert not sandbox.tasks.exists()
     plan = json.loads(sandbox.cli(*args, "--dry-run").stdout)
     argv = plan["argv"]
     assert argv[argv.index("--contributor-mode") + 1] == "off"

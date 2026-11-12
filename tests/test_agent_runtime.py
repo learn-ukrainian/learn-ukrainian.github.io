@@ -4140,7 +4140,7 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
 
 
-def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations=False, write_observation=False):
+def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations=False):
     """Native envelope shared only by the granted Muse protocol cases."""
     from scripts.agent_runtime.adapters.base import InvocationPlan
 
@@ -4155,10 +4155,7 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations
         "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
     })
     records = []
-    tool_name = "edit_file" if write_observation else "read_file"
-    if write_observation:
-        plan.metadata.update(mode="workspace-write", permission_profile=":ask-me",
-                             toolset=["read_file", "write_file", "edit_file"])
+    tool_name = "read_file"
 
     def event(kind, payload, stream="session"):
         number = len(records) + 1
@@ -4194,15 +4191,6 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations
                     "kind": "task_lifecycle", "task_id": task, "task_stream": {"kind": "task", "id": task},
                     "event": {"task_id": task, "kind": kind, **detail},
                 })
-            if write_observation:
-                event("task.lifecycle.tool_output_ref", {
-                    "kind": "task_lifecycle", "task_id": task, "task_stream": {"kind": "task", "id": task},
-                    "event": {"task_id": task, "kind": "tool_output_ref", "availability": "available",
-                              "output_ref": {"kind": "tool_patch", "media_type": "application/json",
-                                             "id": "tool_patch-fixture", "path": "/synthetic/patch.json",
-                                             "uri": "tool-output://local/fixture", "digest": None,
-                                             "byte_len": 240, "patch_summary": {"added": 1, "files": 1, "removed": 1}}},
-                })
     if observations:
         event("tool.result", {"kind": "tool_result", "call_id": "call_fixture", "text": "fixture file text",
                               "correlation_facts": {"outcome": "success", "tool_name": tool_name}})
@@ -4218,16 +4206,15 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations
 
 @pytest.mark.parametrize("model", ["muse-wonder-full-1.0", "muse-spark-1.3"])
 def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
-    """M01: retain usage and reject forged or cross-session write observations."""
+    """M01: retain usage and reject forged or cross-session read observations."""
     import hashlib
 
     from scripts.agent_runtime.adapters.muse import MuseAdapter
 
     # Legacy and Muse 1.4.15 observation shapes, qualified from the synthetic
     # native exec capture. MSP notifications are not the exec contract.
-    for observations, write_observation in ((False, False), (True, False), (True, True)):
-        plan, records = _muse_stream_fixture(tmp_path, model, observations=observations,
-                                            write_observation=write_observation)
+    for observations in (False, True):
+        plan, records = _muse_stream_fixture(tmp_path, model, observations=observations)
         result = MuseAdapter().parse_response(
             stdout="\n".join(json.dumps(record) for record in records),
             stderr="", returncode=0, output_file=None, plan=plan,
@@ -4252,35 +4239,6 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
         )
         assert rejected.ok is False
         assert rejected.tokens is None
-    # Defect class: forged or cross-session write observation accepted.
-    for field, value in (("task_id", "44444444-4444-4444-8444-444444444444"), ("output_ref", {})):
-        invalid = copy.deepcopy(records)
-        payload = next(r["payload"] for r in invalid if r["payload_type"] == "task.lifecycle.tool_output_ref")
-        payload["event"][field] = value
-        rejected = MuseAdapter().parse_response(
-            stdout="\n".join(json.dumps(record) for record in invalid),
-            stderr="", returncode=0, output_file=None, plan=plan,
-        )
-        assert rejected.ok is False
-        assert rejected.tokens is None
-    # Defect class: read-only or unbound tasks attest write-patch observations.
-    for mismatch in ("read-only", "read-intent", "foreign-session"):
-        invalid = copy.deepcopy(records)
-        invalid_plan = copy.deepcopy(plan)
-        if mismatch == "read-only":
-            invalid_plan.metadata.update(mode="read-only", permission_profile=":read-only", toolset=["read_file"])
-        if mismatch in {"read-only", "read-intent"}:
-            next(r["payload"]["event"] for r in invalid
-                 if r["payload_type"] == "task.lifecycle.side_effect_intent")["operation"] = "tool:read_file"
-            next(r["payload"] for r in invalid if r["payload_type"] == "tool.result")[
-                "correlation_facts"]["tool_name"] = "read_file"
-        else:
-            next(r for r in invalid if r["payload_type"] == "task.lifecycle.tool_output_ref")[
-                "stream"]["id"] = "44444444-4444-4444-8444-444444444444"
-        assert MuseAdapter().parse_response(
-            stdout="\n".join(json.dumps(record) for record in invalid),
-            stderr="", returncode=0, output_file=None, plan=invalid_plan,
-        ).ok is False
     unknown = copy.deepcopy(records)
     unknown[2]["payload_type"] = "future.unknown"
     assert MuseAdapter().parse_response(
@@ -4581,6 +4539,15 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            adapter.build_invocation(
+                prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
+                task_id="muse-interface", session_id=None, effort="high",
+                tool_config={"muse_worker": True, "muse_role": role},
+            )
+        assert probes == []
+        return
     plan = adapter.build_invocation(
         prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", session_id=None, effort="high",
@@ -4589,17 +4556,12 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     )
     assert len(probes) == 1
     assert plan.metadata["cli_version"] == "Muse Code 1.4.12 (1.4.12-R6668.1)"
-    assert plan.cmd[plan.cmd.index("--permission-profile") + 1] == (
-        ":read-only" if mode == "read-only" else ":ask-me"
-    )
-    assert ("--disable-write" in plan.cmd) is (mode == "read-only")
+    assert plan.cmd[plan.cmd.index("--permission-profile") + 1] == ":read-only"
+    assert "--disable-write" in plan.cmd
     assert plan.cmd[plan.cmd.index("--workspace") + 1] == str(workspace)
     assert plan.cmd[plan.cmd.index("--worktree") + 1] == "off"
     assert plan.cmd[plan.cmd.index("--contributor-mode") + 1] == "off"
-    assert plan.cmd[plan.cmd.index("--config") + 1] == (
-        'run.toolset=["read_file"]' if mode == "read-only"
-        else 'run.toolset=["read_file", "write_file", "edit_file"]'
-    )
+    assert plan.cmd[plan.cmd.index("--config") + 1] == 'run.toolset=["read_file"]'
     assert {"--disable-shell", "--disable-web-tools", "--disable-reminders",
             "--disable-request-user-input", "--no-foreign-personal-context"} <= set(plan.cmd)
     assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
