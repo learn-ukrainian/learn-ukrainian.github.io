@@ -90,13 +90,12 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
 def test_subject_self_review_effective_identity_or_unknown_refused_before_launch(dispatch, capsys, agent, model, flag, value):
     dispatch(flag, value, agent=agent, model=model, expected=2)
     err = capsys.readouterr().err
-    if agent == "cursor":
-        # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the subject check.
-        assert "cursor_no_approved_model_pin" in err
-    elif model.startswith("grok-"):
-        # Every Grok model is retired (GROK-CANCEL-1110): refused before the subject check.
-        assert "is retired in the model catalog" in err
+    if agent == "cursor" and model == "gpt-6.1-sol":
+        assert "CURSOR_MODEL_NOT_APPROVED" in err
+    elif agent == "cursor" and model == "auto":
+        assert "cursor_auto_outside_coding_task" in err
     else:
+        # A read-only --owned-path that names a review subject is refused before model admission.
         assert "subject" in err
 
 
@@ -105,18 +104,18 @@ def test_subject_self_review_effective_identity_or_unknown_refused_before_launch
     ("auto", ()),
 ])
 def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, capsys, model, flags):
-    # Cursor has no approved model pin (GROK-CANCEL-1110), so no Cursor model is admitted at all.
+    # C-5307 restores only the exact Grok wire pin, not other known models or Auto.
     dispatch(*flags, agent="cursor", model=model, expected=2)
-    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
+    expected = "cursor_auto_outside_coding_task" if model == "auto" else "CURSOR_MODEL_NOT_APPROVED"
+    assert expected in capsys.readouterr().err
 
 
-def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatch, capsys):
+def test_unapproved_cursor_identity_fails_closed_before_fallback(dispatch, monkeypatch, capsys):
     from scripts.review import model_catalog
 
     monkeypatch.setattr(model_catalog, "substitution_default_model", lambda _: "unknown-model")
     dispatch("--subject-seat", "claude", agent="cursor", expected=2)
-    # Cursor has no approved model pin (GROK-CANCEL-1110): refused before the fallback identity is read.
-    assert "cursor_no_approved_model_pin" in capsys.readouterr().err
+    assert "CURSOR_MODEL_NOT_APPROVED" in capsys.readouterr().err
 
 
 def test_verdict_requirement_in_write_mode_refused_before_launch(dispatch, capsys):

@@ -431,9 +431,11 @@ def test_resolve_inter_agent_route_refuses_cursor_auto(model: str) -> None:
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
-def test_resolve_inter_agent_route_refuses_the_retired_cursor_pins(model: str) -> None:
-    # Cursor's only pin, grok-4.7, is retired with every Grok model (GROK-CANCEL-1110), so no
-    # Cursor pin is admitted.
+def test_resolve_inter_agent_route_tracks_active_and_retired_cursor_pins(model: str) -> None:
+    if model == "grok-4.7":
+        route = runner.resolve_inter_agent_route("cursor", model=model)
+        assert (route.participant, route.seat, route.model) == ("cursor", "acpx-cursor-shadow", "grok-4.7")
+        return
     with pytest.raises(runner.InterAgentTransportError, match="refuses non-active model"):
         runner.resolve_inter_agent_route("cursor", model=model)
 

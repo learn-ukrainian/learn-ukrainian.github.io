@@ -1894,11 +1894,10 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
 @pytest.mark.parametrize(
     ("model", "sent", "stand_in"),
     [
-        # The real catalog has no approved Cursor pin (GROK-CANCEL-1110): the former default and the
-        # retired Grok pins are refused.
+        # C-5307 restores only the exact explicit wire pin; no default or alias is admitted.
         (None, None, False),
         ("grok-4.7", None, False),
-        ("grok-4.7-high", None, False),
+        ("grok-4.7-high", "grok-4.7-high", False),
         ("composer-2.5", None, False),
         (None, CURSOR_STAND_IN_PIN, True),
         (CURSOR_STAND_IN_PIN, CURSOR_STAND_IN_PIN, True),

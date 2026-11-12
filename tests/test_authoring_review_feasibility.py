@@ -321,14 +321,13 @@ def test_auto_and_unknown_authors_preserve_review_independence(
     repo.publish()
     expected = "cursor" if trailer == "cursor/auto" else "unknown"
     assert facts(repo, tasks).existing_families == {expected}
-    if agent == "cursor":
-        # The Cursor Grok seat retired (GROK-CANCEL-1110): its verdict is refused for every author shape.
-        with pytest.raises(recorder.RecordError, match="reviewer model unknown"):
-            record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
-        return
     if expected == "unknown":
         # An unknown author excludes no family, so no reviewer is provably outside it (C-2902 F1).
         with pytest.raises(recorder.RecordError, match="AUTHOR_UNRESOLVED"):
+            record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
+        return
+    if agent == "cursor":
+        with pytest.raises(recorder.RecordError, match="Cursor-as-reviewer is ineligible for Cursor-authored work"):
             record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
         return
     receipt = record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)

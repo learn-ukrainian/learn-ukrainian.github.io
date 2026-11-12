@@ -893,12 +893,14 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
-    """No Grok review route exists, so none lists the ukrainian profile (#10835; GROK-CANCEL-1110)."""
+    """C-5307 restores Grok coding and Cursor review without admitting Ukrainian review."""
     source = Path(__file__).resolve().parents[2]
     catalog = yaml.safe_load((source / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
     assert "ukrainian_review" not in catalog["models"]["grok-4.7"]["roles"]
-    assert catalog["models"]["grok-4.7"]["lifecycle"] == "retired"
-    assert not [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
+    assert catalog["models"]["grok-4.7"]["lifecycle"] == "active"
+    assert catalog["models"]["grok-4.7"]["roles"] == ["coding", "standard_review"]
+    assert catalog["models"]["grok-4.7"]["transports"] == ["native_grok", "cursor"]
+    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["review_profiles"] == ["code", "infra"]
 
 
 def guard_policy(settings):
@@ -967,7 +969,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
         assert not [route for route in routes if route.endswith("/cursor_fallback")]
     assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
-    assert "xai_reviewer" not in catalog["seats"]
+    assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
     opus = catalog["models"]["claude-opus-5-5"]
     assert (opus["routing_wire_ids"], opus["transports"]) == (
         {"native_claude": "claude-opus-5-5", "agy": "claude-opus-5-5-high"},
@@ -984,7 +986,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "0785d3963aae8da5bfad29ef03aa46942ea5816e1ec8bb57f32d3f2131a90765",
+    "v2-baseline.json.gz": "70fde5bcd1ecf095a668a4b4221feb8e76d3d1f88495267afc18f3dba88b154d",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "ed7438340b60df7dcf51271dac1b03952fe96617edd249f14aaed1ecb33a0ede",
@@ -1037,10 +1039,16 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "0785d3963aae8da5bfad29ef03aa46942ea5816e1ec8bb57f32d3f2131a90765"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "70fde5bcd1ecf095a668a4b4221feb8e76d3d1f88495267afc18f3dba88b154d"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
+
+GROK_REVIEW_CANDIDATE = {
+    "model_id": "grok-4.7", "route": "cursor", "transport": "cursor",
+    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --effort high",
+    "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["standard_review"],
+}
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
@@ -1119,6 +1127,22 @@ def assert_frozen_surfaces(actual, *, surfaces):
             argon = value["models"].pop("gemini-4-argon")
             assert hashlib.sha256(encode(argon)).hexdigest() == "487d0e7e81d157689031dc8c804f1a3323773e0ed5b4486a8e2f1af793909d3e"
             value["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
+            # C-5307 restores native coding and the exact Cursor review pin. Every
+            # other catalog field, reviewer-of-record ladder and route stays pinned.
+            expected = CURRENT_BASELINE[surface]
+            grok = value["models"]["grok-4.7"]
+            assert hashlib.sha256(encode(grok)).hexdigest() == "3d655f93b3913b8de9f1d752d350ab4743f97a4396056e14153e2ac5505a9310"
+            value["models"]["grok-4.7"] = deepcopy(expected["models"]["grok-4.7"])
+            assert value["review_candidates"].pop("grok-4.7-cursor-fallback") == GROK_REVIEW_CANDIDATE
+            for endpoint, digest in (
+                ("grok", "b893f62c29fe61370e891af14a3c78f55765641c18d60618f735a1fd917425cf"),
+                ("cursor", "463273701fe08a057c071c23c74ce941ba626097e990b01477e1c58d2bb33e22"),
+            ):
+                scheduler = value["review_scheduler"]
+                assert hashlib.sha256(encode(scheduler["endpoints"][endpoint])).hexdigest() == digest
+                scheduler["endpoints"][endpoint] = deepcopy(expected["review_scheduler"]["endpoints"][endpoint])
+            assert hashlib.sha256(encode(value["policy"]["notes"][2])).hexdigest() == "36eeab692964396878fb5faff9f5b1be38f5f096eb85ab449b6b4fe1708bda4a"
+            value["policy"]["notes"][2] = expected["policy"]["notes"][2]
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
