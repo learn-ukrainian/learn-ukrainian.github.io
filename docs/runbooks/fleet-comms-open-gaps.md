@@ -165,16 +165,11 @@ request replays the durable verdict without a provider call or reservation.
 
 ### Diagnose quota concentration
 
-- Open `runtime.html` → **Routing overview**. Start with the lifecycle,
-  automatic-versus-explicit, route-distribution, and failure-cause cards, then
-  filter by lifecycle, mode, route, initiator, model, reviewer, or failure.
-- Read the decision path as initiator → request → selected route/model →
-  outcome. Expand one assignment for the body-free selection trace, quota and
-  credential evidence, retry/failover/replay state, authority IDs, and ordered
-  lifecycle events.
-- Query `/api/runtime/routing-assignments?limit=100` for the same read-only
-  projection. Counts describe the loaded recent window, not all-time fleet
-  totals, configured routing weights, provider quotas, or caching.
+- Query `/api/runtime/routing-assignments?limit=100` for the body-free
+  read-only projection. Read each assignment's decision path as initiator,
+  request, selected route/model and outcome, including its selection trace,
+  authority IDs and ordered lifecycle events. Counts describe the loaded
+  recent window, not all-time fleet totals, routing weights or provider quotas.
 - Treat “No ledger update” as stale activity evidence only. It is not proof of
   provider liveness and does not authorize early lease reclamation.
 - Compare the decision trace's hard-gate and suitability reasons before blaming
@@ -275,11 +270,12 @@ enabling the old MCP server, or running retention helpers such as `bin/services`
 queue cleanup.
 
 The canonical read-only home for zombie, batch-progress, and broker-health
-diagnostics is `GET /api/fleet/operations`, rendered by `dashboards/fleet.html`.
+diagnostics is `GET /api/fleet/operations`. The former Fleet browser view
+was removed; `/machinery` provides Fleet Comms summary counts.
 `scripts/api/route_contracts.py` documents both contracts. These diagnostics are
 historical projections, not authority or proof that Fleet is healthy.
-`dashboards/comms.html` and `dashboards/channels.html` retain their compatibility
-redirects; channel/thread/delivery GET projections remain available. A source
+The former Comms and Channels pages are no longer served;
+channel/thread/delivery GET projections remain available. A source
 audit or a local API test does not establish deployed browser behavior.
 
 ### Observation and retirement gates

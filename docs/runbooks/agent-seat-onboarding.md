@@ -144,23 +144,17 @@ a model-named extra copy.
 
 | Page | Canonical observer role | Browser boundary |
 | --- | --- | --- |
-| **ACP Conversations** (`/acp.html`) | Readable Codex↔Grok ACP transcripts plus the operational event rail | Read-only; cannot start, steer, retry, or cancel ACP |
-| **Channels** (`/channels.html`) | Shared channel, thread, context, and delivery visibility | Read-only; send from an agent TUI or the project bridge CLI |
-| **Broker Ops** (`/comms.html`) | Legacy broker messages, zombies, batch progress, and health during migration | Read-only; no browser message composition |
-| **Runtime** (`/runtime.html`) | Runtime health plus the loaded/recent **Routing overview** for initiator, request, selected route/model, outcome, and lifecycle evidence | Read-only; filters, search, details, and load-more never select, retry, cancel, reclaim, or reroute work |
+| **Machinery** (`/machinery`) | Live workers, subscription usage, sign-ins, Fleet Comms counts and recently finished work | Read-only overview; use the CLI or body-free API projections for details |
 
+The former ACP, Channels, Broker Ops and Runtime pages are no longer served.
 The legacy send, post, and acknowledgement APIs remain available to their
-current project CLI callers. Do not remove those routes or the Broker Ops page
-until caller telemetry proves the old paths are unused and every unique
-operations panel has a canonical replacement.
+current project CLI callers.
 
 ### Read the routing overview correctly
 
-Use `/runtime.html` → **Routing overview** for the human view, or query
-`GET /api/runtime/routing-assignments?limit=100` for the same body-free
-authority projection. The four summary cards, lifecycle groups, filters, and
-route distribution describe only the assignments returned in that loaded
-recent window. They are not all-time fleet totals, configured routing weights,
+Query `GET /api/runtime/routing-assignments?limit=100` for the body-free
+authority projection. Its counts describe only the assignments returned in
+that loaded recent window. They are not all-time fleet totals, configured routing weights,
 provider quotas, or evidence of caching.
 
 Read each decision path from left to right:

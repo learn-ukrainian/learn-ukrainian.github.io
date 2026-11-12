@@ -630,10 +630,9 @@ queued asks use ACP, including detached <code>process-ask</code> workers.</p>
 <p>Bridge telemetry, Broker Ops, and legacy HTTP routes remain in place. #6106
 stays open until measured zero use and operator approval permit retirement.</p>
 <h2>Web dashboard</h2>
-<p>The Fleet observer at <code>http://localhost:8765/fleet.html</code>
-(<code>dashboards/fleet.html</code>) is the browser view of channels and
-deliveries. The former <code>channels.html</code> and <code>comms.html</code>
-pages were removed in the Monitor cull (C-4686, C-4687). The browser POST
+<p>The machinery overview at <code>http://localhost:8765/machinery</code> shows Fleet Comms
+counts. Use the CLI for channels, deliveries and conversations. The former
+Fleet, Channels and Comms pages were removed in the Monitor cull. The browser POST
 endpoint <code>/api/comms/channels/{name}/post</code> stays: user-only, gated
 by localhost binding. Agents still post via CLI.</p>
 <p>The broker message endpoints that the old comms page polled are bounded by
