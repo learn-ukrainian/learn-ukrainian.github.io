@@ -85,8 +85,8 @@ CLAUDE_FIXTURE = """[
         "usedPercent": 7
       },
       "tertiary": null,
-      "accountOrganization": "krisztian.koos@gmail.com's Organization",
-      "accountEmail": "krisztian.koos@gmail.com",
+      "accountOrganization": "account-a@example.invalid's Organization",
+      "accountEmail": "account-a@example.invalid",
       "providerCost": {
         "period": "Monthly cap",
         "updatedAt": "2026-07-09T14:13:51Z",
@@ -97,8 +97,8 @@ CLAUDE_FIXTURE = """[
       "identity": {
         "loginMethod": "Claude Max 20x",
         "providerID": "claude",
-        "accountOrganization": "krisztian.koos@gmail.com's Organization",
-        "accountEmail": "krisztian.koos@gmail.com"
+        "accountOrganization": "account-a@example.invalid's Organization",
+        "accountEmail": "account-a@example.invalid"
       },
       "secondary": {
         "windowMinutes": 10080,
@@ -135,7 +135,7 @@ CODEX_FIXTURE = """[
   {
     "usage": {
       "identity": {
-        "accountEmail": "krisztian.koos@gmail.com",
+        "accountEmail": "account-a@example.invalid",
         "loginMethod": "Pro 20x",
         "providerID": "codex"
       },
@@ -148,7 +148,7 @@ CODEX_FIXTURE = """[
       "dataConfidence": "high",
       "tertiary": null,
       "extraRateWindows": [],
-      "accountEmail": "krisztian.koos@gmail.com",
+      "accountEmail": "account-a@example.invalid",
       "codexResetCredits": 0,
       "updatedAt": "2026-07-09T13:49:49Z",
       "loginMethod": "Pro 20x",
