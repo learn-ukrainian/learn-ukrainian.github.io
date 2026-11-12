@@ -464,98 +464,78 @@ def _exclude_args(repo: Path) -> list[str]:
     return [f"--exclude-paths={ignore}"] if ignore.is_file() else []
 
 
-_COUNT = re.compile(r"\{(\d{1,3})(?:,(\d{0,3}))?\}")
-_ESCAPE_LETTERS = "dwDW"  # ASCII-only in both RE2 and `re.ASCII`
+# Directory names the filesystem walk must not enter. tree_candidates already drops
+# paths under these; the walk needs the same cut or it descends into .git.
+TREE_DIR_EXCLUDES: tuple[str, ...] = (
+    r"(?:^|/)\.git(?:/|$)",
+    r"(?:^|/)\.venv(?:/|$)",
+    r"(?:^|/)node_modules(?:/|$)",
+    r"(?:^|/)\.worktrees(?:/|$)",
+)
 
 
-def _is_plain_re2(pattern: str) -> bool:
-    """True only for the syntax that Python `re` (ASCII) and TruffleHog's RE2 read identically.
-
-    A blacklist of Python-only constructs cannot be exhaustive (inline flags, comments, `\\u`/`\\N`
-    escapes, repeat counts above RE2's limit, ...), so this admits literals, `\\`-escaped punctuation,
-    `\\d\\w`, anchors, `.`, `|`, groups (`(`, `(?:`), plain classes and `* + ? {n,m}` quantifiers.
-    """
-    i, n, quant = 0, len(pattern), 0  # quant: 1 after a quantifier, 2 after its lazy `?`
-    while i < n:
-        c = pattern[i]
-        if ord(c) < 32 or ord(c) == 127:
-            return False
-        if c == "\\":
-            nxt = pattern[i + 1 : i + 2]
-            if not nxt or (nxt.isalnum() and nxt not in _ESCAPE_LETTERS) or nxt.isspace():
-                return False
-            i, quant = i + 2, 0
-            continue
-        if c == "[":
-            i += 1
-            if pattern[i : i + 1] == "^":
-                i += 1
-            if pattern[i : i + 1] == "]":
-                i += 1
-            while i < n and pattern[i] != "]":
-                if pattern[i] in "[" or ord(pattern[i]) < 32:
-                    return False
-                if pattern[i] == "\\":
-                    nxt = pattern[i + 1 : i + 2]
-                    if not nxt or (nxt.isalnum() and nxt not in _ESCAPE_LETTERS) or nxt.isspace():
-                        return False
-                    i += 1
-                i += 1
-            if i >= n:
-                return False
-            i, quant = i + 1, 0
-            continue
-        if c == "(":
-            if pattern[i + 1 : i + 2] == "?" and not pattern.startswith("(?:", i):
-                return False
-            i, quant = i + (3 if pattern.startswith("(?:", i) else 1), 0
-            continue
-        if c in "*+?{":
-            if c == "{":
-                m = _COUNT.match(pattern, i)
-                if not m or any(g and int(g) > 1000 for g in m.groups()):
-                    return False
-                i = m.end() - 1
-            if quant == 0:
-                quant = 1
-            elif quant == 1 and c == "?":
-                quant = 2
-            else:
-                return False
-        else:
-            quant = 0
-        i += 1
-    return True
+def _include_rule(rel: str) -> str:
+    """One anchored RE2 literal. TruffleHog compiles it; this function does not match paths."""
+    if "\n" in rel or "\r" in rel:
+        raise ScanError("refused a tree path that breaks the include file")
+    return "^" + re.escape(rel) + "$"
 
 
-def _ignore_patterns(repo: Path) -> list[re.Pattern[str]]:
-    """Regexes from .trufflehogignore as TruffleHog reads them: one per line (split on `\\n`),
-    whitespace kept, empty and `#` lines skipped, ASCII character classes (`re.ASCII`)."""
+def _ignore_bytes(repo: Path) -> bytes:
+    """`.trufflehogignore` unchanged, including pattern whitespace. Empty when the file is absent."""
     ignore = repo / IGNORE_FILE
     if not ignore.is_file():
-        return []
-    patterns: list[re.Pattern[str]] = []
-    for line in ignore.read_text(encoding="utf-8").split("\n"):
-        line = line.removesuffix("\r")
-        if not line or line.startswith("#"):
-            continue
-        if not _is_plain_re2(line):
-            raise ScanError(f"unsupported {IGNORE_FILE} pattern (outside the plain RE2 subset)")
-        try:
-            patterns.append(re.compile(line, re.ASCII))
-        except re.error as exc:
-            raise ScanError(f"invalid {IGNORE_FILE} pattern ({exc.msg})") from exc
-    return patterns
+        return b""
+    try:
+        data = ignore.read_bytes()
+    except OSError as exc:
+        raise ScanError(f"cannot read {IGNORE_FILE} ({_errno_name(exc)})") from exc
+    if data and not data.endswith(b"\n"):
+        data += b"\n"
+    return data
+
+
+def _write_private(directory: Path, name: str, data: bytes) -> Path:
+    path = directory / name
+    fd = _create_private(path)
+    try:
+        view = memoryview(data)
+        while view:
+            view = view[os.write(fd, view) :]
+    finally:
+        os.close(fd)
+    return path
+
+
+def _tree_filter_files(repo: Path, directory: Path, files: Sequence[str]) -> tuple[Path, Path]:
+    """Include file of candidate paths, and exclude file of the repo rules plus denied directories.
+
+    Both are owner-only files beside the report. TruffleHog's RE2 engine compiles them. A rule it
+    rejects fails the scan (`ScanError`) instead of dropping files the CI scan would still open.
+    """
+    include = _write_private(directory, "include-paths", "".join(f"{_include_rule(rel)}\n" for rel in files).encode())
+    exclude_body = _ignore_bytes(repo) + "".join(f"{line}\n" for line in TREE_DIR_EXCLUDES).encode()
+    exclude = _write_private(directory, "exclude-paths", exclude_body)
+    return include, exclude
 
 
 def scan_tree(binary: str, repo: Path, out_fd: int, log_fd: int, timeout: int) -> int:
     # TruffleHog applies --exclude-paths only while walking a directory, not to explicit file
-    # arguments, so drop ignored files here for parity with the CI range scan.
-    patterns = _ignore_patterns(repo)
-    files = [rel for rel in tree_candidates(repo) if not any(p.search(rel) for p in patterns)]
-    for chunk in batches(files):
-        cmd = [binary, "filesystem", *SAFE_FLAGS, *_exclude_args(repo), "--", *chunk]
-        _run_trufflehog(cmd, repo, out_fd, log_fd, timeout)
+    # arguments (pkg/sources/filesystem/filesystem.go scanRootPath, v3.99.8). Walking `.` with
+    # an include file of tree_candidates keeps that engine as the only matcher.
+    files = tree_candidates(repo)
+    directory = Path(os.readlink(f"/proc/self/fd/{out_fd}")).parent
+    include, exclude = _tree_filter_files(repo, directory, files)
+    cmd = [
+        binary,
+        "filesystem",
+        *SAFE_FLAGS,
+        f"--include-paths={include}",
+        f"--exclude-paths={exclude}",
+        "--",
+        ".",
+    ]
+    _run_trufflehog(cmd, repo, out_fd, log_fd, timeout)
     return len(files)
 
 
@@ -777,7 +757,11 @@ def build_parser() -> argparse.ArgumentParser:
             '  .venv/bin/python scripts/audit/secret_scan_local.py --repo "$REPO" locate "$REPORT"\n'
             "\n"
             "Fixed TruffleHog flags: " + " ".join(SAFE_FLAGS) + "\n"
-            "  plus --exclude-paths=.trufflehogignore when the file exists.\n"
+            "  history: --exclude-paths=.trufflehogignore when the file exists.\n"
+            "  tree: walks the work tree (TruffleHog applies exclude rules only to a directory\n"
+            "  walk) with an include file of the candidate paths and an exclude file of the\n"
+            "  .trufflehogignore rules plus denied directories (.git, .venv, node_modules,\n"
+            "  .worktrees). Pattern whitespace is kept. A rule TruffleHog rejects is a scan error.\n"
             "\n"
             "Outputs:\n"
             "  Full JSON Lines report (contains RAW secret values) and TruffleHog's log\n"
