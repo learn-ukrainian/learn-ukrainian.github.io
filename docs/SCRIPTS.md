@@ -1691,12 +1691,13 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 
 ## Dashboards
 
+The learn-ukrainian pages (home, Curriculum Dashboard, Artifacts) are live pages in
+`scripts/project_api/static/`, served by the Monitor API; there is no build step. See
+`docs/MONITOR-API.md` for the routes they read.
+
 | Entry | Purpose |
 | --- | --- |
-| `scripts/generate_dashboard_data.py` | Aggregate audit cache into dashboard data |
-| `scripts/build_dashboards.py` | Build HTML dashboards with embedded data |
-| `npm run dashboards:data` | Regenerate `scripts/project_api/static/data/status.json` |
-| `npm run dashboards:build` | Rebuild dashboard HTML |
+| `npm run dashboard:serve` | Run a local Monitor API (port 8765, auto-reload) that serves the pages |
 
 ---
 

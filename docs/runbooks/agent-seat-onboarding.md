@@ -145,7 +145,6 @@ a model-named extra copy.
 | Page | Canonical observer role | Browser boundary |
 | --- | --- | --- |
 | **Machinery** (`/machinery`) | Live workers, subscription usage, sign-ins, Fleet Comms counts and recently finished work | Read-only overview; use the CLI or body-free API projections for details |
-| **Build Events** (`/build-events.html`) | Active and recent build activity | Replaces the retired duplicate Comms activity feed |
 
 The former ACP, Channels, Broker Ops and Runtime pages are no longer served.
 The legacy send, post, and acknowledgement APIs remain available to their

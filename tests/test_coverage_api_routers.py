@@ -1,4 +1,4 @@
-"""Tests for API routers: comms_router, admin_router, images_router.
+"""Tests for API routers: comms, batch progress, sources and route contracts.
 
 Targets ~150+ tests for coverage improvement.
 """
@@ -7,18 +7,16 @@ import json
 import os
 import sqlite3
 from datetime import UTC, datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.project_api.context import image_store
-
 pytestmark = pytest.mark.reads_content
 
 # ---------------------------------------------------------------------------
-# Fixtures: create a test app with all three routers mounted
+# Fixtures: test apps with one router mounted each
 # ---------------------------------------------------------------------------
 
 
@@ -90,9 +88,8 @@ def _patch_config(mock_project_root, broker_db):
     comms_router itself keeps no path globals since #7269 step 5 — it
     resolves everything from the app's MonitorContext — so steering comms
     routes at the fixture root happens via ``app.state.ctx`` (see
-    ``comms_client`` and ``_comms_ctx``). admin_router is the same since
-    step 8. The config patches below remain for images_router (still
-    unmigrated; #7325) and helpers that read ``lu_machinery.api.config``.
+    ``comms_client`` and ``_comms_ctx``). The config patches below remain
+    for helpers that read ``lu_machinery.api.config``.
     """
     with (
         patch("lu_machinery.api.config.PROJECT_ROOT", mock_project_root),
@@ -129,36 +126,6 @@ def comms_client(_patch_config, mock_project_root):
     app.state.ctx = _comms_ctx(mock_project_root)
     app.include_router(batch_progress_router, prefix="/api/comms")
     app.include_router(router, prefix="/api/comms")
-    return TestClient(app)
-
-
-@pytest.fixture()
-def admin_app(_patch_config, mock_project_root):
-    """Bare FastAPI app mounting admin_router against a fixture context."""
-    from scripts.project_api.admin_router import router
-
-    app = FastAPI()
-    app.state.ctx = _comms_ctx(mock_project_root)
-    app.include_router(router, prefix="/api/admin")
-    return app
-
-
-@pytest.fixture()
-def admin_client(admin_app):
-    """TestClient for admin router."""
-    return TestClient(admin_app)
-
-
-@pytest.fixture()
-def images_client(_patch_config, mock_project_root):
-    """TestClient for images router."""
-    from lu_machinery.api.monitor_context import fixture_context
-
-    from scripts.project_api import images_router
-
-    app = FastAPI()
-    app.state.ctx = fixture_context(mock_project_root)
-    app.include_router(images_router.router, prefix="/api/images")
     return TestClient(app)
 
 
@@ -407,12 +374,12 @@ class TestCommsLiveActivity:
 
 
 # ===========================================================================
-# ADMIN ROUTER TESTS
+# PATH SAFETY TESTS
 # ===========================================================================
 
 
-class TestAdminHelpers:
-    """Tests for admin helper functions."""
+class TestPathSafety:
+    """Tests for path_safety.safe_join."""
 
     def test_safe_join_valid(self, tmp_path):
         # _safe_within was replaced by path_safety.safe_join in commit
@@ -425,183 +392,6 @@ class TestAdminHelpers:
         from lu_machinery.path_safety import safe_join
         with pytest.raises(ValueError):
             safe_join(tmp_path, "..", "etc", "passwd")
-
-
-class TestAdminBackup:
-    """Tests for backup endpoints."""
-
-    def test_delete_backup(self, admin_client, mock_project_root):
-        backup_dir = mock_project_root / "data" / "backups"
-        (backup_dir / "delete-me.tar").write_bytes(b"x" * 50)
-        r = admin_client.delete("/api/admin/backup/delete-me.tar")
-        assert r.status_code == 200
-        assert r.json()["deleted"] == "delete-me.tar"
-        assert r.json()["freed_bytes"] == 50
-
-    def test_delete_backup_traversal(self, admin_client, mock_project_root, tmp_path):
-        # Path traversal in the filename component is rejected by the
-        # path_safety.safe_join guard inside admin_router (replacement
-        # for the old _safe_within bool-returning helper). Filenames
-        # containing path separators or .. fail with ValueError →
-        # router returns 400 "Invalid filename".
-        r = admin_client.delete("/api/admin/backup/..%2Fevil.tar")
-        assert r.status_code in (400, 404)
-
-
-class TestAdminDiskUsage:
-    """Tests for /api/admin/disk-usage endpoint."""
-
-
-class TestAdminMaintenance:
-    """Tests for maintenance endpoints."""
-
-    def test_vacuum_broker(self, admin_client, broker_db):
-        r = admin_client.post("/api/admin/maintenance/vacuum-broker")
-        data = r.json()
-        assert data["status"] == "ok"
-
-    def test_annotation_stats_with_data(self, admin_client, mock_project_root):
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-1"
-        grade_dir.mkdir()
-        annotations = [
-            {"image_id": "img1", "description_uk": "test", "teaching_value": "high"},
-            {"image_id": "img2", "description_uk": "", "teaching_value": "low"},
-            {"image_id": "img3", "description_uk": "ok", "teaching_value": "medium"},
-        ]
-        (grade_dir / "annotations.json").write_text(json.dumps(annotations))
-        r = admin_client.get("/api/admin/maintenance/annotation-stats")
-        data = r.json()
-        assert data["total_images"] == 3
-        assert data["annotated"] == 2
-
-    def test_annotation_stats_dict_format(self, admin_client, mock_project_root):
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-3"
-        grade_dir.mkdir()
-        annotations = {
-            "img1": {"image_id": "img1", "description_uk": "test", "teaching_value": "high"},
-        }
-        (grade_dir / "annotations.json").write_text(json.dumps(annotations))
-        r = admin_client.get("/api/admin/maintenance/annotation-stats")
-        assert r.json()["total_images"] == 1
-
-    def test_annotation_stats_corrupt_json(self, admin_client, mock_project_root):
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-4"
-        grade_dir.mkdir()
-        (grade_dir / "annotations.json").write_text("not json!")
-        r = admin_client.get("/api/admin/maintenance/annotation-stats")
-        assert r.status_code == 200
-
-
-class TestAdminCollections:
-    """Tests for collection management endpoints."""
-
-
-
-
-
-
-
-
-
-# ===========================================================================
-# IMAGES ROUTER TESTS
-# ===========================================================================
-
-
-class TestImageIndex:
-    """Tests for the _ImageIndex singleton."""
-
-    def test_index_load_with_data(self, images_client, mock_project_root):
-        """Index loads structural JSONLs and annotations."""
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-1"
-        grade_dir.mkdir(exist_ok=True)
-        # Structural JSONL
-        records = [
-            {"image_id": "img1", "pdf_stem": "book1", "page": 1, "grade": 1},
-            {"image_id": "img2", "pdf_stem": "book1", "page": 2, "grade": 1},
-        ]
-        with open(grade_dir / "book1-images.jsonl", "w") as f:
-            for rec in records:
-                f.write(json.dumps(rec) + "\n")
-        # Annotations
-        annotations = [
-            {"image_id": "img1", "description_uk": "test description", "teaching_value": "high"},
-        ]
-        ann_file = img_dir / "image_text_pairs.jsonl"
-        with open(ann_file, "w") as f:
-            for ann in annotations:
-                f.write(json.dumps(ann) + "\n")
-
-        # Reset and reload
-        store = image_store(images_client.app.state.ctx)
-        store.index.reload()
-
-        r = images_client.get("/api/images/stats")
-        data = r.json()
-        assert data["total"] == 2
-        assert data["annotated"] == 1
-
-
-class TestImagesAnnotationUpdate:
-    """Tests for PUT /api/images/annotations/{image_id}."""
-
-    def test_update_annotation(self, images_client, mock_project_root):
-        store = image_store(images_client.app.state.ctx)
-        store.index._records = {
-            "img1": {"image_id": "img1", "description_uk": "old"},
-        }
-        store.index._loaded = True
-
-        with patch("scripts.project_api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
-            r = images_client.put("/api/images/annotations/img1", json={"description_uk": "new"})
-        assert r.status_code == 200
-        assert r.json()["updated_fields"] == ["description_uk"]
-
-
-class TestImagesCleanup:
-    """Tests for POST /api/images/cleanup."""
-
-    def test_cleanup(self, images_client, mock_project_root):
-        store = image_store(images_client.app.state.ctx)
-        img_path = mock_project_root / "data" / "textbook_images" / "test.png"
-        img_path.write_bytes(b"PNG")
-        store.index._records = {
-            "img1": {"image_id": "img1", "image_path": "data/textbook_images/test.png", "pdf_stem": "book", "page": 1},
-        }
-        store.index._by_pdf_page = {
-            "book": {1: [store.index._records["img1"]]},
-        }
-        store.index._loaded = True
-
-        with (
-            patch("scripts.project_api.images_router._remove_from_book_jsonls"),
-            patch("scripts.project_api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock),
-        ):
-            r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
-        data = r.json()
-        assert data["deleted_count"] == 1
-        assert not img_path.exists()
-
-    def test_cleanup_rejects_path_traversal(self, images_client, mock_project_root):
-        store = image_store(images_client.app.state.ctx)
-
-        outside_file = mock_project_root.parent / "outside.png"
-        outside_file.write_bytes(b"PNG")
-        store.index._records = {
-            "img1": {"image_id": "img1", "image_path": "../outside.png", "pdf_stem": "", "page": None},
-        }
-        store.index._loaded = True
-
-        r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
-
-        assert r.json()["deleted_count"] == 0
-        assert r.json()["not_found"] == ["img1"]
-        assert outside_file.exists()
-        assert "img1" in store.index.records
 
 
 class TestRagBrowseImages:
@@ -618,63 +408,6 @@ class TestRagBrowseImages:
         assert r.json() == {"sources_db": {"error": "data/sources.db not found"}}
 
 
-class TestImagesHelpers:
-    """Tests for helper functions in images_router."""
-
-    def test_cache_page_render_eviction(self):
-        from collections import OrderedDict
-
-        from scripts.project_api.images_router import _PAGE_CACHE_MAX, _cache_page_render
-        page_cache = OrderedDict()
-        for i in range(_PAGE_CACHE_MAX + 5):
-            _cache_page_render(f"key:{i}", b"data", page_cache=page_cache)
-        assert len(page_cache) == _PAGE_CACHE_MAX
-
-    def test_remove_from_book_jsonls(self, mock_project_root, _patch_config):
-        from scripts.project_api.images_router import _remove_from_book_jsonls
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-1"
-        grade_dir.mkdir(exist_ok=True)
-        records = [
-            {"image_id": "keep", "data": "a"},
-            {"image_id": "delete", "data": "b"},
-        ]
-        jsonl_path = grade_dir / "book1-images.jsonl"
-        with open(jsonl_path, "w") as f:
-            for rec in records:
-                f.write(json.dumps(rec) + "\n")
-
-        _remove_from_book_jsonls({"delete"}, images_dir=img_dir)
-
-        with open(jsonl_path) as f:
-            remaining = [json.loads(line) for line in f if line.strip()]
-        assert len(remaining) == 1
-        assert remaining[0]["image_id"] == "keep"
-
-    def test_rewrite_annotations_jsonl_sync(self, mock_project_root, _patch_config):
-        from lu_machinery.api.monitor_context import fixture_context
-        ctx = fixture_context(mock_project_root)
-        store = image_store(ctx)
-        ann_file = mock_project_root / "data" / "textbook_images" / "image_text_pairs.jsonl"
-        ann_file.parent.mkdir(parents=True, exist_ok=True)
-        ann_file.write_text('{"image_id": "old"}\n')
-
-        store.index._records = {
-            "img1": {"image_id": "img1", "description_uk": "test", "teaching_value": "high"},
-            "img2": {"image_id": "img2"},  # no annotation data, should be skipped
-        }
-        store.index._loaded = True
-
-        from scripts.project_api import images_router
-        images_router._rewrite_annotations_jsonl_sync(store=store)
-
-        with open(ann_file) as f:
-            lines = [line.strip() for line in f if line.strip()]
-        assert len(lines) == 1
-        data = json.loads(lines[0])
-        assert data["image_id"] == "img1"
-
-
 class TestCommsInternalHelpers:
     """Tests for internal helper functions in comms_router."""
 
@@ -686,44 +419,9 @@ class TestCommsInternalHelpers:
         assert error == "ps: Exception"
 
 
-class TestPDFPool:
-    """Tests for the _PDFPool helper class."""
-
-    @pytest.mark.anyio
-    async def test_pool_eviction(self):
-        from scripts.project_api.images_router import _PDFPool
-        pool = _PDFPool(max_size=2)
-        # Manually inject mock docs
-        mock_doc1 = MagicMock()
-        mock_doc2 = MagicMock()
-        mock_doc3 = MagicMock()
-        async with pool._lock:
-            pool._pool["a.pdf"] = mock_doc1
-            pool._pool["b.pdf"] = mock_doc2
-
-        with patch("pymupdf.open", return_value=mock_doc3):
-            doc = await pool.get("c.pdf")
-        assert doc == mock_doc3
-        mock_doc1.close.assert_called_once()
-
-    @pytest.mark.anyio
-    async def test_pool_cache_hit(self):
-        from scripts.project_api.images_router import _PDFPool
-        pool = _PDFPool(max_size=2)
-        mock_doc = MagicMock()
-        async with pool._lock:
-            pool._pool["cached.pdf"] = mock_doc
-        result = await pool.get("cached.pdf")
-        assert result == mock_doc
-
-
 # ===========================================================================
 # ADDITIONAL TESTS TO REACH 150+
 # ===========================================================================
-
-
-class TestAdminVerifyCollectionsStatuses:
-    """Test various verify status outcomes."""
 
 
 class TestCommsPreseedLogParsing:

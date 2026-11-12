@@ -149,14 +149,14 @@ def test_product_static_map_is_explicit_and_complete() -> None:
     assert declared == on_disk
     # dashboards/ holds only the placeholder the machinery release builder requires.
     assert [path.name for path in (REPO_ROOT / "dashboards").iterdir()] == [".gitkeep"]
-    assert len(declared) == 14
+    assert len(declared) == 5
 
 
 def test_undeclared_and_escaping_product_files_are_not_served(tmp_path: Path, monkeypatch) -> None:
     product = load_product(fixture_context(tmp_path / "ctx"))
     assert product_contribution.product_file(product, "../entry.py") is None
     assert product_contribution.product_file(product, "entry.py") is None
-    assert product_contribution.product_file(product, "progress") == (PRODUCT_STATIC / "progress.html").resolve()
+    assert product_contribution.product_file(product, "curriculum-dashboard") == (PRODUCT_STATIC / "curriculum-dashboard.html").resolve()
 
     root = tmp_path / "product"
     (root / "static").mkdir(parents=True)
