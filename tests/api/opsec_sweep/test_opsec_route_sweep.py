@@ -58,9 +58,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 # test_known_leak_table_rejects_unmatched_dead_and_expired_rows can exercise
 # _validate_known_leaks without pointing at a real emitter regression.
 FROZEN_IDS = frozenset({"opsec-sweep-test-row"})
-# dashboard-work-loopback is ADR-019's permanent loopback constant, not a
-# burn-down obligation; see the `[[approved_exemptions]]` table instead.
-FROZEN_EXEMPTION_IDS = frozenset({"dashboard-work-loopback"})
+# No production approved exemption exists since the machinery pages left this
+# checkout (dashboards/work.html carried the only one). This sentinel id exists
+# solely so the exemption tests can exercise _validate_approved_exemptions.
+FROZEN_EXEMPTION_IDS = frozenset({"opsec-sweep-test-exemption"})
 PATH_CANARY = "opsec-fixture-canary"
 HOST_ALIAS_CANARY = "opsec-host-alias"
 # The real host name an operator's MONITOR_OCCUPANCY_HOST_IDS mapping stands
@@ -484,12 +485,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     dashboards_root.mkdir(parents=True, exist_ok=True)
     for filename in ("index.html", "artifacts.html"):
         (dashboards_root / filename).write_text("<html><body>synthetic artifacts</body></html>\n", encoding="utf-8")
-    shutil.copytree(
-        Path(__file__).resolve().parents[3] / "dashboards",
-        dashboards_root,
-        dirs_exist_ok=True,
-    )
-    # The product pages moved to the product package (C-4687); scan them too.
+    # The product pages live in the product package (C-4687); scan them.
     shutil.copytree(
         Path(__file__).resolve().parents[3] / "scripts" / "project_api" / "static",
         dashboards_root,
@@ -1112,7 +1108,7 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
 
 def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() -> None:
     finding = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:8769",
@@ -1122,7 +1118,7 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
 
     undeclared = {
         "id": "not-a-frozen-exemption-id",
-        "operation": "dashboard:work.html",
+        "operation": "dashboard:sample.html",
         "field": "body",
         "kind": "ipv4",
         "token": "127.0.0.1:8769",
@@ -1133,8 +1129,8 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
         _validate_approved_exemptions([undeclared], [finding])
 
     missing_adr = {
-        "id": "dashboard-work-loopback",
-        "operation": "dashboard:work.html",
+        "id": "opsec-sweep-test-exemption",
+        "operation": "dashboard:sample.html",
         "field": "body",
         "kind": "ipv4",
         "token": "127.0.0.1:8769",
@@ -1159,13 +1155,13 @@ def test_approved_exemption_requires_a_matching_finding_and_an_existing_adr() ->
 def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_body() -> None:
     """A row pinned to one token must not excuse a different finding sharing its operation/field.
 
-    `dashboard:work.html` / `body` covers the whole dashboard file as one
+    `dashboard:sample.html` / `body` covers the whole dashboard file as one
     scanned leaf. Before this row pinned `kind`/`token`, any second loopback
     (a new leak, or the cited ADR URL swapped for a different one) sharing
     that operation and field was silently absorbed by the same row.
     """
     known = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:8769",
@@ -1173,25 +1169,24 @@ def test_approved_exemption_does_not_absorb_a_second_loopback_token_in_the_same_
         end=14,
     )
     second_loopback = opsec_scan.Finding(
-        operation="dashboard:work.html",
+        operation="dashboard:sample.html",
         field_path="body",
         kind="ipv4",
         token="127.0.0.1:9769",
         start=200,
         end=214,
     )
-    remaining = _validate_approved_exemptions(_load_approved_exemptions(), [known, second_loopback])
+    row = {
+        "id": "opsec-sweep-test-exemption",
+        "operation": "dashboard:sample.html",
+        "field": "body",
+        "kind": "ipv4",
+        "token": "127.0.0.1:8769",
+        "adr": "docs/decisions/ADR-019-work-control-plane.md",
+        "reason": "test",
+    }
+    remaining = _validate_approved_exemptions([row], [known, second_loopback])
     assert remaining == [second_loopback]
-
-
-def test_dashboard_work_loopback_exemption_is_pinned_to_the_exact_token() -> None:
-    """A glob edit to this row's operation, field, kind, or token must fail this test."""
-    rows = _load_approved_exemptions()
-    row = next(row for row in rows if row["id"] == "dashboard-work-loopback")
-    assert row["operation"] == "dashboard:work.html"
-    assert row["field"] == "body"
-    assert row["kind"] == "ipv4"
-    assert row["token"] == "127.0.0.1:8769"
 
 
 def test_sweep_seam_honesty_requires_real_cold_start_board_producer(

@@ -1,4 +1,4 @@
-"""B0 handler-contract trace for #10667 D02, D05 and D06.
+"""B0 handler-contract trace for #10667 D02 and D05.
 
 Each test asserts the same semantics the frozen design requires before any UI
 claim: a real field or an explicit unknown, never a fabricated healthy value.
@@ -9,13 +9,10 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from pathlib import Path
 
 from scripts.api import claude_account_usage
 from scripts.api.fleet_router import _message_item
 from scripts.api.route_contracts import contract_for_route
-
-HOME_JS = Path(__file__).resolve().parents[2] / "dashboards" / "fleet-board.js"
 
 
 def test_d02_unknown_account_windows_are_explicit_unknown() -> None:
@@ -91,10 +88,3 @@ def test_d05_message_metadata_never_fabricates_a_posted_blocker_or_decision() ->
     assert "operator_decision" not in message["metadata"]
     assert "posted_blocker" not in message
     assert "operator_decision" not in message
-
-
-def test_d06_home_reads_exclude_agent_monitor_status() -> None:
-    """The home reader must not trigger the reconciling agent-monitor GET."""
-    source = HOME_JS.read_text(encoding="utf-8")
-    assert "/api/agent-monitor/status" not in source
-    assert "agent-monitor" not in source

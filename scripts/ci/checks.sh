@@ -28,7 +28,7 @@ check() {
 machinery_dir="$(basename -- "$(dirname -- "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -L)")")"
 machinery_ruff=()
 [ "$machinery_dir" = scripts ] || machinery_ruff=("$machinery_dir/")
-check "Ruff" .venv/bin/python -m ruff check "${machinery_ruff[@]}" scripts/ tests/ agents_extensions/ dashboards/
+check "Ruff" .venv/bin/python -m ruff check "${machinery_ruff[@]}" scripts/ tests/ agents_extensions/
 
 # Cryptographic curriculum manifest canary: runs before any generator to inspect untouched tree
 check "Curriculum manifest canary" .venv/bin/python scripts/audit/curriculum_manifest_canary.py --check

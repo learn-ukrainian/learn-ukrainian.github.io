@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wiki - ukraine-ops</title>
+<title>Wiki - Learn Ukrainian</title>
 <link rel="icon" href="data:,">
 <style>
 :root {
@@ -73,15 +73,8 @@ tr:last-child td { border-bottom: none; }
   <div class="spacer"></div>
   <button class="btn" onclick="refreshAll()">Refresh</button>
   <div class="muted" id="last-refresh">Auto-refresh every 60s</div>
-  <nav class="monitor-nav" aria-label="Ops API sections">
-    <a href="/">Home</a>
-    <a href="/orient.html">Orient</a>
-    <a href="/fleet.html">Fleet</a>
-    <a href="/work.html">Work</a>
-    <a href="/artifacts/">Artifacts</a>
-    <a href="/runtime.html">Runtime</a>
-    <a href="/docs">API</a>
-  </nav>
+  <nav class="monitor-nav" id="product-nav" aria-label="Products"></nav>
+  <script src="/product-nav.js"></script>
 </div>
 
 <div class="container">

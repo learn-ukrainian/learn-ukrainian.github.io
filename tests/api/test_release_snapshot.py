@@ -159,7 +159,8 @@ def real_release_live_checkout(tmp_path: Path) -> tuple[Path, str]:
         "curriculum/l2-uk-en/curriculum.yaml",
         "site/src/content/docs/a1-v1/sounds-letters-and-hello.mdx",
     )
-    for relative_name in release_snapshot.LIVE_DATA_PATHS:
+    # The installed release builds this snapshot, so its own live-data layout applies.
+    for relative_name in installed_release_snapshot.LIVE_DATA_PATHS:
         (repo_root / relative_name).mkdir(parents=True, exist_ok=True)
     return repo_root, sha
 

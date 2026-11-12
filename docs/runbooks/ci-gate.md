@@ -328,10 +328,9 @@ files; those are imported only with `import type`, which the compiler erases.
 - Within a shard, `-n logical --dist=worksteal` spreads single tests over the
   runner's cores, so one long file no longer pins a shard. The old workflow
   used `--dist=loadfile`, so tests of one file never overlapped. Tests that
-  share a fixed resource must now serialize themselves: the two fixed-port
-  smokes in `tests/test_work_dashboard_private_integration.py` take a file
-  lock in the run's shared temp root. Without the lock, one of them skipped
-  with "ports busy" in every new-workflow run.
+  share a fixed resource must now serialize themselves, for example with a
+  file lock in the run's shared temp root. Two fixed-port smokes without such
+  a lock once skipped with "ports busy" in every new-workflow run.
 - Weights never change which files run; a wrong weight only costs balance.
   `Refresh pytest durations` takes the median of the last five successful
   merge-group `pytest-file-durations` artifacts (downloaded concurrently),
