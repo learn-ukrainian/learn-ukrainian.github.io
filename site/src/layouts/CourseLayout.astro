@@ -239,6 +239,9 @@ const isActive = (href: string) => {
       .lu-search-link[aria-current='page'] {
         background: var(--lu-surface-muted, rgba(127, 127, 127, 0.14));
       }
+      @media (max-width: 820px) {
+        .lu-search-link { display: none; }
+      }
       .lu-search-link-label {
         position: absolute;
         width: 1px;
@@ -332,7 +335,7 @@ const isActive = (href: string) => {
             <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
           </nav>
           <div class="lu-header-controls">
-            {/* Search sits with the controls, not in the scrolling nav, so it is visible at every width (#12984). */}
+            {/* Desktop: Search sits with the controls, not in the clipped scrolling nav. Phone: it moves into the menu (#12984). */}
             <a class="lu-search-link" href="/search/" aria-current={isActive('/search/') ? 'page' : undefined}>
               <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16">
                 <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
@@ -356,6 +359,9 @@ const isActive = (href: string) => {
                   <ChromeText k={item.key} />
                 </a>
               ))}
+              <a href="/search/" aria-current={isActive('/search/') ? 'page' : undefined}>
+                <ChromeText k="nav.search" />
+              </a>
               <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
             </nav>
           </details>

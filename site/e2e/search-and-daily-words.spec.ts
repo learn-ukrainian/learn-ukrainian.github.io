@@ -8,12 +8,14 @@ import { expect, test } from './support/hardened-browser.mjs';
  * site chrome, and stale search copy (retired Etymology page, test-lane Folk label).
  */
 const VIEWPORTS = [
-  { name: 'desktop 1366', viewport: { width: 1366, height: 900 } },
-  { name: 'phone 390', viewport: { width: 390, height: 844 } },
+  { name: 'desktop 1366', viewport: { width: 1366, height: 900 }, phone: false },
+  { name: 'phone 390', viewport: { width: 390, height: 844 }, phone: true },
 ];
 
-async function expectSearchLinkInChrome(page: Page) {
-  const header = page.getByRole('banner').getByRole('link', { name: /^(Search|Пошук)$/ });
+async function expectSearchLinkInChrome(page: Page, phone: boolean) {
+  const banner = page.getByRole('banner');
+  if (phone) await banner.locator('details.lu-mobile-menu > summary').click();
+  const header = banner.getByRole('link', { name: /^(Search|Пошук)$/ });
   await expect(header).toHaveAttribute('href', '/search/');
   await expect(header).toBeInViewport({ ratio: 1 });
   const footerLink = page.locator('footer.lu-footer a[href="/search/"]');
@@ -21,19 +23,23 @@ async function expectSearchLinkInChrome(page: Page) {
   await expect(footerLink).toBeVisible();
 }
 
-/** The primary nav scrolls with a hidden scrollbar: no course link may sit outside its visible box. */
-async function clippedPrimaryLinks(page: Page): Promise<string[]> {
+/** No course link may sit outside the primary nav's visible box, nor the wordmark be truncated. */
+async function clippedHeaderParts(page: Page): Promise<string[]> {
   return page.evaluate(() => {
+    const clipped: string[] = [];
+    const wordmark = document.querySelector('.lu-logo > span:last-child');
+    if (wordmark && wordmark.scrollWidth > wordmark.clientWidth) clipped.push('wordmark');
     const nav = document.querySelector('nav[aria-label="Primary"]');
-    if (!nav || nav.getBoundingClientRect().width === 0) return [];
+    if (!nav || nav.getBoundingClientRect().width === 0) return clipped;
     const right = nav.getBoundingClientRect().right + 0.5;
-    return [...nav.querySelectorAll('a[href^="/"]')]
-      .filter((a) => a.getBoundingClientRect().right > right)
-      .map((a) => a.getAttribute('href') ?? '');
+    for (const a of nav.querySelectorAll('a[href^="/"]')) {
+      if (a.getBoundingClientRect().right > right) clipped.push(a.getAttribute('href') ?? '');
+    }
+    return clipped;
   });
 }
 
-for (const { name, viewport } of VIEWPORTS) {
+for (const { name, viewport, phone } of VIEWPORTS) {
   test.describe(name, () => {
     test.use({ viewport });
 
@@ -41,8 +47,8 @@ for (const { name, viewport } of VIEWPORTS) {
       test(`Search is linked from the site chrome (${locale})`, async ({ page }) => {
         await page.addInitScript((loc) => window.localStorage.setItem('lu-chrome-locale', loc), locale);
         await page.goto('/b1/');
-        await expectSearchLinkInChrome(page);
-        expect(await clippedPrimaryLinks(page)).toEqual([]);
+        expect(await clippedHeaderParts(page)).toEqual([]);
+        await expectSearchLinkInChrome(page, phone);
       });
     }
 

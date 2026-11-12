@@ -75,7 +75,7 @@ describe("site chrome links to search", () => {
     await Promise.all(windows.map((window) => window.happyDOM.abort()));
   });
 
-  test("the always-visible header controls and the footer link to /search/", async () => {
+  test("the header controls, phone menu and footer link to /search/", async () => {
     const container = await AstroContainer.create();
     const window = new Window();
     windows.push(window);
@@ -83,7 +83,7 @@ describe("site chrome links to search", () => {
       await container.renderToString(CourseLayout as any, { props: { title: "Course", currentPath: "/b1/" } }),
     );
     const document = window.document;
-    for (const selector of ["header .lu-header-controls", "footer.lu-footer"]) {
+    for (const selector of ["header .lu-header-controls", 'header nav[aria-label="Mobile primary"]', "footer.lu-footer"]) {
       const link = document.querySelector(`${selector} a[href="/search/"]`);
       expect(link, selector).not.toBeNull();
       expect(link?.querySelector('[data-loc="en"]')?.textContent).toBe(CHROME_STRINGS.en["nav.search"]);
