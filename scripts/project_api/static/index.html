@@ -122,15 +122,18 @@ async function loadStats() {
     const data = await fetchJson('/api/dashboard/overview');
     const tracks = (data.tracks || []).filter(track => track.module_source !== 'plans-fallback');
     const t = sumTracks(tracks);
+    const meta = data.meta || {};
+    // A cold start serves placeholder counts before the full track scan; plan
+    // reviews are not in that placeholder, so they are unknown until the scan.
+    const planReviewed = meta.track_scan === 'skipped' ? null : t.planReviewed;
     row.innerHTML = [
       stat(tracks.length, 'Tracks', '--accent'),
       stat(t.modules, 'Modules', '--accent'),
       stat(t.published, 'Published', '--cyan'),
-      stat(t.planReviewed, 'Plans reviewed', '--purple'),
+      stat(planReviewed, 'Plans reviewed', '--purple'),
       stat(t.research, 'Research docs', '--blue'),
     ].join('');
     document.getElementById('curriculum-stat').textContent = `${tracks.length} tracks · ${t.published} published modules`;
-    const meta = data.meta || {};
     freshness.textContent = meta.generated_at
       ? `Computed ${meta.generated_at}${meta.stale ? ` · cached copy older than ${meta.stale_after_s ?? 'its'} s limit` : ''}`
       : 'Computed at an unknown time';

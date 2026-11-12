@@ -128,16 +128,28 @@ let overviewData = null;
 let selectedTrack = null;
 let trackDetailCache = {};
 
+const API_TIMEOUT_MS = 20000;
+
 async function fetchJson(url, options) {
-  const res = await fetch(url, options);
-  let data = null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+    let res;
+    let data = null;
+    try {
+      res = await fetch(url, { ...options, signal: controller.signal });
+      data = await res.json();
+    } catch (e) {
+      if (controller.signal.aborted) throw new Error(`no response within ${API_TIMEOUT_MS / 1000} s`);
+      if (!res) throw e;
+    }
+    if (!res.ok) {
+      throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
   }
-  return data;
 }
 
 function pctColor(pct) {
@@ -260,9 +272,13 @@ async function loadTrackDetail(trackId) {
   }
 
   const published = t.published_mdx ?? s.published_mdx ?? 0;
-  const planStat = s.plan_reviewed
-    ? `${s.plan_reviewed} plans reviewed (${s.plan_pass || 0} pass, ${s.plan_needs_fixes || 0} needs fixes, ${s.plan_fail || 0} fail)`
-    : 'no plan reviews';
+  // A cold start serves placeholder counts before the full track scan; plan
+  // reviews are not in that placeholder, so they are unknown until the scan.
+  const planStat = overviewData.meta?.track_scan === 'skipped'
+    ? 'plan reviews unknown until the track scan finishes'
+    : s.plan_reviewed
+      ? `${s.plan_reviewed} plans reviewed (${s.plan_pass || 0} pass, ${s.plan_needs_fixes || 0} needs fixes, ${s.plan_fail || 0} fail)`
+      : 'no plan reviews';
 
   container.innerHTML = `
     <div class="track-title">${t.name}</div>
