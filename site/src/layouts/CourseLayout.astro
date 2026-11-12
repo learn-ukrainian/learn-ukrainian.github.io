@@ -225,6 +225,32 @@ const isActive = (href: string) => {
     {/* Analytics: self-hosted GoatCounter, injected globally from astro.config.mjs (/count.js).
         Third-party Plausible was removed 2026-06-12 — consolidated to one privacy-friendly, self-hosted analytics. */}
     <style is:global>
+      .lu-search-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--lu-border, color-mix(in srgb, currentColor 22%, transparent));
+        border-radius: 8px;
+        color: inherit;
+      }
+      .lu-search-link:hover,
+      .lu-search-link[aria-current='page'] {
+        background: var(--lu-surface-muted, rgba(127, 127, 127, 0.14));
+      }
+      @media (max-width: 820px) {
+        .lu-search-link { display: none; }
+      }
+      .lu-search-link-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
       .lu-theme-toggle {
         display: inline-flex;
         align-items: center;
@@ -309,6 +335,14 @@ const isActive = (href: string) => {
             <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
           </nav>
           <div class="lu-header-controls">
+            {/* Desktop: Search sits with the controls, not in the clipped scrolling nav. Phone: it moves into the menu (#12984). */}
+            <a class="lu-search-link" href="/search/" aria-current={isActive('/search/') ? 'page' : undefined}>
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+                <path d="m20 20-4.2-4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span class="lu-search-link-label"><ChromeText k="nav.search" /></span>
+            </a>
             <button id="lu-theme-toggle" class="lu-theme-toggle" type="button" aria-label="Toggle dark and light theme" title="Toggle dark / light theme">
               <span class="lu-theme-icon lu-theme-icon--moon" aria-hidden="true">🌙</span>
               <span class="lu-theme-icon lu-theme-icon--sun" aria-hidden="true">☀️</span>
@@ -325,6 +359,9 @@ const isActive = (href: string) => {
                   <ChromeText k={item.key} />
                 </a>
               ))}
+              <a href="/search/" aria-current={isActive('/search/') ? 'page' : undefined}>
+                <ChromeText k="nav.search" />
+              </a>
               <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
             </nav>
           </details>
@@ -448,6 +485,7 @@ const isActive = (href: string) => {
               <a href="/words-of-the-day/"><ChromeText k="nav.dailyWords" /></a>
               <a href="/practice/"><ChromeText k="nav.practice" /></a>
               <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>
+              <a href="/search/"><ChromeText k="nav.search" /></a>
             </section>
             <section>
               <h3><ChromeText k="footer.externalHeading" /></h3>
