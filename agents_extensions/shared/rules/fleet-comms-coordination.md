@@ -111,8 +111,8 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 ### Routing observability contract
 
-Use `/runtime.html` → **Routing overview**, or the body-free
-`GET /api/runtime/routing-assignments?limit=100` projection, to diagnose which
+Use the body-free `GET /api/runtime/routing-assignments?limit=100`
+projection to diagnose which
 orchestrator initiated a request, whether selection was automatic or explicit,
 which route/model was admitted, and how the reservation terminated. Summary
 cards, lifecycle groups, filters, and route distributions cover only the

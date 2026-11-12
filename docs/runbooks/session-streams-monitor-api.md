@@ -4,12 +4,12 @@ Read-only Monitor surfaces for epic session streams. **No silent cutover.**
 
 ## Fleet Observer (pre-flip)
 
-`/fleet.html` is the consolidated read-only observer for durable fleet-comms
-evidence during soak. It does not start work, apply migrations, change process
-state, retrieve artifact bodies, or alter cutover authority. File handoffs
-remain authoritative in every currently implemented plane mode. Legacy
-`/comms.html`, `/channels.html`, `/runtime.html`, and `/acp.html` stay available
-until a separately approved retirement.
+`/machinery` provides a read-only Fleet Comms count overview. Use the
+body-free API projections below for durable fleet-comms evidence; the former
+Fleet, Comms, Channels, Runtime and ACP browser pages are no longer served.
+The overview does not start work, apply migrations, change process state,
+retrieve artifact bodies, or alter cutover authority. File handoffs remain
+authoritative in every currently implemented plane mode.
 
 | Method | Path | Purpose |
 | --- | --- | --- |

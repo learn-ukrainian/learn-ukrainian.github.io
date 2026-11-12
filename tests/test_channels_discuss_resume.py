@@ -59,7 +59,7 @@ def test_discuss_uses_acp_and_durable_authority_only(
     assert _channels_cli._handle_discuss(args) == 0
     assert observed["participants"] == ("codex", "claude")
     assert observed["source"] == "codex"
-    assert "/fleet.html?conversation=" in capsys.readouterr().out
+    assert "conversation: conversation_" in capsys.readouterr().out
 
 
 def test_partial_discussion_reports_zero_completed_rounds_not_requested_rounds(
