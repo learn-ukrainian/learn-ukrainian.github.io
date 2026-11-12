@@ -540,10 +540,9 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
         check=False,
     )
     if provider == "cursor":
-        # No approved Cursor pin (GROK-CANCEL-1110): the launcher refuses its retired seat pin
-        # before any scope, lease or provider start.
-        assert result.returncode == 2, result.stdout + result.stderr
-        assert "model 'grok-4.7-high' is retired in the model catalog" in result.stderr
+        # The restored explicit review pin confers no Cursor driver authority.
+        assert result.returncode == 4, result.stdout + result.stderr
+        assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
         assert "would claim" not in result.stdout
         return
     assert result.returncode == 0, result.stdout + result.stderr

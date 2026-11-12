@@ -602,13 +602,16 @@ def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str
 
 
 @pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
-def test_cursor_non_dispatch_model_refusal_refuses_the_retired_grok_pins(model: str, monkeypatch):
+def test_cursor_non_dispatch_model_refusal_requires_a_driver_pin_context(model: str, monkeypatch):
     refusal = cursor_non_dispatch_model_refusal(model)
     assert refusal is not None
     assert "(cursor_no_approved_model_pin)" in refusal
-    # Even with another approved pin, a retired Grok id is not an approved Cursor pin.
+    # A driver context admits the restored exact wire pin, never its bare selector.
     catalog = _catalog_with_approved_cursor_pin(monkeypatch)
-    assert "(cursor_model_not_approved)" in cursor_non_dispatch_model_refusal(model, catalog)
+    if model == "grok-4.7-high":
+        assert cursor_non_dispatch_model_refusal(model, catalog) is None
+    else:
+        assert "(cursor_model_not_approved)" in cursor_non_dispatch_model_refusal(model, catalog)
     assert cursor_non_dispatch_model_refusal(_SIMULATED_CURSOR_PIN, catalog) is None
 
 
@@ -620,9 +623,8 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
     with pytest.raises(ModelCatalogError, match="references retired model"):
         validate_catalog(broken_ep)
-    # The live Cursor endpoint is not formal (no approved pin, GROK-CANCEL-1110); making it
-    # formal without a pin must fail.
-    assert load_model_catalog()["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] is False
+    # C-5307 restores the formal endpoint; removing its exact pin must still fail.
+    assert load_model_catalog()["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] is True
     unpinned_ep = deepcopy(load_model_catalog())
     unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
@@ -840,9 +842,9 @@ def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, exp
     if spelling is None:
         return
     prompt = b"implement the brief"
-    if agent == "cursor":
-        # Cursor has no approved model pin (GROK-CANCEL-1110): every Cursor dispatch is refused first.
-        with pytest.raises(ValueError, match="cursor_no_approved_model_pin"):
+    if agent == "cursor" and expected is None:
+        # C-5307 restores only Grok's exact Cursor wire pin; Auto still names no model and is refused.
+        with pytest.raises(ValueError, match="cursor_auto_outside_coding_task"):
             checks.check_model_admission(agent, spelling, "workspace-write", {}, prompt)
     elif agent == "codex" and expected is None:
         # An unknown explicit pin is refused at dispatch admission with the catalog's unknown-model text.
