@@ -658,8 +658,9 @@ def test_non_ua_collision_with_ua_only_index_fails_before_branch_selection(
 
 
 def test_production_manifest_against_drive_custody() -> None:
-    drive = (
-        Path.home() / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
+    drive = min(
+        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"),
+        default=Path.home() / "Library/CloudStorage/GoogleDrive-unavailable/My Drive/Projects/learn-ukrainian-data",
     )
     tarball = drive / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
     closure = (
