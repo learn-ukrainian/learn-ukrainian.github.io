@@ -147,7 +147,6 @@ a model-named extra copy.
 | **ACP Conversations** (`/acp.html`) | Readable Codex↔Grok ACP transcripts plus the operational event rail | Read-only; cannot start, steer, retry, or cancel ACP |
 | **Channels** (`/channels.html`) | Shared channel, thread, context, and delivery visibility | Read-only; send from an agent TUI or the project bridge CLI |
 | **Broker Ops** (`/comms.html`) | Legacy broker messages, zombies, batch progress, and health during migration | Read-only; no browser message composition |
-| **Build Events** (`/build-events.html`) | Active and recent build activity | Replaces the retired duplicate Comms activity feed |
 | **Runtime** (`/runtime.html`) | Runtime health plus the loaded/recent **Routing overview** for initiator, request, selected route/model, outcome, and lifecycle evidence | Read-only; filters, search, details, and load-more never select, retry, cancel, reclaim, or reroute work |
 
 The legacy send, post, and acknowledgement APIs remain available to their

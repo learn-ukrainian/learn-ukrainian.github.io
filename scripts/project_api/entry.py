@@ -18,20 +18,15 @@ from lu_machinery.api.monitor_context import MonitorContext
 from lu_machinery.api.product_contribution import ProductContribution, RouterMount
 
 from . import (
-    admin_router,
     agent_router,
     artifacts_router,
     atlas_jobs_router,
     batch_progress,
     batch_router,
-    build_events_router,
-    consultation_router,
     core_router,
-    cost_router,
     dashboard_router,
     decisions_router,
     governance_router,
-    images_router,
     module_builds,
     orient,
     reviewer_ghosts_router,
@@ -47,19 +42,10 @@ from . import (
 STATIC_ROOT = Path(__file__).resolve().parent / "static"
 STATIC_FILES = (
     "index.html",
-    "admin.html",
     "artifacts.html",
-    "build-events.html",
-    "consultation.html",
-    "cost.html",
     "curriculum-dashboard.html",
-    "image-explorer.html",
-    "progress.html",
-    "quality.html",
-    "wiki.html",
     "monitor.css",
     "product-nav.js",
-    "data/status.json",
 )
 
 # Product modules whose import closure the startup preload warms.
@@ -86,18 +72,13 @@ OPTIONAL_PRELOAD_MODULES = (
 
 # Same prefixes, tags and relative order as before the split.
 ROUTERS = (
-    RouterMount(admin_router.router, "/api/admin"),
     RouterMount(agent_router.router, "/api/agent", ("agent",)),
     RouterMount(artifacts_router.router, "/api/artifacts", ("artifacts",)),
     RouterMount(atlas_jobs_router.router, "/api/atlas-jobs", ("atlas-jobs",)),
     RouterMount(batch_progress.router, "/api/comms"),
-    RouterMount(consultation_router.router, "/api/consultation"),
-    RouterMount(cost_router.router, "/api/analytics/cost"),
     RouterMount(dashboard_router.router, "/api/dashboard"),
     RouterMount(decisions_router.router, "/api/decisions", ("decisions",)),
     RouterMount(governance_router.router, "/api/state/governance", ("governance",)),
-    RouterMount(build_events_router.router, "/api/build/events"),
-    RouterMount(images_router.router, "/api/images"),
     RouterMount(sources_router.router, "/api/sources", ("sources",)),
     # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
     # can discover it alongside the other state-query endpoints.

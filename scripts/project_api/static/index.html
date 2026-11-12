@@ -28,9 +28,9 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 .card h2 { font-family: Charter, Georgia, serif; font-size:18px; line-height:1.2; margin-bottom:6px; }
 .card p { color:var(--text2); font-size:13px; line-height:1.4; }
 .card .card-stat { color:var(--text3); font-size:12px; margin-top:12px; }
-.card.progress { border-left-color:var(--orange); }
 .card.curriculum { border-left-color:var(--cyan); }
-.card.quality { border-left-color:var(--purple); }
+.card.artifacts { border-left-color:var(--accent); }
+.freshness { color:var(--text3); font-size:12px; margin:-14px 0 24px; }
 @media (max-width: 820px) {
   .hero { grid-template-columns:1fr; }
 }
@@ -41,7 +41,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 <div class="top-bar">
   <div class="top-left">
     <h1>Learn Ukrainian</h1>
-    <span>Curriculum build, quality and publishing dashboards</span>
+    <span>Curriculum state and published output</span>
   </div>
   <nav class="monitor-nav" id="product-nav" aria-label="Products"></nav>
   <script src="/product-nav.js"></script>
@@ -51,72 +51,25 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 <section class="hero">
   <div>
     <h2>Curriculum operations</h2>
-    <p>Module progress, quality, builds, wiki, artifacts, images, template proposals, build spend and local maintenance for the Ukrainian curriculum.</p>
+    <p>Published modules, plan reviews and research per track, with a drill-down into every module, plus the repository's reports and handoffs.</p>
   </div>
 </section>
 
 <div class="stats-row" id="stats-row"></div>
+<p class="freshness" id="freshness"></p>
 
 <div class="cards">
-  <a class="card" href="/admin.html" style="border-left: 3px solid var(--gray);">
-    <div class="icon">&#128295;</div>
-    <h2>Admin</h2>
-    <p>Qdrant backups, health checks, disk usage, broker vacuum, log cleanup, collection verification.</p>
-    <div class="card-stat" id="admin-stat"></div>
-  </a>
-  <a class="card" href="/build-events.html" style="border-left: 3px solid var(--orange);">
-    <div class="icon">&#128293;</div>
-    <h2>Build Events</h2>
-    <p>Active module builds and the latest dispatch meta events with level and slug filters.</p>
-    <div class="card-stat" id="card-stat-build-events"></div>
-  </a>
-  <a class="card" href="/consultation.html" style="border-left: 3px solid var(--purple);">
-    <div class="icon">&#128260;</div>
-    <h2>Consultation Loop</h2>
-    <p>Self-improving template proposals. Review, approve/reject queue, history, metrics.</p>
-    <div class="card-stat" id="consultation-stat"></div>
-  </a>
-  <a class="card" href="/cost.html" style="border-left: 3px solid var(--red);">
-    <div class="icon">&#128176;</div>
-    <h2>Cost</h2>
-    <p>Per-module / per-phase / per-model token and USD spend. Last 7 days, 30 days, all-time.</p>
-    <div class="card-stat" id="card-stat-cost"></div>
-  </a>
   <a class="card curriculum" href="/curriculum-dashboard.html">
     <div class="icon">&#128218;</div>
     <h2>Curriculum Dashboard</h2>
-    <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
+    <p>Every track: published modules, plan reviews, research, and a drill-down into each module's plan and content.</p>
     <div class="card-stat" id="curriculum-stat"></div>
   </a>
-  <a class="card" href="/artifacts/" style="border-left: 3px solid var(--accent);">
+  <a class="card artifacts" href="/artifacts/">
     <div class="icon">&#128196;</div>
     <h2>Artifacts</h2>
-    <p>HTML reports, audit evidence, session handoffs, decisions, and best-practice companions.</p>
-    <div class="card-stat">HTML reports</div>
-  </a>
-  <a class="card" href="/image-explorer.html" style="border-left: 3px solid var(--yellow);">
-    <div class="icon">&#128444;</div>
-    <h2>Images</h2>
-    <p>Page context with bounding boxes, annotation editor, RAG search, quality stats & cleanup.</p>
-    <div class="card-stat" id="images-stat"></div>
-  </a>
-  <a class="card progress" href="/progress.html">
-    <div class="icon">&#9654;</div>
-    <h2>Progress</h2>
-    <p>Build state across all tracks. Research, content, validation, review, published MDX.</p>
-    <div class="card-stat" id="progress-stat"></div>
-  </a>
-  <a class="card quality" href="/quality.html">
-    <div class="icon">&#9881;</div>
-    <h2>Quality</h2>
-    <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
-    <div class="card-stat" id="quality-stat"></div>
-  </a>
-  <a class="card" href="/wiki.html" style="border-left: 3px solid var(--green);">
-    <div class="icon">&#128214;</div>
-    <h2>Wiki</h2>
-    <p>Per-track wiki compilation progress, quality gate failures, and the latest build log events.</p>
-    <div class="card-stat" id="card-stat-wiki"></div>
+    <p>Reports, audit evidence, session handoffs, decisions and best-practice documents.</p>
+    <div class="card-stat">Documents and reports</div>
   </a>
 </div>
 
@@ -146,210 +99,48 @@ async function fetchJson(path) {
   }
 }
 
-async function safeFetch(path) {
-  try {
-    return await fetchJson(path);
-  } catch {
-    return null;
-  }
+function stat(value, label, color) {
+  const shown = value == null ? 'unknown' : String(value);
+  return `<div class="stat"><div class="value" style="color:var(${color})">${shown}</div><div class="label">${label}</div></div>`;
 }
 
-function setStat(id, text) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = text || '';
-}
-
-function operationalTrackEntries(tracks) {
-  return Object.entries(tracks || {})
-    .filter(([, track]) => (track.total || 0) > 0 && track.module_source !== 'plans-fallback');
-}
-
-function operationalTrackIdSet(trackEntries) {
-  return new Set(trackEntries.map(([id]) => id));
-}
-
-function operationalTrackIdSetFromSummary(summary) {
-  if (!summary?.tracks) return null;
-  return operationalTrackIdSet(operationalTrackEntries(summary.tracks));
-}
-
-function filterOperationalDashboardTracks(tracks, summary) {
-  const summaryIds = operationalTrackIdSetFromSummary(summary);
-  return (tracks || []).filter(track => {
-    if (summaryIds) return summaryIds.has(track.id);
-    return track.module_source !== 'plans-fallback';
-  });
-}
-
-function sumDashboardTotals(tracks) {
+function sumTracks(tracks) {
   return tracks.reduce((acc, track) => {
     const stats = track.stats || {};
-    acc.total += track.module_count || 0;
-    acc.pass += stats.pass || 0;
-    acc.fail += stats.fail || 0;
-    acc.unaudited += stats.unaudited || 0;
-    acc.content_complete += stats.content_complete || 0;
+    acc.modules += track.module_count || 0;
     acc.published += track.published_mdx || stats.published_mdx || 0;
+    acc.planReviewed += stats.plan_reviewed || 0;
     acc.research += (stats.research && stats.research.total) || 0;
     return acc;
-  }, { total: 0, pass: 0, fail: 0, unaudited: 0, content_complete: 0, published: 0, research: 0 });
-}
-
-function sumSummaryTotals(summary, trackIds) {
-  if (!summary?.tracks || !trackIds) return summary?.totals || {};
-  const totals = { total: 0 };
-  for (const id of trackIds) {
-    const track = summary.tracks[id] || {};
-    for (const [key, value] of Object.entries(track)) {
-      if (typeof value !== 'number') continue;
-      totals[key] = (totals[key] || 0) + value;
-    }
-  }
-  return totals;
-}
-
-const BACKLOG_PENDING_LABEL = 'backlog pending';
-
-function displayBuildCount(value) {
-  return value == null ? '—' : String(value);
-}
-
-function formatBacklogSegment(buildState) {
-  return buildState.pending ? BACKLOG_PENDING_LABEL : `${buildState.backlog} backlog`;
-}
-
-function buildStateSummary(pv, trackIds) {
-  if (!pv) {
-    return { pending: true, current: null, backlog: null, builtPct: null };
-  }
-  if (trackIds && trackIds.size && pv.per_track) {
-    const counts = {v6:0,v5:0,v3:0,unbuilt:0};
-    for (const trackId of trackIds) {
-      const row = pv.per_track[trackId] || {};
-      for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
-    }
-    const total = counts.v6 + counts.v5 + counts.v3 + counts.unbuilt;
-    const built = counts.v6 + counts.v5 + counts.v3;
-    return {
-      pending: false,
-      current: counts.v6,
-      backlog: counts.v5 + counts.v3 + counts.unbuilt,
-      builtPct: total > 0 ? Math.round(built / total * 100) : 0,
-    };
-  }
-  if (trackIds && trackIds.size) {
-    return { pending: true, current: null, backlog: null, builtPct: null };
-  }
-  const state = pv.build_state || {};
-  const current = pv.current_builds ?? state.current ?? pv.counts?.v6;
-  const backlog = pv.rebuild_backlog ?? state.backlog ?? pv.needs_rebuild;
-  if (current == null && backlog == null) {
-    return { pending: true, current: null, backlog: null, builtPct: null };
-  }
-  return {
-    pending: false,
-    current: current ?? 0,
-    backlog: backlog ?? 0,
-    builtPct: pv.pct_built || 0,
-  };
-}
-
-function resolveOperationalBuildState(pv, summary) {
-  const trackIds = operationalTrackIdSet(operationalTrackEntries(summary?.tracks));
-  return buildStateSummary(pv, trackIds);
-}
-
-async function loadWeakPointsStat() {
-  const weakPoints = await safeFetch('/api/state/weak-points?limit=1');
-  if (!weakPoints) return;
-  document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
+  }, { modules: 0, published: 0, planReviewed: 0, research: 0 });
 }
 
 async function loadStats() {
-  let buildState = { pending: true, current: null, backlog: null, builtPct: null };
-  let pendingConsultations = 0;
-  // Quality is often multi-second; defer it so it cannot gate first paint.
-  const [data, pv, cMetrics, summary, buildEvents, wiki, cost] = await Promise.all([
-    safeFetch('/api/dashboard/overview'),
-    safeFetch('/api/state/pipeline-versions'),
-    safeFetch('/api/consultation/metrics'),
-    safeFetch('/api/state/summary'),
-    safeFetch('/api/build/events/active'),
-    safeFetch('/api/wiki/status'),
-    safeFetch('/api/analytics/cost'),
-  ]);
-  void loadWeakPointsStat();
-
+  const row = document.getElementById('stats-row');
+  const freshness = document.getElementById('freshness');
   try {
-    if (!data) throw new Error('overview unavailable');
-    const dashboardTracks = filterOperationalDashboardTracks(data.tracks, summary);
-    const t = sumDashboardTotals(dashboardTracks);
-    if (summary && pv) {
-      buildState = resolveOperationalBuildState(pv, summary);
-    }
-    pendingConsultations = cMetrics?.pending_queue || 0;
-
-    // Honesty of zero: only pass/fail count as recorded audits. An
-    // unaudited-only total (pass=0,fail=0,unaudited=N) is still "no audit
-    // data" — do not render a green Passing: 0 (#7976 / CF on #7978).
-    const auditsRecorded = (t.pass + t.fail) > 0;
-    const passingDisplay = auditsRecorded ? `${t.pass}` : '—';
-    const passingLabel = auditsRecorded ? 'Passing' : 'Passing · no audit data';
-
-    document.getElementById('stats-row').innerHTML = `
-      <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
-      <div class="stat"><div class="value" style="color:var(--green)">${passingDisplay}</div><div class="label">${passingLabel}</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${t.published}</div><div class="label">Published</div></div>
-      <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${displayBuildCount(buildState.current)}</div><div class="label">Current Builds</div></div>
-      <div class="stat"><div class="value" style="color:var(--orange)">${displayBuildCount(buildState.backlog)}</div><div class="label">Rebuild Backlog</div></div>
-      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending ? '—' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
-    `;
-
-    document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
-    if (pendingConsultations > 0) {
-      document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;
-    }
-  } catch(e) {
-    console.error('Failed to load stats:', e);
-  }
-
-  try {
-    if (!summary) throw new Error('summary unavailable');
-    const trackEntries = operationalTrackEntries(summary.tracks);
-    const operationalIds = operationalTrackIdSet(trackEntries);
-    if (pv) {
-      buildState = resolveOperationalBuildState(pv, summary);
-    }
-    const t = sumSummaryTotals(summary, operationalIds);
-    const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
-    document.getElementById('progress-stat').textContent =
-      `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
-  } catch(e) {}
-
-  if (buildEvents) {
-    setStat('card-stat-build-events', `${(buildEvents.active || []).length} active`);
-  }
-
-  if (wiki) {
-    const operationalIds = operationalTrackIdSetFromSummary(summary);
-    const tracks = (wiki.tracks || []).filter(track => !operationalIds || operationalIds.has(track.track));
-    const totals = tracks.reduce((acc, track) => {
-      acc.compiled += track.compiled || 0;
-      acc.total += track.total || 0;
-      return acc;
-    }, { compiled: 0, total: 0 });
-    setStat('card-stat-wiki', `${totals.compiled}/${totals.total} compiled`);
-  }
-
-  if (cost) {
-    const week = cost.windows?.last_7_days || {};
-    if (week.ledger_empty) {
-      setStat('card-stat-cost', `ledger empty · ${Number(week.runtime_calls_total || 0)} runtime calls (7d)`);
-    } else {
-      const amount = Number(week.totals?.cost_usd_est || 0);
-      setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
-    }
+    const data = await fetchJson('/api/dashboard/overview');
+    const tracks = (data.tracks || []).filter(track => track.module_source !== 'plans-fallback');
+    const t = sumTracks(tracks);
+    row.innerHTML = [
+      stat(tracks.length, 'Tracks', '--accent'),
+      stat(t.modules, 'Modules', '--accent'),
+      stat(t.published, 'Published', '--cyan'),
+      stat(t.planReviewed, 'Plans reviewed', '--purple'),
+      stat(t.research, 'Research docs', '--blue'),
+    ].join('');
+    document.getElementById('curriculum-stat').textContent = `${tracks.length} tracks · ${t.published} published modules`;
+    const meta = data.meta || {};
+    freshness.textContent = meta.generated_at
+      ? `Computed ${meta.generated_at}${meta.stale ? ` · cached copy older than ${meta.stale_after_s ?? 'its'} s limit` : ''}`
+      : 'Computed at an unknown time';
+  } catch (e) {
+    row.innerHTML = [
+      stat(null, 'Tracks', '--text3'),
+      stat(null, 'Modules', '--text3'),
+      stat(null, 'Published', '--text3'),
+    ].join('');
+    freshness.textContent = `Curriculum totals unavailable: ${e.message}`;
   }
 }
 

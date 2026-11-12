@@ -821,7 +821,6 @@ def test_route_registry_matches_openapi_and_classifies_every_operation(
     assert {record.classification for record in records} >= {"read", "mutation", "stream"}
     by_key = {record.key: record for record in records}
     assert {
-        "GET /api/images/textbooks",
         "GET /api/sources/search_literary",
         "GET /api/sources/search_text",
     } == registry.FIXTURE_EMPTY_ROUTE_KEYS
@@ -874,12 +873,12 @@ def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
 
 
 def test_registry_refuses_a_mutation_without_a_recipe(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
-    with pytest.raises(AssertionError, match="no disposable-store recipe: POST /api/images/reload"):
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/batch/dispatcher/scan")
+    with pytest.raises(AssertionError, match="no disposable-store recipe: POST /api/batch/dispatcher/scan"):
         registry.build_registry(api_main.app)
 
 
-def _skip_images_reload(
+def _skip_dispatcher_scan(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     *,
@@ -889,12 +888,12 @@ def _skip_images_reload(
     tracking = tmp_path / "tracking_issues.toml"
     tracking.write_text(f'checked_on = "{checked_on.isoformat()}"\n[issues]\n8542 = "{state}"\n', encoding="utf-8")
     monkeypatch.setattr(tracking_issues, "TRACKING_ISSUES_PATH", tracking)
-    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/batch/dispatcher/scan")
     monkeypatch.setitem(
         registry.MUTATION_SKIPS,
-        "POST /api/images/reload",
+        "POST /api/batch/dispatcher/scan",
         registry.MutationSkip(
-            owner="monitor-images",
+            owner="monitor-batch",
             reason="synthetic skip for the closed-issue forcing function",
             expiry=(date.today() + timedelta(days=7)).isoformat(),
             issue=8542,
@@ -903,14 +902,14 @@ def _skip_images_reload(
 
 
 def test_registry_accepts_a_skip_citing_an_open_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today())
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="open", checked_on=date.today())
     records = {record.key: record for record in registry.build_registry(api_main.app)}
-    assert records["POST /api/images/reload"].fixture == "skip"
-    assert records["POST /api/images/reload"].as_dict()["skip"]["issue"] == 8542
+    assert records["POST /api/batch/dispatcher/scan"].fixture == "skip"
+    assert records["POST /api/batch/dispatcher/scan"].as_dict()["skip"]["issue"] == 8542
 
 
 def test_registry_fails_a_skip_citing_a_closed_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="closed", checked_on=date.today())
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="closed", checked_on=date.today())
     with pytest.raises(AssertionError, match="cites closed issue #8542"):
         registry.build_registry(api_main.app)
 
@@ -918,7 +917,7 @@ def test_registry_fails_a_skip_citing_a_closed_issue(monkeypatch: pytest.MonkeyP
 def test_registry_fails_a_skip_renewed_without_refreshing_issue_states(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today() - timedelta(days=40))
+    _skip_dispatcher_scan(monkeypatch, tmp_path, state="open", checked_on=date.today() - timedelta(days=40))
     with pytest.raises(AssertionError, match="refresh_opsec_tracking_issues"):
         registry.build_registry(api_main.app)
 

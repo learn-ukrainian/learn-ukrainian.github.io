@@ -283,9 +283,6 @@ modules:
   batch_utils.py:
     reason: Shim for scripts/batch, which is product.
     role: product
-  build_dashboards.py:
-    reason: Shim for scripts/build, which is product.
-    role: product
   build_landing_pages.py:
     reason: Site landing-page generation.
     role: product
@@ -351,9 +348,6 @@ modules:
     role: product
   generate_curriculum_stats.py:
     reason: Site curriculum-stats data from the manifest.
-    role: product
-  generate_dashboard_data.py:
-    reason: Shim for scripts/generate_mdx, which is product.
     role: product
   generate_ipa.py:
     reason: Shim for scripts/generate_mdx, which is product.
