@@ -1784,7 +1784,7 @@ Use the explicit bridge path. Do not rely on `ab`; on some machines it resolves 
 - `sync <agent>` drains the **channel deliveries queue** — this is how AGY and Codex actually receive channel posts when running headless.
 - `inbox` (in the Legacy broker section below) reads the **old 1:1 message queue ONLY**. It does NOT show channel messages. If you expected channel posts and `inbox` is empty, run `sync` instead.
 
-Browser view: the Fleet observer at `http://localhost:8765/fleet.html` (localhost-only); the former `channels.html` page was removed in the Monitor cull (C-4686).
+Browser overview: `http://localhost:8765/machinery` shows Fleet Comms counts. Use the CLI for channel deliveries and conversations; the former Fleet observer was removed.
 
 ### One-off `ask-*`
 

@@ -338,7 +338,7 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
     assert "transport: ACP (cursor, pool)" in output
-    assert "/fleet.html?conversation=conversation_" in output
+    assert "conversation: conversation_" in output
     from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "authority-plane") as authority:
