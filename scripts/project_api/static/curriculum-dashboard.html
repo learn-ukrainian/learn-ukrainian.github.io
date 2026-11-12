@@ -6,12 +6,6 @@
 <title>Curriculum Dashboard - Learn Ukrainian</title>
 <link rel="icon" href="data:,">
 <style>
-:root {
-  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
-  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
-  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
-  --gray: #484f58; --purple: #bc8cff;
-}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
 a { color: var(--blue); text-decoration: none; }
@@ -24,17 +18,21 @@ a:hover { text-decoration: underline; }
 .refresh-indicator { font-size: 11px; color: var(--text3); }
 
 .main { display: grid; grid-template-columns: 1fr 400px; height: calc(100vh - 49px); }
-@media (max-width: 1000px) { .main { grid-template-columns: 1fr; } }
+@media (max-width: 1000px) {
+  .main { display: flex; flex-direction: column; height: auto; }
+  .right-panel:has(.empty) { order: -1; border-left: 0; padding: 0 24px; }
+  .right-panel:has(.empty) .empty { padding: 12px 0 0; text-align: left; }
+}
 
 .left-panel { overflow-y: auto; padding: 16px 24px; }
 .right-panel { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; background: var(--bg2); }
 
 /* Treemap */
-.treemap { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
-.treemap-cell { border-radius: 6px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; min-height: 60px; transition: transform 0.1s; }
-.treemap-cell:hover { transform: scale(1.02); z-index: 1; }
-.treemap-cell .name { font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
-.treemap-cell .count { font-size: 11px; opacity: 0.8; }
+.treemap { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.25rem, 1fr)); gap: 8px; margin-bottom: 16px; }
+.treemap-cell { border-radius: 6px; padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 64px; overflow: hidden; }
+.treemap-cell:hover { outline: 2px solid var(--accent); outline-offset: -2px; }
+.treemap-cell .name { font-weight: 700; font-size: 13px; hyphens: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.treemap-cell .count { color: var(--text2); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .treemap-cell.selected { outline: 2px solid var(--blue); outline-offset: -2px; }
 
 /* Module table */
@@ -60,10 +58,7 @@ a:hover { text-decoration: underline; }
 .module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
 .module-table .ver-current { background: rgba(63,185,80,0.15); color: var(--green); }
 .module-table .ver-backlog { background: rgba(210,153,34,0.15); color: var(--yellow); }
-.module-table .ver-pending { background: rgba(72,79,88,0.2); color: var(--text3); }
-
-/* Unbuilt modules */
-.obsolete { opacity: 0.4; }
+.module-table .ver-pending { background: var(--bg3); color: var(--text3); }
 
 /* Dimension bar */
 .dim-bar { display: flex; gap: 2px; align-items: center; margin: 2px 0; }
@@ -100,6 +95,7 @@ a:hover { text-decoration: underline; }
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <div class="topbar">
   <h1>Curriculum Dashboard</h1>
@@ -113,14 +109,14 @@ a:hover { text-decoration: underline; }
   <a href="/artifacts/">Artifacts</a>
 </nav>
 
-<div class="main">
+<main class="main" id="main" tabindex="-1">
   <div class="left-panel" id="left-panel">
     <div class="loading"><div class="spinner"></div></div>
   </div>
   <div class="right-panel" id="right-panel">
-    <div class="empty">Select a module to see details</div>
+    <div class="empty" id="dashboard-hint">Select a module to see details</div>
   </div>
-</div>
+</main>
 
 <script>
 const API = '/api/dashboard';
@@ -205,14 +201,11 @@ async function fetchOverview() {
 
 function renderTreemap(tracks) {
   const left = document.getElementById('left-panel');
-  const totalModules = tracks.reduce((s, t) => s + t.module_count, 0);
 
   const treemapHtml = tracks.map(t => {
-    const w = Math.max(80, Math.round(t.module_count / totalModules * 1200));
-    const h = Math.max(60, Math.round(t.module_count / totalModules * 600));
     const sel = selectedTrack === t.id ? 'selected' : '';
     return `
-      <div class="treemap-cell ${sel}" style="width:${w}px;min-height:${h}px;background:${pctColor(t.pct_complete)}"
+      <div class="treemap-cell ${sel}" style="background:${pctColor(t.pct_complete)}"
            onclick="selectTrack('${t.id}')">
         <span class="name">${t.id.toUpperCase()}</span>
         <span class="count">${t.module_count} modules &middot; ${t.published_mdx ?? 0} published</span>
