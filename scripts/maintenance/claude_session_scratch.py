@@ -285,6 +285,34 @@ def confirmed_sessions(roots: Iterable[Path], *, errors: list[dict] | None = Non
     return sessions
 
 
+def _grant_owner_write(fd: int, depth: int = 0) -> None:
+    """Let the owner unlink a tree that was extracted mode 0555/0444.
+
+    ``shutil.rmtree`` cannot remove a directory we own when that directory
+    itself is not owner-writable. Claude session scratch has shipped that
+    mode. Only directories are changed, only when we own them, and symlinks
+    are not followed.
+    """
+    if depth >= 128:
+        raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
+    for name in os.listdir(fd):
+        info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+        if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+            continue
+        if info.st_uid == os.getuid() and not info.st_mode & stat.S_IWUSR:
+            os.chmod(
+                name,
+                stat.S_IMODE(info.st_mode) | stat.S_IWUSR,
+                dir_fd=fd,
+                follow_symlinks=False,
+            )
+        child = os.open(name, _DIR_FLAGS, dir_fd=fd)
+        try:
+            _grant_owner_write(child, depth + 1)
+        finally:
+            os.close(child)
+
+
 def _tree_bytes(fd: int, depth: int = 0) -> int:
     if depth >= 128:
         raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
@@ -368,6 +396,7 @@ def sweep_sessions(
                         if reason in {"confirmed_rollover", "process_gone"}:
                             row["action"] = "would_remove"
                             if apply:
+                                _grant_owner_write(fd)
                                 shutil.rmtree(name, dir_fd=parent_fd)
                                 row["action"] = "removed"
                 finally:

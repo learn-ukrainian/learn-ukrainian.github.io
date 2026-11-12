@@ -540,6 +540,13 @@ def test_extra_executable_hook_gets_delegator(tmp_path: Path) -> None:
     delegator = repo / ".git/hooks/reference-transaction"
     assert delegator.is_file()
     assert os.access(delegator, os.X_OK)
+    body = delegator.read_text(encoding="utf-8")
+    assert "must not abort the reference transaction" in body
+    assert "Git hook error" not in body
+    # The delegator no-ops when this toplevel has no tracked hook, which is
+    # how `git --git-dir` reports `.worktrees/data-tier` during worktree add.
+    missing = _run(["bash", str(delegator), "prepared"], cwd=tmp_path, env=env, check=False)
+    assert missing.returncode == 0
 
 
 def test_installer_refuses_incomplete_hook_directory_and_leaves_hooks_untouched(tmp_path: Path) -> None:

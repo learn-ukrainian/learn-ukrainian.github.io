@@ -63,6 +63,14 @@ def _confirmed(tmp_path: Path) -> Path:
 @pytest.mark.parametrize("project", [False, True])
 def test_process_gone_removes_even_fresh_session(tmp_path: Path, project: bool) -> None:
     root, directory = _session(tmp_path, project=project)
+    # Owner-readonly directories are what made the hourly sweep exit EACCES.
+    nested = directory / "pkg" / "dist"
+    nested.mkdir(parents=True)
+    payload = nested / "payload"
+    payload.write_bytes(b"")
+    payload.chmod(0o444)
+    nested.chmod(0o555)
+    nested.parent.chmod(0o555)
     result = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
     assert not directory.exists()
     assert result["summary"]["removed"] == 1
