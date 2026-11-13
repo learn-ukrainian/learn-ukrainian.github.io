@@ -598,12 +598,13 @@ class _recovery_Transport:
 # silently enter the approval path. These are handling labels, not endorsements.
 
 HANDLING = {
+    "lu_machinery/api/git_hygiene_router.py": "display-label",
     "lu_machinery/orchestration/merge_queue_keeper.py": "accept-as-approval",
     "lu_machinery/orchestration/integration_sweep.py": "accept-as-approval",
     "lu_machinery/orchestration/stalled_work.py": "ignore",
     "lu_machinery/publish/github.py": "accept-as-approval",
     "lu_machinery/fleet_comms/review_publisher.py": "accept-as-approval",
-    "lu_machinery/api/fleet_board/prs.py": "display-label",
+    "scripts/api/fleet_board/prs.py": "display-label",
     "lu_machinery/fleet_comms/review_publication.py": "ignore",
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "lu_machinery/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
@@ -714,7 +715,7 @@ def test_fleet_board_counts_red_team_as_ready():
         threshold=30,
     )
     assert ready is True and minutes == 60
-    assert HANDLING["lu_machinery/api/fleet_board/prs.py"] == "display-label"
+    assert HANDLING["scripts/api/fleet_board/prs.py"] == "display-label"
 
 
 def test_ci_blocker_exclusion_ignores_review_status():
