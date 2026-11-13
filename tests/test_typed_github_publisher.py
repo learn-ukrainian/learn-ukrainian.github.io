@@ -433,10 +433,20 @@ def spy(calls, *, comment_edit=False, merge=False):
             pull = {
                 "id": "PR_fixture_1",
                 "headRefOid": "a" * 40,
-                "isMergeQueueEnabled": False,
+                "isMergeQueueEnabled": True,
                 "viewerMergeHeadlineText": "clean (#1)",
                 "viewerMergeBodyText": "* clean",
             }
+            return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
+        if merge and args[:3] == ["gh", "pr", "view"] and "id,headRefOid,isCrossRepository,baseRefName,labels" in args:
+            # A queue-enabled base: pr-merge proves the head is not yet queued before it enqueues.
+            identity = {"id": "PR_fixture_1", "headRefOid": "a" * 40, "isCrossRepository": False, "baseRefName": "main", "labels": []}
+            return subprocess.CompletedProcess(args, 0, json.dumps(identity), "")
+        if (
+            merge and args[:5] == ["gh", "api", "--method", "POST", "graphql"]
+            and json.loads(Path(args[6]).read_text())["query"] == pub.GQL_READS["queue-status"]
+        ):
+            pull = {"headRefOid": "a" * 40, "isInMergeQueue": False}
             return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         if (
             merge and args[:5] == ["gh", "api", "--method", "POST", "graphql"]
@@ -1417,6 +1427,9 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 }
                 comments.append(comment)
                 return subprocess.CompletedProcess(args, 0, json.dumps(comment), "")
+        if consumer == "verdict" and any(str(arg).startswith("repos/unit/public/pulls/1/files") for arg in args):
+            # A readable file list: an unreadable one now keeps the second seat required (machinery #365).
+            return subprocess.CompletedProcess(args, 0, json.dumps([[{"filename": "scripts/example.py", "status": "modified"}]]), "")
         if consumer == "verdict" and "repos/unit/public/issues/comments/101?per_page=100" in args:
             assert len(comments) == 1
             return subprocess.CompletedProcess(args, 0, json.dumps(comments[0]), "")

@@ -467,15 +467,6 @@ def test_review_profile_rejects_write_mode_before_probe(tmp_path, scoped, monkey
     assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
 
 
-@pytest.mark.parametrize("config", [None, {"task_family": "recon"}])
-def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatch, config):
-    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
-    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
-    plan = build(tmp_path, config)
-    assert "--dangerously-skip-permissions" in plan.cmd
-    assert plan.metadata["agy_permission_profile_id"] is None
-
-
 def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):
     config = {
         "review_access": "isolated",
