@@ -18,7 +18,9 @@ A target is the same module under `lu_machinery.api`. Each imported name on the 
 
 Retarget the 57 files by the prefix swap, then prove the opencode provider and the session-supervisor host-id command still work. Do not delete `scripts/api` in that change.
 
-`scripts/api/fleet_board` has no target. `tests/api/test_fleet_board_prs.py` records that 0.1.10 removed the router and the product kept the source until B2b. 0.1.11 still has no `fleet_board` package. Those two tests are retired with the package. They are not pointed at a module the pin will not grow.
+`scripts/api/fleet_board` has no target. `tests/api/test_fleet_board_prs.py` is that router: 0.1.10 removed it, the product kept the source until B2b, and 0.1.11 still has no `fleet_board` package. That file is retired with the package. It is not pointed at a module the pin will not grow.
+
+`tests/test_red_team_consumer_trace.py` also imports `scripts.api.fleet_board`, but only `test_fleet_board_counts_red_team_as_ready`, the `_board_*` helpers, the module import, and the `HANDLING` row `scripts/api/fleet_board/prs.py` depend on it. The other tests in that file cover retained consumers (the merge queue, the integration sweep, publication, lexicon dispositions, and recovery) and stay.
 
 The opencode provider (`scripts/dispatcher/providers/opencode.py`) is on the operator keep-list. Execution changes only its import of `lu_machinery.api.subscription_usage`, including `_private_usage`, which 0.1.11 still defines. The provider stays.
 
@@ -86,7 +88,7 @@ Several of these call private names (`_private_usage`, `_assemble_session`, `_re
 | `tests/test_host_path_guard.py` | `lu_machinery.api.occupancy_sanitize` |
 | `tests/test_pace_reserve_routing.py` | `lu_machinery.api.state_router` |
 | `tests/test_readonly_sqlite.py` | `lu_machinery.api.resilience` |
-| `tests/test_red_team_consumer_trace.py` | none — retire with `scripts/api/fleet_board` |
+| `tests/test_red_team_consumer_trace.py` | none for the `fleet_board` import — keep the file; retire only that import, the `_board_*` helpers, `test_fleet_board_counts_red_team_as_ready`, and the `HANDLING` row `scripts/api/fleet_board/prs.py` |
 | `tests/test_routing_amendment_11327.py` | `lu_machinery.api.state_router` |
 | `tests/test_routing_consumer_agreement.py` | `lu_machinery.api.state_router` |
 | `tests/test_runtime_routing_window.py` | `lu_machinery.api.runtime_router` |
@@ -120,6 +122,6 @@ Negative-path fixtures that use `scripts.api` as a rejected string (`tests/api/t
 1. Retarget the 57 census files whose modules exist, plus the four callers in the table above. Keep the private names those callers already use.
 2. Run the existing tests for the opencode provider, the session supervisor, and the retargeted modules. The opencode provider must still run.
 3. Stop if a name a caller uses is missing from the pin then in force. This plan was checked against 0.1.11 only.
-4. Separately, and only with an approval that names deletion: retire `scripts/api/fleet_board` and its two tests, point the launchd docs and test at the installed wrapper, then delete the rest of `scripts/api`.
+4. Separately, and only with an approval that names deletion: retire `scripts/api/fleet_board` and `tests/api/test_fleet_board_prs.py`. In `tests/test_red_team_consumer_trace.py`, remove only the fleet-board import, the `_board_*` helpers, `test_fleet_board_counts_red_team_as_ready`, and the `HANDLING` row for `scripts/api/fleet_board/prs.py`. Point the launchd docs and test at the installed wrapper, then delete the rest of `scripts/api`.
 
 Step 4 is not authorized by step 1. Both wait on designated approval. This document does not grant it.
