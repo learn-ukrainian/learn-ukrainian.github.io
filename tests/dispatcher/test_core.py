@@ -50,9 +50,12 @@ def test_legacy_archive_is_read_only_and_nonce_checked(tmp_path, monkeypatch):
 
 @pytest.fixture
 def spec(tmp_path):
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees/dispatch/muse/task"
+    workspace.mkdir(parents=True)
     prompt = tmp_path / "brief.txt"
     prompt.write_text("public input")
-    return TaskSpec("task", "muse", "model", None, "read-only", tmp_path, prompt, tmp_path / "task.result")
+    return TaskSpec("task", "muse", "model", None, "read-only", workspace, prompt, tmp_path / "task.result")
 
 
 def assert_private_input_policy(spec, repo_key, error):
@@ -60,12 +63,11 @@ def assert_private_input_policy(spec, repo_key, error):
         spec = dataclasses.replace(spec, options={**spec.options, "contributor_mode": "on"})
         checks.check_private_input(spec, repo_key)
         if spec.mode == "workspace-write":
-            with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
+            with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
                 muse.build(spec, {})
-            assert spec.options["contributor_mode"] == "off"
-        else:
-            argv = muse.build(spec, {}).argv
-            assert argv[argv.index("--contributor-mode") + 1] == "off"
+            return
+        argv = muse.build(spec, {}).argv
+        assert argv[argv.index("--contributor-mode") + 1] == "off"
     else:
         with pytest.raises(ValueError, match=error):
             checks.check_private_input(spec, repo_key)
@@ -134,7 +136,7 @@ def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, s
     checks.check_private_input(spec, "private" if source == "repo" else "public")
 
     if mode == "workspace-write":
-        with pytest.raises(ValueError, match=r"^muse_write_mode_unconfined$"):
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
             muse.build(spec, {})
     else:
         argv = muse.build(spec, {}).argv
@@ -143,11 +145,12 @@ def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, s
     assert spec.prompt_file.read_bytes() == before
 
 
-def test_public_muse_contributor_on_is_preserved(spec, private_repos):
+def test_public_muse_worker_forces_contributor_off(spec, private_repos):
+    """Defect class: a public worker enables unqualified contributor data use."""
     spec = dataclasses.replace(spec, options={"contributor_mode": "on"})
     checks.check_private_input(spec, "public")
     argv = muse.build(spec, {}).argv
-    assert argv[argv.index("--contributor-mode") + 1] == "on"
+    assert argv[argv.index("--contributor-mode") + 1] == "off"
 
 
 @pytest.mark.parametrize("agent", ["muse", "opencode"])
@@ -421,6 +424,10 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     # Dispatch admission refuses a model the catalog does not name (C-4967).
     model = {"codex": "gpt-6.1-sol", "claude": "claude-sonnet-5-5"}.get(agent, "vendor/model")
     spec = TaskSpec("ro", agent, model, None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    if agent == "muse":
+        workspace = sandbox.repo / ".worktrees/dispatch/muse/ro"
+        workspace.mkdir(parents=True)
+        spec = dataclasses.replace(spec, worktree=workspace)
     refused: dict[str, str] = {}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):

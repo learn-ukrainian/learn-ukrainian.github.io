@@ -109,8 +109,8 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 )
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
-# Cursor has no approved model pin: its only pin, grok-4.7, retired with every Grok
-# model (operator order GROK-CANCEL-1110, 2026-11-10). A new pin is an operator decision.
+# Cursor Auto has no approved driver pin. C-5307 restores only the explicit
+# Grok review wire pin below, without reinstating the Auto allowlist.
 CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ()
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
@@ -119,8 +119,8 @@ CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
 CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
-# Wire pins shared with the launcher contract; its test rejects any drift.
-CURSOR_APPROVED_WIRE_PINS: frozenset[str] = frozenset()
+# C-5307 restores the exact pre-4ee3de75 explicit review pin.
+CURSOR_APPROVED_WIRE_PINS: frozenset[str] = frozenset({"grok-4.7-high"})
 # Typed refusal when Cursor has no approved model pin at all.
 CURSOR_NO_APPROVED_PIN_CODE = "cursor_no_approved_model_pin"
 # Families never pinned as formal reviewers on the Cursor endpoint (#9488):

@@ -39,10 +39,9 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
             ("agy-tools", "agy"),
         ):
             require_execution_model(defaults[lane]["model"], transport=transport)
-    # Grok retired (GROK-CANCEL-1110): both writer lanes' Grok defaults are refused, never admitted.
+    # C-5307 restores grok-4.7 on its native and exact Cursor transports.
     for lane, transport in (("grok-tools", "native_grok"), ("cursor-tools", "cursor")):
-        with pytest.raises(ValueError, match=r"is retired in the model catalog \(grok-4\.7\)"):
-            require_execution_model(linear_pipeline.WRITER_DEFAULTS[lane]["model"], transport=transport)
+        require_execution_model(linear_pipeline.WRITER_DEFAULTS[lane]["model"], transport=transport)
     require_execution_model(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_MODEL_ID, transport="native_claude")
     for model in (batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL):
         require_execution_model(model, transport="agy")
@@ -101,16 +100,10 @@ def test_enabled_content_quality_records_model_refusal_and_preserves_determinist
     assert len(violations) == 2
 
 
-def test_shell_defaults_and_retired_plan_enrichment():
-    paths = [ROOT / "scripts" / rel for rel in (
-        "enrich_a2_plans_gemini.sh", "agent_runtime/_smoke_pty_agents.sh",
-    )]
-    for path in paths:
-        subprocess.run(["bash", "-n", str(path)], check=True, timeout=30)
-    result = subprocess.run(["bash", str(paths[0])], capture_output=True, text=True, cwd=ROOT, timeout=30)
-    assert result.returncode == 2
-    assert "Refused: legacy Gemini CLI" in result.stderr
-    smoke = paths[1].read_text().split("<<'PYDRIVER'\n", 1)[1].split("\nPYDRIVER", 1)[0]
+def test_shell_defaults():
+    path = ROOT / "scripts" / "agent_runtime/_smoke_pty_agents.sh"
+    subprocess.run(["bash", "-n", str(path)], check=True, timeout=30)
+    smoke = path.read_text().split("<<'PYDRIVER'\n", 1)[1].split("\nPYDRIVER", 1)[0]
     tree = ast.parse(smoke)
     models = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign) and
                   any(isinstance(target, ast.Name) and target.id == "MODEL_BY_AGENT" for target in node.targets))

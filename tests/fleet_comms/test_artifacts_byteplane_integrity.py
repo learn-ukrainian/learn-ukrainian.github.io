@@ -213,12 +213,20 @@ def test_referenced_blob_of_open_delivery_is_never_removed(tmp_path: Path) -> No
             lease.delivery.delivery_id, worker_id="worker", fence_token=lease.fence_token
         )
         pending = service.publish_message(sender="codex", body="open body", recipients=("claude-cto",))
+        unread = service.publish_message(
+            sender="codex", body="unread expired body", recipients=("claude-cto",),
+            created_at="2020-01-01T00:00:00Z", idempotency_key="unread-expired",
+        )
+        assert service.expire_undelivered(now="2020-01-09T00:00:00Z") == 1
+        assert service.get_delivery(unread.delivery_ids[0]).state == "expired"
 
         report = store.expire_message_blobs(apply=True, now=datetime.now(UTC) + timedelta(days=60))
 
         assert (report.candidates, report.removed) == (1, 1)
         assert store.get(pending.body_artifact_id).blob_path.is_file()
         assert service.read_message_body(pending.message_id) == "open body"
+        assert store.get(unread.body_artifact_id).blob_path.is_file()
+        assert service.read_message_body(unread.message_id) == "unread expired body"
         done_record = store.get(done.body_artifact_id)
         assert not done_record.blob_path.is_file()
         assert service.get_message(done.message_id).content_sha256 == done.content_sha256

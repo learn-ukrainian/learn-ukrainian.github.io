@@ -196,6 +196,20 @@ def _calls(stub: dict[str, Path]) -> list[dict]:
     return [json.loads(line) for line in stub["record"].read_text(encoding="utf-8").splitlines()]
 
 
+def _flag_path(argv: list[str], name: str) -> Path:
+    prefix = f"--{name}="
+    matches = [arg[len(prefix) :] for arg in argv if arg.startswith(prefix)]
+    assert matches, name
+    return Path(matches[-1])
+
+
+def _tree_call(stub: dict[str, Path]) -> dict:
+    (call,) = _calls(stub)
+    argv = call["argv"]
+    assert argv[argv.index("--") + 1 :] == ["."]
+    return call
+
+
 @pytest.fixture
 def repo(tmp_path: Path) -> Path:
     root = tmp_path / "repo"
@@ -504,7 +518,13 @@ def test_output_location_is_only_the_generated_temp_directory(
     assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
     report = _report_path(capfd.readouterr().out, stub["tmp"])
     created = _all_paths(tmp_path) - before - {stub["record"]}
-    assert created == {report.parent, report, report.with_name(report.name + ".log")}
+    assert created == {
+        report.parent,
+        report,
+        report.with_name(report.name + ".log"),
+        report.parent / "include-paths",
+        report.parent / "exclude-paths",
+    }
     assert report.parent.parent == stub["tmp"].resolve()
     assert report.parent.name.startswith(ssl.OUTPUT_PREFIX)
 
@@ -523,7 +543,12 @@ def test_report_directory_and_files_are_owner_only(
         os.umask(previous)
     report = _report_path(capfd.readouterr().out, stub["tmp"])
     assert stat.S_IMODE(report.parent.stat().st_mode) == 0o700
-    for path in (report, report.with_name(report.name + ".log")):
+    for path in (
+        report,
+        report.with_name(report.name + ".log"),
+        report.parent / "include-paths",
+        report.parent / "exclude-paths",
+    ):
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
 
 
@@ -646,7 +671,13 @@ def test_a_successful_run_writes_only_under_the_temp_root(
     with writes:
         assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
     report = _report_path(capfd.readouterr().out, stub["tmp"])
-    assert writes.targets == [str(report.parent), str(report), str(report) + ".log"]
+    assert writes.targets == [
+        str(report.parent),
+        str(report),
+        str(report) + ".log",
+        str(report.parent / "include-paths"),
+        str(report.parent / "exclude-paths"),
+    ]
     assert _all_paths(repo) == before
 
 
@@ -736,7 +767,17 @@ def test_every_call_carries_the_fixed_offline_flags(
     offline = ("--json", "--no-verification", "--no-update", "--results=unverified", "--exclude-detectors=Lob")
     for flag in (*offline, "--fail-on-scan-errors"):
         assert flag in argv
-    assert f"--exclude-paths={repo / '.trufflehogignore'}" in argv
+    exclude = _flag_path(argv, "exclude-paths")
+    ignore = (repo / ".trufflehogignore").read_bytes()
+    assert exclude.read_bytes().startswith(ignore if ignore.endswith(b"\n") else ignore + b"\n")
+    for line in ssl.TREE_DIR_EXCLUDES:
+        assert line in exclude.read_text(encoding="utf-8").splitlines()
+    assert sorted(_flag_path(argv, "include-paths").read_text(encoding="utf-8").splitlines()) == [
+        r"^\.trufflehogignore$",
+        r"^app\.py$",
+        r"^data/notes\.txt$",
+    ]
+    assert argv[argv.index("--") + 1 :] == ["."]
     assert not any("verifier" in arg for arg in argv)
 
 
@@ -932,10 +973,103 @@ def test_tree_never_scans_denied_areas_or_symlinks(
     stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
     ssl.main(["--repo", str(repo), "tree"])
-    (call,) = _calls(stub)
-    files = call["argv"][call["argv"].index("--") + 1 :]
-    assert sorted(files) == [".trufflehogignore", "app.py", "data/notes.txt"]
+    call = _tree_call(stub)
+    included = _flag_path(call["argv"], "include-paths").read_text(encoding="utf-8").splitlines()
+    assert sorted(included) == [r"^\.trufflehogignore$", r"^app\.py$", r"^data/notes\.txt$"]
     assert Path(call["cwd"]).resolve() == repo.resolve()
+
+
+def _real_trufflehog_applies_ignore(work: Path) -> None:
+    """The installed engine, not Python `re`, decides which of these paths are scanned."""
+    work.mkdir()
+    for name in ("a", "app.py", "gen.lock", "a+b.txt", "other.txt"):
+        (work / name).write_text("x\n", encoding="utf-8")
+    include = work / "inc"
+    include.write_text("^a$\n^app\\.py$\n^gen\\.lock$\n^a\\+b\\.txt$\n", encoding="utf-8")
+    exclude = work / "exc"
+
+    def scanned(rule: str) -> set[str]:
+        exclude.write_text(rule + "\n", encoding="utf-8")
+        result = subprocess.run(
+            [
+                str(REAL_TRUFFLEHOG),
+                "filesystem",
+                "--no-update",
+                "--no-verification",
+                "--json",
+                "--log-level=3",
+                f"--include-paths={include}",
+                f"--exclude-paths={exclude}",
+                "--",
+                ".",
+            ],
+            cwd=work,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise AssertionError(result.returncode)
+        paths = set()
+        for line in result.stderr.splitlines():
+            if '"msg":"scanning file"' not in line:
+                continue
+            paths.add(json.loads(line)["path"])
+        return paths
+
+    assert scanned(r"\.lock$") == {"a", "app.py", "a+b.txt"}
+    assert "app.py" in scanned(r" app\.py$")
+    assert scanned(r"^.{01}$") == {"a", "app.py", "gen.lock", "a+b.txt"}
+    for bad in ("(?=.)", "(?x).*", "(?a).*", "(?#c).*", r"\u002e*", r"\N{FULL STOP}*", "a{1001}", "a*+", r"(a)\1"):
+        exclude.write_text(bad + "\n", encoding="utf-8")
+        result = subprocess.run(
+            [
+                str(REAL_TRUFFLEHOG),
+                "filesystem",
+                "--no-update",
+                "--no-verification",
+                "--json",
+                "--fail-on-scan-errors",
+                f"--exclude-paths={exclude}",
+                "--",
+                ".",
+            ],
+            cwd=work,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        assert result.returncode != 0, bad
+
+
+def test_tree_scan_drops_files_listed_in_trufflehogignore(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    """Defect class: local tree scan ignores .trufflehogignore for explicitly listed files.
+
+    Explicit file arguments skip TruffleHog's exclude rules, so the wrapper walks the work tree
+    and hands the ignore file to TruffleHog unchanged. It does not decide matches itself.
+    """
+    (repo / "gen.lock").write_text("x\n", encoding="utf-8")
+    ssl.main(["--repo", str(repo), "tree"])
+    call = _tree_call(stub)
+    included = _flag_path(call["argv"], "include-paths").read_text(encoding="utf-8").splitlines()
+    assert r"^gen\.lock$" in included
+    assert r"^app\.py$" in included
+    assert "gen.lock" not in call["argv"]
+    exclude = _flag_path(call["argv"], "exclude-paths").read_bytes()
+    assert exclude.startswith(b"\\.lock$\n")
+    # Pattern whitespace is copied through, not stripped before TruffleHog sees it.
+    stub["record"].write_text("", encoding="utf-8")
+    (repo / ".trufflehogignore").write_text(" app\\.py$\n", encoding="utf-8")
+    ssl.main(["--repo", str(repo), "tree"])
+    call = _tree_call(stub)
+    assert _flag_path(call["argv"], "exclude-paths").read_bytes().startswith(b" app\\.py$\n")
+    assert r"^app\.py$" in _flag_path(call["argv"], "include-paths").read_text(encoding="utf-8").splitlines()
+    if REAL_TRUFFLEHOG is not None:
+        _real_trufflehog_applies_ignore(repo.parent / "engine")
 
 
 def test_tree_splits_long_file_lists_into_batches() -> None:

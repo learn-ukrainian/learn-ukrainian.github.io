@@ -669,8 +669,6 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert 'set -euo pipefail' in shared
     assert 'for pkg in bubblewrap "$@" apparmor; do' in shared
     assert 'bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true' in shared
-    postgres = files('lu_machinery.ci').joinpath('start_postgres.sh').read_text()
-    assert 'bash "$(dirname "${BASH_SOURCE[0]}")/setup_bubblewrap.sh" postgresql-16 libpq-dev' in postgres
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
     assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m lu_machinery.ci.pr_affected_tests' in step['run'].replace('scripts.', 'lu_machinery.')

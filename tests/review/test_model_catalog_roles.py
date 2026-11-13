@@ -36,6 +36,7 @@ from tests.review.test_model_catalog import (
 )
 from tests.review.test_model_catalog import (
     FIXED_NOW,
+    GROK_REVIEW_CANDIDATE,
     MUSE_REVIEW_CANDIDATE,
     assert_frozen_surfaces,
     encode,
@@ -92,12 +93,16 @@ def test_authorities_have_one_native_holder_per_family():
 def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
     """Opus has native and AGY review routes, and neither uses Cursor.
 
-    No review seat uses Cursor: its only pin, grok-4.7, retired (GROK-CANCEL-1110).
+    Only Grok's explicit review seat uses Cursor (C-5307).
     """
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
-    assert all(row.exclusion_reasons for row in result.candidates)
-    assert "xai_reviewer" not in catalog["seats"]
-    assert "routing_wire_ids" not in catalog["models"]["grok-4.7"]
+    assert [(row.model_id, row.wire_id) for row in result.candidates if not row.exclusion_reasons] == [
+        ("grok-4.7", "grok-4.7-high"),
+    ]
+    assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
+    assert catalog["models"]["grok-4.7"]["routing_wire_ids"] == {
+        "native_grok": "grok-4.7", "cursor": "grok-4.7-high",
+    }
     opus_routes = resolve_role("anthropic_authority_reviewer", purpose="launch", transport="cursor").candidates
     assert [(row.wire_id, row.transport, row.exclusion_reasons) for row in opus_routes] == [
         ("claude-opus-5-5", "native_claude", ("transport_mismatch",)),
@@ -110,6 +115,7 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
     }
     assert expanded_legacy_view(catalog)["review_candidates"] == {
         **APPROVED_BASELINE["catalog"]["review_candidates"], "muse": MUSE_REVIEW_CANDIDATE,
+        "grok-4.7-cursor-fallback": GROK_REVIEW_CANDIDATE,
     }
 
 
@@ -121,6 +127,7 @@ def test_launch_explicitly_pins_current_review_models():
         "claude-sonnet-5-5",
         "gemini-3.8-flash-high",
         "muse-wonder-full-1.0",
+        "grok-4.7",
     }
     for row in launched.candidates:
         assert row.argv.count("--model") == 1

@@ -153,10 +153,10 @@ def test_ask_cursor_regression_wire_normalization(monkeypatch, stand_in_pin):
 
     # Refusals
     with patch("scripts.agent_runtime.adapters.claude._default_claude_bin", return_value="/bin/claude"):
-        # Grok is retired (GROK-CANCEL-1110): the ask's model selection refuses every Grok id and variant.
+        # C-5307 restores Grok as an active model; an id outside the approved pin set is still refused.
         for m in ("grok-4.7", "grok-4.7-high", "grok-4.7[fast=false]", "grok-4.7-low", "grok-4.7-medium",
                   "grok-4.7-xhigh"):
-            with pytest.raises(ValueError, match=rf"model '{re.escape(m)}' is retired in the model catalog"):
+            with pytest.raises(SystemExit, match=rf"ask-cursor: refused: CURSOR_MODEL_NOT_APPROVED: model '{re.escape(m)}'"):
                 _cursor.ask_cursor("hello", "t-9274", model=m)
         for m, code in [
             ("opus", "CURSOR_CLAUDE_REFUSED"),

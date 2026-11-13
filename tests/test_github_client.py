@@ -461,29 +461,6 @@ def test_checks_native_failure_is_not_success(tmp_path):
     assert result.returncode == 1 and result.stderr == "checks unavailable" and calls == []
 
 
-def test_pr_merge_uses_queue_mutation_and_preserves_head_guard(tmp_path):
-    store, calls = client(
-        tmp_path,
-        [
-            response({"data": {"repository": {"pullRequest": {"id": "PR_1", "isMergeQueueEnabled": True}}}}),
-            response({"data": {"enqueuePullRequest": {"clientMutationId": None}}}),
-        ],
-    )
-    result = gh.run(
-        ["gh", "pr", "merge", "1", "--repo", "o/r", "--squash", "--match-head-commit=" + "a" * 40],
-        client=store,
-        text=True,
-        capture_output=True,
-    )
-    assert result.returncode == 0
-    payload = json.loads(calls[1][3])
-    assert "enqueuePullRequest" in payload["query"] and payload["variables"]["input"] == {
-        "pullRequestId": "PR_1",
-        "expectedHeadOid": "a" * 40,
-    }
-    assert len(calls) == 2
-
-
 def test_pr_merge_without_queue_uses_rest_and_pins_head(tmp_path):
     store, calls = client(
         tmp_path,

@@ -15,6 +15,7 @@ import pytest
 from scripts import driver_state
 from scripts.ai_agent_bridge.monitor_client import MonitorClient
 from scripts.common import task_store_paths
+from scripts.common.repo_root import main_checkout_root
 
 REPO = Path(__file__).resolve().parents[1]
 SYNTHETIC_WORKER_TARGET = 7
@@ -77,6 +78,8 @@ def state(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     monkeypatch.setenv(driver_state.STATE_ENV, str(path))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(REPO)))
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
     monkeypatch.setenv("SESSION_EPIC", "infra")
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "gemini-infra")
     monkeypatch.delenv(driver_state.MIN_WORKERS_ENV, raising=False)
@@ -274,6 +277,8 @@ def test_claude_banner_for_cto_state_never_says_update_pointer_when_goal_lands(t
         encoding="utf-8",
     )
     monkeypatch.setenv(driver_state.STATE_ENV, str(path))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(REPO)))
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
     monkeypatch.setenv("SESSION_EPIC", "epics")
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-epics")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(tmp_path))

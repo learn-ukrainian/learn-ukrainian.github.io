@@ -2262,9 +2262,12 @@ def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape
 )
 def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
     from scripts.agent_runtime import agy_hook_config as hooks
+    from scripts.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path, main_checkout_root
 
     cwd = tmp_path / "worker"
     cwd.mkdir()
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(cwd))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(Path(__file__).resolve().parents[3])))
     real_home = Path.home()
     real_hook_paths = hooks.hook_locations(real_home, real_home)
 
@@ -2305,10 +2308,16 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         data[hooks.GUARD_NAME]["enabled"] = False
         paths[0].write_text(json.dumps(data))
     fake = _fake_agy(tmp_path, monkeypatch, "2.0.0")
-    monkeypatch.setenv("PATH", str(fake.parent))
+    monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
     calls = []
+    real_run = agy_module.subprocess.run
+    root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
+                    str(machinery_path("lib/project_interpreter.sh"))]
 
     def probe(argv, **kwargs):
+        if argv == root_command:
+            return real_run(argv, **kwargs)
+        assert argv == [str(fake), "--version"], "unexpected provider subprocess"
         calls.append(argv)
         return __import__("subprocess").CompletedProcess(argv, 0, "2.0.0", "")
 

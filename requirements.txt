@@ -91,6 +91,9 @@ zeroconf>=0.151.3
 # joserfc comes via Authlib (Authlib 1.9.1 requires joserfc>=1.6.8).
 # CVE-2026-119283 is fixed in 1.7.5; CVE-2026-119284 is fixed in 1.7.6.
 joserfc>=1.7.6
+# soupsieve comes via beautifulsoup4 (beautifulsoup4==4.15.0 requires soupsieve>=1.6.1).
+# CVE-2026-126192 is fixed in 2.10; CVE-2026-126190 is fixed in 4.0.
+soupsieve>=4.0
 
 # ----------------------------------------------------------------------
 # Known-harmless `pip check` warnings (DO NOT CHASE)

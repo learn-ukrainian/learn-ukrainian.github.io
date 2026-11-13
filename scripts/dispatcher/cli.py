@@ -77,6 +77,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--prompt 'Explain X' --contributor-mode on --dry-run\n"
         f"  .venv/bin/python {_DISPATCH} dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
         "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
+        "  Muse supports read-only work only; other modes are refused with muse_worker_mode_refused.\n"
         "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
         "Exit codes: 0 task started or plan printed, 1 hold publication failed, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full.\n"
@@ -363,6 +364,8 @@ def _dispatch(args) -> int:
         aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
         raise ValueError(f"unknown agent {args.agent!r}; supported agents: {', '.join(providers.PROVIDERS)} "
                          f"(aliases: {aliases}); dispatch Grok as --agent cursor --model grok-4.7-high")
+    if agent == "muse" and args.mode != "read-only":
+        raise ValueError("muse_worker_mode_refused")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.advisor is not None and not (
@@ -585,7 +588,8 @@ def _dispatch(args) -> int:
         record.update(advisory_fields, **account_fields, **trial_fields)
         record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
-            record["contributor_mode"] = spec.options.get("contributor_mode", "off")
+            record["requested_contributor_mode"] = args.contributor_mode or "off"
+            record["contributor_mode"] = "off"
         try:
             # Attach to a borrowed worktree under the lock its settlement removes it under, so an
             # active record names it before any removal can start.

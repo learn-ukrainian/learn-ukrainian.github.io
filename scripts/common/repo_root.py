@@ -647,7 +647,7 @@ def native_hook_roots(invocation_dir: Path) -> tuple[Path, Path]:
         )
     except (OSError, subprocess.SubprocessError):
         raise ProductRootError(f"no hook context resolves from {invocation_dir}: the root resolver did not run") from None
-    fields = result.stdout.split(b"\0")
+    fields = os.fsencode(result.stdout).split(b"\0")
     if result.returncode != 0 or len(fields) != 3 or fields[2] or not all(fields[:2]):
         raise ProductRootError(
             f"no hook context resolves from {invocation_dir}: set {PRODUCT_ROOT_ENV} to the product checkout "

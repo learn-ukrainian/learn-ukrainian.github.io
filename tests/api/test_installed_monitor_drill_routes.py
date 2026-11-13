@@ -30,10 +30,8 @@ ROUTES = {
     "/api/delegate/tasks": ("lu_machinery.api.delegate_router", {"tasks": list}),
     "/api/session-streams/v1/health": ("lu_machinery.api.session_streams_router", {"ok": bool, "store": dict}),
     "/api/rules": ("lu_machinery.api.rules_router", {}),
-    "/api/consultation/queue": ("scripts.project_api.consultation_router", {"pending": list, "count": int}),
     "/api/atlas-jobs/health": ("scripts.project_api.atlas_jobs_router", {"ok": bool, "schema": str}),
     "/api/sources/stats": ("scripts.project_api.sources_router", {"sources_db": dict}),
-    "/api/analytics/cost": ("scripts.project_api.cost_router", {"scope": dict, "windows": dict}),
 }
 
 _CHILD = """

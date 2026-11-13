@@ -291,8 +291,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
     # Grok into the effective ladder that the resolver actually walks.
     risk = "high" if injected_grok else "medium"
     if injected_grok:
-        # Grok retired (GROK-CANCEL-1110) and has no candidate: a caller-supplied
-        # rung restoring the former Cursor Grok seat must still be refused.
+        # A caller-supplied Grok rung must still respect subject exclusion.
         restored = replace(
             reviewer_resolver.REVIEW_CANDIDATES["openai_frontier"],
             name="grok-4.7-cursor-fallback", concrete_model="grok-4.7", family="xai", route="cursor", transport="cursor",
@@ -324,7 +323,8 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         assert {entry["name"] for entry in grok_entries} == {"grok-4.7-cursor-fallback"}
         for grok in grok_entries:
             assert grok["status"] == "excluded"
-            assert "is retired" in grok["reason"]
+            assert "subject exclusion" in grok["reason"]
+            assert "subject seat grok" in grok["reason"]
     else:
         # The automatic ladders list no Grok seat at all.
         assert grok_entries == []

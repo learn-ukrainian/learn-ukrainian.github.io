@@ -60,14 +60,10 @@ def run_guard(command: str, *, timeout: float = DEFAULT_TIMEOUT, harness: str = 
     if not math.isfinite(timeout) or not 0 < timeout <= DEFAULT_TIMEOUT:
         return False, BLOCK_PREFIX + "invalid guard deadline.\n"
     try:
-        # Direct-file invocation needs the repository root for the shared
-        # guard runner and linked-worktree interpreter resolver.
-        if str(ROOT) not in sys.path:
-            sys.path.insert(0, str(ROOT))
-        from scripts.agent_runtime.codex_hook_policy import run_guard as run_guard_process
-        from scripts.common.repo_root import product_root
+        from lu_machinery.agent_runtime.codex_hook_policy import run_guard as run_guard_process
+        from lu_machinery.common.repo_root import machinery_path
 
-        guard_path = product_root() / "agents_extensions/shared/hooks/guard-secret-print.py"
+        guard_path = machinery_path("agents_extensions/shared/hooks/guard-secret-print.py")
         if not guard_path.is_file():
             return False, BLOCK_PREFIX + "shared guard unavailable.\n"
         payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})

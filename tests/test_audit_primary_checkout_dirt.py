@@ -26,6 +26,8 @@ from lu_machinery.common.repo_root import machinery_path
 from lu_machinery.guardrails import primary_dirt_audit as audit
 from lu_machinery.hygiene import primary_dirt_cleanup as cleanup
 
+from scripts.agent_runtime.agy_hook_config import native_hook_command
+
 REPO = Path(__file__).resolve().parent.parent
 HOOKS = machinery_path("agents_extensions/shared/hooks")
 GUARD = HOOKS / "guard-primary-checkout-write.py"
@@ -33,10 +35,7 @@ AUDIT = HOOKS / "audit-primary-checkout-dirt.py"
 SETTINGS = REPO / "agents_extensions/shared/settings.json"
 CODEX_ENTRY = machinery_path("agent_runtime/codex_hook_entry.sh")
 CODEX_POLICY = machinery_path("agent_runtime/codex_hook_policy.py")
-AUDIT_COMMAND = (
-    '/bin/bash "$CLAUDE_PROJECT_DIR/scripts/pre_commit/project_python.sh"'
-    " -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt"
-)
+AUDIT_COMMAND = native_hook_command("claude-audit-hook")
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -72,6 +71,7 @@ def _env(tmp_path: Path, primary: Path) -> dict[str, str]:
         env.pop(name, None)
     env["XDG_STATE_HOME"] = str(tmp_path / "state")
     env["CLAUDE_PROJECT_DIR"] = str(primary)
+    env["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(primary)
     return env
 
 

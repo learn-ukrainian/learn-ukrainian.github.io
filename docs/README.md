@@ -266,7 +266,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-textbook-chunks` | `data/textbook_chunks/` | current | mcp: sources MCP search_text (sources.db copy) |
 | `data-ua-gec` | `data/ua-gec/` | current | mcp: sources MCP search_ua_gec_errors (sources.db copy) |
 | `data-artifact-store` | `data/.artifact-store/` | current | cli: scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status |
-| `data-backups` | `data/backups/` | current | api: GET /api/admin/backup/list |
+| `data-backups` | `data/backups/` | current | cli: ls -l data/backups/ (local only) |
 | `data-backups-staging` | `data/.backup-staging/` | current | cli: scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status |
 | `data-corpus-audit` | `data/corpus_audit/` | current | sqlite: read the JSON files directly (jq) |
 | `data-datasets` | `data/datasets/` | current | sqlite: read README.md in each dataset directory |

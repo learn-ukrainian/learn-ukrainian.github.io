@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import os
 import re
@@ -19,7 +18,6 @@ from scripts.common.repo_root import (
     configure_native_hook_roots,
     machinery_path,
     main_checkout_root,
-    product_root,
 )
 from scripts.common.safe_open import safe_open_below
 
@@ -39,6 +37,7 @@ NATIVE_HOOK_MODES = (
     "agy-pretool-hook",
     "claude-hook",
     "claude-stop-hook",
+    "claude-audit-hook",
     "codex-pre-tool-use",
     "codex-post-tool-use",
     "codex-user-prompt-submit",
@@ -48,49 +47,14 @@ NATIVE_HOOK_NAME = "lu-machinery-hook-v1"
 _RESOLVERS_FILE = "lib/project_interpreter.sh"
 _RESOLVERS_BEGIN = "# LU_HOOK_RESOLVERS_BEGIN"
 _RESOLVERS_END = "# LU_HOOK_RESOLVERS_END"
-# Runs after the resolver block, with the mode as $1. A bootstrap failure answers
-# in the mode's native shape: AGY Stop continues, other AGY entries deny, Claude
-# Stop blocks, Claude SessionStart/UserPromptSubmit stops, Codex exits 2. Once
-# the context resolves, the installed entry replaces this shell, so its own
-# output and exit status are the hook's.
-_HOOK_TAIL = r"""_lu_hook_fail() {
+# Product audit extension: use the same resolver as the released commands and
+# run the installed audit under isolated Python. Preserve its policy exit code.
+_HOOK_TAIL = r"""project_hook_context_resolve 2>/dev/null || {
     cat >/dev/null 2>&1
     printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
-    case "$1" in
-        agy-stop-hook) printf '%s\n' '{"decision":"continue","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
-        agy-*) printf '%s\n' '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
-        claude-stop-hook) printf '%s\n' '{"decision":"block","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
-        claude-hook) printf '%s\n' '{"continue":false,"stopReason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ;;
-        *) exit 2 ;;
-    esac
-    exit 0
+    exit 2
 }
-_lu_hook_mode="$1"
-project_hook_context_resolve 2>/dev/null || _lu_hook_fail "$_lu_hook_mode"
-case "$_lu_hook_mode" in
-    agy-primary-write)
-        _lu_hook_guard="$("$LEARN_UKRAINIAN_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
-print(machinery_path("agents_extensions/shared/hooks/guard-primary-checkout-write.py"))' </dev/null 2>/dev/null)" || _lu_hook_fail "$_lu_hook_mode"
-        "$LEARN_UKRAINIAN_PYTHON" -I "$_lu_hook_guard" || _lu_hook_fail "$_lu_hook_mode"
-        exit 0 ;;
-    agy-secret-print)
-        "$LEARN_UKRAINIAN_PYTHON" -I -m lu_machinery.agent_runtime.secret_print_hook --harness agy \
-            || _lu_hook_fail "$_lu_hook_mode"
-        exit 0 ;;
-    agy-pending-orders) _lu_hook_entry=agy_hooks/pending_orders_inject.sh; set -- ;;
-    agy-hook|agy-stop-hook|agy-pretool-hook|claude-hook|claude-stop-hook)
-        _lu_hook_entry=agy_hooks/driver_state_inject.sh; set -- "$_lu_hook_mode" ;;
-    codex-pre-tool-use|codex-post-tool-use|codex-user-prompt-submit)
-        _lu_hook_entry=agent_runtime/codex_hook_entry.sh; set -- "${_lu_hook_mode#codex-}" ;;
-    *) _lu_hook_fail "$_lu_hook_mode" ;;
-esac
-_lu_hook_entry="$("$LEARN_UKRAINIAN_PYTHON" -I -c 'import sys
-from lu_machinery.common.repo_root import machinery_path
-print(machinery_path(sys.argv[1]))' "$_lu_hook_entry" </dev/null 2>/dev/null)" || _lu_hook_fail "$_lu_hook_mode"
-[ -f "$_lu_hook_entry" ] || _lu_hook_fail "$_lu_hook_mode"
-shopt -s execfail
-exec /bin/bash "$_lu_hook_entry" "$@"
-_lu_hook_fail "$_lu_hook_mode"
+exec "$LEARN_UKRAINIAN_PYTHON" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt
 """
 
 
@@ -164,6 +128,12 @@ def native_hook_command(mode: str) -> str:
     """
     if mode not in NATIVE_HOOK_MODES:
         raise AgyHookConfigError("unsupported_hook_mode")
+    # Standard registrations belong to the pinned release. The product retains
+    # its existing audit extension until that mode moves into machinery too.
+    if mode != "claude-audit-hook":
+        from lu_machinery.agent_runtime.agy_hook_config import native_hook_command as installed_command
+
+        return installed_command(mode)
     body = "set -u\n" + _hook_resolvers() + _HOOK_TAIL
     return shlex.join(["/bin/bash", "-c", body, NATIVE_HOOK_NAME, mode])
 
@@ -239,16 +209,11 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
 
 
 def guard_registration(*, repo_root: Path = ROOT) -> dict:
-    """The tracked overlay's guard, with the one generated guard command.
+    """Register the machinery guard independently of product-owned configuration."""
+    return {"PreToolUse": [{"matcher": "run_command", "hooks": [
+        {"type": "command", "command": native_hook_command(GUARD_MODE), "timeout": GUARD_TIMEOUT_FLOOR}
+    ]}]}
 
-    The overlay is product configuration, read from the product checkout ``product_root``
-    selects (C-4746); its other hook metadata is kept. The command is
-    ``native_hook_command(GUARD_MODE)``, the exact bytes ``_check_file`` accepts, so the
-    hook resolves its interpreter by the shared shell rule, never from this process.
-    """
-    guard = copy.deepcopy(_read_config(product_root() / "agents_extensions/agy/hooks.json")[GUARD_NAME])
-    guard["PreToolUse"][0]["hooks"][0]["command"] = native_hook_command(GUARD_MODE)
-    return guard
 
 
 def primary_guard_registration(*, repo_root: Path = ROOT) -> dict:

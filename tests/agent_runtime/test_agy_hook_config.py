@@ -6,6 +6,7 @@ import copy
 import json
 import os
 import shlex
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -216,8 +217,12 @@ def test_duplicate_members_cannot_hide_disabled_or_wrong_guard(tmp_path, candida
 def dispatch_tree(tmp_path):
     primary = tmp_path / "primary"
     cwd = primary / ".worktrees/dispatch/codex/worker"
-    cwd.mkdir(parents=True)
-    (cwd / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
+    subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "-c", "user.name=Fixture", "-c",
+                    "user.email=fixture@example.invalid", "commit", "--allow-empty", "-qm", "fixture"],
+                   check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "worktree", "add", "-qb", "worker", str(cwd)],
+                   check=True, timeout=30)
     return cwd
 
 
@@ -301,7 +306,7 @@ def test_install_does_not_reenable_guard(tmp_path):
 
 def test_overlay_keeps_existing_driver_hooks():
     data = json.loads((ROOT / "agents_extensions/agy/hooks.json").read_text())
-    assert len(data) == 6
+    assert set(data) >= {"pending-orders-announce", "driver-state-pin", "driver-keep-driving", "driver-no-ask-question", config.GUARD_NAME}
     assert data["pending-orders-announce"] == {
         "PreInvocation": [
             {

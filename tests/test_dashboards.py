@@ -10,10 +10,9 @@ from typing import ClassVar
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-DASHBOARDS_DIR = ROOT / "dashboards"
-# Product pages moved to the product package (Monitor split, C-4687).
+# The learn-ukrainian pages live in the product package (Monitor split, C-4687).
 PRODUCT_PAGES_DIR = ROOT / "scripts" / "project_api" / "static"
-PAGE_DIRS = (DASHBOARDS_DIR, PRODUCT_PAGES_DIR)
+PAGE_DIRS = (PRODUCT_PAGES_DIR,)
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "generate_mdx"))
 
@@ -41,18 +40,132 @@ class TestHtmlValidation:
 
     HTML_FILES = sorted(path for page_dir in PAGE_DIRS for path in page_dir.glob("*.html"))
 
-    def test_index_footer_has_no_hardcoded_host(self):
-        """index.html must label its own origin dynamically (#8542).
+    def test_index_footer_does_not_reveal_an_internal_origin(self):
+        """Defect class: the home page wrote ``location.host`` into the footer.
 
-        The footer used to read "Serving from localhost:8765", which is wrong
-        whenever the Monitor API is served from anywhere else. It now derives
-        the label from ``location.host`` at render time.
+        #8542 stopped hardcoding ``localhost:8765``. Printing the live host
+        replaced that with the view's internal origin. The footer must show
+        neither a hardcoded host nor the live one.
         """
         text = (PRODUCT_PAGES_DIR / "index.html").read_text()
         assert "localhost:8765" not in text
         assert "127.0.0.1" not in text
-        assert 'id="footer-origin"' in text
-        assert "location.host" in text
+        assert "location.host" not in text
+        assert "footer-origin" not in text
+        assert "Serving from" not in text
+
+    def test_home_freshness_line_uses_local_time_without_an_alarm(self):
+        """Defect class: the freshness line printed a raw ISO timestamp plus an alarm.
+
+        ``cached copy older than N s limit`` is hard to scan and wraps at 390px.
+        The line must format local time and keep a short calm note on one line.
+        """
+        text = (PRODUCT_PAGES_DIR / "index.html").read_text()
+        assert "cached copy older than" not in text
+        assert "s limit" not in text
+        assert "Computed ${meta.generated_at}" not in text
+        assert "function freshnessLine" in text
+        assert "toLocaleString" in text
+        assert "saved earlier" in text
+        assert "white-space:nowrap" in text
+
+    def test_dashboard_tiles_stay_uniform_and_do_not_break_names(self):
+        """Defect class: tile area followed module count.
+
+        BIO and LIT grew into empty blocks, ``overflow-wrap: anywhere`` broke
+        long ids mid-word, and the select-a-module hint fell below that block.
+        """
+        text = (PRODUCT_PAGES_DIR / "curriculum-dashboard.html").read_text()
+        assert "module_count / totalModules" not in text
+        assert "overflow-wrap:anywhere" not in text
+        assert "overflow-wrap: anywhere" not in text
+        assert "repeat(auto-fill, minmax(10.25rem, 1fr))" in text
+        assert "hyphens: none" in text
+        assert "white-space: nowrap" in text
+        assert ".right-panel:has(.empty)" in text
+        assert "order: -1" in text
+        assert 'id="dashboard-hint"' in text
+
+    def test_home_and_dashboard_have_skip_link_main_and_os_scheme(self):
+        """Defect class: no skip link, no dashboard main landmark, OS scheme ignored."""
+        css = (PRODUCT_PAGES_DIR / "monitor.css").read_text()
+        assert "@media (prefers-color-scheme: dark)" in css
+        assert ".skip-link:focus" in css
+        for name in ("index.html", "curriculum-dashboard.html"):
+            text = (PRODUCT_PAGES_DIR / name).read_text()
+            assert 'class="skip-link" href="#main"' in text
+            assert "<main" in text
+            assert 'id="main"' in text
+
+
+def _channel(value: float) -> float:
+    value = value / 255
+    if value <= 0.04045:
+        return value / 12.92
+    return ((value + 0.055) / 1.055) ** 2.4
+
+
+def _blend(background: str, ink: str, alpha: float) -> str:
+    """Composite ``ink`` at ``alpha`` over an opaque ``#rrggbb`` background."""
+
+    def channels(color: str) -> tuple[int, int, int]:
+        return (int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16))
+
+    base, layer = channels(background), channels(ink)
+    mixed = tuple(round(base[i] * (1 - alpha) + layer[i] * alpha) for i in range(3))
+    return "#" + "".join(f"{channel:02x}" for channel in mixed)
+
+
+def _contrast(foreground: str, background: str) -> float:
+    """WCAG 2.x contrast ratio for two ``#rrggbb`` colors."""
+
+    def luminance(hex_color: str) -> float:
+        red = int(hex_color[1:3], 16)
+        green = int(hex_color[3:5], 16)
+        blue = int(hex_color[5:7], 16)
+        return 0.2126 * _channel(red) + 0.7152 * _channel(green) + 0.0722 * _channel(blue)
+
+    lighter = max(luminance(foreground), luminance(background))
+    darker = min(luminance(foreground), luminance(background))
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def _palette(css: str) -> dict[str, str]:
+    return {name: value.lower() for name, value in re.findall(r"--([a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\b", css)}
+
+
+def test_muted_text_tokens_clear_wcag_aa_on_every_surface():
+    """Defect class: muted ink ``#7a736a`` was 4.07:1 on ``#f5efde`` and 4.34:1 on ``#faf6ef``.
+
+    ``#8a8377`` (the old ``--gray``) was 3.48:1 on the page background. Both
+    tokens have to clear 4.5:1 on ``--bg``, ``--bg2`` and ``--bg3`` in light
+    and dark. A 0.4 opacity on legacy rows dimmed every color in the row.
+    The pending and unknown build badges painted ``--text3`` on
+    ``rgba(72,79,88,0.2)``, which composites to about 4.32:1 on ``--bg``.
+    """
+    assert _contrast("#7a736a", "#f5efde") < 4.5
+    assert _contrast("#7a736a", "#faf6ef") < 4.5
+    assert _contrast("#8a8377", "#faf6ef") < 4.5
+    # The gray wash over the page background, the pair the badge used to paint.
+    assert _contrast("#665e56", _blend("#faf6ef", "#484f58", 0.2)) < 4.5
+    dashboard = (PRODUCT_PAGES_DIR / "curriculum-dashboard.html").read_text()
+    assert "opacity: 0.4" not in dashboard
+    pending = re.search(r"\.module-table \.ver-pending \{([^}]+)\}", dashboard)
+    assert pending is not None
+    rule = pending.group(1)
+    assert "rgba(" not in rule
+    assert "background: var(--bg3)" in rule
+    assert "color: var(--text3)" in rule
+
+    css = (PRODUCT_PAGES_DIR / "monitor.css").read_text()
+    light_css, dark_css = css.split("@media (prefers-color-scheme: dark)", 1)
+    surfaces = ("bg", "bg2", "bg3")
+    inks = ("text3", "gray")
+    for scheme, palette in (("light", _palette(light_css)), ("dark", _palette(dark_css))):
+        for ink in inks:
+            for surface in surfaces:
+                ratio = _contrast(palette[ink], palette[surface])
+                assert ratio >= 4.5, f"{scheme} --{ink} on --{surface} is {ratio:.2f}:1"
 
 
 # ── API endpoint coverage ───────────────────────────────────────
@@ -63,10 +176,7 @@ class TestApiEndpoints:
 
     # All endpoints referenced in dashboard HTML files
     EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
-        "/api/agent-monitor/status",
         "/api/artifacts/html",
-        "/api/build/events/active",
-        "/api/build/events/recent",
         "/api/comms/batch-progress",
         "/api/comms/health",
         "/api/comms/messages",
@@ -133,21 +243,6 @@ class TestApiEndpoints:
         # All found endpoints should be in our known set
         unknown = all_endpoints - self.EXPECTED_ENDPOINTS
         assert not unknown, f"Unknown API endpoints in dashboards: {unknown}"
-
-
-# ── Dashboard inventory ─────────────────────────────────────────
-
-
-class TestDashboardInventory:
-    """Verify expected dashboards exist."""
-
-    EXPECTED_DASHBOARDS: ClassVar[set[str]] = {
-        "index.html",
-        "progress.html",
-        "quality.html",
-        "admin.html",
-        "curriculum-dashboard.html",
-    }
 
 
 # ── #7024 overview last-good honesty ─────────────────────────────

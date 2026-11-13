@@ -172,13 +172,16 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox, mode):
 
 @pytest.mark.parametrize("contributor", ["on", "off", None])
 def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, contributor):
-    """Missing CLI options must not silently force explicit contributor requests off."""
-    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input"]
+    """Defect class: forced-off execution loses the requested mode or misstates the effective mode."""
+    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input", "--mode", "read-only"]
     if contributor is not None:
         args += ["--contributor-mode", contributor]
+    refused = sandbox.cli(*args, "--mode", "workspace-write", "--dry-run", expected=2)
+    assert refused.stderr == "dispatcher: muse_worker_mode_refused\n"
+    assert not sandbox.tasks.exists()
     plan = json.loads(sandbox.cli(*args, "--dry-run").stdout)
     argv = plan["argv"]
-    assert argv[argv.index("--contributor-mode") + 1] == (contributor or "off")
+    assert argv[argv.index("--contributor-mode") + 1] == "off"
     assert not sandbox.tasks.exists()
     assert not Path(plan["worktree"]).exists()
 
@@ -193,14 +196,18 @@ def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, 
     native = binary_dir / f"muse-bin-{version}"
     native.write_text(r'''#!/bin/sh
 set -eu
+contributor=missing
 while [ "$#" -gt 0 ]; do
     if [ "$1" = "--prompt-file" ]; then
         shift
         prompt=$(cat "$1")
-        break
+    elif [ "$1" = "--contributor-mode" ]; then
+        shift
+        contributor=$1
     fi
     shift
 done
+test "$contributor" = off
 case "$prompt" in '<rules-core seat="core"'*) ;; *) exit 1 ;; esac
 case "$prompt" in *'</rules-core>'*'public input') ;; *) exit 1 ;; esac
 printf '%s\n' '{"payload_type":"run.terminal.completed","payload":{"text":"Finished."}}'
@@ -213,8 +220,11 @@ printf '%s\n' '{"payload_type":"run.terminal.completed","payload":{"text":"Finis
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + sandbox.env["PATH"]
     task = sandbox.cli(*args).stdout.splitlines()
     record = sandbox.settle(task)
-    assert record["contributor_mode"] == (contributor or "off")
-    assert json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["contributor_mode"] == (contributor or "off")
+    assert record["contributor_mode"] == "off"
+    assert record["requested_contributor_mode"] == (contributor or "off")
+    persisted = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert persisted["contributor_mode"] == "off"
+    assert persisted["requested_contributor_mode"] == (contributor or "off")
 
 
 @pytest.mark.parametrize("agent", sorted((set(ALIASES) | set(ALIASES.values()) | {"claude"}) - {"muse"}))

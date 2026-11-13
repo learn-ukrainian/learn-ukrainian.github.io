@@ -17,13 +17,14 @@ CLAUDE_SETTINGS = REPO_ROOT / "agents_extensions" / "shared" / "settings.json"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
 
 
-def _hook_env() -> dict[str, str]:
+def _hook_env(primary: Path) -> dict[str, str]:
     """Ambient env for hook runs, minus vars that steer the broker fast path."""
     env = os.environ.copy()
     for key in ("AB_DB_PATH", "LU_PRODUCT_ROOT", "CLAUDE_PROJECT_DIR",
                 "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", "LEARN_UKRAINIAN_STATE_ROOT",
                 "LEARN_UKRAINIAN_PYTHON"):
         env.pop(key, None)
+    env["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(primary)
     return env
 
 
@@ -89,7 +90,7 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
 
     for recipient, expected_header, expected_preview, expected_instruction in test_cases:
         _write_inbox_fixture(fixtures, recipient, expected_preview)
-        env = _hook_env()
+        env = _hook_env(tmp_path)
         env.update(
             {
                 "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -134,7 +135,7 @@ def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "claude", "claude-default payload")
 
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -171,7 +172,7 @@ def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
 def test_inbox_hook_fails_open_when_project_interpreter_is_missing(tmp_path: Path) -> None:
     """A nonblocking hook reports bootstrap failure rather than silently hiding it."""
     _init_primary(tmp_path)
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update({"CLAUDE_PROJECT_DIR": str(tmp_path), "LEARN_UK_HOOK_RECIPIENT": "codex"})
 
     completed = subprocess.run(
@@ -194,7 +195,7 @@ def test_inbox_hook_fails_open_when_project_interpreter_is_missing(tmp_path: Pat
 def test_inbox_hook_fails_open_when_live_cli_errors(tmp_path: Path) -> None:
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "codex", "unreachable payload")
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -238,7 +239,7 @@ def test_inbox_hook_surfaces_at_most_five_cli_previews(tmp_path: Path) -> None:
         "      live-consumed-body\n",
         encoding="utf-8",
     )
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -344,7 +345,7 @@ def test_inbox_hook_empty_inbox_fast_path_never_starts_bridge(tmp_path: Path) ->
     db_path = tmp_path / "messages.db"
     _make_broker_db(db_path, [("codex", 1, 1), ("claude", 0, 0)])
     python_log = _make_failing_python(tmp_path)
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -374,7 +375,7 @@ def test_inbox_hook_unread_rows_keep_exact_live_cli_preview(tmp_path: Path) -> N
     _make_broker_db(db_path, [("codex", 0, 0)])
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "codex", "codex fast-path payload")
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -412,7 +413,7 @@ def test_inbox_hook_grok_seat_dual_reads_grok_build_alias(tmp_path: Path) -> Non
     _make_broker_db(db_path, [("grok-build", 0, 0)])
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "grok", "grok alias payload")
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -449,7 +450,7 @@ def test_inbox_hook_db_error_falls_back_to_live_cli(tmp_path: Path) -> None:
     db_path.write_bytes(b"not a sqlite database")
     fixtures, args_log = _make_fake_inbox_python(tmp_path)
     _write_inbox_fixture(fixtures, "codex", "fallback payload")
-    env = _hook_env()
+    env = _hook_env(tmp_path)
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),

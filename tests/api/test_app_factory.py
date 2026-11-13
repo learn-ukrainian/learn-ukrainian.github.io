@@ -285,8 +285,8 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert "session" in second_manifest
 
 
-def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
-    """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+def test_step8_ops_git_cluster_isolation(tmp_path: Path) -> None:
+    """Ops and git-hygiene routes read only the app's MonitorContext."""
 
     @asynccontextmanager
     async def no_lifespan(_app):
@@ -296,13 +296,6 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     second_root = tmp_path / "second"
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
-
-    first_backups = first_root / "data" / "backups"
-    second_backups = second_root / "data" / "backups"
-    first_backups.mkdir(parents=True)
-    second_backups.mkdir(parents=True)
-    (first_backups / "first.tar").write_bytes(b"first")
-    (second_backups / "second.tar").write_bytes(b"second")
 
     first_plan = first_root / "batch_state" / "fleet-comms" / "retention"
     second_plan = second_root / "batch_state" / "fleet-comms" / "retention"
@@ -321,13 +314,6 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_backups_body = first_client.get("/api/admin/backup/list").json()
-        second_backups_body = second_client.get("/api/admin/backup/list").json()
-        assert {item["filename"] for item in first_backups_body["backups"]} == {"first.tar"}
-        assert {item["filename"] for item in second_backups_body["backups"]} == {"second.tar"}
-        assert "first.tar" not in json.dumps(second_backups_body)
-        assert "second.tar" not in json.dumps(first_backups_body)
-
         first_retention = first_client.get("/api/ops/v1/retention/latest").json()
         second_retention = second_client.get("/api/ops/v1/retention/latest").json()
         assert first_retention["marker"] == "first-plan"
@@ -575,8 +561,9 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
         # Static serving isolation
-        first_static = first_client.get("/")
-        second_static = second_client.get("/")
+        # The product owns "/" (C-4687); the machinery home is always at /machinery.
+        first_static = first_client.get("/machinery")
+        second_static = second_client.get("/machinery")
         assert "First Dashboard" in first_static.text
         assert "Second Dashboard" not in first_static.text
         assert "Second Dashboard" in second_static.text

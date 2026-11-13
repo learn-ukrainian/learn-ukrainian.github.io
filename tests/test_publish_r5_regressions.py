@@ -374,7 +374,10 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     enqueue_payloads = []
     queue_proofs = []
     def spy(args, **kwargs):
-        if args[1:3] == ["pr", "view"]:
+        if args[1:3] == ["pr", "view"] and "id,headRefOid,isCrossRepository,baseRefName,labels" in args:
+            reads.append(args)
+            body = {"id": "PR_fixture_1", "headRefOid": "a" * 40, "isCrossRepository": False, "baseRefName": "main", "labels": []}
+        elif args[1:3] == ["pr", "view"]:
             reads.append(args)
             body = {"number": 1, "isDraft": state == "draft", "mergeStateStatus": "CLEAN", "headRefOid": "a" * 40}
             if "headRefOid,statusCheckRollup" in args:
@@ -400,8 +403,11 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
                     "mergeQueueEntry": {"headCommit": {"oid": "a" * 40}}, "autoMergeRequest": None}}}}
                 return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
             reads.append(args)
+            if document["query"] == pub.GQL_READS["queue-status"]:
+                body = {"data": {"repository": {"pullRequest": {"headRefOid": "a" * 40, "isInMergeQueue": False}}}}
+                return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
             body = {"data": {"repository": {"pullRequest": {
-                "id": "PR_fixture_1", "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                "id": "PR_fixture_1", "headRefOid": "a" * 40, "isMergeQueueEnabled": True,
                 "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
         elif args[1:4] == ["api", "--method", "GET"]:
             reads.append(args)
@@ -423,8 +429,9 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
     # Read the head-bound checks; ready merges also read the default squash text
-    # the recorded review seats (#12020), here an exact-head approval (#12031), and the PR's files (#12181).
-    assert len(reads) == (7 if state == "ready" else 1 if state == "draft" else 3)
+    # the recorded review seats (#12020), here an exact-head approval (#12031), and the PR's files (#12181);
+    # on a queue-enabled base they also read the head's queue identity and membership (machinery #325).
+    assert len(reads) == (9 if state == "ready" else 1 if state == "draft" else 3)
     assert len(queue_proofs) == (1 if state == "ready" else 0)
 
 

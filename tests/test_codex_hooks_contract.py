@@ -793,12 +793,12 @@ def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
     completed = subprocess.run(
         ["bash", str(ENTRY), "pre-tool-use"],
         cwd=worktree,
+        env=_configured_hook_environment(primary, worktree),
         input=json.dumps(payload),
         text=True,
         capture_output=True,
         check=False,
         timeout=30,
-        env=_stamp_environment(tmp_path),
     )
 
     assert completed.returncode == 2
@@ -1105,16 +1105,14 @@ def _post_tool_use_pytest_payload(worktree: Path, tool_name: str) -> dict:
     }
 
 
-def _stamp_environment(stamps: Path) -> dict[str, str]:
-    environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    for name in ("LU_PRODUCT_ROOT", "CLAUDE_PROJECT_DIR", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", "LEARN_UKRAINIAN_STATE_ROOT", "LEARN_UKRAINIAN_PYTHON"):
-        environment.pop(name, None)
+def _stamp_environment(stamps: Path, primary: Path = PRIMARY_ROOT, product: Path | None = None) -> dict[str, str]:
+    environment = _configured_hook_environment(primary, product or primary)
     environment["TMPDIR"] = str(stamps)
     return environment
 
 
 def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) -> None:
-    _, worktree = _make_linked_worktree(tmp_path)
+    primary, worktree = _make_linked_worktree(tmp_path)
     stamps = tmp_path / "stamps"
     stamps.mkdir()
     stamp_module = _load_pytest_stamp_module()
@@ -1129,7 +1127,7 @@ def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) ->
         text=True,
         capture_output=True,
         check=False,
-        env=_stamp_environment(stamps),
+        env=_stamp_environment(stamps, primary, worktree),
         timeout=30,
     )
 
@@ -1139,7 +1137,7 @@ def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) ->
 
 def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Path) -> None:
     """pytest_stamp only inspects a Bash command; other tools never invoke it (#8529)."""
-    _, worktree = _make_linked_worktree(tmp_path)
+    primary, worktree = _make_linked_worktree(tmp_path)
     stamps = tmp_path / "stamps"
     stamps.mkdir()
     stamp_module = _load_pytest_stamp_module()
@@ -1154,7 +1152,7 @@ def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Pa
         text=True,
         capture_output=True,
         check=False,
-        env=_stamp_environment(stamps),
+        env=_stamp_environment(stamps, primary, worktree),
         timeout=30,
     )
 
@@ -1190,10 +1188,11 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
     from tests.helpers.agy_inbox_fixtures import BODY_MARKER, add_authority, add_legacy
 
     primary, worktree = _make_linked_worktree(tmp_path)
-    # No inherited task, interpreter, product, state or Git context may select a
-    # checkout outside this fixture. Native Git created the backlink above.
+    # Only the explicitly trusted primary selects the interpreter. No inherited
+    # task, product, interpreter or Git context can redirect this fixture.
     env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(tmp_path),
-           "TMPDIR": str(tmp_path), "LANG": "C.UTF-8", "XDG_STATE_HOME": str(tmp_path / "state")}
+           "TMPDIR": str(tmp_path), "LANG": "C.UTF-8", "XDG_STATE_HOME": str(tmp_path / "state"),
+           "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(primary)}
     hooks_dir = worktree / "agents_extensions/shared/hooks"
     shutil.copytree(REPO_ROOT / "agents_extensions/shared/hooks", hooks_dir)
     marker = worktree / "curriculum/l2-uk-en/curriculum.yaml"
@@ -1267,6 +1266,7 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
                 assert result.returncode == (2 if blocked else 0), f"{shlex.split(text)[-4:]}: {result}"
                 if blocked:
                     assert "BLOCKED by guard-secret-print" in result.stderr
+                    assert "HOOK-BOOTSTRAP-FAILED" not in result.stderr
             assert not sentinel.exists(), "a worktree-controlled interpreter executed"
         admin = Path((worktree / ".git").read_text().strip().removeprefix("gitdir: "))
         common = (admin / "commondir").read_text()
@@ -1407,7 +1407,8 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         created = subprocess.run([sys.executable, "-m", "venv", "--without-pip", str(no_wheel)],
                                  text=True, capture_output=True, timeout=30)
         assert created.returncode == 0, created.stderr
-        for invalid, cwd in [({"LEARN_UKRAINIAN_PYTHON": "relative-python", "PATH": str(tmp_path) + ":/usr/bin:/bin"}, worktree),
+        for invalid, cwd in [({"LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": ""}, worktree),
+                             ({"LEARN_UKRAINIAN_PYTHON": "relative-python", "PATH": str(tmp_path) + ":/usr/bin:/bin"}, worktree),
                              ({"LEARN_UKRAINIAN_PYTHON": str(tmp_path / "missing")}, worktree),
                              ({"LU_PRODUCT_ROOT": str(tmp_path / "missing")}, worktree),
                              ({"LEARN_UKRAINIAN_PYTHON": str(no_wheel / "bin/python")}, worktree), ({}, outside)]:
@@ -1454,3 +1455,237 @@ def test_hook_context_prevents_worktree_interpreter_and_missing_root_fail_open(
         result = run(command, cwd=outside)
         assert result.returncode != 0 and "no product checkout" in result.stderr, result
         assert "ProductRootError" not in result.stderr, result
+
+
+@pytest.mark.parametrize("defect_class", ["C1", "C2", "C3", "C4", "C5", "C6"])
+def test_carbon_guard_authority_and_external_checkout_regressions(tmp_path, monkeypatch, defect_class):
+    """C1-C6: writable guards, scratch startup, hidden bad Git, parent sourcing,
+    stale self-tests and missing audit launchers must not bypass hook contracts.
+    """
+    from scripts.agent_runtime import agy_hook_config as config
+
+    primary = tmp_path / "primary"
+    _run(["git", "init", "-q", "-b", "main", str(primary)], cwd=tmp_path)
+    _run(["git", "-C", str(primary), "-c", "user.name=Fixture", "-c",
+          "user.email=fixture@example.invalid", "commit", "--allow-empty", "-qm", "fixture"], cwd=tmp_path)
+    worktree = primary / ".worktrees/dispatch/agy/probe"
+    _run(["git", "-C", str(primary), "worktree", "add", "-qb", "probe", str(worktree)], cwd=tmp_path)
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith(("LU_", "CLAUDE_", "LEARN_UKRAINIAN_")):
+            env.pop(key)
+    env.update(LU_PRODUCT_ROOT=str(worktree), LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(primary),
+               LEARN_UKRAINIAN_PYTHON=sys.executable, PATH="/usr/bin:/bin")
+    for key in tuple(os.environ):
+        if key.startswith(("LU_", "CLAUDE_", "LEARN_UKRAINIAN_")):
+            monkeypatch.delenv(key)
+    monkeypatch.setenv("PATH", env["PATH"])
+    for key, value in env.items():
+        if key.startswith(("LU_", "CLAUDE_", "LEARN_UKRAINIAN_")):
+            monkeypatch.setenv(key, value)
+    if defect_class == "C1":
+        from scripts.agent_runtime.secret_print_hook import run_guard as check_secret
+
+        guard = worktree / "agents_extensions/shared/hooks/guard-secret-print.py"
+        guard.parent.mkdir(parents=True)
+        guard.write_text("raise SystemExit(0)\n")
+        allowed, message = check_secret("echo $OPENAI_API_KEY", harness="agy")
+        assert allowed is False
+        assert "would print $OPENAI_API_KEY" in message
+    elif defect_class == "C2":
+        from scripts.ai_agent_bridge._env import build_agent_env
+
+        scratch = tmp_path / "scratch"
+        scratch.mkdir()
+        monkeypatch.delenv("LU_PRODUCT_ROOT", raising=False)
+        config.provision_workspace_guard(scratch)
+        assert json.loads((scratch / ".agents/hooks.json").read_text())[config.GUARD_NAME] == config.guard_registration()
+        assert build_agent_env({"LU_PRODUCT_ROOT": str(worktree)})["LU_PRODUCT_ROOT"] == str(worktree)
+    elif defect_class == "C3":
+        monkeypatch.setenv("LU_PRODUCT_ROOT", str(primary))
+        config.provision_workspace_guard(worktree)
+        config.require_hook_config(worktree, tmp_path / "home")
+        for kind in ("symlink", "malformed"):
+            for newlines in (0, 1, 2):
+                stem = f"bad-{kind}-{newlines}"
+                if newlines:
+                    (tmp_path / stem).mkdir()  # The sibling pwd command substitution used to select.
+                bad = tmp_path / (stem + "\n" * newlines)
+                bad.mkdir()
+                if kind == "symlink":
+                    (bad / ".git").symlink_to(primary / ".git", target_is_directory=True)
+                else:
+                    (bad / ".git").write_text("not a gitdir pointer\n")
+                config.provision_workspace_guard(bad)
+                with pytest.raises(config.AgyHookConfigError, match="hook_context_unavailable"):
+                    config.require_hook_config(bad, tmp_path / "home")
+    elif defect_class == "C4":
+        parent_lib = primary.parent / "scripts/lib/project_interpreter.sh"
+        parent_lib.parent.mkdir(parents=True)
+        marker = tmp_path / "parent-sourced"
+        parent_lib.write_text(f"touch {shlex.quote(str(marker))}\nexit 99\n")
+        deployed = primary / ".claude/hooks/check-agent-inbox.sh"
+        deployed.parent.mkdir(parents=True)
+        shutil.copy2(INBOX_HOOK, deployed)
+        env["LEARN_UK_HOOK_RECIPIENT"] = "invalid-fixture-recipient"
+        result = subprocess.run(["/bin/bash", str(deployed)], input="{}", text=True,
+                                capture_output=True, env=env, cwd=worktree, timeout=30)
+        assert result.returncode == 0, result.stderr
+        assert not marker.exists()
+    elif defect_class == "C5":
+        import yaml
+
+        data = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
+        entry = next(h["entry"] for repo in data["repos"] for h in repo.get("hooks", [])
+                     if h["id"] == "no-secret-print-hook")
+        launcher = worktree / "scripts/pre_commit/project_python.sh"
+        launcher.parent.mkdir(parents=True)
+        shutil.copy2(REPO_ROOT / "scripts/pre_commit/project_python.sh", launcher)
+        library = worktree / "scripts/lib/project_interpreter.sh"
+        library.parent.mkdir(parents=True)
+        shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", library)
+        guard = worktree / "agents_extensions/shared/hooks/guard-secret-print.py"
+        guard.parent.mkdir(parents=True)
+        guard.write_text("raise SystemExit(99)\n")
+        result = subprocess.run(shlex.split(entry), cwd=worktree, env=env,
+                                capture_output=True, text=True, timeout=30)
+        assert result.returncode == 99, result.stderr
+    else:
+        settings = json.loads((REPO_ROOT / "agents_extensions/shared/settings.json").read_text())
+        command = next(h["command"] for group in settings["hooks"]["PreToolUse"] for h in group["hooks"]
+                       if "audit-primary-checkout-dirt" in h.get("command", ""))
+        env["CLAUDE_PROJECT_DIR"] = str(worktree)
+        result = subprocess.run(["/bin/bash", "-c", command], input="{}", text=True,
+                                capture_output=True, env=env, cwd=worktree, timeout=30)
+        assert result.returncode == 0, result.stderr
+        assert "No such file" not in result.stderr
+
+
+def _configured_hook_environment(primary: Path, product: Path) -> dict[str, str]:
+    environment = {
+        key: value for key, value in os.environ.items()
+        if not key.startswith("GIT_")
+        and key not in {"LEARN_UKRAINIAN_PYTHON", "LEARN_UKRAINIAN_STATE_ROOT"}
+    }
+    environment.update(
+        LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(primary),
+        LU_PRODUCT_ROOT=str(product),
+    )
+    return environment
+
+
+@pytest.mark.parametrize("redirect", ["gitfile", "symlinked_gitfile", "git_env", "payload_cwd"])
+def test_codex_bootstrap_cannot_select_interpreter_from_caller_metadata(tmp_path: Path, redirect: str) -> None:
+    """Caller repository identity must never select the interpreter executing policy."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    _run(["git", "init", "-q", "-b", "main"], cwd=foreign)
+    selected = tmp_path / "selected"
+    for root, label in ((primary, "configured"), (foreign, "foreign")):
+        interpreter = root / ".venv/bin/python"
+        interpreter.parent.mkdir(parents=True, exist_ok=True)
+        interpreter.write_text(f"#!/bin/bash\nprintf '%s\\n' {label} >> {shlex.quote(str(selected))}\n")
+        interpreter.chmod(0o755)
+    environment = _configured_hook_environment(primary, worktree)
+    payload_cwd = worktree
+    if redirect in {"gitfile", "symlinked_gitfile"}:
+        pointer = worktree / ".git"
+        if redirect == "symlinked_gitfile":
+            pointer.unlink()
+            link = tmp_path / "pointer"
+            link.write_text(f"gitdir: {foreign}/.git\n")
+            pointer.symlink_to(link)
+        else:
+            pointer.write_text(f"gitdir: {foreign}/.git\n")
+    elif redirect == "git_env":
+        environment.update(GIT_DIR=str(foreign / ".git"), GIT_WORK_TREE=str(foreign))
+    else:
+        payload_cwd = foreign
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=worktree,
+        input=json.dumps({"tool_name": "Write", "cwd": str(payload_cwd),
+                          "tool_input": {"file_path": str(primary / "README.md")}}),
+        env=environment, capture_output=True, text=True, timeout=30,
+    )
+    if redirect in {"gitfile", "symlinked_gitfile"}:
+        assert completed.returncode == 2, completed.stderr
+        assert not selected.exists()
+        assert "HOOK-BOOTSTRAP-FAILED" in completed.stderr
+    else:
+        assert completed.returncode == 0, completed.stderr
+        assert selected.read_text() == "configured\n"
+    assert (primary / "README.md").read_text() == "hook test\n"
+
+
+@pytest.mark.parametrize("invalid", ["unset", "relative", "worktree", "missing", "empty_git"])
+def test_codex_bootstrap_refuses_invalid_mandatory_primary_before_interpreter(tmp_path: Path, invalid: str) -> None:
+    """Unusable mandatory authority must refuse before any interpreter executes."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selected = tmp_path / "selected"
+    interpreter = primary / ".venv/bin/python"
+    interpreter.write_text(f"#!/bin/bash\ntouch {shlex.quote(str(selected))}\n")
+    empty = tmp_path / "empty"
+    (empty / ".git").mkdir(parents=True)
+    environment = _configured_hook_environment(primary, worktree)
+    value = {"relative": "relative", "worktree": str(worktree), "missing": str(tmp_path / "missing"),
+             "empty_git": str(empty)}.get(invalid)
+    if value is None:
+        environment.pop("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")
+    else:
+        environment["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = value
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=worktree, input='{"tool_name":"Write"}',
+        env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert completed.returncode == 2, completed.stderr
+    assert "HOOK-BOOTSTRAP-FAILED" in completed.stderr
+    assert not selected.exists()
+
+
+@pytest.mark.parametrize("event", ["PreToolUse", "PostToolUse", "UserPromptSubmit", "SessionStart", "Stop", "SessionEnd"])
+def test_codex_tool_manifest_uses_configured_source_despite_foreign_cwd(tmp_path: Path, event: str) -> None:
+    """Caller checkout metadata must not choose the lifecycle entry executable."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selected = tmp_path / "selected"
+    relative = {
+        "SessionStart": ".codex/hooks/session-setup.sh", "Stop": ".codex/hooks/goal-driver-stop.sh",
+        "SessionEnd": ".codex/hooks/release-thread-lease.sh",
+    }.get(event, "scripts/agent_runtime/codex_hook_entry.sh")
+    for root, label in ((primary, "configured"), (worktree, "caller")):
+        entry = root / relative
+        entry.parent.mkdir(parents=True)
+        entry.write_text(f"#!/bin/bash\nprintf '%s\\n' {label} >> {shlex.quote(str(selected))}\n")
+    if event in {"PreToolUse", "PostToolUse", "UserPromptSubmit"}:
+        # Installed entry discovery runs under the configured interpreter. This
+        # fixture implements only that lookup and keeps the same authority log.
+        lookup = ("import sys\nfrom lu_machinery.common.repo_root import machinery_path\n"
+                  "print(machinery_path(sys.argv[1]))")
+        interpreter = primary / ".venv/bin/python"
+        interpreter.write_text(
+            "#!/bin/bash\n"
+            f'if [ "$#" -eq 4 ] && [ "$1" = "-I" ] && [ "$2" = "-c" ] '
+            f'&& [ "$3" = {shlex.quote(lookup)} ] '
+            '&& [ "$4" = "agent_runtime/codex_hook_entry.sh" ]; then\n'
+            f"  printf '%s\\n' {shlex.quote(str(primary / relative))}\n"
+            "  exit 0\nfi\nexit 64\n"
+        )
+    command = _manifest()["hooks"][event][0]["hooks"][0]["command"]
+    environment = _configured_hook_environment(primary, worktree)
+    completed = subprocess.run(["bash", "-c", command], cwd=worktree, input="{}",
+                               env=environment, capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 0, completed.stderr
+    assert selected.read_text() == "configured\n"
+
+
+@pytest.mark.parametrize("failure", ["unset", "missing_entry"])
+def test_codex_manifest_bootstrap_start_failure_denies_tool(tmp_path: Path, failure: str) -> None:
+    """Missing bootstrap authority or executable must return the blocking hook status."""
+    environment = dict(os.environ)
+    environment.pop("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", None)
+    if failure == "missing_entry":
+        environment["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(tmp_path)
+    command = _manifest()["hooks"]["PreToolUse"][0]["hooks"][0]["command"]
+    completed = subprocess.run(["bash", "-c", command], cwd=tmp_path, input="{}",
+                               env=environment, capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 2, completed.stderr

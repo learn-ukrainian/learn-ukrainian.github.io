@@ -375,6 +375,71 @@ def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row
         assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == expected
 
 
+def _rate_limited_row() -> dict:
+    window = {"left_pct": None, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+    return {
+        "session5h": dict(window),
+        "weekly": dict(window),
+        "updated": None,
+        "age_s": None,
+        "stale": False,
+        "status": "unknown",
+        "reason": "rate_limited",
+    }
+
+
+def test_default_account_fresh_lane_is_admitted_when_its_row_is_not_a_reading(monkeypatch) -> None:
+    """A rate-limited account row is not a reading and must not hide the host lane meter."""
+    fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 42.0}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": fresh}},
+        "claude_accounts": {"claude:a": _rate_limited_row()},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == 42.0
+    assert mp.routing_budget_used_pct("claude", account=account("a")) == 42.0
+    # The lane meter is account a's. Account b still has no reading of its own.
+    assert mp.routing_budget_used_pct("claude", account=account("b")) is None
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    assert (
+        mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT))
+        is None
+    )
+    # An expired reset on the unused account row does not veto the lane's current window.
+    stale_row = _rate_limited_row()
+    stale_row["stale"] = True
+    stale_row["weekly"]["resets_at"] = "2020-01-01T00:00:00Z"
+    current = {"stale": False, "freshness": "fresh", "weekly_used_pct": 42.0, "weekly_resets_at": "2027-01-01T00:00:00Z"}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": current}},
+        "claude_accounts": {"claude:a": stale_row},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == 42.0
+
+
+def test_stale_lane_still_refuses_when_the_default_account_row_is_not_a_reading(monkeypatch) -> None:
+    """An unknown row must not make a stale lane count as a fresh plan reading."""
+    stale = {"stale": True, "freshness": "stale_last_good", "weekly_used_pct": 42.0}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": stale}},
+        "claude_accounts": {"claude:a": _rate_limited_row()},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    assert mp.refusal_reason(
+        "claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT)
+    ) == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
+    # A probe flagged fresh whose weekly window has already reset is the old window.
+    expired = {"stale": False, "freshness": "fresh", "weekly_used_pct": 42.0, "weekly_resets_at": "2020-01-01T00:00:00Z"}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": expired}},
+        "claude_accounts": {"claude:a": _rate_limited_row()},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
+    assert mp.refusal_reason(
+        "claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT)
+    ) == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
+
+
 def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -> None:
     policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}
     _serve(monkeypatch, _accounts_payload(_account(89.0)))

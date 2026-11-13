@@ -195,14 +195,12 @@ def init_repo(
                 "start-codex-driver.sh",
                 "start-claude-driver.sh",
                 "start-gemini-driver.sh",
-                "start-grok-driver.sh",
                 # The consolidated launchers source the shared core + provider
                 # adapter (PR #5958); fixture repos must ship them or the staged
                 # driver dies at `source` before any behavior under test runs.
                 "scripts/launchers/codex.sh",
                 "scripts/launchers/claude.sh",
                 "scripts/launchers/gemini.sh",
-                "scripts/launchers/grok.sh",
                 "scripts/orchestration/codex_transport_health.py",
                 # Codex and Gemini canaries import the shared blocker policy,
                 # which imports the stdlib-only selector leaf.
@@ -432,8 +430,7 @@ def provider_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str
     for provider, marker in started.items():
         executable = fake_home_bin / executable_names.get(provider, provider)
         executable.write_text(
-            f"#!/bin/bash\ntouch {os.fspath(marker)!r}\n"
-            'if [ "${TEST_HOLD_PROVIDER:-0}" = 1 ]; then read -r; fi\n',
+            f'#!/bin/bash\ntouch {os.fspath(marker)!r}\nif [ "${{TEST_HOLD_PROVIDER:-0}}" = 1 ]; then read -r; fi\n',
             encoding="utf-8",
         )
         executable.chmod(0o755)
@@ -1337,11 +1334,7 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
 
 @pytest.mark.parametrize(
     ("first_provider", "second_provider", "first_model", "second_model"),
-    (
-        # The grok-4.7 row was dropped: every Grok model is retired (GROK-CANCEL-1110), so a Grok
-        # driver pinned to it never reaches its provider.
-        ("claude", "codex", "claude-fable-5-1", "gpt-6.1-sol"),
-    ),
+    (("claude", "codex", "claude-fable-5-1", "gpt-6.1-sol"),),
 )
 def test_real_cross_family_driver_launchers_refuse_before_second_provider_executes(
     tmp_path: Path,
@@ -1395,7 +1388,7 @@ def test_real_cross_family_driver_launchers_refuse_before_second_provider_execut
     assert stream["lease"]["holder_agent"] == first_provider
 
 
-def test_real_grok_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path: Path) -> None:
+def test_real_claude_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = seed_driver_stream(
         primary,
@@ -1404,17 +1397,19 @@ def test_real_grok_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path:
         instance_id="dead-holder",
         process_id=99999999,
     )
-    env, started = provider_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "claude")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
-        launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+        launched = run(
+            [primary / "start-claude-driver.sh", "devops", "--model", "claude-sonnet-5-5"], cwd=primary, env=env
+        )
 
     assert launched.returncode == 1
     assert "already has live session" in launched.stderr
     assert "dead-holder" in launched.stderr
     assert "expires_at=" in launched.stderr
-    assert not started["grok"].exists()
+    assert not started["claude"].exists()
     stream = store.dump_stream("epic:5703")
     assert [session["state"] for session in stream["sessions"]] == ["open"]
     assert stream["lease"]["generation"] == 1
@@ -1422,7 +1417,7 @@ def test_real_grok_driver_refuses_dead_unexpired_holder_via_remote_ttl(tmp_path:
     assert stream["lease"]["state"] == "active"
 
 
-def test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl(
+def test_real_claude_driver_recovers_expired_app_thread_holder_via_remote_ttl(
     tmp_path: Path,
 ) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
@@ -1466,26 +1461,28 @@ def test_real_grok_driver_recovers_expired_app_thread_holder_via_remote_ttl(
         now=observed_at,
         app_proof=proof,
     )
-    env, started = provider_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "claude")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
-        launched = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+        launched = run(
+            [primary / "start-claude-driver.sh", "devops", "--model", "claude-sonnet-5-5"], cwd=primary, env=env
+        )
 
     assert launched.returncode == 0, launched.stderr + launched.stdout
-    assert started["grok"].exists()
+    assert started["claude"].exists()
     stream = store.dump_stream("epic:5703")
     assert [session["state"] for session in stream["sessions"]] == ["closed", "closed"]
     assert stream["lease"]["generation"] == 2
-    assert stream["lease"]["holder_agent"] == "grok"
+    assert stream["lease"]["holder_agent"] == "claude"
     assert stream["lease"]["state"] == "released"
     assert "recovered" in [event["event_type"] for event in stream["lease_events"]]
 
 
-def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
+def test_real_claude_driver_launches_single_holder(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = SessionStreamStore(SessionStreamDatabase(primary / ".agent/session-streams/v1/session-streams.sqlite3"))
-    env, started = provider_environment(tmp_path, "grok")
+    env, started = provider_environment(tmp_path, "claude")
     env.update(
         {
             "TEST_HOLD_PROVIDER": "1",
@@ -1497,7 +1494,7 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         launched_process = subprocess.Popen(
-            [primary / "start-grok-driver.sh", "devops"],
+            [primary / "start-claude-driver.sh", "devops", "--model", "claude-sonnet-5-5"],
             cwd=primary,
             env=env,
             stdin=subprocess.PIPE,
@@ -1506,8 +1503,8 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
             text=True,
         )
         try:
-            wait_for_provider_stub(launched_process, started["grok"])
-            assert started["grok"].exists(), f"grok launcher did not reach provider: {launched_process.poll()}"
+            wait_for_provider_stub(launched_process, started["claude"])
+            assert started["claude"].exists(), f"claude launcher did not reach provider: {launched_process.poll()}"
             time.sleep(1.5)
             stdout, stderr = launched_process.communicate(input="\n", timeout=30)
         finally:
@@ -1516,49 +1513,28 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
                 launched_process.communicate(timeout=10)
 
     assert launched_process.returncode == 0, stderr + stdout
-    assert started["grok"].exists()
+    assert started["claude"].exists()
     stream = store.dump_stream("epic:5703")
     assert [session["state"] for session in stream["sessions"]] == ["closed"]
-    assert stream["lease"]["holder_agent"] == "grok"
+    assert stream["lease"]["holder_agent"] == "claude"
     assert stream["lease"]["state"] == "released"
     assert "heartbeat" in [event["event_type"] for event in stream["lease_events"]]
 
 
-@pytest.mark.parametrize("failure", ["startup", "approval-required"])
-def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_path: Path, failure: str) -> None:
+def test_provider_startup_failure_releases_only_its_exact_lease(tmp_path: Path) -> None:
     primary, _ = init_repo(tmp_path, bootstrap_sources=True)
     store = seed_driver_stream(primary, stream_id="epic:5703", close=True)
-    env, started = provider_environment(tmp_path, "grok")
-    provider = Path(env["HOME"]) / ".local/bin/grok"
-    command = [primary / "start-grok-driver.sh", "devops"]
-    if failure == "approval-required":
-        # Unsupported native options must fail before provider invocation or
-        # lease acquisition. The sentinel exposes any accidental provider call.
-        before_failure = store.dump_stream("epic:5703")
-        provider.write_text(
-            f"#!/bin/bash\ntouch {os.fspath(started['grok'])!r}\n"
-            "echo unexpected-provider-invocation >&2\nexit 99\n",
-            encoding="utf-8",
-        )
-        command += ["--", "--approval-mode", "required"]
-    else:
-        provider.write_text("#!/bin/bash\nexit 17\n", encoding="utf-8")
+    env, started = provider_environment(tmp_path, "claude")
+    provider = Path(env["HOME"]) / ".local/bin/claude"
+    command = [primary / "start-claude-driver.sh", "devops", "--model", "claude-sonnet-5-5"]
+    provider.write_text("#!/bin/bash\nexit 17\n", encoding="utf-8")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         failed = run(command, cwd=primary, env=env)
-        assert failed.returncode == (2 if failure == "approval-required" else 17), failed.stderr + failed.stdout
-        if failure == "approval-required":
-            assert "Unsupported native Grok driver provider argument" in failed.stderr
-        assert not started["grok"].exists()
+        assert failed.returncode == 17, failed.stderr + failed.stdout
+        assert not started["claude"].exists()
         after_failure = store.dump_stream("epic:5703")
-        if failure == "approval-required":
-            assert after_failure == before_failure
-            assert [session["state"] for session in after_failure["sessions"]] == ["closed"]
-            assert after_failure["lease"]["state"] == "released"
-            assert after_failure["lease"]["generation"] == 1
-            return
-
         assert [session["state"] for session in after_failure["sessions"]] == ["closed", "closed"]
         assert after_failure["lease"]["state"] == "released"
         assert after_failure["lease"]["generation"] == 2
@@ -1566,7 +1542,9 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
         # A subsequent ordinary launch can acquire immediately, without a TTL
         # wait or a force-release repair of the failed provider's generation.
         provider.write_text("#!/bin/bash\nexit 0\n", encoding="utf-8")
-        retried = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+        retried = run(
+            [primary / "start-claude-driver.sh", "devops", "--model", "claude-sonnet-5-5"], cwd=primary, env=env
+        )
         assert retried.returncode == 0, retried.stderr + retried.stdout
         after_retry = store.dump_stream("epic:5703")
         assert after_retry["lease"]["generation"] == 3

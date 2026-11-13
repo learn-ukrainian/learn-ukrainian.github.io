@@ -198,10 +198,8 @@ def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
         validate_catalog(catalog)
 
 
-def test_verdict_recorder_refuses_every_retired_grok_reviewer_identity():
-    # The native Grok holder this recorder followed retired with every Grok model (GROK-CANCEL-1110).
-    # Its seat is gone, so an attested native Grok receipt fails holder resolution and nothing is
-    # recorded; the recorder's own typed refusal is a follow-up change to record_cf_verdict.py.
+def test_verdict_recorder_accepts_attested_grok_and_refuses_unpinned_cursor_models():
+    # C-5307 restores Grok's holder and exact Cursor runtime identity.
     from scripts.review import record_cf_verdict
 
     for agent in ("grok", "grok-build"):
@@ -209,13 +207,11 @@ def test_verdict_recorder_refuses_every_retired_grok_reviewer_identity():
             "agent": agent, "model": "grok-4.7", "resolved_model": "grok-4.7-build",
             "resolved_model_known": True, "resolved_model_source": "grok-model-usage",
         }
-        with pytest.raises(ModelCatalogError, match="routing reference must resolve to exactly one model_id"):
-            record_cf_verdict.reviewer_identity(task)
+        assert record_cf_verdict.reviewer_identity(task) == ("grok-4.7", "xai")
     for reported, model in (("grok-4.7-build", "grok-4.7"), ("Grok 4.7 256K High", "grok-4.7")):
         with pytest.raises(record_cf_verdict.RecordError, match="not a formal reviewer"):
             record_cf_verdict._require_formal_reviewer(cursor=False, reported=reported, model=model, family="xai")
-        with pytest.raises(record_cf_verdict.RecordError, match="not a formal reviewer"):
-            record_cf_verdict._require_formal_reviewer(cursor=True, reported=reported, model=model, family="xai")
+        record_cf_verdict._require_formal_reviewer(cursor=True, reported=reported, model=model, family="xai")
 
 
 @pytest.mark.parametrize(

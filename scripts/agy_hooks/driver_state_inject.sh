@@ -34,6 +34,13 @@ code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed
 source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 py="$LEARN_UKRAINIAN_PYTHON"
+# Ordinary sessions have no driver gate and need no temporary files.
+if [ -z "${LU_DRIVER_STATE_FILE:-}" ] || [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
+  cat >/dev/null
+  echo "$fallback"
+  exit 0
+fi
+[ -n "${TMPDIR:-}" ] || bootstrap_failed
 # Drain the hook input before any child can fail without reading it. Keep the
 # original bytes in a file because shell variables cannot preserve NULs.
 input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || { cat >/dev/null; echo "$fallback"; exit 0; }
@@ -41,10 +48,6 @@ output_file=
 trap 'rm -f "$input_file"; [ -z "$output_file" ] || rm -f "$output_file"' 0
 if ! cat >"$input_file"; then
   cat >/dev/null
-  echo "$fallback"
-  exit 0
-fi
-if [ -z "${LU_DRIVER_STATE_FILE:-}" ] || [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
   echo "$fallback"
   exit 0
 fi

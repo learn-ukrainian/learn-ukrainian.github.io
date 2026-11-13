@@ -23,12 +23,16 @@ bootstrap_failed() {
 # The product, shared-state anchor and interpreter come from the one hook rule,
 # project_hook_context_resolve, before any child starts: LU_PRODUCT_ROOT, else
 # CLAUDE_PROJECT_DIR, else the nearest checkout above the working directory.
+# The interpreter and the canonical root come only from the configured
+# shared-state anchor (LEARN_UKRAINIAN_PRIMARY_REPO_ROOT, validated and made
+# physical by the rule); without it the hook refuses. The product's own Git
+# metadata never names the primary: whoever works in a checkout can rewrite it.
 # The payload's working directory stays policy input, never bootstrap authority.
 # shellcheck source=scripts/lib/project_interpreter.sh
 source "$SCRIPT_ROOT/scripts/lib/project_interpreter.sh" || bootstrap_failed
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 PYTHON_BIN="$LEARN_UKRAINIAN_PYTHON"
-CANONICAL_ROOT="$(project_primary_root_resolve "$LU_PRODUCT_ROOT" 2>/dev/null)" || bootstrap_failed
+CANONICAL_ROOT="$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 case "$MODE" in
   pre-tool-use)

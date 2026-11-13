@@ -398,11 +398,6 @@
       "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"int\")"
     },
     {
-      "path": "scripts/agent_runtime/agy_hook_config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "code": "arg-type",
       "message": "Argument 1 to \"Path\" has incompatible type \"Sequence[str]\"; expected \"PathLike[str] | str\""
@@ -8968,21 +8963,6 @@
       "message": "Returning Any from function declared to return \"str\""
     },
     {
-      "path": "scripts/build_dashboards.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/build_dashboards.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/build_dashboards.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
       "path": "scripts/build_landing_pages.py",
       "code": "arg-type",
       "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
@@ -14284,21 +14264,6 @@
     },
     {
       "path": "scripts/generate_a2_plans.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | Loader | None\" has no attribute \"exec_module\""
-    },
-    {
-      "path": "scripts/generate_dashboard_data.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },

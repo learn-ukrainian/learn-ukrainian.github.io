@@ -139,6 +139,18 @@ _project_interpreter_normalize() {
     printf '\n'
 }
 
+# Prints the physical path of directory <dir>, or returns 1. The x sentinel keeps
+# a trailing newline $(...) would strip, so a directory is never checked as its
+# clean namesake; a physical path with a newline cannot be checked faithfully by
+# these helpers (or exported intact), so it refuses (#100).
+_project_physical_dir() {
+    local dir
+    dir="$(cd -P "$1" 2>/dev/null && pwd -P && printf x)" || return 1
+    dir="${dir%$'\n'x}"
+    [[ "$dir" != *$'\n'* ]] || return 1
+    printf '%s\n' "$dir"
+}
+
 # Prints the primary checkout root for <root>; when the checkout's git metadata
 # is untrusted prints the reason instead and returns 1 (the caller captures
 # stdout, so a global would be lost in the subshell).
@@ -217,15 +229,15 @@ _project_interpreter_points_back() {
         *) pointer="$admin_dir/$pointer" ;;
     esac
     [ "$(basename "$pointer")" = ".git" ] || return 1
-    pointed_root="$(cd -P "$(dirname "$pointer")" 2>/dev/null && pwd)" || return 1
+    pointed_root="$(_project_physical_dir "$(dirname "$pointer")")" || return 1
     [ "$pointed_root" = "$root" ]
 }
 
 project_primary_root_resolve() {
     local root primary
 
-    root="$(cd -P "${1:?project_primary_root_resolve: checkout root required}" 2>/dev/null && pwd)" || {
-        echo "Error: untrusted git metadata: checkout root $1 does not exist" >&2
+    root="$(_project_physical_dir "${1:?project_primary_root_resolve: checkout root required}")" || {
+        echo "Error: untrusted git metadata: checkout root $1 does not exist or its path has a newline" >&2
         return 1
     }
     if ! primary="$(_project_interpreter_primary_root "$root")"; then
@@ -261,8 +273,8 @@ project_interpreter_resolve() {
         printf '%s\n' "$configured"
         return 0
     fi
-    root="$(cd -P "${1:?project_interpreter_resolve: checkout root required}" 2>/dev/null && pwd)" || {
-        echo "Error: project interpreter not found: checkout root $1 does not exist" >&2
+    root="$(_project_physical_dir "${1:?project_interpreter_resolve: checkout root required}")" || {
+        echo "Error: project interpreter not found: checkout root $1 does not exist or its path has a newline" >&2
         return 1
     }
     if ! primary="$(_project_interpreter_primary_root "$root")"; then
@@ -317,7 +329,19 @@ _project_hook_git_layout() {
 #   (no .git) therefore needs an explicit anchor.
 project_hook_roots_resolve() {
     local root="${1-${LU_PRODUCT_ROOT:-${CLAUDE_PROJECT_DIR:-}}}"
-    local primary state_root state_config
+    local primary state_root state_config invocation
+    # Configured roots keep precedence, but cannot hide malformed invocation metadata.
+    # Every directory below is checked by its exact physical path; one whose path has
+    # a newline refuses (_project_physical_dir).
+    invocation="$(_project_physical_dir .)" || return 1
+    while [[ ! -e "$invocation/.git" && ! -L "$invocation/.git" && "$invocation" != / ]]; do
+        invocation="${invocation%/*}"
+        [[ -n "$invocation" ]] || invocation=/
+    done
+    if [[ -e "$invocation/.git" || -L "$invocation/.git" ]]; then
+        primary="$(project_primary_root_resolve "$invocation")" || return 1
+        _project_hook_git_layout "$primary" || return 1
+    fi
     if [[ -z "$root" ]]; then
         root="$(pwd -P)" || return 1
         while [[ ! -e "$root/.git" && ! -L "$root/.git" ]]; do
@@ -335,11 +359,11 @@ project_hook_roots_resolve() {
         _project_hook_git_layout "$primary" || return 1
     fi
     state_root="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
-    [[ "$state_root" = /* ]] && _project_hook_git_layout "$state_root" || return 1
-    state_root="$(cd -P "$state_root" 2>/dev/null && pwd)" || return 1
+    [[ "$state_root" = /* ]] || return 1
+    state_root="$(_project_physical_dir "$state_root")" && _project_hook_git_layout "$state_root" || return 1
     if [[ -n "${LEARN_UKRAINIAN_STATE_ROOT:-}" ]]; then
         [[ "$LEARN_UKRAINIAN_STATE_ROOT" = /* ]] || return 1
-        state_config="$(cd -P "$LEARN_UKRAINIAN_STATE_ROOT" 2>/dev/null && pwd)" || return 1
+        state_config="$(_project_physical_dir "$LEARN_UKRAINIAN_STATE_ROOT")" || return 1
         [[ "$state_config" = "$state_root" ]] || return 1
     fi
     export LU_PRODUCT_ROOT="$root"
@@ -347,19 +371,18 @@ project_hook_roots_resolve() {
 }
 
 # project_hook_context_resolve [<product-root>]
-#   project_hook_roots_resolve, then exports LEARN_UKRAINIAN_PYTHON: the
-#   configured absolute executable, else the product primary's .venv python
-#   (exit 0); exit 1 otherwise. A linked worktree's .venv is never used, and a
-#   product root without a .git entry (a release snapshot, or a configured
-#   subdirectory) never supplies its own: the shared-state primary does.
+#   needs a configured LEARN_UKRAINIAN_PRIMARY_REPO_ROOT; then
+#   project_hook_roots_resolve, and exports LEARN_UKRAINIAN_PYTHON: the
+#   configured absolute executable, else the configured primary's .venv python
+#   (exit 0); exit 1 otherwise, before any interpreter starts. The product's own
+#   Git metadata never names the primary or the interpreter: whoever works in a
+#   checkout can rewrite it, and no local check tells it from a real primary
+#   (#100).
 project_hook_context_resolve() {
-    local interpreter checkout
+    local interpreter
+    [[ -n "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-}" ]] || return 1
     project_hook_roots_resolve "$@" || return 1
-    checkout="$LU_PRODUCT_ROOT"
-    if [[ ! -e "$checkout/.git" && ! -L "$checkout/.git" ]]; then
-        checkout="$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
-    fi
-    interpreter="$(project_interpreter_resolve "$checkout")" || return 1
+    interpreter="$(project_interpreter_resolve "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")" || return 1
     export LEARN_UKRAINIAN_PYTHON="$interpreter"
 }
 # LU_HOOK_RESOLVERS_END

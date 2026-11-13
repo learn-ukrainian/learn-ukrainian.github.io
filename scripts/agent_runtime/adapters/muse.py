@@ -20,7 +20,7 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
+from scripts.guardrails.worktree_containment import _require_real_directories, classify_repo_path
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -32,9 +32,8 @@ _EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 _MAX_JSONL_BYTES = 16 * 1024 * 1024
 _TOOLS = {
     "read-only": ("read_file",),
-    "workspace-write": ("read_file", "write_file", "edit_file"),
 }
-_PROFILES = {"read-only": ":read-only", "workspace-write": ":ask-me"}
+_PROFILES = {"read-only": ":read-only"}
 _PASSIVE_EVENTS = frozenset(
     {
         "runtime.command.accepted",
@@ -59,20 +58,23 @@ def confined_muse_argv(
     cmd: list[str], workspace: Path, mode: str, task_id: str, scratch_root: Path | str | None = None,
 ) -> list[str]:
     """Use the existing governed scratch and file sandbox for every Muse run."""
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
     from scripts.common.repo_root import project_interpreter
     from scripts.common.scratch import resolve_scratch_root
 
+    if mode != "read-only":
+        raise ValueError("muse_worker_mode_refused")
+    workspace = _workspace_path(workspace, preview=True)
+    interpreter = str(project_interpreter())
     package = Path(__file__).absolute().parents[2].name
     bootstrap = (
-        "import sys; sys.path.insert(0, sys.argv[1]); "
+        "import os, sys; sys.path.insert(0, sys.argv[1]); "
+        f"os.environ['LEARN_UKRAINIAN_PYTHON'] = {interpreter!r}; "
         f"from {package}.agent_runtime.adapters.muse import sandbox_main; "
         "raise SystemExit(sandbox_main(sys.argv[2:]))"
     )
     return [
-        str(project_interpreter()), "-I", "-c", bootstrap,
-        str(Path(__file__).resolve().parents[3]),
+        interpreter, "-I", "-c", bootstrap,
+        str(Path(__file__).absolute().parents[3]),
         "govern", task_id, mode, str(workspace), str(scratch_root or resolve_scratch_root()), *cmd,
     ]
 
@@ -83,9 +85,9 @@ def sandbox_main(args: list[str]) -> int:
     from scripts.review.isolation import prepare_host_sandbox, stage_engine_auth, wrap_argv_with_sandbox
 
     phase, task_id, mode, raw_workspace, scratch_root, *cmd = args
-    if mode == "workspace-write":
-        raise ValueError("muse_write_mode_unconfined")
-    workspace = Path(raw_workspace).resolve(strict=True)
+    if mode != "read-only":
+        raise ValueError("muse_worker_mode_refused")
+    workspace = _workspace_path(Path(raw_workspace))
     if mode not in _TOOLS or phase not in {"govern", "child"}:
         raise ValueError("muse_sandbox_launch_refused")
     if phase == "govern":
@@ -140,6 +142,10 @@ def sandbox_main(args: list[str]) -> int:
             # bwrap copies this fd into its private tmpfs and closes it before
             # exec. A killed run leaves no named host credential copy.
             extra += ["--perms", "0400", "--ro-bind-data", str(auth_fd), str(home / ".config/muse/auth.json")]
+        # Ancestor directories live on the private root tmpfs. Seal that
+        # mount too, so traversal cannot create even ephemeral outside files.
+        # Existing runtime and workspace submounts retain their own permissions.
+        extra += ["--remount-ro", "/"]
         argv[-len(cmd):-len(cmd)] = extra
         env = build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
         env.update(auth_env, HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"), TMPDIR=str(temporary))
@@ -168,6 +174,11 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
     """Validate both the existing and planned dispatch paths before resolution."""
     if not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{16}", nonce) is None:
         raise ValueError("muse_worker_nonce_required")
+    return _workspace_path(cwd, preview=preview)
+
+
+def _workspace_path(cwd: Path, *, preview: bool = False) -> Path:
+    """Enforce the same path boundary for adapter and direct sandbox callers."""
     if (
         not cwd.is_absolute()
         or any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in str(cwd))
@@ -179,7 +190,9 @@ def _workspace(cwd: Path, nonce: str, *, preview: bool = False) -> Path:
             existing = existing.parent
     _require_real_directories(existing)
     workspace = cwd.resolve(strict=not preview)
-    if cwd != workspace or not is_dispatch_worktree(workspace):
+    # Anchor outside the candidate's own Git marker: it is untrusted and
+    # checked against the containing repository.
+    if cwd != workspace or classify_repo_path(workspace, cwd=existing.parent) != "dispatch_worktree":
         raise ValueError("muse_dispatch_worktree_required")
     return workspace
 
@@ -270,8 +283,6 @@ class MuseAdapter:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         model = resolve_muse_model(model)
         config = tool_config or {}
         if mode not in self.supported_modes:
@@ -289,7 +300,7 @@ class MuseAdapter:
             raise ValueError("muse_worker_configuration_refused")
         require_muse_execution_model(model)
         if model != self.default_model or (config.get("muse_role"), mode) not in {
-            ("implementation", "workspace-write"), ("investigation", "read-only"),
+            ("investigation", "read-only"),
         }:
             raise ValueError("muse_worker_role_mode_refused")
         nonce = config.get("run_nonce")
@@ -320,8 +331,6 @@ class MuseAdapter:
         effort: str | None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
         return self._plan(
             prompt=prompt,
             mode=mode,
@@ -349,10 +358,10 @@ class MuseAdapter:
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
-        if mode == "workspace-write":
-            raise ValueError("muse_write_mode_unconfined")
-        if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
-            raise ValueError("muse_worker_mode_or_effort_refused")
+        if mode not in self.supported_modes:
+            raise ValueError("muse_worker_mode_refused")
+        if effort is not None and effort not in _EFFORTS:
+            raise ValueError("muse_worker_effort_refused")
         if not task_id:
             raise ValueError("muse_delegate_worker_required")
         if max_model_steps is not None and (type(max_model_steps) is not int or max_model_steps < 1):
@@ -363,7 +372,7 @@ class MuseAdapter:
         ):
             raise ValueError("muse_tool_output_budget_invalid")
         require_muse_execution_model(model)
-        # Use the existing lease validator for both modes' private transport.
+        # Use the existing lease validator for the private transport.
         scratch = validate_read_only_tmp_root(
             {"read_only_tmp_root": scratch_root}, workspace, "read-only", adapter="muse"
         )
@@ -415,8 +424,7 @@ class MuseAdapter:
             "--config",
             "run.toolset=" + json.dumps(_TOOLS[mode]),
         ]
-        if mode == "read-only":
-            cmd.append("--disable-write")
+        cmd.append("--disable-write")
         if max_model_steps is not None:
             cmd.extend(["--max-model-steps", str(max_model_steps)])
         if max_tool_output_bytes is not None:

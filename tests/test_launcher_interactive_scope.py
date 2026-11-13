@@ -119,15 +119,12 @@ INTERACTIVE = {
     "start-claude.sh": ("claude", "claude"),
     "start-codex.sh": ("codex", "codex"),
     "start-gemini.sh": ("gemini", "gemini"),
-    "start-grok.sh": ("grok", "grok"),
     f"{MACHINERY}/start-bio-driver.sh": ("claude", "bio"),
 }
 DRIVERS = {
     "start-claude-driver.sh": ("claude", "devops"),
     "start-codex-driver.sh": ("codex", "devops"),
-    "start-cursor-driver.sh": ("cursor", "devops"),
     "start-gemini-driver.sh": ("gemini", "devops"),
-    "start-grok-driver.sh": ("grok", "devops"),
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
     f"{MACHINERY}/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
@@ -295,7 +292,7 @@ def _write(path: Path, body: str, mode: int = 0o644) -> Path:
 # Where the launcher code under test comes from: this checkout's tracked copy,
 # or the installed lu-machinery release (`installed_machinery`).
 RUNTIMES = ("checkout", "installed")
-_PROVIDERS = ("claude", "codex", "cursor", "gemini", "grok")
+_PROVIDERS = ("claude", "codex", "gemini")
 # Package-relative boundary files each fixture replaces with a stub or redirect.
 _REPLACED = (
     "lib/driver_scope.sh",
@@ -485,14 +482,6 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     result = _launch(
         root, env, _runtime_wrapper(wrapper, runtime), *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC)
     )
-    if wrapper == "start-cursor-driver.sh":
-        # Both checkout and installed release refuse the retired Cursor pin before any
-        # scope, lease or provider start (GROK-CANCEL-1110).
-        assert result.returncode == 2, result.stdout + result.stderr
-        assert "model 'grok-4.7-high' is retired in the model catalog" in result.stderr
-        assert _lines(env["FAKE_STARTS"]) == []
-        assert not any(call.startswith("systemd-run ") for call in _lines(env["FAKE_MANAGER_CALLS"]))
-        return
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     assert _lines(env["FAKE_STARTS"]) == ["start"]
     start = re.search(
@@ -598,7 +587,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     ("wrapper", "args", "weekly", "code", "message"),
     [
         ("start-claude.sh", ("--does-not-exist",), "0", 2, "unknown launcher flag"),
-        ("start-grok.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
+        ("start-codex.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
         ("start-claude-driver.sh", ("--epic", "devops", "--model", "not-certified"), "0", 4, "not certified"),
         ("start-gemini-driver.sh", ("--epic", "devops", "--model", "gemini-unknown"), "0", 4, "not certified"),
         ("start-claude.sh", ("--model", "opus"), "0", 7, "Opus is blocked"),
@@ -684,7 +673,7 @@ def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> No
     wrapper = root / "start-gemini.sh"
     wrapper.write_text(
         wrapper.read_text().replace(
-            "launcher_main gemini interactive", "launcher_main grok interactive"
+            "launcher_main gemini interactive", "launcher_main codex interactive"
         )
     )
     result = _launch(root, env, "start-gemini.sh")
@@ -803,7 +792,7 @@ def test_interactive_scope_start_failure_preserves_systemd_status_without_publis
     "parent",
     [f"lu-driver-claude-devops-{_PARENT}.scope", f"lu-interactive-codex-codex-{_PARENT}.scope"],
 )
-@pytest.mark.parametrize(("wrapper", "args"), [("start-claude.sh", ()), ("start-grok-driver.sh", ("--epic", "devops"))])
+@pytest.mark.parametrize(("wrapper", "args"), [("start-claude.sh", ()), ("start-codex-driver.sh", ("--epic", "devops"))])
 def test_launch_from_a_session_scope_starts_a_sibling_scope(
     tmp_path: Path, parent: str, wrapper: str, args: tuple[str, ...]
 ) -> None:
@@ -893,9 +882,9 @@ def test_dispatch_from_an_interactive_scope_stays_bounded(
 
 def test_adapter_refusal_inside_the_scope_keeps_its_code(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    adapter = root / MACHINERY / "launchers/grok.sh"
+    adapter = root / MACHINERY / "launchers/codex.sh"
     adapter.write_text(adapter.read_text() + "launcher_adapter_validate() { lu_test_event validate; exit 2; }\n")
-    result = _launch(root, env, "start-grok.sh")
+    result = _launch(root, env, "start-codex.sh")
     assert result.returncode == 2, result.stdout + result.stderr
     assert _lines(env["FAKE_STARTS"]) == ["start"]
     assert [name for name, _ in _events(env)] == ["rules", "validate"]

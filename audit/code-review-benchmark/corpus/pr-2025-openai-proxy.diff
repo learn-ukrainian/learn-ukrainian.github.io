@@ -1,5 +1,5 @@
 commit db04f07beda401c31b50a175b55d737095d88365
-Author: Krisztian oos <krisztian.koos@gmail.com>
+Author: Project Maintainer <maintainer@example.invalid>
 Date:   Sat May 16 00:50:00 2026 +0200
 
     feat(bridge): OpenAI-compatible HTTP proxy at :8767

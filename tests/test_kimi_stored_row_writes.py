@@ -111,6 +111,9 @@ WRITERS: dict[str, Writer] = {
     f"{_AUTH}::AuthorityService._reclaim_expired_jobs_tx": Writer(SKIP, "deadline expiry and stale-lease requeue"),
     f"{_AUTH}::AuthorityService.claim_next_delivery": Writer(SKIP, "admitted recipient; Kimi-model request passed over"),
     f"{_AUTH}::AuthorityService._reclaim_expired_deliveries_tx": Writer(SKIP, "delivery expiry and requeue"),
+    f"{_AUTH}::AuthorityService.expire_undelivered": Writer(
+        SKIP, "backfill a null deadline on old undelivered rows; stored Kimi deliveries are left"
+    ),
     f"{_AUTH}::AuthorityService.finish_job": Writer(KEYED, "the fenced lease holder terminalizes its own job"),
     f"{_AUTH}::AuthorityService.finish_delivery": Writer(KEYED, "the fenced lease holder terminalizes its delivery"),
     f"{_AUTH}::AuthorityService.authorize_formal_review_substitution": Writer(

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Plan and verify duration-balanced pytest node-ID shards.
 
-Cursor Cloud's ``cursor_cloud_full_pytest.sh`` fallback uses this module
-(``plan`` / ``run`` / ``verify-artifacts``): each shard collects the selected
-suite locally, groups every selected node ID by test file, then uses
-deterministic longest-processing-time (LPT) assignment. GitHub Actions CI does
+Each shard collects the selected suite locally, groups every selected node ID
+by test file, then uses deterministic longest-processing-time (LPT)
+assignment (``plan`` / ``run`` / ``verify-artifacts``). GitHub Actions CI does
 not use it; ci.yml splits files with ``scripts/ci/split_tests.py``.
 
 Required selection (stage-1 slow-split): the identical mark expression
@@ -609,7 +608,7 @@ def _parser() -> argparse.ArgumentParser:
             f"  .venv/bin/python {checkout_relative('ci', 'pytest_shards.py').as_posix()} verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
             "Outputs: shard plans, node-ID lists, execution receipts, duration JSON, and validation errors.\n"
             "Exit codes: 0 means the requested operation passed; 1 means an input, partition, or test failed; 2 means CLI usage failed.\n"
-            f"Related: {checkout_relative('ci', 'cursor_cloud_full_pytest.sh').as_posix()} and docs/runbooks/ci-gate.md."
+            f"Related: docs/runbooks/ci-gate.md."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True, title="commands")

@@ -2029,14 +2029,14 @@ entries:
     kind: data_store
     store: [data/backups/]
     producer: []
-    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. The Monitor admin router (scripts/project_api/admin_router.py, BACKUP_DIR) lists and deletes them.
+    producer_note: No script in scripts/ writes it; it holds hand-made pre-migration copies of sources.db and leftover rehearsal sidecars. No tool lists or deletes them since the Monitor admin router was removed.
     local_only: true
     purpose: Pre-migration safety copies of local SQLite stores, plus leftover migration-rehearsal sidecar files.
     keywords: [backups, pre-migration copy, migration rehearsal]
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: api, how: "GET /api/admin/backup/list"}
+      - {surface: cli, how: "ls -l data/backups/ (local only)"}
     content_searchable: false
 
   - id: data-backups-staging

@@ -298,7 +298,7 @@ repos:
 
       - id: no-secret-print-hook
         name: no-print hook blocks seeded secret echoes
-        entry: bash scripts/pre_commit/project_python.sh -I -m agents_extensions.shared.hooks.guard-secret-print --self-test
+        entry: bash scripts/pre_commit/project_python.sh -I agents_extensions/shared/hooks/guard-secret-print.py --self-test
         language: system
         pass_filenames: false
         stages: [pre-commit]

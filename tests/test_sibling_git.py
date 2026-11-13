@@ -105,6 +105,11 @@ def world(tmp_path, monkeypatch):
         self.env["GIT_CONFIG_SYSTEM"] = os.devnull
 
     monkeypatch.setattr(sg.Git, "__init__", fixture_init)
+    marker = primary / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.touch()
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(primary))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
     before = snapshot(primary)
     yield primary, sibling, upstream
     assert snapshot(primary) == before, "protected primary changed"
@@ -983,6 +988,9 @@ def fixture_hook(primary, monkeypatch, *, deployed=False):
         "scripts/fleet/__init__.py",
         "scripts/fleet/sibling_git.py",
         "scripts/guardrails/worktree_containment.py",
+        "scripts/common/__init__.py",
+        "scripts/common/git_context.py",
+        "scripts/common/repo_root.py",
     ):
         dest = primary / relative
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -1153,12 +1161,13 @@ def test_module_context_attacks(world, tmp_path, monkeypatch, kind):
     [
         ("git -C {sibling} merge --ff-only origin/main", 0),
         ("cd {sibling} && git merge --ff-only origin/main", 2),
-        ("git -C {sibling} worktree remove {target}", 0),
+        ("git -C {sibling} worktree remove {target}", 2),
         ("git -C {primary} merge --ff-only origin/main", 2),
         ("cd {primary} && git merge --ff-only origin/main", 2),
     ],
 )
 def test_issue_11381_raw_git_targets_own_repository(world, monkeypatch, shape, expected):
+    """A foreign Git context must not allow a removal target in the protected primary."""
     primary, sibling, _ = world
     hook = fixture_hook(primary, monkeypatch)
     command = shape.format(sibling=shlex.quote(str(sibling)), primary=shlex.quote(str(primary)), target=shlex.quote(str(primary / "file.txt")))

@@ -382,7 +382,7 @@ The generated Bash command embeds the marked shared resolver block and a fixed
 mode dispatcher. It selects `LU_PRODUCT_ROOT`, then `CLAUDE_PROJECT_DIR`, then
 the nearest checkout above the invocation directory. An invalid nonempty root
 refuses. It keeps product files separate from primary shared state and validates
-Git worktree backlinks before selecting the primary's interpreter. A worktree's
+Git worktree backlinks before selecting the interpreter from the configured trusted primary. A worktree's
 `.venv` is never selected. An interpreter override must be absolute and executable;
 relative values are refused before PATH lookup. The command then runs the
 installed release under `-I`.
@@ -423,10 +423,18 @@ PASS requires one enabled guard registration per existing candidate, the
 to the executable project interpreter and this entry point. Matchers `*`
 and `""` pass the local coverage check; other matchers use Python regular
 expressions. This check does not establish AGY's native matcher semantics.
-Workspace-relative commands must resolve exactly to the project interpreter
-and guard entry point. Home commands must use absolute paths. Unresolved
-commands and duplicate JSON keys refuse.
+The command must match the pinned release writer's bytes exactly. The same
+registration applies in workspace and scoped-home configuration. The command
+resolves the validated primary interpreter before Python starts, then selects
+the installed guard resource. Altered commands and duplicate JSON keys refuse.
 The command timeout must be an integer of at least 10 seconds; booleans refuse.
+Configured product-root precedence is preserved. Before applying that override,
+the hook resolver also checks any Git metadata above the invocation directory;
+malformed gitfiles and symlinked `.git` entries refuse. Non-Git scratch workspaces
+use the caller's configured product and primary roots. Native interpreter bootstrap
+requires a configured `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT` and selects the interpreter
+only from that trusted primary, never from product-controlled Git metadata.
+
 Invalid candidates and the absence of all guarded candidates refuse. The
 adapter installs only when the dispatch workspace candidate is absent. It
 never repairs an existing unguarded, disabled or invalid file. The explicit
@@ -454,12 +462,13 @@ The overlay registers the guard as `primary-checkout-write-guard`, with
 matcher `write_file|edit_file|run_command` and a timeout of 10 seconds.
 Workspace provisioning (the adapter's worktree install, the explicit
 provisioner and bridge scratch) merges both guards when they are missing,
-using absolute paths.
+using the generated native command. Both guard executables come from the installed
+machinery release through `machinery_path`, never from the writable product root.
 A dispatched `workspace-write` AGY worker skips AGY's permission prompts on
 the host, so before launch the dispatcher provisions both guards into its
 worktree with `require_dispatch_guards`. It then refuses the launch unless
 the secret guard passes the gate above, the primary guard member equals the
-absolute registration, and the guard script exists. A dry run plans before
+generated registration, and the installed guard script exists. A dry run plans before
 the worktree exists and provisions nothing.
 
 AGY has no write lock of its own, so `AgyAdapter` refuses a `read-only` call
@@ -469,7 +478,7 @@ validated native denials above and a scoped home, or inside an attempt
 boundary. The lane health probe builds its version-only plan in
 `AgyAdapter.probe_mode` (`workspace-write`).
 
-Bridge asks explicitly provision an absolute guard into their caller-owned
+Bridge asks explicitly provision the generated guard into their caller-owned
 scratch workspace when its hooks file is absent. Existing invalid scratch
 files remain untouched and refuse in the adapter. Attempt workspaces need
 no hooks file because their provisioned scoped home contains the guard.

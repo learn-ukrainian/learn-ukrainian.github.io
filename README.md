@@ -100,7 +100,6 @@ learn-ukrainian/
 │   │   ├── research/           # Research notes (seminar tracks)
 │   │   └── status/             # Audit results (auto-generated)
 │   └── curriculum.yaml         # Module manifest
-├── dashboards/                 # Static analysis & progress dashboards
 ├── starlight/                  # Website (Astro Starlight)
 │   └── src/content/docs/       # Published module pages (MDX)
 ├── scripts/                    # Build tools, audits, batch processing
