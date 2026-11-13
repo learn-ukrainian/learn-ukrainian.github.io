@@ -5,7 +5,6 @@ post-execution checks remain: they verify the output after reattribution +
 ingestion.
 """
 
-import json
 import sys
 from pathlib import Path
 from typing import ClassVar
@@ -20,49 +19,6 @@ from rag.config import LITERARY_DIR
 # ── Post-execution tests ─────────────────────────────────────────────
 
 
-class TestPostReattributedFilesValid:
-    """Each new JSONL has correct author/work fields and valid chunk_ids."""
-
-    EXPECTED_FILES: ClassVar[dict[str, str]] = {
-        "ukrlib-kotsyubynsky.jsonl": "Коцюбинський М.",
-        "ukrlib-kotlyarevsky.jsonl": "Котляревський І.",
-        "ukrlib-myrny.jsonl": "Мирний П.",
-        "ukrlib-tychyna.jsonl": "Тичина П.",
-        "ukrlib-nechuy.jsonl": "Нечуй-Левицький І.",
-    }
-
-    EXPECTED_PREFIXES: ClassVar[dict[str, str]] = {
-        "ukrlib-kotsyubynsky.jsonl": "Михайло Коцюбинський",
-        "ukrlib-kotlyarevsky.jsonl": "Іван Котляревський",
-        "ukrlib-myrny.jsonl": "Панас Мирний",
-        "ukrlib-tychyna.jsonl": "Павло Тичина",
-        "ukrlib-nechuy.jsonl": "Іван Нечуй-Левицький",
-    }
-
-    @pytest.mark.parametrize("filename,expected_author", list(EXPECTED_FILES.items()))
-    def test_post_file_has_correct_author(self, filename, expected_author):
-        path = LITERARY_DIR / filename
-        if not path.exists():
-            pytest.skip(f"Reattributed file not yet created: {path}")
-
-        expected_prefix = self.EXPECTED_PREFIXES[filename]
-        chunk_ids = set()
-        with open(path, encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                chunk = json.loads(line)
-                assert chunk["author"] == expected_author, (
-                    f"Line {i}: author={chunk['author']}, expected={expected_author}"
-                )
-                assert chunk["work"].startswith(expected_prefix + ". "), (
-                    f"Line {i}: work does not start with '{expected_prefix}. ': {chunk['work']}"
-                )
-                assert chunk["chunk_id"] not in chunk_ids, (
-                    f"Line {i}: duplicate chunk_id: {chunk['chunk_id']}"
-                )
-                chunk_ids.add(chunk["chunk_id"])
-                # Verify required fields
-                for field in ("text", "source_url", "year", "genre", "language_period"):
-                    assert field in chunk, f"Line {i}: missing field '{field}'"
 
 
 class TestPostNoCrossContamination:

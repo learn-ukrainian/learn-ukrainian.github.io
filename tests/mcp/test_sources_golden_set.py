@@ -7,8 +7,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-import pytest
-
 _SPEC = importlib.util.spec_from_file_location(
     "sources_golden_set",
     Path(__file__).with_name("sources_golden_set.py"),
@@ -74,10 +72,10 @@ def test_committed_golden_set_stores_hashes_not_dictionary_text() -> None:
         assert len(fingerprint["text_sha256"]) == 64
 
 
-def test_sources_golden_set_matches_frozen_handlers() -> None:
-    from scripts.rag.config import VESUM_DB_PATH
-    from wiki.sources_db import SOURCES_DB_PATH
+def test_sources_golden_set_matches_frozen_handlers(requires_sources_db, requires_vesum_db, monkeypatch) -> None:
+    from scripts.rag import config
+    from wiki import sources_db
 
-    if not SOURCES_DB_PATH.is_file() or not Path(VESUM_DB_PATH).is_file():
-        pytest.skip("local data/sources.db or data/vesum.db is not in this checkout")
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", requires_sources_db)
+    monkeypatch.setattr(config, "VESUM_DB_PATH", requires_vesum_db)
     assert _GOLDEN.canonical_bytes(_GOLDEN.capture()) == _GOLDEN.EXPECTED_PATH.read_bytes()

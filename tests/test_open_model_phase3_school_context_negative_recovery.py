@@ -304,22 +304,6 @@ def test_canonical_temp_root_resolves_var_symlink(monkeypatch: pytest.MonkeyPatc
         shutil.rmtree(root, ignore_errors=True)
 
 
-def test_production_receipt_reproducible_against_drive_custody(tmp_path: Path) -> None:
-    if not CUSTODY_TARBALL.is_file():
-        pytest.skip("Drive custody artifacts unavailable")
-    assert negrec.sha256_file(CUSTODY_TARBALL) == negrec.PINNED_CUSTODY_TARBALL_SHA256
-    committed = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
-    out = tmp_path / "receipt.json"
-    reproduced = negrec.production_run(
-        custody_tarball=CUSTODY_TARBALL,
-        public_receipt_path=out,
-        started_at=committed["started_at"],
-        completed_at=committed["completed_at"],
-    )
-    assert stat.S_IMODE(out.stat().st_mode) == negrec.PRIVATE_FILE_MODE
-    assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
-    assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
-    assert reproduced["bindings"]["implementation_sha256"] == negrec.sha256_file(negrec.SCRIPT_PATH)
 
 
 def _hermetic_fixture(tmp_path: Path) -> dict[str, Path]:

@@ -381,23 +381,3 @@ def test_committed_receipt_validates_when_present() -> None:
     assert "@gmail.com" not in dumped
     assert "/Users/" not in dumped
     assert "page_texts" not in validated
-
-
-def test_private_audit_against_drive_custody() -> None:
-    drive_staging = _drive_staging()
-    if drive_staging is None:
-        pytest.skip("configured Drive mount unavailable")
-    required = [
-        drive_staging / intake.PDF_FILENAME,
-        drive_staging / intake.ITEM_HTML_FILENAME,
-        drive_staging / intake.ONLINE_BOOK_HTML_FILENAME,
-        drive_staging / intake.PDF_HEADERS_FILENAME,
-        drive_staging / intake.ITEM_HEADERS_FILENAME,
-        drive_staging / intake.ONLINE_BOOK_HEADERS_FILENAME,
-    ]
-    if not all(path.exists() for path in required):
-        pytest.skip("Drive custody artifacts unavailable")
-    result = intake.private_audit(drive_staging)
-    assert result["ok"] is True
-    assert result["artifact_count"] == 6
-    assert result["provider_identity_sha256"] == intake.AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256

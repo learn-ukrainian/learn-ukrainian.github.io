@@ -179,26 +179,20 @@ def test_committed_deck_parity(tmp_path: Path):
         assert c_comm["options"] == c_gen["options"]
 
 
-def test_vesum_database_validation():
+def test_vesum_database_validation(requires_vesum_db):
     """Verify that all target inflected pronoun tokens exist in VESUM."""
     cards = build_canonical_pronoun_cards()
-    report = verify_deck_with_vesum(cards)
-    if report["status"] == "skipped":
-        pytest.skip(report["message"])
-
+    report = verify_deck_with_vesum(cards, db_path=requires_vesum_db)
     assert report["verified"] is True
     assert report["status"] == "passed"
     assert report["missing_count"] == 0
     assert report["missing_forms"] == []
 
 
-def test_vesum_distractor_validation():
+def test_vesum_distractor_validation(requires_vesum_db):
     """Verify that corrupted distractors do not falsely match standard literary pronouns in VESUM."""
     cards = build_canonical_pronoun_cards()
-    dist_report = verify_distractors_with_vesum(cards)
-    if dist_report["status"] == "skipped":
-        pytest.skip(dist_report["message"])
-
+    dist_report = verify_distractors_with_vesum(cards, db_path=requires_vesum_db)
     assert dist_report["verified"] is True
     assert dist_report["status"] == "passed"
     assert dist_report["invalid_distractors"] == []

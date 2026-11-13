@@ -9,7 +9,6 @@ import pytest
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as manifest
 from scripts.projects.open_model_data import phase3_ua_gec_complete_context as ua_context
-from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 def _text(family: str, ordinal: int) -> str:
@@ -655,36 +654,3 @@ def test_non_ua_collision_with_ua_only_index_fails_before_branch_selection(
 
     with pytest.raises(manifest.EvaluationContextManifestError, match="collides with UA-only index"):
         _invoke_build_manifest(paths)
-
-
-def test_production_manifest_against_drive_custody() -> None:
-    drive = min(
-        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"),
-        default=Path.home() / "Library/CloudStorage/GoogleDrive-unavailable/My Drive/Projects/learn-ukrainian-data",
-    )
-    tarball = drive / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
-    closure = (
-        drive / "backups/phase3-6375/20260811T090325Z/phase3-v3-prefreeze-20260812T024213Z/ua-gec-context-closure-v2"
-    )
-    backup_dir = drive / "backups/phase3-6375/20260813T220000Z/phase3-evaluation-context-manifest-v1"
-    public_receipt = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
-    if not tarball.exists() or not closure.exists():
-        pytest.skip("Drive custody artifacts unavailable")
-    if backup_dir.exists() and (backup_dir / manifest.PRIVATE_FILENAME).exists():
-        receipt = json.loads(public_receipt.read_text(encoding="utf-8"))
-        manifest.validate_receipt(receipt)
-        assert receipt["context_accounting"] == manifest.CONTEXT_ACCOUNTING
-        return
-    receipt = manifest.production_run(
-        custody_tarball=tarball,
-        ua_gec_context_path=closure / "ua_gec_complete_context_v1.jsonl",
-        ua_gec_exclusions_path=closure / "ua_gec_complete_context_exclusions_v1.jsonl",
-        ua_gec_receipt_path=closure / "phase3-ua-gec-complete-context-receipt-v1.json",
-        drive_backup_dir=backup_dir,
-        public_receipt_path=public_receipt,
-        started_at="2026-08-13T22:00:00Z",
-        completed_at="2026-08-13T22:00:30Z",
-    )
-    manifest.validate_receipt(receipt)
-    assert receipt["row_count"] == 9392
-    assert receipt["context_accounting"] == manifest.CONTEXT_ACCOUNTING

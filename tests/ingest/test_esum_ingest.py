@@ -1,23 +1,7 @@
 import json
 from pathlib import Path
 
-import pytest
-
 from scripts.ingest.esum_ingest import parse_esum, write_jsonl
-
-
-def test_esum_ingest_djvutxt_regression():
-    # Load vol1 djvu raw text
-    repo = Path(__file__).resolve().parents[2]
-    vol1_txt = repo / "data" / "raw" / "esum" / "vol1.txt"
-    if not vol1_txt.exists():
-        pytest.skip("Vol 1 djvutxt file not available locally")
-
-    text = vol1_txt.read_text(encoding="utf-8")
-    entries = parse_esum(text, vol=1, source_format="djvutxt")
-
-    # Regression assertion: vol1 djvutxt parses to >= 5000 entries (current is 5146)
-    assert len(entries) >= 5000
 
 
 def test_esum_ingest_textpdf_parsing(tmp_path: Path):

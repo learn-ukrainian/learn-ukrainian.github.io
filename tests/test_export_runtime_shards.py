@@ -48,9 +48,10 @@ from scripts.atlas.export_runtime_shards import (
     verify_tree,
 )
 from scripts.atlas.normalization import load_normalization_vectors, normalize_atlas_text
+from scripts.guardrails.worktree_containment import resolve_main_root
 
 ROOT = Path(__file__).resolve().parents[1]
-REAL_DB_PATH = ROOT / "data" / "atlas.db"
+REAL_DB_PATH = resolve_main_root(ROOT) / "data" / "atlas.db"
 COMMITTED_RUNTIME_TREE = ROOT / "tests" / "fixtures" / "atlas" / "runtime-tree"
 PRACTICE_DECKS_ROOT = ROOT / "tests" / "fixtures" / "atlas" / "practice_decks"
 EXPORTER_SCRIPT = ROOT / "scripts" / "atlas" / "export_runtime_shards.py"

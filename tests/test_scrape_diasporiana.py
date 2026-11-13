@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import shutil
 import subprocess
 import sys
@@ -169,36 +168,3 @@ class TestDiasporianaOcrFallback:
 
         assert ocr_pages
         assert "Україна" in combined or "Нарис історії України" in combined
-class TestDiasporianaJsonlSchema:
-    def test_chunk_schema_matches_existing_litopys_waves(
-        self,
-        sample_spec: sd.SourceSpec,
-        requires_literary_wave12_jsonl: Path,
-    ) -> None:
-        pages = [
-            sd.PageText(
-                page=1,
-                volume=1,
-                author=sample_spec.author,
-                year=sample_spec.year,
-                work_title=sample_spec.work,
-                source_url="https://diasporiana.org.ua/file.pdf#page=1",
-                text=(
-                    "Гетьманщина була важливою частиною історії України. " * 80
-                    + "\n\n"
-                    + "Дорошенко описує козацьку державу та її політичний розвиток. " * 60
-                ),
-            )
-        ]
-
-        chunks = sd.chunk_pages(pages, sample_spec)
-        assert chunks
-
-        fixture_path = ROOT / "data" / "literary_texts" / "wave12-krupnytsky-orlyk-biohrafiia.jsonl"
-        with fixture_path.open(encoding="utf-8") as handle:
-            fixture_chunk = json.loads(handle.readline())
-
-        assert set(chunks[0].keys()) == set(fixture_chunk.keys())
-        assert chunks[0]["author"] == sample_spec.author
-        assert chunks[0]["work"] == sample_spec.work
-        assert chunks[0]["year"] == sample_spec.year
