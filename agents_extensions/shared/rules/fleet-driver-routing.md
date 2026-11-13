@@ -140,7 +140,7 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 ### Cursor pools (checked 2026-09-22)
 
-Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
+Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a previous-generation slug. An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true`; that flag is not another model slug. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
 **Cursor Models pool.** More included usage. The pin is `grok-4.7-high` (C-5307) for coding and code/infra review. grok-4.6 and grok-4.5 stay retired. Grok is not a driver.
 
