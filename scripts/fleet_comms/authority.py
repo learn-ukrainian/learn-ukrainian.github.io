@@ -1577,8 +1577,10 @@ class AuthorityService:
         """Expire old undelivered rows through the existing deadline path.
 
         A null deadline is set to the row's created_at, which is already past
-        the cutoff, and reclaim_expired_deliveries then marks the row expired.
-        The row, its message and its body artifact stay.
+        the cutoff, and reclaim then marks the row expired. The row and its
+        message stay. An unread body stays ineligible for retention deletion.
+        The batch sends one summary notification, not one per row. A stored
+        Kimi delivery is left untouched.
         """
         if older_than_days <= 0:
             raise AuthorityServiceError("older_than_days_must_be_positive")
@@ -1593,7 +1595,9 @@ class AuthorityService:
                        WHERE delivery_id = ?""",
                     (now_value, str(row["delivery_id"])),
                 )
-            expired = self._reclaim_expired_deliveries_tx(now_value, max_attempts=3)
+            expired = self._reclaim_expired_deliveries_tx(
+                now_value, max_attempts=3, summarize_deadline_expiry=True,
+            )
         return expired
 
     def _stale_undelivered(self, *, older_than_days: int, now: str | None) -> list[sqlite3.Row]:
@@ -2271,9 +2275,12 @@ class AuthorityService:
             reclaimed += 1
         return reclaimed
 
-    def _reclaim_expired_deliveries_tx(self, now: str, *, max_attempts: int) -> int:
+    def _reclaim_expired_deliveries_tx(
+        self, now: str, *, max_attempts: int, summarize_deadline_expiry: bool = False,
+    ) -> int:
         """Expire or requeue abandoned deliveries; a stored Kimi delivery (legacy) is left as it is."""
         reclaimed = 0
+        deadline_ids: list[str] = []
         expired = self._conn.execute(
             """SELECT delivery_id, fence_token, recipient, message_id FROM authority_deliveries
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
@@ -2296,8 +2303,14 @@ class AuthorityService:
                    WHERE delivery_id = ? AND fence_token = ? AND finished_at IS NULL""",
                 (now, delivery_id, int(row["fence_token"])),
             )
-            self._dead_letter_delivery_tx(delivery_id, reason_code="deadline_expired")
+            self._dead_letter_delivery_tx(
+                delivery_id, reason_code="deadline_expired", notify=not summarize_deadline_expiry,
+            )
+            if summarize_deadline_expiry:
+                deadline_ids.append(delivery_id)
             reclaimed += 1
+        if deadline_ids:
+            self._notify_deadline_expiry_summary_tx(deadline_ids)
         stale = self._conn.execute(
             """SELECT delivery_id, fence_token, attempt_count, recipient, message_id FROM authority_deliveries
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
@@ -2410,14 +2423,51 @@ class AuthorityService:
             (state, now, str(row["wake_id"])),
         )
 
-    def _dead_letter_delivery_tx(self, delivery_id: str, *, reason_code: str) -> None:
+    def _dead_letter_delivery_tx(self, delivery_id: str, *, reason_code: str, notify: bool = True) -> None:
         self._conn.execute(
             """INSERT OR IGNORE INTO authority_dead_letters(
                 dead_letter_id, delivery_id, reason_code, created_at
             ) VALUES (?, ?, ?, ?)""",
             (new_id("authority-dead-letter"), delivery_id, reason_code, _iso()),
         )
-        self._notify_coordinator_reply_failure_tx(delivery_id, reason_code=reason_code)
+        if notify:
+            self._notify_coordinator_reply_failure_tx(delivery_id, reason_code=reason_code)
+
+    def _notify_deadline_expiry_summary_tx(self, delivery_ids: list[str]) -> bool:
+        """One delivery-error for a batch of deadline expiries, addressed only to the durable CTO.
+
+        Per-row notices would flood the coordinator and a legacy session recipient
+        would abort the whole batch. Rows whose sender is not the coordinator are
+        omitted, matching the per-row rule.
+        """
+        noticed: list[str] = []
+        for start in range(0, len(delivery_ids), 100):
+            chunk = delivery_ids[start:start + 100]
+            placeholders = ",".join("?" * len(chunk))
+            rows = self._conn.execute(
+                f"""SELECT d.delivery_id, d.recipient, m.sender
+                    FROM authority_deliveries d JOIN comms_messages m USING (message_id)
+                    WHERE d.delivery_id IN ({placeholders})""",
+                chunk,
+            ).fetchall()
+            for row in rows:
+                if row["sender"] == DURABLE_CTO_RECIPIENT and row["recipient"] != DURABLE_CTO_RECIPIENT:
+                    noticed.append(str(row["delivery_id"]))
+        if not noticed:
+            return False
+        ids = sorted(noticed)
+        digest = _sha256_bytes(",".join(ids).encode())[:32]
+        self._publish_message_tx(
+            sender="fleet-comms", channel=None, kind="delivery-error",
+            body=_canonical_json({
+                "error": "coordinator_reply_delivery_failed",
+                "reason_code": "deadline_expired",
+                "expired_count": len(ids),
+            }),
+            targets=_admit_recipients((DURABLE_CTO_RECIPIENT,), mode=BRIDGE_MODE),
+            idempotency_key=f"coordinator-reply-error:summary:{digest}",
+        )
+        return True
 
     def _notify_coordinator_reply_failure_tx(self, delivery_id: str, *, reason_code: str) -> bool:
         row = self._conn.execute(
