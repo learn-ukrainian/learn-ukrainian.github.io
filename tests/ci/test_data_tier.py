@@ -766,6 +766,8 @@ def test_checkout_creation_failure_uses_guarded_cleanup(tmp_path: Path, monkeypa
 
     def command(argv: list[str], **kwargs: object) -> SimpleNamespace:
         if "add" in argv:
+            assert "--git-dir" not in argv
+            assert kwargs.get("cwd") == tmp_path
             created.append(Path(argv[-2]))
             return SimpleNamespace(stdout="")
         raise data_tier.DataTierError("fetch failed")

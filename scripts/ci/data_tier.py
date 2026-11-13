@@ -286,15 +286,17 @@ def stop_scope(unit: str) -> None:
 
 
 def make_test_worktree(primary: Path) -> Path:
-    # Use Git's common directory only to register a new linked checkout. All
-    # code freshness operations happen from that checkout, never from primary.
-    git_dir = primary / ".git"
+    # Register the linked checkout from the primary work tree. Passing
+    # `--git-dir` while the cwd is `.worktrees/data-tier` makes Git treat that
+    # directory as the toplevel, so the reference-transaction delegator looks
+    # for `.githooks` there and aborts the ref update before checkout.
+    # Later freshness commands run in the new checkout, not in primary.
     parent = primary / ".worktrees" / "data-tier"
     parent.mkdir(parents=True, exist_ok=True)
     path = parent / f"run-{uuid.uuid4().hex}"
     command(
-        ["git", "--git-dir", str(git_dir), "worktree", "add", "--detach", str(path), "origin/main"],
-        cwd=parent,
+        ["git", "worktree", "add", "--detach", str(path), "origin/main"],
+        cwd=primary,
         timeout=300,
     )
     try:
