@@ -404,6 +404,16 @@ def test_default_account_fresh_lane_is_admitted_when_its_row_is_not_a_reading(mo
         mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT))
         is None
     )
+    # An expired reset on the unused account row does not veto the lane's current window.
+    stale_row = _rate_limited_row()
+    stale_row["stale"] = True
+    stale_row["weekly"]["resets_at"] = "2020-01-01T00:00:00Z"
+    current = {"stale": False, "freshness": "fresh", "weekly_used_pct": 42.0, "weekly_resets_at": "2027-01-01T00:00:00Z"}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": current}},
+        "claude_accounts": {"claude:a": stale_row},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) == 42.0
 
 
 def test_stale_lane_still_refuses_when_the_default_account_row_is_not_a_reading(monkeypatch) -> None:
@@ -415,6 +425,16 @@ def test_stale_lane_still_refuses_when_the_default_account_row_is_not_a_reading(
     })
     assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
     policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}]}
+    assert mp.refusal_reason(
+        "claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT)
+    ) == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
+    # A probe flagged fresh whose weekly window has already reset is the old window.
+    expired = {"stale": False, "freshness": "fresh", "weekly_used_pct": 42.0, "weekly_resets_at": "2020-01-01T00:00:00Z"}
+    _serve(monkeypatch, {
+        "agents": {"claude": {"status": "cool", "codexbar": expired}},
+        "claude_accounts": {"claude:a": _rate_limited_row()},
+    })
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
     assert mp.refusal_reason(
         "claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT)
     ) == "MODEL_HEADROOM_USAGE_UNKNOWN: claude-opus-5-5 has no fresh plan usage reading"
