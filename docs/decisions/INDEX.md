@@ -6,6 +6,7 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 
 | ID | Date | Expires | Scope | Status | Title |
 | ---- | ------ | --------- | ------- | -------- | ------- |
+| dec-018 | 2026-11-13 | 2027-02-11 | harness | active | Machinery paths change in learn-ukrainian/machinery first (TWIN-FREEZE-1113) |
 | dec-017 | 2026-10-24 | 2027-01-22 | architecture | active | Atlas entries use stable anchors on spelling hubs |
 | dec-016 | 2026-10-01 | 2026-12-30 | pipeline | active | Layer B entailment gate shelved; no cutover |
 | dec-015 | 2026-09-30 | 2026-12-29 | pipeline | active | Evidence pack replaces wiki as LLM research input for core rebuild |

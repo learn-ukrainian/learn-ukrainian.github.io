@@ -446,3 +446,36 @@ decisions:
           Conflates entries and makes corrections or reordering change identity.
     superseded_by: null
     depends_on: []
+
+  - id: dec-018
+    status: active
+    date: 2026-11-13
+    expires: 2027-02-11
+    scope: harness
+    title: "Machinery paths change in learn-ukrainian/machinery first (TWIN-FREEZE-1113)"
+    reasoning: >-
+      Until the product's in-tree machinery copy is gone, a product PR that changes
+      a path the pinned machinery rename map classifies as machinery lands only
+      with a body line "Machinery-Twin: learn-ukrainian/machinery#N SHA" naming a
+      PR merged into machinery main with that merge commit. The CI Gate enforces it
+      on merge_group, reading each member's current body, and warns on
+      pull_request (scripts/ci/machinery_twin_gate.py). Cutover deletions cite the
+      existing machinery PR. The gate turns itself off once the merged branch tip
+      holds no machinery path outside the residual (the OpenCode provider).
+      Semantic equivalence stays with the exact-head review. Named residual: a
+      body edited after the merge_group gate reads it and before the merge
+      commits is not re-checked (the read-to-merge window queue_review_gate
+      also has); a body edit triggers no run of its own.
+    evidence:
+      - "#13017; four product-only edits forked dispatcher and publisher behaviour"
+      - "Opus 5.5 CTO proposal; Sol 6.1 APPROVE WITH CONDITIONS, 2026-11-13"
+      - "Condition 2 ruling (fresh body read on merge_group satisfies it): Opus 5.5 and Sol 6.1, 2026-11-13"
+    alternatives:
+      - option: "Brief-only rule (MACHINERY-TWIN line in every brief)"
+        rejected_because: >-
+          Already in force and did not stop the four forks.
+      - option: "Advisory pr-body-guard check"
+        rejected_because: >-
+          A failing advisory check does not block landing.
+    superseded_by: null
+    depends_on: []
