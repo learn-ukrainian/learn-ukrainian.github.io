@@ -72,9 +72,11 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     result = evaluate_candidate(GROK_CANDIDATE, inputs)
     assert result.status == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in result.reason
-    retired = evaluate_candidate(GROK_CANDIDATE, inputs)
+    retired = evaluate_candidate(
+        replace(GROK_CANDIDATE, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"), inputs
+    )
     assert retired.status == "excluded"
-    assert "Ukrainian-content language-lanes exclusion" in retired.reason
+    assert "retired" in retired.reason
 
     state_file = tmp_path / "review.json"
     assert (
@@ -139,7 +141,10 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
-        assert "retired" in result.reason or "Ukrainian-content language-lanes exclusion" in result.reason
+        if candidate is GROK_CANDIDATE:
+            assert "Ukrainian-content language-lanes exclusion" in result.reason
+        else:
+            assert "retired" in result.reason
     candidate = GROK_CANDIDATE
     result = evaluate_candidate(candidate, inputs)
     assert result.status == "excluded"
@@ -148,13 +153,17 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
         ResolverInputs(
             author_model="codex",
             changed_paths=("curriculum/A1/lesson.mdx",),
-            pinned_candidate="muse",
+            pinned_candidate="grok-4.7-cursor-fallback",
             pressure_override_reason="test pin",
             claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None
-    assert "unknown explicit reviewer pin" in pinned.fail_closed_reason
+    assert "failed a hard eligibility gate" in pinned.fail_closed_reason
+    assert any(
+        row.name == "grok-4.7-cursor-fallback" and "Ukrainian-content language-lanes exclusion" in row.reason
+        for row in pinned.trace
+    )
     deepseek_pin = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
