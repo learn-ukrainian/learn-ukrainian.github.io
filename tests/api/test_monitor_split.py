@@ -147,8 +147,9 @@ def test_product_static_map_is_explicit_and_complete() -> None:
     declared = set(entry.STATIC_FILES)
     on_disk = {path.relative_to(PRODUCT_STATIC).as_posix() for path in PRODUCT_STATIC.rglob("*") if path.is_file()}
     assert declared == on_disk
-    # dashboards/ holds only the placeholder the machinery release builder requires.
-    assert [path.name for path in (REPO_ROOT / "dashboards").iterdir()] == [".gitkeep"]
+    # Machinery pages left this checkout. Release 0.1.11 does not require a
+    # dashboards directory, so the product no longer keeps a placeholder.
+    assert not (REPO_ROOT / "dashboards").exists()
     assert len(declared) == 5
 
 
