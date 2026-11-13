@@ -427,10 +427,11 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
 
-    (main / "curriculum").mkdir()
+    (main / "curriculum/l2-uk-en").mkdir(parents=True)
+    (main / "curriculum/l2-uk-en/curriculum.yaml").write_text("# fixture product\n")
     (main / "curriculum" / "tracked.md").write_text("original\n", encoding="utf-8")
     (main / ".gitignore").write_text("local_state/\n*.local\n", encoding="utf-8")
-    _git(main, "add", "curriculum/tracked.md", ".gitignore")
+    _git(main, "add", "curriculum/tracked.md", "curriculum/l2-uk-en/curriculum.yaml", ".gitignore")
     _git(main, "commit", "-q", "-m", "init")
 
     _git(main, "worktree", "add", "-q", ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
@@ -448,9 +449,12 @@ def _materialize_repo(template: Path, main: Path) -> Path:
 
 
 @pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
-    """Fresh primary checkout and registered worktree for each case."""
-    return _materialize_repo(repo_template, tmp_path / "main")
+def repo(tmp_path: Path, repo_template: Path, monkeypatch) -> Path:
+    """Fresh configured primary checkout and registered worktree for each case."""
+    primary = _materialize_repo(repo_template, tmp_path / "main")
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(primary))
+    return primary
 
 
 @pytest.fixture
@@ -871,12 +875,11 @@ def test_apply_patch_tracked_file_blocked(repo: Path):
     assert ".worktrees/dispatch/" in result.stderr
 
 
-def test_not_enforced_off_protected_branch(repo: Path):
-    # If the primary checkout is deliberately on a feature branch, the guard
-    # stays out of the way — enforcement is scoped to protected branches.
+def test_configured_physical_primary_stays_protected_on_maintenance_branch(repo: Path):
+    """Configured primary authority must remain protected regardless of its branch."""
     _git(repo, "checkout", "-q", "-b", "maintenance")
     result = _run(repo, _write_payload(repo, "Write", "curriculum/tracked.md"))
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
 
 
 def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
@@ -1988,7 +1991,7 @@ def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: st
     targets = hook.bash_write_targets(command, cwd="/")
     assert [str(target) for target in targets] == [literal]
     assert targets[0].unresolved_at == 0
-    assert hook._bash_path_decision(targets[0], "/", None).reason == "unresolved_shell_variable"
+    assert hook._bash_path_decision(targets[0], "/", None, Path("/")).reason == "unresolved_shell_variable"
 
 
 def test_issue_10633_parser_never_decodes_ansi_c_program_name():

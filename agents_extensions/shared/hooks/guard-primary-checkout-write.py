@@ -242,8 +242,55 @@ def _load_containment():
 
 
 def _protected_repo_anchor() -> Path:
-    """The source or deployed hook location identifies its owning repository."""
-    return Path(__file__).resolve().parent
+    """The configured product context, never caller Git metadata."""
+    from scripts.common.repo_root import product_root
+
+    # The retained product resolver requires a curriculum marker even for an
+    # explicitly configured root. Match the canonical hook's directory-only
+    # contract here, including sparse worktrees and product snapshots.
+    configured = os.environ.get("LU_PRODUCT_ROOT")
+    if configured:
+        root = Path(configured)
+        if not root.is_absolute() or not root.is_dir():
+            raise ValueError("configured product root must be an absolute directory")
+        return root
+    return product_root()
+
+
+def _protected_repo_roots(wc) -> tuple[Path, ...]:
+    """Pin the explicit primary first; product metadata can only add protection."""
+    from scripts.common.repo_root import configured_primary_root
+
+    configured = configured_primary_root()
+    anchor = (configured if configured is not None else _protected_repo_anchor()).resolve(strict=True)
+    primary = wc.resolve_main_root_without_git(anchor)
+    if primary != anchor or wc.resolve_main_root(primary) != primary:
+        raise ValueError("configured authority is not a physical primary checkout")
+    # A product may be a worktree of a different repository than shared state.
+    # Its gitfile is inspected only after the mandatory authority is pinned.
+    product = _protected_repo_anchor().resolve(strict=True)
+    try:
+        product_primary = wc.resolve_main_root(product)
+    except wc.NotAGitRepositoryError:
+        # A non-Git product snapshot still has the explicit primary authority.
+        return (primary,)
+    if wc.resolve_main_root_without_git(product_primary) != product_primary:
+        raise ValueError("product primary metadata is inconsistent")
+    return tuple(dict.fromkeys((primary, product_primary)))
+
+
+def _evaluate_write(target: Path, wc, main_root: Path) -> object:
+    """A target-selected checkout may add a denial, never replace the pinned one."""
+    decision = wc.evaluate_write(target, cwd=main_root)
+    if not decision.allowed:
+        return decision
+    try:
+        target_root = wc.resolve_main_root(target.parent)
+    except wc.NotAGitRepositoryError:
+        return decision
+    if target_root != main_root and wc.is_protected_branch(target_root):
+        return wc.evaluate_write(target, cwd=target_root)
+    return decision
 
 
 # ---------------------------------------------------------------------------
@@ -2714,7 +2761,7 @@ def _final_component_matches(pattern: str, name: str) -> bool:
     return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
 
 
-def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None) -> object:
+def _bash_path_decision(word: str, base: str, wc, main_root: Path) -> object:
     """Containment decision for one expanded Bash path word.
 
     A word holding any unknown expansion is blocked outright: the unknown value
@@ -2726,7 +2773,7 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
     reason = getattr(word, "decision_reason", None)
     if reason is not None:
         return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
-    if main_root is not None and re.search(r"[*?\[\]{}]", word):
+    if re.search(r"[*?\[\]{}]", word):
         parts = Path(word).parts
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
         prefix = Path(*parts[:first]) if first else Path(".")
@@ -2740,7 +2787,7 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
                 parts[-1], main_root.relative_to(prefix).parts[0]
             )
         if main_root in prefix.parents:
-            may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
+            may_reach_primary = not _evaluate_write(prefix / "__guard_glob_probe__", wc, main_root).allowed
         if may_reach_primary:
             return _UndecidableWrite(
                 "undecidable_glob_write_target",
@@ -2748,9 +2795,9 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
             )
     base = getattr(word, "base", None) or base
     target = _resolve(word, base, expand_user=False)
-    # When the payload cwd belongs to another repository, containment must
-    # anchor on the target's repository rather than classify it as outside cwd.
-    return wc.evaluate_write(target, cwd=base if main_root is not None else target.parent)
+    # Cwd resolves relative words only. Its Git metadata is worker-controlled
+    # and must never select the checkout whose files are protected.
+    return _evaluate_write(target, wc, main_root)
 
 
 def _label(word: str) -> str:
@@ -2940,8 +2987,6 @@ def _main(payload: dict | None) -> int:
             words = shlex.split(command)
         except ValueError:
             words = []  # The existing shell parser handles malformed commands.
-        if any(words[i : i + 2] == ["-m", _SIBLING_GIT_MODULE] for i in range(len(words) - 1)):
-            return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:
         raw_targets = write_tool_targets(tool_input)
@@ -2962,21 +3007,29 @@ def _main(payload: dict | None) -> int:
     if wc is None:
         return _block_uncertain("containment_unavailable")
 
-    # The cwd may be outside Git while an absolute target still names the
-    # protected checkout. In that case classify each resolved target below.
-    main_root = None
     try:
-        cwd_root = wc.resolve_main_root(cwd)
-        if wc.is_protected_branch(cwd_root):
-            main_root = cwd_root
-    except wc.NotAGitRepositoryError:
-        pass
+        protected_roots = _protected_repo_roots(wc)
     except Exception:
-        return _block_uncertain("undecidable_cwd")
+        return _block_uncertain("product_root_unavailable")
+
+    if is_shell_tool(tool_name) and any(
+        words[i : i + 2] == ["-m", _SIBLING_GIT_MODULE] for i in range(len(words) - 1)
+    ):
+        return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
 
     if is_shell_tool(tool_name):
         try:
-            raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
+            parse_roots = list(protected_roots)
+            try:
+                cwd_root = wc.resolve_main_root(cwd)
+            except wc.NotAGitRepositoryError:
+                pass
+            else:
+                # Preserve cwd's parser refusals without changing configured Git-write policy.
+                if wc.is_protected_branch(cwd_root) and cwd_root not in parse_roots:
+                    parse_roots.append(cwd_root)
+            for root in parse_roots:
+                raw_targets.extend(bash_write_targets(command, cwd=cwd, main_root=root))
         except ShellPreprocessLimit:
             return _block_uncertain("nested_shell_command")
         except _AnsiCQuotingRefused:
@@ -2986,9 +3039,8 @@ def _main(payload: dict | None) -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if is_shell_tool(tool_name) and command and not allow_primary_git:
         try:
-            for intent in git_intents:
+            for intent_root, intent in ((root, intent) for root in protected_roots for intent in git_intents):
                 summary = str(intent.get("summary") or "git write")
-                intent_root = wc.resolve_main_root(_protected_repo_anchor())
                 options = intent.get("git_options") or []
                 redirects = set(wc.GIT_REDIRECT_ENV_KEYS)
                 environment = intent.get("git_environment") or frozenset()
@@ -3048,33 +3100,23 @@ def _main(payload: dict | None) -> int:
 
     try:
         decisions: list[tuple[str, object]] = []
-        for raw in raw_targets:
+        for raw, decision_root in ((raw, root) for raw in raw_targets for root in protected_roots):
             if is_shell_tool(tool_name):
                 # Words were expanded from same-command assignments (#5404 /
                 # #8500); any unknown value blocks (_bash_path_decision).
-                decision = _bash_path_decision(raw, cwd, wc, main_root)
+                decision = _bash_path_decision(raw, cwd, wc, decision_root)
             else:
                 target = _resolve(raw, cwd)
-                decision = wc.evaluate_write(target, cwd=cwd if main_root is not None else target.parent)
+                decision = _evaluate_write(target, wc, decision_root)
             decisions.append((raw, decision))
     except Exception:
         return _block_uncertain("undecidable_write_target")
 
     for raw, decision in decisions:
         if not decision.allowed:
-            target_root = main_root
-            if target_root is None:
-                try:
-                    base = getattr(raw, "base", None) or cwd
-                    target_path = _resolve(raw, base, expand_user=False)
-                    target_root = wc.resolve_main_root(target_path.parent)
-                    if not wc.is_protected_branch(target_root):
-                        continue
-                except Exception:
-                    target_root = None
             sys.stderr.write(
                 f"BLOCKED by guard-primary-checkout-write: {tool_name} would write "
-                f"'{_label(raw)}' inside the protected primary checkout ({target_root or 'possible primary target'}) "
+                f"'{_label(raw)}' inside a protected primary checkout "
                 f"[{decision.reason}].\n\n"
                 "The primary checkout must stay clean on `main`. Do all write "
                 "work in a dispatch worktree instead:\n\n"
