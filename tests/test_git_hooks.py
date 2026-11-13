@@ -29,6 +29,8 @@ def _clean_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env.pop("AGENT_NO_MERGE", None)
     if extra:
         env.update(extra)
+    # Fixture Git must bypass the agent command shims, including local bare remotes.
+    env["PATH"] = ":".join(part for part in env.get("PATH", os.defpath).split(":") if "agent_runtime/shims" not in part)
     return env
 
 
@@ -80,7 +82,9 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     _git(repo, "config", "user.name", "Hook Test")
 
     shutil.copytree(HOOK_DIR, repo / ".githooks")
-    (repo / "scripts").mkdir()
+    (repo / "scripts/lib").mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", repo / "scripts/lib/project_interpreter.sh")
+    _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
@@ -336,6 +340,7 @@ def test_installer_materializes_hooks_in_a_sparse_linked_worktree(tmp_path):
     for hook_name in REQUIRED_HOOKS:
         assert (sparse / ".githooks" / hook_name).is_file()
 
+    assert (sparse / "scripts/lib/project_interpreter.sh").is_file()
     hook_log = Path(env["HOOK_LOG"])
     before = hook_log.read_text(encoding="utf-8").splitlines() if hook_log.exists() else []
     (sparse / "README.md").write_text("sparse change\n", encoding="utf-8")

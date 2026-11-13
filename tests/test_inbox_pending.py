@@ -103,7 +103,7 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
         before = snapshot(stores)
         metadata = run_cli("gemini-infra")
         hook_proc = subprocess.run(
-            ["sh", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
+            ["/bin/bash", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
             input="{}",
             cwd=ROOT,
             capture_output=True,
@@ -142,7 +142,7 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
             "probe": "ok",
         }
         hook_proc = subprocess.run(
-            ["sh", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
+            ["/bin/bash", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
             input="{}",
             cwd=ROOT,
             capture_output=True,

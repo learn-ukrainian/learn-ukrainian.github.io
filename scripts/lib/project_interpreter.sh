@@ -41,9 +41,87 @@
 #   stdout: absolute interpreter path (exit 0)
 #   stderr: "Error: project interpreter not found: <paths tried>" (exit 1)
 #
+# project_python_command <python>
+#   sets PROJECT_PYTHON_COMMAND to the argv prefix that starts <python> isolated
+#   on this library's own machinery tree; append `-m <module> [args...]` or
+#   `-c <code> [args...]`, exactly as after `python`
+#
+# project_python_run <python> (-m <module> | -c <code>) [args...]
+#   runs that command; exit status and streams are the child's
+#
+# project_hook_roots_resolve / project_hook_context_resolve [<product-root>]
+#   the one hook-boundary rule for the product, shared-state and interpreter
+#   roots (see their definitions); exit 0 with the roots exported, else 1
+#
 # Load-bearing tests: tests/test_deploy_extensions.py (real temporary repos),
-# tests/test_launcher_helper_root.py (every launcher helper site).
+# tests/test_launcher_helper_root.py (every launcher helper site),
+# tests/hooks/test_session_setup_isolation.py (every launcher-library child).
 
+# The machinery tree that holds this file, from its unresolved location
+# (design-v1 amendment 1): PROJECT_PACKAGE is the package directory's name,
+# which is its import name, and PROJECT_CODE_ROOT the directory that holds it.
+_project_interpreter_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" \
+    || _project_interpreter_lib_dir=''
+PROJECT_PACKAGE="${_project_interpreter_lib_dir%/*}"
+PROJECT_CODE_ROOT="${PROJECT_PACKAGE%/*}"
+PROJECT_PACKAGE="${PROJECT_PACKAGE##*/}"
+unset _project_interpreter_lib_dir
+
+# Shell counterpart of common.repo_root.product_root's explicit selection.
+# Installed resources have no implicit consumer. Keep the selected spelling,
+# including symlinks, as the Python resolver does.
+project_product_root_resolve() {
+    local root="${1-${LU_PRODUCT_ROOT:-}}"
+    if [[ "$root" != /* || ! -d "$root" ]]; then
+        printf '%s\n' 'Error: product root requires an absolute existing directory (set LU_PRODUCT_ROOT or pass an explicit root)' >&2
+        return 1
+    fi
+    printf '%s\n' "$root"
+}
+
+# The one module bootstrap for every launcher-library Python child (#100 R68).
+# The child starts with -I, so the caller's PYTHONPATH, user site and cwd stay
+# off its import path. The bootstrap loads only the package from
+# PROJECT_CODE_ROOT by spec, so that directory never goes on sys.path and no
+# other name can resolve there; the tree that holds the library supplies the
+# code, whatever the interpreter or project has installed. It then runs
+# `-m <module>` as __main__, or `-c <code>` with sys.argv[0] == "-c", as Python
+# itself would. The environment is passed on unchanged.
+PROJECT_MODULE_BOOTSTRAP='
+import importlib.util, os, runpy, sys
+root, name, mode, target = sys.argv[1:5]
+del sys.argv[1:5]
+pkg = os.path.join(root, name)
+init = os.path.join(pkg, "__init__.py")
+if mode not in ("-m", "-c"):
+    sys.exit("module bootstrap: expected -m <module> or -c <code>, got %s" % mode)
+if not os.path.isfile(init):
+    sys.exit("module bootstrap: no %s package at %s" % (name, pkg))
+spec = importlib.util.spec_from_file_location(name, init, submodule_search_locations=[pkg])
+sys.modules[name] = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sys.modules[name])
+if mode == "-m":
+    runpy.run_module(target, run_name="__main__", alter_sys=True)
+else:
+    exec(compile(target, "<string>", "exec"), {"__name__": "__main__"})
+'
+
+project_python_command() {
+    PROJECT_PYTHON_COMMAND=("${1:?project_python_command: interpreter required}" -I -c "$PROJECT_MODULE_BOOTSTRAP" \
+        "$PROJECT_CODE_ROOT" "$PROJECT_PACKAGE")
+}
+
+project_python_run() {
+    project_python_command "$1" || return 1
+    shift
+    "${PROJECT_PYTHON_COMMAND[@]}" "$@"
+}
+
+# The block between the two marker lines is also the resolver of every native
+# hook command: agent_runtime/agy_hook_config.native_hook_command embeds it
+# verbatim, so a hook validates its interpreter before any Python starts. It
+# must stay self-contained: no function or variable defined outside it.
+# LU_HOOK_RESOLVERS_BEGIN
 # Collapse "." and ".." segments of an absolute path without following
 # symlinks (a symlinked .git must stay visible to the checks below).
 _project_interpreter_normalize() {
@@ -59,6 +137,18 @@ _project_interpreter_normalize() {
     done
     printf '/%s' ${out[@]+"${out[@]}"}
     printf '\n'
+}
+
+# Prints the physical path of directory <dir>, or returns 1. The x sentinel keeps
+# a trailing newline $(...) would strip, so a directory is never checked as its
+# clean namesake; a physical path with a newline cannot be checked faithfully by
+# these helpers (or exported intact), so it refuses (#100).
+_project_physical_dir() {
+    local dir
+    dir="$(cd -P "$1" 2>/dev/null && pwd -P && printf x)" || return 1
+    dir="${dir%$'\n'x}"
+    [[ "$dir" != *$'\n'* ]] || return 1
+    printf '%s\n' "$dir"
 }
 
 # Prints the primary checkout root for <root>; when the checkout's git metadata
@@ -139,15 +229,15 @@ _project_interpreter_points_back() {
         *) pointer="$admin_dir/$pointer" ;;
     esac
     [ "$(basename "$pointer")" = ".git" ] || return 1
-    pointed_root="$(cd -P "$(dirname "$pointer")" 2>/dev/null && pwd)" || return 1
+    pointed_root="$(_project_physical_dir "$(dirname "$pointer")")" || return 1
     [ "$pointed_root" = "$root" ]
 }
 
 project_primary_root_resolve() {
     local root primary
 
-    root="$(cd -P "${1:?project_primary_root_resolve: checkout root required}" 2>/dev/null && pwd)" || {
-        echo "Error: untrusted git metadata: checkout root $1 does not exist" >&2
+    root="$(_project_physical_dir "${1:?project_primary_root_resolve: checkout root required}")" || {
+        echo "Error: untrusted git metadata: checkout root $1 does not exist or its path has a newline" >&2
         return 1
     }
     if ! primary="$(_project_interpreter_primary_root "$root")"; then
@@ -183,8 +273,8 @@ project_interpreter_resolve() {
         printf '%s\n' "$configured"
         return 0
     fi
-    root="$(cd -P "${1:?project_interpreter_resolve: checkout root required}" 2>/dev/null && pwd)" || {
-        echo "Error: project interpreter not found: checkout root $1 does not exist" >&2
+    root="$(_project_physical_dir "${1:?project_interpreter_resolve: checkout root required}")" || {
+        echo "Error: project interpreter not found: checkout root $1 does not exist or its path has a newline" >&2
         return 1
     }
     if ! primary="$(_project_interpreter_primary_root "$root")"; then
@@ -203,65 +293,6 @@ project_interpreter_resolve() {
     echo "Error: project interpreter not found: $tried" >&2
     return 1
 }
-
-_project_interpreter_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" \
-    || _project_interpreter_lib_dir=''
-PROJECT_PACKAGE="${_project_interpreter_lib_dir%/*}"
-PROJECT_CODE_ROOT="${PROJECT_PACKAGE%/*}"
-PROJECT_PACKAGE="${PROJECT_PACKAGE##*/}"
-unset _project_interpreter_lib_dir
-
-# The one module bootstrap for every launcher-library Python child (#100 R68).
-# The child starts with -I, so the caller's PYTHONPATH, user site and cwd stay
-# off its import path. The bootstrap loads only the package from
-# PROJECT_CODE_ROOT by spec, so that directory never goes on sys.path and no
-# other name can resolve there; the tree that holds the library supplies the
-# code, whatever the interpreter or project has installed. It then runs
-# `-m <module>` as __main__, or `-c <code>` with sys.argv[0] == "-c", as Python
-# itself would. The environment is passed on unchanged.
-PROJECT_MODULE_BOOTSTRAP='
-import importlib.util, os, runpy, sys
-root, name, mode, target = sys.argv[1:5]
-del sys.argv[1:5]
-pkg = os.path.join(root, name)
-init = os.path.join(pkg, "__init__.py")
-if mode not in ("-m", "-c"):
-    sys.exit("module bootstrap: expected -m <module> or -c <code>, got %s" % mode)
-if not os.path.isfile(init):
-    sys.exit("module bootstrap: no %s package at %s" % (name, pkg))
-spec = importlib.util.spec_from_file_location(name, init, submodule_search_locations=[pkg])
-sys.modules[name] = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(sys.modules[name])
-if mode == "-m":
-    runpy.run_module(target, run_name="__main__", alter_sys=True)
-else:
-    exec(compile(target, "<string>", "exec"), {"__name__": "__main__"})
-'
-
-project_python_command() {
-    PROJECT_PYTHON_COMMAND=("${1:?project_python_command: interpreter required}" -I -c "$PROJECT_MODULE_BOOTSTRAP" \
-        "$PROJECT_CODE_ROOT" "$PROJECT_PACKAGE")
-}
-
-project_python_run() {
-    project_python_command "$1" || return 1
-    shift
-    "${PROJECT_PYTHON_COMMAND[@]}" "$@"
-}
-
-
-# Prints the physical path of directory <dir>, or returns 1. The x sentinel keeps
-# a trailing newline $(...) would strip, so a directory is never checked as its
-# clean namesake; a physical path with a newline cannot be checked faithfully by
-# these helpers (or exported intact), so it refuses (#100).
-_project_physical_dir() {
-    local dir
-    dir="$(cd -P "$1" 2>/dev/null && pwd -P && printf x)" || return 1
-    dir="${dir%$'\n'x}"
-    [[ "$dir" != *$'\n'* ]] || return 1
-    printf '%s\n' "$dir"
-}
-
 
 # _project_hook_git_layout <checkout>
 #   true when <checkout>/.git passes Git's own repository test, as
@@ -354,3 +385,4 @@ project_hook_context_resolve() {
     interpreter="$(project_interpreter_resolve "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")" || return 1
     export LEARN_UKRAINIAN_PYTHON="$interpreter"
 }
+# LU_HOOK_RESOLVERS_END

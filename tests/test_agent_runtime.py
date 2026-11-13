@@ -190,7 +190,7 @@ def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
     fake.parent.mkdir()
     fake.write_text("#!/bin/sh\nprintf '2.0.0\\n'\n")
     fake.chmod(0o755)
-    monkeypatch.setenv("PATH", str(fake.parent))
+    monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
     workspace = bridge._agy_ask_scratch_cwd()
     assert workspace == tmp_path / "scratch/learn-ukrainian-bridge-asks/agy"
     assert not (workspace / ".git").exists()
@@ -213,7 +213,11 @@ def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
     adapter_module._agy_version.cache_clear()
     calls = []
 
+    real_run = subprocess.run
+
     def probe(argv, **kwargs):
+        if argv != [str(fake), "--version"]:
+            return real_run(argv, **kwargs)
         calls.append(argv)
         return subprocess.CompletedProcess(argv, 0, "2.0.0", "")
 

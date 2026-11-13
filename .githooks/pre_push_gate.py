@@ -68,7 +68,7 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 # A receipt binds these tool fingerprints. The retained ``pytest`` fingerprint reads installed
 # package metadata only; it neither imports pytest nor executes tests during a push.
-TOOL_NAMES = ("gate_source", "launcher", "pre_commit_config", "python", "pytest", "pre_commit")
+TOOL_NAMES = ("gate_source", "launcher", "interpreter_resolver", "pre_commit_config", "python", "pytest", "pre_commit")
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host
 # test-slot wait of one stage allowance, its selector's bound and two cleanups. Checkouts that still run it
@@ -455,6 +455,7 @@ def tool_versions(launcher: str, config: str) -> dict[str, str | None]:
     return {
         "gate_source": digest(Path(__file__)),
         "launcher": digest(Path(launcher)),
+        "interpreter_resolver": digest(Path(launcher).parent.parent / "lib/project_interpreter.sh"),
         "pre_commit_config": digest(Path(config)),
         "python": sys.version,
         "pytest": installed("pytest"),
@@ -1759,6 +1760,7 @@ def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> d
     inputs = {
         "source": Path(__file__),
         "launcher": Path(launcher),
+        "interpreter_resolver": Path(launcher).parent.parent / "lib/project_interpreter.sh",
         "config": Path(config),
     }
     result: dict[str, str | None] = {"input": hashlib.sha256(text.encode()).hexdigest()}

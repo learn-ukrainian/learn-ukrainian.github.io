@@ -283,6 +283,6 @@ done
 # 4. Sparse worktree materialization
 while IFS= read -r worktree; do
     if [[ -n "$worktree" ]] && [[ "$(git -C "$worktree" config --bool core.sparseCheckout 2>/dev/null || true)" == "true" ]]; then
-        git -C "$worktree" sparse-checkout add --skip-checks .githooks
+        git -C "$worktree" sparse-checkout add --skip-checks .githooks scripts/lib/project_interpreter.sh
     fi
 done < <(git -C "$repo_root" worktree list --porcelain | sed -n 's/^worktree //p')

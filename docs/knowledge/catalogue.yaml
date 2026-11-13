@@ -1589,7 +1589,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+      - {surface: cli, how: "scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status"}
       - {surface: git_grep, how: "git grep -n -F '<group>' -- registry/artifacts"}
     content_searchable: true
 
@@ -1954,7 +1954,7 @@ entries:
     entrypoints:
       - {topic: open-model-data project entry, path: docs/projects/open-model-data/README.md}
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status (published groups)"}
+      - {surface: cli, how: "scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status (published groups)"}
     content_searchable: false
 
   - id: data-eval-payloads
@@ -2022,7 +2022,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
+      - {surface: cli, how: "scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts status"}
     content_searchable: false
 
   - id: data-backups
@@ -2050,7 +2050,7 @@ entries:
     lifecycle: active
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.storage status"}
+      - {surface: cli, how: "scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status"}
     content_searchable: false
 
   - id: data-corpus-audit

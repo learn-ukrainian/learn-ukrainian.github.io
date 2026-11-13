@@ -11,9 +11,9 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 import yaml
+from lu_machinery.pre_commit import product_entry, regen_lesson_schema
 
 from scripts.build import generate_lesson_schema
-from scripts.pre_commit import product_entry, regen_lesson_schema
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -170,7 +170,7 @@ def test_lesson_schema_hook_regenerates_for_all_schema_inputs():
 
     assert hook["pass_filenames"] is False
     assert hook["stages"] == ["pre-commit"]
-    assert "scripts/pre_commit/regen_lesson_schema.py" in hook["entry"]
+    assert "lu_machinery.pre_commit.regen_lesson_schema" in hook["entry"]
     assert "git diff --exit-code docs/lesson-schema.yaml" in hook["entry"]
 
     pattern = hook["files"]

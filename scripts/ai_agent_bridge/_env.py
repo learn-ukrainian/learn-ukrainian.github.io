@@ -18,6 +18,7 @@ _SAFE_ENV_KEYS = {
     "LC_ALL",
     "LC_CTYPE",
     "LOGNAME",
+    "LU_PRODUCT_ROOT",
     "PATH",
     "PWD",
     "SHELL",

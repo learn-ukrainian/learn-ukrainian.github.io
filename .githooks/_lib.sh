@@ -5,11 +5,11 @@ set -euo pipefail
 
 hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 worktree_root="$(git rev-parse --show-toplevel)"
-git_common_dir="$(git rev-parse --git-common-dir)"
-if [[ "$git_common_dir" != /* ]]; then
-  git_common_dir="$worktree_root/$git_common_dir"
-fi
-main_root="$(cd "$git_common_dir/.." && pwd -P)"
+# Validate Git metadata with the same resolver as native hook commands before
+# accepting a primary root or interpreter. Never trust commondir for execution.
+source "$worktree_root/scripts/lib/project_interpreter.sh"
+project_hook_context_resolve "$worktree_root" || exit 127
+main_root="$(project_primary_root_resolve "$worktree_root")" || exit 127
 
 source_root="$worktree_root"
 if [[ ! -x "$source_root/scripts/pre_commit/project_python.sh" || ! -f "$source_root/.pre-commit-config.yaml" ]]; then

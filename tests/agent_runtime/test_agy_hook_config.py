@@ -6,12 +6,12 @@ import copy
 import json
 import os
 import shlex
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from scripts.agent_runtime import agy_hook_config as config
-from scripts.common.repo_root import project_interpreter
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -43,8 +43,8 @@ def test_matchers_cover_native_tool(tmp_path, matcher):
         ("wrong_event", "wrong_event"),
         ("ask_question", "wrong_matcher"),
         ("regex", "invalid_matcher"),
-        ("script", "missing_script"),
-        ("relative_interpreter", "invalid_interpreter"),
+        ("script", "invalid_command"),
+        ("relative_interpreter", "invalid_command"),
         ("duplicate", "wrong_event"),
         ("shell_command", "invalid_command"),
         ("disabled_command", "disabled"),
@@ -105,10 +105,10 @@ def test_existing_effective_candidates_required(tmp_path, scoped):
     assert config.check_hook_config(paths).passed
     data = json.loads(paths[1].read_text())
     data[config.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] = (
-        f"../.venv/bin/python ../{config.ENTRY_POINT} --harness agy"
+        "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy"
     )
     paths[1].write_text(json.dumps(data))
-    assert config.check_hook_config(paths).reason == "relative_home_command"
+    assert config.check_hook_config(paths).reason == "invalid_command"
 
 
 @pytest.mark.parametrize("scoped", [False, True], ids=["ordinary", "scoped"])
@@ -217,8 +217,12 @@ def test_duplicate_members_cannot_hide_disabled_or_wrong_guard(tmp_path, candida
 def dispatch_tree(tmp_path):
     primary = tmp_path / "primary"
     cwd = primary / ".worktrees/dispatch/codex/worker"
-    cwd.mkdir(parents=True)
-    (cwd / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
+    subprocess.run(["git", "init", "-q", "-b", "main", str(primary)], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "-c", "user.name=Fixture", "-c",
+                    "user.email=fixture@example.invalid", "commit", "--allow-empty", "-qm", "fixture"],
+                   check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "worktree", "add", "-qb", "worker", str(cwd)],
+                   check=True, timeout=30)
     return cwd
 
 
@@ -270,7 +274,9 @@ def test_empty_worktree_installs_primary_interpreter(tmp_path):
     config.install_worktree_guard(cwd)
     path = cwd / ".agents/hooks.json"
     args = shlex.split(json.loads(path.read_text())[config.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"])
-    assert args[0] == str(project_interpreter(ROOT))
+    assert args[0] == "/bin/bash"
+    assert args[-1] == "agy-secret-print"
+    assert json.loads(path.read_text())[config.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] == config.native_hook_command("agy-secret-print")
     assert config.check_hook_config((path,)).passed
 
 
@@ -300,12 +306,12 @@ def test_install_does_not_reenable_guard(tmp_path):
 
 def test_overlay_keeps_existing_driver_hooks():
     data = json.loads((ROOT / "agents_extensions/agy/hooks.json").read_text())
-    assert len(data) == 6
+    assert set(data) >= {"pending-orders-announce", "driver-state-pin", "driver-keep-driving", "driver-no-ask-question", config.GUARD_NAME}
     assert data["pending-orders-announce"] == {
         "PreInvocation": [
             {
                 "type": "command",
-                "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh",
+                "command": config.native_hook_command("agy-pending-orders"),
                 "timeout": 10,
             }
         ]
@@ -317,7 +323,7 @@ def test_overlay_keeps_existing_driver_hooks():
     ]:
         hook = {
             "type": "command",
-            "command": f"sh ../scripts/agy_hooks/driver_state_inject.sh {action}",
+            "command": config.native_hook_command(action),
             "timeout": timeout,
         }
         assert data[name] == {event: [{"matcher": matcher, "hooks": [hook]}] if matcher else [hook]}
@@ -328,7 +334,7 @@ def test_overlay_keeps_existing_driver_hooks():
     assert primary["matcher"] == "write_file|edit_file|run_command"
     assert primary["hooks"][0] == {
         "type": "command",
-        "command": f"../.venv/bin/python ../{config.PRIMARY_GUARD_ENTRY.as_posix()}",
+        "command": config.native_hook_command("agy-primary-write"),
         "timeout": 10,
     }
 
@@ -425,6 +431,7 @@ def test_install_atomic_publication_preserves_unrelated_bytes(tmp_path, monkeypa
 
 
 def test_gate_and_cli(tmp_path, capsys):
+    (tmp_path / "cwd").mkdir()
     paths = config.hook_locations(tmp_path / "cwd", tmp_path / "home")
     assert config.check_hook_config(()).reason == "missing_file"
     with pytest.raises(config.AgyHookConfigError, match="missing_file"):

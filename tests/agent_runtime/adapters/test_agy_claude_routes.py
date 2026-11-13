@@ -20,11 +20,17 @@ BACKEND_IDS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 
 
 @pytest.fixture(autouse=True)
-def no_provider_process(monkeypatch):
+def no_provider_process(monkeypatch, tmp_path):
+    from scripts.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path, main_checkout_root
+
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(Path(__file__).resolve().parents[3]))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(Path(__file__).resolve().parents[3])))
+    root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
+                    str(machinery_path("lib/project_interpreter.sh"))]
     popen = agy.subprocess.Popen
 
     def local_git_only(cmd, *args, **kwargs):
-        if isinstance(cmd, (list, tuple)) and cmd[0] == "git":
+        if isinstance(cmd, (list, tuple)) and (cmd[0] == "git" or list(cmd) == root_command):
             return popen(cmd, *args, **kwargs)
         pytest.fail("provider subprocess must not run")
 

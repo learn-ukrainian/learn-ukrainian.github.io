@@ -202,11 +202,19 @@ def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch,
     primary = tmp_path / "primary"
     subprocess.run(["git", "init", "-q", str(primary)], check=True, capture_output=True, timeout=30)
     dispatch = primary / ".worktrees/dispatch/codex/worker"
-    dispatch.mkdir(parents=True)
     workspace = primary / ".git/lu-pre-push-gate/pytest-bt/workspace" if layout == "gate" else dispatch
-    workspace.mkdir(parents=True, exist_ok=True)
     if layout == "dispatch":
-        (workspace / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
+        subprocess.run(
+            ["git", "-C", str(primary), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "--allow-empty", "-qm", "fixture"],
+            check=True, capture_output=True, timeout=30,
+        )
+        subprocess.run(
+            ["git", "-C", str(primary), "worktree", "add", "--detach", str(workspace)],
+            check=True, capture_output=True, timeout=30,
+        )
+    else:
+        workspace.mkdir(parents=True, exist_ok=True)
     _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
 
 

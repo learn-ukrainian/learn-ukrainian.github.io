@@ -1,28 +1,35 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Read-only AGY PreInvocation announcement. Never persist stdin or probe output.
+# The product, shared-state anchor and interpreter come from the one hook rule,
+# project_hook_context_resolve (lib/project_interpreter.sh), before the child
+# starts. Without that context the hook denies with the bootstrap diagnostic;
+# "unknown" is kept for a child that ran and could not read its stores.
 fleet_module=scripts.fleet_comms
-fallback='{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; authority: .venv/bin/python -m '"$fleet_module"' deliveries --help"}]}'
-root=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || { cat >/dev/null; printf '%s\n' "$fallback"; exit 0; }
-# Resolve the shared interpreter for linked worktrees without a worktree venv.
-primary=$root
-if [ -f "$root/.git" ]; then
-    common=$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || common=
-    [ -z "$common" ] || primary=$(dirname "$common")
-fi
-py="${LU_DRIVER_STATE_PYTHON:-$primary/.venv/bin/python}"
-if [ ! -x "$py" ]; then
-    cat >/dev/null
-    printf '%s\n' "$fallback"
+fallback='{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; authority: project interpreter -m '"$fleet_module"' deliveries --help"}]}'
+bootstrap_failed() {
+    cat >/dev/null 2>&1
+    printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+    printf '%s\n' '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}'
     exit 0
-fi
+}
+code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed
+# shellcheck disable=SC1091
+source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed
+project_hook_context_resolve 2>/dev/null || bootstrap_failed
+py="$LEARN_UKRAINIAN_PYTHON"
 # The child drains stdin; on early import/exec failure the parent drains the rest.
-if output=$(cd "$root" && "$py" -m scripts.inbox_pending --agy-hook 2>/dev/null); then
+project_python_command "$py" || bootstrap_failed
+if output=$(cd "$LU_PRODUCT_ROOT" && "${PROJECT_PYTHON_COMMAND[@]}" -m scripts.inbox_pending --agy-hook 2>/dev/null); then
     child_ok=1
 else
     child_ok=0
 fi
 cat >/dev/null
-if [ "$child_ok" = 1 ] && validated=$(printf '%s' "$output" | "$py" -c '
+# The child's own context refusal stays a refusal, never an "unknown" announcement.
+if [ "$child_ok" = 1 ] && [ "$output" = '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ]; then
+    bootstrap_failed
+fi
+if [ "$child_ok" = 1 ] && validated=$(printf '%s' "$output" | "$py" -I -c '
 import json, sys
 value = json.load(sys.stdin)
 if value != {}:

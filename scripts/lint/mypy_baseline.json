@@ -398,11 +398,6 @@
       "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"int\")"
     },
     {
-      "path": "scripts/agent_runtime/agy_hook_config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "code": "arg-type",
       "message": "Argument 1 to \"Path\" has incompatible type \"Sequence[str]\"; expected \"PathLike[str] | str\""

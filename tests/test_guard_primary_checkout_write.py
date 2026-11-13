@@ -11,7 +11,7 @@ Two layers:
   ``.worktrees/dispatch/**`` worktree + gitignored state), asserting the exit
   code and worktree-hint message. Explicit subprocess cases also pin process
   isolation. The decision itself is delegated to
-  ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
+  ``lu_machinery.guardrails.worktree_containment`` (#4444); these tests prove the
   provider payloads map onto it correctly.
 
 The hook filename has hyphens, so pure-function tests load it via importlib.
@@ -35,14 +35,15 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
+HOOK_PATH = machinery_path("agents_extensions/shared/hooks/guard-primary-checkout-write.py")
 
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
@@ -142,7 +143,7 @@ def test_issue_9115_escaped_nested_backtick_write_is_visible():
 
 
 def test_issue_9115_backtick_depth_limit_blocks_write_hook(repo: Path, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setitem(hook.preprocess_shell_command.__globals__, "_MAX_BACKTICK_DEPTH", 2)
     body = "tee AGENTS.md"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
@@ -242,8 +243,8 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)
     result = subprocess.run(
-        [sys.executable, str(guard_copy)],
-        input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
+        [sys.executable, "-I", "-S", str(guard_copy)],
+        input=json.dumps({"tool_name": "Bash", "tool_input": {"command": "tee AGENTS.md"}}),
         text=True,
         capture_output=True,
         check=False,
@@ -318,7 +319,10 @@ def test_leading_redirect_cannot_hide_primary_cd(repo: Path, tmp_path: Path, red
     )
     assert oracle.returncode == 0, oracle.stderr
     assert oracle.stdout.strip() == str(target)
-    result = _run(tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}})
+    result = _run(
+        tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}},
+        protected_root=repo,
+    )
     assert result.returncode == (2 if primary else 0), result.stderr
 
 
@@ -484,13 +488,15 @@ def outside_dir() -> Iterator[Path]:
         shutil.rmtree(path)
 
 
-def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    repo: Path, payload: dict, env_extra: dict[str, str] | None = None, *, protected_root: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
-        patch.object(hook, "_protected_repo_anchor", return_value=repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=protected_root or repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -1081,7 +1087,7 @@ def test_issue_11381_protected_or_unresolved_git_target_blocked(
 
 
 def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
-    from scripts.guardrails import worktree_containment as wc
+    from lu_machinery.guardrails import worktree_containment as wc
 
     expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
     with chdir(tmp_path):

@@ -64,6 +64,9 @@ def _product_repo(tmp_path: Path, env: dict[str, str]) -> Path:
     launcher = repo / "scripts" / "pre_commit" / "project_python.sh"
     launcher.parent.mkdir(parents=True)
     shutil.copy2(REPO_ROOT / "scripts" / "pre_commit" / "project_python.sh", launcher)
+    resolver = repo / "scripts" / "lib" / "project_interpreter.sh"
+    resolver.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts" / "lib" / "project_interpreter.sh", resolver)
     (repo / ".pre-commit-config.yaml").write_text("repos: []\n", encoding="utf-8")
     for args in (
         ("init", "-q", "-b", "main"),

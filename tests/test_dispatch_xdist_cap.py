@@ -361,7 +361,7 @@ class _Args:
 
 
 def test_full_suite_classification(tmp_path: Path) -> None:
-    root = repository_root()
+    root = repository_root(_REPO_ROOT)
     assert root == _REPO_ROOT
     foreign = _foreign_rootdir(tmp_path)
     source = _Args("args", [], foreign).ArgsSource

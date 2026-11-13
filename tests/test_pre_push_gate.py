@@ -132,10 +132,19 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     shutil.copytree(HOOK_DIR, root / ".githooks")
+    (root / "scripts/lib").mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", root / "scripts/lib/project_interpreter.sh")
     launcher = root / "scripts/pre_commit/project_python.sh"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
+    # The tracked hook resolves the fixture primary's interpreter before using
+    # its launcher. Keep the real shared Python environment behind that path.
+    fixture_python = root / ".venv/bin/python"
+    fixture_python.parent.mkdir(parents=True)
+    fixture_python.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
+    fixture_python.chmod(0o755)
+    _write(root, ".gitignore", "/.venv/\n")
     from tests.githooks import install_message_scanner
 
     install_message_scanner(root)
@@ -4348,6 +4357,23 @@ def test_a_receipt_for_a_different_tool_or_base_fallback_is_never_reused(tmp_pat
     gate.write_receipt(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1000.0)
     assert gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
     assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+    # A resolver-only change invalidates a real launcher fingerprint. Otherwise
+    # cached pre-push validation could trust a newly planted interpreter rule.
+    launcher = tmp_path / "scripts/pre_commit/project_python.sh"
+    resolver = tmp_path / "scripts/lib/project_interpreter.sh"
+    launcher.parent.mkdir(parents=True)
+    resolver.parent.mkdir(parents=True)
+    launcher.write_text("#!/bin/bash\nexit 0\n")
+    resolver.write_text("original resolver\n")
+    config = tmp_path / "config.yaml"
+    config.write_text("repos: []\n")
+    before = gate.tool_versions(str(launcher), str(config))
+    gate.write_receipt(tmp_path, _plan(tools=before), 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(tools=before), 1001.0)
+    resolver.write_text("changed interpreter selection\n")
+    after = gate.tool_versions(str(launcher), str(config))
+    assert before["interpreter_resolver"] != after["interpreter_resolver"]
+    assert not gate.receipt_is_fresh(tmp_path, _plan(tools=after), 1001.0)
 
 
 # ---- the tree that runs is the outgoing commit -----------------------------------------------------------
@@ -4514,7 +4540,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     shim = push_repo / "scripts/agent_runtime/shims/git"
     shim.parent.mkdir(parents=True)
     shutil.copy2(REPO_ROOT / "scripts/agent_runtime/shims/git", shim)
-    (push_repo / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)
     _commit(push_repo, "install the agent push entry point", "scripts/agent_runtime/shims/git")
     chained = subprocess.run(
         [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),

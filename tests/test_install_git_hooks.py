@@ -14,6 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 INSTALLER_SCRIPT = REPO_ROOT / "scripts/install_git_hooks.sh"
 CHECK_HELPERS = (
     "scripts/pre_commit/project_python.sh",
+    "scripts/lib/project_interpreter.sh",
     "scripts/pre_commit/declared_hook_stages.py",
 )
 REQUIRED_HOOKS = (
@@ -37,6 +38,8 @@ def _clean_env(extra: dict[str, str] | None = None, unset: tuple[str, ...] = ())
         env.update(extra)
     for key in unset:
         env.pop(key, None)
+    # Fixture Git must bypass the agent command shims, including local bare remotes.
+    env["PATH"] = ":".join(part for part in env.get("PATH", os.defpath).split(":") if "agent_runtime/shims" not in part)
     return env
 
 
