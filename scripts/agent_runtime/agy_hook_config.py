@@ -51,7 +51,7 @@ _RESOLVERS_END = "# LU_HOOK_RESOLVERS_END"
 # run the installed audit under isolated Python. Preserve its policy exit code.
 _HOOK_TAIL = r"""project_hook_context_resolve 2>/dev/null || {
     cat >/dev/null 2>&1
-    printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+    printf '%s %s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' "${PROJECT_HOOK_BOOTSTRAP_STEP:-machinery}" >&2
     exit 2
 }
 exec "$LEARN_UKRAINIAN_PYTHON" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt

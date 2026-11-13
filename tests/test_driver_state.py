@@ -202,7 +202,9 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
         answer = json.loads(proc.stdout)
         assert answer["decision"] == ("continue" if mode == "agy-stop-hook" else "deny")
         assert "HOOK-BOOTSTRAP-FAILED" in answer["reason"]
-        assert "HOOK-BOOTSTRAP-FAILED" in proc.stderr
+        assert proc.stderr == (
+            "HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable. interpreter\n"
+        )
     else:
         assert json.loads(proc.stdout) == ({"decision": "allow"} if mode != "agy-hook" else {})
         assert proc.stderr == ""
@@ -264,6 +266,23 @@ def test_hook_shell_normal_path(state, tmp_path, monkeypatch, mode):
         assert result == {"decision": "allow"}
     else:
         assert result["decision"] == "deny"
+    assert proc.stderr == ""
+
+
+def test_hook_shell_unset_tmpdir_does_not_refuse_driver(state, tmp_path, monkeypatch):
+    """An ordinary unset TMPDIR must not stop a driver prompt at bootstrap."""
+    monkeypatch.delenv("TMPDIR", raising=False)
+    monkeypatch.setenv("LEARN_UKRAINIAN_PYTHON", sys.executable)
+    proc = subprocess.run(
+        ["bash", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), "claude-hook"],
+        input=json.dumps({"hook_event_name": "UserPromptSubmit", "cwd": str(tmp_path)}),
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        timeout=60,
+        check=True,
+    )
+    assert "fix X" in json.loads(proc.stdout)["hookSpecificOutput"]["additionalContext"]
     assert proc.stderr == ""
 
 
