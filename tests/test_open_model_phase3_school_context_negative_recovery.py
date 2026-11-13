@@ -15,6 +15,11 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
 PUBLIC_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_school_context_negative_recovery_receipt_v1.json"
+DRIVE_ROOT = min(
+    Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"),
+    default=Path.home() / "Library/CloudStorage/GoogleDrive-unavailable/My Drive/Projects/learn-ukrainian-data",
+)
+CUSTODY_TARBALL = DRIVE_ROOT / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
 
 
 def _school_row(
@@ -299,6 +304,22 @@ def test_canonical_temp_root_resolves_var_symlink(monkeypatch: pytest.MonkeyPatc
         shutil.rmtree(root, ignore_errors=True)
 
 
+def test_production_receipt_reproducible_against_drive_custody(tmp_path: Path) -> None:
+    if not CUSTODY_TARBALL.is_file():
+        pytest.skip("Drive custody artifacts unavailable")
+    assert negrec.sha256_file(CUSTODY_TARBALL) == negrec.PINNED_CUSTODY_TARBALL_SHA256
+    committed = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
+    out = tmp_path / "receipt.json"
+    reproduced = negrec.production_run(
+        custody_tarball=CUSTODY_TARBALL,
+        public_receipt_path=out,
+        started_at=committed["started_at"],
+        completed_at=committed["completed_at"],
+    )
+    assert stat.S_IMODE(out.stat().st_mode) == negrec.PRIVATE_FILE_MODE
+    assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
+    assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
+    assert reproduced["bindings"]["implementation_sha256"] == negrec.sha256_file(negrec.SCRIPT_PATH)
 
 
 def _hermetic_fixture(tmp_path: Path) -> dict[str, Path]:

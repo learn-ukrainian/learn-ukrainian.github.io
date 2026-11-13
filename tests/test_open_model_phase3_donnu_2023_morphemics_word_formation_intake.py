@@ -17,6 +17,11 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
+def _drive_staging() -> Path | None:
+    try:
+        return intake.default_staging_root()
+    except intake.Donnu2023MorphemicsWordFormationIntakeError:
+        return None
 
 
 def test_mint_is_deterministic_and_preserves_false_completion_gates() -> None:
@@ -266,3 +271,28 @@ def test_check_cli_is_hermetic_without_drive(monkeypatch: pytest.MonkeyPatch) ->
 
     monkeypatch.setattr(intake, "default_staging_root", boom)
     assert intake.main(["--check", str(PUBLIC_RECEIPT)]) == 0
+
+
+def test_private_audit_against_drive_custody() -> None:
+    drive_staging = _drive_staging()
+    if drive_staging is None:
+        pytest.skip("configured Drive mount unavailable")
+    required = [
+        drive_staging / intake.PDF_FILENAME,
+        drive_staging / intake.LANDING_FILENAME,
+        drive_staging / intake.ITEM_METADATA_FILENAME,
+        drive_staging / intake.BITSTREAM_METADATA_FILENAME,
+        drive_staging / intake.LICENSE_TEXT_FILENAME,
+        drive_staging / "processed" / "grade-00" / intake.JSONL_FILENAME,
+        drive_staging / "exactness" / intake.EXACTNESS_AUDIT_FILENAME,
+        drive_staging / intake.CONTENT_FIT_AUDIT_FILENAME,
+        drive_staging / intake.CUSTODY_RECEIPT_FILENAME,
+        drive_staging / intake.CHECKSUMS_FILENAME,
+    ]
+    if not all(path.exists() for path in required):
+        pytest.skip("Drive custody artifacts unavailable")
+    result = intake.private_audit(drive_staging)
+    assert result["ok"] is True
+    assert result["checksum_entries"] == 13
+    assert result["custody_receipt_body_sha256"] == intake.CUSTODY_RECEIPT_BODY_SHA256
+    assert result["provider_identity_sha256"] == intake.AUTHORITATIVE_GOOGLE_DRIVE_PROVIDER_IDENTITY_SHA256

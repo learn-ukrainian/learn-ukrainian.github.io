@@ -9,7 +9,7 @@ The prior product selection contained 556 entries. This revision retains 127 exa
 | Removed selection group | Entries | Reason |
 | --- | ---: | --- |
 | No marker-valid bulk root | 4 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| Stopped open-model-data project (C-2181) | 383 | Stopped open-model-data project (C-2181); retained tests with existing local data. |
+| Paused open-model-data project | 383 | project paused; data not provisioned on this host |
 | benchmarks/v1/MANIFEST.json is absent from existing host data. | 3 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | 51 known citation-content xfails still reference closed #8403 | 1 | 51 known citation-content xfails still reference closed #8403; retained outside nightly for content repair on #9256. |
 | Learner content defects recorded on #9256 | 2 | Learner content defects recorded on #9256; content edits frozen. |
@@ -20,21 +20,12 @@ The prior product selection contained 556 entries. This revision retains 127 exa
 
 ## Deleted tests and absent inputs
 
-Tests requiring absent inputs are deleted rather than left as permanent skips. Other tests in the same files remain. Tests for existing data in the stopped open-model-data project remain in source but leave the nightly selection. The bulk-bound lineage test in `test_layerb_shadow.py` remains in source under the DeepSeek keep-list, outside nightly. No application code or learner content changes.
+Tests requiring absent inputs are deleted rather than left as permanent skips. Other tests in the same files remain. All open-model-data tests, code and fixtures remain in source; only their nightly selection entries are removed because the project is paused and its data is not provisioned on this host. The bulk-bound lineage test in `test_layerb_shadow.py` remains in source under the DeepSeek keep-list, outside nightly. No learner content changes.
 
 | Deleted test | Cases or definitions | Missing input |
 | --- | ---: | --- |
 | `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_donnu_2023_morphemics_word_formation_intake.py::test_private_audit_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_evaluation_context_manifest.py::test_production_manifest_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_lnu_2024_phonetics_phonology_intake.py::test_optional_live_drive_audit` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_pliush_2005_canonical_grammar_intake.py::test_private_audit_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_pravopys_evaluation_context.py::test_production_replay_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_school_context_negative_recovery.py::test_production_receipt_reproducible_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_school_parent_section_context.py::test_production_verify_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_vspu_2025_morphemics_word_formation_intake.py::test_production_verify_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_open_model_phase3_zhdu_2026_lexicology_phraseology_intake.py::test_production_verify_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_wiki_channels.py::test_registry_schema_covers_all_live_source_files` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_benchmark_freeze.py::test_public_fixture_hashes_match_frozen_manifest` | 1 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | `tests/test_benchmark_freeze.py::test_reference_scorecard_hash_matches_frozen_manifest` | 1 | benchmarks/v1/MANIFEST.json is absent from existing host data. |

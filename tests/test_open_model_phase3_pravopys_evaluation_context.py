@@ -1248,3 +1248,36 @@ def test_verify_existing_rejects_tampered_public_receipt(tmp_path: Path, monkeyp
             private_output=paths["private_output"],
             public_receipt_path=paths["public_receipt"],
         )
+
+
+def test_production_replay_against_drive_custody() -> None:
+    drive = min(
+        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"),
+        default=Path.home() / "Library/CloudStorage/GoogleDrive-unavailable/My Drive/Projects/learn-ukrainian-data",
+    )
+    tarball = drive / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
+    manifest = (
+        drive
+        / "backups/phase3-6375/20260813T220000Z/phase3-evaluation-context-manifest-v1/evaluation_context_manifest_v1.jsonl"
+    )
+    backup_dir = drive / "backups/phase3-6375/20260813T231656Z"
+    public_receipt = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_pravopys_evaluation_context_receipt_v1.json"
+    if not tarball.exists() or not manifest.exists():
+        pytest.skip("Drive custody artifacts unavailable")
+    if backup_dir.exists() and (backup_dir / prav_context.PRIVATE_FILENAME).exists():
+        receipt = json.loads(public_receipt.read_text(encoding="utf-8"))
+        prav_context.validate_receipt(receipt)
+        assert receipt["context_accounting"] == prav_context.CONTEXT_ACCOUNTING
+        assert receipt["mapping_accounting"] == prav_context.MAPPING_ACCOUNTING
+        return
+    receipt = prav_context.production_run(
+        custody_tarball=tarball,
+        evaluation_manifest_path=manifest,
+        evaluation_manifest_receipt_path=EVAL_RECEIPT,
+        drive_backup_dir=backup_dir,
+        public_receipt_path=public_receipt,
+        started_at="2026-08-13T23:00:00Z",
+        completed_at="2026-08-13T23:00:30Z",
+    )
+    prav_context.validate_receipt(receipt)
+    assert receipt["row_count"] == 413
