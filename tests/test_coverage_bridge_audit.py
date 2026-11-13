@@ -432,6 +432,13 @@ class TestModel:
     def supported_agy_version(self, monkeypatch):
         # Probe-result mocks must not also replace the adapter's version check.
         monkeypatch.setattr("agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
+        import subprocess
+
+        from scripts.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path
+
+        self._real_run = subprocess.run
+        self._root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
+                              str(machinery_path("lib/project_interpreter.sh"))]
 
     def test_detect_model_error_not_found(self):
         from scripts.ai_agent_bridge._model import _detect_model_error
@@ -463,7 +470,12 @@ class TestModel:
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
-        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 90)):
+        def provider_probe(argv, **kwargs):
+            if argv == self._root_command:
+                return self._real_run(argv, **kwargs)
+            raise subprocess.TimeoutExpired("cmd", 90)
+
+        with patch("subprocess.run", side_effect=provider_probe):
             result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "timed out" in capsys.readouterr().out
@@ -478,7 +490,12 @@ class TestModel:
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
-        with patch("subprocess.run", side_effect=FileNotFoundError):
+        def provider_probe(argv, **kwargs):
+            if argv == self._root_command:
+                return self._real_run(argv, **kwargs)
+            raise FileNotFoundError
+
+        with patch("subprocess.run", side_effect=provider_probe):
             result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "AGY CLI not found" in capsys.readouterr().out
@@ -503,7 +520,12 @@ class TestModel:
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         mock_result = MagicMock(returncode=0, stdout="MODEL_OK", stderr="")
-        with patch("subprocess.run", return_value=mock_result) as run:
+        def provider_probe(argv, **kwargs):
+            if argv == self._root_command:
+                return self._real_run(argv, **kwargs)
+            return mock_result
+
+        with patch("subprocess.run", side_effect=provider_probe) as run:
             assert check_model("gemini-3.8-flash-high") is True
         cmd = run.call_args.args[0]
         assert "agy" in cmd[0] or cmd[0].endswith("/agy")
