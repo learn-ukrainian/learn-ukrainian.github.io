@@ -1416,9 +1416,12 @@ class GitHubClient:
                 changed = db.total_changes != changes
             # Size accounting is a read of every response row. Running it inside the
             # write transaction above holds the exclusive lock for the whole scan, and
-            # eight writers near the cap then wait past the lock timeout. Commit first.
+            # eight writers near the cap then wait past the lock timeout. Commit the
+            # response first, then prune in its own transaction so the deletes commit
+            # before this connection closes.
             if changed:
-                _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
+                with db:
+                    _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
         except sqlite3.DatabaseError as error:
             # As above: the caller falls back to memory, and the next client opens a fresh file.
             if self.cache_dir is not None and github_usage.corrupt(error):
@@ -1607,6 +1610,24 @@ class GitHubClient:
         # refuses, or space it takes, can never cost the budget observation. 599 is this client's own
         # transport failure: nothing reached GitHub. A landing call is not counted at all.
         counted = resource == "core" and response.status != 599 and normalized.call_class != "landing"
+
+        def visible():
+            """Caller-visible result, independent of whether the cache write lands.
+
+            A lock timeout must not return the preliminary 304 or rate-limit error.
+            Conditional freshness and Retry-After handling use data already in memory.
+            """
+            if limit is not None:
+                return deferred(limit[2], limit[1])
+            if response.status == 304:
+                if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
+                    return Result(status=304, error="github_cache_miss", headers=h)
+                merged = {**json.loads(cached[1]), **h}
+                return Result(_cached_value(cached), status=304, headers=merged)
+            if result.error == "github_rate_limited":
+                return deferred("pool_exhausted", result.reset_at)
+            return result
+
         try:
             for persist_attempt in range(2):
                 try:
@@ -1658,7 +1679,7 @@ class GitHubClient:
                     if _transient_lock(error):
                         if persist_attempt == 0:
                             continue
-                        return result
+                        return visible()
                     if self.cache_dir is not None:
                         self.cache_dir = None
                         if persist_attempt == 0:
