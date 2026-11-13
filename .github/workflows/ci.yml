@@ -868,7 +868,7 @@ jobs:
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
     # Every dependency must finish with the result required by its event tier.
-    needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
+    needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

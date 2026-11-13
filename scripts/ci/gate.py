@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
-COMMON = frozenset({"secret-scan", "checks", "dependency-audit", "pr-affected", "frontend"})
+COMMON = frozenset({"secret-scan", "hydrate-release-assets", "checks", "dependency-audit", "pr-affected", "frontend"})
 FULL = frozenset({"refresh-pytest-durations", "pytest", "pytest-report"})
 
 

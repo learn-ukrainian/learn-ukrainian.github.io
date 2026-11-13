@@ -420,6 +420,7 @@ def test_ci_gate_runs_after_cancel() -> None:
 
 _GREEN = {
     "SECRET_SCAN": "success",
+    "HYDRATE": "success",
     "CHECKS": "success",
     "PR_AFFECTED": "success",
     "FRONTEND": "success",
@@ -465,7 +466,7 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        mapping = {"PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
@@ -652,7 +653,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     """Missing or non-success changed-test proof must never admit a PR."""
     job = _load('ci.yml')['jobs']['pr-affected']
     assert job['timeout-minutes'] == 40
-    assert 'needs' not in job
+    assert job['needs'] == ['hydrate-release-assets']
     assert 'continue-on-error' not in job
     assert 'pr-affected' in _ci_gate_job()['needs']
     checkout = next(s for s in job['steps'] if str(s.get('uses', '')).startswith('actions/checkout@'))
