@@ -147,7 +147,8 @@ _FAKE_CLAUDE = textwrap.dedent(
             for item in mode[len("status_set:"):].split(";"):
                 name, _, value = item.partition("=")
                 status[name] = json.loads(value)
-                if status[name] is None:
+                # null drops historical keys; a null offer must stay so a non-boolean refuses
+                if status[name] is None and name != "consoleProfileSignInOffered":
                     del status[name]
         if argv[-1] == "--json":
             print(json.dumps(status))
@@ -758,6 +759,13 @@ def test_bound_label_checkout_setting_that_changes_auth_is_refused(accounts, nam
         ("garbage", "claude_account_auth_status_unavailable"),
         ("other_dir", "claude_account_auth_method_conflict"),
         ("unknown_key", "claude_account_auth_method_conflict"),
+        # 2.1.325 admits only a boolean offer; every other JSON value refuses.
+        ('status_set:consoleProfileSignInOffered="true"', "claude_account_auth_method_conflict"),
+        ("status_set:consoleProfileSignInOffered=1", "claude_account_auth_method_conflict"),
+        ("status_set:consoleProfileSignInOffered=0", "claude_account_auth_method_conflict"),
+        ("status_set:consoleProfileSignInOffered=null", "claude_account_auth_method_conflict"),
+        ("status_set:consoleProfileSignInOffered=[]", "claude_account_auth_method_conflict"),
+        ("status_set:consoleProfileSignInOffered={}", "claude_account_auth_method_conflict"),
         # 2.1.319 sets the login marker to true, always beside the plan tier.
         ("status_set:storedClaudeAiLogin=false", "claude_account_auth_method_conflict"),
         ('status_set:storedClaudeAiLogin="true"', "claude_account_auth_method_conflict"),
@@ -786,6 +794,8 @@ def test_bound_label_unconfirmed_auth_status_is_refused(accounts, monkeypatch, m
 @pytest.mark.parametrize(
     "mode",
     [
+        "status_set:consoleProfileSignInOffered=true",
+        "status_set:consoleProfileSignInOffered=false",
         'status_set:planTier="max_5x"',
         'status_set:planTier="max_20x"',
         'status_set:planTier="max_other"',
