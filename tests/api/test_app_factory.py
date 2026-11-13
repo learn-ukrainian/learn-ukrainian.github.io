@@ -32,7 +32,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
-    app = api_main.create_app(production_context())
+    context = production_context()
+    app = api_main.create_app(context)
 
     assert [(entry.cls, entry.args) for entry in app.user_middleware] == [
         (api_main.PrometheusMetricsMiddleware, ()),
@@ -40,7 +41,7 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
         (BaseHTTPMiddleware, ()),
         (CORSMiddleware, ()),
     ]
-    assert app.user_middleware[0].kwargs == {}
+    assert app.user_middleware[0].kwargs == {"context": context}
     assert app.user_middleware[1].kwargs["dispatch"] is opsec_path_sanitizer_middleware
     assert app.user_middleware[2].kwargs["dispatch"] is resilience_middleware
     assert app.user_middleware[3].kwargs == {
