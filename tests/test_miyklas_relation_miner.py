@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 
 import pytest
-from lu_machinery.storage.paths import artifact_path
 
 from scripts.lexicon.miyklas_relation_miner import clean_candidate_records, parse_relation_term
 
@@ -48,9 +47,9 @@ def test_clean_candidate_records_removes_labels_without_losing_valid_terms() -> 
 
 
 @pytest.mark.needs_artifact("lexicon_candidates", "lexicon/relation_candidates_miyklas.json")
-def test_cleaned_artifact_has_no_known_label_or_chopped_headwords() -> None:
+def test_cleaned_artifact_has_no_known_label_or_chopped_headwords(data_artifact_factory) -> None:
     candidates = json.loads(
-        artifact_path("lexicon_candidates", "lexicon/relation_candidates_miyklas.json").read_text(encoding="utf-8")
+        data_artifact_factory("lexicon_candidates", "lexicon/relation_candidates_miyklas.json").read_text(encoding="utf-8")
     )
     forbidden = {
         "мат",

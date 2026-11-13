@@ -19,11 +19,6 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
-def _drive_staging() -> Path | None:
-    try:
-        return intake.default_staging_root()
-    except intake.Pliush2005CanonicalGrammarIntakeError:
-        return None
 
 
 def _write_private(path: Path, payload: bytes) -> None:

@@ -21,7 +21,6 @@ from scripts.lexicon.ohoiko_paired_headword_split import (
     split_paired_headword,
     strip_trailing_parentheticals,
 )
-from scripts.storage.paths import artifact_path
 
 
 def test_split_basic_gender_pair() -> None:
@@ -469,8 +468,8 @@ def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path, mon
 @pytest.mark.needs_artifact(
     "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
 )
-def test_taught_residual_census_artifact_file_integrity() -> None:
-    census_path = artifact_path(
+def test_taught_residual_census_artifact_file_integrity(data_artifact_factory) -> None:
+    census_path = data_artifact_factory(
         "lexicon_recovery_snapshots", "lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
     )
     data = json.loads(census_path.read_text(encoding="utf-8"))

@@ -52,11 +52,11 @@ The obsolete benchmark manifest helpers are removed with their tests. `test_held
 | Sources and VESUM | Existing `requires_sources_db` / `requires_vesum_db` logical-store fixtures; read-only queries. The golden set, pronoun checks, and live style-guide examples use these fixtures. |
 | UA-GEC | Read the existing primary corpus through `resolve_main_root`; build the real in-memory annotation index. |
 | Atlas | Read the existing primary `data/atlas.db` through `resolve_main_root`; retain exact exported counts and alias checks. |
-| Corpus snapshots and lexicon artifacts | Existing files only; no nightly hydration groups. |
+| Corpus snapshots and lexicon artifacts | The 11 marked cases opt into `data_artifact_factory`, which reads existing primary files and verifies their bytes against the current checkout manifest. Their markers retain size, digest, and symlink checks. No hydration or copies. |
 
 ## Accepted skips and content residuals
 
-No skip reasons are accepted for the retained nightly selection. A skip means an unmet execution requirement, not a pass. Stale node IDs whose definitions no longer exist are removed explicitly in the appendix.
+No skip reasons are accepted for the retained nightly selection. A skip means an unmet execution requirement, not a pass. Stale node IDs whose definitions no longer exist are removed explicitly in the appendix. The AST guard pins definitions only. Exact parameter IDs require the full selection-to-collection equality check recorded with the run.
 
 The Atlas membership and all-mode practice gates remain in source and are excluded from nightly because their current failures are learner-content defects. The content lane owns repair after authoring resumes; the exact audit findings are recorded on #9256. No dictionary rows, manifest entries, practice cards, thresholds, or assertions are changed.
 

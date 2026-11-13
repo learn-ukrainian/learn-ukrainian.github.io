@@ -18,11 +18,6 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
-def _drive_staging() -> Path | None:
-    try:
-        return intake.default_staging_root()
-    except intake.Vspu2025MorphemicsWordFormationIntakeError:
-        return None
 
 
 class _FakePage:

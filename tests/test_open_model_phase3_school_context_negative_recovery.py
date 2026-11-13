@@ -15,11 +15,6 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
 PUBLIC_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_school_context_negative_recovery_receipt_v1.json"
-DRIVE_ROOT = min(
-    Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data"),
-    default=Path.home() / "Library/CloudStorage/GoogleDrive-unavailable/My Drive/Projects/learn-ukrainian-data",
-)
-CUSTODY_TARBALL = DRIVE_ROOT / "backups/phase3-6375/20260811T090325Z/phase3-private-and-durable-artifacts.tar.gz"
 
 
 def _school_row(

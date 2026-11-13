@@ -17,11 +17,6 @@ PUBLIC_RECEIPT = intake.DEFAULT_PUBLIC_RECEIPT_PATH
 SCHEMA = intake.SCHEMA_PATH
 
 
-def _drive_staging() -> Path | None:
-    try:
-        return intake.default_staging_root()
-    except intake.Donnu2023MorphemicsWordFormationIntakeError:
-        return None
 
 
 def test_mint_is_deterministic_and_preserves_false_completion_gates() -> None:

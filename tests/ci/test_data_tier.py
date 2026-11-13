@@ -45,7 +45,7 @@ def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
 
 
 def test_real_store_selection_names_existing_tests_and_keeps_store_checks() -> None:
-    """Stale selections must not silently omit the real-store checks (#9256)."""
+    """Missing definitions must not silently omit real-store checks; parameter IDs need collection proof (#9256)."""
     selection = data_tier.load_selection()
     selected = set(selection["nodeids"])
     for nodeid in selected:
