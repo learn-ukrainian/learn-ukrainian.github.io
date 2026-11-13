@@ -398,8 +398,6 @@ def claude_on_cursor(row):
 
 def test_no_claude_review_candidate_runs_on_cursor():
     assert not [name for name, candidate in REVIEW_CANDIDATES.items() if claude_on_cursor(candidate)]
-    assert "grok-4.7-cursor-fallback" not in REVIEW_CANDIDATES
-    assert not [candidate for candidate in REVIEW_CANDIDATES.values() if candidate.transport == "cursor"]
 
 
 @pytest.mark.parametrize("author", D129_AUTHORS)

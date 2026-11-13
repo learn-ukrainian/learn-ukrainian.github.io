@@ -28,9 +28,13 @@ from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.testclient import TestClient
 from lu_machinery.api import (
+    delegate_router,
     epics_router,
     fleet_router,
+    fleet_workers_router,
+    git_hygiene_router,
     issues_router,
+    ops_router,
     opsec_scan,
     route_contracts,
     state_helpers,
@@ -401,6 +405,29 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             "checked_at": "2026-01-01T00:00:00Z",
         },
     )
+    # GET /api/ops/v1/alerts reads the host's loopback Alertmanager. The sweep
+    # never opens a socket, so the seam returns the route's own unreachable
+    # reading and the route still shapes and caches it normally.
+    monkeypatch.setattr(
+        ops_router,
+        "_alerts_reading",
+        lambda: {
+            "status": "unknown",
+            "reason_code": "alertmanager_unreachable",
+            "observed_at": "2026-01-01T00:00:00Z",
+            "heartbeat": None,
+            "alerts": [],
+        },
+    )
+    # GET /api/git/pull-requests reads GitHub through ``gh``; return its own
+    # unavailable reading at the seam, as for ``issues_router._run_gh``.
+    monkeypatch.setattr(
+        git_hygiene_router,
+        "compute_pull_requests",
+        lambda _project_root: git_hygiene_router._unknown_pull_requests(
+            "github_unavailable", "2026-01-01T00:00:00Z"
+        ),
+    )
     # NOTE (#7413): epics graph audit sidecars and spawn workers are isolated
     # so the sweep never reads/writes host cache or spawns refresh jobs.
     _idle_refresh = {
@@ -491,6 +518,16 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         dashboards_root,
         dirs_exist_ok=True,
     )
+
+    # Snapshot routes serve only what the lifespan writer collected; the sweep's
+    # TestClient runs no lifespan, so collect once here and scan real payloads
+    # instead of the "snapshot not ready" 503.
+    for snapshot in (
+        delegate_router.active_snapshot(fixture_ctx),
+        delegate_router.recent_snapshot(fixture_ctx),
+        fleet_workers_router.workers_snapshot(fixture_ctx),
+    ):
+        snapshot.refresh()
 
     # The source and the injected seams must both carry the planted canary
     # before any response is considered safe to scan.
@@ -653,19 +690,6 @@ def _scan_response(
         headers=dict(response.headers),
         canaries=canaries,
     )
-
-
-def test_pr_detail_path_value_is_int_valid_and_not_rejected(isolated_fixture: IsolatedFixture) -> None:
-    # The PR route validates ``number`` as an int >= 1; a non-integer synthetic
-    # value would fail validation with 422 before the sweep reaches the handler.
-    records = {record.key: record for record in registry.build_registry(api_main.app)}
-    record = records["GET /api/fleet/v1/prs/{number}"]
-    number = record.path_params()["number"]
-    assert number == registry._path_value("number") == "1"
-    assert number.isdigit() and int(number) >= 1
-    client = TestClient(api_main.app, raise_server_exceptions=False)
-    response = client.get(_path_for_record(record), params=dict(record.query), headers=dict(record.headers))
-    assert response.status_code != 422, f"{record.key} rejected its path value: {_response_payload(response)!r}"
 
 
 def _assert_unlisted_schema_hidden_route_fails_the_denominator(monkeypatch: pytest.MonkeyPatch) -> None:

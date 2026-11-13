@@ -561,8 +561,9 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
         # Static serving isolation
-        first_static = first_client.get("/")
-        second_static = second_client.get("/")
+        # The product owns "/" (C-4687); the machinery home is always at /machinery.
+        first_static = first_client.get("/machinery")
+        second_static = second_client.get("/machinery")
         assert "First Dashboard" in first_static.text
         assert "Second Dashboard" not in first_static.text
         assert "Second Dashboard" in second_static.text

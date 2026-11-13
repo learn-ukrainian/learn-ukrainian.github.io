@@ -63,8 +63,8 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("muse",),
-            model="muse-wonder-full-1.0",
+            ("cursor",),
+            model="grok-4.7-high",
             mode="read-only",
             review_dispatch=True,
             review_profile="ukrainian",
@@ -114,10 +114,9 @@ def test_a_suffixed_cursor_slug_is_never_an_attempt_identity(monkeypatch, suffix
         _review_target(pin + suffix, attempt=True)
 
 
-def test_the_exact_cursor_grok_slug_is_refused_after_retirement():
-    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED") as refused:
-        _review_target("grok-4.7-high", attempt=True)
-    assert "model 'grok-4.7' is retired" in str(refused.value)
+def test_the_exact_cursor_grok_slug_retains_the_released_attempt_identity():
+    """Machinery #390 restores explicit Cursor review without changing its wire slug."""
+    assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
 
 
 def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():

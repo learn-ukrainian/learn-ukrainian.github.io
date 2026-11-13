@@ -1,17 +1,19 @@
-# lu-machinery consumer lock (machinery docs/release.md, "Dependency lock").
-# Install with --require-hashes only; never as an editable install.
+lu-machinery==0.1.11 \
+    --hash=sha256:e34833eee35f430bc71b1933ee485b7b63ae234799b707014047dcb40c88d46f
+# lu-machinery release dependency lock: every transitive runtime dependency of
+# pyproject.toml, exact version and the SHA-256 of the one wheel installed.
+# docs/release.md is the procedure; a consumer's requirements-machinery.lock is
+# the release's lu-machinery line followed by these lines.
 #
-# Release: learn-ukrainian/machinery v0.1.9
-# Tag object: 767968cad7d9a9c1f038b987f60e147c4cc7e6d8
-# Tag commit: 85a046819b1cb12c7e4c68ac4c4cb123710b08af
-# SHA256SUMS: https://github.com/learn-ukrainian/machinery/releases/download/v0.1.9/SHA256SUMS
-# The lu-machinery hash is the SHA256SUMS entry for
-# lu_machinery-0.1.9-py3-none-any.whl.
-# The pins below are machinery's requirements-machinery.lock at that tag.
-# A package listed here and in requirements-lock.txt must carry the same
-# version in both files.
-lu-machinery==0.1.9 \
-    --hash=sha256:2153808db9a84acb65dadab94ad29fb64bc8fcd8af562b083593cfceb51500ba
+# Resolved for CPython 3.12 on x86_64 Linux with
+#   uv pip compile pyproject.toml --python-version 3.12 \
+#     --python-platform x86_64-manylinux_2_39 --only-binary :all: \
+#     --constraint <learn-ukrainian requirements-lock.txt without local paths>
+# Each hash is the wheel pip selects both on the server (glibc 2.43) and on
+# GitHub-hosted ubuntu-24.04 (glibc 2.39); the highest glibc floor is
+# cryptography's manylinux_2_34. The installed-wheel job in ci-gate.yml
+# installs this file with --require-hashes on every PR, so a dependency added
+# to pyproject.toml without a pin here fails it.
 annotated-doc==0.0.5 \
     --hash=sha256:117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101
 annotated-types==0.8.0 \

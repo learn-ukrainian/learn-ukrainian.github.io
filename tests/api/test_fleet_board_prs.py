@@ -8,16 +8,21 @@ import time
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
-from lu_machinery.api import main as api_main
-from lu_machinery.api.fleet_board import activity as activity_mod
-from lu_machinery.api.fleet_board import prs as prs_mod
-from lu_machinery.api.fleet_board.envelope import endpoint_schema
 from lu_machinery.orchestration.integration_sweep import lookup_verdict
 from lu_machinery.review.record_cf_verdict import build_comment
 
-client = TestClient(api_main.app, raise_server_exceptions=False)
+from scripts.api.fleet_board import activity as activity_mod
+from scripts.api.fleet_board import prs as prs_mod
+from scripts.api.fleet_board.envelope import endpoint_schema
+from scripts.api.fleet_board.router import router
+
+# 0.1.10 removed this router; the product retains its source until B2b.
+app = FastAPI()
+app.include_router(router, prefix="/api/fleet/v1")
+client = TestClient(app, raise_server_exceptions=False)
 
 NOW = datetime(2026, 10, 9, 10, 0, tzinfo=UTC)
 SHA = "a" * 40
@@ -732,9 +737,9 @@ def test_owner_lane_prefers_the_recorded_lane() -> None:
 def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(
     tmp_path, monkeypatch: pytest.MonkeyPatch, board_signals: bool,
 ) -> None:
-    from lu_machinery.api.fleet_board import router as router_mod
-    from lu_machinery.api.fleet_board.sources import report
-    from lu_machinery.api.fleet_board.view import Board
+    from scripts.api.fleet_board import router as router_mod
+    from scripts.api.fleet_board.sources import report
+    from scripts.api.fleet_board.view import Board
 
     board_alert = {
         "severity": "bad", "kind": "dead_driver", "title": "Driver stopped",
