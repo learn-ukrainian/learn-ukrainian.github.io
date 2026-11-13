@@ -74,6 +74,7 @@ _strip_credential_shaped_env()
 import ast
 import contextlib
 import functools
+import importlib
 import importlib.machinery
 import ipaddress
 import itertools
@@ -121,6 +122,85 @@ pytest_plugins = [
     "tests.helpers.reviewer_routing",
     "tests.data_store_fixtures",
 ]
+
+# Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+_API_STATUS_PACKAGES = ("scripts.api", "lu_machinery.api")  # TRANSITIONAL-PKG3-B2
+
+
+def _under_tests_api(request: pytest.FixtureRequest) -> bool:
+    path = getattr(request.node, "path", None)
+    if not isinstance(path, Path):
+        return False
+    try:
+        relative = path.resolve().relative_to(Path(request.config.rootpath).resolve())
+    except ValueError:
+        return False
+    return relative.parts[:2] == ("tests", "api")
+
+
+def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
+    return [importlib.import_module(f"{package}.{name}") for package in _API_STATUS_PACKAGES]
+
+
+def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
+    def _no_provider(directory: int, account: str) -> None:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
+
+    return _no_provider
+
+
+def reset_api_status_caches() -> None:
+    """Drop process-global status and per-account Claude caches."""
+    for state_helpers in _api_status_modules("state_helpers"):  # TRANSITIONAL-PKG3-B2
+        state_helpers.cache_invalidate()
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        claude_account_usage._reset_for_tests()
+
+
+def judge_api_git_below_tmp_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The probe's Git check sees only directories the test built under ``tmp_path``."""
+    boundary = tmp_path.resolve()
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+
+        def inside_git(path: Path, _module=claude_account_usage) -> bool:
+            return any(
+                _module._git_tree(directory)
+                for directory in (path, *path.parents)
+                if directory.is_relative_to(boundary)
+            )
+
+        monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+
+
+def refuse_api_claude_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No API test reaches the real credential owner unless it installs a fixture provider."""
+    from types import SimpleNamespace
+
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(
+            claude_account_usage,
+            "_private_usage",
+            lambda _module=claude_account_usage: SimpleNamespace(prove_claude_owner=_no_api_claude_provider(_module)),
+        )
+
+
+@pytest.fixture(autouse=True)
+def _isolate_api_directory_when_pytest_recollects(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
+    """Keep tests/api isolation when pytest builds a second directory node.
+
+    A file collected directly under ``tests/`` is not deduplicated, so pytest
+    scans the package again. The new ``tests/api`` directory node never receives
+    the fixtures already bound to the first node. ``_last_good`` and the status
+    TTL cache then leak into the next test in that node.
+    """
+    if not _under_tests_api(request):
+        yield
+        return
+    judge_api_git_below_tmp_path(request.getfixturevalue("tmp_path"), monkeypatch)
+    reset_api_status_caches()
+    refuse_api_claude_provider(monkeypatch)
+    yield
+    reset_api_status_caches()
 
 
 @pytest.fixture(scope="session", autouse=True)
