@@ -2108,7 +2108,8 @@ def main(argv=None, *, runner=None):
                 "  echoed, not edited. An unrecognized ruleset field refuses before the PUT.\n"
                 "Exit codes: 0 update sent and the read-back matches; 1 GitHub refused the update (nothing landed);\n"
                 "  2 invalid input or a refusal before the update; 3 the update was sent and the read-back failed\n"
-                "  or does not match: do not retry; 75 rate-limit refusal.\n"
+                "  or does not match: do not retry. A rate limit on that read-back is exit 3, not 75;\n"
+                "  75 is a rate-limit refusal before the update.\n"
                 "Related: GitHub REST update a repository ruleset; decision C-5345."
             )
         for key, kind in schema.items():

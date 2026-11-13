@@ -2531,3 +2531,8 @@ def test_ruleset_merge_queue_changes_only_the_named_parameter(synthetic_opsec, c
         runner=runner,
     ) == 3
     assert calls == ["GET", "PUT", "GET"] and "Do not retry" in capsys.readouterr().err
+
+    with pytest.raises(SystemExit) as exc:
+        publisher.main(["ruleset-merge-queue", "--help"])
+    assert exc.value.code == 0
+    assert "A rate limit on that read-back is exit 3, not 75" in capsys.readouterr().out
