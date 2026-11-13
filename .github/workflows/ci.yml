@@ -243,6 +243,7 @@ jobs:
   # the Actions artifact service, which spends no REST quota. Their own hydrators then
   # re-check every file against the pointer digests in their checkout. Consumer steps
   # hold no token, so a mismatch fails or re-downloads anonymously, never from that pool.
+  # CI Gate requires this job's success in every tier.
   hydrate-release-assets:
     name: Hydrate release assets
     runs-on: ubuntu-latest
@@ -408,12 +409,17 @@ jobs:
         with:
           name: hydrated-atlas-manifest
           path: site/src/data
-      # npm run hydrate re-checks both decks against their pointers.
-      - name: Take the hydrated practice and teacher decks
+      # npm run hydrate re-checks both decks against their pointers. Named downloads:
+      # a missing artifact fails here instead of being re-fetched without a token.
+      - name: Take the hydrated practice deck
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          pattern: hydrated-*-deck
-          merge-multiple: true
+          name: hydrated-practice-deck
+          path: site/public/lexicon
+      - name: Take the hydrated teacher deck
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: hydrated-teacher-deck
           path: site/public/lexicon
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
