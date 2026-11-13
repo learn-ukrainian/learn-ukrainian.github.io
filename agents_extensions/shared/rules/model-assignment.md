@@ -415,7 +415,7 @@ or count as a formal review.
   explicit `--model`. The approved pin is `grok-4.7-high` (C-5307). `auto` is allowed only for a well-defined coding task — a write-capable
   implementation dispatch with `--owned-path` and a PASS DoR issue card, and only inside the catalog Auto allowlist, which stays empty. The driver
   checks that policy; the legacy Cursor Auto DoR admission gate is retired. Coding and code/infra review pin `grok-4.7-high`.
-  The driver seat, advisory review, design, consults, discussions, recon, and any unclear or under-specified task do not use Grok. `auto` is never a formal-review identity.
+  An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true` and records that executed ID and flag in provenance. The driver seat, advisory review, design, recon, and any unclear or under-specified task do not use Grok. `auto` is never a formal-review identity.
   A review of Grok-authored work runs the reviewer resolver's non-xAI pick; no Claude model
   reviews through Cursor (D-129, #10464).
   Pools and prices: `fleet-driver-routing.md` § Cursor pools. `cursor:auto` is **never**
@@ -600,9 +600,9 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 ### Cursor driver seat — identity contract and attestation (#6952 / #6955)
 
 Cursor has no orchestrator seat. Coding and code/infra review use `grok-4.7-high` (C-5307).
-Grok is not the driver, advisory, design, consult, recon, or unclear-task pin.
+Grok is not the driver, advisory, design, recon, or unclear-task pin. An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true` and records that executed ID and flag in provenance.
 
-* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed, and only within the catalog's Auto allowlist, which stays empty (C-5307 restores the explicit pin, not Auto). The driver seat, interactive Cursor sessions, and ACP consults and discussions do not use Grok. A code/infra review on Cursor runs the model the reviewer resolver selects (`closeout_cli resolve-reviewer`), which may be `grok-4.7-high`, never Auto.
+* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed, and only within the catalog's Auto allowlist, which stays empty (C-5307 restores the explicit pin, not Auto). The driver seat and interactive Cursor sessions do not use Grok. An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true` and records that executed ID and flag in provenance; that ask is not designated approval and not a review of record. A code/infra review on Cursor runs the model the reviewer resolver selects (`closeout_cli resolve-reviewer`), which may be `grok-4.7-high`, never Auto.
 * **Driver-of-record requires attested `resolved_model`:** a Cursor driver session requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/dispatch.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
 * **Auto attribution:** Auto authors use the Cursor family, even with concrete runtime
   reports (#9951). A declared conflicting author family fails closed.

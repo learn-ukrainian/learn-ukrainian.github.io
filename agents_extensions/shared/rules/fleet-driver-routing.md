@@ -55,11 +55,9 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
-card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. The driver seat, design, consults, discussions, recon and
-unclear work pin an approved concrete model; a review runs the approved concrete model the reviewer
-resolver selects. Cursor has no approved model pin while Grok is retired (GROK-CANCEL-1110,
-2026-11-10; its only pin was `grok-4.7-high`), so do not dispatch Cursor until the operator
-approves a pin. A review of historical Grok-authored work runs the reviewer resolver's non-xAI pick
+card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. Cursor coding and code/infra review use native Cursor dispatch pinned to `grok-4.7-high` (C-5307). An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true` and records that executed ID and flag in provenance. Every other Cursor model is refused. The driver seat, design, recon and
+unclear work do not use Grok. A review runs the concrete model the reviewer
+resolver selects. A review of Grok-authored work runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
 through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
@@ -92,7 +90,7 @@ stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor, included pool** | none while Grok is retired (GROK-CANCEL-1110) | no approved pin; never a Grok model |
+| **Cursor, included pool** | coding and code/infra review | `grok-4.7-high` (C-5307); not a driver |
 | **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review goes to the `resolve-reviewer` pick instead. |
 | **DeepSeek V4.1 Flash** | Latest `deepseek-v4.1-flash` coding through opencode | Direct DeepSeek API or OpenRouter with a named US provider allow-list; never private-repository content or secrets. Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. `ask-deepseek` remains consult-only for non-language work. |
 | **Kimi** | retired (OO-58, #11327) | do not dispatch; every Kimi id is refused |
@@ -109,7 +107,7 @@ the lane at selection time. A run-time `rate_limited` outcome ends the review
 without an automatic fallback dispatch.
 
 **Codex writer near_cap / timed pause / deficit:** shed mechanical CI to another admitted lane;
-Cursor has no approved pin while Grok is retired. Code/infra review goes to the
+Cursor coding and code/infra review use `grok-4.7-high` (C-5307). Code/infra review goes to the
 `resolve-reviewer` pick. A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
@@ -144,8 +142,7 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
-**Cursor Models pool.** More included usage. We have no pin in this pool: our only pin was
-`grok-4.7-high`, and every Grok model is retired (GROK-CANCEL-1110). Send no Grok model.
+**Cursor Models pool.** More included usage. The pin is `grok-4.7-high` (C-5307) for coding and code/infra review. grok-4.6 and grok-4.5 stay retired. Grok is not a driver.
 
 **Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. It serves non-review third-party work only: no Claude model reviews through Cursor (D-129, #10464), so a reviewer comes from the reviewer resolver, not from this pool. The Claude rows below are price facts about the pool.
 
