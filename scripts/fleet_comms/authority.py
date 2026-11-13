@@ -1571,15 +1571,7 @@ class AuthorityService:
         """Queued or running deliveries older than the cutoff. Reads only."""
         if older_than_days <= 0:
             raise AuthorityServiceError("older_than_days_must_be_positive")
-        now_value = self._now_string(now)
-        cutoff = _iso(_parse_iso(now_value, field="now") - timedelta(days=older_than_days))
-        row = self._conn.execute(
-            """SELECT COUNT(*) FROM authority_deliveries
-               WHERE state IN ('queued', 'running') AND created_at <= ?
-                 AND (deadline_at IS NULL OR deadline_at <= ?)""",
-            (cutoff, now_value),
-        ).fetchone()
-        return int(row[0])
+        return len(self._stale_undelivered(older_than_days=older_than_days, now=now))
 
     def expire_undelivered(self, *, older_than_days: int = 7, now: str | None = None) -> int:
         """Expire old undelivered rows through the existing deadline path.
@@ -1591,18 +1583,33 @@ class AuthorityService:
         if older_than_days <= 0:
             raise AuthorityServiceError("older_than_days_must_be_positive")
         now_value = self._now_string(now)
-        cutoff = _iso(_parse_iso(now_value, field="now") - timedelta(days=older_than_days))
         with self._write_transaction():
-            self._conn.execute(
-                """UPDATE authority_deliveries
-                   SET deadline_at = created_at, updated_at = ?
-                   WHERE state IN ('queued', 'running')
-                     AND deadline_at IS NULL
-                     AND created_at <= ?""",
-                (now_value, cutoff),
-            )
+            for row in self._stale_undelivered(older_than_days=older_than_days, now=now_value):
+                if self._stored_kimi_delivery(row):
+                    continue
+                self._conn.execute(
+                    """UPDATE authority_deliveries
+                       SET deadline_at = created_at, updated_at = ?
+                       WHERE delivery_id = ?""",
+                    (now_value, str(row["delivery_id"])),
+                )
             expired = self._reclaim_expired_deliveries_tx(now_value, max_attempts=3)
         return expired
+
+    def _stale_undelivered(self, *, older_than_days: int, now: str | None) -> list[sqlite3.Row]:
+        """Queued or running rows past the age cutoff whose deadline is null or already due.
+
+        A stored Kimi delivery is omitted. The caller writes one row at a time.
+        """
+        now_value = self._now_string(now)
+        cutoff = _iso(_parse_iso(now_value, field="now") - timedelta(days=older_than_days))
+        rows = self._conn.execute(
+            """SELECT delivery_id, recipient, message_id FROM authority_deliveries
+               WHERE state IN ('queued', 'running') AND created_at <= ?
+                 AND (deadline_at IS NULL OR deadline_at <= ?)""",
+            (cutoff, now_value),
+        ).fetchall()
+        return [row for row in rows if not self._stored_kimi_delivery(row)]
 
     def record_wake_receipt(
         self,
