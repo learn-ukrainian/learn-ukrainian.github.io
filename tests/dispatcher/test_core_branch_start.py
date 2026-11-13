@@ -424,8 +424,12 @@ def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_se
 
     assert fail(["git", "rev-parse", "--verify", "topic^{commit}"], "fatal: Needed a single revision") == (
         "dispatcher: CalledProcessError: git rev-parse exited 128: needed a single revision\n")
-    assert fail(["git", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
-                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
+    assert fail(["git",
+                 "fetch",
+                 "--",
+                 "https://user:token@example.com/org/repo.git",  # trufflehog:ignore
+                 "abc"],
+                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (  # trufflehog:ignore
         "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
     assert fail(["curl", "https://example.com"], "secret") == "dispatcher: CalledProcessError: external command exited 128\n"
     assert fail(["/usr/bin/git", "fetch"], "fatal: could not read from x") == (
@@ -479,7 +483,7 @@ def test_canonical_origins_does_not_reject_same_identity_when_clone_transport_di
         "https://github.com/org/other.git", "git@github.com:org/other.git", "https://github.com/org/rep.git",
         "https://github.com/org/repo-fork.git", "https://github.com/someone/repo.git", "git@github.com:someone/repo.git",
         "https://gitlab.com/org/repo.git", "git@gitlab.com:org/repo.git", "ssh://git@example.com/org/repo.git",
-        "/srv/org/repo.git", "file:///srv/org/repo.git", "https://user:token@github.com/org/repo.git",
+        "/srv/org/repo.git", "file:///srv/org/repo.git", "https://user:token@github.com/org/repo.git",  # trufflehog:ignore
         "https://token@github.com/org/repo.git", "ssh://user:token@github.com/org/repo.git",
         "https://github.com/Org/repo.git", "https://GitHub.com/org/repo.git", "git@github.com:org/Repo.git",
         "https://github.com/org/repo/", "https://github.com/org/repo.git/", "git@github.com:org/repo.git/",

@@ -42,7 +42,7 @@ def assert_ip_fields(payload):
     )
     assert (
         hashlib.sha256("\n".join(sorted(r["lemma"] for r in rows if r["kind"] == "phrase")).encode()).hexdigest()
-        == "4af46cb21aa3c8f4024bcea1a26e71f71025c46361cb111377b3244a5f35b239"
+        == "4af46cb21aa3c8f4024bcea1a26e71f71025c46361cb111377b3244a5f35b239"  # trufflehog:ignore
     )
     for row in rows:
         assert set(row) <= {

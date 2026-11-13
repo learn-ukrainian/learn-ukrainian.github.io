@@ -154,7 +154,7 @@ def test_normalise_url(url, expected):
     assert catalogue.normalise_url(url) == expected
 
 
-@pytest.mark.parametrize("url", ["relative", "file:///tmp/a", "https://user:password@example.org"])
+@pytest.mark.parametrize("url", ["relative", "file:///tmp/a", "https://user:password@example.org"])  # trufflehog:ignore
 def test_reject_unsafe_url(url):
     with pytest.raises(ValueError):
         catalogue.normalise_url(url)

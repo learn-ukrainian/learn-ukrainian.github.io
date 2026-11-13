@@ -8,3 +8,9 @@
 \.lock$
 (^|/)requirements-lock\.txt$
 (^|/)package-lock\.json$
+
+# Operator-confirmed false positive (2026-11-11): a single generated manifest line; JSON has no comment syntax.
+(^|/)registry/artifacts/open_model_other_indexes\.manifest\.json$
+
+# Operator-confirmed false positive (2026-11-11): one hash literal. An inline comment would change the lexicon fingerprint.
+(^|/)scripts/lexicon/calque_corrections\.py$
