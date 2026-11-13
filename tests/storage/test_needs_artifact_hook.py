@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -27,22 +29,39 @@ def test_missing_artifact_skips_with_hydration_command(monkeypatch: pytest.Monke
         conftest.pytest_runtest_setup(_item("group-a", "source.json"))
 
 
-def test_present_artifact_runs_without_skipping(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(paths, "find_entry", lambda group, rel: {"path": "data/source.json"})
-    calls = []
-    monkeypatch.setattr(paths, "verify_file", lambda path, entry, **kw: calls.append((path, entry, kw)))
-    assert conftest.pytest_runtest_setup(_item("group-a", "source.json")) is None
-    assert calls == [
-        (paths.DATA_ROOT / "source.json", {"path": "data/source.json"}, {"group": "group-a", "rel": "source.json"})
-    ]
+def test_present_artifact_runs_without_skipping(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from scripts.guardrails import worktree_containment
+
+    primary = tmp_path / "primary"
+    artifact = primary / "data" / "source.json"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(b"fixture")
+    entry = {"path": "data/source.json", "size": 7, "sha256": hashlib.sha256(b"fixture").hexdigest()}
+    monkeypatch.setattr(paths, "find_entry", lambda group, rel: entry)
+    monkeypatch.setattr(worktree_containment, "resolve_main_root", lambda root: primary)
+    item = _item("group-a", "source.json")
+    item.fixturenames = ["data_artifact_factory"]
+
+    assert conftest.pytest_runtest_setup(item) is None
+    assert conftest._primary_artifact_path("group-a", "source.json") == artifact
+    assert artifact.read_bytes() == b"fixture"
 
 
-def test_corrupt_artifact_fails_instead_of_skipping(monkeypatch: pytest.MonkeyPatch) -> None:
-    error = paths.MissingArtifactError("group-a", "source.json", "/exact/hydrate-command", "sha256 mismatch")
-    monkeypatch.setattr(paths, "find_entry", lambda group, rel: {"path": "data/source.json"})
-    monkeypatch.setattr(paths, "verify_file", lambda path, entry, **kw: (_ for _ in ()).throw(error))
-    with pytest.raises(paths.MissingArtifactError, match="sha256 mismatch"):
-        conftest.pytest_runtest_setup(_item("group-a", "source.json"))
+def test_corrupt_artifact_fails_instead_of_skipping(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from scripts.guardrails import worktree_containment
+
+    primary = tmp_path / "primary"
+    artifact = primary / "data" / "source.json"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(b"tamper!")
+    entry = {"path": "data/source.json", "size": 7, "sha256": hashlib.sha256(b"fixture").hexdigest()}
+    monkeypatch.setattr(paths, "find_entry", lambda group, rel: entry)
+    monkeypatch.setattr(worktree_containment, "resolve_main_root", lambda root: primary)
+    item = _item("group-a", "source.json")
+    item.fixturenames = ["data_artifact_factory"]
+
+    with pytest.raises(paths.MissingArtifactError, match="sha256"):
+        conftest.pytest_runtest_setup(item)
 
 
 def test_needs_artifact_requires_two_positional_arguments() -> None:

@@ -1,21 +1,34 @@
 """H2 helpers — Antonenko full-text + UA-GEC calque retrieval."""
+
 from __future__ import annotations
+
+from pathlib import Path
 
 import pytest
 
+from scripts.audit import _judge_eval_lib
 from scripts.audit._judge_eval_lib import (
-    UA_GEC_ROOT,
     _antonenko_fulltext_search,
     _ua_gec_calque_search,
     _ua_gec_load_index,
     build_judge_prompt_h2,
     retrieve_evidence,
 )
+from scripts.guardrails.worktree_containment import resolve_main_root
+
+UA_GEC_ROOT = resolve_main_root(Path(__file__).resolve().parents[2]) / "data" / "ua-gec"
 
 pytestmark = pytest.mark.skipif(
     not UA_GEC_ROOT.exists(),
     reason="UA-GEC corpus not present (data/ua-gec missing in this environment)",
 )
+
+
+@pytest.fixture(autouse=True)
+def real_ua_gec_index(monkeypatch):
+    """Read the existing corpus in place, including from a dispatch worktree."""
+    monkeypatch.setattr(_judge_eval_lib, "_UA_GEC_INDEX", None)
+    _ua_gec_load_index(root=UA_GEC_ROOT)
 
 
 def test_ua_gec_index_loads_with_relevant_tags() -> None:

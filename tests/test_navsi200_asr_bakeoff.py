@@ -12,7 +12,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_asr_bakeoff import (
-    DEFAULT_BAKEOFF_LEDGER_PATH,
     detect_russisms,
     normalize_text,
     transcribe_faster_whisper,
@@ -76,11 +75,11 @@ class TestAsrBakeoffLedgerAndPrivacy:
     """Verification of honest ledger accounting and OPSEC privacy gates."""
 
     @pytest.fixture(scope="class")
-    def ledger_data(self) -> dict:
+    def ledger_data(self, data_artifact_factory) -> dict:
         import json
 
-        assert DEFAULT_BAKEOFF_LEDGER_PATH.exists(), f"Ledger not found at {DEFAULT_BAKEOFF_LEDGER_PATH}"
-        with DEFAULT_BAKEOFF_LEDGER_PATH.open("r", encoding="utf-8") as f:
+        path = data_artifact_factory("corpus_audit_snapshots", "corpus_audit/navsi200-asr-bakeoff-ledger.json")
+        with path.open("r", encoding="utf-8") as f:
             return json.load(f)
 
     @pytest.fixture(scope="class")
@@ -88,8 +87,9 @@ class TestAsrBakeoffLedgerAndPrivacy:
         return load_catalog()
 
     @BAKEOFF_LEDGER
-    def test_privacy_no_teacher_names_in_ledger(self) -> None:
-        raw = DEFAULT_BAKEOFF_LEDGER_PATH.read_text(encoding="utf-8").lower()
+    def test_privacy_no_teacher_names_in_ledger(self, data_artifact_factory) -> None:
+        path = data_artifact_factory("corpus_audit_snapshots", "corpus_audit/navsi200-asr-bakeoff-ledger.json")
+        raw = path.read_text(encoding="utf-8").lower()
         forbidden = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]
         for name in forbidden:
             assert name not in raw, f"Privacy violation: found '{name}' in committed bake-off ledger"

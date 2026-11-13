@@ -13,7 +13,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_captions import (
-    DEFAULT_LEDGER_PATH,
     clean_vtt_text,
     fetch_single_caption,
     load_caption_ledger,
@@ -29,8 +28,8 @@ class TestNavsi200CaptionsLedger:
     """Verification suite for navsi200-captions-ledger.json and associated utilities."""
 
     @pytest.fixture(scope="class")
-    def ledger(self) -> dict:
-        return load_caption_ledger()
+    def ledger(self, data_artifact_factory) -> dict:
+        return load_caption_ledger(data_artifact_factory("corpus_audit_snapshots", "corpus_audit/navsi200-captions-ledger.json"))
 
     @pytest.fixture(scope="class")
     def catalog(self) -> dict:
@@ -47,8 +46,9 @@ class TestNavsi200CaptionsLedger:
         assert len(ledger["lessons"]) == len(ledger["entries"])
 
     @CAPTIONS_LEDGER
-    def test_privacy_no_teacher_names_in_ledger(self) -> None:
-        raw_text = DEFAULT_LEDGER_PATH.read_text(encoding="utf-8").lower()
+    def test_privacy_no_teacher_names_in_ledger(self, data_artifact_factory) -> None:
+        path = data_artifact_factory("corpus_audit_snapshots", "corpus_audit/navsi200-captions-ledger.json")
+        raw_text = path.read_text(encoding="utf-8").lower()
         forbidden_names = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]
         for name in forbidden_names:
             assert name not in raw_text, f"Privacy violation: found teacher name '{name}' in committed ledger"

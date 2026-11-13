@@ -1652,24 +1652,21 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
     _append_breadcrumb(f"FINISH {nodeid}\n")
 
 
-def _require_data_artifact(
-    relative_path: str,
-) -> Path:
-    """Return a local data artifact or skip tests that cannot run without it."""
-    artifact = _REPO_ROOT / relative_path
-    if not artifact.is_file():
-        try:
-            from scripts.guardrails.worktree_containment import resolve_main_root
+def _primary_artifact_path(group: str, rel: str) -> Path:
+    """Verify the current manifest against existing primary data, without copying."""
+    from scripts.guardrails.worktree_containment import resolve_main_root
+    from scripts.storage.paths import find_entry, verify_file
 
-            fallback = resolve_main_root(_REPO_ROOT) / relative_path
-            if fallback.is_file():
-                artifact = fallback
-        except Exception:
-            pass
-    if not artifact.is_file():
-        pytest.skip(f"requires {relative_path} (not provisioned in CI)")
-
+    entry = find_entry(group, rel)
+    artifact = resolve_main_root(_REPO_ROOT) / "data" / rel
+    verify_file(artifact, entry, group=group, rel=rel)
     return artifact
+
+
+@pytest.fixture(scope="session")
+def data_artifact_factory():
+    """Read existing primary artifacts; the needs_artifact marker retains its gates."""
+    return _primary_artifact_path
 
 
 @pytest.fixture
@@ -1699,10 +1696,7 @@ def requires_vesum_db(data_store_factory) -> Path:
     return data_store_factory("vesum", required_sqlite_tables=("forms",))
 
 
-@pytest.fixture
-def requires_literary_wave12_jsonl() -> Path:
-    """Skip a test requiring the uncommitted Wave 12 literary corpus fixture."""
-    return _require_data_artifact("data/literary_texts/wave12-krupnytsky-orlyk-biohrafiia.jsonl")
+
 
 
 @pytest.fixture(autouse=True)
@@ -3178,8 +3172,11 @@ def pytest_runtest_setup(item: pytest.Item) -> None:
 
         group, rel = marker.args
         try:
-            entry = find_entry(group, rel)
-            verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
+            if "data_artifact_factory" in getattr(item, "fixturenames", ()):
+                _primary_artifact_path(group, rel)
+            else:
+                entry = find_entry(group, rel)
+                verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
         except MissingArtifactError as error:
             detail = error.detail.casefold()
             if detail == "missing" or "manifest missing" in detail or "no unique manifest entry" in detail:

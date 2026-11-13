@@ -430,7 +430,7 @@ entries:
 
   - id: runbooks
     kind: doc_family
-    paths: [docs/runbooks/*]
+    paths: [docs/runbooks/*, docs/ci/data-tier-selection.md]
     purpose: Operating procedures for driver seats, harnesses, review isolation, sessions, handoffs, CI, storage, backup, worktree cleanup, module gates and builds.
     keywords: [runbook, procedure, driver seat, formal review isolation, worktree cleanup, storage topology, storage layout, data layout, where data lives, CI gate, session supervisor, recovery]
     lifecycle: active

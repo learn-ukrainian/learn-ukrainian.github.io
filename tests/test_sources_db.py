@@ -1317,19 +1317,16 @@ class TestHeadwordFirstRanking:
         assert len(hits) >= 1
         assert hits[0]["word"] == "Приймати участь"
 
-    def test_search_style_guide_live_db_documented_examples(self):
-        from wiki.sources_db import SOURCES_DB_PATH, search_style_guide
-
-        if not SOURCES_DB_PATH.exists() or SOURCES_DB_PATH.stat().st_size < 1000:
-            pytest.skip("sources.db not present")
+    def test_search_style_guide_live_db_documented_examples(self, requires_sources_db):
+        from wiki.sources_db import search_style_guide
 
         # "На протязі", "протязі", "Приймати участь" must all resolve against live DB
         for query in ("«На протязі»", "На протязі", "протязі", "«протязі»"):
-            hits = search_style_guide(query)
+            hits = search_style_guide(query, db_path=requires_sources_db)
             assert len(hits) >= 1, f"Failed to return a row for {query!r}"
             assert "протязі" in (hits[0]["word"] + hits[0]["text"]).lower()
 
-        hits_uchast = search_style_guide("Приймати участь")
+        hits_uchast = search_style_guide("Приймати участь", db_path=requires_sources_db)
         assert len(hits_uchast) >= 1
         assert "приймати участь" in hits_uchast[0]["word"].lower()
 

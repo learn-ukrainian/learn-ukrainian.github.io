@@ -165,8 +165,9 @@ def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
 
 
 @pytest.mark.needs_artifact("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
-def test_load_coverage_map_resolves_the_published_artifact() -> None:
-    coverage_map = audit.load_coverage_map()
+def test_load_coverage_map_resolves_the_published_artifact(data_artifact_factory) -> None:
+    path = data_artifact_factory("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
+    coverage_map = audit.load_coverage_map(path)
     assert coverage_map["metadata"]["article_count"] == len(coverage_map["articles"])
     assert audit.classify_gap_categories(coverage_map)
 
