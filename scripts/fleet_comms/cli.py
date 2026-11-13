@@ -858,6 +858,18 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
                     fence_token=args.fence_token,
                     acknowledgment_artifact_id=args.acknowledgment_artifact_id,
                 ))
+            elif args.deliveries_command == "expire-stale":
+                matched = service.count_undelivered(older_than_days=args.older_than_days)
+                expired = (
+                    service.expire_undelivered(older_than_days=args.older_than_days)
+                    if args.apply else 0
+                )
+                payload = {
+                    "matched": matched,
+                    "expired": expired,
+                    "applied": bool(args.apply),
+                    "older_than_days": args.older_than_days,
+                }
             else:
                 payload = asdict(service.get_delivery(args.delivery_id))
     except AuthorityServiceError as exc:
@@ -896,6 +908,8 @@ def _add_deliveries_parser(sub: Any) -> None:
         "  inspect the external outcome before repeating an action. Ack records its verified outcome;\n"
         "  supervisory requests require consumption for the current fence. Status reads metadata.\n"
         "  Unreadable or dead-lettered coordinator replies emit a typed delivery-error to both parties.\n"
+        "  expire-stale counts queued or running deliveries older than 7 days. Without --apply it\n"
+        "  writes nothing. With --apply it sets a past deadline and reclaims them; rows and bodies stay.\n"
         "  These commands open the authority store, initializing/migrating it if necessary.\n"
         "Exit codes: 0 = success, 1 = no claimable delivery or delivery not found,\n"
         "  2 = usage error, 3 = operation refused or storage error.\n"
@@ -941,6 +955,17 @@ def _add_deliveries_parser(sub: Any) -> None:
                 help="Existing sealed outcome artifact ID (default: no artifact); reuse on idempotent ack",
             )
         operation.set_defaults(func=cmd_deliveries)
+    expire = operations.add_parser(
+        "expire-stale",
+        help="Count undelivered deliveries older than 7 days; expire them only with --apply",
+        description="Count undelivered deliveries older than 7 days.\n" + description,
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    expire.add_argument("--root", default=None, help="Authority storage directory")
+    expire.add_argument("--older-than-days", type=int, default=7, help="Age cutoff in days (default: 7)")
+    expire.add_argument("--apply", action="store_true", help="Expire matched rows through the deadline path (default: count only)")
+    expire.set_defaults(func=cmd_deliveries)
 
 
 def _body_argument(value: str) -> str:

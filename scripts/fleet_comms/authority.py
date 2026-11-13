@@ -1567,6 +1567,43 @@ class AuthorityService:
         with self._write_transaction():
             return self._reclaim_expired_deliveries_tx(now_value, max_attempts=max_attempts)
 
+    def count_undelivered(self, *, older_than_days: int = 7, now: str | None = None) -> int:
+        """Queued or running deliveries older than the cutoff. Reads only."""
+        if older_than_days <= 0:
+            raise AuthorityServiceError("older_than_days_must_be_positive")
+        now_value = self._now_string(now)
+        cutoff = _iso(_parse_iso(now_value, field="now") - timedelta(days=older_than_days))
+        row = self._conn.execute(
+            """SELECT COUNT(*) FROM authority_deliveries
+               WHERE state IN ('queued', 'running') AND created_at <= ?
+                 AND (deadline_at IS NULL OR deadline_at <= ?)""",
+            (cutoff, now_value),
+        ).fetchone()
+        return int(row[0])
+
+    def expire_undelivered(self, *, older_than_days: int = 7, now: str | None = None) -> int:
+        """Expire old undelivered rows through the existing deadline path.
+
+        A null deadline is set to the row's created_at, which is already past
+        the cutoff, and reclaim_expired_deliveries then marks the row expired.
+        The row, its message and its body artifact stay.
+        """
+        if older_than_days <= 0:
+            raise AuthorityServiceError("older_than_days_must_be_positive")
+        now_value = self._now_string(now)
+        cutoff = _iso(_parse_iso(now_value, field="now") - timedelta(days=older_than_days))
+        with self._write_transaction():
+            self._conn.execute(
+                """UPDATE authority_deliveries
+                   SET deadline_at = created_at, updated_at = ?
+                   WHERE state IN ('queued', 'running')
+                     AND deadline_at IS NULL
+                     AND created_at <= ?""",
+                (now_value, cutoff),
+            )
+            expired = self._reclaim_expired_deliveries_tx(now_value, max_attempts=3)
+        return expired
+
     def record_wake_receipt(
         self,
         delivery_id: str,
@@ -1953,6 +1990,12 @@ class AuthorityService:
         provenance_data = _safe_json_mapping(provenance)
         deadline = self._normalize_deadline(deadline_at)
         creation = self._normalize_created_at(created_at)
+        # The idempotency payload keeps the caller's deadline so a retry matches.
+        # A live publish that omits one still expires after 7 days. Imports keep
+        # a null deadline so a historical replay is not expired on the next claim.
+        stored_deadline = deadline
+        if stored_deadline is None and imported_source is None and imported_delivery_state is None:
+            stored_deadline = _iso(_parse_iso(creation, field="created_at") + timedelta(days=7))
         body_bytes = body.encode("utf-8")
         body_sha = _sha256_bytes(body_bytes)
         payload = {
@@ -2067,7 +2110,7 @@ class AuthorityService:
                     mid,
                     recipient,
                     delivery_state,
-                    deadline,
+                    stored_deadline,
                     terminal_sha,
                     creation,
                     creation,
