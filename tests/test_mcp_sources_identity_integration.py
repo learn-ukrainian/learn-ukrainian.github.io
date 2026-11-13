@@ -24,7 +24,6 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
-import socket
 import threading
 import time
 from pathlib import Path
@@ -39,7 +38,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SERVER_PATH = REPO_ROOT / ".mcp" / "servers" / "sources" / "server.py"
 
 
-
 pytestmark = pytest.mark.usefixtures("requires_sources_db", "requires_vesum_db")
 
 
@@ -49,12 +47,6 @@ def _load_sources_server():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
-
-
-def _free_port() -> int:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.bind(("127.0.0.1", 0))
-        return int(sock.getsockname()[1])
 
 
 @pytest.fixture(scope="module")
@@ -75,31 +67,34 @@ def log_path(tmp_path_factory: pytest.TempPathFactory):
 @pytest.fixture
 def sources_http_url(log_path: Path, requires_sources_db, requires_vesum_db):
     module = _load_sources_server()
-    port = _free_port()
     app = module.create_http_app()
-    config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning")
+    config = uvicorn.Config(app, host="127.0.0.1", port=0, log_level="warning")
+    listener = config.bind_socket()
+    port = listener.getsockname()[1]
     server = uvicorn.Server(config)
-    thread = threading.Thread(target=server.run, daemon=True)
-    thread.start()
+    thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
+    try:
+        thread.start()
 
-    base_url = f"http://127.0.0.1:{port}"
-    deadline = time.monotonic() + 10
-    while time.monotonic() < deadline:
-        try:
-            response = httpx.get(f"{base_url}/health", timeout=0.5)
-            if response.status_code == 200:
-                break
-        except httpx.HTTPError:
-            time.sleep(0.05)
-    else:
+        base_url = f"http://127.0.0.1:{port}"
+        deadline = time.monotonic() + 10
+        while time.monotonic() < deadline:
+            try:
+                response = httpx.get(f"{base_url}/health", timeout=0.5)
+                if response.status_code == 200:
+                    break
+            except httpx.HTTPError:
+                time.sleep(0.05)
+        else:
+            server.should_exit = True
+            thread.join(timeout=5)
+            pytest.fail("MCP sources HTTP server did not start")
+
+        yield base_url
+    finally:
         server.should_exit = True
-        thread.join(timeout=5)
-        pytest.fail("MCP sources HTTP server did not start")
-
-    yield base_url
-
-    server.should_exit = True
-    thread.join(timeout=5)
+        thread.join(timeout=10)
+        listener.close()
 
 
 @pytest.fixture()

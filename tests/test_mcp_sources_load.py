@@ -12,7 +12,6 @@ from __future__ import annotations
 import asyncio
 import importlib.util
 import os
-import socket
 import threading
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -28,12 +27,6 @@ SMALL_HOST_CPUS = 4
 CALLS = 120
 CALL_SECONDS = 0.5
 STALLED_CONNECTIONS = 150
-
-
-def _free_port() -> int:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.bind(("127.0.0.1", 0))
-        return int(sock.getsockname()[1])
 
 
 @pytest.fixture
@@ -77,25 +70,29 @@ def _serve(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, call_timeout: flo
         return [module.TextContent(type="text", text="saturating tool done")]
 
     module.handle_collection_stats = saturating_tool
-    port = _free_port()
-    config = uvicorn.Config(module.create_http_app(), host="127.0.0.1", port=port, log_level="warning")
+    config = uvicorn.Config(module.create_http_app(), host="127.0.0.1", port=0, log_level="warning")
+    listener = config.bind_socket()
+    port = listener.getsockname()[1]
     server = uvicorn.Server(config)
-    thread = threading.Thread(target=server.run, daemon=True)
-    thread.start()
-    base_url = f"http://127.0.0.1:{port}"
-    deadline = time.monotonic() + 10
-    while time.monotonic() < deadline:
-        try:
-            if httpx.get(f"{base_url}/health", timeout=0.5).status_code == 200:
-                break
-        except httpx.HTTPError:
-            time.sleep(0.05)
-    else:
+    thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
+    try:
+        thread.start()
+        base_url = f"http://127.0.0.1:{port}"
+        deadline = time.monotonic() + 10
+        while time.monotonic() < deadline:
+            try:
+                if httpx.get(f"{base_url}/health", timeout=0.5).status_code == 200:
+                    break
+            except httpx.HTTPError:
+                time.sleep(0.05)
+        else:
+            server.should_exit = True
+            pytest.fail("sources HTTP server did not start")
+        yield base_url, port, stats
+    finally:
         server.should_exit = True
-        pytest.fail("sources HTTP server did not start")
-    yield base_url, port, stats
-    server.should_exit = True
-    thread.join(timeout=10)
+        thread.join(timeout=10)
+        listener.close()
 
 
 async def _health_probes(base_url: str, ready: Future[None], stop: threading.Event) -> list[float]:

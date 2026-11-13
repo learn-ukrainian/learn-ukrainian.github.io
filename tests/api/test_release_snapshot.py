@@ -123,10 +123,12 @@ def _next_sha(repo_root: Path) -> str:
     return _run_git(repo_root, "rev-parse", "HEAD")
 
 
-def _free_port() -> int:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
-        server.bind(("127.0.0.1", 0))
-        return int(server.getsockname()[1])
+@pytest.fixture
+def release_listener():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        yield listener
 
 
 def _read_json(url: str, *, timeout: float = 0.5) -> dict:
@@ -225,10 +227,11 @@ def test_corrupt_release_dir_is_rebuilt_not_reused(tmp_path: Path) -> None:
     assert (release_snapshot.releases_root(repo_root) / "current").resolve() == rebuilt
 
 
-def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp_path: Path) -> None:
+def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp_path: Path, release_listener) -> None:
     repo_root, sha = _create_snapshot_repo(tmp_path, api_app=True)
     release_dir, _ = release_snapshot.build_release(repo_root, sha)
-    port = _free_port()
+    listener = release_listener
+    port = listener.getsockname()[1]
     environment = sanitized_git_env() | {
         "LEARN_UK_REPO_ROOT": str(repo_root),
         "GIT_DIR": str(repo_root / ".git"),
@@ -244,14 +247,16 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
             "scripts.api.main:app",
             "--host",
             "127.0.0.1",
-            "--port",
-            str(port),
+            "--fd",
+            str(listener.fileno()),
         ],
+        pass_fds=(listener.fileno(),),
         cwd=release_dir,
         env=environment,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+    listener.close()
     try:
         deadline = time.monotonic() + 10
         while True:
@@ -448,7 +453,7 @@ def test_pruning_rechecks_current_release_before_each_deletion(tmp_path: Path) -
 
 
 def test_real_release_serves_live_data_routers_with_logical_paths(
-    tmp_path: Path, real_release_live_checkout: tuple[Path, str]
+    tmp_path: Path, real_release_live_checkout: tuple[Path, str], release_listener
 ) -> None:
     """Boot a snapshot of this worktree and exercise each live-data route class."""
     repo_root, sha = real_release_live_checkout
@@ -460,7 +465,8 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
     (repo_root / "docs" / "research").mkdir()
     (repo_root / doc_path).write_text("# Live release data\n", encoding="utf-8")
     (repo_root / html_path).write_text("<title>Live release data</title>\n", encoding="utf-8")
-    port = _free_port()
+    listener = release_listener
+    port = listener.getsockname()[1]
     log_path = tmp_path / "release-api.log"
     # As lu_machinery.api.launchd_supervisor starts it: the snapshot is the product, the installed
     # release serves the app, and the shared-state primary is the live checkout the snapshot was
@@ -487,14 +493,16 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                 "lu_machinery.api.main:app",
                 "--host",
                 "127.0.0.1",
-                "--port",
-                str(port),
+                "--fd",
+                str(listener.fileno()),
             ],
+            pass_fds=(listener.fileno(),),
             cwd=release_dir,
             env=environment,
             stdout=log_file,
             stderr=subprocess.STDOUT,
         )
+        listener.close()
         agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
         try:
             def application_started() -> bool:
