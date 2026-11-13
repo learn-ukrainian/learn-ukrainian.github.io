@@ -505,6 +505,8 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     assert identity["scope_pid"] == identity["pid"]
     child_names = Path(env["TEST_PROVIDER_ENV"]).read_bytes().split(b"\0")
     assert not [entry for entry in child_names if entry.startswith(b"LAUNCHER_")]
+    if provider == "claude" and runtime == "checkout":
+        assert os.fsencode(f"LEARN_UKRAINIAN_PRIMARY_REPO_ROOT={root}") in child_names
     if mode == "driver":
         assert identity["epic"] == label
     else:

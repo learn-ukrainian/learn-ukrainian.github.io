@@ -162,6 +162,7 @@ LC_ROOT="$1"
 source "$LC_ROOT/scripts/lib/launcher_core.sh"
 launcher_resolve_roots
 printf 'resolved=%s\n' "$LC_DURABLE_HELPER_ROOT"
+printf 'hook_primary=%s\n' "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-}"
 source "$LC_ROOT/scripts/lib/handoff_identity.sh"
 site() { printf 'SITE %s\n' "$1" >> "$SITE_LOG"; }
 
@@ -243,7 +244,9 @@ def _assert_refused_before_any_site(layout: Layout, result: subprocess.Completed
 
 
 def test_honest_worktree_every_site_runs_the_primary_interpreter(layout: Layout) -> None:
-    _assert_every_site_ran_the_primary(layout, _run_sites(layout))
+    result = _run_sites(layout, LC_PROVIDER="claude")
+    _assert_every_site_ran_the_primary(layout, result)
+    assert f"hook_primary={layout.primary}" in result.stdout
 
 
 def test_worktree_reached_through_a_symlinked_path_still_resolves(layout: Layout) -> None:
@@ -267,7 +270,11 @@ def test_relative_back_pointer_is_accepted(layout: Layout) -> None:
 
 
 def test_ambient_git_dir_does_not_redirect_any_site(layout: Layout) -> None:
-    _assert_every_site_ran_the_primary(layout, _run_sites(layout, **_hostile_env(layout)))
+    result = _run_sites(
+        layout, LC_PROVIDER="claude", LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(layout.attacker), **_hostile_env(layout)
+    )
+    _assert_every_site_ran_the_primary(layout, result)
+    assert f"hook_primary={layout.primary}" in result.stdout
 
 
 def test_worktree_local_venv_never_runs(layout: Layout) -> None:

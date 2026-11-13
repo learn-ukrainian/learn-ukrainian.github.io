@@ -581,6 +581,20 @@ launcher_resolve_roots() {
     exit 3
   fi
   export LC_SESSION_ROOT LC_DURABLE_HELPER_ROOT
+  if [ "${LC_PROVIDER:-}" = claude ]; then
+    # The launcher supplies the hook trust anchor from its own runtime root,
+    # never from the product checkout or the caller's inherited override.
+    # Keep the hook boundary's primary/state validation without changing the
+    # selected product root in this shell. A snapshot needs a real primary.
+    if ! (export LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$LC_DURABLE_HELPER_ROOT"; project_hook_roots_resolve "$LC_ROOT"); then
+      launcher_error 'LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: invalid launcher primary layout, conflicting LEARN_UKRAINIAN_STATE_ROOT or invalid invocation Git metadata; refusing to start Claude.'
+      exit 3
+    fi
+    export LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$LC_DURABLE_HELPER_ROOT"
+    if [ "${LC_DRY_RUN:-0}" = 1 ]; then
+      printf 'LAUNCHER_DRY_RUN=1: child environment LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=%q\n' "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+    fi
+  fi
 }
 
 # Prints the physical path of an operator-named primary checkout, or explains
