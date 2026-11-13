@@ -71,11 +71,27 @@ def test_process_gone_removes_even_fresh_session(tmp_path: Path, project: bool) 
     payload.chmod(0o444)
     nested.chmod(0o555)
     nested.parent.chmod(0o555)
+    directory.chmod(0o555)
     result = scratch.sweep_sessions(root, apply=True, probe=lambda: DEAD)
     assert not directory.exists()
     assert result["summary"]["removed"] == 1
     assert result["summary"]["bytes_freed"] == 17
     assert result["entries"][0]["reason"] == "process_gone"
+
+    repair = tmp_path / "repair"
+    repair.mkdir()
+    notes = repair / "notes"
+    notes.write_bytes(b"x")
+    notes.chmod(0o444)
+    alias = repair / "alias"
+    alias.symlink_to(notes)
+    held = os.open(repair, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        scratch._grant_owner_write(held)
+    finally:
+        os.close(held)
+    assert stat.S_IMODE(notes.stat().st_mode) == 0o444
+    assert alias.is_symlink()
 
 
 def test_live_session_kept_despite_rollover_and_age(tmp_path: Path) -> None:

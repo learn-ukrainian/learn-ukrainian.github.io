@@ -290,23 +290,20 @@ def _grant_owner_write(fd: int, depth: int = 0) -> None:
 
     ``shutil.rmtree`` cannot remove a directory we own when that directory
     itself is not owner-writable. Claude session scratch has shipped that
-    mode. Only directories are changed, only when we own them, and symlinks
-    are not followed.
+    mode. The descriptor is the directory already opened with ``O_DIRECTORY``
+    and ``O_NOFOLLOW``. ``fchmod`` changes that directory, never a path that
+    could have been replaced by a file or a symlink.
     """
     if depth >= 128:
         raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
+    info = os.fstat(fd)
+    if stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid() and not info.st_mode & stat.S_IWUSR:
+        os.fchmod(fd, stat.S_IMODE(info.st_mode) | stat.S_IWUSR)
     for name in os.listdir(fd):
-        info = os.stat(name, dir_fd=fd, follow_symlinks=False)
-        if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+        try:
+            child = os.open(name, _DIR_FLAGS, dir_fd=fd)
+        except OSError:
             continue
-        if info.st_uid == os.getuid() and not info.st_mode & stat.S_IWUSR:
-            os.chmod(
-                name,
-                stat.S_IMODE(info.st_mode) | stat.S_IWUSR,
-                dir_fd=fd,
-                follow_symlinks=False,
-            )
-        child = os.open(name, _DIR_FLAGS, dir_fd=fd)
         try:
             _grant_owner_write(child, depth + 1)
         finally:
