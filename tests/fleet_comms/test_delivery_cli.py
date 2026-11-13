@@ -447,3 +447,47 @@ def test_exhausted_unacknowledged_reply_notifies_once_without_recursive_alerts(p
         assert service.store.connection.execute(
             "SELECT COUNT(*) FROM comms_messages WHERE kind = 'delivery-error'",
         ).fetchone()[0] == 1
+        first = service.publish_message(
+            sender="claude-cto", body="old one", recipients=("worker-task",),
+            created_at="2020-01-01T00:00:00Z", idempotency_key="old-one",
+        )
+        second = service.publish_message(
+            sender="claude-cto", body="old two", recipients=("worker-task",),
+            created_at="2020-01-01T00:00:00Z", idempotency_key="old-two",
+        )
+        service.store.connection.execute(
+            "UPDATE authority_deliveries SET recipient = ? WHERE delivery_id = ?",
+            ("claude-cto-session", second.delivery_ids[0]),
+        )
+        service.store.connection.commit()
+        assert service.count_undelivered(now="2020-01-10T00:00:00Z") == 2
+        before = {
+            (row["state"], row["deadline_at"], row["updated_at"])
+            for row in service.store.connection.execute(
+                "SELECT state, deadline_at, updated_at FROM authority_deliveries",
+            )
+        }
+        assert service.count_undelivered(now="2020-01-10T00:00:00Z") == 2
+        after_dry = {
+            (row["state"], row["deadline_at"], row["updated_at"])
+            for row in service.store.connection.execute(
+                "SELECT state, deadline_at, updated_at FROM authority_deliveries",
+            )
+        }
+        assert after_dry == before
+        assert service.expire_undelivered(now="2020-01-10T00:00:00Z") == 2
+        assert service.get_delivery(first.delivery_ids[0]).state == "expired"
+        assert service.get_delivery(second.delivery_ids[0]).state == "expired"
+        assert service.read_message_body(first.message_id) == "old one"
+        notices = service.store.connection.execute(
+            "SELECT message_id FROM comms_messages WHERE kind = 'delivery-error' ORDER BY created_at",
+        ).fetchall()
+        assert len(notices) == 2
+        summary = json.loads(service.read_message_body(notices[-1]["message_id"]))
+        assert summary == {
+            "error": "coordinator_reply_delivery_failed",
+            "reason_code": "deadline_expired",
+            "expired_count": 2,
+        }
+        summary_message = service.get_message(notices[-1]["message_id"])
+        assert {service.get_delivery(d).recipient for d in summary_message.delivery_ids} == {"claude-cto"}
