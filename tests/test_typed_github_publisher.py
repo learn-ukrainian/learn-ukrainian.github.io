@@ -2345,3 +2345,149 @@ def test_issue_transfer_verification_waits_out_a_lagging_redirect_without_a_seco
         assert receipt["outcome"] == "unverified"
         assert receipt["detail"] == "the source URL does not resolve to the returned issue"
         assert sum(transfer.sleeps) == 180
+
+
+def test_ruleset_merge_queue_changes_only_the_named_parameter(synthetic_opsec, capsys):
+    """A ruleset write that edits another field, or reports success when the read-back differs, would ship.
+
+    The defect is a merge-queue edit that also changes enforcement, another rule, an unnamed
+    parameter, or a ruleset field the verb does not know how to preserve.
+    """
+    from scripts.publish import github as publisher
+
+    assert [name for name in publisher.SCHEMAS if "ruleset" in name] == ["ruleset-merge-queue"]
+    parameters = {
+        "check_response_timeout_minutes": 60,
+        "grouping_strategy": "ALLGREEN",
+        "max_entries_to_build": 2,
+        "max_entries_to_merge": 4,
+        "merge_method": "SQUASH",
+        "min_entries_to_merge": 1,
+        "min_entries_to_merge_wait_minutes": 0,
+    }
+    document = {
+        "id": 20977023,
+        "name": "main-merge-queue",
+        "target": "branch",
+        "source_type": "Repository",
+        "source": "unit/public",
+        "enforcement": "active",
+        "node_id": "NODE",
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-01T00:00:00Z",
+        "_links": {"self": {"href": "https://api.github.com/repos/unit/public/rulesets/20977023"}},
+        "current_user_can_bypass": "never",
+        "bypass_actors": [],
+        "conditions": {"ref_name": {"exclude": [], "include": ["refs/heads/main"]}},
+        "rules": [{"type": "deletion"}, {"type": "merge_queue", "parameters": parameters}],
+    }
+    endpoint = "repos/unit/public/rulesets/20977023"
+
+    def serve(document, *, apply):
+        calls, sent = [], {}
+        state = json.loads(json.dumps(document))
+
+        def runner(args, **kwargs):
+            method = args[args.index("--method") + 1]
+            assert args[args.index("--method") + 2] == endpoint
+            calls.append(method)
+            if method == "GET":
+                return subprocess.CompletedProcess(args, 0, json.dumps(state), "")
+            if method == "PUT":
+                sent["body"] = json.loads(Path(args[args.index("--input") + 1]).read_text())
+                if apply:
+                    state.update(sent["body"])
+                return subprocess.CompletedProcess(args, 0, "", "")
+            raise AssertionError(method)
+
+        return runner, calls, sent
+
+    runner, calls, sent = serve(document, apply=True)
+    assert publisher.main(
+        ["ruleset-merge-queue", "--repo", "unit/public", "--ruleset", "20977023",
+         "--min-entries-to-merge-wait-minutes", "10"],
+        runner=runner,
+    ) == 0
+    report = json.loads(capsys.readouterr().out)
+    expected = {**parameters, "min_entries_to_merge_wait_minutes": 10}
+    body = sent["body"]
+    assert calls == ["GET", "PUT", "GET"]
+    assert set(body) == {"name", "target", "enforcement", "bypass_actors", "conditions", "rules"}
+    assert body["enforcement"] == "active" and body["conditions"] == document["conditions"]
+    assert body["rules"][0] == {"type": "deletion"}
+    assert body["rules"][1]["parameters"] == expected
+    assert report == {"merge_queue": expected, "repo": "unit/public", "ruleset": 20977023}
+
+    def refused(args, **kwargs):
+        raise AssertionError("transport")
+
+    with pytest.raises(publisher.gate.PublishBlocked, match="unknown publisher field"):
+        publisher.publish(
+            "ruleset-merge-queue", repo="unit/public", ruleset=20977023,
+            min_entries_to_merge_wait_minutes=10, enforcement="disabled", runner=refused,
+        )
+    with pytest.raises(publisher.gate.PublishBlocked, match="invalid publisher field min_entries_to_merge_wait_minutes"):
+        publisher.publish(
+            "ruleset-merge-queue", repo="unit/public", ruleset=20977023,
+            min_entries_to_merge_wait_minutes=361, runner=refused,
+        )
+    with pytest.raises(publisher.gate.PublishBlocked, match="explicit merge queue fields"):
+        publisher.publish("ruleset-merge-queue", repo="unit/public", ruleset=20977023, runner=refused)
+    with pytest.raises(SystemExit) as exc:
+        publisher.main(
+            ["ruleset-merge-queue", "--repo", "unit/public", "--ruleset", "20977023",
+             "--min-entries-to-merge-wait-minutes", "10", "--enforcement", "disabled"],
+            runner=refused,
+        )
+    assert exc.value.code == 2
+
+    def before_put(document):
+        calls = []
+
+        def runner(args, **kwargs):
+            method = args[args.index("--method") + 1]
+            calls.append(method)
+            if method == "PUT":
+                raise AssertionError("put")
+            return subprocess.CompletedProcess(args, 0, json.dumps(document), "")
+
+        return runner, calls
+
+    preserved = json.loads(json.dumps(document))
+    preserved["future_field"] = True
+    runner, calls = before_put(preserved)
+    with pytest.raises(publisher.gate.PublishBlocked, match="does not preserve"):
+        publisher.publish(
+            "ruleset-merge-queue", repo="unit/public", ruleset=20977023,
+            min_entries_to_merge_wait_minutes=10, runner=runner,
+        )
+    assert calls == ["GET"]
+
+    missing = json.loads(json.dumps(document))
+    del missing["rules"][1]["parameters"]["max_entries_to_build"]
+    runner, calls = before_put(missing)
+    with pytest.raises(publisher.gate.PublishBlocked, match="not on this ruleset"):
+        publisher.publish(
+            "ruleset-merge-queue", repo="unit/public", ruleset=20977023,
+            max_entries_to_build=2, runner=runner,
+        )
+    assert calls == ["GET"]
+
+    duplicate = json.loads(json.dumps(document))
+    duplicate["rules"].append({"type": "merge_queue", "parameters": dict(parameters)})
+    runner, calls = before_put(duplicate)
+    with pytest.raises(publisher.gate.PublishBlocked, match="no single merge_queue rule"):
+        publisher.publish(
+            "ruleset-merge-queue", repo="unit/public", ruleset=20977023,
+            min_entries_to_merge_wait_minutes=10, runner=runner,
+        )
+    assert calls == ["GET"]
+
+    runner, calls, sent = serve(document, apply=False)
+    assert publisher.main(
+        ["ruleset-merge-queue", "--repo", "unit/public", "--ruleset", "20977023",
+         "--min-entries-to-merge-wait-minutes", "10"],
+        runner=runner,
+    ) == 3
+    assert calls == ["GET", "PUT", "GET"] and "Do not retry" in capsys.readouterr().err
+    assert sent["body"]["rules"][1]["parameters"]["min_entries_to_merge_wait_minutes"] == 10
