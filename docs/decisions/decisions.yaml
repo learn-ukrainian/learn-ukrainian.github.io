@@ -462,10 +462,14 @@ decisions:
       pull_request (scripts/ci/machinery_twin_gate.py). Cutover deletions cite the
       existing machinery PR. The gate turns itself off once the merged branch tip
       holds no machinery path outside the residual (the OpenCode provider).
-      Semantic equivalence stays with the exact-head review.
+      Semantic equivalence stays with the exact-head review. Named residual: a
+      body edited after the merge_group gate reads it and before the merge
+      commits is not re-checked (the read-to-merge window queue_review_gate
+      also has); a body edit triggers no run of its own.
     evidence:
       - "#13017; four product-only edits forked dispatcher and publisher behaviour"
       - "Opus 5.5 CTO proposal; Sol 6.1 APPROVE WITH CONDITIONS, 2026-11-13"
+      - "Condition 2 ruling (fresh body read on merge_group satisfies it): Opus 5.5 and Sol 6.1, 2026-11-13"
     alternatives:
       - option: "Brief-only rule (MACHINERY-TWIN line in every brief)"
         rejected_because: >-

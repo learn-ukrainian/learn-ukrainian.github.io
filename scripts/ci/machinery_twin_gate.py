@@ -22,7 +22,8 @@ On ``merge_group`` (enforcing) every member PR of the candidate is checked, memb
 ``scripts.ci.queue_review_gate``, each against its squash commit's paths and its body as read
 when the gate runs, so a body edited after the PR's own CI still decides the landing. On
 ``pull_request`` the same check only warns: ``ci.yml`` does not rerun on body edits, and a red PR
-gate would outlive a corrected body.
+gate would outlive a corrected body. Residual (accepted with the condition-2 ruling): a body edited
+after the merge_group gate reads it and before the merge commits is not re-checked.
 """
 
 from __future__ import annotations
