@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.jsonl import jsonl_lines
 
 from batch_gemini_config import FLASH_MODEL
 
@@ -37,7 +38,6 @@ from content.video_discovery_helpers import (
 from content.video_discovery_helpers import (
     search_rag as _search_rag_impl,
 )
-from scripts.common.jsonl import jsonl_lines
 
 logger = logging.getLogger(__name__)
 

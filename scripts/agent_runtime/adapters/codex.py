@@ -48,7 +48,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
-from scripts.review.receipts.ledger import review_tools
+from scripts.review.product_hooks import attempt_hooks
 from scripts.secret_redactor import redact_text
 
 from ..read_only_tmp import validate_read_only_tmp_root
@@ -231,7 +231,10 @@ def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
         return True
     if any(
         all(flag in argv for flag in _sources_read_only_flags(tools))
-        for tools in (tuple(sorted(review_tools())), tuple(sorted(review_tools("full"))))
+        for tools in (
+            tuple(sorted(attempt_hooks().ledger().review_tools())),
+            tuple(sorted(attempt_hooks().ledger().review_tools("full"))),
+        )
     ):
         return True
     return all(flag in argv for flag in _sources_read_only_flags())
@@ -242,6 +245,8 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
     # writable paths. The legacy mode is a fail-closed fallback for old CLIs.
     # HOME and the checkout remain read-only; gh authentication is inherited
     # through the existing runtime environment. Only scratch needs writes.
+    # Network: any public host through Codex's network proxy (operator decision
+    # 2026-11-10); the proxy's local/private-network guard stays on.
     return [
         "-c",
         'sandbox_mode="read-only"',
@@ -250,7 +255,7 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         "-c",
         'permissions={lu_review={filesystem={":root"="read",'
         + _json.dumps(str(root), ensure_ascii=False)
-        + '="write"},network={enabled=true,domains={"github.com"="allow","api.github.com"="allow"}}}}',
+        + '="write"},network={enabled=true,domains={"*"="allow"}}}}',
         "-c",
         "features.network_proxy=true",
         "-c",
@@ -511,7 +516,7 @@ class CodexAdapter:
             # Formal scoped homes use the receipt contract, including when the
             # parent AttemptBoundary replaces their server with a stdio proxy.
             if tc.get("codex_home_override") and tc.get("mcp_config_path"):
-                tools = tuple(sorted(review_tools(tc.get("review_access", "isolated"))))
+                tools = tuple(sorted(attempt_hooks().ledger().review_tools(tc.get("review_access", "isolated"))))
             else:
                 tools = sources_tool_sets()[0]
             cmd.extend(_sources_read_only_flags(tools))

@@ -8,7 +8,7 @@ and case government rules based on CEFR level.
 import re
 from typing import Any
 
-from common.text_utils import strip_ukrainian_stress
+from curriculum.quality.text_utils import strip_ukrainian_stress
 
 from ..cleaners import extract_ukrainian_sentences
 from ..config import (

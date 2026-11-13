@@ -7,6 +7,7 @@ There is no argv, arbitrary endpoint, GraphQL document or payload passthrough.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -15,6 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 from urllib.parse import quote
@@ -28,11 +30,30 @@ from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
 
+# The repository registry and the verdict recorder, by their checkout-relative paths. Those
+# start with the machinery package's directory name, taken from this module's unresolved
+# location: a symlinked package keeps its checkout name, and a short import spelling (the
+# package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+_FLEET_REPOS = f"{_MACHINERY}/config/fleet_repos.yaml"
+_RECORDER = f"{_MACHINERY}/review/record_cf_verdict.py"
+# This publisher's import name, as ``python -m`` runs it (never __package__).
+_PUBLISHER = f"{_MACHINERY}.publish"
+
 # Each field has one type and one meaning; strings never select gh flags.
 COMMON = {"repo": "repo"}
 TEXT = {"title": "text", "body": "text", "body_file": "file"}
 EDIT = {**TEXT, "add_labels": "texts", "remove_labels": "texts", "milestone": "text"}
 ASSETS = {"assets": "assets"}
+# Documented merge_queue parameter bounds (GitHub REST, rulesets, API 2022-11-28).
+# A value outside these bounds is refused before any request.
+MERGE_QUEUE_INT_BOUNDS = {
+    "check_response_timeout_minutes": (1, 360),
+    "max_entries_to_build": (0, 100),
+    "max_entries_to_merge": (0, 100),
+    "min_entries_to_merge": (0, 100),
+    "min_entries_to_merge_wait_minutes": (0, 360),
+}
 SCHEMAS = {
     "issue-create": ({"title", "body"}, {**COMMON, **TEXT, "labels": "texts", "milestone": "text", "parent": "number"}),
     "issue-edit": ({"number"}, {**COMMON, **EDIT, "number": "number", "remove_milestone": "bool"}),
@@ -120,6 +141,22 @@ SCHEMAS = {
         {**COMMON, "parent_id": "node", "child_id": "node", "replace_parent": "bool"},
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
+    # Named merge_queue parameters only. There is no generic ruleset editor.
+    "ruleset-merge-queue": (
+        {"ruleset"},
+        {
+            **COMMON,
+            "ruleset": "number",
+            **{name: "count" for name in MERGE_QUEUE_INT_BOUNDS},
+            "grouping_strategy": "grouping_strategy",
+            "merge_method": "merge_method",
+        },
+    ),
+    # Both endpoints resolve through scripts/config/fleet_repos.yaml; the verb sends no text (C-4682).
+    "issue-transfer": (
+        {"repo", "number", "destination"},
+        {"repo": "endpoint", "number": "number", "destination": "alias", "receipt_dir": "path", "dry_run": "bool"},
+    ),
 }
 # Workflows this publisher may start. workflow_dispatch input names, required
 # flags, booleans and choice options are read from each workflow file. There
@@ -153,13 +190,27 @@ ENUMS = {
     "verdict": {"approve", "comment", "request-changes"},
     "state": {"open", "closed"},
     "status": {"success", "failure", "error", "pending"},
+    "grouping_strategy": {"ALLGREEN", "HEADGREEN"},
+    "merge_method": {"MERGE", "SQUASH", "REBASE"},
 }
+_MERGE_QUEUE_FIELDS = frozenset(MERGE_QUEUE_INT_BOUNDS) | frozenset({"grouping_strategy", "merge_method"})
+# Keys a repository ruleset GET returns that PUT must not send back. A key in neither
+# this set nor _RULESET_WRITABLE refuses the update, so a new GitHub field is not dropped.
+_RULESET_READONLY = frozenset({
+    "_links", "created_at", "current_user_can_bypass", "id", "node_id", "source", "source_type", "updated_at",
+})
+_RULESET_WRITABLE = frozenset({
+    "name", "target", "enforcement", "bypass_actors", "conditions", "rules", "bypass_mode",
+})
 PATTERNS = {
     "repo": r"(?:[A-Za-z0-9.-]+/)?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
     "ref": r"[A-Za-z0-9_][A-Za-z0-9_./-]*",
     "sha": r"[0-9a-fA-F]{40}",
     "node": r"[A-Za-z0-9_=-]+",
     "color": r"[0-9a-fA-F]{6}",
+    # A registry alias, or owner/name; issue-transfer resolves either through the registry.
+    "alias": r"[a-z0-9][a-z0-9-]*",
+    "endpoint": r"[a-z0-9][a-z0-9-]*|[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
 }
 
 
@@ -216,15 +267,28 @@ def _workflow_yaml_loader() -> type[yaml.SafeLoader]:
 _WORKFLOW_YAML_LOADER = _workflow_yaml_loader()
 
 
-def _workflow_input_schema(workflow: str) -> dict[str, tuple[object, bool]] | None:
+def _workflow_input_schema(workflow: str, *, product_root: Path | None = None) -> dict[str, tuple[object, bool]] | None:
     """Input schema for an allowlisted workflow, read from its file.
 
-    None refuses every dispatch of that workflow, including an empty input
-    object. A workflow with no declared inputs returns an empty schema.
+    The file is a product-repository workflow, read under ``product_root`` (an
+    absolute path; default: the checkout ``scripts.common.repo_root.product_root``
+    selects, C-4746), never from the machinery package. None, also when no product
+    checkout can be selected, refuses every dispatch of that workflow, including
+    an empty input object. A workflow with no declared inputs returns an empty
+    schema.
     """
     if workflow not in WORKFLOWS or "/" in workflow or workflow.startswith("."):
         return None
-    path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / workflow
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        return None
+    from scripts.common.repo_root import ProductRootError
+    from scripts.common.repo_root import product_root as resolve_product_root
+
+    try:
+        root = resolve_product_root() if product_root is None else product_root
+    except ProductRootError:
+        return None
+    path = root / ".github" / "workflows" / workflow
     try:
         document = yaml.load(path.read_text(encoding="utf-8"), Loader=_WORKFLOW_YAML_LOADER)
     except (OSError, UnicodeError, yaml.YAMLError):
@@ -303,6 +367,8 @@ def _validate(verb, fields):
         valid = True
         if kind == "bool":
             valid = type(value) is bool
+        elif kind == "count":
+            valid = type(value) is int and value >= 0
         elif kind == "number":
             valid = type(value) is int and value > 0
         elif kind == "file":
@@ -337,6 +403,12 @@ def _validate(verb, fields):
     for name in ("body", "notes"):
         if name in fields and name + "_file" in fields:
             raise gate.PublishBlocked("OPSEC: use one text input per field.")
+    if verb == "ruleset-merge-queue":
+        if not (set(fields) & _MERGE_QUEUE_FIELDS):
+            raise gate.PublishBlocked("OPSEC: edit requires explicit merge queue fields.")
+        for key, (low, high) in MERGE_QUEUE_INT_BOUNDS.items():
+            if key in fields and not low <= fields[key] <= high:
+                raise gate.PublishBlocked(f"OPSEC: invalid publisher field {key}.")
 
 
 class CfVerdictRecord(str):
@@ -365,9 +437,7 @@ def _refuse_verdict_markers(verb, fields):
         return
     if verb == CF_VERDICT_RECORD_VERB and type(value) is CfVerdictRecord:
         return
-    raise gate.PublishBlocked(
-        "CF_VERDICT_MARKER_REFUSED: review-verdict markers are written only by scripts/review/record_cf_verdict.py."
-    )
+    raise gate.PublishBlocked(f"CF_VERDICT_MARKER_REFUSED: review-verdict markers are written only by {_RECORDER}.")
 
 
 class Asset:
@@ -533,7 +603,7 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
     if state == "needs-CF" and recorder:
         raise gate.PublishBlocked(
-            f"OPSEC: merge refused: no cross-family APPROVE from scripts/review/record_cf_verdict.py is recorded at {head}."
+            f"OPSEC: merge refused: no cross-family APPROVE from {_RECORDER} is recorded at {head}."
         )
     from scripts.review import contract_canary
 
@@ -730,6 +800,62 @@ def _issue_node(read_runner, gh_repo, number, cwd, environment):
     return document["node_id"]
 
 
+def _fleet_catalog_row(gh_repo):
+    """The fleet_repos row for this owner/name, or None when the repository is not registered."""
+    slug = gh_repo.casefold()
+    for row in gate.catalog().values():
+        github = row.get("github") if isinstance(row, dict) else None
+        if not isinstance(github, str):
+            continue
+        normalized = gate.normalize_repository(github)
+        if normalized != "unknown" and normalized.split("/", 1)[1] == slug:
+            return row
+    return None
+
+
+def _owns_stream_registry(row):
+    """True for the repository whose issues the stream-registry numbers are.
+
+    ``issue_streams.yaml`` has no per-repository key. Its epic numbers are issues in the
+    one default fleet repository. Every other registered repository has no stream registry.
+    """
+    return bool(row.get("default"))
+
+
+def _issue_create_parent_policy(gh_repo):
+    """``stream`` (own open epic), ``none`` (no --parent), or ``unregistered``."""
+    row = _fleet_catalog_row(gh_repo)
+    if row is None:
+        return "unregistered"
+    return "stream" if _owns_stream_registry(row) else "none"
+
+
+def _cli_keeps_stream_parent_refusal(explicit):
+    """Keep the historical missing-parent sentence unless this destination has no stream registry.
+
+    An unresolved destination keeps that sentence, so a checkout of the default repository
+    that omits ``--repo`` still prints it. A resolved repository with no stream registry, and
+    a resolved unregistered repository, fall through to ``publish``.
+    """
+    slug = None
+    if isinstance(explicit, str) and explicit.strip():
+        normalized = gate.normalize_repository(explicit)
+        if normalized != "unknown":
+            slug = normalized.split("/", 1)[1]
+    if slug is None:
+        try:
+            dest = repository(Path.cwd(), _validated_environment(None), explicit)
+        except gate.PublishBlocked:
+            return True
+        if dest == "unknown":
+            return True
+        slug = dest.split("/", 1)[1]
+    try:
+        return _issue_create_parent_policy(slug) == "stream"
+    except gate.PublishBlocked:
+        return True
+
+
 def _parent_epic_node(read_runner, gh_repo, parent, cwd, environment):
     """Resolve --parent to a registered open stream epic's node id before anything is created."""
     from scripts.orchestration import issue_stream_audit
@@ -776,6 +902,641 @@ def _link_created_issue(created, parent, parent_node, gh_repo, read_runner, runn
         )
 
 
+# --- issue-transfer (C-4682) ---------------------------------------------------------------
+# One open issue moves between two registered repositories of one owner. Static refusals
+# come first, then fresh reads, then exactly one transferIssue mutation. Nothing after the
+# mutation can send a second one; once it is sent, every failure exits TRANSFER_UNSETTLED.
+
+TRANSFER_REPOSITORY_QUERY = (
+    "query($owner:String!,$name:String!,$cursor:String){repository(owner:$owner,name:$name){"
+    "id nameWithOwner visibility viewerPermission isArchived "
+    "labels(first:100,after:$cursor){totalCount pageInfo{hasNextPage endCursor} nodes{name}}}}"
+)
+TRANSFER_ISSUE_LABELS_QUERY = (
+    "query($owner:String!,$name:String!,$number:Int!,$cursor:String){repository(owner:$owner,name:$name){"
+    "issue(number:$number){id labels(first:100,after:$cursor){totalCount pageInfo{hasNextPage endCursor} "
+    "nodes{name}}}}}"
+)
+TRANSFER_MUTATION = (
+    "mutation($issue:ID!,$repository:ID!){transferIssue(input:{issueId:$issue,repositoryId:$repository,"
+    "createLabelsIfMissing:false}){issue{id number url repository{nameWithOwner}}}}"
+)
+TRANSFER_WRITE_PERMISSIONS = frozenset({"ADMIN", "MAINTAIN", "WRITE"})
+TRANSFER_VISIBILITY = {"private": "PRIVATE", "public": "PUBLIC"}
+TRANSFER_UNSETTLED = 3
+TRANSFER_LABEL_PAGES = 50
+# GitHub serves the source redirect and the moved issue's labels some time after the mutation
+# returns (one issue took about 85 s on 2026-11-04), so verification re-reads with a bounded
+# backoff: eight fresh reads over 180 seconds.
+TRANSFER_VERIFY_DELAYS = (0, 2, 4, 8, 16, 30, 60, 60)
+_transfer_sleep = time.sleep
+TRANSFER_PROBED = frozenset({"transferred", "already-transferred", "unverified", "ambiguous"})
+TRANSFER_PROBE_NOTE = (
+    "An anonymous HTTP status alone does not prove confidentiality: GitHub serves a transfer "
+    "banner at the old URL to readers without access to the destination."
+)
+_API_REPOSITORY = re.compile(r"https://api\.github\.com/repos/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)")
+
+
+def _transfer_refused(reason):
+    return gate.PublishBlocked(f"TRANSFER_REFUSED: {reason}; nothing was transferred.")
+
+
+def _transfer_endpoint(value, environment):
+    """Resolve a registry alias or owner/name to exactly one registered github.com repository."""
+    rows = gate.catalog()
+    if not isinstance(rows, dict):
+        raise _transfer_refused("the repository registry is unreadable")
+    if "/" in value:
+        wanted = gate.normalize_repository(value, environment.get("GH_HOST", "github.com"))
+        matches = [
+            (alias, row) for alias, row in rows.items()
+            if isinstance(row, dict) and isinstance(row.get("github"), str)
+            and gate.normalize_repository(row["github"]) == wanted != "unknown"
+        ]
+    else:
+        matches = [(value, rows[value])] if value in rows else []
+    if len(matches) != 1:
+        raise _transfer_refused(f"{value} is not exactly one repository registered in {_FLEET_REPOS}")
+    alias, row = matches[0]
+    github, role = (row.get("github"), row.get("role")) if isinstance(row, dict) else (None, None)
+    canonical = gate.normalize_repository(github) if isinstance(github, str) else "unknown"
+    privacy = None
+    if isinstance(role, str):
+        privacy = "private" if role.startswith("private-") else "public" if role.startswith("public-") else None
+    if not canonical.startswith("github.com/") or privacy is None:
+        raise _transfer_refused(f"the registry row for {alias} has no github.com repository or no public-/private- role")
+    repository_name = canonical.split("/", 1)[1]
+    return {"alias": alias, "repository": repository_name, "owner": repository_name.split("/", 1)[0], "privacy": privacy}
+
+
+def _transfer_checkouts():
+    checkouts = [gate.ROOT.resolve()]
+    with contextlib.suppress(NotAGitRepositoryError):
+        checkouts.append(resolve_main_root_without_git(gate.ROOT).resolve())
+    return checkouts
+
+
+def _reserve_transfer_receipt(value, source, number):
+    """Create a new 0600 receipt in a private directory outside every checkout.
+
+    The directory is opened once and checked through that descriptor (owner, mode, real
+    path), and the file is created relative to it, so a parent swapped after the check
+    cannot move the receipt into a checkout.
+    """
+    from datetime import UTC, datetime
+
+    if value is None:
+        state = os.environ.get("XDG_STATE_HOME", "")
+        base = Path(state) if os.path.isabs(state) else Path.home() / ".local" / "state"
+        directory = base / "learn-ukrainian" / "issue-transfer"
+    else:
+        directory = Path(value).expanduser()
+        if not directory.is_absolute():
+            raise _transfer_refused("the receipt directory must be an absolute path")
+    directory = Path(os.path.abspath(directory))
+    # Lexical check first, so nothing is ever created inside a checkout.
+    if any(directory.resolve().is_relative_to(root) for root in _transfer_checkouts()):
+        raise _transfer_refused("the receipt directory must be outside the repository")
+    try:
+        directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+        directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        raise _transfer_refused("the receipt directory cannot be created or opened") from None
+    try:
+        info = os.fstat(directory_fd)
+        real = Path(os.readlink(f"/proc/self/fd/{directory_fd}"))
+        if not real.is_absolute() or any(real.is_relative_to(root) for root in _transfer_checkouts()):
+            raise _transfer_refused("the receipt directory must be outside the repository")
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o077:
+            raise _transfer_refused("the receipt directory must be a mode 0700 directory owned by this user")
+        name = f"{source['repository'].replace('/', '-')}-{number}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%fZ')}.json"
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        return {"path": real / name, "fd": os.open(name, flags, 0o600, dir_fd=directory_fd)}
+    except OSError:
+        raise _transfer_refused("the receipt file cannot be created") from None
+    finally:
+        os.close(directory_fd)
+
+
+def _write_transfer_receipt(sink, receipt):
+    """Write the receipt once into its reserved file; False when it cannot be written."""
+    fd, sink["fd"] = sink["fd"], None
+    if fd is None:
+        return False
+    try:
+        handle = os.fdopen(fd, "w", encoding="utf-8")
+    except OSError:
+        os.close(fd)
+        return False
+    try:
+        with handle:
+            handle.write(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+        return True
+    except OSError:
+        return False
+
+
+def _anonymous_probe(url):
+    """One credential-free GET: no token, cookie, netrc or proxy; record the final URL and status."""
+    import urllib.error
+    import urllib.request
+
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    request = urllib.request.Request(url, headers={"User-Agent": "learn-ukrainian-issue-transfer-probe"})
+    try:
+        with opener.open(request, timeout=20) as response:
+            return {"url": url, "final_url": response.geturl(), "status": response.status, "error": None}
+    except urllib.error.HTTPError as exc:
+        return {"url": url, "final_url": exc.geturl(), "status": exc.code, "error": None}
+    except Exception as exc:
+        return {"url": url, "final_url": None, "status": None, "error": type(exc).__name__}
+
+
+def _probe_failed(probe):
+    status = probe.get("status")
+    return probe.get("error") is not None or type(status) is not int or status >= 500
+
+
+def _transfer_resolution(endpoint, number, reader, cwd, environment):
+    """What source/number resolves to now; the REST read follows a transferred issue's redirect."""
+    result = read(
+        "issue", repo=endpoint["repository"], runner=reader, cwd=cwd, env=environment, capture_output=True,
+        text=True, check=False, timeout=30, number=number,
+    )
+    if result.returncode:
+        raise ValueError("issue unreadable")
+    document = json.loads(result.stdout)
+    resolved = {
+        "repository": None, "number": document["number"], "node_id": document["node_id"],
+        "state": document["state"], "url": document["html_url"], "pull_request": "pull_request" in document,
+    }
+    match = _API_REPOSITORY.fullmatch(document["repository_url"]) if isinstance(document["repository_url"], str) else None
+    if (
+        match is None or type(resolved["number"]) is not int or resolved["number"] <= 0
+        or not isinstance(resolved["node_id"], str) or not re.fullmatch(PATTERNS["node"], resolved["node_id"])
+        or resolved["state"] not in {"open", "closed"} or not isinstance(resolved["url"], str)
+    ):
+        raise ValueError("malformed issue")
+    resolved["repository"] = match[1]
+    if not resolved["pull_request"] and resolved["url"].casefold() != (
+        f"https://github.com/{match[1]}/issues/{resolved['number']}".casefold()
+    ):
+        raise ValueError("issue URL does not match its repository")
+    return resolved
+
+
+def _transfer_label_connection(query, variables, select, reader, cwd, environment, temp):
+    """Every label of one GraphQL label connection: paginated, count-checked and distinct.
+
+    ``select`` maps the repository object to (identity fields, label page); the identity must
+    stay the same on every page.
+    """
+    labels, cursor, identity, total = [], None, None, None
+    for _ in range(TRANSFER_LABEL_PAGES):
+        frozen = temp / "query.json"
+        frozen.write_bytes(json.dumps({"query": query, "variables": {**variables, "cursor": cursor}}).encode("utf-8"))
+        result = reader(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)],
+            cwd=cwd, env=dict(environment), capture_output=True, text=True, check=False, timeout=30,
+        )
+        if result.returncode:
+            raise ValueError("label read unreadable")
+        document = json.loads(result.stdout)
+        if not isinstance(document, dict) or document.get("errors"):
+            raise ValueError("label read errors")
+        current, page = select(document["data"]["repository"])
+        if identity is None:
+            identity, total = current, page["totalCount"]
+        if current != identity or page["totalCount"] != total or type(total) is not int:
+            raise ValueError("labels changed while reading")
+        names = [node["name"] for node in page["nodes"]]
+        if not all(isinstance(label, str) and label for label in names):
+            raise ValueError("malformed label")
+        labels += names
+        more = page["pageInfo"]["hasNextPage"]
+        if more is False:
+            break
+        cursor = page["pageInfo"]["endCursor"]
+        if more is not True or not isinstance(cursor, str):
+            raise ValueError("malformed label page")
+    else:
+        raise ValueError("too many label pages")
+    # GitHub label names are unique without regard to case, so a repeat means a misread page.
+    if len(labels) != total or len({label.casefold() for label in labels}) != len(labels):
+        raise ValueError("incomplete or repeated labels")
+    return identity, labels
+
+
+def _transfer_repository(endpoint, reader, cwd, environment, temp):
+    """Fresh identity, visibility, permission and complete label names of one repository."""
+    owner, name = endpoint["repository"].split("/", 1)
+    fields = ("id", "nameWithOwner", "visibility", "viewerPermission", "isArchived")
+    identity, labels = _transfer_label_connection(
+        TRANSFER_REPOSITORY_QUERY, {"owner": owner, "name": name},
+        lambda repo: ({key: repo[key] for key in fields}, repo["labels"]), reader, cwd, environment, temp,
+    )
+    if not isinstance(identity["id"], str) or not identity["id"]:
+        raise ValueError("repository id unreadable")
+    return {**identity, "labels": labels}
+
+
+def _transfer_issue_labels(repository_name, number, node_id, reader, cwd, environment, temp):
+    """Complete label names of one issue, bound to the expected issue node id."""
+    owner, name = repository_name.split("/", 1)
+    identity, labels = _transfer_label_connection(
+        TRANSFER_ISSUE_LABELS_QUERY, {"owner": owner, "name": name, "number": number},
+        lambda repo: ({"id": repo["issue"]["id"]}, repo["issue"]["labels"]), reader, cwd, environment, temp,
+    )
+    if identity["id"] != node_id:
+        raise ValueError("the labels belong to another issue")
+    return labels
+
+
+def _missing_labels(labels, present):
+    kept = {name.casefold() for name in present}
+    return [name for name in labels if name.casefold() not in kept]
+
+
+def _same_repository(left, right):
+    return isinstance(left, str) and isinstance(right, str) and left.casefold() == right.casefold()
+
+
+def _transfer_verify(source, destination, number, moved, receipt, reader, cwd, environment, temp):
+    """Bind the source URL and the moved issue's labels to the returned issue; nothing here writes.
+
+    Each attempt is a fresh read. The last failure's detail is raised once the attempts run out.
+    """
+    detail = "the transfer could not be verified"
+    for attempt, delay in enumerate(TRANSFER_VERIFY_DELAYS, start=1):
+        _transfer_sleep(delay)
+        receipt["verification_reads"] = attempt
+        try:
+            now = _transfer_resolution(source, number, reader, cwd, environment)
+            if now["node_id"] != moved["id"] or now["number"] != moved["number"] or not (
+                _same_repository(now["repository"], destination["repository"])
+            ):
+                raise ValueError("the source URL does not resolve to the returned issue")
+            return _transfer_issue_labels(
+                destination["repository"], moved["number"], moved["id"], reader, cwd, environment, temp
+            )
+        except Exception as exc:
+            detail = str(exc) if isinstance(exc, ValueError) and str(exc) else "the transfer could not be verified"
+    raise ValueError(detail)
+
+
+def _transfer_result(receipt, code, capture_output, text):
+    encoded = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
+    if code == TRANSFER_UNSETTLED:
+        with contextlib.suppress(OSError, ValueError):
+            print(
+                f"TRANSFER_UNSETTLED: {receipt['detail'] or 'the receipt is incomplete'}; a mutation was sent, so do "
+                "not retry. Read the state only with --dry-run, which sends no mutation: an already transferred issue "
+                "exits 0 as already-transferred.",
+                file=sys.stderr,
+            )
+    return subprocess.CompletedProcess(
+        ["github", "issue-transfer"], code,
+        (encoded if text else encoded.encode("utf-8")) if capture_output else None,
+        ("" if text else b"") if capture_output else None,
+    )
+
+
+def _issue_transfer(fields, *, runner, cwd, environment, capture_output, text):
+    """Transfer one open issue, or refuse before the mutation; leave a private receipt after the static checks."""
+    source = _transfer_endpoint(fields["repo"], environment)
+    destination = _transfer_endpoint(fields["destination"], environment)
+    if source["owner"] != destination["owner"]:
+        raise _transfer_refused("GitHub transfers issues only between repositories of the same owner")
+    if source["repository"] == destination["repository"]:
+        raise _transfer_refused("the destination is the source repository")
+    if source["privacy"] == "private" and destination["privacy"] != "private":
+        raise _transfer_refused("an issue in a private-role repository never moves to a public-role repository")
+    number = fields["number"]
+    environment["GH_HOST"] = "github.com"
+    receipt = {
+        "schema": "issue-transfer-receipt/v1",
+        "outcome": None,
+        "mutations_sent": 0,
+        "dry_run": bool(fields.get("dry_run")),
+        "source": {"alias": source["alias"], "repository": source["repository"], "number": number,
+                   "url": f"https://github.com/{source['repository']}/issues/{number}", "node_id": None},
+        "destination": {"alias": destination["alias"], "repository": destination["repository"],
+                        "number": None, "url": None, "node_id": None},
+        "labels": {"source": None, "destination_issue": None, "dropped": None, "predicted_dropped": None},
+        "probes": [],
+        "probe_note": TRANSFER_PROBE_NOTE,
+        "verification_reads": 0,
+        "detail": None,
+    }
+    sink = {"fd": None, "path": None}
+    try:
+        with tempfile.TemporaryDirectory(
+            prefix="lu-transfer-", dir=ensure_scratch_root(), ignore_cleanup_errors=True
+        ) as directory:
+            sink.update(_reserve_transfer_receipt(fields.get("receipt_dir"), source, number))
+            return _transfer_checked(
+                fields, source, destination, receipt, sink, Path(directory),
+                runner=runner, cwd=cwd, environment=environment, capture_output=capture_output, text=text,
+            )
+    except Exception:
+        if not receipt["mutations_sent"]:
+            raise
+        # Every local failure after the mutation (receipt output, stdout, cleanup) stays unsettled.
+        if receipt["outcome"] in {None, "transferred"}:
+            receipt["outcome"] = "unverified"
+            receipt["detail"] = "a local step failed after the mutation was sent"
+        _write_transfer_receipt(sink, receipt)
+        return _transfer_result(receipt, TRANSFER_UNSETTLED, capture_output, text)
+    finally:
+        if sink["fd"] is not None:
+            os.close(sink["fd"])
+
+
+def _transfer_checked(fields, source, destination, receipt, sink, temp, *, runner, cwd, environment,
+                      capture_output, text):
+    """The fresh checks, the one mutation and its verification, with the receipt reserved."""
+    reader = merge_readiness_runner(runner)
+    number = fields["number"]
+
+    def settle(outcome, code, detail=None):
+        receipt["outcome"], receipt["detail"] = outcome, detail
+        if outcome in TRANSFER_PROBED and not receipt["dry_run"]:
+            urls = [receipt["source"]["url"], receipt["destination"]["url"]]
+            receipt["probes"] = [_anonymous_probe(url) for url in urls if url]
+            if receipt["mutations_sent"] and any(_probe_failed(probe) for probe in receipt["probes"]):
+                code = TRANSFER_UNSETTLED
+                if outcome == "transferred":
+                    receipt["outcome"], receipt["detail"] = "unverified", "an anonymous probe failed"
+        if not _write_transfer_receipt(sink, receipt):
+            print("TRANSFER_RECEIPT_UNWRITTEN: the receipt is on stdout only.", file=sys.stderr)
+            code = code or (TRANSFER_UNSETTLED if receipt["mutations_sent"] else 2)
+        print(f"issue-transfer: receipt {sink['path']}", file=sys.stderr)
+        result = _transfer_result(receipt, code, capture_output, text)
+        if not capture_output:
+            print(json.dumps(receipt, indent=2, sort_keys=True))
+        return result
+
+    try:
+        try:
+            repositories = {
+                side: _transfer_repository(endpoint, reader, cwd, environment, temp)
+                for side, endpoint in (("source", source), ("destination", destination))
+            }
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("a repository read was unreadable, malformed or unknown") from None
+        for side, endpoint in (("source", source), ("destination", destination)):
+            live = repositories[side]
+            if not _same_repository(live["nameWithOwner"], endpoint["repository"]):
+                raise _transfer_refused(f"the {side} repository's live identity differs from the registry")
+            if live["visibility"] != TRANSFER_VISIBILITY[endpoint["privacy"]]:
+                raise _transfer_refused(f"the {side} repository's live visibility differs from its registry role")
+            if live["viewerPermission"] not in TRANSFER_WRITE_PERMISSIONS:
+                raise _transfer_refused(f"this login cannot write to the {side} repository")
+            if live["isArchived"] is not False:
+                raise _transfer_refused(f"the {side} repository is archived or its state is unknown")
+        try:
+            resolved = _transfer_resolution(source, number, reader, cwd, environment)
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("the source issue is missing, unreadable or malformed") from None
+        if _same_repository(resolved["repository"], destination["repository"]) and not resolved["pull_request"]:
+            # Already moved: bind the redirect to the destination's own record of that issue.
+            try:
+                bound = _transfer_resolution(destination, resolved["number"], reader, cwd, environment)
+                if bound["node_id"] != resolved["node_id"] or bound["number"] != resolved["number"] or not (
+                    _same_repository(bound["repository"], destination["repository"])
+                ):
+                    raise _transfer_refused("the redirect does not match the destination's issue")
+                after = _transfer_issue_labels(
+                    destination["repository"], bound["number"], bound["node_id"], reader, cwd, environment, temp
+                )
+            except (gate.PublishBlocked, github_client.GitHubRateLimited):
+                raise
+            except Exception:
+                raise _transfer_refused("the transferred issue's destination record is unreadable") from None
+            receipt["destination"].update(number=bound["number"], url=bound["url"], node_id=bound["node_id"])
+            receipt["labels"]["destination_issue"] = after
+            return settle("already-transferred", 0, "source labels are no longer readable; drops unknown")
+        if not _same_repository(resolved["repository"], source["repository"]) or resolved["number"] != number:
+            raise _transfer_refused("the source issue redirects to a repository other than the destination")
+        if resolved["pull_request"]:
+            raise _transfer_refused("the source number is a pull request")
+        if resolved["state"] != "open":
+            raise _transfer_refused("the source issue is closed")
+        receipt["source"]["node_id"] = resolved["node_id"]
+        try:
+            labels = _transfer_issue_labels(
+                source["repository"], number, resolved["node_id"], reader, cwd, environment, temp
+            )
+        except (gate.PublishBlocked, github_client.GitHubRateLimited):
+            raise
+        except Exception:
+            raise _transfer_refused("the source issue's labels are unreadable or incomplete") from None
+        receipt["labels"]["source"] = labels
+        receipt["labels"]["predicted_dropped"] = _missing_labels(labels, repositories["destination"]["labels"])
+        if receipt["dry_run"]:
+            return settle("dry-run", 0, "every check passed; no mutation was sent")
+    except gate.PublishBlocked as exc:
+        settle("refused", 2, str(exc))
+        raise
+    except github_client.GitHubRateLimited:
+        settle("refused", 2, "a fresh read was refused by the GitHub rate limit")
+        raise
+    except Exception:
+        settle("refused", 2, "an unexpected error stopped the checks before any mutation")
+        raise
+
+    frozen = temp / "request.json"
+    variables = {"issue": resolved["node_id"], "repository": repositories["destination"]["id"]}
+    frozen.write_bytes(json.dumps({"query": TRANSFER_MUTATION, "variables": variables}).encode("utf-8"))
+    receipt["mutations_sent"] = 1
+    try:
+        result = _send(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)],
+            environment=environment, runner=runner, cwd=cwd, capture_output=True, text=True, check=False,
+            timeout=60,
+        )
+        document = json.loads(result.stdout) if result.returncode == 0 else None
+        moved = document["data"]["transferIssue"]["issue"] if isinstance(document, dict) else None
+        if not isinstance(document, dict) or document.get("errors") or not isinstance(moved, dict):
+            raise ValueError
+    except Exception:
+        return settle("ambiguous", TRANSFER_UNSETTLED, "the transfer mutation's result is unknown")
+    try:
+        moved_number = moved["number"]
+        if (
+            type(moved_number) is not int or moved_number <= 0
+            or not isinstance(moved["id"], str) or not re.fullmatch(PATTERNS["node"], moved["id"])
+            or not _same_repository(moved["repository"]["nameWithOwner"], destination["repository"])
+            or not _same_repository(moved["url"], f"https://github.com/{destination['repository']}/issues/{moved_number}")
+        ):
+            raise ValueError("the mutation returned another issue or repository")
+        # Only a validated URL is recorded, so only a validated URL is probed.
+        receipt["destination"].update(number=moved_number, url=moved["url"], node_id=moved["id"])
+        after = _transfer_verify(source, destination, number, moved, receipt, reader, cwd, environment, temp)
+    except Exception as exc:
+        detail = str(exc) if isinstance(exc, ValueError) and str(exc) else "the transfer could not be verified"
+        return settle("unverified", TRANSFER_UNSETTLED, detail)
+    receipt["labels"]["destination_issue"] = after
+    receipt["labels"]["dropped"] = _missing_labels(labels, after)
+    return settle("transferred", 0)
+
+
+def _ruleset_get(runner, endpoint, cwd, environment):
+    """Read one repository ruleset. A failed or unparsable read never continues into a write."""
+    result = runner(
+        ["gh", "api", "--method", "GET", endpoint],
+        cwd=cwd,
+        env=dict(environment),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if result.returncode:
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    try:
+        document = json.loads(result.stdout)
+    except (TypeError, json.JSONDecodeError):
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.") from None
+    if not isinstance(document, dict):
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    return document
+
+
+def _merge_queue_rule(rules):
+    """The single merge_queue rule, or a refusal when the ruleset has none or several."""
+    if not isinstance(rules, list):
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    found = [index for index, rule in enumerate(rules) if isinstance(rule, dict) and rule.get("type") == "merge_queue"]
+    if len(found) != 1:
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    rule = rules[found[0]]
+    parameters = rule.get("parameters")
+    if not isinstance(parameters, dict):
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    return found[0], parameters
+
+
+def _ruleset_body(before, rules):
+    """Writable ruleset fields only. An unrecognized key refuses, so it is not dropped on PUT."""
+    unknown = set(before) - _RULESET_READONLY - _RULESET_WRITABLE
+    if unknown or any(not isinstance(before.get(key), str) or not before[key] for key in ("name", "target", "enforcement")):
+        raise gate.PublishBlocked("OPSEC: ruleset has a field this verb does not preserve.")
+    if "conditions" not in before or "bypass_actors" not in before:
+        raise gate.PublishBlocked("OPSEC: ruleset has a field this verb does not preserve.")
+    body = {key: before[key] for key in ("name", "target", "enforcement", "bypass_actors", "conditions")}
+    if before.get("bypass_mode") is not None:
+        body["bypass_mode"] = before["bypass_mode"]
+    body["rules"] = rules
+    return body
+
+
+def _ruleset_unchanged(before, after, original_parameters):
+    """True when the read-back differs only by the merge_queue parameters already checked."""
+    if any(before.get(key) != after.get(key) for key in ("name", "target", "enforcement", "conditions", "bypass_actors")):
+        return False
+    if ("bypass_mode" in before or "bypass_mode" in after) and before.get("bypass_mode") != after.get("bypass_mode"):
+        return False
+    restored = []
+    seen = 0
+    for rule in after.get("rules", []):
+        if isinstance(rule, dict) and rule.get("type") == "merge_queue":
+            seen += 1
+            restored.append({**rule, "parameters": original_parameters})
+        else:
+            restored.append(rule)
+    return seen == 1 and restored == before.get("rules")
+
+
+def _publish_ruleset_merge_queue(
+    fields, *, gh_repo, dest, runner, cwd, environment, temp, capture_output, text,
+):
+    """Replace named merge_queue parameters on an existing ruleset and require the read-back to match.
+
+    PUT replaces the whole ruleset, so the body echoes GitHub's writable fields and edits
+    only parameters that already exist on its single merge_queue rule. A read-back that
+    does not match exits 3 and must not be retried: a retry would echo whatever the failed
+    write left behind.
+    """
+    ruleset_id = fields["ruleset"]
+    changes = {key: value for key, value in fields.items() if key in _MERGE_QUEUE_FIELDS}
+    endpoint = f"repos/{gh_repo}/rulesets/{ruleset_id}"
+    before = _ruleset_get(runner, endpoint, cwd, environment)
+    if type(before.get("id")) is not int or before["id"] != ruleset_id:
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    index, parameters = _merge_queue_rule(before.get("rules"))
+    if any(key not in parameters for key in changes):
+        raise gate.PublishBlocked("OPSEC: merge queue parameter is not on this ruleset.")
+    updated = {**parameters, **changes}
+    rules = [
+        {**rule, "parameters": updated} if rule_index == index else rule
+        for rule_index, rule in enumerate(before["rules"])
+    ]
+    body = _ruleset_body(before, rules)
+    try:
+        raw = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    except (TypeError, ValueError):
+        raise gate.PublishBlocked("OPSEC: ruleset cannot be republished.") from None
+    try:
+        gate.check_texts(dest, [raw.decode("utf-8")], environment=environment, field_names=["ruleset"])
+    except gate.PublishBlocked:
+        raise
+    except Exception:
+        raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+    frozen = temp / "request.json"
+    frozen.write_bytes(raw)
+    put_argv = ["gh", "api", "--method", "PUT", endpoint, "--input", str(frozen)]
+    put = runner(
+        put_argv,
+        cwd=cwd,
+        env=dict(environment),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if put.returncode:
+        print("OPSEC: ruleset update was refused by GitHub.", file=sys.stderr)
+        return put
+    try:
+        after = _ruleset_get(runner, endpoint, cwd, environment)
+        after_index, after_parameters = _merge_queue_rule(after.get("rules"))
+    except Exception:
+        # After the PUT, every read-back failure is unverified, including a rate
+        # limit. Letting that exception reach the command wrapper reports exit 75
+        # or 2, as if the public write had not been sent.
+        print(
+            "OPSEC: ruleset update unverified: the write was sent and the read-back failed. Do not retry.",
+            file=sys.stderr,
+        )
+        return subprocess.CompletedProcess(put_argv, 3, "", "")
+    if (
+        type(after.get("id")) is not int
+        or after["id"] != ruleset_id
+        or after_index != index
+        or after_parameters != updated
+        or not _ruleset_unchanged(before, after, parameters)
+    ):
+        print(
+            "OPSEC: ruleset update unverified: the write was sent and the read-back does not match. Do not retry.",
+            file=sys.stderr,
+        )
+        return subprocess.CompletedProcess(put_argv, 3, "", "")
+    line = json.dumps(
+        {"merge_queue": after_parameters, "repo": gh_repo, "ruleset": ruleset_id},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    if not capture_output:
+        print(line)
+    return subprocess.CompletedProcess(put_argv, 0, line if text else line.encode(), "")
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -805,6 +1566,10 @@ def publish(
         raise gate.PublishBlocked("OPSEC: edit requires explicit fields; interactive publishing refused.")
     environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
+    if verb == "issue-transfer":
+        return _issue_transfer(
+            fields, runner=runner, cwd=cwd, environment=environment, capture_output=capture_output, text=text
+        )
     dest = "unknown" if verb == "gist-create" else repository(cwd, environment, fields.get("repo"))
     if dest == "unknown" and verb != "gist-create":
         raise gate.PublishBlocked("OPSEC: publisher repository unresolved; provide --repo.")
@@ -834,12 +1599,24 @@ def publish(
         readiness_runner = merge_readiness_runner(runner)
         parent_node = None
         if verb == "issue-create":
-            if "parent" not in fields:
+            policy = _issue_create_parent_policy(gh_repo)
+            if policy == "unregistered":
                 raise gate.PublishBlocked(
-                    "PARENT_REQUIRED: issue-create requires parent, the number of a registered open stream epic; "
+                    "REPO_REFUSED: issue-create only targets a repository registered in "
+                    f"{_FLEET_REPOS}; nothing was created."
+                )
+            if policy == "stream":
+                if "parent" not in fields:
+                    raise gate.PublishBlocked(
+                        "PARENT_REQUIRED: issue-create requires parent, the number of a registered open stream epic; "
+                        "nothing was created."
+                    )
+                parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
+            elif "parent" in fields:
+                raise gate.PublishBlocked(
+                    "PARENT_REFUSED: this repository has no stream registry, so issue-create accepts no --parent; "
                     "nothing was created."
                 )
-            parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
 
         def queue_probe():
             identity = readiness_runner(
@@ -976,6 +1753,18 @@ def publish(
             raise
         except Exception:
             raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+        if verb == "ruleset-merge-queue":
+            return _publish_ruleset_merge_queue(
+                fields,
+                gh_repo=gh_repo,
+                dest=dest,
+                runner=readiness_runner,
+                cwd=cwd,
+                environment=environment,
+                temp=temp,
+                capture_output=capture_output,
+                text=text,
+            )
         if verb == "comment-edit":
             try:
                 documents = []
@@ -1189,7 +1978,7 @@ def main(argv=None, *, runner=None):
     parser = PublisherParser(
         description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh reads use native CLI arguments.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m scripts.publish read code-scanning-alerts --number 9781\n  .venv/bin/python -m scripts.publish read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
+        epilog=f"Examples:\n  .venv/bin/python -m {_PUBLISHER} issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m {_PUBLISHER} read code-scanning-alerts --number 9781\n  .venv/bin/python -m {_PUBLISHER} read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
         allow_abbrev=False,
     )
     verbs = parser.add_subparsers(dest="verb", required=True)
@@ -1204,8 +1993,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md\n"
-                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file -\n"
+                f"  .venv/bin/python -m {_PUBLISHER} comment-edit --repo unit/public --comment-id 123456 --body-file reply.md\n"
+                f"  .venv/bin/python -m {_PUBLISHER} comment-edit --repo unit/public --comment-id 123456 --body-file -\n"
                 "Outputs: PATCH the same comment ID with the scanned body; temporary payload removed on exit.\n"
                 "Exit codes: 0 success; 1 GitHub failure; 2 invalid input, publishing refusal or transport error.\n"
                 "Related: docs/dev/agent-public-text.md; read comment."
@@ -1218,7 +2007,7 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish workflow-run --repo unit/public --workflow ci.yml --ref main "
+                f"  .venv/bin/python -m {_PUBLISHER} workflow-run --repo unit/public --workflow ci.yml --ref main "
                 "--inputs '{\"secret_scan_mode\": \"full-history-audit\"}'\n"
                 "Outputs: a workflow_dispatch request. A choice value must be one of the options that input declares.\n"
                 "  Other workflows and other values are refused before transport.\n"
@@ -1233,8 +2022,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
-                "  .venv/bin/python -m scripts.publish run-cancel --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} read run --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} run-cancel --repo unit/public --number 12345678901\n"
                 "Outputs: requests ordinary cancellation; can interrupt work and eject a merge-group run from the queue.\n"
                 "  Request acceptance does not prove terminal cancellation; read back the run state.\n"
                 "  Cancellation does not satisfy CI or merge gates and does not consume or reset recovery allowances.\n"
@@ -1251,8 +2040,8 @@ def main(argv=None, *, runner=None):
             sub.formatter_class = argparse.RawDescriptionHelpFormatter
             sub.epilog = (
                 "Examples:\n"
-                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
-                "  .venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} read run --repo unit/public --number 12345678901\n"
+                f"  .venv/bin/python -m {_PUBLISHER} run-rerun --repo unit/public --number 12345678901\n"
                 "Outputs: requests a GitHub rerun with --failed on the original pinned run, not the latest PR head.\n"
                 "  PR recovery requires an eligible failed run, current-head approval and posted failure evidence.\n"
                 "  It consumes the one PR-head recovery allowance for reruns before sending the write.\n"
@@ -1266,8 +2055,76 @@ def main(argv=None, *, runner=None):
                 "  Other gh exit codes propagate.\n"
                 "Related: docs/dev/agent-public-text.md; read run; pr-update-branch."
             )
+        if verb == "issue-transfer":
+            sub.description = (
+                f"Move one open issue between two repositories registered in {_FLEET_REPOS}\n"
+                "that share an owner, through one GitHub transferIssue mutation. Raw gh issue transfer stays refused.\n"
+                "Use for approved confidentiality or ownership moves only; never for bulk moves or private-to-public."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                f"  .venv/bin/python -m {_PUBLISHER} issue-transfer --repo public --number 123 "
+                "--destination infra-private --dry-run\n"
+                f"  .venv/bin/python -m {_PUBLISHER} issue-transfer --repo learn-ukrainian/learn-ukrainian.github.io "
+                "--number 123 --destination infra-private --receipt-dir /abs/private/dir\n"
+                "Checks, in order, before any mutation: both endpoints registered (alias or owner/name), same owner,\n"
+                "  different repositories, never a private- role to a public- role; then fresh reads: each\n"
+                "  repository's live name, visibility (PRIVATE or PUBLIC as its role says), write permission and\n"
+                "  archive state; the source number resolves to an open issue, not a pull request, in the source.\n"
+                "  If the source number already resolves to an issue in the destination, the verb reports it and\n"
+                "  exits 0 without a mutation; a redirect to any other repository is refused.\n"
+                "Outputs: one transferIssue mutation with createLabelsIfMissing false (labels missing at the\n"
+                "  destination are dropped; create them first with label-create). The receipt JSON goes to stdout\n"
+                "  and to a new 0600 file in the receipt directory: outcome, source and destination URLs, node ids,\n"
+                "  source labels, labels dropped (from complete label reads; predicted_dropped on a dry run), and\n"
+                "  credential-free anonymous HTTP probes of both URLs with final URL and status or error (none on\n"
+                "  a dry run). A status alone does not prove confidentiality: GitHub shows a transfer banner at\n"
+                "  the old URL. Label reads are paginated, count-checked and bound to the issue's node id.\n"
+                "  After the mutation, the source redirect and labels are re-read up to eight times over about\n"
+                "  180 s, because GitHub can take over a minute to serve them; verification_reads counts them.\n"
+                "  A refusal after the static checks leaves a receipt with outcome refused.\n"
+                "Exit codes: 0 transferred and verified, already transferred, or dry run passed;\n"
+                "  2 invalid input or refusal, no mutation sent; 3 mutation sent but its result is ambiguous or\n"
+                "  unverified (including a failed anonymous probe or any later local error): never retry; read the\n"
+                "  state only with --dry-run, because a plain re-run sends a new mutation if the issue did not move;\n"
+                "  75 rate-limit refusal before the mutation.\n"
+                "Related: decision C-4682; machinery-move contract v3 step 10; label-create; read issue."
+            )
+        if verb == "ruleset-merge-queue":
+            sub.description = (
+                "Change named merge_queue parameters on one existing repository ruleset.\n"
+                "Use only for those parameters. This is not a ruleset editor: a name, enforcement,\n"
+                "condition, bypass actor, other rule, or unknown field is refused."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                f"  .venv/bin/python -m {_PUBLISHER} ruleset-merge-queue --repo unit/public --ruleset 20977023 "
+                "--min-entries-to-merge-wait-minutes 10\n"
+                "Outputs: reads the ruleset, replaces only the named merge_queue parameters that already exist\n"
+                "  on its single merge_queue rule, PUTs the writable ruleset fields, reads the ruleset again,\n"
+                "  and prints JSON {repo, ruleset, merge_queue} from that read-back. Other ruleset fields are\n"
+                "  echoed, not edited. An unrecognized ruleset field refuses before the PUT.\n"
+                "Exit codes: 0 update sent and the read-back matches; 1 GitHub refused the update (nothing landed);\n"
+                "  2 invalid input or a refusal before the update; 3 the update was sent and the read-back failed\n"
+                "  or does not match: do not retry. A rate limit on that read-back is exit 3, not 75;\n"
+                "  75 is a rate-limit refusal before the update.\n"
+                "Related: GitHub REST update a repository ruleset; decision C-5345."
+            )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
+            if verb == "issue-transfer":
+                kwargs["help"] = {
+                    "repo": "Required source: registry alias (e.g. public) or owner/name; no GH_REPO or origin default",
+                    "number": "Required source issue number (e.g. 123); a pull request number is refused",
+                    "destination": "Required destination registry alias (e.g. infra-private); owner/name is refused",
+                    "receipt_dir": (
+                        "Absolute private directory for the receipt, created 0700 and outside the repository; "
+                        "default $XDG_STATE_HOME/learn-ukrainian/issue-transfer (else ~/.local/state/...)"
+                    ),
+                    "dry_run": "Run every check and the label analysis, write the receipt; no mutation, no probe; default off",
+                }[key]
             if verb == "comment-edit":
                 kwargs["action"] = StoreOnce
                 kwargs["help"] = {
@@ -1275,6 +2132,18 @@ def main(argv=None, *, runner=None):
                     "comment_id": "Required positive comment ID (e.g. 123456), not an issue or PR number; no default",
                     "body": "Exact UTF-8 body text; use exactly one of --body or --body-file; no default",
                     "body_file": "UTF-8 body file (e.g. reply.md), or - for stdin; no default",
+                }[key]
+            if verb == "ruleset-merge-queue":
+                kwargs["help"] = {
+                    "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
+                    "ruleset": "Required existing ruleset ID (e.g. 20977023); no default",
+                    "check_response_timeout_minutes": "Minutes for a required check to finish, from 1 to 360; omitted keeps the current value",
+                    "grouping_strategy": "ALLGREEN or HEADGREEN; omitted keeps the current value",
+                    "max_entries_to_build": "Queued pull requests built at once, from 0 to 100; omitted keeps the current value",
+                    "max_entries_to_merge": "Maximum pull requests merged as one group, from 0 to 100; omitted keeps the current value",
+                    "merge_method": "MERGE, SQUASH or REBASE; omitted keeps the current value",
+                    "min_entries_to_merge": "Minimum group size, from 0 to 100; omitted keeps the current value",
+                    "min_entries_to_merge_wait_minutes": "Minutes to wait for that minimum, from 0 to 360; omitted keeps the current value",
                 }[key]
             if verb in {"run-rerun", "run-cancel"}:
                 kwargs["help"] = {
@@ -1297,7 +2166,7 @@ def main(argv=None, *, runner=None):
                             raise argparse.ArgumentTypeError("invalid artifact") from None
 
                     kwargs["type"] = asset_arg
-            elif kind == "number":
+            elif kind in {"number", "count"}:
                 kwargs["type"] = int
             if kind == "workflow_inputs":
                 kwargs["type"] = json.loads
@@ -1315,7 +2184,7 @@ def main(argv=None, *, runner=None):
             "takes no selectors, and emits one complete JSON array with only number, state, package, "
             "ecosystem, manifest, GHSA, severity, affected range and fixed version (possibly null). "
             "It rejects withdrawn advisories and malformed responses; failures emit no alert rows. "
-            "Example: .venv/bin/python -m scripts.publish read dependabot-alerts"
+            f"Example: .venv/bin/python -m {_PUBLISHER} read dependabot-alerts"
         ),
     )
     read_parser.add_argument(
@@ -1369,7 +2238,7 @@ def main(argv=None, *, runner=None):
     )
     args = vars(parser.parse_args(argv))
     verb = args.pop("verb")
-    if verb == "issue-create" and "parent" not in args:
+    if verb == "issue-create" and "parent" not in args and _cli_keeps_stream_parent_refusal(args.get("repo")):
         print(
             "issue-create requires --parent <stream epic issue number>; the new issue is linked to it. "
             "Nothing was created.",
@@ -1792,7 +2661,7 @@ def read(
         if _dependabot_repository(cwd, environment, repo) != (dest, physical_identity):
             raise gate.PublishBlocked("DEPENDABOT_IDENTITY_CHANGED: physical checkout changed during read.")
         if result.returncode:
-            refusal = "OPSEC: API read refused; use python -m scripts.publish read <name>."
+            refusal = f"OPSEC: API read refused; use python -m {_PUBLISHER} read <name>."
             if (result.stderr or "").strip() == refusal:
                 raise gate.PublishBlocked(refusal)
             raise gate.PublishBlocked("OPSEC: Dependabot read failed; no complete alert inventory.")

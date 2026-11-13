@@ -1,30 +1,13 @@
-"""State API router -- v6 pipeline state, research/review coverage, weak points, issues.
+"""State API router, machinery half: routing and GitHub budgets plus the agent manifest.
 
-Mounted at /api/state/ in main.py.
+Mounted at /api/state/ in main.py. The curriculum endpoints under the same
+prefix (summary, pipeline, preparation, coverage, scores, builds, issues) are
+product routes in ``scripts.project_api.state_router`` (Monitor split, C-4687).
 
 Endpoints:
-  GET /api/state/summary              Full project snapshot
-  GET /api/state/pipeline/{track}     Per-module pipeline state for one track
-  GET /api/state/preparation          Active manifest bundle/publication roster
-  GET /api/state/preparation/{track}/{slug} Canonical one-module preparation
-  GET /api/state/weak-points          Modules with quality issues
-  GET /api/state/build-status/{track}  Compact live build progress (one call)
-  GET /api/state/build-status          All-tracks build progress summary
-  GET /api/state/module-range/{track}  Deterministic committed-file status for a module range
-  GET /api/state/module/{track}/{num}  Single module deep-dive with comms
-  GET /api/state/final-reviews/{track} Phase F results aggregated per track
-  GET /api/state/failing              Modules with audit/phase failures
-  GET /api/state/scores/{track}       Per-module status + LLM-QG aggregate + per-dim scores
-  GET /api/state/scores/{track}/{slug} One module's status + per-dimension scores
-  GET /api/state/research-coverage    Per-track research completeness
-  GET /api/state/research/{track}    Per-module research quality + dimensions + upgrade queue
-  GET /api/state/review-coverage      Per-track review completeness + quality
-  GET /api/state/issues               Aggregated outstanding issues
   GET /api/state/routing-budget       Per-agent capacity burn + routing recommendation
-
-Performance notes:
-  - Heavy endpoints run their sync I/O in asyncio.to_thread().
-  - Results are cached in-memory with a TTL (60s for summary/pipeline, 300s for coverage).
+  GET /api/state/github-budget        Cached GitHub GraphQL rateLimit observation
+  GET /api/state/manifest             Cold-start component index
 """
 
 from __future__ import annotations
@@ -34,36 +17,19 @@ import json
 import logging
 import math
 import os
-import re
 import threading
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import yaml
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
-from fastapi.responses import JSONResponse
-
-from scripts.analytics.cost_report import CostRecord, load_cost_records
-from scripts.audit.llm_qg_store import (
-    current_payload_for_module,
-    llm_qg_file_is_current_for_module,
-)
-
-try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
-except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
-
-try:
-    from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
-except ImportError:
-    from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+from fastapi import APIRouter, Depends, Query, Request
+from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import machinery_path, main_checkout_root
 from scripts.fleet import capacity_pick, credit_lane
 from scripts.fleet.reset_reserve import (
     codex_is_threatened,
@@ -72,9 +38,10 @@ from scripts.fleet.reset_reserve import (
 )
 from scripts.github_graphql_budget import probe_graphql_budget
 from scripts.research.registry import research_manifest_component
+from scripts.telemetry.cost_report import CostRecord, load_cost_records
 
 from . import delegate_router as delegate_api
-from . import preparation_state, state_helpers
+from . import state_helpers
 from .claude_account_usage import revalidated_routing_budget_fields
 from .claude_account_usage import routing_budget_fields as claude_account_routing_fields
 from .codexbar_usage import (
@@ -87,7 +54,6 @@ from .codexbar_usage import (
     refresh_provider_usage_data,
     trigger_background_refresh,
 )
-from .config import LEVELS
 from .lane_health import LaneHealthScan, scan_lane_health
 from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
@@ -101,57 +67,14 @@ try:
 except ImportError:
     from scripts.agent_runtime.usage import summarize_fleet_burn, summarize_lane_runtime
 from .monitor_context import MonitorContext, get_ctx
-from .repository_authority import (
-    RepositoryAuthorityError,
-    build_repository_authority,
-    preparation_data_root,
-)
-from .rules_router import _matches_etag, rules_hash
+from .rules_router import rules_hash
 from .session_router import session_hash
-from .state_build import (
-    compute_build_stats,
-    compute_build_stats_all,
-    compute_build_status_all,
-    compute_build_status_track,
-    compute_enrichment_status,
-    compute_module_range_status,
-    compute_track_health,
-)
-from .state_compute import (
-    compute_llm_qg_track,
-    compute_module_detail,
-    compute_research_detail,
-    read_llm_qg,
-    severity_key,
-    summarize_llm_qg,
-)
-from .state_coverage import (
-    compute_pipeline_track,
-    compute_research_coverage,
-    compute_review_coverage,
-    compute_summary,
-)
 from .state_helpers import (
-    cache_get,
     cache_get_or_compute,
     cache_get_or_compute_async,
     cache_get_stored,
-    cache_get_with_age,
-    cache_invalidate,
-    cache_set,
     ctx_scoped_ttl_key,
-    detect_pipeline_version,
-    get_audit_status,
-    get_plan_slugs,
-    get_research_score,
-    get_word_target_from_plan,
-    read_v2_state,
-    read_v3_state,
     schedule_cache_refresh,
-)
-from .state_issues import (
-    compute_final_reviews,
-    compute_issues,
 )
 from .telemetry.response import add_json_telemetry, session_id_from_request
 
@@ -199,271 +122,18 @@ def _fleet_burn_has_activity(fleet_burn: dict[str, Any] | None) -> bool:
 
 router = APIRouter(tags=["state"])
 
-SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi", "muse")
 API_LANES = ("openrouter", "deepseek")
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
-STATE_SUMMARY_TTL_S = 60.0
-STATE_PIPELINE_TTL_S = 60.0
-STATE_RESEARCH_COVERAGE_TTL_S = 300.0
-STATE_RESEARCH_DETAIL_TTL_S = 120.0
-STATE_REVIEW_COVERAGE_TTL_S = 300.0
-STATE_PIPELINE_VERSIONS_TTL_S = 60.0
-STATE_WEAK_POINTS_TTL_S = 60.0
 ROUTING_BUDGET_TTL_S = 15.0
 # Past this age a stored snapshot must not authorize a lane. Same bound the
 # payload already publishes as diagnostics.stale_threshold_s.
 ROUTING_BUDGET_MAX_AGE_S = 900.0
-_PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
-_state_scan_warm_lock = threading.Lock()
-_state_scan_warm_thread: threading.Thread | None = None
 
 
 def _ctx_cache_key(ctx: MonitorContext, *parts: object) -> str:
     """Cache key scoped to one MonitorContext root (process-global TTL cache)."""
     return ctx_scoped_ttl_key(ctx, *parts)
-
-
-def _compute_pipeline_versions_payload(ctx: MonitorContext, track: str | None) -> dict[str, Any]:
-    """Walk orchestration dirs and group modules by pipeline version."""
-    counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-    by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
-    per_track: dict[str, dict] = {}
-
-    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-    for level_cfg in level_cfgs:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(
-            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-        )
-        if not plan_slugs:
-            continue
-
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-        track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-
-        for num, slug in plan_slugs:
-            orch_dir = safe_join(track_dir / "orchestration", slug)
-            version = detect_pipeline_version(orch_dir)
-            if version not in counts:
-                version = "unbuilt"
-            counts[version] += 1
-            track_counts[version] += 1
-            by_version[version].append({"track": track_id, "num": num, "slug": slug})
-
-        per_track[track_id] = track_counts
-
-    total = sum(counts.values())
-    current_builds = counts["v6"]
-    legacy_builds = counts["v5"] + counts["v3"]
-    unbuilt_modules = counts["unbuilt"]
-    rebuild_backlog = legacy_builds + unbuilt_modules
-    built = current_builds + counts["v5"]
-    return {
-        "total": total,
-        "counts": counts,
-        "pct_v6": round(counts["v6"] / total * 100) if total else 0,
-        "pct_v5": round(counts["v5"] / total * 100) if total else 0,
-        "pct_current": round(current_builds / total * 100) if total else 0,
-        "pct_built": round(built / total * 100) if total else 0,
-        "current_builds": current_builds,
-        "legacy_builds": legacy_builds,
-        "unbuilt_modules": unbuilt_modules,
-        "rebuild_backlog": rebuild_backlog,
-        "build_state": {
-            "current": current_builds,
-            "legacy": legacy_builds,
-            "unbuilt": unbuilt_modules,
-            "backlog": rebuild_backlog,
-        },
-        "needs_rebuild": rebuild_backlog,
-        "per_track": per_track,
-        "v6_modules": by_version["v6"],
-        "v5_modules": by_version["v5"],
-        "generated_at": datetime.now(UTC).isoformat(),
-    }
-
-
-def _compute_weak_points_payload(
-    ctx: MonitorContext,
-    track: str | None,
-    min_score: int,
-    limit: int,
-) -> dict[str, Any]:
-    """Scan modules for audit/research/word-count weakness."""
-    weak = []
-    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-    for level_cfg in level_cfgs:
-        track_id = level_cfg["id"]
-        plan_slugs = get_plan_slugs(
-            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-        )
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-        for num, slug in plan_slugs:
-            issues = []
-            audit = get_audit_status(track_dir, slug)
-
-            if audit["status"] == "fail":
-                issues.append("audit_fail")
-
-            research_score = get_research_score(track_dir, slug, track_id)
-            if research_score is not None and research_score < min_score:
-                issues.append(f"research_score_{research_score}")
-
-            word_count = audit.get("word_count", 0)
-            word_target = audit.get("word_target", 0)
-            if word_target == 0 and word_count > 0:
-                word_target = get_word_target_from_plan(
-                    track_id, slug, plans_root=ctx.roots.plans_root, curriculum_root=ctx.roots.curriculum_root
-                )
-            if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
-                issues.append(f"low_words_{word_count}/{word_target}")
-
-            if issues:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                weak.append(
-                    {
-                        "track": track_id,
-                        "num": num,
-                        "slug": slug,
-                        "audit_status": audit["status"],
-                        "word_count": word_count,
-                        "word_target": word_target,
-                        "research_score": research_score,
-                        "pipeline_version": version,
-                        "issues": issues,
-                    }
-                )
-
-    weak.sort(key=severity_key)
-    return {"count": len(weak), "modules": weak[:limit]}
-
-
-def _run_state_scan_warmup(ctx: MonitorContext) -> None:
-    """Populate the default expensive state-scan caches after process start."""
-    try:
-        # First: a dispatch launch right after a restart reads this key (#12512).
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "routing-budget", "dispatch", 0),
-            ROUTING_BUDGET_TTL_S,
-            _routing_budget_compute(ctx, "dispatch", False),
-        )
-    except Exception as exc:
-        logging.getLogger("state_router").warning("Routing-budget warmup failed: %s", exc)
-    try:
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "pipeline_versions", "all"),
-            STATE_PIPELINE_VERSIONS_TTL_S,
-            lambda: _compute_pipeline_versions_payload(ctx, None),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
-            STATE_WEAK_POINTS_TTL_S,
-            lambda: _compute_weak_points_payload(ctx, None, 7, 20),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "summary"),
-            STATE_SUMMARY_TTL_S,
-            lambda: compute_summary(
-                curriculum_root=ctx.roots.curriculum_root,
-                project_root=ctx.roots.project_root,
-                plans_root=ctx.roots.plans_root,
-            ),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "research_coverage"),
-            STATE_RESEARCH_COVERAGE_TTL_S,
-            lambda: compute_research_coverage(
-                curriculum_root=ctx.roots.curriculum_root,
-                plans_root=ctx.roots.plans_root,
-            ),
-        )
-    except Exception as exc:
-        logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
-
-
-def schedule_state_scan_warmup(ctx: MonitorContext) -> threading.Thread:
-    """Detached warm for pipeline-versions + default weak-points (#7973).
-
-    Returns the warmup thread — the one started here, or the still-running one
-    from an earlier call (which may belong to a different ctx) — so callers can
-    join it instead of polling for effects (#8570).
-    """
-    global _state_scan_warm_thread
-    with _state_scan_warm_lock:
-        if _state_scan_warm_thread is not None and _state_scan_warm_thread.is_alive():
-            return _state_scan_warm_thread
-        worker = threading.Thread(
-            target=_run_state_scan_warmup,
-            args=(ctx,),
-            name="state-scan-warmup",
-            daemon=True,
-        )
-        _state_scan_warm_thread = worker
-        worker.start()
-        return worker
-
-
-def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
-    unknown = sorted(set(request.query_params) - allowed)
-    if unknown:
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "UNKNOWN_QUERY_PARAMETER", "parameters": unknown},
-        )
-    duplicates = sorted(key for key in allowed if len(request.query_params.getlist(key)) > 1)
-    if duplicates:
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "DUPLICATE_QUERY_PARAMETER", "parameters": duplicates},
-        )
-
-
-def _validate_preparation_selector(value: str, label: str) -> None:
-    if not _PREPARATION_SELECTOR_RE.fullmatch(value):
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "INVALID_SELECTOR", "selector": label},
-        )
-
-
-def _preparation_response(request: Request, payload: dict[str, Any], *, status_code: int = 200) -> Response:
-    body, etag_hex = preparation_state.response_document(payload)
-    headers = {
-        "ETag": f'"{etag_hex}"',
-        "Cache-Control": "no-cache",
-        "X-Source-Identity": payload["freshness"]["source_identity"],
-    }
-    if status_code == 200 and _matches_etag(request.headers.get("If-None-Match"), etag_hex):
-        return Response(status_code=304, headers=headers)
-    return Response(content=body, media_type="application/json", status_code=status_code, headers=headers)
-
-
-def _with_state_meta(
-    result: dict[str, Any],
-    *,
-    source: str,
-    stale_after_s: float,
-    cache: str,
-    age_s: float | None = None,
-) -> dict[str, Any]:
-    """Attach freshness metadata without mutating the cached payload."""
-    payload = dict(result)
-    generated_at = str(payload.get("generated_at") or _isoformat_z(datetime.now(UTC)))
-    meta: dict[str, Any] = {
-        "generated_at": generated_at,
-        "source": source,
-        "cache": cache,
-        "stale_after_s": stale_after_s,
-        "stale": False,
-    }
-    if age_s is not None:
-        meta["age_s"] = round(age_s, 3)
-    payload["meta"] = meta
-    return payload
 
 
 def _isoformat_z(value: datetime) -> str:
@@ -546,12 +216,12 @@ def _sum_agent_spend(
     records: list[CostRecord],
     *,
     agent: str,
-    since: datetime,
+    since: datetime, codex_account: str | None = None,
 ) -> tuple[float, int]:
     spent = 0.0
     missing = 0
     for record in records:
-        if _agent_key(getattr(record, "agent", None)) != agent:
+        if not _spend_row_counts(record, agent, codex_account):
             continue
         if getattr(record, "mtime", datetime.min.replace(tzinfo=UTC)) < since:
             continue
@@ -633,7 +303,6 @@ def _in_flight_by_agent(
     tasks_dir: Path | None = None, *, task_generation: list[str] | None = None,
 ) -> dict[str, int] | None:
     """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
-
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
     ``delegate_api.active_delegate_tasks`` (dead ``running`` PIDs → zombie, not in-flight).
     None when active work cannot be observed (missing tasks dir, read failure):
@@ -659,7 +328,8 @@ def _in_flight_by_agent(
     for task in tasks:
         agent = normalize_seat(str(task.get("agent") or ""))
         if agent:
-            in_flight[agent] = in_flight.get(agent, 0) + 1
+            key = _in_flight_agent_key(agent, task, tasks_dir)
+            in_flight[key] = in_flight.get(key, 0) + 1
     return in_flight
 
 
@@ -1516,7 +1186,8 @@ def _compute_dispatch_routing_budget(
     cb_max_age_s = None
     cb_freshness: dict[str, str] = {}
     cb_had_any_before_notebook = False
-    refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
+    # ``codex`` refreshes account a (stored with ``codex:a``). ``codex:b`` is the other subscription.
+    refreshed_codexbar = refresh_provider_usage_data((*SUBSCRIPTION_LANES, "codex:b")) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
         if lane == "cursor":
@@ -2031,9 +1702,26 @@ def _compute_dispatch_routing_budget(
     blocked_ranked = [x for x in ranked if _runtime_blocked(x)]
     ranked = free_ranked + blocked_ranked
 
+    codex_accounts, b_missing = _codex_subscription_rows(
+        agents,
+        budgets=budgets,
+        records=records,
+        window_start=window_start,
+        resets_at=resets_at,
+        current_time=current_time,
+        usage_dir=usage_dir,
+        in_flight=in_flight_by_agent,
+        fresh_probe=refreshed_codexbar.get("codex:b") if fresh_codexbar else None,
+        is_stale=is_stale,
+        project_root=project_root,
+        account_a_reserve=reset_reserve,
+    )
+    missing_cost_records += b_missing
+
     return {
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
+        "codex_accounts": codex_accounts,
         "reset_reserve": reset_reserve,
         "api_accounts": api_accounts,
         "in_flight": in_flight_by_agent,
@@ -2073,6 +1761,224 @@ def _compute_dispatch_routing_budget(
         },
         "ranked_by_headroom": ranked,
     }
+
+
+_CODEXBAR_PUBLIC_FIELDS = (
+    "primary_used_pct",
+    "primary_remaining_pct",
+    "secondary_used_pct",
+    "secondary_remaining_pct",
+    "tertiary_used_pct",
+    "tertiary_remaining_pct",
+    "weekly_used_pct",
+    "weekly_remaining_pct",
+    "windows",
+    "provider_windows",
+    "credit_balance",
+    "reset_credits",
+    "weekly_resets_at",
+    "weekly_pace_delta_pct",
+    "weekly_expected_pct",
+    "will_last_to_reset",
+    "pace_summary",
+    "stale",
+    "freshness",
+    "age_s",
+    "fetched_at",
+    "failure_kind",
+    "last_failure_at",
+    "last_failure_code",
+    "source",
+)
+
+
+# Ledger labels for Codex account b. An unlabelled row stays on account a.
+_CODEX_B_LEDGER = frozenset({"b-sub", "b", "codex:b"})
+
+
+def _as_mapping(value: object) -> dict[str, Any]:
+    return cast(dict[str, Any], value) if isinstance(value, dict) else {}
+
+
+def _ledger_codex_account(record: object) -> str:
+    """``b-sub`` when the cost row names account b; otherwise account a."""
+    raw = getattr(record, "codex_account", None)
+    return "b-sub" if isinstance(raw, str) and raw in _CODEX_B_LEDGER else "sub"
+
+
+def _spend_row_counts(record: object, agent: str, codex_account: str | None) -> bool:
+    """Whether this cost row belongs on the requested lane and Codex account."""
+    if _agent_key(getattr(record, "agent", None)) != agent:
+        return False
+    if agent != "codex":
+        return True
+    wanted = "b-sub" if codex_account in _CODEX_B_LEDGER else "sub"
+    return _ledger_codex_account(record) == wanted
+
+
+def _in_flight_agent_key(agent: str, task: dict[str, Any], tasks_dir: Path | None) -> str:
+    """``codex:b`` for a b-sub task. Every other seat keeps its agent name."""
+    if agent == "codex" and _task_codex_account(task, tasks_dir) == "b-sub":
+        return "codex:b"
+    return agent
+
+
+def _task_codex_account(task: dict[str, Any], tasks_dir: Path | None) -> str:
+    """Account of one active Codex task. The summary omits the field, so read the task file."""
+    raw = task.get("codex_account")
+    if raw is None and tasks_dir is not None:
+        task_id = task.get("task_id")
+        if isinstance(task_id, str):
+            raw = _task_file_codex_account(tasks_dir, task_id)
+    return "b-sub" if isinstance(raw, str) and raw in _CODEX_B_LEDGER else "sub"
+
+
+def _task_file_codex_account(tasks_dir: Path, task_id: str) -> object:
+    if not task_id or task_id in {".", ".."} or "/" in task_id or "\\" in task_id:
+        return None
+    path = tasks_dir / f"{task_id}.json"
+    try:
+        resolved = path.resolve()
+        root = tasks_dir.resolve()
+    except OSError:
+        return None
+    if resolved.parent != root or not resolved.is_file():
+        return None
+    try:
+        payload = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    return payload.get("codex_account")
+
+
+def _codex_account_cap(budgets: dict[str, Any], account: str) -> float:
+    """Weekly dollar cap for one Codex subscription. Account b uses its own entry."""
+    config = _as_mapping(budgets.get("codex"))
+    if account == "b-sub":
+        row = _as_mapping(_as_mapping(config.get("accounts")).get("b"))
+        raw = row.get("weekly_cap_usd")
+        if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+            return float(raw)
+    raw = config.get("weekly_cap_usd")
+    if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+        return float(raw)
+    return 0.0
+
+
+def _codex_account_probe_row(
+    probe: dict[str, Any] | None,
+    *,
+    label: str,
+    spent: float,
+    cap: float,
+    resets_at: str,
+    current_time: datetime,
+    usage_dir: Path | None,
+    is_stale: bool,
+    in_flight: int | None,
+) -> dict[str, Any]:
+    """One Codex subscription's pace and ledger. ``label`` is ``sub`` or ``b-sub``."""
+    has_cap = cap > 0
+    burn = _burn_pct(spent, cap) if has_cap else None
+    status = _status_from_burn(burn, has_cap=has_cap)
+    if not has_cap:
+        status = "unknown"
+        burn = None
+    source = "ledger_burn"
+    row: dict[str, Any] = {
+        "codex_account": label,
+        "spent_7d_usd": _round_money(spent),
+        "weekly_cap_usd": _round_money(cap) if has_cap else None,
+        "burn_pct_7d": burn,
+        "status": status,
+        "status_source": source,
+        "resets_at": resets_at,
+        "remaining_pct": (100.0 - burn) if burn is not None else None,
+        "in_flight": in_flight,
+    }
+    if not isinstance(probe, dict):
+        return row
+    used = _capacity_used_pct(probe)
+    if used is not None:
+        row["status"] = _status_from_weekly_used(
+            used,
+            probe,
+            lane="codex:b" if label == "b-sub" else "codex",
+            info={**probe, "codexbar": probe},
+            now=current_time,
+            snapshot_stale=bool(probe.get("stale")) or is_stale,
+            usage_dir=usage_dir,
+        )
+        row["burn_pct_7d"] = used
+        row["remaining_pct"] = 100.0 - used
+        row["status_source"] = "weekly_pace"
+    if probe.get("weekly_resets_at"):
+        row["resets_at"] = probe["weekly_resets_at"]
+    row["codexbar"] = {key: probe.get(key) for key in _CODEXBAR_PUBLIC_FIELDS}
+    row["freshness"] = probe.get("freshness", "unavailable")
+    row["age_s"] = probe.get("age_s")
+    row["stale"] = bool(probe.get("stale"))
+    for name in ("credit_balance", "reset_credits"):
+        row[name] = probe.get(name)
+    return row
+
+
+def _codex_subscription_rows(
+    agents: dict[str, Any],
+    *,
+    budgets: dict[str, Any],
+    records: list[CostRecord],
+    window_start: datetime,
+    resets_at: str,
+    current_time: datetime,
+    usage_dir: Path | None,
+    in_flight: dict[str, int] | None,
+    fresh_probe: dict[str, Any] | None,
+    is_stale: bool,
+    project_root: Path | None,
+    account_a_reserve: dict[str, Any],
+) -> tuple[dict[str, Any], int]:
+    """``codex:a`` mirrors account a (the ``codex`` key). ``codex:b`` is account b's own row.
+
+    Account b's numbers are not written onto ``agents.codex``.
+    """
+    a_count = None if in_flight is None else in_flight.get("codex", 0)
+    a_row = {
+        **agents.get("codex", {}),
+        "codex_account": "sub",
+        "in_flight": a_count,
+        "reset_reserve": account_a_reserve,
+    }
+    b_spent, b_missing = _sum_agent_spend(records, agent="codex", since=window_start, codex_account="b-sub")
+    probe = fresh_probe if isinstance(fresh_probe, dict) else get_provider_usage_data("codex:b")
+    b_count = None if in_flight is None else in_flight.get("codex:b", 0)
+    b_row = _codex_account_probe_row(
+        probe if isinstance(probe, dict) else None,
+        label="b-sub",
+        spent=b_spent,
+        cap=_codex_account_cap(budgets, "b-sub"),
+        resets_at=resets_at,
+        current_time=current_time,
+        usage_dir=usage_dir,
+        is_stale=is_stale,
+        in_flight=b_count,
+    )
+    try:
+        b_row["runtime"] = summarize_lane_runtime("codex", usage_dir=usage_dir, codex_account="b-sub")
+    except Exception as exc:  # telemetry must not drop the account row
+        logging.getLogger("state_router").debug("account b runtime summary failed: %s", exc)
+        b_row["runtime"] = {"source": "agent_runtime_jsonl", "headroom_blocked": None, "codex_account": "b-sub"}
+    # The seat health record is account a's. Copying it would mark b avoid when a failed.
+    runtime = b_row.get("runtime")
+    if isinstance(runtime, dict) and runtime.get("headroom_blocked") and b_row.get("status") in {None, "cool", "warm", "unknown"}:
+        b_row["status"] = "hot"
+    _attach_credit_states({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
+    _attach_routing_facts({"codex:b": b_row}, current_time=current_time, snapshot_stale=is_stale, usage_dir=usage_dir)
+    root = project_root or Path(__file__).resolve().parents[2]
+    b_row["reset_reserve"] = load_reset_reserve(root, now=current_time, codex_info=b_row, account="b-sub")
+    return {"codex:a": a_row, "codex:b": b_row}, b_missing
 
 
 def compute_routing_budget(
@@ -2202,7 +2108,11 @@ def compute_routing_budget(
 
 
 def _aged_routing_budget(
-    payload: object, age_s: float, *, stale: bool = True, claude_fields: dict[str, Any] | None = None,
+    payload: object,
+    age_s: float,
+    *,
+    stale: bool = True,
+    claude_fields: dict[str, Any] | None = None,
 ) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
@@ -2278,11 +2188,13 @@ async def _with_live_lane_errors(payload: object, tasks_dir: Path, cache_key: st
     # Only snapshots displaying a failure need a second read. Healthy warm
     # reads retain the cheap cache path; new failures arrive with the refresh.
     if not any(
-        isinstance(info, dict) and isinstance(info.get("health"), dict)
+        isinstance(info, dict)
+        and isinstance(info.get("health"), dict)
         and (info["health"].get("last_error") or info["health"].get("error"))
         for info in payload["agents"].values()
     ):
         return payload
+
     def _scan() -> LaneHealthScan:
         try:
             return scan_lane_health(tasks_dir)
@@ -2349,7 +2261,7 @@ def _routing_budget_compute(
             transport=transport,
             fresh_codexbar=False,
             refresh_requested=refresh_requested,
-            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+            budget_config_path=machinery_path("config/agent_budgets.yaml"),
             tasks_dir=tasks_dir,
             project_root=ctx.roots.project_root,
             curriculum_root=ctx.roots.curriculum_root,
@@ -2410,14 +2322,17 @@ async def routing_budget(
         value = await _with_live_lane_errors(value, tasks_dir, cache_key)
         claude_fields = await revalidated_routing_budget_fields()
         return _aged_routing_budget(
-            value, state_helpers._ttl_clock() - observed.started_at,
+            value,
+            state_helpers._ttl_clock() - observed.started_at,
             stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
             claude_fields=claude_fields,
         )
     observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
     claude_fields = await revalidated_routing_budget_fields()
     return _aged_routing_budget(
-        value, state_helpers._ttl_clock() - observed.started_at, stale=observed.invalidated.is_set(),
+        value,
+        state_helpers._ttl_clock() - observed.started_at,
+        stale=observed.invalidated.is_set(),
         claude_fields=claude_fields,
     )
 
@@ -2433,929 +2348,47 @@ async def github_budget():
     )
 
 
-@router.get("/summary")
-async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
-    """Full project snapshot. One call replaces 5 bash scripts at session start."""
-    cache_key = _ctx_cache_key(ctx, "summary")
-    if fresh:
-        cache_invalidate(cache_key)
-    was_warm = (not fresh) and cache_get(cache_key, STATE_SUMMARY_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
-        STATE_SUMMARY_TTL_S,
-        lambda: compute_summary(
-            curriculum_root=ctx.roots.curriculum_root,
-            project_root=ctx.roots.project_root,
-            plans_root=ctx.roots.plans_root,
-        ),
-        force=fresh,
-    )
-    aged = cache_get_with_age(cache_key, STATE_SUMMARY_TTL_S)
-    return _with_state_meta(
-        result,
-        source="fs:plans+orchestration+artifacts+research",
-        stale_after_s=STATE_SUMMARY_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=0.0 if aged is None else aged[1],
-    )
+_state_scan_warm_lock = threading.Lock()
+_state_scan_warm_thread: threading.Thread | None = None
 
 
-@router.get("/pipeline/{track_id}")
-async def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
-    """Per-module pipeline state for one track."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    cache_key = _ctx_cache_key(ctx, "pipeline", track_id)
-    if fresh:
-        cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:orchestration+audit+research",
-            stale_after_s=STATE_PIPELINE_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_pipeline_track,
-        track_id,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        project_root=ctx.roots.project_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return _with_state_meta(
-        result,
-        source="fs:orchestration+audit+research",
-        stale_after_s=STATE_PIPELINE_TTL_S,
-        cache="miss",
-        age_s=0.0,
-    )
-
-
-@router.get("/pipeline-versions")
-async def pipeline_versions(
-    track: str | None = Query(None), fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
-):
-    """All modules grouped by pipeline version."""
-    cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
-    was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
-        STATE_PIPELINE_VERSIONS_TTL_S,
-        lambda: _compute_pipeline_versions_payload(ctx, track),
-        force=fresh,
-    )
-    age_s = 0.0
-    aged = cache_get_with_age(cache_key, STATE_PIPELINE_VERSIONS_TTL_S)
-    if aged is not None:
-        age_s = aged[1]
-    return _with_state_meta(
-        result,
-        source="fs:orchestration",
-        stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=age_s,
-    )
-
-
-@router.get("/preparation")
-async def preparation_roster(
-    request: Request,
-    track: str | None = Query(None, min_length=1, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]*$"),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Active-manifest learner bundle and publication state, without readiness sweeps."""
-    _validate_preparation_query(request, {"track"})
-
-    def _compute() -> dict[str, Any]:
-        data_root = preparation_data_root(
-            project_root=ctx.roots.project_root,
-            live_repo_root=ctx.roots.live_repo_root,
-        )
-        authority = build_repository_authority(
-            project_root=ctx.roots.project_root,
-            live_repo_root=data_root,
-        )
-        return preparation_state.build_roster(
-            repo_root=data_root,
-            authority=authority,
-            track=track,
-        )
-
+def _run_state_scan_warmup(ctx: MonitorContext, follow_ups: tuple[Callable[[MonitorContext], None], ...] = ()) -> None:
+    """Warm the routing-budget cache after process start, then run the product scan warms in order."""
     try:
-        payload = await asyncio.to_thread(_compute)
-    except preparation_state.InactiveTrackError as exc:
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "INACTIVE_TRACK", "manifest_authority": "fallback-diagnostic-only"},
-        ) from exc
-    except preparation_state.UnknownTrackError as exc:
-        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_TRACK"}) from exc
-    except (preparation_state.PreparationStateError, RepositoryAuthorityError) as exc:
-        raise HTTPException(
-            status_code=503,
-            detail={"code": "PREPARATION_AUTHORITY_UNAVAILABLE"},
-        ) from exc
-    return _preparation_response(request, payload)
-
-
-@router.get("/preparation/{track}/{slug}")
-async def preparation_module(
-    request: Request,
-    track: str,
-    slug: str,
-    evidence: Literal["summary", "expanded"] = Query("summary"),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """One fail-closed canonical preparation decision plus orthogonal publication state."""
-    _validate_preparation_query(request, {"evidence"})
-    _validate_preparation_selector(track, "track")
-    _validate_preparation_selector(slug, "slug")
-
-    def _compute() -> dict[str, Any]:
-        data_root = preparation_data_root(
-            project_root=ctx.roots.project_root,
-            live_repo_root=ctx.roots.live_repo_root,
+        # First: a dispatch launch right after a restart reads this key (#12512).
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "routing-budget", "dispatch", 0),
+            ROUTING_BUDGET_TTL_S,
+            _routing_budget_compute(ctx, "dispatch", False),
         )
-        authority = build_repository_authority(
-            project_root=ctx.roots.project_root,
-            live_repo_root=data_root,
-        )
-        return preparation_state.build_module_state(
-            repo_root=data_root,
-            authority=authority,
-            track=track,
-            slug=slug,
-            expanded=evidence == "expanded",
-        )
-
-    try:
-        payload = await asyncio.to_thread(_compute)
-    except preparation_state.InactiveTrackError as exc:
-        raise HTTPException(
-            status_code=422,
-            detail={"code": "INACTIVE_TRACK", "manifest_authority": "fallback-diagnostic-only"},
-        ) from exc
-    except preparation_state.UnknownTrackError as exc:
-        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_TRACK"}) from exc
-    except (preparation_state.PreparationStateError, RepositoryAuthorityError) as exc:
-        raise HTTPException(
-            status_code=503,
-            detail={"code": "PREPARATION_AUTHORITY_UNAVAILABLE"},
-        ) from exc
-
-    status_code = 404 if payload["manifest_authority"] == "off-manifest" else 200
-    return _preparation_response(request, payload, status_code=status_code)
+    except Exception as exc:
+        logging.getLogger("state_router").warning("Routing-budget warmup failed: %s", exc)
+    for follow_up in follow_ups:
+        follow_up(ctx)
 
 
-@router.get("/weak-points")
-async def weak_points(
-    track: str | None = Query(None),
-    min_score: int = Query(7, ge=0, le=10),
-    limit: int = Query(20, ge=1, le=500),
-    fresh: bool = Query(False),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Modules with quality issues: failing audit, thin research, or low word count."""
-    cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    return await cache_get_or_compute_async(
-        cache_key,
-        STATE_WEAK_POINTS_TTL_S,
-        lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
-        force=fresh,
-    )
+def schedule_state_scan_warmup(
+    ctx: MonitorContext, follow_ups: tuple[Callable[[MonitorContext], None], ...] = ()
+) -> threading.Thread:
+    """Detached warm for the routing budget, then the product state scans (#7973).
 
-
-@router.get("/failing")
-async def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """All modules with audit failures or phase failures."""
-
-    def _compute():
-        failing = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                audit = get_audit_status(track_dir, slug)
-
-                if version in ("v6", "v5"):
-                    phases = read_v2_state(orch_dir).get("phases", {})
-                    failed_phases = [
-                        k for k, v in phases.items() if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                elif version == "v3":
-                    v3 = read_v3_state(orch_dir)
-                    phases = v3.get("phases", {})
-                    failed_phases = [
-                        k.replace("v3-", "")
-                        for k, v in phases.items()
-                        if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                else:
-                    failed_phases = []
-
-                if audit["status"] == "fail" or failed_phases:
-                    failing.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "pipeline_version": version,
-                            "audit_status": audit["status"],
-                            "failed_phases": failed_phases,
-                            "blocking_issues": audit.get("blocking_issues", []),
-                        }
-                    )
-
-        return {"count": len(failing), "modules": failing}
-
-    return await asyncio.to_thread(_compute)
-
-
-def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
-    """Read per-module LLM-QG aggregate + per-dimension scores from llm_qg.json.
-
-    Returns ``{"aggregate": {...}|None, "dimensions": {dim: score}}``. Missing,
-    unreadable, or malformed files degrade to ``aggregate=None`` / empty dims
-    (a module may not have been QG-scored yet). The dimension map is read
-    generically, so a newly-added dim (e.g. ``beauty`` once Phase A lands) is
-    surfaced automatically with no change here.
+    Returns the warmup thread — the one started here, or the still-running one
+    from an earlier call (which may belong to a different ctx) — so callers can
+    join it instead of polling for effects (#8570).
     """
-    level = module_dir.parent.name
-    slug = module_dir.name
-    data = current_payload_for_module(level, slug, module_dir)
-    path = module_dir / "llm_qg.json"
-    if data is None:
-        if not llm_qg_file_is_current_for_module(module_dir, path):
-            return {"aggregate": None, "dimensions": {}}
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError, ValueError):
-            return {"aggregate": None, "dimensions": {}}
-    if not isinstance(data, dict):
-        return {"aggregate": None, "dimensions": {}}
-
-    raw_agg = data.get("aggregate") if isinstance(data, dict) else None
-    aggregate: dict[str, Any] | None = None
-    if isinstance(raw_agg, dict):
-        aggregate = {
-            "verdict": raw_agg.get("verdict"),
-            "terminal_verdict": raw_agg.get("terminal_verdict"),
-            "min_score": raw_agg.get("min_score"),
-            "min_dim": raw_agg.get("min_dim"),
-            "failing_dims": raw_agg.get("failing_dims", []),
-            "warning_dims": raw_agg.get("warning_dims", []),
-        }
-
-    raw_dims = data.get("dimensions") if isinstance(data, dict) else None
-    dimensions: dict[str, Any] = {}
-    if isinstance(raw_dims, dict):
-        for dim, entry in raw_dims.items():
-            if isinstance(entry, dict) and "score" in entry:
-                dimensions[dim] = entry.get("score")
-    return {"aggregate": aggregate, "dimensions": dimensions}
-
-
-def _module_score_record(track_id: str, track_dir: Path, num: int, slug: str) -> dict[str, Any]:
-    """Assemble one module's status + LLM-QG score record."""
-    audit = get_audit_status(track_dir, slug)
-    scores = _read_llm_qg_scores(safe_join(track_dir, slug))
-    return {
-        "track": track_id,
-        "num": num,
-        "slug": slug,
-        "status": audit.get("status"),
-        "word_count": audit.get("word_count"),
-        "word_target": audit.get("word_target"),
-        "scored": scores["aggregate"] is not None,
-        "aggregate": scores["aggregate"],
-        "dimensions": scores["dimensions"],
-    }
-
-
-@router.get("/scores/{track}")
-async def module_scores(track: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Per-module status + LLM-QG aggregate + per-dimension scores for a track.
-
-    The view the user watches the seminar quality-gate prototype converge with
-    (docs/folk-epic/seminar-quality-gate-design.md). Source of truth:
-    ``curriculum/l2-uk-en/<track>/<slug>/llm_qg.json`` (``.aggregate`` +
-    ``.dimensions``) plus the audit status cache. Always fresh (small reads, no
-    cache) so polling during a build reflects the latest round.
-    """
-
-    def _compute() -> dict[str, Any] | None:
-        level_cfg = next((l for l in LEVELS if l["id"] == track), None)
-        if not level_cfg:
-            return None
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-        plan_slugs = get_plan_slugs(track, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
-        modules = [_module_score_record(track, track_dir, num, slug) for num, slug in plan_slugs]
-        scored = sum(1 for m in modules if m["scored"])
-        return {"track": track, "count": len(modules), "scored": scored, "modules": modules}
-
-    result = await asyncio.to_thread(_compute)
-    if result is None:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
-    return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
-
-
-@router.get("/scores/{track}/{slug}")
-async def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
-    """One module's status + LLM-QG aggregate + per-dimension scores."""
-
-    def _compute() -> dict[str, Any] | None:
-        level_cfg = next((l for l in LEVELS if l["id"] == track), None)
-        if not level_cfg:
-            return None
-        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-        plan_slugs = get_plan_slugs(track, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
-        match = next((ns for ns in plan_slugs if ns[1] == slug), None)
-        if match is None:
-            return {"__not_found__": "slug"}
-        num, resolved_slug = match
-        return _module_score_record(track, track_dir, num, resolved_slug)
-
-    result = await asyncio.to_thread(_compute)
-    if result is None:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
-    if result.get("__not_found__"):
-        return JSONResponse(status_code=404, content={"error": f"Module '{slug}' not found in track '{track}'"})
-    return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
-
-
-@router.get("/research-coverage")
-async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track research completeness and quality."""
-    cache_key = _ctx_cache_key(ctx, "research_coverage")
-    if fresh:
-        cache_invalidate(cache_key)
-    was_warm = (not fresh) and cache_get(cache_key, STATE_RESEARCH_COVERAGE_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
-        STATE_RESEARCH_COVERAGE_TTL_S,
-        lambda: compute_research_coverage(
-            curriculum_root=ctx.roots.curriculum_root,
-            plans_root=ctx.roots.plans_root,
-        ),
-        force=fresh,
-    )
-    aged = cache_get_with_age(cache_key, STATE_RESEARCH_COVERAGE_TTL_S)
-    return _with_state_meta(
-        result,
-        source="fs:research+dossiers",
-        stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=0.0 if aged is None else aged[1],
-    )
-
-
-@router.get("/research/{track_id}")
-async def research_detail(
-    track_id: str, min_score: int = 9, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
-):
-    """Per-module research quality with dimension scores, gaps, and upgrade queue."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    cache_key = _ctx_cache_key(ctx, "research_detail", track_id, min_score)
-    if fresh:
-        cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_DETAIL_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:research+dossiers",
-            stale_after_s=STATE_RESEARCH_DETAIL_TTL_S,
-            cache="hit",
-            age_s=age_s,
+    global _state_scan_warm_thread
+    with _state_scan_warm_lock:
+        if _state_scan_warm_thread is not None and _state_scan_warm_thread.is_alive():
+            return _state_scan_warm_thread
+        worker = threading.Thread(
+            target=_run_state_scan_warmup,
+            args=(ctx, follow_ups),
+            name="state-scan-warmup",
+            daemon=True,
         )
-
-    result = await asyncio.to_thread(
-        compute_research_detail,
-        track_id,
-        level_cfg,
-        min_score,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return _with_state_meta(
-        result,
-        source="fs:research+dossiers",
-        stale_after_s=STATE_RESEARCH_DETAIL_TTL_S,
-        cache="miss",
-        age_s=0.0,
-    )
-
-
-@router.get("/review-coverage")
-async def review_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track review and final-review coverage + quality signal."""
-    cache_key = _ctx_cache_key(ctx, "review_coverage")
-    if fresh:
-        cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_REVIEW_COVERAGE_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:review+audit",
-            stale_after_s=STATE_REVIEW_COVERAGE_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_review_coverage,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return _with_state_meta(
-        result,
-        source="fs:review+audit",
-        stale_after_s=STATE_REVIEW_COVERAGE_TTL_S,
-        cache="miss",
-        age_s=0.0,
-    )
-
-
-@router.get("/build-status/{track_id}")
-async def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Compact build progress for a track."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    cache_key = _ctx_cache_key(ctx, "build_status", track_id)
-    cached = cache_get(cache_key, ttl=15.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_build_status_track,
-        track_id,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/build-status")
-async def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
-    """All-tracks build progress in one call."""
-    cache_key = _ctx_cache_key(ctx, "build_status_all")
-    cached = cache_get(cache_key, ttl=30.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_build_status_all,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/module-range/{track_id}")
-async def module_range_status(
-    track_id: str,
-    start: int = Query(..., ge=1),
-    end: int = Query(..., ge=1),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Deterministic committed-file status for a module number range."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-    if end < start:
-        return JSONResponse(
-            status_code=422,
-            content={"error": "end must be greater than or equal to start"},
-        )
-    cache_key = _ctx_cache_key(ctx, "module_range", track_id, start, end)
-    cached = cache_get(cache_key, ttl=30.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_module_range_status,
-        track_id,
-        level_cfg,
-        start=start,
-        end=end,
-        curriculum_root=ctx.roots.curriculum_root,
-        project_root=ctx.roots.project_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/llm-qg/{track_id}")
-async def llm_qg_track(
-    track_id: str,
-    verbose: bool = Query(
-        False,
-        description="True = include full dimension evidence. Default returns score-only dimensions.",
-    ),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Per-module LLM quality-gate scores from build artifacts on disk."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    return await asyncio.to_thread(
-        compute_llm_qg_track,
-        track_id,
-        level_cfg,
-        verbose=verbose,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-
-
-@router.get("/build-stats")
-async def build_stats_all(ctx: MonitorContext = Depends(get_ctx)):
-    """V6 build stats aggregated across all tracks."""
-    return await asyncio.to_thread(compute_build_stats_all, curriculum_root=ctx.roots.curriculum_root)
-
-
-@router.get("/build-stats/{track_id}")
-async def build_stats(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
-    """V6 build-stats.jsonl parsed: attempts, success rate, recent entries."""
-    return await asyncio.to_thread(compute_build_stats, track_id, curriculum_root=ctx.roots.curriculum_root)
-
-
-@router.get("/module/{track_id}/{num}")
-async def module_detail(track_id: str, num: int, ctx: MonitorContext = Depends(get_ctx)):
-    """Single module deep-dive: pipeline state, audit, research, review, comms."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    result = await asyncio.to_thread(
-        compute_module_detail,
-        track_id,
-        num,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-        message_db=ctx.stores.message_db,
-    )
-    if "error" in result:
-        return JSONResponse(status_code=404, content=result)
-    return result
-
-
-@router.get("/module/{track_id}/slug/{slug}")
-async def module_detail_by_slug(
-    track_id: str,
-    slug: str,
-    verbose: bool = Query(
-        False,
-        description="True = full compute_module_detail payload. Default returns a compact view.",
-    ),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Slug-keyed module state (#1313 / Codex-1).
-
-    Same data as ``/api/state/module/{track_id}/{num}`` but keyed by
-    slug (the stable identifier agents actually use) and returning a
-    compact default shape so cold-start / "what's the state of this
-    module right now" calls don't pay for the full dump.
-
-    Pass ``?verbose=true`` to get the original rich payload.
-
-    Compact shape::
-        {
-          "track": "a1", "slug": "...", "num": 3,
-          "phase":            "review",   # current or last-complete phase name
-          "last_successful":  "review",   # last phase whose status was complete
-          "pipeline_version": "v6",
-          "needs_rebuild":    false,
-          "audit":  {"status": "pass", "word_count": ..., "word_target": ...},
-          "review": {"score": 9.4, "verdict": "PASS"},
-          "final_review": {"exists": true, "verdict": "PASS"} | null,
-          "blocking_issues":  [...],
-          "retry_count":      0,
-          "worker":           "gemini"
-        }
-    """
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Track '{track_id}' not found"},
-        )
-
-    plan_slugs = get_plan_slugs(track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root)
-    match = next(((n, s) for n, s in plan_slugs if s == slug), None)
-    if not match:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Module '{slug}' not found in track '{track_id}'"},
-        )
-    num, _ = match
-
-    full = await asyncio.to_thread(
-        compute_module_detail,
-        track_id,
-        num,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-        message_db=ctx.stores.message_db,
-    )
-    if "error" in full:
-        return JSONResponse(status_code=404, content=full)
-
-    if verbose:
-        return full
-
-    # --- compact projection -------------------------------------------
-    phases = full.get("phases") or {}
-    current_phase = None
-    last_successful = None
-    retry_count = 0
-    current_worker = None
-    for name, data in phases.items():
-        if not isinstance(data, dict):
-            continue
-        status = data.get("status")
-        if status == "in_progress":
-            current_phase = name
-        if status == "complete":
-            last_successful = name
-        # attempts / retry_count key varies by pipeline version; surface
-        # whatever the phase payload carries so consumers don't have to.
-        for key in ("retries", "retry_count", "attempts"):
-            val = data.get(key)
-            if isinstance(val, int):
-                retry_count = max(retry_count, val)
-        if status == "in_progress":
-            exec_ = data.get("executor") if isinstance(data.get("executor"), dict) else {}
-            current_worker = exec_.get("agent")
-
-    audit = full.get("audit") or {}
-    review = full.get("review") or {}
-    final_review = full.get("final_review")
-    track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-    llm_qg = await asyncio.to_thread(read_llm_qg, track_dir, slug)
-
-    return {
-        "track": track_id,
-        "slug": slug,
-        "num": num,
-        "phase": current_phase or last_successful or "pending",
-        "last_successful": last_successful,
-        "pipeline_version": full.get("pipeline_version"),
-        "needs_rebuild": full.get("needs_rebuild"),
-        "audit": {
-            "status": audit.get("status"),
-            "word_count": audit.get("word_count"),
-            "word_target": audit.get("word_target"),
-        },
-        "review": {
-            "score": review.get("score") if isinstance(review, dict) else None,
-            "verdict": review.get("verdict") if isinstance(review, dict) else None,
-        },
-        "final_review": (
-            {"exists": final_review.get("exists"), "verdict": final_review.get("verdict")}
-            if isinstance(final_review, dict) and final_review.get("exists")
-            else None
-        ),
-        "blocking_issues": audit.get("blocking_issues") or [],
-        "retry_count": retry_count,
-        "worker": current_worker,
-        "llm_qg": summarize_llm_qg(llm_qg),
-    }
-
-
-@router.get("/final-reviews/{track_id}")
-async def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    cache_key = _ctx_cache_key(ctx, "final_reviews", track_id)
-    cached = cache_get(cache_key, ttl=60.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_final_reviews,
-        track_id,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/enrichment-status")
-async def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """Which plans are enriched per track."""
-    cache_key = _ctx_cache_key(ctx, "enrichment_status", track or "all")
-    cached = cache_get(cache_key, ttl=120.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_enrichment_status,
-        track,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/track-health/{track_id}")
-async def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
-    """Single-call track health summary."""
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
-
-    cache_key = _ctx_cache_key(ctx, "track_health", track_id)
-    cached = cache_get(cache_key, ttl=30.0)
-    if cached is not None:
-        return cached
-    result = await asyncio.to_thread(
-        compute_track_health,
-        track_id,
-        level_cfg,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-        project_root=ctx.roots.project_root,
-        git_root=ctx.roots.live_repo_root,
-    )
-    cache_set(cache_key, result)
-    return result
-
-
-@router.get("/issues")
-async def outstanding_issues(
-    track: str | None = Query(None),
-    severity: str | None = Query(None),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Aggregated outstanding issues from review files + audit failures."""
-    return await asyncio.to_thread(
-        compute_issues,
-        track,
-        severity,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
-    )
-
-
-# ==================== RANGE STATUS (#1313 / Codex-4) ====================
-
-
-@router.get("/range/{track_id}")
-async def range_status(
-    track_id: str,
-    start: int = Query(1, ge=1, description="First module number (inclusive)."),
-    end: int | None = Query(
-        None,
-        description="Last module number (inclusive). Omit to go to the end of the track.",
-    ),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    """Compact per-module table for one [start, end] slice of a track.
-
-    Designed for overnight batch runs: one call tells you exactly
-    which module is in which phase, whether it's blocked, current
-    review score, and which worker is assigned. Builds on
-    ``compute_pipeline_track`` so the data source is shared with the
-    existing ``/api/state/pipeline/{track}`` endpoint — just slice
-    + flatten (reviewer Codex-4 / #1313).
-    """
-    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
-    if not level_cfg:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Track '{track_id}' not found"},
-        )
-
-    def _compute() -> dict:
-        full = compute_pipeline_track(
-            track_id,
-            level_cfg,
-            curriculum_root=ctx.roots.curriculum_root,
-            project_root=ctx.roots.project_root,
-            plans_root=ctx.roots.plans_root,
-        )
-        modules = full.get("modules", []) if isinstance(full, dict) else full
-        if not isinstance(modules, list):
-            return {"error": "pipeline_track returned non-list"}
-
-        sliced = [
-            m
-            for m in modules
-            if isinstance(m, dict)
-            and isinstance(m.get("num"), int)
-            and m["num"] >= start
-            and (end is None or m["num"] <= end)
-        ]
-
-        compact = []
-        for m in sliced:
-            phases = m.get("phases") or {}
-            # "current phase" = last phase whose status is in_progress or
-            # the last completed phase (whichever is latest). Keeps the
-            # compact view actionable without a separate call.
-            current = None
-            last_complete = None
-            failed_phase = None
-            for name, data in phases.items():
-                if not isinstance(data, dict):
-                    continue
-                status = data.get("status")
-                if status == "in_progress":
-                    current = name
-                if status == "complete":
-                    last_complete = name
-                if status == "failed":
-                    failed_phase = name
-            phase_now = current or failed_phase or last_complete or "pending"
-
-            review = m.get("review") or {}
-            audit = m.get("audit")
-
-            # ``compute_pipeline_track`` does NOT emit a ``blocker``
-            # field (reviewer Codex BLOCKER on #1312 pre-merge:
-            # previously this was always null and documented as
-            # "whether a module is blocked"). Derive it here so the
-            # compact dashboard actually answers the stated question:
-            #   - a failed phase name — the pipeline gave up at that step
-            #   - "audit_fail" — audit ran but produced a fail verdict
-            #   - first blocking_issues[*].gate name — specific gate
-            #   - null — nothing known to be blocking
-            blocker: str | None = None
-            if failed_phase:
-                blocker = f"failed:{failed_phase}"
-            elif isinstance(audit, str) and audit.lower() == "fail":
-                blocker = "audit_fail"
-            blocking_issues = m.get("blocking_issues") or []
-            if blocker is None and blocking_issues:
-                first = blocking_issues[0]
-                if isinstance(first, dict):
-                    gate = first.get("gate") or first.get("type")
-                    blocker = f"gate:{gate}" if gate else "audit_issue"
-
-            compact.append(
-                {
-                    "num": m["num"],
-                    "slug": m.get("slug"),
-                    "phase": phase_now,
-                    "phase_status": (
-                        phases.get(phase_now, {}).get("status") if isinstance(phases.get(phase_now), dict) else None
-                    ),
-                    "worker": (
-                        phases.get(phase_now, {}).get("executor", {}).get("agent")
-                        if isinstance(phases.get(phase_now), dict)
-                        and isinstance(phases.get(phase_now, {}).get("executor"), dict)
-                        else None
-                    ),
-                    "audit": audit,
-                    "review_score": (review.get("score") if isinstance(review, dict) else None),
-                    "words": m.get("words"),
-                    "word_target": m.get("word_target"),
-                    "blocker": blocker,
-                    "pipeline_version": m.get("pipeline_version"),
-                    "needs_rebuild": m.get("needs_rebuild"),
-                }
-            )
-
-        return {
-            "track": track_id,
-            "start": start,
-            "end": end,
-            "count": len(compact),
-            "modules": compact,
-        }
-
-    return await asyncio.to_thread(_compute)
+        _state_scan_warm_thread = worker
+        worker.start()
+        return worker
 
 
 # ==================== MANIFEST (#1309) ====================

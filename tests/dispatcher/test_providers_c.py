@@ -71,15 +71,24 @@ def run_stub(invocation, spec):
 @pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("effort", (None, "high"))
 @pytest.mark.parametrize("contributor", (None, "on", "off"))
-def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
+def test_muse_argv(spec, stub_env, model, mode, effort, contributor, monkeypatch):
+    # Transport flags are independent of the file sandbox, exercised below.
+    monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
     options = {} if contributor is None else {"contributor_mode": contributor}
     spec = replace(spec, model=model, mode=mode, effort=effort, options=options)
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            muse.build(spec, stub_env)
+        return
     invocation = muse.build(spec, stub_env)
     expected = [
         "exec",
         "--json",
+        "--provider",
+        "meta",
         "--model",
         model,
+        "--disable-web-tools",
         "--workspace",
         str(spec.worktree),
         "--worktree",
@@ -87,14 +96,13 @@ def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
         "--prompt-file",
         str(spec.prompt_file),
         "--contributor-mode",
-        contributor or "off",
+        "off",
     ]
     if effort:
         expected += ["--reasoning-effort", effort]
-    if mode == "workspace-write":
-        expected += ["--permission-profile", ":unrestricted"]
-    else:
-        expected += ["--permission-profile", ":read-only", "--disable-write", "--disable-shell"]
+    expected += ["--permission-profile", ":read-only", "--disable-shell",
+                 "--disable-reminders", "--disable-request-user-input", "--no-foreign-personal-context",
+                 "--config", 'run.toolset=["read_file"]', "--disable-write"]
     assert run_stub(invocation, spec) == expected
     assert invocation.env["MUSE_NO_AUTO_UPDATE"] == "1"
     assert "MUSE_NO_AUTO_UPDATE" not in stub_env
@@ -322,3 +330,73 @@ def test_cursor_text_deltas_do_not_displace_the_result_or_duplicate_assistant_te
     assert cursor.parse(stream(*deltas, result), "", 0, None).text == "Checking.\n\nVERDICT: APPROVE"
     mixed = [*deltas, _assistant("VERDICT: APPROVE"), result]
     assert cursor.parse(stream(*mixed), "", 0, None).text == "VERDICT: APPROVE"
+
+
+def test_muse_provider_cannot_bypass_file_sandbox(tmp_path, monkeypatch):
+    """Defect class: Muse provider bypasses file sandbox and reads host files."""
+    import shutil
+
+    from scripts.agent_runtime.adapters.muse import confined_muse_argv
+    from scripts.guardrails.worktree_containment import NotAGitRepositoryError
+
+    if not shutil.which("bwrap"):
+        pytest.skip("bubblewrap is required for the real file boundary")
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees/dispatch/muse/containment"
+    workspace.mkdir(parents=True)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside")
+    (workspace / "inside.txt").write_text("inside")
+    (workspace / "escape").symlink_to(outside)
+    install = tmp_path / "install"
+    install.mkdir()
+    launcher = install / "muse"
+    launcher.write_text('#!/bin/sh\nexec "$(dirname "$0")/muse-bin-1.0.0-R1" "$@"\n')
+    launcher.chmod(0o700)
+    (install / ".muse-version").write_text("1.0.0-R1")
+    native = install / "muse-bin-1.0.0-R1"
+    native.write_text(
+        '#!/bin/sh\n'
+        'test "$(cat "$HOME/.config/muse/auth.json")" = synthetic-auth-only || exit 19\n'
+        'cat inside.txt\n'
+        f'if cat "{outside}" 2>/dev/null; then exit 20; fi\n'
+        'if cat ../outside.txt 2>/dev/null; then exit 21; fi\n'
+        'if cat escape 2>/dev/null; then exit 22; fi\n'
+        'if printf changed > inside.txt 2>/dev/null; then exit 23; fi\n'
+        f'if printf bad > "{outside}" 2>/dev/null; then exit 24; fi\n'
+        'if printf bad > ../outside.txt 2>/dev/null; then exit 25; fi\n'
+        'if printf bad > escape 2>/dev/null; then exit 26; fi\n'
+        'if printf bad > "$HOME/.config/muse/auth.json" 2>/dev/null; then exit 27; fi\n'
+    )
+    native.chmod(0o700)
+    source_home = tmp_path / "empty-home"
+    source_home.mkdir()
+    auth = source_home / ".config/muse/auth.json"
+    auth.parent.mkdir(parents=True)
+    auth.write_text("synthetic-auth-only")
+    auth.chmod(0o600)
+    monkeypatch.setenv("HOME", str(source_home))
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
+    prompt = tmp_path / "brief.txt"
+    prompt.write_text("fixture")
+    spec = TaskSpec("muse-containment", "muse", MODELS[0], None, "read-only", workspace, prompt, tmp_path / "final")
+    # Defect class: direct sandbox callers mount a primary or symlink target writable.
+    for rejected in (tmp_path, tmp_path / ".worktrees", tmp_path / "install"):
+        with pytest.raises(ValueError, match="muse_dispatch_worktree_required"):
+            muse.build(replace(spec, worktree=rejected), {})
+    linked = tmp_path / "linked-workspace"
+    linked.symlink_to(workspace, target_is_directory=True)
+    with pytest.raises(NotAGitRepositoryError, match="symlink or not a directory"):
+        muse.build(replace(spec, worktree=linked), {})
+    invocation = muse.build(spec, {"PATH": str(install) + os.pathsep + os.defpath, "HOME": str(source_home)})
+    assert invocation.argv[:6] == confined_muse_argv([], workspace, "read-only", spec.task_id)[:6]
+    result = subprocess.run(invocation.argv, cwd=workspace, env=invocation.env, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "inside"
+    assert (workspace / "inside.txt").read_text() == "inside"
+    assert not list(scratch.glob("task-scratch/*/scratch"))
+
+    with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+        muse.build(replace(spec, mode="workspace-write"), {})

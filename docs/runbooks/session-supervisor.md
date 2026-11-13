@@ -511,13 +511,16 @@ it does not certify a production lease or atomic admission. Do not run a receipt
 against a live production driver.
 
 ```bash
-.venv/bin/python - <<'PY'
+.venv/bin/python - scripts.ai_agent_bridge._ui_codex <<'PY'
+import importlib
 import json
 import os
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
-from scripts.ai_agent_bridge import _ui_codex as ui
+
+ui = importlib.import_module(sys.argv[1])
 
 with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"], prefix="wake-receipt-") as scratch:
     subprocess.run(["git", "init", "-q", scratch], check=True)

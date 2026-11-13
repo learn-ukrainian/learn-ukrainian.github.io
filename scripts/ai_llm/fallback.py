@@ -284,7 +284,7 @@ def resolve_allowed_auth_modes(
         return ("oauth",)
     # auto / unset / invalid
     if cooldown_active is None:
-        from ai_llm.cooldown import is_api_cooldown_active
+        from .cooldown import is_api_cooldown_active
         cooldown_active = is_api_cooldown_active()
     if not _has_gemini_api_key(source):
         return ("oauth",)
@@ -455,7 +455,7 @@ def run_gemini_fallback_ladder(
                 # entirely without a probe call. 429 on OAuth rung is
                 # handled as "try next model" only — no cooldown.
                 if rung.auth_mode == "api":
-                    from ai_llm.cooldown import set_api_cooldown
+                    from .cooldown import set_api_cooldown
                     expires_at = set_api_cooldown()
                     emit(
                         f"  🧊 API cooldown armed until {time.strftime('%H:%M:%S', time.localtime(expires_at))} "

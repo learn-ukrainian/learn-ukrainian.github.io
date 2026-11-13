@@ -14,7 +14,7 @@ from scripts.review.app_bot_authorship import (
     listing_app_bot_login,
     verified_app_bot_login,
 )
-from scripts.review.reviewer_resolver import ResolverInputs, complete_author_families
+from scripts.review.reviewer_resolver import ResolverInputs, complete_author_families, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 SHA = "a" * 40
@@ -185,6 +185,16 @@ def test_resolver_treats_a_verified_bot_as_complete_authorship_excluding_no_fami
     assert complete_author_families(inputs, "unknown") == {VERIFIED_APP_BOT}
     mixed = ResolverInputs(author_model="", author_families=frozenset({VERIFIED_APP_BOT, "anthropic"}), claude_account=HOST_ACCOUNT)
     assert complete_author_families(mixed, "unknown") == {VERIFIED_APP_BOT, "anthropic"}
+    pair = ResolverInputs(
+        author_model="", author_families=frozenset({VERIFIED_APP_BOT, "anthropic", "openai"}),
+        author_commits=(("a" * 40, "anthropic"), ("b" * 40, "openai"), ("c" * 40, VERIFIED_APP_BOT)),
+        risk="critical", claude_account=HOST_ACCOUNT, structural=True,
+    )
+    plan = resolve_reviewer(pair)
+    assert plan.selected is None and {seat.family for seat in plan.quorum} == {"anthropic", "openai"}
+    assert {scope.reviewer_family: scope.commits for scope in plan.review_scopes} == {
+        "anthropic": ("b" * 40,), "openai": ("a" * 40,),
+    }
 
 
 @pytest.mark.parametrize("repository", [None, "", "owner", "other/repo", "owner/repo/extra"])

@@ -141,6 +141,9 @@ REFUSED_PATHS = (
     ".github/ISSUE_TEMPLATE/naturalness-quality.md",
     "site/package.json",
     "README.md",
+    # The Monitor's product half is not an allowlisted root (C-4687).
+    "scripts/project_api/hramatka_generator.py",
+    "scripts/project_api/sources_router.py",
     # Exclusions inside allowlisted roots.
     "scripts/agent_runtime/kimi_admission.py",
     "scripts/agent_runtime/kimi_boundary.py",
@@ -148,8 +151,6 @@ REFUSED_PATHS = (
     "scripts/agent_runtime/env_sanitize.py",
     "scripts/agent_runtime/adapters/kimi.py",
     "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md",
-    "scripts/api/hramatka_generator.py",
-    "scripts/api/sources_router.py",
     "tests/api/test_hramatka_router.py",
     "scripts/orchestration/curriculum_readiness.py",
     "scripts/orchestration/prompt_contracts.py",
@@ -256,9 +257,8 @@ def test_a_cyrillic_free_component_is_admitted():
 @pytest.mark.parametrize(
     ("scope", "excluded"),
     [
-        ("scripts/api/**", "scripts/api/hramatka_"),
-        ("scripts/api", "scripts/api/sources_router.py"),
-        ("scripts/api/", "scripts/api/hramatka_"),
+        ("scripts/orchestration", "scripts/orchestration/curriculum_"),
+        ("scripts/orchestration/", "scripts/orchestration/curriculum_"),
         ("scripts/orchestration/**", "scripts/orchestration/curriculum_"),
         ("scripts/agent_runtime/**", "scripts/agent_runtime/kimi_admission.py"),
         ("tests/api/test_*.py", "tests/api/test_hramatka_"),
@@ -709,8 +709,9 @@ def test_refusal_states_the_policy_and_names_the_alternative_seats():
     message = _refusal(mode="read-only", review=True, paths=("docs/x.md",))
     assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
     assert kimi_admission.POLICY_LINE in message
-    # The Cursor seat's concrete xAI pin makes it a consult alternative (#9274).
-    assert "consults and discussions → claude, codex, cursor, or grok" in message
+    # Cursor has no approved pin and Grok is retired (GROK-CANCEL-1110): neither is a consult alternative.
+    consults = message.split("consults and discussions → ", 1)[1].split(";", 1)[0]
+    assert set(re.split(r",\s*(?:or\s+)?", consults)) == {"claude", "codex"}
     assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
 
 
@@ -719,7 +720,8 @@ def test_kimi_refusal_distinguishes_reviewers_from_consult_and_discussion_seats(
     reviews, consultations = message.split("reviews → ", 1)[1].split("; consults and discussions → ", 1)
     assert "agy" in reviews and "claude" in reviews and "codex" in reviews and "reviewer resolver" in reviews
     assert "grok" not in reviews and "kimi" not in reviews
-    assert "grok" in consultations
+    assert "claude" in consultations and "codex" in consultations
+    assert "grok" not in consultations and "cursor" not in consultations
 
 
 def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch):

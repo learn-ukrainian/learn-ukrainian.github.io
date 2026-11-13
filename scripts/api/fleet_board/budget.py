@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
+from scripts.common.repo_root import machinery_path
+
 from .. import state_router
 from ..monitor_context import MonitorContext
 from ..subscription_usage import _parse_resets_at_any, compute_usage_pace
@@ -151,6 +153,10 @@ def project_budget(raw: Mapping[str, Any], *, now: datetime | None = None) -> di
     for lane in state_router.SUBSCRIPTION_LANES:
         info = agents.get(lane)
         rows.append(_subscription(lane, info if isinstance(info, Mapping) else {}, now=moment))
+    # ``codex`` above is account a. Account b is its own row when the budget published one.
+    accounts = raw.get("codex_accounts")
+    if isinstance(accounts, Mapping) and isinstance(accounts.get("codex:b"), Mapping):
+        rows.append(_subscription("codex:b", accounts["codex:b"], now=moment))
     return {"subscriptions": rows}
 
 
@@ -160,7 +166,7 @@ def _invoke(ctx: MonitorContext) -> dict[str, Any]:
         transport="dispatch",
         fresh_codexbar=False,
         refresh_requested=False,
-        budget_config_path=roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+        budget_config_path=machinery_path("config/agent_budgets.yaml"),
         tasks_dir=roots.batch_state_dir / "tasks",
         project_root=roots.project_root,
         curriculum_root=roots.curriculum_root,

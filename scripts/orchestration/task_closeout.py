@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
@@ -37,6 +38,13 @@ from scripts.github_check_rollup import collapse_status_rollup
 from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration import lifecycle_observation, task_identity, task_lifecycle
 from scripts.publish.github import Request, request_run
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 Runner = Callable[[list[str], str | None], str]
 
@@ -224,7 +232,7 @@ class GhGitHubAdapter:
             # Closed epics stay in the file for launcher and Work API consumers.
             # Membership roots are the audit registry only (#12176).
             registry = issue_stream_audit.load_registry(
-                self.repo_root / "scripts" / "config" / "issue_streams.yaml",
+                self.repo_root / _MACHINERY / "config" / "issue_streams.yaml",
                 audit_only=True,
             )
         except (OSError, ValueError) as exc:
@@ -1011,32 +1019,37 @@ def _write_and_print(path: Path, ledger: Mapping[str, Any], extra: Mapping[str, 
     return 0
 
 
-def cmd_init(args: argparse.Namespace) -> int:
+def _identity_from_args(args: argparse.Namespace) -> dict[str, Any]:
     fresh_fields = ("repository", "stream_epic", "issue", "semantic_title", "task_family", "role", "terminal_goal")
     try:
         if args.identity_file:
             if any(getattr(args, field) is not None for field in fresh_fields):
                 raise task_lifecycle.LifecycleError("fresh identity options require --fresh-task-id")
-            identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
-        else:
-            missing = ["--" + field.replace("_", "-") for field in fresh_fields if getattr(args, field) is None]
-            if missing:
-                raise task_lifecycle.LifecycleError("--fresh-task-id requires " + ", ".join(missing))
-            identity = task_identity.build_identity(
-                repository=args.repository,
-                stream_epic=args.stream_epic,
-                stream_epic_url=None,
-                github_issue_number=args.issue,
-                github_issue_url=None,
-                semantic_title=args.semantic_title,
-                task_family=args.task_family,
-                role=args.role,
-                fresh_task_id=args.fresh_task_id,
-                terminal_goal=args.terminal_goal,
-                lifecycle_state="active",
-            )
+            return task_identity.validate_identity(_json_file(Path(args.identity_file)))
+        missing = ["--" + field.replace("_", "-") for field in fresh_fields if getattr(args, field) is None]
+        if missing:
+            raise task_lifecycle.LifecycleError("--fresh-task-id requires " + ", ".join(missing))
+        return task_identity.build_identity(
+            repository=args.repository,
+            stream_epic=args.stream_epic,
+            stream_epic_url=None,
+            github_issue_number=args.issue,
+            github_issue_url=None,
+            semantic_title=args.semantic_title,
+            task_family=args.task_family,
+            role=args.role,
+            fresh_task_id=args.fresh_task_id,
+            terminal_goal=args.terminal_goal,
+            lifecycle_state="active",
+        )
     except ValueError as exc:
         raise task_lifecycle.LifecycleError(str(exc)) from exc
+
+
+def _issue_snapshot(
+    args: argparse.Namespace, identity: Mapping[str, Any], now: str,
+) -> tuple[GhGitHubAdapter, dict[str, Any], list[int] | None, Mapping[str, Any] | None]:
+    """Resolve exact stream membership and snapshot the authoritative issue ACs."""
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
     registered_epics = adapter.registered_stream_epics(identity["repository"])
@@ -1063,10 +1076,16 @@ def cmd_init(args: argparse.Namespace) -> int:
             "issue membership does not resolve to the identity's exact registered "
             f"stream epic: {membership['reason']}"
         )
-    now = args.now or utc_now()
     snapshot = task_lifecycle.build_ac_snapshot(
         issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now
     )
+    return adapter, snapshot, registered_epics, membership_report
+
+
+def cmd_init(args: argparse.Namespace) -> int:
+    identity = _identity_from_args(args)
+    now = args.now or utc_now()
+    adapter, snapshot, registered_epics, membership_report = _issue_snapshot(args, identity, now)
     ledger = task_lifecycle.build_lifecycle(
         identity,
         author_family=args.author_family,
@@ -1097,6 +1116,45 @@ def cmd_init(args: argparse.Namespace) -> int:
             membership_report=membership_report,
         )
         return _write_and_print(path, ledger)
+
+
+def cmd_bind_successor(args: argparse.Namespace) -> int:
+    """Archive the issue's predecessor ledger byte for byte and bind a successor identity."""
+    identity = _identity_from_args(args)
+    now = args.now or utc_now()
+    adapter, snapshot, registered_epics, membership_report = _issue_snapshot(args, identity, now)
+    path = _state_file(args, identity)
+    with task_lifecycle.lifecycle_lock(path, blocking=False):
+        try:
+            raw = path.read_bytes()
+        except FileNotFoundError as exc:
+            raise task_lifecycle.EvidencePolicyError(
+                "PREDECESSOR_LEDGER_MISSING", f"no predecessor lifecycle ledger at {path}; use init"
+            ) from exc
+        try:
+            predecessor = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise task_lifecycle.LifecycleError(f"cannot read lifecycle ledger {path}: {exc}") from exc
+        if not isinstance(predecessor, dict):
+            raise task_lifecycle.LifecycleError("lifecycle ledger must contain a JSON object")
+        archive_path, archive_sha256 = task_lifecycle.predecessor_archive_path(path, raw)
+        ledger = task_lifecycle.bind_successor(
+            predecessor,
+            identity=identity,
+            author_family=args.author_family,
+            ac_snapshot=snapshot,
+            required_checks=args.required_check,
+            pr_number=args.pr,
+            archive_path=archive_path,
+            archive_sha256=archive_sha256,
+            now=now,
+        )
+        _assert_live_memberships(
+            adapter, ledger, registered_epics=registered_epics,
+            membership_report=membership_report,
+        )
+        task_lifecycle.archive_predecessor(raw, archive_path, archive_sha256)
+        return _write_and_print(path, ledger, {"predecessor_ledger": ledger["predecessor_ledger"]})
 
 
 def cmd_locate(args: argparse.Namespace) -> int:
@@ -1250,11 +1308,30 @@ def cmd_recover_local(args: argparse.Namespace) -> int:
     return 0
 
 
+def _add_identity_arguments(parser: argparse.ArgumentParser) -> None:
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--identity-file", help="Existing task-identity.v1 JSON envelope, e.g. identity.json.")
+    source.add_argument("--fresh-task-id", help="Exact current native thread ID; required fresh identity options follow.")
+    parser.add_argument("--repository", help="Fresh identity repository, e.g. org/repo; required with --fresh-task-id.")
+    parser.add_argument("--stream-epic", type=int, help="Fresh identity registered stream epic number; required with --fresh-task-id.")
+    parser.add_argument("--issue", type=int, help="Fresh identity GitHub issue number; required with --fresh-task-id.")
+    parser.add_argument("--semantic-title", help="Fresh identity task description; required with --fresh-task-id.")
+    parser.add_argument("--task-family", help="Fresh identity lowercase task family slug; required with --fresh-task-id.")
+    parser.add_argument("--role", help="Fresh identity assigned role, e.g. driver; required with --fresh-task-id.")
+    parser.add_argument("--terminal-goal", choices=sorted(task_identity.TERMINAL_GOALS), help="Fresh identity completion goal; required with --fresh-task-id.")
+    parser.add_argument("--ac-policy", required=True, help='JSON mapping of stable AC IDs to due states and evidence types, e.g. ac-policy.json.')
+    parser.add_argument("--author-family", required=True, help='Implementation author family, e.g. codex.')
+    parser.add_argument("--required-check", action="append", required=True, help='Required CI check name, e.g. CI Gate; repeat for each check.')
+    parser.add_argument("--pr", type=int, help='Exact GitHub PR number; init defaults to unbound.')
+    parser.add_argument("--state-file", help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    parser.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout init --help\n  .venv/bin/python -m scripts.orchestration.task_closeout carrier --state-file ledger.json\n  .venv/bin/python -m scripts.orchestration.task_closeout reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} init --help\n  .venv/bin/python -m {_MODULE} carrier --state-file ledger.json\n  .venv/bin/python -m {_MODULE} reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
     )
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1262,8 +1339,8 @@ def build_parser() -> argparse.ArgumentParser:
         "recover-local", help="Legacy tasks only: append a verified local observation for an already-reaped merged task.",
         description="Legacy tasks only: recover historical dispatch facts from a verified preservation bundle, after removal.\nDispatch v2 tasks need no recovery; mutate close-issue observes the cleanup of a merged task itself.\nChild association and historical common-closeout recovery read GitHub; ordinary recovery is offline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Example:
-  .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
+        epilog=f"""Example:
+  .venv/bin/python -m {_MODULE} recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
 Outputs: One append-only lifecycle receipt, or the existing verified receipt on retry.
 Exit codes: 0 = recovered/replayed; 2 = typed refusal; no GitHub mutation.
 Related: docs/runbooks/worktree-cleanup.md; #10752.
@@ -1287,24 +1364,26 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
         "init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.",
         description="Initialize from a validated envelope or an exact fresh native task ID.\nFresh threads require all identity options and never resume a rollover.",
     )
-    source = init.add_mutually_exclusive_group(required=True)
-    source.add_argument("--identity-file", help="Existing task-identity.v1 JSON envelope, e.g. identity.json.")
-    source.add_argument("--fresh-task-id", help="Exact current native thread ID; required fresh identity options follow.")
-    init.add_argument("--repository", help="Fresh identity repository, e.g. org/repo; required with --fresh-task-id.")
-    init.add_argument("--stream-epic", type=int, help="Fresh identity registered stream epic number; required with --fresh-task-id.")
-    init.add_argument("--issue", type=int, help="Fresh identity GitHub issue number; required with --fresh-task-id.")
-    init.add_argument("--semantic-title", help="Fresh identity task description; required with --fresh-task-id.")
-    init.add_argument("--task-family", help="Fresh identity lowercase task family slug; required with --fresh-task-id.")
-    init.add_argument("--role", help="Fresh identity assigned role, e.g. driver; required with --fresh-task-id.")
-    init.add_argument("--terminal-goal", choices=sorted(task_identity.TERMINAL_GOALS), help="Fresh identity completion goal; required with --fresh-task-id.")
-    init.add_argument("--ac-policy", required=True, help='JSON mapping of stable AC IDs to due states and evidence types, e.g. ac-policy.json.')
-    init.add_argument("--author-family", required=True, help='Implementation author family, e.g. codex.')
-    init.add_argument("--required-check", action="append", required=True, help='Required CI check name, e.g. CI Gate; repeat for each check.')
-    init.add_argument("--pr", type=int, help='Exact GitHub PR number; init defaults to unbound.')
-    init.add_argument("--state-file", help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
-    init.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
+    _add_identity_arguments(init)
     init.add_argument("--reuse", action="store_true", help='Reuse only an identical effective AC snapshot/policy without resetting evidence; differences exit 2. Default refuses an existing ledger.')
     init.set_defaults(func=cmd_init)
+
+    successor = sub.add_parser(
+        "bind-successor", help="Archive an issue's existing ledger byte for byte and bind a successor identity.",
+        description="Bind a successor thread to an issue whose lifecycle ledger another identity created.\nUnder a non-blocking ledger lock it stores the predecessor's exact bytes under predecessors/,\nthen writes a fresh ledger with the same AC snapshot, policy and PR that records the archive path and sha256.\nEvidence starts empty: re-record current-head evidence. Nothing is deleted.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=f"""Example:
+  .venv/bin/python -m {_MODULE} bind-successor --identity-file identity.json --ac-policy ac-policy.json --author-family codex --required-check 'CI Gate'
+Outputs: The predecessor archive, the successor ledger and its carrier as JSON.
+Exit codes: 0 = bound; 2 = typed refusal (LIFECYCLE_LOCK_HELD, PREDECESSOR_LEDGER_MISSING,
+  SUCCESSOR_{{REPOSITORY,ISSUE,STREAM,PR,POLICY,AUTHOR_FAMILY}}_MISMATCH, AC_SNAPSHOT_MISMATCH,
+  SUCCESSOR_IDENTITY_UNCHANGED, SUCCESSOR_REMAINING_SCOPE_RECORDED, PREDECESSOR_ARCHIVE_CONFLICT),
+  ledger unchanged.
+Related: task-lifecycle-closeout.md; takeover skill; #12844.
+""",
+    )
+    _add_identity_arguments(successor)
+    successor.set_defaults(func=cmd_bind_successor)
 
     locate = sub.add_parser("locate", help="Resolve the shared ledger path from task-identity.v1.")
     locate.add_argument("--identity-file", required=True, help='Validated task-identity.v1 JSON envelope, e.g. identity.json.')
@@ -1331,7 +1410,7 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
         "correct-evidence-types", help="Append an attributed correction to one criterion's required evidence types.",
         description="Correct wrongly frozen required evidence types while retaining prior snapshots and proof.\nUse before the criterion is checked or the issue is completed; never substitutes for evidence.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout correct-evidence-types --state-file ledger.json --ac-id AC-02 --required-evidence document --required-evidence review --actor codex/task --reason 'Documentation criterion'\nOutputs: Atomic local ledger update and append-only correction receipt; reads GitHub without mutating it.\nExit codes: 0: corrected or replayed; 2: typed refusal, ledger unchanged.\nRelated: task-lifecycle-closeout.md; #12608.",
+        epilog=f"Examples:\n  .venv/bin/python -m {_MODULE} correct-evidence-types --state-file ledger.json --ac-id AC-02 --required-evidence document --required-evidence review --actor codex/task --reason 'Documentation criterion'\nOutputs: Atomic local ledger update and append-only correction receipt; reads GitHub without mutating it.\nExit codes: 0: corrected or replayed; 2: typed refusal, ledger unchanged.\nRelated: task-lifecycle-closeout.md; #12608.",
     )
     correction.add_argument("--state-file", required=True, help="Existing lifecycle JSON ledger, e.g. ledger.json.")
     correction.add_argument("--ac-id", required=True, help="Exact stable criterion ID, e.g. AC-02.")

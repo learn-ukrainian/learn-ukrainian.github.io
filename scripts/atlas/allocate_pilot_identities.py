@@ -24,10 +24,11 @@ from types import SimpleNamespace
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.common.scratch import ensure_scratch_root
+from lu_machinery.guardrails import worktree_containment as containment
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+
 from scripts.atlas import word_card_foundation as foundation
-from scripts.common.scratch import ensure_scratch_root
-from scripts.guardrails import worktree_containment as containment
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 ROOT = Path.cwd()
 MANIFEST = ROOT / "registry/atlas/pilot/pilot-v1.json"
@@ -448,9 +449,10 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
                     })
             registry["registry_version"] = before["registry_version"] + 1
 
+        from lu_machinery.storage.topology import store_data_dir
+
         from scripts.atlas import word_card_assembly as assembly
         from scripts.atlas import word_card_sources as src
-        from scripts.storage.topology import store_data_dir
 
         raw = foundation.readonly(stack, assembly.raw_cache_path(sources_path))
         modern_inputs = SimpleNamespace(records=records,

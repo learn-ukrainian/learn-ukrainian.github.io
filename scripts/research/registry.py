@@ -30,7 +30,9 @@ ETag.
 
 from __future__ import annotations
 
+import errno
 import fnmatch
+import functools
 import json
 import logging
 import math
@@ -43,9 +45,93 @@ from typing import Any
 
 import yaml
 
-from scripts.audit import check_research_registry as crr
+from scripts.common import repo_root
+from scripts.ops.product_entry import load_configured_module
 
 logger = logging.getLogger("research.registry")
+
+# Product checker. The module name is data in scripts/audit/research_check.v1.json,
+# loaded here so this machinery package does not import a product module.
+_CHECK_SCHEMA = "learn-ukrainian.research-check.v1"
+_CHECK_KEYS = ("check_module", "corpus_module")
+_MODULE_NAME_RE = re.compile(r"scripts(?:\.[A-Za-z_][A-Za-z0-9_]*)+")
+_CHECK_CONFIG_REL = Path("scripts/audit/research_check.v1.json")
+
+
+def _selected_product_root(product_root: Path | None) -> Path:
+    """The product checkout to read from: ``product_root``, else :func:`repo_root.product_root`'s choice."""
+    if product_root is not None:
+        if not isinstance(product_root, Path) or not product_root.is_absolute():
+            raise RuntimeError("product root is not an absolute path")
+        return product_root
+    try:
+        return repo_root.product_root()
+    except repo_root.ProductRootError as exc:
+        raise RuntimeError(f"research check has no product checkout: {exc}") from None
+
+
+def _check_config_path(root: Path) -> Path:
+    """The research-check data file of the product checkout ``root``."""
+    return root / _CHECK_CONFIG_REL
+
+
+def research_check_config(*, product_root: Path | None = None) -> dict[str, str]:
+    """Return the check and corpus module names from the product data file.
+
+    ``product_root`` selects the product checkout; omitted, it is the one
+    :func:`scripts.common.repo_root.product_root` selects (C-4746). The file is
+    read when this function runs, not when the module is imported. A missing
+    product checkout or a missing or unreadable file refuses the call.
+    """
+    path = _check_config_path(_selected_product_root(product_root))
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError("research check config is unreadable") from exc
+    if not isinstance(payload, dict) or payload.get("schema") != _CHECK_SCHEMA:
+        raise RuntimeError("research check config schema mismatch")
+    if set(payload) != {"schema", *_CHECK_KEYS}:
+        raise RuntimeError("research check config fields mismatch")
+    names: dict[str, str] = {}
+    for key in _CHECK_KEYS:
+        value = payload[key]
+        if not isinstance(value, str) or _MODULE_NAME_RE.fullmatch(value) is None:
+            raise RuntimeError(f"research check config {key} is not a module name")
+        names[key] = value
+    return names
+
+
+def _load_configured_module(key: str, *, product_root: Path | None = None) -> Any:
+    """Validate the research-check data and load its configured product module from one checkout."""
+    root = _selected_product_root(product_root)
+    name = research_check_config(product_root=root)[key]
+    try:
+        return load_configured_module(name, product_root=root)
+    except ModuleNotFoundError as exc:
+        if exc.name and (name == exc.name or name.startswith(exc.name + ".")):
+            location = root.joinpath(*exc.name.split(".")).with_suffix(".py")
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(location)) from None
+        raise
+
+
+@functools.lru_cache(maxsize=8)
+def _cached_check_module(root: str) -> Any:
+    return _load_configured_module("check_module", product_root=Path(root))
+
+
+def configured_check_module(*, product_root: Path | None = None) -> Any:
+    """The product registry checker named by the research-check data file.
+
+    The product checkout is selected first and the module is cached by that
+    checkout, so a call for another checkout never reuses this one's module.
+    Importing this module does not read product data. A missing checkout or
+    file refuses the call.
+    """
+    return _cached_check_module(os.fspath(_selected_product_root(product_root)))
+
+
+def _resolve_check(check: Any | None) -> Any:
+    return configured_check_module() if check is None else check
 
 # --------------------------------------------------------------------------- #
 # Kill switch (ADR-011 §"Runtime kill switch")
@@ -239,7 +325,7 @@ class RegistryRuntime:
         return sha256(canonical_json_bytes(items)).hexdigest()
 
 
-def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
+def load_runtime(*, root: Path | None = None, check: Any | None = None) -> RegistryRuntime | None:
     """Load the registry and validate it via P1's ``validate_registry`` — the single
     semantic authority for schema, lifecycle, supersession, consumer, ownership, and
     digest-policy invariants (this module never duplicates that logic).
@@ -252,15 +338,16 @@ def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
     reports drift and nothing else, the runtime is still built and only the drifted
     ids are marked ``valid=False`` so healthy records keep routing.
     """
+    checker = _resolve_check(check)
     root = root if root is not None else _live_repo_root()
     path = _registry_path(root)
     try:
-        raw, data = crr.load_registry(path)
+        raw, data = checker.load_registry(path)
     except (OSError, ValueError, yaml.YAMLError, RecursionError) as exc:
         logger.warning("research registry: cannot load %s (%s); no research surface", path, exc)
         return None
     try:
-        result = crr.validate_registry(data, project_root=root, raw_text=raw)
+        result = checker.validate_registry(data, project_root=root, raw_text=raw)
     except (OSError, ValueError, yaml.YAMLError, RecursionError, KeyError, TypeError) as exc:
         logger.warning(
             "research registry: %s failed validation (%s); no research surface",
@@ -281,7 +368,7 @@ def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
     return RegistryRuntime(root=root, pairs=pairs)
 
 
-def load_runtime_safe(*, root: Path | None = None) -> RegistryRuntime | None:
+def load_runtime_safe(*, root: Path | None = None, check: Any | None = None) -> RegistryRuntime | None:
     """Fail-open boundary around :func:`load_runtime` for every HTTP-facing caller.
 
     ``load_runtime`` already turns known-bad input (missing file, malformed YAML,
@@ -292,7 +379,7 @@ def load_runtime_safe(*, root: Path | None = None) -> RegistryRuntime | None:
     must check :func:`is_enabled` first; this function does not gate on the flag.
     """
     try:
-        return load_runtime(root=root)
+        return load_runtime(root=root, check=check)
     except Exception as exc:
         logger.warning(
             "research registry: unexpected %s loading runtime; no research surface",
@@ -544,7 +631,9 @@ def _slug_ok(record_id: str) -> bool:
     return _SLUG_RE.fullmatch(record_id) is not None
 
 
-def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | None:
+def record_body(
+    runtime: RegistryRuntime, record_id: str, *, check: Any | None = None
+) -> tuple[str, str] | None:
     """Return (markdown_body, etag_hex) for a record, or ``None`` if unavailable.
 
     ``None`` (→ generic 404 at the API) covers: malformed id, unknown/invalid/
@@ -559,10 +648,11 @@ def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | N
         return None
     if record.get("access_class") == "private-local":
         return None
+    checker = _resolve_check(check)
     try:
-        raw_projection = crr._record_projection(record, runtime.root)
-        body = crr.normalize_digest_projection(raw_projection)
-    except crr.ProvenanceError:
+        raw_projection = checker._record_projection(record, runtime.root)
+        body = checker.normalize_digest_projection(raw_projection)
+    except checker.ProvenanceError:
         return None
     body_bytes = body.encode("utf-8")
     if len(body_bytes) > MAX_RECORD_BYTES:
@@ -580,7 +670,7 @@ def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | N
     # ETag and serving unreconciled bytes. A fresh load_runtime() call would
     # exclude this record entirely; this call must not do less.
     stored = record["content_hash"]
-    if crr.compute_content_hash(body) != stored:
+    if checker.compute_content_hash(body) != stored:
         logger.warning(
             "research registry: record %r content changed since load_runtime(); refusing to serve",
             record_id,

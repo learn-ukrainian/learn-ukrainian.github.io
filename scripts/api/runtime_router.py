@@ -21,10 +21,12 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
+from scripts.common.repo_root import machinery_path
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly  # type: ignore[no-redef]
 
@@ -412,7 +414,7 @@ def _adapters_dir(ctx: MonitorContext) -> Path:
     """
     if ctx.root is not None:
         return ctx.root / "runtime_adapters_fixture_stub"
-    return ctx.roots.project_root / "scripts" / "agent_runtime" / "adapters"
+    return machinery_path("agent_runtime/adapters")
 
 
 def list_runtime_agents(ctx: MonitorContext, unreadable: dict[str, int] | None = None) -> list[dict[str, Any]]:
@@ -1742,15 +1744,16 @@ async def runtime_routing_assignments(
 async def runtime_transport_health():
     """Return the cached Codex fresh-process probe; never launch a model.
 
-    No ``MonitorContext`` root applies here: the config/receipt paths are
-    resolved through ``codex_transport_health``'s own module attributes
-    (read at call time, never re-exported as a local ``Path`` global), and
-    the response is fully sanitized status fields with no filesystem paths.
+    No ``MonitorContext`` root applies here: the receipt path and the
+    product's Codex config are resolved through ``codex_transport_health``'s
+    own attributes at call time (the config through ``product_root``,
+    C-4746; never re-exported as a local ``Path`` global), and the response
+    is fully sanitized status fields with no filesystem paths.
     """
     return await asyncio.to_thread(
         codex_transport_health.current_transport_health,
         receipt_path=codex_transport_health.TRANSPORT_RECEIPT_PATH,
-        config_path=codex_transport_health.DEFAULT_CONFIG_PATH,
+        config_path=codex_transport_health.default_config_path(),
     )
 
 

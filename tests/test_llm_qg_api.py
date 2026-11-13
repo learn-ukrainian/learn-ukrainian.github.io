@@ -9,9 +9,10 @@ from fastapi.testclient import TestClient
 
 pytestmark = pytest.mark.reads_content
 
-import scripts.api.main as api_main
-import scripts.api.state_compute as state_compute
-import scripts.api.state_router as state_router
+import lu_machinery.api.main as api_main
+
+import scripts.project_api.state_compute as state_compute
+import scripts.project_api.state_router as state_router
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

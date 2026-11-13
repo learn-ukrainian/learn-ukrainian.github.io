@@ -16,20 +16,16 @@ from scripts.api.occupancy_sanitize import (
 _FULL_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _SERVICE_NAME_RE = re.compile(r"^[a-z][a-z0-9-]{0,31}$")
 _COLLECTED_AT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
-_SERVICE_STATES = frozenset(
-    {"running", "stopped", "degraded", "tunneled", "unavailable", "blocked"}
-)
+_SERVICE_STATES = frozenset({"running", "stopped", "degraded", "tunneled", "unavailable", "blocked"})
 _REPO_KEYS = frozenset({"learn-ukrainian", "sibling"})
 _SERVING_MODES = frozenset({"release", "checkout", "unknown"})
 # Why a running service's code identity could not be resolved (#8591). Only
 # ``serving_mode: "unknown"`` rows carry one, and they must carry one.
-_UNRESOLVED_REASONS = frozenset(
-    {"no_listener_pid", "cwd_unreadable", "cwd_not_git_repo", "head_unresolvable"}
-)
+_UNRESOLVED_REASONS = frozenset({"no_listener_pid", "cwd_unreadable", "cwd_not_git_repo", "head_unresolvable"})
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
 _LANE_USAGE_ALLOWED_KEYS = frozenset({"lane", "window", "used_pct", "resets_at"})
 _LANE_USAGE_WINDOWS = frozenset({"weekly"})
-_LANE_TOKENS = frozenset({"claude", "codex", "cursor", "gemini", "grok", "kimi"})
+_LANE_TOKENS = frozenset({"claude", "codex", "codex:a", "codex:b", "cursor", "gemini", "grok", "kimi"})
 _RESETS_AT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 _FORBIDDEN_LANE_USAGE_SUBSTRINGS = ("@", "$", "€", "£", "organization", "account", "plan")
 
@@ -127,11 +123,7 @@ def validate_lane_usage_block(lane_usage: Any) -> None:
 
 
 def validate_report_document(document: dict[str, Any]) -> None:
-    body = {
-        key: value
-        for key, value in document.items()
-        if key not in {"collected_at", "workers", "lane_usage"}
-    }
+    body = {key: value for key, value in document.items() if key not in {"collected_at", "workers", "lane_usage"}}
     if _scan_value(body):
         raise ProjectStateValidationError("forbidden token in report")
 
@@ -182,13 +174,9 @@ def validate_report_document(document: dict[str, Any]) -> None:
             raise ProjectStateValidationError("invalid serving_mode")
         serving_sha = service.get("serving_sha")
         checkout_sha = service.get("checkout_sha")
-        if serving_sha is not None and (
-            not isinstance(serving_sha, str) or not _FULL_SHA_RE.fullmatch(serving_sha)
-        ):
+        if serving_sha is not None and (not isinstance(serving_sha, str) or not _FULL_SHA_RE.fullmatch(serving_sha)):
             raise ProjectStateValidationError("invalid serving_sha")
-        if checkout_sha is not None and (
-            not isinstance(checkout_sha, str) or not _FULL_SHA_RE.fullmatch(checkout_sha)
-        ):
+        if checkout_sha is not None and (not isinstance(checkout_sha, str) or not _FULL_SHA_RE.fullmatch(checkout_sha)):
             raise ProjectStateValidationError("invalid checkout_sha")
         if mode == "release" and serving_sha is None and state == "running":
             raise ProjectStateValidationError("release mode requires serving_sha when running")

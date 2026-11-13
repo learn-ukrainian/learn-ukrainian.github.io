@@ -9,7 +9,7 @@
 # drop-in next to this unit (lu.slice.d/10-limits.conf) with MemoryHigh=,
 # MemoryMax= and MemorySwapMax=, and verifies it with systemctl --user show
 # before this unit is installed, so the live limits never lapse.
-# Apply, check and rollback: scripts/ops/lu_slice_apply.sh (runbook:
+# Apply, check and rollback: the lu_slice_apply.sh helper (runbook:
 # docs/runbooks/driver-memory-scope.md).
 [Unit]
 Description=Learn Ukrainian shared driver and dispatch pool

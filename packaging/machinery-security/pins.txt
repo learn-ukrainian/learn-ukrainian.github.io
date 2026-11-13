@@ -1,0 +1,127 @@
+# Scanner pins for the learn-ukrainian/machinery security scans (issue
+# #12682, machinery move contract v3 section 5), its pre-publication gate
+# (amendment PUBLIC-1104 item 3) and its bootstrap CI Gate (machinery move
+# plan v1 section 4 step 4). This file is the record; ci-gate.yml (whose
+# secret-scan and sast jobs are the repository's security scans) and
+# prepublication-gate.sh carry the same values and are not read from here.
+# Bump a pin by changing it here, in ci-gate.yml and, where it carries the
+# pin, in prepublication-gate.sh together, with the new upstream evidence. Never move to an older release to clear a finding.
+# Upstream checks below were made on 2026-11-03.
+
+# TruffleHog (secret scan)
+TRUFFLEHOG_VERSION=3.99.0
+#   Release v3.99.0, published 2026-10-06, tag commit b2b0a92070f206ab7b5a1105d82a7f2f48d92341
+#   https://github.com/trufflesecurity/trufflehog/releases/tag/v3.99.0
+#   The rule set is the detector catalog built into this CLI release.
+TRUFFLEHOG_LINUX_AMD64_SHA256=e35ae3fd1e4b7a0c1699d0fda1814282bf906d03379bd4337b092b3a84c6740b
+#   trufflehog_3.99.0_linux_amd64.tar.gz; equals the entry in the release's
+#   trufflehog_3.99.0_checksums.txt.
+TRUFFLEHOG_LINUX_AMD64_BINARY_SHA256=bcbdd2627c3f96e641edec60e3ccf36fc12afa4ffead5f32c98f8dbe7373cedc
+#   The trufflehog executable inside that tarball (checked 2026-11-04 after
+#   verifying the tarball against the pin above). prepublication-gate.sh
+#   refuses any other executable.
+TRUFFLEHOG_ACTION_SHA=ea68ca03c865c5f324e86e849ced20ed3cf9dbbb
+#   Commit of tag v3.99.8 of trufflesecurity/trufflehog (2026-11-02; checked
+#   2026-11-10 with `gh api repos/trufflesecurity/trufflehog/git/ref/tags/v3.99.8`),
+#   the action script the source repository's .github/workflows/ci.yml pins.
+#   Its action.yml is unchanged from the v3.99.7 pin (31ce31ee...), so the
+#   command line below is the same.
+#   The secret-scan job of ci-gate.yml runs the CLI with the command line this
+#   script builds (git file://, --since-commit, --branch, --fail, --no-update)
+#   without its `docker run` wrapper: it runs the checksum-verified release
+#   binary under `env -i` instead of a container image.
+TRUFFLEHOG_FLAGS=--results=verified,unknown,unverified --exclude-detectors=Lob --fail-on-scan-errors --exclude-paths=.trufflehogignore
+#   `unverified` is added to the contract's --results=verified,unknown by
+#   claude-cto decision on 2026-11-03 (#12682). The decision applies to the
+#   public machinery repository (restated as UNVERIFIED-SCOPE-1105 on 2026-11-05).
+#   Reason: on the vendor's canary repository trufflesecurity/test_keys,
+#   TruffleHog 3.99.0 reports 3 results with verified,unknown and 8 with
+#   verified,unknown,unverified. The 4 extra cloud access keys and the PrivateKey
+#   result are unverified, so the narrower filter passes revoked, synthetic
+#   and most private-key secrets. That is fail-open. False positives go
+#   through the reviewed .trufflehogignore or an inline trufflehog:ignore with
+#   a reason.
+
+# Semgrep CE (SAST)
+SEMGREP_VERSION=1.183.0
+#   Release v1.183.0, published 2026-10-29, tag commit 4fe07d805dd2a4b64fed486e95136923f08648d0
+#   https://github.com/semgrep/semgrep/releases/tag/v1.183.0
+#   The release has no binary assets; the install comes from PyPI.
+SEMGREP_WHEEL_MANYLINUX_2_34_X86_64_SHA256=f36115c4d0cb43056ceb308273421a2f6a35e055e7e029601e130850f836646e
+#   https://pypi.org/project/semgrep/1.183.0/ (uploaded 2026-10-29). The sast
+#   job of ci-gate.yml pins all 66 packages of the dependency closure for
+#   CPython 3.12 on x86_64 Linux by SHA-256, with 76 wheel hashes because some
+#   packages accept more than one wheel.
+SEMGREP_CORE_LINUX_X86_64_SHA256=e19fedac1f7c292522b498a8f8394361e6ed389aeef9dd754c26d181bf3d8460
+#   semgrep-1.183.0.data/purelib/semgrep/bin/semgrep-core inside that wheel
+#   (checked 2026-11-04 after verifying the wheel against the pin above).
+#   prepublication-gate.sh refuses a Semgrep venv with any other engine.
+SEMGREP_PYTHON=3.12.14
+SEMGREP_RULES_REPOSITORY=https://github.com/semgrep/semgrep-rules
+SEMGREP_RULES_COMMIT=16b9e6d45f10649f6a531ec4838ed9924372c3bc
+#   Commit dated 2026-10-21 ("add php docker rule (#4114)"); the develop head
+#   on 2026-11-03. Rules are under the Semgrep Rules License v1.0, which
+#   permits scanning one's own code.
+SEMGREP_CONFIGS=python/lang python/correctness python/jinja2 python/jwt python/requests python/sh generic/secrets bash/lang yaml/github-actions yaml/kubernetes
+
+# GitHub actions used by the workflow
+ACTIONS_CHECKOUT=3d3c42e5aac5ba805825da76410c181273ba90b1
+#   actions/checkout tag v7.0.1 (the latest release; rechecked 2026-11-05)
+ACTIONS_SETUP_PYTHON=6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+#   actions/setup-python tag v7.1.0 (the latest release; rechecked 2026-11-05)
+
+# Bootstrap CI Gate (ci-gate.yml). Its secret-scan and sast jobs run the
+# TruffleHog and Semgrep pins above, and it uses no actions besides the two
+# above.
+# Upstream checks below were made on 2026-11-05.
+CI_GATE_RUNNER=ubuntu-24.04
+#   GitHub-hosted Ubuntu 24.04 x64 image, https://github.com/actions/runner-images
+#   (ubuntu-latest pointed to it on 2026-11-05). The versioned label keeps the
+#   image fixed when ubuntu-latest moves.
+CI_GATE_PYTHON=3.12.15
+#   The source repository's .python-version. Built for ubuntu-24.04 x64 in
+#   https://github.com/actions/python-versions versions-manifest.json.
+RUFF_VERSION=0.15.21
+#   Release 0.15.21, published 2026-07-09, tag commit 3e1f63645109e69f9bccc7be354c5ee4672fb8f3
+#   https://github.com/astral-sh/ruff/releases/tag/0.15.21
+#   The source repository's requirements-lock.txt version, so lu_machinery is
+#   checked with the version and lint settings the source CI uses. Moving to
+#   0.17.x is a separate change: on 2026-11-05, 0.17.3 reported 7 findings
+#   under the same settings on the machinery paths that 0.15.21 passes.
+RUFF_WHEEL_MANYLINUX_2_17_X86_64_SHA256=bab0905d2f29e0d9fbc3c373ed23db0095edaa3f71f1f4f519ec15134d9e85c8
+#   https://pypi.org/project/ruff/0.15.21/ (uploaded 2026-07-09); the wheel has
+#   no dependencies.
+ZIZMOR_VERSION=1.31.1
+#   Release v1.31.1, published 2026-10-15, tag commit effdb35fa7868863f11655db256d9008922fa427
+#   https://github.com/zizmorcore/zizmor/releases/tag/v1.31.1
+#   v1.32.0 (published 2026-11-02) was still inside the 7-day cooldown that
+#   the source repository's .github/dependabot.yml applies to new releases.
+ZIZMOR_WHEEL_MANYLINUX_2_28_X86_64_SHA256=58e878eb2dbd2c6183c105e1ac28c14f7dd1eca44a783f1fe2a69647d012c410
+#   https://pypi.org/project/zizmor/1.31.1/ (uploaded 2026-10-15); the wheel
+#   has no dependencies.
+ACTIONLINT_VERSION=1.7.12
+#   Release v1.7.12, published 2026-03-30, tag commit 914e7df21a07ef503a81201c76d2b11c789d3fca
+#   https://github.com/rhysd/actionlint/releases/tag/v1.7.12 (the latest release)
+ACTIONLINT_LINUX_AMD64_SHA256=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+#   actionlint_1.7.12_linux_amd64.tar.gz; equals the entry in the release's
+#   actionlint_1.7.12_checksums.txt and the GitHub release asset digest, and the
+#   value the source repository's scripts/audit/check_workflows.sh pins.
+SHELLCHECK_VERSION=0.11.0
+#   Release v0.11.0, published 2025-08-04, annotated tag object
+#   b12c2a6a0834a5b8c12b1c0eb36704f698de5bac on commit aac0823e6b58f8a499e856e93738082691cbf212
+#   https://github.com/koalaman/shellcheck/releases/tag/v0.11.0 (the latest release)
+SHELLCHECK_LINUX_X86_64_SHA256=b7af85e41cc99489dcc21d66c6d5f3685138f06d34651e6d34b42ec6d54fe6f6
+#   shellcheck-v0.11.0.linux.x86_64.tar.gz. The release publishes no checksum
+#   file; this equals the GitHub release asset digest and the downloaded file.
+
+# Pre-publication gate (prepublication-gate.sh beside this file)
+#   Run once on the rewritten clone before the first content push, with the
+#   exact refs to be pushed, then verify the clearance immediately before the
+#   push:
+#     prepublication-gate.sh scan --repo CLONE --ref refs/heads/main \
+#       --out PRIVATE_DIR --semgrep-venv SEMGREP_VENV
+#     prepublication-gate.sh verify --repo CLONE --ref refs/heads/main \
+#       --clearance PRIVATE_DIR/clearance.json
+#   It uses the TruffleHog flags, Semgrep version, rules commit and configs
+#   above, checks the two executable pins, and blocks on any finding or
+#   scanner error. --help lists every check, output and exit code.

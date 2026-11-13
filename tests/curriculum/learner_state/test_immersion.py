@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-import scripts.config as cfg
+import scripts.curriculum.pedagogy_config as cfg
 from scripts.curriculum.arc.loader import ArcPosition, ArcStaleError, load_arc
 from scripts.curriculum.learner_state import codes
 from scripts.curriculum.learner_state.immersion import ImmersionError, compute_lesson_immersion_band

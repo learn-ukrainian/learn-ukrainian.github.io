@@ -1,35 +1,34 @@
 from unittest.mock import MagicMock, patch
 
+import lu_machinery.agent_runtime.adapters.acpx as acpx_module
 import pytest
+from lu_machinery.agent_runtime.adapters.acpx import AcpxCursorShadowAdapter
+from lu_machinery.agent_runtime.adapters.cursor import CursorAdapter
+from lu_machinery.review.model_catalog import ModelCatalogError
 
-import scripts.agent_runtime.adapters.acpx as acpx_module
-import scripts.ai_agent_bridge._cursor as ask_cursor
 import scripts.audit.cursor_judge_calibration as cursor_judge
-from scripts.agent_runtime.adapters.acpx import AcpxCursorShadowAdapter
-from scripts.agent_runtime.adapters.cursor import CursorAdapter
-from scripts.review.model_catalog import ModelCatalogError
 
+# `ask-cursor` reaches Cursor through the ACP participant, which is the "acpx" caller.
 CALLERS = [
     "adapter",
     "acpx",
-    "ask",
     "judge"
 ]
 
 MODELS_ALLOWED = [
-    ("grok-4.7", "grok-4.7-high"),
-    ("grok-4.7-high", "grok-4.7-high"),
+    ("stand-in-cursor-pin-high", "stand-in-cursor-pin-high"),
+    ("stand-in-cursor-pin", "stand-in-cursor-pin"),
     ("composer-2.5", None),
     ("composer-2.5[fast=false]", None),
 ]
 
 MODELS_REFUSED = [
-    ("grok-4.7-low", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-medium", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-xhigh", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7[context=500k]", "CURSOR_UNATTESTED_GROK_VARIANT"),
-    ("grok-4.7[fast=false]", "CURSOR_UNATTESTED_GROK_VARIANT"),
+    ("grok-4.7-low", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-medium", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-xhigh", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7-fast", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7[context=500k]", "CURSOR_MODEL_NOT_APPROVED"),
+    ("grok-4.7[fast=false]", "CURSOR_MODEL_NOT_APPROVED"),
     ("opus", "CURSOR_CLAUDE_REFUSED"),
     ("sonnet", "CURSOR_CLAUDE_REFUSED"),
     ("haiku", "CURSOR_CLAUDE_REFUSED"),
@@ -41,6 +40,13 @@ MODELS_REFUSED = [
     ("composer-2.5[arbitrary=value]", "CURSOR_MODEL_NOT_APPROVED"),
     ("composer-2.5-heavy", "CURSOR_MODEL_NOT_APPROVED"),
 ]
+
+@pytest.fixture(autouse=True)
+def stand_in_cursor_pin(monkeypatch):
+    """Preserve wire checks without approving a retired provider model."""
+    monkeypatch.setattr("lu_machinery.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({"stand-in-cursor-pin", "stand-in-cursor-pin-high"}))
+    monkeypatch.setattr("lu_machinery.review.model_catalog.cursor_pinned_models", lambda catalog=None: ("stand-in-cursor-pin", "stand-in-cursor-pin-high"))
+
 
 def extract_argv(caller, model, tmp_path):
     if caller == "adapter":
@@ -58,13 +64,6 @@ def extract_argv(caller, model, tmp_path):
             model=model, task_id="1", session_id=None, tool_config=tc
         )
         return plan.cmd
-    elif caller == "ask":
-        with patch("subprocess.run") as run_mock:
-            run_mock.return_value = MagicMock(returncode=0, stdout='{"verdict": "ok"}', stderr="")
-            ask_cursor._invoke_cursor("hello", model=model)
-            if not run_mock.called:
-                return None
-            return run_mock.call_args[0][0]
     elif caller == "judge":
         with patch("subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout='{"verdict": "ok"}', stderr="")
@@ -72,10 +71,17 @@ def extract_argv(caller, model, tmp_path):
             if not run_mock.called:
                 return None
             return run_mock.call_args[0][0]
-@pytest.mark.parametrize("caller", CALLERS)
-@pytest.mark.parametrize("input_model,expected_wire", MODELS_ALLOWED)
+# The release's ACPX adapter builds an argv only from its sealed Node prefix, which product CI does not
+# provision; machinery's test_cursor_acp_invocation_carries_a_concrete_pin proves its wire pins.
+WIRE_CASES = [
+    (caller, model, wire) for caller in CALLERS for model, wire in MODELS_ALLOWED
+    if not (caller == "acpx" and wire is not None)
+]
+
+
+@pytest.mark.parametrize("caller,input_model,expected_wire", WIRE_CASES)
 def test_callers_apply_wire_normalization(caller, input_model, expected_wire, monkeypatch, tmp_path):
-    import scripts.agent_runtime.adapters.claude as claude_module
+    import lu_machinery.agent_runtime.adapters.claude as claude_module
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     monkeypatch.setattr(acpx_module, "_require_communication_transport", lambda **kw: None)
     monkeypatch.setattr(acpx_module, "_require_communication_target", lambda **kw: None)
@@ -93,7 +99,7 @@ def test_callers_apply_wire_normalization(caller, input_model, expected_wire, mo
 @pytest.mark.parametrize("caller", CALLERS)
 @pytest.mark.parametrize("input_model,refusal_code", MODELS_REFUSED)
 def test_callers_refuse_forbidden_variants(caller, input_model, refusal_code, monkeypatch, tmp_path):
-    import scripts.agent_runtime.adapters.claude as claude_module
+    import lu_machinery.agent_runtime.adapters.claude as claude_module
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     monkeypatch.setattr(acpx_module, "_require_communication_transport", lambda **kw: None)
     monkeypatch.setattr(acpx_module, "_require_communication_target", lambda **kw: None)

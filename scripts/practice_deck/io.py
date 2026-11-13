@@ -9,13 +9,13 @@ import json
 import os
 import urllib.error
 import urllib.parse
-import urllib.request
 from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
-from scripts.common import github_client
-from scripts.storage.paths import REGISTRY_ROOT
+from scripts.lexicon.manifest_io import download_release_asset
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
@@ -207,17 +207,7 @@ def _download_url(pointer: dict[str, Any], attempt: int) -> str:
 
 
 def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
-    request = urllib.request.Request(
-        _download_url(pointer, attempt),
-        headers={
-            "Accept": "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
-            "Cache-Control": "no-cache",
-            "Pragma": "no-cache",
-            "User-Agent": "learn-ukrainian-atlas-practice-deck-hydrate/1.0",
-        },
-    )
-    with github_client.http_open(request, timeout=60) as response:
-        return response.read()
+    return download_release_asset(_download_url(pointer, attempt))
 
 
 def _download_gzip(pointer: dict[str, Any]) -> bytes:

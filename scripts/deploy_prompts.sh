@@ -21,7 +21,12 @@
 # ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Machinery code (helpers, sibling shell files, the AGY heredoc import) is found
+# from this script's own directory, never from the product root, an environment
+# setting or the import path; the project being deployed is PROJECT_ROOT.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AGENT_DEPLOY_DIR="$SCRIPT_DIR/agent_deploy"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 PROJECT_PYTHON="$PROJECT_ROOT/.venv/bin/python"
@@ -37,7 +42,7 @@ if [[ ! -x "$PROJECT_PYTHON" ]]; then
 fi
 
 # shellcheck disable=SC1091
-source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
+source "$SCRIPT_DIR/deploy_orphan_paths.sh"
 
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
@@ -65,14 +70,6 @@ build_excludes() {
         args+=" --exclude=/$p"
     done
     echo "$args"
-}
-
-build_shared_skill_overlay_excludes() {
-    local shared_skill
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        echo "--exclude=/skills/$(basename "$shared_skill")/"
-    done
 }
 
 # A manifest entry is TYPE<TAB>PATH, where TYPE is d, f, or l.  Paths are
@@ -166,8 +163,8 @@ reap_retired_shared_agent_paths() {
     # a review reproduced a symlink swapped in between those two steps deleting a file
     # OUTSIDE the repository. The helper walks components with O_NOFOLLOW|O_DIRECTORY
     # and unlinks relative to the resulting directory fd, so the entry removed is the
-    # one inside the directory actually opened. See scripts/deploy/reap_agent_mirrors.py.
-    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/reap_agent_mirrors.py" \
+    # one inside the directory actually opened. See scripts/agent_deploy/reap_agent_mirrors.py.
+    "$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/reap_agent_mirrors.py" \
         --agent-root .agent \
         --manifest "$AGENT_SHARED_MANIFEST" \
         --source-root "$SHARED_EXTENSIONS"
@@ -177,7 +174,7 @@ sync_shared_agent_mirror() {
     # The source is absolute because the helper fchdirs into a descriptor for
     # .agent before it execs rsync.  Passing . as the destination keeps the write
     # bound to that descriptor even if another agent swaps the .agent pathname.
-    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" \
+    "$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/sync_agent_mirror.py" \
         --source-root "$PROJECT_ROOT/$SHARED_EXTENSIONS" \
         --agent-root .agent
 }
@@ -208,8 +205,8 @@ import stat
 import sys
 from pathlib import Path
 
-root, agent_root = Path(sys.argv[1]), Path(sys.argv[2])
-sys.path.insert(0, str(root / "scripts" / "deploy"))
+root, agent_root, agent_deploy = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
+sys.path.insert(0, agent_deploy)
 from agent_directory import open_agent_directory
 
 
@@ -351,7 +348,7 @@ try:
 finally:
     os.close(agent_fd)
 PY
-    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent && status=0 || status=$?
+    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent "$AGENT_DEPLOY_DIR" && status=0 || status=$?
     rm -f "$script"
     return "$status"
 }
@@ -388,7 +385,7 @@ git_source_deleted() {
 
 # Preflight assertion: warn if an undeclared orphan is in the destination
 # but missing from source. This catches "someone dropped a new file in
-# .gemini/ without updating ORPHAN_PATHS_GEMINI" situations before the
+# .codex/ without updating ORPHAN_PATHS_CODEX" situations before the
 # next deploy silently deletes it.
 check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
@@ -440,33 +437,17 @@ check_orphans() {
     return 0
 }
 
-check_shared_skill_collisions() {
-    local shared_skill skill_name
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        skill_name="$(basename "$shared_skill")"
-        if [[ -e "gemini_extensions/skills/$skill_name" ]]; then
-            echo "  ⚠️  shared/Gemini skill collision: $skill_name"
-            echo "     Keep one canonical source; rename or remove the provider-specific duplicate."
-            return 1
-        fi
-    done
-    return 0
-}
-
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
-"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py verify || orphan_fail=true
+"$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/retire_codex_skills.py" verify \
+    --target-root "$PROJECT_ROOT" --source-root "$PROJECT_ROOT" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
 # .agent/ is preserve-by-default (runtime state written by agents/lanes).
 # No orphan check or --delete here — see #4741. Shared source (if any)
 # is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
-check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS" "gemini_extensions → .gemini" || orphan_fail=true
-check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
-check_shared_skill_collisions || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
     echo "❌ Deploy aborted: undeclared orphan paths would be deleted."
@@ -477,13 +458,14 @@ echo ""
 
 # Step 1: Lint prompts (blocks deploy on failure)
 echo "=== Lint prompts ==="
-"$PROJECT_PYTHON" scripts/lint_prompts.py
+# Lint the project being deployed, never the product checkout the resolver selects.
+"$PROJECT_PYTHON" scripts/lint_prompts.py --project-root "$PROJECT_ROOT"
 echo ""
 
 # Verify that all hooks in source directories are executable on disk
 echo "=== Verify hook permissions ==="
 hook_perm_fail=false
-for hook_dir in "$SHARED_EXTENSIONS/hooks" "gemini_extensions/hooks"; do
+for hook_dir in "$SHARED_EXTENSIONS/hooks"; do
     if [[ -d "$hook_dir" ]]; then
         for hook in "$hook_dir"/*; do
             if [[ -f "$hook" && ! -x "$hook" ]]; then
@@ -584,32 +566,6 @@ diff_overlay_files() {
     fi
 }
 
-diff_shared_skill_overlays() {
-    local shared_skill skill_name
-    for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        skill_name="$(basename "$shared_skill")"
-        diff_dirs \
-            "$shared_skill" \
-            ".gemini/skills/$skill_name" \
-            "$shared_skill → .gemini/skills/$skill_name" \
-            ""
-    done
-}
-
-diff_gemini_skill_owners() {
-    local deployed_skill skill_name
-    [[ -d .gemini/skills ]] || return 0
-    for deployed_skill in .gemini/skills/*; do
-        [[ -d "$deployed_skill" ]] || continue
-        skill_name="$(basename "$deployed_skill")"
-        if [[ ! -d "$SHARED_EXTENSIONS/skills/$skill_name" && ! -d "gemini_extensions/skills/$skill_name" ]]; then
-            echo "  .gemini/skills: stale unowned skill '$skill_name' (will be removed)"
-            has_changes=true
-        fi
-    done
-}
-
 diff_dirs \
     "$SHARED_EXTENSIONS" \
     ".claude" \
@@ -625,10 +581,6 @@ fi
 if [[ -d "$AGY_EXTENSIONS" ]]; then
     diff_overlay_files "$AGY_EXTENSIONS" ".agents" "$AGY_EXTENSIONS → .agents"
 fi
-diff_overlay_files "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
-diff_shared_skill_overlays
-diff_gemini_skill_owners
-diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules → .gemini/rules" ""
 echo ""
 
 if [[ -d .codex/skills ]]; then
@@ -656,8 +608,9 @@ fi
 echo "=== Syncing ==="
 # Resolve before the first shell sync as well as the descriptor-bound helper.
 # Ambient PATH aliases must not execute an installed Cursor target in either.
-RSYNC="$("$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" --resolve-rsync)"
-"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
+RSYNC="$("$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/sync_agent_mirror.py" --resolve-rsync)"
+"$PROJECT_PYTHON" "$AGENT_DEPLOY_DIR/retire_codex_skills.py" apply \
+    --target-root "$PROJECT_ROOT" --source-root "$PROJECT_ROOT"
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 "$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
@@ -687,23 +640,11 @@ mkdir -p .agents
 if [[ -d "$AGY_EXTENSIONS" ]]; then
     "$RSYNC" -av "$AGY_EXTENSIONS/" .agents/
 fi
-# shellcheck disable=SC2046
-"$RSYNC" -av --delete \
-    $(build_excludes "$ORPHAN_PATHS_GEMINI") \
-    $(build_shared_skill_overlay_excludes) \
-    gemini_extensions/ .gemini/
-for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-    [[ -d "$shared_skill" ]] || continue
-    skill_name="$(basename "$shared_skill")"
-    mkdir -p ".gemini/skills/$skill_name"
-    "$RSYNC" -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
-done
-"$RSYNC" -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination
 echo "=== Ensuring deployed hooks are executable ==="
-for dest_hooks in .claude/hooks .agent/hooks .codex/hooks .gemini/hooks; do
+for dest_hooks in .claude/hooks .agent/hooks .codex/hooks; do
     if [[ -d "$dest_hooks" ]]; then
         chmod +x "$dest_hooks"/* 2>/dev/null || true
     fi

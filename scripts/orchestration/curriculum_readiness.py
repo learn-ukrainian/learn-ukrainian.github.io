@@ -6,11 +6,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import stat
 import sys
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 from urllib.parse import urlparse
 
@@ -20,11 +23,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import lint_bio_dossier_xref
-from scripts.audit.wiki_completeness_gate import check_wiki_completeness
-from scripts.build import linear_pipeline
+from scripts.common.repo_root import ProductRootError
+from scripts.common.repo_root import product_root as resolve_product_root
 from scripts.common.schema_check import check_schema as check_schema_memoised
-from scripts.level_config import base_level, resolve_manifest_module_track
+from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
     RegistryValidationError,
@@ -32,9 +34,103 @@ from scripts.orchestration.preparation_evidence import (
     load_yaml_mapping,
 )
 from scripts.research import research_quality
-from scripts.validate import check_discovery_integrity, check_wiki_subject, lint_seminar_quality
-from scripts.wiki.domains import resolve_write_domain
-from scripts.wiki.sources_schema import load_sources_registry, validate_sources_registry
+
+# The product data file that names the readiness gates module, relative to the product root.
+READINESS_GATES_FILE = Path("scripts/curriculum/readiness_gates.v1.json")
+_GATES_MAX_BYTES = 4096
+# The product API these checks use. A configured module without any of it is refused.
+_GATE_EXPORTS = (
+    "lint_bio_dossier_xref",
+    "check_wiki_completeness",
+    "linear_pipeline",
+    "base_level",
+    "resolve_manifest_module_track",
+    "check_discovery_integrity",
+    "check_wiki_subject",
+    "lint_seminar_quality",
+    "resolve_write_domain",
+    "load_sources_registry",
+    "validate_sources_registry",
+)
+
+
+def _gates_module_name(path: Path) -> str:
+    """Read the strict, bounded product configuration at ``path``."""
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode):
+        raise ImportError("readiness gates configuration must be a regular file, not a symlink")
+    if info.st_size > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
+            raise ImportError("readiness gates configuration changed while opening")
+        raw = handle.read(_GATES_MAX_BYTES + 1)
+    if len(raw) > _GATES_MAX_BYTES:
+        raise ImportError("readiness gates configuration is too large")
+
+    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        document: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in document:
+                raise ValueError("duplicate key")
+            document[key] = value
+        return document
+
+    def no_constants(token: str) -> Any:
+        raise ValueError(f"non-finite number {token}")
+
+    try:
+        document = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=no_constants)
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
+        raise ImportError("readiness gates configuration must be strict UTF-8 JSON") from exc
+    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", "origin", "module"}:
+        raise ImportError("readiness gates configuration fields mismatch")
+    if document["schema"] != "learn-ukrainian.readiness-gates" or type(document["schema_version"]) is not int:
+        raise ImportError("readiness gates configuration schema mismatch")
+    if document["schema_version"] != 1:
+        raise ImportError("readiness gates configuration version mismatch")
+    if document["origin"] != "scripts/curriculum/readiness_gates.v1.json":
+        raise ImportError("readiness gates configuration origin mismatch")
+    name = document["module"]
+    if not isinstance(name, str) or re.fullmatch(r"scripts(?:\.[a-z_][a-z0-9_]*)+", name) is None:
+        raise ImportError("readiness gates configuration module must be a lowercase scripts.* name")
+    return name
+
+
+def load_readiness_gates(exports: tuple[str, ...], *, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, which must provide every name in ``exports``.
+
+    Its name comes from ``READINESS_GATES_FILE`` under ``product_root`` (an absolute path;
+    default: the checkout :func:`scripts.common.repo_root.product_root` selects, C-4746),
+    read strictly at each call; the module must come from that root.
+    A missing or invalid configuration, or a module without one of ``exports``, raises
+    (``ImportError`` or ``OSError``) and so refuses the operation that asked for the gates.
+    Each consumer passes the product API it uses (``_GATE_EXPORTS`` here, the lifecycle
+    pilot's own list there), so this is the one reader of the configuration.
+    """
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
+    if product_root is None:
+        try:
+            product_root = resolve_product_root()
+        except ProductRootError as exc:
+            raise ConfiguredModuleError(str(exc)) from None
+    module = load_configured_module(_gates_module_name(product_root / READINESS_GATES_FILE), product_root=product_root)
+    missing = [name for name in exports if not hasattr(module, name)]
+    if missing:
+        raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
+    return module
+
+
+def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, loaded when a check needs it, never at import.
+
+    It must provide every name in ``_GATE_EXPORTS``; see :func:`load_readiness_gates`.
+    """
+    return load_readiness_gates(_GATE_EXPORTS, product_root=product_root)
+
 
 CONFIG_PATH = Path("agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml")
 CONFIG_SCHEMA_PATH = Path(
@@ -166,6 +262,16 @@ def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+def _product_checkout(repo_root: Path | None) -> Path:
+    """``repo_root`` when a caller names it, else the product checkout ``product_root`` selects (C-4746)."""
+    if repo_root is not None:
+        return repo_root
+    try:
+        return resolve_product_root()
+    except ProductRootError as exc:
+        raise ReadinessError(str(exc)) from None
+
+
 def _repo_file(repo_root: Path, relative: str | Path) -> Path:
     raw = str(relative)
     path = Path(raw)
@@ -253,18 +359,19 @@ def _research_path(repo_root: Path, track: str, slug: str) -> Path:
 
 def artifact_path(artifact: str, repo_root: Path, track: str, slug: str) -> Path:
     """Resolve a registered artifact ID without track-name branches."""
+    gates = readiness_gates()
     curriculum = repo_root / "curriculum" / "l2-uk-en"
     manifest = curriculum / "curriculum.yaml"
-    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    plan_track = gates.base_level(track, manifest=manifest) if manifest.exists() else track
     resolvers: dict[str, Callable[[], Path]] = {
         "research": lambda: _research_path(repo_root, track, slug),
         "dossier": lambda: repo_root / "docs" / "research" / track / f"{slug}.md",
         "plan": lambda: curriculum / "plans" / plan_track / f"{slug}.yaml",
         "manual-registry": lambda: curriculum / track / "promotion-evidence.yaml",
-        "wiki-document": lambda: repo_root / "wiki" / resolve_write_domain(plan_track, slug) / f"{slug}.md",
+        "wiki-document": lambda: repo_root / "wiki" / gates.resolve_write_domain(plan_track, slug) / f"{slug}.md",
         "wiki-sources": lambda: repo_root
         / "wiki"
-        / resolve_write_domain(plan_track, slug)
+        / gates.resolve_write_domain(plan_track, slug)
         / f"{slug}.sources.yaml",
         "discovery": lambda: curriculum / track / "discovery" / f"{slug}.yaml",
     }
@@ -289,8 +396,9 @@ def _yaml_mapping(path: Path, _option: Mapping[str, Any], _context: ValidationCo
 
 
 def _plan_check(path: Path, _option: Mapping[str, Any], _context: ValidationContext) -> ValidationResult:
+    gates = readiness_gates()
     try:
-        linear_pipeline.plan_check(path)
+        gates.linear_pipeline.plan_check(path)
     except Exception as exc:  # authoritative plan validator has several error types
         return ValidationResult(False, f"{type(exc).__name__}: {exc}")
     return ValidationResult(True, "authoritative plan check passed")
@@ -301,7 +409,7 @@ def _seminar_plan_language(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = [finding for finding in lint_seminar_quality.lint_plan(path) if finding.severity == "high"]
+    findings = [finding for finding in readiness_gates().lint_seminar_quality.lint_plan(path) if finding.severity == "high"]
     return ValidationResult(not findings, f"{len(findings)} high seminar-language finding(s)")
 
 
@@ -337,6 +445,7 @@ def _wiki_sources_registry(
     _option: Mapping[str, Any],
     context: ValidationContext,
 ) -> ValidationResult:
+    gates = readiness_gates()
     try:
         raw = load_yaml_mapping(path)
         raw_sources = raw.get("sources")
@@ -344,12 +453,12 @@ def _wiki_sources_registry(
             return ValidationResult(False, "wiki source registry needs a non-empty sources list")
         if not all(isinstance(item, Mapping) for item in raw_sources):
             return ValidationResult(False, "wiki source registry entries must be mappings")
-        registry = load_sources_registry(path)
+        registry = gates.load_sources_registry(path)
         if not registry.sources:
             return ValidationResult(False, "wiki source registry has no valid entries")
         article_path = artifact_path("wiki-document", context.repo_root, context.track, context.slug)
         article_text = article_path.read_text(encoding="utf-8", errors="strict")
-        issues = validate_sources_registry(article_text, registry)
+        issues = gates.validate_sources_registry(article_text, registry)
     except (KeyError, OSError, TypeError, UnicodeDecodeError, ValueError) as exc:
         return ValidationResult(False, f"invalid wiki source registry: {exc}")
     if issues:
@@ -449,7 +558,7 @@ def _bio_dossier_xref(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = lint_bio_dossier_xref.lint_dossier(path)
+    findings = readiness_gates().lint_bio_dossier_xref.lint_dossier(path)
     return ValidationResult(not findings, f"{len(findings)} dossier cross-reference finding(s)")
 
 
@@ -468,7 +577,7 @@ def _wiki_completeness(
     _option: Mapping[str, Any],
     context: ValidationContext,
 ) -> ValidationResult:
-    report = check_wiki_completeness(path, level=context.track, slug=context.slug)
+    report = readiness_gates().check_wiki_completeness(path, level=context.track, slug=context.slug)
     return ValidationResult(report["verdict"] == "PASS", str(report["diagnostic"]))
 
 
@@ -480,7 +589,7 @@ def _bio_wiki_subject(
     plan = context.plan()
     if plan is None:
         return ValidationResult(False, "plan title unavailable for wiki subject check")
-    finding = check_wiki_subject.check_wiki_file(path, plan_title=str(plan.get("title", "")))
+    finding = readiness_gates().check_wiki_subject.check_wiki_file(path, plan_title=str(plan.get("title", "")))
     return ValidationResult(finding is None, "wiki subject matches plan" if finding is None else str(finding))
 
 
@@ -489,7 +598,7 @@ def _seminar_wiki_language(
     _option: Mapping[str, Any],
     _context: ValidationContext,
 ) -> ValidationResult:
-    findings = [finding for finding in lint_seminar_quality.lint_text(path) if finding.severity == "high"]
+    findings = [finding for finding in readiness_gates().lint_seminar_quality.lint_text(path) if finding.severity == "high"]
     return ValidationResult(not findings, f"{len(findings)} high seminar-language finding(s)")
 
 
@@ -501,7 +610,7 @@ def _bio_discovery_integrity(
     plan = context.plan()
     if plan is None:
         return ValidationResult(False, "plan title unavailable for discovery integrity check")
-    finding = check_discovery_integrity.check_discovery_file(path, plan_title=str(plan.get("title", "")))
+    finding = readiness_gates().check_discovery_integrity.check_discovery_file(path, plan_title=str(plan.get("title", "")))
     return ValidationResult(finding is None, "discovery subject matches plan" if finding is None else str(finding))
 
 
@@ -525,9 +634,10 @@ VALIDATORS: dict[str, Validator] = {
 
 def load_config(
     *,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     active_tracks: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
+    repo_root = _product_checkout(repo_root)
     config_path = _repo_file(repo_root, CONFIG_PATH)
     schema = _load_json(_repo_file(repo_root, CONFIG_SCHEMA_PATH))
     try:
@@ -1048,11 +1158,12 @@ def evaluate_preparation(
     slug: str,
     *,
     consumed_preparation_identity: str | None = None,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validators: Mapping[str, Validator] = VALIDATORS,
     active_manifest: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Evaluate one manifest target without reading legacy QG state."""
+    repo_root = _product_checkout(repo_root)
     track = track.lower()
     slug = slug.lower()
     if not _TARGET_RE.fullmatch(track) or not _TARGET_RE.fullmatch(slug):
@@ -1061,7 +1172,9 @@ def evaluate_preparation(
         raise ReadinessError("consumed preparation identity must be a SHA-256 hex digest")
 
     manifest = active_manifest if active_manifest is not None else load_active_manifest(repo_root)
-    track = resolve_manifest_module_track(track, slug, manifest["tracks"])
+    # Load the product gates before any validator runs: the validator adapter turns an
+    # exception into a failed check, so a missing configuration must refuse here instead.
+    track = readiness_gates().resolve_manifest_module_track(track, slug, manifest["tracks"])
     manifest_record, manifest_slugs = manifest_track(manifest, track)
     config = load_config(
         repo_root=repo_root,
@@ -1100,11 +1213,11 @@ def evaluate_preparation(
 def validate_result(
     result: Mapping[str, Any],
     *,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validator: Draft202012Validator | None = None,
 ) -> None:
     if validator is None:
-        schema = _load_json(_repo_file(repo_root, RESULT_SCHEMA_PATH))
+        schema = _load_json(_repo_file(_product_checkout(repo_root), RESULT_SCHEMA_PATH))
         _validate(result, schema, "preparation result")
         return
     _validate_with(result, validator, "preparation result")
@@ -1143,10 +1256,12 @@ def evaluate_inventory(
     *,
     mode: str,
     track: str | None = None,
-    repo_root: Path = PROJECT_ROOT,
+    repo_root: Path | None = None,
     validators: Mapping[str, Validator] = VALIDATORS,
 ) -> dict[str, Any]:
     """Evaluate a deterministic compact view over active manifest results."""
+    repo_root = _product_checkout(repo_root)
+    readiness_gates()  # refuse before any work when the product gates are unavailable
     if mode not in {"summary", "missing-only"}:
         raise ReadinessError(f"unsupported readiness inventory mode: {mode}")
     if track is not None:

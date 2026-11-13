@@ -51,7 +51,9 @@ PASSED_ENV = frozenset({
 NPM_CONFIG_PREFIX = "npm_config_"
 # Native modules build with these when no prebuilt binary exists, so their identity is part of the key.
 BUILD_TOOLS = ("python3", "make", "cc", "c++")
-SHIM_DIRS = (("scripts", "agent_runtime", "shims"), ("scripts", "dispatcher", "npm_shims"))
+# Shim directories of any checkout, under the machinery package named by this file's location.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+SHIM_DIRS = ((_MACHINERY, "agent_runtime", "shims"), (_MACHINERY, "dispatcher", "npm_shims"))
 # Tool caches npm scripts write under node_modules at run time; never part of an install.
 RUNTIME_CACHES = frozenset({".cache", ".vite", ".vite-temp", ".astro"})
 # Rewritten by npm itself, so it is copied rather than shared.

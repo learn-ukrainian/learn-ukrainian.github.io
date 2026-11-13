@@ -4,6 +4,7 @@ import inspect
 import json
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -14,6 +15,7 @@ from scripts.audit.practice_quality_gate import (
     audit_practice_shards,
     audit_sentence_inventory,
     audit_teacher_cloze_deck,
+    ground_with_sources,
     run_all_practice_audits,
 )
 
@@ -838,41 +840,6 @@ def test_audit_practice_shards_vesum_attestation(tmp_path: Path, monkeypatch):
     assert any(v["type"] == "VESUM_UNATTESTED" and "p_unattested" in v["item"] for v in violations)
 
 
-def test_audit_card_ambiguity_mocked(tmp_path: Path):
-    """Verify audit_card_ambiguity with mock TypeSafe System One responses."""
-    par_data = {
-        "paronym": [
-            {
-                "paronymId": "p_test",
-                "prompt": "Вранці він ___ у парку.",
-                "answer": "бігає",
-                "options": [{"label": "бігає"}, {"label": "біжить"}],
-            }
-        ]
-    }
-    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
-
-    mock_resp = {
-        "model": "mock-jev",
-        "answers": {
-            "distractor_plausibility": {"score": 1.8, "confidence": 0.95},
-            "is_unambiguous": {"noul": 0.92},
-            "anti_calque_yield": {"noul": 0.10},
-            "card_quality": {"choice": "pass", "confidence": 0.95},
-        },
-    }
-
-    verdicts, violations = audit_card_ambiguity(
-        shards_dir=tmp_path,
-        sample_size=1,
-        mock_response=mock_resp,
-        strict_ambiguity=True,
-    )
-    assert len(verdicts) == 1
-    assert verdicts[0]["verdict"] == "pass"
-    assert len(violations) == 0
-
-
 def test_audit_practice_shards_missing_vesum_db_fails_closed(tmp_path: Path):
     """Finding 3: missing VESUM database must fail closed with VESUM_DB_MISSING violation."""
     par_data = {
@@ -962,7 +929,7 @@ def test_audit_practice_shards_requires_prompt_and_options(tmp_path: Path):
 
 def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     """Finding 1: offline ambiguity validation in strict mode must report unavailable and not fabricate a pass."""
-    from scripts.practice import typesafe_distractor_validator
+    from scripts.audit import practice_quality_gate
 
     par_data = {
         "paronym": [
@@ -979,13 +946,11 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     mock_vesum = tmp_path / "mock_vesum.db"
     mock_vesum.touch()
 
-    monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
     monkeypatch.setattr(
-        typesafe_distractor_validator,
+        practice_quality_gate,
         "ground_with_sources",
-        lambda target, distractors, vesum_db_path=None: {
+        lambda target, vesum_db_path=None: {
             "target": {"in_vesum": True},
-            "distractors": {d: {"in_vesum": True} for d in distractors},
         },
     )
 
@@ -993,9 +958,7 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
         shards_dir=tmp_path,
         sample_size=1,
         vesum_db=mock_vesum,
-        mock_response=None,
         strict_ambiguity=True,
-        client=None,
     )
     assert len(verdicts) == 1
     assert verdicts[0]["verdict"] == "unverified_offline"
@@ -1005,10 +968,8 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     assert any(v["type"] == "AMBIGUITY_VALIDATION_UNAVAILABLE" for v in violations)
 
 
-def test_audit_card_ambiguity_missing_vesum_reports_unavailable(tmp_path: Path, monkeypatch):
+def test_audit_card_ambiguity_missing_vesum_reports_unavailable(tmp_path: Path):
     """P2 regression: missing VESUM database must report morphological verification as unavailable."""
-    from scripts.practice import typesafe_distractor_validator
-
     par_data = {
         "paronym": [
             {
@@ -1021,8 +982,6 @@ def test_audit_card_ambiguity_missing_vesum_reports_unavailable(tmp_path: Path, 
     }
     (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
 
-    monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
-
     nonexistent_db = tmp_path / "nonexistent.db"
     assert not nonexistent_db.exists()
 
@@ -1030,9 +989,7 @@ def test_audit_card_ambiguity_missing_vesum_reports_unavailable(tmp_path: Path, 
         shards_dir=tmp_path,
         sample_size=1,
         vesum_db=nonexistent_db,
-        mock_response=None,
         strict_ambiguity=False,
-        client=None,
     )
     assert len(verdicts) == 1
     v = verdicts[0]
@@ -1058,20 +1015,9 @@ def test_audit_card_ambiguity_honors_sample_size(tmp_path: Path):
     }
     (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
 
-    mock_resp = {
-        "model": "mock-jev",
-        "answers": {
-            "distractor_plausibility": {"score": 1.8, "confidence": 0.95},
-            "is_unambiguous": {"noul": 0.92},
-            "anti_calque_yield": {"noul": 0.10},
-            "card_quality": {"choice": "pass", "confidence": 0.95},
-        },
-    }
-
     verdicts, violations = audit_card_ambiguity(
         shards_dir=tmp_path,
         sample_size=8,
-        mock_response=mock_resp,
         strict_ambiguity=False,
     )
     assert len(verdicts) == 8
@@ -1436,3 +1382,31 @@ def test_target_attestation_supported_correction_notation(tmp_path, monkeypatch,
     findings = _audit_attestation_target(tmp_path, field, target, db)
     assert calls == ["жжжа", "жжжб"]
     assert [v["type"] for v in findings] == ([] if positive else ["VESUM_UNATTESTED"])
+
+
+def test_ground_with_sources_direct(requires_vesum_db):
+    """An attested target remains accepted after grounding moves to the audit caller."""
+    res = ground_with_sources(target="протягом", vesum_db_path=requires_vesum_db)
+    assert res["target"]["in_vesum"] is True
+
+
+def test_ground_with_sources_vesum_exception_fails_closed():
+    """Single-word and multi-word VESUM exceptions cannot attest a target."""
+    with patch(
+        "scripts.audit.practice_quality_gate.verify_word",
+        side_effect=RuntimeError("VESUM connection error"),
+    ), patch(
+        "scripts.audit.practice_quality_gate.verify_words",
+        side_effect=RuntimeError("VESUM bulk connection error"),
+    ):
+        res = ground_with_sources(target="братом")
+        assert res["target"]["in_vesum"] is False
+        assert "ERROR: VESUM connection error" in res["target"]["status"]
+
+    with patch(
+        "scripts.audit.practice_quality_gate.verify_words",
+        side_effect=RuntimeError("VESUM multi-word error"),
+    ):
+        res_multi = ground_with_sources(target="минулого року")
+        assert res_multi["target"]["in_vesum"] is False
+        assert "ERROR: VESUM multi-word error" in res_multi["target"]["status"]

@@ -17,10 +17,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.lexicon.relation_pairs import normalize_relation_word
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
-from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma
 
 INTAKE_JSON: Path | None = None

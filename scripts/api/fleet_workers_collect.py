@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import copy
+import errno
 import hashlib
+import os
 import sqlite3
 import threading
 import time
@@ -15,7 +17,7 @@ from typing import Any
 try:
     from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
@@ -44,12 +46,16 @@ from scripts.api.occupancy_local import (
     session_streams_db_path,
 )
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, opaque_host_id, safe_field
+from scripts.api.product_contribution import atlas_provider
 from scripts.api.project_state_store import (
     freshness_from_age,
     get_live_report,
     workers_status_from_document,
 )
-from scripts.lexicon.runner import atlas_job
+from scripts.orchestration.dispatch_admission import _ACTIVE_STATUS_MARKERS
+from scripts.orchestration.dispatch_admission import (
+    ACTIVE_STATUSES as _DELEGATE_ACTIVE_STATUSES,
+)
 from scripts.orchestration.task_record_store import iter_task_records
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"
@@ -203,6 +209,62 @@ def _job_state(state: str) -> str | None:
     return None
 
 
+def _prefilter_bytes(raw: bytes) -> bool:
+    """True when the bytes can spell a stored running or spawning status.
+
+    The quoted markers are the ones ``dispatch_admission`` already uses.
+    ``json.loads`` also accepts ``\\u0072unning`` as ``running``, which those
+    markers miss, so a JSON ``\\u`` escape stays a candidate.
+    """
+    return any(marker in raw for marker in _ACTIVE_STATUS_MARKERS) or b"\\u" in raw
+
+
+def _record_may_name_active_status(path: Path, tasks_root: str) -> bool:
+    """Whether ``path`` can name a stored ``running`` or ``spawning`` status.
+
+    A symlink is resolved and rejected before its target is read when the
+    real path is outside ``tasks_root``, the same containment as
+    ``delegate_router._read_task_state``. A regular file is opened with
+    ``O_NOFOLLOW``, so a directory entry cannot follow a link out of the
+    directory. A read error stays a candidate so ``_read_task_state`` still
+    retries it.
+    """
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError as exc:
+        if exc.errno != errno.ELOOP:
+            return True
+        try:
+            fullpath = os.path.realpath(path)
+        except OSError:
+            return True
+        if not fullpath.startswith(tasks_root + os.sep):
+            return False
+        try:
+            raw = Path(fullpath).read_bytes()
+        except OSError:
+            return True
+        return _prefilter_bytes(raw)
+    try:
+        with os.fdopen(fd, "rb") as handle:
+            raw = handle.read()
+    except OSError:
+        return True
+    return _prefilter_bytes(raw)
+
+
+def _stored_delegate_status(status: Any) -> str | None:
+    """Return a stored status that can map to a delegate row.
+
+    ``ACTIVE_STATUSES`` is a set, so membership hashes the value. A list or
+    dict status must be rejected before that test: hashing it raises
+    ``TypeError`` and would abort the scan. Only these two strings map.
+    """
+    if not isinstance(status, str) or status not in _DELEGATE_ACTIVE_STATUSES:
+        return None
+    return status
+
+
 def collect_delegate_workers(
     tasks_dir: Path,
     *,
@@ -213,12 +275,21 @@ def collect_delegate_workers(
     rows: list[CollectedWorker] = []
     if not tasks_dir.is_dir():
         return rows
+    try:
+        tasks_root = os.path.realpath(tasks_dir)
+    except OSError:
+        tasks_root = None
     for entry in iter_task_records(tasks_dir, include_archive=False):
+        if tasks_root is not None and not _record_may_name_active_status(entry, tasks_root):
+            continue
         task = delegate_router._read_task_state(str(entry), tasks_dir=tasks_dir)
         if task is None:
             continue
-        status, alive = _derived_task_status(task)
-        mapped = _delegate_state(str(task.get("status") or status), alive=alive, pid=task.get("pid"))
+        stored = _stored_delegate_status(task.get("status"))
+        if stored is None:
+            continue
+        alive = _derived_task_status(task)[1]
+        mapped = _delegate_state(stored, alive=alive, pid=task.get("pid"))
         if mapped is None:
             continue
         task_id = _worker_id_token(task.get("task_id") or entry.stem, tally=tally)
@@ -391,14 +462,17 @@ def collect_job_workers(
     clock = now or datetime.now(UTC)
     rows: list[CollectedWorker] = []
     burn: dict[str, Any] | None = None
+    atlas = atlas_provider()
     try:
-        registry = atlas_job.list_registry()
+        if atlas is None:
+            raise LookupError("no Atlas provider")
+        registry = atlas.list_registry()
     except Exception:
         return rows, {"source": "job", "state": "unknown", "count": 0, "reason": "registry unreadable"}
     for item in registry:
         if not isinstance(item, dict):
             continue
-        if canonical_host is not None and atlas_job._canonical_host(item.get("host")) != canonical_host:
+        if canonical_host is not None and atlas.canonical_host(item.get("host")) != canonical_host:
             continue
         state = str(item.get("state") or "")
         mapped = _job_state(state)

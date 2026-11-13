@@ -19,8 +19,9 @@ typed publisher (`docs/dev/agent-public-text.md`), which scans every field befor
 2. **What changes**, briefly. No file-by-file inventory.
 3. **Proof**, one line: the check or reproduction that shows it works, with the run id.
 4. The public-safe subset of the hand-off record ([delivery](delivery.md#hand-off-record)):
-   acceptance ids and their proof, catalog risk and budget tier, and the finding ledger.
-5. A size justification when the PR is above the small-batch guide (`workflow.md` § Merge
+   acceptance ids and their proof, catalog risk and the rounds used of the review budget, and
+   the finding ledger.
+5. A size justification when the PR is above the size signal (`workflow.md` § Merge
    policy).
 6. `Refs #N` or `Fixes #N` for the issue. `Fixes` closes the whole issue, so use it only when
    every acceptance criterion is delivered (`workflow.md` § Work intake).

@@ -30,6 +30,10 @@ ones, [learning](learning.md)). The database is the seat's handoff; the markdown
 only a pointer ([handoff](handoff.md)).
 Before restarting a lane or ordering an item, read its last state and linked PR or issue.
 Honor shutdown orders; send stale-open items whose PRs merged to the tracker owner.
+Search the operator's mail for replies to the CTO's notification threads (Gmail connector
+`search_threads` with `from:me newer_than:2d subject:Re:`) only while a notification the CTO sent is
+still unanswered, skip it otherwise, and record any answer as an operator order in driver state
+before deciding anything on that item.
 
 ## 3. Resume exactly the named rollover
 
@@ -44,8 +48,12 @@ rollover candidate alone; archive one only through the `thread-rollover` skill.
 and the authority service refuses any publication to `claude-cto-<anything>`. Your session
 identity `claude-cto-<session id>` is only the consumer identity: pass it as `--worker-id`
 when you claim and acknowledge, never as a recipient and never to workers as an address.
-Drain the launcher's registered slot and the epics recipients: `claude-epics`
-(`scripts/config/area_assignments.yaml` `epics.slots`), `epics`, `cto` and `claude-cto`.
+The default drain covers `cto`, `epics` and `claude-cto`.
+`claude-epics` (`scripts/config/area_assignments.yaml` `epics.slots`) carries the launcher's
+supervisory deliveries. `scripts.fleet_comms deliveries claim` has no kind filter, so a drain
+of that slot claims a supervisory delivery before it can be recognised, and repeated claims
+exhaust its attempts. Read `claude-epics` first, read-only, with
+`.venv/bin/python -m scripts.fleet_comms backlog`, and claim only a named non-supervisory delivery.
 The Fleet authority service admits every exact recipient, even where a convenience CLI
 lists fewer. For each message run the authority-delivery procedure in
 `docs/runbooks/driver-seat-cli-move.md` § 5: claim, read the body, reconcile prior effects,
@@ -59,6 +67,13 @@ each such name the same way (claim with `--recipient <old name>`, your own `--wo
 Do not publish to an old name and do not tell a worker to.
 
 ## 5. Re-arm and cycle
+
+Before re-arming, and before the first dispatch of the session, list every task
+record whose id starts with the predecessor session's prefix (for example
+`ls batch_state/tasks/ | grep '^cto-<prefix>-'`, then `scripts/dispatch.py status
+<id>` for each). Reconcile that list against the handoff note, and read the
+latest notes on the top operator order. The handoff list is a snapshot; the task
+records under `batch_state/tasks` are the source of truth.
 
 Re-arm in the background `.venv/bin/python scripts/dispatch.py wait <task-id> --run-nonce
 <nonce>` for every live worker and any PR watcher the handoff names, then run the first

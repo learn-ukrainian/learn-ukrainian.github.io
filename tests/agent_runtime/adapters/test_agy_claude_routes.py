@@ -20,11 +20,17 @@ BACKEND_IDS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 
 
 @pytest.fixture(autouse=True)
-def no_provider_process(monkeypatch):
+def no_provider_process(monkeypatch, tmp_path):
+    from scripts.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path, main_checkout_root
+
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(Path(__file__).resolve().parents[3]))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(Path(__file__).resolve().parents[3])))
+    root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
+                    str(machinery_path("lib/project_interpreter.sh"))]
     popen = agy.subprocess.Popen
 
     def local_git_only(cmd, *args, **kwargs):
-        if isinstance(cmd, (list, tuple)) and cmd[0] == "git":
+        if isinstance(cmd, (list, tuple)) and (cmd[0] == "git" or list(cmd) == root_command):
             return popen(cmd, *args, **kwargs)
         pytest.fail("provider subprocess must not run")
 
@@ -75,7 +81,8 @@ def test_other_claude_names_stay_unsupported(model):
         agy.AgyAdapter()._resolve_model_flag(model)
 
 
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+# Read-only off the review route is refused; the review route is pinned below.
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
 def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypatch, mode, model):
     monkeypatch.setattr(agy, "require_hook_config", lambda *args, **kwargs: None)

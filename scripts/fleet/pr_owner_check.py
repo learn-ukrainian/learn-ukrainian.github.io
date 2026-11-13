@@ -16,13 +16,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
+from pathlib import Path
 
 from scripts.common import github_client
 from scripts.orchestration.fleet_repos import FleetRepo, FleetRepoError, load_fleet_repos
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 # Repositories whose open PRs the CTO cycle must account for ("both repositories").
 DEFAULT_REPO_KEYS = ("public", "infra-private")
@@ -107,8 +115,23 @@ def fetch_open_prs(slug: str) -> list[dict]:
     """Open PRs of one repository; raises RuntimeError when GitHub cannot be read."""
     try:
         proc = github_client.run(
-            ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT + 1), "--json", _PR_FIELDS],
-            capture_output=True, text=True, check=False, timeout=_GH_TIMEOUT_SECONDS,
+            [
+                "gh",
+                "pr",
+                "list",
+                "--repo",
+                slug,
+                "--state",
+                "open",
+                "--limit",
+                str(_PR_LIMIT + 1),
+                "--json",
+                _PR_FIELDS,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GH_TIMEOUT_SECONDS,
         )
     except (subprocess.SubprocessError, OSError) as exc:
         raise RuntimeError(f"cannot list open PRs of {slug}: {type(exc).__name__}") from exc
@@ -132,21 +155,25 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.pr_owner_check\n"
-            "  .venv/bin/python -m scripts.fleet.pr_owner_check --repo infra-private --json\n\n"
+            f"  .venv/bin/python {_ENTRY}\n"
+            f"  .venv/bin/python {_ENTRY} --repo infra-private --json\n\n"
             "Outputs: one line per unowned PR on stdout (or a JSON list with --json); no side effects.\n"
             "Exit codes: 0 every open PR has a live owner task; 1 at least one PR is unowned;\n"
             "  2 GitHub, the repository catalog or the task records could not be read (unknown, never clean).\n"
-            "Related: dispatch task records (scripts/dispatch.py list), scripts/config/fleet_repos.yaml, "
+            f"Related: dispatch task records ({_MACHINERY}/dispatch.py list), {_MACHINERY}/config/fleet_repos.yaml, "
             "epic #10453."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--repo", action="append", metavar="KEY",
+        "--repo",
+        action="append",
+        metavar="KEY",
         help=f"fleet_repos.yaml key to check, repeatable (default: {' and '.join(DEFAULT_REPO_KEYS)})",
     )
-    parser.add_argument("--json", action="store_true", help="print the unowned PRs as a JSON list (default: text lines)")
+    parser.add_argument(
+        "--json", action="store_true", help="print the unowned PRs as a JSON list (default: text lines)"
+    )
     return parser
 
 

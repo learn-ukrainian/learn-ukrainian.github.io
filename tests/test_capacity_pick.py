@@ -105,7 +105,9 @@ def test_lane_rows_mark_avoid():
     assert rows["claude"]["avoid"] is True
     assert rows["cursor"]["avoid"] is False
     assert rows["cursor"]["status"] == "cool"
-    assert rows["cursor"]["will_last"] is rows["grok"]["will_last"] is None
+    # The shared grok_cursor meter was removed with Grok (GROK-CANCEL-1110): each lane reads its own row.
+    assert rows["cursor"]["will_last"] is True
+    assert rows["grok"]["will_last"] is None
     # glm's z.ai subscription is retired (operator 2026-09-03): AVOID even
     # when the budget snapshot itself still reports the lane as cool/wrong.
     assert rows["glm"]["avoid"] is True

@@ -17,7 +17,6 @@ from collections import Counter, defaultdict
 from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
 
 ROOT = Path(__file__).resolve().parents[4]
 if str(ROOT) not in sys.path:
@@ -25,10 +24,10 @@ if str(ROOT) not in sys.path:
 
 import yaml
 from jsonschema import Draft202012Validator
+from lu_machinery.common.jsonl import jsonl_lines
 
 from scripts.atlas import word_card_certification as certification
 from scripts.atlas import word_card_foundation as foundation
-from scripts.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 
@@ -78,8 +77,9 @@ def load_cards(path: Path, register_path: Path) -> list[dict]:
         return [json.loads(line) for line in jsonl_lines(path.read_bytes().decode("utf-8")) if line.strip()]
     value = json.loads(path.read_bytes())
     if isinstance(value, dict) and "selection" in value:
+        from lu_machinery.common.scratch import ensure_scratch_root
+
         from scripts.atlas import word_card_assembly as assembly
-        from scripts.common.scratch import ensure_scratch_root
 
         with ExitStack() as stack:
             scratch = Path(stack.enter_context(tempfile.TemporaryDirectory(dir=ensure_scratch_root())))
@@ -125,7 +125,7 @@ def _matches(assertion: dict, selector: dict) -> bool:
 
 
 def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict],
-                   scope: Literal["dataset", "site"] = "dataset") -> str | None:
+                   scope: str = "dataset") -> str | None:
     if assertion["status"] != "active":
         return "inactive"
     if any(_matches(assertion, entry["selector"]) for entry in withdrawals):
@@ -174,7 +174,7 @@ def create_release(
     cards: list[dict], *, release_version: str, register_path: Path | None = None,
     format: str = "jsonl", withdrawals: list[dict] | None = None,
     allow_candidates: bool = False,
-    scope: Literal["dataset", "site"] = "dataset",
+    scope: str = "dataset",
 ) -> Release:
     """Classify inputs, filter assertions for the selected product and build release bytes.
 
@@ -291,7 +291,7 @@ def create_release(
             "mixed_source_rows": len(row_sets["included"] & row_sets["filtered"]),
         }
     manifest = {
-        "schema_version": SCHEMA_VERSION, "release_version": release_version,
+        "schema_version": SCHEMA_VERSION, "release_version": release_version, "scope": scope,
         "dataset_file": f"word-cards.{format}", "dataset_sha256": sha256(dataset), "dataset_bytes": len(dataset),
         "card_count": len(rows), "field_citation_count": sum(len(row["fields"]) for row in rows),
         "certified_count": sum(row["status"] == "CERTIFIED" for row in rows),

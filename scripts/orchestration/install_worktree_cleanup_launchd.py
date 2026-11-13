@@ -33,6 +33,12 @@ from scripts.common.safe_unit_install import (
 )
 from scripts.orchestration import scheduled_worktree_cleanup
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 LABEL = "com.learn-ukrainian.worktree-cleanup"
 DEFAULT_INTERVAL_MINUTES = 240
 DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
@@ -62,7 +68,7 @@ def state_dir(home: Path) -> Path:
 
 
 def wrapper_path(public_repo: Path) -> Path:
-    return public_repo / "scripts" / "orchestration" / WRAPPER_NAME
+    return public_repo / _PACKAGE_DIR / WRAPPER_NAME
 
 
 def build_plist(
@@ -171,7 +177,7 @@ def _validate_primary(repo_root: Path, *, require_interpreter: bool = False) -> 
         interpreter = repo_root / ".venv" / "bin" / "python"
         if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
             raise LaunchdError(f"required interpreter is missing: {interpreter}")
-        cleanup_script = repo_root / "scripts" / "orchestration" / "scheduled_worktree_cleanup.py"
+        cleanup_script = repo_root / _PACKAGE_DIR / "scheduled_worktree_cleanup.py"
         if not cleanup_script.is_file():
             raise LaunchdError(f"cleanup script is missing: {cleanup_script}")
         wrapper = wrapper_path(repo_root)

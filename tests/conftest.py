@@ -74,6 +74,7 @@ _strip_credential_shaped_env()
 import ast
 import contextlib
 import functools
+import importlib
 import importlib.machinery
 import ipaddress
 import itertools
@@ -83,6 +84,7 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import threading
 import warnings
 import weakref
@@ -121,6 +123,85 @@ pytest_plugins = [
     "tests.data_store_fixtures",
 ]
 
+# Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+_API_STATUS_PACKAGES = ("scripts.api", "lu_machinery.api")  # TRANSITIONAL-PKG3-B2
+
+
+def _under_tests_api(request: pytest.FixtureRequest) -> bool:
+    path = getattr(request.node, "path", None)
+    if not isinstance(path, Path):
+        return False
+    try:
+        relative = path.resolve().relative_to(Path(request.config.rootpath).resolve())
+    except ValueError:
+        return False
+    return relative.parts[:2] == ("tests", "api")
+
+
+def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
+    return [importlib.import_module(f"{package}.{name}") for package in _API_STATUS_PACKAGES]
+
+
+def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
+    def _no_provider(directory: int, account: str) -> None:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
+
+    return _no_provider
+
+
+def reset_api_status_caches() -> None:
+    """Drop process-global status and per-account Claude caches."""
+    for state_helpers in _api_status_modules("state_helpers"):  # TRANSITIONAL-PKG3-B2
+        state_helpers.cache_invalidate()
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        claude_account_usage._reset_for_tests()
+
+
+def judge_api_git_below_tmp_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The probe's Git check sees only directories the test built under ``tmp_path``."""
+    boundary = tmp_path.resolve()
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+
+        def inside_git(path: Path, _module=claude_account_usage) -> bool:
+            return any(
+                _module._git_tree(directory)
+                for directory in (path, *path.parents)
+                if directory.is_relative_to(boundary)
+            )
+
+        monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
+
+
+def refuse_api_claude_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No API test reaches the real credential owner unless it installs a fixture provider."""
+    from types import SimpleNamespace
+
+    for claude_account_usage in _api_status_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(
+            claude_account_usage,
+            "_private_usage",
+            lambda _module=claude_account_usage: SimpleNamespace(prove_claude_owner=_no_api_claude_provider(_module)),
+        )
+
+
+@pytest.fixture(autouse=True)
+def _isolate_api_directory_when_pytest_recollects(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
+    """Keep tests/api isolation when pytest builds a second directory node.
+
+    A file collected directly under ``tests/`` is not deduplicated, so pytest
+    scans the package again. The new ``tests/api`` directory node never receives
+    the fixtures already bound to the first node. ``_last_good`` and the status
+    TTL cache then leak into the next test in that node.
+    """
+    if not _under_tests_api(request):
+        yield
+        return
+    judge_api_git_below_tmp_path(request.getfixturevalue("tmp_path"), monkeypatch)
+    reset_api_status_caches()
+    refuse_api_claude_provider(monkeypatch)
+    yield
+    reset_api_status_caches()
+
 
 @pytest.fixture(scope="session", autouse=True)
 def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path, None, None]:
@@ -129,6 +210,114 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
     with pytest.MonkeyPatch.context() as mp:
         mp.setenv("LU_MCP_SOURCES_LOG_DIR", str(log_dir))
         yield log_dir
+
+
+_GUARD_FREE_DISK_TEST = "test_snapshot_stops_when_free_disk_falls_below_the_floor"
+_guard_reads_production_free_disk = False
+# Same string as ``scripts.storage.generations.FREE_DISK_FLOOR_ENV``.
+# The patch below checks that constant once ``Sources`` is imported.
+_FREE_DISK_FLOOR_ENV = "LU_EVIDENCE_FREE_DISK_FLOOR_BYTES"
+_SOURCES_MODULE = "scripts.curriculum.evidence.sources"
+
+
+def _patch_sources_free_disk(module: Any) -> None:
+    """Point ``Sources.free_disk_bytes`` at the recorded floor, not the runner disk."""
+    sources_cls = module.Sources
+    current = sources_cls.free_disk_bytes
+    if getattr(current, "_lu_reports_floor_instead_of_runner_disk", False):
+        return
+    # The product module reads its evidence store configuration from the installed release.
+    evidence_config = sys.modules["lu_machinery.storage.generations"]
+    if evidence_config.FREE_DISK_FLOOR_ENV != _FREE_DISK_FLOOR_ENV:
+        raise RuntimeError(
+            f"{_SOURCES_MODULE} free-disk env is {evidence_config.FREE_DISK_FLOOR_ENV!r}, not {_FREE_DISK_FLOOR_ENV!r}"
+        )
+    real = current
+
+    def free_disk_bytes(self: Any) -> int:
+        if _guard_reads_production_free_disk:
+            return real(self)
+        return evidence_config.FREE_DISK_FLOOR_BYTES
+
+    free_disk_bytes._lu_reports_floor_instead_of_runner_disk = True
+    sources_cls.free_disk_bytes = free_disk_bytes
+
+
+class _SourcesFreeDiskLoader:
+    """Execute the real loader, then keep ``Sources`` off the runner's free disk."""
+
+    def __init__(self, loader: Any) -> None:
+        self._loader = loader
+
+    def create_module(self, spec: Any) -> Any:
+        create = getattr(self._loader, "create_module", None)
+        if create is None:
+            return None
+        return create(spec)
+
+    def exec_module(self, module: Any) -> None:
+        self._loader.exec_module(module)
+        _patch_sources_free_disk(module)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._loader, name)
+
+
+class _SourcesFreeDiskImportHook:
+    """Patch evidence ``Sources`` on first import without importing it here (#12655)."""
+
+    def find_spec(self, fullname: str, path: Any, target: Any = None) -> Any:
+        if fullname != _SOURCES_MODULE:
+            return None
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
+        if spec is None or spec.loader is None:
+            return None
+        if not isinstance(spec.loader, _SourcesFreeDiskLoader):
+            spec.loader = _SourcesFreeDiskLoader(spec.loader)
+        return spec
+
+
+def _install_sources_free_disk_hook() -> None:
+    if any(isinstance(hook, _SourcesFreeDiskImportHook) for hook in sys.meta_path):
+        return
+    module = sys.modules.get(_SOURCES_MODULE)
+    if module is not None and hasattr(module, "Sources"):
+        _patch_sources_free_disk(module)
+    sys.meta_path.insert(0, _SourcesFreeDiskImportHook())
+
+
+_install_sources_free_disk_hook()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def no_free_disk_floor() -> Generator[None, None, None]:
+    """Keep evidence ``Sources`` snapshots off the runner's free disk (#12640).
+
+    One fixture replaces the copies under ``tests/build`` and
+    ``tests/curriculum/evidence``. Session scope runs it before module-scoped
+    fixtures that open a snapshot. The floor environment is what a subprocess
+    inherits. Replacing ``free_disk_bytes`` keeps an in-process ``_guard`` off
+    ``shutil.disk_usage``. That replacement is installed on first import of
+    ``Sources``: importing it here would load ``ijson`` for every session,
+    including the deploy-idempotency job that does not install ``ijson``
+    (#12655). The guard's own test still calls the production reading for
+    the duration of its body.
+    """
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setenv(_FREE_DISK_FLOOR_ENV, "0")
+        yield
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item: pytest.Item) -> Generator[None, object, object]:
+    """Let the free-disk guard test call the production reading (#12640)."""
+    global _guard_reads_production_free_disk
+    name = getattr(item, "originalname", item.name)
+    _guard_reads_production_free_disk = name == _GUARD_FREE_DISK_TEST
+    try:
+        return (yield)
+    finally:
+        _guard_reads_production_free_disk = False
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -191,7 +380,11 @@ class _TelemetryIsolation:
         frame = sys._getframe(1)
         try:
             while frame is not None:
-                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                if frame.f_globals.get("__name__") in {
+                    "telemetry.emit",
+                    "scripts.telemetry.emit",
+                    "lu_machinery.telemetry.emit",  # TRANSITIONAL-PKG3-B2: installed release beside the in-tree copy
+                }:
                     self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
                     # emit_event swallows ordinary write errors. Retain the
                     # attempt for sessionfinish as well as preventing the write.
@@ -346,7 +539,51 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
+        parent = getattr(item, "callspec", None)
+        mode = parent.params.get("_launcher_parent_environment") if parent is not None else None
+        if mode is not None:
+            from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+            # Before fixtures of any scope, including checkout builders.
+            for name, value in SEAT_CONTAMINATION.items():
+                if mode == "polluted":
+                    patch.setenv(name, value)
+                else:
+                    patch.delenv(name, raising=False)
         return (yield)
+
+
+def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+    """Distribute audited launcher regressions normally, including their parameters."""
+    from tests.launcher_sandbox import LAUNCHER_TEST_FILES, POLLUTED_PARENT_TESTS
+
+    if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
+        regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
+        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
+        modes = ("clean", "polluted") if regression else ("clean",)
+        metafunc.parametrize(
+            "_launcher_parent_environment", modes, indirect=True,
+            ids=tuple("parent-" + mode for mode in modes),
+        )
+
+
+@pytest.fixture(autouse=True)
+def _launcher_parent_environment(request: pytest.FixtureRequest) -> dict[str, str]:
+    """Exercise inherited seat leaks before launcher fixtures build child environments.
+
+    The protocol hook has scrubbed live identity and injected the case's input.
+    Verify the effective parent, then let tests supply deliberate child inputs.
+    Tests outside the audited inventory keep their existing environment.
+    """
+    if not hasattr(request, "param"):
+        return {}
+    from tests.launcher_sandbox import SEAT_CONTAMINATION
+
+    effective = {name: os.environ[name] for name in SEAT_CONTAMINATION if name in os.environ}
+    assert effective == (SEAT_CONTAMINATION if request.param == "polluted" else {})
+    request.node.user_properties.append(("launcher_parent", request.param))
+    request.node.user_properties.append(("launcher_parent_verified_variables", len(effective)))
+    return effective
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -761,7 +998,11 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     return detector
 
 
-_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_CLAUDE_ADAPTER_ALIASES = (
+    "scripts.agent_runtime.adapters.claude",
+    "agent_runtime.adapters.claude",
+    "lu_machinery.agent_runtime.adapters.claude",  # TRANSITIONAL-PKG3-B2: product code runs the installed adapter
+)
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
 # Bridge package the rules-workflow venv does not install. The Claude adapter
 # reaches it through fleet_comms contracts; its absence is not an alias typo.
@@ -864,21 +1105,23 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
     state: dict[str, Any] = {"ready": False, "reason": "test stub: host slice probe disabled"}
     if request.node.get_closest_marker("host_dispatch_probe") is not None:
         return state
-    from scripts.orchestration import dispatch_isolation
-
     monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
         state["ready"] = True
         state["reason"] = None
 
-    def _probe(env: Any = None, **_kwargs: Any) -> Any:
-        source = os.environ if env is None else env
-        forced = dispatch_isolation._forced_fallback(source)
-        if forced is not None:
-            return forced
-        return dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
+    # Both machinery copies: the in-tree one and the installed release.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.orchestration.dispatch_isolation", "lu_machinery.orchestration.dispatch_isolation"):  # TRANSITIONAL-PKG3-B2
+        dispatch_isolation = importlib.import_module(name)
 
-    monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
+        def _probe(env: Any = None, _module: Any = dispatch_isolation, **_kwargs: Any) -> Any:
+            source = os.environ if env is None else env
+            forced = _module._forced_fallback(source)
+            if forced is not None:
+                return forced
+            return _module.ProbeResult(ready=state["ready"], reason=state["reason"])
+
+        monkeypatch.setattr(dispatch_isolation, "probe_isolation", _probe)
     return state
 
 
@@ -984,13 +1227,41 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is not None:
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
         if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
             monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
     return isolated_path
+
+
+# Every by-path sibling key both copies cache and reuse (an AST scan of scripts/ and the
+# installed lu_machinery/ for literal loader names; the two OPSEC loader keys re-execute
+# their private file on every load and never read the cache).  # TRANSITIONAL-PKG3-B2
+_SHARED_SIBLING_MODULE_KEYS = (
+    "_node_modules_integrity_check_primary_integrity",
+    "_venv_integrity_check_primary_integrity",
+    "_worktree_cleanup_integrity_check_primary_integrity",
+)
+
+
+@pytest.fixture(autouse=True)
+def _drop_shared_sibling_module_keys() -> None:
+    """Let each machinery copy load its own by-path sibling module.
+
+    The in-tree ``scripts/hygiene/check_{venv,node_modules,worktree_cleanup}_integrity.py``
+    and the installed release's copies each cache ``check_primary_integrity.py`` under
+    a fixed ``sys.modules`` key. In one pytest process the copy imported second gets the
+    other copy's module (merge-group run 42931243455: the release app's preload
+    raised ``AttributeError: ... has no attribute 'product_root'``). A copy keeps
+    the reference it bound at import, so dropping the key only affects the next
+    import. TRANSITIONAL-PKG3-B2: delete with the in-tree copy.
+    """
+    for key in _SHARED_SIBLING_MODULE_KEYS:
+        sys.modules.pop(key, None)
 
 
 @pytest.fixture(autouse=True)
@@ -1123,6 +1394,34 @@ def _checkout_corpus_db_paths() -> tuple[Path, Path]:
 def _checkout_corpus_db_snapshot() -> frozenset[str]:
     """The corpus databases present in the checkout."""
     return frozenset(path.relative_to(_REPO_ROOT).as_posix() for path in _checkout_corpus_db_paths() if path.exists())
+
+
+@pytest.hookimpl(specname="pytest_sessionstart", tryfirst=True)
+def pytest_sessionstart_runtime_scratch(session: pytest.Session) -> None:
+    config = session.config
+    # Collection and higher-scope fixtures run before the per-test override.
+    # Each xdist worker has its own factory and session-lifetime patch.
+    root = config._tmp_path_factory.mktemp("runtime-scratch-session")
+    # Explicit scratch overrides suppress consumers' own short-path fallback.
+    # Leave space for the PostgreSQL fixture's longest Unix socket name.
+    socket_suffix = Path("pg-XXXXXXXX") / ".s.PGSQL.65535"
+    if len(os.fsencode(root / socket_suffix)) > 103:
+        for base in (Path(f"/run/user/{os.getuid()}"), Path("/dev/shm"), Path("/tmp")):
+            try:
+                candidate = Path(tempfile.mkdtemp(prefix="lu-pytest-", dir=base)).resolve()
+            except OSError:
+                continue
+            if len(os.fsencode(candidate / socket_suffix)) <= 103:
+                root = candidate
+                config.add_cleanup(lambda root=root: shutil.rmtree(root))
+                break
+            shutil.rmtree(candidate)
+        else:
+            raise pytest.UsageError("No writable private scratch root fits the 103-byte Unix socket limit")
+    patch = pytest.MonkeyPatch()
+    config.add_cleanup(patch.undo)
+    patch.setenv("LU_SCRATCH_ROOT", str(root))
+    patch.setenv("LU_SCRATCH_SCAN_ROOT", str(root))
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
@@ -1505,14 +1804,14 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     records hold real rate limits. Credit-lane tests monkeypatch both readers
     themselves.
     """
-    from scripts.fleet import credit_lane
-
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
-    monkeypatch.setattr(
-        credit_lane,
-        "read_recent_rate_limits",
-        lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
-    )
+    for name in ("scripts.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
+        credit_lane = importlib.import_module(name)
+        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+        monkeypatch.setattr(
+            credit_lane,
+            "read_recent_rate_limits",
+            lambda *_args, **_kwargs: {"count": 0, "last_rate_limited_at": None},
+        )
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the
@@ -1587,14 +1886,14 @@ class _RedirectRefreshSidecarLoader:
 class _IssueStreamRefreshImportHook:
     """Redirect refresh sidecars on the audit module's first import (#10519)."""
 
-    _MODULE = "scripts.orchestration.issue_stream_audit"
+    _MODULES = ("scripts.orchestration.issue_stream_audit", "lu_machinery.orchestration.issue_stream_audit")  # TRANSITIONAL-PKG3-B2
 
     def __init__(self, state: Path, lock: Path) -> None:
         self._state = state
         self._lock = lock
 
     def find_spec(self, fullname, path, target=None):
-        if fullname != self._MODULE:
+        if fullname not in self._MODULES:  # TRANSITIONAL-PKG3-B2
             return None
         spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
         if spec is None or spec.loader is None:
@@ -1619,10 +1918,11 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
     state_dir = _write_ownership_base / f"issue-audit-refresh-{next(_WRITE_OWNERSHIP_SEQ)}"
     state = state_dir / "issue_stream_audit_refresh.json"
     lock = state_dir / "issue_stream_audit_refresh.lock"
-    module = sys.modules.get(_IssueStreamRefreshImportHook._MODULE)
-    if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
-        monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
-        monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
+    for name in _IssueStreamRefreshImportHook._MODULES:  # TRANSITIONAL-PKG3-B2
+        module = sys.modules.get(name)
+        if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
+            monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
+            monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
     hook = _IssueStreamRefreshImportHook(state, lock)
     sys.meta_path.insert(0, hook)
     try:
@@ -1835,19 +2135,20 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
-    api_config = _loaded_module("scripts", "api", "config")
-    if api_config is not None:
-        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-    monitor_context = _loaded_module("scripts", "api", "monitor_context")
-    if monitor_context is not None:
-        monitor_context.production_context.cache_clear()
-    api_main = _loaded_module("scripts", "api", "main")
-    if api_main is None:
-        return
-    app = vars(api_main).get("app")
-    context = getattr(getattr(app, "state", None), "ctx", None)
-    if context is not None:
-        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+    for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
+        api_config = _loaded_module(package, "api", "config")
+        if api_config is not None:
+            monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+        monitor_context = _loaded_module(package, "api", "monitor_context")
+        if monitor_context is not None:
+            monitor_context.production_context.cache_clear()
+        api_main = _loaded_module(package, "api", "main")
+        if api_main is None:
+            continue
+        app = vars(api_main).get("app")
+        context = getattr(getattr(app, "state", None), "ctx", None)
+        if context is not None:
+            monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
 
 
 # Per-process, not per-test: ``mktemp`` scans the base directory for the next
@@ -3863,14 +4164,14 @@ def _hermetic_agy_claude_window(monkeypatch):
     which catalog seat those tests select. The default reading is a fresh
     empty window. A test of the real reader restores ``__wrapped__``.
     """
-    from scripts.agent_runtime import model_pause as mp
+    for name in ("scripts.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
+        mp = importlib.import_module(name)
+        real = mp.routing_budget_used_pct
 
-    real = mp.routing_budget_used_pct
+        def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):
+            if lane == _window:
+                return 0.0
+            return _real(lane, account=account)
 
-    def wrapped(lane, *, account):
-        if lane == mp.AGY_CLAUDE_WINDOW_LANE:
-            return 0.0
-        return real(lane, account=account)
-
-    wrapped.__wrapped__ = real
-    monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)
+        wrapped.__wrapped__ = real
+        monkeypatch.setattr(mp, "routing_budget_used_pct", wrapped)

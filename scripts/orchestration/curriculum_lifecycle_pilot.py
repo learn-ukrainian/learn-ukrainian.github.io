@@ -12,6 +12,7 @@ import sys
 from collections.abc import Mapping, Sequence
 from itertools import pairwise
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import yaml
@@ -21,9 +22,23 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import post_build_review
-from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.orchestration import curriculum_readiness, prompt_contracts
+
+# The product API the pilot uses. A configured module without any of it is refused.
+_GATE_EXPORTS = ("post_build_review", "base_level", "resolve_content_track", "resolve_manifest_module_track")
+
+
+def readiness_gates(*, product_root: Path | None = None) -> ModuleType:
+    """The product's readiness gates module, loaded when the pilot needs it, never at import.
+
+    The readiness checks' strict loader (:func:`curriculum_readiness.load_readiness_gates`)
+    reads the configuration under ``product_root`` (an absolute path; default: this checkout)
+    at each call and refuses a module without every name in ``_GATE_EXPORTS``. A missing or
+    invalid configuration, or a module without that API, raises (``ImportError`` or
+    ``OSError``) and so refuses the operation that asked for the gates.
+    """
+    return curriculum_readiness.load_readiness_gates(_GATE_EXPORTS, product_root=product_root)
+
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")
 DEFAULT_MATRIX_PATH = CONTRACT_ROOT / "config/pilot-matrix.v1.yaml"
@@ -315,7 +330,7 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
             continue
         track, slug = str(row["selector"]).split("/", 1)
         active_manifest = curriculum_readiness.load_active_manifest(repo_root)
-        resolved_track = resolve_manifest_module_track(track, slug, active_manifest["tracks"])
+        resolved_track = readiness_gates().resolve_manifest_module_track(track, slug, active_manifest["tracks"])
         manifest, modules = curriculum_readiness.manifest_track(active_manifest, resolved_track)
         if slug not in modules:
             raise PilotError(f"pilot target is not active in curriculum manifest: {row['selector']}")
@@ -342,6 +357,7 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
 
 
 def load_matrix(*, repo_root: Path = PROJECT_ROOT, matrix_path: Path = DEFAULT_MATRIX_PATH) -> dict[str, Any]:
+    readiness_gates()  # every pilot operation loads the matrix: refuse first when the gates are unavailable
     path = _repository_backed_file(repo_root, matrix_path)
     matrix = _read_yaml(path)
     _validate(matrix, _repo_file(repo_root, MATRIX_SCHEMA_PATH), "pilot matrix")
@@ -351,12 +367,13 @@ def load_matrix(*, repo_root: Path = PROJECT_ROOT, matrix_path: Path = DEFAULT_M
 
 def _learner_hashes(matrix: Mapping[str, Any], repo_root: Path) -> dict[str, str]:
     hashes: dict[str, str] = {}
+    gates = readiness_gates()
     selectors = sorted({str(row["selector"]) for row in matrix["rows"] if row["kind"] in {"repository", "historical"}})
     for selector in selectors:
         track, slug = selector.split("/", 1)
         curriculum = repo_root / "curriculum/l2-uk-en"
-        content_track = resolve_content_track(track, slug, curriculum)
-        plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
+        content_track = gates.resolve_content_track(track, slug, curriculum)
+        plan_track = gates.base_level(track, manifest=curriculum / "curriculum.yaml")
         candidates = [
             Path(f"curriculum/l2-uk-en/plans/{plan_track}/{slug}.yaml"),
             *(Path(f"curriculum/l2-uk-en/{content_track}/{slug}/{name}") for name in LEARNER_BUNDLE_FILES),
@@ -420,6 +437,7 @@ def _post_build_evidence_passes(row: Mapping[str, Any], repo_root: Path) -> bool
         return True
     path = _repo_file(repo_root, str(evidence["path"]))
     value = _read_json(path)
+    post_build_review = readiness_gates().post_build_review
     try:
         post_build_review.validate_result(value, repo_root=repo_root)
         target = post_build_review.resolve_target(str(row["selector"]), repo_root=repo_root)

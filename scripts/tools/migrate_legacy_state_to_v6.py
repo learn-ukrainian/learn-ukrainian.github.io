@@ -404,7 +404,7 @@ def build_v6_state(candidate: Candidate, migrated_at: str | None = None) -> Migr
 
 def verify_v6_state(track: str, slug: str, orch_dir: Path, expected_state: dict[str, Any]) -> None:
     """Round-trip a v6 state through the API reader."""
-    from api.state_helpers import detect_pipeline_version, load_module_state
+    from project_api.curriculum_state import detect_pipeline_version, load_module_state
 
     version = detect_pipeline_version(orch_dir)
     if version != "v6":
@@ -453,8 +453,7 @@ def _verify_dry_run(report: MigrationReport) -> None:
         verify_v6_state(report.candidate.track, report.candidate.slug, orch_dir, report.v6_state)
 
     from fastapi.testclient import TestClient
-
-    from api.main import app
+    from lu_machinery.api.main import app
 
     client = TestClient(app)
     track = report.candidate.track
@@ -533,7 +532,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     mode.add_argument("--dry-run", action="store_true", help="Preview changes without writing (default)")
     mode.add_argument("--apply", action="store_true", help="Write migrated state.json files in place")
 
-    parser.add_argument("--verify", action="store_true", help="Round-trip migrated states through scripts.api.state_helpers")
+    parser.add_argument("--verify", action="store_true", help="Round-trip migrated states through scripts.project_api.curriculum_state")
     parser.add_argument("--limit", type=int, default=None, help="Only process the first N matching orchestration directories")
     return parser.parse_args(argv)
 

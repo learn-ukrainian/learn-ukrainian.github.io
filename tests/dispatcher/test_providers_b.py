@@ -14,10 +14,82 @@ from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.repo_root import project_interpreter
 from scripts.dispatcher import agy_sandbox, runtime_context
-from scripts.dispatcher.providers import load
+from scripts.dispatcher.providers import PROVIDERS, load
 from scripts.dispatcher.runtime_context import read_roots
 from scripts.dispatcher.types import ParsedResult, TaskSpec
 from scripts.lib import rules_core
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+@pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
+@pytest.mark.parametrize("correction", (False, True))
+def test_instruction_free_dispatch_delivers_trusted_core(tmp_path, monkeypatch, provider, mode, correction):
+    """Defect class: provider transports omit the trusted core in instruction-free checkouts."""
+    from scripts.dispatcher.environment import child_env
+    from scripts.dispatcher.providers import muse
+
+    checkout = tmp_path / "empty checkout"
+    checkout.mkdir()
+    brief = tmp_path / "brief"
+    original = b'Inspect "this".\r\nPreserve brief bytes.\n'
+    brief.write_bytes(original)
+    spec = TaskSpec("core-delivery", provider, "grok-4.7-high" if provider == "cursor" else "gpt-6.1-sol",
+                    "high", mode, checkout, brief, tmp_path / "result")
+    monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
+    monkeypatch.setattr(muse, "confined_muse_argv", lambda argv, *args: argv)
+    binary = tmp_path / ("cursor-agent" if provider == "cursor" else provider)
+    binary.write_text(f"#!{sys.executable}\n" + r'''
+import json, pathlib, sys, tomllib
+args = sys.argv[1:]
+layers = [sys.stdin.buffer.read().decode()]
+for i, arg in enumerate(args[:-1]):
+    if arg in {"--prompt-file", "--append-system-prompt-file"}:
+        layers.append(pathlib.Path(args[i + 1]).read_bytes().decode())
+    if arg == "--append-system-prompt":
+        layers.append(args[i + 1])
+    if arg == "-c" and args[i + 1].startswith("developer_instructions="):
+        layers.append(tomllib.loads(args[i + 1])["developer_instructions"])
+if "--" in args:
+    layers.append(args[args.index("--") + 1])
+if "--input-format" in args:
+    layers[0] = json.loads(layers[0])["message"]["content"][0]["text"]
+print(json.dumps({"argv": args, "layers": layers}))
+''')
+    binary.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path) + os.pathsep + os.environ["PATH"])
+    selected = b"Keep the same verdict.\r\n" if correction else original
+    if provider == "muse" and mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
+        assert brief.read_bytes() == original
+        assert list(checkout.iterdir()) == []
+        return
+    invocation = runtime_context.build(spec, child_env(spec), launch_prompt=selected if correction else None)
+    result = subprocess.run(invocation.argv, input=invocation.stdin, env=invocation.env, cwd=checkout,
+                            capture_output=True, timeout=10)
+    assert result.returncode == 0, result.stderr.decode()
+    capture = json.loads(result.stdout)
+    core = rules_core.core_text(rules_core.resolve_seat())
+    assert sum(layer.count(core) for layer in capture["layers"]) == 1
+    assert any(selected.decode() in layer for layer in capture["layers"])
+    if correction:
+        assert all(original.decode() not in layer for layer in capture["layers"])
+    assert brief.read_bytes() == original
+    assert list(checkout.iterdir()) == []
+    for flag in ("--append-system-prompt-file", "--prompt-file"):
+        if flag in invocation.argv:
+            assert Path(invocation.argv[invocation.argv.index(flag) + 1]).stat().st_mode & 0o777 == 0o600
+    # The adapter's permission, account and isolation settings remain present verbatim.
+    adapter = load(provider).build(spec, child_env(spec))
+    for flag in ("--permission-mode", "--restricted", "--tools", "--allowedTools", "--disallowedTools",
+                 "--sandbox", "--force", "--mode", "--permission-profile", "--disable-write", "--disable-shell"):
+        if flag in adapter.argv:
+            assert flag in invocation.argv
+            i = adapter.argv.index(flag)
+            if i + 1 < len(adapter.argv) and not adapter.argv[i + 1].startswith("--"):
+                assert invocation.argv[invocation.argv.index(flag) + 1] == adapter.argv[i + 1]
+    for key in ("OPENCODE_PERMISSION", "CLAUDE_CODE_SHELL_PREFIX"):
+        assert invocation.env.get(key) == adapter.env.get(key)
 
 # Small recorded event shapes from the old adapters' stream contracts.
 SUCCESS = {
@@ -84,15 +156,15 @@ def test_private_repo_workers_can_load_shared_skills_and_task_records(tmp_path, 
     (tasks / "previous.result").write_text("prior worker evidence")
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     source_path = rules_core.source_path
-    monkeypatch.setattr(rules_core, "source_path", lambda rel, root=None:
-                        shared if rel == "agents_extensions/shared" else source_path(rel, root))
+    monkeypatch.setattr(rules_core, "source_path", lambda rel, root=None, **kwargs:
+                        shared if rel == "agents_extensions/shared" else source_path(rel, root, **kwargs))
     # Exercise the structured AGY provider message here; the real read-only boundary is tested below.
     monkeypatch.setattr(agy_sandbox, "unavailable", lambda: None)
     monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
     prompt = tmp_path / "prompt"
     original = b"List the loaded skills.\r\nRead previous.result from the shared task store."
     prompt.write_bytes(original)
-    spec = TaskSpec("context", provider, "stub", "high", mode, private, prompt, tmp_path / "final")
+    spec = TaskSpec("context", provider, "gpt-6.1-sol", "high", mode, private, prompt, tmp_path / "final")
     invocation = runtime_context.build(spec, child_env(spec))
     # A real child interprets the advertised catalog and opens its files, rather than just
     # asserting that a helper was called or that environment keys were set.
@@ -135,7 +207,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     prompt_bytes = 'Inspect "the file".\r\nЗвіт.\n--not-a-flag'.encode()
     prompt.write_bytes(prompt_bytes)
     final = tmp_path / "final.txt"
-    spec = TaskSpec("provider-b", provider, "explicit-model", effort, mode, worktree, prompt, final, "a")
+    spec = TaskSpec("provider-b", provider, "gpt-6.1-sol", effort, mode, worktree, prompt, final, "a")
     executable = "cursor-agent" if provider == "cursor" else provider
     binary = tmp_path / executable
     binary.write_text(f"#!{sys.executable}\n" + STUB)
@@ -149,12 +221,12 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     original_env = env.copy()
     invocation = load(provider).build(spec, env)
     expected = {
-        "codex": ["exec", "--json", "-C", str(worktree), "-m", "explicit-model", "-o", str(final)],
-        "claude": ["-p", "--model", "explicit-model"],
+        "codex": ["exec", "--json", "-C", str(worktree), "-m", "gpt-6.1-sol", "-o", str(final)],
+        "claude": ["-p", "--model", "gpt-6.1-sol"],
         "cursor": [
             "-p",
             "--model",
-            "explicit-model",
+            "gpt-6.1-sol",
             "--output-format",
             "stream-json",
             "--trust",
@@ -169,7 +241,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             "--output-format",
             "stream-json",
             "--model",
-            "explicit-model",
+            "gpt-6.1-sol",
         ],
     }[provider]
     if provider == "codex":
@@ -318,7 +390,7 @@ def test_claude_parse_counts_completed_sources_mcp_calls_from_the_stream():
 def test_unknown_provider_mode_never_receives_write_or_bypass_flags(tmp_path, provider, mode):
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("private prompt must not be echoed")
-    spec = TaskSpec("unknown-mode", provider, "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    spec = TaskSpec("unknown-mode", provider, "gpt-6.1-sol", None, mode, tmp_path, prompt, tmp_path / "final.txt")
     invocation = None
     with pytest.raises(ValueError) as exc:
         invocation = load(provider).build(spec, {"PRIVATE_ENV": "must not be echoed"})
@@ -330,7 +402,7 @@ def test_unknown_provider_mode_never_receives_write_or_bypass_flags(tmp_path, pr
 def test_unknown_codex_mode_never_receives_sandbox_bypass(tmp_path, mode):
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("private prompt must not be echoed")
-    spec = TaskSpec("unknown-mode", "codex", "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    spec = TaskSpec("unknown-mode", "codex", "gpt-6.1-sol", None, mode, tmp_path, prompt, tmp_path / "final.txt")
     invocation = None
     with pytest.raises(ValueError) as exc:
         invocation = load("codex").build(spec, {"PRIVATE_ENV": "must not be echoed"})

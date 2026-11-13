@@ -6,10 +6,20 @@ import time
 from collections.abc import Callable, Mapping
 from contextlib import contextmanager
 from pathlib import Path
+from typing import TypedDict
 
-from agent_runtime import runner
-from agent_runtime.errors import AgentRuntimeError, AgentTimeoutError, RateLimitedError
-from ai_llm.fallback import AttemptRecord, CallResult, visible_sleep
+from .fallback import AttemptRecord, AttemptStatus, CallResult, visible_sleep
+
+if __package__ == "ai_llm":  # the historical top-level alias, imported with scripts/ on sys.path
+    from agent_runtime import runner
+    from agent_runtime.errors import AgentRuntimeError, AgentTimeoutError, RateLimitedError
+else:
+    from ..agent_runtime import runner  # type: ignore[no-redef]
+    from ..agent_runtime.errors import (  # type: ignore[assignment]
+        AgentRuntimeError,
+        AgentTimeoutError,
+        RateLimitedError,
+    )
 
 
 @contextmanager
@@ -26,6 +36,17 @@ def _patched_environ(base_env: Mapping[str, str] | None):
     finally:
         os.environ.clear()
         os.environ.update(old_env)
+
+
+class _Attempt(TypedDict):
+    """One runtime call's outcome, as ``call_agent_with_fallback`` records it."""
+
+    status: AttemptStatus
+    model: str
+    elapsed_s: float
+    response: str | None
+    error: str | None
+    returncode: int | None
 
 
 def _build_model_ladder(
@@ -168,7 +189,7 @@ def _invoke_once(
     hard_timeout: int | None,
     workdir: Path,
     base_env: Mapping[str, str] | None,
-) -> dict[str, object]:
+) -> _Attempt:
     attempt_start = time.monotonic()
     try:
         with _patched_environ(base_env):
@@ -217,14 +238,14 @@ def _invoke_once(
 
 
 def _attempt(
-    status: str,
+    status: AttemptStatus,
     model: str,
     elapsed_s: float,
     *,
     response: str | None = None,
     error: str | None = None,
     returncode: int | None = None,
-) -> dict[str, object]:
+) -> _Attempt:
     return {
         "status": status,
         "model": model,

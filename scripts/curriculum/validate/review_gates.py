@@ -920,8 +920,8 @@ class ReviewGates(Gates):
         Availability is measured before each step, including earlier teaching in the
         same lesson. Early A1 is the table's English-only activity-instruction role.
         """
-        from scripts import config as immersion_config
         from scripts.build.fresh.immersion import get_immersion_table
+        from scripts.curriculum import pedagogy_config as immersion_config
 
         from .cross import collect_introductions
 

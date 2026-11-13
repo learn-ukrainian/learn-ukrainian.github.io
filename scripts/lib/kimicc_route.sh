@@ -10,6 +10,13 @@
 # Headless Claude Code uses --bare, so it resolves a fresh OAuth token at spawn
 # and must be relaunched for calls longer than the roughly 15-minute token life.
 
+# This file's directory (it supplies the sibling helpers) and the machinery
+# package's directory name in checkout paths, from this file's unresolved
+# location (design-v1 amendment 1).
+KIMICC_ROUTE_LIB_DIR="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || KIMICC_ROUTE_LIB_DIR=''
+KIMICC_ROUTE_PACKAGE="${KIMICC_ROUTE_LIB_DIR%/*}"
+KIMICC_ROUTE_PACKAGE="${KIMICC_ROUTE_PACKAGE##*/}"
+
 kimicc_default_base_url() {
   case "$1" in
     platform) printf '%s\n' 'https://api.moonshot.ai/anthropic' ;;
@@ -153,7 +160,7 @@ kimicc_configure_route() {
   fi
 
   # shellcheck source=scripts/lib/claude_route_guard.sh
-  source "$project_dir/scripts/lib/claude_route_guard.sh"
+  source "$KIMICC_ROUTE_LIB_DIR/claude_route_guard.sh"
   CLAUDE_ROUTE_GUARD_PYTHON="$python_bin"
   export CLAUDE_ROUTE_GUARD_PYTHON
   if [ "$ISOLATE_CONFIG" = "1" ] && [ "${KIMICC_HEADLESS:-0}" != "1" ] && [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
@@ -168,7 +175,7 @@ kimicc_configure_route() {
   # Catalog/session resolution stays on the invoked worktree. Only Kimi's
   # OAuth helper can be durable, so isolated apiKeyHelper paths survive a
   # short-lived dispatch worktree without making the session itself durable.
-  oauth_helper="$durable_helper_dir/scripts/lib/kimi_coding_oauth.py"
+  oauth_helper="$durable_helper_dir/$KIMICC_ROUTE_PACKAGE/lib/kimi_coding_oauth.py"
   AUTH_VIA_OAUTH=0
   if ! kimicc_resolve_explicit_auth_token; then
     if [ "$ENDPOINT" = "coding" ] && [ -f "$oauth_helper" ] && [ -x "$python_bin" ]; then
@@ -191,7 +198,7 @@ kimicc_configure_route() {
   fi
 
   # shellcheck source=scripts/lib/profile_resolver.sh
-  source "$project_dir/scripts/lib/profile_resolver.sh"
+  source "$KIMICC_ROUTE_LIB_DIR/profile_resolver.sh"
   CLAUDE_PROFILE_RESOLVER_PYTHON="$python_bin"
   export CLAUDE_PROFILE_RESOLVER_PYTHON
   if ! resolve_context_profile "$PROFILE_ID" "$LEAD_MODEL"; then

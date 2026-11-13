@@ -44,19 +44,16 @@ policy:
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 reviews and drives through native Claude only; no Claude model
       reviews through Cursor (operator decision D-129, #10464).
-      Grok dispatch uses Cursor at grok-4.7-high. Native Grok dispatch is retired.
-      The native CLI remains available to direct interactive and ACP callers.
-      The Cursor seat pinned to grok-4.7-high is a regular code/infra reviewer at
-      every risk, including critical;
-      verdicts require runtime model attestation and exclude xAI-authored changes.
-      Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
-      first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
-      OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
+      Operator order C-5307 (2026-11-12) restores grok-4.7 for coding and
+      review through the existing Cursor transport, on trial (C-5308).
+      Native Grok remains available for coding; older Grok models remain
+      historical identities.
+      Grok has no driver, Ukrainian, or high/critical final-signoff authority.
     - >-
       Kimi models are retired (OO-58, #11327, 2026-10-21; unused since
       2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses
       every Kimi id. Historical workers used the native `kimi` CLI only;
-      OpenRouter was never a Kimi worker bus. Pool and Gemma are retired, not subscribed (operator 2026-10-23).
+      OpenRouter was never a Kimi worker bus. Pool is not subscribed (operator 2026-10-23). Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107).
     - >-
       Kimi seats are not a usable lane (OO-58, #11327). Historical limit, kept
       as record: web, UI and backend coding only, no Ukrainian-language content,
@@ -88,7 +85,7 @@ policy:
       strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast
       scoped CF. Historical GLM-5.3 = ships-heavier; GLM is now retired, not subscribed. Codex/Sol = careful/small, thorough/heavy advisory — not a
       speed winner. Evidence: AGY #7137, Kimi #7143, Codex/Sol #7142, Grok #7133,
-      GLM #7144 (also addresses #7121 fetch refspecs). Pool, Gemma and GLM are retired, not subscribed (operator 2026-10-23).
+      GLM #7144 (also addresses #7121 fetch refspecs). Pool and GLM are not subscribed (operator 2026-10-23). Gemma is live for hramatka through OpenCode (operator 2026-11-07, REMOVE-UNNEEDED-1107).
       Gemini uses AGY, never OpenRouter.
       Kimi is retired and is not a seat.
 
@@ -141,7 +138,6 @@ review_scheduler:
       - architecture_support
       - consequential_advisory
       - bounded_advisory_envelope
-      - review_budget_elevation
       - advisory
       - high_volume_dissent
       - web_fact_check
@@ -153,7 +149,7 @@ review_scheduler:
   # natively; no Claude model through Cursor, #10464). This is an eligibility gate: ladders, explicit
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
-    high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}, {role: legacy_reviewers, seat: xai_reviewer}]
+    high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}]
   endpoints:
     claude:
       formal_review_eligible: true
@@ -170,13 +166,13 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [{role: openai_frontier_coder}, gpt-6-astra]
+      models: [{role: openai_frontier_coder}]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
       sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: codex
-      credential_bucket: codex
+      quota_bucket: codex:a
+      credential_bucket: codex:a
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
@@ -197,10 +193,10 @@ review_scheduler:
       credential_limit: 2
       capacity_weight: 1.0
     grok:
-      # Operator decision 2026-10-05 (#9769): native code/infra review at every risk.
-      # Verdict recording requires runtime modelUsage attestation.
-      formal_review_eligible: true
-      models: [{role: legacy_reviewers, seat: xai_reviewer}]
+      # The existing native runtime supports coding, but has no dispatcher provider.
+      formal_review_eligible: false
+      formal_review_exclusion_reason: "native dispatcher route unavailable; formal Grok reviews use Cursor"
+      models: []
       participant: grok
       adapter_transport: acp
       catalog_transport: native_grok
@@ -258,6 +254,7 @@ review_scheduler:
       # exact Cursor slug and record_cf_verdict accepts its verdict only from the
       # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
       # Claude stay unpinned, so the resolver excludes them as unattested.
+      # C-5307 restores the exact grok-4.7-high review pin, not Cursor Auto.
       formal_review_eligible: true
       models: [{role: legacy_reviewers, seat: xai_reviewer}]
       participant: cursor
@@ -343,16 +340,6 @@ advisory_roles:
     effort: high
     fence: advisory-envelope
     output_fields: [task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints, risk_boundaries, acceptance_evidence, escalation_triggers]
-  # Rounds 4 and 5 for one PR's open qualifying blocker, by the CTO's ruling and
-  # this sealed non-author APPROVE; read by the verdict recorder
-  # (scripts/review/budget_grant.py). Designated approval: CTO proposal, Sol 6.1
-  # APPROVE WITH CHANGES (task cto-7923-adv-clog-sol, item 3b).
-  review_budget_elevation:
-    effort: high
-    fence: budget-elevation
-    # For an admission_exclusion, attest after reading the complete bound reply:
-    # {complete_reply_execution_obstruction_only: true, no_substantive_defect: true, no_security_fail: true}; otherwise null.
-    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, withheld_capability, p2_fix_verification, owner_request, admission_exclusion_attestation, request_sha256]
 
 models:
   muse-wonder-full-1.0:
@@ -396,7 +383,6 @@ models:
       - critical_review
       - agentic_coding
       - bounded_advisory_envelope
-      - review_budget_elevation
       - consequential_advisory
       - ukrainian_review
     transports: [native_codex]
@@ -467,25 +453,14 @@ models:
   gpt-6-astra:
     family: openai
     tier: frontier_authority
-    lifecycle: fallback
-    roles: [standard_review]
-    transports: [native_codex]
-    routing_wire_ids:
-      native_codex: gpt-6-astra
-    red_team_only:
-      review_mode: red_team
-      review_profile: code
-      transport: native_codex
-      role: standard_review
-      expires_at: '2026-11-04T00:00:00Z'
-      author_model: gpt-6.1-sol
+    lifecycle: retired
+    replaced_by: gpt-6.1-sol
+    roles: [bounded_advisory_envelope, architecture, consequential_advisory]
+    transports: []
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Operator decision 2026-10-31, recorded by CTO, under #10437: Codex
-      red-team code review of Sol-authored PRs only until 2026-11-04T00:00Z.
-      No outside-family credit, Ukrainian review, security sign-off, advice,
-      approval, design, implementation or driver role. Existing risk floors apply.
+      Historical records only. Operator 2026-09-29 (#9230): gpt-6.1-sol took the advisory seat. Not routable.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
   gpt-6-sol:
@@ -585,6 +560,27 @@ models:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
+  claude-fable-5-2:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    # #9583: no architecture/advisory or review role; launchable model only.
+    # Explicit pin only (C-4965); no resolver, ladder or default routes it.
+    roles: [long_horizon_coding, orchestration]
+    transports: [native_claude]
+    strengths: [long_horizon_work, always_on_thinking]
+    weaknesses: [no_zero_data_retention, forced_tool_choice_unsupported]
+    notes: >-
+      Operator order C-4965 (2026-11-09): Fable 5.2 is prepared for use by explicit
+      pin only and is not routed by default until the operator decides after
+      evaluation. Probe 2026-11-09 (Claude Code 2.1.321, account a):
+      claude -p --model claude-fable-5-2 succeeded with modelUsage key
+      claude-fable-5-2. Like claude-fable-5-1 (#9583) it holds no advisory,
+      approval, review or critique role and is not a last resort for any of them.
+      claude-fable-5-1 stays active alongside it. Thinking is always on and the
+      API default effort is high; it requires 30-day data retention (no ZDR).
+    sources:
+      - https://platform.claude.com/docs/en/models/fable-5-2/overview
   claude-opus-5-5:
     routing_wire_ids:
       native_claude: claude-opus-5-5
@@ -600,7 +596,6 @@ models:
       - agentic_coding
       - critical_review
       - security_review
-      - review_budget_elevation
     transports: [native_claude, agy]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
@@ -662,7 +657,7 @@ models:
     strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
     weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver]
     notes: >-
-      #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
+      #9996: routine lockfile, pointer and smoke work; mechanical
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
       owned paths and non-Ukrainian inputs. #10919: bounded implementation also
@@ -718,10 +713,7 @@ models:
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
     # The first-choice Ukrainian reviewer (core.md P2). The 2026-10-08 approval adds low-risk and
     # medium-risk code review through native AGY; high/critical and security paths remain excluded.
-    # Low/medium code suitability ranks long_context_review before Grok's
-    # critical_review-only routes, even though Grok appears earlier in the ladder.
-    # Thus native AGY can precede Grok when higher-fit Sol/Claude seats are unavailable;
-    # hard gates, suitability and quality still precede health/quota tie-breaks.
+    # Hard gates, suitability and quality still precede health/quota tie-breaks.
     roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review, long_context_review]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
@@ -743,42 +735,102 @@ models:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
   gemini-4-carbon:
-    family: google
-    tier: compatibility
-    lifecycle: hold
-    roles: [inventory_only]
-    transports: []
-    strengths: [inventory_placeholder]
-    weaknesses: [unreleased, unofficial_evidence_only, provisional_id, unavailable_on_agy]
-    notes: >-
-      Unreleased model reported only by unofficial sources. The catalog id
-      gemini-4-carbon is provisional, not a verified provider selector or wire id.
-      A live `agy models` probe on 2026-10-29 listed no Carbon selector.
-      No execution, resolver, ladder, dispatch or role placement is authorized.
-      Promotion requires a new live `agy models` probe listing the exact Carbon
-      selector, recording the real wire id(s) from that listing, then designated
-      approval before lifecycle: active and any role or ladder placement.
-    sources:
-      - https://testingcatalog.com/gemini-4-carbon-early-test-results
-      - https://letsdatascience.com/news/gemini-4-carbon-checkpoint-reportedly-appears-on-chatbot-are-ee165ebf
-      - https://pasqualepillitteri.it/de/news/22309/gemini-4-carbon-leak-mitarbeiter-opus-5-5
-  gemini-4-argon-high:
+    routing_wire_ids:
+      agy: gemini-4-carbon-medium
     family: google
     tier: frontier_practical
-    lifecycle: retired
-    aliases: [gemini-4-argon-medium, gemini-4-argon-low]
-    # Direct listed AGY slugs. Not a base name plus an effort suffix.
-    # Historical trial metadata. Retirement bars all execution.
-    roles: [explicit_bakeoff_only]
-    transports: []
-    strengths: [listed_agy_selector]
+    lifecycle: active
+    # The listed AGY selectors are separate wire values. -medium is the routing
+    # wire id (the Gemini work route); -high and -low are runtime ids, which dispatch
+    # passes through unchanged and identity attestation recognises, for explicit
+    # selection only. They are not aliases: dispatch rewrites an alias to the wire
+    # id, so an alias would run -medium.
+    runtime_model_ids: [gemini-4-carbon-high, gemini-4-carbon-low]
+    # Work roles only. Review, Ukrainian review and advisory roles stay with the
+    # existing seats until a held-out review test reports.
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
+    transports: [agy]
+    strengths: [listed_agy_selector, one_million_token_context, terminal_bench_coding]
     weaknesses:
-      - supervised_trial_not_advisor_quality
+      - provider_listing_is_not_qualification
+      - no_published_code_review_benchmark
+      - no_published_ukrainian_quality_result
+      - more_thinking_tokens_than_argon
+      - occasional_slowness_or_timeouts
+      - cyber_scores_via_fairwind_program_access
+      - agy_selector_thinking_level_mapping_unverified
+    notes: >-
+      Operator decision 2026-11-10: Gemini 4 Carbon at medium is the Gemini work
+      route over AGY, preferred over Gemini 4 Argon, which is the second Gemini
+      option; both are used on medium and measured in use (hallucination, code
+      writing, pricing; Ukrainian later). Live `agy models` probes on 2026-11-10
+      (19:50Z and 20:03Z) list gemini-4-carbon-high, gemini-4-carbon-medium and
+      gemini-4-carbon-low. Dispatch: `scripts/dispatch.py dispatch --agent agy
+      --model gemini-4-carbon-medium`; -high and -low are explicit selections
+      only. Review ladders, review seats, the Ukrainian review route and advisory
+      roles are unchanged until the held-out review test reports; Carbon holds no
+      review role, so it is refused for any review of record. The certified
+      Gemini driver seat (orchestrator_seats.agy) is unchanged. Model card
+      (published November 2026): based on Gemini 4 Argon, one 1M-token window
+      shared by input and output, knowledge cutoff March 2026, more thinking
+      tokens than Argon with configurable thinking levels, occasional slowness or
+      timeouts and higher token use at higher thinking levels; Terminal-Bench 4.0
+      (AA) 65.2% in Google's table; its cybersecurity results reflect access
+      through the Fairwind Program. Gemini API docs: API id gemini-4-carbon,
+      generally available 2026-11-10, thinking levels low, medium and high
+      (default medium). Google publishes no code-review benchmark and no
+      Ukrainian result, and does not state how the AGY selectors map to API
+      thinking levels. A 2026-10-29 probe listed no Carbon selector; the earlier
+      leak-based sources are superseded by the official card.
+    sources:
+      - https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-4-Carbon-Model-Card.pdf
+      - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/
+      - https://aistudio.google.com/docs/changelog
+      - https://aistudio.google.com/docs/thinking
+  gemini-4-argon:
+    routing_wire_ids:
+      agy: gemini-4-argon-medium
+    family: google
+    tier: frontier_practical
+    lifecycle: active
+    # Same selector shape as gemini-4-carbon. The former catalog id
+    # gemini-4-argon-high still resolves here as an effort variant.
+    runtime_model_ids: [gemini-4-argon-high, gemini-4-argon-low]
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
+    transports: [agy]
+    strengths: [listed_agy_selector, one_million_token_context, terminal_bench_coding]
+    weaknesses:
+      - second_to_carbon_for_gemini_work
       - not_admitted_for_critical_security_or_advisor
       - provider_listing_is_not_qualification
+      - no_published_code_review_benchmark
+      - no_published_ukrainian_quality_result
+      - agy_selector_thinking_level_mapping_unverified
+    notes: >-
+      Operator decision 2026-11-10: Gemini 4 Argon at medium is the second Gemini
+      work option over AGY, used after Gemini 4 Carbon at medium and never ahead
+      of it. Live `agy models` probes on 2026-11-10 (19:50Z and 20:03Z) list
+      gemini-4-argon-high, gemini-4-argon-medium and gemini-4-argon-low.
+      Dispatch: `scripts/dispatch.py dispatch --agent agy --model
+      gemini-4-argon-medium`; -high and -low are explicit selections only.
+      Review ladders, review seats, the Ukrainian review route and advisory roles
+      are unchanged until the held-out review test reports; Argon holds no review
+      role. History: catalog id gemini-4-argon-high until 2026-11-10; retired by
+      operator decision 2026-10-23 (not subscribed; never route or select); a
+      2026-11-09 dispatch failed agy_model_identity_unverified because the
+      retired row carried no AGY wire id; the 2026-11-10 decision reinstates it.
+      Model card (published 2026-10-13): sparse mixture-of-experts, combined
+      input-output window up to 1M tokens, knowledge cutoff March 2026;
+      Terminal-bench 4.0 57.4% and DeepSWE v1.1 77.9% in Google's table. Gemini
+      API docs: API id gemini-4-argon, generally available 2026-10-13, thinking
+      levels low, medium and high (default medium). Google publishes no
+      code-review benchmark and no Ukrainian result, and does not state how the
+      AGY selectors map to API thinking levels.
     sources:
+      - https://deepmind.google/models/model-cards/gemini-4-argon/
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/
-    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
+      - https://aistudio.google.com/docs/changelog
+      - https://aistudio.google.com/docs/thinking
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
@@ -832,33 +884,34 @@ models:
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
   grok-4.7:
-    routing_wire_ids:
-      native_grok: grok-4.7
-      cursor: grok-4.7-high
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Dispatch v2 uses Cursor at grok-4.7-high; native Grok dispatch is retired.
-    # grok-4.7-build-fast is not an alias. grok-4.6 is not admitted.
-    # The retained ukrainian_review role confers no language route.
-    # Ukrainian seats are Gemini and Sol (scripts/review/ukrainian_seats.py).
-    # Review routes list only code and infra profiles; the resolver refuses xAI.
-    roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
+    # C-5307 reverses GROK-CANCEL-1110 for this model; C-5308 keeps it on trial.
+    # Native CLI selector: grok-4.7; attested modelUsage id: grok-4.7-build.
+    # Formal Cursor reviews use the exact high-effort wire pin.
+    routing_wire_ids: {native_grok: grok-4.7, cursor: grok-4.7-high}
+    aliases: [grok-4.7-build, grok-4.7-high]
     runtime_model_ids: [grok-4.7-build]
+    roles: [coding, standard_review]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
     notes: >-
-      Native `grok models` default. grok-4.7-build-fast is not admitted.
+      Operator order C-5307 restores native coding and Cursor review on trial
+      (C-5308). The native read-only canary accepts grok-4.7 and attests
+      grok-4.7-build. It grants no high/critical final sign-off or Ukrainian
+      role.
+      Formal reviews use the existing Cursor provider at grok-4.7-high. The
+      native runtime transport supports coding; no native dispatcher provider exists.
     sources:
       - https://docs.x.ai/docs/models
   grok-4.6:
     family: xai
     tier: frontier_practical
     lifecycle: retired
-    replaced_by: grok-4.7
-    # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
-    # adapter. Defaults and ladders use grok-4.7.
+    # Prior pin (operator order 2026-08-16 / #6865), superseded by grok-4.7.
+    # C-5307 restores only grok-4.7; this older identity remains retired.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: []
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
@@ -875,7 +928,7 @@ models:
     # Retired as the sanctioned grok pin by operator order 2026-08-16 (#6865)
     # in favor of grok-4.6. Historical model identity only, with no executable
     # transport. Never referenced by an active review_candidate, ladder,
-    # orchestrator_seat, or formal_cf_default; live routes use grok-4.7.
+    # orchestrator_seat, or formal_cf_default. C-5307 restores only grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: []
     strengths: [strong_coding, sharp_review, agentic_work]
@@ -1200,10 +1253,10 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  openai_red_team_exception: {role: legacy_reviewers, seat: openai_red_team_exception, route_name: native, field: candidate}
+  grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
   muse: {role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: candidate}
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
-  grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
+  openai_frontier_b: {role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
   claude-opus-5-5-agy: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: candidate}
   claude-sonnet-5-5: {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: candidate}
@@ -1213,8 +1266,8 @@ review_candidates:
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane).
 # Native AGY reviews low/medium code in an exact-head worktree; its ACP wrapper cannot consume the
-# parent-owned sealed MCP. Native and Cursor Grok review code/infra with runtime
-# attestation at every risk (#9769); Kimi: web, UI and backend coding only, never review.
+# parent-owned sealed MCP. Grok reviews through Cursor and holds no driver seat;
+# Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1232,8 +1285,8 @@ orchestrator_seats:
       Sol 6.1 take review, critique, design input and Ukrainian work and hold
       designated approval: the non-author's approval when one of them authored the
       proposal, both for any other author (#9583, #9616). Orchestration alone does not
-      confer approval authority. grok-4.7 owns the daily epic
-      loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
+      confer approval authority. Claude driver sessions stay dispatch-heavy,
+      never inline-heavy.
       Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
       not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
       step down to medium/low for routine turns; xhigh for hard turns and pinned
@@ -1254,16 +1307,6 @@ orchestrator_seats:
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
-  grok:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    # grok-4.7 only. grok-4.7-build-fast is not admitted.
-    escalate_model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    escalate_effort: high
-    escalate_when: n/a_same_sku
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
   agy:
     model_id: {role: legacy_reviewers, seat: google_bounded}
     effort: high
@@ -1271,43 +1314,13 @@ orchestrator_seats:
     escalate_effort: high
     escalate_when: n/a_same_sku
     note: >-
-      Google-family seat; Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High
-      outperforms 3.1 Pro). Gemini may drive epics (2026-10-08 approval):
+      Google-family seat. Gemini may drive epics (2026-10-08 approval):
       start-gemini-driver.sh defaults to gemini-3.8-flash-high and refuses every other Gemini id. The 2026-10-08 approval also
       admits Gemini as a formal reviewer of low-risk and medium-risk code, and of Ukrainian work with
       the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 under the current qualification policy. Security-path code reviews remain excluded.
       Native AGY review dispatches run directly in the exact-head worktree. Design input and designated approval stay
-      with Opus 5.5 and Sol 6.1. Gemini Pro and Argon are retired, not subscribed (operator 2026-10-23).
-  cursor:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    escalate_model_id: {role: openai_frontier_coder}
-    escalate_effort: high
-    escalate_when: deep_single_shot_or_architecture
-    auto_allowlist:
-      - {role: legacy_reviewers, seat: xai_reviewer}
-    auto_scope: write_implementation_dispatch_with_green_dor
-    attestation_rule: driver_of_record_requires_attested_resolved_model
-    unknown_auto_family_resolution: cursor_family
-    unknown_auto_union_families:
-      - xai
-    note: >-
-      Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
-      grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
-      Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
-      (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
-      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI]; refresh under the catalog ~30-day contract). The driver
-      seat, review, design, consults, discussions and recon never run Auto.
-      Cursor Auto selectors use the Cursor author family (#9951), even when the
-      runtime reports a concrete model. Reviewers from other families can review
-      Cursor-authored work; Cursor reviewers cannot. The legacy
-      unknown_auto_union_families field describes the concrete allowlist only.
-      A concrete Cursor grok-4.7 pin uses the xAI family; it is
-      a regular formal code/infra reviewer at every risk, including critical
-      (operator decision 2026-10-05, #9769).
-      Driver-of-record still requires an attested concrete resolved_model from the run.
-      Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
-      from within the driver session).
+      with Opus 5.5 and Sol 6.1.
+  # C-5307 restores an explicit Cursor review pin, not a Cursor driver or Auto allowlist.
 
 # Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
 # roles use their catalog effort; Sol high fills the routine Codex reviewer role.
@@ -1329,11 +1342,6 @@ formal_cf_defaults:
     family_models:
       - {role: legacy_reviewers, seat: anthropic_practical}
       - {role: anthropic_authority_reviewer}
-  grok:
-    model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    effort: high
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
     # #10073: native low/medium code review; Ukrainian review needs Sources MCP.
     model_id: {role: legacy_reviewers, seat: google_bounded}
@@ -1342,29 +1350,27 @@ formal_cf_defaults:
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
-  # Grok dispatch reviews use the surviving Cursor route.
-  # Runtime attestation and xAI author exclusions still apply.
+  # C-5307 restores Grok's explicit review pin; the ordinary
+  # reviewer-of-record ladders remain unchanged.
   # No Claude model reviews through Cursor (D-129, #10464).
   # Unsubscribed models have no review candidates. Fable holds no review role (#9583).
-  # Grok reviews security code statically: CI is its execution proof and the
-  # review requests no execution (core.md P2; D-129, #10464).
   critical:
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
   medium: &practical_first_code_review
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: legacy_label}]
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: agy, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: agy, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
@@ -1374,25 +1380,17 @@ review_ladders:
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
 # Keyed by the substitute lane. A source model with a row rewrites to that
 # target. No explicit --model, or an explicit model the substitute adapter
-# does not reject, uses that lane's registry default — the dispatch pin named
-# on orchestrator_seats (cursor: grok-4.7), not the driver launcher's
-# grok-4.7-high slug.
+# does not reject, uses that lane's registry default.
 # An explicit model with no row that the substitute adapter rejects is
 # refused before spawn (agy rejects an unknown Gemini slug; codex rejects
-# anything outside gpt-6.1-sol/gpt-6-luna). Cursor forwards an unrecognized
-# --model, so an unmapped slug such as gpt-6.1-sol still uses grok-4.7.
+# anything outside gpt-6.1-sol/gpt-6-luna).
 # GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
-# Operator 2026-10-21 (OO-58, #11327): native Grok and Cursor draw from one usage
-# meter. Budget routing reads this record; the two seats are not two pools.
-usage_pools:
-  grok_cursor:
-    seats: [grok, cursor]
+# Grok has no shared Cursor usage pool or Cursor substitution row.
+usage_pools: {}
 budget_substitution_models:
   codex:
     gpt-6.1-sol: {role: openai_frontier_coder}
     gpt-6-luna: {role: bounded_recon}
-  cursor:
-    grok-4.7: {role: legacy_reviewers, seat: xai_reviewer}
 
 
 # #9302 role references resolve to the v1 consumer view until PR 4.
@@ -1400,6 +1398,21 @@ budget_substitution_models:
 # Legacy labels below serialize frozen receipts; they are not moving aliases.
 routing_schema_version: model-catalog.v1.1
 seats:
+  xai_reviewer:
+    model_id: grok-4.7
+    bindings: [legacy_review_candidate]
+    priority: 20
+    decision_reference: C-5307
+    routes:
+      cursor_fallback:
+        legacy_name: grok-4.7-cursor-fallback
+        effort: high
+        suitability_roles: [standard_review]
+        route: cursor
+        transport: cursor
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id} --effort high
+        review_profiles: [code, infra]
+        capabilities: [code_review]
   meta_reviewer:
     model_id: muse-wonder-full-1.0
     bindings: [legacy_review_candidate]
@@ -1425,6 +1438,21 @@ seats:
     priority: 10
     decision_reference: agents_extensions/shared/rules/operator-expectations.md#12
     routes:
+      native_b:
+        legacy_name: openai_frontier_b
+        effort: high
+        route: codex
+        transport: native_codex
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --codex-account b-sub --model {wire_id} --effort high
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+        advisory_only_for_author_families:
+        - openai
       native:
         legacy_name: openai_frontier
         effort: high
@@ -1440,40 +1468,6 @@ seats:
         - sealed_evidence
         advisory_only_for_author_families:
         - openai
-  openai_red_team_exception:
-    model_id: gpt-6-astra
-    bindings: [legacy_review_candidate]
-    priority: 20
-    decision_reference: operator:2026-10-31#10437
-    routes:
-      native:
-        legacy_name: openai_red_team_exception
-        effort: high
-        route: codex
-        transport: native_codex
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
-        review_profiles: [code]
-        capabilities: [code_review, isolation, sealed_evidence]
-  xai_reviewer:
-    model_id: grok-4.7
-    bindings:
-    - legacy_review_candidate
-    priority: 20
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      cursor_fallback:
-        legacy_name: grok-4.7-cursor-fallback
-        effort: high
-        suitability_roles:
-        - critical_review
-        route: cursor
-        transport: cursor
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id}
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
   anthropic_authority:
     model_id: claude-opus-5-5
     bindings:
@@ -1616,10 +1610,10 @@ roles:
   code_review_low:
     routes:
     - meta_reviewer/native
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
@@ -1628,10 +1622,10 @@ roles:
   code_review_medium:
     routes:
     - meta_reviewer/native
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - anthropic_practical/agy
     - google_bounded/native
@@ -1639,18 +1633,18 @@ roles:
     risk: medium
   code_review_high:
     routes:
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     cardinality: many
     risk: high
   code_review_critical:
     routes:
+    - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
     - anthropic_authority/agy
-    - xai_reviewer/cursor_fallback
     cardinality: many
     risk: critical
     required_model_roles:

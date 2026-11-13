@@ -2,7 +2,7 @@ module: a2-004
 level: A2
 sequence: 4
 slug: liudyna-i-stosunky
-version: 1.0.5
+version: 1.0.6
 title: Яка вона людина? Описуємо людей навколо нас
 subtitle: Зовнішність, характер та стосунки — описуємо рідних, друзів і знайомих
 focus: communication
@@ -37,7 +37,7 @@ content_outline:
   - 'Базова лексика на позначення зовнішності: високий/низький, худий/повний, молодий/старий, темноволосий/світловолосий,
     кароокий/блакитноокий.'
   - 'Опис за допомогою дієслова мати та прийменника з + орудний відмінок (ознайомлення): Вона має карі очі / Вона з карими
-    очима. Зверніть увагу: тут ми лише знайомимося з орудним відмінком, формально він вивчатиметься пізніше, у модулі A2.4.'
+    очима. Зверніть увагу: тут ми лише знайомимося з орудним відмінком, формально він вивчатиметься пізніше, на етапі A2.4.'
   - 'Практика опису людей за фотографіями чи ілюстраціями — побудова описів із кількома прикметниками. Узгодження: високий
     чоловік, висока жінка.'
 - section: 'Характер: яка вона людина?'
@@ -63,8 +63,8 @@ content_outline:
   - 'Поєднання зовнішності, характеру та стосунків у короткому тексті: Мій друг Андрій — високий хлопець із карими очима.
     Він дуже веселий і щирий. Ми познайомилися в університеті.'
   - 'Практика: студент описує 2-3 знайомих людей, використовуючи повну модель (хто це, як виглядає, який має характер).'
-  - 'Культурна примітка: українці часто описують людей через їхні вчинки та характер, а не лише зовнішність — фраза "Добра
-    людина" є вагомим компліментом.'
+  - 'Культурна примітка: фраза "Добра людина" може бути вагомим компліментом; конкретні приклади поведінки допомагають
+    пояснити характер людини.'
 - section: Підсумок
   words: 200
   points:
@@ -120,13 +120,13 @@ persona:
   voice: Практичний A2 розмовний наставник
   role: Тримає фокус на дорослих повсякденних ситуаціях, природному регістрі та точному використанні граматики.
 references:
-- title: Заболотний Grade 5, §38-42
-  notes: Іменник — людина, стосунки, описові тексти
-- title: Большакова Grade 1, §14-16
-  notes: Опис людини, зовнішність і характер у дитячих текстах
-- title: 'ULP: How to Describe a Person in Ukrainian'
-  url: https://www.ukrainianlessons.com/describing-people/
-  notes: Лексика на позначення зовнішності та характеру
+- title: Заболотний. Українська мова, 5 клас, 2022, §38-42
+  notes: Синтаксис — зв'язок слів у реченні, додаток та означення.
+- title: Большакова, Пристінська. Буквар, 1 клас, 2018, ч. 2, с. 13-15
+  notes: Будова тексту, текст-опис тварини та риси героїв казки; методична опора для опису через ознаки й вчинки.
+- title: 'ULP: Common Ukrainian Adjectives'
+  url: https://www.ukrainianlessons.com/vocabulary-adjectives/
+  notes: Прикметники, пари протилежних ознак та узгодження за родом.
 plan_fixes:
 - version: 1.0.5
   date: '2026-06-04'
@@ -135,3 +135,11 @@ plan_fixes:
   - Added explicit grammar readiness metadata derived from objectives/content outline.
   - Added register readiness metadata.
   - Added persona readiness metadata for content generation.
+- version: 1.0.6
+  date: '2026-11-01'
+  trigger: 'Bounded module correctness repair for #12272.'
+  changes:
+  - Corrected A2.4 to a later curriculum phase while preserving recognition-only instrumental phrases.
+  - Matched reference descriptions to inspected textbook passages and replaced a confirmed broken ULP link with the module's existing public adjective resource.
+  - Calibrated cultural guidance to the attested compliment and action examples without asserting a national communicative habit.
+  - Reference corrections record grounding verified for this repair; the original author's source provenance remains unknown.

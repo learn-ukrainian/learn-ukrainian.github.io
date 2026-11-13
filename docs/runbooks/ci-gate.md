@@ -64,7 +64,17 @@ recorded duration first, tests that import the changed code themselves before te
 `importing_test_files` and `deferred_files`. If the guards alone exceed the safe budget,
 the job writes `pr-affected.json` with `execution_status` `not_run_guards_exceed_safe_budget`
 and fails with that reason instead of running to the timeout. The recorded estimate includes the importing tests that run, and
-`unknown_duration_files` includes every importing test with no recorded time. Infrastructure
+`unknown_duration_files` includes every importing test with no recorded time.
+Some tests read a changed file as text through a computed path (for example a parametrized
+list of paths that the test parses), which the import scan cannot follow. A test file whose
+parsed source holds a string literal equal to a changed file's repository-relative path, or
+to the dotted module name of a changed Python module that is not a package `__init__.py`, is
+a text reader of that file (#12789). The whole literal must match; comments, docstrings,
+other bare string statements and f-string pieces never count, and `conftest.py` files are not scanned. Text
+readers fill their own 60-second room after every other selection, cheapest recorded duration
+first, so they never displace a test that would run without them; the rest defer, are listed in
+`text_reading_test_files` and `deferred_files`, and run in merge-group pytest. When text readers
+run, the pytest timeout grows to the estimate times 1.18, at most 550 seconds. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
@@ -129,7 +139,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files, tests that import changed files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
+| PR changed tests and guards | PRs execute changed test files, tests that import changed files, tests that name a changed file as text, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
 | Frontend | Every event. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
@@ -137,7 +147,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | CI Gate | `if: always()`; fails on any job result other than the expected one. Also runs the large-file guard and attribution on a sparse, full-history checkout (below). |
 
 `ci-advisory.yml` (pull_request only, never required) carries the advisory
-checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
+checks: Atlas POC richness (#3930) and the diff-scoped
 Atlas vocabulary coverage report.
 
 For an offline local TruffleHog scan of the work tree or the whole public history
@@ -157,7 +167,7 @@ that chose *which* tests or checks a change ran is gone.
 | Read-only token (`permissions: contents: read`) | workflow | workflow; pytest duration refresh adds `actions: read` |
 | Credential-free checkout (`persist-credentials: false`) | every checkout | every checkout (tested) |
 | SHA-pinned actions | every `uses:` | every `uses:` (tested; actionlint + zizmor) |
-| Ruff lint (`ruff check scripts/ tests/ agents_extensions/ dashboards/`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
+| Ruff lint (`ruff check` of the machinery package plus scripts/, tests/, agents_extensions/ and dashboards/; see `scripts/ci/checks.sh`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
 | Strict v2 plan validation | Fast checks | checks.sh (same PR path scoping) |
 | Arc landing drift (`build_arc_landing a1 --check`) | Fast checks | checks.sh |
 | Word Atlas sense-lint ratchet | Contracts | checks.sh |
@@ -178,7 +188,6 @@ that chose *which* tests or checks a change ran is gone.
 | Every test file ran | none (planner trust) | pytest report: shard file lists must partition `git ls-files tests` |
 | Full-history checkout where tests read old commits | pytest, Fast checks, Contracts | pytest shard 1 (the history shard), Checks, Frontend, Secret scan; pytest shards 2..N are shallow |
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
-| TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
@@ -220,6 +229,20 @@ it reports after failed or cancelled dependencies.
 
 Queue runs never reuse PR results. The tested-tree artifact remains an audit
 record of the candidate and its partition results.
+
+On `merge_group`, the gate's final step (`scripts/ci/queue_review_gate.py`) fails the candidate unless every PR
+in it has `fleet/cross-family-review` = `success`, GitHub's newest state for that context, on its current head.
+This applies whichever command enqueued the PR. The event's `base_sha` is the previous entry's candidate, not
+`main`, so the ref's PR number and `base..head` name only the last PR. Membership is the first-parent chain from
+the candidate's merge base with the live `main` tip. Each squash commit there must be the `headCommit` of exactly
+one paginated merge-queue entry with the same `(#N)`. Acceptance (AC1 as amended under designated approval): the
+squash tree must equal the PR's current head merged onto the queue parent (`git merge-tree`), that head must carry
+the approval, and GitHub must hold a check suite on it created before the entry's `enqueuedAt`. No GitHub field
+names an entry's source head, so this proves tree equivalence, not source-SHA identity, history or attribution
+(residual on learn-ukrainian/machinery#100). API errors and
+membership disagreements get three fresh reads, then fail closed. This guards against accidental landings without
+review. It is not a trust boundary: a status forged with the shared credential, or a candidate that edits this
+workflow, is outside it.
 
 The gate's checkout keeps full history but is sparse (`scripts/` and
 `.python-version`). `actions/checkout` then fetches with `filter: blob:none`, so
@@ -305,10 +328,9 @@ files; those are imported only with `import type`, which the compiler erases.
 - Within a shard, `-n logical --dist=worksteal` spreads single tests over the
   runner's cores, so one long file no longer pins a shard. The old workflow
   used `--dist=loadfile`, so tests of one file never overlapped. Tests that
-  share a fixed resource must now serialize themselves: the two fixed-port
-  smokes in `tests/test_work_dashboard_private_integration.py` take a file
-  lock in the run's shared temp root. Without the lock, one of them skipped
-  with "ports busy" in every new-workflow run.
+  share a fixed resource must now serialize themselves, for example with a
+  file lock in the run's shared temp root. Two fixed-port smokes without such
+  a lock once skipped with "ports busy" in every new-workflow run.
 - Weights never change which files run; a wrong weight only costs balance.
   `Refresh pytest durations` takes the median of the last five successful
   merge-group `pytest-file-durations` artifacts (downloaded concurrently),

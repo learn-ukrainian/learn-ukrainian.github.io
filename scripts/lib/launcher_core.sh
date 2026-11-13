@@ -4,7 +4,7 @@
 # uniform public CLI and driver lifecycle.
 
 # Fixed arguments a public wrapper adds to its caller's argv: launcher options
-# (the CTO lane, the kimicc harness) and leading provider arguments (the bio
+# (the CTO lane) and leading provider arguments (the bio
 # agent). A wrapper sets them after sourcing this file. Scope re-entry and
 # supervisory successors replay the caller's argv alone, so the wrapper adds
 # them exactly once (#9624). Sourcing resets them; arrays are never inherited.
@@ -15,10 +15,68 @@ LC_WRAPPER_PROVIDER_ARGS=()
 # lane is refused before side effects, whatever option spelling reached it (#12553).
 LC_WRAPPER_FIXED_EPIC=''
 
+# The machinery package directory: the parent of the directory this file was sourced
+# from, as a physical path (directory symlinks resolved, so it is the same directory
+# however the checkout was reached). A symlink to this file is not followed: its own
+# directory supplies the helpers, as the sourced sibling paths always did. Sourced
+# helpers come from here; neither the working directory nor any configured root can
+# choose them. Prints the directory; fails when it cannot be entered.
+launcher_machinery_dir() {
+  (CDPATH='' cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && cd -P .. && pwd -P)
+}
+
+# Readonly once set. Sourcing this file again from the same place keeps the value; from
+# another place it refuses. An inherited environment value is replaced, never trusted.
+if ! _lc_machinery_dir="$(launcher_machinery_dir)" || [ -z "$_lc_machinery_dir" ]; then
+  printf 'launcher: cannot resolve the machinery directory of %s\n' "${BASH_SOURCE[0]}" >&2
+  unset _lc_machinery_dir
+  return 1
+fi
+_lc_machinery_flags="$(declare -p LC_MACHINERY_DIR 2>/dev/null)" || _lc_machinery_flags=''
+_lc_machinery_flags="${_lc_machinery_flags#declare -}"
+_lc_machinery_flags="${_lc_machinery_flags%% *}"
+if [[ "$_lc_machinery_flags" == *r* ]]; then
+  if [ "$LC_MACHINERY_DIR" != "$_lc_machinery_dir" ]; then
+    printf 'launcher: LC_MACHINERY_DIR is already %s; refusing a second machinery directory %s\n' \
+      "$LC_MACHINERY_DIR" "$_lc_machinery_dir" >&2
+    unset _lc_machinery_dir _lc_machinery_flags
+    return 1
+  fi
+else
+  readonly LC_MACHINERY_DIR="$_lc_machinery_dir"
+fi
+unset _lc_machinery_dir _lc_machinery_flags
+
+# The machinery package's import name, which is also its directory name in checkout-relative
+# paths: the name of this file's parent directory, from its unresolved location (design-v1
+# amendment 1), never a resolved path. Module names handed to `python -m` or embedded programs are
+# this name plus the known package-relative suffix. Readonly once set, like LC_MACHINERY_DIR.
+if ! _lc_machinery_package="$(CDPATH='' cd -L -- "$(dirname -- "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd -L)" \
+    || [ -z "${_lc_machinery_package##*/}" ]; then
+  printf 'launcher: cannot resolve the machinery package of %s\n' "${BASH_SOURCE[0]}" >&2
+  unset _lc_machinery_package
+  return 1
+fi
+_lc_machinery_package="${_lc_machinery_package##*/}"
+_lc_machinery_flags="$(declare -p LC_MACHINERY_PACKAGE 2>/dev/null)" || _lc_machinery_flags=''
+_lc_machinery_flags="${_lc_machinery_flags#declare -}"
+_lc_machinery_flags="${_lc_machinery_flags%% *}"
+if [[ "$_lc_machinery_flags" =~ r ]]; then
+  if [ "$LC_MACHINERY_PACKAGE" != "$_lc_machinery_package" ]; then
+    printf 'launcher: LC_MACHINERY_PACKAGE is already %s; refusing a second machinery package %s\n' \
+      "$LC_MACHINERY_PACKAGE" "$_lc_machinery_package" >&2
+    unset _lc_machinery_package _lc_machinery_flags
+    return 1
+  fi
+else
+  readonly LC_MACHINERY_PACKAGE="$_lc_machinery_package"
+fi
+unset _lc_machinery_package _lc_machinery_flags
+
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
     # shellcheck source=scripts/launchers/muse.sh
-    source "$(dirname "${BASH_SOURCE[0]}")/../launchers/muse.sh"
+    source "$LC_MACHINERY_DIR/launchers/muse.sh"
     launcher_muse_usage
     return
   fi
@@ -30,16 +88,9 @@ launcher_usage() {
   case "${0##*/}" in
     start-claude-cto.sh|start-codex-cto.sh) name="${0##*/}" ;;
   esac
-  case "$LC_PROVIDER" in
-    kimi|glm)
-      driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
-      ;;
-    *)
-      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
+  driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
                semantic canary where available (otherwise reports not run),
                then injects the drive-epic binding."
-      ;;
-  esac
   case "$LC_PROVIDER" in
     claude) provider_env='  Claude weekly cap: every Claude launch stops at 99% weekly used.
                              Opus is always blocked outside start-claude-cto.sh on epics:
@@ -52,19 +103,9 @@ launcher_usage() {
     codex) provider_env='  CODEX_CC_BASE_URL, CODEX_CC_AUTH_TOKEN
                              Approved local-proxy settings for --harness claude-code.' ;;
     gemini) provider_env='  AGY_*                    AGY-managed Gemini authentication and configuration.' ;;
-    grok) provider_env='  GROK_*                   Grok CLI authentication and configuration.' ;;
-    cursor) provider_env='  CURSOR_API_KEY           Optional Cursor API key (otherwise CLI login / oauth).' ;;
-    kimi) provider_env='  KIMICC_AUTH_TOKEN, MOONSHOT_API_KEY, KIMI_API_KEY
-                             Explicit Kimi credentials for --harness claude-code.' ;;
-    glm) provider_env='  GLMCC_AUTH_TOKEN, ZAI_API_KEY, ZHIPU_API_KEY, GLM_API_KEY
-                             Explicit GLM credentials (preferred over the secret file).
-  ~/.secret/zai.key        Owner-only fallback (mode 0600/0400) when env is unset.
-  GLMCC_SECRET_FILE        Override path for the file-backed Z.AI key.' ;;
   esac
   case "$LC_PROVIDER:$LC_MODE" in
-    gemini:interactive) example_three='./start-gemini.sh --model gemini-3.8-flash-high' ;;
-    kimi:interactive) example_three='./start-kimicc.sh --endpoint coding' ;;
-    glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
+    gemini:interactive) example_three='./start-gemini.sh --model gemini-4-carbon-medium' ;;
     *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
@@ -90,17 +131,13 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
-                             Cursor default (driver and interactive): grok-4.7-high;
-                             never Auto, a Fast variant,
-                             an empty model or a forwarded --model. Gemini driver
-                             default: gemini-3.8-flash-high (only certified id);
+                             Gemini driver default: gemini-3.8-flash-high (only certified id);
                              Gemini interactive default:
-                             gemini-3.8-flash-high. Claude interactive: omit to use
-                             project settings (Sonnet 5.5). Grok: omit to keep
-                             last TUI/session model.
-  --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
-                             --reasoning-effort). Claude driver default: high. Otherwise
-                             omit to keep last session selection. Other providers ignore.
+                             gemini-4-carbon-medium. Claude interactive: omit to use
+                             project settings (Sonnet 5.5).
+  --effort LEVEL             Session effort when supported (Claude Code --effort).
+                             Claude driver default: high. Otherwise omit to keep last
+                             session selection. Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --force                    Driver only. Attributed operator release of a live
@@ -108,12 +145,7 @@ Options:
                              driver did not hand off. Live drivers must not pass it.
                              CTO wrappers reject it with exit 2.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
-  --endpoint NAME            Kimi/GLM route endpoint: coding or platform.
-  --isolate-config           Kimi/GLM Claude-Code config isolation (default).
-  --no-isolate-config        Use the existing Claude-Code config only when route-safe.
   --                         Pass all remaining arguments verbatim to the provider CLI.
-                             Native Grok drivers take prompt words before this separator;
-                             after it, only supported session options are accepted.
                              For option-looking text, use a prompt such as 'Task: --flag'.
 
 Environment:
@@ -122,11 +154,10 @@ Environment:
   LU_RULES_SEAT              Rules core seat: core or content (default: content for a
                              curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
-                             claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
-                             for Claude interactive = project settings (Sonnet 5.5);
-                             empty for Grok = last session).
+                             claude-opus-5-5[1m]; empty
+                             for Claude interactive = project settings (Sonnet 5.5)).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
-                             empty for Claude interactive/Grok = last session).
+                             empty for Claude interactive = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
 
@@ -186,12 +217,17 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
-# Apply the final CLI credential policy only inside the child process.
-# Direct exec test seams without the project helper retain their environment.
+# Apply launcher-control and credential cleanup only inside the child process.
+# The supervisor keeps its inputs for scope re-entry and successor replay.
 launcher_drop_unneeded_secrets() {
-  local py sanitizer
-  LC_CHILD_ENV_COMMAND=(env)
-  sanitizer="${LC_ROOT:-}/scripts/agent_runtime/env_sanitize.py"
+  local py sanitizer variable
+  LC_CHILD_ENV_COMMAND=(/usr/bin/env)
+  while IFS= read -r -d '' variable; do
+    case "$variable" in
+      LAUNCHER_*=*) LC_CHILD_ENV_COMMAND+=(-u "${variable%%=*}") ;;
+    esac
+  done < <(/usr/bin/env -0)
+  sanitizer="$LC_MACHINERY_DIR/agent_runtime/env_sanitize.py"
   py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
     return 0
@@ -200,10 +236,11 @@ launcher_drop_unneeded_secrets() {
     launcher_error "could not drop unneeded API keys"
     return 1
   fi
-  LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --exec)
+  LC_CHILD_ENV_COMMAND+=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}")
   if [ "${LC_MODE:-}" = driver ]; then
-    LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --driver-launcher --exec)
+    LC_CHILD_ENV_COMMAND+=(--driver-launcher)
   fi
+  LC_CHILD_ENV_COMMAND+=(--exec)
 }
 
 launcher_require_binary() {
@@ -247,12 +284,12 @@ launcher_print_argv() {
 launcher_load_rules_core() {
   local lane=""
   LC_RULES_CORE_TOML=""
-  if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
-    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_ROOT/scripts/lib/rules_core.sh is missing)."
+  if [ ! -r "$LC_MACHINERY_DIR/lib/rules_core.sh" ]; then
+    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_MACHINERY_DIR/lib/rules_core.sh is missing)."
     exit 1
   fi
   # shellcheck source=scripts/lib/rules_core.sh
-  source "$LC_ROOT/scripts/lib/rules_core.sh"
+  source "$LC_MACHINERY_DIR/lib/rules_core.sh"
   if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
     lane="$LC_EPIC"
   fi
@@ -279,7 +316,6 @@ launcher_clear_foreign_route_state() {
   unset CLAUDE_CODE_USE_MANTLE CLAUDE_CODE_USE_ANTHROPIC_AWS
   unset LEARN_UKRAINIAN_TRANSPORT LEARN_UKRAINIAN_REQUESTED_PROFILE_ID
   unset LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH
-  unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
 }
 
 launcher_export_git_identity() {
@@ -311,36 +347,18 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
-      # Both modes use the subscribed Flash pin (operator 2026-10-23).
-      LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
+      # The driver keeps the certified Flash seat; interactive sessions use the
+      # Carbon medium work route (operator 2026-11-10).
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-gemini-4-carbon-medium}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     muse)
       LC_MODEL="${LAUNCHER_MODEL-muse-wonder-full-1.0}"
       LC_HARNESS="${LAUNCHER_HARNESS:-muse}"
-      ;;
-    grok)
-      # Both interactive and driver leave model/effort alone unless the caller
-      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
-      # the Grok TUI keeps the last session selection.
-      LC_MODEL="${LAUNCHER_MODEL:-}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
-      ;;
-    cursor)
-      # Driver and interactive sessions both pin the catalog seat. Omitting
-      # --model lets cursor-agent use Auto, which only a typed implementation
-      # dispatch may run (operator decision 2026-09-30, #9274). --model or
-      # LAUNCHER_MODEL may choose another certified pin.
-      LC_MODEL="${LAUNCHER_MODEL:-$LC_CURSOR_SEAT_PIN}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
-      ;;
-    kimi)
-      LC_MODEL="${LAUNCHER_MODEL:-k3-256k}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-kimi-code}"
-      ;;
-    glm)
-      LC_MODEL="${LAUNCHER_MODEL:-glm-5.3}"
-      LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;
   esac
@@ -354,20 +372,16 @@ launcher_defaults() {
     # Opus 5.5 API default is medium; orchestrating seats run at high.
     LC_EFFORT=high
   fi
-  LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
-  LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
   LC_EPIC=""
   LC_GOVERNOR="0"
   LC_DRIVER_FORCE=0
   LC_DRIVER_LEASE_CLAIMED=0
-  LC_HARNESS_EXPLICIT=0
   LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
   LC_CALLER_PROMPT_ARGS=()
   LC_CALLER_PROMPT_INDICES=()
   LC_PROVIDER_ARGS=()
-  LC_UNSEPARATED_PROVIDER_ARGS=0
   LC_POST_SEPARATOR_INDEX=-1
 }
 
@@ -440,11 +454,10 @@ launcher_parse() {
       --effort=*) LC_EFFORT="${1#*=}"; shift ;;
       --harness)
         launcher_need_value "$1" "${2:-}"
-        LC_HARNESS_EXPLICIT=1
         LC_HARNESS="$2"
         shift 2
         ;;
-      --harness=*) LC_HARNESS_EXPLICIT=1; LC_HARNESS="${1#*=}"; shift ;;
+      --harness=*) LC_HARNESS="${1#*=}"; shift ;;
       --epic)
         launcher_need_value "$1" "${2:-}"
         LC_EPIC="$2"
@@ -465,14 +478,6 @@ launcher_parse() {
         shift 2
         ;;
       --governor=*) LC_GOVERNOR="1"; LC_EPIC="${1#*=}"; shift ;;
-      --endpoint)
-        launcher_need_value "$1" "${2:-}"
-        LC_ENDPOINT="$2"
-        shift 2
-        ;;
-      --endpoint=*) LC_ENDPOINT="${1#*=}"; shift ;;
-      --isolate-config) LC_ISOLATE_CONFIG=1; shift ;;
-      --no-isolate-config) LC_ISOLATE_CONFIG=0; shift ;;
       -*)
         # A driver selector consumes the first positional argument. Preserve
         # the former driver's compatibility contract by forwarding subsequent
@@ -483,8 +488,6 @@ launcher_parse() {
           case "${0##*/}" in
             start-claude-cto.sh|start-codex-cto.sh) ;;
             *)
-              # shellcheck disable=SC2034 # consumed by the native Grok adapter
-              LC_UNSEPARATED_PROVIDER_ARGS=1
               LC_FORWARD_ARGS+=("$1"); shift; continue
               ;;
           esac
@@ -517,7 +520,7 @@ launcher_normalize_model() {
     claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
   if [ -n "$LC_MODEL" ]; then
-    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
+    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_MACHINERY_DIR/review/model_catalog.py" \
       --check-retired-model "$LC_MODEL" || exit 2
   fi
 }
@@ -570,7 +573,7 @@ launcher_resolve_roots() {
   LC_SESSION_ROOT="$LC_ROOT"
   LC_DURABLE_HELPER_ROOT=""
   # shellcheck source=scripts/lib/project_interpreter.sh
-  source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh"
+  source "$LC_MACHINERY_DIR/lib/project_interpreter.sh"
   if [ "${LC_PROVIDER:-}" = codex ] && [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
     LC_DURABLE_HELPER_ROOT="$(launcher_canonical_override_root "$CODEX_CANONICAL_REPO_ROOT")" || exit 1
   elif ! LC_DURABLE_HELPER_ROOT="$(project_primary_root_resolve "$LC_ROOT")"; then
@@ -740,34 +743,14 @@ launcher_refuse_uncertified_gemini_driver() {
 
 launcher_validate_driver_certification() {
   launcher_refuse_uncertified_gemini_driver
-  # Interactive Grok: empty --model keeps the last TUI selection; an explicit
-  # pin must be the certified native model (refuse retired grok-4.5, #6870).
-  # Cursor pins a concrete model in every mode: an interactive session is not a
-  # typed implementation dispatch, so it never runs Auto either (#9274).
-  if [ "$LC_PROVIDER" = "cursor" ] && [ "$LC_GOVERNOR" = "0" ]; then
-    launcher_validate_cursor_pin
-    return 0
-  fi
-  if [ "$LC_MODE" = "interactive" ] && [ "$LC_PROVIDER" = "grok" ]; then
-    if [ -z "${LC_MODEL:-}" ]; then
-      return 0
-    fi
-    case "$LC_MODEL" in
-      grok-4.7) return 0 ;;
-      *)
-        launcher_error "model '$LC_MODEL' is not certified for the grok launcher (use grok-4.7, or omit --model)."
-        exit 4
-        ;;
-    esac
-  fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude/Grok may omit --model so the CLI keeps its current selection.
-  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
+  # Claude may omit --model so the CLI keeps its current selection.
+  if [ "$LC_PROVIDER" = "claude" ] && [ -z "${LC_MODEL:-}" ]; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-wonder-full-1.0)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-fable-5-2|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|muse:muse-wonder-full-1.0)
       return 0
       ;;
     *)
@@ -777,60 +760,6 @@ launcher_validate_driver_certification() {
   esac
 }
 
-# Catalog seat pin: orchestrator_seats.cursor model_id grok-4.7 at effort high
-# (scripts/config/model_catalog.yaml; tests/test_start_cursor_launcher.py
-# keeps the two in step).
-LC_CURSOR_SEAT_PIN=grok-4.7-high
-
-# Every launched Cursor session, driver or interactive, runs a concrete
-# approved pin, never Auto (operator decision 2026-09-30, #9274): an empty
-# model and a provider --model forwarded after `--` would let cursor-agent pick
-# Auto or override the certified pin.
-launcher_validate_cursor_pin() {
-  local arg seat="cursor driver"
-  [ "$LC_MODE" = driver ] || seat="cursor interactive session"
-  for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
-    case "$arg" in
-      --model|--model=*)
-        launcher_error "the $seat takes its model from the launcher --model, not from forwarded '$arg' (pin $LC_CURSOR_SEAT_PIN; never Auto)."
-        exit 4
-        ;;
-    esac
-  done
-  if [ -z "${LC_MODEL:-}" ]; then
-    launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN)."
-    exit 4
-  fi
-  local normalized
-  if ! normalized="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -c '
-import sys
-sys.path.insert(0, sys.argv[1])
-from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
-try:
-    print(apply_cursor_model_pins(sys.argv[2]) or "")
-except ModelCatalogError as exc:
-    print(str(exc), file=sys.stderr)
-    sys.exit(4)
-' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN; never Auto, Fast or a previous generation."
-    exit 4
-  fi
-  LC_MODEL="$normalized"
-  if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN; never Auto, Fast or a previous generation."
-    exit 4
-  fi
-}
-
-# Cursor CLI pins: only Grok high is certified. Composer is retired, not subscribed.
-launcher_cursor_model_certified() {
-  local model="$1"
-  case "$model" in
-    grok-4.7-high) return 0 ;;
-  esac
-  return 1
-}
-
 launcher_prepare_driver_identity() {
   local handoff harness
   case "$LC_PROVIDER" in
@@ -838,8 +767,6 @@ launcher_prepare_driver_identity() {
     codex) handoff="$(handoff_identity_for_codex_epic "$LC_EPIC")"; harness="codex-cli" ;;
     gemini) handoff="$(handoff_identity_for_gemini_epic "$LC_EPIC")"; harness="agy" ;;
     muse) handoff="$(handoff_identity_for_muse_epic "$LC_EPIC")"; harness="muse-cli" ;;
-    grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
-    cursor) handoff="$(handoff_identity_for_cursor_epic "$LC_EPIC")"; harness="cursor-agent" ;;
   esac
   LC_DRIVER_HANDOFF="$handoff"
   LC_DRIVER_HARNESS="$harness"
@@ -870,7 +797,7 @@ launcher_seed_driver_state() {
   fi
   local py="${LU_DRIVER_STATE_PYTHON:-$LC_ROOT/.venv/bin/python}"
   [ -x "$py" ] || return 0
-  (cd "$LC_ROOT" && "$py" -m scripts.driver_state init --epic "$LC_EPIC" >/dev/null 2>&1) || true
+  (cd "$LC_ROOT" && "$py" -m "$LC_MACHINERY_PACKAGE.driver_state" init --epic "$LC_EPIC" >/dev/null 2>&1) || true
 }
 
 launcher_import_rollover_bundle() {
@@ -882,7 +809,7 @@ launcher_import_rollover_bundle() {
   esac
   helper_root="$LC_DURABLE_HELPER_ROOT"
   py="$helper_root/.venv/bin/python"
-  script="$helper_root/scripts/orchestration/thread_handoff.py"
+  script="$helper_root/$LC_MACHINERY_PACKAGE/orchestration/thread_handoff.py"
   if [ ! -x "$py" ] || [ ! -f "$script" ]; then
     printf 'WARNING: rollover bundle pre-lease import unavailable; continuing fail-open (helper=%s).\n' "$helper_root" >&2
     return 0
@@ -909,88 +836,14 @@ launcher_claim_driver_lease() {
     if [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
       printf 'launcher: would force-release any live holder on %s then claim\n' "$stream"
     fi
-    launcher_cursor_observer_presence
     return 0
   fi
   # shellcheck source=scripts/lib/session_supervisor.sh
-  source "$LC_ROOT/scripts/lib/session_supervisor.sh"
+  source "$LC_MACHINERY_DIR/lib/session_supervisor.sh"
   task_id="${SESSION_TASK_ID:-launcher-${LC_PROVIDER}-driver}"
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
   claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC" || return 1
   LC_DRIVER_LEASE_CLAIMED=1
-  launcher_cursor_observer_presence
-}
-
-launcher_cursor_observer_presence() {
-  # Occupancy cannot infer Cursor from a RAM lease or a live fleet-agents row.
-  # Heartbeat the loopback observer store (#7075). Fail-open if Monitor is down.
-  [ "$LC_PROVIDER" = "cursor" ] || return 0
-  [ "$LC_MODE" = "driver" ] || return 0
-  if [ "$LC_DRY_RUN" = "1" ]; then
-    printf 'launcher: would heartbeat observer presence agent=cursor\n'
-    printf 'launcher: would renew observer presence while the driver session runs\n'
-    return 0
-  fi
-  local task_id
-  task_id="${SESSION_TASK_ID:-${LC_EPIC:-cursor-driver}}"
-  # Linked worktrees carry no venv; the validated durable helper root does.
-  "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
-    --agent cursor \
-    --task-id "$task_id" \
-    --epic "$LC_EPIC" \
-    --status working \
-    --summary "cursor driver occupancy heartbeat" \
-    >/dev/null || true
-}
-
-launcher_cursor_observer_renew_loop() {
-  [ "$LC_PROVIDER" = "cursor" ] || return 0
-  [ "$LC_MODE" = "driver" ] || return 0
-  [ "$LC_DRY_RUN" != "1" ] || return 0
-  local child_pid="$1"
-  (
-    # Same orphan class as the driver renew loop (#7832): an untracked
-    # `sleep 480` outlives a TERM'd subshell and holds the launcher's output
-    # pipes open past any caller timeout. Wait on an anonymous FIFO instead.
-    local observer_stop=""
-    local slices=0
-    local wait_fifo wait_fd=""
-    trap 'observer_stop=1' INT TERM HUP
-    if wait_fifo="$(mktemp -u)" && mkfifo "$wait_fifo"; then
-      if { exec 215<>"$wait_fifo"; }; then
-        wait_fd=215
-      fi
-      rm -f "$wait_fifo"
-    fi
-    while [ -z "$observer_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
-      # Short slices only: a long `read -t` resumes its full timeout after a
-      # trapped signal instead of returning, which would stall teardown.
-      slices=4800
-      while [ "$slices" -gt 0 ] && [ -z "$observer_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
-        if [ -n "$wait_fd" ]; then
-          read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
-        else
-          # FIFO setup failed: a stop can orphan at most one 0.1s sleep.
-          sleep 0.1
-        fi
-        slices=$((slices - 1))
-      done
-      [ -n "$observer_stop" ] && break
-      if ! kill -0 "$child_pid" 2>/dev/null; then
-        break
-      fi
-      launcher_cursor_observer_presence
-    done
-  ) &
-  LC_OBSERVER_HEARTBEAT_PID=$!
-}
-
-launcher_stop_cursor_observer_renew() {
-  if [ -n "${LC_OBSERVER_HEARTBEAT_PID:-}" ]; then
-    kill "$LC_OBSERVER_HEARTBEAT_PID" 2>/dev/null || true
-    wait "$LC_OBSERVER_HEARTBEAT_PID" 2>/dev/null || true
-    LC_OBSERVER_HEARTBEAT_PID=""
-  fi
 }
 
 launcher_driver_renew_loop() {
@@ -1037,7 +890,7 @@ launcher_driver_renew_loop() {
       if ! kill -0 "$launcher_pid" 2>/dev/null || ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
-      if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
+      if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m "$LC_MACHINERY_PACKAGE.session_supervisor" heartbeat --role driver 2>&1 >/dev/null)"; then
         renew_started=$SECONDS
         continue
       fi
@@ -1107,7 +960,7 @@ launcher_close_driver_lease() {
     # Linked worktrees carry no venv; the validated durable helper root does.
     # Capture stderr per attempt for classification only — it is never echoed.
     if close_stderr="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" \
-        -m scripts.session_supervisor close --role driver 2>&1 >/dev/null)"; then
+        -m "$LC_MACHINERY_PACKAGE.session_supervisor" close --role driver 2>&1 >/dev/null)"; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
@@ -1151,7 +1004,6 @@ launcher_forward_driver_signal() {
   LC_DRIVER_CHILD_PID=""
   session_supervisor_stop_inbox_watch
   launcher_stop_driver_renew
-  launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || true
   trap - EXIT INT TERM HUP
   exit "$exit_code"
@@ -1203,7 +1055,6 @@ launcher_exec_command() {
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
   launcher_driver_renew_loop "$LC_DRIVER_CHILD_PID"
-  launcher_cursor_observer_renew_loop "$LC_DRIVER_CHILD_PID"
   if ! session_supervisor_start_inbox_watch; then
     session_supervisor_stop_provider_for_wake
     provider_rc=1
@@ -1286,7 +1137,6 @@ launcher_exec_command() {
   LC_DRIVER_CHILD_PID=""
   session_supervisor_stop_inbox_watch
   launcher_stop_driver_renew
-  launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || close_rc=$?
   trap - EXIT INT TERM HUP
 
@@ -1329,7 +1179,7 @@ launcher_inject_driver_agent() {
   local py="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
   local agent_type=""
   [ -x "$py" ] || return 0
-  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
+  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m "$LC_MACHINERY_PACKAGE.orchestration.driver_agent_type" --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
     printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; no named agent selected; using the launcher model or project settings (Sonnet 5.5)\n' "$LC_EPIC" >&2
     return 0
@@ -1361,13 +1211,6 @@ launcher_provider_option_arity() {
         *) return 1 ;;
       esac
       ;;
-    cursor:cursor-agent)
-      case "$1" in
-        --api-key|-H|--header|-e|--endpoint|--output-format|--mode|--sandbox|--workspace|--add-dir|--plugin-dir|--worktree-base) LC_OPTION_ARITY=one ;;
-        --resume|-w|--worktree) LC_OPTION_ARITY=optional ;;
-        *) return 1 ;;
-      esac
-      ;;
     gemini:agy)
       case "$1" in
         --add-dir|--agent|--conversation|-i|--input-format|--json-schema|--log-file|--mode|--new-project|--output-format|-p|--print|--print-timeout|--project|--prompt|--prompt-interactive|--settings) LC_OPTION_ARITY=one ;;
@@ -1375,7 +1218,7 @@ launcher_provider_option_arity() {
       esac
       ;;
     *)
-      # Routes without a table keep their own adapter refusal (Grok and Muse) and their existing forwarding.
+      # Routes without a table keep their own adapter refusal (Muse) and their existing forwarding.
       LC_OPTION_ARITY=none
       ;;
   esac
@@ -1411,9 +1254,9 @@ launcher_bind_drive_epic() {
   if [ "${0##*/}" = start-claude-cto.sh ]; then
     state_lane=cto entry_skill=cto work_clause=''
   fi
-  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  if [ -r "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
-    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+    source "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh"
   fi
   if command -v fleet_comms_resolve_plane_mode >/dev/null 2>&1; then
     # shellcheck disable=SC2155  # export of resolved plane mode is intentional
@@ -1427,14 +1270,9 @@ launcher_bind_drive_epic() {
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
-  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m scripts.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
+  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m ${LC_MACHINERY_PACKAGE}.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
   if [ "${LC_PROVIDER:-}" = codex ]; then
     LC_DRIVER_PROMPT+=" Hand off after the fourth compaction and before the eighth; native automatic compaction remains enabled."
-  fi
-  if [ "${LC_PROVIDER:-}" = grok ]; then
-    # Grok has no SessionStart hook to inject the lane handoff (#10835); the
-    # file name is shared with every provider.
-    LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so after DB render/check read .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md for supplemental context; reconcile its housekeeping and in-flight lines against the newest full-content DB handoff_note before acting. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
   fi
   local caller arg index=0 caller_index=0 is_caller value_mode='' post_separator=999999
   if [ "${LC_POST_SEPARATOR_INDEX:--1}" -ge 0 ]; then
@@ -1498,11 +1336,11 @@ launcher_bind_drive_epic() {
 }
 
 launcher_publication_path() {
-  local shim_path="$LC_ROOT/scripts/agent_runtime/shims" real_path="" entry
+  local shim_path="$LC_MACHINERY_DIR/agent_runtime/shims" real_path="" entry
   if [[ -z "${AGENT_REAL_GH:-}" ]]; then
     IFS=':' read -r -a publication_paths <<< "${PATH:-}"
     for entry in "${publication_paths[@]}"; do
-      [[ "$entry" == */scripts/agent_runtime/shims ]] && continue
+      [[ "$entry" == */"$LC_MACHINERY_PACKAGE"/agent_runtime/shims ]] && continue
       if [[ -x "$entry/gh" ]]; then
         real_path="$(cd "$entry" && pwd)/gh"
         break
@@ -1567,7 +1405,7 @@ launcher_claude_cap_guard() {
   local pct
   local -r stop=99
   local py; py="$(launcher_project_python 2>/dev/null || true)"
-  pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
+  pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_MACHINERY_DIR/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
   # Any non-negative decimal is usage; overshoot above 100% still stops.
   if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0)}'; then
     printf 'launcher: warning: Claude weekly usage unknown or invalid; allowing launch without a usage check.\n' >&2
@@ -1575,8 +1413,8 @@ launcher_claude_cap_guard() {
   fi
   if awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
     local handoff=""
-    if [ -n "$py" ] && [ -f "$LC_ROOT/scripts/fleet/routing_policy.py" ]; then
-      handoff="$("$py" -I "$LC_ROOT/scripts/fleet/routing_policy.py" --handoff 2>/dev/null || true)"
+    if [ -n "$py" ] && [ -f "$LC_MACHINERY_DIR/fleet/routing_policy.py" ]; then
+      handoff="$("$py" -I "$LC_MACHINERY_DIR/fleet/routing_policy.py" --handoff 2>/dev/null || true)"
     fi
     if [ -n "$handoff" ]; then
       printf 'launcher: cap-handoff %s branch=%s task=%s\n' "$handoff" "${LC_BRANCH:-}" "${LC_TASK_ID:-}" >&2
@@ -1603,9 +1441,9 @@ launcher_main() {
   # sourcing the richer cold-start clause whenever the full checkout is
   # present. Neither path starts an ACP process.
   export LU_AGENT_COMM_TRANSPORT="${LU_AGENT_COMM_TRANSPORT:-acp}"
-  if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
+  if [ -r "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh" ]; then
     # shellcheck source=scripts/lib/fleet_comms_cold_start.sh
-    source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"
+    source "$LC_MACHINERY_DIR/lib/fleet_comms_cold_start.sh"
   fi
   launcher_clear_foreign_route_state
   launcher_defaults
@@ -1629,17 +1467,15 @@ launcher_main() {
   launcher_refuse_uncertified_gemini_driver
   launcher_drop_force_from_successor_args
   launcher_normalize_effort
-  # Provider adapters are sourced dynamically and consume these values.
-  export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
   launcher_publication_path
   launcher_normalize_model
   # shellcheck source=scripts/lib/handoff_identity.sh
-  source "$LC_ROOT/scripts/lib/handoff_identity.sh"
+  source "$LC_MACHINERY_DIR/lib/handoff_identity.sh"
   # Muse admission runs before generic slot errors and any scope, deploy,
   # lease or CLI activity. Its real-session guard gate has no override.
   if [ "$LC_PROVIDER" = muse ]; then
-    source "$LC_ROOT/scripts/launchers/muse.sh"
+    source "$LC_MACHINERY_DIR/launchers/muse.sh"
     launcher_adapter_validate
     launcher_adapter_preflight
   fi
@@ -1657,14 +1493,14 @@ launcher_main() {
     fi
   else
     # shellcheck source=scripts/lib/driver_scope.sh
-    source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
+    source "$LC_MACHINERY_DIR/lib/driver_scope.sh" || exit 6
     launcher_enter_driver_scope || exit 6
   fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core
   launcher_export_git_identity || exit 3
   # shellcheck disable=SC1090
-  source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
+  source "$LC_MACHINERY_DIR/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
   # Refuse an unclassified provider option before deploy, import, lease,
   # canary or seed can leave side effects behind a failed launch.
@@ -1687,7 +1523,7 @@ launcher_main() {
     echo "LAUNCHER_DRY_RUN=1: would deploy agent extensions (agents:deploy)"
   else
     # shellcheck source=scripts/lib/deploy_extensions.sh
-    source "$LC_ROOT/scripts/lib/deploy_extensions.sh"
+    source "$LC_MACHINERY_DIR/lib/deploy_extensions.sh"
     if ! deploy_agent_extensions "$LC_ROOT" agents:deploy; then
       launcher_error "refusing to launch ${LC_PROVIDER}: the agent-extensions deploy failed."
       exit 1

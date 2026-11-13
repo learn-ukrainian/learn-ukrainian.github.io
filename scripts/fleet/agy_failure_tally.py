@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter
@@ -36,6 +37,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.agent_runtime.adapters.agy import parse_agy_provider_fault
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration.task_record_store import read_task_record
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 CAUSE_LABELS: tuple[str, ...] = (
     "cancellation",
@@ -218,15 +225,15 @@ def build_parser() -> argparse.ArgumentParser:
         allow_abbrev=False,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.agy_failure_tally --since 2026-09-25\n"
-            "  .venv/bin/python -m scripts.fleet.agy_failure_tally --since 2026-09-25 "
+            f"  .venv/bin/python {_ENTRY} --since 2026-09-25\n"
+            f"  .venv/bin/python {_ENTRY} --since 2026-09-25 "
             "--before-after 2026-10-06\n"
-            "  .venv/bin/python -m scripts.fleet.agy_failure_tally --since 2026-09-25 --json\n"
+            f"  .venv/bin/python {_ENTRY} --since 2026-09-25 --json\n"
             "\n"
             "Outputs: cause counts on stdout. --json prints one JSON object. "
             "Nothing is written or deleted.\n"
             "Exit codes: 0 counts printed; 2 invalid arguments or missing tasks directory.\n"
-            "Related: scripts/agent_runtime/adapters/agy.py transient retry; issue #10206.\n"
+            f"Related: {_MACHINERY}/agent_runtime/adapters/agy.py transient retry; issue #10206.\n"
         ),
     )
     parser.add_argument(

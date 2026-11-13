@@ -10,11 +10,11 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api import batch_router as batch_router_mod
-from scripts.api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
-from scripts.api.batch_router import router as batch_router
-from scripts.api.monitor_context import fixture_context
+from scripts.project_api import batch_router as batch_router_mod
+from scripts.project_api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
+from scripts.project_api.batch_router import router as batch_router
 
 
 @pytest.fixture()
@@ -33,7 +33,7 @@ def test_corrupt_checkpoint_json_surfaces_track_error(
     (state_dir / "checkpoint_a1.json").write_text("{not-json", encoding="utf-8")
     (state_dir / "checkpoint_b1.json").write_text(json.dumps({"cp": 2}), encoding="utf-8")
 
-    with caplog.at_level(logging.WARNING, logger="scripts.api.batch_router"):
+    with caplog.at_level(logging.WARNING, logger="scripts.project_api.batch_router"):
         resp = batch_client.get("/api/batch/checkpoints")
 
     assert resp.status_code == 200
@@ -51,6 +51,7 @@ def test_dispatcher_scan_timeout_returns_degraded_response(
     interpreter = tmp_path / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True)
     interpreter.write_text("", encoding="utf-8")
+    interpreter.chmod(0o755)  # the release resolver accepts only an executable interpreter
 
     def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["scan"], timeout=DISPATCHER_SCAN_TIMEOUT_S)

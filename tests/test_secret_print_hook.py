@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
 
 from tests.test_guard_secret_print import (
     ROUND_FIVE_KEYED,
@@ -205,7 +206,7 @@ def test_native_guard_failures(harness, failure, monkeypatch, capsys, tmp_path):
     from scripts.agent_runtime import secret_print_hook as hook
 
     if failure == "missing_guard":
-        monkeypatch.setattr(hook, "GUARD_PATH", tmp_path / "absent.py")
+        monkeypatch.setattr("lu_machinery.common.repo_root.machinery_path", lambda relative: tmp_path / "missing-guard.py")
     else:
 
         def broken_run(*args, **kwargs):
@@ -245,7 +246,7 @@ def test_shared_runner_pins_guard_and_sanitizes_timeout(timed_out, monkeypatch):
     )
     assert calls == [
         (
-            [sys.executable, str(ROOT / "agents_extensions/shared/hooks/guard-secret-print.py")],
+            [sys.executable, "-I", str(machinery_path("agents_extensions/shared/hooks/guard-secret-print.py"))],
             {
                 "input": json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}),
                 "text": True,
@@ -291,7 +292,7 @@ def test_actual_guard_stderr_is_forwarded(harness, monkeypatch, capsys):
 
     command = 'echo "$ARBITRARY_TOKEN"'
     guard = subprocess.run(
-        [sys.executable, str(hook.GUARD_PATH)],
+        [sys.executable, "-I", str(machinery_path("agents_extensions/shared/hooks/guard-secret-print.py"))],
         input=json.dumps(event("claude", command)),
         text=True,
         capture_output=True,
@@ -419,17 +420,19 @@ def test_agy_invalid_stdin_subprocess(raw):
 
 @pytest.mark.parametrize("failure", ["missing", "crash", "deadline"])
 def test_agy_detector_failure_real_subprocess(tmp_path, failure):
-    guard = tmp_path / "guard.py"
+    guard = tmp_path / "agents_extensions/shared/hooks/guard-secret-print.py"
+    guard.parent.mkdir(parents=True)
     if failure != "missing":
         guard.write_text(
             "raise RuntimeError('synthetic crash')\n" if failure == "crash" else "import time\ntime.sleep(30)\n"
         )
     wrapper = tmp_path / "hook_probe.py"
     wrapper.write_text(
-        "import sys\nfrom pathlib import Path\n"
+        "import os, sys\nfrom pathlib import Path\n"
         f"sys.path.insert(0, {str(ROOT)!r})\n"
         "from scripts.agent_runtime import secret_print_hook as hook\n"
-        f"hook.GUARD_PATH = Path({str(guard)!r})\n"
+        "from lu_machinery.common import repo_root\n"
+        f"repo_root.machinery_path = lambda relative: Path({str(guard)!r})\n"
         "raise SystemExit(hook.main(['--harness', 'agy']))\n"
     )
     result = subprocess.run(

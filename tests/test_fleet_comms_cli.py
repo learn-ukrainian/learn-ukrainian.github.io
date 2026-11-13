@@ -129,7 +129,7 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
                 argv.append(action.option_strings[0])
             argv.append("1" if action.type is int else "fixture")
         entrypoints.append((argv, parser.get_default("func").__name__))
-    assert len(entrypoints) == 28
+    assert len(entrypoints) == 29
     for argv, handler_name in entrypoints:
         handler = Mock(side_effect=AssertionError("unsafe root reached command handler"))
         with monkeypatch.context() as guard:
@@ -338,7 +338,7 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
     assert "transport: ACP (cursor, pool)" in output
-    assert "/fleet.html?conversation=conversation_" in output
+    assert "conversation: conversation_" in output
     from scripts.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "authority-plane") as authority:

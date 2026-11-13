@@ -36,7 +36,12 @@ handoff
     gone and the launcher has exited, and only then respawns, so the successor's
     single-instance check never meets the predecessor (#12562). If the
     predecessor does not exit in time, or its scope cannot be identified, nothing is
-    respawned and ``claude-cto`` is alerted once. A completed relaunch alerts
+    respawned and ``claude-cto`` is alerted once. The ordinary relaunch (the agent exited by
+    itself or on ``/exit``) takes the same wait without the stop (#12569): the agent's scope is
+    read and checkpointed with the agent's pid and start time while it is alive, before any
+    ``/exit`` (none is typed when that fails), and the respawn waits until that scope is gone.
+    A scope that was never recorded, or whose state cannot be read, holds the relaunch and
+    alerts ``claude-cto`` after ``UNKNOWN_SCOPE_ALERT_SECONDS``; it never relaunches blind. A completed relaunch alerts
     ``claude-cto`` once with a redacted pane tail. Other stalled handoffs alert
     ``epics`` once after ``handoff_alert_seconds``. After a respawn it
     watches the launcher; a non-zero launcher exit alerts once with the pane's
@@ -92,6 +97,10 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -127,6 +136,8 @@ ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
 RELAUNCH_SETTLE_SECONDS = 900
 # A forced relaunch waits this long for the predecessor's scope and agent to exit before it respawns.
 PREDECESSOR_EXIT_SECONDS = 60
+# An ordinary relaunch held because the predecessor's scope is unknown alerts claude-cto after this long.
+UNKNOWN_SCOPE_ALERT_SECONDS = 600
 # The agent's driver scope, from its cgroup path (``scripts/lib/driver_scope.sh`` verifies the same shape).
 # The agent may sit in a sub-cgroup of the scope, so the unit is the component under ``lu-driver.slice``.
 DRIVER_SCOPE_RE = re.compile(r"/lu\.slice/lu-driver\.slice/(lu-[A-Za-z0-9_.:-]+\.scope)(?:/|$)")
@@ -139,6 +150,11 @@ SINGLE_INSTANCE_RC = 3
 SINGLE_INSTANCE_REFUSAL_RE = re.compile(r"refused: .*process is still running")
 RELAUNCH_TAIL_LINES = 6
 ALERT_DETAIL_CHARS = 600
+# Fleet Comms message kinds, one per send. Only the launcher watcher consumes a supervisory
+# request, so it carries only the handoff request to a driver seat. An alert to claude-cto or
+# epics is an ordinary request that the CTO seat claims and acknowledges (#12837).
+HANDOFF_REQUEST = "supervisory-request"
+ALERT = "request"
 # A lead lane (the CTO) whose session is missing alerts claude-cto after this long, then hourly.
 LEAD_MISSING_ALERT_SECONDS = 900
 LEAD_MISSING_REALERT_SECONDS = 3600
@@ -336,16 +352,23 @@ class Tmux:
                 stack.append(child)
         return PaneSnapshot(pane=f"{pid}@{starts[pid]}", agent=agent, busy=bool(children.get(pid)))
 
-    def agent_scope(self, agent: str) -> str | None:
+    def agent_scope(self, agent: str, *, strict: bool = False) -> str | None:
         """The ``lu-driver`` scope unit holding the agent ``<pid>@<start>``, or None when it is not in one.
 
         Raises ``TelemetryUnavailable`` when the cgroup cannot be read (for example the process just exited).
+        ``strict`` treats output without a unified (``0::``) line, or with a relative or deleted path, as
+        unreadable, not as "in no scope"; the forced relaunch keeps the lenient read.
         """
         pid = agent.split("@", 1)[0]
         for line in self._query(["cat", f"/proc/{pid}/cgroup"], "agent cgroup").splitlines():
             if line.startswith("0::"):
-                match = DRIVER_SCOPE_RE.search(line[3:])
+                path = line[3:]
+                if strict and not (path.startswith("/") and not path.endswith("(deleted)")):
+                    raise TelemetryUnavailable(f"agent cgroup: malformed unified path {path[:60]!r}")
+                match = DRIVER_SCOPE_RE.search(path)
                 return match.group(1) if match else None
+        if strict:
+            raise TelemetryUnavailable("agent cgroup: no unified cgroup line")
         return None
 
     def scope_active(self, unit: str) -> bool:
@@ -459,7 +482,7 @@ class Guard:
     repo_root: Path
     tmux: Tmux
     log: Callable[[str], None]
-    send: Callable[[str, str, str], None]
+    send: Callable[[str, str, str, str], None]  # (recipient, body, key, kind)
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
@@ -509,7 +532,7 @@ class Guard:
         body = self._prompt(lane, self._reason(lane, s, pct), reminder)
         self.tmux.type_into(lane.target, body)
         stamp = iso(self.now())
-        self.send(lane.sender, body, f"{lane.kind}-handoff-{lane.name}-{stamp}")
+        self.send(lane.sender, body, f"{lane.kind}-handoff-{lane.name}-{stamp}", HANDOFF_REQUEST)
         s.update(nudges=reminder, last_nudge=stamp)
 
     def _seconds_since(self, value: str | None) -> float:
@@ -610,7 +633,7 @@ class Guard:
         phase start (``since``) so a later phase is a new occurrence.
         """
         phase = s.get("since") or iso(self.now())
-        self.send("epics", body, f"{key}-{phase}")
+        self.send("epics", body, f"{key}-{phase}", ALERT)
         alerts = s.setdefault("anchor_alerts", [])
         if key not in alerts:
             alerts.append(key)
@@ -743,6 +766,7 @@ class Guard:
             f"(since {s['missing_since']}); the guard cannot hand it off or relaunch it. "
             f"{self.tmux.server_diagnosis(error)}",
             f"lead-missing-{lane.name}-{stamp}",
+            ALERT,
         )
 
     def _watch(
@@ -760,6 +784,7 @@ class Guard:
             ):
                 s.pop(key, None)
             s.pop("predecessor_scope", None)
+            s.pop("exit_evidence", None)
         else:
             self._watch_launcher_exit(lane, s, text, snap)
         if snap.agent is None:
@@ -795,6 +820,7 @@ class Guard:
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):
             self.log(f"{lane.name} watch: HANDOFF-DONE seen before the prompt -> handoff (done)")
             self._enter_handoff(s, pct, done=True)
+            self._record_scope(lane, st, s, snap, pct)
             return
         if lane.kind == "claude":
             due = pct is not None and pct >= self.setting("claude_handoff_pct")
@@ -810,6 +836,7 @@ class Guard:
         self._enter_handoff(s, pct, done=False)
         self._nudge(lane, s, pct)
         self.log(f"{lane.name} watch -> handoff: HANDOFF NOW sent")
+        self._record_scope(lane, st, s, snap, pct)
 
     def _predecessor_remains(self, s: dict[str, Any], snap: PaneSnapshot) -> str | None:
         """Why the predecessor may still be running after a relaunch, or None when nothing of it remains.
@@ -875,6 +902,7 @@ class Guard:
             # Keyed on the relaunch occurrence: a fixed key makes the Fleet plane
             # refuse the next, differently timestamped alert for the same lane and rc.
             f"launcher-exit-{lane.name}-{rc}-{occurrence}",
+            ALERT,
         )
 
     def _idle(self, lane: Lane, text: str) -> bool:
@@ -883,11 +911,19 @@ class Guard:
             return CLAUDE_BUSY_RE.search(tail) is None
         return "Ready" in tail and "Working" not in tail
 
-    def _answer_exit_dialog(self, lane: Lane, text: str, pct: int | None, snap: PaneSnapshot) -> bool:
-        """Handle a visible Claude exit dialog, deferring if either guard refuses."""
+    def _answer_exit_dialog(
+        self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot, *, recorded: bool = True
+    ) -> bool:
+        """Handle a visible Claude exit dialog, deferring if either guard refuses.
+
+        Answering ends the agent, so an agent whose scope is not recorded (``recorded`` False) is held instead.
+        """
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind != "claude" or not any(marker in tail for marker in EXIT_DIALOG):
             return False
+        if not recorded:
+            self._hold_unknown(lane, s, "the agent's scope could not be recorded, so the exit dialog was not answered")
+            return True
         # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
         # Delegate workers are separate tasks and keep running.
         if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
@@ -931,6 +967,7 @@ class Guard:
                 return
             self._relaunch(lane, st, s, pct, snap)
             return
+        recorded = self._record_scope(lane, st, s, snap, pct)
         tail = ""
         if s.get("quit_sent") and lane.kind == "claude":
             redacted = redact_text(text) or ""
@@ -951,7 +988,7 @@ class Guard:
         # After two swallowed exits an idle, completed handoff takes the guarded
         # relaunch path even if an exit dialog remains on screen.
         force_exit = lane.kind == "claude" and done and idle and int(s.get("quit_attempts", 0)) >= 2
-        if not force_exit and self._answer_exit_dialog(lane, text, pct, snap):
+        if not force_exit and self._answer_exit_dialog(lane, s, text, pct, snap, recorded=recorded):
             return
         quit_due = (
             lane.kind == "claude"
@@ -970,11 +1007,17 @@ class Guard:
                         f"HANDOFF-DONE; idle agent ended through the relaunch path. "
                         f"Pane tail: {tail or '(none captured)'}",
                         f"failed-exit-{lane.name}-{s['since']}",
+                        ALERT,
                     )
                 else:
                     self._stall_alert(lane, s, waited)
                 return
             command = "/exit" if lane.kind == "claude" else "/quit"
+            if not recorded:
+                # The ordinary relaunch waits for this agent's scope, so it must be on disk before the agent exits.
+                # Without the record no exit is sent, so the hold must alert, or the lane would stall in silence.
+                self._hold_unknown(lane, s, f"the agent's scope could not be recorded, so no {command} was sent")
+                return
             if not self._unchanged(lane, snap, command, pct):
                 return
             self.tmux.type_into(lane.target, command)
@@ -1001,7 +1044,7 @@ class Guard:
                         dialog = self.tmux.capture(lane.target)
                         if self.tmux.monotonic() - started >= self._exit_poll_remaining:
                             break
-                        if self._answer_exit_dialog(lane, dialog, pct, snap):
+                        if self._answer_exit_dialog(lane, s, dialog, pct, snap):
                             break
                     finally:
                         # One run shares this budget, including time spent reading telemetry.
@@ -1025,8 +1068,50 @@ class Guard:
                 f"CTO-ALERT {iso(self.now())}: {lane.name} handoff still incomplete {waited}s after HANDOFF NOW; "
                 f"no forced kill. Check tmux session {lane.session}",
                 f"handoff-alert-{lane.name}-{iso(self.now())}",
+                ALERT,
             )
             s["alerted"] = True
+
+    def _record_scope(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], snap: PaneSnapshot, pct: int | None) -> bool:
+        """Checkpoint the live agent's driver scope with its pid and start time; False when that is not possible.
+
+        The ordinary relaunch happens after the agent is gone, when its cgroup can no longer be
+        read, so the evidence is taken while it runs and saved before anything ends it (#12569).
+        The scope is trusted only if the agent ``<pid>@<start>`` is still in the process table after
+        the cgroup read, so a reused pid never lends another process's scope. ``exit_evidence`` is
+        ``{"agent": ..., "scope": unit or None}`` (None: the agent is in no driver scope). A save
+        that fails raises and leaves nothing recorded.
+        """
+        agent = snap.agent
+        if agent is None:
+            return False
+        evidence = s.get("exit_evidence")
+        if isinstance(evidence, dict) and evidence.get("agent") == agent:
+            return True
+        try:
+            unit = self.tmux.agent_scope(agent, strict=True)
+            if not self.tmux.process_exists(agent):
+                raise TelemetryUnavailable(f"agent {agent} exited or its pid was reused while its scope was read")
+        except TelemetryUnavailable as exc:
+            self.log(f"{lane.name} handoff ctx_pct={pct}: agent scope not recorded ({exc}); retry next tick")
+            return False
+        s["exit_evidence"] = {"agent": agent, "scope": unit}
+        try:
+            self.checkpoint(st)
+        except BaseException:
+            s.pop("exit_evidence", None)
+            raise
+        s.pop("relaunch_held_since", None)  # an earlier failed read no longer ages a later hold
+        return True
+
+    def _hold_unknown(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
+        """Hold an ordinary relaunch whose predecessor scope is unknown; alert once the hold passes the bound."""
+        held = s.setdefault("relaunch_held_since", iso(self.now()))
+        waited = self._seconds_since(held)
+        if waited >= UNKNOWN_SCOPE_ALERT_SECONDS:
+            self._predecessor_alert(lane, s, f"{reason}, held {int(waited)}s")
+        else:
+            self.log(f"{lane.name} relaunch held: {reason}; no respawn, retry next tick")
 
     def _predecessor_alert(self, lane: Lane, s: dict[str, Any], reason: str) -> None:
         """Alert claude-cto once per handoff phase that a relaunch is held because the predecessor is not gone."""
@@ -1040,6 +1125,7 @@ class Guard:
             f"CTO-ALERT {stamp}: {lane.name} relaunch held, nothing respawned: {reason}. The successor's "
             f"single-instance check would refuse while the predecessor runs. Check tmux session {lane.session}",
             f"relaunch-held-{lane.name}-{s.get('since') or stamp}",
+            ALERT,
         )
 
     def _end_predecessor(
@@ -1063,6 +1149,7 @@ class Guard:
         and leaves the pane as it is. Returns the pane snapshot taken once the predecessor is gone,
         and the scope that held it.
         """
+        ordinary, watched = False, snap.agent
         if snap.agent is not None:
             unit = self.tmux.agent_scope(snap.agent)
             if not self.tmux.process_exists(snap.agent):
@@ -1082,15 +1169,48 @@ class Guard:
         else:
             unit = s.get("predecessor_scope")
             if not unit:
-                return snap, None
+                # The ordinary relaunch: the agent exited by itself, so only the evidence taken while it ran
+                # says which scope it held (#12569). No evidence is a hold, never a pass.
+                evidence = s.get("exit_evidence")
+                if not isinstance(evidence, dict) or not evidence.get("agent") or "scope" not in evidence:
+                    self._hold_unknown(lane, s, "no scope was recorded for the agent that exited")
+                    return None
+                ordinary, watched, unit = True, evidence["agent"], evidence["scope"]
+        try:
+            return self._wait_for_scope(lane, s, snap, pct, unit, watched, stop=not ordinary)
+        except TelemetryUnavailable as exc:
+            if not ordinary:
+                raise
+            self._hold_unknown(lane, s, f"scope state unknown ({exc})")
+            return None
+
+    def _wait_for_scope(
+        self,
+        lane: Lane,
+        s: dict[str, Any],
+        snap: PaneSnapshot,
+        pct: int | None,
+        unit: str | None,
+        watched: str | None,
+        *,
+        stop: bool,
+    ) -> tuple[PaneSnapshot, str | None] | None:
+        """Wait until ``unit`` is inactive, ``watched`` (``<pid>@<start>``) is gone and the launcher has exited.
+
+        ``stop`` first queues the stop of an active scope (the forced relaunch); the ordinary relaunch
+        only waits, because the agent left by itself and its leftover tasks are not ours to kill. A
+        ``unit`` of None (the agent was in no driver scope) skips the systemd calls, not the identity wait.
+        """
+        if not stop and not (unit and self.tmux.scope_active(unit)) and not (watched and self.tmux.process_exists(watched)):
+            return snap, unit  # already gone: the caller's own re-check of this snapshot guards the respawn
         deadline = self.tmux.monotonic() + PREDECESSOR_EXIT_SECONDS
-        if self.tmux.scope_active(unit):
+        if stop and self.tmux.scope_active(unit):
             if not self._unchanged(lane, snap, f"stopping scope {unit}", pct):
                 return None
-            stop = self.tmux.stop_scope(unit)
+            stopped = self.tmux.stop_scope(unit)
             self.log(
-                f"{lane.name} relaunch ctx_pct={pct}: stop scope {unit} rc={stop.returncode} "
-                f"{(stop.stderr or '').strip()[-120:]}"
+                f"{lane.name} relaunch ctx_pct={pct}: stop scope {unit} rc={stopped.returncode} "
+                f"{(stopped.stderr or '').strip()[-120:]}"
             )
         while True:
             fresh = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
@@ -1100,16 +1220,18 @@ class Guard:
                     f"(pane {snap.pane} -> {fresh.pane}, agent {snap.agent} -> {fresh.agent}); nothing respawned"
                 )
                 return None
-            if self.tmux.scope_active(unit):
+            if unit and self.tmux.scope_active(unit):
                 remaining = f"scope {unit} is still active"
-            elif (snap.agent is not None and self.tmux.process_exists(snap.agent)) or fresh.agent is not None:
-                remaining = f"agent {snap.agent} is still running"
+            elif (watched is not None and self.tmux.process_exists(watched)) or fresh.agent is not None:
+                remaining = f"agent {watched or fresh.agent} is still running"
             elif fresh.busy:
                 remaining = "the launcher is still exiting"
             else:
                 return fresh, unit
             if self.tmux.monotonic() >= deadline:
-                self._predecessor_alert(lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the scope stop")
+                self._predecessor_alert(
+                    lane, s, f"{remaining} {PREDECESSOR_EXIT_SECONDS}s after the {'scope stop' if stop else 'agent exit'}"
+                )
                 return None
             self.tmux.sleep(1)
 
@@ -1154,6 +1276,8 @@ class Guard:
             "predecessor_scope": unit or s.get("predecessor_scope"),
             "relaunch_retried": bool(s.get("relaunch_retried")),
         }
+        if isinstance(s.get("exit_evidence"), dict):  # the single-instance retry needs it too
+            st[lane.session]["exit_evidence"] = s["exit_evidence"]
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:
         self._exit_poll_remaining = 10.0
@@ -1224,19 +1348,30 @@ def comms_reader(db: Path | None, log: Callable[[str], None]) -> Callable[[str, 
     return handoff_posted
 
 
-def fleet_sender(identity: str, log: Callable[[str], None]) -> Callable[[str, str, str], None]:
-    def send(recipient: str, body: str, key: str) -> None:
+def fleet_sender(identity: str, log: Callable[[str], None]) -> Callable[[str, str, str, str], None]:
+    """Publish one guard message as ``identity``; ``kind`` is ``HANDOFF_REQUEST`` or ``ALERT``."""
+
+    def send(recipient: str, body: str, key: str, kind: str) -> None:
         try:
             from scripts.fleet_comms.authority import AuthorityService
 
-            message_id = (
-                AuthorityService(root=None)
-                .enqueue_supervisory_request(
+            service = AuthorityService(root=None)
+            if kind == HANDOFF_REQUEST:
+                message = service.enqueue_supervisory_request(
                     sender=identity, recipient=recipient, body=body, correlation_id=key, idempotency_key=key
                 )
-                .message_id
-            )
-            log(f"send {recipient} ok {message_id}")
+            elif kind == ALERT:
+                message = service.publish_message(
+                    sender=identity,
+                    recipients=(recipient,),
+                    body=body,
+                    kind=ALERT,
+                    correlation_id=key,
+                    idempotency_key=key,
+                )
+            else:
+                raise ValueError(f"unknown guard message kind {kind!r}")
+            log(f"send {recipient} ok {message.message_id}")
         except Exception as exc:  # a Fleet outage must not stop the pane-side handoff
             log(f"send {recipient} failed {type(exc).__name__}: {exc}")
 
@@ -1274,13 +1409,13 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ops.context_guard tick\n"
-            "  .venv/bin/python scripts/ops/context_guard.py tick --lane infra-muse\n"
-            "  .venv/bin/python -m scripts.ops.context_guard handoff-sessions\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.context_guard tick\n"
+            f"  .venv/bin/python {_MACHINERY}/ops/context_guard.py tick --lane infra-muse\n"
+            f"  .venv/bin/python -m {_MACHINERY}.ops.context_guard handoff-sessions\n"
             "Outputs: tick types into lane panes, posts to Fleet Comms, respawns exited lanes, and writes\n"
             "  state.json and guard.log under the state directory; handoff-sessions prints a JSON list.\n"
             "Exit codes: 0 done (or another tick holds the lock); 1 invalid lane data; 2 invalid arguments.\n"
-            "Related: scripts/config/driver_lanes.json, packaging/systemd/learn-ukrainian-context-guard.timer,\n"
+            f"Related: {_MACHINERY}/config/driver_lanes.json, packaging/systemd/learn-ukrainian-context-guard.timer,\n"
             "  docs/runbooks/maintenance-window.md, issue #10814."
         ),
     )
@@ -1305,7 +1440,7 @@ def main(argv: list[str] | None = None) -> int:
         "--data",
         type=Path,
         default=None,
-        help="Lane data file (default: scripts/config/driver_lanes.json).",
+        help=f"Lane data file (default: {_MACHINERY}/config/driver_lanes.json).",
     )
     args = parser.parse_args(argv)
     state_dir = args.state_dir or default_state_dir()

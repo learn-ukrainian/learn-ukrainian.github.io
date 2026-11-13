@@ -15,6 +15,10 @@
 set -euo pipefail
 
 API="http://localhost:8765"
+# The machinery package directory holding this script, from its own (unresolved)
+# location; its name spells the package in the commands below.
+MACHINERY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MACHINERY_PKG="$(basename "$MACHINERY_DIR")"
 BLUE='\033[0;34m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -30,7 +34,7 @@ NC='\033[0m'
 # ---------------------------------------------------------------------------
 if ! curl -s --max-time 2 "$API/api/state/summary" > /dev/null 2>&1; then
     echo -e "${RED}Monitoring API not running at $API${NC}"
-    echo "Start it:  .venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --reload &"
+    echo "Start it:  .venv/bin/python -m uvicorn ${MACHINERY_PKG}.api.main:app --host 0.0.0.0 --port 8765 --reload &"
     exit 1
 fi
 
@@ -153,14 +157,14 @@ if command -v curl > /dev/null 2>&1; then
     # Try the MCP endpoint via the bridge script
     INBOX_RESULT=$(.venv/bin/python -c "
 import json, sys
-sys.path.insert(0, 'scripts')
+sys.path.insert(0, sys.argv[1])
 try:
     from ai_agent_bridge import check_inbox
     msgs = check_inbox('claude')
     print(json.dumps(msgs))
 except Exception as e:
     print(json.dumps({'error': str(e)}))
-" 2>/dev/null || echo '{"error": "bridge unavailable"}')
+" "$MACHINERY_DIR" 2>/dev/null || echo '{"error": "bridge unavailable"}')
 
     if echo "$INBOX_RESULT" | jq -e '.error' > /dev/null 2>&1; then
         echo -e "${BOLD}GEMINI INBOX${NC}  ${DIM}(check manually: mcp__message-broker__check_inbox)${NC}"

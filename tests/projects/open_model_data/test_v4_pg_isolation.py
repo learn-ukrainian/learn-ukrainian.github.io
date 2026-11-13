@@ -9,10 +9,12 @@ from _v4_linguistic_context_fixture import stored_preparation
 from _v4_packaged_runtime_fixture import produce_author_record
 from _v4_shared_runtime_fixtures import assert_authorized_request, role_connection
 from learn_ukrainian_v4_runtime import semantic_inputs
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+)
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import claim
 from test_v4_protected_parent_mechanism import _run_real_pair
-
-from scripts.fleet_comms.request_executor import RequestExecutor
 
 pytest_plugins = ("pytester",)
 
@@ -23,7 +25,8 @@ def leave_foreign_request(pg, root, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     with RequestExecutor(root=root) as executor:
         request = executor.create_request(recipient="claude", body="foreign queue fixture")
-        executor.authorize_author_execution(
+        authorize_author_execution(
+            executor,
             request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
         )
     with role_connection(pg, "hramatka_v4_control_writer") as conn:

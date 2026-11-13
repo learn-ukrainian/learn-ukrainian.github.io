@@ -261,7 +261,8 @@ body {
 }
 
 .lu-nav a {
-  padding: 6px 8px;
+  /* 6px keeps every primary link inside the 1200px header beside the search control (#12984). */
+  padding: 6px 6px;
   border-radius: 8px;
   color: var(--lu-gray-600);
   font-size: 0.82rem;

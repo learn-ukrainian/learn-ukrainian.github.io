@@ -43,7 +43,9 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    # Only this package's own absence selects the short spelling; its name comes from this
+    # file's unresolved location (design-v1 amendment 1), never __package__.
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
@@ -72,6 +74,10 @@ from scripts.fleet_comms.opsec_store import (
 )
 from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
+
+# This package's import name, as ``python -m`` runs it: from this module's unresolved location
+# (design-v1 amendment 1), never __package__.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.fleet_comms"
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -852,6 +858,18 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
                     fence_token=args.fence_token,
                     acknowledgment_artifact_id=args.acknowledgment_artifact_id,
                 ))
+            elif args.deliveries_command == "expire-stale":
+                matched = service.count_undelivered(older_than_days=args.older_than_days)
+                expired = (
+                    service.expire_undelivered(older_than_days=args.older_than_days)
+                    if args.apply else 0
+                )
+                payload = {
+                    "matched": matched,
+                    "expired": expired,
+                    "applied": bool(args.apply),
+                    "older_than_days": args.older_than_days,
+                }
             else:
                 payload = asdict(service.get_delivery(args.delivery_id))
     except AuthorityServiceError as exc:
@@ -873,11 +891,11 @@ def _add_deliveries_parser(sub: Any) -> None:
     )
     epilog = (
         "Examples:\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries claim --recipient codex --worker-id seat-1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries receive --recipient worker-task --worker-id worker-task\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
-        "  .venv/bin/python -m scripts.fleet_comms deliveries read DELIVERY --worker-id seat-1 --fence-token 1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries claim --recipient codex --worker-id seat-1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries receive --recipient worker-task --worker-id worker-task\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
+        f"  .venv/bin/python -m {_PACKAGE} deliveries read DELIVERY --worker-id seat-1 --fence-token 1\n"
         "Outputs: JSON on stdout; message bodies only from read and receive.\n"
         "  Receive claims and reads in one call: {delivery: {delivery_id, fence_token, sender, body, ...},\n"
         "  content_included: true}. Empty receive returns {delivery: null, content_included: false}.\n"
@@ -890,10 +908,13 @@ def _add_deliveries_parser(sub: Any) -> None:
         "  inspect the external outcome before repeating an action. Ack records its verified outcome;\n"
         "  supervisory requests require consumption for the current fence. Status reads metadata.\n"
         "  Unreadable or dead-lettered coordinator replies emit a typed delivery-error to both parties.\n"
+        "  expire-stale counts queued or running deliveries older than 7 days. Without --apply it\n"
+        "  writes nothing. With --apply it expires them. Rows stay, and an unread body stays\n"
+        "  ineligible for retention deletion. Expiry sends one summary notification.\n"
         "  These commands open the authority store, initializing/migrating it if necessary.\n"
         "Exit codes: 0 = success, 1 = no claimable delivery or delivery not found,\n"
         "  2 = usage error, 3 = operation refused or storage error.\n"
-        "Related: scripts.fleet_comms.authority.AuthorityService; channels publish; plane-status."
+        f"Related: {_PACKAGE}.authority.AuthorityService; channels publish; plane-status."
     )
     deliveries = sub.add_parser(
         "deliveries", help="Process fenced authority deliveries (read/receive include bodies)",
@@ -935,6 +956,17 @@ def _add_deliveries_parser(sub: Any) -> None:
                 help="Existing sealed outcome artifact ID (default: no artifact); reuse on idempotent ack",
             )
         operation.set_defaults(func=cmd_deliveries)
+    expire = operations.add_parser(
+        "expire-stale",
+        help="Count undelivered deliveries older than 7 days; expire them only with --apply",
+        description="Count undelivered deliveries older than 7 days.\n" + description,
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    expire.add_argument("--root", default=None, help="Authority storage directory")
+    expire.add_argument("--older-than-days", type=int, default=7, help="Age cutoff in days (default: 7)")
+    expire.add_argument("--apply", action="store_true", help="Expire matched rows through the deadline path (default: count only)")
+    expire.set_defaults(func=cmd_deliveries)
 
 
 def _body_argument(value: str) -> str:
@@ -1236,7 +1268,7 @@ def cmd_retention(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.fleet_comms",
+        prog=f"python -m {_PACKAGE}",
         description=(
             "Inspect Fleet Comms status, requests, metrics, and review jobs.\n"
             "Use read commands for diagnostics; delivery processing and explicit accept/import commands perform writes."
@@ -1244,13 +1276,13 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet_comms plane-status\n"
-            "  .venv/bin/python -m scripts.fleet_comms fleet status\n"
-            "  .venv/bin/python -m scripts.fleet_comms metrics\n"
+            f"  .venv/bin/python -m {_PACKAGE} plane-status\n"
+            f"  .venv/bin/python -m {_PACKAGE} fleet status\n"
+            f"  .venv/bin/python -m {_PACKAGE} metrics\n"
             "Outputs: JSON on stdout. Plane-status/metrics reads do not initialize stores.\n"
             "Exit codes: 0 = report produced (inspect health/error fields), "
             "1 = not found/no delivery, 2 = usage error, 3 = operation error.\n"
-            "Related: scripts.fleet_comms.message_plane; fleet help."
+            f"Related: {_PACKAGE}.message_plane; fleet help."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1327,8 +1359,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet_comms retention\n"
-            "  .venv/bin/python -m scripts.fleet_comms retention "
+            f"  .venv/bin/python -m {_PACKAGE} retention\n"
+            f"  .venv/bin/python -m {_PACKAGE} retention "
             "--cited-from-tasks batch_state/tasks --cited-from-docs docs "
             "--cited-from-github github.jsonl --cited-from-export citations.txt "
             "--cited-from-batch-state batch_state\n"

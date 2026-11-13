@@ -56,12 +56,14 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
+from lu_machinery.common.task_store_paths import tasks_dir
+from lu_machinery.review import findings_db, second_seat
+
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.common.repo_root import project_interpreter, resolve_repo_root
-from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.inventory_gate import GateReport
@@ -69,7 +71,7 @@ from scripts.curriculum.learner_state.planned import planned_state
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.validate.validate import main as validate_main
-from scripts.review import findings_db, fixloop, record, second_seat, settle
+from scripts.review import fixloop, record, settle
 from scripts.review.prompts import check as prompt_check
 from scripts.review.prompts import render as prompt_render
 from scripts.review.receipts.ledger import LedgerError, records
@@ -91,6 +93,8 @@ from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsuppo
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
+# The dispatcher entry comes from this code's own primary, never the configured target (#12681).
+DISPATCH_ENTRY = main_checkout_root(Path(__file__).resolve().parents[2]) / "scripts" / "dispatch.py"
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
@@ -1003,14 +1007,14 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
     does not wire protected review isolation or Sources receipts into this
     command. The existing finish validation still requires its bound receipts.
     """
-    from scripts.review.model_catalog import substitution_default_model
+    from lu_machinery.review.model_catalog import substitution_default_model
 
     model = substitution_default_model(agent)
     if not model:
         raise ValueError(f"no configured v2 review model for {agent!r}")
     return [
         str(PYTHON),
-        str(PRIMARY / "scripts" / "dispatch.py"),
+        str(DISPATCH_ENTRY),
         "dispatch",
         "--agent",
         agent,
@@ -1153,7 +1157,7 @@ def render_card(out: Path, card: dict[str, Any]) -> str:
     card["dispatch_cmd"] = shlex.join(card["dispatch"])
     card["record_cmd"] = f"cd {shlex.quote(str(REPO_ROOT))} && {shlex.join(card['record'])}"
     (cards / f"{card['case']}.json").write_text(json.dumps(card, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "dispatch.py"), "wait", card["task_id"]])
+    wait = shlex.join([str(PYTHON), str(DISPATCH_ENTRY), "wait", card["task_id"]])
     finish = shlex.join([str(PYTHON), "-m", "scripts.review.integration_check", "finish-real", "--out", str(out)])
     lines = [
         f"=== DISPATCH CARD ({card['case']}) {card['title']} ===",

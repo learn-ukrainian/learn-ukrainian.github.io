@@ -35,6 +35,13 @@ from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, mark_missing_worktree_failed
 from scripts.publish.github import Request, request_run
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 
 def repo_root_from_file() -> Path:
     return Path(__file__).resolve().parents[2]
@@ -304,9 +311,7 @@ def push_and_maybe_open_pr(
         actions.append(f"pr_exists:{url}")
         return actions
     pr_title = title or f"chore(dispatch): settle {branch}"
-    pr_body = body or (
-        "Auto-opened by `python -m scripts.orchestration.dispatch_settle` after a worker left commits without a PR.\n"
-    )
+    pr_body = body or (f"Auto-opened by `python -m {_MODULE}` after a worker left commits without a PR.\n")
     base_result = _run(["gh", "repo", "view", "--json", "defaultBranchRef"], cwd=worktree)
     try:
         base = json.loads(base_result.stdout)["defaultBranchRef"]["name"]
@@ -529,7 +534,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Inspect and settle a dispatch task.\nUse only for the assigned task; PR creation remains opt-in.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/dispatch_settle.py task --help\nOutputs and exit codes: Task disposition and optional branch push or PR creation. 0: settled; >=1: unresolved or failed.\nRelated: #9297",
+        epilog=f"Examples:\n  .venv/bin/python {_PACKAGE_DIR}/dispatch_settle.py task --help\nOutputs and exit codes: Task disposition and optional branch push or PR creation. 0: settled; >=1: unresolved or failed.\nRelated: #9297",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

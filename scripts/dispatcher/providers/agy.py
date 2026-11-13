@@ -251,6 +251,12 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if (argument := schema_argument(spec.options)) is not None:
         argv += ["--json-schema", argument]
     if spec.mode == "workspace-write":
+        # AGY runs unwrapped with skipped permissions here: its workspace hooks are the only
+        # boundary on the primary checkout. A dry run plans before the worktree exists.
+        if spec.options.get("dry_run") != "True":
+            from scripts.agent_runtime.agy_hook_config import require_dispatch_guards
+
+            require_dispatch_guards(spec.worktree, Path(env.get("HOME") or Path.home()))
         argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
     elif spec.mode == "read-only":
         # AGY has no write lock of its own: read-only runs only inside the dispatcher's bubblewrap

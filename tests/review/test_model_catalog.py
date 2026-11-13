@@ -22,6 +22,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     require_execution_model,
 )
+from tests.helpers import machinery_package
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
@@ -892,16 +893,14 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
-    """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
+    """C-5307 restores Grok coding and Cursor review without admitting Ukrainian review."""
     source = Path(__file__).resolve().parents[2]
     catalog = yaml.safe_load((source / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
-    assert "ukrainian_review" in catalog["models"]["grok-4.7"]["roles"]
-    xai = [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
-    assert xai, "grok-4.7 reviewer seat missing"
-    routes = [route for candidate in xai for route in candidate["routes"].values()]
-    assert {route["transport"] for route in routes} == {"cursor"}
-    for route in routes:
-        assert route["review_profiles"] == ["code", "infra"]
+    assert "ukrainian_review" not in catalog["models"]["grok-4.7"]["roles"]
+    assert catalog["models"]["grok-4.7"]["lifecycle"] == "active"
+    assert catalog["models"]["grok-4.7"]["roles"] == ["coding", "standard_review"]
+    assert catalog["models"]["grok-4.7"]["transports"] == ["native_grok", "cursor"]
+    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["review_profiles"] == ["code", "infra"]
 
 
 def guard_policy(settings):
@@ -964,22 +963,20 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
                 assert not (family[name] == "anthropic" and candidates[name]["transport"] == "cursor"), (risk, name)
         on_ladder = {name for rung in ladders[risk] for name in rung}
         assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
-        assert {"claude-opus-5-5", "grok-4.7-cursor-fallback"} <= on_ladder, risk
+        assert "claude-opus-5-5" in on_ladder, risk
+        assert not [name for name in on_ladder if candidates[name]["transport"] == "cursor"], risk
     for risk in ("low", "medium", "high", "critical"):
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
-        assert "anthropic_authority/cursor_fallback" not in routes
-        assert "xai_reviewer/cursor_fallback" in routes
+        assert not [route for route in routes if route.endswith("/cursor_fallback")]
     assert list(catalog["seats"]["anthropic_authority"]["routes"]) == ["native", "agy"]
-    assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"cursor_fallback"}
-    assert "transport_fallback_for" not in catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]
+    assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
     opus = catalog["models"]["claude-opus-5-5"]
     assert (opus["routing_wire_ids"], opus["transports"]) == (
         {"native_claude": "claude-opus-5-5", "agy": "claude-opus-5-5-high"},
         ["native_claude", "agy"],
     )
-    cursor = catalog["budget_substitution_models"]["cursor"]
-    assert "claude-opus-5-5" not in cursor
-    assert "claude-fable-5-1" not in cursor
+    # No Cursor substitution row exists, so no Claude model substitutes onto Cursor (GROK-CANCEL-1110).
+    assert "cursor" not in catalog["budget_substitution_models"]
     assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
     assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude"]
     assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
@@ -989,10 +986,10 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab",
+    "v2-baseline.json.gz": "70fde5bcd1ecf095a668a4b4221feb8e76d3d1f88495267afc18f3dba88b154d",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
+    "SPEC.md": "ed7438340b60df7dcf51271dac1b03952fe96617edd249f14aaed1ecb33a0ede",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
@@ -1042,44 +1039,30 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "399cf15d4a0efa36bff57c143a66638a085b792d069c38ccb07955c1dee068ab"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "70fde5bcd1ecf095a668a4b4221feb8e76d3d1f88495267afc18f3dba88b154d"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
-# Gemini 3.8 Flash High is a general worker (#12291). The gzip fixture stays
-# byte-identical; the loaded catalog drops the retired fallback block so frozen
-# compares and re-validation match the live route keys.
-CURRENT_BASELINE["catalog"]["execution_routing"]["sol_advised_bounded"].pop("bounded_fallback_worker")
-# The Hermes runtime path is removed (#12410). The gzip fixture stays
-# byte-identical; the loaded catalog drops the retired transport so frozen
-# compares match the live route.
-CURRENT_BASELINE["catalog"]["models"]["deepseek-v4.1-flash"]["transports"].remove("hermes")
-# Drop only the removed transport's ban wording from the historical receipt.
-_catalog_notes = CURRENT_BASELINE["catalog"]["policy"]["notes"]
-assert _catalog_notes[2].count("Hermes and OpenRouter") == 1
-_catalog_notes[2] = _catalog_notes[2].replace("Hermes and OpenRouter", "OpenRouter")
+
+GROK_REVIEW_CANDIDATE = {
+    "model_id": "grok-4.7", "route": "cursor", "transport": "cursor",
+    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --effort high",
+    "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["standard_review"],
+}
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high --contributor-mode off",
     "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
-def _pop_budget_elevation_role(catalog):
-    """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
-    role = "review_budget_elevation"
-    # The envelope role is the one advisory_roles entry of the bounded route; it is checked against the
-    # route's advisor, not frozen here, and the elevation's frozen receipt stays what it was.
+def _pop_advisory_roles(catalog):
+    """Remove the ``advisory_roles`` section, which the frozen catalogs predate."""
+    # The envelope role is the one advisory_roles entry, of the bounded route; it is checked against the
+    # route's advisor, not frozen here. The removed budget elevation role left no other entry.
     envelope = catalog["advisory_roles"].pop("bounded_advisory_envelope")
     advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
     assert (envelope["effort"], envelope["output_fields"]) == (advisor["effort"], advisor["output_fields"])
-    catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
-    holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
-    for model_id in holders:
-        catalog["models"][model_id]["roles"].remove(role)
-    entry = catalog["advisory_roles"].pop(role)
-    # It is the only advisory role left once the envelope role is popped, so its key goes too.
     assert catalog.pop("advisory_roles") == {}
-    return {"advisory_role": entry, "consult": role, "holders": holders}
 
 
 def with_advisory_roles(frozen):
@@ -1104,35 +1087,71 @@ def with_advisory_roles(frozen):
 def without_advisory_roles(catalog):
     """``with_advisory_roles`` undone: the frozen catalog the overlay was built from."""
     catalog = deepcopy(catalog)
-    _pop_budget_elevation_role(catalog)
+    _pop_advisory_roles(catalog)
     return catalog
+
+
+def approved_dispatcher_spelling(value):
+    """``value`` with the dispatcher path spelled as the frozen fixtures and approvals spell it.
+
+    They name ``scripts/dispatch.py``; the machinery-move rename rewrites that path to the package's
+    new directory. Only the exact dispatcher path, alone or after the project interpreter, is mapped,
+    so every other byte still has to match.
+    """
+    package = machinery_package()
+    if isinstance(value, dict):
+        return {key: approved_dispatcher_spelling(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [approved_dispatcher_spelling(item) for item in value]
+    if isinstance(value, str):
+        if value == f"{package}/dispatch.py":
+            return "scripts/dispatch.py"
+        moved = f".venv/bin/python {package}/dispatch.py "
+        if value.startswith(moved):
+            return ".venv/bin/python scripts/dispatch.py " + value[len(moved):]
+    return value
 
 
 def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
     for surface in surfaces:
-        value = deepcopy(actual[surface])
+        value = approved_dispatcher_spelling(deepcopy(actual[surface]))
         if surface == "catalog":
-            # Assert the entire operator-approved exception before comparing every other field.
-            if "red_team_only" in value["models"]["gpt-6-astra"]:
-                assert hashlib.sha256(encode(value["models"]["gpt-6-astra"])).hexdigest() == "80bcd99f8ecf8e25423683302239e2cdb26e0ea48abdbcb5e7848d31e6a690a6"
-                exception = value["review_candidates"].pop("openai_red_team_exception")
-                assert hashlib.sha256(encode(exception)).hexdigest() == "ba9c4c63a08db1d9173ace99f6f6da2735f4e5c5402f305d24300c29fbde4a5c"
-                endpoint = value["review_scheduler"]["endpoints"]["codex"]
-                assert endpoint["models"] == ["gpt-6.1-sol", "gpt-6-astra"]
-                endpoint["models"] = ["gpt-6.1-sol"]
-                value["models"]["gpt-6-astra"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gpt-6-astra"])
-            # Carbon is held inventory only; every prior seat and route stays frozen.
+            # Operator decision 2026-11-10: Carbon and Argon are active AGY work models with no
+            # review or advisory role, so they join no seat, review route, ladder or ranking and
+            # every other field stays frozen. Argon's frozen row is its retired record, which
+            # held the catalog id gemini-4-argon-high before that decision.
             carbon = value["models"].pop("gemini-4-carbon")
-            assert hashlib.sha256(encode(carbon)).hexdigest() == "5e7dd56ff656759fae9e85e0120c0eb74ae49ea78122db95c288ad3631c960b7"
+            assert hashlib.sha256(encode(carbon)).hexdigest() == "d8d515834ddc850490fb2e2a9bd7b9b0cdf77b2184254ca6db765b5b92f510d5"
+            argon = value["models"].pop("gemini-4-argon")
+            assert hashlib.sha256(encode(argon)).hexdigest() == "487d0e7e81d157689031dc8c804f1a3323773e0ed5b4486a8e2f1af793909d3e"
+            value["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
+            # C-5307 restores native coding and the exact Cursor review pin. Every
+            # other catalog field, reviewer-of-record ladder and route stays pinned.
+            expected = CURRENT_BASELINE[surface]
+            grok = value["models"]["grok-4.7"]
+            assert hashlib.sha256(encode(grok)).hexdigest() == "3d655f93b3913b8de9f1d752d350ab4743f97a4396056e14153e2ac5505a9310"
+            value["models"]["grok-4.7"] = deepcopy(expected["models"]["grok-4.7"])
+            assert value["review_candidates"].pop("grok-4.7-cursor-fallback") == GROK_REVIEW_CANDIDATE
+            for endpoint, digest in (
+                ("grok", "b893f62c29fe61370e891af14a3c78f55765641c18d60618f735a1fd917425cf"),
+                ("cursor", "463273701fe08a057c071c23c74ce941ba626097e990b01477e1c58d2bb33e22"),
+            ):
+                scheduler = value["review_scheduler"]
+                assert hashlib.sha256(encode(scheduler["endpoints"][endpoint])).hexdigest() == digest
+                scheduler["endpoints"][endpoint] = deepcopy(expected["review_scheduler"]["endpoints"][endpoint])
+            assert hashlib.sha256(encode(value["policy"]["notes"][2])).hexdigest() == "36eeab692964396878fb5faff9f5b1be38f5f096eb85ab449b6b4fe1708bda4a"
+            value["policy"]["notes"][2] = expected["policy"]["notes"][2]
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
-            # The elevated-tier grant role is a consult role held by Sol and Opus; it moves no seat,
-            # route or review ranking. It replaced the retired budget extension role.
-            elevation = _pop_budget_elevation_role(value)
-            assert hashlib.sha256(encode(elevation)).hexdigest() == "c4c6af852a668fafe093e1464504ec8db3e5fcbc17f11fb6eb9b5571c6f08dd0"
+            # C-4965: Fable 5.2 is an explicit-pin model with no review or advisory role, so it
+            # joins no seat, review route, ladder or ranking; every other field stays frozen.
+            fable52 = value["models"].pop("claude-fable-5-2")
+            assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
+            # The advisory_roles section moves no seat, route or review ranking.
+            _pop_advisory_roles(value)
             # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
             if value["review_ladders"]["low"] and value["review_ladders"]["low"][-1] == ["muse"]:
                 assert value["review_ladders"]["low"].pop() == ["muse"]
@@ -1144,6 +1163,14 @@ def assert_frozen_surfaces(actual, *, surfaces):
             assert hashlib.sha256(encode(muse_model)).hexdigest() == "72ee5f7017790c3dd0fc3ebfbe47fa40c883010ff444875ad6403ca80fa305e5"
             value["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
             value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
+            # REMOVE-UNNEEDED-1107: prose-only correction of two stale "Gemma retired" policy notes
+            # (Gemma is live for hramatka through OpenCode). No seat, route or ranking moves.
+            for index in (3, 7):
+                value["policy"]["notes"][index] = CURRENT_BASELINE["catalog"]["policy"]["notes"][index]
+            # Explanatory prose only: normalize the cleaned-up notes to the historical overlay.
+            frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
+            value["models"]["claude-haiku-5-5"]["notes"] = frozen_notes
+            value["orchestrator_seats"]["agy"]["note"] = CURRENT_BASELINE["catalog"]["orchestrator_seats"]["agy"]["note"]
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 
@@ -1159,14 +1186,23 @@ def refresh_current_baseline():
     capture = deepcopy(_V2_BASELINE)
     catalog = plain(expanded_legacy_view())
     catalog["models"].pop("gemini-4-carbon")
+    catalog["models"].pop("gemini-4-argon")
+    catalog["models"]["gemini-4-argon-high"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["gemini-4-argon-high"])
     catalog["models"].pop("gpt-6.1-terra")
-    _pop_budget_elevation_role(catalog)
+    _pop_advisory_roles(catalog)
+    # Keep the previously approved overlays outside this current-baseline refresh.
+    for risk in ("low", "medium"):
+        assert catalog["review_ladders"][risk].pop() == ["muse"]
+    catalog["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
+    catalog["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
     capture["baseline"]["catalog"] = catalog
     usage_dir = _V2_BASELINE_PATH.parent / ".recapture-no-live-usage"
     assert not usage_dir.exists()
     receipts = []
     with (
         patch("scripts.agent_runtime.model_pause.load_policy", return_value={}),
+        # Match conftest's hermetic AGY Claude window instead of reading the host.
+        patch("scripts.agent_runtime.model_pause.routing_budget_used_pct", return_value=0.0),
         patch.object(credit_lane, "routing_facts", partial(credit_lane.routing_facts, now=FIXED_NOW, usage_dir=usage_dir)),
         patch.object(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=FIXED_NOW)),
     ):

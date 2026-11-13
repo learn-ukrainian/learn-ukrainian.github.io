@@ -50,15 +50,22 @@ def test_legacy_archive_is_read_only_and_nonce_checked(tmp_path, monkeypatch):
 
 @pytest.fixture
 def spec(tmp_path):
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees/dispatch/muse/task"
+    workspace.mkdir(parents=True)
     prompt = tmp_path / "brief.txt"
     prompt.write_text("public input")
-    return TaskSpec("task", "muse", "model", None, "read-only", tmp_path, prompt, tmp_path / "task.result")
+    return TaskSpec("task", "muse", "model", None, "read-only", workspace, prompt, tmp_path / "task.result")
 
 
 def assert_private_input_policy(spec, repo_key, error):
     if spec.agent == "muse":
         spec = dataclasses.replace(spec, options={**spec.options, "contributor_mode": "on"})
         checks.check_private_input(spec, repo_key)
+        if spec.mode == "workspace-write":
+            with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+                muse.build(spec, {})
+            return
         argv = muse.build(spec, {}).argv
         assert argv[argv.index("--contributor-mode") + 1] == "off"
     else:
@@ -128,17 +135,22 @@ def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, s
 
     checks.check_private_input(spec, "private" if source == "repo" else "public")
 
-    argv = muse.build(spec, {}).argv
-    assert argv[argv.index("--contributor-mode") + 1] == "off"
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            muse.build(spec, {})
+    else:
+        argv = muse.build(spec, {}).argv
+        assert argv[argv.index("--contributor-mode") + 1] == "off"
     assert spec.options == expected_options
     assert spec.prompt_file.read_bytes() == before
 
 
-def test_public_muse_contributor_on_is_preserved(spec, private_repos):
+def test_public_muse_worker_forces_contributor_off(spec, private_repos):
+    """Defect class: a public worker enables unqualified contributor data use."""
     spec = dataclasses.replace(spec, options={"contributor_mode": "on"})
     checks.check_private_input(spec, "public")
     argv = muse.build(spec, {}).argv
-    assert argv[argv.index("--contributor-mode") + 1] == "on"
+    assert argv[argv.index("--contributor-mode") + 1] == "off"
 
 
 @pytest.mark.parametrize("agent", ["muse", "opencode"])
@@ -409,12 +421,18 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     """C-2916 P6 removed the lexical refusal; read-only is now held by each CLI's own write lock or refused."""
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
-    spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    # Dispatch admission refuses a model the catalog does not name (C-4967).
+    model = {"codex": "gpt-6.1-sol", "claude": "claude-sonnet-5-5"}.get(agent, "vendor/model")
+    spec = TaskSpec("ro", agent, model, None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    if agent == "muse":
+        workspace = sandbox.repo / ".worktrees/dispatch/muse/ro"
+        workspace.mkdir(parents=True)
+        spec = dataclasses.replace(spec, worktree=workspace)
     refused: dict[str, str] = {}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
             providers.load(agent).build(spec, {})
-        result = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", expected=2)
+        result = sandbox.cli("dispatch", "--agent", agent, "--model", model, "--prompt", "Fix X", expected=2)
         assert f"read_only_unenforceable: {agent} cannot run --mode read-only" in result.stderr
         assert refused[agent] in result.stderr
         assert not sandbox.tasks.exists()
@@ -484,7 +502,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
                 allows |= set(json.loads(argv[argv.index("--settings") + 1]).get("permissions", {}).get("allow", []))
             assert write_rule not in allows, account
             assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob,Bash,WebFetch,WebSearch"
-        plan = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", "--dry-run")
+        plan = sandbox.cli("dispatch", "--agent", agent, "--model", model, "--prompt", "Fix X", "--dry-run")
         assert "--restricted" in json.loads(plan.stdout)["argv"]
     else:
         assert agent == "opencode" and "--auto" not in argv
@@ -531,11 +549,19 @@ def test_initial_response_timeout_default_is_600():
 
 
 def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
-    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup."""
+    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup.
+
+    Defect class: a silent tree kept until the hard timeout.
+
+    The silence timer is 1s. Dispatch and reaping took the sibling startup check to 6.06s
+    on a loaded runner, past a bound of 6. The hard timeout is 60s and the bound is 15s:
+    above that run, and below a run that misses the silence timer.
+    """
     started = time.monotonic()
-    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "1")
+    task = sandbox.dispatch("tree", "--hard-timeout", "60", "--silence-timeout", "1")
     record = sandbox.settle(task, expected=1)
-    assert time.monotonic() - started < 6
+    elapsed = time.monotonic() - started
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s hard timeout must not pass"
     assert record["returncode"] == -signal.SIGKILL
     assert record["status"] == "timeout"
     assert "stdout_silence_timeout" in record["stderr_excerpt"]
@@ -545,7 +571,13 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
 
 
 def test_provider_process_lingering_after_its_final_result_settles_with_that_result(sandbox, monkeypatch):
-    """Defect class: a finished run held open until timeout."""
+    """Defect class: a finished run held open until timeout.
+
+    The supervisor waits one 1s terminal grace, then ``_end_lingering`` waits up to one more,
+    so the fixed path is a little over 2s. A loaded merge-group runner took 3.06s and missed a
+    bound of 3. The hard timeout is 60s and the bound is 15s: above that run, and below a run
+    that stays open until the timeout.
+    """
     from scripts.dispatcher import watchdog
     from scripts.dispatcher.providers import agy
     from scripts.dispatcher.types import Invocation
@@ -560,7 +592,7 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     monkeypatch.setattr(worker.agy_sandbox, "verify", lambda *_args: ({}, None, None))
     spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
                     sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
-                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
+                    options={"hard_timeout": "60", "silence_timeout": "0.5"})
     spec.prompt_file.write_bytes(b"literal final response")
     log = sandbox.repo / "provider.log"
     code = (
@@ -587,9 +619,12 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     elapsed = time.monotonic() - started
 
     result = json.loads(path.read_text())
-    assert result["status"] == "done"
+    assert result["status"] == "done", (
+        f"status={result['status']} error={result.get('error')} elapsed={elapsed:.2f}"
+    )
     assert result["error"] is None
-    assert elapsed < 3
+    assert "kill_reason" not in result
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s timeout must not pass"
     assert worker._identity(result["provider_pgid"]) is None
     assert log.stat().st_size > 0
     assert spec.final_file.read_text() == "literal final response"
@@ -628,7 +663,12 @@ def test_a_run_settling_while_a_task_it_dispatched_still_runs_names_that_task(sa
 
 
 def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monkeypatch):
-    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable."""
+    """Defect class: an AGY workspace-write run that exits 0 on an interim reply while a child task is still active settles done or no_deliverable.
+
+    The supervisor returns at its 2s deadline, a little over 2s. A bound of 8 sat a few
+    seconds above that. The bound is 15s: above that deadline on a loaded runner, and below
+    a run held to the 30s terminal grace or the default hard timeout.
+    """
     from scripts.dispatcher.providers import agy
     from scripts.dispatcher.types import Invocation
 
@@ -671,7 +711,9 @@ def test_agy_write_run_does_not_settle_while_its_child_is_running(sandbox, monke
     result = json.loads(path.read_text())
     assert result["status"] not in {"done", "no_deliverable"}
     assert "agy-write-review" in (result.get("error") or "")
-    assert elapsed < 8
+    assert elapsed < 15, (
+        f"elapsed={elapsed:.2f}s; a run held to the 30s terminal grace or the default hard timeout must not pass"
+    )
 
 
 @pytest.mark.parametrize(("inherited", "parent"), [("dispatching-run", "dispatching-run"), ("self-run", None),
@@ -686,12 +728,20 @@ def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, i
 
 
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
-    """Ported from tests/test_delegate.py with the same test name."""
+    """Ported from tests/test_delegate.py with the same test name.
+
+    Defect class: a silent startup kept until the silence or hard timeout.
+
+    The initial-response timer is 1s. A loaded merge-group runner took 6.06s and missed a
+    bound of 6. Silence and hard timeout are 60s and the bound is 15s: above that run, and
+    below a run that misses the 1s timer.
+    """
     started = time.monotonic()
-    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "30",
+    task = sandbox.dispatch("tree", "--hard-timeout", "60", "--silence-timeout", "60",
                             "--initial-response-timeout", "1")
     record = sandbox.settle(task, expected=1)
-    assert time.monotonic() - started < 6
+    elapsed = time.monotonic() - started
+    assert elapsed < 15, f"elapsed={elapsed:.2f}s; a run held to the 60s timeouts must not pass"
     assert record["returncode"] == -signal.SIGKILL
     assert record["status"] == "timeout"
     excerpt = record["stderr_excerpt"]

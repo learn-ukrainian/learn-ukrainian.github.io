@@ -15,6 +15,13 @@
 
 # shellcheck disable=SC2034  # PROJECT_DIR is provided by the sourcing launcher
 
+# The machinery package's name (its import name, also its directory name in
+# checkout paths), from this file's unresolved location (design-v1 amendment 1).
+_fleet_comms_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || _fleet_comms_lib_dir=''
+FLEET_COMMS_MACHINERY_PACKAGE="${_fleet_comms_lib_dir%/*}"
+FLEET_COMMS_MACHINERY_PACKAGE="${FLEET_COMMS_MACHINERY_PACKAGE##*/}"
+unset _fleet_comms_lib_dir
+
 # Select ACP for eligible `ab discuss` calls without starting any process.
 export LU_AGENT_COMM_TRANSPORT="${LU_AGENT_COMM_TRANSPORT:-acp}"
 
@@ -52,8 +59,8 @@ fleet_comms_resolve_plane_mode() {
       (
         cd "$root" || exit 0
         "$py" -c \
-          'from scripts.fleet_comms.message_plane import resolve_plane_mode; print(resolve_plane_mode(None))' \
-          2>/dev/null || true
+          'import importlib, sys; print(importlib.import_module(sys.argv[1]).resolve_plane_mode(None))' \
+          "$FLEET_COMMS_MACHINERY_PACKAGE.fleet_comms.message_plane" 2>/dev/null || true
       )
     )"
     case "${mode}" in
@@ -80,13 +87,13 @@ fleet_comms_cold_clause() {
     "Method playbook: load skill ${skill} (provider drivers inject the binding after lease + canary). " \
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \
-    "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
+    "Topology: \`.venv/bin/python -m ${FLEET_COMMS_MACHINERY_PACKAGE}.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
     "Landing: PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. " \
     "Then the worker that owns the brief (or the driver, when no brief owns the PR) enqueues through the merge queue (never --auto, never ask the operator to merge), confirms MERGED and runs closeout. " \
     "Cross-family CF: direct ask-<lane> for verdict+findings (sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
     "All normal inter-agent asks and discussions of 2 to 4 enabled seats use ACP; other seat counts reject loudly. " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
-    "Closeout: use the task-prescribed interpreter with \`-m scripts.orchestration.merge_closeout <N> --apply\`; require the common-reaper cleanup receipt. " \
+    "Closeout: use the task-prescribed interpreter with \`-m ${FLEET_COMMS_MACHINERY_PACKAGE}.orchestration.merge_closeout <N> --apply\`; the cleanup proof is that command exiting 0 after the worker's task has settled (its worktree removed by the dispatcher). " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
 }
 

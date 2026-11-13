@@ -573,7 +573,10 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
     monkeypatch.setattr(runner, "_load_adapter", lambda *args, **kwargs: Adapter())
     monkeypatch.setattr(runner, "has_headroom", lambda *args, **kwargs: (True, "fixture"))
     monkeypatch.setattr(runner, "write_record", lambda record: None)
-    result = runner.invoke(agent, "probe", cwd=root, tool_config=tc, model="fixture-model", hard_timeout=30)
+    evidence = {}
+    result = runner.invoke(agent, "probe", cwd=root, tool_config=tc, model="fixture-model", hard_timeout=30,
+                           attempt_evidence=evidence)
+    assert evidence == {"records": [], "overflow_count": 0}
     assert result.ok and result.response == "own return"
     assert observed and not observed[0].workspace.exists()
 
@@ -646,6 +649,68 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         assert probe.returncode == 0, probe.stderr
         assert probe.stdout.strip()
         assert env["HOME"] != str(home)
+    finally:
+        boundary.cleanup()
+
+
+@pytest.mark.parametrize("agent,access", [("codex", "isolated"), ("codex", "full"),
+                                         ("agy", "isolated"), ("agy", "full"), ("claude", "full")])
+def test_native_bound_review_wire_contains_hash_bound_core_without_boot_files(
+    world, tmp_path, monkeypatch, two_accounts, agent, access,
+):
+    """Defect class: isolated native review transports drop the rendered, hash-bound trusted core."""
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+    from scripts.lib import rules_core
+    from scripts.review.prompts.render import render_prompt
+    from tests.review.test_prompts import _setup_lexical_fixture
+
+    root, _ = world
+    manifest_path, doc, _ = _setup_lexical_fixture(root)
+    rendered, sha, _ = render_prompt(manifest_path, repo_root=root, review_id="review", attempt_id="current",
+                                    review_access=access)
+    tc = attempt_config(root, tmp_path, doc, agent, review_access=access)
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+        tc["review_cwd"] = str(root)
+    if agent == "claude":
+        tc["claude_account"] = "b"
+    boundary = AttemptBoundary(agent=agent, tool_config=tc)
+    try:
+        native_which = shutil.which
+        monkeypatch.setattr(shutil, "which", lambda name: "/bin/true" if name in {"agy", "codex", "claude"}
+                            else native_which(name))
+        monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
+        adapter = {"agy": AgyAdapter, "codex": CodexAdapter, "claude": ClaudeAdapter}[agent]()
+        if agent == "agy":
+            monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
+        plan = adapter.build_invocation(prompt=rendered, mode="read-only", cwd=boundary.workspace,
+                                        model=None, task_id="core-boundary-probe", session_id=None,
+                                        tool_config=boundary.tool_config, effort="high")
+        # Replace only the provider executable with a deterministic child; preserve its actual
+        # argv, stdin, files, environment and production OS boundary.
+        child = r'''
+import hashlib,json,pathlib,sys
+payload = sys.stdin.read()
+if "--input-format" in sys.argv:
+    payload = json.loads(payload)["message"]["content"][0]["text"]
+if not payload:
+    payload = sys.argv[-1]
+assert not pathlib.Path("AGENTS.md").exists()
+assert not pathlib.Path("CLAUDE.md").exists()
+print(json.dumps({"argv": sys.argv[1:], "text": payload, "sha256": hashlib.sha256(payload.encode()).hexdigest()}))
+'''
+        cmd, env = boundary.wrap([sys.executable, "-c", child, *plan.cmd[1:]], plan.env_overrides)
+        result = subprocess.run(cmd, cwd=plan.cwd, env=env, input=plan.stdin_payload,
+                                text=True, capture_output=True, timeout=30)
+        assert result.returncode == 0, result.stderr
+        capture = json.loads(result.stdout)
+        assert capture["argv"] == plan.cmd[1:]
+        assert capture["text"] == rendered
+        assert capture["sha256"] == sha
+        assert rules_core.core_text() in capture["text"]
+        assert not list(root.rglob("AGENTS.md")) and not list(root.rglob("CLAUDE.md"))
     finally:
         boundary.cleanup()
 
@@ -807,15 +872,13 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
     import asyncio
     import ssl
 
-    from scripts.agent_runtime.attempt_network import load_allowlist
-
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent, review_access=access)
     tc.update(review_access=access, review_cwd=str(root))
     if access == "full":
         subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
-    allowed = sorted(load_allowlist(agent))[0]
+    allowed = "provider.example"
 
     class Forbidden(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -840,7 +903,8 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
             return ["8.8.8.8", "::ffff:127.0.0.1"] if denial == "mixed" else ["127.0.0.1"]
 
         monkeypatch.setattr(boundary.egress, "_resolve", resolve)
-        url = "https://not-allowed.example/" if denial == "hostname" else f"https://{allowed}/"
+        # Any hostname is admitted; an address literal would skip the parent's DNS answer validation.
+        url = "https://127.0.0.1/" if denial == "hostname" else f"https://{allowed}/"
         if denial in {"redirect", "allowed"}:
             # A provider-shaped TLS fixture redirects the native HTTP client
             # toward a forbidden host service; the redirect never reaches it.
@@ -1983,3 +2047,36 @@ def test_api_key_receipt_names_the_helper_method():
         "verified": True,
     }
     reset_claude_account_receipts()
+
+
+def test_attempt_boundary_authenticates_codex_seat_as_the_labelled_account(world, tmp_path, monkeypatch):
+    """A b-sub attempt's sealed home holds account b's login, never account a's (#12504, C-4635)."""
+    root, home = world
+    b = tmp_path / "codex-b"
+    b.mkdir(mode=0o700)
+    (b / "auth.json").write_bytes(b'{"login": "account-b"}')
+    (b / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b), "budget_usd": 200}}}))
+    binding.chmod(0o600)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "codex").write_text("#!/bin/sh\nexit 0\n")  # `codex login status` reports a login
+    (bin_dir / "codex").chmod(0o755)
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "codex", review_access="full")
+    tc.update(review_cwd=str(root), codex_account="b-sub")
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    # The world's ambient CODEX_HOME is account a's home: the boundary refuses rather than substitute it.
+    with pytest.raises(ReviewIsolationError, match=r"^attempt_codex_account_ambient_conflict$"):
+        AttemptBoundary(agent="codex", tool_config=tc)
+    monkeypatch.delenv("CODEX_HOME")
+    for label, own in (("b-sub", b), (None, home / ".codex")):
+        boundary = AttemptBoundary(agent="codex", tool_config={**tc, "codex_account": label})
+        try:
+            staged = boundary.write_root / "home" / ".codex"
+            assert (staged / "auth.json").read_bytes() == (own / "auth.json").read_bytes()
+            assert boundary.env["CODEX_HOME"] == str(staged) == boundary.tool_config["codex_home_override"]
+        finally:
+            boundary.cleanup()

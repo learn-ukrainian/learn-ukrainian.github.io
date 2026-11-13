@@ -70,6 +70,12 @@ Classify each granted case before the grant is sent:
 The PR body lists which cases are defect cases and which are controls, with the before and
 after result of each. Never require a control case to fail before the fix.
 
+## Disposition of a residual for a worker
+
+Before recording a "not reachable" disposition for a worker, cite evidence of what that worker
+can reach: its own worktree, branch and remote, from its task record or a command run as it
+would run. An item's absence from a repository's default branch is not that evidence.
+
 ## Worktree disposition before re-dispatch
 
 A finished task's worktree and branch lease end when the dispatcher settles it and removes the
@@ -94,8 +100,12 @@ Run Claude-account dispatches from the seat as `env -u CLAUDE_CONFIG_DIR .venv/b
 scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
 `CLAUDE_CONFIG_DIR` into the seat's shells, and the dispatcher refuses an explicit account
 while that ambient value is set (`claude_account_ambient_conflict`).
-Dispatch every takeover successor with `--base origin/main`, never the PR branch as base;
-the `takeover` skill checks out the PR branch.
+CTO dispatches omit `--claude-account` unless a current order names an exception: the saved
+dispatch default account carries the active account order, and an explicit account overrides it.
+Dispatch every takeover successor with `--branch <the PR's head branch>` together with
+`--base origin/main`, never the PR branch as base; the `takeover` skill checks out the PR branch.
+A successor dispatched without `--branch` is refused by `scripts.orchestration.pr_ownership accept`
+with `publish_branch_required` and stops.
 The successor's owned paths must cover the original PR's full diff against `origin/main`,
 not only its own fixes, because `delivered_paths` counts the PR's inherited commits as the
 successor's changes.
@@ -113,6 +123,7 @@ passes sets `--hard-timeout 14400`, because the dispatcher default is 7200 secon
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before dispatch, check every owned path in the brief and the `--owned-path` flags with `git ls-files --error-unmatch <path>`, or mark it in the brief as a new file the worker creates.
 Before dispatching an open issue, run `git log origin/main --oneline --grep='#<N>'` and read the issue's linked PRs; if fixes already landed, verify the acceptance criteria on main and close or narrow the issue instead of dispatching.
+Before briefing a fix for a refusal or a fail-closed check, confirm that the state after the fix is allowed by policy (attested model and variant, operator keep-list, honest provenance); a census or residual that names such a blocker stops the dispatch, and the item is recorded as blocked instead.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
@@ -122,7 +133,7 @@ requires every tracked file under those roots to be covered by a family glob and
 catalogue changes, the generated family table in `docs/README.md` regenerated
 (`python -m scripts.docs.catalogue readme`).
 Retained evidence, evaluation material and anything a later session needs goes under
-`/home/ops/ops-state/<topic>/` (mode 0700 when private), never a session scratchpad, and the
+`<durable-state-root>/<topic>/` (mode 0700 when private), never a session scratchpad, and the
 brief names that path.
 Before writing a brief from a tracker item, read its full history with `lu-driver-state show <id>`
 (all notes): operator amendments are recorded as notes.

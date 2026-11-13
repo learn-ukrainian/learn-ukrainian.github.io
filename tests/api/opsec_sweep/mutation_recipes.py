@@ -12,7 +12,6 @@ from the fixture context or the fixture root.
 
 from __future__ import annotations
 
-import json
 import os
 import sqlite3
 import subprocess
@@ -24,17 +23,18 @@ from pathlib import Path
 from typing import Any
 
 import psutil
+from lu_machinery.api import agent_monitor_router, project_state_router
 
 from agents_extensions.shared.session_streams.model import LeaseHolder
-from scripts.api import agent_monitor_router, batch_router, project_state_router
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import batch_router
 
 AGENT_MONITOR_TOKEN = "opsec-agent-monitor-token"
 ATLAS_JOB_ID = "opsec-atlas-job"
 ATLAS_CLOSE_JOB_ID = "opsec-atlas-close"
 LOOPBACK_CLIENT = ("127.0.0.1", 50000)
 LOOPBACK_BASE_URL = "http://127.0.0.1"
-# Synthetic stream ids (scripts/lint/lint_test_assertions.py::_SYNTHETIC_EPIC_IDS):
+# Synthetic stream ids (lu_machinery/lint/lint_test_assertions.py::_SYNTHETIC_EPIC_IDS):
 # the fixture epics store is empty, so no id may name a real epic.
 EPIC_CLAIM_STREAM = "epic:1001"
 EPIC_HANDOFF_STREAM = "epic:1002"
@@ -195,77 +195,6 @@ def _epic_lease_state(env: MutationEnv, stream_id: str) -> str:
     return str(env.ctx.stores.epics_store.remote_stream_projection(stream_id)["lease"]["state"])
 
 
-def _image_store(env: MutationEnv) -> Any:
-    return env.ctx.stores.image_store
-
-
-def _seed_images(env: MutationEnv) -> None:
-    """Plant two structural image rows plus one PNG, then force a reload."""
-    store = _image_store(env)
-    book_dir = store.images_dir / "opsec-book"
-    book_dir.mkdir(parents=True, exist_ok=True)
-    (book_dir / "opsec-img-2.png").write_bytes(b"\x89PNG\r\n\x1a\nopsec")
-    rows = [
-        {"image_id": "opsec-img-1", "pdf_stem": "opsec-book", "page": 1},
-        {
-            "image_id": "opsec-img-2",
-            "pdf_stem": "opsec-book",
-            "page": 1,
-            "image_path": "data/textbook_images/opsec-book/opsec-img-2.png",
-        },
-    ]
-    (book_dir / "opsec-book-images.jsonl").write_text(
-        "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
-    )
-    store.index.reload()
-
-
-def _annotations_text(env: MutationEnv) -> str:
-    path = _image_store(env).annotations_file
-    return path.read_text(encoding="utf-8") if path.exists() else ""
-
-
-# ── Admin ────────────────────────────────────────────────────────
-
-
-def _setup_backup(env: MutationEnv) -> None:
-    backup_dir = env.ctx.roots.backup_dir
-    backup_dir.mkdir(parents=True, exist_ok=True)
-    (backup_dir / "opsec-backup.tar.gz").write_bytes(b"opsec-backup-bytes")
-
-
-def _verify_backup(env: MutationEnv, response: Any) -> None:
-    assert not (env.ctx.roots.backup_dir / "opsec-backup.tar.gz").exists()
-    assert response.json()["freed_bytes"] == len(b"opsec-backup-bytes")
-
-
-def _setup_clean_logs(env: MutationEnv) -> None:
-    old_log = env.ctx.roots.logs_dir / "opsec-old.log"
-    old_log.parent.mkdir(parents=True, exist_ok=True)
-    old_log.write_text("opsec stale log\n", encoding="utf-8")
-    stale = time.time() - 90 * 86400
-    os.utime(old_log, (stale, stale))
-
-
-def _verify_clean_logs(env: MutationEnv, response: Any) -> None:
-    assert not (env.ctx.roots.logs_dir / "opsec-old.log").exists()
-    assert response.json()["deleted_count"] == 1
-
-
-def _setup_vacuum(env: MutationEnv) -> None:
-    connection = env.ctx.stores.message_db.connect()
-    try:
-        connection.execute("CREATE TABLE IF NOT EXISTS opsec_vacuum_probe (value TEXT)")
-        connection.commit()
-    finally:
-        connection.close()
-
-
-def _verify_vacuum(env: MutationEnv, response: Any) -> None:
-    del env
-    assert response.json()["status"] == "ok"
-
-
 # ── Agent monitor ────────────────────────────────────────────────
 
 
@@ -368,50 +297,6 @@ def _verify_dispatcher_scan(env: MutationEnv, response: Any) -> None:
     cmd, cwd = calls[0]
     assert cwd == env.root
     assert all(Path(part).is_relative_to(env.root) for part in cmd[:2])
-
-
-# ── Consultation queue ───────────────────────────────────────────
-
-
-def _seed_consultation(env: MutationEnv, filename: str) -> None:
-    template_dir = env.root / "agents_extensions" / "shared" / "phases" / "gemini"
-    template_dir.mkdir(parents=True, exist_ok=True)
-    (template_dir / "opsec-template.md").write_text("opsec old guidance\n", encoding="utf-8")
-    queue_dir = env.ctx.roots.queue_dir
-    queue_dir.mkdir(parents=True, exist_ok=True)
-    (queue_dir / filename).write_text(
-        "source_module: a1/opsec-module\n"
-        "consultation_num: 1\n"
-        "confidence: high\n"
-        "root_cause: synthetic opsec consultation\n"
-        "queued_at: '2026-01-01T00:00:00Z'\n"
-        "proposed_changes:\n"
-        "  - file: opsec-template.md\n"
-        "    find: opsec old guidance\n"
-        "    replace: opsec new guidance\n"
-        "    rationale: synthetic\n",
-        encoding="utf-8",
-    )
-
-
-def _setup_consultation_approve(env: MutationEnv) -> None:
-    _seed_consultation(env, "opsec-approve.yaml")
-
-
-def _verify_consultation_approve(env: MutationEnv, response: Any) -> None:
-    assert response.json()["changes_applied"] == 1
-    assert (env.ctx.roots.queue_dir / "applied" / "opsec-approve.yaml").is_file()
-    template = env.root / "agents_extensions" / "shared" / "phases" / "gemini" / "opsec-template.md"
-    assert "opsec new guidance" in template.read_text(encoding="utf-8")
-
-
-def _setup_consultation_reject(env: MutationEnv) -> None:
-    _seed_consultation(env, "opsec-reject.yaml")
-
-
-def _verify_consultation_reject(env: MutationEnv, response: Any) -> None:
-    del response
-    assert (env.ctx.roots.queue_dir / "rejected" / "opsec-reject.yaml").is_file()
 
 
 # ── Epic leases (loopback-only mutations) ────────────────────────
@@ -527,31 +412,6 @@ def _verify_project_report_refusal(env: MutationEnv, response: Any) -> None:
     assert env.ctx.stores.report_store == env.scratch["reports_before"]
 
 
-# ── Images ───────────────────────────────────────────────────────
-
-
-def _verify_annotation_put(env: MutationEnv, response: Any) -> None:
-    assert response.json()["updated_fields"] == ["teaching_value"]
-    assert '"opsec-img-1"' in _annotations_text(env)
-
-
-def _verify_annotation_bulk(env: MutationEnv, response: Any) -> None:
-    assert response.json()["updated_count"] == 2
-    assert '"opsec-img-2"' in _annotations_text(env)
-
-
-def _verify_image_cleanup(env: MutationEnv, response: Any) -> None:
-    assert response.json()["deleted_count"] == 1
-    store = _image_store(env)
-    assert not (store.images_dir / "opsec-book" / "opsec-img-2.png").exists()
-    assert "opsec-img-2" not in store.index.records
-
-
-def _verify_image_reload(env: MutationEnv, response: Any) -> None:
-    del env
-    assert response.json()["total_records"] == 2
-
-
 # ── Observer presence ────────────────────────────────────────────
 
 
@@ -583,29 +443,6 @@ def _verify_module_build(env: MutationEnv, response: Any) -> None:
 _RETIRED = "retired legacy write; the 410 tombstone is the route's only response"
 
 RECIPES: dict[str, MutationRecipe] = {
-    "DELETE /api/admin/backup/{filename}": MutationRecipe(
-        store="fixture backups dir (ctx.roots.backup_dir)",
-        expected_statuses=(200,),
-        reason="deletes a planted backup file",
-        path_values={"filename": "opsec-backup.tar.gz"},
-        setup=_setup_backup,
-        verify=_verify_backup,
-    ),
-    "POST /api/admin/maintenance/clean-logs": MutationRecipe(
-        store="fixture logs dir (ctx.roots.logs_dir)",
-        expected_statuses=(200,),
-        reason="deletes a planted 90-day-old log",
-        query={"max_age_days": "30"},
-        setup=_setup_clean_logs,
-        verify=_verify_clean_logs,
-    ),
-    "POST /api/admin/maintenance/vacuum-broker": MutationRecipe(
-        store="fixture broker DB (ctx.stores.message_db)",
-        expected_statuses=(200,),
-        reason="VACUUMs a planted broker database",
-        setup=_setup_vacuum,
-        verify=_verify_vacuum,
-    ),
     "POST /api/agent-monitor/heartbeat": MutationRecipe(
         store="fixture batch_state/agent_monitor.sqlite3",
         expected_statuses=(200,),
@@ -690,24 +527,6 @@ RECIPES: dict[str, MutationRecipe] = {
         expected_statuses=(410,),
         reason=_RETIRED,
     ),
-    "POST /api/consultation/queue/{filename}/approve": MutationRecipe(
-        store="fixture consultation queue + fixture gemini phase templates",
-        expected_statuses=(200,),
-        reason="approves a planted proposal and patches a planted template",
-        path_values={"filename": "opsec-approve.yaml"},
-        query={"confirm": "true"},
-        setup=_setup_consultation_approve,
-        verify=_verify_consultation_approve,
-    ),
-    "POST /api/consultation/queue/{filename}/reject": MutationRecipe(
-        store="fixture consultation queue",
-        expected_statuses=(200,),
-        reason="rejects a planted proposal",
-        path_values={"filename": "opsec-reject.yaml"},
-        query={"confirm": "true", "reason": "opsec synthetic rejection"},
-        setup=_setup_consultation_reject,
-        verify=_verify_consultation_reject,
-    ),
     "POST /api/epics/v1/{stream_id}/claim": MutationRecipe(
         store="fixture epics session-stream DB (ctx.stores.epics_store)",
         expected_statuses=(200,),
@@ -753,32 +572,6 @@ RECIPES: dict[str, MutationRecipe] = {
         verify=_verify_project_report,
         loopback=True,
     ),
-    "POST /api/images/annotations/bulk": MutationRecipe(
-        store="fixture data/textbook_images annotations JSONL (ctx.stores.image_store)",
-        expected_statuses=(200,),
-        reason="bulk-annotates planted image rows",
-        body_factory=lambda: {
-            "image_ids": ["opsec-img-1", "opsec-img-2"],
-            "updates": {"element_type": "photo"},
-        },
-        setup=_seed_images,
-        verify=_verify_annotation_bulk,
-    ),
-    "POST /api/images/cleanup": MutationRecipe(
-        store="fixture data/textbook_images (PNG + JSONLs)",
-        expected_statuses=(200,),
-        reason="deletes a planted image row and its PNG",
-        body_factory=lambda: {"image_ids": ["opsec-img-2"]},
-        setup=_seed_images,
-        verify=_verify_image_cleanup,
-    ),
-    "POST /api/images/reload": MutationRecipe(
-        store="fixture data/textbook_images index (ctx.stores.image_store)",
-        expected_statuses=(200,),
-        reason="reloads the planted image index from the fixture tree",
-        setup=_seed_images,
-        verify=_verify_image_reload,
-    ),
     "POST /api/observer/presence": MutationRecipe(
         store="fixture in-memory presence store (ctx.stores.presence_store)",
         expected_statuses=(200,),
@@ -812,15 +605,6 @@ RECIPES: dict[str, MutationRecipe] = {
             "duration_ms": 1,
         },
         verify=_verify_tool_timing,
-    ),
-    "PUT /api/images/annotations/{image_id}": MutationRecipe(
-        store="fixture data/textbook_images annotations JSONL (ctx.stores.image_store)",
-        expected_statuses=(200,),
-        reason="annotates one planted image row",
-        path_values={"image_id": "opsec-img-1"},
-        body_factory=lambda: {"teaching_value": "high"},
-        setup=_seed_images,
-        verify=_verify_annotation_put,
     ),
 }
 

@@ -23,7 +23,6 @@ LIVE_DATA_PATHS: tuple[str, ...] = (
     "logs",
     "site",
     "tests/fixtures",
-    "dashboards",
     ".mcp",
     "agents_extensions",
     "plans",

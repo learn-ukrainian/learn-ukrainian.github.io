@@ -84,13 +84,15 @@ scope or from review in the steps below.
 
 **The round-1 review brief freezes three things (#10665)**, and later rounds
 reuse them unchanged: the outcome (`--intended-behavior`, acceptance criteria,
-non-goals); the threat and input model, which names the attacker (who controls
-which input) and the input classes in scope; and the Step 5 dispositions. The
-author ships bounded class coverage with the change: an entry-point matrix (each
-input class against each affected entry point), one reproducer per class, and
-the untested boundaries stated. The brief names input classes, never lists of
-individual spellings for the reviewer to try. Changing the outcome, the threat
-model or the dispositions after round 1 is a contract change (Step 6). The brief
+non-goals); the input contract, which says what executes, on which data, and who
+controls the input (a one-shot run on the frozen tree at a named SHA, or a
+reusable tool and the inputs its contract admits), with the input classes in
+scope; and the Step 5 dispositions. The author ships bounded class coverage with
+the change: one reproducer per class, the residuals deliberately not handled,
+and the checks already run with their CI run ids. The brief names input classes,
+never lists of individual spellings for the reviewer to try. Changing the
+outcome, the input contract or the dispositions after round 1 is a contract
+change (Step 6), and new code goes in a new PR. The brief
 template is `drive-epic` `references/review-merge-cleanup.md` §6; a review-typed
 dispatch whose brief has no heading naming the dispositions gets the typed
 warning `review_brief_no_dispositions` (stderr and task record), not a refusal.
@@ -158,8 +160,8 @@ curl -s 'http://localhost:8765/api/state/routing-budget?fresh_codexbar=true' \
   --owned-path "<each changed per-seat adapter or reviewer hook; repeat the flag>"
 ```
 
-When the frozen diff governs a seat — its adapter under
-`scripts/agent_runtime/adapters/<seat>*.py`, or that seat's reviewer hooks —
+When the frozen diff governs a seat — its adapter `<seat>*.py` under
+`scripts/agent_runtime/adapters/`, or that seat's reviewer hooks —
 pass those paths as repeatable `--owned-path` values, or name the seat with
 repeatable `--subject-seat` / `--subject-family`. The resolver then excludes
 that seat and records why on the trace. An unambiguous path such as
@@ -224,9 +226,10 @@ scope under the review budget and the Step 6 breakers.
 
 **Class-level findings (#10665)**: the reviewer reports one finding per input
 class, with one reproducer and every sibling spelling found in this round, not
-one spelling per round. In round 1, a discovery outside the stated classes still
-blocks or escalates when it exposes a material defect. Later rounds apply the
-review budget. Reviewers keep their own
+one spelling per round. A P0–P2 finding cites `sources` that show its trigger is
+reachable under the input contract
+([severity](../review-loop/references/policy.md#severity)); a trigger absent from
+the frozen input of a one-shot run is P3. Later rounds apply the review budget. Reviewers keep their own
 independent adversarial cases; the author's matrix narrows nothing.
 
 For `verify_review.py`, a structured reply may use bare schema-valid JSON or
@@ -255,15 +258,18 @@ For every finding, raise it, then adjudicate it:
 
 Disposition guide, subject to this round's scope under the review budget:
 
-- **`in_scope_blocker`** — a real, verified bug inside the frozen scope
-  that must be fixed before this closes out: it violates the stated
-  contract, or an existing invariant on a path the change introduces,
-  modifies or newly exposes, or it regresses main, whether or not the brief
-  listed the case.
-- **`follow_up`** — real but not blocking (out of frozen scope, or minor):
-  pre-existing defects off the change's paths, wording, and P2/P3 findings,
-  unless their impact, or the change's dependency on them, is material;
-  track it with an owner, do not fix it here.
+- **`in_scope_blocker`** — a P0–P2 finding whose trigger is reachable under
+  the input contract, shown by its `sources` (path:line in the tree, a
+  published-history entry, or a reproduction the author can run), or a
+  demonstrated P0–P2 regression against main. A reviewer who cannot establish
+  reachability says so, and the author answers with a reproduction or a
+  code-path proof.
+- **`follow_up`** — real but not blocking: pre-existing defects off the
+  change's paths, wording, P3 findings, and confirmed P2 findings that are not
+  regressions, which are fixed in the PR when cheap and safe or tracked on an
+  open issue before enqueue
+  ([severity](../review-loop/references/policy.md#severity), item 3); track it
+  with an owner.
 - **`stop_and_escalate`** — fixing it would itself blow a breaker (Step 6):
   it changes the public/task contract, crosses an owner boundary, needs a
   canonical design decision, or the fix/review loop already failed to
@@ -272,6 +278,10 @@ Disposition guide, subject to this round's scope under the review budget:
 
 **Proportional verdicts (#10665).** APPROVE with tracked follow-ups is allowed;
 only an `in_scope_blocker` (or an open `stop_and_escalate`) withholds approval.
+The author may answer a P0–P2 finding with `not_applicable` and its proof
+(command and output, or code path) in the ledger; the priority stays as the
+reviewer set it, and the reviewer confirms or contests the claim in the delta
+round ([severity](../review-loop/references/policy.md#severity)).
 Every blocker states a reproducible failure, its impact and the required
 corrected behaviour; a code-level fix is a suggestion, not the requirement. A
 delta review (round 2 onwards) attests the new exact head and checks only the fix

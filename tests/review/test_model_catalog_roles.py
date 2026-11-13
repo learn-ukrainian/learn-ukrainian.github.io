@@ -36,6 +36,7 @@ from tests.review.test_model_catalog import (
 )
 from tests.review.test_model_catalog import (
     FIXED_NOW,
+    GROK_REVIEW_CANDIDATE,
     MUSE_REVIEW_CANDIDATE,
     assert_frozen_surfaces,
     encode,
@@ -81,23 +82,27 @@ def test_authorities_have_one_native_holder_per_family():
     result = resolve_role("designated_authorities", purpose="inspect")
     assert [(row.model_id, row.family, row.transport) for row in result.candidates] == [
         ("gpt-6.1-sol", "openai", "native_codex"),
+        ("gpt-6.1-sol", "openai", "native_codex"),
         ("claude-opus-5-5", "anthropic", "native_claude"),
         ("claude-opus-5-5", "anthropic", "agy"),
     ]
+    assert [row.route_name for row in result.candidates if row.family == "openai"] == ["native_b", "native"]
     assert all(row.decision_reference and row.qualification_reference is None for row in result.candidates)
 
 
 def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
-    """Opus has native and AGY review routes, and neither uses Cursor."""
+    """Opus has native and AGY review routes, and neither uses Cursor.
+
+    Only Grok's explicit review seat uses Cursor (C-5307).
+    """
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
-    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
+    assert [(row.model_id, row.wire_id) for row in result.candidates if not row.exclusion_reasons] == [
+        ("grok-4.7", "grok-4.7-high"),
+    ]
+    assert catalog["seats"]["xai_reviewer"]["model_id"] == "grok-4.7"
     assert catalog["models"]["grok-4.7"]["routing_wire_ids"] == {
         "native_grok": "grok-4.7", "cursor": "grok-4.7-high",
     }
-    assert cursor.wire_id == "grok-4.7-high"
-    assert not cursor.exclusion_reasons
-    assert cursor.argv[-1] == cursor.wire_id
-    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"].get("last_resort", False) is False
     opus_routes = resolve_role("anthropic_authority_reviewer", purpose="launch", transport="cursor").candidates
     assert [(row.wire_id, row.transport, row.exclusion_reasons) for row in opus_routes] == [
         ("claude-opus-5-5", "native_claude", ("transport_mismatch",)),
@@ -110,11 +115,7 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
     }
     assert expanded_legacy_view(catalog)["review_candidates"] == {
         **APPROVED_BASELINE["catalog"]["review_candidates"], "muse": MUSE_REVIEW_CANDIDATE,
-        "openai_red_team_exception": {
-            "model_id": "gpt-6-astra", "route": "codex", "transport": "native_codex",
-            "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6-astra --effort high",
-            "review_profiles": ["code"], "capabilities": ["code_review", "isolation", "sealed_evidence"],
-        },
+        "grok-4.7-cursor-fallback": GROK_REVIEW_CANDIDATE,
     }
 
 
@@ -122,12 +123,11 @@ def test_launch_explicitly_pins_current_review_models():
     launched = resolve_role("legacy_reviewers", purpose="launch")
     assert {row.model_id for row in launched.candidates} == {
         "gpt-6.1-sol",
-        "gpt-6-astra",
-        "grok-4.7",
         "claude-opus-5-5",
         "claude-sonnet-5-5",
         "gemini-3.8-flash-high",
         "muse-wonder-full-1.0",
+        "grok-4.7",
     }
     for row in launched.candidates:
         assert row.argv.count("--model") == 1
@@ -168,7 +168,8 @@ def test_role_aliases_preserve_holder_and_constraints():
 ])
 def test_health_observation_is_separate_from_baseline_rank(health, observation, rank, diagnostic):
     for purpose in ("inspect", "launch"):
-        row = resolve_role("bounded_advisor", purpose=purpose, health=health).candidates[0]
+        row = next(row for row in resolve_role("bounded_advisor", purpose=purpose, health=health).candidates
+                   if row.route_name == "native")
         assert (row.health, row.health_rank, row.health_provenance["diagnostic"]) == (observation, rank, diagnostic)
         assert not row.exclusion_reasons  # no new universal health prerequisite
 
@@ -176,9 +177,17 @@ def test_health_observation_is_separate_from_baseline_rank(health, observation, 
 def test_health_evidence_does_not_echo_unrelated_account_fields():
     row = resolve_role("bounded_advisor", purpose="inspect", health={
         "agents": {"codex": {"status": "cool", "account": "private-account", "credit_balance": 9}},
-    }).candidates[0]
-    assert row.health == "healthy"
+    }).candidates[1]
+    assert row.route_name == "native" and row.health == "healthy"
     assert "private-account" not in json.dumps(row.health_provenance)
+    routes = resolve_role("bounded_advisor", purpose="launch", health={
+        "agents": {"codex": {"status": "unhealthy"}},
+        "codex_accounts": {"codex:b": {"status": "cool", "account": "private-account", "credit_balance": 9}},
+    }).candidates
+    assert routes[0].route_name == "native_b" and routes[0].health == "healthy"
+    assert routes[1].route_name == "native" and routes[1].health == "unhealthy"
+    assert routes[0].health_provenance["normalized_key"] == "codex:b"
+    assert "private-account" not in json.dumps(routes[0].health_provenance)
 
 
 def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
@@ -194,13 +203,14 @@ def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
         assert ("isolation_required" in opus.exclusion_reasons) == (opus.route_name == "agy")
     result = resolve_role("legacy_reviewers", purpose="inspect", family="openai", context={
         "required_capabilities": ["unsupported"], "isolation_required": True,
-        "excluded_seats": ["xai_reviewer"], "excluded_families": ["xai"],
+        "excluded_seats": ["anthropic_practical"], "excluded_families": ["anthropic"],
         "pinned_model": "gpt-6.1-sol",
     })
-    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
+    (sonnet_agy,) = (row for row in result.candidates
+                     if row.seat == "anthropic_practical" and row.route_name == "agy")
     assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
-            "required_capability_missing", "explicit_pin_mismatch"} <= set(cursor.exclusion_reasons)
-    assert "isolation_required" in cursor.exclusion_reasons
+            "required_capability_missing", "explicit_pin_mismatch"} <= set(sonnet_agy.exclusion_reasons)
+    assert "isolation_required" in sonnet_agy.exclusion_reasons
 
 
 def test_risk_roles_use_existing_hard_gate_evidence():
@@ -257,7 +267,7 @@ def test_invalid_extension_versions_or_empty_sections(catalog, field, value):
 @pytest.mark.parametrize("model", ["unregistered", "gpt-6-astra", "qwen/qwen3.6-plus", "gpt-6.1-sol-high"])
 def test_holder_requires_concrete_registered_routable_identity(catalog, model):
     catalog["seats"]["bounded_worker"]["model_id"] = model
-    reason = "duplicate expanded routes" if model == "gpt-6-astra" else r"unknown concrete|unroutable"
+    reason = r"unknown concrete|unroutable"
     with pytest.raises(ModelCatalogError, match=reason):
         validate_catalog(catalog)
 
@@ -336,17 +346,17 @@ def test_duplicate_routes_labels_and_missing_legacy_coverage(catalog):
     with pytest.raises(ModelCatalogError, match="duplicate expanded routes"):
         validate_catalog(catalog)
     catalog = deepcopy(load_model_catalog())
-    catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["legacy_name"] = "openai_frontier"
+    catalog["seats"]["anthropic_practical"]["routes"]["agy"]["legacy_name"] = "openai_frontier"
     with pytest.raises(ModelCatalogError, match="legacy receipt labels"):
         validate_catalog(catalog)
     catalog = deepcopy(load_model_catalog())
-    del catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["legacy_name"]
+    del catalog["seats"]["anthropic_practical"]["routes"]["agy"]["legacy_name"]
     with pytest.raises(ModelCatalogError, match="cover every legacy"):
         validate_catalog(catalog)
 
 
 def test_moving_last_resort_or_any_legacy_routing_value_is_rejected(catalog):
-    catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["last_resort"] = True
+    catalog["seats"]["anthropic_practical"]["routes"]["agy"]["last_resort"] = True
     with pytest.raises(ModelCatalogError, match="changes the legacy candidate"):
         validate_catalog(catalog)
 

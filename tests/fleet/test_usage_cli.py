@@ -6,6 +6,7 @@ import copy
 import io
 import json
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -380,18 +381,22 @@ def test_prepaid_rejects_non_usd_deepseek():
     assert api_lane_status_from_account("deepseek", account) == "cool"
 
 
-def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    secret = tmp_path / ".secret/openrouter-management.key"
-    secret.parent.mkdir()
-    secret.write_text("secret-file-marker")
-    monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "secret-env-marker")
-    monkeypatch.setattr(Path, "read_text", lambda *a, **kw: pytest.fail("doctor must not read credential contents"))
+def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, capsys):
+    from types import SimpleNamespace
+
+    from scripts.api import subscription_usage
+
+    monkeypatch.setattr(
+        subscription_usage,
+        "_private_usage",
+        lambda: SimpleNamespace(
+            credential_inventory=lambda: ["env SYNTHETIC_PROVIDER: present", "file synthetic label: absent"]
+        ),
+    )
+    monkeypatch.setattr(Path, "read_text", lambda *a, **kw: pytest.fail("public doctor must not read credentials"))
     assert usage.main(["doctor"]) == 0
     text = capsys.readouterr().out
-    assert "env OPENROUTER_MANAGEMENT_API_KEY: present" in text
-    assert "file ~/.secret/openrouter-management.key: present" in text
-    assert "secret-file-marker" not in text and "secret-env-marker" not in text
+    assert "env SYNTHETIC_PROVIDER: present" in text and "file synthetic label: absent" in text
 
 
 def test_refresh_failure_is_nonzero_and_does_not_echo_exception(monkeypatch, capsys):
@@ -1264,10 +1269,13 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
         }
     original = copy.deepcopy(routing)
     payloads = {
-        "/fixture/codexbar": {
-            "provider": "muse",
-            "usage": {"primary": {"usedPercent": 60}},
-            "account": "PRIVATE_ACCOUNT account@example.invalid",
+        "/usr/bin/muse": {
+            "allowance": {
+                "asOfMs": int(time.time() * 1000),
+                "tier": "PRIVATE_ACCOUNT account@example.invalid",
+                "weekly": {"usedPercent": 30},
+                "window": {"usedPercent": 60},
+            },
             "credits": 987654321,
         },
         "/fixture/agy": {
@@ -1285,10 +1293,20 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
             "credits": 987654321,
         },
     }
-    monkeypatch.setattr(su, "_codexbar_bin", lambda: "/fixture/codexbar")
+    real_which = su.shutil.which
+
+    def which(name, *args, **kwargs):
+        if name == "muse":
+            return "/usr/bin/muse"
+        return real_which(name, *args, **kwargs)
+
+    monkeypatch.setattr(su.shutil, "which", which)
     monkeypatch.setattr(su, "_agy_cli_bin", lambda: "/fixture/agy")
 
     def run(argv, **kwargs):
+        if argv[0] == "/usr/bin/muse":
+            assert argv[1:] == ["usage", "--json"]
+            assert kwargs.get("stdin") is subprocess.DEVNULL
         assert argv[0] in payloads
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payloads[argv[0]]), stderr="PRIVATE_STDERR")
 
@@ -1331,7 +1349,7 @@ def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, 
                 assert public.out.splitlines()[0] == "QA PASS: 1 subscription lane(s) have usable allotment signal(s)"
             if diagnostic in {"muse", "both"}:
                 assert "muse | healthy | 40.0 | fresh |" in public.out
-                assert "  primary (window): used=60.0% rem=40.0% resets=unknown" in public.out
+                assert "  primary (5h): used=60.0% rem=40.0% resets=unknown" in public.out
             if diagnostic in {"agy", "both"}:
                 assert "agy | healthy | unknown | fresh |" in public.out
                 assert "  Claude and GPT models (5h): used=50.0% rem=50.0% resets=unknown" in public.out
@@ -1367,3 +1385,11 @@ def test_cli_qa_rejects_missing_or_malformed_routing_despite_fresh_diagnostics(m
         else "QA FAIL:\n- codex: not an object\n- no usable subscription allotment rows (mix-max blind)\n"
     )
     assert capsys.readouterr().out == expected
+
+
+def test_doctor_absent_private_binding_reports_unavailable(monkeypatch, capsys):
+    from scripts.api import subscription_usage
+
+    monkeypatch.setattr(subscription_usage, "_private_usage", lambda: None)
+    assert usage.main(["doctor"]) == 0
+    assert "Credential inventory unavailable." in capsys.readouterr().out

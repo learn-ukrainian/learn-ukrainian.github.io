@@ -12,13 +12,13 @@ import json
 import os
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 from fastapi.testclient import TestClient
 
-import scripts.api.main as api_main
-import scripts.api.state_compute as state_compute
-import scripts.api.state_router as state_router
-from scripts.api.state_router import _read_llm_qg_scores
+import scripts.project_api.state_compute as state_compute
+import scripts.project_api.state_router as state_router
 from scripts.audit.llm_qg_store import DB_ENV_VAR, record_llm_qg
+from scripts.project_api.state_router import _read_llm_qg_scores
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

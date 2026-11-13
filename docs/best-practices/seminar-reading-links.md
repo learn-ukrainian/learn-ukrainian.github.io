@@ -54,8 +54,8 @@ lane) so its schema matches the consumer. Until then THIS doc is the source of t
 research dossiers, session-state, stale resource backups). The folk lane is fixed in this PR (spec above +
 folk landing + 3 module `resources.yaml` never used it / now use Diasporiana). The **live**
 `docs/resources/external_resources.yaml` (v4.0, CORE a1–c2) is **already chtyvo-clean** (0 refs) and already
-carries litopys (5) + diasporiana (8); only the stale `external_resources.yaml.backup` / `.truncated` still
-mention chtyvo. The remaining cross-seminar references (esp. `curriculum/l2-uk-en/plans/bio/*.yaml`,
+carries litopys (5) + diasporiana (8). The stray `.backup` and `.truncated` copies were
+removed in REMOVE-UNNEEDED-1107; see git history. The remaining cross-seminar references (esp. `curriculum/l2-uk-en/plans/bio/*.yaml`,
 `docs/research/bio/*`) are OTHER lanes — filed as #3175 for the infra/bio orchestrators. Do not ship any new
 chtyvo.org.ua link.
 

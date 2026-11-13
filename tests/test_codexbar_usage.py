@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import json
+import sys
 import threading
 import time
 from datetime import UTC, datetime, timedelta
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_router
 from scripts.api import subscription_usage as subscription_usage_mod
@@ -23,6 +23,16 @@ from scripts.api.subscription_usage import (
     pace_is_deficit,
     pace_is_visible,
 )
+from scripts.telemetry.cost_report import CostRecord
+
+
+def _fake_private(monkeypatch, outcome=None, *, api_account=None):
+    module = SimpleNamespace(
+        probe_subscription=lambda *a, **kw: outcome,
+        probe_api_account=lambda *a, **kw: api_account,
+    )
+    monkeypatch.setattr(subscription_usage_mod, "_private_usage", lambda: module)
+    return module
 
 
 @pytest.mark.parametrize("used_pct", [90.0, 98.99, 99.0, 100.0])
@@ -75,8 +85,8 @@ CLAUDE_FIXTURE = """[
         "usedPercent": 7
       },
       "tertiary": null,
-      "accountOrganization": "krisztian.koos@gmail.com's Organization",
-      "accountEmail": "krisztian.koos@gmail.com",
+      "accountOrganization": "account-a@example.invalid's Organization",
+      "accountEmail": "account-a@example.invalid",
       "providerCost": {
         "period": "Monthly cap",
         "updatedAt": "2026-07-09T14:13:51Z",
@@ -87,8 +97,8 @@ CLAUDE_FIXTURE = """[
       "identity": {
         "loginMethod": "Claude Max 20x",
         "providerID": "claude",
-        "accountOrganization": "krisztian.koos@gmail.com's Organization",
-        "accountEmail": "krisztian.koos@gmail.com"
+        "accountOrganization": "account-a@example.invalid's Organization",
+        "accountEmail": "account-a@example.invalid"
       },
       "secondary": {
         "windowMinutes": 10080,
@@ -125,7 +135,7 @@ CODEX_FIXTURE = """[
   {
     "usage": {
       "identity": {
-        "accountEmail": "krisztian.koos@gmail.com",
+        "accountEmail": "account-a@example.invalid",
         "loginMethod": "Pro 20x",
         "providerID": "codex"
       },
@@ -138,7 +148,7 @@ CODEX_FIXTURE = """[
       "dataConfidence": "high",
       "tertiary": null,
       "extraRateWindows": [],
-      "accountEmail": "krisztian.koos@gmail.com",
+      "accountEmail": "account-a@example.invalid",
       "codexResetCredits": 0,
       "updatedAt": "2026-07-09T13:49:49Z",
       "loginMethod": "Pro 20x",
@@ -590,15 +600,9 @@ def test_normalize_kimi_healthy_shape():
 
 def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (
-            401,
-            {"error": "expired"},
-            "Kimi Code CLI credential is expired, please re-authenticate",
-        ),
+    _fake_private(
+        monkeypatch,
+        {"outcome": "error", "error": {"kind": "provider", "code": 401, "message": "Kimi credential rejected"}},
     )
     codexbar_usage_mod._last_good_data.pop("kimi", None)
 
@@ -626,7 +630,13 @@ def test_healthy_record_carries_error_shape_defaults():
 
 def test_missing_credentials_returns_need_login(monkeypatch):
     """Missing native credentials must surface NEED_LOGIN, not missing_binary."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "need_login", "code": "NEED_LOGIN", "message": "Codex OAuth credentials unavailable"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -638,7 +648,13 @@ def test_missing_credentials_returns_need_login(monkeypatch):
 
 def test_native_probe_unavailable_missing_credentials(monkeypatch):
     """Regression: missing credentials must not masquerade as a healthy 0% lane."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: None)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "need_login", "code": "NEED_LOGIN", "message": "Codex OAuth credentials unavailable"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -681,11 +697,9 @@ def test_native_probe_unavailable_missing_credentials(monkeypatch):
 
 def test_codexbar_unavailable_timeout(monkeypatch):
     """Regression test for timeout: must surface status='unavailable' and auth_error."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (0, None, "timed out after 1s"),
+    _fake_private(
+        monkeypatch,
+        {"outcome": "error", "error": {"kind": "fetch_error", "code": "FETCH_ERROR", "message": "request timed out"}},
     )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
@@ -729,12 +743,13 @@ def test_codexbar_unavailable_timeout(monkeypatch):
 
 def test_codexbar_unavailable_malformed_json(monkeypatch):
     """Regression test for malformed JSON: must surface status='unavailable' and auth_error."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-
-    def _bad_json(*args, **kwargs):
-        raise json.JSONDecodeError("bad", "doc", 0)
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _bad_json)
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {"kind": "fetch_error", "code": "FETCH_ERROR", "message": "Native probe failed: JSONDecodeError"},
+        },
+    )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
@@ -776,11 +791,16 @@ def test_codexbar_unavailable_malformed_json(monkeypatch):
 
 def test_codexbar_unavailable_unparseable_schema(monkeypatch):
     """Regression test for empty schema: must surface status='unavailable'."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_codex_oauth_token", lambda: "fixture-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, {}, None),
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "error",
+            "error": {
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+                "message": "Codex usage payload missing rate windows",
+            },
+        },
     )
     codexbar_usage_mod._last_good_data.pop("codex", None)
 
@@ -1043,7 +1063,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     subscription_usage_mod._run_all_refreshes()  # must no-op while first is in flight
     release.set()
     worker.join(timeout=1.0)
-    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
+    assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_REFRESH_KEYS)]
     assert claude_calls == []
 
 
@@ -1074,43 +1094,37 @@ DEEPSEEK_BALANCE_FIXTURE = {
 
 
 def test_openrouter_missing_key_returns_need_key(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: None)
-    codexbar_usage_mod._api_account_last_good.pop("openrouter", None)
-    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
+    account = subscription_usage_mod._empty_openrouter_account("NEED_KEY")
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
     assert result["probe_state"] == "NEED_KEY"
-    assert result["usage_usd"] is None
-    assert result["limit_remaining_usd"] is None
+    assert result["usage_usd"] is None and result["limit_remaining_usd"] is None
 
 
 def test_openrouter_key_probe_success(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: "fixture-openrouter-key")
-
-    def _fake_http(method, url, **kwargs):
-        if url.endswith("/key"):
-            return 200, dict(OPENROUTER_KEY_FIXTURE), None
-        return 0, None, "unexpected url"
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
-    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
-    assert result["probe_state"] == "ok"
-    assert result["usage_usd"] == 12.5
-    assert result["limit_remaining_usd"] == 87.5
-    assert result["is_free_tier"] is False
+    account = {
+        **subscription_usage_mod._empty_openrouter_account("ok"),
+        "usage_usd": 12.5,
+        "limit_remaining_usd": 87.5,
+        "is_free_tier": False,
+    }
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
+    assert result == account
+    assert result["usage_usd"] == 12.5 and result["limit_remaining_usd"] == 87.5
 
 
 def test_deepseek_balance_probe_success(monkeypatch):
-    monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: "fixture-deepseek-key")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, dict(DEEPSEEK_BALANCE_FIXTURE), None),
-    )
-    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
-    assert result["probe_state"] == "ok"
-    assert result["local_only"] is True
-    assert result["currency"] == "USD"
-    assert result["total_balance"] == 42.5
-    assert result["is_available"] is True
+    account = {
+        **subscription_usage_mod._empty_deepseek_account("ok"),
+        "currency": "USD",
+        "total_balance": 42.5,
+        "is_available": True,
+    }
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_deepseek_native(timeout_s=1)
+    assert result == account
+    assert result["local_only"] is True and result["total_balance"] == 42.5
 
 
 def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
@@ -1175,278 +1189,6 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
 # --- routing-budget stale/wrong lane state regressions (#7646) --------------
 
 
-def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch):
-    """Codex CLI's current auth.json nests the OAuth set under "tokens"."""
-    codex_home = tmp_path / ".codex"
-    codex_home.mkdir()
-    (codex_home / "auth.json").write_text(
-        json.dumps({"tokens": {"access_token": "fixture-nested-token", "refresh_token": "fixture-refresh"}}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("CODEX_HOME", str(codex_home))
-
-    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
-
-
-def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatch):
-    """Backward compat: a flat top-level access_token must still resolve."""
-    codex_home = tmp_path / ".codex"
-    codex_home.mkdir()
-    (codex_home / "auth.json").write_text(
-        json.dumps({"access_token": "fixture-flat-token"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("CODEX_HOME", str(codex_home))
-
-    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
-
-
-def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
-    """Kimi credential loader must succeed from kimi-code.json's access_token."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(json.dumps({"access_token": "fixture-kimi-token"}), encoding="utf-8")
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-kimi-token"
-
-
-def test_load_kimi_bearer_reads_nested_tokens_shape(tmp_path, monkeypatch):
-    """Some CLI artifacts nest the OAuth set under tokens / camelCase keys."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps({"tokens": {"accessToken": "fixture-nested-kimi"}}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-nested-kimi"
-
-
-def test_load_kimi_bearer_uses_kimi_code_home(tmp_path, monkeypatch):
-    """Honor KIMI_CODE_HOME the same way the native Kimi adapter does."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    monkeypatch.delenv("KIMI_CODE_CREDENTIALS_PATH", raising=False)
-    home = tmp_path / "kimi-home"
-    cred_dir = home / "credentials"
-    cred_dir.mkdir(parents=True)
-    (cred_dir / "kimi-code.json").write_text(
-        json.dumps({"access_token": "fixture-home-token"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_HOME", str(home))
-
-    assert subscription_usage_mod._load_kimi_bearer() == "fixture-home-token"
-
-
-class _KimiOAuthRefreshServer:
-    """Minimal /api/oauth/token endpoint for bearer-refresh unit tests."""
-
-    def __init__(self, payload: dict, status: int = 200) -> None:
-        self.payload = payload
-        self.status = status
-        self.bodies: list[str] = []
-        outer = self
-
-        class Handler(BaseHTTPRequestHandler):
-            def do_POST(self) -> None:
-                length = int(self.headers.get("Content-Length", "0"))
-                outer.bodies.append(self.rfile.read(length).decode("utf-8"))
-                body = json.dumps(outer.payload).encode("utf-8")
-                self.send_response(outer.status)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-
-            def log_message(self, *args: object) -> None:
-                pass
-
-        self.server = HTTPServer(("127.0.0.1", 0), Handler)
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
-
-    @property
-    def url(self) -> str:
-        host, port = self.server.server_address
-        return f"http://{host}:{port}"
-
-    def __enter__(self) -> _KimiOAuthRefreshServer:
-        self.thread.start()
-        return self
-
-    def __exit__(self, *exc: object) -> None:
-        self.server.shutdown()
-        self.server.server_close()
-        self.thread.join(timeout=5)
-
-
-def test_load_kimi_bearer_refreshes_expired_oauth_token(tmp_path, monkeypatch):
-    """Expired access_token + refresh_token must rebind via the OAuth helper."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps(
-            {
-                "access_token": "stale-access",
-                "refresh_token": "fixture-refresh",
-                "expires_at": time.time() - 30,
-                "token_type": "Bearer",
-                "scope": "kimi-code",
-            }
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-    payload = {
-        "access_token": "rotated-access",
-        "refresh_token": "rotated-refresh",
-        "expires_in": 900,
-        "token_type": "Bearer",
-        "scope": "kimi-code",
-    }
-    with _KimiOAuthRefreshServer(payload) as server:
-        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
-        assert subscription_usage_mod._load_kimi_bearer() == "rotated-access"
-
-    stored = json.loads(cred_path.read_text(encoding="utf-8"))
-    assert stored["access_token"] == "rotated-access"
-    assert stored["refresh_token"] == "rotated-refresh"
-
-
-def test_kimi_probe_retries_usages_after_401_refresh(tmp_path, monkeypatch):
-    """Usages 401 with a listed expires_at still force-refreshes once and recovers."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    cred_path = tmp_path / "kimi-code.json"
-    cred_path.write_text(
-        json.dumps(
-            {
-                "access_token": "stale-but-unexpired",
-                "refresh_token": "fixture-refresh",
-                "expires_at": time.time() + 3600,
-                "token_type": "Bearer",
-                "scope": "kimi-code",
-            }
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
-    live_shape = {
-        "usage": {
-            "used": "40",
-            "limit": "100",
-            "remaining": "60",
-            "resetTime": "2026-09-10T00:00:00Z",
-        },
-        "limits": [
-            {
-                "detail": {
-                    "limit": "100",
-                    "remaining": "55",
-                    "resetTime": "2026-09-03T10:00:00Z",
-                },
-                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-            }
-        ],
-    }
-    payload = {
-        "access_token": "rotated-access",
-        "refresh_token": "rotated-refresh",
-        "expires_in": 900,
-        "token_type": "Bearer",
-        "scope": "kimi-code",
-    }
-    usages_auths: list[str] = []
-
-    def _fake_http(method, url, **kwargs):
-        usages_auths.append(kwargs.get("headers", {}).get("Authorization", ""))
-        if len(usages_auths) == 1:
-            return (401, None, "unauthorized")
-        return (200, live_shape, None)
-
-    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    with _KimiOAuthRefreshServer(payload) as server:
-        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
-        res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-
-    assert res["status"] == "healthy"
-    assert usages_auths == ["Bearer stale-but-unexpired", "Bearer rotated-access"]
-    assert res["primary_used_pct"] == 45.0
-
-
-def test_kimi_missing_credentials_file_is_need_login(tmp_path, monkeypatch):
-    """No credential file anywhere → honest NEED_LOGIN, not a fetch_error."""
-    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
-    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(tmp_path / "missing-kimi-code.json"))
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "need_login"
-    assert res["probe_state"] == "NEED_LOGIN"
-
-
-def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login(monkeypatch):
-    """A present, loadable credential file that fails at the network layer must
-    surface fetch_error/unavailable — never re-claim NEED_LOGIN, which would
-    wrongly tell the operator to log in again."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (0, None, "connection reset"),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "unavailable"
-    assert res["error_kind"] == "fetch_error"
-    assert res["error_kind"] != "need_login"
-
-
-def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
-    """Live Kimi shape (2026-09-03): string used/limit/remaining; detail lacks used;
-    window is {duration, timeUnit: TIME_UNIT_MINUTE}. Must parse, not NEED_LOGIN.
-    """
-    live_shape = {
-        "usage": {
-            "used": "40",
-            "limit": "100",
-            "remaining": "60",
-            "resetTime": "2026-09-10T00:00:00Z",
-        },
-        "limits": [
-            {
-                "detail": {
-                    "limit": "100",
-                    "remaining": "55",
-                    "resetTime": "2026-09-03T10:00:00Z",
-                },
-                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-            }
-        ],
-    }
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (200, live_shape, None),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["status"] == "healthy"
-    assert res["error_kind"] != "need_login"
-    assert res["error_kind"] is None
-    # detail used derived: 100 - 55 = 45 → 45%
-    assert res["primary_used_pct"] == 45.0
-    # usage.used/limit strings → 40%
-    assert res["weekly_used_pct"] == 40.0
-    assert res["windows"]["primary"]["window_minutes"] == 300
-
-
 def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
     assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
     assert subscription_usage_mod._coerce_float(7) == 7.0
@@ -1454,41 +1196,6 @@ def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
     assert subscription_usage_mod._coerce_float("") is None
     assert subscription_usage_mod._coerce_float("nope") is None
     assert subscription_usage_mod._coerce_float(None) is None
-
-
-def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
-    """HTTP 200 with used=NaN must not become healthy with nan percents."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
-    monkeypatch.setattr(
-        subscription_usage_mod,
-        "_http_json_request",
-        lambda *args, **kwargs: (
-            200,
-            {
-                "usage": {
-                    "used": "NaN",
-                    "limit": "100",
-                },
-                "limits": [
-                    {
-                        "detail": {
-                            "used": "NaN",
-                            "limit": "100",
-                        },
-                        "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
-                    }
-                ],
-            },
-            None,
-        ),
-    )
-    codexbar_usage_mod._last_good_data.pop("kimi", None)
-
-    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
-    assert res["error_kind"] == "unparseable_schema"
-    assert res["status"] != "healthy"
-    assert res["primary_used_pct"] is None
-    assert res["weekly_used_pct"] is None
 
 
 def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
@@ -1592,36 +1299,6 @@ def test_prepaid_failure_preserves_last_good_and_retries_quickly(monkeypatch):
     cache_invalidate("api_account:deepseek")
 
 
-def test_management_key_loaders_and_balance(monkeypatch, tmp_path):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    monkeypatch.delenv("OPENROUTER_MANAGEMENT_API_KEY", raising=False)
-    secret = tmp_path / ".secret/openrouter-management.key"
-    secret.parent.mkdir()
-    secret.write_text("")
-    assert mod._load_openrouter_management_api_key() is None
-    secret.write_text("file-fixture\n")
-    assert mod._load_openrouter_management_api_key() == "file-fixture"
-    auth = tmp_path / ".local/share/opencode/auth.json"
-    auth.parent.mkdir(parents=True)
-    auth.write_text(json.dumps({"openrouter-management": {"key": "opencode-fixture"}}))
-    assert mod._load_openrouter_management_api_key() == "opencode-fixture"
-    monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "env-fixture")
-    assert mod._load_openrouter_management_api_key() == "env-fixture"
-    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
-
-    def http(method, url, **kwargs):
-        if url.endswith("/credits"):
-            assert kwargs["headers"]["Authorization"] == "Bearer env-fixture"
-            return 200, {"data": {"total_credits": 100, "total_usage": 100}}, None
-        return 200, {"data": {"limit_remaining": 70}}, None
-
-    monkeypatch.setattr(mod, "_http_json_request", http)
-    result = mod._probe_openrouter_native(timeout_s=1)
-    assert result["account_remaining_usd"] == 0
-    assert result["balance_probe_state"] == "ok"
-
-
 def test_cursor_explicit_refresh_is_blocking(monkeypatch):
     mod = subscription_usage_mod
     calls = []
@@ -1650,18 +1327,11 @@ def test_subscription_login_failure_clears_on_success(monkeypatch):
 
 
 def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
-    mod = subscription_usage_mod
-    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
-    monkeypatch.setattr(mod, "_load_openrouter_management_api_key", lambda: "management-fixture")
-
-    def http(method, url, **kwargs):
-        return (200, {"data": {"limit_remaining": 100}}, None) if url.endswith("/key") else (503, None, "unavailable")
-
-    monkeypatch.setattr(mod, "_http_json_request", http)
-    result = mod._probe_openrouter_native(timeout_s=1)
-    assert result["probe_state"] == "NEED_PROBE"
-    assert result["balance_probe_state"] == "NEED_PROBE"
-    assert not mod._api_account_is_cacheable(result)
+    account = {**subscription_usage_mod._empty_openrouter_account("NEED_PROBE"), "balance_probe_state": "NEED_PROBE"}
+    _fake_private(monkeypatch, api_account=account)
+    result = subscription_usage_mod._probe_openrouter_native(timeout_s=1)
+    assert result["probe_state"] == result["balance_probe_state"] == "NEED_PROBE"
+    assert not subscription_usage_mod._api_account_is_cacheable(result)
 
 
 def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
@@ -1949,48 +1619,38 @@ def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format(monke
     assert "pace delta" not in res["pace_summary"]
 
 
-def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
-    """ChatGPT wham often returns only primary_window with limit_window_seconds=604800
-    (weekly) and secondary_window=null. Do not default that to a fake 5h window."""
-    from scripts.api import subscription_usage as su
-
-    # Freeze the pace clock: reset_at is derived from frozen now + reset_after_seconds
-    # so the window stays open no matter when the suite runs.
-    frozen = datetime(2026, 9, 15, 12, 0, tzinfo=UTC)
-    reset_after_seconds = 313014
-    payload = {
-        "rate_limit": {
-            "allowed": True,
-            "limit_reached": False,
-            "primary_window": {
-                "used_percent": 40,
-                "limit_window_seconds": 604800,
-                "reset_after_seconds": reset_after_seconds,
-                "reset_at": int(frozen.timestamp()) + reset_after_seconds,
+def test_codex_private_weekly_window_keeps_weekly_pace(monkeypatch):
+    frozen = datetime(2026, 9, 15, 12, tzinfo=UTC)
+    real = subscription_usage_mod.compute_usage_pace
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "compute_usage_pace",
+        lambda used, reset, **kw: real(used, reset, **{**kw, "now": frozen}),
+    )
+    _fake_private(
+        monkeypatch,
+        {
+            "outcome": "data",
+            "record": {
+                "provider": "codex",
+                "source": "codex_oauth",
+                "openaiDashboard": {},
+                "usage": {
+                    "primary": None,
+                    "secondary": {
+                        "windowMinutes": 10080,
+                        "usedPercent": 40,
+                        "resetsAt": int(frozen.timestamp()) + 313014,
+                    },
+                },
             },
-            "secondary_window": None,
-        }
-    }
-
-    def fake_http(method, url, headers=None, body=None, timeout_s=None):
-        return 200, payload, None
-
-    real = su.compute_usage_pace
-
-    def _paced(used_pct, resets_at, *, window_minutes=None, now=None):
-        return real(used_pct, resets_at, window_minutes=window_minutes, now=now or frozen)
-
-    monkeypatch.setattr(su, "compute_usage_pace", _paced)
-    monkeypatch.setattr(su, "_load_codex_oauth_token", lambda: "tok")
-    monkeypatch.setattr(su, "_http_json_request", fake_http)
-    res = su._probe_codex_native(timeout_s=5)
-    assert res["status"] == "healthy"
-    assert res["primary_used_pct"] is None
-    assert res["weekly_used_pct"] == 40.0
-    assert res["windows"]["secondary"]["window_minutes"] == 10080
-    assert res["pace_summary"] is not None
-    assert "Expected" in res["pace_summary"]
-    assert res["will_last_to_reset"] is not None
+        },
+    )
+    result = subscription_usage_mod._probe_codex_native(timeout_s=5)
+    assert result["status"] == "healthy"
+    assert result["primary_used_pct"] is None and result["weekly_used_pct"] == 40.0
+    assert result["windows"]["secondary"]["window_minutes"] == 10080
+    assert "Expected" in result["pace_summary"] and result["will_last_to_reset"] is not None
 
 
 def test_agy_nonzero_exit_does_not_leak_stdout_stderr(monkeypatch, tmp_path):
@@ -2030,22 +1690,6 @@ def test_compute_usage_pace_rejects_expired_and_out_of_window():
     )
     ok = compute_usage_pace(25.0, (now + timedelta(seconds=150 * 60)).isoformat(), window_minutes=300, now=now)
     assert ok is not None
-
-
-def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
-    from scripts.api import subscription_usage as su
-
-    secrets = tmp_path / ".secrets"
-    secret = tmp_path / ".secret"
-    secrets.mkdir()
-    secret.mkdir()
-    (secret / "deepseek.key").write_text("OLD_KEY\n", encoding="utf-8")
-    (secrets / "deekseep.key").write_text("NEW_KEY\n", encoding="utf-8")
-    monkeypatch.setenv("HOME", str(tmp_path))
-    for env in ("DEEPSEEK_API_KEY",):
-        monkeypatch.delenv(env, raising=False)
-    monkeypatch.setattr(su, "_load_opencode_provider_key", lambda _p: None)
-    assert su._load_deepseek_api_key() == "NEW_KEY"
 
 
 _MUSE_EMAIL = "secret-email-do-not-leak@example.com"
@@ -2247,39 +1891,92 @@ def test_muse_fresh_projection_keeps_binding_headroom():
     assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] == 70.0
 
 
-def test_muse_probe_invokes_supported_codexbar_interface(monkeypatch):
+def test_muse_probe_reads_muse_usage_json(monkeypatch):
     import subprocess
 
     captured: dict = {}
+    now_ms = int(time.time() * 1000)
+    payload = {
+        "allowance": {
+            "asOfMs": now_ms,
+            "tier": _MUSE_EMAIL,
+            "weekly": {"usedPercent": 30, "resetsAtMs": now_ms + 5 * 24 * 3600 * 1000},
+            "window": {"usedPercent": 10, "resetsAtMs": now_ms + 300 * 1000},
+        }
+    }
 
     def fake_run(argv, **kwargs):
         captured["argv"] = argv
         captured["kwargs"] = kwargs
-        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps([_MUSE_KNOWN]), stderr=_MUSE_EMAIL)
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payload), stderr=_MUSE_EMAIL)
 
+    from tests.opsec_fixtures import TOKEN
+
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
     monkeypatch.setattr(
-        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar" if name == "codexbar" else None
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None
     )
     monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
     record = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
-    assert captured["argv"] == [
-        "/usr/bin/codexbar",
-        "usage",
-        "--provider",
-        "muse",
-        "--json",
-        "--no-credits",
-    ]
+    assert captured["argv"] == ["/usr/bin/muse", "usage", "--json"]
     assert captured["kwargs"]["stdin"] is subprocess.DEVNULL
+    usage_env = captured["kwargs"]["env"]
+    assert usage_env["MUSE_NO_AUTO_UPDATE"] == "1"
+    assert "GH_TOKEN" not in usage_env
+    assert TOKEN not in usage_env.values()
+    assert record["status"] == "healthy"
+    assert record["source"] == "muse_usage"
+    assert record["weekly_used_pct"] == 30.0
     assert record["headroom_pct"] == 70.0
-    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
     _assert_muse_has_no_account_material(record)
+
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: None)
+    missing = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
+    assert missing["error_code"] == "NO_PROBE"
+    assert missing["status"] == "unavailable"
+    assert missing["status"] != "healthy"
+    assert missing["weekly_used_pct"] is None
+    assert missing["weekly_remaining_pct"] is None
+
+
+def test_muse_allowance_session_drops_secret_shaped_parent_env(monkeypatch):
+    """A secret-shaped parent variable must not reach the Muse allowance session.
+
+    The value is the synthetic OPSEC sentinel, never a credential-shaped literal.
+    The session env is the runner allowlist for provider ``muse`` plus the two
+    CLI lookups that ``muse usage`` honors when they are set.
+    """
+    from tests.opsec_fixtures import TOKEN
+
+    monkeypatch.setenv("SYNTHETIC_TOKEN", TOKEN)
+    monkeypatch.setenv("LU_OPSEC_OVERRIDE", TOKEN)
+    monkeypatch.setenv("GH_TOKEN", TOKEN)
+    monkeypatch.setenv("XDG_CONFIG_HOME", "/fixture/xdg")
+    monkeypatch.setenv("SSL_CERT_FILE", "/fixture/ca.pem")
+    monkeypatch.setenv("MUSE_FLAGS", "1")
+    monkeypatch.setenv("MUSE_AUTH_PATH", "/fixture/muse-auth")
+    monkeypatch.setenv("XDG_DATA_HOME", "/fixture/xdg-data")
+    monkeypatch.setenv("SSL_CERT_DIR", "/fixture/certs")
+
+    env = subscription_usage_mod._muse_session_env()
+
+    assert env["MUSE_NO_AUTO_UPDATE"] == "1"
+    assert env["XDG_CONFIG_HOME"] == "/fixture/xdg"
+    assert env["SSL_CERT_FILE"] == "/fixture/ca.pem"
+    assert "SYNTHETIC_TOKEN" not in env
+    assert "LU_OPSEC_OVERRIDE" not in env
+    assert "GH_TOKEN" not in env
+    assert "MUSE_FLAGS" not in env
+    assert "MUSE_AUTH_PATH" not in env
+    assert "XDG_DATA_HOME" not in env
+    assert "SSL_CERT_DIR" not in env
+    assert TOKEN not in env.values()
 
 
 def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
     import subprocess
 
-    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar")
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/muse" if name == "muse" else None)
 
     def timeout_run(argv, **kwargs):
         raise subprocess.TimeoutExpired(argv, kwargs.get("timeout"))
@@ -2836,341 +2533,233 @@ def test_public_projection_does_not_trust_cached_provider_metadata(lane):
         ]
 
 
-# Frozen presentation controls for #9869. These execute the shipped renderer.
-def _render_subscription_snapshot(snapshot):
-    import subprocess
+# --- Codex account b (#12692): one usage row per subscription account ---------
 
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    let output = '';
-    const document = { getElementById: () => ({ set innerHTML(value) { output = value; } }) };
-    Date.now = () => Date.parse('2030-01-01T12:00:00Z');
-    eval(html.slice(start, end));
-    renderSubscriptions(JSON.parse(fs.readFileSync(0, 'utf8')));
-    console.log(output);
-    """
-    result = subprocess.run(
-        ['node', '-e', script], input=json.dumps(snapshot), capture_output=True,
-        text=True, check=True, timeout=30,
-    )
-    return result.stdout
+_CODEX_ACCOUNT_KEYS = ("codex", "codex:a", "codex:b")
 
 
-def _subscription_cells(rendered, lane='codex'):
-    import re
+@pytest.fixture
+def two_codex_accounts(monkeypatch):
+    """The private boundary answers by account label, without any credential fixture."""
+    for key in _CODEX_ACCOUNT_KEYS:
+        monkeypatch.delitem(subscription_usage_mod._last_good_data, key, raising=False)
+        monkeypatch.delitem(subscription_usage_mod._last_failure_data, key, raising=False)
+    cache_invalidate("codexbar_usage:")
+    rejected = set()
+    answers = {"sub": (11.0, 22.0), "b-sub": (66.0, 77.0)}
 
-    row = re.search(rf'<tr>\s*<td class="mono">{lane}</td>(.*?)</tr>', rendered, re.S)
-    assert row is not None, rendered
-    return re.findall(r'<td>(.*?)</td>', row.group(1), re.S)
-
-
-def _subscription_snapshot():
-    return {
-        'generated_at': '2030-01-01T11:59:30Z',
-        'diagnostics': {'stale': False, 'stale_threshold_s': 900},
-        'agents': {'codex': {
-            'status': 'hot', 'status_source': 'weekly_pace',
-            'remaining_pct': 70,
-            'codexbar': {
-                'weekly_used_pct': 30, 'weekly_remaining_pct': 70,
-                'weekly_pace_delta_pct': 20, 'weekly_expected_pct': 10,
-                'pace_summary': '20% in deficit | Expected 10% used',
-                'freshness': 'fresh', 'stale': False, 'age_s': 30,
-                'fetched_at': '2030-01-01T11:59:30Z',
+    def probe(provider, *, timeout_s, account=None):
+        assert provider == "codex" and timeout_s == 1
+        if account in rejected:
+            return {
+                "outcome": "error",
+                "error": {"kind": "token_rejected", "code": 401, "message": "Codex OAuth token rejected"},
+            }
+        session, weekly = answers[account]
+        return {
+            "outcome": "data",
+            "record": {
+                "provider": "codex",
+                "source": "codex_oauth",
+                "openaiDashboard": {},
+                "usage": {
+                    "primary": {"windowMinutes": 300, "usedPercent": session, "resetsAt": None},
+                    "secondary": {"windowMinutes": 10080, "usedPercent": weekly, "resetsAt": None},
+                },
             },
-            'health': {'healthy': True, 'basis': 'recent_tasks'},
-            'runtime': {'headroom_blocked': False, 'window_s': 300,
-                        'error': 0, 'rate_limited': 0, 'timeout': 0,
-                        'last_outcome_at': '2030-01-01T11:59:30Z'},
-        }},
-        'in_flight': {'codex': 2},
+        }
+
+    module = _fake_private(monkeypatch)
+    module.probe_subscription = probe
+    yield rejected
+    cache_invalidate("codexbar_usage:")
+
+
+def test_two_codex_accounts_publish_two_rows_with_their_own_numbers(two_codex_accounts):
+    refreshed = subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    assert set(refreshed) == set(_CODEX_ACCOUNT_KEYS)
+
+    rows = codexbar_usage_mod.codex_account_usage_snapshot(kick_refresh=False)
+    assert set(rows) == {"codex:a", "codex:b"}
+    a, b = rows["codex:a"], rows["codex:b"]
+    assert (a["codex_account"], a["primary_used_pct"], a["weekly_used_pct"]) == ("sub", 11.0, 22.0)
+    assert (b["codex_account"], b["primary_used_pct"], b["weekly_used_pct"]) == ("b-sub", 66.0, 77.0)
+    assert a["freshness"] == b["freshness"] == "fresh"
+    # Compatibility: ``codex`` keeps meaning account a until slice B moves its consumers.
+    legacy = subscription_usage_mod.get_provider_usage_data("codex", kick_refresh=False)
+    assert (legacy["codex_account"], legacy["weekly_used_pct"]) == ("sub", 22.0)
+    assert "fixture-token" not in json.dumps(rows) + json.dumps(legacy)
+
+
+@pytest.mark.parametrize(("expired", "healthy"), [("codex:b", "codex:a"), ("codex:a", "codex:b")])
+def test_expired_codex_token_marks_only_that_account_unavailable(two_codex_accounts, expired, healthy):
+    subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    two_codex_accounts.add("b-sub" if expired == "codex:b" else "sub")
+    # The expired account has no earlier good reading to fall back to.
+    for key in subscription_usage_mod._stored_usage_keys(expired):
+        subscription_usage_mod._last_good_data.pop(key, None)
+        cache_invalidate(f"codexbar_usage:{key}")
+
+    refreshed = subscription_usage_mod.refresh_provider_usage_data(_CODEX_ACCOUNT_KEYS, timeout_s=1.0)
+    assert expired not in refreshed and healthy in refreshed
+
+    rows = codexbar_usage_mod.codex_account_usage_snapshot(kick_refresh=False)
+    dead, live = rows[expired], rows[healthy]
+    assert dead["status"] == "unavailable"
+    assert (dead["failure_kind"], dead["last_failure_code"]) == ("token_rejected", 401)
+    assert dead["weekly_used_pct"] is None and dead["primary_used_pct"] is None
+    assert dead["codex_account"] == ("b-sub" if expired == "codex:b" else "sub")
+    expected_numbers = (66.0, 77.0) if healthy == "codex:b" else (11.0, 22.0)
+    assert (live["primary_used_pct"], live["weekly_used_pct"]) == expected_numbers
+    assert live["failure_kind"] is None
+    assert "fixture-token" not in json.dumps(rows)
+
+
+@pytest.fixture
+def private_binding(tmp_path, monkeypatch):
+    from scripts.opsec import prepublish
+
+    monkeypatch.setattr(prepublish, "primary_root", lambda: tmp_path / "public")
+    monkeypatch.setattr(prepublish, "catalog", lambda: {"infra-private": {"local_name": "private"}})
+    directory = tmp_path / "private" / "tools" / "fleet_usage"
+    directory.mkdir(parents=True)
+    monkeypatch.delitem(sys.modules, "_lu_private_fleet_usage", raising=False)
+    subscription_usage_mod._load_private_usage.cache_clear()
+    yield directory / "usage.py"
+    subscription_usage_mod._load_private_usage.cache_clear()
+    sys.modules.pop("_lu_private_fleet_usage", None)
+
+
+_REQUIRED_PRIVATE_ENTRY_POINTS = (
+    "probe_subscription",
+    "probe_api_account",
+    "api_key_present",
+    "prepaid_remaining_usd",
+    "prove_claude_owner",
+    "credential_inventory",
+)
+
+
+def _private_module_source(*, version="1", missing=None):
+    lines = [f"INTERFACE_VERSION = {version}"]
+    for name in _REQUIRED_PRIVATE_ENTRY_POINTS:
+        if name != missing:
+            lines.append(f"def {name}(*args, **kwargs): return None")
+    return "\n".join(lines)
+
+
+@pytest.mark.parametrize("version", ["0", "2", "True", "1.0", "'1'"])
+def test_private_binding_incompatible_version_is_unavailable(private_binding, version):
+    private_binding.write_text(_private_module_source(version=version))
+    result = subscription_usage_mod.fetch_provider_usage("codex:b", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["codex_account"] == "b-sub"
+    assert result["weekly_used_pct"] is None
+
+
+@pytest.mark.parametrize("missing", _REQUIRED_PRIVATE_ENTRY_POINTS)
+def test_private_binding_missing_entry_point_is_unavailable(private_binding, missing):
+    private_binding.write_text(_private_module_source(missing=missing))
+    result = subscription_usage_mod.fetch_provider_usage("claude", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["status"] == "unavailable"
+    assert result["weekly_used_pct"] is None
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "codex:a", "codex:b", "kimi", "grok"])
+def test_absent_private_binding_subscription_fails_closed(private_binding, provider, monkeypatch):
+    monkeypatch.setattr(Path, "home", lambda: pytest.fail("public probe must never discover credentials"))
+    result = subscription_usage_mod.fetch_provider_usage(provider, timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert result["error_kind"] == "unavailable"
+    assert result["auth_error"] == "private usage tooling unavailable"
+    assert result["primary_used_pct"] is None and result["weekly_used_pct"] is None
+    assert subscription_usage_mod._probe_glm_native(timeout_s=1)["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+
+
+@pytest.mark.parametrize("provider", ["openrouter", "deepseek"])
+def test_absent_private_binding_prepaid_needs_probe(private_binding, provider):
+    result = subscription_usage_mod._probe_api_account_live(provider, timeout_s=1)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["auth_error"] == "private usage tooling unavailable"
+    assert result.get("total_balance") is None and result.get("account_remaining_usd") is None
+
+
+def test_private_binding_load_failure_is_quiet_and_unavailable(private_binding, capsys):
+    private_binding.write_text("print('SYNTHETIC_PRIVATE_DETAIL')\nraise RuntimeError('SYNTHETIC_PRIVATE_DETAIL')")
+    result = subscription_usage_mod.fetch_provider_usage("claude", timeout_s=1)
+    assert result["error_code"] == "PRIVATE_TOOLING_UNAVAILABLE"
+    assert capsys.readouterr() == ("", "")
+    assert "SYNTHETIC_PRIVATE_DETAIL" not in json.dumps(result)
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "codex:a", "codex:b", "kimi", "grok"])
+def test_private_outcome_keeps_public_normalization(monkeypatch, provider):
+    outcome = {
+        "outcome": "data",
+        "record": {
+            "provider": "codex" if provider.startswith("codex") else provider,
+            "source": "synthetic",
+            "openaiDashboard": {},
+            "usage": {
+                "primary": {"windowMinutes": 300, "usedPercent": 12.5, "resetsAt": None},
+                "secondary": {"windowMinutes": 10080, "usedPercent": 37.5, "resetsAt": None},
+            },
+            "credit_balance": 0,
+            "reset_credits": {"available_count": 0, "expires_at": []},
+        },
     }
+    seen = []
+    module = _fake_private(monkeypatch)
+
+    def probe(name, *, timeout_s, account=None):
+        seen.append((name, timeout_s, account))
+        return outcome
+
+    module.probe_subscription = probe
+    result = subscription_usage_mod.fetch_provider_usage(provider, timeout_s=3)
+    assert result["status"] == "healthy"
+    assert result["primary_used_pct"] == 12.5 and result["weekly_used_pct"] == 37.5
+    assert result["primary_remaining_pct"] == 87.5 and result["weekly_remaining_pct"] == 62.5
+    assert result["windows"]["secondary"]["window_minutes"] == 10080
+    if provider.startswith("codex"):
+        label = "b-sub" if provider == "codex:b" else "sub"
+        assert seen == [("codex", 3, label)]
+        assert result["codex_account"] == label
+        assert result["credit_balance"] == 0 and result["reset_credits"]["available_count"] == 0
+    else:
+        assert seen == [(provider, 3, None)]
 
 
-def test_subscription_pace_pressure_with_ample_quota():
-    pressure, quota, health, _burn, in_flight = _subscription_cells(
-        _render_subscription_snapshot(_subscription_snapshot())
+def test_path_loaded_private_module_normalizes_data(private_binding, capsys):
+    outcome = {
+        "outcome": "data",
+        "record": {
+            "provider": "codex",
+            "source": "synthetic",
+            "openaiDashboard": {},
+            "usage": {
+                "primary": {"windowMinutes": 300, "usedPercent": 12.5, "resetsAt": None},
+                "secondary": {"windowMinutes": 10080, "usedPercent": 37.5, "resetsAt": None},
+            },
+        },
+    }
+    private_binding.write_text(
+        "from __future__ import annotations\n"
+        "from dataclasses import dataclass\n"
+        "@dataclass\n"
+        "class Outcome:\n"
+        "    value: dict\n"
+        + _private_module_source()
+        + "\nprint('SYNTHETIC_PRIVATE_DETAIL')\n"
+        + "def probe_subscription(provider, *, timeout_s, account=None):\n"
+        + "    assert (provider, timeout_s, account) == ('codex', 3, 'b-sub')\n"
+        + f"    return Outcome({outcome!r}).value\n"
     )
-    assert 'usage ahead of pace' in pressure
-    assert 'weekly pace' in pressure
-    assert '20% in deficit' in pressure
-    assert 'near cap' not in pressure
-    assert '30% used · 70% left' in quota
-    assert 'fresh · 30s ago' in quota
-    assert '>healthy</span>' in health
-    assert 'snapshot fresh' in health
-    assert '0 errors' in health
-    assert in_flight == '2'
-
-
-def test_subscription_actual_cap_uses_measured_window():
-    snapshot = _subscription_snapshot()
-    agent = snapshot['agents']['codex']
-    agent['status'] = 'near_cap'
-    agent['codexbar']['windows'] = {
-        'primary': {'window_minutes': 300, 'used_pct': 100, 'remaining_pct': 0},
-        'secondary': {'window_minutes': 10080, 'used_pct': 30, 'remaining_pct': 70},
-    }
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert 'near cap' in pressure
-    assert 'measured provider window' in pressure
-    assert 'usage ahead of pace' not in pressure
-    assert '5h' in quota and '100% used · 0% left' in quota
-    assert 'weekly' in quota and '30% used · 70% left' in quota
-    assert '>healthy</span>' in health
-
-
-def test_subscription_runtime_failure_keeps_quota_independent():
-    snapshot = _subscription_snapshot()
-    agent = snapshot['agents']['codex']
-    agent['health'] = {'healthy': False, 'basis': 'recent_tasks', 'last_error': 'spawn failed'}
-    agent['runtime'].update(headroom_blocked=True, headroom_reason='recent rate limits', rate_limited=3)
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert 'runtime pressure' in pressure
-    assert 'runtime health' in pressure and 'recent rate limits' in pressure
-    assert '30% used · 70% left' in quota
-    assert '>unhealthy</span>' in health and 'spawn failed' in health and '3 rate limits' in health
-    agent['status'] = 'error'
-    agent['runtime']['headroom_blocked'] = False
-    pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
-    assert '>error</span>' in pressure and 'spawn failed' in pressure
-
-
-def test_subscription_missing_and_stale_evidence():
-    missing = _subscription_cells(_render_subscription_snapshot({'agents': {}}))
-    assert '>unknown</span>' in missing[0]
-    assert 'freshness unknown' in missing[1]
-    assert '>unknown</span>' in missing[2] and 'snapshot freshness unknown' in missing[2]
-    snapshot = _subscription_snapshot()
-    snapshot['diagnostics']['stale'] = True
-    snapshot['agents']['codex']['codexbar'].update(stale=True, freshness='stale', age_s=1800)
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert '<div class="stale-note">stale · ' in pressure
-    assert '<div class="stale-note">stale · ' in quota
-    assert 'snapshot stale · ' in health
-    assert '70% left' in quota
-    # A cached fresh flag cannot override elapsed age, even when age_s is missing.
-    snapshot['diagnostics']['stale'] = False
-    snapshot['generated_at'] = '2030-01-01T11:00:00Z'
-    snapshot['agents']['codex']['codexbar'].update(
-        stale=False, freshness='fresh', age_s=None, fetched_at='2030-01-01T11:00:00Z',
-    )
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert '<div class="stale-note">stale · ' in pressure
-    assert '<div class="stale-note">stale · 1.0h ago' in quota
-    assert 'snapshot stale · 1.0h ago' in health
-    snapshot['diagnostics'].pop('stale_threshold_s')
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert '<div class="stale-note">freshness unknown · 1.0h ago' in pressure
-    assert '<div class="stale-note">freshness unknown · 1.0h ago' in quota
-    assert 'snapshot freshness unknown · 1.0h ago' in health
-
-
-@pytest.mark.parametrize('invalid', [None, 'bad', '', True, [], {}, '42', -1, 101],
-                         ids=['null', 'text', 'empty', 'boolean', 'array', 'object', 'numeric-string', 'negative', 'over-100'])
-def test_subscription_invalid_percentages_are_unknown(invalid):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['codexbar']['windows'] = {
-        'primary': {'label': 'test window', 'used_pct': invalid, 'remaining_pct': invalid},
-    }
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert 'test window' in quota and '>unknown</span>' in quota
-    assert '% used' not in quota and '% left' not in quota
-    assert 'class="bar unavailable"' in quota
-
-
-def test_subscription_null_remaining_and_nonnumeric_freshness():
-    snapshot = _subscription_snapshot()
-    agent = snapshot['agents']['codex']
-    agent['codexbar'].update(weekly_remaining_pct=None, age_s='bad', fetched_at='bad timestamp')
-    agent['runtime'].update(error=None, rate_limited='bad', timeout=True)
-    agent['health']['healthy'] = None
-    _, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert '30% used · unknown remaining' in quota
-    assert '70% left' not in quota and '0% left' not in quota
-    assert 'freshness unknown · age unknown · probe time unknown' in quota
-    assert '>unknown</span>' in health
-    assert 'errors unknown' in health and 'rate limits unknown' in health and 'timeouts unknown' in health
-    agent['codexbar'].update(
-        weekly_used_pct=None, weekly_remaining_pct=70, age_s=30, fetched_at='2030-01-01T11:59:30Z',
-    )
-    snapshot['diagnostics']['stale_threshold_s'] = 'bad'
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert 'unknown used · 70% left' in quota
-    assert '<div class="stale-note">freshness unknown · 30s ago' in pressure
-    assert '<div class="stale-note">freshness unknown · 30s ago' in quota
-    assert 'snapshot freshness unknown · 30s ago' in health
-
-
-def test_subscription_declared_unavailable_freshness_is_explicit():
-    """A declared unavailable probe must not be relabelled as merely unknown."""
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['codexbar'].update(
-        freshness='unavailable', age_s=None, fetched_at=None,
-    )
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert 'unavailable' in quota
-    assert 'freshness unknown' not in quota
-
-
-@pytest.mark.parametrize('scale', [1, 1000], ids=['seconds', 'milliseconds'])
-def test_subscription_numeric_epoch_fetched_at_is_rendered(scale):
-    snapshot = _subscription_snapshot()
-    epoch = int(datetime(2030, 1, 1, 11, 59, 30, tzinfo=UTC).timestamp()) * scale
-    snapshot['agents']['codex']['codexbar'].update(fetched_at=epoch, age_s=None)
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert 'fresh ·' in quota
-    assert 'probe time unknown' not in quota and '1970' not in quota
-
-
-def test_subscription_unsafe_labels_are_escaped():
-    unsafe = '\"><img src=x onerror=alert(1)>&\''
-    snapshot = _subscription_snapshot()
-    agent = snapshot['agents']['codex']
-    agent['status'] = unsafe
-    agent['status_source'] = unsafe
-    agent['codexbar'].update(failure_kind=unsafe, last_failure_at=unsafe)
-    agent['codexbar']['windows'] = {
-        'primary': {'label': unsafe, 'used_pct': 30, 'remaining_pct': 70, 'resets_at': unsafe},
-    }
-    agent['health'].update(basis=unsafe, last_error=unsafe)
-    agent['runtime'].update(headroom_blocked=True, headroom_reason=unsafe, last_outcome_at=unsafe)
-    rendered = _render_subscription_snapshot(snapshot)
-    assert unsafe not in rendered and '<img' not in rendered
-    assert '&quot;&gt;&lt;img src=x onerror=alert(1)&gt;&amp;&#39;' in rendered
-    # Weekly-pace summaries are also untrusted labels.
-    agent['status'] = 'hot'
-    agent['status_source'] = 'weekly_pace'
-    agent['runtime']['headroom_blocked'] = False
-    agent['codexbar']['pace_summary'] = unsafe
-    pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
-    assert '<img' not in pressure and '&lt;img' in pressure
-
-
-def test_subscription_unaffected_lane_controls():
-    snapshot = _subscription_snapshot()
-    snapshot['agents'].update({
-        'cursor': {'status': 'cool', 'status_source': 'cursor_auto',
-                   'provider_windows': {'auto': {'used_pct': 23, 'remaining_pct': 77},
-                                        'api': {'used_pct': 40, 'remaining_pct': 60}}},
-        'claude': {'status': 'need_login', 'login_state': 'NEED_LOGIN'},
-        'kimi': {'status': 'unknown', 'probe_state': 'NEED_PROBE'},
-        'gemini': {'status': 'cool', 'codexbar': {'weekly_used_pct': 10, 'weekly_remaining_pct': 90}},
-        'glm': {'status': 'cool'},
-    })
-    snapshot['in_flight'].update(gemini=3)
-    snapshot['agents']['codex']['fleet_burn'] = {
-        'windows': {'5h': {'counts': {'total': 1}}, '7d': {'counts': {'total': 3}},
-                    '30d': {'counts': {'total': 10}}},
-    }
-    rendered = _render_subscription_snapshot(snapshot)
-    cursor = _subscription_cells(rendered, 'cursor')[1]
-    assert all(label in cursor for label in ['Cursor Models', 'Other Models', 'Grok Bot'])
-    assert '23% used · 77% left' in cursor and '40% used · 60% left' in cursor
-    claude = _subscription_cells(rendered, 'claude')[1]
-    assert 'NEED_LOGIN' in claude and 'subscription window' in claude
-    assert all(label not in claude for label in ['Cursor Models', 'Other Models', 'Grok Bot'])
-    assert 'NEED_PROBE' in _subscription_cells(rendered, 'kimi')[1]
-    agy = _subscription_cells(rendered, 'agy')
-    assert '10% used · 90% left' in agy[1] and agy[-1] == '3'
-    assert '>gemini</td>' not in rendered and '>glm</td>' not in rendered
-    assert '5h: 1 · 7d: 3 · 30d: 10' in _subscription_cells(rendered)[3]
-
-
-@pytest.mark.parametrize('status, spent, burn', [('near_cap', 95.6, 95.6), ('hot', 80, 80)])
-def test_subscription_review_ledger_pressure_names_source_and_spend(status, spent, burn):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['claude'] = {
-        'status': status, 'status_source': 'ledger_burn',
-        'spent_7d_usd': spent, 'weekly_cap_usd': 100, 'burn_pct_7d': burn,
-    }
-    pressure, quota, *_ = _subscription_cells(_render_subscription_snapshot(snapshot), 'claude')
-    assert 'ledger spend' in pressure
-    assert f'USD {spent:.2f} spent' in pressure and 'USD 100.00 weekly cap' in pressure
-    assert f'{burn:g}%' in pressure
-    assert 'unknown (ledger_burn)' not in pressure
-    assert 'measured provider window' not in pressure and 'see measured remaining quota' not in pressure
-    assert '% left' not in quota
-
-
-@pytest.mark.parametrize('source', ['weekly_pace', 'cursor_auto', 'ledger_burn', 'unrecognised', None])
-def test_subscription_review_near_cap_source_is_not_invented(source):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex'].update(status='near_cap', status_source=source)
-    pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
-    assert ('measured provider window' in pressure) == (source in {'weekly_pace', 'cursor_auto'})
-    assert ('see measured remaining quota' in pressure) == (source in {'weekly_pace', 'cursor_auto'})
-
-
-@pytest.mark.parametrize('source', ['weekly_pace', 'cursor_auto', 'ledger_burn'])
-def test_subscription_review_near_cap_without_quota_has_no_empty_cell_reference(source):
-    snapshot = {'agents': {'claude': {'status': 'near_cap', 'status_source': source, 'burn_pct_7d': 95.6}}}
-    pressure, quota, *_ = _subscription_cells(_render_subscription_snapshot(snapshot), 'claude')
-    assert 'see measured remaining quota' not in pressure
-    assert 'measured provider window' not in pressure
-    expected_reason = 'ledger spend' if source == 'ledger_burn' else 'measured remaining quota unavailable'
-    assert expected_reason in pressure
-    assert 'no window data' in quota
-
-
-def test_subscription_review_calm_status_with_runtime_pressure_warns():
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex'].update(status='cool')
-    snapshot['agents']['codex']['runtime'].update(headroom_blocked=True, headroom_reason='recent rate limits')
-    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert '<span class="pill hot">runtime pressure</span>' in pressure
-    assert 'runtime health' in pressure and 'recent rate limits' in pressure
-    assert '<span class="pill hot">runtime pressure</span>' in health
-    assert '>healthy</span>' not in health and 'recent rate limits' in health
-    assert '30% used · 70% left' in quota
-
-
-@pytest.mark.parametrize('timestamp', [1792649579, 1792649579000], ids=['seconds', 'milliseconds'])
-def test_subscription_review_epoch_reset_matches_iso(timestamp):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['codexbar']['weekly_resets_at'] = timestamp
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    snapshot['agents']['codex']['codexbar']['weekly_resets_at'] = '2026-10-22T06:12:59Z'
-    expected = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert quota == expected
-    assert '2026' in quota and '1970' not in quota
-
-
-@pytest.mark.parametrize('window_source', ['windows', 'provider_windows'])
-def test_subscription_review_empty_windows_are_omitted(window_source):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['codexbar'][window_source] = {
-        'primary': {'used_pct': None, 'remaining_pct': None},
-        'secondary': {'label': 'weekly', 'used_pct': 30, 'remaining_pct': 70},
-        'tertiary': {},
-    }
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert quota.count('class="sub-window"') == 1
-    assert 'weekly' in quota and '30% used · 70% left' in quota
-    assert 'no window data' not in quota
-
-
-@pytest.mark.parametrize('window_source', ['windows', 'provider_windows'])
-def test_subscription_review_all_empty_windows_have_one_named_marker(window_source):
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['codexbar'][window_source] = {
-        'primary': {'used_pct': None, 'remaining_pct': None},
-        'secondary': {}, 'tertiary': {},
-    }
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
-    assert 'no window data' in quota
-    assert quota.count('class="sub-window"') == 1
-    assert '% used' not in quota and '% left' not in quota
-
-
-def test_subscription_review_status_pill_escapes_label():
-    unsafe = '\"><img src=x onerror=alert(1)>&\''
-    snapshot = _subscription_snapshot()
-    snapshot['agents']['codex']['status'] = unsafe
-    pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
-    assert '<img' not in pressure
-    assert '>&quot;&gt;&lt;img src=x onerror=alert(1)&gt;&amp;&#39;</span>' in pressure
+    result = subscription_usage_mod.fetch_provider_usage("codex:b", timeout_s=3)
+    assert result["status"] == "healthy"
+    assert result["codex_account"] == "b-sub"
+    assert (result["primary_used_pct"], result["weekly_used_pct"]) == (12.5, 37.5)
+    assert (result["primary_remaining_pct"], result["weekly_remaining_pct"]) == (87.5, 62.5)
+    assert result["source"] == "synthetic"
+    assert capsys.readouterr() == ("", "")

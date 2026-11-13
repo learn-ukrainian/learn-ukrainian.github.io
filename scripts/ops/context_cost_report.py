@@ -38,7 +38,7 @@ Amendment 2 (normative; supersedes conflicting sentences):
 6. Tests: add (1) a Claude session with three assistant records sharing one `requestId` and usage counted once (calls, each token category), (2) a Codex session with a duplicated `token_count` snapshot (sum equals the final cumulative total; `token_total_mismatch` 0), (3) class 8 bytes using canonical-JSON attachment size with an `other`-type attachment adding no bytes, (4) a Codex session with `session_meta` base instructions yielding a cold-start number and one without any system field yielding unknown, (5) two identical `apply_patch` results not forming a poll. Update the docstring and the runbook verbatim.
 
 Frozen definitions (normative except where amended above):
-- Denominator: Codex `~/.codex/sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory.
+- Denominator: Codex account a (`sub`, harness `codex`) `sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). When the accounts loader binds `b-sub`, that home's `sessions/` tree is harness `codex:b` under the same rollout, window, and pairing rules; an unbound `b-sub` adds no root and no harness row. Both Codex homes come from the accounts loader, never from an assumed single directory or from ambient `CODEX_HOME`. Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory. Home paths are not printed.
 - Freeze: before any metric, write a mode-0600 manifest (under `batch_state/monitor-blocker-dedupe/`, never committed) that stores the full session path, harness, size, mtime, paired-tool-call count, and a 16-hex SHA-256 digest of the path; print the SHA-256 of the manifest file. `report` opens only paths listed in the manifest. If size or mtime differs from the manifest, skip that session as `stale_session`; never rescan. Stdout, the baseline JSON, error strings, tests and the runbook emit the 16-hex digest only, never the path or the raw session id.
 - Join rule: Claude `tool_use.id` pairs with `tool_result.tool_use_id`; Codex `call_id` on `custom_tool_call` (and `function_call`, handled as a sibling) pairs with the matching output record. An unpaired result counts toward class 4 bytes with shape `other` and toward no other class.
 - Hash and size basis: SHA-256 of the UTF-8 result body (canonical JSON with sorted keys when the body is an object); size is that body's byte length.
@@ -84,10 +84,18 @@ import re
 import shlex
 import sys
 from collections import Counter
+from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
+
+from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
+
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' checkout paths. Taken from this file's unresolved location, so neither a short
+# import spelling nor a symlinked directory changes it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 MAX_LINE = 8 * 1024 * 1024
 REASONS = frozenset(
@@ -220,9 +228,40 @@ def records(path: Path, counters: Counter):
             del chunk
 
 
+def _is_codex_harness(harness: str) -> bool:
+    """Account a is harness ``codex``; account b is ``codex:b``. Both are Codex transcripts."""
+    return harness in {"codex", "codex:b"}
+
+
+def default_roots(environ: Mapping[str, str] | None = None) -> dict[str, Path]:
+    """Session roots for a freeze that was not given an explicit map.
+
+    Account a is always the loader's ``sub`` home. Account b is included only
+    when ``b-sub`` resolves; a refusal omits that harness. Claude stays under
+    the same home's ``.claude/projects``.
+    """
+    env = os.environ if environ is None else environ
+    home = Path(env.get("HOME") or Path.home())
+    roots = {
+        "codex": codex_account_home("sub", env) / "sessions",
+        "claude": home / ".claude" / "projects",
+    }
+    bound = _bound_sessions("b-sub", env)
+    if bound is not None:
+        roots["codex:b"] = bound
+    return roots
+
+
+def _bound_sessions(label: str, env: Mapping[str, str]) -> Path | None:
+    try:
+        return codex_account_home(label, env) / "sessions"
+    except CodexAccountRefused:
+        return None
+
+
 def tools_in(record: dict, harness: str):
     """Emit call/result tuples without exposing any body outside the parser."""
-    if harness == "codex":
+    if _is_codex_harness(harness):
         if record.get("type") != "response_item":
             return
         p = obj(record.get("payload"))
@@ -403,7 +442,7 @@ class Session:
     """Streaming attribution state. No result body or raw identity is retained."""
 
     def __init__(self, harness: str):
-        self.harness = harness
+        self.harness = "codex" if _is_codex_harness(harness) else harness
         self.metrics: dict[str, dict] = {"unknown": fresh_metrics()}
         self.counters: Counter = Counter()
         self.model = "unknown"
@@ -819,21 +858,26 @@ def write_private(path: Path, payload: dict) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def freeze(manifest: Path, *, roots: dict[str, Path] | None = None, run_start: datetime | None = None) -> dict:
+def freeze(
+    manifest: Path,
+    *,
+    roots: dict[str, Path] | None = None,
+    run_start: datetime | None = None,
+    environ: dict[str, str] | None = None,
+) -> dict:
     start = run_start or datetime.now(UTC)
-    roots = (
-        roots
-        if roots is not None
-        else {"codex": Path.home() / ".codex/sessions", "claude": Path.home() / ".claude/projects"}
-    )
+    roots = roots if roots is not None else default_roots(environ)
     sessions, errors = [], []
     excluded: Counter = Counter()
     availability = {}
-    for harness in ("codex", "claude"):
+    harness_order = ["codex", "claude"]
+    if "codex:b" in roots:
+        harness_order.insert(1, "codex:b")
+    for harness in harness_order:
         root = roots.get(harness)
         count = 0
         if root is not None and root.is_dir():
-            pattern = "rollout-*.jsonl" if harness == "codex" else "*.jsonl"
+            pattern = "rollout-*.jsonl" if _is_codex_harness(harness) else "*.jsonl"
             # No other roots, worktrees, or home-directory scan.
             for path in sorted(root.rglob(pattern)):
                 if "subagents" in path.parts or path.match("agent-*.jsonl"):
@@ -906,7 +950,7 @@ def report(manifest: Path, *, tool_sha: str = "unknown") -> dict:
         if not isinstance(sid, str) or not re.fullmatch(r"[0-9a-f]{16}", sid):
             raise ValueError("invalid_manifest")
         path = Path(entry["path"])
-        if digest(str(path))[:16] != sid or entry["harness"] not in {"codex", "claude"}:
+        if digest(str(path))[:16] != sid or entry["harness"] not in {"codex", "codex:b", "claude"}:
             raise ValueError("invalid_manifest")
         try:
             st = path.stat()
@@ -921,11 +965,18 @@ def report(manifest: Path, *, tool_sha: str = "unknown") -> dict:
             sessions.append({"digest": sid, "harness": entry["harness"], **result})
         except OSError:
             skipped.append({"digest": sid, "reason": "io_error"})
+    availability = frozen.get("availability")
+    if not isinstance(availability, dict):
+        availability = {}
+    harness_order = ["codex", "claude", "grok", "agy", "gemini", "kimi", "cursor"]
+    if "codex:b" in availability or any(s.get("harness") == "codex:b" for s in sessions):
+        harness_order.insert(1, "codex:b")
+    documented = {"codex", "claude", "codex:b"}
     harnesses = {}
-    for harness in ("codex", "claude", "grok", "agy", "gemini", "kimi", "cursor"):
+    for harness in harness_order:
         group = [s for s in sessions if s["harness"] == harness]
         if not group:
-            reason = "no_documented_root" if harness not in {"codex", "claude"} else "no_eligible_session"
+            reason = "no_documented_root" if harness not in documented else "no_eligible_session"
             harnesses[harness] = {"status": "unavailable", "reason": reason}
             continue
         models = {}
@@ -960,9 +1011,9 @@ def build_parser() -> argparse.ArgumentParser:
         "Measure content-free context bytes and provider token categories from a frozen sample.\n"
         "Use for local baselines; never use to set thresholds or infer policy or cost."
     )
-    epilog = """Examples:
-  .venv/bin/python scripts/ops/context_cost_report.py freeze --manifest batch_state/monitor-blocker-dedupe/sample.json
-  .venv/bin/python scripts/ops/context_cost_report.py report --manifest batch_state/monitor-blocker-dedupe/sample.json --text
+    epilog = f"""Examples:
+  .venv/bin/python {_MACHINERY}/ops/context_cost_report.py freeze --manifest batch_state/monitor-blocker-dedupe/sample.json
+  .venv/bin/python {_MACHINERY}/ops/context_cost_report.py report --manifest batch_state/monitor-blocker-dedupe/sample.json --text
 Outputs: freeze writes a private mode-0600 manifest; report prints content-free JSON or a short table.
 Exit codes: 0 success (including explicit unknowns); 1 IO/manifest error; 2 invalid arguments.
 Related: docs/runbooks/context-cost-baseline.md; #10421."""

@@ -7,18 +7,30 @@ import subprocess
 from dataclasses import replace
 
 import pytest
-
-from scripts.common.git_context import sanitized_git_env
-from scripts.review.closeout_cli import main
-from scripts.review.reviewer_resolver import (
-    GROK_4_7_CURSOR_FALLBACK,
+from lu_machinery.common.git_context import sanitized_git_env
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount
+from lu_machinery.review.closeout_cli import main
+from lu_machinery.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
+    ReviewerCandidate,
     evaluate_candidate,
     is_ukrainian_content_change,
     resolve_reviewer,
 )
-from tests.claude_route_accounts import HOST_ACCOUNT
+
+# The host's built-in default account, as ``tests.claude_route_accounts.HOST_ACCOUNT`` names it,
+# built from the release's own account type: the release resolver refuses another type.
+HOST_ACCOUNT = ClaudeAccount("a", "builtin")
+GROK_CANDIDATE = ReviewerCandidate(
+    name="grok-4.7-cursor-fallback",
+    family="xai",
+    concrete_model="grok-4.7",
+    route="cursor",
+    transport="cursor",
+    invocation="",
+    quality_tier="frontier_practical",
+)
 
 
 @pytest.mark.parametrize(
@@ -44,7 +56,7 @@ def test_each_ukrainian_content_path_is_classified(path):
 
 @pytest.fixture(autouse=True)
 def isolated_live_snapshot(monkeypatch):
-    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+    monkeypatch.setattr("lu_machinery.fleet.credit_lane.read_routing_budget", lambda **_: None)
 
 
 def test_unrelated_paths_do_not_match_content_patterns():
@@ -56,9 +68,15 @@ def test_unrelated_paths_do_not_match_content_patterns():
 def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path, capsys):
     inputs = ResolverInputs(author_model="codex", owned_paths=("curriculum/a.mdx",), claude_account=HOST_ACCOUNT)
     assert is_ukrainian_content_change(inputs)
-    result = evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs)
+    assert "muse" not in REVIEW_CANDIDATES  # Machinery #384 retired Muse.
+    result = evaluate_candidate(GROK_CANDIDATE, inputs)
     assert result.status == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in result.reason
+    retired = evaluate_candidate(
+        replace(GROK_CANDIDATE, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"), inputs
+    )
+    assert retired.status == "excluded"
+    assert "retired" in retired.reason
 
     state_file = tmp_path / "review.json"
     assert (
@@ -79,11 +97,8 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(
         item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
     )
-    # #9769: both Grok transports stay excluded from Ukrainian content.
-    xai = [item for item in payload["trace"] if item["family"] == "xai"]
-    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
-    assert xai[0]["status"] == "excluded"
-    assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
+    assert not [item for item in payload["trace"] if item["family"] == "xai"]
+    assert "grok-4.7-cursor-fallback" in REVIEW_CANDIDATES
     assert "composer-2.5" not in {item["name"] for item in payload["trace"]}
 
 
@@ -120,24 +135,35 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     # DeepSeek is excluded from every review, not just language review.
     assert "deepseek-v4.1-flash" not in REVIEW_CANDIDATES
     for candidate in (
-        GROK_4_7_CURSOR_FALLBACK,
-        replace(GROK_4_7_CURSOR_FALLBACK, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"),
-        replace(GROK_4_7_CURSOR_FALLBACK, name="composer-2.5", concrete_model="composer-2.5", family="moonshot"),
+        GROK_CANDIDATE,
+        replace(GROK_CANDIDATE, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"),
+        replace(GROK_CANDIDATE, name="composer-2.5", concrete_model="composer-2.5", family="moonshot"),
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
-        assert ("Ukrainian-content language-lanes exclusion" if candidate is GROK_4_7_CURSOR_FALLBACK else "retired") in result.reason
+        if candidate is GROK_CANDIDATE:
+            assert "Ukrainian-content language-lanes exclusion" in result.reason
+        else:
+            assert "retired" in result.reason
+    candidate = GROK_CANDIDATE
+    result = evaluate_candidate(candidate, inputs)
+    assert result.status == "excluded"
+    assert "Ukrainian-content language-lanes exclusion" in result.reason
     pinned = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             changed_paths=("curriculum/A1/lesson.mdx",),
-            pinned_candidate="grok-4.7",
+            pinned_candidate="grok-4.7-cursor-fallback",
             pressure_override_reason="test pin",
             claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None
-    assert pinned.fail_closed_reason
+    assert "failed a hard eligibility gate" in pinned.fail_closed_reason
+    assert any(
+        row.name == "grok-4.7-cursor-fallback" and "Ukrainian-content language-lanes exclusion" in row.reason
+        for row in pinned.trace
+    )
     deepseek_pin = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -151,28 +177,26 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
 
 
 def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
-    """Gemini stays excluded from infra; Muse supplies a qualified low/medium selection."""
+    """Machinery #384: retired Muse cannot rescue unhealthy primary infra routes."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "muse": "healthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"anthropic": "unhealthy", "openai": "unhealthy", "muse": "healthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
-    assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "muse-wonder-full-1.0"
-    assert resolution.selected.route == "muse"
+    assert resolution.selected is None
     assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
-    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
+    assert not [item for item in resolution.trace if item.family == "xai"]
     dark = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
+            routing_snapshot={"anthropic": "unhealthy", "openai": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy", "muse": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert dark.selected is None
@@ -227,7 +251,7 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex", *repository]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"
-    assert any("Ukrainian-content language-lanes exclusion" in (item["reason"] or "") for item in payload["trace"])
+    assert all(item["family"] in {"anthropic", "openai", "google"} or item["status"] == "excluded" for item in payload["trace"])
 
     state["target_args"].pop("repo_root")
     state_file.write_text(json.dumps(state), encoding="utf-8")

@@ -487,7 +487,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.lexicon.curated_ohoiko_ulp_repromote --write-inventory --write-decisions\n"
             "  .venv/bin/python -m scripts.lexicon.curated_ohoiko_ulp_repromote --apply --report\n"
             "Outputs: inventory/decision YAML; --apply writes candidate/plan JSON; --write updates manifest/fingerprint.\n"
-            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or lu_machinery.tools.task_scratch run).\n"
             "Artifacts remain until the caller's scratch lifecycle ends; explicit output paths retain caller ownership.\n"
             "Exit codes: 0 success; 2 invalid arguments; other failures propagate. Related: #9702; source-inventory promotion."
         ),

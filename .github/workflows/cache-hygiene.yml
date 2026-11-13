@@ -2,7 +2,7 @@ name: Cache hygiene
 
 # Deletes dead Actions cache entries so the repository stays under GitHub's
 # 10 GB cache limit, whose LRU eviction otherwise drops live entries such as
-# main's uv cache (#9101). Rules live in scripts/ci/cache_hygiene.py:
+# main's uv cache (#9101). Rules live in lu_machinery.ci.cache_hygiene (the locked release):
 # on main keep the newest CodeQL TRAP entry per language and CodeQL version
 # plus every TRAP entry at an open pull request's base commit (the exact key
 # CodeQL restores for that PR), drop TRAP entries on other refs, and drop
@@ -18,8 +18,8 @@ name: Cache hygiene
 # `actions: write` on its own schedule. No workflow_run trigger: default
 # setup has no workflow to name, and zizmor flags workflow_run triggers.
 #
-# A pull request that changes this workflow or one of its sparse inputs checks
-# out the same paths and imports the script (runpy, run_name not_main). That
+# A pull request that changes this workflow or one of its inputs installs the
+# same locked release and imports the module without running it. That
 # job does not list or delete caches. Deletion stays on main. The import check
 # has its own concurrency group per pull request. Schedule and workflow_dispatch
 # stay on cache-hygiene, so neither can replace the other's pending run.
@@ -31,17 +31,8 @@ on:
   pull_request:
     paths:
       - .github/workflows/cache-hygiene.yml
-      - scripts/ci/cache_hygiene.py
-      - scripts/__init__.py
-      - scripts/common/__init__.py
-      - scripts/common/github_client.py
-      - scripts/common/github_usage.py
-      - scripts/common/http_status.py
-      - scripts/common/scratch.py
-      - scripts/opsec/__init__.py
-      - scripts/opsec/gh_snapshot.py
-      - scripts/opsec/prepublish.py
       - requirements-lock.txt
+      - requirements-machinery.lock
       - '.python-version'
 
 permissions: {}
@@ -69,27 +60,33 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            scripts/ci/cache_hygiene.py
-            scripts/__init__.py
-            scripts/common/__init__.py
-            scripts/common/github_client.py
-            scripts/common/github_usage.py
-            scripts/common/http_status.py
-            scripts/common/scratch.py
-            scripts/opsec/__init__.py
-            scripts/opsec/gh_snapshot.py
-            scripts/opsec/prepublish.py
             requirements-lock.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Delete dead cache entries
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-        run: python3 scripts/ci/cache_hygiene.py --repo "${REPO}" --lock-file requirements-lock.txt --apply
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: python3 -m lu_machinery.ci.cache_hygiene --repo "${REPO}" --lock-file requirements-lock.txt --lock-file requirements-machinery.lock --apply
 
   import-check:
     name: Import cache hygiene
@@ -104,21 +101,25 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
-            scripts/ci/cache_hygiene.py
-            scripts/__init__.py
-            scripts/common/__init__.py
-            scripts/common/github_client.py
-            scripts/common/github_usage.py
-            scripts/common/http_status.py
-            scripts/common/scratch.py
-            scripts/opsec/__init__.py
-            scripts/opsec/gh_snapshot.py
-            scripts/opsec/prepublish.py
             requirements-lock.txt
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Import cache hygiene without running it
-        run: python3 -c "import runpy; runpy.run_path('scripts/ci/cache_hygiene.py', run_name='not_main')"
+        run: python3 -I -c "import lu_machinery.ci.cache_hygiene"

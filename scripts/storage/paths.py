@@ -14,6 +14,16 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_ROOT = ROOT / "registry"
 DATA_ROOT = ROOT / "data"
@@ -96,7 +106,7 @@ def load_manifest(group: str, repo: Path = ROOT) -> dict:
         raise MissingArtifactError(
             group,
             "*",
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts manifest build --group {group} --pre <commit>",
+            f".venv/bin/python -m {_mod('storage', 'artifacts')} manifest build --group {group} --pre <commit>",
             "manifest missing",
         )
     return validate_manifest(json.loads(path.read_text(encoding="utf-8")), group, str(path))
@@ -238,7 +248,7 @@ def find_entry(group: str, rel: str, repo: Path = ROOT) -> dict:
         raise MissingArtifactError(
             group,
             rel,
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}",
+            f".venv/bin/python -m {_mod('storage', 'artifacts')} hydrate --group {group}",
             "no unique manifest entry",
         )
     return matches[0]
@@ -258,7 +268,7 @@ def hash_file(path: Path) -> str:
 
 
 def verify_file(path: Path, entry: dict, *, group: str, rel: str) -> None:
-    command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    command = f".venv/bin/python -m {_mod('storage', 'artifacts')} hydrate --group {group}"
     expected = checked_destination(path.parents[len(checked_rel(rel).parts)], f"data/{rel}", "data")
     if path != expected:
         raise ValueError(f"artifact path differs from {expected}: {path}")
@@ -283,7 +293,7 @@ def artifact_path(group: str, rel: str, *, repo: Path = ROOT) -> Path:
         raise MissingArtifactError(group, rel, "hydrate the artifact group", "no unique manifest entry")
     entry = matches[0]
     path = checked_destination(repo, f"data/{rel}", "data")
-    command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    command = f".venv/bin/python -m {_mod('storage', 'artifacts')} hydrate --group {group}"
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)
     stat = path.stat()

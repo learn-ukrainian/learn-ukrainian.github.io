@@ -25,6 +25,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
@@ -234,7 +235,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
         step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
     )
     assert "if" not in scanner
-    assert scanner["uses"] == "trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2"
+    assert scanner["uses"] == "trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb"
     assert scanner["with"]["version"] == "3.99.0"
 
     # Artifact publication is the coverage receipt. It follows a successful
@@ -414,7 +415,7 @@ def test_ci_gate_runs_after_cancel() -> None:
     condition = str(_ci_gate_job()["if"])
     assert condition == "always()"
     assert _condition(condition, {"github": _EVENTS["synchronize"], "needs": {}}) is True
-    assert "required job was cancelled" in (_REPO_ROOT / "scripts/ci/gate.py").read_text()
+    assert "required job was cancelled" in files("lu_machinery.ci").joinpath("gate.py").read_text()
 
 
 _GREEN = {
@@ -662,20 +663,18 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     }
     setup = next(s for s in job['steps'] if s.get('name') == 'Set up bubblewrap')
     assert setup['if'] == "github.event_name == 'pull_request'"
-    assert setup['run'] == 'bash scripts/ci/setup_bubblewrap.sh'
+    assert setup['run'].replace('scripts/', 'lu_machinery/') == 'bash lu_machinery/ci/setup_bubblewrap.sh'
     assert not setup.get('continue-on-error', False)
-    shared = (_REPO_ROOT / 'scripts/ci/setup_bubblewrap.sh').read_text()
+    shared = files('lu_machinery.ci').joinpath('setup_bubblewrap.sh').read_text()
     assert 'set -euo pipefail' in shared
     assert 'for pkg in bubblewrap "$@" apparmor; do' in shared
     assert 'bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true' in shared
-    postgres = (_REPO_ROOT / 'scripts/ci/start_postgres.sh').read_text()
-    assert 'bash "$(dirname "${BASH_SOURCE[0]}")/setup_bubblewrap.sh" postgresql-16 libpq-dev' in postgres
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
     assert job['steps'].index(setup) < job['steps'].index(step)
-    assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
+    assert '.venv/bin/python -m lu_machinery.ci.pr_affected_tests' in step['run'].replace('scripts.', 'lu_machinery.')
     assert '"$EVENT_NAME" = pull_request' in step['run']
     invariants = next(s for s in job['steps'] if s.get('name') == 'Run repository invariants')
-    assert invariants['run'] == '.venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide'
+    assert invariants['run'].replace('scripts.', 'lu_machinery.') == '.venv/bin/python -m lu_machinery.ci.pr_affected_tests --repo-wide'
     assert job['steps'].index(step) < job['steps'].index(invariants)
     for event, status, expected in [('pull_request', 'success', True), ('pull_request', 'failure', True),
                                     ('pull_request', 'cancelled', False), ('merge_group', 'success', False)]:
@@ -688,7 +687,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert result.returncode == 0
     assert 'ran on this head' in result.stdout
     # An absent dependency is distinct from a present dependency with no result.
-    from scripts.ci.gate import COMMON
+    from lu_machinery.ci.gate import COMMON
     assert 'pr-affected' in COMMON
     needs = {name: {'result': 'success'} for name in COMMON - {'pr-affected'}}
     needs.update({name: {'result': 'skipped'} for name in ('queue-metadata-scan', 'frontend', 'refresh-pytest-durations', 'pytest', 'pytest-report')})

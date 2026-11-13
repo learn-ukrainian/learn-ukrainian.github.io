@@ -58,7 +58,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -71,7 +71,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Sentinel grade for non-school reference material (Anna Ohoiko books,
 # Ukrainian Lessons Podcast lesson notes, etc.). School-textbook

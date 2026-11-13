@@ -190,7 +190,7 @@ def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
     fake.parent.mkdir()
     fake.write_text("#!/bin/sh\nprintf '2.0.0\\n'\n")
     fake.chmod(0o755)
-    monkeypatch.setenv("PATH", str(fake.parent))
+    monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
     workspace = bridge._agy_ask_scratch_cwd()
     assert workspace == tmp_path / "scratch/learn-ukrainian-bridge-asks/agy"
     assert not (workspace / ".git").exists()
@@ -213,7 +213,11 @@ def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
     adapter_module._agy_version.cache_clear()
     calls = []
 
+    real_run = subprocess.run
+
     def probe(argv, **kwargs):
+        if argv != [str(fake), "--version"]:
+            return real_run(argv, **kwargs)
         calls.append(argv)
         return subprocess.CompletedProcess(argv, 0, "2.0.0", "")
 
@@ -1141,10 +1145,9 @@ def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_n
         patch("agent_runtime.runner.subprocess.Popen", side_effect=_git_only) as mock_popen,
         pytest.raises(
             ValueError,
-            match=(re.escape(f"Agent {agent_name!r}: model {model!r}") + r" (is restricted to red-team code review|red-team exception expired)"
-                   if model == "gpt-6-astra" else re.escape(
-                       f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
-                   )),
+            match=re.escape(
+                f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
+            ),
         ),
     ):
         invoke(agent_name, "hello", mode=mode, cwd=tmp_path, model=model, tool_config=tool_config)
@@ -1161,7 +1164,8 @@ def test_invoke_admits_active_explicit_model_past_retirement_gate(tmp_path):
         patch("agent_runtime.runner.write_record"),
         pytest.raises(RateLimitedError, match="probe"),
     ):
-        invoke("cursor", "hello", mode="read-only", cwd=tmp_path, model="grok-4.7")
+        # An active catalog model (Grok is retired, GROK-CANCEL-1110) passes the retirement gate.
+        invoke("codex", "hello", mode="read-only", cwd=tmp_path, model="gpt-6.1-sol")
 
 
 def test_invoke_requires_cwd_for_write_mode():
@@ -1561,6 +1565,8 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     import json as _json
     from unittest.mock import MagicMock
 
+    from scripts.lib import rules_core
+
     # Set up fake Gemini state for the test project. The session file is
     # created by the mocked Popen below, after build_invocation snapshots
     # pre-existing files.
@@ -1603,12 +1609,16 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     mock_kill_tree = MagicMock()
 
     def _popen_after_session_start(*args, **kwargs):
+        prompt = kwargs["stdin"].read()
+        kwargs["stdin"].seek(0)
+        assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nwrite a module"
+        assert prompt.count(rules_core.BLOCK_OPEN) == 1
         (chats_dir / "session-latest.json").write_text(
             _json.dumps(
                 {
                     "sessionId": "x",
                     "messages": [
-                        {"type": "user", "content": [{"text": "write a module"}]},
+                        {"type": "user", "content": [{"text": prompt}]},
                         {"type": "gemini", "content": "### Skeleton\n\n## Section 1\n...full response..."},
                     ],
                 }
@@ -4134,7 +4144,7 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
 
 
-def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
+def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0", *, observations=False):
     """Native envelope shared only by the granted Muse protocol cases."""
     from scripts.agent_runtime.adapters.base import InvocationPlan
 
@@ -4149,6 +4159,7 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
         "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
     })
     records = []
+    tool_name = "read_file"
 
     def event(kind, payload, stream="session"):
         number = len(records) + 1
@@ -4163,16 +4174,30 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
 
     event("runtime.command.accepted", {"kind": "command_accepted", "command_kind": "turn.submit"})
     event("session.run.linked", {})
+    if observations:
+        event("run.model.configured", {"kind": "run_model_configured", "model_id": model, "provider_id": "meta"})
     event("session.workspace_branch.observed", {
         "record": {"command_id": command, "workspace_root": str(tmp_path)},
     })
     event("run.lifecycle.started", {})
     event("task.stream.linked", {"task_id": task, "task_stream": {"kind": "task", "id": task}})
     for stage in ("proposed", "accepted", "scheduled", "side_effect_intent", "started", "completed"):
+        task_event = {"task_id": task, "kind": stage}
+        if observations and stage == "side_effect_intent":
+            task_event.update(operation="tool:" + tool_name, idempotency_key="tool:call_fixture")
         event(f"task.lifecycle.{stage}", {
-            "task_id": task, "task_stream": {"kind": "task", "id": task},
-            "event": {"task_id": task, "kind": stage},
+            "task_id": task, "task_stream": {"kind": "task", "id": task}, "event": task_event,
         })
+        if observations and stage == "started":
+            for kind, detail in (("status", {"message": "reading"}),
+                                 ("output", {"chunk": "fixture file text", "final_result": True})):
+                event(f"task.lifecycle.{kind}", {
+                    "kind": "task_lifecycle", "task_id": task, "task_stream": {"kind": "task", "id": task},
+                    "event": {"task_id": task, "kind": kind, **detail},
+                })
+    if observations:
+        event("tool.result", {"kind": "tool_result", "call_id": "call_fixture", "text": "fixture file text",
+                              "correlation_facts": {"outcome": "success", "tool_name": tool_name}})
     event("run.usage", {
         "kind": "run_usage", "children_included": False, "failed_calls": 0, "cancelled_calls": 0,
         "calls": 1, "completed_calls": 1,
@@ -4185,16 +4210,45 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
 
 @pytest.mark.parametrize("model", ["muse-wonder-full-1.0", "muse-spark-1.3"])
 def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
-    """M01: completed answers retain bound usage without promoting backend identity."""
+    """M01: retain usage and reject forged or cross-session read observations."""
     import hashlib
 
     from scripts.agent_runtime.adapters.muse import MuseAdapter
 
-    plan, records = _muse_stream_fixture(tmp_path, model)
-    result = MuseAdapter().parse_response(
-        stdout="\n".join(json.dumps(record) for record in records),
+    # Legacy and Muse 1.4.15 observation shapes, qualified from the synthetic
+    # native exec capture. MSP notifications are not the exec contract.
+    for observations in (False, True):
+        plan, records = _muse_stream_fixture(tmp_path, model, observations=observations)
+        result = MuseAdapter().parse_response(
+            stdout="\n".join(json.dumps(record) for record in records),
+            stderr="", returncode=0, output_file=None, plan=plan,
+        )
+        assert result.ok is True
+        assert result.response == "READY\n"
+        assert result.tokens == 120
+    import copy
+
+    for kind, field, value in (
+        ("run.model.configured", "model_id", "foreign-model"),
+        ("task.lifecycle.status", "message", None),
+        ("task.lifecycle.output", "final_result", 1),
+        ("tool.result", "call_id", "foreign-call"),
+    ):
+        invalid = copy.deepcopy(records)
+        payload = next(r["payload"] for r in invalid if r["payload_type"] == kind)
+        (payload["event"] if kind.startswith("task.") else payload)[field] = value
+        rejected = MuseAdapter().parse_response(
+            stdout="\n".join(json.dumps(record) for record in invalid),
+            stderr="", returncode=0, output_file=None, plan=plan,
+        )
+        assert rejected.ok is False
+        assert rejected.tokens is None
+    unknown = copy.deepcopy(records)
+    unknown[2]["payload_type"] = "future.unknown"
+    assert MuseAdapter().parse_response(
+        stdout="\n".join(json.dumps(record) for record in unknown),
         stderr="", returncode=0, output_file=None, plan=plan,
-    )
+    ).ok is False
 
     assert result.ok is True
     assert result.response == "READY\n"
@@ -4426,6 +4480,7 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
 
     from agent_runtime import runner, usage
     from scripts.agent_runtime.adapters import muse
+    from scripts.lib import rules_core
     from scripts.secret_redactor import REDACTION
 
     # Delimit the assignment so opaque-token redaction of random tmp/xdist paths
@@ -4448,9 +4503,9 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     monkeypatch.setattr(usage, "_usage_dir", lambda: store)
 
     result = runner.invoke(
-        "muse", "fixture", mode="workspace-write", cwd=workspace, model="muse-wonder-full-1.0",
+        "muse", "fixture", mode="read-only", cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", effort="high", hard_timeout=45,
-        tool_config={"muse_worker": True, "muse_role": "implementation",
+        tool_config={"muse_worker": True, "muse_role": "investigation",
                      "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
                      "max_model_steps": 8, "max_tool_output_bytes": 8192},
     )
@@ -4471,21 +4526,32 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert plan.cwd == workspace
     assert records[2]["payload"]["record"]["workspace_root"] == str(workspace)
     assert durable["muse_run"]["total_tokens"] == 120
-    assert durable["muse_run"]["declared_mode"] == "workspace-write"
+    assert durable["muse_run"]["declared_mode"] == "read-only"
     assert len(probes) == 1
     assert plan.cmd[plan.cmd.index("--max-model-steps") + 1] == "8"
     assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
     assert plan.metadata["max_model_steps"] == 8
     assert plan.metadata["max_tool_output_bytes"] == 8192
-    assert Path(plan.cmd[-1]).read_text() == "fixture"
+    prompt = Path(plan.cmd[-1]).read_text()
+    assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nfixture"
+    assert prompt.count(rules_core.BLOCK_OPEN) == 1
 
 
 @pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])
 def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch, mode, role):
-    """M05: CLI changes must preserve explicit profiles and confinement without a version pin."""
+    """M05: preserve permissions and prevent symlink-package bootstrap or interpreter-anchor loss."""
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
+    if mode == "workspace-write":
+        with pytest.raises(ValueError, match=r"^muse_worker_mode_refused$"):
+            adapter.build_invocation(
+                prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
+                task_id="muse-interface", session_id=None, effort="high",
+                tool_config={"muse_worker": True, "muse_role": role},
+            )
+        assert probes == []
+        return
     plan = adapter.build_invocation(
         prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", session_id=None, effort="high",
@@ -4494,19 +4560,32 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     )
     assert len(probes) == 1
     assert plan.metadata["cli_version"] == "Muse Code 1.4.12 (1.4.12-R6668.1)"
-    assert plan.cmd[plan.cmd.index("--permission-profile") + 1] == (
-        ":read-only" if mode == "read-only" else ":ask-me"
-    )
-    assert ("--disable-write" in plan.cmd) is (mode == "read-only")
+    assert plan.cmd[plan.cmd.index("--permission-profile") + 1] == ":read-only"
+    assert "--disable-write" in plan.cmd
     assert plan.cmd[plan.cmd.index("--workspace") + 1] == str(workspace)
     assert plan.cmd[plan.cmd.index("--worktree") + 1] == "off"
     assert plan.cmd[plan.cmd.index("--contributor-mode") + 1] == "off"
-    assert plan.cmd[plan.cmd.index("--config") + 1] == (
-        'run.toolset=["read_file"]' if mode == "read-only"
-        else 'run.toolset=["read_file", "write_file", "edit_file"]'
-    )
+    assert plan.cmd[plan.cmd.index("--config") + 1] == 'run.toolset=["read_file"]'
     assert {"--disable-shell", "--disable-web-tools", "--disable-reminders",
             "--disable-request-user-input", "--no-foreign-personal-context"} <= set(plan.cmd)
     assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
     assert "GH_TOKEN" in plan.env_unsets
     assert Path(plan.cmd[-1]).read_text() == "fixture"
+    from scripts.agent_runtime.adapters import muse as muse_module
+
+    package = tmp_path / "machinery/lu_machinery"
+    (package / "agent_runtime/adapters").mkdir(parents=True)
+    for directory in (package, package / "agent_runtime", package / "agent_runtime/adapters"):
+        (directory / "__init__.py").write_text("")
+    (package / "agent_runtime/adapters/muse.py").write_text(
+        'import os\ndef sandbox_main(args):\n'
+        '    return 0 if os.environ.get("LEARN_UKRAINIAN_PYTHON") else 23\n'
+    )
+    product = tmp_path / "product"
+    product.mkdir()
+    (product / "scripts").symlink_to(package, target_is_directory=True)
+    monkeypatch.setattr(muse_module, "__file__", str(product / "scripts/agent_runtime/adapters/muse.py"))
+    bootstrap = muse_module.confined_muse_argv(["fixture"], workspace, mode, "symlink-bootstrap", scratch)
+    completed = subprocess.run(bootstrap, cwd=workspace, env={"PATH": os.defpath},
+                               capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 0, completed.stderr

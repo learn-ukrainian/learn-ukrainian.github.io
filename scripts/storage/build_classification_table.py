@@ -17,7 +17,17 @@ from pathlib import Path
 
 if __package__ in (None, ""):  # run as a file: make `scripts.*` importable
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.scratch import ensure_scratch_root
+
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
 
 # First match wins. Keep this as a single reviewable table: specific exceptions
 # precede their named audit groups. There is deliberately no catch-all rule.
@@ -858,8 +868,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base origin/main --output registry/artifacts/classification-v1.tsv\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base HEAD > /tmp/classification.tsv\n"
+            f"  .venv/bin/python -m {_mod('storage', 'build_classification_table')} --base origin/main --output registry/artifacts/classification-v1.tsv\n"
+            f"  .venv/bin/python -m {_mod('storage', 'build_classification_table')} --base HEAD > classification.tsv\n"
             "\nOutputs: TSV to stdout or --output; with --output also writes the sibling .meta.json.\n"
             "Counts and byte totals go to stderr. No network use.\n"
             "Exit codes: 0 = table generated; 1 = unmatched path or Git/IO error; 2 = invalid arguments.\n"

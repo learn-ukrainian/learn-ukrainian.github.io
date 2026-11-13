@@ -16,6 +16,7 @@ import urllib.request
 from pathlib import Path
 
 import pytest
+from lu_machinery.api import release_snapshot as installed_release_snapshot
 
 from scripts.api import release_snapshot
 from scripts.common.git_context import sanitized_git_env
@@ -133,8 +134,8 @@ def _read_json(url: str, *, timeout: float = 0.5) -> dict:
         return json.loads(response.read().decode("utf-8"))
 
 
-def _read_text(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=0.5) as response:
+def _read_text(url: str, *, timeout: float = 0.5) -> str:
+    with urllib.request.urlopen(url, timeout=timeout) as response:
         return response.read().decode("utf-8")
 
 
@@ -451,7 +452,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
 ) -> None:
     """Boot a snapshot of this worktree and exercise each live-data route class."""
     repo_root, sha = real_release_live_checkout
-    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+    release_dir, _ = installed_release_snapshot.build_release(repo_root, sha)
     # Write after snapshot publication to prove these routes read live data,
     # while keeping discovery independent of the growing repository corpus.
     doc_path = "docs/research/release-live-data.md"
@@ -461,7 +462,16 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
     (repo_root / html_path).write_text("<title>Live release data</title>\n", encoding="utf-8")
     port = _free_port()
     log_path = tmp_path / "release-api.log"
-    environment = sanitized_git_env() | {
+    # As lu_machinery.api.launchd_supervisor starts it: the snapshot is the product, the installed
+    # release serves the app, and the shared-state primary is the live checkout the snapshot was
+    # built from. This test process's own roots name neither.
+    environment = {
+        key: value
+        for key, value in sanitized_git_env().items()
+        if key not in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")
+    } | {
+        "LU_PRODUCT_ROOT": str(release_dir),
+        "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(repo_root),
         "LEARN_UK_REPO_ROOT": str(repo_root),
         "GIT_DIR": _run_git(repo_root, "rev-parse", "--absolute-git-dir"),
         "GIT_WORK_TREE": str(repo_root),
@@ -474,7 +484,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
                 str(VENV_PYTHON),
                 "-m",
                 "uvicorn",
-                "scripts.api.main:app",
+                "lu_machinery.api.main:app",
                 "--host",
                 "127.0.0.1",
                 "--port",
@@ -518,7 +528,7 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
             # small discovery walk: the payload below lists only the two files
             # written above. The socket timeout is a hang guard.
             artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
-            docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}")
+            docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}", timeout=10)
         finally:
             process.terminate()
             try:

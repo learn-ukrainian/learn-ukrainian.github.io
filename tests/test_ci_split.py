@@ -579,7 +579,7 @@ def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     ):
         assert flag in script
     assert "-n auto" not in script
-    assert "scripts.ci.pg_skip_guard" in script
+    assert "lu_machinery.ci.pg_skip_guard" in script
     assert (
         'export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}'
         + pytest_report.COLLECTED_SUFFIX
@@ -611,7 +611,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     steps = report["steps"]
     assert any(step.get("with", {}).get("pattern") == "pytest-junit-shard-*" for step in steps)
-    report_step = next(step for step in steps if "scripts.ci.pytest_report" in str(step.get("run", "")))
+    report_step = next(step for step in steps if "lu_machinery.ci.pytest_report" in str(step.get("run", "")))
     # The audit record identifies the exact candidate and run.
     assert report_step["env"] == {"PR_NUMBER": "${{ github.event.pull_request.number }}"}
     assert any(step.get("with", {}).get("name") == "ci-tested-tree" for step in steps)
@@ -647,7 +647,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     assert steps.index(checkout) < steps.index(setup) < steps.index(metadata) < steps.index(scan)
     assert setup["with"] == {"python-version-file": ".python-version"}
     record = next(step for step in steps if step.get("name") == "Record original queue candidate")
-    assert "scripts.ci.gate --record-queue" in record["run"]
+    assert "lu_machinery.ci.gate --record-queue" in record["run"]
     upload = next(step for step in steps if step.get("with", {}).get("name") == "ci-queue-candidate")
     assert upload["with"]["if-no-files-found"] == "error"
     assert steps.index(record) < steps.index(upload) < steps.index(metadata)
@@ -655,11 +655,11 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
         "persist-credentials": False,
         "fetch-depth": 0,
         "filter": "blob:none",
-        "sparse-checkout": "scripts/\n.python-version\n",
+        "sparse-checkout": "requirements-machinery.lock\n.python-version\n",
         "sparse-checkout-cone-mode": False,
     }
     assert metadata["id"] == "metadata"
-    assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]
+    assert "python3 -m lu_machinery.ci.metadata_commit --commit HEAD" in metadata["run"]
     full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
     assert scan["uses"] == full_scan["uses"]
     assert scan["with"] == {
@@ -992,6 +992,56 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     assert affected.CAP_SECONDS == 600
 
 
+def test_pr_machinery_lock_only_diff_runs_consumers_within_fill_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Defect class: a dependency lock bump selects no external-package importers."""
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    repo = tmp_path / 'lock'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    sources = {
+        'tests/test_guard.py': b'def test_guard(): pass\n',
+        'tests/test_consumer.py': b'from lu_machinery.ci import gate\n',
+        'tests/test_heavy.py': b'import lu_machinery.ci.gate\n',
+        'tests/test_unrelated.py': b'import json\n',
+    }
+    for name, source in sources.items():
+        (repo / name).write_bytes(source)
+    (repo / affected.GUARDS).write_text('tests/test_guard.py\n')
+    (repo / affected.DURATIONS).write_text(json.dumps({
+        'tests/test_guard.py': 5, 'tests/test_consumer.py': 10,
+        'tests/test_heavy.py': 400, 'tests/test_unrelated.py': 1,
+    }))
+    lock = repo / 'requirements-machinery.lock'
+    lock.write_text('old\n')
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    lock.write_text('new\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'lock only')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(components, 'python_sources', lambda: sources)
+    monkeypatch.setattr(components, 'tracked_paths', lambda: list(sources))
+    monkeypatch.setattr(affected, 'files', lambda _: [
+        'lu_machinery/__init__.py', 'lu_machinery/ci/__init__.py', 'lu_machinery/ci/gate.py',
+    ])
+    selected = affected.plan(base, candidate)
+    assert selected['changed_test_files'] == []
+    assert selected['importing_test_files'] == ['tests/test_consumer.py', 'tests/test_heavy.py']
+    assert selected['run_files'] == ['tests/test_consumer.py', 'tests/test_guard.py']
+    assert selected['deferred_files'] == ['tests/test_heavy.py']
+    assert selected['estimate_seconds'] == 75
+    assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
+    assert selected['timeout_seconds'] == 480
+
+
 def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypatch: pytest.MonkeyPatch) -> None:
     """Defect class: a conftest's import edges are invisible to the selector.
 
@@ -1020,6 +1070,173 @@ def test_pr_conftest_import_edges_select_the_tests_under_its_directory(monkeypat
     assert direct == ['tests/sub/test_direct.py']
     assert shared == ['tests/sub/deep/test_b.py', 'tests/sub/test_a.py']
     assert affected.importing_tests({'scripts/unrelated.py'}, set(), 'unused', entries) == ([], [])
+
+
+def _count_parses(monkeypatch: pytest.MonkeyPatch) -> list[bytes]:
+    import ast
+
+    parsed: list[bytes] = []
+    real = ast.parse
+    monkeypatch.setattr(ast, 'parse', lambda source, *args, **kwargs: parsed.append(source) or real(source, *args, **kwargs))
+    return parsed
+
+
+def test_pr_import_scan_parses_only_files_that_can_select_a_test(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: the planner's import scan parses every source file (#12817).
+
+    Only the edges of a test file or a conftest can select a test, so parsing the rest only
+    costs time: the real tree has twice as many other files. Those files stay import targets,
+    and the scan gives each file it parses exactly the edges of a whole-tree scan.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    sources = {
+        'scripts/x.py': b'X = 1\n',
+        'scripts/y.py': b'from scripts import x\n',
+        'tests/test_a.py': b'from scripts import y\n',
+        'tests/sub/conftest.py': b'from scripts import x\n',
+        'tests/sub/test_b.py': b'def test_b():\n    pass\n',
+    }
+    monkeypatch.setattr(components, 'python_sources', lambda: sources)
+    monkeypatch.setattr(components, 'tracked_paths', lambda: list(sources))
+    entries = {name: '100644' for name in sources if name.startswith('tests/')}
+    parsed = _count_parses(monkeypatch)
+    assert affected.importing_tests({'scripts/x.py'}, set(), 'unused', entries) == ([], ['tests/sub/test_b.py'])
+    assert affected.importing_tests({'scripts/y.py'}, set(), 'unused', entries) == (['tests/test_a.py'], [])
+    selecting = {'tests/test_a.py', 'tests/sub/conftest.py', 'tests/sub/test_b.py'}
+    assert sorted(parsed) == sorted(sources[name] for name in selecting)
+    assert affected.selecting(sources) == selecting
+    whole = components.scan_imports(sources, set(sources))
+    part = components.scan_imports(sources, set(sources), importers=selecting)
+    assert ('scripts/y.py', 'scripts/x.py') in whole['file_edges']
+    assert part['file_edges'] == [edge for edge in whole['file_edges'] if edge[0] in selecting]
+    assert part['directory_edges'] == [edge for edge in whole['directory_edges'] if edge[0] in selecting]
+
+
+def test_pr_candidate_tree_parses_each_test_file_once_across_plans(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: the planner parses the same test file again for every selection (#12817).
+
+    `importing_tests` and `text_reading_tests` read one candidate tree, and every plan asks
+    both, so the real tree's test files were parsed twice per plan. Each is now parsed once,
+    by the import scan, which records its string literals; a literal written with an escape
+    still counts. An edited tree is scanned afresh, so a new literal is never missed.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    sources = {
+        'scripts/x.py': b'X = 1\n',
+        'tests/test_imports.py': b'from scripts import x\n# parsed once\n',
+        'tests/test_reads.py': b"PATH = 'scripts\\x2fx.py'\n# parsed once\n",
+        'tests/test_other.py': b"PATH = 'scripts/y.py'\n# parsed once\n",
+        'tests/conftest.py': b'# parsed once\n',
+    }
+    monkeypatch.setattr(components, 'python_sources', lambda: dict(sources))
+    monkeypatch.setattr(components, 'tracked_paths', lambda: sorted(sources))
+    entries = {name: '100644' for name in sources if affected.TEST.fullmatch(name)}
+    parsed = _count_parses(monkeypatch)
+    for _ in range(2):
+        assert affected.importing_tests({'scripts/x.py'}, set(), 'unused', entries) == (['tests/test_imports.py'], [])
+        assert affected.text_reading_tests({'scripts/x.py'}, entries) == ['tests/test_reads.py']
+    assert sorted(parsed) == sorted(source for name, source in sources.items() if name.startswith('tests/'))
+    sources['tests/test_other.py'] = b"PATH = 'scripts/x.py'\n# parsed once, edited\n"
+    parsed.clear()
+    assert affected.text_reading_tests({'scripts/x.py'}, entries) == ['tests/test_other.py', 'tests/test_reads.py']
+    assert sorted(parsed) == sorted(source for name, source in sources.items() if name.startswith('tests/'))
+
+
+def test_pr_text_reading_test_not_selected_for_a_changed_source_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: a text-reading test is not selected for a changed source file (#12789).
+
+    `tests/test_readonly_harness_readers.py` parses `_inbox_watch.py` through a computed path, so the
+    import scan never links them: PR #12777 passed PR CI and its merge group failed on that test. With
+    the #12777 source paths as the diff, the real scanner and planner run the test, and every test the
+    plan runs without text readers still runs. A sibling in the same package does not select it.
+    """
+    from scripts.ci import components
+    from scripts.ci import pr_affected_tests as affected
+
+    # Built from parts: a whole-path literal here would make this test a text reader of each file.
+    changed_12777 = [f'scripts/{folder}/{name}.py' for folder, names in {
+        'agent_runtime/adapters': 'acpx claude gemini grok_build',
+        'agent_runtime': 'agent_identity agy_hook_config attempt_forwarder failover grok_reviewer_permissions '
+                         'kimi_admission lane_probe registry review_mcp runner secret_print_hook tool_config '
+                         'trail_isolation',
+        'ai_agent_bridge': '__main__ _acp_compat _ask_lifecycle _channels _channels_cli _cli _config '
+                           '_dispatch_wrappers _gemini _inbox _inbox_watch _job_host_forward _prompts _ui_codex '
+                           'routing_guard',
+        'ai_llm': 'agent_runtime_call claude_call codex_call fallback',
+        'dispatcher': 'agy_sandbox cli codex_meter git primary',
+    }.items() for name in names.split()] + ['scripts/lint/mypy_baseline' + '.json']
+    reader = 'tests/test_readonly_harness_readers.py'
+    real_git = affected.git
+    diff: list[str] = []
+
+    def git(*args: str) -> bytes:
+        if args[0] == 'diff':
+            return b''.join(name.encode() + b'\0' for name in ([] if '--diff-filter=D' in args else diff))
+        return real_git(*args)
+
+    monkeypatch.chdir(components.ROOT)
+    monkeypatch.setattr(affected, 'git', git)
+    diff[:] = changed_12777
+    selected = affected.plan('HEAD', 'HEAD')
+    assert reader in selected['run_files']
+    assert reader in selected['text_reading_test_files']
+    with monkeypatch.context() as without_readers:
+        without_readers.setattr(affected, 'text_reading_tests', lambda *_: [])
+        baseline = affected.plan('HEAD', 'HEAD')
+    assert set(baseline['run_files']) <= set(selected['run_files'])
+
+    diff[:] = ['scripts/ai_agent_bridge/_monitor_cache.py']
+    unrelated = affected.plan('HEAD', 'HEAD')
+    assert reader not in unrelated['text_reading_test_files'] + unrelated['importing_test_files']
+    assert reader not in unrelated['run_files']
+
+
+def test_text_references_selects_escaped_and_non_utf8_literals() -> None:
+    """An escaped literal and a non-UTF-8 coding declaration still name a changed path.
+
+    A byte search for the raw path skips both, so the file never reaches the parser
+    and PR CI misses the test. A docstring, an f-string piece, a comment, a longer
+    string and a conftest still do not count, and a package ``__init__.py`` still
+    matches by path only.
+    """
+    from scripts.ci import pr_affected_tests as affected
+
+    path = 'pkg/' + 'escaped_target.py'
+    module = 'pkg.' + 'escaped_target'
+    reencoded = 'pkg/' + 'caf\u00e9.py'
+    init_path = 'pkg/' + '__init__.py'
+    sources = {
+        'tests/test_escaped.py': b"PATH = 'pkg\\x2fescaped_target.py'\n",
+        'tests/test_module.py': b"NAME = 'pkg\\x2eescaped_target'\n",
+        'tests/test_reencoded.py': "# coding: latin-1\nPATH = 'pkg/caf\xe9.py'\n".encode('latin-1'),
+        'tests/test_plain.py': b"PATH = 'pkg/escaped_target.py'\n",
+        'tests/test_prose.py': b"'pkg/escaped_target.py'\n",
+        'tests/test_fstring.py': b"PATH = f'pkg/escaped_target.py'\n",
+        'tests/test_comment.py': b'# pkg/escaped_target.py\nx = 1\n',
+        'tests/test_longer.py': b"PATH = 'pkg/escaped_target.py.extra'\n",
+        'tests/conftest.py': b"PATH = 'pkg/escaped_target.py'\n",
+        'tests/test_init_name.py': b"NAME = 'pkg'\n",
+        'tests/test_init_path.py': b"PATH = 'pkg/__init__.py'\n",
+        'tests/test_broken.py': b"PATH = 'pkg/escaped_target.py'\n(",
+    }
+    # The raw bytes are not the UTF-8 of the decoded literal. That is the miss.
+    assert path.encode() not in sources['tests/test_escaped.py']
+    assert module.encode() not in sources['tests/test_module.py']
+    assert reencoded.encode() not in sources['tests/test_reencoded.py']
+    found = affected.text_references(sources, {path, init_path})
+    assert found == {
+        'tests/test_escaped.py',
+        'tests/test_module.py',
+        'tests/test_plain.py',
+        'tests/test_init_path.py',
+    }
+    assert affected.text_references(
+        {'tests/test_reencoded.py': sources['tests/test_reencoded.py']}, {reencoded},
+    ) == {'tests/test_reencoded.py'}
 
 
 def test_pr_provider_module_change_selects_the_registry_driven_dispatcher_test(

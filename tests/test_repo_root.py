@@ -75,6 +75,10 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
     script = "from scripts.ai_agent_bridge._config import DB_PATH, PID_DIR; print(f'{DB_PATH};{PID_DIR}')"
     env = os.environ.copy()
     env.pop("AB_DB_PATH", None)  # Exercise the default path, not the suite's isolated override.
+    # The layout is another checkout: this test process's own product and primary roots
+    # (scripts/__init__.py) are not its configuration.
+    for name in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
+        env.pop(name, None)
     proc = subprocess.run(
         [sys.executable, "-c", script],
         cwd=str(worktree),
@@ -110,7 +114,7 @@ def _link_worktree(primary: Path, worktree: Path) -> None:
 def test_project_interpreter_rejects_another_checkouts_venv(tmp_path, monkeypatch):
     """An explicit root must not inherit a different checkout's interpreter.
 
-    ``scripts.api.batch_router`` passes ``live_repo_root`` to
+    ``scripts.project_api.batch_router`` passes ``live_repo_root`` to
     ``project_interpreter`` (the dispatcher scan command). A missing checkout
     used to accept any running ``sys.executable`` ending in ``.venv/bin/python``,
     so ``project_interpreter(Path("/no-such-checkout"))`` returned this repo's

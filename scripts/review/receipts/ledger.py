@@ -31,9 +31,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.sources_read_only import SERVER_PATH, sources_tool_sets
-from scripts.common.safe_open import UnsafeEntryError, safe_open_below
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, _tool_sets, sources_tool_sets
+from lu_machinery.common.safe_open import UnsafeEntryError, safe_open_below
+
 from scripts.curriculum.evidence.lock import atomic_write
+
+SERVER_PATH = Path(__file__).resolve().parents[3] / SERVER_RELATIVE_PATH
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
@@ -92,7 +95,7 @@ def review_tools(review_access: str = "isolated", *, server_path: Path | None = 
             raise ValueError("review_launched_sources_server_mismatch")
         # Launch validation must not reuse declarations cached before a file
         # changed or became unreadable. Parse the exact path afresh.
-        readers = frozenset(sources_tool_sets.__wrapped__(server_path)[0])
+        readers = frozenset(_tool_sets.__wrapped__(server_path)[0])
         if not readers >= FULL_REVIEW_TOOLS:
             raise ValueError("review_contract_contains_non_read_only_sources_tool")
         return FULL_REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS

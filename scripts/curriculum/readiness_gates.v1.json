@@ -1,0 +1,6 @@
+{
+  "schema": "learn-ukrainian.readiness-gates",
+  "schema_version": 1,
+  "origin": "scripts/curriculum/readiness_gates.v1.json",
+  "module": "scripts.curriculum.readiness_gates"
+}

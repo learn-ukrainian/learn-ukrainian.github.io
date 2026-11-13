@@ -5,6 +5,7 @@ import contextlib
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import signal
 import subprocess
@@ -57,8 +58,10 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
 @pytest.mark.parametrize(
     "second", ["kept", "changed", "invalid", "ambiguous", "quoted", "meaning", "unconfident"]
 )
-def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
-    """Case 3: a Cursor reply with no recognised VERDICT line gets one format correction.
+def test_schemaless_reviewer_missing_verdict_gets_one_correction_turn(sandbox, second):
+    """Case 3: a reply from a reviewer that cannot bind a schema, with no recognised VERDICT line, gets one
+    format correction. Muse is that reviewer now; Cursor, which had this path, has no approved pin while
+    Grok is retired (GROK-CANCEL-1110).
 
     The second reply is accepted only when it is valid findings JSON and keeps the
     first reply's decision. A changed or still-invalid second reply fails closed,
@@ -99,33 +102,38 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
         first = "The change is sound.\n" + findings
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir()
-    count = binary_dir / "launches"
-    count.write_text("0")
-    prompts = binary_dir / "prompts"
-    executable = binary_dir / "cursor-agent"
-    executable.write_text(
-        f"#!{sys.executable}\n"
-        "import json, pathlib, sys\n"
-        f"count = pathlib.Path({str(count)!r})\n"
-        f"prompts = pathlib.Path({str(prompts)!r})\n"
-        "n = int(count.read_text()) + 1\n"
-        "count.write_text(str(n))\n"
-        "prompt = sys.stdin.read()\n"
-        "prompts.write_text(prompts.read_text() + '\\n---\\n' + prompt if prompts.exists() else prompt)\n"
-        f"reply = {first!r} if n == 1 else {reply!r}\n"
-        "events = [\n"
-        '    {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},\n'
-        '    {"type": "assistant", "message": {"content": [{"type": "text", "text": reply}]}},\n'
-        '    {"type": "result", "subtype": "success", "result": reply},\n'
-        "]\n"
-        "print('\\n'.join(json.dumps(event) for event in events))\n"
-    )
+    version = "0.0.0-R1"
+    (binary_dir / ".muse-version").write_text(version)
+    executable = binary_dir / "muse"
+    executable.write_text('#!/bin/sh\nexec "$(dirname "$0")/muse-bin-0.0.0-R1" "$@"\n')
+    native = binary_dir / f"muse-bin-{version}"
+    first_event = json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": first}})
+    correction_event = json.dumps({"payload_type": "run.terminal.completed", "payload": {"text": reply}})
+    # The real sandbox permits no host counter writes. The dispatcher already
+    # captures stderr across launches, so use it to observe the native calls.
+    native.write_text(r'''#!/bin/sh
+set -eu
+while [ "$#" -gt 0 ]; do
+    if [ "$1" = "--prompt-file" ]; then
+        shift
+        prompt=$(cat "$1")
+        break
+    fi
+    shift
+done
+printf 'TEST_PROMPT_BEGIN\n%s\nTEST_PROMPT_END\n' "$prompt" >&2
+case "$prompt" in
+''' + f"*'Keep the same verdict'*) printf '%s\\n' {shlex.quote(correction_event)} ;;\n"
+        + f"*) printf '%s\\n' {shlex.quote(first_event)} ;;\nesac\n")
     executable.chmod(0o755)
+    native.chmod(0o755)
+    home = sandbox.repo.parent / "synthetic-home"
+    home.mkdir()
+    sandbox.env.update(HOME=str(home), XDG_CONFIG_HOME=str(home / ".config"))
     schema_dir = sandbox.repo / "schemas"
     schema_dir.mkdir(exist_ok=True)
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     head = run_git(
         sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
         "authored change\n\nX-Agent: claude/claude-opus-5-5",
@@ -133,16 +141,22 @@ def test_cursor_missing_verdict_gets_one_correction_turn(sandbox, second):
     run_git(sandbox.repo, "branch", "review-source", head)
     run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
-        "dispatch", "--agent", "cursor", "--model", "grok-4.7-high",
+        "dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0",
         "--prompt", "Review the change", "--mode", "read-only",
         "--branch", "review-source", "--require-review-verdict", "--review-profile", "code",
         "--review-author-model", "claude-opus-5-5",
     )
     record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if second == "kept" else 1)
     launches = 1 if second in {"ambiguous", "quoted"} else 2
-    assert int(count.read_text()) == launches
+    trace = (sandbox.tasks / "logs" / f"{record['task_id']}.stderr.log").read_text()
+    frames = trace.split("TEST_PROMPT_BEGIN\n")[1:]
+    assert len(frames) == launches
+    assert all("\nTEST_PROMPT_END\n" in frame for frame in frames)
+    prompts = [frame.split("\nTEST_PROMPT_END\n", 1)[0] for frame in frames]
     if launches == 2:
-        correction = prompts.read_text().split("\n---\n", 1)[1]
+        correction = prompts[1]
+        assert correction.startswith('<rules-core seat="core"')
+        assert "</rules-core>" in correction
         assert "Keep the same verdict" in correction
         if second == "unconfident":
             assert "REQUEST_CHANGES" in correction
@@ -412,6 +426,66 @@ def _provider_environment(pid, sandbox):
     entries = Path(f"/proc/{pid}/environ").read_bytes().split(b"\0")
     environment = dict(entry.decode().split("=", 1) for entry in entries if b"=" in entry)
     return {**environment, test_slots.DIR_ENV: sandbox.env[test_slots.DIR_ENV]}
+
+
+def test_a_slot_holding_preload_starts_no_thread_pool_that_keeps_the_review_hold(tmp_path):
+    """Defect: the build-engine preload starts an OpenBLAS pool that keeps review flocks past SIGKILL.
+
+    ``scripts.build.fresh.manifest`` reaches numpy. Its threads share the supervisor's file table, so once the
+    leader is a zombie ``_identity`` reports it gone while the flocks are still held. The preload a slot-holding
+    supervisor runs is ``load_post_start_code(False)``: a bound review attempt is the only run that passes True,
+    and that run does not take review slots.
+    """
+    from scripts.common import test_slots
+
+    pool = tmp_path / "pool"
+    ready = tmp_path / "ready"
+    code = """
+import json, os, sys, time
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+os.environ["LU_TEST_SLOTS"] = "on"
+os.environ["LU_TEST_SLOTS_DIR"] = sys.argv[2]
+os.environ["LU_TEST_SLOTS_COUNT"] = "4"
+os.environ["LU_TEST_SLOTS_WAIT_S"] = "5"
+os.environ.pop("CI", None)
+os.environ.pop("LU_TEST_SLOTS_HOLDER", None)
+os.environ.pop("LU_TEST_SLOTS_SESSION", None)
+from scripts.dispatcher.worker import load_post_start_code
+load_post_start_code(False)
+threads = len(list(Path("/proc/self/task").iterdir()))
+from scripts.common import test_slots
+test_slots.acquire(2, kind="review", task_id="preload-threads")
+Path(sys.argv[3]).write_text(json.dumps({"threads": threads}))
+time.sleep(30)
+"""
+    err = tmp_path / "child.err"
+    with err.open("w") as stream:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(SOURCE), str(pool), str(ready)],
+            stdout=subprocess.DEVNULL, stderr=stream,
+        )
+    try:
+        deadline = time.monotonic() + 30
+        while not ready.exists():
+            if proc.poll() is not None:
+                raise AssertionError(err.read_text() or f"preload child exited {proc.returncode}")
+            assert time.monotonic() < deadline, "the preload child did not take its slots"
+            time.sleep(0.02)
+        assert json.loads(ready.read_text())["threads"] == 1
+        os.kill(proc.pid, signal.SIGKILL)
+        proc.wait(timeout=5)
+        status = test_slots.status({
+            test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(pool),
+            test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5",
+        })
+        assert status["error"] is None, status
+        assert status["slots_in_use"] == 0
+        assert status["slots_draining"] == 0
+    finally:
+        if proc.poll() is None:
+            os.kill(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
 
 
 def test_a_killed_supervisors_review_hold_ends_with_it_and_its_provider_holds_no_pool_descriptor(sandbox, tmp_path):

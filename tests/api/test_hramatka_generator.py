@@ -6,7 +6,8 @@ from collections.abc import Mapping
 from typing import Any
 from urllib.error import HTTPError
 
-from scripts.api.hramatka_generator import (
+from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER
+from scripts.project_api.hramatka_generator import (
     MAX_PROVIDER_ATTEMPTS,
     PRIMARY_MODEL,
     SECONDARY_MODEL,
@@ -15,7 +16,6 @@ from scripts.api.hramatka_generator import (
     generate_qualified_lesson,
     is_transient_provider_failure,
 )
-from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER
 
 
 def _passing_evidence() -> dict[str, Any]:

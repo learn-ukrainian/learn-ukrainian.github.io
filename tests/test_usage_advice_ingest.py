@@ -21,8 +21,8 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import requests
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest.usage_advice_ingest import (
     EXIT_HTTP_403_FORBIDDEN,
     EXIT_HTTP_SERVER_ERROR,
@@ -207,7 +207,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         session_user = MagicMock(spec=requests.Session)
         r302 = MagicMock(spec=requests.Response)
         r302.status_code = 302
-        r302.headers = {"Location": "https://user:pass@example.com/secret"}
+        r302.headers = {"Location": "https://user:pass@example.com/secret"}  # trufflehog:ignore
         session_user.get.return_value = r302
 
         with self.assertRaises(UsageAdviceIngestError) as ctx:

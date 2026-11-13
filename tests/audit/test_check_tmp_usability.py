@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.audit import check_tmp_usability as ctu
+from scripts.hygiene import check_tmp_usability as ctu
 
 
 def test_probe_tmp_usability_healthy(tmp_path: Path) -> None:

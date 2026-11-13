@@ -38,6 +38,7 @@ def codex_text(pct: int, *lines: str, ready: bool = True) -> str:
     return "\n".join([*lines, "Ready" if ready else "Working (3s)", f"Context {pct}% used"])
 
 
+UNKNOWN_BOUND_MINUTES = getattr(cg, "UNKNOWN_SCOPE_ALERT_SECONDS", 600) / 60 + 1
 SCOPE = "lu-driver-claude-epics-05592eda-1b2c-4d3e-8f4a-5b6c7d8e9f01.scope"
 CGROUP = f"0::/user.slice/user-1000.slice/user@1000.service/lu.slice/lu-driver.slice/{SCOPE}/tools\n"
 
@@ -94,7 +95,9 @@ class ShellTmux(FakeTmux):
             pid = argv[1].split("/")[2]
             for pane in self.sessions.values():
                 if pane.agent and pane.agent_pid == pid:
-                    return self._ok(CGROUP if pane.scope == SCOPE else "0::/user.slice/user-1000.slice/session-3.scope\n")
+                    return self._ok(
+                        CGROUP if pane.scope == SCOPE else "0::/user.slice/user-1000.slice/session-3.scope\n"
+                    )
             return self._fail("No such file or directory")
         if argv[0] == "systemctl":
             self.calls.append(list(argv))
@@ -150,6 +153,7 @@ class Harness:
         self.moment = START
         self.logs: list[str] = []
         self.sent: list[tuple[str, str]] = []
+        self.kinds: list[tuple[str, str, str]] = []  # (recipient, key, kind) per send
         self.posted: dict[str, str] = {}  # sender -> created_at of a HANDOFF-DONE post
         self.state: dict = {}
         self.proc_root = tmp_path / "proc"
@@ -168,11 +172,18 @@ class Harness:
                 monotonic=self.fake.monotonic,
             ),
             log=self.logs.append,
-            send=lambda recipient, body, key: self.sent.append((recipient, body)),
+            send=self.send,
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
             now=lambda: self.moment,
         )
         self.guard.tmux.proc_root = self.proc_root
+
+    def send(self, recipient: str, body: str, key: str, kind: str) -> None:
+        # Only the handoff request to a lane's own seat is supervisory; every alert is ordinary (#12837).
+        lane_seats = {lane.sender for lane in self.guard.registry.lanes}
+        assert kind == (cg.HANDOFF_REQUEST if recipient in lane_seats else cg.ALERT), (recipient, kind, key)
+        self.kinds.append((recipient, key, kind))
+        self.sent.append((recipient, body))
 
     def tick(self, *only: str) -> None:
         self.guard.run(self.state, list(only))
@@ -217,6 +228,12 @@ def test_every_lane_is_resolved_by_session_name_never_by_pane_id(tmp_path: Path)
         text = (REPO / path).read_text(encoding="utf-8")
         assert re.search(r"%\d", text) is None, path
         assert '"pane"' not in text, path
+    lanes = json.loads((REPO / "scripts/config/driver_lanes.json").read_text(encoding="utf-8"))
+    for lane in lanes["lanes"]:
+        if lane["kind"] == "codex":
+            assert lane["account"] == "sub"
+        else:
+            assert "account" not in lane
 
 
 def test_missing_session_is_logged_and_skipped(tmp_path: Path) -> None:
@@ -689,11 +706,162 @@ def test_the_wait_is_bounded_by_the_clock_including_slow_telemetry(tmp_path: Pat
     h = stuck_exit_harness(tmp_path, exit_after_stop=None)
     h.fake.call_cost = 5
     alerted_at: list[float] = []
-    h.guard.send = lambda recipient, body, key: alerted_at.append(h.fake.mono)
+    h.guard.send = lambda recipient, body, key, kind: alerted_at.append(h.fake.mono)
     h.tick("cto")
     assert respawns(h) == [] and len(alerted_at) == 1
     polling_pass = 5 * 5 + 1  # the snapshot (3 reads), the scope state and the process table, plus the sleep
     assert alerted_at[0] - h.fake.stopped_at[0] <= cg.PREDECESSOR_EXIT_SECONDS + polling_pass + 5
+
+
+def exits_by_itself(tmp_path: Path) -> Harness:
+    """A cto lane with HANDOFF-DONE posted whose agent then exits on its own, before the next tick (#12569)."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")  # watch -> handoff
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    h.pane("cto").agent = None
+    h.advance(5)
+    return h
+
+
+def test_an_ordinary_exit_whose_scope_outlives_the_agent_is_relaunched_only_after_the_scope_exits(
+    tmp_path: Path,
+) -> None:
+    """AC-01: background tasks keep the scope active after the agent leaves; the successor would refuse (rc=3)."""
+    state_path = tmp_path / "state.json"
+    saved_before_exit: list[bool] = []
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.guard.checkpoint = lambda state: (
+        cg.save_state(state_path, state),
+        saved_before_exit.append("/exit" not in h.fake.typed("cto")),
+    )[0]
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    # The scope was saved with the agent's pid and start time before /exit was typed.
+    assert saved_before_exit == [True]
+    assert cg.load_state(state_path)["cto"]["exit_evidence"] == {"agent": h.state["cto"]["agent_id"], "scope": SCOPE}
+
+    h.pane("cto").agent = None  # the agent exits; its background tasks keep the scope active
+    h.fake.live_scopes.add(SCOPE)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and h.state["cto"]["phase"] == "handoff"
+    assert systemctl(h, "stop") == []  # the agent left by itself: its leftover tasks are held for, not killed
+    assert len(cto_alerts(h)) == 1 and "relaunch held" in cto_alerts(h)[0] and SCOPE in cto_alerts(h)[0]
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
+    h.fake.live_scopes.clear()
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1 and h.fake.respawned_over_live_agent == [False]
+    assert h.state["cto"]["phase"] == "watch"
+
+    # An agent in no driver scope still has to be gone: a process outside the pane keeps its pid and start time.
+    detached = tmp_path / "detached"
+    detached.mkdir()
+    h = Harness(detached, **{"cto": Pane(text=claude_text(70), agent="claude", scope=None)})
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    h.pane("cto").agent = None
+    outlives = [True]
+    run = h.guard.tmux.run
+
+    def ps_with_detached_agent(argv: list[str]) -> subprocess.CompletedProcess:
+        result = run(argv)
+        if "ps" in argv[:3] and outlives[0]:
+            return subprocess.CompletedProcess(argv, 0, result.stdout + "\n200 1 Fri Oct 16 11:00:00 2026 claude", "")
+        return result
+
+    h.guard.tmux.run = ps_with_detached_agent
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "is still running" in cto_alerts(h)[0]
+    outlives[0] = False
+    h.advance(5)
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+
+
+def test_a_failed_scope_lookup_holds_the_ordinary_relaunch_and_alerts_after_the_bound(tmp_path: Path) -> None:
+    """AC-02: an agent whose scope was never read, or a scope whose state cannot be read, is unknown, not gone."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.fake.override["cat"] = subprocess.CompletedProcess([], 1, "", "No such file or directory")
+    h.tick("cto")
+    h.advance(5)
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto")
+    h.tick("cto")
+    assert "/exit" not in h.fake.typed("cto") and cto_alerts(h) == []  # no evidence on disk: no exit, held quietly
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")  # still alive and done, still unreadable: the hold alerts instead of stalling in silence
+    assert "/exit" not in h.fake.typed("cto")
+    assert len(cto_alerts(h)) == 1 and "could not be recorded" in cto_alerts(h)[0]
+    h.pane("cto").agent = None  # it exits on its own
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1
+
+    for index, output in enumerate(("", "0::\n", "0::not-a-path\n")):  # successful reads that name no usable cgroup
+        third = tmp_path / f"third-{index}"
+        third.mkdir()
+        h = Harness(third, **{"cto": claude_pane(70)})
+        h.fake.override["cat"] = subprocess.CompletedProcess([], 0, output, "")
+        h.tick("cto")
+        h.posted["claude-epics"] = cg.iso(h.moment)
+        h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "Move to background and exit", "Exit and stop tasks")
+        h.advance(5)
+        h.tick("cto")  # an exit dialog is on screen, but nothing says which scope this agent holds
+        assert "exit_evidence" not in h.state["cto"] and "1" not in h.fake.typed("cto")
+        h.advance(UNKNOWN_BOUND_MINUTES)
+        h.tick("cto")
+        assert "1" not in h.fake.typed("cto") and len(cto_alerts(h)) == 1 and "exit dialog" in cto_alerts(h)[0]
+
+    second = tmp_path / "second"
+    second.mkdir()
+    h = exits_by_itself(second)
+    run = h.guard.tmux.run
+    h.guard.tmux.run = lambda argv: (
+        subprocess.CompletedProcess(argv, 3, "unknown\n", "")
+        if argv[:3] == ["systemctl", "--user", "is-active"]
+        else run(argv)
+    )
+    h.tick("cto")
+    assert respawns(h) == [] and cto_alerts(h) == []
+    h.advance(UNKNOWN_BOUND_MINUTES)
+    h.tick("cto")
+    assert respawns(h) == [] and len(cto_alerts(h)) == 1 and "scope state unknown" in cto_alerts(h)[0]
+
+
+def test_a_reused_pid_never_lends_its_scope_to_the_ordinary_relaunch(tmp_path: Path) -> None:
+    """AC-03: the agent exits as its cgroup is read and another process, in no driver scope, takes its pid."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+
+    def reuse_pid() -> None:
+        pane = h.pane("cto")
+        pane.agent_start, pane.scope = "Fri Oct 16 12:20:00 2026", None  # same pid, a different process
+
+    before_call(h.guard.tmux, "cat", reuse_pid)
+    h.tick("cto")
+    assert "exit_evidence" not in h.state["cto"]  # nothing was attributed to the exited agent
+    assert any("pid was reused" in line for line in h.logs)
+    assert "/exit" not in h.fake.typed("cto")
+
+    # The original agent is gone but its tasks keep the scope active. Had the other process's "no scope"
+    # been attributed to it, the relaunch would now pass blind.
+    pane = h.pane("cto")
+    pane.agent = None
+    h.fake.live_scopes.add(SCOPE)
+    h.posted["claude-epics"] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick("cto")
+    assert respawns(h) == []
 
 
 def relaunched(tmp_path: Path) -> Harness:
@@ -823,7 +991,9 @@ def test_unreadable_agent_cgroup_is_unknown() -> None:
         tmux_with({"cat": ok("", 1)}).agent_scope("200@x")
 
 
-@pytest.mark.parametrize(("state", "active"), [("active", True), ("deactivating", True), ("inactive", False), ("failed", False)])
+@pytest.mark.parametrize(
+    ("state", "active"), [("active", True), ("deactivating", True), ("inactive", False), ("failed", False)]
+)
 def test_scope_state_reads_systemctl_is_active(state: str, active: bool) -> None:
     assert tmux_with({"is-active": ok(state + "\n", 0 if active else 3)}).scope_active(SCOPE) is active
 
@@ -1007,13 +1177,105 @@ def test_fleet_sender_uses_the_data_file_identity_and_never_raises(monkeypatch: 
                 raise RuntimeError("store unavailable")
             return type("Msg", (), {"message_id": "m-1"})()
 
+        def publish_message(self, **kwargs):
+            calls.append(kwargs)
+            if kwargs["recipients"] == ("down",):
+                raise RuntimeError("store unavailable")
+            return type("Msg", (), {"message_id": "m-2"})()
+
     monkeypatch.setattr(authority, "AuthorityService", FakeAuthority)
     logs: list[str] = []
     send = cg.fleet_sender(load_registry().guard_sender, logs.append)
-    send("epics", "body", "key-1")
-    send("down", "body", "key-2")
-    assert calls[0]["sender"] == load_registry().guard_sender and calls[0]["idempotency_key"] == "key-1"
-    assert logs == ["send epics ok m-1", "send down failed RuntimeError: store unavailable"]
+    send("claude-infra", "body", "key-1", cg.HANDOFF_REQUEST)
+    send("down", "body", "key-2", cg.HANDOFF_REQUEST)
+    send("epics", "body", "key-3", cg.ALERT)
+    send("down", "body", "key-4", cg.ALERT)
+    send("epics", "body", "key-5", "status")
+    assert all(call["sender"] == load_registry().guard_sender for call in calls)
+    assert [call["idempotency_key"] for call in calls] == ["key-1", "key-2", "key-3", "key-4"]
+    assert logs == [
+        "send claude-infra ok m-1",
+        "send down failed RuntimeError: store unavailable",
+        "send epics ok m-2",
+        "send down failed RuntimeError: store unavailable",
+        "send epics failed ValueError: unknown guard message kind 'status'",
+    ]
+
+
+@pytest.fixture
+def temp_plane(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A temporary Fleet Comms authority store; fleet_sender resolves it through FLEET_COMMS_ROOT."""
+    root = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    monkeypatch.setenv("AB_DB_PATH", str(tmp_path / "unused-legacy.db"))
+    return root
+
+
+def guard_sends(root: Path) -> dict[str, str]:
+    """Send one handoff and the two alert recipients through fleet_sender; recipient -> message id."""
+    logs: list[str] = []
+    send = cg.fleet_sender(load_registry().guard_sender, logs.append)
+    send("claude-infra", "HANDOFF NOW body", "claude-handoff-infra-1", cg.HANDOFF_REQUEST)
+    send("claude-cto", "CTO-ALERT relaunch held", "relaunch-held-infra-1", cg.ALERT)
+    send("epics", "CTO-ALERT handoff incomplete", "handoff-alert-infra-1", cg.ALERT)
+    assert all(" ok message_" in line for line in logs), logs
+    return {line.split()[1]: line.split()[3] for line in logs}
+
+
+def test_fleet_sender_stores_the_handoff_as_supervisory_and_alerts_as_ordinary_messages(temp_plane: Path) -> None:
+    """Defect class (#12837): an alert stored as a supervisory request, which no agent seat may acknowledge."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    sent = guard_sends(temp_plane)
+    keys = {
+        "claude-infra": "claude-handoff-infra-1",
+        "claude-cto": "relaunch-held-infra-1",
+        "epics": "handoff-alert-infra-1",
+    }
+    with AuthorityService(root=temp_plane) as service:
+        stored = {recipient: service.get_message(message_id) for recipient, message_id in sent.items()}
+        keyed = dict(
+            service.store.connection.execute(
+                "SELECT idempotency_key, subject_id FROM authority_idempotency WHERE namespace = 'message'"
+            ).fetchall()
+        )
+    assert {recipient: message.kind for recipient, message in stored.items()} == {
+        "claude-infra": "supervisory-request",
+        "claude-cto": "request",
+        "epics": "request",
+    }
+    for recipient, message in stored.items():
+        assert (message.sender, message.recipient, message.correlation_id) == (
+            load_registry().guard_sender,
+            recipient,
+            keys[recipient],
+        )
+        assert keyed[keys[recipient]] == message.message_id
+
+
+def test_an_alert_delivery_is_claimed_and_acked_by_an_agent_seat(
+    temp_plane: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Defect class (#12837): the CTO's ack of a guard alert refused with supervisory_consumption_required."""
+    from scripts.fleet_comms.cli import EXIT_ERROR, EXIT_OK, main
+
+    sent = guard_sends(temp_plane)
+    capsys.readouterr()
+
+    def deliveries(*args: str, expected: int) -> dict:
+        assert main(["deliveries", *args]) == expected
+        payload: dict = json.loads(capsys.readouterr().out)
+        return payload
+
+    def claim_and_ack(recipient: str, expected: int) -> dict:
+        lease = deliveries("claim", "--recipient", recipient, "--worker-id", recipient, expected=EXIT_OK)
+        assert lease["message_id"] == sent[recipient]
+        fence = ["--worker-id", recipient, "--fence-token", str(lease["fence_token"])]
+        return deliveries("ack", lease["delivery_id"], *fence, expected=expected)
+
+    assert claim_and_ack("claude-cto", EXIT_OK)["state"] == "acknowledged"
+    assert claim_and_ack("epics", EXIT_OK)["state"] == "acknowledged"
+    assert claim_and_ack("claude-infra", EXIT_ERROR)["error"] == "supervisory_consumption_required"
 
 
 def test_stuck_handoff_alerts_epics_once_without_killing(tmp_path: Path) -> None:

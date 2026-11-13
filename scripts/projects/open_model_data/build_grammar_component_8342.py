@@ -35,8 +35,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage import paths as storage_paths
+from lu_machinery.storage.artifacts import write_artifact_set
+
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     AUTHORITY_PROFILES,
     CONTROL_PROFILE,
@@ -53,8 +56,6 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     format_query_template,
     resolve_specific_linguistic_citation,
 )
-from scripts.storage import paths as storage_paths
-from scripts.storage.artifacts import write_artifact_set
 
 _COMPONENT_GROUP = "open_model_component_payload"
 _GRAMMAR_REL = "projects/open_model_data/components/grammar"
@@ -130,7 +131,7 @@ def resolve_data_path(rel_path: str) -> Path:
     if local_p.exists() and (local_p.is_dir() or local_p.stat().st_size > 0):
         return local_p
     try:
-        from scripts.guardrails.worktree_containment import resolve_main_root
+        from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
         main_root = resolve_main_root(PROJECT_ROOT)
         main_p = main_root / rel_path
@@ -5388,8 +5389,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342 --output-dir /tmp/grammar-export\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342 --output-dir /tmp/grammar-export\n"
             "Outputs: managed A shards and K companions as one transaction, or an explicit external directory.\n"
             "Exit codes: 0 = success; nonzero = input, validation, or publication failure.\n"
             "Related: issues #8342 and #8809."

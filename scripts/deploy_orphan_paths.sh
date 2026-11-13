@@ -54,20 +54,7 @@ ORPHAN_PATHS_CODEX="settings.local.json retired-skills $ORPHAN_PATHS_RUNTIME"
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
 # the shared rsync/delete pass, then verify them with the overlay drift check.
 # hooks.json and config.toml are intentionally here, not in ORPHAN_PATHS_CODEX.
-CODEX_OVERLAY_PATHS="config.toml hooks.json memory"
-
-# --- gemini_extensions → .gemini ---
-# tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
-#        local working state, NOT a deploy artifact. Preserve across rsync --delete.
-# config.yaml — repository-level Gemini Code Assist for GitHub configuration.
-#        It disables GitHub PR reviews while preserving local Gemini CLI tooling.
-ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/ $ORPHAN_PATHS_RUNTIME"
-
-# Shared skills overlay into .gemini/skills. Gemini-specific skills remain
-# sourced from gemini_extensions/skills; shared skill names are overlaid after
-# that sync. The glob is a preflight/diff exclusion only and MUST NOT be passed
-# to the gemini_extensions rsync --exclude list.
-GEMINI_SHARED_SKILL_OVERLAY_PATHS="skills/*"
+CODEX_OVERLAY_PATHS="config.toml hooks.json"
 
 # --- deploy-owned: Claude autoload excludes (checker mirrors for .claude drift) ---
 # Claude Code auto-loads every unscoped file in `.claude/rules/` into the system

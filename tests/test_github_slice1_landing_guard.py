@@ -586,8 +586,8 @@ def test_lookalike_entry_points_never_exempt(tmp_path):
     """Same function names, other files: neither the name nor a path suffix is the vetting."""
     wire = Wire()
     client = store(tmp_path, wire, [("core", 0, OPEN)])
-    for path, name in [*gh._LANDING_ENTRY_POINTS, ("scripts/publish/github.py", "publish")]:
-        for filename in (str(tmp_path / path), path, "<string>"):
+    for path, name in [*gh._LANDING_ENTRY_POINTS, gh._PUBLISHER_ENTRY_POINT]:
+        for filename in (str(tmp_path / path), str(tmp_path / "scripts" / path), path, "<string>"):
             namespace = {"call": _pr_view, "client": client}
             exec(compile(f"def {name}():\n    return call(client)\n", filename, "exec"), namespace)
             refused(namespace[name](), "core_below_landing_reserve")
@@ -627,13 +627,13 @@ def test_caller_tags_flags_headers_and_environment_never_exempt(tmp_path, monkey
 
 def test_frozen_landing_entry_points_exist_and_nothing_else_declares_them():
     assert gh._LANDING_ENTRY_POINTS == {
-        ("scripts/orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
-        ("scripts/fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
-        ("scripts/fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
-        ("scripts/fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
-        ("scripts/review/record_cf_verdict.py", "record"): "verdict-publication",
+        ("orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
+        ("fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
+        ("fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
+        ("fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
+        ("review/record_cf_verdict.py", "record"): "verdict-publication",
     }
-    assert gh._PUBLISHER_ENTRY_POINT == ("scripts/publish/github.py", "publish")
+    assert gh._PUBLISHER_ENTRY_POINT == ("publish/github.py", "publish")
     assert {
         "pr-merge",
         "pr-update-branch",
@@ -644,7 +644,7 @@ def test_frozen_landing_entry_points_exist_and_nothing_else_declares_them():
         "pr-disarm",
     } == gh._PUBLISHER_LANDING_VERBS
     for path, name in [*gh._LANDING_ENTRY_POINTS, gh._PUBLISHER_ENTRY_POINT]:
-        tree = ast.parse((ROOT / path).read_text())
+        tree = ast.parse((ROOT / "scripts" / path).read_text())
         assert name in {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}, (path, name)
     # Only this module opens a landing operation, and only at these vetted sites.
     openers = []

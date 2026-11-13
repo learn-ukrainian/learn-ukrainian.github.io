@@ -24,7 +24,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.api.resilience import connect_sqlite
+from lu_machinery.api.resilience import connect_sqlite
+
 from scripts.audit import llm_qg_store, llm_reviewer, qg_schema, qg_workflow
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.curriculum_qg_harness import CHECKER_VERSION

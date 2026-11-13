@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { chromium, type Browser, type Page } from '@playwright/test';
+import type { Browser, Page } from '@playwright/test';
+import { launchHardenedChromium } from '../../e2e/support/hardened-browser.mjs';
 import {
   expectCurrentAtlasArticle,
   foldUkrainian,
@@ -7,13 +8,14 @@ import {
   inspectHeteronymTab,
 } from '../helpers/c37-search-proof';
 
-const origin = 'http://c37.test';
+// Fulfilled by the page route below; an allowlisted origin, so nothing depends on route order.
+const origin = 'http://localhost';
 let browser: Browser;
 let page: Page;
 let html = '';
 
 beforeAll(async () => {
-  browser = await chromium.launch({ headless: true });
+  browser = await launchHardenedChromium();
   page = await browser.newPage();
   await page.route(`${origin}/**`, route => route.fulfill({
     status: 200,

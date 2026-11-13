@@ -9,10 +9,12 @@ import re
 import subprocess
 from pathlib import Path
 
+from scripts.ci._location import module_name
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import rules_dir
 from scripts.review.target_resolution import is_test_path
 
-POLICY = Path(__file__).resolve().parents[2] / "agents_extensions/shared/rules/workflow.md"
+POLICY = rules_dir() / "workflow.md"
 SHA = re.compile(r"[0-9a-fA-F]{40}")
 
 
@@ -118,12 +120,12 @@ def report(args: argparse.Namespace) -> dict:
         "policy_source": "agents_extensions/shared/rules/workflow.md#merge-policy",
     }
     try:
-        # Read the ordered trial's numbers, rather than maintaining another policy source.
+        # Read the size signal's number, rather than maintaining another policy source. Files are data only.
         policy = POLICY.read_text(encoding="utf-8").split("**Small batches (", 1)[1].split("**Revert first", 1)[0]
-        limits = re.search(r"above about (\d+) changed non-test lines or about (\d+) files", policy)
+        limits = re.search(r"About (\d+)\s+changed\s+lines,\s+excluding\s+tests", policy)
         if limits is None:
-            raise ValueError("small-batches policy limits unavailable")
-        result["limits"] = {"changed_non_test_lines": int(limits[1]), "eligible_files": int(limits[2])}
+            raise ValueError("small-batches size signal unavailable")
+        result["limits"] = {"changed_non_test_lines": int(limits[1])}
         base, head = args.base, args.head
         if args.event_path:
             event = json.loads(args.event_path.read_text(encoding="utf-8"))
@@ -143,7 +145,7 @@ def report(args: argparse.Namespace) -> dict:
             result["diagnostics"].append("eligible binary files have unknown changed-line counts")
         else:
             result["status"] = "measured"
-        if result["eligible_files"] > result["limits"]["eligible_files"] or (
+        if (
             result["changed_non_test_lines"] is not None
             and result["changed_non_test_lines"] > result["limits"]["changed_non_test_lines"]
         ):
@@ -168,7 +170,7 @@ def emit(result: dict, summary: Path | None) -> None:
     text = ["### Small-batch size warning", "", f"Status: {result['status']}", "", numbers]
     if limits:
         text += [
-            f"Trial limits: {limits['changed_non_test_lines']} changed non-test lines / {limits['eligible_files']} eligible files."
+            f"Size signal: {limits['changed_non_test_lines']} changed non-test lines (eligible files are data only)."
         ]
     text += [
         f"Size justification present: {display(result['justification_present'])} (data only; does not suppress warnings).",
@@ -200,7 +202,7 @@ def emit(result: dict, summary: Path | None) -> None:
     print(json.dumps(result, sort_keys=True, ensure_ascii=True))
     if result["over_limit"]:
         print(
-            f"::warning title=Small-batch size::{numbers}. Above the trial limit; split the PR or record Size justification: <reason> in the PR body."
+            f"::warning title=Small-batch size::{numbers}. Above the size signal; split the PR or record Size justification: <reason> in the PR body."
         )
     if result["status"] == "unknown" or result["diagnostics"]:
         print(
@@ -210,12 +212,12 @@ def emit(result: dict, summary: Path | None) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Report PR size using the existing small-batches trial.\n"
+        description="Report PR size against the small-batches size signal.\n"
         "Use for advisory PR reporting, never as a required CI gate.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.ci.pr_size_warning --event-path event.json
-  .venv/bin/python -m scripts.ci.pr_size_warning --base <40-hex-sha> --head <40-hex-sha>
+        epilog=f"""Examples:
+  .venv/bin/python -m {module_name(__spec__, __file__)} --event-path event.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} --base <40-hex-sha> --head <40-hex-sha>
 Outputs: JSON and advisory annotations on stdout; appends to --summary/GITHUB_STEP_SUMMARY.
 Exit codes: 0 for measured or unknown size; 2 for invalid CLI usage. No Git writes or network calls.
 Related: #11470; agents_extensions/shared/rules/workflow.md, Small batches.

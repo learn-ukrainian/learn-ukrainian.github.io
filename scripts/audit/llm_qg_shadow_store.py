@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from scripts.api.config import PROJECT_ROOT
-from scripts.api.resilience import connect_sqlite
+from lu_machinery.api.config import PROJECT_ROOT
+from lu_machinery.api.resilience import connect_sqlite
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_shadow.db"
 SCHEMA_VERSION = "llm_qg_shadow_store.v1"

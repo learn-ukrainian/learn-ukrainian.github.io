@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import re
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -87,31 +89,9 @@ ADVISOR_OUTPUT_FIELDS = [
 ]
 ADVISORY_ROLES_KEY = "advisory_roles"
 ADVISORY_ROLE_KEYS = frozenset({"effort", "fence", "output_fields"})
-REVIEW_BUDGET_ELEVATION_ROLE = "review_budget_elevation"
 BOUNDED_ADVISORY_ENVELOPE_ROLE = "bounded_advisory_envelope"
 # Role -> (fence label, exact typed-object fields, active holder families) the catalog entry must declare.
 ADVISORY_ROLE_SHAPES = {
-    REVIEW_BUDGET_ELEVATION_ROLE: (
-        "budget-elevation",
-        [
-            "decision",
-            "repository",
-            "pr",
-            "lineage_id",
-            "scope_paths",
-            "finding_id",
-            "blocker_class",
-            "issuer",
-            "issuer_model",
-            "issued_at",
-            "withheld_capability",
-            "p2_fix_verification",
-            "owner_request",
-            "admission_exclusion_attestation",
-            "request_sha256",
-        ],
-        2,
-    ),
     # The envelope has one advisor, the bounded_advisor seat's model, not a non-author pair.
     BOUNDED_ADVISORY_ENVELOPE_ROLE: ("advisory-envelope", ADVISOR_OUTPUT_FIELDS, 1),
 }
@@ -129,9 +109,9 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 )
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
-# Fixed v1-only compatibility policy; role-bearing catalogs derive these pins.
-# Retired with the legacy catalog interface in #9302 PR 4.
-CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7",)
+# Cursor Auto has no approved driver pin. C-5307 restores only the explicit
+# Grok review wire pin below, without reinstating the Auto allowlist.
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ()
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
@@ -139,8 +119,10 @@ CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
 CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
-# Wire pins shared with the launcher contract; its test rejects any drift.
-CURSOR_APPROVED_WIRE_PINS = frozenset({"grok-4.7-high"})
+# C-5307 restores the exact pre-4ee3de75 explicit review pin.
+CURSOR_APPROVED_WIRE_PINS: frozenset[str] = frozenset({"grok-4.7-high"})
+# Typed refusal when Cursor has no approved model pin at all.
+CURSOR_NO_APPROVED_PIN_CODE = "cursor_no_approved_model_pin"
 # Families never pinned as formal reviewers on the Cursor endpoint (#9488):
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
@@ -540,7 +522,6 @@ def _validate_cursor_review_seats(catalog: dict[str, Any]) -> None:
     Cursor reports the model the run actually used; ``record_cf_verdict`` maps
     only that high-effort report back to the catalog id, so the seat must
     dispatch ``<model>-high`` (a bare id runs a different variant).
-    Operator decision 2026-10-05 (#9769) admits Grok as a regular reviewer.
     """
     endpoint = (catalog.get("review_scheduler") or {}).get("endpoints", {}).get("cursor") or {}
     if endpoint.get("formal_review_eligible") is not True:
@@ -716,8 +697,7 @@ def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> N
 def _validate_ukrainian_seat_catalog(models: Mapping[str, Any]) -> None:
     """The catalog may not grant a Claude model a Ukrainian seat.
 
-    Eligible families come from ``ukrainian_seats``. Grok may keep the role
-    because that role grants it no language route.
+    Eligible families come from ``ukrainian_seats``.
     """
     from scripts.review.ukrainian_seats import UKRAINIAN_SEAT_FAMILIES
 
@@ -1084,6 +1064,10 @@ def model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
     return aliases
 
 
+# The whole remainder after a catalog id that still names that model: an effort or thinking variant.
+VARIANT_SUFFIX = re.compile(r"(?:low|medium|high|xhigh|max|minimal|thinking|thinking-(?:low|medium|high|xhigh|max))")
+
+
 def _model_id_candidates(model: str) -> list[str]:
     """Return ``model`` plus each harness-qualified suffix, most specific first.
 
@@ -1103,7 +1087,18 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     Matches case-insensitively through catalog aliases and harness prefixes
     (``codex:gpt-6-luna``, ``openai/gpt-6-luna``), drops a bracketed context
     suffix (``claude-opus-5-5[1m]``), and resolves a provider variant such as
-    ``gpt-6-luna-high`` to the longest catalog id it extends.
+    ``gpt-6-luna-high`` to the longest catalog id it extends. A variant names
+    that model only when everything after the id is one effort or thinking
+    suffix (``VARIANT_SUFFIX``); ``claude-opus-5-6`` is an unknown model, not
+    a variant of ``claude-opus-5``.
+    """
+    return _catalog_match(model, catalog, variants_only=True)
+
+
+def _catalog_match(model: Any, catalog: dict[str, Any] | None, *, variants_only: bool) -> str | None:
+    """Exact id or alias first, else the longest catalog id or alias the spelling extends.
+
+    ``variants_only`` admits an extension only when its whole remainder is a ``VARIANT_SUFFIX``.
     """
     text = str(model or "").strip().split("[", 1)[0].strip()
     if not text:
@@ -1118,13 +1113,14 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
             for candidate in candidates
             for alias, owner in lookup.items()
             if candidate.startswith(f"{alias}-")
+            and (not variants_only or VARIANT_SUFFIX.fullmatch(candidate[len(alias) + 1 :]))
         ]
         model_id = max(extended)[1] if extended else None
     return model_id
 
 
 def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = None) -> str | None:
-    """Apply Cursor harness model rules: Grok pinning, Claude refusal, and explicit allowlist."""
+    """Apply Cursor harness model rules: Claude refusal and the explicit allowlist."""
     if not model:
         return None
 
@@ -1133,16 +1129,6 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
 
     if is_cursor_auto_selector(text):
         return text
-
-    if "grok-4.7" in text_lower:
-        if text_lower == "grok-4.7" or text_lower == "grok-4.7-high":
-            text = "grok-4.7-high"
-            text_lower = "grok-4.7-high"
-        else:
-            raise ModelCatalogError(
-                f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
-                "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
-            )
 
     source = catalog or load_model_catalog()
     model_id = canonical_model_id(text, source)
@@ -1163,6 +1149,12 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
     allowed_pins = set(cursor_pinned_models(catalog))
     allowed_pins.update(CURSOR_APPROVED_WIRE_PINS)
 
+    if not allowed_pins:
+        raise ModelCatalogError(
+            f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
+            f"There is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
     if text not in allowed_pins:
         raise ModelCatalogError(
             f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
@@ -1173,14 +1165,9 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
 
 
 def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
-    """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
-    if "roles" not in catalog:
-        return CURSOR_AUTO_EXPECTED_ALLOWLIST
-    from scripts.review.role_resolution import resolve_routing_reference
-
-    return tuple(
-        resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, catalog) for seat in ("xai_reviewer",)
-    )
+    """The approved Cursor Auto allowlist; empty while Cursor has no approved pin."""
+    del catalog
+    return CURSOR_AUTO_EXPECTED_ALLOWLIST
 
 
 def routing_model(section: str, lane: str, field: str = "model_id") -> str:
@@ -1195,7 +1182,8 @@ def routing_model(section: str, lane: str, field: str = "model_id") -> str:
 def substitution_default_model(lane: str) -> str | None:
     """Role-backed substitution defaults; registry-only lanes migrate in PR 3c."""
     if lane == "cursor":
-        return routing_model("orchestrator_seats", lane)
+        seat = load_model_catalog()["orchestrator_seats"].get(lane)
+        return seat["model_id"] if seat else None
     if lane in {"codex", "claude", "agy"}:
         return routing_model("formal_cf_defaults", lane)
     return None
@@ -1283,7 +1271,9 @@ def advisory_role_policy(role: str, catalog: dict[str, Any] | None = None) -> Ad
 def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     source = catalog or load_model_catalog()
-    seat = source["orchestrator_seats"]["cursor"]
+    seat = source["orchestrator_seats"].get("cursor")
+    if not seat:
+        return ()
     pin = seat["model_id"]
 
     def _gen():
@@ -1303,6 +1293,11 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
     default was Auto (operator decision 2026-09-30, #9274).
     """
     pins = cursor_pinned_models(catalog)
+    if not pins:
+        return (
+            f"there is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
     fix = f"pin {' or '.join(pins)} (operator decision 2026-09-30, #9274)"
     text = str(model or "").strip()
     if not text:
@@ -1358,7 +1353,9 @@ def retired_model_refusal(
     """Refuse retired ids using the same canonical identity as review admission.
 
     Delegate, the runner and adapter model guards call this before side effects.
-    Unknown ids return None; transport gates own them.
+    Unknown ids return None; transport gates own them. An unknown spelling that extends a retired
+    or red-team-only id (``claude-opus-5-6``, ``gemma-4-26b-a4b-it``) names no catalog model, but
+    stays refused here as it was before identity stopped reading it as that model (C-4967).
     """
     text = str(model or "").strip()
     if not text:
@@ -1367,6 +1364,13 @@ def retired_model_refusal(
     models = catalog["models"]
     model_id = resolve_catalog_model_id(text, catalog)
     if model_id is None:
+        prefix = _catalog_match(text, catalog, variants_only=False)
+        if prefix is None:
+            return None
+        if models[prefix]["lifecycle"] == "retired":
+            return f"model {text!r} names no catalog model; its prefix {prefix} is retired in the model catalog"
+        if models[prefix].get("red_team_only"):
+            return f"model {text!r} names no catalog model; its prefix {prefix} is restricted to red-team review (#10437)"
         return None
     entry = models[model_id]
     if restriction := entry.get("red_team_only"):
@@ -1455,6 +1459,11 @@ def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None 
     )
 
 
+def unknown_model_refusal(model: Any) -> str:
+    """The one refusal wording for a model string that names no catalog model."""
+    return f"model {model!r} is not in the model catalog"
+
+
 def require_execution_model(
     model: str, *, transport: str, catalog: dict[str, Any] | None = None,
 ) -> str:
@@ -1469,7 +1478,7 @@ def require_execution_model(
         raise ModelCatalogError(refusal)
     model_id = resolve_catalog_model_id(model, catalog)
     if model_id is None:
-        raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+        raise ModelCatalogError(unknown_model_refusal(model))
     _require_routable_model(catalog["models"], model_id, "execution model", deepseek_execution=True)
     entry = catalog["models"][model_id]
     if entry["family"] == "deepseek" and transport != "opencode":
@@ -1564,21 +1573,25 @@ def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tupl
     return model_id, source["models"][model_id]["glm_routes"]
 
 
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``.
+
+    It starts with the package's directory name, the one checkout paths use, taken from this
+    module's unresolved location, so neither a symlinked package nor a short import spelling
+    changes it. This module does not import ``repo_root``: launchers and standalone catalog
+    copies run it without ``common/``.
+    """
+    package = Path(os.path.abspath(__file__)).parents[1].name
+    return f"{package}/{relative}"
+
+
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
     """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
+    route_helper = _checkout_relative("lib/kimicc_route.sh")
+    adapter_file = _checkout_relative("agent_runtime/adapters/kimi.py")
     consumers = {
-        # BOTH kimi harness branches must resolve aliases through the catalog:
-        # the native branch via --resolve-kimi-model --format native (review
-        # finding on #5958 r3 — this requirement was narrowed away in the
-        # cutover, blinding the guard while the native branch regressed), the
-        # claude-code branch via kimicc_configure_route.
-        "scripts/launchers/kimi.sh": (
-            "kimicc_configure_route",
-            "--resolve-kimi-model",
-            "--format native",
-        ),
-        "scripts/lib/kimicc_route.sh": ("--resolve-kimi-model", "--format kimicc"),
-        "scripts/agent_runtime/adapters/kimi.py": ("kimi_model_aliases()",),
+        route_helper: ("--resolve-kimi-model", "--format kimicc"),
+        adapter_file: ("kimi_model_aliases()",),
     }
     for relative_path, required_snippets in consumers.items():
         path = project_root / relative_path
@@ -1592,39 +1605,22 @@ def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
                 f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
             )
 
-    kimi_adapter = (project_root / "scripts" / "launchers" / "kimi.sh").read_text(encoding="utf-8")
-    if "resolve_kimi_model() {\n  case" in kimi_adapter:
-        raise ModelCatalogError("Kimi launcher adapter contains a local Kimi alias case map")
-    adapter = (project_root / "scripts/agent_runtime/adapters/kimi.py").read_text(encoding="utf-8")
+    adapter = (project_root / adapter_file).read_text(encoding="utf-8")
     if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
         raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
-    kimicc_helper = (project_root / "scripts" / "lib" / "kimicc_route.sh").read_text(encoding="utf-8")
+    kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
     if 'case "$MODEL_ALIAS"' in kimicc_helper:
         raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
-
-
-def validate_glm_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
-    """Reject local alias maps so all GLM surfaces stay catalog-backed."""
-    consumers = {
-        "scripts/lib/glmcc_route.sh": ("--resolve-glm-model", "--format glmcc"),
-    }
-    for relative_path, required_snippets in consumers.items():
-        path = project_root / relative_path
-        try:
-            source = path.read_text(encoding="utf-8")
-        except OSError as exc:
-            raise ModelCatalogError(f"cannot read GLM alias consumer {relative_path}: {exc}") from exc
-        missing = [snippet for snippet in required_snippets if snippet not in source]
-        if missing:
-            raise ModelCatalogError(
-                f"{relative_path} must resolve GLM aliases through model_catalog.yaml; missing {missing}"
-            )
 
 
 def _main() -> int:
     """Expose catalog-backed model resolution for shell launchers."""
     import argparse
+    import os
 
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    related = f"{_checkout_relative('config/model_catalog.yaml')}; {_checkout_relative('lib/kimicc_route.sh')}"
     parser = argparse.ArgumentParser(
         description=(
             "Resolve routing roles or Kimi/GLM aliases and refuse retired models for shell launchers.\n"
@@ -1633,13 +1629,13 @@ def _main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
-            "  .venv/bin/python -m scripts.review.model_catalog --resolve-role bounded_advisor\n"
+            f"  .venv/bin/python {entry} --resolve-kimi-model k3\n"
+            f"  .venv/bin/python {entry} --resolve-glm-model glm --format glmcc\n"
+            f"  .venv/bin/python {entry} --check-retired-model claude-fable-5\n"
+            f"  .venv/bin/python {entry} --resolve-role bounded_advisor\n"
             "Outputs: model id, tab-separated alias route fields, or role-resolution JSON on stdout; no writes.\n"
             "Exit codes: 0 resolved or launcher-admitted; 2 refused model, invalid arguments or unknown route.\n"
-            "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
+            f"Related: {related}."
         ),
     )
     group = parser.add_mutually_exclusive_group(required=True)

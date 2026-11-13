@@ -225,7 +225,7 @@ const en = {
   'search.emptyCode': 'No Results',
   'search.emptyTitle': 'No matching pages.',
   'search.emptyBody':
-    'Try a broader term, a Ukrainian lemma, or open A1, B1, B2, Word Atlas, or Etymology directly.',
+    'Try a broader term, a Ukrainian lemma, or open A1, B1, B2, or the Word Atlas directly.',
   'search.suggested': 'Suggested Pages',
   'search.hint': 'Start with a broad query or use the shortcuts.',
 
@@ -662,7 +662,7 @@ const uk: Record<ChromeKey, string> = {
   'search.emptyCode': 'Немає результатів',
   'search.emptyTitle': 'Немає відповідних сторінок.',
   'search.emptyBody':
-    'Спробуйте загальніший запит, українську лему або відкрийте A1, B1, B2, Атлас слів чи Етимологію напряму.',
+    'Спробуйте загальніший запит, українську лему або відкрийте A1, B1, B2 чи Атлас слів напряму.',
   'search.suggested': 'Рекомендовані сторінки',
   'search.hint': 'Почніть із загального запиту або скористайтеся посиланнями.',
 

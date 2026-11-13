@@ -51,7 +51,7 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
 - **Actionable** is the server-side SSOT `scripts/work/attention.py::is_actionable`
   (OFF_TRACK/AT_RISK always; otherwise `safe_next_action.code` outside the
   `INSPECT_UNKNOWN`/`OPEN_GITHUB`/`NONE` deny list). The projection stamps
-  that result on `flags.attention`. `dashboards/work.html` reads only that
+  that result on `flags.attention`. the former Work browser view read only that
   flag and treats a missing flag as not actionable. It does not keep a copy
   of the deny list.
 - **Unknown stays visible.** Rows whose membership or decision-bearing state
@@ -107,9 +107,12 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   expired-but-present entries are served with an honest `cache_age_s` while
   the shared background refresh runs, until age reaches `max_stale_s` (300s)
   → `503 {"error": "stale", "cache_age_s", "max_stale_s", "retry_after_s"}`.
-  The background build is bounded (`NEXT_BUILD_TIMEOUT_S`, 20s) so a hung
-  collector frees the single-flight slot and the next caller's refresh can
-  succeed instead of wedging the lane at 503 stale (#6984).
+  The background build is one at a time. `NEXT_BUILD_TIMEOUT_S` (20s) is how
+  long a caller waits before it stops waiting. That wait does not cancel the
+  build or free the single-flight slot. A build that finishes after the wait
+  still caches its result. A collector that never returns holds the slot until
+  its thread exits; past `max_stale_s` the lane can sit at 503 stale with that
+  one thread and no second build (#6984, revised by #12649).
   An unreadable `issue_streams.yaml` registry →
   `503 {"error": "registry_unavailable", "retry_after_s"}` (fail closed —
   never 200 + empty queue for a stream typo). These are source-defined bounds,
@@ -121,8 +124,8 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   `work_id` tie-break; two calls over an unchanged projection return identical
   order.
 
-UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list
-(Monitor paper language).
+UI: the former Work browser view is no longer served. Use the Work API
+projections described here for the evidence rail attention list.
 
 ## Ownership and membership evidence
 
@@ -162,7 +165,8 @@ enqueue, confirmed merge and closeout gates still apply.
 
 ## Browser-local private adapter boundary
 
-Only browser JavaScript in `dashboards/work.html` may fetch the fixed constant:
+The former Work browser adapter used this fixed constant; that page is no
+longer served. Its historical browser-only boundary was:
 
 `http://127.0.0.1:8769/v1/projection`
 

@@ -22,8 +22,16 @@ from pytest_stamp import (
     stamp_identity_for_branch,
 )
 
+# A machinery module by its import name, which the move renames. Its first component is the
+# machinery package, which is also the directory of machinery files in the pushing checkout (this
+# hook is outside the package). The literal "scripts/" is the product package directory of a
+# consumer checkout; until the move both are the same directory.
+_MACHINERY_MODULE = "scripts.common.repo_root"
+_MACHINERY = _MACHINERY_MODULE.partition(".")[0]
+
 TRIGGER_PREFIXES = (
     "tests/",
+    f"{_MACHINERY}/",
     "scripts/",
     "curriculum/",
     "agents_extensions/shared/rules/",

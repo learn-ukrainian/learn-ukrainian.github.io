@@ -511,9 +511,9 @@ def _heal_fixture(tmp_path: Path, bare: str) -> tuple[Path, Path]:
         encoding="utf-8",
     )
     spawned = tmp_path / "spawned"
-    audit = root / "scripts/audit"
-    audit.mkdir()
-    (audit / "check_core_bare.py").write_text(
+    hygiene = root / "scripts/hygiene"
+    hygiene.mkdir()
+    (hygiene / "check_core_bare.py").write_text(
         f"from pathlib import Path\nPath({str(spawned)!r}).write_text('yes')\n", encoding="utf-8"
     )
     (root / ".git").mkdir()
@@ -559,7 +559,7 @@ def test_agy_outer_timeout_exceeds_the_secret_guard_deadline() -> None:
 
     hooks = json.loads((REPO / "agents_extensions/agy/hooks.json").read_text(encoding="utf-8"))
     entry = hooks["shell-secret-print-guard"]["PreToolUse"][0]["hooks"][0]
-    assert "secret_print_hook.py" in entry["command"]
+    assert "-I -m lu_machinery.agent_runtime.secret_print_hook" in entry["command"]
     assert entry["timeout"] >= secret_print_hook.DEFAULT_TIMEOUT + 2
 
 

@@ -30,10 +30,10 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 import numpy as np
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.opsec.needles import Needles, load_needles, run_user_alias_pattern
 
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.opsec.needles import Needles, load_needles, run_user_alias_pattern
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,

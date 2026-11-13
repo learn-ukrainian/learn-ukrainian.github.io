@@ -61,7 +61,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.common.epic_selector import validate_epic
+from scripts.common.repo_root import machinery_path
 from scripts.session_canary import handoff_select
+
+# The machinery package's import name, which is also the directory its files have in checkout paths:
+# from this module's unresolved location (design-v1 amendment 1), never __package__.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+# This package's import name, as ``python -m`` names its modules.
+_PACKAGE = f"{_MACHINERY}.session_canary"
 
 
 class StreamResolutionError(ValueError):
@@ -83,7 +90,7 @@ def _launcher_selector_stream(selector: str) -> str:
                 "-c",
                 'source "$1" && launcher_selector_stream "$2"',
                 "lane-stream",
-                str(ROOT / "scripts/lib/handoff_identity.sh"),
+                str(machinery_path("lib/handoff_identity.sh")),
                 selector,
             ],
             capture_output=True,
@@ -140,7 +147,7 @@ source "$1" || exit 1
 done
 """,
             "lane-defaults",
-            str(ROOT / "scripts/lib/handoff_identity.sh"),
+            str(machinery_path("lib/handoff_identity.sh")),
         ],
         capture_output=True,
         text=True,
@@ -697,7 +704,7 @@ def cmd_mint(args: argparse.Namespace) -> int:
     # Delegate freeze to context_canary (legacy path) so scoring stays shared.
     command = [
         sys.executable,
-        str(repo / "scripts" / "context_canary.py"),
+        str(repo / _MACHINERY / "context_canary.py"),
         "mint",
         "--facts",
         str(facts_path),
@@ -797,7 +804,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 
     command = [
         sys.executable,
-        str(repo / "scripts" / "context_canary.py"),
+        str(repo / _MACHINERY / "context_canary.py"),
         "score",
         "--probe",
         str(probe_path),
@@ -1179,7 +1186,7 @@ You are bound to epic **{epic}** / stream **{stream}**.
 The handoff is a living document. Mint binds its path; ``handoff_sha256`` is informational. Material edits after mint → re-mint to refresh facts.
 After every real batch (merge, issue close, dispatch start, advisor note, block):
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane stamp --epic {epic} \\
+.venv/bin/python -m {_PACKAGE}.grok_lane stamp --epic {epic} \\
   --title "short what changed" \\
   --bullet "fact 1" --bullet "fact 2" \\
   --next "next action 1" --next "next action 2"
@@ -1200,8 +1207,8 @@ Next Drive / Active Working Set / a stamp, it is allowed to evaporate on compact
 2. **Read diary handoff + stream tail first** (do not invent queue from chat)
 3. Only within `thread-rollover`, mint after reading continuity:
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane mint --epic {epic} --stream {stream}
-.venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}
+.venv/bin/python -m {_PACKAGE}.grok_lane mint --epic {epic} --stream {stream}
+.venv/bin/python -m {_PACKAGE}.grok_lane questions --epic {epic}
 ```
 Do not open `probe.json` when later scoring from memory.
 
@@ -1216,7 +1223,7 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 
 1. **Score canary FROM MEMORY** (do not open diary/stream/probe answers first):
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane score --epic {epic} \
+.venv/bin/python -m {_PACKAGE}.grok_lane score --epic {epic} \
   --answers .claude/{epic}-epic/canary/answers.json --context-tokens <N>
 ```
 2. If FAIL-HANDOFF → handback is already written → `/quit`; launcher closes its fenced lease (new session via launcher).
@@ -1228,11 +1235,11 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 5. Only use standalone `hydrate` if you need a re-print; default path is score→auto-hydrate→re-ground.
 
 ### Score procedure (from memory — no re-read of probe answers)
-1. `.venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}`
+1. `.venv/bin/python -m {_PACKAGE}.grok_lane questions --epic {epic}`
 2. Write answers **from memory only** to `{canary}/answers.json` as `{{"id": "answer", ...}}`
 3. Run:
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane score \\
+.venv/bin/python -m {_PACKAGE}.grok_lane score \\
   --epic {epic} \\
   --answers {canary}/answers.json \\
   --context-tokens <N> --model grok-4.7
@@ -1242,7 +1249,7 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 
 ### Clean close (optional while still PASS)
 ```bash
-.venv/bin/python -m scripts.session_canary.grok_lane handback --epic {epic} \\
+.venv/bin/python -m {_PACKAGE}.grok_lane handback --epic {epic} \\
   --reason "clean end" --next "..." --bullet "..."
 ```
 
@@ -1256,7 +1263,7 @@ Operator 2026-09-21: keep the product default of 85%. Do not raise it.
 
 ### Production rollover (different tool)
 Strict 10/10 identity rollover still uses:
-`scripts/context_canary.py mint --snapshot …` + score — not this operational lane canary.
+`{_MACHINERY}/context_canary.py mint --snapshot …` + score — not this operational lane canary.
 """
     print(text)
     return 0
@@ -1353,7 +1360,7 @@ def cmd_handback(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="python -m scripts.session_canary.grok_lane",
+        prog=f"python -m {_PACKAGE}.grok_lane",
         description=(
             "Operational Grok epic-lane session canary (8/10 rot gate). "
             "A driver handoff is a living document: mint binds its path "

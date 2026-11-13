@@ -314,7 +314,7 @@ def admission_dispatch(sandbox, monkeypatch):
 
     monkeypatch.setattr(worker, "start", start)
 
-    def dispatch(*flags, model="echo", mode="workspace-write", task_id="adm-worker"):
+    def dispatch(*flags, model="gpt-6.1-sol", mode="workspace-write", task_id="adm-worker"):
         return cli.main(["dispatch", "--agent", "sol", "--model", model, "--mode", mode,
                          "--task-id", task_id, "--prompt", "Map the parser flags.", *flags])
 
@@ -682,3 +682,101 @@ def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mod
     assert state.get("returncode_reason") != "spawn_setup_failed"
     assert state.get("pid")
     assert prompt.read_text() == "the operator's submitted prompt"
+
+
+def _write_rate_limits(usage_dir, agent, model, account):
+    from datetime import UTC, datetime
+
+    from scripts.agent_runtime import usage
+
+    usage._reset_rate_limit_cache_for_tests()
+    for path in usage_dir.glob("usage_*.jsonl"):
+        path.unlink()
+    stamp = datetime.now(UTC).isoformat()
+    rows = []
+    for _ in range(2):
+        row = {"ts": stamp, "agent": agent, "model": model, "outcome": "rate_limited"}
+        if account is not None:
+            row["codex_account"] = account
+        rows.append(row)
+    (usage_dir / f"usage_{agent}-fixture.jsonl").write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+
+def test_runtime_headroom_gates_each_codex_account_on_its_own_events(tmp_path, monkeypatch):
+    """Account a's rate-limit events stopped a b-sub task (#12735).
+
+    The supervisor asked for runtime headroom without the record's Codex account.
+    """
+    from scripts.agent_runtime import usage
+    from scripts.agent_runtime.errors import RateLimitedError
+    from scripts.dispatcher import git, headroom
+
+    usage_dir = tmp_path / "usage"
+    tasks = tmp_path / "tasks"
+    usage_dir.mkdir()
+    tasks.mkdir()
+    (tasks / "logs").mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
+    monkeypatch.delenv("CODEX_HOME", raising=False)  # this process is account a ("sub")
+    monkeypatch.setattr(usage, "_usage_dir", lambda: usage_dir)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_args, **_kwargs: {})
+    usage._reset_rate_limit_cache_for_tests()
+    model = "gpt-6.1-sol"
+    real = headroom.check_runtime
+    seen = {}
+
+    def spy(agent, model_name, *, codex_account=None):
+        seen["codex_account"] = codex_account
+        try:
+            real(agent, model_name, codex_account=codex_account)
+        except RateLimitedError:
+            seen["admitted"] = False
+            raise
+        seen["admitted"] = True
+        # The real check admitted the task. Stop here so the supervisor never launches a provider.
+        raise RateLimitedError(agent, model_name, "headroom-admitted")
+
+    monkeypatch.setattr(worker.headroom, "check_runtime", spy)
+
+    def settle(task_id, agent, codex_account):
+        prompt = tmp_path / f"{task_id}.prompt"
+        prompt.write_bytes(b"prompt")
+        spec = TaskSpec(task_id, agent, model if agent == "codex" else "claude-opus-5-5", None, "read-only",
+                        tmp_path, prompt, tasks / f"{task_id}.result", codex_account=codex_account)
+        record = store.new_record(spec, {"key": "public", "github": "example/repo"}, "main", "a" * 40,
+                                  {"research_owned_path": []})
+        record["prompt_file"] = str(tasks / f"{task_id}.prompt")
+        path = store.create(record, b"prompt")
+        worker.supervise(path, {}, 10)
+        return json.loads(path.read_text())
+
+    _write_rate_limits(usage_dir, "codex", model, "sub")
+    spared = settle("b-spared", "codex", "b-sub")
+    assert seen == {"codex_account": "b-sub", "admitted": True}
+    assert spared["status"] == "rate_limited"
+    assert spared["error"] == "codex/gpt-6.1-sol rate limited: headroom-admitted"
+    assert spared["provider_pgid"] is None
+    blocked_a = settle("a-blocked", "codex", "sub")
+    assert seen == {"codex_account": "sub", "admitted": False}
+    assert blocked_a["status"] == "rate_limited"
+    assert "headroom-admitted" not in blocked_a["error"]
+    assert "rate_limited" in blocked_a["error"]
+
+    _write_rate_limits(usage_dir, "codex", model, "b-sub")
+    blocked_b = settle("b-blocked", "codex", "b-sub")
+    assert seen == {"codex_account": "b-sub", "admitted": False}
+    assert blocked_b["status"] == "rate_limited"
+    assert "headroom-admitted" not in blocked_b["error"]
+
+    _write_rate_limits(usage_dir, "claude", "claude-opus-5-5", None)
+    claude_blocked = settle("claude-own", "claude", None)
+    assert seen == {"codex_account": None, "admitted": False}
+    assert claude_blocked["error"].startswith("claude/claude-opus-5-5 rate limited:")
+    _write_rate_limits(usage_dir, "codex", model, "sub")
+    claude_clear = settle("claude-clear", "claude", None)
+    assert seen == {"codex_account": None, "admitted": True}
+    assert claude_clear["error"] == "claude/claude-opus-5-5 rate limited: headroom-admitted"
+    usage._reset_rate_limit_cache_for_tests()

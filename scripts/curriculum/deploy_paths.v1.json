@@ -1,0 +1,20 @@
+{
+  "schema": "learn-ukrainian.deploy-paths",
+  "schema_version": 1,
+  "content_path_prefixes": [
+    "curriculum/",
+    "data/",
+    "registry/",
+    "site/src/content/",
+    "site/src/data/",
+    "site/src/lib/lexicon/curated-heteronyms.ts"
+  ],
+  "site_code_path_exceptions": [
+    "site/src/data/lexicon-practice-deck.pointer.json",
+    "site/src/data/lexicon-manifest.pointer.json"
+  ],
+  "site_code_path_prefixes": [
+    "site/",
+    "packages/activity-kit/"
+  ]
+}

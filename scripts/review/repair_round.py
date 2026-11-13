@@ -55,9 +55,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.opsec import prepublish
 from scripts.orchestration.integration_sweep import SHA
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.review_lineage import LineageRefused, check_lineage, lineage_runs, superseded_runs
+from scripts.review.verdict_parser import _structured_explanation
 
 RECEIPT_DIR = "review-repair-rounds"
 RECEIPT_SCHEMA = "review-repair-round.v1"
@@ -66,7 +68,9 @@ CONFLICT_RESOLUTION = "conflict-resolution"
 MAX_REPAIR_COMMITS = 20
 FAILED_CONCLUSIONS = frozenset({"failure", "timed_out"})
 # Only the required CI workflow's PR and merge-queue runs are CI evidence; a manual or other run is not.
-REQUIRED_WORKFLOW = ".github/workflows/ci.yml"
+# The workflow is the repository's own ``required_workflow`` in scripts/config/fleet_repos.yaml.
+DEFAULT_REQUIRED_WORKFLOW = ".github/workflows/ci.yml"
+WORKFLOW_PATH = re.compile(r"\.github/workflows/[A-Za-z0-9._-]+\.ya?ml\Z")
 CI_EVENTS = frozenset({"pull_request", "merge_group"})
 # The round's reviewer verifies the complete delta is only the repair, bound to its digest.
 REPAIR_VERIFIED = re.compile(r"(?m)^\s*REPAIR_VERIFIED:\s*([0-9a-f]{64})\s*$")
@@ -235,25 +239,49 @@ def classify_delta(repo_root: Path, *, approved: str, candidate: str, base_tip: 
     return delta
 
 
-def _required_failure(run: Mapping[str, Any]) -> bool:
+def required_workflow(repository: str) -> str:
+    """The repository's required CI workflow: its registry row's ``required_workflow``, else ci.yml."""
+    try:
+        rows = [
+            row
+            for row in prepublish.catalog().values()
+            if isinstance(row, Mapping) and str(row.get("github", "")).casefold() == repository.casefold()
+        ]
+    except (prepublish.PublishBlocked, AttributeError):
+        raise RepairRefused(
+            EVIDENCE, "the repository allowlist is unreadable, so its required CI workflow is unknown"
+        ) from None
+    if len(rows) > 1:
+        raise RepairRefused(
+            EVIDENCE, f"{repository} is registered more than once, so its required CI workflow is unknown"
+        )
+    workflow = rows[0].get("required_workflow", DEFAULT_REQUIRED_WORKFLOW) if rows else DEFAULT_REQUIRED_WORKFLOW
+    if not isinstance(workflow, str) or not WORKFLOW_PATH.match(workflow):
+        raise RepairRefused(EVIDENCE, f"{repository}'s required_workflow is not a .github/workflows/ file")
+    return workflow
+
+
+def _required_failure(run: Mapping[str, Any], workflow: str) -> bool:
     """A failed run of the required CI workflow on a PR or merge-queue event."""
     path = str(run.get("path") or "").split("@", 1)[0]
-    return path == REQUIRED_WORKFLOW and run.get("event") in CI_EVENTS and run.get("conclusion") in FAILED_CONCLUSIONS
+    return path == workflow and run.get("event") in CI_EVENTS and run.get("conclusion") in FAILED_CONCLUSIONS
 
 
-def failed_runs_for(approved: str, *, number: int, repo_root: Path, github: GitHubReads) -> list[dict[str, Any]]:
-    """Failed CI runs of the approved head itself, or of this PR's merge-queue candidate built from it."""
+def failed_runs_for(
+    approved: str, *, number: int, repo_root: Path, github: GitHubReads, workflow: str
+) -> list[dict[str, Any]]:
+    """Failed ``workflow`` runs of the approved head itself, or of this PR's merge-queue candidate built from it."""
     tied = [
         {"run_id": run.get("id"), "event": run.get("event"), "conclusion": run.get("conclusion")}
         for run in github.failed_runs(approved)
-        if run.get("head_sha") == approved and _required_failure(run) and run.get("event") == "pull_request"
+        if run.get("head_sha") == approved and _required_failure(run, workflow) and run.get("event") == "pull_request"
     ]
     queue = re.compile(rf"gh-readonly-queue/[^/]+(?:/[^/]+)*/pr-{number}-([0-9a-f]{{40}})\Z")
     for run in github.queue_runs():
         match = queue.match(str(run.get("head_branch") or ""))
         if (
             not match
-            or not _required_failure(run)
+            or not _required_failure(run, workflow)
             or run.get("event") != "merge_group"
             or not SHA.fullmatch(str(run.get("head_sha")))
         ):
@@ -386,12 +414,13 @@ def admit_repair_round(
         )
     elif "commit" in kinds and kinds <= {"commit", "clean-merge"}:
         kind = CI_FIX
-        runs = failed_runs_for(approved, number=number, repo_root=repo_root, github=github)
+        workflow = required_workflow(repository)
+        runs = failed_runs_for(approved, number=number, repo_root=repo_root, github=github, workflow=workflow)
         if not runs:
             raise RepairRefused(
                 EVIDENCE,
                 f"no failed CI run is tied to the approved head {approved} (its own PR run, or this PR's "
-                "merge-queue candidate built from it); a change after approval without one escalates",
+                f"merge-queue candidate built from it, of {workflow}); a change after approval without one escalates",
             )
         evidence["failed_runs"] = runs
     else:
@@ -475,14 +504,20 @@ def receipt_at(receipt_root: Path, *, repository: str, number: int, branch: str,
 
 
 def require_repair_verified(reply: str, receipt: Mapping[str, Any]) -> None:
-    """An APPROVE in the repair round names the delta it verified as only the repair."""
-    attested = REPAIR_VERIFIED.findall(reply)
+    """An APPROVE in the repair round names the delta it verified as only the repair.
+
+    A whole ``code-review-findings.v1`` reply attests only in the lines of its
+    ``overall.explanation``, the reviewer's statement about the change; a finding describes a
+    defect and never attests (#12726). Any other reply is read whole, line by line.
+    """
+    explanation = _structured_explanation(reply)
+    attested = REPAIR_VERIFIED.findall(reply if explanation is None else explanation)
     if attested != [receipt.get("delta_sha256")]:
         raise RepairRefused(
             VERIFICATION,
             "an APPROVE in the repair round needs exactly one line "
             f"`REPAIR_VERIFIED: {receipt.get('delta_sha256')}`, the reviewer's statement that the complete "
-            "delta is only the repair it names",
+            "delta is only the repair it names; a structured reply carries it in overall.explanation",
         )
 
 

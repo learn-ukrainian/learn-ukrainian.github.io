@@ -75,8 +75,7 @@ Independent critical review freezes an unseen case against the exact source SHA
 before execution. Prompt critique, author tests and Git mechanism proof do not
 replace that held-out case or exact-head cross-family approval.
 
-The driver obtains separate workflow code-owner/delegated approval, same-head
-branch and merge-group CI, confirms merge and performs common cleanup. After
+Same-head branch and merge-group CI, confirms merge and performs common cleanup. After
 merge, record a scheduled and a manual run's ID, event and source SHA, confirm
 that the real helper executed, and inspect safe actual behavior. A skipped job
 or zero deletions alone proves neither trigger nor helper behavior. Pair this

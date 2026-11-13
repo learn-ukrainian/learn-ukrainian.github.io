@@ -90,7 +90,17 @@ def test_selector_acceptance_table(case, expected, chosen, rejection):
     else:
         pools = [first, second]
         if case == "expiry_boundary":
-            meters["first"] = meter(end=NOW)
+            pools = [replace(first, source="codex:a"), replace(second, source="codex:b")]
+            def account_row(left, end):
+                return {"codexbar": {"freshness": "fresh", "stale": False, "age_s": 0,
+                    "fetched_at": NOW.isoformat(), "windows": {"weekly": {
+                        "remaining_pct": left, "resets_at": end.isoformat()}}}}
+            budget = {"agents": {"codex": account_row(0, NOW)}, "codex_accounts": {
+                "codex:a": account_row(0, NOW), "codex:b": account_row(75, LATER)}}
+            sources = s.budget_sources(budget, NOW)
+            assert sources["codex"].windows[0].left == 0
+            assert sources["codex:b"].windows[0].left == 75
+            meters = s.pool_meters(s.Policy("test-policy", tuple(pools)), sources)
         elif case == "held":
             pools[0] = replace(first, held=True)
         elif case == "earliest_expiry":
@@ -154,7 +164,7 @@ def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch)
         }},
     }
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    args = cli.build_parser().parse_args(["dispatch", "--agent", "claude", "--model", "approved-model",
+    args = cli.build_parser().parse_args(["dispatch", "--agent", "claude", "--model", "claude-sonnet-5-5",
         "--task-id", "shadow-hook", "--prompt", "bounded task", "--mode", "read-only", "--worktree"])
     monkeypatch.setattr(cli.admission, "claude_account", lambda *_: {"claude_account": "live-login"})
     monkeypatch.setattr(cli.git, "resolve_repo", lambda *_: (tmp_path, {"key": "public", "github": "test/repo"}))

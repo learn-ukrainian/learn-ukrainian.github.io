@@ -12,8 +12,10 @@ from pathlib import Path
 
 import yaml
 
+from scripts.common.repo_root import machinery_path
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_TAXONOMY_PATH = PROJECT_ROOT / "scripts/config/fleet_taxonomy.yaml"
+DEFAULT_TAXONOMY_PATH = machinery_path("config/fleet_taxonomy.yaml")
 
 
 class FleetTaxonomyError(ValueError):

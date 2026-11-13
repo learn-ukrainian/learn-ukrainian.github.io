@@ -16,7 +16,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -24,6 +24,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common.http_status import has_http_status
 from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+# This CLI as it was started: by its import name under ``-m``, else by its file.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
 
 
 def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display: bool = False) -> dict[str, Any]:
@@ -51,7 +57,7 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display
     )
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        subscription = executor.submit(refresh_provider_usage_data, SUBSCRIPTION_PROVIDERS)
+        subscription = executor.submit(refresh_provider_usage_data, (*SUBSCRIPTION_PROVIDERS, "codex:b"))
         prepaid = executor.submit(refresh_api_account_data, API_ACCOUNT_PROVIDERS)
         subscription.result()
         prepaid.result()
@@ -289,7 +295,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
             f"active={agentic.get('active')}"
         )
 
-    if lane == "codex":
+    if lane == "codex" or lane.startswith("codex:"):
         balance = info.get("credit_balance", native.get("credit_balance"))
         inventory = info.get("reset_credits", native.get("reset_credits")) or {}
         count = inventory.get("available_count")
@@ -434,20 +440,35 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
     return tips
 
 
+def _budget_mapping(value: object) -> dict[str, Any]:
+    return cast(dict[str, Any], value) if isinstance(value, dict) else {}
+
+
 def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
     """Render an authoritative budget; optional diagnostics never count as routing signals."""
     routing_agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    accounts = _budget_mapping(budget.get("codex_accounts"))
+    account_b_raw = accounts.get("codex:b")
+    account_b = cast(dict[str, Any], account_b_raw) if isinstance(account_b_raw, dict) else None
     usable = sum(_lane_has_usable_allotment(info) for info in routing_agents.values() if isinstance(info, dict))
+    if account_b is not None and _lane_has_usable_allotment(account_b):
+        usable += 1
     if for_display:
         budget = _attach_status_observations(budget)
+        accounts = _budget_mapping(budget.get("codex_accounts"))
+        refreshed_b = accounts.get("codex:b")
+        if isinstance(refreshed_b, dict):
+            account_b = refreshed_b
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     lines = [
         f"source: {budget.get('source', 'unknown')}",
         "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
         "lane | status | remaining% | freshness | age_s | fail",
     ]
-    for lane in sorted(agents):
-        info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+    rows = [(lane, agents.get(lane) if isinstance(agents.get(lane), dict) else {}) for lane in sorted(agents)]
+    if account_b is not None:
+        rows.append(("codex:b", account_b))
+    for lane, info in rows:
         freshness, age = _observation(info)
         status = _display_status(info, freshness=freshness)
         rem = info.get("remaining_pct")
@@ -521,78 +542,12 @@ def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
 
 
 def doctor() -> str:
-    """Inspect credential locations only; never load or display credential contents."""
-    home = Path.home()
-    env_names = (
-        "CLAUDE_CODE_OAUTH_TOKEN",
-        "ANTHROPIC_AUTH_TOKEN",
-        "KIMI_CODE_API_KEY",
-        "GROK_OAUTH_TOKEN",
-        "CURSOR_API_KEY",
-        "OPENROUTER_API_KEY",
-        "OPENROUTER_MANAGEMENT_API_KEY",
-        "DEEPSEEK_API_KEY",
-    )
-    paths = [
-        home / ".claude/.credentials.json",
-        Path(os.environ.get("CODEX_HOME", str(home / ".codex"))).expanduser() / "auth.json",
-        home / ".config/codex/auth.json",
-        Path(os.environ.get("GROK_HOME", str(home / ".grok"))).expanduser() / "auth.json",
-        Path(
-            os.environ.get(
-                "KIMI_CODE_CREDENTIALS_PATH",
-                str(
-                    Path(os.environ.get("KIMI_CODE_HOME", str(home / ".kimi-code"))).expanduser()
-                    / "credentials/kimi-code.json"
-                ),
-            )
-        ).expanduser(),
-        home / ".gemini/antigravity-cli/antigravity-oauth-token",
-        home / ".agy/credentials.json",
-        home / ".config/agy/credentials.json",
-        home / ".config/cursor/auth.json",
-        home / ".config/cursor-agent/api.key.env",
-        home / ".local/share/opencode/auth.json",
-    ]
-    for name in (
-        "openrouter.key",
-        "openrouter-management.key",
-        "deepseek.key",
-        "deekseep.key",
-        "zai.key",
-    ):
-        # ~/.secrets is the current host layout; ~/.secret is the legacy path.
-        paths.append(home / ".secrets" / name)
-        paths.append(home / ".secret" / name)
-    lines = ["Credential presence only (does not verify login or balance):"]
-    lines.extend(f"env {name}: {'present' if os.environ.get(name, '').strip() else 'absent'}" for name in env_names)
-    for path in paths:
-        try:
-            present = "present" if path.is_file() else "absent"
-        except OSError:
-            present = "unavailable"
-        label = "~/" + str(path.relative_to(home)) if path.is_relative_to(home) else "configured credential path"
-        lines.append(f"file {label}: {present}")
-    lines.append(
-        "OpenCode management entry: openrouter-management (key); presence of auth.json does not verify its entries."
-    )
-    cursor_auth = home / ".config/cursor/auth.json"
-    cursor_key = home / ".config/cursor-agent/api.key.env"
-    has_session = False
-    if cursor_auth.is_file():
-        try:
-            data = json.loads(cursor_auth.read_text(encoding="utf-8"))
-            tok = data.get("accessToken") if isinstance(data, dict) else None
-            has_session = isinstance(tok, str) and bool(tok.strip())
-        except (OSError, json.JSONDecodeError):
-            has_session = False
-    has_api_key = bool(os.environ.get("CURSOR_API_KEY", "").strip()) or cursor_key.is_file()
-    if has_api_key and not has_session:
-        lines.append(
-            "Cursor tip: CURSOR_API_KEY is present but ~/.config/cursor/auth.json has no accessToken — "
-            "run `agent login` for Auto/API/Grok Bot allotment meters (API key alone cannot call "
-            "GetCurrentPeriodUsage)."
-        )
+    """Report the private inventory's presence-only diagnostics."""
+    from scripts.api.subscription_usage import _private_usage
+
+    module = _private_usage()
+    lines = ["Credential inventory unavailable."] if module is None else module.credential_inventory()
+    lines = list(lines)
     lines.append(
         "Notebook tip: if `usage show --fresh` ImportErrors on learn_ukrainian_v4_runtime, "
         "run `.venv/bin/pip install -e packages/v4-runtime` (Monitor-backed `show` needs no v4)."
@@ -632,14 +587,14 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.fleet.usage show\n"
-            "  .venv/bin/python -m scripts.fleet.usage json --fresh\n"
-            "  .venv/bin/python -m scripts.fleet.usage doctor\n"
-            "  .venv/bin/python -m scripts.fleet.usage qa\n\n"
+            f"  .venv/bin/python {_ENTRY} show\n"
+            f"  .venv/bin/python {_ENTRY} json --fresh\n"
+            f"  .venv/bin/python {_ENTRY} doctor\n"
+            f"  .venv/bin/python {_ENTRY} qa\n\n"
             "Default: DELEGATE_MONITOR_API (http://127.0.0.1:8765); offline falls back to blocking probes.\n"
             "Outputs: stdout snapshot or QA result; native refresh updates existing usage caches.\n"
             "Exit codes: 0 ok; 1 read/refresh/qa failed; 2 invalid arguments.\n"
-            "Related: /api/state/routing-budget; scripts.fleet.capacity_pick; issue #8074."
+            f"Related: /api/state/routing-budget; {_MACHINERY}.fleet.capacity_pick; issue #8074."
         ),
     )
     parser.add_argument(

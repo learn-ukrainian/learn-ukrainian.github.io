@@ -9,8 +9,9 @@ are in it. Bytes carried per row are printed (``pytest -s``).
 The core is ``agents_extensions/shared/rules/core.md`` when this checkout has it;
 otherwise ``tests/fixtures/rules_core/`` stands in: in-process through the loader's
 ``core_dir`` resolver, and for launcher and CLI subprocesses through a checkout view
-(``tests/rules_core_view.py``) whose rules directory holds the fixture. Nothing in the
-environment can move the core.
+(``tests/rules_core_view.py``) whose rules directory holds the fixture. Only the machinery
+roots configuration (``LEARN_UKRAINIAN_RULES_DIR``) can move the core; the old
+``LU_RULES_CORE_DIR`` override has no effect.
 
 A missing core refuses: each entry point (launcher, ``delegate.py`` dispatch, ACP call and
 discussion, bridge builder, ``ask-*`` prompt, ``/api/rules`` scope) is exercised without the
@@ -23,15 +24,20 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tomllib
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib import rules_core as release_rules_core
 
+from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
 from scripts.lib import rules_core
-from tests.rules_core_view import absent_checkout, checkout_view
+from tests.helpers import machinery_package
+from tests.launcher_sandbox import launcher_environment
+from tests.rules_core_view import CORE_FILES, absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -47,19 +53,46 @@ CHECKOUT_CORE_DIR = rules_core.core_dir
 OLD_OVERRIDE_ENV = "LU_RULES_CORE_DIR"
 
 
+_FIXTURE_RULES = pytest.StashKey[Path]()
+
+
+def _rules_dir_with_fixture_core(request: pytest.FixtureRequest) -> Path:
+    """This checkout's rules directory with the fixture core files in place of the core, built once.
+
+    The fixture stands in for the core only, as in ``checkout_view``: every other rules source
+    (``/api/rules`` full and task scopes) is still the checkout's own.
+    """
+    stash = request.config.stash
+    if _FIXTURE_RULES not in stash:
+        rules = request.getfixturevalue("tmp_path_factory").mktemp("rules-fixture-core")
+        if REAL_CORE_DIR.is_dir():
+            for entry in REAL_CORE_DIR.iterdir():
+                if entry.name not in CORE_FILES:
+                    (rules / entry.name).symlink_to(entry)
+        for name in CORE_FILES:
+            (rules / name).symlink_to(FIXTURE_CORE_DIR / name)
+        stash[_FIXTURE_RULES] = rules
+    return stash[_FIXTURE_RULES]
+
+
 @pytest.fixture(autouse=True)
-def _core_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    """In-process code reads CORE_DIR (the fixture stands in for a checkout without the core)."""
+def _core_present(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest, core_root: Path) -> None:
+    """In-process code reads the CORE_DIR core (the fixture stands in for a checkout without the core)."""
     if CORE_DIR != REAL_CORE_DIR:
-        monkeypatch.setattr(rules_core, "core_dir", lambda root=None: CORE_DIR)
+        rules = _rules_dir_with_fixture_core(request)
+        monkeypatch.setattr(rules_core, "core_dir", lambda root=None: rules)
+        monkeypatch.setenv(PRODUCT_ROOT_ENV, str(core_root))
 
 
 @pytest.fixture(scope="module")
 def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The checkout launchers and the CLI run from: this one, or a view carrying the fixture."""
-    if CORE_DIR == REAL_CORE_DIR:
-        return REPO
-    return checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", FIXTURE_CORE_DIR)
+    view = checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", CORE_DIR)
+    marker = view / PRODUCT_MARKER
+    if not marker.is_file():
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text("levels: {}\n", encoding="utf-8")
+    return view
 
 
 @pytest.fixture
@@ -79,11 +112,16 @@ def missing_core(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
 
 @pytest.fixture
 def core_without_addendum(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
-    """In-process loader reads ``core.md`` but no ``core-curriculum.md``."""
+    """The fleet core exists, but a valid product tree has no curriculum addendum."""
     partial = tmp_path / "core-only"
     partial.mkdir()
     (partial / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
     monkeypatch.setattr(rules_core, "core_dir", lambda root=None: partial)
+    product = tmp_path / "product-without-addendum"
+    marker = product / PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n", encoding="utf-8")
+    monkeypatch.setenv(PRODUCT_ROOT_ENV, str(product))
     return partial
 
 
@@ -106,9 +144,14 @@ def _anchors(seat: str) -> tuple[str, ...]:
 
 
 def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None = None) -> None:
+    assert len((CORE_DIR / "core.md").read_bytes()) <= 40_000
     block = rules_core.core_block(seat)
-    # #10959: the framed content-seat block measures 41201 bytes.
-    ceiling = 42_000 if seat == "content" else 40_960
+    # CONTENT-CEILING-1106: curriculum adds its source and separator, within one wrapper.
+    ceiling = 40_960
+    if seat == "content":
+        addendum = (CORE_DIR / "core-curriculum.md").read_text(encoding="utf-8").rstrip() + "\n"
+        ceiling += len(addendum.encode("utf-8")) + len(rules_core.FILE_SEP.encode("utf-8"))
+        ceiling += len("content") - len("core")
     assert len(block.encode("utf-8")) <= ceiling, f"{row}: binding {seat} block exceeds {ceiling} bytes"
     assert block in context, f"{row}: the exact {seat} block is not in the assembled context"
     for anchor in _anchors(seat):
@@ -183,7 +226,8 @@ def test_a_core_quoted_in_an_attachment_does_not_replace_the_preamble() -> None:
 
 
 def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, core_root: Path) -> None:
-    monkeypatch.setenv(OLD_OVERRIDE_ENV, str(_hostile_core_dir(tmp_path)))
+    hostile = str(_hostile_core_dir(tmp_path))
+    monkeypatch.setenv(OLD_OVERRIDE_ENV, hostile)
     monkeypatch.chdir(tmp_path)
     assert CHECKOUT_CORE_DIR() == REPO / rules_core.RULES_DIR_REL
     assert CHECKOUT_CORE_DIR(core_root) == core_root / rules_core.RULES_DIR_REL
@@ -191,13 +235,14 @@ def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp
     text = rules_core.core_text("content", core_root)
     assert "HOSTILE" not in text
     assert text.startswith((CORE_DIR / "core.md").read_text(encoding="utf-8").rstrip())
-    script = REPO / "scripts" / "lib" / "rules_core.py"
+    script = REPO / machinery_package() / "lib" / "rules_core.py"
     cli = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "text"],
         capture_output=True,
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment({OLD_OVERRIDE_ENV: hostile}),
     )
     assert cli.returncode == 0, cli.stderr
     assert cli.stdout == rules_core.core_text("core", core_root)
@@ -213,34 +258,65 @@ def test_toml_and_kimi_forms_round_trip() -> None:
         rules_core.kimi_agent_file_text("x ${injected} y")
 
 
+def test_cli_help_paths_follow_relocated_module(tmp_path: Path) -> None:
+    """Catch hardcoded machinery paths in CLI help after package relocation."""
+    machinery = tmp_path / "relocated_machinery"
+    script = machinery / "lib" / "rules_core.py"
+    script.parent.mkdir(parents=True)
+    shutil.copyfile(REPO / machinery_package() / "lib" / "rules_core.py", script)
+    # Keep the existing scripts.common imports available without rewriting the copied module.
+    (tmp_path / machinery_package()).symlink_to(REPO / machinery_package(), target_is_directory=True)
+    result = subprocess.run(
+        [sys.executable, os.fspath(script), "--help"],
+        cwd=tmp_path,
+        env={**launcher_environment(), "PYTHONPATH": os.fspath(tmp_path), "COLUMNS": "100"},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout
+    for example in (
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --format json",
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --lane core --format seat",
+        "  .venv/bin/python relocated_machinery/lib/rules_core.py --seat content --root /product --format block",
+    ):
+        assert example in result.stdout
+    assert (
+        "Related: relocated_machinery/lib/rules_core.sh; relocated_machinery/api/rules_router.py; #12819."
+        in result.stdout
+    )
+    assert "scripts/" not in result.stdout
+
+
 def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_root: Path) -> None:
-    script = core_root / "scripts" / "lib" / "rules_core.py"
+    script = core_root / machinery_package() / "lib" / "rules_core.py"
     ok = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "json"],
         capture_output=True,
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment(),
     )
     assert ok.returncode == 0, ok.stderr
     payload = json.loads(ok.stdout)
     assert (payload["first_anchor"], payload["last_anchor"]) == _anchors("core")
     absent = absent_root
     missing = subprocess.run(
-        [sys.executable, os.fspath(absent / "scripts" / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
+        [sys.executable, os.fspath(absent / machinery_package() / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
         capture_output=True,
         text=True,
         check=False,
         timeout=60,
+        env=launcher_environment(),
     )
     assert missing.returncode == 3
     assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
 
 
 # --------------------------------------------------------------------------- launchers
-
-_KIMI_CREDENTIALS = {"KIMICC_AUTH_TOKEN": "test-key", "MOONSHOT_API_KEY": "", "KIMI_API_KEY": ""}
-_GLM_CREDENTIALS = {"GLMCC_AUTH_TOKEN": "", "ZAI_API_KEY": "test-key", "ZHIPU_API_KEY": "", "GLM_API_KEY": ""}
 
 # (row, launcher, args, extra env kind, carrier, seat)
 LAUNCHER_ROWS = (
@@ -259,11 +335,6 @@ LAUNCHER_ROWS = (
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
     ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
-    ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
-    ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
-    ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
-    ("glm-opencode", "start-glm.sh", (), None, "positional", "core"),
-    ("glmcc", "start-glmcc.sh", (), "glm", "--append-system-prompt", "core"),
 )
 
 
@@ -278,11 +349,7 @@ def _launch(
     expect_launch: bool = True,
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
-    env = {**os.environ, "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
-    if env_kind == "kimi":
-        env.update({**_KIMI_CREDENTIALS, "HOME": str(tmp_path / "home")})
-    elif env_kind == "glm":
-        env.update({**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")})
+    env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
     env.update(extra_env or {})
     result = subprocess.run(
         [str(root / name), *args], cwd=root, env=env, text=True, capture_output=True, check=False, timeout=120
@@ -321,11 +388,6 @@ def _carrier(argv: list[str], carrier: str) -> str:
     ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
 )
 def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat, tmp_path: Path, core_root) -> None:
-    if row in {"glm-opencode", "glmcc"}:
-        result, argv = _launch(core_root, name, args, tmp_path, env_kind, expect_launch=False)
-        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
-        assert argv == []
-        return
     result, argv = _launch(core_root, name, args, tmp_path, env_kind)
     text = _carrier(argv, carrier)
     _assert_core(text, seat, row)
@@ -357,91 +419,6 @@ def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_ro
     assert argv[argv.index("-p") + 1] == rules_core.core_block("core") + "\n\nhello"
 
 
-_KIMI_REFUSED = (
-    ("--continue",),
-    ("-c",),
-    ("-C",),
-    ("-yc",),
-    ("-cy",),
-    ("--session",),
-    ("--session=abc",),
-    ("-S",),
-    ("-S", "abc"),
-    ("-Sabc",),
-    ("-ySabc",),
-    ("--resume",),
-    ("--resume=abc",),
-    ("-r",),
-    ("-rabc",),
-    ("--agent", "okabe"),
-    ("--agent=okabe",),
-    ("--agent-file", "/tmp/custom.md"),
-    ("--agent-file=/tmp/custom.md",),
-    ("--model", "k2.7"),
-    ("-m", "k2.7"),
-    ("--unknown-flag",),
-    ("-Z",),
-    ("session",),
-    ("fork", "abc"),
-    ("--",),
-    ("-",),
-    ("--yolo", "--prompt"),
-    ("-p",),
-    ("-p", "--continue"),
-    ("--prompt", "-S"),
-    ("-p-c",),
-)
-
-
-@pytest.mark.parametrize("forwarded", _KIMI_REFUSED, ids=lambda forwarded: " ".join(forwarded))
-def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, core_root: Path) -> None:
-    """OO-58: the retired default refuses before the fresh-session classifier, and nothing execs."""
-    result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "forwarded",
-    (
-        (),
-        ("--yolo",),
-        ("-y",),
-        ("--auto",),
-        ("--plan",),
-        ("-yp", "hello"),
-        ("-phello",),
-        ("--prompt=hello",),
-        ("--prompt", "hello", "--output-format", "text"),
-        ("--output-format=stream-json", "--yolo"),
-        ("--skills-dir", "/tmp/skills", "--add-dir=/tmp/extra", "--add-dir", "/tmp/more"),
-    ),
-    ids=lambda forwarded: " ".join(forwarded) or "plain",
-)
-def test_kimi_code_fresh_launch_carries_the_core(forwarded, tmp_path: Path, core_root: Path) -> None:
-    """OO-58: a fresh Kimi launch is refused before argv, so the core is never attached to a command."""
-    result, _ = _launch(
-        core_root,
-        "start-kimi.sh",
-        ("--", *forwarded) if forwarded else (),
-        tmp_path,
-        None,
-        expect_launch=False,
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-
-
-def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
-    """OO-58: kimicc resume is refused with the retired default before a core-bearing argv exists."""
-    result, _ = _launch(
-        core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi", expect_launch=False
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "is retired in the model catalog" in result.stderr
-    assert "would exec" not in result.stdout
-
-
 @pytest.mark.parametrize(
     ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
 )
@@ -449,11 +426,6 @@ def test_launcher_without_the_core_refuses_before_any_side_effect(
     row, name, args, env_kind, carrier, seat, tmp_path: Path, absent_root: Path
 ) -> None:
     result, _ = _launch(absent_root, name, args, tmp_path, env_kind, expect_launch=False)
-    if row in {"glm-opencode", "glmcc"}:
-        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
-        assert "would exec" not in result.stdout
-        assert "would deploy agent extensions" not in result.stdout
-        return
     assert result.returncode == 1, (result.stdout, result.stderr)
     assert "refusing to launch" in result.stderr
     assert "agents_extensions/shared/rules/core.md" in result.stderr
@@ -467,12 +439,18 @@ def addendum_less_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     core_only = tmp_path_factory.mktemp("rules-core-partial") / "rules"
     core_only.mkdir()
     (core_only / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
-    return checkout_view(core_only.parent / "checkout", core_only)
+    view = checkout_view(core_only.parent / "checkout", core_only)
+    marker = view / PRODUCT_MARKER
+    if not marker.is_file():
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text("levels: {}\n", encoding="utf-8")
+    return view
 
 
 def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
-    tmp_path: Path, addendum_less_root: Path
+    tmp_path: Path, addendum_less_root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setenv(PRODUCT_ROOT_ENV, str(addendum_less_root))
     refused, _ = _launch(
         addendum_less_root,
         "start-claude-driver.sh",
@@ -501,6 +479,8 @@ def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
 
 
 def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from types import SimpleNamespace
+
     from scripts.agent_runtime import runner
 
     seen: list[str] = []
@@ -508,12 +488,15 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
     class _Captured(Exception):
         pass
 
-    def fake_direct(seat, prompt, **kwargs):
+    def capture_plan(*, prompt, **kwargs):
         seen.append(prompt)
         raise _Captured
 
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
-    monkeypatch.setattr(runner, "_invoke_direct_only", fake_direct)
+    adapter = SimpleNamespace(default_model="gpt-6.1-sol", supported_modes={"read-only"},
+                              build_invocation=capture_plan)
+    monkeypatch.setattr(runner, "_load_adapter", lambda *a, **kw: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *a: (True, ""))
     with pytest.raises(_Captured):
         runner.invoke_inter_agent(
             "codex",
@@ -526,6 +509,7 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
         )
     assert seen, "invoke_inter_agent did not reach the transport"
     assert seen[0] == rules_core.core_block("core") + "\n\nreview this"
+    assert seen[0].count(rules_core.BLOCK_OPEN) == 1
     _assert_core(seen[0], "core", "acp-inter-agent")
 
 
@@ -572,6 +556,9 @@ def test_acp_discussion_without_the_core_refuses_before_admission(
                 task_id="task-core",
                 correlation_id="corr-core",
                 idempotency_key="idem-core",
+                # The default pair names the retired grok seat (GROK-CANCEL-1110), which is refused
+                # before the core check; name active seats so the core gate is what refuses.
+                participants=("codex", "claude"),
             )
         count = controller.conn.execute("SELECT COUNT(*) FROM acp_conversation_events").fetchone()[0]
     finally:
@@ -614,6 +601,14 @@ def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core
         build()
 
 
+def _stand_in_cursor_pin(monkeypatch: pytest.MonkeyPatch) -> str:
+    """Install a stand-in approved Cursor pin: none is approved while Grok is retired (GROK-CANCEL-1110)."""
+    pin = "stand-in-cursor-pin-high"
+    monkeypatch.setattr("scripts.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({pin}))
+    monkeypatch.setattr("scripts.review.model_catalog.cursor_pinned_models", lambda catalog=None: (pin,))
+    return pin
+
+
 def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
@@ -627,13 +622,45 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
     # Binary lookup is the shared resolver on the bridge module.
     monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
+    pin = _stand_in_cursor_pin(monkeypatch)
     with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
-        _cursor._invoke_cursor("hello", "grok-4.7-high")
+        _cursor._invoke_cursor("hello", pin)
     with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
         _opencode._run_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
 
 # --------------------------------------------------------------------------- public entries, before any write
+
+
+@pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode", "bridge"])
+def test_conflicting_core_prefix_is_a_typed_bridge_refusal(who: str) -> None:
+    """A stale leading core block must refuse with context instead of a traceback."""
+    from scripts.ai_agent_bridge._prompts import with_core_or_exit
+
+    conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
+        with_core_or_exit(conflict, who)
+    current = rules_core.with_core("hello")
+    assert with_core_or_exit(current, who) == current
+
+
+@pytest.mark.parametrize("who", ["ask-cursor", "ask-opencode"])
+def test_conflicting_core_prefix_refuses_before_transport_spawn(who: str, monkeypatch) -> None:
+    from scripts.ai_agent_bridge import _cursor, _opencode
+
+    def spawn(*_a, **_k):
+        raise AssertionError("a conflicting prefix must refuse before spawning")
+
+    monkeypatch.setattr(_cursor.subprocess, "run", spawn)
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
+    pin = _stand_in_cursor_pin(monkeypatch)
+    monkeypatch.setattr(_opencode.shutil, "which", lambda _name: "/stub/opencode")
+    conflict = '<rules-core seat="core" sha256="stale">\nstale\n</rules-core>\nhello'
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*conflicting rules core prefix"):
+        if who == "ask-cursor":
+            _cursor._invoke_cursor(conflict, pin)
+        else:
+            _opencode._run_opencode(conflict, "deepseek/deepseek-flash")
 
 # Everything a public ask or discussion entry could write or start: a spy on each
 # records the call instead of doing it, so a refusal must leave every list empty.
@@ -758,9 +785,13 @@ def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
 
 @pytest.fixture
 def api_client():
-    from fastapi.testclient import TestClient
+    """The installed Monitor app: the in-tree app no longer loads the product (slice F).
 
-    import scripts.api.main as api_main
+    The release serves its packaged fleet rules (machinery #126), so the
+    cases below compare with the release's rules_core and rules_router.
+    """
+    from fastapi.testclient import TestClient
+    from lu_machinery.api import main as api_main
 
     return TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -769,8 +800,8 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
     body = api_client.get("/api/rules?format=json").json()
     assert body == api_client.get("/api/rules?scope=core&format=json").json()
     assert body["scope"] == "core"
-    assert body["sources"] == [rules_core.CORE_REL]
-    assert body["markdown"] == rules_core.core_text()
+    assert body["sources"] == [release_rules_core.CORE_REL]
+    assert body["markdown"] == release_rules_core.core_text()
     assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_960
     plain = api_client.get("/api/rules")
     assert plain.text == body["markdown"]
@@ -779,12 +810,12 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
 
 
 def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get("/api/rules?scope=full&format=json").json()
     assert set(body) >= {"hash", "bytes", "sources", "markdown"}
     assert body["scope"] == "full"
-    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if (REPO / rel).is_file()]
+    assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if release_rules_core.source_path(rel, REPO).is_file()]
     expected, sources, digest = rules_router._assemble_rules(REPO)
     assert (body["markdown"], body["sources"], body["hash"]) == (expected, sources, digest)
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
@@ -799,12 +830,12 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
 
 @pytest.mark.parametrize("scope", ("core", "content"))
 def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
-    from scripts.api import rules_router
+    from lu_machinery.api import rules_router
 
     body = api_client.get(f"/api/rules?scope={scope}&format=json").json()
-    offline = rules_core.core_text(scope)
+    offline = release_rules_core.core_text(scope)
     assert body["markdown"] == offline
-    assert body["sources"] == list(rules_core.seat_sources(scope))
+    assert body["sources"] == list(release_rules_core.seat_sources(scope))
     assert body["scope"] == scope
     assert body["hash"] == rules_router.scope_digest(scope, offline)
     assert body["hash"] != hashlib.sha256(offline.encode("utf-8")).hexdigest()
@@ -821,13 +852,21 @@ def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
 def test_task_scope_serves_its_row_sources(api_client) -> None:
     body = api_client.get("/api/rules?scope=task:cli&format=json").json()
     assert body["sources"] == ["agents_extensions/shared/rules/cli-help-standard.md"]
-    assert body["markdown"] == (REPO / body["sources"][0]).read_text(encoding="utf-8").rstrip() + "\n"
+    # Changed: the release reads the task source from its package, not the checkout.
+    assert body["markdown"] == release_rules_core.source_path(body["sources"][0]).read_text(encoding="utf-8").rstrip() + "\n"
     assert api_client.get("/api/rules?scope=task:nope").status_code == 400
     assert api_client.get("/api/rules?scope=everything").status_code == 400
 
 
 def test_missing_core_scope_is_unavailable_not_empty(api_client, monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
+    # Changed: the release has no core_dir; hide its core files behind source_path.
+    real_source_path = release_rules_core.source_path
+    core_files = {release_rules_core.CORE_REL, release_rules_core.CONTENT_ADDENDUM_REL}
+    monkeypatch.setattr(
+        release_rules_core,
+        "source_path",
+        lambda rel, root=None: tmp_path / "missing" / rel if rel in core_files else real_source_path(rel, root),
+    )
     for scope in ("core", "content"):
         response = api_client.get(f"/api/rules?scope={scope}")
         assert response.status_code == 503

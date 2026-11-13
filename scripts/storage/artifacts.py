@@ -33,6 +33,16 @@ from pathlib import Path
 
 from scripts.storage import paths
 
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 ROOT = paths.ROOT
 TABLE = "registry/artifacts/classification-v1.tsv"
 _JOURNAL_SCRATCH = re.compile(r"\.lu-journal-[0-9a-f]{32}-[A-Za-z0-9_]{8}\.tmp\Z")
@@ -522,7 +532,7 @@ class RecoveryError(ValueError):
 
 
 def _recovery_remediation(journal: Path) -> str:
-    command = "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts"
+    command = f".venv/bin/python -m {_mod('storage', 'artifacts')}"
     return (
         f"remediation: every `{command}` command (status and verify included) runs recovery first and stops "
         "on this journal, so start with plain shell tools:\n"
@@ -1461,10 +1471,10 @@ def _parser() -> argparse.ArgumentParser:
         description="Manage manifests and host-local artifacts for the data/ split.\nUse before and after migration phases; do not write published A paths directly.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts manifest build --group raw_source --pre HEAD\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P1\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group raw_source\n"
+            'Examples:\n  .venv/bin/python -m ' + _mod("storage", "artifacts") + ' manifest build --group raw_source --pre HEAD\n'
+            f"  .venv/bin/python -m {_mod('storage', 'artifacts')} snapshot --phase P1\n"
+            f"  .venv/bin/python -m {_mod('storage', 'artifacts')} snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
+            f"  .venv/bin/python -m {_mod('storage', 'artifacts')} hydrate --group raw_source\n"
             "Outputs: tracked registry/artifacts manifests; untracked host store objects and hydrated data files.\n"
             "Exit codes: 0 = success; 1 = missing, corrupt, or failed operation; 2 = invalid arguments.\n"
             "Related: issue #8809 spec v3.3 sections 3, 4, and 8."
@@ -1493,7 +1503,7 @@ def _parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example (checkout still at main, phase branch fetched first with git fetch origin <phase-branch>):\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
+            f"  .venv/bin/python -m {_mod('storage', 'artifacts')} snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
             "Outputs: store objects only; the working tree, index, and branch are unchanged.\n"
             "Exit codes: 0 = every phase artifact stored; 1 = missing ref or manifest, or failed proof; 2 = invalid arguments."
         ),
@@ -1536,8 +1546,8 @@ def _parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts "
-            "publish-set --plan /tmp/group-plan.json\n"
+            f"Example: .venv/bin/python -m {_mod('storage', 'artifacts')} "
+            "publish-set --plan group-plan.json\n"
             "Plan JSON: group, producer, expected_members (data-relative strings), artifacts "
             "(operation, rel, source, expected_sha256), companions (path, source, expected_sha256), "
             "and optional expected_manifest (canonical digest of artifact_set().manifest; "

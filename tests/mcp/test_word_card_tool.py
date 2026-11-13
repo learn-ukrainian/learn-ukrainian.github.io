@@ -493,6 +493,7 @@ def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
         ReviewContractError,
         check_launch_contract,
         server_code,
+        trusted_core_context,
     )
 
     checkout = tmp_path / "checkout"
@@ -506,6 +507,7 @@ def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
         "server_interpreter": str(interpreter),
         "server_digest": before.digest,
         "server_components": before.components(),
+        "machinery_dependencies": {"rules_core": trusted_core_context()[1]},
     }
     check_launch_contract(contract, checkout, interpreter)  # Unchanged: admitted.
 
@@ -521,7 +523,7 @@ def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
 @pytest.fixture
 def network_dir(tmp_path, monkeypatch):
     """A directory the locality check reports as network storage; nothing under it may be read."""
-    from scripts.storage import topology
+    from lu_machinery.storage import topology  # word_card.py runs the installed release
 
     network = (tmp_path / "network").resolve()
     network.mkdir()

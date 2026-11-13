@@ -33,9 +33,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -48,13 +51,13 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.storage.artifacts import write_artifact
+from lu_machinery.storage.artifacts import write_artifact
 
 DEFAULT_OUT_DIR = PROJECT_ROOT / "data" / "lexicon" / "textbook-end-dictionaries"
 SCHEMA = "atlas-end-dictionary-inventory"
@@ -968,8 +971,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py --out-dir data/lexicon/textbook-end-dictionaries\n"
+            "  .venv/bin/python scripts/practice_deck/end_dictionaries.py\n"
+            "  .venv/bin/python scripts/practice_deck/end_dictionaries.py --out-dir data/lexicon/textbook-end-dictionaries\n"
             "Outputs: inventory.json and sections.json in --out-dir; declared artifacts publish through their manifest.\n"
             "Exit codes: 0 = success; 1 = missing sources.db or extraction failure; 2 = invalid arguments.\n"
             "Related: issue #8809 P2 and docs/practice/textbook-end-dictionaries.md."

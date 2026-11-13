@@ -223,11 +223,6 @@ def test_self_review_still_blocks_when_families_match() -> None:
             bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
         )
         llm_reviewer_dispatch.validate_cross_family(route, lineage)
-    meta_route = replace(route, reviewer_model_id="muse-wonder-full-1.0", reviewer_family="meta", bridge_command=())
-    with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError, match="author_family=meta"):
-        llm_reviewer_dispatch.validate_cross_family(
-            meta_route, llm_reviewer_dispatch.AuthorLineage(family="meta", source="test")
-        )
     # A classified selector does not grant the separate formal transport capability.
     candidate = ReviewerCandidate(
         name="muse",

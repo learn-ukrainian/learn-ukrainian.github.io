@@ -47,15 +47,20 @@ class _PromptPath(type(Path())):
         return self.content.decode(encoding or "utf-8", errors or "strict")
 
 
+# The entry points as a user runs them: the wrapper by its checkout path, this module by its import name.
+_DISPATCH = f"{Path(__file__).absolute().parents[1].name}/dispatch.py"
+_CLI = f"-m {Path(__file__).absolute().parents[1].name}.dispatcher.cli"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Run provider CLIs in detached dispatch worktrees.\nUse for new tasks; legacy tasks retain their supervisor.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.cli dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
-        "  .venv/bin/python scripts/dispatch.py wait TASK --run-nonce NONCE --timeout 60\n"
-        "  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
+        epilog=f"Examples:\n  .venv/bin/python {_CLI} dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
+        f"  .venv/bin/python {_DISPATCH} wait TASK --run-nonce NONCE --timeout 60\n"
+        f"  .venv/bin/python {_DISPATCH} grant-paths TASK --run-nonce NONCE --owned-path tests/fix.py "
         "--reason 'Approved fixture change' --approval-ref message-id\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --set\n"
         "Outputs: task JSON, prompt, result and logs; new branch/worktree on dispatch.\n"
         "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full, 124 client timeout.\n"
@@ -68,10 +73,11 @@ def build_parser() -> argparse.ArgumentParser:
         description="Start a detached provider task.\nUse --dry-run to inspect its command without creating task files.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 "
+        f"  .venv/bin/python {_DISPATCH} dispatch --agent muse --model muse-wonder-full-1.0 "
         "--prompt 'Explain X' --contributor-mode on --dry-run\n"
-        "  .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
+        f"  .venv/bin/python {_DISPATCH} dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
         "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
+        "  Muse supports read-only work only; other modes are refused with muse_worker_mode_refused.\n"
         "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
         "Exit codes: 0 task started or plan printed, 1 hold publication failed, 2 invalid/refused request,\n"
         "  3 host admission refused (retryable), 4 worktree disk full.\n"
@@ -90,7 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("codex-account", None, "Codex account: sub or api (default: sub; api requires a private codex_accounts.json binding)"),
+        ("codex-account", None, "Codex route: sub or api (account a; also a-sub, a-api), b-sub (also b) or b-api (default: sub; every route but sub requires its entry in the private codex_accounts.json)"),
         ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
         ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
          "(default: that amount)"),
@@ -107,10 +113,10 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
         ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
-         "review_budget_elevation; needs --advisory-binding (default: none)"),
-        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget grant ruling digest "
+         "bounded_advisory_envelope; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a --print-advisory-binding digest "
          "(default: none)"),
-        ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
+        ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check .' (default: none)"),
         ("trial-role", None, "Shadow trial role, e.g. review; read-only, with --trial-qualified-task and --pinned-head (default: none)"),
         ("trial-qualified-task", None, "Successful qualified non-trial task on the same input, head and role, e.g. qualified-42 (default: none)"),
     ):
@@ -192,7 +198,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Append an attributable owned-path grant to a running write task.\n"
         "Coordinator use only; refuses self/descendants, sealed envelopes and settling tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py grant-paths TASK --run-nonce NONCE "
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} grant-paths TASK --run-nonce NONCE "
         "--owned-path tests/fix.py --reason 'Approved fixture change' --approval-ref message-id\n"
         "Outputs: JSON receipt with task, nonce, grant id, paths and effective scope.\n"
         "Side effects: appends a grant to the canonical task record; never changes sparse checkout.\n"
@@ -222,8 +228,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Exit 0 only for a confirmed running task",
         description="Verify task state and supervisor process identity.\n"
         "Use for liveness guardrails; use status to inspect terminal records.",
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py status-or-fail TASK\n"
-        "  .venv/bin/python scripts/dispatch.py status-or-fail TASK --run-nonce NONCE --verbose\n"
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} status-or-fail TASK\n"
+        f"  .venv/bin/python {_DISPATCH} status-or-fail TASK --run-nonce NONCE --verbose\n"
         "Outputs: quiet by default; --verbose prints legacy-shaped status JSON. No records changed.\n"
         "Exit codes: 0 confirmed running; 1 not running, missing, stale or nonce mismatch; "
         "2 unavailable or invalid state.\n"
@@ -238,8 +244,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="List linked worktrees with their owning task",
         description="List every linked worktree of a repository with its owning task record.\n"
         "Read-only: changes no record and removes nothing.",
-        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py worktrees\n"
-        "  .venv/bin/python scripts/dispatch.py worktrees --repo public --all\n"
+        epilog=f"Examples:\n  .venv/bin/python {_DISPATCH} worktrees\n"
+        f"  .venv/bin/python {_DISPATCH} worktrees --repo public --all\n"
         "Outputs: JSON list; per tree: path, task_id, borrowers, status, worktree_disposition,\n"
         "  worktree_disposition_reason, age_s, size_bytes and no_task_record (no record names it).\n"
         "Exit codes: 0 listed, 2 repository or records unavailable.\n"
@@ -256,8 +262,8 @@ def build_parser() -> argparse.ArgumentParser:
         "leave it untouched. Do not use this command to publish, delete, or inspect the worktree.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --set\n"
-        "  .venv/bin/python scripts/dispatch.py retain-worktree TASK --clear\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --set\n"
+        f"  .venv/bin/python {_DISPATCH} retain-worktree TASK --clear\n"
         "Outputs: JSON with task_id and worktree_retention_hold. Writes the task record only.\n"
         "Side effects: --set stores the hold and a non-retry retained disposition; --clear removes the "
         "hold and any retention_hold or retention_hold_invalid disposition. Neither pushes "
@@ -358,6 +364,8 @@ def _dispatch(args) -> int:
         aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
         raise ValueError(f"unknown agent {args.agent!r}; supported agents: {', '.join(providers.PROVIDERS)} "
                          f"(aliases: {aliases}); dispatch Grok as --agent cursor --model grok-4.7-high")
+    if agent == "muse" and args.mode != "read-only":
+        raise ValueError("muse_worker_mode_refused")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.advisor is not None and not (
@@ -416,16 +424,22 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
-    # Settlement can verify only an origin/<branch> base. Refuse anything else before a
-    # workspace-write task is created, so a SHA does not run and then settle no_deliverable (#12420).
+    # Settlement can verify only an origin/<branch> base, and only when that branch
+    # is not the publish branch. Refuse either case before a workspace-write task
+    # is created, so it does not run and then settle no_deliverable (#12420, #12667).
     if args.mode == "workspace-write":
         try:
-            git.verifiable_origin_base(args.base)
+            origin_base = git.verifiable_origin_base(args.base)
         except git.OriginBaseRequired:
             raise ValueError(
                 "workspace_write_base_unverified: settlement cannot verify this --base; "
                 "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
             ) from None
+        if args.branch is not None and origin_base.removeprefix("origin/") == args.branch:
+            raise ValueError(
+                "workspace_write_base_equals_branch: --base names the same branch as --branch; "
+                "use --base origin/main --branch <PR head branch>, with the PR's files as owned paths"
+            )
     start = args.pinned_head or args.branch or args.base
     publish_remote = None
     exact = False
@@ -574,7 +588,8 @@ def _dispatch(args) -> int:
         record.update(advisory_fields, **account_fields, **trial_fields)
         record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
-            record["contributor_mode"] = spec.options.get("contributor_mode", "off")
+            record["requested_contributor_mode"] = args.contributor_mode or "off"
+            record["contributor_mode"] = "off"
         try:
             # Attach to a borrowed worktree under the lock its settlement removes it under, so an
             # active record names it before any removal can start.

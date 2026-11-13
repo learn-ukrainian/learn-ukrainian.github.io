@@ -41,10 +41,14 @@ EOF
 }
 
 _real_git() {
-  local shim_dir
+  local shim_dir package
   shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  # The machinery package directory holds this shim at agent_runtime/shims; its name comes from
+  # the shim's unresolved location (design-v1 amendment 1).
+  package="${shim_dir%/*/*}"
+  package="${package##*/}"
 
-  if [[ -n "${AGENT_REAL_GIT:-}" && "${AGENT_REAL_GIT:-}" != "$shim_dir/git" && "${AGENT_REAL_GIT:-}" != */scripts/agent_runtime/shims/git ]]; then
+  if [[ -n "${AGENT_REAL_GIT:-}" && "${AGENT_REAL_GIT:-}" != "$shim_dir/git" && "${AGENT_REAL_GIT:-}" != */"$package"/agent_runtime/shims/git ]]; then
     printf '%s\n' "$AGENT_REAL_GIT"
     return 0
   fi
@@ -52,7 +56,7 @@ _real_git() {
   local path_entry
   IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
   for path_entry in "${_path_entries[@]}"; do
-    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" || "$path_entry" == */scripts/agent_runtime/shims ]] && continue
+    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" || "$path_entry" == */"$package"/agent_runtime/shims ]] && continue
     if [[ -x "$path_entry/git" ]]; then
       printf '%s\n' "$path_entry/git"
       return 0
@@ -95,6 +99,9 @@ _blocks_branch_switch() {
   shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   local shim_repo
   shim_repo="$(cd "$shim_dir/../../.." && pwd)"
+  # The machinery package directory, named by the shim's unresolved location (design-v1 amendment 1).
+  local package="${shim_dir%/*/*}"
+  package="${package##*/}"
 
   local real_git_bin
   real_git_bin="$(_real_git 2>/dev/null || true)"
@@ -140,13 +147,21 @@ from pathlib import Path
 # Any unhandled exception or non-zero exit code fails closed.
 
 try:
-    shim_main_root = sys.argv[1]
-    git_args = sys.argv[2:]
+    import importlib
 
+    machinery_package = sys.argv[1]
+    shim_main_root = sys.argv[2]
+    git_args = sys.argv[3:]
+
+    if not machinery_package.isidentifier():
+        raise ValueError(f"machinery package name {machinery_package!r} is not a Python identifier")
     if shim_main_root and shim_main_root not in sys.path:
         sys.path.insert(0, shim_main_root)
 
-    from scripts.guardrails.worktree_containment import is_primary_checkout, is_protected_branch, PROTECTED_BRANCHES
+    containment = importlib.import_module(machinery_package + ".guardrails.worktree_containment")
+    is_primary_checkout = containment.is_primary_checkout
+    is_protected_branch = containment.is_protected_branch
+    PROTECTED_BRANCHES = containment.PROTECTED_BRANCHES
 
     if not (is_primary_checkout() and is_protected_branch()):
         print("GUARD_ALLOW")
@@ -213,7 +228,7 @@ except SystemExit:
 except Exception as exc:
     print(f"error: branch containment check failed: {exc}", file=sys.stderr)
     sys.exit(3)
-' "$shim_main_root" "$@")" || guard_status=$?
+' "$package" "$shim_main_root" "$@")" || guard_status=$?
 
   if [[ "$guard_status" -ne 0 ]]; then
     return "$guard_status"
@@ -520,7 +535,9 @@ if [[ "$_opsec_push" == 1 ]]; then
     _opsec_refuse "--shallow-file is not supported for a scanned push"
   fi
   _opsec_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd -P)"
-  _opsec_hooks="$_opsec_root/scripts/opsec/push_hooks"
+  # The scanner is the one in this shim's own machinery package directory.
+  _opsec_machinery="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+  _opsec_hooks="$_opsec_machinery/opsec/push_hooks"
   _opsec_python="$_opsec_root/.venv/bin/python"
   if [[ ! -x "$_opsec_python" ]]; then
     # A linked worktree has no interpreter of its own: use the main checkout's.
@@ -531,7 +548,7 @@ if [[ "$_opsec_push" == 1 ]]; then
   for _opsec_hook in pre-push reference-transaction chain; do
     [[ -f "$_opsec_hooks/$_opsec_hook" && -x "$_opsec_hooks/$_opsec_hook" ]] || _opsec_refuse "push scanner hooks unavailable"
   done
-  [[ -f "$_opsec_root/scripts/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
+  [[ -f "$_opsec_machinery/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
   [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
   export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
   _opsec_restore_override

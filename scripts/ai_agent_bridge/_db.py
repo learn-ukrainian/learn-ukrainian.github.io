@@ -18,12 +18,11 @@ in the B.1 design round (task bridge-b1-schema-design, 2026-04-11).
 
 import sqlite3
 from datetime import UTC, datetime
-from importlib import util as importlib_util
-from pathlib import Path
 
 from scripts.fleet_comms.migrations import apply_migrations
 
 from ._config import DB_PATH
+from .broker_indexes import apply as apply_broker_indexes
 
 # ── Schema definitions ─────────────────────────────────────────────────
 # Kept at module scope so tests and tooling can import them.
@@ -236,7 +235,7 @@ def _kimi_row_sql(agent: object, model: object) -> int:
 
 
 def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:
-    """Apply the standalone broker-index migration from scripts/migrations."""
+    """Create the broker indexes when this database is missing any of them."""
     existing_indexes = {
         row[0]
         for row in conn.execute(
@@ -267,20 +266,7 @@ def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:
         if table in existing_tables
     ):
         return
-
-    migration_path = (
-        Path(__file__).resolve().parents[1]
-        / "migrations"
-        / "2026-05-06-broker-indexes.py"
-    )
-    if not migration_path.exists():
-        return
-    spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
-    if spec is None or spec.loader is None:
-        return
-    module = importlib_util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    module.apply(conn)
+    apply_broker_indexes(conn)
 
 
 def init_db():

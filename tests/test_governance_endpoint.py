@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 from fastapi.testclient import TestClient
 
-import scripts.api.main as api_main
 from scripts.audit import check_adrs
 
 client = TestClient(api_main.app, raise_server_exceptions=False)

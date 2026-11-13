@@ -50,8 +50,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 
@@ -1071,7 +1072,7 @@ def main() -> None:
         description="Kyivan Rus epigraphy mining. Regeneration is deferred to P3b (#8809).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py --help\n"
             "Outputs: none; generation refuses before writing.\n"
             "Exit codes: 0 for help, nonzero for deferred generation.\n"

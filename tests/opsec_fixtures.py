@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers import machinery_package
+
 TOKEN = "SENTINEL-HOST-TOKEN"
 ROOT = Path(__file__).resolve().parents[1]
 MATCHER = """import re
@@ -32,8 +34,50 @@ class Matcher:
 """
 
 
+# A synthetic stand-in for the private override module the public guard loads
+# from private_tooling().parent (PUBLIC-1104 6(b)). It admits one flagged write
+# per reason and appends an audit row; the private module scopes admission per
+# command and is tested privately.
+OVERRIDE = """import hashlib, json, os
+OVERRIDE = "LU_OPSEC_OVERRIDE"
+class OverrideBlocked(RuntimeError):
+    pass
+def internal_environment(source=None):
+    return {k: v for k, v in (os.environ if source is None else source).items() if k != OVERRIDE}
+def take_override(environment):
+    return environment.pop(OVERRIDE, "")
+def command_keys(reason):
+    return ["synthetic-command"]
+def authorize(destination, blocks, reason, log_path):
+    if not reason.strip():
+        return False
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    claim = log_path.parent / ("consumed-" + hashlib.sha256(reason.encode()).hexdigest())
+    try:
+        claim.open("x").close()
+    except FileExistsError:
+        raise OverrideBlocked("OPSEC: override already consumed; use a fresh command-scoped reason.") from None
+    row = {"timestamp": "synthetic", "destination": destination,
+           "rule_ids": sorted({rule for rule, _ in blocks}), "reason": reason}
+    with log_path.open("a") as stream:
+        stream.write(json.dumps(row) + "\\n")
+    return True
+"""
+
+
+def install_override(tooling, source=OVERRIDE):
+    """Write an override module where the guard looks for it, beside the private tooling."""
+    path = tooling.parent / "opsec_override" / "override.py"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source)
+    return path
+
+
 def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
-    policy = json.loads((ROOT / "scripts/opsec/blocking.json").read_text())
+    # The machinery package finds its own policy file, so this holds in either checkout layout.
+    from scripts.common.repo_root import machinery_path
+
+    policy = json.loads(machinery_path("opsec/blocking.json").read_text())
     rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
     rows = rules.setdefault(str(level), {"patterns": []})["patterns"]
     rows[:] = [row for row in rows if row["id"] != rule]
@@ -71,15 +115,18 @@ def make_tooling(directory):
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "matcher.py").write_text(MATCHER)
     (directory / "rules.json").write_text(json.dumps(RULES))
+    install_override(directory)
     return directory
 
 
 @pytest.fixture
 def synthetic_opsec(tmp_path, monkeypatch):
-    from scripts.opsec import prepublish
+    import importlib
 
     directory = make_tooling(tmp_path / "tooling")
-    monkeypatch.setattr(prepublish, "private_tooling", lambda: directory)
+    # Product publishers run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.opsec.prepublish", "lu_machinery.opsec.prepublish"):  # TRANSITIONAL-PKG3-B2
+        monkeypatch.setattr(importlib.import_module(name), "private_tooling", lambda: directory)
     return directory
 
 
@@ -95,9 +142,11 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
         pending.extend((source / package).rglob("*.py"))
     visited = set()
 
+    package_name = machinery_package()
+
     def stage(module: str) -> None:
         parts = module.split(".")
-        if parts[0] != "scripts":
+        if parts[0] != package_name:
             return
         # Package initializers can have dependencies of their own.
         for length in range(1, len(parts) + 1):
@@ -111,13 +160,13 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
                 shutil.copy2(path, target)
                 pending.append(path)
 
-    stage("scripts")
+    stage(package_name)
     while pending:
         path = pending.pop()
         if path in visited:
             continue
         visited.add(path)
-        module = ("scripts", *path.relative_to(source).with_suffix("").parts)
+        module = (package_name, *path.relative_to(source).with_suffix("").parts)
         package = ".".join(module[:-1])
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"), filename=str(path))):
             if isinstance(node, ast.Import):
@@ -137,16 +186,27 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
 def gh_shim_sandbox(tmp_path):
     root = tmp_path / "public-fixture"
     root.mkdir()
-    scripts = root / "scripts"
+    scripts = root / machinery_package()
     scripts.mkdir()
-    copy_publisher_scripts(ROOT / "scripts", scripts)
+    copy_publisher_scripts(ROOT / machinery_package(), scripts)
     # The advisory classifier reads workflow policy as well as importing code.
     workflow = root / ".github/workflows/ci.yml"
     workflow.parent.mkdir(parents=True)
     shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
+    # The merge gate's learner-content check reads the deploy path policy data, a product file
+    # that stays under the product checkout's scripts/ when the machinery package moves.
+    from scripts.common.repo_root import product_root
+
+    deploy_paths = root / "scripts/curriculum/deploy_paths.v1.json"
+    deploy_paths.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(product_root() / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
+    # Those reads go through product_root() (C-4746), so this fake checkout carries the product marker.
+    marker = root / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("")
     shim = scripts / "agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
-    shutil.copy2(ROOT / "scripts/agent_runtime/shims/gh", shim)
+    shutil.copy2(ROOT / machinery_package() / "agent_runtime/shims/gh", shim)
     (scripts / "config").mkdir()
     (scripts / "config/fleet_repos.yaml").write_text(json.dumps({"repos": CATALOG}))
     (root / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)
@@ -166,8 +226,13 @@ def gh_shim_sandbox(tmp_path):
 @pytest.fixture
 def publisher_transport(monkeypatch):
     """Explicitly inject existing subprocess spies at the typed transport boundary."""
-    from scripts.publish import github
-    original = github._send
-    def send(argv, *, runner, **kwargs):
-        return original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
-    monkeypatch.setattr(github, "_send", send)
+    import importlib
+
+    # Product publishers send through the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("scripts.publish.github", "lu_machinery.publish.github"):  # TRANSITIONAL-PKG3-B2
+        github = importlib.import_module(name)
+
+        def send(argv, *, runner, _original=github._send, **kwargs):
+            return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
+
+        monkeypatch.setattr(github, "_send", send)

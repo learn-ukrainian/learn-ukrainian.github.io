@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Opus 5.5 (`claude-opus-5-5`) / Sol 6.1 (`gpt-6.1-sol`) for hard design/diagnostic/architecture. Future peers require qualification. Historical “Sol” references in older evidence remain historical. Designated approval is given by the operator, or when `claude-opus-5-5` and `gpt-6.1-sol` agree; when one of them authored the proposal, the other's approval completes it; a proposal by any other agent needs both; if they disagree, the operator decides (#9583, #9616). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. The former Astra seat holds no advisory, approval or review role; `gpt-6-astra` is not routable. |
+| **Ceiling model** | Opus 5.5 (`claude-opus-5-5`) / Sol 6.1 (`gpt-6.1-sol`) for hard design/diagnostic/architecture. Future peers require qualification. Historical “Sol” references in older evidence remain historical. Designated approval is given by the operator, or when `claude-opus-5-5` and `gpt-6.1-sol` agree; when one of them authored the proposal, the other's approval completes it; a proposal by any other agent needs both; if they disagree, the operator decides (#9583, #9616). The former Astra seat holds no advisory, approval or review role; `gpt-6-astra` is not routable. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---
@@ -93,16 +93,8 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling from a complete Sol advisory envelope (always required, #9275); never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
-| **Fable 5.1** | Parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. |
-| Fable 5 (retired) | Historical identity only; Opus 5.5 / Sol 6.1 for current advice |
 | Opus 5.5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
 | Claude Haiku recon | **`medium`** default; never sole authority |
-
-#### Former Fable effort guidance
-
-[Historical effort notes](../decisions/agent-rules-routing-history.md) are
-archived evidence, not a current driver, advisor, approval or review route.
-Current effort and model identities come from the catalog and live profiles.
 
 **Standing exceptions (do not step down):** skills whose frontmatter pins
 `effort: xhigh` — `content-review`, `plan-review`, `plan-review-seminar`,
@@ -111,21 +103,21 @@ notes never override these Ukrainian learner-content review floors.
 
 #### Opus 5.5 `/effort` decision topology (operator 2026-09-22)
 
-Short form of the bundled Claude API Opus 5.5 migration guidance. The level names match Fable 5.1's, but the depth behind them does not, and they do not map 1:1 from Opus 5.
+Short form of the bundled Claude API Opus 5.5 migration guidance. The depth behind each level differs from Opus 5, so levels do not map 1:1 from Opus 5.
 
 | Level | When |
 |---|---|
 | **`high`** | Orchestration and epic driving (`start-claude-driver.sh` default), dispatch briefs, pedagogy calls, first-pass code review of consequential PRs. |
 | **`medium`** | **API default.** Routine interactive turns, status checks, small edits, day-to-day coding. In Anthropic's testing, `medium` matched or beat Opus 5 at `high` on multistep repository coding with about half the tokens. |
 | **`low`** | Simple lookups and quick questions; latency-sensitive turns. Searches less — raise it when the turn needs retrieval. |
-| **`xhigh`** | Hard debugging, large multi-file refactors — and the curriculum/linguistic review skills that pin `effort: xhigh` (same standing exceptions as Fable 5.1). Turns run noticeably longer than on Opus 5. |
+| **`xhigh`** | Hard debugging, large multi-file refactors — and the curriculum/linguistic review skills that pin `effort: xhigh`. Turns run noticeably longer than on Opus 5. |
 | **`max`** | Almost never; only after measured headroom at `xhigh`. Uncapped. |
 
 Quirks that change the choice:
 
 - **Thinking is always on.** Effort is the only control; `thinking: disabled` and `budget_tokens` return a 400. To get less thinking, **lower effort before adding "think less" prompts**.
 - **More thinking per level than Opus 5**, most of all at `xhigh`/`max`. A setting carried over from Opus 5 means longer turns and more output tokens.
-- **Effort ≠ response length** (same as Fable 5.1): trim output with prompting, not the dial.
+- **Effort ≠ response length**: trim output with prompting, not the dial.
 
 #### Sonnet 5.5 /effort decision topology (operator 2026-09-28)
 

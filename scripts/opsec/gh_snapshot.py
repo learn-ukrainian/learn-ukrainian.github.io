@@ -6,11 +6,18 @@ credential, file-upload and external-host protections belong here.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from dataclasses import dataclass
+from pathlib import Path
 
 from scripts.opsec.prepublish import PublishBlocked, check_texts, internal_environment, is_private, normalize_repository
+
+# The publisher's import name, as ``python -m`` runs it: the machinery package's own publish
+# package, named from this file's unresolved location (a short ``opsec.gh_snapshot`` import
+# would shorten ``__name__``).
+_PUBLISHER = f"{Path(os.path.abspath(__file__)).parents[1].name}.publish"
 
 # Write grammars retain their closed fields and private-destination proof.
 REPO = {"--repo": True, "-R": True}
@@ -294,7 +301,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
     if tuple(argv) in {("--version",), ("version",)}:
         return FrozenCommand(list(argv), "unknown", False)
     if len(argv) < 2:
-        raise PublishBlocked("OPSEC: use python -m scripts.publish <verb>; raw gh command refused.")
+        raise PublishBlocked(f"OPSEC: use python -m {_PUBLISHER} <verb>; raw gh command refused.")
     if argv[0] == "api":
         from scripts.common import github_client
 
@@ -344,7 +351,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         dest = normalize_repository(f"{host}/{match[1]}/{match[2]}") if match else "unknown"
         if not is_private(dest):
             raise PublishBlocked(
-                "OPSEC: raw API refused; use python -m scripts.publish issue-comment-json or python -m scripts.publish read <name>."
+                f"OPSEC: raw API refused; use python -m {_PUBLISHER} issue-comment-json or python -m {_PUBLISHER} read <name>."
             )
         pinned = [arg for arg in argv]
         pinned += ["--hostname", dest.split("/", 1)[0]]
@@ -474,7 +481,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         else:
             dest = "unknown"
     if not is_private(dest):
-        raise PublishBlocked(f"OPSEC: raw public write refused; use python -m scripts.publish {key[0]}-{key[1]}.")
+        raise PublishBlocked(f"OPSEC: raw public write refused; use python -m {_PUBLISHER} {key[0]}-{key[1]}.")
     # Pin the same repository and host whose private exemption was proven.
     pinned = [*key, *positional]
     for flag, value in found:

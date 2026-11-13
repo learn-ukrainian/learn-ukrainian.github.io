@@ -86,6 +86,18 @@ def test_relocated_result_file_points_at_the_moved_sidecar(tmp_path):
     assert store.relocated_result_file(archived, None) is None
 
 
+def test_v2_record_under_another_name_raises_identity_mismatch_with_its_content(tmp_path):
+    """Defect class: a reader cannot tell a copied record from a renamed one, or a copy reads as valid."""
+    path = tmp_path / "worker.review-wait.json"
+    record = {"schema_version": 2, "task_id": "worker", "status": "done"}
+    with pytest.raises(store.TaskIdentityMismatch, match="has invalid task identity") as caught:
+        store.parse_task_record(path, json.dumps(record).encode())
+    assert isinstance(caught.value, ValueError) and caught.value.record == record
+    with pytest.raises(ValueError, match="has invalid task identity") as non_string:
+        store.parse_task_record(tmp_path / "worker.json", json.dumps({**record, "task_id": 7}).encode())
+    assert not isinstance(non_string.value, store.TaskIdentityMismatch)
+
+
 def test_blank_v2_named_record_is_damaged_not_foreign(tmp_path):
     """Defect class: an empty or NUL-filled v2-named record read as foreign (#12219)."""
     for raw in (b"", b" \n\t", b"\x00" * 64, b"\xef\xbb\xbf\x00"):

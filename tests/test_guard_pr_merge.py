@@ -1647,6 +1647,28 @@ def test_heredoc_merge_mention_not_detected():
     assert not _any_merge(cmd)
 
 
+def test_quoted_heredoc_backticks_are_data_not_unreadable_shell(monkeypatch):
+    """Defect class: Markdown backticks in a quoted here-doc body refused as unreadable shell.
+
+    Bash expands nothing in a `<<'EOF'` body, so a brief that mentions a merge in
+    backticks is a plain file write. Controls: an unquoted body's backticks run,
+    a real merge after the here-doc is still judged, and a body line ending in a
+    backslash does not swallow the closer before an executed merge.
+    """
+    brief = "cat > brief.md <<'EOF'\nLand it with `gh pr merge`; don't merge by hand.\nEOF"
+    assert _run(monkeypatch, brief, checks=(["CI Gate"], [])) == 0
+    assert _run(monkeypatch, brief.replace("<<'EOF'", "<<EOF"), checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, brief + "\ngh pr merge 5", checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, "cat <<'EOF'\nx\\\nEOF\necho `gh pr merge 5`\nEOF", checks=([], [])) == 2
+    # Quoting the delimiter does not make a shell/interpreter reader's stdin inert.
+    for reader in ("bash", "sh", "cat | bash", "bash -s", "source /dev/stdin", f"{sys.executable} -"):
+        body = "import os; os.system('echo `gh pr merge 5`')" if reader.endswith(" -") else "echo `gh pr merge 5`"
+        assert _run(monkeypatch, f"{reader} <<'EOF'\n{body}\nEOF", checks=(["CI Gate"], [])) == 2, reader
+    assert _run(monkeypatch, "cat <<'EOF' | bash\necho `gh pr merge 5`\nEOF", checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, brief + "\nbash brief.md", checks=(["CI Gate"], [])) == 2
+    assert _run(monkeypatch, "function cat { bash; }\n" + brief, checks=(["CI Gate"], [])) == 2
+
+
 def test_unclosed_heredoc_does_not_hide_merge():
     assert _any_merge("cat <<'NOEND'\nnote\ngh pr merge 5 --squash")
 
@@ -2511,3 +2533,58 @@ def test_status_rollup_returns_the_bound_response(monkeypatch):
     assert guard._status_rollup("5") == payload
     _fake_gh(monkeypatch, returncode=0, stdout="[]")
     assert guard._status_rollup("5") is None
+
+
+@pytest.mark.parametrize(
+    "command,failures,expected",
+    [
+        ("bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("sh -s <<EOF\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | cat | sh -s\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat | bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("python3 - <<'EOF'\nimport os; os.system('gh pr merge 5')\nEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | cat | python3 -\nimport os; os.system('gh pr merge 5')\nEOF", ["CI Gate"], 2),
+        ("source /dev/stdin <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("bash <<-EOF\n\tgh pr merge 5\n\tEOF", ["CI Gate"], 2),
+        ("cat <<'EOF' | sed -n p | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("env -C / bash <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("cat prefix.sh <<'EOF' | bash\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        ("bash -c \"bash <<'EOF'\ngh pr merge 5\nEOF\"", ["CI Gate"], 2),
+        (
+            ".venv/bin/python -m scripts.publish issue-comment --repo o/r --number 7 --body-file - <<'EOF'\nApproved through review; the keeper will merge once CI is green.\nEOF",
+            ["CI Gate"],
+            0,
+        ),
+        (
+            ".venv/bin/python -m scripts.publish pr-comment --number 7 --body-file=- <<'EOF'\nUse `gh pr merge` after review.\nEOF",
+            ["CI Gate"],
+            0,
+        ),
+        ("gh pr create --title t --body-file - <<'EOF'\nfix(hooks): high-risk merge path proven\nEOF", ["CI Gate"], 0),
+        ("git commit -F - <<'EOF'\nfix(hooks): refuse gh pr merge via heredoc\nEOF", ["CI Gate"], 0),
+        ("git commit --file=- <<'EOF'\nfix(hooks): high-risk merge path proven\nEOF", ["CI Gate"], 0),
+        (
+            ".venv/bin/python -m scripts.publish pr-merge --number 5 --body-file - <<'EOF'\nApproved through review; merge when green.\nEOF",
+            [],
+            0,
+        ),
+        (
+            ".venv/bin/python -m scripts.publish pr-merge --number 5 --body-file - <<'EOF'\nApproved through review; merge when green.\nEOF",
+            ["CI Gate"],
+            2,
+        ),
+        ("cat > n.md <<'EOF'\nmerge note for gh pr\nEOF\ngit add n.md", ["CI Gate"], 0),
+        ("tee n.md <<'EOF'\nmerge note for gh pr\nEOF\ngit add n.md", ["CI Gate"], 0),
+        ("cat <<'EOF'\nmerge note for gh pr\nEOF\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+        (
+            "cat > msg.txt <<'EOF'\nApproved through review; merge when green.\nEOF\n.venv/bin/python -m scripts.publish issue-comment --number 7 --body-file msg.txt",
+            ["CI Gate"],
+            0,
+        ),
+        ("function cat { bash; }\ncat <<'EOF'\ngh pr merge 5\nEOF", ["CI Gate"], 2),
+    ],
+)
+def test_interpreter_heredoc_merge_bypass_refused(monkeypatch, command, failures, expected):
+    """R33: interpreter stdin is executable, including a pipeline's heredoc."""
+    assert _run(monkeypatch, command, checks=(failures, [])) == expected

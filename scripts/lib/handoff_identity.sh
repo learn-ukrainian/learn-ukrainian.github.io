@@ -242,7 +242,11 @@ _handoff_slot_registry() {
     py="$(project_interpreter_resolve "$repo_root" 2>/dev/null)" || return 2
   fi
   [ -n "$py" ] && [ -x "$py" ] || return 2
-  (cd "$repo_root" && "$py" -m scripts.orchestration.handoff_slot_registry "$@")
+  # The machinery package's import name: this file's package directory name,
+  # from its unresolved location (design-v1 amendment 1).
+  local package="${_HANDOFF_IDENTITY_DIR%/*}"
+  package="${package##*/}"
+  (cd "$repo_root" && "$py" -m "$package.orchestration.handoff_slot_registry" "$@")
 }
 
 # launcher_require_registered_slot "<provider>" "<selector>"

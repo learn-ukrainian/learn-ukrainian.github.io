@@ -26,14 +26,16 @@ from scripts.session_supervisor import (
     main,
     strip_lease_credentials,
 )
+from tests.helpers import machinery_module, machinery_package
 from tests.helpers.restore_import_state import restore_import_state
+from tests.launcher_sandbox import launcher_environment
 
 
 @pytest.mark.parametrize("resolution", ["recorded", "local-bin", "path", "missing", "non-executable", "directory"])
 def test_successor_preflight_resolves_executable_with_stripped_pane_path(
     tmp_path: Path, resolution: str, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
+    helper = Path(__file__).resolve().parents[1] / machinery_package() / "lib/session_supervisor.sh"
     home = tmp_path / "home"
     cli = (home / ".local/bin" if resolution == "local-bin" else tmp_path / "cli with spaces") / "fixture-cli"
     cli.parent.mkdir(parents=True)
@@ -50,7 +52,7 @@ LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli)) if resolution != 'local-bin
 session_supervisor_preflight_successor || exit $?
 fixture-cli
 """
-    env = {**os.environ, "HOME": str(home), "PATH": os.defpath}
+    env = {**launcher_environment(), "HOME": str(home), "PATH": os.defpath}
     if resolution == "path":
         env["PATH"] = f"{cli.parent}{os.pathsep}{os.defpath}"
         script = script.replace(f"LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli))}", "LC_DRIVER_PROVIDER_EXECUTABLE=/missing/cli")
@@ -86,7 +88,7 @@ def test_watcher_preflight_probe_failure_retains_restart(monkeypatch, capsys, fa
 
 
 def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path: Path) -> None:
-    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
+    helper = Path(__file__).resolve().parents[1] / machinery_package() / "lib/session_supervisor.sh"
     successor = tmp_path / "start-codex-driver.sh"
     successor.write_text(
         "#!/usr/bin/env bash\n"
@@ -115,15 +117,15 @@ LC_DRIVER_LEASE_CLOSED=1
 session_supervisor_exec_successor
 exit 36
 """
-    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
+    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines() == ["--epic", "fixture", "literal $(false) argument"]
 
 
 def test_kube_dojo_lane_wrapper_is_its_own_supervisory_successor(tmp_path: Path) -> None:
     """The successor replays the lane wrapper, which re-adds its fixed lane (#12553)."""
-    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
-    for relative, marker in (("start-claude-driver.sh", "generic"), ("scripts/start-kube-dojo-driver.sh", "lane")):
+    helper = Path(__file__).resolve().parents[1] / machinery_package() / "lib/session_supervisor.sh"
+    for relative, marker in (("start-claude-driver.sh", "generic"), (f"{machinery_package()}/start-kube-dojo-driver.sh", "lane")):
         entry = tmp_path / relative
         entry.parent.mkdir(parents=True, exist_ok=True)
         entry.write_text(f"#!/usr/bin/env bash\nprintf '%s\\n' {marker} \"$@\"\n", encoding="utf-8")
@@ -140,14 +142,14 @@ export SESSION_STREAM_ID=epic:9999
 session_supervisor_exec_successor
 exit 36
 """
-    wrapper = str(tmp_path / "scripts" / "start-kube-dojo-driver.sh")
-    result = subprocess.run(["bash", "-c", script, wrapper], capture_output=True, text=True, timeout=15)
+    wrapper = str(tmp_path / machinery_package() / "start-kube-dojo-driver.sh")
+    result = subprocess.run(["bash", "-c", script, wrapper], capture_output=True, text=True, timeout=15, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines() == ["lane", "caller text"]
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+_ISSUE_STREAMS = _REPO_ROOT / machinery_package() / "config" / "issue_streams.yaml"
 
 
 def _infra_harness_stream_id() -> str:
@@ -242,8 +244,8 @@ def test_worker_env_default_is_sorted_safe_session_metadata_without_secret_env(t
         "OPENAI_API_KEY": "fake-openai-key-value",
     }
     child_env = {
-        "PATH": os.environ["PATH"],
-        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "PATH": os.defpath,
+        "HOME": str(tmp_path / "home"),
         "SESSION_STREAM_ID": "epic:test",
         "SESSION_STREAM_LEASE_ID": "lease-test",
         "SESSION_STREAM_FENCING_TOKEN": "fencing-test",
@@ -279,8 +281,8 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
         "EXAMPLE_AUTH": "fake-example-auth-value",
     }
     child_env = {
-        "PATH": os.environ["PATH"],
-        "HOME": os.environ.get("HOME", str(tmp_path)),
+        "PATH": os.defpath,
+        "HOME": str(tmp_path / "home"),
         "UNRELATED_RUNTIME_FLAG": "visible-in-full-mode",
         **fake_secrets,
     }
@@ -302,11 +304,11 @@ def test_worker_env_all_redacts_secret_values_without_override(tmp_path: Path) -
 
 
 def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.MonkeyPatch) -> None:
+    redactor, supervisor = machinery_module("secret_redactor"), machinery_module("session_supervisor")
     subprocess_code = (
-        "import sys; "
-        "sys.modules['scripts.secret_redactor'] = None; "
-        "import scripts.session_supervisor; "
-        "assert hasattr(scripts.session_supervisor, 'SessionSupervisor')"
+        "import importlib, sys; "
+        f"sys.modules[{redactor!r}] = None; "
+        f"assert hasattr(importlib.import_module({supervisor!r}), 'SessionSupervisor')"
     )
     result = subprocess.run(
         [sys.executable, "-c", subprocess_code],
@@ -315,6 +317,7 @@ def test_session_supervisor_import_without_secret_redactor(monkeypatch: pytest.M
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
 

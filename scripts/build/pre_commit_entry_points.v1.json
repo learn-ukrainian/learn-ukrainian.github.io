@@ -1,0 +1,15 @@
+{
+  "schema": "learn-ukrainian.pre-commit-entry-points",
+  "schema_version": 1,
+  "origin": "scripts/build/pre_commit_entry_points.v1.json",
+  "entry_points": {
+    "lesson-schema-drift": {
+      "entry_point": "scripts.build.generate_lesson_schema:main",
+      "argv": []
+    },
+    "atlas-lexicon-fingerprint-drift": {
+      "entry_point": "scripts.lexicon.manifest_fingerprint:main",
+      "argv": ["--write"]
+    }
+  }
+}

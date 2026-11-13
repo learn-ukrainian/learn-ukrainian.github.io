@@ -16,7 +16,7 @@ must match every manifest input hash; a mismatch refuses as
 `full_review_tree_mismatch`. The same check runs again before adapter launch.
 
 Full access uses the same isolated attempt boundary, sources socket forwarder
-and `AttemptEgress` allowlist proxy as isolated mode. Its only wider grant is
+and `AttemptEgress` CONNECT proxy as isolated mode. Its only wider grant is
 read-only access to the verified full checkout, the Git metadata and object
 store needed by that checkout, and the repository's shared `data/` corpus.
 A linked checkout gets its own Git metadata plus common objects, refs and
@@ -36,11 +36,33 @@ abstract Unix listeners, receipt store, task records and saved results are
 unmounted or unreachable. Only the attempt's private runtime/home/return tree
 is writable; checkout and corpus files are read-only. The sources server and
 ledger writer remain outside and are reached through the attempt socket.
-The namespace-local TCP forwarder sends provider traffic through the parent
-CONNECT-only proxy to exact allowlisted API hosts. Clearing proxy variables
+The namespace-local TCP forwarder sends all outbound traffic through the parent
+CONNECT-only proxy, which admits HTTPS to any public host. Clearing proxy variables
 does not create a host network route. Claude stages only selected provider
 authentication, including a fresh Linux OAuth access token, into the private
 seat environment; it receives no real-home credential directory.
+
+### Attempt egress evidence
+
+The dispatcher task record stores `review_attempt_egress` after runtime cleanup,
+including success, provider failure, timeout and cancellation. Its `records` list
+retains the first 256 distinct canonical CONNECT destinations as
+`{"destination": "hostname:443", "bytes": 0}` entries. Repeated requests to a
+retained destination aggregate the bytes relayed in both directions. A record
+means a CONNECT destination was requested, not that DNS, connection or TLS
+succeeded; refused or failed requests can have zero bytes. Malformed CONNECT
+requests have no canonical destination and produce no entry.
+
+`overflow_count` counts CONNECT requests to destinations outside that retained
+set, including repeats. It does not count distinct overflow hosts. Those hosts
+are not retained, so both the list and its deduplication state stay bounded.
+Overflow requests still follow exactly the same destination checks and proxy
+behavior. Records contain no resolved addresses, URLs, headers or payloads.
+They use the existing task record, not the Sources receipt ledger or a new
+store. A refusal before boundary creation has no proxy evidence. Abrupt loss
+of the supervisor before Python cleanup cannot certify an egress summary.
+
+### Runtime checks
 
 Missing Bubblewrap refuses with `sandbox_unavailable:linux_bwrap_missing`;
 failed namespace/read/write probes refuse with `sandbox_probe_*`, and a
@@ -141,7 +163,7 @@ controls. Shared Git/corpus access has a linked-worktree regression that also
 proves neighboring checkout denial. Authenticated probes reuse the same script
 and require captured command/output, unchanged protected bytes, an outside
 sources receipt and detached-child teardown. Actual provider completion proves
-allowlisted provider connectivity. These are runtime boundary probes; the
+provider connectivity through the proxy. These are runtime boundary probes; the
 linguistic review and recorder acceptance proof remains AC-04.
 
 ## Explicit isolated mode
@@ -371,20 +393,24 @@ matrix, and establish its own exact-head provider compatibility proof.
 
 ## Provider egress boundary
 
-`scripts/config/attempt_provider_egress.yaml` contains the exact per-harness
-hostname allowlist. It includes the native provider startup/eligibility services
-as well as the inference endpoints; AGY's profile-image dependency is an exact
-hostname, with no domain suffix or wildcard grant. No runtime override admits
-additional hosts. The parent loads this config before launching a seat.
+Operator decision of 2026-11-10: sandboxed agents need the internet and GitHub,
+so the parent proxy no longer restricts destinations to per-harness provider
+hosts. Formal review attempts (AGY, Codex and Claude), read-only AGY dispatches
+and native Claude's read-only review shell (`scripts/dispatcher/agy_sandbox.py`)
+all reach any public host over HTTPS through the same proxy. There is no host
+allowlist file and no runtime override.
 
 The parent proxy (`attempt_network.py`) listens on a per-attempt Unix socket.
-It accepts only `CONNECT canonical-host:443` with exact allowlist membership,
-rejecting plain HTTP, IP literals, userinfo, malformed authorities, suffix
-lookalikes, conflicting or duplicate Host headers and request bodies. It
-normalizes mapped addresses and validates every DNS answer: one non-global,
-multicast, reserved, unspecified or host-interface address rejects the entire
-request. Interface addresses are enumerated at startup. Connections use only
-the validated numeric addresses, with no second lookup.
+It accepts only `CONNECT canonical-host:443`, rejecting plain HTTP, other
+ports, IP literals, userinfo, malformed authorities, conflicting or duplicate
+Host headers and request bodies. It normalizes mapped addresses and validates
+every DNS answer: one non-global, multicast, reserved, unspecified or
+host-interface address rejects the entire request, so host loopback services,
+private networks and cloud metadata stay unreachable. Interface addresses are
+enumerated at startup. Connections use only the validated numeric addresses,
+with no second lookup. Each requested destination is recorded with its byte
+count; the records go into the attempt's or dispatch's sandbox receipt
+(`egress`), so every contacted host stays auditable.
 
 The projected stdlib forwarder (`attempt_forwarder.py`) starts inside the
 namespace before the CLI. It relays bytes from namespace loopback to that Unix
@@ -400,19 +426,18 @@ processes, 5-second header/resolver deadlines, a 10-second total connect deadlin
 and 60-second idle/drain deadlines. Relays read 64 KiB chunks with backpressure;
 stream reader buffers are bounded. Resolver output is capped at 64 KiB. DNS
 processes are killed and reaped on timeout or cancellation. Destination/byte
-aggregates are bounded by the allowlist and contain no payloads or addresses.
+aggregates hold one entry per destination host and contain no payloads or addresses.
 Parent cleanup cancels connections and resolvers and closes the listener. A
 stopped proxy, failed forwarder or failed namespace refuses launch without
 falling back to the host network.
 
 ## Provider compatibility proof
 
-At the exact implementation head, record the SHA-256 of the allowlist and each
-native CLI version. For AGY and Codex, wrap their real adapter invocation
-with `AttemptBoundary.wrap`, provide a minimal prompt requesting a fixed token
-without tools, and parse the actual terminal response with that adapter. Retain
-only the implementation SHA, allowlist digest, CLI version, tested variable,
-exit status, exact-token verdict and destination/byte aggregates in ignored local
+At the exact implementation head, record each native CLI version. For AGY and
+Codex, wrap their real adapter invocation with `AttemptBoundary.wrap`, provide a
+minimal prompt requesting a fixed token without tools, and parse the actual
+terminal response with that adapter. Retain only the implementation SHA, CLI
+version, tested variable, exit status, exact-token verdict and destination/byte aggregates in ignored local
 evidence. Never retain credentials, payloads, host addresses or host paths in
 public evidence. Proxy traffic alone or `--version` is insufficient proof.
 
@@ -423,7 +448,7 @@ bytes correlated with that invocation. Then stop the parent proxy and repeat the
 same wrapped invocation: it must refuse before the CLI can produce the token.
 A harness failure remains a blocker; do not broaden the network namespace or
 silently substitute a provider. Independently repeat this proof on the reviewed
-head before landing; a changed proxy, allowlist or invocation voids prior proof.
+head before landing; a changed proxy or invocation voids prior proof.
 
 AC-2 retains the AGY and Codex proof rows. The Claude row is excluded from this
 branch's compatibility claims and belongs to the adapter follow-up; its refusal

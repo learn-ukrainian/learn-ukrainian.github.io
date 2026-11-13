@@ -467,12 +467,22 @@ def _reading_window_passed(view: Mapping[str, Any], lane: str, account: ClaudeAc
             return False
         return any(_window_reset_passed(windows.get(key), now) for key in _AGY_CLAUDE_WINDOW_KEYS)
     if lane == "claude" and account is not None:
+        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
+
         rows = view.get("claude_accounts")
         row = rows.get(f"claude:{account.label}") if isinstance(rows, Mapping) else None
-        if isinstance(row, Mapping):  # an account row owns the reading, as in account_weekly_used_pct
+        # The same row that supplies the used-% owns the reset. A present row
+        # that is not a fresh reading does not: the default account then reads
+        # the lane meter, and that meter's weekly_resets_at is the one that counts.
+        if isinstance(row, Mapping) and claude_account_lane._fresh_account_weekly_used_pct(row) is not None:
             return _window_reset_passed(row.get("weekly"), now)
+        if account.label != DEFAULT_CLAUDE_ACCOUNT:
+            return False
         agents = view.get("agents")
         info = agents.get(lane) if isinstance(agents, Mapping) else None
+    elif lane in {"codex:a", "codex:b"}:
+        accounts = view.get("codex_accounts")
+        info = accounts.get(lane, {}) if isinstance(accounts, Mapping) else {}
     else:
         info = claude_account_lane.other_lane_record(view, lane)
     probe = info.get("codexbar") if isinstance(info, Mapping) else None
@@ -559,7 +569,11 @@ def routing_budget_used_pct(
         return claude_account_lane.account_weekly_used_pct(view, account=account)
     if lane == AGY_CLAUDE_WINDOW_LANE:
         return _agy_claude_windows_used_pct(view)
-    info = claude_account_lane.other_lane_record(view, lane)
+    if lane in {"codex:a", "codex:b"}:
+        accounts = view.get("codex_accounts")
+        info = accounts.get(lane, {}) if isinstance(accounts, Mapping) else {}
+    else:
+        info = claude_account_lane.other_lane_record(view, lane)
     probe = _fresh_probe_record(info)
     if probe is None:
         return None
@@ -582,7 +596,8 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
 
 
 def policy_for_seat(
-    seat: str, *, review: bool = False, check_headroom: bool = True, plan_metered: bool = True
+    seat: str, *, review: bool = False, check_headroom: bool = True, plan_metered: bool = True,
+    codex_account: str | None = None
 ) -> dict[str, Any]:
     """Keep pauses and only the headroom entries that fund this seat.
 
@@ -592,6 +607,10 @@ def policy_for_seat(
     ``plan_metered=False`` (a claude seat on an API-key account, which has no
     plan meter) omits the ``claude`` plan entries; its spend cap guards it.
     """
+    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+    codex_lane = ({"sub": "codex:a", "b-sub": "codex:b"}.get(resolve_codex_account_label(codex_account))
+                  if seat == "codex" else None)
     policy = load_policy()
     headroom = [
         entry for entry in _entries(policy, "headroom")
@@ -599,6 +618,9 @@ def policy_for_seat(
         and (not review or entry.get("lane") == "claude")
         and (seat == "claude" or entry.get("lane") != "claude")
         and (plan_metered or entry.get("lane") != "claude")
+        and (entry.get("lane") not in {"codex", "codex:a", "codex:b"}
+             or (codex_lane is not None
+                 and ("codex:a" if entry.get("lane") == "codex" else entry.get("lane")) == codex_lane))
     ]
     if check_headroom and seat == "agy":
         headroom.append({

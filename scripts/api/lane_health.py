@@ -13,12 +13,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records, read_task_record
+from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, seat_read_aliases
 
-try:
-    from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
-except ImportError:
-    from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records, read_task_record
 
 try:
     from secret_redactor import redact_text

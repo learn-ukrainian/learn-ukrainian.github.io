@@ -32,7 +32,8 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_pair,
 )
 from scripts.audit.lexeme_filter import is_lexeme_entry, practice_ineligibility_reason
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 
 def _entry_lookup(entries: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:

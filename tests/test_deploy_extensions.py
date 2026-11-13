@@ -1,6 +1,6 @@
 """Run the launcher deploy fail-honest fixtures under the required pytest gate.
 
-``scripts/audit/test_deploy_extensions.sh`` exercises
+``scripts/agent_deploy/test_deploy_extensions.sh`` exercises
 ``scripts/lib/deploy_extensions.sh`` — the helper both launchers
 (``start-claude.sh``, ``start-codex.sh``) use to deploy
 ``agents_extensions/shared`` into the gitignored runtime dirs at startup.
@@ -14,6 +14,7 @@ launcher wiring load-bearing in the required ``Test (pytest)`` job.
 from __future__ import annotations
 
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -22,7 +23,7 @@ from pathlib import Path
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_FIXTURES = _REPO_ROOT / "scripts" / "audit" / "test_deploy_extensions.sh"
+_FIXTURES = _REPO_ROOT / "scripts" / "agent_deploy" / "test_deploy_extensions.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -72,8 +73,8 @@ def _make_worktree_fixture(tmp_path: Path, *, primary_venv: bool) -> tuple[Path,
     for rel in (
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
-        "scripts/deploy/update_agent_deploy_status.py",
-        "scripts/deploy/agent_directory.py",
+        "scripts/agent_deploy/update_agent_deploy_status.py",
+        "scripts/agent_deploy/agent_directory.py",
     ):
         (worktree / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / rel, worktree / rel)
@@ -271,3 +272,56 @@ def test_relative_gitfile_pointer_is_accepted(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert "Agent extensions deployed" in result.stdout
+
+
+def test_hook_python_bootstrap_ignores_caller_import_paths(tmp_path: Path) -> None:
+    """Policy modules must load from the helper's tree, never caller cwd or PYTHONPATH."""
+    runtime = tmp_path / "runtime"
+    helper = runtime / "scripts/lib/project_interpreter.sh"
+    helper.parent.mkdir(parents=True)
+    shutil.copy2(_REPO_ROOT / "scripts/lib/project_interpreter.sh", helper)
+    (runtime / "scripts/__init__.py").write_text("")
+    (runtime / "scripts/probe.py").write_text("print('trusted-policy')\n")
+    caller = tmp_path / "caller"
+    (caller / "scripts").mkdir(parents=True)
+    (caller / "scripts/__init__.py").write_text("raise RuntimeError('caller package executed')\n")
+    environment = {**os.environ, "PYTHONPATH": str(caller)}
+    # sys.executable is the pytest interpreter, including in subprocesses.
+    completed = subprocess.run(
+        ["bash", "-c", f"source {shlex.quote(str(helper))}; project_python_run {shlex.quote(sys.executable)} -m scripts.probe"],
+        cwd=caller, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout == "trusted-policy\n"
+
+
+@pytest.mark.parametrize("context", ["primary_alias", "product_snapshot", "state_mismatch"])
+def test_hook_context_preserves_configured_physical_authority(tmp_path: Path, context: str) -> None:
+    """Product context and aliases must not replace the configured shared-state authority."""
+    primary, worktree = _make_worktree_fixture(tmp_path, primary_venv=True)
+    alias = tmp_path / "alias"
+    alias.symlink_to(primary, target_is_directory=True)
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    environment = {
+        key: value for key, value in os.environ.items()
+        if not key.startswith("GIT_")
+        and key not in {"LEARN_UKRAINIAN_PYTHON", "LEARN_UKRAINIAN_STATE_ROOT"}
+    }
+    environment.update(
+        LU_PRODUCT_ROOT=str(snapshot if context == "product_snapshot" else worktree),
+        LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(alias if context == "primary_alias" else primary),
+    )
+    if context == "state_mismatch":
+        environment["LEARN_UKRAINIAN_STATE_ROOT"] = str(snapshot)
+    helper = _REPO_ROOT / "scripts/lib/project_interpreter.sh"
+    completed = subprocess.run(
+        ["bash", "-c", f'source {shlex.quote(str(helper))}; project_hook_context_resolve || exit 2; printf "%s\\n%s\\n" "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT" "$LEARN_UKRAINIAN_PYTHON"'],
+        cwd=worktree, env=environment, capture_output=True, text=True, timeout=30,
+    )
+    if context == "state_mismatch":
+        assert completed.returncode == 2
+        assert completed.stdout == ""
+    else:
+        assert completed.returncode == 0, completed.stderr
+        assert completed.stdout == f"{primary}\n{primary}/.venv/bin/python\n"

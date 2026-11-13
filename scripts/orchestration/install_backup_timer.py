@@ -28,9 +28,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.repo_root import ProductRootError, product_root
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
-TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
+# The backup unit templates are product files, under the product checkout (C-4746).
+TEMPLATE_REL = "packaging/systemd"
 UNIT_NAMES = (
     "learn-ukrainian-backup.service",
     "learn-ukrainian-backup.timer",
@@ -49,10 +57,19 @@ def render_unit(template_path: Path, repo_root: Path) -> str:
     return text.replace(REPO_ROOT_PLACEHOLDER, str(repo_root))
 
 
+def _product_checkout() -> Path:
+    """The product checkout ``product_root`` selects; refuse the install when there is none."""
+    try:
+        return product_root()
+    except ProductRootError as exc:
+        raise InstallError(str(exc)) from None
+
+
 def render_units(repo_root: Path) -> dict[str, str]:
+    template_dir = _product_checkout() / TEMPLATE_REL
     rendered: dict[str, str] = {}
     for name in UNIT_NAMES:
-        template = TEMPLATE_DIR / name
+        template = template_dir / name
         if not template.is_file():
             raise InstallError(f"missing unit template: {template}")
         rendered[name] = render_unit(template, repo_root)
@@ -151,9 +168,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply
+        epilog=f"""Examples:
+  .venv/bin/python {_PACKAGE_DIR}/install_backup_timer.py --repo-root /path/to/primary
+  .venv/bin/python {_PACKAGE_DIR}/install_backup_timer.py --repo-root /path/to/primary --apply
 
 Outputs: preview only by default; --apply writes owner-only unit files, reloads
 systemd, and disables and stops both retired timers. No backup data is removed.
@@ -165,8 +182,8 @@ Related: packaging/systemd/; docs/runbooks/data-backup.md.
     parser.add_argument(
         "--repo-root",
         type=Path,
-        default=PROJECT_ROOT,
-        help="primary checkout substituted for @REPO_ROOT@ (default: this checkout)",
+        default=None,
+        help="primary checkout substituted for @REPO_ROOT@ (default: the product checkout)",
     )
     parser.add_argument(
         "--unit-dir",
@@ -192,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.enable:
         raise InstallError("legacy backup and retention timers are retired; --enable is refused")
-    repo_root = args.repo_root.expanduser().resolve()
+    repo_root = (args.repo_root or _product_checkout()).expanduser().resolve()
     if not (repo_root / ".git").is_dir():
         raise InstallError(f"repository root must be the primary checkout: {repo_root}")
     rendered = render_units(repo_root)

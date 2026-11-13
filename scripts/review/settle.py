@@ -27,11 +27,12 @@ from jsonschema import Draft202012Validator
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.review import findings_db as db
+
 from scripts.build.fresh.assemble import component_props_from_jsx
 from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.curriculum.evidence.lock import atomic_write
 from scripts.curriculum.validate.loader import read_plan_text
-from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts import ledger
@@ -830,8 +831,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.review.settle prepare 1 --db batch_state/review-findings/a1.sqlite --document site/src/content/docs/a1/module/2.mdx --prior-ledger batch_state/review-receipts/R/A.jsonl --review-id settle-R --attempt-id A1 --manifest settle.manifest.yaml --prompt settle.prompt.md\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.review.settle record reply.yaml --db batch_state/review-findings/a1.sqlite --manifest settle.manifest.yaml --ledger settle.jsonl --decided-by language-seat\n"
+            "  .venv/bin/python -m scripts.review.settle prepare 1 --db batch_state/review-findings/a1.sqlite --document site/src/content/docs/a1/module/2.mdx --prior-ledger batch_state/review-receipts/R/A.jsonl --review-id settle-R --attempt-id A1 --manifest settle.manifest.yaml --prompt settle.prompt.md\n"
+            "  .venv/bin/python -m scripts.review.settle record reply.yaml --db batch_state/review-findings/a1.sqlite --manifest settle.manifest.yaml --ledger settle.jsonl --decided-by language-seat\n"
             "Outputs: prepare writes a manifest, prompt and render sidecars; record writes a saved reply and updates settle_items.\n"
             "Exit codes: 0 accepted; 1 malformed task, reply or filesystem error.\n"
             "Related: scripts/review/prompts/settle.md.j2; docs/epics/fresh-build-review-contracts.md The settle step."

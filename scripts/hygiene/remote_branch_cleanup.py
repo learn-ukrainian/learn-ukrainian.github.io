@@ -21,6 +21,17 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from scripts.common import github_client
 
+
+def _machinery_top() -> str:
+    # Name the package from the unresolved file location, never from __package__
+    # (design-v1 amendment 1): a copy loaded without a package must name the same tree.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 KEEP_PATH = ".github/branch-cleanup-keep.txt"
 API = "https://api.github.com"
 MIN_AGE = timedelta(hours=48)
@@ -354,7 +365,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Delete eligible public GitHub branches at least 48 hours old.\n"
         "Use only in the default-branch scheduled/manual workflow; never for local worktree cleanup.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: python -m scripts.hygiene.remote_branch_cleanup --repo learn-ukrainian/learn-ukrainian.github.io\n"
+        epilog=f"Example: python -m {_mod('hygiene', 'remote_branch_cleanup')} --repo learn-ukrainian/learn-ukrainian.github.io\n"
         "Outputs: JSON stdout and GITHUB_STEP_SUMMARY; conditional remote branch deletes.\n"
         "Exit codes: 0 completed (possibly no eligible branches); 1 unknown evidence or deletion failure.\n"
         "Related: docs/runbooks/remote-branch-cleanup.md, #10945.\n"

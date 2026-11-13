@@ -13,16 +13,16 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api import fleet_workers_collect as collect_mod
+from lu_machinery.api import fleet_workers_router as router_mod
+from lu_machinery.api import project_state_router as state_router_mod
+from lu_machinery.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
+from lu_machinery.api.main import app
+from lu_machinery.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
+from lu_machinery.api.occupancy_local import OccupancyRead, _marker_fresh
+from lu_machinery.api.project_state_router import LocalDocumentSnapshot, reset_local_document_cache
+from lu_machinery.api.project_state_store import get_stored_report, reset_project_state_store
 
-from scripts.api import fleet_workers_collect as collect_mod
-from scripts.api import fleet_workers_router as router_mod
-from scripts.api import project_state_router as state_router_mod
-from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
-from scripts.api.main import app
-from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
-from scripts.api.occupancy_local import OccupancyRead, _marker_fresh
-from scripts.api.project_state_router import LocalDocumentSnapshot, reset_local_document_cache
-from scripts.api.project_state_store import get_stored_report, reset_project_state_store
 from tests import _host_path_guard as guard
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -32,6 +32,12 @@ loop_client = TestClient(
     client=("127.0.0.1", 50000),
     raise_server_exceptions=False,
 )
+
+def _workers_get(path: str):
+    # Machinery #353: the lifespan writer publishes the snapshot; GETs never collect.
+    router_mod.workers_snapshot(app.state.ctx).refresh()
+    return client.get(path)
+
 
 _PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
@@ -123,17 +129,17 @@ def test_v1_report_workers_unreported(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document())
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
+    host = _host_by_id(_workers_get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "unreported"
     assert host["workers"] == []
-    assert "unreported:host-worker" in client.get("/api/fleet/workers/v1").json()["attention"]
+    assert "unreported:host-worker" in _workers_get("/api/fleet/workers/v1").json()["attention"]
 
 
 def test_v2_empty_workers_verified_zero(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[]))
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
+    host = _host_by_id(_workers_get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "reported"
     assert host["workers"] == []
 
@@ -145,7 +151,7 @@ def test_remote_reported_workers_surface(monkeypatch: pytest.MonkeyPatch) -> Non
         "/api/fleet/projects/v1/report",
         json=_document(workers=[_worker_row()]),
     )
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
+    host = _host_by_id(_workers_get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "reported"
     assert len(host["workers"]) == 1
     assert host["workers"][0]["source"] == "project_state"
@@ -178,7 +184,7 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
     )
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"teach-box=host-teacher,worker-box={self_host_id}")
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {self_host_id})
-    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    monkeypatch.setattr("lu_machinery.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
     monkeypatch.setattr(collect_mod, "collect_driver_workers", lambda **_: ([], []))
     monkeypatch.setattr(collect_mod, "collect_job_workers", lambda **_: ([], None))
     monkeypatch.setattr(collect_mod, "collect_marker_workers", lambda **_: [])
@@ -192,16 +198,7 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
         ).status_code
         == 200
     )
-    builds = 0
-    build = collect_mod._build_workers_payload
-
-    def counted_build(**kwargs: Any) -> dict[str, Any]:
-        nonlocal builds
-        builds += 1
-        return build(**kwargs)
-
-    monkeypatch.setattr(collect_mod, "_build_workers_payload", counted_build)
-    first = client.get("/api/fleet/workers/v1")
+    first = _workers_get("/api/fleet/workers/v1")
     assert first.status_code == 200
     initial = first.json()
     assert initial["counts"]["live"] == 2
@@ -211,10 +208,9 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
     unknown_before = initial["counts"]["hosts_unknown"]
 
     snapshot = LocalDocumentSnapshot(None, age_s, freshness)
-    second = client.get("/api/fleet/workers/v1")
+    second = _workers_get("/api/fleet/workers/v1")
     assert second.status_code == 200
     final = second.json()
-    assert builds == 1
     assert final["counts"] == {
         "live": 1,
         "hosts_unknown": unknown_before + (freshness == "unknown"),
@@ -230,7 +226,7 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
     assert remote["freshness"] == "fresh"
     assert remote["workers"][0]["age_s"] == 7200
 
-    filtered = client.get(f"/api/fleet/workers/v1?host_id={self_host_id}").json()
+    filtered = _workers_get(f"/api/fleet/workers/v1?host_id={self_host_id}").json()
     assert [host["host_id"] for host in filtered["hosts"]] == [self_host_id]
     assert filtered["counts"] == {
         "live": 0,
@@ -241,8 +237,7 @@ def test_workers_route_recounts_final_host_freshness_on_warm_cache(
     }
 
     snapshot = LocalDocumentSnapshot(_document(), 0.75, "fresh")
-    recovered = client.get("/api/fleet/workers/v1").json()
-    assert builds == 2  # The filtered request has its own cache entry.
+    recovered = _workers_get("/api/fleet/workers/v1").json()
     assert recovered["counts"] == initial["counts"]
     assert _host_by_id(recovered, self_host_id)["age_s"] == 0.75
     assert _host_by_id(recovered, self_host_id)["workers"] == local_rows
@@ -364,11 +359,12 @@ def test_workers_route_keeps_unattributed_unknown_with_fresh_self_snapshot(
         heartbeat=None if missing_heartbeat else (now - timedelta(hours=2)).isoformat(),
         expires=(now + timedelta(minutes=5)).isoformat(),
     )
-    monkeypatch.setattr(collect_mod, "session_streams_db_path", lambda: db)
+    monkeypatch.setattr(app.state, "ctx", app.state.ctx.with_roots(session_streams_db_path=db))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "fixture-local=unattributed,teach-box=host-teacher")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "unattributed" if self_identity == "explicit" else "local")
     monkeypatch.setattr(
-        collect_mod.atlas_job, "is_self_host", lambda alias: self_identity == "alias" and alias == "fixture-local"
+        "scripts.lexicon.runner.atlas_job.is_self_host",
+        lambda alias: self_identity == "alias" and alias == "fixture-local",
     )
     assert collect_mod._self_host_ids() == {UNATTRIBUTED_HOST_ID}
     monkeypatch.setattr(state_router_mod, "collect_local_document", lambda host_id: _document(host_id, workers=[]))
@@ -384,7 +380,7 @@ def test_workers_route_keeps_unattributed_unknown_with_fresh_self_snapshot(
 
     retained = None
     for _ in range(2):  # Repeat each filter against the warm payload cache.
-        response = client.get(f"/api/fleet/workers/v1{query}")
+        response = _workers_get(f"/api/fleet/workers/v1{query}")
         assert response.status_code == 200
         payload = response.json()
         host = _host_by_id(payload, UNATTRIBUTED_HOST_ID)
@@ -436,7 +432,7 @@ def test_same_task_id_different_run_id_two_rows(monkeypatch: pytest.MonkeyPatch)
             ]
         ),
     )
-    workers = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")["workers"]
+    workers = _host_by_id(_workers_get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")["workers"]
     run_ids = {row["run_id"] for row in workers}
     assert run_ids == {"11111111", "22222222"}
 
@@ -523,8 +519,8 @@ def test_oversized_task_id_dropped_not_500(
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-worker"})
-    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
-    response = client.get("/api/fleet/workers/v1?host_id=host-worker")
+    monkeypatch.setattr("lu_machinery.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    response = _workers_get("/api/fleet/workers/v1?host_id=host-worker")
     assert response.status_code == 200
     data = response.json()
     host = _host_by_id(data, "host-worker")
@@ -739,9 +735,33 @@ def test_workers_opsec_no_sensitive_tokens(monkeypatch: pytest.MonkeyPatch) -> N
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[_worker_row()]))
-    text = json.dumps(client.get("/api/fleet/workers/v1").json()).lower()
+    text = json.dumps(_workers_get("/api/fleet/workers/v1").json()).lower()
     assert _IP.findall(text) == []
     for alias in _ALIAS_LEAKS:
         assert alias not in text
     assert "run_nonce" not in text
     assert "pid" not in text
+
+
+
+def test_release_app_task_reads_stay_in_the_isolated_batch_state(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """Defect class: a release-app test reading the live primary task store.
+
+    The shared fixtures must retarget the installed app's batch state as well
+    as the in-tree app's; otherwise ``workers_payload`` scans the primary
+    checkout's ``batch_state/tasks`` (NON_RECORD_FILE warnings for primary
+    files and live worker counts).
+    """
+    from lu_machinery.api import delegate_router
+
+    isolated = Path(os.environ["LU_TASKS_DIR"])
+    assert Path(app.state.ctx.roots.batch_state_dir) == isolated.parent
+    # The plain-caller fallback workers_payload uses reads the release config.
+    assert delegate_router._tasks_dir() == isolated
+    with caplog.at_level("WARNING"):
+        payload = workers_payload(session_db=_driver_lease_db(tmp_path))
+    scanned = [record.getMessage() for record in caplog.records if "NON_RECORD_FILE" in record.getMessage()]
+    assert all(str(isolated) in message for message in scanned), scanned
+    assert payload["counts"]["live"] == 0

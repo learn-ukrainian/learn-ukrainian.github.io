@@ -3,7 +3,7 @@
 <critical>
 
 **Cutover issue:** #6159 · **Stream:** #4707 (infra-harness) · **Operator GO:** 2026-08-01
-**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Kimi, Cursor, wrappers; AGY/Gemini only as a standalone TUI seat, never an epic-driver seat) — not only agents that load a skill.
+**Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Cursor, AGY/Gemini, wrappers) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
 served in `GET /api/rules?scope=task:fleet-comms`, `scope=task:driver`, or `scope=full`.
@@ -19,7 +19,7 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | Layer | Role | Where |
 | --- | --- | --- |
 | **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules?scope=task:fleet-comms` (or `scope=task:driver` / `scope=full`) + offline path |
-| **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
+| **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
 | **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules?scope=task:routing` (or `scope=full`) model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `.venv/bin/python -m scripts.fleet_comms plane-status` |
@@ -40,7 +40,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `dispatch.py` seats (claude/codex/glm/opencode; Grok dispatch through Cursor at `grok-4.7-high`, with native Grok dispatch retired, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
+- For plan, create, review, and design, use **toolful** native or `dispatch.py` seats (claude/codex/glm/opencode; Grok 4.7 codes and reviews code/infra through Cursor at `grok-4.7-high` (C-5307) and is not a plan, design, or advisory seat; review of Grok-authored work stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = the `review-loop` skill (qualified toolful exact-head approval, bound with `record_cf_verdict.py`, then same-head CI).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -111,8 +111,8 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 ### Routing observability contract
 
-Use `/runtime.html` → **Routing overview**, or the body-free
-`GET /api/runtime/routing-assignments?limit=100` projection, to diagnose which
+Use the body-free `GET /api/runtime/routing-assignments?limit=100`
+projection to diagnose which
 orchestrator initiated a request, whether selection was automatic or explicit,
 which route/model was admitted, and how the reservation terminated. Summary
 cards, lifecycle groups, filters, and route distributions cover only the
@@ -151,8 +151,9 @@ Every epic driver session (any harness) MUST:
    and same-family chat are still not the gate.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
-   - **grok / gemini / kimi:** canary mint/score
-     (`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane …`); end on
+   - **gemini / codex:** canary mint/score with the seat lane
+     (`.venv/bin/python -m scripts.session_canary.gemini_lane …` or
+     `.venv/bin/python -m scripts.session_canary.codex_lane …`); end on
      FAIL-HANDOFF (&lt;8/10), not compact count.
    - **Claude / Sonnet:** SessionStart / PostCompact + thread-handoff — **no** canary lane
      (do not invent `<model>_lane`).
@@ -168,11 +169,10 @@ Every epic driver session (any harness) MUST:
 
 ## Operator launch surface (#5632)
 
-- Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
-  `./start-claude-driver.sh --epic <epic> [--model claude-sonnet-5-5]`,
+- Driver entrypoints: `./start-claude-driver.sh --epic <epic> [--model claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Gemini/AGY (Flash) is not an epic-driver seat (operator decision 2026-10-03, #9584).
-- Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
+- Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
   spends the cross-family review-of-record seat). **Live policy** is still
   `model_catalog.orchestrator_seats` + `/api/rules?scope=task:routing` (or `scope=full`).
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added
@@ -221,7 +221,7 @@ Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF
 For normal **read-only inter-agent communication**, ACP is the only provider
 transport. Fleet launchers make ordinary (non-review) `ask-*` and `discuss`
 calls that name **2 to 4 distinct enabled seats** use the durable ACP controller:
-Codex, Grok, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never participants (retired, OO-58, #11327; the runtime refuses them).
+Codex, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never participants (retired, OO-58, #11327; the runtime refuses them). Grok 4.7 codes and reviews through Cursor at `grok-4.7-high` (C-5307); it is not a driver.
 Any other participant count is rejected
 loudly before a conversation begins. The direct `.venv/bin/python -m
 scripts.fleet_comms acp-discuss` surface remains available to operators.

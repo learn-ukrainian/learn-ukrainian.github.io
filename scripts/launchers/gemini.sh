@@ -17,6 +17,7 @@ launcher_adapter_exec() {
     (cd "$LC_ROOT" && "$py" -m scripts.agent_runtime.agy_hook_config --cwd "$LC_ROOT") || return 3
   fi
   local cmd=(agy --model "$LC_MODEL")
+  if [ -n "${LC_EFFORT:-}" ]; then cmd+=(--effort "$LC_EFFORT"); fi
   local arg prompt_flag="" core_placed=0
   local -a rest=()
   # AGY has no system-prompt flag and its GEMINI.md loading is unproven, so the

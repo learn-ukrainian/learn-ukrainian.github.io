@@ -33,7 +33,8 @@ from scripts.audit.source_inventory_review_decisions import (
     _validate_decision_row,
     source_inventory_key,
 )
-from scripts.storage.paths import REGISTRY_ROOT
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 _SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 

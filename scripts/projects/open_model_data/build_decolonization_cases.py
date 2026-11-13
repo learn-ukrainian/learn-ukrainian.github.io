@@ -38,8 +38,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.lib.readonly_sqlite import is_sqlite_connection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import is_sqlite_connection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage import paths as storage_paths
+from lu_machinery.storage.artifacts import write_artifact_set
+
 from scripts.projects.open_model_data.audit_dataset_acceptance import PROJECT_ROOT, _resolve_db_path
 from scripts.projects.open_model_data.decolonization_cases_data import (
     LEXICAL_CALQUES,
@@ -60,8 +63,6 @@ from scripts.projects.open_model_data.sum20_codification_records import (
     committed_record_dispositions,
     ensure_reproducible_sum20_table,
 )
-from scripts.storage import paths as storage_paths
-from scripts.storage.artifacts import write_artifact_set
 from scripts.wiki.sum20_official import live_article_predicate_for, normalize_sum20_lookup
 
 _COMPONENT_GROUP = "open_model_component_payload"
@@ -1129,8 +1130,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir /tmp/decolonization-export\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir /tmp/decolonization-export\n"
             "Outputs: managed A payloads and K companions as one transaction, or an explicit external directory.\n"
             "Exit codes: 0 = success; nonzero = validation or publication failed.\n"
             "Related: issues #8340 and #8809."

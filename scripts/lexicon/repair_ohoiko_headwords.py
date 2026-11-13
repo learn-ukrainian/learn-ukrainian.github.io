@@ -17,15 +17,15 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.scratch import ensure_scratch_root
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
-from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest import ohoiko_books_ingest as words
 from scripts.ingest import ohoiko_verbs_ingest as verbs
 from scripts.lexicon import promote_grow_candidates as promote
 from scripts.lexicon.curated_ohoiko_ulp_repromote import _norm_lemma
 from scripts.lexicon.published_record_dispositions import canonical_sha256, load_dispositions
-from scripts.lib.readonly_sqlite import open_readonly
 from scripts.verification.vesum import InspectionStatus, inspect_word
 
 ROOT = Path(__file__).resolve().parents[2]

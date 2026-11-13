@@ -2,13 +2,13 @@
 
 Defense in depth, not universal enforcement: absolute gh paths, aliases,
 extensions and raw HTTP clients can bypass shell interception. Direct project
-publishers must call scripts.publish.github.publish. The private matcher owns all matching logic;
-this module owns destination admission, blocking policy and masked diagnostics.
+publishers must call scripts.publish.github.publish. The private matcher owns all matching logic,
+and the private override module beside it owns override authorization and auditing; this module
+owns destination admission, blocking policy and masked diagnostics.
 """
 
 from __future__ import annotations
 
-import hashlib
 import importlib.util
 import json
 import os
@@ -17,17 +17,21 @@ import subprocess
 import sys
 import unicodedata
 from collections.abc import Mapping
-from datetime import UTC, datetime
 from functools import wraps
 from itertools import pairwise
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+# The machinery package's directory name, which is also its import name and the first component
+# of its files' paths under any checkout. Taken from this file's unresolved location (not from
+# ``__name__``, which a short ``opsec.prepublish`` import shortens, and not by importing
+# ``common/``, which minimal workflow checkouts omit).
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 POLICY = Path(__file__).with_name("blocking.json")
+# Dropped from every internal environment; only the private override authority may admit with it.
 OVERRIDE = "LU_OPSEC_OVERRIDE"
-PROC = Path("/proc")
 
 
 class PublishBlocked(RuntimeError):
@@ -77,71 +81,6 @@ def internal_environment(source: Mapping[str, str] | None = None) -> dict[str, s
     return {key: value for key, value in (os.environ if source is None else source).items() if key != OVERRIDE}
 
 
-def _process(pid: int, assignment: bytes) -> tuple[int, int, bool]:
-    """(parent pid, start time, whether the environment pid was started with holds assignment).
-
-    /proc/<pid>/environ is the environment fixed when the process was
-    executed; later changes inside the process do not appear in it. The start
-    time is read on both sides of it, so a pid reused in between is refused.
-    """
-
-    def stat() -> tuple[int, int]:
-        raw = (PROC / str(pid) / "stat").read_bytes()
-        fields = raw[raw.rindex(b")") + 2 :].split()
-        return int(fields[1]), int(fields[19])
-
-    parent, started = stat()
-    carries = assignment in (PROC / str(pid) / "environ").read_bytes().split(b"\0")
-    if stat()[1] != started:
-        raise LookupError
-    return parent, started, carries
-
-
-def command_keys(reason: str) -> list[str]:
-    """The command an override with this reason was set for, as every process of it names it (#9681).
-
-    That command is the nearest process, from this one upwards, that was not
-    started with the override: the shell whose command line set it, or a
-    program that set it in its own environment. Every process it starts
-    inherits the override, so an in-process publish, a child push, its hooks
-    and a recursive submodule push all walk up to the same process, whichever
-    publishes first and whenever the publisher is imported.
-
-    A shell can run the last program of its command line in place of itself
-    (bash does), and that program, which inherited the override, walks past
-    the shell. So the outermost process that inherited the override is a key
-    too, and first: it is that shell's pid and start time, which its earlier
-    siblings hold as their command. Each key is a pid, its start time and the
-    boot, so a reused pid never matches.
-
-    Refused (PublishBlocked) when the command cannot be determined: no /proc
-    (non-Linux), an unreadable process, a parent replaced while walking (a
-    reused pid has a later start time than its child), or an override that
-    reaches init or the top of a pid namespace, which is no command.
-    """
-    try:
-        boot = (PROC / "sys/kernel/random/boot_id").read_text().strip()
-        assignment = os.fsencode(f"{OVERRIDE}={reason}")
-        pid = os.getpid()
-        parent, started, carries = _process(pid, assignment)
-        seen, inheritor = {pid}, None
-        while carries:
-            if parent <= 1 or parent in seen:
-                raise LookupError
-            seen.add(parent)
-            inheritor = (pid, started)
-            grandparent, parent_started, carries = _process(parent, assignment)
-            if parent_started > started:
-                raise LookupError
-            pid, parent, started = parent, grandparent, parent_started
-        if not boot:
-            raise LookupError
-        keys = [*([inheritor] if inheritor else []), (pid, started)]
-    except Exception:
-        raise PublishBlocked("OPSEC: the command that set the override is unidentifiable; write refused.") from None
-    return [f"{boot}:{key_pid}:{key_started}" for key_pid, key_started in keys]
-
-
 def primary_root(cwd: Path = ROOT) -> Path:
     result = subprocess.run(
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
@@ -170,7 +109,7 @@ def catalog() -> dict:
             return super().construct_mapping(node, deep=deep)
 
     try:
-        return yaml.load((ROOT / "scripts/config/fleet_repos.yaml").read_text(), Loader=UniqueLoader)["repos"]
+        return yaml.load((ROOT / _MACHINERY / "config" / "fleet_repos.yaml").read_text(), Loader=UniqueLoader)["repos"]
     except Exception:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
@@ -388,18 +327,20 @@ def check_texts(
     log_path: Path | None = None,
     field_names: list[str] | None = None,
 ) -> None:
-    """Scan final fields; an override permits policy hits only after a durable log.
+    """Scan final fields; an override permits policy hits only when the private authority admits it.
 
-    The override is dropped from environment on every call but claimed and
-    logged only when a scan blocks, so a clean, empty or private publish
-    leaves it for the one flagged publish it was set for. It is claimed once
-    for the command that set it (command_keys), across all of its processes.
+    The override is dropped from environment on every call but offered to the
+    private override module only when a scan blocks, so a clean, empty or
+    private publish leaves it for the one flagged publish it was set for.
+    That module (beside the private tooling) decides whether the reason is
+    admitted and audits it durably first; without it no override is possible.
     """
     environment = os.environ if environment is None else environment
     reason = environment.pop(OVERRIDE, "")
     if not texts or is_private(destination):
         return
-    loaded = _load_matcher(tooling or private_tooling())
+    tooling = tooling or private_tooling()
+    loaded = _load_matcher(tooling)
     blocks = []
     locations = []
     blocked = set()
@@ -419,57 +360,74 @@ def check_texts(
                     locations.append(location)
     if not blocks:
         return
-    if reason.strip():
-        _record_override(destination, blocks, reason, log_path)
-        return
-    error = PublishBlocked(
+    message = (
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
         "set LU_OPSEC_OVERRIDE to a reason for this command only."
     )
+    if reason.strip():
+        authority = _load_override(tooling)
+        if authority is not None and _override_admitted(authority, destination, blocks, reason, log_path):
+            return
+        message += " The override was not admitted: private override tooling is absent or incompatible."
+    error = PublishBlocked(message)
     error.indices = frozenset(blocked)
     raise error
 
 
-def _record_override(
+def _load_override(tooling: Path):
+    """The private override module beside the private tooling, or None when absent or incompatible.
+
+    It is loaded as the matcher is, from private_tooling().parent; private
+    output is suppressed and every load failure means no override, never a
+    permission. Scanning does not depend on it.
+    """
+    import contextlib
+    import io
+
+    try:
+        path = tooling.parent / "opsec_override" / "override.py"
+        spec = importlib.util.spec_from_file_location("_lu_private_opsec_override", path)
+        if spec is None or spec.loader is None:
+            raise ValueError
+        module = importlib.util.module_from_spec(spec)
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            source = path.read_bytes()
+            exec(compile(source, "<private-opsec-override>", "exec"), module.__dict__)
+        refusal = module.OverrideBlocked
+        if module.OVERRIDE != OVERRIDE or not (isinstance(refusal, type) and issubclass(refusal, Exception)):
+            raise ValueError
+        if not callable(module.authorize):
+            raise ValueError
+        return module
+    except Exception:
+        return None
+
+
+def _override_admitted(
+    authority,
     destination: str,
     blocks: list[tuple[str, int]],
     reason: str,
     log_path: Path | None,
-) -> None:
-    """Claim the command's one override and durably log it before sending.
+) -> bool:
+    """Whether the private authority admits these policy hits; its refusal becomes PublishBlocked.
 
-    Every key of the command (command_keys) is claimed in order, and one
-    already claimed refuses; only the outermost inheritor, a process of the
-    same command, can be claimed before such a refusal.
+    The audit path is this checkout's primary root, shared by every worktree
+    and publisher, unless the caller names one. Only a literal True admits;
+    any other failure, resolving that path included, admits nothing.
     """
-    record = {
-        "timestamp": datetime.now(UTC).isoformat(),
-        "destination": destination,
-        "rule_ids": sorted({rule for rule, _ in blocks}),
-        "reason": reason,
-    }
-    claims: list[str] = []
+    import contextlib
+    import io
+
     try:
         target = log_path or primary_root() / "batch_state/opsec/overrides.jsonl"
-        target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        for key in command_keys(reason):
-            digest = hashlib.sha256(f"{key}:{reason}".encode("utf-8", "surrogateescape")).hexdigest()
-            claims.append(str(target.parent / ("consumed-" + digest)))
-        for claim in claims:
-            os.close(os.open(claim, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
-        fd = os.open(target, os.O_WRONLY | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW, 0o600)
-        with os.fdopen(fd, "a") as stream:
-            stream.write(json.dumps(record, ensure_ascii=True) + "\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-    except PublishBlocked:
-        raise
-    except FileExistsError as exc:
-        if exc.filename in claims:
-            raise PublishBlocked("OPSEC: override already consumed; use a fresh command-scoped reason.") from None
-        raise PublishBlocked("OPSEC: override log unavailable; write refused.") from None
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            admitted = authority.authorize(destination, list(blocks), reason, target)
+    except authority.OverrideBlocked as exc:
+        raise PublishBlocked(str(exc)) from None
     except Exception:
-        raise PublishBlocked("OPSEC: override log unavailable; write refused.") from None
+        return False
+    return admitted is True
 
 
 def real_gh(environment: Mapping[str, str]) -> str:
@@ -492,8 +450,8 @@ def real_gh(environment: Mapping[str, str]) -> str:
             path.is_absolute()
             and path.is_file()
             and os.access(path, os.X_OK)
-            and path != (ROOT / "scripts/agent_runtime/shims/gh").resolve()
-            and path.parts[-4:] != ("scripts", "agent_runtime", "shims", "gh")
+            and path != (ROOT / _MACHINERY / "agent_runtime" / "shims" / "gh").resolve()
+            and path.parts[-4:] != (_MACHINERY, "agent_runtime", "shims", "gh")
         ):
             return str(path)
     raise PublishBlocked("OPSEC: real gh executable unavailable; write refused.")
@@ -502,7 +460,7 @@ def real_gh(environment: Mapping[str, str]) -> str:
 def publish_environment(source: Mapping[str, str], *, root: Path = ROOT) -> dict[str, str]:
     """Keep the publishing shim first without propagating command-scoped overrides."""
     env = internal_environment(source)
-    shim = str(root / "scripts/agent_runtime/shims")
+    shim = str(root / _MACHINERY / "agent_runtime" / "shims")
     env["PATH"] = os.pathsep.join([shim, *[p for p in env.get("PATH", "").split(os.pathsep) if p and p != shim]])
     try:
         env["AGENT_REAL_GH"] = real_gh(source)

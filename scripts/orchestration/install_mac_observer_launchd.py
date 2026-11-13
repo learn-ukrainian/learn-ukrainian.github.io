@@ -32,6 +32,12 @@ from scripts.common.safe_unit_install import (
     remove_unit,
 )
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 LABEL = "com.learn-ukrainian.mac-observer-heartbeat"
 DEFAULT_INTERVAL_MINUTES = 5
 DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS = 30.0
@@ -70,7 +76,7 @@ def state_dir(home: Path) -> Path:
 
 def wrapper_path(repo_root: Path) -> Path:
     """Return the stable bash wrapper launchd executes."""
-    return repo_root / "scripts" / "orchestration" / WRAPPER_NAME
+    return repo_root / _PACKAGE_DIR / WRAPPER_NAME
 
 
 def build_plist(
@@ -161,7 +167,7 @@ def _validate_runtime(repo_root: Path, *, require_interpreter: bool = False) -> 
         interpreter = repo_root / ".venv" / "bin" / "python"
         if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
             raise LaunchdError(f"required interpreter is missing: {interpreter}")
-        heartbeat_script = repo_root / "scripts" / "orchestration" / "observer_heartbeat.py"
+        heartbeat_script = repo_root / _PACKAGE_DIR / "observer_heartbeat.py"
         if not heartbeat_script.is_file():
             raise LaunchdError(f"observer heartbeat script is missing: {heartbeat_script}")
         wrapper = wrapper_path(repo_root)

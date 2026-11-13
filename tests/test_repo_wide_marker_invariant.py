@@ -76,6 +76,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/orchestration/test_worktree_removal_invariant.py",
         "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
+        "tests/test_browser_hardening_guard.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_dispatch_checkout_size.py",
@@ -198,7 +199,7 @@ NOT_REPO_WIDE = {
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_dashboards.py::TestApiEndpoints.test_fetch_calls_in_html": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
+        "Scans only the product pages in scripts/project_api/static/, one fixed directory, not a repository tree."
     ),
     "tests/test_layerb_candidates.py::test_ci_differential_replays_all_unit_fixtures_at_pinned_base_values": (
         "Scans tests/fixtures/qg_bakeoff; fixture files are not test modules, so any change "
@@ -245,17 +246,14 @@ NOT_REPO_WIDE.update(
         for name in (
             "test_codex_legacy_migration_preserves_modified_content",
             "test_agent_manifest_rejects_symlinked_intermediate_component",
-            "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills",
             "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
             "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
             "test_codex_legacy_migration_recognizes_committed_source_before_edits",
             "test_codex_legacy_python_cache_does_not_block_driver_deployment",
             "test_agent_transient_briefs_are_preserved",
-            "test_gemini_shared_skill_name_collision_fails_closed",
             "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
             "test_tracked_mirror_drift_is_detected_before_deploy",
             "test_second_deploy_is_noop_for_codex_target",
-            "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
             "test_tracked_mirror_resolves_each_deploy_source",
             "test_claude_epic_dirs_are_preserved",
             "test_driver_runtime_state_is_preserved",

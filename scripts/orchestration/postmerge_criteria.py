@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -18,6 +19,12 @@ from scripts.common import github_client
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.orchestration import task_lifecycle
 from scripts.publish.github import publish, read
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 LANES = frozenset({
     "claude-infra", "codex-devops", "codex-atlas", "grok-monitor",
@@ -172,8 +179,8 @@ def main(argv: list[str] | None = None) -> int:
         "Use after merge; dry-run by default. Do not use to close issues or audit old issues.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
-        "  .venv/bin/python -m scripts.orchestration.postmerge_criteria --pr 123\n"
-        "  .venv/bin/python -m scripts.orchestration.postmerge_criteria --pr 123 --apply\n"
+        f"  .venv/bin/python -m {_MODULE} --pr 123\n"
+        f"  .venv/bin/python -m {_MODULE} --pr 123 --apply\n"
         "Outputs: JSON report; apply reopens unfinished issues, comments once per item set,\n"
         "and sends idempotent supervisory requests to claude-cto for missing assignments.\n"
         "Exit codes: 0 = no outstanding items; 1 = outstanding items; 2 = read/write or state error.\n"

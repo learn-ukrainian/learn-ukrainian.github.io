@@ -34,8 +34,35 @@ from functools import cached_property, lru_cache, wraps
 from pathlib import Path
 from threading import RLock
 
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mp(relative: str) -> str:
+    return f"{_machinery_top()}/{relative}"
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
+def _scan_trees() -> tuple[str, ...]:
+    """The machinery package directory, the product scripts tree and tests.
+
+    In this checkout the first two are one directory, so the tuple has two names.
+    """
+    return tuple(dict.fromkeys((_machinery_top(), "scripts", "tests")))
+
+
+def _scan_trees_text() -> str:
+    *head, last = [f"{tree}/" for tree in _scan_trees()]
+    return f"{', '.join(head)} and {last}" if head else last
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
-READER_BOUNDARY = "scripts/lib/readonly_sqlite.py"
+READER_BOUNDARY = _mp("lib/readonly_sqlite.py")
 REFERENCE_MANIFEST = Path(__file__).with_name("sqlite_reference_allowlist.json")
 SQLITE_MODULES = frozenset({"sqlite3", "sqlite3.dbapi2", "_sqlite3"})
 CONSTRUCTORS = frozenset({"connect", "Connection"})
@@ -68,6 +95,19 @@ class AllowedReference:
     functions: tuple[str, ...] = ()
 
 
+# Configured entry point (#12504, LOADER-1104). Product data names a module and
+# scripts.ops.product_entry.load_configured_module imports it. That import's
+# argument is not a string constant, so this lint reports it like every other
+# non-constant import_module. The kind pins that one call site and no other.
+CONFIGURED_ENTRY_POINT_KIND = "configured_entry_point"
+CONFIGURED_ENTRY_POINTS = {
+    _mp("ops/product_entry.py"): (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
+}
+# The helper refuses SQLite module names, so a call with a non-constant name is
+# not a finding. A call with a constant SQLite name is, as for any loader.
+CONFIGURED_LOADER = "load_configured_module"
+
+
 def load_allowlist() -> tuple[AllowedReference, ...]:
     entries = tuple(
         AllowedReference(**{**row, "calls": tuple(row.get("calls", ())), "functions": tuple(row.get("functions", ()))})
@@ -75,18 +115,26 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
     )
     if len({entry.path for entry in entries}) != len(entries):
         raise ValueError("duplicate SQLite allowlist path")
+    # Product writer rows stay under scripts/. Machinery rows use this package's
+    # directory name, which is the same prefix in this checkout.
+    machinery_prefix = f"{_machinery_top()}/"
     for entry in entries:
         common_invalid = ".." in Path(entry.path).parts or not entry.reason.strip()
         if entry.kind == "store_resolver":
-            invalid = (entry.path != "scripts/storage/topology.py" or entry.reference_count != 0
+            invalid = (entry.path != _mp("storage/topology.py") or entry.reference_count != 0
                        or entry.target_db is not None or bool(entry.calls) or not entry.functions
                        or not set(entry.functions) <= {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write", "_prepare_store_write_target"})
         elif entry.kind == "fixture_factory":
             invalid = (not entry.path.startswith("tests/") or entry.reference_count < 1
                        or entry.target_db is not None or not entry.calls or bool(entry.functions))
+        elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+            pinned = CONFIGURED_ENTRY_POINTS.get(entry.path)
+            invalid = (pinned is None or entry.reference_count != pinned[0]
+                       or entry.target_db is not None or bool(entry.calls) or bool(entry.functions))
         else:
             invalid = (entry.kind not in {"writer", "reader_pending_migration_9662"}
-                       or entry.reference_count < 1 or not entry.path.startswith("scripts/")
+                       or entry.reference_count < 1
+                       or not (entry.path.startswith("scripts/") or entry.path.startswith(machinery_prefix))
                        or bool(entry.functions)
                        or (entry.kind == "writer" and (not entry.target_db or not entry.calls))
                        or (entry.kind != "writer" and entry.target_db is not None))
@@ -195,12 +243,13 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
     # Every reference/loader branch below needs one of these AST anchors.
     # Check syntax rather than source text, retaining aliased and dynamic imports.
     anchors = SQLITE_MODULES | {"__import__", "importlib", "pkgutil", "builtins",
-                                "import_module", "resolve_name"}
+                                "import_module", "resolve_name", CONFIGURED_LOADER}
     if not (syntax.names & anchors or syntax.strings & SQLITE_MODULES):
         return []
     lines = source.splitlines()
     modules = set(SQLITE_MODULES)
     loaders = {"__import__", "importlib.import_module", "pkgutil.resolve_name"}
+    configured = {CONFIGURED_LOADER}
     findings: dict[tuple[int, int], Finding] = {}
     constructors = set()
 
@@ -247,6 +296,18 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
                 for alias in node.names:
                     if alias.name == "__import__":
                         loaders.add(alias.asname or alias.name)
+            configured.update(alias.asname or alias.name for alias in node.names if alias.name == CONFIGURED_LOADER)
+
+    def configured_sqlite_load(node: ast.AST) -> bool:
+        """A call of the configured-entry-point helper (plain, aliased or qualified) with a constant SQLite name."""
+        if not isinstance(node, ast.Call):
+            return False
+        name = _dotted(node.func)
+        if name not in configured and not name.endswith(f".{CONFIGURED_LOADER}"):
+            return False
+        target = node.args[0] if node.args else next((k.value for k in node.keywords if k.arg == "name"), None)
+        return (isinstance(target, ast.Constant) and isinstance(target.value, str)
+                and not SQLITE_MODULES.isdisjoint(re.split(r"[.:]", target.value)))
 
     parents = syntax.parents
     assignments = [node for node in nodes if isinstance(node, (ast.Assign, ast.AnnAssign))]
@@ -258,7 +319,7 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
         for node in assignments:
             if node.value is not None:
                 value = _dotted(node.value)
-                dynamic_module = False
+                dynamic_module = configured_sqlite_load(node.value)
                 if isinstance(node.value, ast.Call) and _dotted(node.value.func) in loaders:
                     target = (
                         node.value.args[0]
@@ -327,6 +388,8 @@ def classify_source(source: str, rel_path: str, *, syntax: _Syntax | None = None
                 and target.value.split(":", 1)[0] in SQLITE_MODULES
             ) or (not isinstance(target, ast.Constant)):
                 report(node)
+        if configured_sqlite_load(node):
+            report(node)
     return sorted(findings.values(), key=lambda finding: finding.line_no)
 
 
@@ -722,7 +785,7 @@ def census(commit: str, root: Path = REPO_ROOT) -> dict:
         sha = subprocess.check_output(
             ["git", "rev-parse", f"{commit}^{{commit}}"], cwd=root, text=True, timeout=30,
         ).strip()
-    paths = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "-z", sha, "--", "scripts", "tests"], cwd=root, timeout=30)
+    paths = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "-z", sha, "--", *_scan_trees()], cwd=root, timeout=30)
     names = [p for p in paths.decode().split("\0") if p.endswith(".py")]
     requests = "".join(f"{sha}:{p}\n" for p in names).encode()
     blobs = subprocess.check_output(["git", "cat-file", "--batch"], cwd=root, input=requests, timeout=30)
@@ -753,7 +816,7 @@ def base_blob_ids(root: Path, commit: str) -> dict[str, str]:
     if available.returncode:
         # Shallow checkouts lack the frozen base: classify every current file.
         return {}
-    result = subprocess.check_output(["git", "ls-tree", "-r", "-z", commit, "--", "scripts", "tests"],
+    result = subprocess.check_output(["git", "ls-tree", "-r", "-z", commit, "--", *_scan_trees()],
                                      cwd=root, timeout=30)
     blobs = {}
     for row in result.split(b"\0"):
@@ -814,14 +877,14 @@ def iter_scan_paths(root: Path) -> list[Path]:
     """Tracked scripts in a repository, fixture files in an injected test root."""
     if (root / ".git").exists():
         result = subprocess.run(
-            ["git", "ls-files", "-z", "--cached", "--others", "--", "scripts/*.py", "tests/*.py"],
+            ["git", "ls-files", "-z", "--cached", "--others", "--", *(f"{tree}/*.py" for tree in _scan_trees())],
             cwd=root,
             check=True,
             capture_output=True,
             timeout=30,
         )
         return sorted({root / p for p in result.stdout.decode().split("\0") if p})
-    return sorted([*(root / "scripts").rglob("*.py"), *(root / "tests").rglob("*.py")])
+    return sorted({path for tree in _scan_trees() for path in (root / tree).rglob("*.py")})
 
 
 @dataclass(frozen=True)
@@ -860,6 +923,11 @@ def _scan_file(job: tuple[str, str, AllowedReference | None, list[StoreFinding],
                 violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
             if entry.kind == "writer":
                 violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
+            elif entry.kind == CONFIGURED_ENTRY_POINT_KIND:
+                expected = CONFIGURED_ENTRY_POINTS.get(rel)
+                snippets = [finding.snippet for finding in references]
+                if expected is None or snippets != [expected[1]]:
+                    violations.append(f"{rel}: configured entry point differs from the pinned call site")
             else:
                 calls = [
                     ast.unparse(n)
@@ -945,9 +1013,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects\n  .venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects --census origin/main\nOutputs: diagnostics or deterministic census JSON on stdout; no files or databases changed.\nExit codes: 0 = census emitted or pinned inventory matches; 1 = a violation or unreadable input.\nRelated: #9945, #9937, #9609; #9662 reader migration. Code generated by exec is outside this structural scan.",
+        epilog='Examples:\n  .venv/bin/python -m ' + _mod("hygiene", "lint_source_db_writable_connects") + '\n  .venv/bin/python -m ' + _mod("hygiene", "lint_source_db_writable_connects") + ' --census origin/main\nOutputs: diagnostics or deterministic census JSON on stdout; no files or databases changed.\nExit codes: 0 = census emitted or pinned inventory matches; 1 = a violation or unreadable input.\nRelated: #9945, #9937, #9609; #9662 reader migration. Code generated by exec is outside this structural scan.',
     )
-    parser.add_argument("--census", metavar="COMMIT", help="Emit deterministic JSON census of tracked scripts/ and tests/ at COMMIT (e.g. origin/main); default: lint working tree.")
+    parser.add_argument("--census", metavar="COMMIT", help=f"Emit deterministic JSON census of tracked {_scan_trees_text()} at COMMIT (e.g. origin/main); default: lint working tree.")
     args = parser.parse_args(argv)
     if args.census:
         print(json.dumps(census(args.census), indent=2) + "")
@@ -956,7 +1024,7 @@ def main(argv: list[str] | None = None) -> int:
     if violations or unreadable:
         print("\n".join([*violations, *(f"{path}: unreadable" for path in unreadable)]), file=sys.stderr)
         return 1
-    print("OK: SQLite reference boundary and store-access ratchet pass in scripts/ and tests/")
+    print(f"OK: SQLite reference boundary and store-access ratchet pass in {_scan_trees_text()}")
     return 0
 
 

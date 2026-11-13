@@ -1,17 +1,24 @@
-"""Preload the import closure for API startup resilience."""
+"""Preload the import closure for API startup resilience.
+
+The machinery lists below cover ``scripts/api/**``. The product contribution
+adds its own required and optional module names (``ProductContribution.preload``
+and ``preload_optional``), and :func:`preload_all` loads them with the same
+rules (Monitor split, C-4687).
+"""
 
 from __future__ import annotations
 
 import logging
+import os
 import sqlite3
 import time
-from importlib import util as importlib_util
+from collections.abc import Sequence
 from pathlib import Path
 
 try:
     from scripts.lib.readonly_sqlite import import_named_module
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
@@ -32,7 +39,6 @@ PRELOAD_MODULES = [
     "pathlib",
     "fastapi.responses",
     # Internal required modules
-    "scripts.api.state_build",
     "scripts.api.state_helpers",
     "scripts.api.rules_router",
     "scripts.api.session_router",
@@ -42,48 +48,36 @@ PRELOAD_MODULES = [
     "scripts.api.fleet_workers_collect",
     "scripts.api.fleet_workers_router",
     "sqlite3",
-    "scripts.api.review_parsing",
     "scripts.orchestration",
-    "audit.config",
-    "audit.checks.activity_validation",
-    "yaml_activities",
     "scripts.guardrails",
-    "scripts.audit.check_core_bare",
-    "audit.check_core_bare",
-    "scripts.audit.check_self_symlinks",
-    "audit.check_self_symlinks",
-    "scripts.audit.check_primary_integrity",
-    "audit.check_primary_integrity",
-    "scripts.audit.check_node_modules_integrity",
-    "audit.check_node_modules_integrity",
-    "scripts.audit.check_venv_integrity",
-    "audit.check_venv_integrity",
-    "scripts.audit.check_worktree_cleanup_integrity",
-    "audit.check_worktree_cleanup_integrity",
-    "scripts.audit.check_tmp_usability",
-    "audit.check_tmp_usability",
-    "scripts.build.phase_constants",
+    "scripts.hygiene.check_core_bare",
+    "hygiene.check_core_bare",
+    "scripts.hygiene.check_self_symlinks",
+    "hygiene.check_self_symlinks",
+    "scripts.hygiene.check_primary_integrity",
+    "hygiene.check_primary_integrity",
+    "scripts.hygiene.check_node_modules_integrity",
+    "hygiene.check_node_modules_integrity",
+    "scripts.hygiene.check_venv_integrity",
+    "hygiene.check_venv_integrity",
+    "scripts.hygiene.check_worktree_cleanup_integrity",
+    "hygiene.check_worktree_cleanup_integrity",
+    "scripts.hygiene.check_tmp_usability",
+    "hygiene.check_tmp_usability",
     "agent_runtime.adapters.gemini",
-    "research_quality",
-    "research.research_markdown_utils",
     "scripts.research.registry",
     "scripts.audit.check_research_registry",
 ]
 
 # Heavy or optional dependencies (try/except ImportError, record skipped)
 OPTIONAL_MODULES = [
-    "pymupdf",
-    # Not the deprecated `fitz` alias: its import calls pymupdf.message_warning,
-    # which writes to the stream captured when pymupdf was imported. A closed
-    # pytest capture stream then raises ValueError and aborts API startup.
-    "rag.poc_pair_page",
-    "rag.query",
     # Bridge modules use the canonical `scripts.` identity only (#6812):
     # preloading the bare `ai_agent_bridge` name would create a second,
     # divergent sys.modules identity in the long-lived API process.
     "scripts.ai_agent_bridge",
     "scripts.ai_agent_bridge._channels",
     "scripts.ai_agent_bridge._db",
+    "scripts.ai_agent_bridge.broker_indexes",
 ]
 
 DYNAMIC_LOADERS = {
@@ -94,11 +88,6 @@ DYNAMIC_LOADERS = {
             {"func": "import_module", "caller": "list_routing_assignments"},
             {"func": "spec_from_file_location", "caller": "_load_registry_default_models"},
         ],
-    },
-    "scripts.api.comms_router": {
-        "description": "Loads broker migration files dynamically using spec_from_file_location",
-        "strategy": "load_migration",
-        "calls": [{"func": "spec_from_file_location", "caller": "ensure_broker_db_ready"}],
     },
 }
 
@@ -123,35 +112,17 @@ def _walk_adapters_strategy() -> tuple[int, int, list[str]]:
     return pinned, skipped, skipped_names
 
 
-def _load_migration_strategy() -> tuple[int, int, list[str]]:
-    pinned = 0
-    skipped = 0
-    skipped_names = []
-    api_dir = Path(__file__).resolve().parent
-    migration_path = api_dir.parent / "migrations" / "2026-05-06-broker-indexes.py"
-    if migration_path.exists():
-        try:
-            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
-            if spec is not None and spec.loader is not None:
-                module = importlib_util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                pinned += 1
-        except Exception:
-            skipped += 1
-            skipped_names.append("broker_indexes_20260506")
-    return pinned, skipped, skipped_names
-
-
 STRATEGIES = {
     "walk_adapters": _walk_adapters_strategy,
-    "load_migration": _load_migration_strategy,
 }
 
 
-def preload_all() -> None:
+def preload_all(product_modules: Sequence[str] = (), product_optional: Sequence[str] = ()) -> None:
     """Preload all static and dynamic modules in the API import closure.
 
-    Aborts startup loudly if any required module fails to load.
+    ``product_modules`` and ``product_optional`` are the product
+    contribution's required and optional names. Aborts startup loudly if any
+    required module fails to load.
     """
     start_time = time.perf_counter()
     pinned_count = 0
@@ -159,7 +130,7 @@ def preload_all() -> None:
     skipped_names = []
 
     # 1. Load required static modules
-    for name in PRELOAD_MODULES:
+    for name in [*PRELOAD_MODULES, *product_modules]:
         try:
             # sqlite3 is the stdlib module itself. The named-module boundary
             # refuses it; a direct import warms the same module without exposing
@@ -175,7 +146,7 @@ def preload_all() -> None:
             raise RuntimeError(f"Required module preload failed: {name}") from e
 
     # 2. Load optional/heavy static modules
-    for name in OPTIONAL_MODULES:
+    for name in [*OPTIONAL_MODULES, *product_optional]:
         try:
             import_named_module(name)
             pinned_count += 1

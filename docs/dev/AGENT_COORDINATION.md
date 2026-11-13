@@ -904,7 +904,7 @@ Every curriculum module should have rich external content in `[!resources]` sect
 - Merged with existing 602 ULP podcast mappings
 - YAML structure validated
 
-**Backup created:** `docs/resources/external_resources.yaml.backup`
+The stray backup copy was removed in REMOVE-UNNEEDED-1107; see git history.
 
 ### Phase 5: ✅ COMPLETE - Update Generation Scripts
 

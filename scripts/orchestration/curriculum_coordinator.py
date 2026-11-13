@@ -23,7 +23,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import ProductRootError, main_checkout_root
+from scripts.common.repo_root import product_root as resolve_product_root
 from scripts.fleet import claude_account_lane, credit_lane
 from scripts.orchestration.curriculum_readiness import (
     ReadinessError,
@@ -32,15 +33,19 @@ from scripts.orchestration.curriculum_readiness import (
     module_bundle_state,
 )
 
-DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agents_extensions/shared/curriculum-lifecycle/config/coordinator.v1.yaml"
-CONFIG_SCHEMA_PATH = (
-    PROJECT_ROOT / "agents_extensions/shared/curriculum-lifecycle/schema/coordinator-config.v1.schema.json"
-)
-LEDGER_SCHEMA_PATH = (
-    PROJECT_ROOT / "agents_extensions/shared/curriculum-lifecycle/schema/coordinator-ledger.v1.schema.json"
-)
-BOUNDED_RUN_SCHEMA_PATH = (
-    PROJECT_ROOT / "agents_extensions/shared/skills/track-completion/schema/bounded-completion-run.v1.schema.json"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
+# Product files, relative to the product checkout (C-4746: found through ``product_root``, never
+# through this file's location).
+DEFAULT_CONFIG_REL = Path("agents_extensions/shared/curriculum-lifecycle/config/coordinator.v1.yaml")
+CONFIG_SCHEMA_REL = Path("agents_extensions/shared/curriculum-lifecycle/schema/coordinator-config.v1.schema.json")
+LEDGER_SCHEMA_REL = Path("agents_extensions/shared/curriculum-lifecycle/schema/coordinator-ledger.v1.schema.json")
+BOUNDED_RUN_SCHEMA_REL = Path(
+    "agents_extensions/shared/skills/track-completion/schema/bounded-completion-run.v1.schema.json"
 )
 _TARGET_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 _SCOPES = frozenset({"all", "built", "unbuilt", "stale", "one"})
@@ -89,6 +94,21 @@ def _load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _product_checkout(repo_root: Path | None = None) -> Path:
+    """``repo_root`` when a caller names it, else the product checkout ``product_root`` selects."""
+    if repo_root is not None:
+        return repo_root
+    try:
+        return resolve_product_root()
+    except ProductRootError as exc:
+        raise CoordinatorError(str(exc)) from None
+
+
+def product_file(relative: Path) -> Path:
+    """The product file at checkout-relative ``relative`` in the selected product checkout."""
+    return _product_checkout() / relative
+
+
 def _validate(value: Mapping[str, Any], schema_path: Path, label: str) -> None:
     schema = _load_json(schema_path)
     try:
@@ -117,15 +137,17 @@ def _repo_relative_path(repo_root: Path, raw: str) -> Path:
     return resolved
 
 
-def load_config(path: Path = DEFAULT_CONFIG_PATH) -> dict[str, Any]:
-    """Load and semantically validate the versioned coordinator policy."""
+def load_config(path: Path | None = None) -> dict[str, Any]:
+    """Load and semantically validate the versioned coordinator policy (default: the product's)."""
+    if path is None:
+        path = product_file(DEFAULT_CONFIG_REL)
     try:
         value = yaml.safe_load(path.read_text(encoding="utf-8", errors="strict"))
     except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
         raise CoordinatorError(f"invalid coordinator config {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise CoordinatorError(f"coordinator config must be a mapping: {path}")
-    _validate(value, CONFIG_SCHEMA_PATH, "coordinator config")
+    _validate(value, product_file(CONFIG_SCHEMA_REL), "coordinator config")
     if value["default_wave_size"] > value["maximum_wave_size"]:
         raise CoordinatorError("default_wave_size cannot exceed maximum_wave_size")
     group_ids = [group["id"] for group in value["health"]["capability_groups"]]
@@ -284,7 +306,7 @@ def _append_event(ledger: dict[str, Any], event: str, details: Mapping[str, Any]
 
 
 def _validate_ledger(ledger: Mapping[str, Any]) -> None:
-    _validate(ledger, LEDGER_SCHEMA_PATH, "coordinator ledger")
+    _validate(ledger, product_file(LEDGER_SCHEMA_REL), "coordinator ledger")
     identity_payload = {
         "owner": ledger["owner"],
         "request": ledger["request"],
@@ -624,7 +646,7 @@ def compact_status(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "last_event": ledger["history"][-1]["event"],
         "event_count": len(ledger["history"]),
         "resume_command": (
-            ".venv/bin/python scripts/orchestration/curriculum_coordinator.py resume "
+            f".venv/bin/python {_PACKAGE_DIR}/curriculum_coordinator.py resume "
             f"--run-id {shlex.quote(str(ledger['run_id']))} "
             f"--owner {shlex.quote(str(ledger['owner']))}"
         ),
@@ -799,12 +821,13 @@ def start_run(
     end: str | None = None,
     wave_size: int | None = None,
     terminal_goal: str | None = None,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
     readiness_evaluator: ReadinessEvaluator | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Create one deterministic run or return its exact active retry."""
+    repo_root = _product_checkout(repo_root)
     track = track.strip().lower()
     owner = owner.strip()
     scope = scope.strip().lower()
@@ -965,11 +988,12 @@ def resume_run(
     run_id: str,
     *,
     owner: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Renew only the exact run's leases and reconstruct missing same-run leases."""
+    repo_root = _product_checkout(repo_root)
     config = load_config(config_path)
     root = _runtime_root(repo_root, config, runtime_root)
     try:
@@ -1025,11 +1049,12 @@ def migrate_terminal_goal(
     *,
     owner: str,
     terminal_goal: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Attach explicit intent to one legacy run and reopen unproven outcomes."""
+    repo_root = _product_checkout(repo_root)
     terminal_goal = terminal_goal.strip().lower()
     if terminal_goal not in _TERMINAL_GOALS:
         raise CoordinatorError("terminal goal must be one of merge, certify, or deploy")
@@ -1073,11 +1098,12 @@ def adjudicate_run(
     *,
     owner: str,
     reason: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Explicitly abandon an unrecoverable drifted or stale run without lease theft."""
+    repo_root = _product_checkout(repo_root)
     reason = reason.strip()
     if not reason or len(reason) > 500:
         raise CoordinatorError("adjudication reason must contain 1..500 characters")
@@ -1159,13 +1185,14 @@ def acquire_next(
     run_id: str,
     *,
     owner: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
     health_probe: HealthProbe = default_health_probe,
     readiness_evaluator: ReadinessEvaluator | None = None,
 ) -> tuple[Path, dict[str, Any], dict[str, Any] | None]:
     """Acquire the next prerequisite-safe module, pausing cleanly on fleet health."""
+    repo_root = _product_checkout(repo_root)
     config = load_config(config_path)
     root = _runtime_root(repo_root, config, runtime_root)
     evaluator = readiness_evaluator or _default_readiness(repo_root)
@@ -1347,7 +1374,7 @@ def _bounded_module_result(
     bounded_run = bounded.get("run") if isinstance(bounded, Mapping) else None
     if not isinstance(bounded_run, Mapping):
         raise CoordinatorError("track-completion ledger has no authoritative bounded-completion run")
-    _validate(bounded_run, BOUNDED_RUN_SCHEMA_PATH, "bounded module run")
+    _validate(bounded_run, product_file(BOUNDED_RUN_SCHEMA_REL), "bounded module run")
     if bounded_run.get("run_id") != run_id or bounded_run.get("target") != f"{track}/{slug}":
         raise CoordinatorError("bounded module run identity does not match the track ledger")
     measurements = bounded_run["measurements"]
@@ -1428,11 +1455,12 @@ def _record_module(
     slug: str,
     disposition: str | None,
     integration: Mapping[str, Any] | None,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any], dict[str, Any] | None]:
     """Persist one derived bounded result, retaining only a legacy adapter."""
+    repo_root = _product_checkout(repo_root)
     disposition = disposition.strip().lower() if disposition is not None else None
     slug = slug.strip().lower()
     if not _TARGET_RE.fullmatch(slug):
@@ -1519,11 +1547,12 @@ def record_module(
     slug: str,
     disposition: str,
     integration: Mapping[str, Any] | None,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Compatibility adapter for provisional ledgers and existing Python callers."""
+    repo_root = _product_checkout(repo_root)
 
     path, ledger, _operator_result = _record_module(
         run_id,
@@ -1545,11 +1574,12 @@ def record_bounded_module_result(
     slug: str,
     track_ledger: str,
     track_run_id: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> tuple[Path, dict[str, Any], dict[str, Any]]:
     """Record the terminal result of the one authoritative bounded module ledger."""
+    repo_root = _product_checkout(repo_root)
 
     path, ledger, operator_result = _record_module(
         run_id,
@@ -1569,10 +1599,11 @@ def status_run(
     run_id: str,
     *,
     owner: str,
-    repo_root: Path = PROJECT_ROOT,
-    config_path: Path = DEFAULT_CONFIG_PATH,
+    repo_root: Path | None = None,
+    config_path: Path | None = None,
     runtime_root: Path | None = None,
 ) -> dict[str, Any]:
+    repo_root = _product_checkout(repo_root)
     config = load_config(config_path)
     root = _runtime_root(repo_root, config, runtime_root)
     _path, ledger = _load_owned_run(
@@ -1591,8 +1622,8 @@ def status_run(
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", type=Path, default=PROJECT_ROOT)
-    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
+    parser.add_argument("--repo-root", type=Path, default=None, help="default: the product checkout")
+    parser.add_argument("--config", type=Path, default=None, help="default: the product coordinator config")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     start_parser = subparsers.add_parser("start", help="Create or replay one ordered run")
@@ -1631,12 +1662,13 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    common = {
-        "repo_root": args.repo_root.resolve(),
-        "config_path": args.config.resolve(),
-        "runtime_root": None,
-    }
     try:
+        # Resolved at startup: an unselectable product checkout refuses the command.
+        common: dict[str, Any] = {
+            "repo_root": _product_checkout(args.repo_root).resolve(),
+            "config_path": (args.config or product_file(DEFAULT_CONFIG_REL)).resolve(),
+            "runtime_root": None,
+        }
         if args.command == "start":
             path, ledger = start_run(
                 args.track,

@@ -1,76 +1,56 @@
 # Agent GitHub identity
 
-Dispatches use a repository-scoped GitHub App installation token before any
-other GitHub credential. This lets ordinary `git push` and `.venv/bin/python -m scripts.publish pr-create` work
-without giving an agent shell the operator's GitHub keychain identity.
+Agent pushes and pull requests use a repository-scoped identity provisioned
+by the operator. Keep provisioning separate from task execution. An agent
+must not borrow an operator's personal credentials to make a push succeed.
 
 ## One-time App setup
 
-Create and install a GitHub App on the `learn-ukrainian` repository only. Give
-the installation these repository permissions:
+The operator installs a GitHub App only on the intended repository and grants
+the permissions required by the approved workflow. Routine publication needs
+repository contents and pull-request access; broader organization or
+administration access requires separate authorization.
 
-- **Contents:** Read and write
-- **Pull requests:** Read and write
-
-Do not grant workflow, administration, organization-secret, or broader
-organization permissions. Store the App ID, installation ID, and private key
-only in the operator's local secret store, then export them for the dispatch
-service as:
-
-```bash
-export LU_AGENT_GITHUB_APP_ID='…'
-export LU_AGENT_GITHUB_APP_PRIVATE_KEY='<PKCS#8 PEM-encoded private key>'
-export LU_AGENT_GITHUB_APP_INSTALLATION_ID='…'
-```
-
-The runtime signs a short-lived JWT and asks GitHub for an installation token
-scoped to this repository. It does not request additional permissions.
+Keep the App identifiers and private key in the approved private secret
+store. Never put them in the checkout, a task brief, logs or public evidence.
+The runtime mints a short-lived installation token for the repository.
 
 ## Protected App provisioning for rescue
 
-The operator provisions `${XDG_CONFIG_HOME:-$HOME/.config}/learn-ukrainian/agent-github-app/`
-with mode `0700`, owned by the user running rescue. It contains exactly
-`app-id`, `installation-id` and `private-key.pem`, each a regular file owned
-by that user with mode `0600`. The two IDs are single-line numeric text;
-the key is the App's PEM private key. Do not use symlinks.
+Rescue uses operator-provisioned inputs with restrictive ownership and file
+permissions. Missing, incomplete, unreadable, symlinked or unsafe provisioning
+must refuse the operation. Do not repair it from an agent task or fall back to
+a personal identity. Report only the value-free refusal code privately.
 
-Only rescue reads this directory. Explicit environment App inputs take
-precedence, followed by this directory, then `LU_AGENT_GITHUB_TOKEN` when the
-directory is absent. A partial or unsafe directory refuses without fallback;
-rescue never uses the legacy operator token. App tokens request only
-repository-scoped `contents:write` and are revoked after success or failure.
-Keys and provisioning inputs are never exported to child processes.
-
-Refusals retain `rescue_identity_unavailable` and report a `missing` list of
-fixed `item:category` codes in the diagnostic and result. Items are
-`app-directory`, `app-id`, `installation-id`, `private-key.pem`, `agent-token`
-and `app-token`. Categories are `missing`, `wrong_mode`, `wrong_owner`,
-`symlink`, `wrong_type`, `unreadable`, `changed`, `invalid`,
-`unexpected_items` and `mint_failed`. The supported alternative is publishing
-through the normal pre-push push from the worktree.
+Temporary tokens must remain scoped to the authorized operation and be revoked
+when it finishes, including after failure. Provisioning inputs must not leak
+into child processes.
 
 ## Dedicated-token alternative
 
-Until the App is installed, provision a dedicated bot token with the same
-repository-level scope and set:
-
-```bash
-export LU_AGENT_GITHUB_TOKEN='…'
-```
-
-The runtime passes it to child shells as `GH_TOKEN`, which both GitHub CLI and
-the Git askpass helper use. It does not pass `GITHUB_TOKEN` through.
+A dedicated automation token is an operator-provisioned alternative. Scope it
+to the intended repository and approved actions. Do not use a personal token,
+copy another account's login state or publish the token's discovery location.
 
 ## Confirm the active identity
 
-Inside a dispatched agent shell, check only the non-secret provenance:
+Inside a dispatched shell, inspect only non-secret provenance:
 
 ```bash
 printf '%s\n' "$LU_AGENT_GITHUB_IDENTITY_SOURCE"
 ```
 
-The App route reports `app`; the dedicated-token route reports `token`. The
-temporary legacy path reports `legacy` and emits a one-line warning to stderr.
-Legacy fallback uses an operator `GH_TOKEN`, `GITHUB_TOKEN`, or local
-`~/.bash_secrets` only when neither App nor dedicated-token configuration is
-present. It is a transition mechanism, not a long-term dispatch identity.
+Compare that provenance with the authorized task's identity route using the
+private procedure. A missing or unexpected result blocks publication. Do not
+print the token, environment dump, account profile or secret-store contents.
+
+After the identity is verified, use ordinary project publication commands
+from the dispatch worktree:
+
+```bash
+git push -u origin HEAD
+.venv/bin/python -m scripts.publish pr-create --title '<title>' \
+  --body-file '<project-relative-body-file>' --base main --head '<branch>'
+```
+
+Operational details are in the private infra repository's `runbooks/agent-github-identity.md`.

@@ -33,7 +33,6 @@ from scripts.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     UNATTESTED_AUTHOR_FAMILY,
     ResolverInputs,
-    evaluate_candidate,
     resolve_author_family,
     resolve_reviewer,
 )
@@ -65,13 +64,10 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
 
 def test_cursor_attested_grok_author_refuses_same_family_review():
-    """Both Grok transports refuse an attested xAI author (#9769)."""
+    """An attested xAI author cannot use the restored Grok reviewer (C-5307)."""
     inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium", claude_account=HOST_ACCOUNT)
     assert resolve_author_family(inputs.author_model) == "xai"
-    for name in ("grok-4.7-cursor-fallback",):
-        result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert result.status == "excluded"
-        assert result.reason == "same family as author (xai) — cross-family review requires a different family"
+    assert REVIEW_CANDIDATES["grok-4.7-cursor-fallback"].family == "xai"
 
     resolution = resolve_reviewer(inputs)
     assert resolution.fail_closed_reason is None

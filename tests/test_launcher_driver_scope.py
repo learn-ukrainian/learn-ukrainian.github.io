@@ -11,11 +11,14 @@ import shutil
 import signal
 import subprocess
 import sys
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
+from tests.helpers import machinery_package
+from tests.launcher_sandbox import launcher_environment
 from tests.wait_helpers import wait_until
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
@@ -51,7 +54,8 @@ def test_forwarder_finishes_close_and_reaps_children_after_repeated_signal(
     attempts = tmp_path / "attempts"
     closed = tmp_path / "closed"
     client_pid = tmp_path / "client-pid"
-    core = _write(tmp_path / "launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
+    # Keep the package layout: the core names its modules from its own location.
+    core = _write(tmp_path / "scripts/lib/launcher_core.sh", (REPO / "scripts/lib/launcher_core.sh").read_text())
     provider = _write(tmp_path / "provider.py", """import signal, sys
 from pathlib import Path
 def stop(sig, frame):
@@ -79,12 +83,11 @@ LC_PROVIDER=claude
 LC_DRIVER_CHILD_PID=$!
 sleep 300 & LC_SUPERVISORY_WATCH_PID=$!
 sleep 300 & LC_DRIVER_RENEW_PID=$!
-sleep 300 & LC_OBSERVER_HEARTBEAT_PID=$!
 trap 'launcher_forward_driver_signal {name} {expected}' {name}
 printf 'armed\\n' > armed
 IFS= read -r _ < "$TEST_GATE"
 """)
-    env = {**os.environ, "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
+    env = {**launcher_environment(), "TEST_GATE": str(gate), "TEST_ATTEMPTS": str(attempts),
            "TEST_CLOSED": str(closed), "TEST_CLIENT_PID": str(client_pid)}
     process = subprocess.Popen(["bash", str(launcher)], cwd=tmp_path, env=env, start_new_session=True,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -152,13 +155,22 @@ def manager_guard(directory: Path) -> Path:
     return directory
 
 
-def scope_sandbox(root: Path, tmp_path: Path) -> dict[str, str]:
-    """Copy the real helper, replacing only kernel reads with test-owned files."""
-    helper = root / "scripts/lib/driver_scope.sh"
+def scope_sandbox(
+    root: Path, tmp_path: Path, *, machinery: Path | None = None, package: str | None = None
+) -> dict[str, str]:
+    """Copy the real helper, replacing only kernel reads with test-owned files.
+
+    ``machinery`` is the package directory whose helper is copied (the checkout's by
+    default, or an installed release's) and ``package`` the directory name it takes under
+    ``root``.
+    """
+    helper = root / (package or machinery_package()) / "lib/driver_scope.sh"
     helper.parent.mkdir(parents=True, exist_ok=True)
-    body = (REPO / "scripts/lib/driver_scope.sh").read_text()
+    body = ((machinery or REPO / machinery_package()) / "lib/driver_scope.sh").read_text()
     assert body.count('"/proc/$$/cgroup"') == 1
     body = body.replace('"/proc/$$/cgroup"', '"$FAKE_CGROUP"')
+    # Never write through a link into the source tree.
+    helper.unlink(missing_ok=True)
     helper.write_text(body)
     bindir = tmp_path / "scope-bin"
     bindir.mkdir(exist_ok=True)
@@ -185,6 +197,24 @@ exec "$@"
     exe.write_text("""#!/usr/bin/env bash
 printf 'systemctl %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
 [ "${FAKE_BUS_FAIL:-0}" = 0 ] || exit 1
+if [[ "$*" == *--value* ]]; then
+  if [ -n "${FAKE_SCOPE_STATE:-}" ]; then /bin/cat "$FAKE_SCOPE_STATE"; else printf 'inactive\\n'; fi
+  exit 0
+fi
+if [ "${2:-}" = kill ]; then
+  [ -n "${FAKE_SCOPE_ORPHAN:-}" ] || exit 0
+  IFS= read -r cgroup < "$FAKE_CGROUP"
+  [ "${@: -1}" = "${cgroup##*/}" ] || exit 97
+  IFS= read -r orphan < "$FAKE_SCOPE_ORPHAN"
+  case "$*" in
+    *--signal=TERM*) printf 'TERM\\n' >> "$FAKE_SCOPE_SIGNALS"; kill -TERM "$orphan" || exit 97 ;;
+    *--signal=KILL*) printf 'KILL\\n' >> "$FAKE_SCOPE_SIGNALS"; kill -KILL "$orphan" || exit 97
+      printf 'inactive\\n' > "$FAKE_SCOPE_STATE" ;;
+    *) exit 97 ;;
+  esac
+  exit 0
+fi
+[ "${2:-}" != stop ] || exit 0
 if [[ "$*" == *lu-driver.slice* ]]; then
   printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
   exit
@@ -215,7 +245,7 @@ exit "${FAKE_LOGGER_RC:-0}"
     cgroup.write_text("0::/test/outside.scope\n")
     guard = manager_guard(tmp_path / "manager-guard-bin")
     return {
-        "PATH": f"{bindir}:{guard}:{os.environ['PATH']}",
+        "PATH": f"{bindir}:{guard}:{os.defpath}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
         "FAKE_MANAGER_CALLS": str(tmp_path / "manager-calls"),
@@ -303,23 +333,11 @@ launcher_adapter_exec() {
     return launcher, env
 
 
-_INHERITED_HOLDS = ("LU_DRIVER_", "PYTEST_XDIST_AUTO_NUM_WORKERS")
-
-
-def _inherited_environ() -> dict[str, str]:
-    """The process environment minus holds the pre-push gate or a driver scope exports.
-
-    The gate sets PYTEST_XDIST_AUTO_NUM_WORKERS and a driver scope sets the
-    LU_DRIVER_* limits; each test supplies the ones it asserts on explicitly.
-    """
-    return {k: v for k, v in os.environ.items() if not k.startswith(_INHERITED_HOLDS)}
-
-
 def _run(launcher: Path, env: dict[str, str], **extra: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**_inherited_environ(), **env, **extra},
+        env={**launcher_environment(), **env, **extra},
         input="stdin survives\n",
         capture_output=True,
         text=True,
@@ -409,13 +427,63 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     _assert_exit_line(result.stderr, env, rc)
 
 
+@pytest.mark.parametrize(("provider_exit", "expected"), [("exit 0", 0), ("exit 23", 23), ("kill -KILL $$", 137)])
+def test_driver_scope_outlives_agent_until_remaining_children_are_stopped(
+    tmp_path: Path, provider_exit: str, expected: int
+) -> None:
+    """Scope outlives its agent: an orphan ignoring TERM must die without replacing the agent status."""
+    launcher, env = _launcher(tmp_path)
+    orphan = tmp_path / "orphan"
+    state = tmp_path / "scope-state"
+    state.write_text("active\n")
+    ready = tmp_path / "orphan-ready"
+    os.mkfifo(ready)
+    env.update(
+        FAKE_SCOPE_ORPHAN=str(orphan), FAKE_SCOPE_STATE=str(state),
+        FAKE_SCOPE_SIGNALS=str(tmp_path / "scope-signals"), FAKE_RUN_ARGV=str(tmp_path / "scope-argv"),
+        TEST_ORPHAN_READY=str(ready),
+    )
+    adapter = launcher.parent / "scripts/launchers/claude.sh"
+    adapter.write_text(adapter.read_text() + """
+launcher_adapter_exec() {
+  bash -c 'trap "" TERM; printf "%s\\n" "$$" > "$FAKE_SCOPE_ORPHAN";
+    printf "ready\\n" > "$TEST_ORPHAN_READY"; exec sleep 300' </dev/null >/dev/null 2>&1 &
+  IFS= read -r _ < "$TEST_ORPHAN_READY"
+""" + provider_exit + "\n}\n")
+    started = time.monotonic()
+    try:
+        result = _run(launcher, env)
+        assert result.returncode == expected, result.stderr
+        _assert_exit_line(result.stderr, env, expected)
+        assert state.read_text() == "inactive\n", result.stderr
+        assert time.monotonic() - started < 6
+        pid = int(orphan.read_text())
+
+        def orphan_finished() -> bool:
+            try:
+                return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] in {"Z", "X"}
+            except (FileNotFoundError, ProcessLookupError):
+                return True
+
+        wait_until(orphan_finished, timeout=2, message="scope orphan killed")
+        assert Path(env["FAKE_SCOPE_SIGNALS"]).read_text().splitlines() == ["TERM", "KILL"]
+        argv = Path(env["FAKE_RUN_ARGV"]).read_bytes().split(b"\0")
+        # Live-agent external stops must keep the manager's original grace.
+        assert b"--property=TimeoutStopSec=2s" not in argv
+        assert b"--property=SendSIGKILL=yes" not in argv
+    finally:
+        if orphan.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(orphan.read_text()), signal.SIGKILL)
+
+
 @pytest.mark.parametrize("rc", [0, 130])
 def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)
     with subprocess.Popen(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**_inherited_environ(), **env, "TEST_RC": str(rc)},
+        env={**launcher_environment(), **env, "TEST_RC": str(rc)},
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -540,6 +608,7 @@ read() {{
         timeout=30,
         # No controlling terminal: the waiter is never in a foreground group.
         start_new_session=True,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == expected, result.stderr
@@ -565,6 +634,7 @@ printf 'reaped child; waiter alive\\n'
         capture_output=True,
         text=True,
         timeout=30,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "reaped child; waiter alive\n"
@@ -581,6 +651,7 @@ raise SystemExit(0 if ctypes.CDLL(None).prctl(15, sys.argv[1].encode(), 0, 0, 0)
 """, name],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
+        env=launcher_environment(),
     )
     stat = Path(f"/proc/{child.pid}/stat")
     try:
@@ -598,6 +669,7 @@ if driver_scope_child_running "$2"; then echo running; else echo exited; fi
             capture_output=True,
             text=True,
             timeout=10,
+            env=launcher_environment(),
         )
         assert result.returncode == 0, result.stderr
         assert result.stdout == "exited\n"
@@ -705,7 +777,7 @@ launcher_adapter_exec() {
         ["bash", str(launcher)],
         cwd=launcher.parent,
         env={
-            **_inherited_environ(), **env,
+            **launcher_environment(), **env,
             "TEST_CHILD_READY": str(child_ready), "TEST_RECEIVED": str(received),
             "TEST_READ_ENTERING": str(read_entering), "TEST_READ_FINISHED": str(read_finished),
             "TEST_TRAP_IN_READ": str(trap_in_read), "TEST_RELAY_FINISHED": str(relay_finished),
@@ -808,6 +880,7 @@ def test_recorded_signal_is_forwarded_only_to_a_running_child(tmp_path: Path, se
         text=True,
         timeout=30,
         start_new_session=True,
+        env=launcher_environment(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == expected, result.stderr
@@ -826,7 +899,7 @@ def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
     bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
     (bindir / "logger").unlink()
     # Keep the sandbox utilities available without falling back to host logger.
-    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk"):
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk", "timeout"):
         executable = shutil.which(name)
         assert executable is not None
         (bindir / name).symlink_to(executable)
@@ -1027,7 +1100,7 @@ def _direct_entry(
     )
     result = subprocess.run(
         ["bash", str(entry)],
-        env={**_inherited_environ(), **env},
+        env={**launcher_environment(), **env},
         capture_output=True,
         text=True,
         timeout=15,
@@ -1076,9 +1149,11 @@ def require_soak_opt_in() -> None:
 
 
 def soak_environment() -> dict[str, str]:
-    """The caller's environment against the real manager, with the soak limits."""
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    """An isolated environment with explicit access to the real user manager."""
+    env = launcher_environment()
+    env["PATH"] = os.defpath
     env["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
+    env["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={env['XDG_RUNTIME_DIR']}/bus"
     env.update(LU_DRIVER_MEMORY_HIGH=str(SOAK_HIGH), LU_DRIVER_MEMORY_MAX=str(SOAK_MAX), LU_DRIVER_MEMORY_SWAP_MAX="0")
     return env
 

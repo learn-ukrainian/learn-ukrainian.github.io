@@ -9,10 +9,11 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.ai_agent_bridge import _db
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import production_context
 
-from scripts.ai_agent_bridge import _db
-from scripts.api.main import app
-from scripts.api.monitor_context import production_context
+from scripts.project_api.context import with_product_roots
 from tests.latency_budget import assert_under_budget
 
 SAMPLE_COUNT = 3
@@ -21,19 +22,6 @@ HEALTH_ENDPOINT = "/api/health"
 DASHBOARD_LOADS = {
     "index.html": [
         "/api/dashboard/overview",
-        "/api/state/summary",
-        "/api/wiki/status",
-        "/api/analytics/cost",
-    ],
-    "admin.html": [
-        "/api/admin/health",
-        "/api/admin/disk-usage",
-        "/api/admin/backup/list",
-        "/api/admin/maintenance/embedding-cache-stats",
-    ],
-    "build-events.html": [
-        "/api/build/events/active",
-        "/api/build/events/recent?limit=50&offset=0",
     ],
     "channels.html": [
         "/api/comms/channels",
@@ -46,17 +34,6 @@ DASHBOARD_LOADS = {
         "/api/comms/batch-progress",
         "/api/comms/zombies",
     ],
-    "consultation.html": [
-        "/api/config",
-        "/api/consultation/metrics",
-        "/api/consultation/queue",
-        "/api/consultation/history?limit=200",
-    ],
-    "cost.html": [
-        "/api/analytics/cost",
-        "/api/analytics/cost/module/a1/hello",
-        "/api/analytics/cost/phase/write",
-    ],
     "curriculum-dashboard.html": [
         "/api/dashboard/overview",
         "/api/dashboard/track/a1",
@@ -65,25 +42,8 @@ DASHBOARD_LOADS = {
     "delegate.html": [
         "/api/delegate/tasks?limit=100",
     ],
-    "image-explorer.html": [
-        "/api/images/textbooks",
-        "/api/images/stats",
-        "/api/images/annotations?per_page=5",
-        "/api/sources/search_text?q=test&limit=5",
-    ],
     "orient.html": [
         "/api/orient",
-    ],
-    "progress.html": [
-        "/api/state/pipeline/a1",
-        "/api/state/summary",
-        "/api/state/pipeline-versions",
-    ],
-    "quality.html": [
-        "/api/state/research-coverage",
-        "/api/state/review-coverage",
-        "/api/state/issues",
-        "/api/state/weak-points?limit=500",
     ],
     "runtime.html": [
         "/api/runtime/agents",
@@ -97,12 +57,6 @@ DASHBOARD_LOADS = {
         "/api/runtime/usage?days=7",
         "/api/delegate/tasks?limit=100",
     ],
-    "wiki.html": [
-        "/api/wiki/status",
-        "/api/wiki/status/a1",
-        "/api/wiki/quality-gate/a1",
-        "/api/wiki/build-log?limit=50",
-    ],
 }
 
 BUDGETS = {
@@ -111,16 +65,6 @@ BUDGETS = {
     # Dashboard endpoints below can transitively touch filesystem scans, sqlite,
     # git, GH, RAG/textbook indexes, or cold in-memory caches. GH #1826 relaxes
     # these network/IO-bound smoke budgets to 1.5s while keeping health tight.
-    "/api/admin/backup/list": 1.5,
-    "/api/admin/disk-usage": 1.5,
-    "/api/admin/health": 1.5,
-    "/api/admin/maintenance/embedding-cache-stats": 1.5,
-    "/api/analytics/cost": 1.5,
-    "/api/analytics/cost/module/a1/hello": 1.5,
-    "/api/analytics/cost/phase/write": 1.5,
-    "/api/build/events/active": 1.5,
-    "/api/build/events/recent?limit=40": 1.5,
-    "/api/build/events/recent?limit=50&offset=0": 1.5,
     "/api/comms/batch-progress": 1.5,
     "/api/comms/channels": 1.5,
     "/api/comms/channels/general": 1.5,
@@ -130,17 +74,11 @@ BUDGETS = {
     "/api/comms/messages?limit=1&offset=0": 1.5,
     "/api/comms/zombies": 1.5,
     "/api/config": 1.5,
-    "/api/consultation/history?limit=200": 1.5,
-    "/api/consultation/metrics": 1.5,
-    "/api/consultation/queue": 1.5,
     "/api/dashboard/module/a1/hello": 1.5,
     "/api/dashboard/overview": 1.5,
     "/api/dashboard/track/a1": 1.5,
     "/api/dashboard/track/a1/summary": 1.5,
     "/api/delegate/tasks?limit=100": 1.5,
-    "/api/images/annotations?per_page=5": 1.5,
-    "/api/images/stats": 1.5,
-    "/api/images/textbooks": 1.5,
     "/api/orient": 1.5,
     "/api/sources/search_text?q=test&limit=5": 1.5,
     "/api/runtime/agents": 1.5,
@@ -214,26 +152,18 @@ def three_run_perf_probe() -> Callable[[Callable[[], object]], tuple[list[object
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     broker_db = tmp_path / "messages.db"
     _init_broker_db(broker_db)
-    # admin_router keeps no path globals since #7269 step 8 — it resolves
-    # its broker DB from the app's MonitorContext (same as comms_router
-    # since step 5). Pin the context's message DB onto this smoke broker.
     # comms_router keeps no path globals since #7269 step 5 — it resolves
     # its broker DB from the app's MonitorContext. Pin the context's message
     # DB onto this smoke broker while keeping every other production root
     # intact for the non-comms dashboards this test also exercises.
     base_ctx = production_context()
     image_root = tmp_path / "textbook_images"
-    textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
-    textbooks_dir.mkdir()
-    test_ctx = base_ctx.with_roots(
-        message_db_path=broker_db,
+    test_ctx = with_product_roots(
+        base_ctx.with_roots(message_db_path=broker_db),
         images_dir=image_root,
-        textbooks_dir=textbooks_dir,
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
-    app.state.ctx.stores.image_store.index.reload()
-    app.state.ctx.stores.image_store.page_cache.clear()
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []
@@ -280,7 +210,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
 
 def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_path):
     """#7024: empty in-memory last-good + published_mdx>0 is not missing=total."""
-    import scripts.api.dashboard_router as dashboard_router
+    import scripts.project_api.dashboard_router as dashboard_router
 
     dashboard_router.reset_overview_state_for_tests()
     monkeypatch.setenv(

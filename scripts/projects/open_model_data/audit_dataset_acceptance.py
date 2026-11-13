@@ -40,7 +40,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_set
+
 from scripts.projects.open_model_data.paths import (
     ARTIFACT_DECOLONIZATION_DIR,
     ARTIFACT_GRAMMAR_DIR,
@@ -48,7 +50,6 @@ from scripts.projects.open_model_data.paths import (
     REGISTRY_GRAMMAR_DIR,
 )
 from scripts.rag.config import VESUM_DB_PATH
-from scripts.storage.paths import artifact_set
 
 # ── Paths and Authorities ──────────────────────────────────────────────────
 
@@ -58,7 +59,7 @@ def _resolve_db_path(filename: str, project_root: Path) -> Path:
     if direct.is_file() and direct.stat().st_size > 0:
         return direct
     try:
-        from scripts.guardrails.worktree_containment import resolve_main_root
+        from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
         primary = resolve_main_root(project_root) / "data" / filename
         if primary.is_file() and primary.stat().st_size > 0:

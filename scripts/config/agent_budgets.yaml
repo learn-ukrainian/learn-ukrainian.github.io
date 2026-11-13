@@ -5,7 +5,7 @@
 # Effective windows (anchored to user's billing cycle, treated as ISO weeks for now):
 #   - claude.interactive: Max 20× = ~$2000/mo API-equivalent. +50% promo until 2026-07-13.
 #   - claude.agentic_pool: $200/mo from 2026-06-15 (Anthropic Pro+/Max agentic credit).
-#   - codex: ~$1000/wk effective weekly quota (rough; revise from observed cap-hits).
+#   - codex: ~$1000/wk effective weekly quota per subscription account (a and b; rough).
 #   - gemini: ~$500/wk effective daily quota aggregated (rough).
 #
 # All caps are dollar-denominated. Records that lack a cost estimate are excluded
@@ -20,7 +20,10 @@ claude:
     monthly_cap_usd: 200
     starts_on: "2026-06-15"
 codex:
-  weekly_cap_usd: 1000
+  weekly_cap_usd: 1000  # account a (the `codex` / `codex:a` ledger)
+  accounts:
+    b:
+      weekly_cap_usd: 1000  # account b (`b-sub` / `codex:b`); not a's cap
 gemini:
   weekly_cap_usd: 500
 

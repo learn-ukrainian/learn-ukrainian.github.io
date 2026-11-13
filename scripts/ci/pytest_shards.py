@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Plan and verify duration-balanced pytest node-ID shards.
 
-Cursor Cloud's ``cursor_cloud_full_pytest.sh`` fallback uses this module
-(``plan`` / ``run`` / ``verify-artifacts``): each shard collects the selected
-suite locally, groups every selected node ID by test file, then uses
-deterministic longest-processing-time (LPT) assignment. GitHub Actions CI does
+Each shard collects the selected suite locally, groups every selected node ID
+by test file, then uses deterministic longest-processing-time (LPT)
+assignment (``plan`` / ``run`` / ``verify-artifacts``). GitHub Actions CI does
 not use it; ci.yml splits files with ``scripts/ci/split_tests.py``.
 
 Required selection (stage-1 slow-split): the identical mark expression
@@ -27,6 +26,11 @@ import xml.etree.ElementTree as element_tree
 from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative
 
 SHARD_COUNT = 4
 PLAYGROUND_PERF_TEST = "tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
@@ -600,11 +604,11 @@ def _parser() -> argparse.ArgumentParser:
         formatter_class=formatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/ci/pytest_shards.py plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
-            "  .venv/bin/python scripts/ci/pytest_shards.py verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'pytest_shards.py').as_posix()} plan-shard --snapshot ci-artifacts/pytest-duration-snapshot.json --shard-id 1 --output-dir ci-artifacts\n"
+            f"  .venv/bin/python {checkout_relative('ci', 'pytest_shards.py').as_posix()} verify-artifacts --artifact-dir ci-artifacts --expected-source-sha $GITHUB_SHA --require-plan-metadata --require-execution-receipt\n"
             "Outputs: shard plans, node-ID lists, execution receipts, duration JSON, and validation errors.\n"
             "Exit codes: 0 means the requested operation passed; 1 means an input, partition, or test failed; 2 means CLI usage failed.\n"
-            "Related: scripts/ci/cursor_cloud_full_pytest.sh and docs/runbooks/ci-gate.md."
+            f"Related: docs/runbooks/ci-gate.md."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True, title="commands")

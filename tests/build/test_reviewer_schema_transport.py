@@ -118,9 +118,11 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
 
 def build_plan(adapter, cwd: Path, config: dict[str, Any], *, model=None):
     if adapter.name == "agy":
+        # AGY read-only runs only on the review route, which needs a scoped home.
         home = cwd / "agy-home"
         register_agy_hooks(cwd, home=home)
-        config = {**config, "agy_home_override": str(home)}
+        (home / ".gemini" / "antigravity-cli").mkdir(parents=True, exist_ok=True)
+        config = {**config, "agy_home_override": str(home), "review_profile": "code"}
     return adapter.build_invocation(
         prompt="Public mechanical schema fixture.",
         mode="read-only",
@@ -200,11 +202,19 @@ def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch,
     primary = tmp_path / "primary"
     subprocess.run(["git", "init", "-q", str(primary)], check=True, capture_output=True, timeout=30)
     dispatch = primary / ".worktrees/dispatch/codex/worker"
-    dispatch.mkdir(parents=True)
     workspace = primary / ".git/lu-pre-push-gate/pytest-bt/workspace" if layout == "gate" else dispatch
-    workspace.mkdir(parents=True, exist_ok=True)
     if layout == "dispatch":
-        (workspace / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
+        subprocess.run(
+            ["git", "-C", str(primary), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "--allow-empty", "-qm", "fixture"],
+            check=True, capture_output=True, timeout=30,
+        )
+        subprocess.run(
+            ["git", "-C", str(primary), "worktree", "add", "--detach", str(workspace)],
+            check=True, capture_output=True, timeout=30,
+        )
+    else:
+        workspace.mkdir(parents=True, exist_ok=True)
     _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
 
 
@@ -557,7 +567,7 @@ def direct_context(tmp_path: Path) -> direct.DirectModuleContext:
 
 @pytest.mark.parametrize("damage", ("none", "defect", "missing", "invalid", "truncated", "failed", "contradiction"))
 def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner  # the product review phase runs the installed runner
 
     monkeypatch.setattr(direct, "PROJECT_ROOT", tmp_path)
     ctx = direct_context(tmp_path)
@@ -592,7 +602,8 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
 
 
 def test_audit_claude_schema_and_embedded_fence_survive_consumption(tmp_path, monkeypatch):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner  # the product dispatch runs the installed runner
+
     from scripts.audit import llm_reviewer_dispatch as dispatch
 
     payload = mechanical_payload("audit")

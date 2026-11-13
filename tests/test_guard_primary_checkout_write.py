@@ -11,7 +11,7 @@ Two layers:
   ``.worktrees/dispatch/**`` worktree + gitignored state), asserting the exit
   code and worktree-hint message. Explicit subprocess cases also pin process
   isolation. The decision itself is delegated to
-  ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
+  ``lu_machinery.guardrails.worktree_containment`` (#4444); these tests prove the
   provider payloads map onto it correctly.
 
 The hook filename has hyphens, so pure-function tests load it via importlib.
@@ -35,14 +35,15 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.common.scratch import ensure_scratch_root
 
-from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
+HOOK_PATH = machinery_path("agents_extensions/shared/hooks/guard-primary-checkout-write.py")
 
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
@@ -142,7 +143,7 @@ def test_issue_9115_escaped_nested_backtick_write_is_visible():
 
 
 def test_issue_9115_backtick_depth_limit_blocks_write_hook(repo: Path, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setitem(hook.preprocess_shell_command.__globals__, "_MAX_BACKTICK_DEPTH", 2)
     body = "tee AGENTS.md"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
@@ -242,8 +243,8 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     guard_copy = tmp_path / HOOK_PATH.name
     shutil.copy2(HOOK_PATH, guard_copy)
     result = subprocess.run(
-        [sys.executable, str(guard_copy)],
-        input=json.dumps({"tool_input": {"command": "tee AGENTS.md"}}),
+        [sys.executable, "-I", "-S", str(guard_copy)],
+        input=json.dumps({"tool_name": "Bash", "tool_input": {"command": "tee AGENTS.md"}}),
         text=True,
         capture_output=True,
         check=False,
@@ -318,7 +319,10 @@ def test_leading_redirect_cannot_hide_primary_cd(repo: Path, tmp_path: Path, red
     )
     assert oracle.returncode == 0, oracle.stderr
     assert oracle.stdout.strip() == str(target)
-    result = _run(tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}})
+    result = _run(
+        tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}},
+        protected_root=repo,
+    )
     assert result.returncode == (2 if primary else 0), result.stderr
 
 
@@ -427,10 +431,11 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
 
-    (main / "curriculum").mkdir()
+    (main / "curriculum/l2-uk-en").mkdir(parents=True)
+    (main / "curriculum/l2-uk-en/curriculum.yaml").write_text("# fixture product\n")
     (main / "curriculum" / "tracked.md").write_text("original\n", encoding="utf-8")
     (main / ".gitignore").write_text("local_state/\n*.local\n", encoding="utf-8")
-    _git(main, "add", "curriculum/tracked.md", ".gitignore")
+    _git(main, "add", "curriculum/tracked.md", "curriculum/l2-uk-en/curriculum.yaml", ".gitignore")
     _git(main, "commit", "-q", "-m", "init")
 
     _git(main, "worktree", "add", "-q", ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
@@ -448,9 +453,12 @@ def _materialize_repo(template: Path, main: Path) -> Path:
 
 
 @pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
-    """Fresh primary checkout and registered worktree for each case."""
-    return _materialize_repo(repo_template, tmp_path / "main")
+def repo(tmp_path: Path, repo_template: Path, monkeypatch) -> Path:
+    """Fresh configured primary checkout and registered worktree for each case."""
+    primary = _materialize_repo(repo_template, tmp_path / "main")
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(primary))
+    return primary
 
 
 @pytest.fixture
@@ -480,13 +488,15 @@ def outside_dir() -> Iterator[Path]:
         shutil.rmtree(path)
 
 
-def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    repo: Path, payload: dict, env_extra: dict[str, str] | None = None, *, protected_root: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
-        patch.object(hook, "_protected_repo_anchor", return_value=repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=protected_root or repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -521,6 +531,40 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     payload = _write_payload(repo, "Edit", ".worktrees/dispatch/claude/task-1/curriculum/tracked.md")
     result = _run(repo, payload)
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("shape", ["agy", "claude"])
+@pytest.mark.parametrize("where", ["primary", "worktree", "malformed"])
+@pytest.mark.parametrize("tool", ["write_file", "edit_file", "run_command"])
+def test_agy_tool_call_shape_cannot_bypass_primary_write_guard(repo: Path, shape: str, where: str, tool: str):
+    """Defect class: a provider payload shape the guard does not parse is silently allowed.
+
+    AGY sends ``toolCall.args`` and reads a denial only as stdout JSON (exit 0); worktree
+    writes stay allowed. Claude-shaped payloads keep their exit-2 contract unchanged.
+    """
+    cwd = repo if where != "worktree" else repo / ".worktrees/dispatch/claude/task-1"
+    target = str(cwd / "curriculum/tracked.md")
+    if tool == "run_command":
+        args, claude_tool, claude_input = {"CommandLine": f"echo x > {target}"}, "Bash", {"command": f"echo x > {target}"}
+    else:
+        args = {"Path": target, "Content": "x"} if tool == "write_file" else {"Path": target, "Target": "o", "Replacement": "x"}
+        claude_tool, claude_input = ("Write" if tool == "write_file" else "Edit"), {"file_path": target}
+    if shape == "agy":
+        call = {"id": "t1", "name": tool, "args": "malformed" if where == "malformed" else args}
+        payload = {"hookEventName": "PreToolUse", "cwd": str(cwd), "toolCall": call}
+    else:
+        payload = {"tool_name": claude_tool, "cwd": str(cwd), "tool_input": "malformed" if where == "malformed" else claude_input}
+    result = _run(repo, payload)
+    blocked = where != "worktree"
+    if shape == "claude":
+        assert (result.returncode, result.stdout) == (2 if blocked else 0, ""), result.stderr
+    elif blocked:
+        assert result.returncode == 0, result.stderr
+        decision = json.loads(result.stdout)
+        assert decision["decision"] == "deny"
+        assert decision["reason"].startswith("BLOCKED by guard-primary-checkout-write")
+    else:
+        assert (result.returncode, result.stdout) == (0, ""), result.stderr
 
 
 @pytest.mark.parametrize(
@@ -837,12 +881,11 @@ def test_apply_patch_tracked_file_blocked(repo: Path):
     assert ".worktrees/dispatch/" in result.stderr
 
 
-def test_not_enforced_off_protected_branch(repo: Path):
-    # If the primary checkout is deliberately on a feature branch, the guard
-    # stays out of the way — enforcement is scoped to protected branches.
+def test_configured_physical_primary_stays_protected_on_maintenance_branch(repo: Path):
+    """Configured primary authority must remain protected regardless of its branch."""
     _git(repo, "checkout", "-q", "-b", "maintenance")
     result = _run(repo, _write_payload(repo, "Write", "curriculum/tracked.md"))
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
 
 
 def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
@@ -1044,7 +1087,7 @@ def test_issue_11381_protected_or_unresolved_git_target_blocked(
 
 
 def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
-    from scripts.guardrails import worktree_containment as wc
+    from lu_machinery.guardrails import worktree_containment as wc
 
     expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
     with chdir(tmp_path):
@@ -1954,7 +1997,7 @@ def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: st
     targets = hook.bash_write_targets(command, cwd="/")
     assert [str(target) for target in targets] == [literal]
     assert targets[0].unresolved_at == 0
-    assert hook._bash_path_decision(targets[0], "/", None).reason == "unresolved_shell_variable"
+    assert hook._bash_path_decision(targets[0], "/", None, Path("/")).reason == "unresolved_shell_variable"
 
 
 def test_issue_10633_parser_never_decodes_ansi_c_program_name():
@@ -2432,6 +2475,38 @@ def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str)
     assert reason in result.stderr
 
 
+def test_tar_list_mode_option_word_is_not_a_primary_write(repo: Path, outside_dir: Path):
+    """Defect class: tar's dash-less option word (``tar tzf``) read as a file written in the primary.
+
+    ``-t`` lists the archive named by ``-f`` and writes nothing; later words are
+    member names. Controls: extracting or creating into the primary is still
+    refused, and so is a listing whose ``TAR_OPTIONS`` the command sets or whose
+    words Bash can expand into other options.
+    """
+
+    def decision(command: str) -> int:
+        return _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}).returncode
+
+    archive = outside_dir / "a.tgz"
+    assert decision(f"tar tzf {archive}") == 0
+    assert decision(f"tar tvzf {archive} curriculum/tracked.md") == 0
+    assert decision(f"tar xzf {archive}") == 2
+    assert decision(f"tar -xzf {archive} -C {repo}") == 2
+    assert decision(f"tar czf {repo}/out.tgz curriculum") == 2
+    assert decision(f"TAR_OPTIONS=--checkpoint-action=exec=touch tar tzf {archive}") == 2
+    assert decision(f"tar tzf {archive} {{--checkpoint=1,--checkpoint-action=exec=touch}}") == 2
+    assert decision(f"tar tzf {archive} *") == 2
+    # A first textual segment may execute again or later with a changed environment.
+    for command in (
+        f"while tar tzf {archive}; do export TAR_OPTIONS=--index-file=out; done",
+        f"until tar tzf {archive} && test -e out; do export TAR_OPTIONS=--index-file=out; done",
+        f"function f {{ tar tzf {archive}; }}; TAR_OPTIONS=--index-file=out f",
+        f"while tar tzf {archive}\ndo source env.sh\ndone",
+        f"f() {{ tar tzf {archive}; }}; TAR_OPTIONS=--index-file=out f",
+    ):
+        assert decision(command) == 2, command
+
+
 @pytest.mark.parametrize(
     "template",
     [
@@ -2759,3 +2834,40 @@ def test_issue_8785_review_allowed_cases(repo: Path, command: str):
         },
     )
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("trap 'touch tracked.txt' EXIT", 2),
+        ("trap -- 'touch tracked.txt' EXIT", 2),
+        ("trap 'git reset --hard' EXIT", 2),
+        ("trap 'touch $HOME/tracked.txt' EXIT; HOME=<primary>", 2),
+        ("trap 'touch ~/tracked.txt' EXIT; HOME=<primary>", 2),
+        ("coproc git reset --hard", 2),
+        ("coproc cd <dispatch>; touch tracked.txt", 2),
+        ("trap 'tar xzf archive.tgz' EXIT", 2),
+        ("coproc touch tracked.txt", 2),
+        ("coproc tar xzf archive.tgz", 2),
+        ("coproc { touch tracked.txt; }", 2),
+        ("coproc WORKER { touch tracked.txt; }", 2),
+        ("coproc WORKER { tar xzf archive.tgz; }", 2),
+        ("coproc WORKER while touch tracked.txt; do :; done", 2),
+        ("coproc WORKER if tar xzf archive.tgz; then :; fi", 2),
+        ("coproc ( touch tracked.txt )", 2),
+        ("bash -c \"trap 'touch tracked.txt' EXIT\"", 2),
+        ("eval \"coproc touch tracked.txt\"", 2),
+        ("coproc { coproc touch tracked.txt; }", 2),
+        ("coproc printf done", 0),
+        ("trap -p", 0),
+        ("trap '' EXIT", 0),
+    ],
+)
+def test_trap_coproc_primary_write_bypass_refused(repo: Path, command: str, expected: int):
+    """R34: deferred trap actions and asynchronous coprocesses must expose writers."""
+    command = command.replace("<dispatch>", str(repo / ".worktrees/dispatch/claude/task-1")).replace(
+        "<primary>", str(repo)
+    )
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+    result = _run(repo, payload)
+    assert result.returncode == expected, result.stderr

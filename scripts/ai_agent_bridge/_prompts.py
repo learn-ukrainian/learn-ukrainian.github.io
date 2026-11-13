@@ -1,8 +1,22 @@
 """Prompt building for Gemini and Claude interactions."""
 
+import os
+from pathlib import Path
+
+from scripts.common.repo_root import product_root
 from scripts.lib import rules_core
 
-from ._config import REPO_ROOT
+from ._config import MACHINERY_PACKAGE, REPO_ROOT
+
+
+def _product_doc(relative: str) -> Path:
+    """A product document the prompts quote, at checkout-relative ``relative``.
+
+    ``AB_REPO_ROOT`` names the bridge's repository explicitly and keeps that meaning (the
+    bridge also serves other repositories); unset, the document is in the product checkout
+    ``product_root`` selects (C-4746), which refuses when there is none.
+    """
+    return (REPO_ROOT if os.environ.get("AB_REPO_ROOT") else product_root()) / relative
 
 
 def review_protocol_prefix(
@@ -12,7 +26,7 @@ def review_protocol_prefix(
     worktree_provisioned: bool = False,
 ) -> str:
     """Load the canonical review protocol and optional branch-target guard."""
-    protocol = (REPO_ROOT / "docs" / "review-protocol.md").read_text("utf-8").rstrip()
+    protocol = _product_doc("docs/review-protocol.md").read_text("utf-8").rstrip()
     if branch is None:
         return protocol + "\n\n"
 
@@ -75,46 +89,18 @@ def require_core_or_exit(who: str) -> None:
 
 
 def with_core_or_exit(prompt: str, who: str) -> str:
-    """Lead ``prompt`` with the rules core, or exit naming the missing path (nothing is sent without it)."""
+    """Lead with the rules core, or refuse a missing source or conflicting prefix."""
     try:
         return rules_core.with_core(prompt)
     except rules_core.RulesCoreMissing as exc:
         raise SystemExit(f"{who}: refused: {exc}; the rules core is required") from exc
+    except rules_core.RulesCoreError as exc:
+        raise SystemExit(f"{who}: refused: {exc}") from exc
 
 
 def bridge_prompt(prompt: str, review: bool, **review_target) -> str:
     """Finish a bridge prompt: the rules core first, then any review protocol."""
     return with_core_or_exit(_prepend_review_protocol(prompt, review, **review_target), "bridge")
-
-
-def _load_gemini_context() -> str:
-    """Load .gemini/docs/ context files and return as a single block.
-
-    These files contain the linguistic rules, tool reference, and workflow
-    that Gemini MUST know for every interaction.  GEMINI.md tells Gemini
-    to "read these files" — we inject them directly so there's no chance
-    of Gemini skipping or hallucinating their contents.
-    """
-    docs_dir = REPO_ROOT / ".gemini" / "docs"
-    if not docs_dir.exists():
-        return ""
-
-    parts: list[str] = []
-    for name in ("LINGUISTICS.md", "TOOLS.md", "WORKFLOW.md"):
-        path = docs_dir / name
-        if path.exists():
-            parts.append(path.read_text("utf-8"))
-
-    if not parts:
-        return ""
-
-    return (
-        "# PROJECT CONTEXT — NON-NEGOTIABLE RULES\n\n"
-        "The following rules, tools, and workflow govern ALL your output.\n"
-        "Violating any rule = task failure.\n\n"
-        + "\n\n---\n\n".join(parts)
-        + "\n\n---\n\n"
-    )
 
 
 def build_gemini_prompt(msg: dict, stdout_only: bool, output_path: str | None,
@@ -147,8 +133,7 @@ def _build_full_execution_prompt(msg: dict, delimiters: str | None) -> str:
     else:
         delimiter_instruction = "Your ONLY text output must be between the ===TAG_START=== / ===TAG_END=== delimiters defined in your task."
 
-    context = _load_gemini_context()
-    return f"""{context}ROLE: You are a SILENT EXECUTION AGENT. Use only the tools and permissions granted by the runtime for the assigned task.
+    return f"""ROLE: You are a SILENT EXECUTION AGENT. Use only the tools and permissions granted by the runtime for the assigned task.
 
 TOOLS YOU MUST USE (not simulate):
 - run_shell_command: scripts/audit_module.sh, .venv/bin/python scripts/*.py, grep, wc
@@ -196,8 +181,7 @@ def _build_orchestrated_prompt(msg: dict, output_path: str | None) -> str:
 - Output your result as plain text between the delimiters specified in the task
 - That's it. Nothing else. Just text output."""
 
-    context = _load_gemini_context()
-    prompt = f"""{context}ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.
+    prompt = f"""ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.
 
 ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:
 
@@ -225,8 +209,7 @@ ATTACHED DATA:
 
 def _build_standard_prompt(msg: dict) -> str:
     """Build STANDARD collaborative prompt for general communication."""
-    context = _load_gemini_context()
-    prompt = f"""{context}You are Gemini, participating in a collaboration with Claude.
+    prompt = f"""You are Gemini, participating in a collaboration with Claude.
 This is a message from Claude to you:
 
 ---
@@ -287,7 +270,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
     )
 
 
-_CODEX_STANDING_RULES = """\
+_CODEX_STANDING_RULES = f"""\
 # NON-NEGOTIABLE RULES FOR CODEX (apply to EVERY task from this bridge)
 
 ## Git branch safety — HARD CONSTRAINT
@@ -314,7 +297,7 @@ Perform authorized edits only in the assigned dispatch worktree:
 - Be concise. Report what you did, what you verified, and what remains.
 
 ## Runtime / architecture tasks
-- If the task involves `scripts/agent_runtime/`, READ `docs/agent-runtime-guide.md` FIRST.
+- If the task involves `{MACHINERY_PACKAGE}/agent_runtime/`, READ `docs/agent-runtime-guide.md` FIRST.
   The guide is the single source of truth for the runtime design; violating its rules
   (session resume policy, mode vocabulary, adapter protocol shape) causes silent bugs.
 """

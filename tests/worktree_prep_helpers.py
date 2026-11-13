@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import worktree_prep
+from lu_machinery.orchestration import worktree_prep
 
 
 def _git_env() -> dict[str, str]:

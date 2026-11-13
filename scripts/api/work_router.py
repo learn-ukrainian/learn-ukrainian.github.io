@@ -11,6 +11,8 @@ import concurrent.futures
 import contextlib
 import logging
 import threading
+import time
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
@@ -56,10 +58,16 @@ NEXT_TOP_BLOCKERS = 3
 # Bound stale-serve for /next: expired cache may be returned while a
 # single-flight refresh runs, but never past this age (residual #3 / #6890).
 NEXT_MAX_STALE_S = 300.0
-# Bound one background build (#6984): the single-flight slot must always free
-# again even when a section collector hangs, or every later /next caller sees
-# 503 stale forever. Well above the per-section timeouts in sources_public.
+# One projection build per cache key (#6984, revised by #12649).
+# NEXT_BUILD_TIMEOUT_S is how long a caller waits before it stops waiting.
+# The build thread keeps the single-flight slot until it returns, and a late
+# result is still cached. A collector that never returns holds the slot for
+# the life of that thread; past NEXT_MAX_STALE_S the lane can sit at 503 stale
+# with no second build. Well above the per-section timeouts in sources_public.
 NEXT_BUILD_TIMEOUT_S = 20.0
+_build_state_lock = threading.Lock()
+_active_build_keys: set[str] = set()
+_build_ids = 0
 STREAM_REGISTRY_CACHE_KEY = "work:v1:stream-registry"
 STREAM_REGISTRY_TTL_S = 60.0
 
@@ -236,18 +244,57 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
     return True
 
 
+def _store_build(key: str, filters: dict[str, Any]) -> dict[str, Any]:
+    """Build one projection and publish it before this thread returns.
+
+    Caching on the thread, not after the await, keeps the result when every
+    caller has already stopped waiting (#12649). The key stays in
+    ``_active_build_keys`` for the whole call so a second entry is visible.
+    """
+    global _build_ids
+    with _build_state_lock:
+        _build_ids += 1
+        build_id = _build_ids
+        overlap = key in _active_build_keys
+        _active_build_keys.add(key)
+    if overlap:
+        log.warning("work projection build overlapped an in-flight build id=%s", build_id)
+    else:
+        log.info("work projection build start id=%s", build_id)
+    started = time.monotonic()
+    try:
+        payload = _build_sync(filters, cache_age_s=0.0)
+        payload["cache_age_s"] = 0.0
+        cache_set(key, payload)
+        return payload
+    finally:
+        elapsed = time.monotonic() - started
+        with _build_state_lock:
+            _active_build_keys.discard(key)
+        log.info("work projection build finish id=%s elapsed=%.1f", build_id, elapsed)
+
+
 async def _run_build_job(
     key: str,
     filters: dict[str, Any],
     timeout_s: float | None = None,
 ) -> dict[str, Any]:
+    """Run one build to completion. ``timeout_s`` does not cancel it.
+
+    The value is the caller-wait bound captured when the build was kicked.
+    It only decides whether a late finish is logged. The single-flight slot
+    stays until this coroutine returns, which is when the thread returns.
+    """
     bound = NEXT_BUILD_TIMEOUT_S if timeout_s is None else timeout_s
-    payload = await asyncio.wait_for(
-        asyncio.to_thread(_build_sync, filters, cache_age_s=0.0),
-        timeout=bound,
-    )
-    payload["cache_age_s"] = 0.0
-    cache_set(key, payload)
+    started = asyncio.get_running_loop().time()
+    payload = await asyncio.to_thread(_store_build, key, filters)
+    elapsed = asyncio.get_running_loop().time() - started
+    if elapsed >= bound:
+        log.warning(
+            "work projection build outlived the %.1fs caller bound (%.1fs); result cached",
+            bound,
+            elapsed,
+        )
     return payload
 
 
@@ -376,7 +423,9 @@ async def drain_context_background_work(
             log.warning("context background work did not drain before shutdown deadline")
             break
         try:
-            await asyncio.wait_for(asyncio.wrap_future(future), timeout=remaining)
+            # Shield the worker future: a drain deadline must not cancel the
+            # build and free the slot while its thread is still running.
+            await asyncio.wait_for(asyncio.shield(asyncio.wrap_future(future)), timeout=remaining)
         except TimeoutError:
             log.warning("context background work timed out during shutdown")
             break
@@ -400,8 +449,9 @@ def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContex
 
     Sync TestClient does not pump request-loop ``create_task`` work between
     GETs; this helper waits on the worker-loop future instead of sleeping
-    and re-polling. No-op when nothing is in flight. Job failures (including
-    ``NEXT_BUILD_TIMEOUT_S``) are swallowed — callers assert on cache/slot.
+    and re-polling. No-op when nothing is in flight. A finished job's
+    failure is swallowed — callers assert on cache/slot. ``timeout`` is this
+    helper's own wait. It does not cancel the build.
     """
     slots = _in_flight_builds(ctx)
     with _IN_FLIGHT_LOCK:
@@ -454,7 +504,17 @@ async def refresh_projection_cache_periodically(ctx: MonitorContext) -> None:
         if cache_get_with_age(key, CACHE_TTL_S) is not None:
             continue
         try:
-            await _follow_cfuture(_get_or_create_build_task(key, {}, ctx))
+            # Stop waiting at the caller bound. The shield leaves the build
+            # running, and the next tick joins that same handle.
+            await asyncio.wait_for(
+                asyncio.shield(_follow_cfuture(_get_or_create_build_task(key, {}, ctx))),
+                timeout=NEXT_BUILD_TIMEOUT_S,
+            )
+        except TimeoutError:
+            log.warning(
+                "work projection build still in flight past %.1fs; not starting another",
+                NEXT_BUILD_TIMEOUT_S,
+            )
         except Exception as exc:
             log.warning("Work projection periodic refresh failed: %s", type(exc).__name__)
 
@@ -716,7 +776,10 @@ async def work_next(
         ...,
         min_length=1,
         max_length=64,
-        description="Stream key from scripts/config/issue_streams.yaml (the caller's lane epic).",
+        description=(
+            "Stream key from "
+            f"{Path(__file__).parents[1].name}/config/issue_streams.yaml (the caller's lane epic)."
+        ),
     ),
     limit: int = Query(NEXT_DEFAULT_LIMIT, ge=1, le=NEXT_MAX_LIMIT),
     ctx: MonitorContext = Depends(get_ctx),
@@ -728,9 +791,11 @@ async def work_next(
     ``cache_age_s``) while the shared single-flight refresh runs in the
     background so /next-only pollers converge without ever blocking — until
     age exceeds ``NEXT_MAX_STALE_S``, which fails closed with 503 ``stale``.
-    The background build itself is bounded by ``NEXT_BUILD_TIMEOUT_S`` so a
-    hung collector frees the single-flight slot instead of wedging every
-    later caller at 503 stale (#6984). ``stream`` also accepts unambiguous
+    The background build is one at a time. ``NEXT_BUILD_TIMEOUT_S`` is how
+    long a caller waits; it does not cancel the build or free the slot. A
+    build that finishes later still caches. A collector that never returns
+    holds the slot until its thread exits (#6984, revised by #12649).
+    ``stream`` also accepts unambiguous
     fleet-taxonomy area aliases (``infra`` → ``infra-harness``); an
     unreadable stream registry fails closed with 503 ``registry_unavailable``
     rather than treating typos as an empty queue (#6890).
@@ -912,7 +977,8 @@ async def work_capabilities() -> dict[str, Any]:
             "route": "GET /api/work/v1/next",
             "params": {
                 "stream": (
-                    "required — stream key from scripts/config/issue_streams.yaml; the pick list is scoped to it. "
+                    "required — stream key from "
+                    f"{Path(__file__).parents[1].name}/config/issue_streams.yaml; the pick list is scoped to it. "
                     "Unambiguous fleet-taxonomy area aliases (e.g. infra → infra-harness) are accepted (#6984)"
                 ),
                 "limit": f"optional int, default {NEXT_DEFAULT_LIMIT}, max {NEXT_MAX_LIMIT}",
@@ -920,7 +986,8 @@ async def work_capabilities() -> dict[str, Any]:
             "served_from": (
                 "warm projection cache only; 503 building + retry_after_s when cold; "
                 f"503 stale when cache_age_s ≥ {int(NEXT_MAX_STALE_S)}s; "
-                f"background refresh bounded at {int(NEXT_BUILD_TIMEOUT_S)}s so the single-flight slot always frees; "
+                f"one background build at a time; callers stop waiting after {int(NEXT_BUILD_TIMEOUT_S)}s "
+                "and that build still caches when it finishes; "
                 "503 registry_unavailable when the stream registry is unreadable"
             ),
         },

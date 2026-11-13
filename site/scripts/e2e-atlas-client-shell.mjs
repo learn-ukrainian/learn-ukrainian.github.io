@@ -17,7 +17,7 @@ import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { launchHardenedChromium } from "../e2e/support/hardened-browser.mjs";
 import { createGhPages404Server } from "./serve-gh-pages-404.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -164,7 +164,7 @@ async function main() {
   const { baseUrl } = await server.listen();
   ok(`server ${baseUrl}`);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await launchHardenedChromium();
   const page = await browser.newPage();
   const errors = [];
   page.on("pageerror", (err) => errors.push(String(err)));

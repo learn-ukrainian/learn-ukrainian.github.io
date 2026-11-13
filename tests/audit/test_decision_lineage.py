@@ -7,10 +7,10 @@ import subprocess
 from pathlib import Path
 
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
 
-from scripts.api import decisions_router
-from scripts.api.main import app
 from scripts.audit.decision_lineage import build_lineage_response
+from scripts.project_api import decisions_router
 
 
 def _git(repo: Path, *args: str, date: str | None = None) -> None:

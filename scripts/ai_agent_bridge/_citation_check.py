@@ -54,10 +54,14 @@ Out of scope (v1, deferred to follow-ups if needed):
 
 from __future__ import annotations
 
+import json
 import logging
+import os
 import re
 import sqlite3
+import unicodedata
 from collections.abc import Callable
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NamedTuple
@@ -65,7 +69,7 @@ from typing import NamedTuple
 try:
     from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
@@ -156,41 +160,295 @@ def _normalize_word(word: str) -> str:
 
 
 # ──────────────────────────────────────────────────────────────────────
-# Best-effort imports — must NOT raise at import time of this module.
-# Each verifier handles import/DB-missing as a soft-skip rather than
-# a flag, because the absence of the source DB is a deployment problem
-# (CI minimal env, fresh checkout without data/), not a citation
-# fabrication signal.
+# Headword lookup. The bridge does not import wiki. A product caller that
+# wants the product module passes it to ``check_and_annotate``. With no
+# caller, a read-only probe of ``data/sources.db`` answers the same
+# existence questions. A missing database returns None, the soft-skip
+# ``ImportError`` used to produce: an empty lookup result would otherwise
+# look like "headword not found" and flag every citation.
 # ──────────────────────────────────────────────────────────────────────
+
+_caller_sources: ContextVar[object | None] = ContextVar("citation_sources_db", default=None)
+_REPOSITORY_SOURCES_DB: Path | None = None
+_LIKE_PATTERN_LIMIT = 50_000
+# Same high-confidence markers the product cleaner uses to drop a row.
+_ESUM_MOJIBAKE_MARKERS = (
+    "Зпоц",
+    "Эндзелин",
+    "Зндзелин",
+    "Веліа[",
+    "Вегіа[",
+    "Вехіа]",
+    "Е55)",
+    "Е55Л",
+    "Е5)С",
+    "Зспиз",
+    "51ййсііа",
+    "\\У",
+)
+
+
+def _fold_key(value: str) -> str:
+    cleaned = str(value or "").replace("\u0301", "").strip()
+    return cleaned.strip("«»\"'“”„`").strip().lower()
+
+
+def _like_is_safe(query: str) -> bool:
+    return len(query.encode("utf-8")) + 1 <= _LIKE_PATTERN_LIMIT
+
+
+class _SourcesProbe:
+    """Read-only stand-in for the product sources lookups the verifiers call."""
+
+    def __init__(self, path: Path) -> None:
+        self.SOURCES_DB_PATH = path
+
+    def search_style_guide(self, word: str, limit: int = 5, **_kwargs: object) -> list[dict]:
+        query_key = _fold_key(word)
+        if not query_key:
+            return []
+        conn = _open_sources(self.SOURCES_DB_PATH)
+        if conn is None:
+            return []
+        try:
+            rows = conn.execute("SELECT word, text FROM style_guide ORDER BY rowid").fetchall()
+        except sqlite3.OperationalError:
+            return []
+        finally:
+            conn.close()
+        exact: list[dict] = []
+        partial: list[dict] = []
+        body: list[dict] = []
+        for row in rows:
+            item = {"word": row["word"], "text": row["text"]}
+            headword_key = _fold_key(str(item.get("word", "")))
+            if headword_key:
+                if headword_key == query_key:
+                    exact.append(item)
+                    continue
+                if query_key in headword_key or headword_key in query_key:
+                    partial.append(item)
+                    continue
+            text_key = _fold_key(str(item.get("text", "")))
+            if text_key and query_key in text_key:
+                body.append(item)
+        return (exact + partial + body)[:limit]
+
+    def search_grinchenko_1907(self, word: str, limit: int = 10, **_kwargs: object) -> list[dict]:
+        return _headword_rows(self.SOURCES_DB_PATH, "grinchenko", word, limit)
+
+    def search_esum(self, query: str, limit: int = 5, **_kwargs: object) -> list[dict]:
+        return _esum_rows(self.SOURCES_DB_PATH, query, limit)
+
+
+def _repository_sources_db() -> Path:
+    """Return this checkout's sources database path.
+
+    ``scripts.storage.topology`` already owns that path. An empty env keeps
+    the lookup on the checkout file, which is the file the product module
+    opens. This module does not build the path itself.
+    """
+    global _REPOSITORY_SOURCES_DB
+    if _REPOSITORY_SOURCES_DB is None:
+        from scripts.storage.topology import resolve_active_sources_db
+
+        root = Path(__file__).resolve().parents[2]
+        _REPOSITORY_SOURCES_DB = resolve_active_sources_db(root, env={}, refuse_network=False).path
+    return _REPOSITORY_SOURCES_DB
+
+
+def _open_sources(path: Path):
+    if not path.exists():
+        return None
+    try:
+        conn = open_readonly(path)
+    except sqlite3.OperationalError as exc:
+        logger.debug("citation-check: read-only connect to %s failed: %s", path, exc)
+        return None
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _headword_rows(path: Path, table: str, word: str, limit: int) -> list[dict]:
+    cleaned = _fold_key(word)
+    variants = [
+        v
+        for v in dict.fromkeys(
+            [word.strip(), cleaned, cleaned.capitalize(), cleaned.upper(), word.replace("\u0301", "").strip()]
+        )
+        if v
+    ]
+    if not variants:
+        return []
+    conn = _open_sources(path)
+    if conn is None:
+        return []
+    try:
+        placeholders = ",".join("?" for _ in variants)
+        rows = conn.execute(
+            f"SELECT word FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE "
+            "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
+            (*variants, word, limit),
+        ).fetchall()
+        if not rows and cleaned:
+            rows = conn.execute(
+                f"SELECT word FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE "
+                "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
+                (f"{cleaned}%", f"{word}%", limit),
+            ).fetchall()
+    except sqlite3.OperationalError as exc:
+        logger.debug("citation-check: headword lookup on %s failed: %s", table, exc)
+        return []
+    finally:
+        conn.close()
+    return [{"word": row["word"]} for row in rows]
+
+
+def _esum_text_kept(text: object) -> bool:
+    body = str(text or "")
+    return not any(marker in body for marker in _ESUM_MOJIBAKE_MARKERS)
+
+
+_GARBLED_ESUM_CATALOG: dict[str, dict] | None = None
+_APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'"})
+
+
+def _esum_lookup_key(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", str(value or "").strip())
+    normalized = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
+    normalized = unicodedata.normalize("NFC", normalized)
+    return normalized.translate(_APOSTROPHE_TRANSLATION).casefold()
+
+
+def _garbled_esum_catalog() -> dict[str, dict]:
+    """Curated lemma metadata. The file is data; the bridge does not import lexicon."""
+    global _GARBLED_ESUM_CATALOG
+    if _GARBLED_ESUM_CATALOG is not None:
+        return _GARBLED_ESUM_CATALOG
+    path = Path(__file__).resolve().parents[2] / "registry" / "lexicon" / "esum_garbled_etymologies.json"
+    catalog: dict[str, dict] = {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        payload = {}
+    for entry in payload.get("entries") or []:
+        lemma = str(entry.get("lemma") or "").strip() if isinstance(entry, dict) else ""
+        if lemma:
+            catalog[_esum_lookup_key(lemma)] = entry
+    _GARBLED_ESUM_CATALOG = catalog
+    return catalog
+
+
+def _strip_garbled_tail(text: str, entry: dict) -> str:
+    clean = str(text or "")
+    marker = str(entry.get("strip_after") or "")
+    if marker and marker in clean:
+        clean = clean.split(marker, 1)[0]
+    return re.sub(r"\s+", " ", clean.rstrip(" ,;:-—")).strip()
+
+
+def _goroh_override_present(conn, lemma: str) -> bool:
+    try:
+        row = conn.execute(
+            "SELECT 1 FROM goroh_etymology WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
+            (lemma,),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return False
+    return row is not None
+
+
+def _esum_row_kept(conn, lemma: object, text: object) -> bool:
+    """Match the product cleaner's keep-or-drop choice for one ESUM row."""
+    head = str(lemma or "")
+    entry = _garbled_esum_catalog().get(_esum_lookup_key(head))
+    if entry is None:
+        return _esum_text_kept(text)
+    if _goroh_override_present(conn, head):
+        return True
+    return _esum_text_kept(_strip_garbled_tail(str(text or ""), entry))
+
+
+def _esum_rows(path: Path, query: str, limit: int) -> list[dict]:
+    clean = _fold_key(query)
+    if not clean:
+        return []
+    limit = max(1, min(limit, 20))
+    variants = [
+        v
+        for v in dict.fromkeys(
+            [query.strip(), clean, clean.capitalize(), clean.upper(), query.replace("\u0301", "").strip()]
+        )
+        if v
+    ]
+    conn = _open_sources(path)
+    if conn is None:
+        return []
+    try:
+        meta_cols = {row["name"] for row in conn.execute("PRAGMA table_info(esum_etymology_meta)").fetchall()}
+        body_cols = {row["name"] for row in conn.execute("PRAGMA table_info(esum_etymology)").fetchall()}
+        if not meta_cols or not body_cols:
+            return []
+        volumes = conn.execute("SELECT DISTINCT vol FROM esum_etymology_meta ORDER BY vol LIMIT 2").fetchall()
+        loaded = int(volumes[0]["vol"]) if len(volumes) == 1 else None
+        if loaded == 1:
+            normalized = query.strip().lower()
+            letters = normalized.replace("'", "").replace("’", "")
+            if normalized and letters.isalpha() and not normalized.startswith(("а", "б", "в", "г", "ґ")):
+                return []
+        placeholders = ",".join("?" for _ in variants)
+        meta_where = f"(lemma IN ({placeholders}) OR replace(lemma, char(0x301), '') = ? COLLATE NOCASE"
+        params: list[object] = [*variants, clean]
+        if _like_is_safe(clean):
+            meta_where += " OR lemma LIKE ? COLLATE NOCASE OR replace(lemma, char(0x301), '') LIKE ? COLLATE NOCASE"
+            params.extend((f"{clean}%", f"{clean}%"))
+        meta_where += ")"
+        params.append(limit * 3)
+        meta_rows = conn.execute(
+            f"SELECT lemma, etymology_text FROM esum_etymology_meta WHERE {meta_where} "
+            "ORDER BY vol, page, lemma LIMIT ?",
+            tuple(params),
+        ).fetchall()
+        kept = [row for row in meta_rows if _esum_row_kept(conn, row["lemma"], row["etymology_text"])]
+        if kept:
+            return [{"lemma": row["lemma"]} for row in kept[:limit]]
+        if not _like_is_safe(clean):
+            return []
+        phrase = clean.replace("\x00", " ").replace('"', " ").strip()
+        if not phrase:
+            return []
+        fts_rows = conn.execute(
+            "SELECT lemma, etymology_text FROM esum_etymology WHERE esum_etymology MATCH ? "
+            "ORDER BY rank, rowid LIMIT ?",
+            (f'"{phrase}"', max(limit * 4, 30)),
+        ).fetchall()
+        fts_rows = [row for row in fts_rows if _esum_row_kept(conn, row["lemma"], row["etymology_text"])]
+    except sqlite3.OperationalError as exc:
+        logger.debug("citation-check: ESUM lookup failed: %s", exc)
+        return []
+    finally:
+        conn.close()
+    return [{"lemma": row["lemma"]} for row in fts_rows[:limit]]
+
+
+def _sources_if_db_present(sources_db: object) -> object | None:
+    path = getattr(sources_db, "SOURCES_DB_PATH", None)
+    if path is None or not Path(path).exists():
+        logger.debug("citation-check: %s missing — verifier will soft-skip", path)
+        return None
+    return sources_db
 
 
 def _try_load_sources_db():
-    """Lazy-load wiki.sources_db. Returns module or None.
+    """Return the caller's sources lookup, or the local probe, or None.
 
-    Returns None on:
-      - ImportError (module not on sys.path; should not happen via
-        ai_agent_bridge.__init__ but defensive).
-      - sources.db missing on disk (worktree without ``data/``,
-        fresh checkout, CI minimal env).
-
-    The "DB-missing" check is critical: ``wiki.sources_db._dict_lookup``
-    catches FileNotFoundError internally and returns ``[]``, which would
-    be indistinguishable from "headword not found" — turning every
-    citation into a flag in environments without the DB. We pre-check
-    the path so the verifier can soft-skip with a clear reason.
+    None means soft-skip. That is the missing-database result, and it is
+    what an absent caller used to get from ``ImportError``.
     """
-    try:
-        from wiki import sources_db  # type: ignore
-    except ImportError as exc:
-        logger.debug("citation-check: wiki.sources_db import failed: %s", exc)
-        return None
-    if not sources_db.SOURCES_DB_PATH.exists():
-        logger.debug(
-            "citation-check: %s missing — verifier will soft-skip",
-            sources_db.SOURCES_DB_PATH,
-        )
-        return None
-    return sources_db
+    supplied = _caller_sources.get()
+    if supplied is not None:
+        return _sources_if_db_present(supplied)
+    return _sources_if_db_present(_SourcesProbe(_repository_sources_db()))
 
 
 # Правопис verifier is intentionally NOT plumbed into the v1 lookup
@@ -732,12 +990,12 @@ def annotate_body(
 # ──────────────────────────────────────────────────────────────────────
 
 
-def check_and_annotate(body: str) -> CitationCheckResult:
+def check_and_annotate(body: str, sources_db: object | None = None) -> CitationCheckResult:
     """Run detection + verification + annotation on a single body.
 
-    Side-effect-free other than DB reads via ``wiki.sources_db``.
-    Safe to call from any thread (sources_db connection is
-    ``check_same_thread=False`` per its config).
+    ``sources_db`` is the product lookup (``wiki.sources_db``). Omit it
+    and the bridge uses its own read-only probe. Either way a missing
+    database soft-skips. Each call opens and closes its own connection.
 
     Returns ``CitationCheckResult`` with:
       - ``annotated_body``: body with markers appended for unverified
@@ -745,11 +1003,16 @@ def check_and_annotate(body: str) -> CitationCheckResult:
       - ``citations``: every detected attribution event.
       - ``verifications``: 1:1 with citations, in order.
     """
-    citations = detect_citations(body or "")
-    verifications = [verify_citation(c) for c in citations]
-    annotated = annotate_body(body or "", verifications)
-    return CitationCheckResult(
-        citations=citations,
-        verifications=verifications,
-        annotated_body=annotated,
-    )
+    token = _caller_sources.set(sources_db) if sources_db is not None else None
+    try:
+        citations = detect_citations(body or "")
+        verifications = [verify_citation(c) for c in citations]
+        annotated = annotate_body(body or "", verifications)
+        return CitationCheckResult(
+            citations=citations,
+            verifications=verifications,
+            annotated_body=annotated,
+        )
+    finally:
+        if token is not None:
+            _caller_sources.reset(token)

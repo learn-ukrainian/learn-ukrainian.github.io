@@ -223,7 +223,7 @@ def build_kaikki_side_db(
 
     Workers query by key instead of reparsing the global JSON file.
     """
-    guidance = "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group lexicon_kaikki"
+    guidance = ".venv/bin/python -m scripts.storage.artifacts hydrate --group lexicon_kaikki"
     try:
         raw = json.loads(kaikki_json.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:

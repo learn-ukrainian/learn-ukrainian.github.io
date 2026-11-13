@@ -28,6 +28,7 @@ from typing import Any
 
 import yaml
 
+from scripts.common.repo_root import machinery_path
 from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader
@@ -45,7 +46,7 @@ MAX_RESIDUE_RECEIPT_BYTES = 10 * 1024 * 1024
 MAX_DETACHED_BUNDLE_BYTES = MAX_PRESERVED_BYTES
 
 # Reviewed creator-initiator -> canonical stream map for lane succession (#10617).
-SUCCESSION_MAP = Path(__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
+SUCCESSION_MAP = machinery_path("config/terminal_abandon_succession.yaml")
 _SUCCESSION_STREAM = re.compile(r"epic:[1-9][0-9]*")
 _SUCCESSION_INITIATOR = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 
@@ -71,6 +72,23 @@ class SuccessionRefusal(ValueError):
 
 class PreservationLimit(ValueError):
     """A complete snapshot exceeds the existing automatic preservation budget."""
+
+
+def preservation_root(control_root: Path) -> Path:
+    """Root whose ``batch_state/preserved/`` keeps output preserved from ``control_root``'s worktrees.
+
+    The public control plane (its primary checkout or its state root) preserves on the
+    machinery state root (:func:`scripts.common.repo_root.state_root`, #12681), so a
+    machinery checkout outside this repository preserves where dispatch keeps state.
+    The two are one directory while the state root must equal the primary. A
+    repository that is its own control plane preserves on itself. An unusable
+    configuration raises its ``ValueError``, so removal refuses.
+    """
+    from scripts.common.repo_root import primary_root, state_root
+
+    state = state_root()
+    public = {os.path.realpath(primary_root()), os.path.realpath(state)}
+    return state if os.path.realpath(control_root) in public else control_root
 
 
 def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) -> dict[str, Any]:
@@ -1574,6 +1592,7 @@ def preserve_helper_output(
         read_helper_creator,
     )
 
+    primary = preservation_root(primary).resolve(strict=True)
     members = helper_borrowers(worktree, repo_root=repo_root, tasks_dir=tasks_dir)
     helper_untracked_files(worktree)
     # The copy engine's identity is an artifact namespace, not a task record.
@@ -1694,7 +1713,7 @@ def preserve_worktree_artifacts(
 
     try:
         worktree = worktree.resolve(strict=True)
-        primary = primary.resolve(strict=True)
+        primary = preservation_root(primary).resolve(strict=True)
         matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         # Task creators keep their existing attribution and retention rules.
         # Only a cohort consisting entirely of borrowers may use helper custody.

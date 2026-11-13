@@ -6,11 +6,12 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import lu_machinery.api.delegate_router as delegate_router
+import lu_machinery.api.main as api_main
+import lu_machinery.api.state_helpers as state_helpers
 from fastapi.testclient import TestClient
 
-import scripts.api.delegate_router as delegate_router
-import scripts.api.main as api_main
-import scripts.api.state_helpers as state_helpers
+import scripts.project_api.orient as product_orient
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -23,7 +24,7 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
     # Patch the canonical factory (used by shared resolve_context) and the
     # router re-export kept for monkeypatch compatibility after #7496.
-    import scripts.api.monitor_context as monitor_context
+    import lu_machinery.api.monitor_context as monitor_context
 
     monkeypatch.setattr(monitor_context, "production_context", lambda *a, **k: ctx)
     monkeypatch.setattr(delegate_router, "production_context", lambda *a, **k: ctx)
@@ -70,13 +71,13 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
     async def fake_pipeline(*a, **k):
         return {"summary": {}}
 
-    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
+    monkeypatch.setattr(product_orient, "collect_pipeline_orient_data", fake_pipeline)
     monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda *a, **k: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
+    monkeypatch.setattr(product_orient, "collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
-        api_main,
-        "_collect_governance_orient_data",
+        product_orient,
+        "collect_governance_orient_data",
         lambda *a, **k: {
             "decisions_total": 0,
             "decisions_stale": 0,
@@ -123,6 +124,8 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     )
     _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
 
+    # Machinery #353: the lifespan writer publishes before HTTP readers run.
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     active_response = client.get("/api/delegate/active")
     orient_response = client.get("/api/orient?fresh=true")
 
@@ -174,6 +177,7 @@ def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
         ),
     )
 
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
 
     assert response.status_code == 200
@@ -214,6 +218,7 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
 
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
 
     assert response.status_code == 200
@@ -262,6 +267,7 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     )
 
     t0 = datetime.now(UTC)
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
     t1 = datetime.now(UTC)
     duration_s = (t1 - t0).total_seconds()

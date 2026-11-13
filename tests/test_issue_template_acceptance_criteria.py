@@ -3,10 +3,9 @@
 from pathlib import Path
 
 import pytest
-
-from scripts.ci.check_issue_task_quality import score_body
-from scripts.orchestration.postmerge_criteria import visible_markdown
-from scripts.orchestration.task_lifecycle import LifecycleError, parse_issue_acceptance_criteria
+from lu_machinery.ci.check_issue_task_quality import score_body
+from lu_machinery.orchestration.postmerge_criteria import visible_markdown
+from lu_machinery.orchestration.task_lifecycle import LifecycleError, parse_issue_acceptance_criteria
 
 pytestmark = pytest.mark.repo_wide
 

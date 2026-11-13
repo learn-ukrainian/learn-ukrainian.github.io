@@ -15,6 +15,22 @@ Use these project entry points for agent fleet work:
 Gemini CLI and Gemini Code Assist are unsupported for this project. Do not
 document them as current fallback, review, dispatch, or restoration paths.
 
+## Browser Automation
+
+Operator decision 2026-11-03 (#12689): Playwright runs only against our own
+trusted content (the local site build on the loopback host, or
+`learn-ukrainian.github.io`), and only through the hardened launcher:
+`site/e2e/support/hardened-browser.mjs` for Node and
+`scripts/validate/browser_launcher.py` for Python. The launcher starts the
+system's installed, auto-updated Google Chrome with its sandbox on and aborts,
+with a logged reason, every request to any other origin.
+
+- Do not point Playwright at untrusted or open-web pages.
+- Do not use a Playwright MCP server.
+- Do not download Playwright's bundled browsers or turn the browser sandbox off.
+
+`tests/test_browser_hardening_guard.py` enforces this for every launch site.
+
 ## Stream Orchestration Model
 
 Long-running curriculum streams should have one orchestrator thread per stream
@@ -61,12 +77,6 @@ and one independent review are cheaper and safer.
 ## Command Examples
 
 ```bash
-printf '%s\n' "<review prompt>" | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-    --task-id review-123 \
-    --to-model gemini-3.8-flash-high \
-    --review
-
 scripts/dispatch.py dispatch --model <catalog-model> \
   --agent agy \
   --prompt-file docs/dispatch-briefs/example.md \
@@ -81,6 +91,6 @@ environment before relying on it.
 
 ## AGY Model Names
 
-AGY uses `gemini-3.8-flash-high`. Direct calls and bridge/runtime requests
-accept that slug. Gemini Pro and Argon are retired, not subscribed (operator
-2026-10-23); do not select them. Older Flash generations remain retired.
+AGY model ids come from `scripts/config/model_catalog.yaml`: Gemini work uses
+`gemini-4-carbon-medium`, then `gemini-4-argon-medium`; the driver and review
+seats use `gemini-3.8-flash-high`. Gemini Pro and older Flash generations are retired.

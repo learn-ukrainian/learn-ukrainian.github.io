@@ -336,15 +336,23 @@ LABELLED_ACCOUNT_SETTING_SOURCES = "project,local"
 _LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty"}
 # Every key the JSON status may carry for that login. Claude Code adds
 # ``apiKeySource``, ``allowedProviders`` or ``forcedLoginMethod`` only when a
-# key, provider policy or login policy is in force; each refuses.
+# key, provider policy or login policy is in force; each refuses. Since 2.1.318
+# it also reports the date the stored sign-in ends (``loginExpiresAt``). Since
+# 2.1.319 a ``claude.ai`` login also carries ``storedClaudeAiLogin``, which that
+# branch sets to ``true`` and nothing else, and ``planTier``; the two are always
+# reported together.
 _LABELLED_AUTH_STATUS_KEYS = frozenset(
     {*_LABELLED_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
-    | {"email", "orgId", "orgName", "subscriptionType"}
+    | {"email", "orgId", "orgName", "subscriptionType", "loginExpiresAt", "storedClaudeAiLogin", "planTier"}
 )
-# Every line label the text status may print for that login. It prints a line
-# for each endpoint, proxy, certificate, token, key or provider override in
-# effect (JSON reports none of those), so any other line refuses.
-_LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email"})
+# The ``planTier`` Claude Code 2.1.319 derives for each consumer ``subscriptionType``
+# (Max also by the login's rate-limit tier); any other plan is reported as ``other``.
+_LABELLED_PLAN_TIERS = {"pro": frozenset({"pro"}), "max": frozenset({"max_5x", "max_20x", "max_other"})}
+# Every line label the text status may print for that login, including the
+# sign-in end date (2.1.318). It prints a line for each endpoint, proxy,
+# certificate, token, key or provider override in effect (JSON reports none of
+# those), so any other line refuses.
+_LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email", "Sign-in ends"})
 # An API-key label's run (C-2643): the key helper from its bound settings file and nothing else.
 # Claude Code 2.1.312 reports exactly these keys and the one text line below for it.
 _API_KEY_AUTH_STATUS = {
@@ -362,9 +370,12 @@ _AUTH_STATUS_TIMEOUT_S = 30
 # isolated from the worker's Python environment variables and working
 # directory. That module imports the standard library only, so the guard
 # needs no virtual environment (the runner resolves the interpreter link).
+# The guard is named under the machinery package's canonical import name (the
+# unresolved name of the package directory this file is in), whichever name this
+# module was imported by.
 _LAUNCH_GUARD_CODE = (
     "import sys; sys.path.insert(0, sys.argv.pop(1)); "
-    "from scripts.agent_runtime.env_sanitize import run_claude_launch_guard; "
+    f"from {Path(__file__).absolute().parents[2].name}.agent_runtime.env_sanitize import run_claude_launch_guard; "
     "run_claude_launch_guard(sys.argv[1:])"
 )
 _CODE_ROOT = Path(__file__).resolve().parents[3]
@@ -634,9 +645,17 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build worker hook settings from tracked sources in this checkout."""
+    """Build worker hook settings: the product's hook list, run with this installation's guards.
+
+    The settings file is product configuration, read from the product checkout
+    ``product_root`` selects (C-4746). The guards it names and the interpreter that runs
+    them are machinery: they always come from the checkout this code runs from
+    (``source_root``), never from product configuration.
+    """
+    from scripts.common.repo_root import product_root
+
     source_root = Path(__file__).resolve().parents[3]
-    source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
+    source = json.loads((product_root() / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
     for group in source["hooks"]["PreToolUse"]:
         hooks = []
@@ -1301,8 +1320,9 @@ def _verify_labelled_auth_method(
     files, ``--settings``) is resolved by Claude Code itself. The JSON
     must name the subscription login, the first-party provider, the bound
     directory and a consumer plan (the plan Claude Code itself resolved for
-    the login decides whether it fetches organisational policy), with no key
-    outside the allowlist; the text must carry no line outside its allowlist,
+    the login decides whether it fetches organisational policy) with the plan
+    tier Claude Code derives for that plan, with no key outside the allowlist;
+    the text must carry no line outside its allowlist,
     which is what attests the endpoint. Output is parsed, never logged or
     kept.
     """
@@ -1356,7 +1376,14 @@ def _verify_labelled_auth_method(
         if [line for line in status("--text").splitlines() if line.strip()] != _API_KEY_STATUS_TEXT:
             raise ClaudeAccountRefused("claude_account_status_override")
         return
-    if parsed.get("subscriptionType") not in CLAUDE_CONSUMER_PLANS.values():
+    stored = parsed.get("storedClaudeAiLogin", True)
+    if ("storedClaudeAiLogin" in parsed) != ("planTier" in parsed) or stored is not True:
+        raise ClaudeAccountRefused("claude_account_auth_method_conflict")
+    plan = parsed.get("subscriptionType")
+    if not isinstance(plan, str) or plan not in CLAUDE_CONSUMER_PLANS.values():
+        raise ClaudeAccountRefused("claude_account_plan_unverified")
+    tier = parsed.get("planTier")
+    if "planTier" in parsed and not (isinstance(tier, str) and tier in _LABELLED_PLAN_TIERS.get(plan, frozenset())):
         raise ClaudeAccountRefused("claude_account_plan_unverified")
     lines = [line for line in status("--text").splitlines() if line.strip()]
     labels = [line.partition(": ")[0] if ": " in line else None for line in lines]

@@ -1,4 +1,4 @@
-"""Tests for scripts/ci/check_issue_task_quality.py (#7854)."""
+"""Tests for lu_machinery.ci.check_issue_task_quality, the installed release (#7854)."""
 
 from __future__ import annotations
 
@@ -13,8 +13,8 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-from scripts.ci.check_issue_task_quality import main, score_body
-from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
+from lu_machinery.ci.check_issue_task_quality import main, score_body
+from lu_machinery.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
 COMPLETE = """
 ## User-visible outcome
@@ -185,7 +185,7 @@ def test_first_line_trivial_exemption(first_line: str) -> None:
 def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "Correct spelling", "labels": [{"name": label}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.github_client.check_output",
+        "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert (
@@ -198,7 +198,7 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
 def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
     payload = {"title": "trivial:", "body": "Correct spelling", "labels": [{"name": "task"}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.github_client.check_output",
+        "lu_machinery.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert (
@@ -267,7 +267,7 @@ def test_dor_workflow_comment_lists_missing_fields_and_updates_one() -> None:
 
 
 def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     assert score_body(COMPLETE)["verdict"] == "PASS"
     policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]} for key in ("AC-01", "AC-02")}
@@ -279,9 +279,27 @@ def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
 
 
 # #10565: supplied observations exercise the real lifecycle ancestry validator.
-from scripts.ci import check_issue_task_quality as checker
-from scripts.ci import comment_issue_task_quality as commenter
-from scripts.orchestration import issue_stream_audit as audit
+from lu_machinery.ci import check_issue_task_quality as checker
+from lu_machinery.ci import comment_issue_task_quality as commenter
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.orchestration import issue_stream_audit as audit
+
+
+def _select_checkout(monkeypatch, checkout):
+    """Run the checker for ``checkout`` as ``scripts/__init__.py`` configures the release for a checkout.
+
+    The product is the checkout and the shared-state anchor is its primary, where the in-tree
+    copy's ``ROOT`` and ``main_checkout_root(ROOT)`` pointed. The release accepts only a primary
+    with its own ``.git`` directory, so a bare fixture directory gets one.
+    """
+    primary = main_checkout_root(checkout)
+    # A real Git directory: Git needs HEAD, objects/ and refs/ before it treats .git as one.
+    for entry in ("objects", "refs"):
+        (primary / ".git" / entry).mkdir(parents=True, exist_ok=True)
+    (primary / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(checkout))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(primary))
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 REGISTRY = {"devops": [5703], "harness": [6943]}
@@ -309,7 +327,7 @@ def hygiene_lookup(monkeypatch):
 
 
 def test_dod_structure_uses_canonical_grammar():
-    from scripts.orchestration.task_lifecycle import parse_issue_acceptance_criteria
+    from lu_machinery.orchestration.task_lifecycle import parse_issue_acceptance_criteria
 
     for body in [COMPLETE, COMPLETE.replace("[ ]", "[x]")]:
         assert parse_issue_acceptance_criteria(body)
@@ -396,7 +414,7 @@ def test_read_failures_are_unknown(monkeypatch, failure, code):
 
 
 def test_observation_audits_only_target_null_and_publishes_complete_cache(monkeypatch, tmp_path):
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    _select_checkout(monkeypatch, tmp_path)
     monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
     monkeypatch.setattr(checker, "read_parent", lambda r, n: {"number": 5703, "repository": REPO})
     monkeypatch.setattr(checker, "live_audit", lambda *a: pytest.fail("native parent must not audit"))
@@ -442,7 +460,7 @@ def test_live_audit_retains_forest_ownership_and_incomplete_refusal(monkeypatch)
 
 @pytest.fixture
 def membership_cache(monkeypatch, tmp_path):
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    _select_checkout(monkeypatch, tmp_path)
     path = tmp_path / "batch_state/issue_stream_audit.json"
     path.parent.mkdir()
     monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
@@ -687,7 +705,7 @@ def test_writer_and_reader_share_primary_cache_from_linked_worktree(monkeypatch,
     checkout = tmp_path / "worker"
     checkout.mkdir()
     (checkout / ".git").write_text(f"gitdir: {gitdir}\n")
-    monkeypatch.setattr(checker, "ROOT", checkout)
+    _select_checkout(monkeypatch, checkout)
     assert checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY, root=checkout)
     assert (primary / "batch_state/issue_stream_audit.json").is_file()
     assert not (checkout / "batch_state").exists()
@@ -786,7 +804,9 @@ def audited_checkout(monkeypatch, tmp_path):
         "## Stream milestones (the focus layer)\n\n| Stream | State | Current milestone | Done when |\n"
         "| --- | --- | --- | --- |\n| devops | STALE | #77 cache writer | merged |\n"
     )
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    _select_checkout(monkeypatch, tmp_path)
+    # The release's run_audit reads its registry from REGISTRY_PATH, not from the checkout.
+    monkeypatch.setattr(audit, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
     monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
     monkeypatch.setattr(checker, "read_parent", lambda *a: None)
     monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
@@ -903,18 +923,19 @@ def test_comment_main_rate_limit_skip(monkeypatch, capsys):
     assert "rate_limited" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("script", [
-    "scripts/ci/comment_issue_task_quality.py",
-    "scripts/orchestration/issue_quality_report.py",
+@pytest.mark.parametrize("module", [
+    "lu_machinery.ci.comment_issue_task_quality",
+    "lu_machinery.orchestration.issue_quality_report",
 ])
-def test_issue_quality_file_help_without_repository_import_path(script, tmp_path):
+def test_issue_quality_file_help_without_repository_import_path(module, tmp_path):
+    import importlib.util
     import os
     import subprocess
     import sys
-    from pathlib import Path
 
+    script = importlib.util.find_spec(module).origin  # the installed release's file, run by path
     result = subprocess.run(
-        [sys.executable, "-I", str(Path(__file__).resolve().parents[1] / script), "--help"],
+        [sys.executable, "-I", script, "--help"],
         cwd=tmp_path,
         env={key: value for key, value in os.environ.items() if key not in {
             "PYTHONPATH", "GITHUB_TOKEN", "GITHUB_REPOSITORY", "GITHUB_EVENT_PATH",
@@ -933,11 +954,12 @@ def test_issue_quality_file_help_without_repository_import_path(script, tmp_path
 def test_cli_stub_entrypoint_and_safe_errors(tmp_path, monkeypatch, capsys):
     import subprocess
     import sys
-    from pathlib import Path
 
+    # The release ships no top-level compatibility stub; its entry point is the ci module.
     command = [
         sys.executable,
-        str(Path(__file__).resolve().parents[1] / "scripts/check_issue_task_quality.py"),
+        "-m",
+        "lu_machinery.ci.check_issue_task_quality",
         "--body",
         "trivial: yes",
         "--json",

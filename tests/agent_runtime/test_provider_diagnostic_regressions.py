@@ -1,8 +1,6 @@
 """#9539 review regressions, using installed CLI/SDK and repository diagnostics.
 
 Positive diagnostic provenance (no paid CLI calls):
-* Kimi: installed @moonshot-ai/kimi-code dist/main.mjs,
-  formatNativeTurnFailure + formatStartupError, and PROVIDER_*_ERROR_CODE.
 * Cursor: installed cursor-agent index.js, requireAuth Error diagnostic.
 * Gemini: test_gemini_adapter_auth.py::TestRateLimitMarkersFromCodexReview;
   scripts/etymology/bulk_ocr_gemini.py's captured TerminalQuotaError.
@@ -64,7 +62,7 @@ PREFIXED_TYPED_DIAGNOSTICS = [
 
 
 @pytest.mark.parametrize(
-    "prefix", ["Error", "opencode", "kimi", "grok", "agy", "gemini", "cursor", "provider", "acp transport"]
+    "prefix", ["Error", "opencode", "grok", "agy", "gemini", "cursor", "provider", "acp transport"]
 )
 @pytest.mark.parametrize("body,expected,trigger", PREFIXED_TYPED_DIAGNOSTICS)
 def test_generic_prefix_admits_immediate_status_label_or_title(prefix, body, expected, trigger):
@@ -143,32 +141,6 @@ def test_gemini_real_terminal_limit_sets_api_cooldown(diagnostic, tmp_path, monk
     assert cooldowns == [True]
 
 
-@pytest.mark.parametrize(
-    "code,expected,trigger",
-    [
-        ("provider.rate_limit", "rate_limited", "rate_limited"),
-        ("provider.auth_error", "provider_auth", "auth"),
-        ("provider.overloaded", "provider_overloaded", "overloaded"),
-        ("provider.connection_error", "transport_error", "transport"),
-    ],
-)
-def test_kimi_terminal_codes_survive_wrapped_error(code, expected, trigger):
-    diagnostic = f"error: failed to run prompt: {code}:"
-    result = ADAPTERS["kimi"]().parse_response(stdout="", stderr=diagnostic, returncode=1, output_file=None)
-    assert result.failure_code == expected
-    assert result.rate_limited is (trigger == "rate_limited")
-    assert (
-        classify_failover_trigger(
-            parse=result,
-            returncode=1,
-            kill_reason=None,
-            stdout_text=CONTENT,
-            stderr_text=diagnostic,
-        )
-        == trigger
-    )
-
-
 @pytest.mark.parametrize("adapter", ["agy", "grok", "deepseek", "glm"])
 @pytest.mark.parametrize(
     "diagnostic",
@@ -221,23 +193,6 @@ def test_explicit_status_never_falls_back_to_body_words(status):
     body = "rate limit exceeded; authentication required; connection refused"
     assert provider_failure_code(body, status) == expected
     assert provider_failure_code(f"Error code: {status} - {body}") == expected
-
-
-def test_kimi_gh_login_is_github_auth_not_provider_auth():
-    diagnostic = "To get started with GitHub CLI, please run:  gh auth login"
-    result = ADAPTERS["kimi"]().parse_response(stdout="", stderr=diagnostic, returncode=1, output_file=None)
-    assert result.failure_code == "github_auth_required"
-    assert result.rate_limited is False
-    assert (
-        classify_failover_trigger(
-            parse=result,
-            returncode=1,
-            kill_reason=None,
-            stdout_text="",
-            stderr_text=diagnostic,
-        )
-        == "auth"
-    )
 
 
 @pytest.mark.parametrize("adapter", ADAPTERS)

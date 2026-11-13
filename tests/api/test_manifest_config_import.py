@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.api import config
+from scripts.project_api import config
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
 FALLBACK_ROWS = [
@@ -113,7 +113,7 @@ elif hasattr(yaml, "CSafeLoader"):
     del yaml.CSafeLoader
 Path.read_text = counted_read
 yaml.load = counted_load
-from scripts.api import config
+from scripts.project_api import config
 print(json.dumps({
     "reads": len(reads), "loaders": loaders,
     "levels": config.LEVELS, "seminars": sorted(config.SEMINAR_TRACK_IDS),

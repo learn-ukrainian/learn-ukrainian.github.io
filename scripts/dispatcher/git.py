@@ -20,7 +20,7 @@ import yaml
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.git_credentials import canonical_origins as canonical_origins
 from scripts.common.git_credentials import verification_credentials
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import configured_github_slug, product_root, resolve_repo_root
 from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
@@ -265,6 +265,10 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     if key not in repos:
         raise ValueError("unknown repository key")
     item = {**repos[key], "key": key}
+    slug = configured_github_slug() if item.get("default") else None
+    if slug is not None:
+        # A configured slug names the default repository (#12681); unset, the catalog's value stands.
+        item["github"] = slug
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 
@@ -952,9 +956,10 @@ def _require_public_push(tree: Path, remote: str, ref: str, commit: str) -> None
             refuse()
         except git_push.ScanTimeout:
             refuse()
-        # The checkout under salvage can replace its own linter. Run the copy next to this
-        # module, and point Git at the salvage objects.
-        script = Path(__file__).resolve().parents[2] / "scripts/audit/lint_opsec_leaks.py"
+        # The checkout under salvage can replace its own linter. Run the product checkout's
+        # copy (``product_root``'s choice, C-4746; refused when there is none), never one
+        # inside the salvage tree, and point Git at the salvage objects.
+        script = (product_root() / "scripts/audit/lint_opsec_leaks.py").resolve()
         try:
             script.resolve().relative_to(tree.resolve())
         except ValueError:
@@ -1064,6 +1069,16 @@ def _archive_removed(repo: Path, tree: Path, record: dict, head: str) -> str | N
         return f"failed: {type(exc).__name__}: {exc}"
 
 
+# Settlement could not load its code (a dispatcher change merged while the worker ran). The tree stays and
+# the scheduled cleanup, a fresh process, retries it (worker.RETRY_REASONS).
+CODE_UNAVAILABLE = "settlement_code_unavailable"
+
+
+def _code_load_failure(error: str | None) -> bool:
+    """Whether a removal error names a failed import; the chokepoint reports ``<ExceptionType>: <message>``."""
+    return (error or "").partition(":")[0] in {"ImportError", "ModuleNotFoundError"}
+
+
 def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
@@ -1081,16 +1096,22 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     claims admit it, and is removed only while its HEAD and content still equal what that branch holds;
     a failed or unproven salvage keeps it, and so does every hold _salvage_hold finds.
     """
-    registry_note = []  # what archiving the repository's registry entry did, once the tree is removed
-    seen_head = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
+    registry_note: list[str] = []  # what archiving the repository's registry entry did, once the tree is removed
+    seen_head: list[str] = []  # the tree's HEAD once read: a retained tree's entry then records it (_refresh_at_settlement)
 
-    def disposition(state, reason, detail=None):
+    def disposition(state: str, reason: str, detail: str | None = None) -> dict[str, str]:
         if (state == "retained" and seen_head and reason != "borrowed_worktree" and not registry_note
                 and (note := _refresh_at_settlement(record, Path(record["worktree_path"]), seen_head[0])) is not None):
             registry_note.append(note)
-        return dict(worktree_disposition=state, worktree_disposition_reason=reason,
-                    **({"worktree_disposition_detail": detail} if detail else {}),
-                    **({"worktree_registry": registry_note[0]} if registry_note else {}))
+        outcome: dict[str, str] = {
+            "worktree_disposition": state,
+            "worktree_disposition_reason": reason,
+        }
+        if detail:
+            outcome["worktree_disposition_detail"] = detail
+        if registry_note:
+            outcome["worktree_registry"] = registry_note[0]
+        return outcome
 
     # An owner hold is decided before any Git read, push, or removal. The disk
     # record wins when this copy is stale.
@@ -1170,6 +1191,8 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     if removal.action == "skipped":
         return disposition("retained", "removal_refused", removal.reason)
     if removal.action != "removed":
+        if _code_load_failure(removal.error):
+            return disposition("retained", CODE_UNAVAILABLE, removal.error)
         return disposition("error", "worktree_remove_failed", removal.error or removal.reason)
     try:
         # The task branch goes only when its tip is published or reachable from another ref.
@@ -1184,5 +1207,5 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
 
 if __name__ == "__main__":  # the worktree hooks: refresh TREE REGISTRY
     if len(sys.argv) != 4 or sys.argv[1] != "refresh":
-        sys.exit("usage: python -m scripts.dispatcher.git refresh TREE REGISTRY")
+        sys.exit(f"usage: python -m {Path(__file__).absolute().parents[1].name}.dispatcher.git refresh TREE REGISTRY")
     refresh_worktree(Path(sys.argv[3]), Path(sys.argv[2]))

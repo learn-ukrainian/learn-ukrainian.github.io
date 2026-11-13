@@ -13,20 +13,22 @@ import json
 import os
 import shutil
 import sqlite3
+import sys
 import threading
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
+from lu_machinery.review import findings_db, second_seat  # the subject record.py runs the installed release
+from lu_machinery.review.seeds import manifest as seed_manifest
 
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.plan_promote import promote_plan
 from scripts.curriculum.evidence import lock
-from scripts.review import findings_db, fixloop, record, second_seat
+from scripts.review import fixloop, record
 from scripts.review.receipts.ledger import create_empty_ledger
-from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate import codes
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
 from tests.review.test_r1_schema_ledger import LESSON_CHECKS, PLAN_CHECKS, _dump, _record, _review
@@ -86,6 +88,8 @@ class World:
         return path
 
     def task(self, task_id: str, agent: str, model: str | None, **extra: Any) -> str:
+        if extra.get("review_attempt") is not None:
+            extra = {**getattr(self, "rendered_prompts", {}).get(extra.get("prompt_sha256"), {}), **extra}
         (self.tasks_dir / f"{task_id}.json").write_text(
             json.dumps({"task_id": task_id, "agent": agent, "model": model, "status": "done", **extra}),
             encoding="utf-8",
@@ -1656,11 +1660,70 @@ def _with_placeholder_prompt_sha(made: dict[str, Any]) -> None:
 
 
 def _rendered(world: World, made: dict[str, Any], access: str = "isolated") -> str:
+    from scripts.review.prompts.render import render
+
+    rendered = render(
+        world.manifest(made["n"]), repo_root=world.root, review_id=made["review_id"],
+        attempt_id=made["attempt_id"], review_access=access,
+    )
     sha = record.rendered_prompt_sha256(
         world.manifest(made["n"]), world.root, made["review_id"], made["attempt_id"], access
     )
     assert sha is not None
+    assert rendered.prompt_sha256 == sha
+    prompt = world.out / f"{sha}.prompt"
+    prompt.write_bytes(rendered.prompt.encode("utf-8"))
+    if not hasattr(world, "rendered_prompts"):
+        world.rendered_prompts = {}
+    world.rendered_prompts[sha] = {
+        "prompt_file": str(prompt),
+        "review_contract": {"prompt_sha256": sha, "machinery_dependencies": rendered.machinery_dependencies},
+    }
     return sha
+
+
+def test_placeholder_attestation_keeps_recorded_core_but_rejects_tampering(world, monkeypatch, tmp_path):
+    """Defect class: rules churn invalidates a paid return, or an archived prefix bypasses proof checks."""
+    from scripts.review.prompts.render import REPO_ROOT, render_prompt
+    from scripts.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
+
+    core = tmp_path / "rules" / "core.md"
+    core.parent.mkdir()
+    core.write_text("Original trusted rules\n")
+    monkeypatch.setenv("LEARN_UKRAINIAN_RULES_DIR", str(core.parent))
+    made = world.make_return(2)
+    sent = _rendered(world, made)
+    world.task("review-historical", "claude", "claude-sonnet-5", prompt_sha256=sent,
+               review_attempt=_bound(world, made))
+    _with_placeholder_prompt_sha(made)
+    world.capture_result(made, "review-historical")
+    task_path = world.tasks_dir / "review-historical.json"
+    task = json.loads(task_path.read_bytes())
+    prompt_path = Path(task["prompt_file"])
+    original, _, _ = render_prompt(world.manifest(2), repo_root=world.root, output_path=prompt_path,
+                                   review_id=made["review_id"], attempt_id=made["attempt_id"], review_access="isolated")
+    kwargs = dict(task_id="review-historical", tasks_dir=world.tasks_dir, manifest_path=world.manifest(2),
+                  root=world.root, **_bound(world, made))
+    raw = made["review"].read_bytes()
+    expected = record.attest_prompt_sha256(raw, sent)
+    assert record.attested_return(raw, **kwargs) == expected
+    core.write_text("Changed trusted rules\n")
+    assert record.attested_return(raw, **kwargs) == expected
+    with pytest.raises(ReviewContractError, match="review_rules_core_changed"):
+        check_render_contract(prompt_path, original, REPO_ROOT)
+    with pytest.raises(ReviewContractError, match="review_rules_core_changed"):
+        check_launch_contract(task["review_contract"], REPO_ROOT, Path(sys.executable))
+    for changed in (original.replace("Original trusted rules", "Tampered trusted rules", 1), original + "\nforged body"):
+        altered = json.loads(json.dumps(task))
+        prompt_path.write_text(changed)
+        altered["prompt_sha256"] = altered["review_contract"]["prompt_sha256"] = hashlib.sha256(changed.encode()).hexdigest()
+        task_path.write_text(json.dumps(altered))
+        with pytest.raises(record.RecordError, match=record.PROMPT_SHA256_UNATTESTABLE):
+            record.attested_return(raw, **kwargs)
+    prompt_path.write_text(original)
+    task_path.write_text(json.dumps(task))
+    outcome = world.record(made, task_id="review-historical")
+    assert outcome.accepted, outcome.rejection_codes
 
 
 def _bound(world: World, made: dict[str, Any], **override: str) -> dict[str, str]:

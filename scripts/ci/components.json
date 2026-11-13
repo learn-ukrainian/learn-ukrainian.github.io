@@ -503,9 +503,6 @@
     "UI-REVIEW-FINDINGS.md": [
       "shared-core"
     ],
-    "commit.sh": [
-      "harness"
-    ],
     "dagger.json": [
       "shared-core"
     ],
@@ -614,31 +611,10 @@
     "start-codex.sh": [
       "harness"
     ],
-    "start-cursor-driver.sh": [
-      "harness"
-    ],
     "start-gemini-driver.sh": [
       "harness"
     ],
     "start-gemini.sh": [
-      "harness"
-    ],
-    "start-glm.sh": [
-      "harness"
-    ],
-    "start-glmcc.sh": [
-      "harness"
-    ],
-    "start-grok-driver.sh": [
-      "harness"
-    ],
-    "start-grok.sh": [
-      "harness"
-    ],
-    "start-kimi.sh": [
-      "harness"
-    ],
-    "start-kimicc.sh": [
       "harness"
     ],
     "tests/build/test_build_landing_pages.py": [
@@ -696,12 +672,6 @@
       "path": ".agent/",
       "components": [
         "harness"
-      ]
-    },
-    {
-      "path": ".astro/",
-      "components": [
-        "shared-core"
       ]
     },
     {
@@ -783,12 +753,6 @@
       ]
     },
     {
-      "path": "briefs/",
-      "components": [
-        "harness"
-      ]
-    },
-    {
       "path": "curriculum/",
       "components": [
         "curriculum-generation"
@@ -838,12 +802,6 @@
     },
     {
       "path": "eval/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
-      "path": "gemini_extensions/",
       "components": [
         "shared-core"
       ]
@@ -926,12 +884,6 @@
       "path": "review/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "reviews/",
-      "components": [
-        "harness"
       ]
     },
     {
@@ -1031,6 +983,12 @@
       ]
     },
     {
+      "path": "scripts/project_api/",
+      "components": [
+        "harness"
+      ]
+    },
+    {
       "path": "scripts/projects/open_model_data/",
       "components": [
         "open-model-data"
@@ -1080,12 +1038,6 @@
       "path": "status/",
       "components": [
         "shared-core"
-      ]
-    },
-    {
-      "path": "tasks/",
-      "components": [
-        "harness"
       ]
     },
     {

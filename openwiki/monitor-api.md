@@ -26,9 +26,9 @@ The operational dashboard backend is built on **FastAPI** and located under [`sc
 | Router file | Prefix / Endpoint | Purpose |
 |---|---|---|
 | [`rules_router.py`](../scripts/api/rules_router.py) | `/api/rules` | Serves authoritative shared agent rules parsed from `agents_extensions/shared/rules/`. |
-| [`artifacts_router.py`](../scripts/api/artifacts_router.py) | `/artifacts/` | Serves committed and generated evaluation artifacts (HTML reports, scorecards). |
-| [`batch_router.py`](../scripts/api/batch_router.py) | `/api/batch/...` | Manages batch build tasks and WebSocket progress reporting. |
-| [`agent_router.py`](../scripts/api/agent_router.py) | `/api/agent/...` | Exposes agent metrics, session metadata, and tool invocation stats. |
+| [`artifacts_router.py`](../scripts/project_api/artifacts_router.py) | `/artifacts/` | Serves committed and generated evaluation artifacts (HTML reports, scorecards). |
+| [`batch_router.py`](../scripts/project_api/batch_router.py) | `/api/batch/...` | Manages batch build tasks and WebSocket progress reporting. |
+| [`agent_router.py`](../scripts/project_api/agent_router.py) | `/api/agent/...` | Exposes agent metrics, session metadata, and tool invocation stats. |
 | [`docs_router.py`](../scripts/api/docs_router.py) | `/api/docs/...` | Document inspection endpoint. (Post-adopt expansion candidate for OpenWiki browsing). |
 
 ---

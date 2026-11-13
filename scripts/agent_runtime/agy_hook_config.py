@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import os
 import re
@@ -13,13 +12,50 @@ from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.common.repo_root import main_checkout_root, project_interpreter
+from lu_machinery.common.repo_root import machinery_path as installed_machinery_path
+
+from scripts.common.repo_root import (
+    configure_native_hook_roots,
+    machinery_path,
+    main_checkout_root,
+)
 from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
-ENTRY_POINT = Path("scripts/agent_runtime/secret_print_hook.py")
 GUARD_TIMEOUT_FLOOR = 10
+PRIMARY_GUARD_NAME = "primary-checkout-write-guard"
+PRIMARY_GUARD_ENTRY = "agents_extensions/shared/hooks/guard-primary-checkout-write.py"
+GUARD_MODE = "agy-secret-print"
+# Every mode a product hook manifest may name, in the order of the tail's case.
+NATIVE_HOOK_MODES = (
+    GUARD_MODE,
+    "agy-primary-write",
+    "agy-pending-orders",
+    "agy-hook",
+    "agy-stop-hook",
+    "agy-pretool-hook",
+    "claude-hook",
+    "claude-stop-hook",
+    "claude-audit-hook",
+    "codex-pre-tool-use",
+    "codex-post-tool-use",
+    "codex-user-prompt-submit",
+)
+# $0 of the generated command, so the contract version shows in process listings.
+NATIVE_HOOK_NAME = "lu-machinery-hook-v1"
+_RESOLVERS_FILE = "lib/project_interpreter.sh"
+_RESOLVERS_BEGIN = "# LU_HOOK_RESOLVERS_BEGIN"
+_RESOLVERS_END = "# LU_HOOK_RESOLVERS_END"
+# Product audit extension: use the same resolver as the released commands and
+# run the installed audit under isolated Python. Preserve its policy exit code.
+_HOOK_TAIL = r"""project_hook_context_resolve 2>/dev/null || {
+    cat >/dev/null 2>&1
+    printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+    exit 2
+}
+exec "$LEARN_UKRAINIAN_PYTHON" -I -m agents_extensions.shared.hooks.audit-primary-checkout-dirt
+"""
 
 
 @dataclass(frozen=True)
@@ -68,7 +104,41 @@ def _read_config(path: Path) -> dict:
     return data
 
 
-def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) -> None:
+def _hook_resolvers() -> str:
+    """The marked resolver block of the packaged shell library, read as data."""
+    try:
+        lines = machinery_path(_RESOLVERS_FILE).read_text(encoding="utf-8").splitlines(keepends=True)
+    except (OSError, UnicodeError):
+        raise AgyHookConfigError("hook_resolvers_unavailable") from None
+    begins = [index for index, line in enumerate(lines) if line.rstrip("\n") == _RESOLVERS_BEGIN]
+    ends = [index for index, line in enumerate(lines) if line.rstrip("\n") == _RESOLVERS_END]
+    if len(begins) != 1 or len(ends) != 1 or ends[0] < begins[0]:
+        raise AgyHookConfigError("hook_resolvers_unmarked")
+    return "".join(lines[begins[0] + 1 : ends[0]])
+
+
+def native_hook_command(mode: str) -> str:
+    """The one native hook command for ``mode``; every product manifest uses these bytes.
+
+    ``/bin/bash -c <body> lu-machinery-hook-v1 <mode>``, serialized with ``shlex.join``.
+    The body is ``set -u``, the packaged resolver block and a fixed tail. It holds no
+    host path: it resolves the product, shared-state anchor and interpreter by the
+    shell rule before any Python starts, then runs the installed entry for ``mode``
+    under ``-I``. Validators compare these exact bytes, never an equivalent argv.
+    """
+    if mode not in NATIVE_HOOK_MODES:
+        raise AgyHookConfigError("unsupported_hook_mode")
+    # Standard registrations belong to the pinned release. The product retains
+    # its existing audit extension until that mode moves into machinery too.
+    if mode != "claude-audit-hook":
+        from lu_machinery.agent_runtime.agy_hook_config import native_hook_command as installed_command
+
+        return installed_command(mode)
+    body = "set -u\n" + _hook_resolvers() + _HOOK_TAIL
+    return shlex.join(["/bin/bash", "-c", body, NATIVE_HOOK_NAME, mode])
+
+
+def _check_file(path: Path, command: str) -> None:
     guard = _read_config(path).get(GUARD_NAME)
     if not isinstance(guard, dict):
         raise AgyHookConfigError("missing_guard")
@@ -98,28 +168,9 @@ def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) 
         raise AgyHookConfigError("invalid_timeout")
     if any(item.get("enabled", True) is not True or item.get("disabled", False) is not False for item in (group, hook)):
         raise AgyHookConfigError("disabled")
-    if hook.get("type") != "command" or not isinstance(hook.get("command"), str):
+    # Byte equality: a differently quoted equivalent could expand before argv forms.
+    if hook.get("type") != "command" or hook.get("command") != command:
         raise AgyHookConfigError("invalid_command")
-    try:
-        argv = shlex.split(hook["command"])
-    except ValueError:
-        raise AgyHookConfigError("invalid_command") from None
-    if len(argv) != 4 or argv[2:] != ["--harness", "agy"]:
-        raise AgyHookConfigError("invalid_command")
-    paths = [Path(arg) for arg in argv[:2]]
-    if absolute and not all(p.is_absolute() for p in paths):
-        raise AgyHookConfigError("relative_home_command")
-    resolved = [Path(os.path.abspath(path.parent / p)) for p in paths]
-    # Compare interpreter spelling too: resolving its final symlink would accept
-    # a system Python that bypasses the project's environment.
-    if (
-        resolved[0] != Path(os.path.abspath(interpreter))
-        or not resolved[0].is_file()
-        or not os.access(resolved[0], os.X_OK)
-    ):
-        raise AgyHookConfigError("invalid_interpreter")
-    if resolved[1].resolve() != script.resolve() or not resolved[1].is_file():
-        raise AgyHookConfigError("missing_script")
 
 
 def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) -> HookConfigResult:
@@ -139,14 +190,14 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
     UNKNOWN. It can only fire on ``run_command``, which the settings deny.
     """
     try:
-        interpreter = project_interpreter(repo_root)
+        command = native_hook_command(GUARD_MODE)
         checked = 0
         for path in locations:
             try:
                 path.lstat()
             except FileNotFoundError:
                 continue
-            _check_file(path, interpreter, repo_root / ENTRY_POINT, absolute=path.parent.name == "config")
+            _check_file(path, command)
             checked += 1
         if not checked:
             raise AgyHookConfigError("missing_file")
@@ -158,12 +209,41 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
 
 
 def guard_registration(*, repo_root: Path = ROOT) -> dict:
-    """Use the tracked overlay, with absolute interpreter and entry-point paths."""
-    guard = copy.deepcopy(_read_config(repo_root / "agents_extensions/agy/hooks.json")[GUARD_NAME])
-    guard["PreToolUse"][0]["hooks"][0]["command"] = shlex.join(
-        [str(project_interpreter(repo_root)), str((repo_root / ENTRY_POINT).absolute()), "--harness", "agy"]
-    )
-    return guard
+    """Register the machinery guard independently of product-owned configuration."""
+    return {"PreToolUse": [{"matcher": "run_command", "hooks": [
+        {"type": "command", "command": native_hook_command(GUARD_MODE), "timeout": GUARD_TIMEOUT_FLOOR}
+    ]}]}
+
+
+
+def primary_guard_registration(*, repo_root: Path = ROOT) -> dict:
+    """Register the installed primary-write guard using the native hook contract."""
+    return {"PreToolUse": [{"matcher": "write_file|edit_file|run_command", "hooks": [
+        {"type": "command", "command": native_hook_command("agy-primary-write"), "timeout": 10}
+    ]}]}
+
+
+def require_dispatch_guards(worktree: Path, home: Path) -> None:
+    """Provision and verify both guards before a dispatched workspace-write AGY run."""
+    try:
+        configure_native_hook_roots(worktree)
+    except (OSError, ValueError):
+        raise AgyHookConfigError("hook_context_unavailable") from None
+    try:
+        install_worktree_guard(worktree)
+        result = check_hook_config(hook_locations(worktree, home))
+        if result.passed:
+            registered = _read_config(worktree / ".agents/hooks.json").get(PRIMARY_GUARD_NAME)
+            if registered != primary_guard_registration():
+                result = HookConfigResult("REFUSE", "primary_guard_mismatch")
+            elif not installed_machinery_path(PRIMARY_GUARD_ENTRY).is_file():
+                result = HookConfigResult("REFUSE", "missing_primary_guard_script")
+    except AgyHookConfigError:
+        raise
+    except (OSError, ValueError):
+        raise AgyHookConfigError("install_failed") from None
+    if not result.passed:
+        raise AgyHookConfigError(result.reason)
 
 
 def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
@@ -173,7 +253,7 @@ def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
     dispatch = (primary / ".worktrees/dispatch").resolve(strict=True) if primary != target else primary
     if ".." in cwd.parts or primary == target or target == dispatch or not target.is_relative_to(dispatch):
         raise AgyHookConfigError("install_requires_dispatch_worktree")
-    provision_workspace_guard(cwd, repo_root=repo_root)
+    provision_workspace_guard(cwd)
 
 
 def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
@@ -213,11 +293,16 @@ def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
             raise AgyHookConfigError("invalid_json") from None
         if not isinstance(data, dict):
             raise AgyHookConfigError("invalid_json")
-        if GUARD_NAME in data:
-            return  # Preserve explicitly disabled or invalid user wiring.
-        # Insert only the new member, keeping unrelated hook bytes unchanged.
+        missing = {
+            name: register()
+            for name, register in ((GUARD_NAME, guard_registration), (PRIMARY_GUARD_NAME, primary_guard_registration))
+            if name not in data  # Preserve explicitly disabled or invalid user wiring.
+        }
+        if not missing:
+            return
+        # Insert only missing members, keeping unrelated hook bytes unchanged.
         end = original.rindex("}")
-        member = json.dumps({GUARD_NAME: guard_registration(repo_root=repo_root)}, indent=2)[1:-1]
+        member = json.dumps(missing, indent=2)[1:-1]
         payload = original[:end] + ("," if data else "") + member + original[end:]
         temporary = f".hooks-{uuid.uuid4().hex}.tmp"
         fd = safe_open_below(directory_fd, temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
@@ -240,7 +325,15 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
     Every existing candidate must validate, and at least one must contain the
     guard. Never repair an existing invalid candidate or write ordinary HOME.
+    ``cwd`` is the invocation boundary: missing product and shared-state roots are
+    configured from it by the shared shell rule before anything is provisioned, so
+    the provider and its hooks inherit them. Configured roots are kept; invalid
+    ones refuse.
     """
+    try:
+        configure_native_hook_roots(cwd)
+    except (OSError, ValueError):
+        raise AgyHookConfigError("hook_context_unavailable") from None
     try:
         if install and not os.path.lexists(cwd / ".agents/hooks.json") and main_checkout_root(cwd) != cwd:
             install_worktree_guard(cwd)
@@ -254,9 +347,11 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named canonically, under the unresolved name of the package directory this file is in.
+    entry = f"-m {Path(__file__).absolute().parents[1].name}.agent_runtime.agy_hook_config"
     parser = argparse.ArgumentParser(
         description="Read effective AGY hooks files and refuse missing no-print wiring.",
-        epilog="Example: .venv/bin/python -m scripts.agent_runtime.agy_hook_config --cwd .\n"
+        epilog=f"Example: .venv/bin/python {entry} --cwd .\n"
         "Outputs: PASS or REFUSE with a reason code. Writes: none. Exit: 0 PASS, 2 REFUSE.",
     )
     parser.add_argument("--cwd", type=Path, required=True, help="AGY workspace directory.")

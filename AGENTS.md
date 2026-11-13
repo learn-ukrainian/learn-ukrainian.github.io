@@ -1,63 +1,21 @@
 # AGENTS.md - Compact Rules for AI Coding Agents
 
-> This is the non-skippable static digest for Codex-family consumers. It is
-> deliberately compact: full policy lives in the rules API and the listed local
-> sources. Do not load `CLAUDE.md` or `GEMINI.md` during normal Codex startup.
+> Compact static guardrails for Codex-family consumers; full policy lives in the
+> rules API. Do not load `CLAUDE.md` or `GEMINI.md` during normal Codex startup.
 
-## Read the current rule set
+## Rules
 
-Load `agents_extensions/shared/rules/core.md` (`/api/rules?scope=core`) as the
-short binding set for every seat; curriculum seats add `core-curriculum.md`.
-Then read this digest and the canonical
-[`task-scoped-reading.md`](agents_extensions/shared/rules/task-scoped-reading.md)
-selector. Load the sources for the task and current phase before acting; load
-additional sources when scope changes. Git `agents_extensions/` remains
-canonical; deployed harness copies are consumers.
+The rules core is injected at launch; if no `<rules-core>` block is present, load
+`agents_extensions/shared/rules/core.md` (`/api/rules?scope=core`) first. Then read
+[`task-scoped-reading.md`](agents_extensions/shared/rules/task-scoped-reading.md) and
+the sources for the task. Git `agents_extensions/` is canonical; deployed harness
+copies are consumers.
 
-The Monitor `GET /api/rules?format=markdown` endpoint serves the binding core.
-`GET /api/rules?scope=full&format=markdown` remains the complete,
-hash-cacheable rules reference. Use it when the full ruleset is needed, not as
-a requirement to inject unrelated rules on every task. If Monitor is unavailable,
-use the same selector via
-[`_load-via-api.md`](agents_extensions/shared/rules/_load-via-api.md).
-Missing telemetry is unknown; applicable hard gates still bind.
+## Operator Contract
 
-## Operator Contract (binding for ALL agents — read before acting)
-
-The binding wording is in
-`agents_extensions/shared/rules/operator-expectations.md` (served first by
-`/api/rules?scope=full`). Its items decide conflicts. This inline digest is intentionally
-non-skippable:
-
-1. Quality: no shortcuts, threshold-lowering, or “for now”.
-2. Use established best practice and fix root causes.
-3. Preserve Git/GitHub hygiene: layout A, dispatch worktrees, PRs, and
-   `X-Agent` attribution.
-4. Use the fleet; the review gate is an independent **cross-family** review,
-   not discussion.
-5. Route by model × harness fit; Kimi models are retired in the catalog (OO-58).
-6. Substitute a constrained lane and record that substitution.
-7. Make tool-backed claims only; outcome validity precedes paid execution:
-   define semantic success and stop criteria; transport, shape, and cost are
-   not proof. Verify Ukrainian word, stress, and morphology claims with
-   VESUM/`sources`.
-8. Keep code and documentation current and clean.
-9. Maximize Ukrainian immersion, **EXCEPT A1**.
-10. Drive decided work within approved scope.
-11. Repository hard gates bind.
-12. Do not make NEW architecture, layout, process, or policy decisions without
-    present-tense operator approval or designated approval (Opus 5.5 and Sol 6.1 agreeing;
-    when one of them authored the proposal, the other's approval completes it; a proposal
-    by any other agent needs both; if they disagree, the operator decides); this does not reopen
-    approval on already-ordered or already-approved work — drive that per item 10.
-13. Apply adversarial quality: lead with failure modes and missing evidence.
-14. **Pre-dispatch outcome adequacy:** before presenting or dispatching a
-    substantive phase/epic, freeze the SHA-256, user outcome, denominator,
-    non-goals, role map, independent held-out evaluation, stop/residual policy,
-    and completion terms. Prompt review never replaces exact-head
-    implementation or cross-family PR review.
-15. **Simplest adequate solution** (adjust code to data; proportionate review;
-    the review budget is `agents_extensions/shared/skills/review-loop/references/policy.md`).
+Binding wording: `agents_extensions/shared/rules/operator-expectations.md` (served
+first by `/api/rules?scope=full`); its items decide conflicts. The core P0–P6 carries
+the working rules.
 
 ## Non-skippable offline execution guardrails
 
@@ -121,18 +79,6 @@ non-skippable:
   satisfy the cross-family review gate.
 
 ## Completion
-
-**Definition of Done (operator: "ready" = delivered):** a task/issue is finished only
-when the user-visible outcome is verified end-to-end **and** git hygiene (branches +
-worktrees reaped) **and** GitHub hygiene (issue updated/closed as appropriate) are
-done. Opening a PR, requesting CF, or writing "Next: …" is not Done. Full schema:
-`docs/best-practices/task-quality.md` DoD; binding: `/api/rules` →
-`operator-expectations.md` §3a.
-
-**Definition of Ready (DoR):** may start only when **task card ∧ dispatch preflight**
-are green (issue+ACs, outcome/verify, accountable driver, CF path; Monitor/task
-infra, disk, live capacity, ≥2 non-orch workers). Everyday “ready” ≠ DoR. Binding
-pointer: `/api/rules` → §3b; tables in `task-quality.md`.
 
 Before claiming completion, inspect the exact diff and status, run proportionate
 verification, and report changed files, commands/results, final branch status,

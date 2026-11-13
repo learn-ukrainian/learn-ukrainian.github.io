@@ -14,6 +14,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.ci.check_issue_task_quality import (
     FIELDS,
     NON_OVERRIDABLE,
@@ -131,12 +132,12 @@ if __name__ == "__main__":
             "Use from issue-event CI; --help runs without GitHub credentials or an event."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Example:
-  .venv/bin/python -m scripts.ci.comment_issue_task_quality
+        epilog=f"""Example:
+  .venv/bin/python -m {module_name(__spec__, __file__)}
 Inputs: GITHUB_TOKEN, GITHUB_REPOSITORY and GITHUB_EVENT_PATH from issue-event CI.
 Outputs: Creates or updates the advisory issue comment and removes duplicate bot comments.
 Exit codes: 0 = synchronized or rate-limited; 1 = quality finding or execution failure; 2 = invalid usage.
-Related: scripts/ci/check_issue_task_quality.py; docs/best-practices/task-quality.md.
+Related: {checkout_relative("ci", "check_issue_task_quality.py").as_posix()}; docs/best-practices/task-quality.md.
 """,
     ).parse_args()
     try:

@@ -12,7 +12,7 @@ import json
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from scripts.agent_runtime.tool_calls import OUTPUT_SUMMARY_LIMIT, TRUNCATION_SUFFIX, summarize_tool_output
+from lu_machinery.agent_runtime.tool_calls import OUTPUT_SUMMARY_LIMIT, TRUNCATION_SUFFIX, summarize_tool_output
 
 
 def _text_from_result_value(result: Any) -> str | None:

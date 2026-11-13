@@ -30,10 +30,11 @@ if __name__ == "__main__":
             sys.path.remove(path)
     sys.path[:0] = [str(PROJECT_ROOT), str(SCRIPTS_DIR)]
 
+from lu_machinery.common.repo_root import resolve_repo_root
+
 from scripts.audit import layerb_shadow, llm_qg_shadow_store, llm_reviewer_dispatch, qg_workflow
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
-from scripts.common.repo_root import resolve_repo_root
 
 _LOGGER = logging.getLogger("qg_shadow_run")
 

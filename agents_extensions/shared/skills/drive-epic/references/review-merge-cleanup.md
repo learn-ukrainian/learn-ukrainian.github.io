@@ -13,9 +13,10 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
-**Small batches (trial until 2026-11-05).** A reviewer may reject a PR for size
-alone, even when the driver has justified its size. The size guide, exclusions
-and split-or-justify rule are in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
+**Size.** About 1000 changed lines excluding tests is a review-size signal, not a rule:
+above it the author splits the PR or states in one line why it is one outcome
+([workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450)).
+Size alone is not a finding.
 
 **Revert first (trial until 2026-11-05).** For a revert under that Merge policy,
 the exact-head cross-family review checks only that the PR is a pure `git revert`
@@ -83,7 +84,7 @@ dispatch_result="$("$PY" scripts/dispatch.py dispatch \
   --pinned-head "$HEAD_SHA" --require-review-verdict \
   --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" \
   --risk "$REVIEW_RISK")"
-mapfile -t dispatch_lines <<<"$dispatch_result"
+mapfile -t dispatch_lines < <(printf '%s\n' "$dispatch_result")
 REVIEW_TASK="${dispatch_lines[0]}"
 REVIEW_NONCE="${dispatch_lines[1]}"
 # Arm in a yielding tool session. Re-arm ONLY wait on client expiry.
@@ -94,7 +95,7 @@ while true; do
   if (( wait_rc == 0 )); then printf '%s\n' "$wait_result"; break; fi
   if (( wait_rc == 124 )); then
     state="$("$PY" scripts/dispatch.py status "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE")"
-    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' <<<"$state"; then continue; fi
+    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' < <(printf '%s\n' "$state"); then continue; fi
     # A terminal state raced expiry: read its same-nonce settlement/exit code.
     "$PY" scripts/dispatch.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1
     exit $?
@@ -173,20 +174,22 @@ read-only dispatch (#8703, above).
 
 1. **Target** — branch, exact head SHA, issue if one exists, review profile and risk.
 2. **Outcome** — the frozen intended behaviour, acceptance criteria and non-goals.
-3. **Threat and input model** — the attacker (who controls which input) and the input
-   classes in scope, with the author's entry-point matrix, one concrete case per class and the
-   untested boundaries. Name classes; never a "try to break it" list of individual spellings.
+3. **Input contract** — what executes, on which data, and who controls the input: a one-shot
+   run on the frozen tree at a named SHA (its invocation included), or a reusable tool and the
+   inputs its contract admits. Add the input classes in scope with one concrete case per
+   class, the non-goals, the residuals deliberately not handled, and the checks already run
+   with their CI run ids. Name classes; never a "try to break it" list of individual spellings.
 4. **Dispositions** (a `## Dispositions` heading; `local-code-review` checklist Step 5):
-   - `in_scope_blocker` — violates the stated contract, or an existing invariant on a path
-     the change introduces, modifies or newly exposes, or regresses main, whether or not the
-     case was listed;
-   - `follow_up` — pre-existing defects off those paths, wording, P2/P3, unless their impact
-     or the change's dependency on them is material; tracked with an owner;
+   - `in_scope_blocker` — a P0–P2 finding whose trigger is reachable under the input
+     contract ([severity](../../review-loop/references/policy.md#severity)), or a demonstrated
+     P0–P2 regression against main;
+   - `follow_up` — pre-existing defects off the change's paths, wording, P3, and confirmed P2
+     findings handled under the policy's item 3; tracked with an owner;
    - `stop_and_escalate` — material contract ambiguity, or a fix that would trip a breaker.
 5. **Reviewer duties** — one class-level finding per input class, with a concrete example and every
-   sibling found within this round's scope. In round 1, a material defect outside the stated
-   classes still blocks or escalates. Later rounds use the review budget to decide
-   blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
+   sibling found within this round's scope. Every P0–P2 finding cites `sources` that show its
+   trigger is reachable under the input contract; a reviewer who cannot establish reachability
+   says so. Later rounds use the review budget to decide blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
    A delta-review brief asks the reviewer to probe every fallback or fail-open path changed
    by the fix diff and check listed fixes, interactions and weakened tests at the new exact
@@ -270,7 +273,7 @@ interpreter:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE --include='*.py' 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
+"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE --include='*.py' 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|launchers/|\brun_launcher\b' tests/)
 ```
 
 **Diagnose pytest failures from the junit artifact first (#8701, #8705).**

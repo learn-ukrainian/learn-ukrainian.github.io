@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from lu_machinery.common.schema_check import check_schema
 
-from scripts.common.schema_check import check_schema
 from scripts.projects.open_model_data import document_signal_manifest as phase1_signals
 from scripts.projects.open_model_data import source_work_locator_index as locator_index_builder
 

@@ -23,6 +23,8 @@ from __future__ import annotations
 import os
 import re
 
+from ._config import DISPATCH_ENTRY
+
 _QWEN_RE = re.compile(r"(?:^|[/:_-])qwen", re.IGNORECASE)
 # Subscription families that must NEVER route through OpenRouter. gemma is
 # google/ but has no subscription lane — only gemini is subscription-covered.
@@ -78,7 +80,12 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
 
     ``context`` names the call site for the error message (and telemetry).
     """
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import (
+        canonical_model_id,
+        load_model_catalog,
+        retired_model_refusal,
+        unknown_model_refusal,
+    )
 
     if refusal := retired_model_refusal(model):
         raise RoutingGuardError(f"{context}: {refusal}")
@@ -92,7 +99,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"{context}: {text!r} is the retired OpenRouter stealth ox-alpha pin "
             "(delisted 2026-08-26). z.ai GLM subscription is retired "
             "(operator 2026-09-03). Default Flash/code workhorse: "
-            "`scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
+            f"`{DISPATCH_ENTRY} dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
             f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     if _QWEN_RE.search(text):
@@ -123,7 +130,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"{context}: {text!r} routes GLM through OpenRouter. "
             "z.ai GLM subscription is retired (operator 2026-09-03); do not "
             "dispatch `--agent glm`. Default Flash/code workhorse: "
-            "`scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
+            f"`{DISPATCH_ENTRY} dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
             f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     if _DEEPSEEK_RETIRED_PREFIX_RE.match(text):
@@ -150,6 +157,15 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             "the agy subscription seat). "
             f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
+    if ais_prefix:
+        # Fail closed (C-4967): google-ais carries only a Gemma model the catalog names and whose
+        # catalog row admits routing. The catalog row decides; no model id is hard-coded here.
+        catalog = load_model_catalog()
+        identity = canonical_model_id(text, catalog)
+        if identity is None:
+            raise RoutingGuardError(f"{context}: {unknown_model_refusal(text)}")
+        if catalog["models"][identity]["lifecycle"] not in {"active", "fallback"}:
+            raise RoutingGuardError(f"{context}: model {text!r} is not admitted for routing")
 
 
 def assert_agent_routing_allowed(agent: str | None, *, context: str) -> None:

@@ -69,8 +69,12 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -78,12 +82,15 @@ except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
     # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
+    _repo_root = _scripts_dir.parent
+    if str(_repo_root) not in sys.path:
+        sys.path.insert(0, str(_repo_root))
+    from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -1897,30 +1904,22 @@ def resolve_derivational_suffix_mutation_rule(stem_consonant_group: str) -> tupl
     )
 
 
-def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking specified path, local tree, or primary checkout."""
-    if specified and specified.exists():
-        return specified
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-        Path("/home/ops/learn-ukrainian/data/vesum.db"),
-    ]
-    for c in candidates:
-        if c.exists():
-            return c
-    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+def find_vesum_db(specified: Path | str | None = None) -> StoreBinding | StoreRefusal:
+    """Resolve VESUM at call time. An explicit path is an injected read binding."""
+    binding = StoreBinding("vesum", Path(specified)) if specified is not None else None
+    return resolve_store("vesum", PROJECT_ROOT, binding=binding)
 
 
 def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | None = None) -> dict[str, Any]:
     """Verifies that target word forms in fill-in-blank cards exist in VESUM."""
-    resolved_path = find_vesum_db(vesum_db_path)
-    if not resolved_path.exists():
+    resolved = find_vesum_db(vesum_db_path)
+    if isinstance(resolved, StoreRefusal):
         return {
             "verified": False,
-            "error": f"VESUM database not found at {resolved_path}",
+            "error": resolved.reason,
             "missing_forms": [],
         }
+    resolved_path = resolved.path
 
     conn = _open_readonly(resolved_path)
     cur = conn.cursor()
@@ -1966,13 +1965,14 @@ def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | Non
 
 def verify_distractors_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | None = None) -> dict[str, Any]:
     """Verifies that phonological and morphological corruption distractors are not valid standard words in VESUM."""
-    resolved_path = find_vesum_db(vesum_db_path)
-    if not resolved_path.exists():
+    resolved = find_vesum_db(vesum_db_path)
+    if isinstance(resolved, StoreRefusal):
         return {
             "verified": False,
-            "error": f"VESUM database not found at {resolved_path}",
+            "error": resolved.reason,
             "invalid_distractors": [],
         }
+    resolved_path = resolved.path
 
     corruption_types = {
         AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION,
@@ -2052,13 +2052,13 @@ def main() -> int:
         "--verify-vesum",
         action="store_true",
         default=True,
-        help="Verify target words against data/vesum.db",
+        help="Verify target words against the configured VESUM store",
     )
     parser.add_argument(
         "--vesum-db",
         type=Path,
         default=None,
-        help="Path to vesum.db (defaults to auto-discovered location)",
+        help="Absolute path to the VESUM database (default: the configured store)",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for option ordering")
     args = parser.parse_args()
@@ -2069,7 +2069,9 @@ def main() -> int:
     if args.verify_vesum:
         report = verify_deck_with_vesum(cards, args.vesum_db)
         if not report["verified"]:
-            print(f"VESUM verification FAILED: missing forms: {report.get('missing_forms', [])}")
+            reason = report.get("error")
+            detail = reason if reason else report.get("missing_forms", [])
+            print(f"VESUM verification FAILED: {detail}")
             return 1
         print(f"VESUM verification PASSED: {report['checked_word_count']} words verified.")
 

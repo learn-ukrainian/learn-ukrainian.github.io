@@ -1,0 +1,17 @@
+# DRAFT for the public learn-ukrainian/machinery repository (issue #12682).
+# Install it there as the root .trufflehogignore; the secret-scan job of
+# ci-gate.yml passes it to TruffleHog with --exclude-paths. A missing file is a
+# scan error. prepublication-gate.sh passes this copy, beside it, to its
+# pre-publication scans.
+#
+# One Go regular expression per line, matched against repository-relative
+# paths. Comment and blank lines are skipped (TruffleHog 3.99.0
+# pkg/common/filter.go). The Lob detector is excluded by flag in that
+# secret-scan job, not here.
+#
+# There are no exclusions. Every pattern is a path the secret scan cannot
+# see. Add one only for a reviewed false positive, anchored to the exact file,
+# with the reason in a comment above it. The source repository's entries do
+# not carry over: its site config is product content, and its lockfiles
+# produce no TruffleHog 3.99.0 results even with unverified results reported
+# (checked on uv.lock, requirements-lock.txt and .dagger/uv.lock, 2026-11-03).

@@ -49,6 +49,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import functools
+import hashlib
 import html
 import json
 import os
@@ -73,6 +74,10 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.storage.paths import artifact_path
 
 from scripts.lexicon.atlas_wikipedia_intro import atlas_wikipedia_ok_as_intro
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
@@ -124,10 +129,7 @@ from scripts.lexicon.source_attribution import (
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
-from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import normalize_word, primary_synonym_sense_text
 
@@ -144,12 +146,12 @@ def _resolve_primary_checkout() -> Path | None:
     outside a git repo so callers fall back honestly.
     """
     try:
-        from scripts.guardrails.worktree_containment import (
+        from lu_machinery.guardrails.worktree_containment import (
             NotAGitRepositoryError,
             resolve_main_root,
         )
     except ImportError:  # scripts/ stripped from sys.path
-        from guardrails.worktree_containment import (  # type: ignore[no-redef]
+        from lu_machinery.guardrails.worktree_containment import (  # type: ignore[no-redef]
             NotAGitRepositoryError,
             resolve_main_root,
         )
@@ -1246,8 +1248,10 @@ class _SlovnykArticleParser(HTMLParser):
     Also records each top-level ``<p>`` as a ``paragraphs`` entry with whether it
     is wrapped in ``<strong>``/``<b>`` (the proverbs dictionary bolds the saying
     and leaves its plain-text gloss paragraph unbolded, #6462). This is additive:
-    ``article_parts``/``h1_parts``/``title_parts``/``canonical_url`` are unchanged,
-    so every other slug's flattened-text extraction keeps its existing behavior.
+    ``article_parts``/``h1_parts``/``title_parts`` are unchanged, so every other
+    slug's flattened-text extraction keeps its existing behavior. The page's
+    ``rel=canonical`` link is not retained: it only ever fed ``source_url``, and
+    slovnyk.me now publishes that link as ``http``.
     """
 
     def __init__(self) -> None:
@@ -1256,7 +1260,6 @@ class _SlovnykArticleParser(HTMLParser):
         self.h1_parts: list[str] = []
         self.article_parts: list[str] = []
         self.paragraphs: list[dict[str, Any]] = []
-        self.canonical_url = ""
         self._in_title = False
         self._in_article_section = False
         self._in_article = False
@@ -1269,8 +1272,6 @@ class _SlovnykArticleParser(HTMLParser):
         attr = {key: value or "" for key, value in attrs}
         if tag == "title":
             self._in_title = True
-        if tag == "link" and attr.get("rel") == "canonical":
-            self.canonical_url = attr.get("href", "")
         if tag == "section" and attr.get("id") in {"dictionary-acticle", "dictionary-article"}:
             self._in_article_section = True
         if tag == "article" and self._in_article_section:
@@ -1585,7 +1586,9 @@ def _parse_slovnyk_entry(
         "dictionary_slug": slug,
         "dictionary_label": _SLOVNYK_DICT_LABELS.get(slug, slug),
         "word": headword,
-        "source_url": parser.canonical_url or url,
+        # The https locator the caller requested. Never the page canonical:
+        # slovnyk.me publishes that as http, which _valid_slovnyk_positive rejects.
+        "source_url": url,
         "title": title,
         # Store the full attested article (#6736): the former 5000-char cap
         # amputated the longest multi-sense VTS/СУМ-20 articles mid-text, and
@@ -4506,6 +4509,41 @@ def _sum20_definition_card(
     return None
 
 
+def _vts_store_rows(lookup_word: str) -> tuple[dict[str, Any], ...]:
+    """Read admitted VTS rows from ``slovnyk_me_entries``; never fetches or writes.
+
+    These include articles imported from the dictionary-acquisition staging, which
+    have no per-lemma cache file; only rows whose text matches its SHA-256 qualify. An absent store is a local miss; other store
+    refusals propagate, as for the canonical СУМ-20 reader.
+    """
+    from scripts.lexicon.sum20_store import Sum20StoreError, open_sources
+
+    key = normalize_word(lookup_word)
+    if not key:
+        return ()
+    try:
+        conn = open_sources(repository_root=ROOT)
+    except Sum20StoreError as error:
+        if error.reason == "store_missing":
+            return ()
+        raise
+    try:
+        rows = conn.execute(
+            "SELECT word, text, source_url, dictionary_slug, content_sha256 FROM slovnyk_me_entries "
+            "WHERE dictionary_slug = 'vts' AND normalized_word = ? AND text != '' ORDER BY id",
+            (key,),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return ()  # a store without the slovnyk.me table has no VTS rows
+    finally:
+        conn.close()
+    # Only full witnesses: a bounded snippet row never stands in for the article.
+    return tuple(
+        dict(row) for row in rows
+        if hashlib.sha256(row["text"].encode("utf-8")).hexdigest() == row["content_sha256"]
+    )
+
+
 def _vts_definition_card(
     lemma: str,
     cache: dict[str, Any] | None = None,
@@ -4513,7 +4551,8 @@ def _vts_definition_card(
     resolve_xref: bool = True,
 ) -> dict[str, Any] | None:
     """Великий тлумачний словник (VTS) — a modern, Ukrainian-only explanatory
-    dictionary on slovnyk.me, fetched live (cached per lookup word). Shown as the
+    dictionary on slovnyk.me: the per-lemma cache, then admitted sources.db rows, then a
+    live fetch (cached per lookup word). Shown as the
     top definition card, with СУМ-20 below. Non-Soviet replacement for the removed
     СУМ-11 source (decolonization decision 2026-06-26). For inflected-form entries it
     falls back to the base lemma's entry via _slovnyk_base_row."""
@@ -4522,6 +4561,9 @@ def _vts_definition_card(
         return None
     cached_present = isinstance(cache, dict) and "vts" in (cache.get("lookups") or {})
     row = _cache_lookup(cache, "vts") if cache is not None else None
+    if not row:
+        # Admitted local rows (including acquisition-staging imports) before any fetch.
+        row = next(iter(_vts_store_rows(lookup_word)), None)
     if not row and not cached_present:
         transient = False
         try:

@@ -9,8 +9,8 @@ import pytest
 from scripts.dispatcher import store, worker
 from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.task_record_store import read_task_record
-from scripts.review import budget_grant, review_lineage
 from scripts.review import record_cf_verdict as recorder
+from scripts.review import review_lineage
 from tests.dispatcher.conftest import run_git
 
 HEAD = "a" * 40
@@ -19,7 +19,6 @@ HEAD = "a" * 40
 def admission_readers(root):
     return [
         lambda: review_lineage.review_records(root, repository="org/repo"),
-        lambda: budget_grant._grant_records(root),
         lambda: store.list_tasks(include_archive=True, strict=True),
         lambda: recorder.admitted_unknown_history(
             repository="org/repo", branch="topic", head_sha=HEAD, task_root=root, repo_root=root
@@ -45,10 +44,9 @@ def test_foreign_sidecar_does_not_block_review_admission(tmp_path, monkeypatch, 
     sidecar = (archive if archived else tmp_path) / "worker.manifest-canary.json"
     sidecar.write_bytes(foreign)
     assert [record["task_id"] for _, record in admission_readers(tmp_path)[0]()] == ["unrelated"]
-    assert admission_readers(tmp_path)[1]() == []
-    assert [record["task_id"] for record in admission_readers(tmp_path)[2]()] == ["unrelated"]
-    assert admission_readers(tmp_path)[3]() == ()
-    assert admission_readers(tmp_path)[4]() is None
+    assert [record["task_id"] for record in admission_readers(tmp_path)[1]()] == ["unrelated"]
+    assert admission_readers(tmp_path)[2]() == ()
+    assert admission_readers(tmp_path)[3]() is None
     store.check_review_attempt(dict(review_id="unused", attempt_id="unused", manifest_sha256="b" * 64))
     assert str(sidecar) in caplog.text
 

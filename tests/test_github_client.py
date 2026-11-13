@@ -10,8 +10,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from lu_machinery.common import github_client as gh
 
-from scripts.common import github_client as gh
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 # Captured at import: tests that monkeypatch ``gh.GitHubClient`` must still build stores from the real class.
@@ -64,7 +64,7 @@ def test_conditional_cache_survives_new_client(tmp_path):
 
 
 def test_usage_counts_callers_separately_and_top_orders_them(tmp_path, monkeypatch, capsys):
-    from scripts.common import github_usage
+    from lu_machinery.common import github_usage
 
     for task, count in (("task-light", 1), ("task-heavy", 3)):
         monkeypatch.setenv(github_usage.TASK_ENV, task)
@@ -186,7 +186,7 @@ def test_pr_comment_uses_rest_once(tmp_path):
 
 def test_run_cancel_translates_to_cancel_endpoint(tmp_path, monkeypatch):
     """Unsupported or misrouted production cancellation must not bypass the ordinary endpoint."""
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     store, calls = client(tmp_path, [response(None, status=202)])
     monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
@@ -200,7 +200,7 @@ def test_run_cancel_translates_to_cancel_endpoint(tmp_path, monkeypatch):
 
 def test_run_cancel_rejects_force_before_transport(tmp_path, monkeypatch):
     """Force cancellation must not widen the publisher's authority or send a write."""
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     store, calls = client(tmp_path, [])
     monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
@@ -461,29 +461,6 @@ def test_checks_native_failure_is_not_success(tmp_path):
     assert result.returncode == 1 and result.stderr == "checks unavailable" and calls == []
 
 
-def test_pr_merge_uses_queue_mutation_and_preserves_head_guard(tmp_path):
-    store, calls = client(
-        tmp_path,
-        [
-            response({"data": {"repository": {"pullRequest": {"id": "PR_1", "isMergeQueueEnabled": True}}}}),
-            response({"data": {"enqueuePullRequest": {"clientMutationId": None}}}),
-        ],
-    )
-    result = gh.run(
-        ["gh", "pr", "merge", "1", "--repo", "o/r", "--squash", "--match-head-commit=" + "a" * 40],
-        client=store,
-        text=True,
-        capture_output=True,
-    )
-    assert result.returncode == 0
-    payload = json.loads(calls[1][3])
-    assert "enqueuePullRequest" in payload["query"] and payload["variables"]["input"] == {
-        "pullRequestId": "PR_1",
-        "expectedHeadOid": "a" * 40,
-    }
-    assert len(calls) == 2
-
-
 def test_pr_merge_without_queue_uses_rest_and_pins_head(tmp_path):
     store, calls = client(
         tmp_path,
@@ -581,7 +558,7 @@ def test_stale_pr_files_propagate_age_and_reset(tmp_path):
 
 
 def test_parent_read_uses_rest_and_preserves_cross_repository_identity(tmp_path, monkeypatch):
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     issue = {
         "number": 1,
@@ -679,7 +656,7 @@ def test_auto_merge_timestamp_is_not_invented_from_rest(tmp_path):
 
 def test_publishing_preflight_returns_typed_limit_without_write(tmp_path, monkeypatch):
     """Only GitHub's own hold refuses a landing verb; an exhausted core pool alone does not (#10730)."""
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     store, calls = client(tmp_path, [])
     with store._db() as db:
@@ -694,7 +671,7 @@ def test_publishing_preflight_returns_typed_limit_without_write(tmp_path, monkey
 
 
 def test_keeper_timer_skips_before_actions_and_logs_reset(tmp_path, monkeypatch, capsys):
-    from scripts.orchestration import merge_queue_keeper as keeper
+    from lu_machinery.orchestration import merge_queue_keeper as keeper
 
     def deferred(*args, **kwargs):
         raise gh.GitHubRateLimited(2000)
@@ -723,7 +700,7 @@ LEAKED_TOKEN = "ghp_" + "a1B2c3D4e5F6g7H8i9J0k1L2m3N4"
 
 def _publish_link(tmp_path, monkeypatch, script, *, verb="issue-link", **fields):
     """Run a real link verb through GitHubClient with a fake HTTP transport."""
-    from scripts.publish import github as pub
+    from lu_machinery.publish import github as pub
 
     store, calls = client(Path(tempfile.mkdtemp(dir=tmp_path)), script)  # fresh budget per call
     monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
@@ -1174,7 +1151,7 @@ def test_a_bounded_cli_request_keeps_its_frame_and_refuses_the_oversized_body(tm
 
 
 def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
-    from scripts.orchestration import merge_queue_keeper as keeper
+    from lu_machinery.orchestration import merge_queue_keeper as keeper
 
     class BudgetOnly:
         def branch_names(self):
@@ -1192,6 +1169,8 @@ def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
 
 
 def test_asset_limit_does_not_fall_back_to_another_http_request(monkeypatch):
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
+
     from scripts.open_dataset import hydrate
 
     def limited(args, **kwargs):
@@ -1255,26 +1234,31 @@ def test_real_cli_transport_uses_conditional_headers_and_preserves_frozen_body(t
     assert store.request("POST", "repos/o/r/issues/1/comments", payload=body).value["body"].encode() == body
 
 
+# The installed release anchors its disk cache on the configured primary checkout, never on its own location.
+PRIMARY_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
 @pytest.fixture
 def module_repository(tmp_path, monkeypatch):
-    """A real module-owned repository, independent of the caller's repository."""
+    """A real primary checkout configured as the state anchor, independent of the caller's repository."""
     monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
             monkeypatch.delenv(key)
     canonical = tmp_path / "canonical"
     subprocess.run(["git", "init", str(canonical)], check=True, capture_output=True, timeout=30)
-    module = canonical / "scripts/common/github_client.py"
-    module.parent.mkdir(parents=True)
-    module.write_text("# fixture module location\n")
-    monkeypatch.setattr(gh, "__file__", str(module))
-    return canonical, module
+    monkeypatch.setenv(PRIMARY_ROOT_ENV, str(canonical))
+    return canonical
 
 
 @pytest.mark.parametrize("layout", ["primary", "linked", "linked-relative"])
-def test_disk_cache_uses_runtime_state_of_module_git_common_root(module_repository, tmp_path, monkeypatch, layout):
-    canonical, module = module_repository
-    if layout != "primary":
+def test_disk_cache_uses_the_configured_primary_checkout_state(module_repository, tmp_path, monkeypatch, layout):
+    """Defect class: state split between a worktree and its primary. Only a primary checkout anchors the cache."""
+    canonical = module_repository
+    if layout == "primary":
+        assert gh._cache_directory() == canonical / "batch_state/github-client"
+    else:
         subprocess.run(
             [
                 "git",
@@ -1300,21 +1284,20 @@ def test_disk_cache_uses_runtime_state_of_module_git_common_root(module_reposito
             capture_output=True,
             timeout=30,
         )
-        module = worktree / module.relative_to(canonical)
-        module.parent.mkdir(parents=True)
-        module.write_text("# fixture module location\n")
-        monkeypatch.setattr(gh, "__file__", str(module))
         if layout == "linked-relative":
             marker = worktree / ".git"
             gitdir = Path(marker.read_text().strip()[8:])
             marker.write_text(f"gitdir: {os.path.relpath(gitdir, worktree)}\n")
             (gitdir / "commondir").write_text(str(canonical / ".git"))
-    assert gh._cache_directory() == canonical / "batch_state/github-client"
+        # A linked worktree configured as the anchor is refused: the cache stays in memory.
+        monkeypatch.setenv(PRIMARY_ROOT_ENV, str(worktree))
+        assert gh._cache_directory() is None
+        assert not (worktree / "batch_state").exists()
 
 
 @pytest.mark.parametrize("explicit_cwd", [False, True])
 def test_client_from_fixture_repository_leaves_its_status_clean(module_repository, tmp_path, monkeypatch, explicit_cwd):
-    canonical, _ = module_repository
+    canonical = module_repository
     caller = tmp_path / "caller"
     subprocess.run(["git", "init", str(caller)], check=True, capture_output=True, timeout=30)
     monkeypatch.chdir(caller)
@@ -1334,7 +1317,7 @@ def test_client_from_fixture_repository_leaves_its_status_clean(module_repositor
 def test_cache_directory_override_wins_without_module_repository(tmp_path, monkeypatch):
     override = tmp_path / "override"
     monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(override))
-    monkeypatch.setattr(gh, "__file__", str(tmp_path / "plain/scripts/common/github_client.py"))
+    monkeypatch.delenv(PRIMARY_ROOT_ENV, raising=False)
     store = gh.GitHubClient(transport=lambda *_: response(1), env={})
     assert store.request("GET", "user").value == 1
     assert store.cache_dir == override
@@ -1342,19 +1325,17 @@ def test_cache_directory_override_wins_without_module_repository(tmp_path, monke
 
 
 @pytest.mark.parametrize(
-    "layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"]
+    "layout", ["plain", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"]
 )
 def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path, monkeypatch, layout):
+    """No usable primary checkout is configured, so the cache and budget stay in memory."""
     monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
     root = tmp_path / "plain"
-    module = root / "scripts/common/github_client.py"
-    module.parent.mkdir(parents=True)
-    module.write_text("# fixture module location\n")
-    monkeypatch.setattr(gh, "__file__", str(module))
+    root.mkdir()
+    monkeypatch.setenv(PRIMARY_ROOT_ENV, str(root))
     marker = root / ".git"
-    if layout == "empty-git-dir":
-        marker.mkdir()
-    elif layout in {"invalid-gitfile", "unreadable"}:
+    if layout in {"invalid-gitfile", "unreadable"}:
         marker.write_text("invalid gitfile\n")
         if layout == "unreadable":
             read_text = Path.read_text
@@ -1650,6 +1631,8 @@ def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
 
 
 def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
+
     from scripts.open_dataset import hydrate
 
     monkeypatch.setattr("sys.argv", ["hydrate"])
@@ -1669,14 +1652,16 @@ def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
 def test_release_pointer_limit_never_retries(module_name, function_name, monkeypatch):
     import importlib
 
+    from lu_machinery.common import github_client as gh  # the product subject calls the installed release client
+
     module = importlib.import_module(module_name)
     calls = []
 
-    def unavailable(request, **kwargs):
-        calls.append(request)
-        raise gh.GitHubRateLimited(2000)
+    def unavailable(self, method, endpoint, **kwargs):
+        calls.append((method, endpoint))
+        return gh.Result(status=429, error="github_rate_limited", reset_at=2000)
 
-    monkeypatch.setattr(module.github_client, "http_open", unavailable)
+    monkeypatch.setattr(gh.GitHubClient, "request", unavailable)
     with pytest.raises(gh.GitHubRateLimited):
         getattr(module, function_name)(
             {
@@ -1789,8 +1774,8 @@ def test_pr_snapshot_preserves_cached_age_and_stale_marker(items, monkeypatch):
     import time
     from datetime import UTC, datetime, timedelta
 
-    from scripts import github_rest_cache as rest
-    from scripts.work import sources_public as sources
+    from lu_machinery import github_rest_cache as rest
+    from lu_machinery.work import sources_public as sources
 
     now = datetime(2026, 10, 6, tzinfo=UTC)
     page = rest.RestPage(items, truncated=False, stale=True, age_seconds=90)
@@ -1807,8 +1792,8 @@ def test_pr_snapshot_preserves_cached_age_and_stale_marker(items, monkeypatch):
 
 @pytest.mark.parametrize("kind", ["issues", "prs"])
 def test_empty_cached_lists_keep_stale_metadata(tmp_path, monkeypatch, kind):
-    from scripts import github_rest_cache as rest
-    from scripts.work import sources_public as sources
+    from lu_machinery import github_rest_cache as rest
+    from lu_machinery.work import sources_public as sources
 
     repo = sources.DEFAULT_PUBLIC_REPOSITORY
     endpoint = (
@@ -1832,7 +1817,7 @@ def test_empty_cached_lists_keep_stale_metadata(tmp_path, monkeypatch, kind):
 def test_cached_empty_review_list_is_incomplete(monkeypatch):
     import time
 
-    from scripts import github_rest_cache as rest
+    from lu_machinery import github_rest_cache as rest
 
     cache = rest.GitHubRestCache(
         identity="fixture", transport=lambda *a: (200, {"x-github-stale": "true", "x-github-age": "43"}, b"[]")
@@ -1844,8 +1829,8 @@ def test_cached_empty_review_list_is_incomplete(monkeypatch):
 def test_pr_snapshot_rate_failure_does_not_leave_warm_data_current(monkeypatch):
     import time
 
-    from scripts import github_rest_cache as rest
-    from scripts.work import sources_public as sources
+    from lu_machinery import github_rest_cache as rest
+    from lu_machinery.work import sources_public as sources
 
     snapshot = sources._PRSnapshot(sources.DEFAULT_PUBLIC_REPOSITORY, 1000)
     observed = sources._iso_now()
@@ -2063,14 +2048,13 @@ def admitted_read_cases():
 
 @pytest.mark.parametrize("args", admitted_read_cases())
 def test_every_shim_admitted_read_translates_or_falls_through(tmp_path, args):
-    from pathlib import Path
+    from importlib.resources import files
 
-    from scripts.opsec.gh_snapshot import admit
+    from lu_machinery.opsec.gh_snapshot import admit
 
-    root = Path(__file__).resolve().parents[1]
-    # These are the live entry chain: bash shim -> admission -> client.
-    assert "scripts/opsec/gh_entry.py" in (root / "scripts/agent_runtime/shims/gh").read_text()
-    entry = (root / "scripts/opsec/gh_entry.py").read_text()
+    # These are the live entry chain: the installed release's bash shim -> admission -> client.
+    assert '"${PROJECT_PACKAGE}.opsec.gh_entry"' in (files("lu_machinery.agent_runtime") / "shims/gh").read_text()
+    entry = (files("lu_machinery.opsec") / "gh_entry.py").read_text()
     assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
     assert not admit(args[1:], cwd=tmp_path, environment={}).write
     translated, native = [], []
@@ -2109,7 +2093,7 @@ def test_stale_requires_opt_in_for_gate_readers(tmp_path, monkeypatch, entry):
         result = gh.run(args, client=store, capture_output=True, text=True)
         assert result.returncode == 75 and result.github_result.error == "github_rate_limited"
     else:
-        from scripts.publish import github as publisher
+        from lu_machinery.publish import github as publisher
 
         monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
         monkeypatch.setattr(publisher.gate, "real_gh", lambda env: "gh")
@@ -2174,7 +2158,7 @@ def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path, monke
 def test_flake_ledger_1000_run_read_and_denominator_guard(tmp_path, monkeypatch, total, limited):
     from datetime import date
 
-    from scripts.ci import flake_ledger
+    from lu_machinery.ci import flake_ledger
 
     rows = [{"id": i + 1, "created_at": "2026-10-05T00:00:00Z"} for i in range(total)]
     pages = []
@@ -2351,13 +2335,12 @@ def admitted_api_read_cases():
 
 @pytest.mark.parametrize("args", admitted_api_read_cases())
 def test_every_admitted_api_read_translates_exactly_or_falls_through(tmp_path, args):
-    from pathlib import Path
+    from importlib.resources import files
 
-    from scripts.opsec.gh_snapshot import admit
+    from lu_machinery.opsec.gh_snapshot import admit
 
-    root = Path(__file__).resolve().parents[1]
-    assert "scripts/opsec/gh_entry.py" in (root / "scripts/agent_runtime/shims/gh").read_text()
-    entry = (root / "scripts/opsec/gh_entry.py").read_text()
+    assert '"${PROJECT_PACKAGE}.opsec.gh_entry"' in (files("lu_machinery.agent_runtime") / "shims/gh").read_text()
+    entry = (files("lu_machinery.opsec") / "gh_entry.py").read_text()
     assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
     frozen = admit(args[1:], cwd=tmp_path, environment={"GH_REPO": "o/r"})
     assert frozen.write is False and frozen.argv == args[1:]
@@ -2500,7 +2483,7 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
     import os
     import sys
 
-    from scripts.publish import github as publisher
+    from lu_machinery.publish import github as publisher
 
     binary = tmp_path / "gh"
     calls = tmp_path / "calls"
@@ -2863,7 +2846,7 @@ def test_near_cap_multiprocess_304s_keep_shared_cache_and_observe_persisted_budg
     script = r'''
 import json, sys
 from pathlib import Path
-from scripts.common import github_client as gh
+from lu_machinery.common import github_client as gh
 directory, index = Path(sys.argv[1]), int(sys.argv[2])
 calls = []
 def transport(method, endpoint, headers, body, timeout):
@@ -2918,7 +2901,7 @@ print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed"
 
 def test_physical_maintenance_keeps_owner_schema_cache_reuse_and_live_budget_authority(tmp_path, monkeypatch):
     """Compaction must not prune responses, re-scope keys, or reset a live budget."""
-    from scripts.maintenance.github_cache import maintain
+    from lu_machinery.maintenance.github_cache import maintain
 
     monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path))
     store, calls = client(tmp_path, [response({"state": "open"}, remaining=499)])

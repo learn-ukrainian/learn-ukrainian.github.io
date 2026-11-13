@@ -416,6 +416,47 @@ def _receipt_path(state_dir: Path, now: datetime) -> Path:
     return state_dir / "receipts" / "v1" / f"{stamp}-{os.getpid()}-{uuid.uuid4().hex[:12]}.json"
 
 
+def cleanup_homes(
+    *,
+    codex_home: Path | None = None,
+    codex_account: str | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> list[tuple[str | None, Path]]:
+    """Homes to clean, each account separate.
+
+    An explicit ``codex_home`` is that directory only, so a cleanup of one home
+    does not see another account. An explicit account label uses the loader.
+    The default is every subscription account the loader can resolve. Account
+    a (``sub``) does not read ambient ``CODEX_HOME``.
+    """
+    from scripts.agent_runtime.codex_accounts import (
+        CODEX_SUBSCRIPTION_ACCOUNTS,
+        CodexAccountRefused,
+        codex_account_home,
+        resolve_codex_account_label,
+    )
+
+    if codex_home is not None and codex_account is not None:
+        raise CleanupError("codex_home_and_account")
+    if codex_home is not None:
+        return [(None, Path(codex_home).expanduser())]
+    if codex_account is not None:
+        try:
+            label = resolve_codex_account_label(codex_account)
+            return [(label, codex_account_home(label, environ))]
+        except CodexAccountRefused as exc:
+            raise CleanupError(exc.code) from None
+    homes: list[tuple[str | None, Path]] = []
+    for label in CODEX_SUBSCRIPTION_ACCOUNTS:
+        try:
+            homes.append((label, codex_account_home(label, environ)))
+        except CodexAccountRefused:
+            continue
+    if not homes:
+        raise CleanupError("codex_account_unbound")
+    return homes
+
+
 def run_cleanup(
     *,
     apply: bool = False,
@@ -437,7 +478,15 @@ def run_cleanup(
         raise ValueError("retention_days must be at least 1")
     if observation_interval_days < 1:
         raise ValueError("observation_interval_days must be at least 1")
-    home = (codex_home or Path.home() / ".codex").expanduser()
+    if codex_home is None:
+        try:
+            from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
+
+            home = codex_account_home("sub", environ)
+        except CodexAccountRefused as exc:
+            raise CleanupError(exc.code) from None
+    else:
+        home = Path(codex_home).expanduser()
     cleanup_dir = (state_dir or home / "thread-cleanup").expanduser()
     database = db_path or codex_state.discover_state_database(codex_home=home)
     delete_runner = runner or _default_runner(home)
@@ -624,7 +673,17 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="apply mature deletions (default is a stateful dry-run observation)",
     )
-    parser.add_argument("--codex-home", type=Path, default=Path.home() / ".codex")
+    parser.add_argument(
+        "--codex-home",
+        type=Path,
+        default=None,
+        help="Clean this one home. Default: every subscription account the loader resolves.",
+    )
+    parser.add_argument(
+        "--codex-account",
+        default=None,
+        help="Clean one accounts-loader label (sub or b-sub). Not combined with --codex-home.",
+    )
     parser.add_argument("--db", type=Path, help="explicit Codex state_*.sqlite path")
     parser.add_argument("--state-dir", type=Path, help="override versioned state/receipt directory")
     parser.add_argument("--codex-binary", default="codex")
@@ -638,40 +697,105 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
-    try:
-        receipt = run_cleanup(
-            apply=args.apply,
-            codex_home=args.codex_home,
-            db_path=args.db,
-            state_dir=args.state_dir,
-            codex_binary=args.codex_binary,
-            current_cwd=args.repo_root,
-            retention_days=args.retention_days,
-            observation_interval_days=args.observation_interval_days,
-        )
-    except (CleanupError, codex_state.CodexStateError, OSError, ValueError) as exc:
-        print(json.dumps({"status": "error", "error": str(exc)}, sort_keys=True))
-        return 2
-    print(
-        json.dumps(
-            {
-                "status": "blocked" if args.apply and receipt["protection_errors"] else "ok",
-                "mode": receipt["mode"],
-                "receipt_path": receipt["receipt_path"],
-                "summary": receipt["summary"],
-                "protection_errors": receipt["protection_errors"],
-            },
-            sort_keys=True,
-        )
-    )
+def _public_protection_code(error: str) -> str:
+    """Value-free code for a protection error. The private receipt keeps the text."""
+    text = error.casefold()
+    if "global state" in text:
+        return "codex_global_state_unavailable"
+    if "non-uuid" in text:
+        return "pin_registry_invalid_id"
+    if "pin registry" in text:
+        return "pin_registry_malformed"
+    if "workspace root" in text:
+        return "workspace_roots_malformed"
+    if "automation registry" in text:
+        return "automation_registry_unavailable"
+    if "cannot read automation" in text:
+        return "automation_unreadable"
+    if "automation cwds" in text:
+        return "automation_cwds_malformed"
+    if "rollover lease" in text:
+        return "rollover_lease_unreadable"
+    if "exact uuid" in text:
+        return "protection_uuid_missing"
+    return "protection_error"
+
+
+def _stdout_receipt(receipt: Mapping[str, Any], *, apply: bool, include_path: bool) -> dict[str, Any]:
+    errors = receipt["protection_errors"]
+    if not include_path:
+        errors = [_public_protection_code(str(item)) for item in errors]
+    body: dict[str, Any] = {
+        "status": "blocked" if apply and receipt["protection_errors"] else "ok",
+        "mode": receipt["mode"],
+        "summary": receipt["summary"],
+        "protection_errors": errors,
+    }
+    if include_path:
+        body["receipt_path"] = receipt["receipt_path"]
+    return body
+
+
+def _receipt_failed(receipt: Mapping[str, Any], *, apply: bool) -> bool:
     failed = sum(
         count
         for outcome, count in receipt["summary"].items()
         if outcome in {"apply_blocked", "delete_failed", "reconciliation_failed", "refresh_failed"}
     )
-    return 2 if failed or (args.apply and receipt["protection_errors"]) else 0
+    return bool(failed or (apply and receipt["protection_errors"]))
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
+    try:
+        homes = cleanup_homes(codex_home=args.codex_home, codex_account=args.codex_account)
+    except (CleanupError, ValueError) as exc:
+        print(json.dumps({"status": "error", "error": str(exc)}, sort_keys=True))
+        return 2
+    if (args.db is not None or args.state_dir is not None) and len(homes) != 1:
+        print(json.dumps({"status": "error", "error": "shared_state_needs_one_home"}, sort_keys=True))
+        return 2
+    results: list[tuple[str | None, dict[str, Any]]] = []
+    failures: list[str | None] = []
+    single = len(homes) == 1
+    for label, home in homes:
+        try:
+            receipt = run_cleanup(
+                apply=args.apply,
+                codex_home=home,
+                db_path=args.db,
+                state_dir=args.state_dir,
+                codex_binary=args.codex_binary,
+                current_cwd=args.repo_root,
+                retention_days=args.retention_days,
+                observation_interval_days=args.observation_interval_days,
+            )
+        except (CleanupError, codex_state.CodexStateError, OSError, ValueError) as exc:
+            if single:
+                print(json.dumps({"status": "error", "error": str(exc)}, sort_keys=True))
+                return 2
+            failures.append(label)
+            continue
+        results.append((label, receipt))
+    if single and results:
+        receipt = results[0][1]
+        # The historical one-home run prints the receipt path. A named account does not:
+        # the path is that account's home.
+        include_path = args.codex_account is None
+        print(json.dumps(_stdout_receipt(receipt, apply=args.apply, include_path=include_path), sort_keys=True))
+        return 2 if _receipt_failed(receipt, apply=args.apply) else 0
+    body: dict[str, Any] = {}
+    exit_code = 0
+    for label, receipt in results:
+        key = label or "home"
+        body[key] = _stdout_receipt(receipt, apply=args.apply, include_path=False)
+        if _receipt_failed(receipt, apply=args.apply):
+            exit_code = 2
+    for label in failures:
+        body[label or "home"] = {"status": "error", "error": "codex_state_unavailable"}
+        exit_code = 2
+    print(json.dumps({"accounts": body}, sort_keys=True))
+    return exit_code
 
 
 if __name__ == "__main__":

@@ -225,11 +225,12 @@ then enqueues that head at the front of the queue, while every gate, including t
 merge-group CI Gate, still applies, and a label applied before that head's approval does nothing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
-**Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,
-split a PR above about 400 changed non-test lines or about 8 files, or have the
-driver record a one-line justification in the PR body. Test fixtures, generated
-files and whole-file deletions do not count toward either size measure. A
-reviewer may reject a PR for size alone, even with a justification.
+**Small batches (size signal).** One outcome per PR. About 1000 changed lines,
+excluding tests, test fixtures, generated files and whole-file deletions, is a
+review-size signal, not a rule: above it, split the PR, or record one line in the
+PR body (`Size justification: <reason>`) stating why the change is one outcome.
+The review budget and its frozen round-1 scope are in the
+[`review-loop` policy](../skills/review-loop/references/policy.md#budget).
 
 **Revert first (trial until 2026-11-05).** When a merged change breaks main
 (red CI on main), bypasses a gate, or breaks a deployed service, the owning
@@ -243,10 +244,10 @@ would reopen the hole; a data or schema migration or deployed data change; or a
 ready, smaller fix-forward that lands within the hour. All existing gates stay
 unchanged, including for exceptions.
 
-These trials draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
+The size signal and the revert trial draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
 and [version control](https://dora.dev/capabilities/version-control/) capabilities
 and Google's [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
-The size thresholds and mitigation targets are local trial policy.
+The size signal and the mitigation targets are local policy.
 
 **Red-team exception (operator 2026-10-11, #10437).** For code review
 only, when no independent outside-family reviewer can be obtained, a
@@ -664,7 +665,7 @@ directory. Canonical text: `docs/best-practices/test-quality.md`.
 Do not write (all qualifiers must hold):
 - **D1** asserts only what a runtime-enforced schema/validator already rejects AND
   another kept test exercises that rejection. Python annotations are not runtime
-  enforcement; schema-rejection tests (e.g. `tests/api/test_fleet_board_v1.py:80-110`) stay.
+  enforcement; schema-rejection tests (e.g. learn-ukrainian/machinery `tests/api/test_fleet_board_v1.py:80-110`) stay.
 - **D2** asserts only that a mock was called, where the call is not itself the
   contract. Interaction contracts stay: dispatch destination, read-only access, no
   network/process launch, exactly-once cleanup (e.g. `tests/test_mcp_sources_server.py:823-827`).
@@ -675,8 +676,8 @@ Do not write (all qualifiers must hold):
   path/assert shape (Unicode NEL/LS/PS cases in `tests/test_cli_tail_timeouts.py:120-140` stay).
 - **D5** speed claim (wall-clock "is fast") or fixed real sleep to force ordering.
   Bounded-liveness/stall guards and documented budgets stay until an equivalent
-  replacement passes (`tests/api/test_context_cost.py:178-198`,
-  `tests/api/test_fleet_board_ops.py:92-120`). Deterministic-clock tests are never
+  replacement passes (learn-ukrainian/machinery `tests/api/test_context_cost.py`,
+  learn-ukrainian/machinery `tests/api/test_fleet_board_ops.py:92-120`). Deterministic-clock tests are never
   "timer" tests.
 - **D6** incidental wording/format assertions. Required CLI help sections and
   exit-code descriptions (`cli-help-standard.md:11-26`; e.g.
@@ -698,7 +699,7 @@ Must test (protected):
 - **K7** any identified regression test, any age.
 - **K8** fixture mirrors for rules/prompt deploy checks.
 - **K9** application lifecycle, resource cleanup (e.g.
-  `tests/api/test_context_cost.py:149-175`), bounded liveness, resource/call-count budgets.
+  learn-ukrainian/machinery `tests/api/test_context_cost.py`), bounded liveness, resource/call-count budgets.
 - **K10** public CLI/API/output contracts, clean-process packaging/startup,
   dependency-patch guards, platform/environment isolation.
 - **K11** test manifests/registries that name test files or node ids

@@ -56,7 +56,9 @@ from pathlib import Path
 
 agent = sys.argv[1]
 repo_root = Path(os.environ["LU_ROOT"])
-sys.path.insert(0, str(repo_root / "scripts"))
+# Bare agent_runtime names resolve from the machinery package directory; the absolute
+# package imports inside the runner resolve from the checkout root.
+sys.path[:0] = [os.environ["LU_MACHINERY_DIR"], str(repo_root)]
 
 MODEL_BY_AGENT = {
     "codex":    None,
@@ -118,6 +120,9 @@ fi
 
 FAILED=0
 export LU_ROOT="${ROOT}"
+# The bare agent_runtime package resolves from its parent, the machinery package directory.
+LU_MACHINERY_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export LU_MACHINERY_DIR
 
 for AGENT in "${AGENTS[@]}"; do
     echo "=== smoke: ${AGENT} ==="

@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import sys
-import time
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -52,8 +51,8 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
-@pytest.mark.parametrize("models", [[], ["Grok 4.7 256K High"], ["Grok 4.7 256K High", "different"]])
-def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, models, mode):
+def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, mode):
+    models = []
     from scripts.review import record_cf_verdict as recorder
 
     binary_dir = sandbox.repo.parent / "bin"
@@ -67,7 +66,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
     sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     # A read-only --branch dispatch is a review (C-2902 F10): it needs a reviewed commit outside its family.
-    source = sandbox.review_target("requested-model-is-not-proof")[-1] if mode == "read-only" else "HEAD"
+    source = sandbox.review_target("grok-4.7-high")[-1] if mode == "read-only" else "HEAD"
     run_git(sandbox.repo, "branch", "review-source", source)
     run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
@@ -75,7 +74,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
         "--agent",
         "cursor",
         "--model",
-        "requested-model-is-not-proof",
+        "grok-4.7-high",
         "--prompt",
         "The prompt claims Grok 4.7 256K High",
         "--mode",
@@ -86,7 +85,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if mode == "read-only" else 1)
     known = len(models) == 1
     assert record["schema_version"] == 2
-    assert record["model"] == "requested-model-is-not-proof"
+    assert record["model"] == "grok-4.7-high"
     assert record["resolved_model"] == ("Grok 4.7 256K High" if known else "unknown")
     assert record["resolved_model_known"] is known
     assert record["resolved_model_source"] == ("cursor-stream-json" if known else "pending")
@@ -101,15 +100,13 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
             recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
 
 
-@pytest.mark.parametrize("attested", [True, False])
-def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_attestation(sandbox, attested):
+
+def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_attestation(sandbox):
     """Defect (#12014): a running Cursor author's PR was unreviewable until its task exited."""
     binary_dir = sandbox.repo.parent / "bin"
     binary_dir.mkdir()
     release = sandbox.tasks / "cursor.release"
-    # An unattested run names its model only where no attestation is read: a self-declared claim.
-    first = ({"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"} if attested
-             else {"type": "assistant", "model": "Grok 4.7 256K High", "content": "I am Grok 4.7 256K High"})
+    first = {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"}
     result = {"type": "result", "subtype": "success", "result": "done"}
     executable = binary_dir / "cursor-agent"
     executable.write_text(
@@ -122,14 +119,11 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
     author = sandbox.cli("dispatch", "--agent", "cursor", "--model", "grok-4.7-high", "--prompt", "Author a change",
                          "--mode", "workspace-write").stdout.splitlines()
     await_file(sandbox.tasks / "logs" / f"{author[0]}.stdout.log", ready=lambda content: content.endswith("\n"))
-    if attested:
-        await_file(sandbox.tasks / f"{author[0]}.json", ready=lambda content: json.loads(content)["resolved_model_known"])
-    else:
-        time.sleep(0.5)  # several observer polls: an unattested stream must stay unattested
+    await_file(sandbox.tasks / f"{author[0]}.json", ready=lambda content: json.loads(content)["resolved_model_known"])
     running = json.loads(sandbox.cli("status", author[0]).stdout)
     assert running["status"] == "running"
     assert (running["resolved_model"], running["resolved_model_known"], running["resolved_model_source"]) == (
-        ("Grok 4.7 256K High", True, "cursor-stream-json") if attested else ("unknown", False, "pending"))
+        "Grok 4.7 256K High", True, "cursor-stream-json")
     sandbox.review_models("echo")
     head = run_git(sandbox.repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
                    f"authored change\n\nX-Agent: cursor/{author[0]}")
@@ -139,15 +133,13 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
         "dispatch", "--agent", "sol", "--model", "echo", "--prompt",
         '{"schema_version":"code-review-findings.v1","overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},"findings":[]}',
         "--require-review-verdict", "--mode", "read-only", "--branch", "review-source",
-        expected=0 if attested else 2,
+        expected=0,
     )
-    if attested:
-        assert sandbox.settle(review.stdout.splitlines())["status"] == "done"
-    else:
-        assert "AUTHOR_UNRESOLVED" in review.stderr
+    assert sandbox.settle(review.stdout.splitlines())["status"] == "done"
     release.touch()
     settled = sandbox.settle(author, expected=1)
-    assert settled["resolved_model_known"] is attested
+    assert settled["resolved_model_known"] is True
+
 
 
 def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):

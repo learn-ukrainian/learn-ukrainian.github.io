@@ -7,6 +7,9 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# The machinery package directory this script sits in, from its own location, so
+# the commands printed below name it in either checkout layout.
+MACHINERY_REL="$(basename "$(cd "$(dirname "$0")" && pwd)")"
 cd "$PROJECT_ROOT"
 
 # shellcheck disable=SC1091
@@ -19,7 +22,7 @@ path_matches_declared_entry() {
 
 tracked_mirror_source() {
     local mirror="$1"
-    local relative skill_name skill_relative
+    local relative
 
     case "$mirror" in
         .claude/*)
@@ -47,24 +50,6 @@ tracked_mirror_source() {
                 printf '%s\n' "agents_extensions/shared/$relative"
             fi
             ;;
-        .gemini/*)
-            relative="${mirror#.gemini/}"
-            if [[ "$relative" == rules/* ]]; then
-                printf '%s\n' "agents_extensions/shared/$relative"
-            elif [[ "$relative" == skills/* ]]; then
-                skill_name="${relative#skills/}"
-                skill_name="${skill_name%%/*}"
-                skill_relative="${relative#skills/"$skill_name"/}"
-                if [[ -d "agents_extensions/shared/skills/$skill_name" ]]; then
-                    printf '%s\n' "agents_extensions/shared/skills/$skill_name/$skill_relative"
-                else
-                    printf '%s\n' "gemini_extensions/$relative"
-                fi
-            else
-                path_matches_declared_entry "$relative" "$ORPHAN_PATHS_GEMINI" && return 1
-                printf '%s\n' "gemini_extensions/$relative"
-            fi
-            ;;
         *) return 1 ;;
     esac
 }
@@ -86,7 +71,7 @@ check_tracked_mirrors() {
             echo "::error::Committed deploy-mirror drift: $source -> $mirror"
             failed=1
         fi
-    done < <(git ls-files -z -- .claude .agent .agents .codex .gemini)
+    done < <(git ls-files -z -- .claude .agent .agents .codex)
 
     if [[ "$failed" -eq 0 ]]; then
         echo "OK: committed deploy mirrors match their canonical sources"
@@ -98,7 +83,7 @@ if [[ "${1:-}" == "--tracked-mirrors-only" ]]; then
     check_tracked_mirrors
     exit $?
 elif [[ $# -ne 0 ]]; then
-    echo "Usage: scripts/check_rules_deployment.sh [--tracked-mirrors-only]" >&2
+    echo "Usage: $MACHINERY_REL/check_rules_deployment.sh [--tracked-mirrors-only]" >&2
     exit 2
 fi
 
@@ -128,7 +113,7 @@ check_pair() {
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"
         echo
-        echo "This means scripts/deploy_prompts.sh is out of sync with its source."
+        echo "This means $MACHINERY_REL/deploy_prompts.sh is out of sync with its source."
         echo "Fix the deploy script, not the target tree."
         return 1
     fi
@@ -165,84 +150,17 @@ check_overlay() {
         echo "::error::Deploy-script drift between $src and $dst:"
         echo "$diff_out"
         echo
-        echo "This means scripts/deploy_prompts.sh is out of sync with its source overlay."
+        echo "This means $MACHINERY_REL/deploy_prompts.sh is out of sync with its source overlay."
         return 1
     fi
 
     echo "OK: $src -> $dst"
 }
 
-check_shared_skill_pairs() {
-    local shared_skill skill_name failed=0
-    for shared_skill in agents_extensions/shared/skills/*; do
-        [[ -d "$shared_skill" ]] || continue
-        skill_name="$(basename "$shared_skill")"
-        check_pair "$shared_skill" ".gemini/skills/$skill_name" || failed=1
-    done
-    return "$failed"
-}
-
-check_gemini_provider_skill_pairs() {
-    local provider_skill skill_name failed=0
-    for provider_skill in gemini_extensions/skills/*; do
-        [[ -d "$provider_skill" ]] || continue
-        skill_name="$(basename "$provider_skill")"
-        check_pair "$provider_skill" ".gemini/skills/$skill_name" || failed=1
-    done
-    return "$failed"
-}
-
-check_gemini_skill_owners() {
-    local deployed_skill skill_name failed=0
-    [[ -d .gemini/skills ]] || return 0
-    for deployed_skill in .gemini/skills/*; do
-        [[ -d "$deployed_skill" ]] || continue
-        skill_name="$(basename "$deployed_skill")"
-        if [[ ! -d "agents_extensions/shared/skills/$skill_name" && ! -d "gemini_extensions/skills/$skill_name" ]]; then
-            echo "::error::Unowned deployed Gemini skill: .gemini/skills/$skill_name"
-            failed=1
-        fi
-    done
-    return "$failed"
-}
-
-gemini_path_is_declared_orphan() {
-    local relative="$1" orphan normalized
-    for orphan in $ORPHAN_PATHS_GEMINI; do
-        normalized="${orphan%/}"
-        if [[ "$relative" == "$normalized" || "$relative" == "$normalized/"* ]]; then
-            return 0
-        fi
-    done
-    return 1
-}
-
-check_gemini_file_owners() {
-    local deployed_file relative failed=0
-    [[ -d .gemini ]] || return 0
-    while IFS= read -r deployed_file; do
-        relative="${deployed_file#.gemini/}"
-        if bytecode_cache_path "$relative"; then
-            continue
-        fi
-        if [[ "$relative" == skills/* || "$relative" == rules/* ]]; then
-            continue
-        fi
-        if gemini_path_is_declared_orphan "$relative"; then
-            continue
-        fi
-        if [[ ! -e "gemini_extensions/$relative" ]]; then
-            echo "::error::Unowned deployed Gemini file: .gemini/$relative"
-            failed=1
-        fi
-    done < <(find .gemini \( -type f -o -type l \) -print | sort)
-    return "$failed"
-}
-
 drift=0
 # Duplicate skill discovery is an error even when the two copies agree.
 if [[ -e .codex/skills || -L .codex/skills ]]; then
-    echo "::error::Legacy .codex/skills discovery path remains; run scripts/deploy_prompts.sh and reconcile any unverified content."
+    echo "::error::Legacy .codex/skills discovery path remains; run $MACHINERY_REL/deploy_prompts.sh and reconcile any unverified content."
     drift=1
 fi
 
@@ -269,16 +187,5 @@ check_pair \
 check_overlay "agents_extensions/codex" ".codex" || drift=1
 # shellcheck disable=SC2086
 check_pair "agents_extensions/shared/skills" ".agents/skills" $ORPHAN_PATHS_AGENTS || drift=1
-# shellcheck disable=SC2086
-check_pair \
-    "gemini_extensions" \
-    ".gemini" \
-    $ORPHAN_PATHS_GEMINI \
-    $GEMINI_SHARED_SKILL_OVERLAY_PATHS || drift=1
-check_gemini_provider_skill_pairs || drift=1
-check_shared_skill_pairs || drift=1
-check_gemini_skill_owners || drift=1
-check_gemini_file_owners || drift=1
-check_pair "agents_extensions/shared/rules" ".gemini/rules" || drift=1
 
 exit "$drift"

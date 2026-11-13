@@ -1,0 +1,83 @@
+# Ported machinery test harness for verify_extraction.py --run-tests (V8).
+# [run]: the machinery move contract v3 section 4 test files, run as whole files.
+# [support]: their fixture and helper closure: every tests/ module imported and every tests/ file opened
+# while those files ran at origin/main 0e2b0f5f12 (pytest with an import and open audit hook; 1256 passed).
+# One repository path per line; each exists at origin/main; no product test file is run.
+# [run]
+tests/test_fleet_repos.py
+tests/test_sibling_git_https.py
+tests/orchestration/test_merge_closeout.py
+tests/test_worktree_claims_lock_identity.py
+tests/orchestration/test_worktree_claims_cli.py
+tests/test_handoff_slot_registry.py
+tests/test_launcher_interactive_scope.py
+tests/test_session_supervisor.py
+tests/test_rules_core_loading.py
+tests/review/test_record_cf_verdict.py
+tests/publish/test_pr_merge_squash_scan.py
+tests/review/test_routing_consumers.py
+tests/githooks/test_owned_paths_hook.py
+# [support]
+tests/__init__.py
+tests/claude_route_accounts.py
+tests/conftest.py
+tests/cursor_exec_tripwire.py
+tests/cursor_process_guard.py
+tests/data_store_fixtures.py
+tests/epics_monitor_stub.py
+tests/fixtures/routing_baseline/baseline.json.gz
+tests/fixtures/routing_baseline/inputs.json
+tests/fixtures/routing_baseline/routing-10263.json.gz
+tests/fixtures/routing_baseline/v2-baseline.json.gz
+tests/flake_quarantine.yaml
+tests/githooks/__init__.py
+tests/helpers/__init__.py
+tests/helpers/checkout_write_defaults.py
+tests/helpers/checkout_write_guard.py
+tests/helpers/github_command_boundary.py
+tests/helpers/github_transport.py
+tests/helpers/monitor.py
+tests/helpers/python.py
+tests/helpers/restore_import_state.py
+tests/helpers/reviewer_routing.py
+tests/helpers/source_db_write_guard.py
+tests/helpers/stress_fixtures.py
+tests/launcher_libraries.py
+tests/launcher_sandbox.py
+tests/opsec_fixtures.py
+tests/orchestration/test_task_lifecycle.py
+tests/project_python.py
+tests/review/__init__.py
+tests/review/conftest.py
+tests/review/fixtures/agy-mode-11152.json
+tests/review/fixtures/budget-pin-11110.json
+tests/review/fixtures/claude-advisor-10083.json
+tests/review/fixtures/claude-cap-10355.json
+tests/review/fixtures/cto-wrappers-10453.json
+tests/review/fixtures/haiku-luna-brief-10919.json
+tests/review/fixtures/hermes-effort-10751.json
+tests/review/fixtures/launcher-canary-10266.json
+tests/review/fixtures/muse-seat-11026.json
+tests/review/fixtures/routing-10016.json.gz
+tests/review/fixtures/routing-10073.json.gz
+tests/review/fixtures/routing-10464.json.gz
+tests/review/fixtures/routing-10568.json.gz
+tests/review/fixtures/routing-10835.json
+tests/review/fixtures/routing-11327.json
+tests/review/fixtures/word-card-tool-11084.json
+tests/review/test_model_catalog.py
+tests/rules_core_view.py
+tests/sparse_trees.py
+tests/test_agent_github_identity.py
+tests/test_authoring_review_feasibility.py
+tests/test_dispatch_isolation.py
+tests/test_launcher_contract.py
+tests/test_launcher_driver_scope.py
+tests/test_opsec_prepublish.py
+tests/test_record_cf_verdict.py
+tests/test_review_closeout_cli.py
+tests/test_sibling_git.py
+tests/test_verdict_parser.py
+tests/wait_helpers.py
+tests/fixtures/rules_core/core-curriculum.md
+tests/fixtures/rules_core/core.md

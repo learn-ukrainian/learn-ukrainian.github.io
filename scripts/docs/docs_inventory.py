@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import posixpath
 import re
 import subprocess
@@ -18,8 +19,9 @@ from markdown_it import MarkdownIt
 ROOT_FILES = frozenset({'AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'README.md'})
 DOC_SUFFIXES = frozenset({'.md', '.mdx', '.rst', '.txt', '.adoc'})
 # Explicit read boundary: arbitrary tracked data/private corpora are not inputs.
+# The machinery package, named by this file's location, is read too; in this checkout it is 'scripts'.
 READ_ROOTS = frozenset({'docs', 'scripts', 'site', 'tests', 'agents_extensions',
-                        'contracts', 'memory', 'audit'})
+                        'contracts', 'memory', 'audit', Path(os.path.abspath(__file__)).parents[1].name})
 EXCLUDED_PARTS = frozenset({'session-state', 'node_modules', '__pycache__',
                             '.claude', '.codex', '.agent', '.gemini',
                             'private', 'secrets', 'credentials', 'cache', 'caches'})
@@ -334,13 +336,18 @@ def summary(manifest: dict) -> str:
     return '\n'.join(lines)
 
 
+def _self_module() -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}.{here.parent.name}.{here.stem}"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description='Inventory tracked documentation deterministically from Git index blobs.\n'
                     'Use for docs-knowledge evidence; not for live state or OpenWiki generation.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog='Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python scripts/docs/docs_inventory.py\n'
-               '  /home/ops/learn-ukrainian/.venv/bin/python scripts/docs/docs_inventory.py --output audit/docs-inventory/run\n'
+        epilog=f'Examples:\n  .venv/bin/python -m {_self_module()}\n'
+               f'  .venv/bin/python -m {_self_module()} --output audit/docs-inventory/run\n'
                'Outputs: manifest.json, references.json, summary.md, digest.sha256; overwrites generated output only.\n'
                'Exit codes: 0 success; 1 invalid Git/input/output; 2 invalid CLI arguments.\n'
                'Related: #5536, #5535; docs/knowledge/inventory/README.md; ADR-013.')

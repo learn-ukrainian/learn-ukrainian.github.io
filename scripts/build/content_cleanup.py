@@ -19,8 +19,8 @@ from pathlib import Path
 
 import yaml
 
-# Project curriculum root. Defined locally (matching learner_immersion.py /
-# orch_index.py) so this module has no dependency on v6_build's globals.
+# Project curriculum root. Defined locally (matching learner_immersion.py)
+# so this module has no dependency on v6_build's globals.
 # This file lives at scripts/build/, so parents[2] is the repo root.
 CURRICULUM_ROOT = Path(__file__).resolve().parents[2] / "curriculum" / "l2-uk-en"
 

@@ -13,9 +13,11 @@ import re
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.jsonl import jsonl_lines
 from scripts.orchestration.integration_sweep import (
     ITEM_ID_RE,
@@ -1309,18 +1311,31 @@ class ClaimsValidationResult:
     dropped_claims: tuple[dict[str, Any], ...]
 
 
-_CITED_FACT = re.compile(
-    r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
-    r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|Wikipedia|dictionar\w*|slovnyk|"
-    r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+|rules?|tags?|paradigms?|according to|cites?|"
-    r"(?:noun|adj|verb|adv|numr|pron|prep|conj|part|intj|predic|insert|onomat|noninfl)(?::\w+)+|"
-    r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d+|"
-    r"soft[ -]group|hard[ -]group|pp?\.?\s*\d+)\b|§|"
-    r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|(?-i:СУМ)(?:-\d+)?|сум-\d+|ЕСУМ|ВТС|Вікіпеді\w*|"
-    r"Грінченк\w*|Антоненк\w*|Заболотн\w*|Большаков\w*|Пристінськ\w*|"
-    r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил(?:о|а|у|і|ом|ам|ах|ами)?|тег\w*|(?:с|стор)\.\s*\d+)\b",
-    re.IGNORECASE,
-)
+# A Sources tool name cites a source; any other identifier with a tool-like prefix (a file or function name
+# such as ``verify_pilot``) does not. Names come from the server's declarations, and a ``_``-separated
+# extension of one (``verify_stress_result``) still cites it.
+_TOOL_NAME_PREFIX = re.compile(r"(?:verify|query|search|inspect|check|translate|vet|get)_\w+")
+
+
+@lru_cache(maxsize=1)
+def _cited_fact() -> re.Pattern[str]:
+    """Compile once from the registered Sources tools; an unreadable server declaration propagates."""
+    readers, writers = sources_tool_sets()
+    tools = sorted((name for name in (*readers, *writers) if _TOOL_NAME_PREFIX.fullmatch(name)), key=lambda n: (-len(n), n))
+    if not tools:
+        raise ValueError("sources_tool_names_empty")
+    return re.compile(
+        r"\b(?:VESUM|ULIF|PULS|SUM-20|Pravopys|Zabolotnyi|Bolshakova|Prystinska|"
+        r"Antonenko|Grinchenko|ESUM|GRAC|CEFR|Wikipedia|dictionar\w*|slovnyk|"
+        r"(?:" + "|".join(map(re.escape, tools)) + r")(?:_\w*)?|rules?|tags?|paradigms?|according to|cites?|"
+        r"(?:noun|adj|verb|adv|numr|pron|prep|conj|part|intj|predic|insert|onomat|noninfl)(?::\w+)+|"
+        r"(?:sources?|citations?|references?)\s*[:=]\s*\S|mcp\w*sources\w*|pages?\s*\d+|"
+        r"soft[ -]group|hard[ -]group|(?!(?-i:P[0-3])\b)pp?\.?\s*\d+)\b|§|"
+        r"\b(?:правопис\w*|ВЕСУМ|УЛІФ|(?-i:СУМ)(?:-\d+)?|сум-\d+|ЕСУМ|ВТС|Вікіпеді\w*|"
+        r"Грінченк\w*|Антоненк\w*|Заболотн\w*|Большаков\w*|Пристінськ\w*|"
+        r"Горох\w*|Караванськ\w*|словник\w*|сторінк\w*|правил(?:о|а|у|і|ом|ам|ах|ами)?|тег\w*|(?:с|стор)\.\s*\d+)\b",
+        re.IGNORECASE,
+    )
 
 
 def _cited_fact_clauses(text: str, *, sources: bool) -> list[str]:
@@ -1328,7 +1343,7 @@ def _cited_fact_clauses(text: str, *, sources: bool) -> list[str]:
     return [
         clause.strip() for clause in text.split(";")
         if clause.strip().casefold() not in {"", "none", "n/a", "no sources"}
-        and (sources or _CITED_FACT.search(clause))
+        and (sources or _cited_fact().search(clause))
     ]
 
 
@@ -1417,7 +1432,9 @@ def validate_ukrainian_reply_claims(
         body = reply
     try:
         payload = yaml.safe_load(body)
-    except yaml.YAMLError as exc:
+    # The reply is untrusted: besides YAMLError, PyYAML's constructors raise ValueError, KeyError,
+    # IndexError, AttributeError or OverflowError on bad scalars, and deep nesting RecursionError.
+    except Exception as exc:
         if tag:
             raise ContractError("CLAIM_PAYLOAD_MALFORMED: review payload is not readable") from exc
         payload = None
@@ -1468,8 +1485,9 @@ def validate_item_claims(
     of that receipt's stored result. Unsupported and foreign-attempt citations are dropped,
     recorded with reasons for audit, and counted.
     """
-    from scripts.review.receipts import ledger
+    from scripts.review.product_hooks import attempt_hooks
 
+    ledger = attempt_hooks().ledger()
     indexed: dict[str, dict[str, Any]] = {}
     foreign: dict[str, dict[str, Any]] = {}
     if ledger_path is not None and Path(ledger_path).exists():
@@ -1647,7 +1665,7 @@ def validate_item_claims(
         stored_result = rec.get("result")
         if not isinstance(stored_result, str) or not stored_result.strip():
             return False, "uncaptured_output"
-        if has_quote and (quote not in stored_result or (_CITED_FACT.search(quote) and not _claim_matches(quote, stored_result))):
+        if has_quote and (quote not in stored_result or (_cited_fact().search(quote) and not _claim_matches(quote, stored_result))):
             return False, "quote_not_in_result"
         return True, None
 
@@ -1787,7 +1805,7 @@ def validate_item_claims(
                             rec = indexed.get(rid)
                             if isinstance(rec, dict) and isinstance(rec.get("result"), str):
                                 stored_results.append(rec["result"])
-                        if not any(expected in res and (not _CITED_FACT.search(expected) or _claim_matches(expected, res))
+                        if not any(expected in res and (not _cited_fact().search(expected) or _claim_matches(expected, res))
                                    for res in stored_results):
                             reason = "quote_not_in_result"
                         else:

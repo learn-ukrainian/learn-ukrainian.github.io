@@ -37,6 +37,7 @@ Allowed in the MAIN worktree:
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import re
@@ -44,6 +45,12 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+# The roots reader, by import name. This hook is outside the machinery package: under its source
+# tree the reader's file is at the same dotted path, and the name's first component is the machinery
+# package's directory.
+_ROOTS_READER_MODULE = "scripts.common.repo_root"
+_MACHINERY = _ROOTS_READER_MODULE.partition(".")[0]
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
@@ -103,7 +110,7 @@ def _git_probe_env() -> dict[str, str]:
     direct = os.pathsep.join(
         entry
         for entry in env.get("PATH", "").split(os.pathsep)
-        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+        if Path(entry).parts[-3:] != (_MACHINERY, "agent_runtime", "shims")
     )
     if shutil.which("git", path=direct):
         env["PATH"] = direct
@@ -127,18 +134,66 @@ def _public_primary_root() -> Path:
     return Path(common_dir).resolve().parent
 
 
+class RootsConfigurationError(Exception):
+    """The machinery roots configuration names a primary checkout that cannot be used."""
+
+
+def _configured_primary_root() -> Path | None:
+    """The primary checkout named by the machinery roots configuration, else ``None``.
+
+    Read through ``scripts/common/repo_root.py`` of this hook's own source tree, the
+    one reader of ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`` (#12681). Unset or empty, the
+    reader is not loaded at all, so the guard behaves exactly as without the
+    configuration. A value the reader refuses, or a set value with no reader beside
+    this hook, raises, so the command is blocked rather than judged against the
+    wrong checkout.
+    """
+    if not os.environ.get("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
+        return None
+    here = Path(__file__).resolve()
+    reader_file = Path(*_ROOTS_READER_MODULE.split(".")).with_suffix(".py")
+    reader = next(
+        (candidate / reader_file for candidate in here.parents if (candidate / reader_file).is_file()),
+        None,
+    )
+    if reader is None:
+        raise RootsConfigurationError("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT is set but no roots reader is installed")
+    name = "_guard_branch_switch_repo_root"
+    try:
+        module = sys.modules.get(name)
+        if module is None:
+            spec = importlib.util.spec_from_file_location(name, reader)
+            if spec is None or spec.loader is None:
+                raise ImportError(f"cannot load {reader}")
+            module = importlib.util.module_from_spec(spec)
+            # Registered before it runs: its dataclass looks its module up by name.
+            sys.modules[name] = module
+            try:
+                spec.loader.exec_module(module)
+            except BaseException:
+                sys.modules.pop(name, None)
+                raise
+        return module.configured_primary_root()
+    except Exception as exc:
+        raise RootsConfigurationError(str(exc)) from exc
+
+
 # This deployed public hook is also the only branch guard for the private
 # infrastructure checkout. Resolve both roots so symlinked invocations compare
-# the actual checkout directories, not their textual spellings. Resolved on
-# first use: most commands never reach a branch verb, and the lookup spawns git.
+# the actual checkout directories, not their textual spellings. A configured
+# primary checkout is protected too; the Git-derived one stays protected, so the
+# configuration never removes a protected root. Resolved on first use: most
+# commands never reach a branch verb, and the lookup spawns git.
 PROTECTED_ROOTS: list[Path] | None = None
 
 
 def _protected_roots() -> set[Path]:
     global PROTECTED_ROOTS
     if PROTECTED_ROOTS is None:
+        configured = _configured_primary_root()
         PROTECTED_ROOTS = [
             _public_primary_root(),
+            *([] if configured is None else [configured]),
             Path("~/projects/learn-ukrainian-infra-private").expanduser().resolve(),
         ]
     return {root.resolve() for root in PROTECTED_ROOTS}
@@ -712,6 +767,8 @@ def main() -> int:
 
     try:
         reason = _command_danger_reason(command)
+    except RootsConfigurationError as exc:
+        reason = f"machinery roots configuration unusable ({exc})"
     except Exception:
         reason = "nested shell command could not be parsed safely"
     if reason:

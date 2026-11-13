@@ -26,6 +26,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
+from scripts.common.repo_root import machinery_path
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS, SafeGitRunner
 from scripts.orchestration.execution_safe_git import run_git as safe_git
@@ -35,7 +36,10 @@ from scripts.orchestration.task_record_store import parse_task_record
 _GIT = "/usr/bin/git"
 _FETCH_REMOTE = "sibling-git-canonical"
 _SOURCE_ROOT = Path(__file__).resolve().parents[2]
-_REGISTRY_PATH = _SOURCE_ROOT / "scripts/config/fleet_repos.yaml"
+_REGISTRY_PATH = machinery_path("config/fleet_repos.yaml")
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 
 class Refusal(ValueError):
@@ -353,14 +357,23 @@ class Git:
         git_dir, common = _git_dir(path)
         if git_dir != common:
             result = safe_git(
-                ["config", "--null", "--list", "--show-scope"], cwd=path,
-                runner=SafeGitRunner(_GIT), env=env, capture_output=True, text=True,
-                timeout=30, check=False,
+                ["config", "--null", "--list", "--show-scope"],
+                cwd=path,
+                runner=SafeGitRunner(_GIT),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
             )
         else:
             result = subprocess.run(
                 [_GIT, "--no-pager", "-C", str(path), "config", "--null", "--list", "--show-scope"],
-                env=env, capture_output=True, text=True, timeout=30, check=False,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
             )
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
@@ -748,7 +761,8 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
 
 
 def examples(interpreter: str = ".venv/bin/python") -> str:
-    prefix = f"{interpreter} -m scripts.fleet.sibling_git"
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    prefix = f"{interpreter} -m {__spec__.name}" if __spec__ is not None else f"{interpreter} {os.fspath(__file__)}"
     return f"{prefix} status --repo infra-private\n{prefix} sync-main --repo infra-private\n{prefix} worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'"
 
 
@@ -757,7 +771,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Maintain a registered sibling with three closed Git verbs.\nUse from this repository root; raw sibling Git and arbitrary Git arguments receive no exemption.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         allow_abbrev=False,
-        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force, only at its recorded base or reachable from canonical origin's fetched refs.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; scripts/config/fleet_repos.yaml; #9309; #9742.",
+        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force, only at its recorded base or reachable from canonical origin's fetched refs.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; {_MACHINERY}/config/fleet_repos.yaml; #9309; #9742.",
     )
     parser.add_argument(
         "verb",

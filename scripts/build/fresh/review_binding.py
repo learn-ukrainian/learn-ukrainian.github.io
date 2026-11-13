@@ -56,10 +56,12 @@ def check_review_binding(
     ``review-receipts`` holds the attempt ledger dispatch claimed. Raises
     ``ReviewStateUnavailable`` when this host has no findings database for the level.
     """
-    from scripts.common.task_store_paths import tasks_dir as dispatch_tasks_dir
-    from scripts.lib.readonly_sqlite import open_readonly
-    from scripts.orchestration.task_record_store import relocated_result_file
-    from scripts.review import findings_db, fixloop
+    from lu_machinery.common.task_store_paths import tasks_dir as dispatch_tasks_dir
+    from lu_machinery.lib.readonly_sqlite import open_readonly
+    from lu_machinery.orchestration.task_record_store import relocated_result_file
+    from lu_machinery.review import findings_db
+
+    from scripts.review import fixloop
     from scripts.review import record as recorder
     from scripts.review.receipts import ledger
 

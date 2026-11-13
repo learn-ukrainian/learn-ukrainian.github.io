@@ -520,14 +520,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or lu_machinery.tools.task_scratch run).\n"
             "The caller retains outputs for readback and owns cleanup.\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake\n"
             "  .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake --inventory-out inventory.json --report-out report.json\n"
             "Outputs: JSON inventory and aggregate report; optional decision-ledger YAML. No Atlas or learner publication.\n"
             "Exit codes: 0 success; 2 invalid arguments, destination or intake failure.\n"
-            "Related: #9702; scripts.tools.task_scratch; source_inventory_review_decisions."
+            "Related: #9702; lu_machinery.tools.task_scratch; source_inventory_review_decisions."
         ),
     )
     parser.add_argument(

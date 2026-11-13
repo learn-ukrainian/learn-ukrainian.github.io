@@ -60,6 +60,8 @@ from .env_sanitize import (
 # one this host has always used. Which account a non-default label means lives
 # only in private local configuration (see ``load_claude_account_binding``).
 CLAUDE_ACCOUNT_KEY = "claude_account"
+# The Codex account label of a bound attempt (``codex_accounts``); omitted means the default account.
+CODEX_ACCOUNT_KEY = "codex_account"
 DEFAULT_CLAUDE_ACCOUNT = "a"
 # Subscription logins: the host's own (``a``) and a second consumer login.
 CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS = ("a", "b")
@@ -1023,6 +1025,39 @@ def _run_claude_renewal(config_dir: Path) -> None:
             proc.wait()
 
 
+def stage_codex_account_auth(label: object, write_home: Path) -> dict[str, str]:
+    """Stage exactly ``label``'s Codex login into ``write_home``; never another account's.
+
+    The default account keeps its existing source. Any other label is read from its own bound home
+    through the binder an ordinary launch uses (``codex_account_env``), which refuses an unknown label,
+    an unbound, shared or default home, an ambient credential or home that conflicts with it, and a home
+    without a login. A bound home that staging would read under another name, or whose login is not a
+    file, refuses rather than copying another directory's login or launching unauthenticated.
+    """
+    from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
+
+    from .codex_accounts import (
+        DEFAULT_CODEX_ACCOUNT,
+        CodexAccountRefused,
+        codex_account_env,
+        resolve_codex_account_label,
+    )
+
+    try:
+        label = resolve_codex_account_label(label)
+        source = codex_account_env(label, os.environ)
+    except CodexAccountRefused as exc:
+        raise ReviewIsolationError(f"attempt_{exc.code}") from None
+    if label != DEFAULT_CODEX_ACCOUNT and source["CODEX_HOME"] != source["CODEX_HOME"].strip():
+        # stage_engine_auth strips CODEX_HOME, so it would copy from another directory than the one bound
+        # (a home bound as "$HOME/.codex " would yield account a's login). Refuse before copying anything.
+        raise ReviewIsolationError("attempt_codex_account_home_not_canonical")
+    env = stage_engine_auth("codex", write_home=write_home, source_env=source)
+    if label != DEFAULT_CODEX_ACCOUNT and not (write_home / ".codex" / "auth.json").is_file():
+        raise ReviewIsolationError("attempt_codex_account_login_missing")
+    return env
+
+
 def linux_claude_auth(account: str | None = None) -> dict[str, str]:
     """Select only a fresh access token; --bare ignores file-backed login.
 
@@ -1066,16 +1101,16 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
     schema. A re-review additionally admits exactly previous review, previous
     ledger and diff. No file referred to by an input's contents is opened.
     """
-    from scripts.build.fresh.manifest import pinned_entries
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.prompts.eligibility import pin_refusals
+    from scripts.review.product_hooks import attempt_hooks
 
+    hooks = attempt_hooks()
     if manifest.get("kind") not in {"plan", "lesson", "lexical"}:
         raise ReviewIsolationError("attempt_manifest_kind")
-    if pin_refusals(manifest, root):
+    if hooks.pin_refusals(manifest, root):
         raise ReviewIsolationError("attempt_manifest_ineligible")
     copied: dict[str, bytes] = {}
-    for location, entry in pinned_entries(manifest):
+    for location, entry in hooks.pinned_entries(manifest):
         path = root / entry["path"]
         data = path.read_bytes()
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
@@ -1216,7 +1251,7 @@ class AttemptBoundary:
     def __init__(self, *, agent: str, tool_config: dict[str, Any]):
         from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
-        from .attempt_network import AttemptEgress, load_allowlist
+        from .attempt_network import AttemptEgress
         from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
         # Claude's adapter must land with its own eligible cross-family review
@@ -1245,6 +1280,7 @@ class AttemptBoundary:
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
         self.egress = None
+        self.egress_evidence: dict = {}
         self.agent = agent
         try:
             if platform.system() != "Linux":
@@ -1265,7 +1301,9 @@ class AttemptBoundary:
             (self.write_root / "tmp").mkdir()
             self.env = build_agent_env(provider=agent)
             home.mkdir()
-            if agent != "agy":
+            if agent == "codex":
+                self.env.update(stage_codex_account_auth(tool_config.get(CODEX_ACCOUNT_KEY), home))
+            elif agent != "agy":
                 self.env.update(stage_engine_auth(agent, write_home=home))
             if agent == "claude":
                 self.env.update(linux_claude_auth(tool_config.get(CLAUDE_ACCOUNT_KEY)))
@@ -1285,7 +1323,7 @@ class AttemptBoundary:
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
-            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
+            self.egress = AttemptEgress(self.egress_endpoint)
             self.forwarder = self.write_root / "forwarder.py"
             self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {
@@ -1447,16 +1485,23 @@ class AttemptBoundary:
                 boundary=self,
             )
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> dict:
         try:
             if self.egress is not None:
-                self.egress.cleanup()
+                try:
+                    self.egress.cleanup()
+                finally:
+                    self.egress_evidence = {
+                        "records": [dict(record) for record in self.egress.records],
+                        "overflow_count": self.egress.overflow_count,
+                    }
         finally:
             try:
                 if self.connection is not None:
                     self.connection.cleanup()
             finally:
                 self.temp.cleanup()
+        return self.egress_evidence
 
 
 def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
@@ -1465,17 +1510,17 @@ def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
     A separate review tree is allowed only when its pinned bytes match. Other
     repository files are context, never evidence without a sources receipt.
     """
-    from scripts.build.fresh.manifest import pinned_entries
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.prompts.eligibility import pin_refusals
+    from scripts.review.product_hooks import attempt_hooks
 
+    hooks = attempt_hooks()
     try:
         manifest = yaml.safe_load(manifest_path.read_bytes())
-        for _, entry in pinned_entries(manifest):
+        for _, entry in hooks.pinned_entries(manifest):
             data = safe_read_attempt_file(cwd / entry["path"], trusted_root=cwd)
             if hashlib.sha256(data).hexdigest() != entry["sha256"]:
                 raise ReviewIsolationError("full_review_tree_mismatch")
-        if pin_refusals(manifest, cwd):
+        if hooks.pin_refusals(manifest, cwd):
             raise ReviewIsolationError("full_review_manifest_ineligible")
         checkout = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"], cwd=cwd, capture_output=True, text=True, timeout=30, check=False

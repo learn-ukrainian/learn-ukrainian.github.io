@@ -2,14 +2,18 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import sqlite3
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    # Only this package's own absence selects the short spelling; its name comes from this
+    # file's unresolved location (design-v1 amendment 1), never __package__.
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection  # type: ignore[no-redef]
 

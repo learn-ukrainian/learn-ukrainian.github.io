@@ -13,7 +13,9 @@ Legacy worker environments set ``PYTEST_PLUGINS``, and ``build_agent_env`` forwa
 ``ci.pytest_dispatch_cap`` while the dispatch marker is set, so the cap still
 loads when a worker copies CI's ``--override-ini addopts=-v`` and drops the
 ``addopts`` ``-p`` registration. Operator shells and CI leave the dispatch
-variable unset, so they are unchanged.
+variable unset. CI is unchanged. An operator shell with no live inherited
+hold is refused before startup when the worker count xdist would start is
+above the cap, and the error names the governed ``test_slots run`` command.
 
 When pytest-xdist is not importable (a minimal venv with only pytest and
 pyyaml, as the rules-deployment-check lane builds), the fan-out cap is a no-op:
@@ -27,11 +29,15 @@ after the cap, or one), waits in the host's FIFO queue with progress lines, and
 starts no more workers than the slots it holds. Each xdist worker joins those
 slots and keeps them until it exits, so they stay taken when the controller is
 killed while its workers still run tests (#11230). ``LU_TEST_SLOTS=off`` and a
-true ``CI`` variable disable this. ``--collect-only``, ``--help`` and other runs
-that execute no test take no slots. A run nested inside a live holder
-(``LU_TEST_SLOTS_HOLDER``) queues for nothing, dispatch run or not, and starts
-at most the inherited count of workers: ``maxprocesses``, an explicit ``--tx``
-list and ``PYTEST_XDIST_AUTO_NUM_WORKERS`` are all capped before the session.
+true ``CI`` variable disable acquisition. ``LU_TEST_SLOTS=off`` also disables
+acquisition and does not authorize a local run above the cap. ``--collect-only``,
+``--help``, ``--version`` and ``--markers`` execute no test and take no slots.
+``--fixtures`` and ``--fixtures-per-test`` take no slots when they start no
+workers; when they would, they follow the same refusal and inherited clamp as
+any other run. A run nested inside a live holder (``LU_TEST_SLOTS_HOLDER``)
+queues for nothing, dispatch run or not, and starts at most the inherited
+count of workers: ``maxprocesses``, an explicit ``--tx`` list and
+``PYTEST_XDIST_AUTO_NUM_WORKERS`` are all capped before the session.
 """
 
 from __future__ import annotations
@@ -46,9 +52,11 @@ from types import ModuleType
 import pytest
 
 try:
+    from scripts.common.repo_root import PRODUCT_ROOT_ENV, native_hook_roots, product_root
     from scripts.common.test_thread_caps import THREAD_CAPS
     from scripts.common.test_thread_caps import apply as apply_thread_caps
 except ImportError:
+    from common.repo_root import PRODUCT_ROOT_ENV, native_hook_roots, product_root  # type: ignore[no-redef]
     from common.test_thread_caps import THREAD_CAPS
     from common.test_thread_caps import apply as apply_thread_caps
 
@@ -63,14 +71,23 @@ LOCK_PATH = LOCK_DIR / "pytest-full-suite.lock"
 FULL_SUITE_BUSY = "full suite already running on this host; run targeted tests — CI runs the full suite"
 CAP_LINE = f"dispatch xdist cap: maxprocesses={MAX_PROCESSES}"
 TX_TOO_MANY = "dispatch xdist cap: --tx specifies {count} workers; at most {max} are allowed"
+PRODUCT_UNRESOLVED = (
+    "dispatch xdist cap: no product checkout for this pytest invocation; "
+    f"run pytest inside the product checkout or set {PRODUCT_ROOT_ENV} to it"
+)
 _LOCK_ATTR = "_lu_dispatch_full_suite_lock_fd"
 _CLAMP_ATTR = "_lu_dispatch_cap_clamped"
 _SLOTS_ATTR = "_lu_test_slots_hold"
 _SLOTS_PRIOR_MARKER_ATTR = "_lu_test_slots_prior_marker"
 _AUTO_PRIOR_ATTR = "_lu_test_slots_prior_auto_workers"
 _THREAD_PRIOR_ATTR = "_lu_test_slots_prior_thread_caps"
-# Informational runs execute no test, so they never queue for slots.
-_NO_TEST_OPTIONS = ("help", "version", "showfixtures", "show_fixtures_per_test", "markers")
+# These execute no test and start no xdist worker, so they never queue or refuse.
+_NO_TEST_OPTIONS = ("help", "version", "markers")
+# ``--fixtures`` and ``--fixtures-per-test`` start workers when ``-n`` / ``--tx`` ask
+# for them. A serial invocation of either still executes no test and must not queue.
+_FIXTURE_OPTIONS = ("showfixtures", "show_fixtures_per_test")
+_PACKAGE_NAME = Path(__file__).parents[1].name
+GOVERNED_PYTEST = f".venv/bin/python -m {_PACKAGE_NAME}.common.test_slots run -- .venv/bin/python -m pytest ..."
 
 _lock_fd: int | None = None
 
@@ -103,16 +120,21 @@ def _resolved(path: Path) -> Path:
     return path.resolve()
 
 
-def repository_root() -> Path:
-    """Checkout that owns this plugin, from its path and the git toplevel.
+def repository_root(invocation_dir: Path) -> Path:
+    """Product checkout whose ``tests`` tree this plugin bounds.
 
-    ``pytest --rootdir`` and the process cwd are not the suite boundary.
+    A configured ``LU_PRODUCT_ROOT`` names it. Without one, the product comes from
+    pytest's ``invocation_dir`` by the shared hook-root rule, read-only and without an
+    interpreter; the environment is not changed. ``pytest --rootdir`` is not the suite
+    boundary, and the installed package does not walk ancestors from its own file.
+    An unresolvable product raises ``pytest.UsageError``, so the cap is never waived.
     """
-    start = Path(__file__).resolve().parent
-    for candidate in (start, *start.parents):
-        if (candidate / "pyproject.toml").is_file() and (candidate / ".git").exists():
-            return candidate
-    raise RuntimeError("pytest dispatch cap cannot locate the repository root from its module path")
+    try:
+        if os.environ.get(PRODUCT_ROOT_ENV):
+            return product_root()
+        return native_hook_roots(invocation_dir)[0]
+    except (OSError, ValueError):
+        raise pytest.UsageError(PRODUCT_UNRESOLVED) from None
 
 
 def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
@@ -129,7 +151,7 @@ def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
         candidate = invocation_dir / candidate
     try:
         resolved = _resolved(candidate)
-        root = repository_root()
+        root = repository_root(invocation_dir)
         tests_root = _resolved(root / "tests")
     except OSError:
         return False
@@ -326,6 +348,87 @@ def requested_test_processes(config: pytest.Config) -> int:
     return max(1, min(tx_spec_worker_count(tx), cap)) if tx else 1
 
 
+def effective_xdist_workers(config: pytest.Config) -> int:
+    """Workers xdist's own ``pytest_cmdline_main`` would start. Does not change ``config``.
+
+    Mirrors ``xdist/plugin.py`` (the installed 3.8.0 hook): ``-d`` is ``--dist=load``;
+    ``auto`` / ``logical`` are 0 under ``--pdb`` and otherwise the ``pytest_xdist_auto_num_workers``
+    hook; a truthy ``-n`` replaces ``--tx`` and a truthy ``--maxprocesses`` caps that ``-n`` only;
+    ``-n 0`` starts no worker; a bare ``--tx`` list counts only when distribution is on.
+    """
+    if not xdist_available():
+        return 0
+    option = config.option
+    numprocesses = getattr(option, "numprocesses", None)
+    dist = "load" if getattr(option, "distload", False) else getattr(option, "dist", "no")
+    if numprocesses in ("auto", "logical"):
+        if bool(config.getoption("usepdb", False)):
+            numprocesses = 0
+        else:
+            numprocesses = config.hook.pytest_xdist_auto_num_workers(config=config)
+    if numprocesses:
+        count = int(numprocesses)
+        maxprocesses = getattr(option, "maxprocesses", None)
+        if maxprocesses:
+            count = min(count, int(maxprocesses))
+        return count
+    if numprocesses == 0:
+        return 0
+    if dist == "no":
+        return 0
+    specs = list(getattr(option, "tx", None) or [])
+    return tx_spec_worker_count(specs) if specs else 0
+
+
+def _fanout_refusal(count: int, *, slots_off: bool) -> str:
+    """Usage error for an ungoverned local run above :data:`MAX_PROCESSES`."""
+    message = (
+        f"pytest worker cap: this run would start {count} xdist workers and the cap is {MAX_PROCESSES}. "
+        "An ungoverned local pytest cannot exceed it. "
+        f"Run it under the governor: {GOVERNED_PYTEST}"
+    )
+    if slots_off:
+        message += (
+            " LU_TEST_SLOTS=off disables acquisition and does not authorize a larger fan-out; "
+            "that command does not raise this cap while off is set."
+        )
+    return message
+
+
+def _ci_true(slots: ModuleType) -> bool:
+    """True when ``CI`` is set the way :func:`scripts.common.test_slots.enabled` reads a true value."""
+    return os.environ.get("CI", "").strip().lower() in slots._TRUE
+
+
+def _slots_explicitly_off(slots: ModuleType) -> bool:
+    return os.environ.get(slots.ENABLE_ENV, "").strip().lower() in slots._FALSE
+
+
+def _informational(config: pytest.Config) -> bool:
+    if collection_only(config):
+        return True
+    return any(getattr(config.option, name, False) for name in _NO_TEST_OPTIONS)
+
+
+def _shows_fixtures(config: pytest.Config) -> bool:
+    return any(getattr(config.option, name, False) for name in _FIXTURE_OPTIONS)
+
+
+def _option_requests_workers(config: pytest.Config) -> bool:
+    """Whether the raw options ask xdist to start at least one worker, before the auto hook runs."""
+    if not xdist_available():
+        return False
+    option = config.option
+    numprocesses = getattr(option, "numprocesses", None)
+    if numprocesses in ("auto", "logical"):
+        return not bool(config.getoption("usepdb", False))
+    if isinstance(numprocesses, int):
+        return numprocesses > 0
+    dist = "load" if getattr(option, "distload", False) else getattr(option, "dist", "no")
+    specs = list(getattr(option, "tx", None) or [])
+    return dist != "no" and bool(specs) and tx_spec_worker_count(specs) > 0
+
+
 def _limit_workers(config: pytest.Config, count: int) -> None:
     """Start at most ``count`` xdist workers: cap ``-n`` (``auto`` included) and cut an explicit ``--tx`` list.
 
@@ -379,20 +482,43 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
     A live ancestor hold bounds every run below it, dispatch run or not: the run queues for nothing and starts
     at most the inherited count of workers. Otherwise only a dispatch run (``acquire``) waits for and holds
     slots of its own. A marker without a live holder is ignored, so a dispatch run under it still queues.
+
+    An ungoverned local run whose effective worker count is above :data:`MAX_PROCESSES` is refused here,
+    before xdist builds its worker list. Dispatch runs are already clamped and are not refused. A true ``CI``
+    variable is not refused. ``LU_TEST_SLOTS=off`` does not authorize the over-cap count. A run at or under
+    the cap with no holder does not consult the governor, so an invalid setting stays unevaluated there.
+    ``join_inherited`` runs at most once and that result both admits the hold and clamps the workers.
     """
-    if collection_only(config) or any(getattr(config.option, name, False) for name in _NO_TEST_OPTIONS):
+    if _informational(config):
         return
+    if _shows_fixtures(config) and not _option_requests_workers(config):
+        return  # serial --fixtures executes no test and must not queue
     slots = _test_slots()
-    if not acquire and not os.environ.get(slots.HOLDER_ENV, "").strip():
-        return  # no hold to run inside and none to take: an operator shell or CI run stays unchanged
+    holder_set = bool(os.environ.get(slots.HOLDER_ENV, "").strip())
+    counted: int | None = None
+
+    def worker_count() -> int:
+        nonlocal counted
+        if counted is None:
+            counted = effective_xdist_workers(config)
+        return counted
+
+    # Within the cap and nothing to inherit or acquire: do not read slot settings.
+    if not acquire and not holder_set and worker_count() <= MAX_PROCESSES:
+        return
     try:
         if not slots.enabled():
+            if worker_count() > MAX_PROCESSES and not _ci_true(slots) and _slots_explicitly_off(slots):
+                raise pytest.UsageError(_fanout_refusal(worker_count(), slots_off=True))
             return
         inherited = slots.join_inherited()
         if inherited is not None:
             _run_inside_inherited_hold(config, slots, inherited)
             return
-        if not acquire:
+        # ``--fixtures`` under a dispatch marker already has the dispatch clamp and still takes no slots.
+        if not acquire or _shows_fixtures(config):
+            if not acquire and worker_count() > MAX_PROCESSES and not _ci_true(slots):
+                raise pytest.UsageError(_fanout_refusal(worker_count(), slots_off=False))
             return
         hold = slots.acquire(requested_test_processes(config), kind="pytest")
     except slots.SlotError as error:

@@ -69,7 +69,7 @@ def test_mcp_tools_only_call_fixed_p3_runner_verbs() -> None:
     assert calls[1][-5:] == ["step", "--run-id", "run-123", "--expected-step", "check"]
     # Summons are P3-owned records exposed by status, never a local mutation.
     assert calls[2][-3:] == ["status", "--run-id", "run-123"]
-    assert all(call[:2] == [str(trail_mcp.PYTHON_BIN), str(trail_mcp.TRAIL_RUNNER)] for call in calls)
+    assert all(call[:2] == [str(project_interpreter()), str(trail_mcp.TRAIL_RUNNER)] for call in calls)
 
 
 def test_grok_profile_has_one_private_server_and_exact_allowlist() -> None:

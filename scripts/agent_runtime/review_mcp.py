@@ -101,8 +101,21 @@ from typing import Any
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
-from scripts.review.receipts.ledger import REVIEW_TOOLS, review_tools
+from scripts.review.product_hooks import attempt_hooks
 from scripts.review.render_contract import check_launch_contract, check_render_contract
+
+
+# The product receipt ledger's Sources tool sets, read through the review attempt hooks
+# when a review feature first needs them, never at import.
+def _review_tools_isolated() -> frozenset[str]:
+    tools: frozenset[str] = attempt_hooks().ledger().REVIEW_TOOLS
+    return tools
+
+
+def review_tools(review_access: str = "isolated", *, server_path: Path | None = None) -> frozenset[str]:
+    tools: frozenset[str] = attempt_hooks().ledger().review_tools(review_access, server_path=server_path)
+    return tools
+
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
@@ -111,9 +124,8 @@ ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
 SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex"})
 
-# The isolated contract is mandatory even when a brief declares an empty list.
-# Full access adds grants, not mandatory requirements (#9949).
-REVIEW_REQUIRED_SOURCES_TOOLS = REVIEW_TOOLS
+# The isolated contract (the ledger's REVIEW_TOOLS) is mandatory even when a brief
+# declares an empty list. Full access adds grants, not mandatory requirements (#9949).
 _REQUIRED_SOURCES_HEADER = re.compile(r"^Required-Sources-Tools:[ \t]*(.*)$", re.MULTILINE)
 _SOURCES_TOOL_NAME = re.compile(r"[a-z][a-z0-9_]*\Z")
 
@@ -148,7 +160,7 @@ def check_review_tool_requirements(brief: str, review_access: str = "isolated") 
                 raise ValueError("invalid declaration")
         except (ValueError, TypeError) as exc:
             raise ReviewToolRequirementsRefused("review_tool_requirements_invalid") from exc
-    required = REVIEW_REQUIRED_SOURCES_TOOLS | frozenset(declared)
+    required = _review_tools_isolated() | frozenset(declared)
     unsupported = required - review_tools(review_access)
     if unsupported:
         # All current review routes derive from review_tools; do not promise

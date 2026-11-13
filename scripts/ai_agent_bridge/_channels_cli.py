@@ -57,7 +57,7 @@ from agent_runtime.kimi_admission import is_kimi_seat
 
 from . import _channels
 from ._channels_watch import watch_channel_events
-from ._config import REPO_ROOT
+from ._config import DISPATCH_ENTRY, MACHINERY_PACKAGE, REPO_ROOT
 
 _PREFLIGHT_FILE_PATH_RE = re.compile(r"[\w/-]+\.py\b")
 _PREFLIGHT_MULTI_STEP_RE = re.compile(
@@ -618,7 +618,7 @@ def register_channel_commands(subparsers: Any) -> None:
         help="Multi-agent discussion with round limit (B.4)",
         description=(
             "Multi-agent discussion with round limit (B.4). "
-            "Discussion is analysis-only. Use scripts/dispatch.py dispatch for execution."
+            f"Discussion is analysis-only. Use {DISPATCH_ENTRY} dispatch for execution."
         ),
     )
     discuss_parser.add_argument("channel", help="Channel name")
@@ -752,10 +752,62 @@ def _legacy_writes_retired() -> bool:
     return resolve_plane_mode(None) == "authority"
 
 
+def queued_authority_delivery_count(recipient: str) -> int | None:
+    """Queued authority deliveries for *recipient*; ``None`` when they cannot be read."""
+    try:
+        from scripts.fleet_comms.efficiency_metrics import (
+            _authority_file_missing,
+            _connect_ro,
+            _placeholder,
+            _table_exists,
+        )
+        from scripts.fleet_comms.paths import default_plane_root, validate_plane_root
+
+        plane_db = validate_plane_root(default_plane_root()) / "comms.sqlite3"
+        if _authority_file_missing(plane_db):
+            return None
+        with _connect_ro(plane_db) as conn:
+            if not _table_exists(conn, "authority_deliveries"):
+                return None
+            row = conn.execute(
+                "SELECT COUNT(*) AS n FROM authority_deliveries "
+                f"WHERE state = 'queued' AND recipient = {_placeholder(conn)}",
+                (recipient,),
+            ).fetchone()
+            return int(row["n"])
+    except Exception:
+        return None
+
+
+def authority_inbox_notice(recipient: str | None, *, file: Any = None) -> bool:
+    """In authority mode print one line pointing a legacy read path at Fleet Comms deliveries.
+
+    Returns whether the line was printed; outside authority mode nothing is printed.
+    """
+    from scripts.fleet_comms.message_plane import resolve_plane_mode
+
+    try:
+        if resolve_plane_mode(None) != "authority":
+            return False
+    except ValueError:
+        return False
+    slot = (recipient or "").strip().lower() or None
+    if slot:
+        slot = _channels.resolve_recipient_alias(slot)
+    count = queued_authority_delivery_count(slot) if slot else None
+    print(
+        "Legacy inbox is a read-only projection in authority mode; read your deliveries with "
+        f"`.venv/bin/python -m {MACHINERY_PACKAGE}.fleet_comms deliveries receive --recipient {slot or '<slot>'}` "
+        f"(queued authority deliveries: {'unknown' if count is None else count}).",
+        file=file or sys.stdout,
+    )
+    return True
+
+
 def _retired_legacy_write(command: str) -> int:
     print(
         f"legacy `{command}` writes are retired in authority mode; "
-        "use `python -m scripts.fleet_comms channel ...`",
+        f"use `python -m {MACHINERY_PACKAGE}.fleet_comms channel ...`",
         file=sys.stderr,
     )
     return 2
@@ -1964,7 +2016,7 @@ def _handle_discuss(args) -> int:
                     idempotency_key=f"discussion-result:{authority_job.job_id}",
                 )
         print(f"   transport: ACP ({', '.join(with_agents)})")
-        print(f"   conversation: /fleet.html?conversation={conversation_id}")
+        print(f"   conversation: {conversation_id}")
         print(f"   state: {state}; rounds completed: {payload.get('rounds_completed', 0)}")
         return 0 if state == "COMPLETE" else 1
 
@@ -2202,7 +2254,7 @@ def _handle_discuss(args) -> int:
                 f"{violation_marker}\n\n"
                 f"`ab discuss` round {round_idx} changed the git working tree. "
                 "Discussion rounds are analysis-only; filesystem writes must go "
-                "through an explicit execution path such as `scripts/dispatch.py dispatch`.\n\n"
+                f"through an explicit execution path such as `{DISPATCH_ENTRY} dispatch`.\n\n"
                 "Current `git status --short`:\n\n"
                 "```text\n"
                 f"{status_text}\n"

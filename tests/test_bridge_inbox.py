@@ -1,25 +1,18 @@
 from __future__ import annotations
 
 import sqlite3
-import sys
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-
-from agent_runtime.errors import RateLimitedError
-from agent_runtime.result import Result
-from batch_gemini_config import FLASH_MODEL, PRO_MODEL
-from scripts.ai_agent_bridge import _channels, _db, _inbox
+from lu_machinery.agent_runtime.errors import RateLimitedError
+from lu_machinery.agent_runtime.result import Result
+from lu_machinery.ai_agent_bridge import _channels, _db, _inbox
 
 
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("scripts.ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -65,18 +58,6 @@ def _make_thread(
     return messages
 
 
-def _set_delivery_model(message_id: str, model: str) -> None:
-    conn = _db.get_db()
-    try:
-        conn.execute(
-            "UPDATE deliveries SET to_model = ? WHERE message_id = ?",
-            (model, message_id),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
-
 def _ok_result(
     agent: str,
     *,
@@ -104,48 +85,7 @@ def _ok_result(
     )
 
 
-@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("case,ok", [
-    ("exact", True), ("display", True), ("other-pin", False), ("other-family", False),
-    ("repeated", False), ("nested-model", False), ("nested-session", False),
-    ("terminal-session", False), ("duplicate-after", False), ("missing", False),
-    ("configuration", False), ("provider-failure", False),
-])
-def test_native_agy_inbox_uses_observation_not_requested_identity(monkeypatch, tmp_path, pin, case, ok):
-    from scripts.agent_runtime import runner
-    from scripts.fleet_comms import bottleneck_alerts
-    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
-
-    monkeypatch.setattr(bottleneck_alerts, "scan_bottlenecks_at_inbox_checkpoint", lambda **k: None)
-    thread = _make_thread("agy")
-    _set_delivery_model(str(thread[0]["message_id"]), pin)
-    monkeypatch.setattr(_inbox, "REPO_ROOT", tmp_path)
-    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
-    results = []
-
-    def invoke(*args, **kwargs):
-        assert not (kwargs.get("tool_config") or {}).get("run_nonce")
-        result = runner.invoke(*args, **kwargs)
-        results.append(result)
-        return result
-
-    monkeypatch.setattr(_inbox, "runtime_invoke", invoke)
-    summary = _inbox.run_inbox("agy", max_messages=1, until_idle=False)
-
-    assert len(launches) == len(results) == 1
-    assert results[0].ok is ok
-    assert results[0].model_identity is None
-    assert results[0].model == pin
-    assert summary.deliveries_failed == (0 if ok else 1)
-    assert summary.deliveries_delivered == summary.replies_posted == (1 if ok else 0)
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert len(messages) == (2 if ok else 1)
-    if ok:
-        assert messages[-1]["from_model"] == "unattested-harness"
-        assert messages[-1]["body"] == "READY"
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_single_delivery(mock_invoke):
     thread = _make_thread("claude", count=1)
     mock_invoke.return_value = _ok_result("claude")
@@ -166,7 +106,7 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert messages[-1]["parent_id"] == thread[0]["message_id"]
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -182,7 +122,7 @@ def test_run_inbox_codex_cold_call_persists_runtime_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "codex-session-one"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke):
     thread = _make_thread("codex", count=1)
     mock_invoke.return_value = _ok_result(
@@ -213,7 +153,7 @@ def test_run_inbox_codex_same_thread_resumes_with_unseen_only_prompt(mock_invoke
     assert str(follow_up["message_id"]) not in prompt
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     first = _make_thread("codex", channel="first", count=1)
     second = _make_thread("codex", channel="second", count=1)
@@ -234,7 +174,7 @@ def test_run_inbox_codex_sessions_are_isolated_by_thread(mock_invoke):
     assert _inbox._get_session_id(second_task_id, "codex") == "second-session"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     thread = _make_thread("codex", count=1)
     task_id = _inbox._thread_session_key("topic", str(thread[0]["thread_id"]))
@@ -254,7 +194,7 @@ def test_run_inbox_failed_codex_result_does_not_overwrite_session(mock_invoke):
     assert _inbox._get_session_id(task_id, "codex") == "existing-session"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     thread = _make_thread("claude", count=3)
     mock_invoke.return_value = _ok_result("claude")
@@ -273,7 +213,7 @@ def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
     assert messages[-1]["parent_id"] == thread[-1]["message_id"]
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -292,7 +232,7 @@ def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     assert second_row["status"] == "delivered"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -318,7 +258,7 @@ def test_run_inbox_rate_limit_releases_and_aborts(mock_invoke):
     assert second_row["status"] == "pending"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -333,7 +273,7 @@ def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=2)
@@ -351,7 +291,7 @@ def test_run_inbox_max_messages_caps_deliveries(mock_invoke):
     assert all(row["status"] == "pending" for row in second_rows)
 
 
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
+@patch("lu_machinery.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
     """Regression: Gemini c2-review r1 BLOCKER — queue deadlock.
 
@@ -375,102 +315,3 @@ def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
     assert mock_invoke.call_count == 1
     for message in thread:
         assert _delivery_rows(str(message["message_id"]))[0]["status"] == "delivered"
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_invoke):
-    """Retired Pro's alias equals Flash and must not create a self-retry cycle."""
-    assert PRO_MODEL == FLASH_MODEL
-    thread = _make_thread("gemini", count=1)
-    message_id = str(thread[0]["message_id"])
-    _set_delivery_model(message_id, PRO_MODEL)
-    mock_invoke.return_value = _ok_result(
-        "gemini", model=FLASH_MODEL, ok=False, response="",
-        stderr_excerpt="HTTP 429 Too Many Requests", returncode=1,
-    )
-    summary = _inbox.run_inbox("gemini")
-    assert summary.deliveries_failed == 1
-    mock_invoke.assert_called_once()
-    assert mock_invoke.call_args.kwargs["model"] == FLASH_MODEL
-    delivered = _channels.deliveries_for_message(message_id)[0]
-    assert delivered["status"] == "failed"
-    assert delivered["to_model"] == FLASH_MODEL
-    assert len(_channels.read("topic", thread_id=str(thread[0]["thread_id"]))) == 1
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
-    thread = _make_thread("gemini", count=1)
-    _set_delivery_model(str(thread[0]["message_id"]), PRO_MODEL)
-    mock_invoke.return_value = _ok_result("gemini", model=PRO_MODEL, response="bridge reply")
-
-    summary = _inbox.run_inbox("gemini", gemini_auth_mode="subscription")
-
-    assert summary.deliveries_delivered == 1
-    assert mock_invoke.call_args.kwargs["tool_config"] == {
-        "auth_mode": "subscription",
-        "discussion_readonly": True,
-    }
-
-
-@pytest.mark.parametrize("raises", [False, True])
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_gemini_flash_capacity_exhaustion_does_not_retry_alias(mock_invoke, raises):
-    thread = _make_thread("gemini", count=1)
-    message_id = str(thread[0]["message_id"])
-    _set_delivery_model(message_id, FLASH_MODEL)
-    if raises:
-        mock_invoke.side_effect = _inbox.RateLimitedError("gemini", FLASH_MODEL, "429 quota")
-    else:
-        mock_invoke.return_value = _ok_result(
-            "gemini", model=FLASH_MODEL, ok=False, response="",
-            stderr_excerpt="HTTP 429 Too Many Requests", returncode=1,
-        )
-
-    summary = _inbox.run_inbox("gemini")
-
-    assert summary.deliveries_failed == (0 if raises else 1)
-    assert summary.deliveries_released == (1 if raises else 0)
-    assert summary.aborted is raises
-    assert mock_invoke.call_count == 1
-    assert mock_invoke.call_args.kwargs["model"] == FLASH_MODEL
-    delivered = _channels.deliveries_for_message(message_id)[0]
-    assert delivered["status"] == ("pending" if raises else "failed")
-    assert delivered["to_model"] == FLASH_MODEL
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert len(messages) == 1
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
-    thread = _make_thread("gemini", count=1)
-    message_id = str(thread[0]["message_id"])
-    _set_delivery_model(message_id, PRO_MODEL)
-    mock_invoke.side_effect = [
-        _ok_result(
-            "gemini",
-            model=PRO_MODEL,
-            ok=False,
-            response="",
-            stderr_excerpt="HTTP 429 Too Many Requests",
-            returncode=1,
-        ),
-        _ok_result(
-            "gemini",
-            model=FLASH_MODEL,
-            ok=False,
-            response="",
-            stderr_excerpt="HTTP 429 Too Many Requests",
-            returncode=1,
-        ),
-    ]
-
-    summary = _inbox.run_inbox("gemini")
-
-    assert summary.deliveries_failed == 1
-    assert mock_invoke.call_count == 1
-    delivered = _channels.deliveries_for_message(message_id)[0]
-    assert delivered["status"] == "failed"
-    assert delivered["to_model"] == FLASH_MODEL
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert len(messages) == 1

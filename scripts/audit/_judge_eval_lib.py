@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
     # top-level package is absent (exc.name == "scripts"). Any other
@@ -29,7 +29,7 @@ except ModuleNotFoundError as exc:
     )
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -43,8 +43,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 

@@ -11,10 +11,12 @@ from learn_ukrainian_v4_runtime import semantic_inputs as semantic
 from learn_ukrainian_v4_runtime.child_runtime import CapturedChild, parse_child
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonical_bytes, digest, parse_request
 from learn_ukrainian_v4_runtime.v4_execution_origin import load_review_rubric_sha256
+from learn_ukrainian_v4_runtime.v4_fleet_execution_authority import (
+    authorize_author_execution,
+)
+from lu_machinery.fleet_comms.request_executor import RequestExecutor
 from test_v4_operation_lifecycle import claim, role_connection
 from test_v4_protected_parent_mechanism import _run_real_pair
-
-from scripts.fleet_comms.request_executor import RequestExecutor
 
 
 def _assignment(pg, tmp_path, monkeypatch):
@@ -22,7 +24,8 @@ def _assignment(pg, tmp_path, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     with RequestExecutor(root=tmp_path) as executor:
         request = executor.create_request(recipient="claude", body="synthetic linguistic contract")
-        return executor.authorize_author_execution(
+        return authorize_author_execution(
+            executor,
             request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5",
         )
 
@@ -182,6 +185,7 @@ def test_http_cannot_select_semantic_authority(key):
     body = {"schema": "hramatka-v4-operation-execute.v1", "authorization_id": "A" * 43, key: "caller"}
     with pytest.raises(OperationRefused, match="request_keys"):
         parse_request(canonical_bytes(body), execution=True)
+
 
 def test_single_token_morphology_preparation_needs_no_invented_dependency(pg_cluster, tmp_path, monkeypatch):
     binding = _assignment(pg_cluster, tmp_path, monkeypatch)

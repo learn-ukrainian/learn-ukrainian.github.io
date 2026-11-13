@@ -1590,7 +1590,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
 
     ordinary = AgyAdapter().build_invocation(
         prompt="ordinary",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="ordinary-agy-task",
@@ -2380,6 +2380,7 @@ def test_prepare_refuses_a_server_changed_since_admission_before_writing_anythin
         "server_interpreter": str(python),
         "server_digest": admitted_code.digest,
         "server_components": admitted_code.components(),
+        "machinery_dependencies": {"rules_core": render_contract.trusted_core_context()[1]},
     }
     receipts = tmp_path / "receipts"
     kwargs = {

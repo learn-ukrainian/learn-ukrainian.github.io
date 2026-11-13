@@ -3,21 +3,42 @@
 The registry is intentionally family-based: most Monitor endpoints belong to
 router families with the same source and freshness behavior. Tests verify that
 every public FastAPI route and literal dashboard HTML page matches a contract.
+
+The declarations here cover the machinery routes and pages. The product
+contribution adds its own (``scripts.project_api.route_contracts``), and the
+lookups and ``/api/contracts/routes`` read both: machinery first, then product
+(Monitor split, C-4687).
 """
 
 from __future__ import annotations
 
+import os
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Literal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .product_contribution import ProductContribution, installed_product
 
 ContractKind = Literal["http", "websocket"]
 MatchType = Literal["exact", "prefix"]
 RouteLocality = Literal["host_affine", "cluster_authoritative", "mixed"]
+
+
+def _top() -> str:
+    """Unresolved name of this file's top package directory."""
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _rel(*parts: str) -> str:
+    return "/".join((_top(), *parts))
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_top(), *parts))
 
 
 @dataclass(frozen=True)
@@ -79,7 +100,8 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Remote TTL-fenced epic registry, lease claim, heartbeat, handoff, release, and bounded digest projection.",
-        "API-host SessionStreamStore seeded at process start from the release snapshot's scripts/config/issue_streams.yaml; no PID probe and no GitHub enrichment.",
+        "API-host SessionStreamStore seeded at process start from the release snapshot's "
+        f"{_rel('config', 'issue_streams.yaml')}; no PID probe and no GitHub enrichment.",
         "Registry identity is fresh at the last successful API restart; lease state and bounded digest are read per request.",
         ("remote orchestrators", "launchers", "Monitor"),
         "Complements local session-supervisor hooks; it is the remote authority for v1 epic leases and a snapshot projection for registry identity.",
@@ -108,10 +130,10 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Host test-slot pool (#10662): slots in use, holders by task, the FIFO queue with positions, and wait times.",
         "This host's private test-slot pool directory: flock-live holder records and queue tickets "
-        "(scripts/common/test_slots.py).",
+        f"({_rel('common', 'test_slots.py')}).",
         "Read live per request; flock decides liveness, so a crashed holder disappears at once. No cache.",
         ("operators", "dispatch", "agents"),
-        "Same data as `python -m scripts.common.test_slots status --json`; dispatch admission reads the queue depth.",
+        f"Same data as `python -m {_mod('common', 'test_slots')} status --json`; dispatch admission reads the queue depth.",
         "low; read-only and path-free",
         "keep",
         response_schema_version="test-slots.status.v1",
@@ -155,130 +177,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         response_schema_version="github-budget.v1",
     ),
     RouteContract(
-        "/api/state/reviewer-ghosts",
-        "prefix",
-        "http",
-        "Reviewer hallucination telemetry for missing-anchor reviewer fixes.",
-        "curriculum/l2-uk-en/{track}/review/*-ghost-review-r*.yaml",
-        "No route cache; per-request review-directory scan with optional filters.",
-        ("agents", "future dashboards", "tests"),
-        "Mounted under /api/state but logically telemetry, not canonical module state.",
-        "medium if treated as generic /api/state progress data",
-        "keep as a distinct contract family",
-    ),
-    RouteContract(
-        "/api/state/preparation",
-        "prefix",
-        "http",
-        "Versioned active-manifest roster and one-module canonical preparation projection for agents.",
-        "curriculum.yaml + canonical four-file learner bundles + learner publication files + "
-        "curriculum_readiness.evaluate_preparation().",
-        "Recomputed from deterministic local sources on every request; strong ETag addresses exact response bytes.",
-        ("agents", "session_start.sh", "orchestrators"),
-        "Replaces readiness inferences from legacy /api/state/summary, /module, and retired /ready-to-build telemetry.",
-        "low — failures in manifest, readiness contracts, selectors, or repository authority fail closed",
-        "keep as the canonical agent-facing curriculum preparation contract",
-        response_schema_version="authority.v2",
-    ),
-    RouteContract(
-        "/api/state/ready-to-build",
-        "exact",
-        "http",
-        "Retired research-complete candidate list; never generation readiness.",
-        "Legacy orchestration research/dossier presence and pipeline content phase state.",
-        "Retired route; use canonical /api/state/preparation.",
-        ("legacy agents",),
-        "Misleading predecessor to /api/state/preparation; retired in #7947.",
-        "none; retired in #7947 after test callers migrated",
-        "retired; migrate to /api/state/preparation (NOTE: retire_now; retired in #7947, use /api/state/preparation)",
-        replacement="/api/state/preparation",
-    ),
-    RouteContract(
-        "/api/state",
-        "prefix",
-        "http",
-        "Mixed legacy pipeline telemetry plus canonical project, review, build, routing, and cold-start state.",
-        "curriculum.yaml, plans, orchestration state, research/dossier docs, audit/review files, artifacts, and cost records.",
-        "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true. Summary, research-coverage, pipeline-versions, and weak-points use a short TTL plus singleflight; a warm hit is served on the event loop. API lifespan schedules a best-effort detached warm of those default keys — early post-start callers may still wait on the first scan. /routing-budget serves a cached snapshot, refreshes it off the request when stale, and never blocks on a provider CLI; agents.claude remains the default-account lane and the additive claude_accounts/preferred_claude_account keys are the per-account view (display only, #10630), aged on every serve rather than frozen in the cached snapshot.",
-        ("progress.html", "quality.html", "index.html", "Site LiveStatus", "agents"),
-        "Overlaps /api/dashboard projections, retired /api/blue/live-status, and legacy team views.",
-        "low after #2790 for summary/progress; medium for state endpoints that do not expose meta yet",
-        "keep for compatible telemetry; use /api/state/preparation for curriculum readiness decisions",
-    ),
-    RouteContract(
-        "/api/dashboard",
-        "prefix",
-        "http",
-        "Rich dashboard projections for audit, curriculum, pipeline, and comms pages.",
-        "Dashboard helper scans over plans, status cache, research, reviews, orchestration, and broker data.",
-        "Dashboard helper caches are process-local: track detail 30s, summary 60s, overview reuses state summary 60s. /overview includes meta (derived from state-summary + dashboard caches); most other payloads do not.",
-        ("quality.html", "curriculum-dashboard.html", "index.html"),
-        "Overlaps /api/state counts; richer module/audit detail remains distinct.",
-        "medium if consumers treat it as canonical fresh state",
-        "keep for page-specific detail; use /api/state/* (with ?fresh=true + meta) for canonical freshness-sensitive counts and state. Dashboard meta is secondary/derived.",
-    ),
-    RouteContract(
-        "/api/blue/live-status",
-        "exact",
-        "http",
-        "Retired legacy live build status.",
-        "Filesystem scan over module files and status cache.",
-        "Retired route; use canonical /api/state/build-status.",
-        ("legacy agents", "docs"),
-        "Duplicates /api/state/build-status.",
-        "none; retired in #7939 after test callers migrated",
-        "retired; migrate to /api/state/build-status (NOTE: retire_now; test callers migrated to /api/state/build-status in #7939, alias retired)",
-        replacement="/api/state/build-status",
-    ),
-    RouteContract(
-        "/api/blue",
-        "prefix",
-        "http",
-        "Legacy Blue/final-review helper endpoints.",
-        "Status cache, module files, activity YAML, review files, and batch state.",
-        "No route cache; /audit?...fresh=true runs audit as a side effect.",
-        ("agents", "final-review workflow"),
-        "Overlaps /api/state and /api/artifacts for some module evidence.",
-        "low for final-review helpers; medium for write-side effects",
-        "retain compatibility helpers (NOTE: compat_keep; active final-review workflow helpers)",
-    ),
-    RouteContract(
-        "/api/gold",
-        "prefix",
-        "http",
-        "Legacy Gold/team module inspection endpoints.",
-        "Plans, module files, orchestration, and broker data.",
-        "No route cache; live filesystem and broker reads.",
-        ("legacy agents", "docs"),
-        "Overlaps /api/state/module, /api/artifacts, and /api/dashboard/module.",
-        "medium because canonical source is not obvious from the route name",
-        "retain until agent consumers migrate (NOTE: compat_keep; callers in consultation tests and router split tests)",
-    ),
-    RouteContract(
-        "/api/agent",
-        "prefix",
-        "http",
-        "Agent-oriented module, orchestration, prompt, runtime, and worktree snapshots.",
-        "Module files, orchestration files, runtime files, and git worktree state.",
-        "No route cache; live filesystem and git/process reads.",
-        ("agents", "docs"),
-        "Overlaps /api/state, /api/artifacts, /api/runtime, and /api/worktrees.",
-        "medium because it is a compatibility facade",
-        "retain until agent consumers migrate (NOTE: compat_keep; caller in test_release_snapshot.py)",
-    ),
-    RouteContract(
-        "/api/artifacts",
-        "prefix",
-        "http",
-        "Artifact classification, artifact-gate checks, report listing, drift, and force-preview evidence.",
-        "Plans, generated curriculum files, site MDX, review/audit docs, docs/audit reports.",
-        "No route cache; live filesystem reads.",
-        ("artifacts.html", "agents", "docs"),
-        "Complements /api/state published/stale signals.",
-        "low",
-        "keep",
-    ),
-    RouteContract(
         "/artifacts",
         "prefix",
         "http",
@@ -320,7 +218,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Configured and durable fleet agent endpoint inventory with configuration secrets omitted.",
-        "Endpoint registry (scripts/config) plus durable agent_endpoints rows from the fleet-comms v1 SQLite read model.",
+        f"Endpoint registry ({_rel('config')}) plus durable agent_endpoints rows from the fleet-comms v1 SQLite read model.",
         "Generated per request; every fleet route opens the durable plane read-only. No response cache.",
         ("fleet.html", "operators", "agents"),
         "Specific member of the /api/fleet observer family; /api/fleet/endpoints serves the same handler as an alias.",
@@ -429,7 +327,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Canonical channel bridge plus broker/process health, batch progress, zombies, acknowledgements, and module-linked messages.",
         "SQLite message broker, delivery tables, process probes, and build state.",
         "No route cache; live broker/process reads. POST routes mutate broker/message state.",
-        ("channels.html", "comms.html", "progress.html", "index.html", "agents"),
+        ("progress.html", "index.html", "agents"),
         "Canonical channels replace legacy direct-message routes; status overlaps delegate/build events.",
         "low/medium",
         "keep",
@@ -453,7 +351,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Parallel-agent coordination ledger summary, active task list, and task detail.",
-        "orchestration/agent-ledger/tasks/*.json written by scripts/orchestration/agent_ledger.py.",
+        f"orchestration/agent-ledger/tasks/*.json written by {_rel('orchestration', 'agent_ledger.py')}.",
         "No route cache; live filesystem reads from the local coordination ledger.",
         ("agents", "orchestrator", "future dashboards"),
         "Complements /api/delegate process state with explicit task ownership and review metadata.",
@@ -470,18 +368,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("agents", "cold-start tooling", "worktree hygiene"),
         "Complements /api/git/hygiene and /api/git/cleanup.",
         "low; failures degrade to empty/error payload",
-        "keep",
-    ),
-    RouteContract(
-        "/api/build/events",
-        "prefix",
-        "http",
-        "Recent and active module build event timeline.",
-        "curriculum/l2-uk-en/**/orchestration/**/dispatch/*-meta.json plus module state files.",
-        "No route cache; filesystem scan capped at 5000 dispatch metadata files.",
-        ("build-events.html", "index.html"),
-        "Complements delegate and comms activity.",
-        "low",
         "keep",
     ),
     RouteContract(
@@ -515,146 +401,12 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Per-agent soft-cap burn and routing recommendation.",
-        "scripts/config/agent_budgets.yaml, cost records, delegate in-flight state, and the process-local CodexBar snapshot.",
+        f"{_rel('config', 'agent_budgets.yaml')}, cost records, delegate in-flight state, and the process-local CodexBar snapshot.",
         "No route cache for ledger/runtime; CodexBar allotment is a 12-minute TTL snapshot refreshed in the background. HTTP ?fresh_codexbar=true kicks a refresh and still returns cache/LKG — it never waits for the CLI.",
         ("routing.html", "agents"),
         "Overlaps runtime usage and cost summaries but adds routing recommendation.",
         "low",
         "keep canonical for routing guidance",
-    ),
-    RouteContract(
-        "/api/analytics/cost",
-        "prefix",
-        "http",
-        "Cost summaries by project, module, and phase.",
-        "batch_state/api_usage/** cost records.",
-        "No route cache; live usage record reads.",
-        ("cost.html", "index.html", "routing.html"),
-        "Retired legacy /api/cost alias in #7947.",
-        "low",
-        "keep canonical UI path",
-    ),
-    RouteContract(
-        "/api/cost",
-        "prefix",
-        "http",
-        "Retired compatibility alias for cost summaries.",
-        "batch_state/api_usage/** cost records.",
-        "Retired route; use canonical /api/analytics/cost.",
-        ("legacy scripts", "docs"),
-        "Retired alias of /api/analytics/cost.",
-        "none; retired in #7947 after test callers migrated",
-        "retired; migrate callers to /api/analytics/cost (NOTE: retire_now; test callers migrated to /api/analytics/cost in #7947, alias retired)",
-        replacement="/api/analytics/cost",
-    ),
-    RouteContract(
-        "/api/wiki",
-        "prefix",
-        "http",
-        "Wiki compilation status, quality gates, build log, article preview, and source inventory.",
-        "Wiki progress state/DB, wiki markdown files, and data/sources.db.",
-        "Selected aggregate reads use short shared TTL cache; article detail reads file bodies on demand.",
-        ("wiki.html", "index.html"),
-        "Complements /api/state published/wiki status signals.",
-        "low/medium",
-        "keep",
-    ),
-    RouteContract(
-        "/api/images",
-        "prefix",
-        "http",
-        "Textbook image catalog, page rendering, annotation search with a render_url for usable matches, stats, cleanup, and reload.",
-        "data/textbook_images/**, bulk-root textbooks/** (storage topology), and annotation JSONL.",
-        "Lazy in-memory image index; PDF pool and page-render LRU cache; /reload resets the index.",
-        ("image-explorer.html",),
-        "Complements on-disk textbook image browse at /api/sources/browse_images.",
-        "low; mutating annotation/cleanup/reload routes are local-only",
-        "keep",
-    ),
-    RouteContract(
-        "/images",
-        "prefix",
-        "http",
-        "Static textbook image file serving.",
-        "data/textbook_images/** image files.",
-        "FileResponse with Cache-Control max-age=3600.",
-        ("image-explorer.html",),
-        "Static companion to /api/images metadata.",
-        "low",
-        "keep",
-    ),
-    RouteContract(
-        "/api/sources",
-        "prefix",
-        "http",
-        "Source text and literary search, collection stats, and on-disk textbook image browse.",
-        "Local SQLite source databases, textbook images, and corpus indexes.",
-        "No Monitor route cache; search backend freshness follows database and collection state.",
-        ("image-explorer.html", "agents"),
-        "Primary live surface for local source and corpus queries.",
-        "low/medium if databases are unavailable",
-        "keep as the canonical sources route family",
-    ),
-    RouteContract(
-        "/api/rag",
-        "prefix",
-        "http",
-        "Retired legacy alias for /api/sources text and literary search.",
-        "Local SQLite source databases, textbook images, and corpus indexes.",
-        "Retired route; mirrors canonical /api/sources.",
-        ("image-explorer.html (legacy)", "agents"),
-        "Retired alias for /api/sources.",
-        "none; retired in #7939 after test callers migrated",
-        "retired; migrate callers to /api/sources (NOTE: retire_now; test callers migrated to /api/sources in #7939, alias retired)",
-        replacement="/api/sources",
-    ),
-    RouteContract(
-        "/api/admin",
-        "prefix",
-        "http",
-        "Local maintenance: health, backups, disk, broker vacuum, logs, and collection verification.",
-        "Qdrant snapshots/storage, broker DB, logs, data directories, and collection metadata.",
-        "No route cache; live local maintenance operations. POST/DELETE routes mutate local state.",
-        ("admin.html",),
-        "Operational-only surface.",
-        "medium because several routes mutate local state",
-        "keep local-only",
-    ),
-    RouteContract(
-        "/api/consultation",
-        "prefix",
-        "http",
-        "Template proposal queue, detail, approve/reject, history, and metrics.",
-        "Consultation queue/history files.",
-        "No route cache; live filesystem reads. Approve/reject POST routes mutate queue/history state.",
-        ("consultation.html", "index.html"),
-        "None.",
-        "low",
-        "keep",
-    ),
-    RouteContract(
-        "/api/decisions",
-        "prefix",
-        "http",
-        "Decision registry listing, stale/budget/lineage views, scope lookups, and detail.",
-        "docs/decisions/**.",
-        "No route cache; live filesystem reads.",
-        ("agents", "docs"),
-        "Related to /api/state/governance aggregate.",
-        "low",
-        "keep",
-    ),
-    RouteContract(
-        "/api/state/governance",
-        "exact",
-        "http",
-        "Governance aggregate for decisions and ADR hygiene.",
-        "docs/decisions/** and ADR docs.",
-        "No route cache in the endpoint; /api/orient may cache the governance section for 120s.",
-        ("orient.html", "agents"),
-        "Aggregate counterpart to /api/decisions detail endpoints.",
-        "low",
-        "keep",
     ),
     RouteContract(
         "/api/issues/map",
@@ -758,18 +510,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Index for /api/rules, /api/session/current, /api/orient, comms inbox/activity.",
         "low",
         "keep cold-start source of truth",
-    ),
-    RouteContract(
-        "/api/site",
-        "prefix",
-        "http",
-        "Public site health and deployment observability.",
-        "Public site probe and GitHub Pages deployment data.",
-        "No route cache; each request probes/queries live state with bounded subprocess/network behavior.",
-        ("agents", "docs"),
-        "Complements local build/status dashboards.",
-        "medium if network/GitHub is unavailable",
-        "keep",
     ),
     RouteContract(
         "/api/agent-monitor/status",
@@ -878,35 +618,11 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Active multi-agent discussion snapshot.",
         "Channel bridge SQLite messages and discussion state.",
         "No route cache; live broker reads.",
-        ("orient.html", "channels.html"),
+        ("orient.html",),
         "Complements channel message endpoints.",
         "low",
         "keep",
         locality="mixed",
-    ),
-    RouteContract(
-        "/api/batch",
-        "prefix",
-        "http",
-        "Legacy batch dispatcher, active orchestration, failures, usage, checkpoints, and logs.",
-        "batch_state files and dispatcher process/log state.",
-        "No route cache; live filesystem/process reads. Dispatcher scan POST mutates dispatcher state.",
-        ("legacy scripts", "docs"),
-        "Overlaps delegate, build-events, and comms progress surfaces.",
-        "medium because it is older orchestration vocabulary",
-        "retain compatibility until clients migrate (NOTE: migrate_caller_first; live callers in session_start.sh, session_end.sh, wt.sh, and test suites)",
-    ),
-    RouteContract(
-        "/api/config",
-        "exact",
-        "http",
-        "Monitor config and level metadata.",
-        "scripts/api/config.py constants.",
-        "Generated per request; no route cache.",
-        ("consultation.html", "agents"),
-        "None.",
-        "low",
-        "keep",
     ),
     RouteContract(
         "/api/health",
@@ -926,25 +642,13 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Cluster readiness: reports storage-seam authority and ability to open authority stores for cluster-authoritative reads without claiming multi-host HA.",
-        "scripts/control_plane/storage.py authority resolution and authority store connectivity.",
+        f"{_rel('control_plane', 'storage.py')} authority resolution and authority store connectivity.",
         "Evaluated per request; no cache.",
         ("agents", "orchestrators", "monitor client", "tests"),
         "Complements host-affine /api/health; distinct cluster-authoritative readiness contract.",
         "low",
         "keep as canonical cluster readiness endpoint",
         locality="cluster_authoritative",
-    ),
-    RouteContract(
-        "/ws/batch",
-        "exact",
-        "websocket",
-        "Legacy batch heartbeat stream.",
-        "API process heartbeat loop.",
-        "Sends {'type':'heartbeat'} every 5s while connected; no persisted state or cache.",
-        ("legacy live monitors",),
-        "Overlaps newer polling dashboards.",
-        "medium because WebSockets are not visible in OpenAPI",
-        "retain until websocket consumers are audited (NOTE: compat_keep; websocket heartbeat retained for legacy monitors)",
     ),
     RouteContract(
         "/api/work",
@@ -957,19 +661,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Joins existing GH list + streams + class-4 summaries; does not replace GitHub or those sources as authority.",
         "medium if GitHub is slow or a class-4 section degrades independently",
         "keep as the Work foundation surface; FOUNDATION_COMPLETE only",
-    ),
-    RouteContract(
-        "/api/atlas-jobs/submit",
-        "exact",
-        "http",
-        "Validates plan and submits systemd service unit to host.",
-        "Atlas host systemd and local registry journal.",
-        "Direct host interaction; writes new registry row and launches service.",
-        ("operators", "dispatch", "tests"),
-        "None.",
-        "low",
-        "keep",
-        mutates=True,
     ),
     RouteContract(
         "/api/occupancy",
@@ -1039,45 +730,6 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         mutates=False,
     ),
     RouteContract(
-        "/api/atlas-jobs/{job_id}/close",
-        "exact",
-        "http",
-        "Closes an atlas job and seals a fail-closed result receipt.",
-        "Host exit-status, pull artifacts, restic backups, and local registry.",
-        "Direct host/restic execution; seals result receipt.",
-        ("operators", "dispatch", "tests"),
-        "None.",
-        "low",
-        "keep",
-        mutates=True,
-    ),
-    RouteContract(
-        "/api/atlas-jobs/{job_id}",
-        "exact",
-        "http",
-        "Atlas job status and journal reconciliation against host systemd truth.",
-        "Host systemd unit status and local registry row.",
-        "Live host reconcile per request; mutates registry state when host status changed.",
-        ("operators", "dispatch", "tests"),
-        "None.",
-        "low",
-        "keep",
-        mutates=True,
-    ),
-    RouteContract(
-        "/api/atlas-jobs",
-        "prefix",
-        "http",
-        "Atlas VPS job protocol facade: list, health, host load, and result receipts.",
-        "Local registry journal, result files, and cached nonblocking host load probes.",
-        "Load uses in-process stale-while-revalidate cache (fresh <=30s, stale <=300s); list, health, and results read local registry files directly.",
-        ("operators", "dispatch", "tests"),
-        "None.",
-        "low",
-        "keep",
-        mutates=False,
-    ),
-    RouteContract(
         "/api",
         "exact",
         "http",
@@ -1094,7 +746,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Dashboard root static page.",
-        "dashboards/index.html.",
+        "The product home, scripts/project_api/static/index.html, unless dashboards/index.html exists.",
         "Static FileResponse; page fetches live API data client-side.",
         ("humans",),
         "Catch-all static route also serves other dashboard files.",
@@ -1106,39 +758,17 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "exact",
         "http",
         "Static dashboard file serving catch-all.",
-        "dashboards/**.",
+        "dashboards/** (machinery pages), then the files the product entry declares (scripts/project_api/static/).",
         "Static FileResponse; dashboard freshness comes from client-side API calls.",
         ("humans",),
         "Can hide missing page contracts unless dashboard files are scanned separately.",
         "medium",
-        "keep; require explicit page contracts for dashboards/*.html",
+        "keep; require explicit page contracts for dashboards/*.html and the product's declared pages",
     ),
 )
 
 
 PAGE_CONTRACTS: tuple[PageContract, ...] = (
-    PageContract(
-        "index.html",
-        "/",
-        "Operations launchpad and aggregate cards.",
-        "Fanout across dashboard, state, orient, runtime, delegate, wiki, and cost APIs.",
-        "Client fetches live endpoints with a **20s** abort budget; launchpad state uses warm `/api/state/summary` + `/api/state/pipeline-versions` (no per-load `?fresh=true`, #7976). OpenAPI + `/api/contracts/routes` remain the agent onboarding SSOT — not this HTML page.",
-        ("humans",),
-        "Links to every major dashboard.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "progress.html",
-        "/progress.html",
-        "Canonical visual project progress (also absorbs retired Track Health).",
-        "/api/state/summary, /api/state/pipeline-versions, /api/state/pipeline/{track}.",
-        "Explicit ?fresh=true requests and freshness banner.",
-        ("humans",),
-        "Canonical for build/track progress; track-health.html redirects here (#7992).",
-        "low",
-        "keep canonical",
-    ),
     PageContract(
         "routing.html",
         "/routing.html",
@@ -1149,50 +779,6 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "Complements runtime, delegate, cost, and routing-budget endpoints.",
         "low after live refactor",
         "keep live",
-    ),
-    PageContract(
-        "audit-dashboard.html",
-        "/audit-dashboard.html",
-        "Compatibility redirect to Quality (#7992).",
-        "none — immediate browser redirect to /quality.html.",
-        "Immediate browser redirect; no API data is rendered on this page.",
-        ("humans",),
-        "Shares its redirect target with bookmarks to the retired Audit Dashboard DOM.",
-        "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain redirect permanently (#7992) — bookmark-safe; Quality owns QA drill-down",
-    ),
-    PageContract(
-        "quality.html",
-        "/quality.html",
-        "Research/review/issues/weak-points fix queue (also absorbs retired Audit Dashboard).",
-        "/api/state/research-coverage, /api/state/review-coverage, /api/state/issues, /api/state/weak-points.",
-        "State coverage TTLs where configured; weak-points uses ~60s TTL + singleflight (#7973); optional `?fresh=true` forces one coalesced recompute.",
-        ("humans",),
-        "Canonical quality/QA surface; audit-dashboard.html redirects here (#7992).",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "track-health.html",
-        "/track-health.html",
-        "Compatibility redirect to Progress (#7992).",
-        "none — immediate browser redirect to /progress.html.",
-        "Immediate browser redirect; no API data is rendered on this page.",
-        ("humans",),
-        "Shares its redirect target with bookmarks to the retired Track Health DOM.",
-        "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain redirect permanently (#7992) — bookmark-safe; Progress owns build/track health",
-    ),
-    PageContract(
-        "curriculum-dashboard.html",
-        "/curriculum-dashboard.html",
-        "Plan/meta/module inspection (treemap).",
-        "/api/dashboard/overview, /api/dashboard/track, /api/dashboard/module.",
-        "Dashboard helper caches 30/60s.",
-        ("humans",),
-        "Distinct inspection workflow; Progress/Quality are the glance pair.",
-        "medium",
-        "keep as inspection workflow",
     ),
     PageContract(
         "work.html",
@@ -1212,7 +798,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "/api/fleet/* over the existing durable-plane SQLite read models, endpoint registry, sanitized runtime/ACP evidence, bounded legacy operations read models, GET /api/occupancy for cloud-observer presence, GET /api/fleet/workers/v1 for the AI worker map, and GET /api/fleet/projects/v1 for per-host checkout and serving-SHA drift.",
         "Client fetches bounded read-only projections with a 5s timeout, including AI workers, occupancy, and project-state panels; no client mutation controls or artifact-body retrieval.",
         ("humans", "operators"),
-        "Consolidates observer entry points while legacy comms, channels, runtime, and ACP pages remain available during pre-flip soak.",
+        "Consolidates observer entry points; the retired comms and channels pages are removed, while runtime and ACP pages remain available during pre-flip soak.",
         "medium if optional tables are absent or an operator mistakes the dashboard for post-flip authority",
         "keep as a pre-flip observer; file handoffs remain authoritative until an operator/advisor-approved default change",
     ),
@@ -1237,28 +823,6 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "Complements epics.html's flat lifecycle table with area grouping and issue-membership detail.",
         "medium if stale or no-cache data is mistaken for confirmed zero issue membership",
         "keep as the read-only epic relationship-map observer",
-    ),
-    PageContract(
-        "channels.html",
-        "/channels.html",
-        "Compatibility redirect to the consolidated read-only Fleet Observer.",
-        "Static meta refresh and link to /fleet.html.",
-        "Immediate browser redirect; no API data is rendered on this page.",
-        ("humans", "agents"),
-        "Shares its redirect target with comms.html; canonical channel evidence is visible through Fleet Observer projections.",
-        "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain redirect permanently; observation window closed (#7935) — keeps bookmarks/legacy links alive at zero maintenance cost and the file is pinned by UI contract tests",
-    ),
-    PageContract(
-        "comms.html",
-        "/comms.html",
-        "Compatibility redirect from retired Broker Ops to the consolidated read-only Fleet Observer.",
-        "Static meta refresh and link to /fleet.html; operations data lives at /api/fleet/operations.",
-        "Immediate browser redirect; no API data is rendered on this page.",
-        ("humans",),
-        "Shares its redirect target with channels.html; legacy /api/comms/* routes remain separately deployed for compatibility.",
-        "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain redirect permanently; observation window closed (#7935) — keeps bookmarks/legacy links alive at zero maintenance cost and the file is pinned by UI contract tests",
     ),
     PageContract(
         "delegate.html",
@@ -1294,105 +858,6 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "keep as the canonical ACP conversation observer",
     ),
     PageContract(
-        "cost.html",
-        "/cost.html",
-        "Cost reports.",
-        "/api/analytics/cost*.",
-        "Live cost record reads.",
-        ("humans",),
-        "Complements routing/runtime.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "build-events.html",
-        "/build-events.html",
-        "Build dispatch event timeline.",
-        "/api/build/events/*.",
-        "Live capped filesystem scans.",
-        ("humans",),
-        "Complements comms/delegate.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "wiki.html",
-        "/wiki.html",
-        "Wiki build, quality, source, and log overview.",
-        "/api/wiki/*.",
-        "Wiki router caches selected aggregates.",
-        ("humans",),
-        "Complements state published/wiki signals.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "artifacts.html",
-        "/artifacts/",
-        "Artifact/report browser.",
-        "/api/artifacts/html and /artifacts file serving.",
-        "Short-TTL singleflight over the documentation tree; a warm hit does not rescan.",
-        ("humans",),
-        "Links all ops pages.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "image-explorer.html",
-        "/image-explorer.html",
-        "Textbook image/RAG annotation UI.",
-        "/api/images/*, /api/sources/*, /images/*.",
-        "Lazy image index and render LRU.",
-        ("humans",),
-        "None.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "images.html",
-        "/images.html",
-        "Redirect alias to image explorer.",
-        "No API source; static meta refresh to /image-explorer.html.",
-        "Static redirect only.",
-        ("legacy links",),
-        "Duplicate alias.",
-        "low",
-        "retain redirect-only alias",
-    ),
-    PageContract(
-        "admin.html",
-        "/admin.html",
-        "Local maintenance dashboard.",
-        "/api/admin/*.",
-        "Live local operations.",
-        ("humans",),
-        "None.",
-        "medium due to mutating POST/DELETE actions",
-        "keep local-only",
-    ),
-    PageContract(
-        "consultation.html",
-        "/consultation.html",
-        "Template proposal queue/history dashboard.",
-        "/api/consultation/* and /api/config.",
-        "Live queue/history reads.",
-        ("humans",),
-        "None.",
-        "low",
-        "keep",
-    ),
-    PageContract(
-        "orient.html",
-        "/orient.html",
-        "Cold-start/session orientation snapshot.",
-        "/api/orient and /api/discussions/active.",
-        "Orient section TTLs; client abort budget **20s** for `/api/orient` and **12s** for glance panels (#7976); auto-refresh every 30s. Agents should call `/api/orient` directly rather than scraping this page.",
-        ("humans", "agents"),
-        "Mirrors agent bootstrap.",
-        "low",
-        "keep",
-    ),
-    PageContract(
         "fleet-board.html",
         "/fleet-board.html",
         "Read-only fleet board home and epic detail.",
@@ -1412,10 +877,20 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
 router = APIRouter(tags=["contracts"])
 
 
+def all_route_contracts(product: ProductContribution | None = None) -> tuple[RouteContract, ...]:
+    """Machinery route contracts, then the product's (the installed product when none is given)."""
+    return (*ROUTE_CONTRACTS, *(installed_product() if product is None else product).route_contracts)
+
+
+def all_page_contracts(product: ProductContribution | None = None) -> tuple[PageContract, ...]:
+    """Machinery page contracts, then the product's (the installed product when none is given)."""
+    return (*PAGE_CONTRACTS, *(installed_product() if product is None else product).page_contracts)
+
+
 def contracts_for_route(path: str, kind: ContractKind = "http") -> list[RouteContract]:
     """Return matching contracts, most specific first."""
     return sorted(
-        (contract for contract in ROUTE_CONTRACTS if contract.matches(path, kind)),
+        (contract for contract in all_route_contracts() if contract.matches(path, kind)),
         key=lambda item: item.specificity,
         reverse=True,
     )
@@ -1427,18 +902,19 @@ def contract_for_route(path: str, kind: ContractKind = "http") -> RouteContract 
 
 
 def contract_for_page(filename: str) -> PageContract | None:
-    for contract in PAGE_CONTRACTS:
+    for contract in all_page_contracts():
         if contract.file == filename:
             return contract
     return None
 
 
 @router.get("/routes")
-async def route_contracts(ctx: MonitorContext = Depends(get_ctx)):
+async def route_contracts(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     """Public Monitor route/page contract registry."""
     _ = resolve_context(ctx)
+    product = getattr(request.app.state, "product", None)
     return {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "route_contracts": [contract.to_dict() for contract in ROUTE_CONTRACTS],
-        "page_contracts": [contract.to_dict() for contract in PAGE_CONTRACTS],
+        "route_contracts": [contract.to_dict() for contract in all_route_contracts(product)],
+        "page_contracts": [contract.to_dict() for contract in all_page_contracts(product)],
     }

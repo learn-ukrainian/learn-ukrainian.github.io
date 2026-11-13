@@ -401,3 +401,22 @@ def test_diagnostic_gh_repo_does_not_require_origin(suffix):
 
 def test_diagnostic_unknown_origin_does_not_block_reads():
     assert not admit(['api', 'repos/unit/public/code-scanning/alerts'], cwd='.', environment={}, reader=lambda *a, **k: None).write
+
+
+@pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
+@pytest.mark.parametrize("args", [
+    ["issue", "transfer", "7", "unit/private"],
+    ["issue", "transfer", "7", "unit/private", "--repo", "unit/public"],
+    ["--repo", "unit/public", "issue", "transfer", "7", "unit/private"],
+    ["issue", "transfer", "--help"],
+])
+def test_raw_issue_transfer_stays_refused_beside_the_typed_verb(args, repo):
+    # The typed publisher's issue-transfer verb is the only transfer path (C-4682).
+    with pytest.raises(PublishBlocked, match="typed publisher"):
+        admit(args, cwd=".", environment={"GH_REPO": repo}, reader=lambda *a, **k: pytest.fail("no execution"))
+
+
+def test_raw_graphql_transfer_mutation_is_refused():
+    query = "query=mutation{transferIssue(input:{issueId:\"I\",repositoryId:\"R\"}){issue{number}}}"
+    with pytest.raises(PublishBlocked):
+        admit(["api", "graphql", "-f", query], cwd=".", environment={})

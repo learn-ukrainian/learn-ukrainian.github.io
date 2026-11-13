@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import gc
 import json
 import math
 import os
@@ -14,12 +15,38 @@ import sys
 import time
 import unicodedata
 import xml.etree.ElementTree as ET
+from functools import lru_cache
+from importlib.metadata import files
 from pathlib import Path, PurePosixPath
 
 from scripts.ci.gate import event_tier
 
-GUARDS = Path("scripts/ci/pr-affected-guards.txt")
-DURATIONS = Path("scripts/ci/pytest-file-durations.json")
+# This file is copied alone into a fixture checkout, so its paths come from
+# this file's own directory, with symlinks left unresolved.
+_PACKAGE_DIR = Path(__file__).parents[1]
+
+
+def _checkout_relative(*parts: str) -> Path:
+    return Path(_PACKAGE_DIR.name, *parts)
+
+
+def _module_name() -> str:
+    top = _PACKAGE_DIR.name
+    spec = __spec__
+    if spec is not None and spec.name and spec.name != "__main__":
+        name = spec.name
+        if name == top or name.startswith(f"{top}."):
+            return name
+        return f"{top}.{name}"
+    relative = Path(__file__).relative_to(_PACKAGE_DIR).with_suffix("")
+    parts = [top, *relative.parts]
+    if parts[-1] == "__init__":
+        parts.pop()
+    return ".".join(parts)
+
+
+GUARDS = _checkout_relative("ci", "pr-affected-guards.txt")
+DURATIONS = _checkout_relative("ci", "pytest-file-durations.json")
 INFRA = {
     ".github/workflows/ci.yml",
     "pyproject.toml",
@@ -47,6 +74,11 @@ GUARDS_REASON = "guards alone exceed the safe budget under the 480 second pytest
 # has no room for runner speed variance. Measured from the mandatory selection, not
 # from zero, so a heavy guard list never starves every importing test.
 FILL_SHARE = 0.5
+# Tests that name a changed file as text (`text_references`, #12789) fill a room of
+# their own after every other selection, so they never displace one; the rest defer to
+# merge-group pytest. The pytest timeout grows by the runner-variance margin of what
+# they use: at most ceil((406 + 60) * 1.18) = 550 seconds, under the 600 second cap.
+READER_ROOM_SECONDS = 60
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 # A guard line is a test file, or `file::name[::name]` to pin one test (or Class::test) in a file
 # too slow to run whole under the PR cap. Names are plain identifiers, so a pinned id carries no
@@ -99,6 +131,118 @@ def safe_path(name: str, *, node: bool = False) -> str:
     return name
 
 
+def text_references(sources: dict[str, bytes], targets: set[str]) -> set[str]:
+    """Test files with a string literal that names a changed file.
+
+    A test can read a file through a computed path, such as ``ROOT / reader`` over a
+    parametrized list of paths, which the import scan cannot follow. The rule: a
+    string literal in a test file whose whole value equals a changed file's
+    repository-relative path, or the dotted module name of a changed Python module,
+    is a dependency on that file. Literals come from the parsed source, so comments
+    never count; a bare string statement, such as a docstring, is prose and never
+    counts; a literal that only contains a name does not match, nor does a piece of
+    an f-string, which is part of a longer computed string. A package
+    ``__init__.py`` matches by path only: a package name such as ``scripts`` is
+    also an everyday path segment.
+
+    Only test files count, not ``conftest.py``: a conftest literal would select every
+    test under its directory, and the root conftest names the Claude adapter module,
+    so a change to that adapter would select the whole suite. Every test file is
+    parsed. A byte search for the raw path misses a literal written with escapes
+    and a file whose coding declaration is not UTF-8.
+    """
+    names = set(targets) | {
+        target[:-3].replace("/", ".") for target in targets
+        if target.endswith(".py") and PurePosixPath(target).name != "__init__.py"
+    }
+    return {path for path, source in sources.items()
+            if TEST.fullmatch(path) and not names.isdisjoint(string_literals(source))}
+
+
+# Literal values by file bytes (`string_literals`). Bounded, so a session that plans
+# many synthetic trees cannot grow it without limit; an evicted file is parsed again.
+_LITERALS: dict[bytes, frozenset[str]] = {}
+_LITERALS_LIMIT = 8192
+
+
+def string_literals(source: bytes) -> frozenset[str]:
+    """The values of a file's string literals, without prose (`components.dependency_nodes`).
+
+    Keyed by the file's bytes, which alone fix its syntax tree, so a planner that
+    asks about the same file again parses it once, and an edited file is parsed
+    afresh. `candidate_scan` records them from its own parse. A file that does not
+    parse has no literals.
+    """
+    found = _LITERALS.get(source)
+    if found is None:
+        from scripts.ci import components
+
+        strings: set[str] = set()
+        tree: ast.Module | None
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError):
+            tree = None
+        if tree is not None:
+            components.dependency_nodes(tree, strings)
+        found = _remember_literals(source, frozenset(strings))
+    return found
+
+
+def _remember_literals(source: bytes, strings: frozenset[str]) -> frozenset[str]:
+    if len(_LITERALS) >= _LITERALS_LIMIT:
+        _LITERALS.clear()
+    _LITERALS[source] = strings
+    return strings
+
+
+def text_reading_tests(targets: set[str], entries: dict[str, str]) -> list[str]:
+    """Tracked regular test files in the candidate that name a changed file (`text_references`)."""
+    from scripts.ci import components
+
+    regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
+    sources = components.python_sources()
+    # The candidate scan's one parse of each test file records its literals.
+    candidate_scan(tuple(sources.items()), tuple(components.tracked_paths()))
+    return sorted(text_references(sources, targets) & regular)
+
+
+def selecting(sources: dict[str, bytes]) -> set[str]:
+    """The files whose own edges can select a test: test files and every ``conftest.py``.
+
+    `importing_tests` keeps an edge only when its importer is a test file or a conftest,
+    so the scan parses only these; the other sources stay import targets.
+    """
+    return {path for path in sources if TEST.fullmatch(path) or PurePosixPath(path).name == "conftest.py"}
+
+
+@lru_cache(maxsize=2)
+def candidate_scan(sources: tuple[tuple[str, bytes], ...], known_paths: tuple[str, ...]) -> dict:
+    """The import scan of the files that can select a test (`selecting`), shared, never mutated.
+
+    Cached by every source byte and indexed path, never by time, so `importing_tests`
+    and `text_reading_tests` on one candidate tree parse each file once: the same
+    parse records each test file's string literals.
+    """
+    from scripts.ci import components
+
+    files = dict(sources)
+
+    def remember(path: str, source: bytes, strings: frozenset[str]) -> None:
+        if TEST.fullmatch(path):
+            _remember_literals(source, strings)
+
+    # Parsing allocates millions of syntax nodes that form no reference cycles, so the
+    # cycle collector's repeated passes over them are pure cost during the scan.
+    collecting = gc.isenabled()
+    gc.disable()
+    try:
+        return components.scan_imports(files, set(known_paths), importers=selecting(files), on_strings=remember)
+    finally:
+        if collecting:
+            gc.enable()
+
+
 def importing_tests(
     targets: set[str], deleted: set[str], base: str, entries: dict[str, str],
 ) -> tuple[list[str], list[str]]:
@@ -118,7 +262,17 @@ def importing_tests(
     """
     from scripts.ci import components
 
-    scan = components.scan_imports(components.python_sources(), set(components.tracked_paths()))
+    sources = components.python_sources()
+    if "requirements-machinery.lock" in targets:
+        # Give the existing import scanner targets for the installed dependency.
+        # Only test/conftest sources are parsed; package files need names, not bytes.
+        machinery = {str(p) for p in files("lu-machinery") or ()
+                     if str(p).startswith("lu_machinery/") and str(p).endswith(".py")}
+        if not machinery:
+            raise ValueError("installed lu-machinery Python files are missing")
+        sources = {**dict.fromkeys(machinery, b""), **sources}
+        targets = targets | machinery
+    scan = candidate_scan(tuple(sources.items()), tuple(components.tracked_paths()))
     edges, directories = scan["file_edges"], scan["directory_edges"]
     if deleted:
         tree = {}
@@ -128,7 +282,7 @@ def importing_tests(
                 tree[name] = meta.split()
         blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
         sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
-        scan = components.scan_imports(sources, set(tree))
+        scan = components.scan_imports(sources, set(tree), importers=selecting(sources))
         edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
         directories = [*directories, *scan["directory_edges"]]
     regular = {name for name, mode in entries.items() if TEST.fullmatch(name) and mode in {"100644", "100755"}}
@@ -205,7 +359,11 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     infrastructure = any(
         p in INFRA
         or Path(p).name == "conftest.py"
-        or p.startswith(("scripts/ci/", "scripts/common/flake_quarantine", ".github/actions/python-ci-env/"))
+        or p.startswith((
+            f"{_checkout_relative('ci').as_posix()}/",
+            _checkout_relative("common", "flake_quarantine").as_posix(),
+            ".github/actions/python-ci-env/",
+        ))
         or p == "tests/flake_quarantine.yaml"
         for p in changed
     )
@@ -242,8 +400,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         else ([], [])
     )
     imported = direct + shared
-    unknown += [p for p in imported if p not in durations]
-    for p in imported:
+    readers = (
+        [p for p in text_reading_tests(sources, entries) if p not in run and p not in imported]
+        if importers and sources and not reason
+        else []
+    )
+    unknown += [p for p in imported + readers if p not in durations]
+    for p in imported + readers:
         value = durations.get(p, default)
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
@@ -256,7 +419,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
             if budget + durations.get(p, default) <= fill_limit:
                 run.add(p)
                 budget += durations.get(p, default)
-    if set(imported) - run:
+    used = budget
+    for p in sorted(readers, key=lambda p: (durations.get(p, default), p)):
+        if budget + durations.get(p, default) <= fill_limit + READER_ROOM_SECONDS:
+            run.add(p)
+            budget += durations.get(p, default)
+    timeout = min(CAP_SECONDS, max(TIMEOUT_SECONDS, math.ceil(budget * VARIANCE_RATIO))) if budget > used else TIMEOUT_SECONDS
+    if (set(imported) | set(readers)) - run:
         reason = BUDGET_REASON if fill_limit == SAFE_SECONDS else "recorded estimate exceeds 600 second cap"
     # A whole file already covers its pinned ids.
     run = sorted(p for p in run if "::" not in p or guard_file(p) not in run)
@@ -266,11 +435,13 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         "guards": guards,
         "changed_test_files": tests,
         "importing_test_files": imported,
+        "text_reading_test_files": readers,
         "run_files": run,
-        "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
+        "deferred_files": sorted((set(tests) | set(imported) | set(readers)) - set(run)),
         "reason": reason,
         "estimate_seconds": budget,
         "safe_budget_seconds": SAFE_SECONDS,
+        "timeout_seconds": timeout,
         "guards_exceed_safe_budget": guard_estimate > SAFE_SECONDS,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
@@ -281,14 +452,14 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run changed tests, tests that import changed files and guards, or marker-only\n"
+        description="Run changed tests, tests that import or name changed files and guards, or marker-only\n"
         "repository invariants for a PR candidate. PR CI runs no pytest shards; merge-group CI runs the full suite.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
+        epilog=f"Example: .venv/bin/python -m {_module_name()}\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
         "Outputs: ci-artifacts/pr-affected.* or pr-repo-wide.* and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
-        "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
+        f"Related: {GUARDS.as_posix()}; docs/runbooks/ci-gate.md.",
     )
     parser.add_argument("--repo-wide", action="store_true", help="Run only repo_wide marked tests, independent of changed-file deferral.")
     args = parser.parse_args()
@@ -320,7 +491,7 @@ def main() -> int:
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
-        timeout = 1500 if args.repo_wide else TIMEOUT_SECONDS
+        timeout = 1500 if args.repo_wide else record["timeout_seconds"]
         record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
                       logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"

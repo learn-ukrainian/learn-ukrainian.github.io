@@ -32,8 +32,9 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from lu_machinery.storage import paths as storage_paths
+
 from scripts.projects.open_model_data.paths import LOGICAL_OPEN_MODEL_PREFIX, refuse_quarantined
-from scripts.storage import paths as storage_paths
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -91,7 +92,8 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     "*",
-                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+                    f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     str(exc),
                 ) from exc
             prefix = "projects/open_model_data/release/"
@@ -127,7 +129,8 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     f"projects/open_model_data/release/{pattern}",
-                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+                    f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     "no committed members match required selector; inspect manifest membership",
                 )
 
@@ -459,7 +462,7 @@ def main() -> int:
             "Use for an external export after hydrating the release artifacts."
         ),
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/package_unified_dataset.py --output-dir /tmp/uldr-v02\n"
             "Outputs: train.jsonl, dpo.jsonl, eval.jsonl, manifest.json, hash sidecar, and README.md.\n"
             "Exit codes: 0 on success; nonzero for invalid paths or missing/corrupt inputs.\n"

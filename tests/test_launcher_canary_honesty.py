@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment
+
 REPO = Path(__file__).resolve().parents[1]
-PROVIDERS = ("gemini", "cursor", "grok", "claude", "kimi", "glm", "codex")
+PROVIDERS = ("gemini", "claude", "codex")
 
 
 def _canary_binding_probe(
@@ -38,7 +39,7 @@ def _canary_binding_probe(
             "bash", str(REPO), provider, dry_run, str(tmp_path),
             "1" if inherited else "0",
         ],
-        env={**os.environ, "LC_PROVIDER_CANARY_RAN": "1" if inherited else "0"},
+        env={**launcher_environment(), "LC_PROVIDER_CANARY_RAN": "1" if inherited else "0"},
         capture_output=True, text=True, check=False, timeout=30,
     )
 
@@ -57,7 +58,7 @@ def test_noop_adapter_does_not_claim_a_canary(provider: str, dry_run: str, tmp_p
     assert "provider canary: not run" in _driver_prompt(result)
     assert "provider canary: ran" not in result.stdout
     assert "ran its provider canary" not in result.stdout
-    if provider in ("gemini", "cursor") or (provider in ("claude", "kimi") and dry_run == "1"):
+    if provider == "gemini" or (provider == "claude" and dry_run == "1"):
         assert f"{provider} adapter: provider canary: not run" in result.stdout
         assert "would run provider canary" not in result.stdout
 
@@ -91,5 +92,6 @@ def test_binding_uses_explicit_adapter_execution_report(
             "bash", str(REPO), ran, dry_run, str(tmp_path),
         ],
         capture_output=True, text=True, check=False, timeout=30,
+        env=launcher_environment(),
     )
     assert f"provider canary: {expected}" in _driver_prompt(result)

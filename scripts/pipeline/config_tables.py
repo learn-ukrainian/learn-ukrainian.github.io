@@ -9,8 +9,8 @@ from __future__ import annotations
 import copy
 import textwrap
 
-from config import IMMERSION_POLICIES
-from config import get_immersion_rule as shared_get_immersion_rule
+from curriculum.pedagogy_config import IMMERSION_POLICIES
+from curriculum.pedagogy_config import get_immersion_rule as shared_get_immersion_rule
 from level_config import base_level
 
 # ============================================================================

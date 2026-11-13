@@ -51,6 +51,12 @@ from threading import Lock
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.common.http_status import has_http_status
+
 from audit.status_cache import get_source_paths, read_status
 from batch.batch_dispatcher_config import (
     COOLDOWN_SECONDS,
@@ -59,7 +65,6 @@ from batch.batch_dispatcher_config import (
     TrackState,
 )
 from batch_gemini_config import PROJECT_ROOT, VENV_PYTHON, get_module_index, get_module_paths
-from common.http_status import has_http_status
 
 # ---------------------------------------------------------------------------
 # Constants

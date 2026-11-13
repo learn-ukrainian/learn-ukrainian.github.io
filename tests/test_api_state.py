@@ -1,8 +1,105 @@
 """Tests for Monitor API state_compute + state_build new fields (#971)."""
 
 import json
+import sys
+from types import ModuleType
 
 import pytest
+
+
+@pytest.fixture
+def monitor_paths(tmp_path, monkeypatch):
+    from scripts.project_api import curriculum_state
+
+    monkeypatch.setattr(curriculum_state, "_PRODUCT_DATA_DIR", tmp_path)
+    path = tmp_path / "monitor_paths.v1.json"
+    path.write_text(json.dumps({
+        "schema": "learn-ukrainian.monitor-paths",
+        "schema_version": 1,
+        "monitor_surface": "scripts.curriculum.monitor_surface",
+        "product_api": "scripts.project_api.entry",
+    }))
+    return curriculum_state, path
+
+
+@pytest.mark.parametrize("name", [None, 1, "sqlite3", "scripts.sqlite3", "scripts.Bad", ".scripts.api", "scripts/a", "scripts.a:main", "scripts.a\n"])
+def test_monitor_loader_refuses_malformed_names(monitor_paths, name):
+    helpers, path = monitor_paths
+    document = json.loads(path.read_text())
+    document["monitor_surface"] = name
+    path.write_text(json.dumps(document))
+    with pytest.raises((ValueError, ImportError)):
+        helpers._load_monitor_surface()
+
+
+@pytest.mark.parametrize("raw", [
+    b"\xff", b"{", b"[]", b"{}", b'[' * 1200,
+    (b'{"schema":"learn-ukrainian.monitor-paths","schema":"learn-ukrainian.monitor-paths",'
+     b'"schema_version":1,"monitor_surface":"scripts.curriculum.monitor_surface"}'),
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":true,"monitor_surface":"scripts.api"}',
+    b'{"schema":"wrong","schema_version":1,"monitor_surface":"scripts.api"}',
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":2,"monitor_surface":"scripts.api"}',
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":1,"monitor_surface":"scripts.api","extra":0}',
+])
+def test_monitor_loader_keeps_json_refusals(monitor_paths, raw):
+    helpers, path = monitor_paths
+    path.write_bytes(raw)
+    with pytest.raises(ValueError):
+        helpers._load_monitor_surface()
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory", "symlink", "oversized"])
+def test_monitor_loader_keeps_file_refusals(monitor_paths, kind):
+    helpers, path = monitor_paths
+    if kind == "oversized":
+        path.write_bytes(b" " * (helpers._PRODUCT_DATA_MAX_BYTES + 1))
+    else:
+        path.unlink()
+        if kind == "directory":
+            path.mkdir()
+        elif kind == "symlink":
+            target = path.with_suffix(".target")
+            target.write_text("{}")
+            path.symlink_to(target)
+    with pytest.raises(ValueError):
+        helpers._load_monitor_surface()
+
+
+def test_monitor_loader_refuses_foreign_cache_and_keeps_startup_pin(monitor_paths, monkeypatch, tmp_path):
+    helpers, _ = monitor_paths
+    pinned = helpers.monitor_surface
+    foreign = ModuleType(pinned.__name__)
+    foreign.__file__ = str(tmp_path / "foreign.py")
+    monkeypatch.setitem(sys.modules, pinned.__name__, foreign)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        helpers._load_monitor_surface()
+    assert helpers.monitor_surface is pinned
+
+
+def test_configured_loader_accounting_covers_map_callers_once():
+    """The scanners must see every configured caller, without double counting."""
+    from pathlib import Path
+
+    from lu_machinery.ci.components import scan_imports
+    from lu_machinery.hygiene.lint_source_db_writable_connects import classify_source
+    from lu_machinery.lint import boundary_ratchet
+
+    root = Path(__file__).resolve().parents[1]
+    paths = [
+        "scripts/api/product_contribution.py",
+        "scripts/project_api/curriculum_state.py",
+        "scripts/project_api/atlas_jobs_router.py",
+        "scripts/pre_commit/product_entry.py",
+    ]
+    sources = {path: (root / path).read_bytes() for path in paths}
+    graph = scan_imports(sources)
+    # product_contribution calls the loader twice: the product entry and the Atlas registry adapter.
+    assert [row["path"] for row in graph["configured_loads"]] == sorted([*paths, "scripts/api/product_contribution.py"])
+    assert all(classify_source(source.decode(), path) == [] for path, source in sources.items())
+    config = boundary_ratchet.load_config(root / "scripts/config/package_boundary.yaml")
+    assert boundary_ratchet._dynamic_count(graph, config, "machinery") == 2
+    assert boundary_ratchet._dynamic_count(graph, config, "product") == 2
+    assert boundary_ratchet._configured_line(graph) == "configured-entry-point implementation=0 callers=4"
 
 
 @pytest.fixture
@@ -19,7 +116,7 @@ def module_tree(tmp_path):
 
 class TestGetReviewScore:
     def test_with_score(self, module_tree):
-        from scripts.api.state_compute import _get_review_score
+        from scripts.project_api.state_compute import _get_review_score
 
         track_dir, _ = module_tree
         review_dir = track_dir / "review"
@@ -37,7 +134,7 @@ class TestComputeShippable:
     """
 
     def _health(self, tmp_path, *, mdx=None, verdict=None, write_complete=False, audit_pass=False):
-        from scripts.api.state_build import compute_track_health
+        from scripts.project_api.state_build import compute_track_health
 
         root = tmp_path
         curriculum = root / "curriculum" / "l2-uk-en"
@@ -121,7 +218,7 @@ class TestComputeShippable:
 
 class TestPlanRevisionLog:
     def test_block_style_plan_fixes_count_as_enriched(self, tmp_path):
-        from scripts.api.state_helpers import plan_has_revision_log
+        from scripts.project_api.curriculum_state import plan_has_revision_log
 
         plan = tmp_path / "plan.yaml"
         plan.write_text(
@@ -134,7 +231,7 @@ class TestPlanRevisionLog:
 
 class TestGetStressIssues:
     def test_with_stress_issues(self, module_tree):
-        from scripts.api.state_compute import _get_stress_issues
+        from scripts.project_api.state_compute import _get_stress_issues
 
         _, orch_dir = module_tree
         (orch_dir / "screen-result.json").write_text(

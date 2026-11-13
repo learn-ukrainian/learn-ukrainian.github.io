@@ -10,13 +10,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
+import lu_machinery.api.worktrees_router as worktrees_router
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.artifacts_router as artifacts_router
-import scripts.api.main as api_main
-import scripts.api.state_router as state_router
-import scripts.api.worktrees_router as worktrees_router
+import scripts.project_api.artifacts_router as artifacts_router
+import scripts.project_api.state_router as state_router
 
 pytestmark = pytest.mark.reads_content
 
@@ -279,7 +279,7 @@ def test_force_preview_enumerates_every_deletion_target(tmp_path, monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
 
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api.monitor_context import fixture_context
 
     ctx = fixture_context(proj).with_roots(curriculum_root=proj / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)

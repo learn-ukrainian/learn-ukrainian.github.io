@@ -999,7 +999,7 @@ def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path
         "https://github.com:65536/acme/widget",
         "https://github.com:80abc/acme/widget.git",
         "ssh://git@github.com:notaport/acme/widget.git",
-        "https://user:token@github.com:abc/acme/widget.git",
+        "https://user:token@github.com:abc/acme/widget.git",  # trufflehog:ignore
     ],
 )
 def test_malformed_origin_port_is_unknown(origin):

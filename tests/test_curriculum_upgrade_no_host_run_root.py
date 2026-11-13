@@ -19,7 +19,6 @@ ROOT = Path(__file__).resolve().parents[1]
 
 _PUBLIC_TREES = (
     Path("docs/epics/curriculum-upgrade-phase1-spec.md"),
-    Path("audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py"),
     Path("curriculum/l2-uk-en/a1/things-have-gender"),
     Path("curriculum/l2-uk-en/a1/what-is-it-like"),
 )

@@ -7,11 +7,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import acpx_pilot, runner, usage
+from lu_machinery.ai_agent_bridge import _cli
+from lu_machinery.telemetry import cost_report
 
-from agent_runtime import usage as bridge_usage
-from scripts.agent_runtime import acpx_pilot, runner, usage
-from scripts.ai_agent_bridge import _cli, _codex
-from scripts.analytics import cost_report
 from scripts.audit import qg_bakeoff
 
 MODEL = "gpt-6.1-sol"
@@ -31,12 +30,10 @@ CORRUPT_LINES = (
 @pytest.fixture
 def isolated_usage(tmp_path, monkeypatch):
     monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
-    for module in (usage, bridge_usage):
-        module._reset_rate_limit_cache_for_tests()
-        monkeypatch.setattr(module, "_usage_dir", lambda: tmp_path)
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
     yield tmp_path
-    for module in (usage, bridge_usage):
-        module._reset_rate_limit_cache_for_tests()
+    usage._reset_rate_limit_cache_for_tests()
 
 
 def _record(*, recent=True, executed=True, outcome="ok", entrypoint="bridge"):
@@ -179,7 +176,10 @@ def test_headroom_callers_surface_counts_and_keep_admission(caller, events, isol
     if caller == "runner":
         ok, reason = runner.has_headroom("codex", MODEL)
     elif caller == "bridge":
-        ok, reason = _codex.has_codex_headroom(MODEL)
+        # The bridge's headroom check is the `codex-usage` report's (the Codex processor is retired).
+        headroom = _cli._build_codex_usage_report("5h", "all")["headroom"]
+        assert headroom["model"] == MODEL
+        ok, reason = headroom["has_headroom"], headroom["reason"]
     else:
         route = next(r for r in qg_bakeoff.SUBSCRIPTION_BARE_ROUTES if r.route_name == "bare_runtime_gpt")
         monkeypatch.setattr(qg_bakeoff.shutil, "which", lambda _name: "fixture-cli")

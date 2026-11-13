@@ -52,11 +52,32 @@ from scripts.docs import store_census  # imports this module back; each side use
 from scripts.docs.docs_inventory import EXCLUDED_PARTS
 from scripts.docs.docs_inventory import metadata as inventory_metadata
 
+
+def _top() -> str:
+    """Unresolved name of this file's top package directory."""
+    return Path(__file__).parents[1].name
+
+
+def _self() -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}.{here.parent.name}.{here.stem}"
+
+
+def _sibling(stem: str) -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}.{here.parent.name}.{stem}"
+
+
+def _sibling_path(name: str) -> str:
+    here = Path(__file__)
+    return f"{here.parents[1].name}/{here.parent.name}/{name}"
+
+
 CATALOGUE_PATH = 'docs/knowledge/catalogue.yaml'
 SCHEMA_PATH = 'docs/knowledge/catalogue.schema.json'
 TRACKED_ROOTS = ('docs', 'registry', 'curriculum/l2-uk-en/evidence')
-OWNER_SOURCES = (('scripts/config/issue_streams.yaml', 'streams'),
-                 ('scripts/config/area_assignments.yaml', 'assignments'))
+OWNER_SOURCES = ((f'{_top()}/config/issue_streams.yaml', 'streams'),
+                 (f'{_top()}/config/area_assignments.yaml', 'assignments'))
 TERMINAL_LIFECYCLES = frozenset({'active', 'archive'})
 SQLITE_SIDECARS = ('-shm', '-wal', '-journal')
 PLACEHOLDER_NAMES = frozenset({'.gitkeep', '.gitignore'})
@@ -865,7 +886,10 @@ def draft_scan(repo: Path, report: Report) -> dict:
 
 # ---------------------------------------------------------------- data-store literals in code
 
-CODE_ROOT = 'scripts/'
+# The machinery package (named by this file's location) and the product's code directory, which are
+# the same directory in this checkout.
+CODE_ROOTS = tuple(dict.fromkeys((f'{_top()}/', 'scripts/')))
+CODE_ROOTS_SHOWN = ' and '.join(CODE_ROOTS)
 STORE_SUFFIXES = ('.db', '.sqlite', '.sqlite3', '.duckdb')
 # One character of a store name. Excluded: whitespace (the quoted dialect re-admits the
 # plain space), controls, quotes, '<>|', the shell terminators ';&()', the expansion and
@@ -1012,7 +1036,7 @@ def store_literals(repo: Path, files: dict[str, IndexEntry] | None = None) -> St
     scan = StoreScan({})
     objects = {}
     for path, entry in files.items():
-        if not path.startswith(CODE_ROOT):
+        if not path.startswith(CODE_ROOTS):
             continue
         if CONTROL_CHARS.search(path) or is_excluded(path):
             scan.withheld.append(path)
@@ -1060,7 +1084,7 @@ def store_literal_errors(catalogue: dict, literals: dict[str, list[str]]) -> lis
                           f'{" and more" if len(paths) > 3 else ""}) has no data_store entry; add its name to a '
                           'data_store entry\'s store list, or a reasoned store_literal_exemptions item')
     for literal in sorted(set(exempt) - set(literals)):
-        errors.append(f'store_literal_exemptions: {literal!r} is no longer named in {CODE_ROOT}; remove it')
+        errors.append(f'store_literal_exemptions: {literal!r} is no longer named in {CODE_ROOTS_SHOWN}; remove it')
     return errors
 
 
@@ -1183,10 +1207,10 @@ def marker_errors(repo: Path, report: Report, catalogue: dict) -> tuple[list[str
             if facts.get('lifecycle') != 'superseded' or facts.get('superseded_by') != [target]:
                 errors.append(f'{where}: catalogue marks it superseded by {target!r}; its front matter must say '
                               f'lifecycle: superseded and superseded_by: {target} '
-                              f'(python -m scripts.docs.catalogue mark --apply)')
+                              f'(python -m {_self()} mark --apply)')
             if banner_line(path, target) not in heads[path].splitlines():
                 errors.append(f'{where}: missing the banner line {banner_line(path, target)!r} '
-                              '(python -m scripts.docs.catalogue mark --apply)')
+                              f'(python -m {_self()} mark --apply)')
     return errors, unverifiable
 
 
@@ -1194,7 +1218,7 @@ def marker_errors(repo: Path, report: Report, catalogue: dict) -> tuple[list[str
 
 README_PATH = 'docs/README.md'
 README_BEGIN = ('<!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run '
-                'python -m scripts.docs.catalogue readme -->')
+                f'python -m {_self()} readme -->')
 README_END = '<!-- END GENERATED: catalogue families -->'
 STATUS_WORDS = {'active': 'current', 'archive': 'historical', 'superseded': 'superseded', 'draft': 'draft'}
 
@@ -1262,7 +1286,7 @@ def readme_errors(repo: Path, report: Report, catalogue: dict, files: dict[str, 
     except ValueError as exc:
         return [f'{README_PATH}: {str(exc)[:300]}']
     return [] if current else [f'{README_PATH}: the generated family table is stale; run '
-                               'python -m scripts.docs.catalogue readme and stage the file']
+                               f'python -m {_self()} readme and stage the file']
 
 
 # ---------------------------------------------------------------- whole-repository check
@@ -1281,9 +1305,9 @@ def repository_check(repo: Path, catalogue_path: Path | None = None) -> tuple[Re
     files = index_entries(repo)
     scan = store_literals(repo, files)
     report.store_literals, report.store_files_scanned = scan.stores, scan.scanned
-    report.errors.extend(f'{CODE_ROOT}: cannot read tracked file {shown(p)} (not a regular UTF-8 blob), '
+    report.errors.extend(f'{CODE_ROOTS_SHOWN}: cannot read tracked file {shown(p)} (not a regular UTF-8 blob), '
                          'so its store names are unchecked' for p in scan.unread)
-    report.errors.extend(f'{CODE_ROOT}: tracked file {shown(p)} is withheld by the privacy gate (an '
+    report.errors.extend(f'{CODE_ROOTS_SHOWN}: tracked file {shown(p)} is withheld by the privacy gate (an '
                          'inventory-excluded component), so its store names are unchecked; move it'
                          for p in scan.withheld)
     report.errors.extend(store_literal_errors(catalogue, scan.stores))
@@ -1382,20 +1406,20 @@ def _nearest(path: str, families: list[dict], roots: tuple[str, ...]) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog='python -m scripts.docs.catalogue',
+        prog=f'python -m {_self()}',
         description='Validate the document and data catalogue and its coverage of tracked files.\n'
                     'Use before adding a docs/registry/evidence family or a data/ store; '
-                    'to find a document or store, use python -m scripts.docs.find instead.',
+                    f'to find a document or store, use python -m {_sibling("find")} instead.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='Examples:\n'
-               '  .venv/bin/python -m scripts.docs.catalogue check\n'
-               '  .venv/bin/python -m scripts.docs.catalogue check --report-only --suggest\n'
-               '  .venv/bin/python -m scripts.docs.catalogue check --json\n'
-               '  .venv/bin/python -m scripts.docs.catalogue check --data-root ../primary-checkout/data\n'
-               '  .venv/bin/python -m scripts.docs.catalogue census --root ../primary-checkout --expect-present\n'
-               '  .venv/bin/python -m scripts.docs.catalogue draft-scan --json\n'
-               '  .venv/bin/python -m scripts.docs.catalogue readme --check\n'
-               '  .venv/bin/python -m scripts.docs.catalogue mark --apply\n'
+               f'  .venv/bin/python -m {_self()} check\n'
+               f'  .venv/bin/python -m {_self()} check --report-only --suggest\n'
+               f'  .venv/bin/python -m {_self()} check --json\n'
+               f'  .venv/bin/python -m {_self()} check --data-root ../primary-checkout/data\n'
+               f'  .venv/bin/python -m {_self()} census --root ../primary-checkout --expect-present\n'
+               f'  .venv/bin/python -m {_self()} draft-scan --json\n'
+               f'  .venv/bin/python -m {_self()} readme --check\n'
+               f'  .venv/bin/python -m {_self()} mark --apply\n'
                'Outputs: check, census and draft-scan print a report on stdout and never write files (data/ is '
                'read by name only; census reads at most 100 header bytes per file); readme rewrites the generated block of docs/README.md; mark --apply writes '
                'front matter and banners into superseded Markdown files.\n'
@@ -1412,8 +1436,9 @@ def main(argv: list[str] | None = None) -> int:
                'a comment after a plain value, unconstructible scalars, over 2 MiB, 100,000 nodes or 16 '
                'nesting levels); 4 internal error. Failures print a typed '
                'error (JSON with --json) with repository-relative names only, never a traceback.\n'
-               'Related: #9412; #11092; docs/knowledge/catalogue.yaml; scripts/docs/store_census.py; docs/knowledge/catalogue.schema.json; '
-               'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
+               'Related: #9412; #11092; docs/knowledge/catalogue.yaml; '
+               f'{_sibling_path("store_census.py")}; docs/knowledge/catalogue.schema.json; '
+               f'{_sibling_path("docs_inventory.py")}; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
     check = sub.add_parser('check', help='Validate schema, coverage, globs, supersession, owners, producers, '
                            'data/ store names in scripts/, status markers and the README block (what CI enforces).',
@@ -1550,7 +1575,7 @@ def _check_command(args: argparse.Namespace) -> int:
         for error in report.errors:
             print(f'ERROR {error}')
         if report.store_literals is not None:
-            print(f'data/ store names in {CODE_ROOT}: {len(report.store_literals)} '
+            print(f'data/ store names in {CODE_ROOTS_SHOWN}: {len(report.store_literals)} '
                   f'(from {report.store_files_scanned} tracked text files)')
         for path in report.uncovered:
             print(f'UNCOVERED {shown(path)}')
@@ -1570,7 +1595,7 @@ def _check_command(args: argparse.Namespace) -> int:
         print(suggest(report, catalogue))
     if args.suggest and report.store_literals:
         for store in unclaimed_stores(catalogue, report.store_literals):
-            print(f'  # data/ store named in {CODE_ROOT} without an entry: {shown(store)}')
+            print(f'  # data/ store named in {CODE_ROOTS_SHOWN} without an entry: {shown(store)}')
             print(store_stub(store), end='')
     store_gaps = bool(stores and stores[1])
     if census_result is not None and not census_result.complete:

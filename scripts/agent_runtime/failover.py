@@ -15,6 +15,11 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.common.repo_root import machinery_path
+except ImportError:  # agent_runtime loaded with scripts/ on path
+    from common.repo_root import machinery_path  # type: ignore[no-redef]
+
 from .failure_codes import provider_failure_code, provider_stderr_error
 from .result import ParseResult
 from .routes import (
@@ -144,7 +149,7 @@ def _repo_root() -> Path:
 
 
 def default_failover_config_path() -> Path:
-    return _repo_root() / "scripts" / "config" / "agent_runtime_failover.yaml"
+    return machinery_path("config/agent_runtime_failover.yaml")
 
 
 def default_cooldown_db_path() -> Path:

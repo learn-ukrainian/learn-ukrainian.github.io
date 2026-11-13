@@ -22,14 +22,16 @@ from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
-from agent_runtime.tool_config import build_mcp_tool_config
-from ai_llm.fallback import (
+from lu_machinery.agent_runtime.tool_config import build_mcp_tool_config
+from lu_machinery.ai_llm.fallback import (
     AttemptOutcome,
+    AttemptStatus,
+    AuthMode,
     is_gemini_rate_limited,
     run_gemini_fallback_ladder,
     visible_sleep,
 )
-from common.http_status import has_http_status
+from lu_machinery.common.http_status import has_http_status
 
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
@@ -504,12 +506,12 @@ def _dispatch_claude_via_runtime(
       via utils.claude_version gating
     - Writes dispatch log to orchestration/{slug}/dispatch/
     """
-    from agent_runtime.errors import (
+    from lu_machinery.agent_runtime.errors import (
         AgentStalledError,
         AgentTimeoutError,
         RateLimitedError,
     )
-    from agent_runtime.runner import invoke as runtime_invoke
+    from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
 
     if allowed_tools is not None:
         if mcp_tools:
@@ -630,12 +632,12 @@ def _dispatch_via_runtime(
       (this is PIPELINE observability, separate from the runtime's
       batch_state/api_usage/ records — both logs are written)
     """
-    from agent_runtime.errors import (
+    from lu_machinery.agent_runtime.errors import (
         AgentStalledError,
         AgentTimeoutError,
         RateLimitedError,
     )
-    from agent_runtime.runner import invoke as runtime_invoke
+    from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
 
     # Determine mode + tool_config based on legacy agent name
     if is_gemini:
@@ -747,19 +749,20 @@ def _dispatch_via_runtime(
             return False, "", str(exc), elapsed, None
 
     if is_gemini:
-        from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
-        from agent_runtime.errors import (
+        from lu_machinery.agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+        from lu_machinery.agent_runtime.errors import (
             AgentStalledError,
             AgentTimeoutError,
             AgentUnavailableError,
             RateLimitedError,
         )
-        from agent_runtime.runner import invoke as runtime_invoke
+        from lu_machinery.agent_runtime.runner import invoke as runtime_invoke
+
         from batch_gemini_config import CASCADE_PER_CALL_MAX_S
 
         per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
         resolved_auth_mode = resolve_gemini_auth_mode()
-        allowed_auth_modes = ("oauth",) if resolved_auth_mode == "subscription" else ("api",)
+        allowed_auth_modes: tuple[AuthMode, ...] = ("oauth",) if resolved_auth_mode == "subscription" else ("api",)
 
         def _gemini_attempt_runner(
             rung,
@@ -851,7 +854,7 @@ def _dispatch_via_runtime(
                     ok=False,
                     prompt=prompt,
                 )
-                status = "rate_limited" if is_gemini_rate_limited(str(exc)) else "retryable_error"
+                status: AttemptStatus = "rate_limited" if is_gemini_rate_limited(str(exc)) else "retryable_error"
                 return AttemptOutcome(
                     status=status,
                     elapsed_s=elapsed,

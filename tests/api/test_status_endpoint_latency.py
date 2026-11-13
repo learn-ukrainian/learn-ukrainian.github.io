@@ -21,15 +21,17 @@ import httpx
 import pytest
 from fastapi import APIRouter, FastAPI
 from httpx import ASGITransport
+from lu_machinery.api import delegate_router, epics_router, state_helpers, state_router
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api import artifacts_router, delegate_router, epics_router, state_helpers, state_router
-from scripts.api.monitor_context import fixture_context
+from scripts.project_api import artifacts_router
+from scripts.project_api import state_router as product_state_router
 
 _BURST = 20
 # Attempt bound for observable polls. Not a latency budget: the loop exits
 # when the condition is true, and a loaded runner only makes each yield slower.
 _ATTEMPTS = 10_000
-_COLD_ROUTERS = (delegate_router, state_router, artifacts_router, epics_router)
+_COLD_ROUTERS = (delegate_router, state_router, product_state_router, artifacts_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
@@ -184,12 +186,8 @@ def _assert_burst(responses: list[httpx.Response], calls: dict[str, int], overla
 # covers every sibling that shares the joiner counter (#11366).
 _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[str, object]]] = {
     "delegate_active": (
-        delegate_router,
-        "active_delegate_tasks",
-        delegate_router.router,
-        "/api/delegate",
-        "/api/delegate/active",
-        {"total": 0, "tasks": []},
+        delegate_router, "active_delegate_tasks", delegate_router.router,
+        "/api/delegate", "/api/delegate/active", {"total": 0, "tasks": []},
     ),
     "delegate_tasks": (
         delegate_router,
@@ -200,33 +198,33 @@ _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[
         {"total": 0, "tasks": []},
     ),
     "state_summary": (
-        state_router,
+        product_state_router,
         "compute_summary",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/summary",
         {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}, "totals": {}},
     ),
     "pipeline_versions": (
-        state_router,
+        product_state_router,
         "_compute_pipeline_versions_payload",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/pipeline-versions",
         {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "counts": {}},
     ),
     "weak_points": (
-        state_router,
+        product_state_router,
         "_compute_weak_points_payload",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/weak-points",
         {"count": 0, "modules": []},
     ),
     "research_coverage": (
-        state_router,
+        product_state_router,
         "compute_research_coverage",
-        state_router.router,
+        product_state_router.router,
         "/api/state",
         "/api/state/research-coverage",
         {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}},
@@ -259,7 +257,7 @@ _BURST_ROUTES: dict[str, tuple[types.ModuleType, str, APIRouter, str, str, dict[
 
 
 def _warmup_claim() -> None:
-    """Claim a foreign key the way ``state_router._run_state_scan_warmup`` does."""
+    """Claim a foreign key the way the state-scan warmup (``warm_state_scans``) does."""
     state_helpers.cache_get_or_compute("state-scan-warmup:research_coverage#11366", 60.0, lambda: {"warm": True})
 
 
@@ -275,6 +273,9 @@ def test_foreign_key_claim_inside_burst_is_not_a_joiner(
     The burst must count only claims for the key it addressed; the warmup is
     not a joiner of this flight and its compute is not this burst's.
     """
+    if route == "delegate_active":
+        _assert_active_snapshot_burst(tmp_path, monkeypatch, intruder=_warmup_claim)
+        return
     module, attr, router, prefix, path, payload = _BURST_ROUTES[route]
     calls = {"n": 0}
 
@@ -290,6 +291,10 @@ def test_foreign_key_claim_inside_burst_is_not_a_joiner(
 
 
 def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _assert_active_snapshot_burst(tmp_path, monkeypatch)
+
+
+def _assert_active_snapshot_burst(tmp_path, monkeypatch, *, intruder=None):
     calls = {"n": 0}
 
     def slow(**_kwargs):
@@ -297,10 +302,21 @@ def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pyte
         return {"total": 0, "tasks": []}
 
     monkeypatch.setattr(delegate_router, "active_delegate_tasks", slow)
-    responses, overlap = _run_overlapping_burst(
-        monkeypatch, _mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/active"
-    )
-    _assert_burst(responses, calls, overlap)
+    app = _mount(tmp_path, delegate_router.router, "/api/delegate")
+
+    async def scenario():
+        # Machinery #353: one lifespan writer; HTTP readers never scan or join a flight.
+        async with delegate_router.active_snapshot(app.state.ctx).lifespan():
+            async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+                if intruder is not None:
+                    intruder()
+                responses = await asyncio.gather(*[client.get("/api/delegate/active") for _ in range(_BURST)])
+                assert [response.status_code for response in responses] == [200] * _BURST
+                assert [response.json() for response in responses] == [{"total": 0, "tasks": []}] * _BURST
+                assert all("X-Snapshot-Age-S" in response.headers for response in responses)
+                assert calls["n"] == 1
+
+    asyncio.run(scenario())
 
 
 def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -310,7 +326,7 @@ def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, mo
     def slow(**kwargs):
         kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls["n"] += 1
-        return {"generated_at": "2026-01-01T00:00:00Z", "marker": calls["n"]}
+        return {"generated_at": "2026-01-01T00:00:00Z", "diagnostics": {"stale": False}}
 
     monkeypatch.setattr(state_router, "compute_routing_budget", slow)
     app = _mount(tmp_path, state_router.router, "/api/state")
@@ -347,7 +363,7 @@ def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, mo
                 await _until(second_task.done, "warm routing budget waited on the saturated worker pool")
                 second = second_task.result()
                 assert second.status_code == 200
-                assert second.json()["marker"] == 1
+                assert second.json()["diagnostics"]["stale"] is False
                 assert entered["n"] == worker_count
             finally:
                 release.set()
@@ -425,7 +441,7 @@ def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeyp
                 release_refresh.wait()
             finally:
                 refresh_finished.set()
-        return {"generated_at": "2026-01-01T00:00:00Z", "marker": 1}
+        return {"generated_at": "2026-01-01T00:00:00Z", "diagnostics": {"stale": False}}
 
     monkeypatch.setattr(state_router, "compute_routing_budget", slow)
     app = _mount(tmp_path, state_router.router, "/api/state")
@@ -443,7 +459,7 @@ def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeyp
                 await _until(second_task.done, "stale routing budget waited on its refresh")
                 second = second_task.result()
                 assert second.status_code == 200
-                assert second.json()["marker"] == 1
+                assert second.json()["diagnostics"]["stale"] is True
                 assert calls["n"] == 2
                 assert not refresh_finished.is_set()
             finally:
@@ -600,7 +616,7 @@ def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypa
         calls["n"] += 1
         return {"total": calls["n"], "tasks": []}
 
-    monkeypatch.setattr(delegate_router, "active_delegate_tasks", scan)
+    monkeypatch.setattr(delegate_router, "list_delegate_tasks", scan)
     app = _mount(tmp_path, delegate_router.router, "/api/delegate")
     tasks_dir = tmp_path / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True)
@@ -608,10 +624,10 @@ def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypa
     async def scenario() -> None:
         transport = ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-            first = await client.get("/api/delegate/active")
+            first = await client.get("/api/delegate/tasks")
             assert first.json()["total"] == 1
             (tasks_dir / "one.json").write_text("{}", encoding="utf-8")
-            second = await client.get("/api/delegate/active")
+            second = await client.get("/api/delegate/tasks")
             assert second.json()["total"] == 2
 
     asyncio.run(scenario())

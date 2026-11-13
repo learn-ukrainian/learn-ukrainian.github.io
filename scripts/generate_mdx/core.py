@@ -52,10 +52,11 @@ if str(SCRIPT_DIR) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.common.repo_root import project_interpreter
+
 from level_config import base_level
 from manifest_utils import Module, get_modules_for_level, load_manifest
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
-from scripts.common.repo_root import project_interpreter
 from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers

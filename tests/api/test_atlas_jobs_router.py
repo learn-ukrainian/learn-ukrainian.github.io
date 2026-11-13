@@ -5,18 +5,52 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import sys
 import threading
 import time
+from types import ModuleType
 
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
 
-from scripts.api import atlas_jobs_router as router_mod
-from scripts.api.main import app
 from scripts.lexicon.runner import atlas_job
+from scripts.project_api import atlas_jobs_router as router_mod
 
 client = TestClient(app, raise_server_exceptions=False)
+
+
+@pytest.mark.parametrize("name", [None, "sqlite3", "scripts._sqlite3", "scripts.Bad", ".scripts.api", "scripts/a", "scripts.a:main"])
+def test_jobs_loader_refuses_malformed_names(tmp_path, monkeypatch, name):
+    path = tmp_path / "monitor_jobs.v1.json"
+    path.write_text(json.dumps({"module": name}))
+    monkeypatch.setattr(router_mod, "_MONITOR_JOBS_ENTRY_PATH", path)
+    with pytest.raises(ImportError):
+        router_mod._load_monitor_jobs()
+
+
+def test_jobs_loader_refuses_bad_json_and_missing_module(tmp_path, monkeypatch):
+    path = tmp_path / "monitor_jobs.v1.json"
+    monkeypatch.setattr(router_mod, "_MONITOR_JOBS_ENTRY_PATH", path)
+    path.write_text("{")
+    with pytest.raises(json.JSONDecodeError):
+        router_mod._load_monitor_jobs()
+    path.write_text(json.dumps({"module": "scripts.lexicon.no_such_jobs_module"}))
+    with pytest.raises(ModuleNotFoundError):
+        router_mod._load_monitor_jobs()
+
+
+def test_jobs_loader_reuses_module_and_refuses_foreign_cache(monkeypatch, tmp_path):
+    name = "scripts.lexicon.monitor_jobs"
+    pinned = router_mod.monitor_jobs
+    assert router_mod._load_monitor_jobs() is pinned
+    foreign = ModuleType(name)
+    foreign.__file__ = str(tmp_path / "foreign.py")
+    monkeypatch.setitem(sys.modules, name, foreign)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        router_mod._load_monitor_jobs()
+    assert router_mod.monitor_jobs is pinned
 
 
 def _plan(**overrides: object) -> dict:
@@ -133,7 +167,7 @@ def test_api_rejects_path_injection_job_id(
         assert close_resp.status_code == 400, (bad, close_resp.status_code, close_resp.text)
 
     # Explicit path-param values that CodeQL flags (handler-level, not URL routing).
-    from scripts.api import atlas_jobs_router as router_mod
+    from scripts.project_api import atlas_jobs_router as router_mod
 
     for bad in ("../../tmp", "../escape", "/etc/passwd"):
         with pytest.raises(HTTPException) as excinfo:
@@ -682,7 +716,7 @@ def test_results_skips_corrupt_and_non_object_receipts(
 def test_results_and_receipt_resolve_via_monitor_context(
     tmp_path, _isolate: atlas_job.FakeHostAdapter, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api.monitor_context import fixture_context
 
     monkeypatch.delenv("ATLAS_JOB_REGISTRY", raising=False)
     ctx_root = tmp_path / "custom_ctx"

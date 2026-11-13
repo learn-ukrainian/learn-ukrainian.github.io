@@ -116,7 +116,7 @@ resolve_actionlint() {
   url="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_${platform}.tar.gz"
 
   echo "→ fetching actionlint v${ACTIONLINT_VERSION} (${platform})" >&2
-  curl -fsSL -o "$tarball" "$url"
+  curl -fsSL --retry 5 --retry-all-errors --retry-delay 2 -o "$tarball" "$url"
   sha256_verify "$expected" "$tarball"
   tar -xzf "$tarball" -C "$_DOWNLOAD_DIR" actionlint
   RESOLVED_BIN="${_DOWNLOAD_DIR}/actionlint"

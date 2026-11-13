@@ -5,7 +5,6 @@ from __future__ import annotations
 import concurrent.futures
 import inspect
 import os
-import sys
 import threading
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
@@ -26,7 +25,6 @@ from . import config
 from .resilience import connect_sqlite
 
 if TYPE_CHECKING:
-    from .images_router import ImageStore
     from .observer_presence import ObserverPresence
     from .project_state_store import StoredReport
 
@@ -36,31 +34,6 @@ if TYPE_CHECKING:
 _WORK_IN_FLIGHT_BUILDS: dict[Any, Any] = {}
 
 
-
-
-from scripts.storage.topology import (
-    StoreBinding,
-    StoreRefusal,
-    resolve_active_sources_db,
-    resolve_store,
-    unavailable_store_path,
-)
-
-
-def _store_path(store, path=None, *, root=None, required=False):
-    """Resolve each read at use time; compatibility defaults never name a local store."""
-
-    repository = Path(__file__).resolve().parents[2]
-    if str(repository) not in sys.path:
-        sys.path.append(str(repository))
-
-    result = resolve_store(store, root or repository,
-                           binding=None if path is None else StoreBinding(store, Path(path)))
-    if isinstance(result, StoreRefusal):
-        if required:
-            raise FileNotFoundError(result.reason) from None
-        return unavailable_store_path(store)
-    return result.path
 
 def _as_path(value: os.PathLike[str] | str) -> Path:
     return Path(value).expanduser()
@@ -85,9 +58,6 @@ class MonitorRoots:
     queue_dir: Path
     pid_dir: Path
     effective_roots: Mapping[str, Path] = field(default_factory=dict)
-    images_dir: Path | None = None
-    textbooks_dir: Path | None = None
-    sources_db_path: Path = Path()
     message_db_path: Path = Path()
     session_streams_db_path: Path = Path()
     epics_db_path: Path = Path()
@@ -114,9 +84,12 @@ class DatabaseHandle:
 
 @dataclass(frozen=True)
 class MonitorStores:
-    """Store handles owned by one Monitor application context."""
+    """Store handles owned by one Monitor application context.
 
-    sources_db: DatabaseHandle | None = None
+    Product stores (the textbook image store and the sources database) are
+    built by ``scripts.project_api.context`` on the context runtime.
+    """
+
     message_db: DatabaseHandle | None = None
     presence_store: dict[tuple[str, str, str], ObserverPresence] | None = None
     report_store: dict[str, StoredReport] | None = None
@@ -124,7 +97,6 @@ class MonitorStores:
     session_streams_store: SessionStreamStore | None = None
     epics_database: SessionStreamDatabase | None = None
     epics_store: SessionStreamStore | None = None
-    image_store: ImageStore | None = None
     work_in_flight: dict[str, concurrent.futures.Future[dict[str, Any]]] | None = None
 
 
@@ -239,7 +211,7 @@ class MonitorContext:
         interim = MonitorContext(roots=new_roots, stores=MonitorStores(), root=self.root)
         return replace(interim, stores=_stores(interim, fixture=self.root is not None))
 
-    def _resolve_db_path(self, database: os.PathLike[str] | str) -> Path:
+    def resolve_db_path(self, database: os.PathLike[str] | str) -> Path:
         """Resolve a database target and enforce a fixture root, if present."""
         resolved = _as_path(database).resolve()
         if self.root is not None:
@@ -256,7 +228,7 @@ class MonitorContext:
         session_streams: bool = False,
     ) -> Any:
         """Open one database through the context's single guarded choke point."""
-        path = self._resolve_db_path(database)
+        path = self.resolve_db_path(database)
         if session_streams:
             return SessionStreamDatabase(path)
         if read_only:
@@ -264,11 +236,6 @@ class MonitorContext:
             # the path contains ? or #. connect_sqlite keeps slow-query logging.
             return connect_sqlite(path.resolve().as_uri() + "?mode=ro", uri=True)
         return connect_sqlite(str(path))
-
-    def _open_sources_db(self, database: os.PathLike[str] | str, *, read_only: bool = True) -> Any:
-        path = self._resolve_db_path(database)
-        path = _store_path("sources", path, root=self.roots.project_root, required=True)
-        return connect_sqlite(path.as_uri() + "?mode=ro", uri=True)
 
 
 def get_ctx(request: Request) -> MonitorContext:
@@ -308,10 +275,7 @@ def _roots(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
-    textbooks_dir: Path,
-    fixture: bool,
 ) -> MonitorRoots:
-    image_dir = project_root / "data" / "textbook_images"
     return MonitorRoots(
         project_root=project_root,
         live_repo_root=live_repo_root,
@@ -324,10 +288,6 @@ def _roots(
         queue_dir=project_root / "agents_extensions" / "shared" / "consultation-queue",
         pid_dir=project_root / ".mcp" / "servers" / "message-broker" / "pids",
         effective_roots=_effective_roots(project_root),
-        images_dir=image_dir,
-        textbooks_dir=textbooks_dir,
-        sources_db_path=(resolve_active_sources_db(project_root, env={}).path
-                         if fixture else _store_path('sources', root=project_root)),
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         epics_db_path=session_streams_db_path,
@@ -356,23 +316,9 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         report_store = _REPORT_STORE
         work_in_flight = _WORK_IN_FLIGHT_BUILDS
 
-    from .images_router import (  # noqa: PLC0415  # lazy-ok: avoid circular import between monitor_context and images_router
-        ImageStore,
-    )
-
-    images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
-    annotations_file = images_dir / "image_text_pairs.jsonl"
     session_store = SessionStreamStore(session_database)
-    image_store = ImageStore(
-        images_dir=images_dir,
-        textbooks_dir=roots.textbooks_dir,
-        annotations_file=annotations_file,
-        project_root=roots.project_root,
-    )
-    context.runtime.register_resource(image_store)
 
     return MonitorStores(
-        sources_db=DatabaseHandle(roots.sources_db_path, context._open_sources_db),
         message_db=DatabaseHandle(roots.message_db_path, context._open_db),
         presence_store=presence_store,
         report_store=report_store,
@@ -383,7 +329,6 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         # store: both are projections over the same context-owned file.
         epics_database=session_database,
         epics_store=session_store,
-        image_store=image_store,
         work_in_flight=work_in_flight,
     )
 
@@ -398,7 +343,6 @@ def _build_context(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
-    textbooks_dir: Path,
     fixture: bool,
 ) -> MonitorContext:
     root = project_root.resolve() if fixture else None
@@ -411,8 +355,6 @@ def _build_context(
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         backup_dir=backup_dir,
-        textbooks_dir=textbooks_dir,
-        fixture=fixture,
     )
     context = MonitorContext(roots=roots, stores=MonitorStores(), root=root)
     return replace(context, stores=_stores(context, fixture=fixture))
@@ -428,7 +370,6 @@ def _cached_production_context(
     message_db_path: Path,
     session_streams_db_path: Path,
     backup_dir: Path,
-    textbooks_dir: Path,
 ) -> MonitorContext:
     return _build_context(
         project_root=project_root,
@@ -439,7 +380,6 @@ def _cached_production_context(
         message_db_path=message_db_path,
         session_streams_db_path=session_streams_db_path,
         backup_dir=backup_dir,
-        textbooks_dir=textbooks_dir,
         fixture=False,
     )
 
@@ -457,7 +397,6 @@ def production_context() -> MonitorContext:
         Path(config.MESSAGE_DB),
         default_database_path(live_repo_root),
         Path(os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))),
-        Path(config.TEXTBOOKS_DIR),
     )
 
 
@@ -478,7 +417,6 @@ def fixture_context(root: os.PathLike[str] | str) -> MonitorContext:
         message_db_path=fixture_root / ".mcp" / "servers" / "message-broker" / "messages.db",
         session_streams_db_path=fixture_root / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
         backup_dir=fixture_root / "data" / "backups",
-        textbooks_dir=fixture_root / "data" / "textbooks",
         fixture=True,
     )
 

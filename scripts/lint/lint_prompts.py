@@ -13,31 +13,30 @@ Exit code 0 = clean, 1 = violations found.
 """
 
 import argparse
-import importlib.util
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if __package__ and "." in __package__:
+    from ..common.repo_root import product_root
+else:  # run by path or imported top-level: the resolver is in the package directory above this file
+    _PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _PACKAGE_DIR not in sys.path:
+        sys.path.insert(0, _PACKAGE_DIR)
+    from common.repo_root import product_root  # type: ignore[no-redef]
 
+# Every path below is relative to the project a scan runs for: the deploying project
+# named by ``--project-root`` (the deploy gate, #12818), else the product checkout that
+# ``product_root`` selects when the scan runs (C-4746); never to this file.
 # Directories to scan for prompt/skill files (deploy gate)
-PROMPT_SCAN_DIRS = [
-    PROJECT_ROOT / "gemini_extensions" / "skills",
-    PROJECT_ROOT / "agents_extensions/shared" / "phases",
-]
-
-ORCHESTRATOR_PROMPT_ROOT = PROJECT_ROOT / "docs" / "prompts" / "orchestrators"
-CURRICULUM_MANIFEST = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-LEGACY_PROMPT_MIGRATION = (
-    PROJECT_ROOT
-    / "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
-)
-
+PROMPT_SCAN_RELS = ("agents_extensions/shared/phases",)
+ORCHESTRATOR_PROMPT_REL = "docs/prompts/orchestrators"
+CURRICULUM_MANIFEST_REL = "curriculum/l2-uk-en/curriculum.yaml"
+LEGACY_PROMPT_MIGRATION_REL = "agents_extensions/shared/curriculum-lifecycle/config/legacy-prompt-migration.v1.yaml"
 # Directories to scan for curriculum research files (--curriculum mode)
-CURRICULUM_RESEARCH_DIRS = [
-    PROJECT_ROOT / "curriculum" / "l2-uk-en",
-]
+CURRICULUM_RESEARCH_RELS = ("curriculum/l2-uk-en",)
 
 LEGACY_NON_SUITE_PROMPT_TRACKS = {"a1", "a2", "b1", "b2", "folk"}
 SEMINAR_SUITE_TRACKS = {
@@ -218,9 +217,15 @@ def check_file_level_rule(filepath: Path) -> list[dict]:
     return violations
 
 
-def check_line_rules(filepath: Path) -> list[dict]:
+def _project_root(project_root: Path | None) -> Path:
+    """The project a scan runs for: the one given, else the selected product checkout."""
+    return product_root() if project_root is None else project_root
+
+
+def check_line_rules(filepath: Path, *, project_root: Path | None = None) -> list[dict]:
     """Check per-line rules against a file."""
     violations = []
+    root = _project_root(project_root)
     content = filepath.read_text(encoding="utf-8")
     lines = content.splitlines()
 
@@ -239,7 +244,7 @@ def check_line_rules(filepath: Path) -> list[dict]:
                 violations.append({
                     "rule": rule_id,
                     "severity": severity,
-                    "file": str(filepath.relative_to(PROJECT_ROOT)),
+                    "file": str(filepath.relative_to(root)),
                     "line": i,
                     "message": description,
                     "content": line.strip()[:120],
@@ -248,19 +253,22 @@ def check_line_rules(filepath: Path) -> list[dict]:
     return violations
 
 
-def scan_prompts() -> list[dict]:
-    """Scan prompt/skill files for violations (deploy gate)."""
+def scan_prompts(project_root: Path | None = None) -> list[dict]:
+    """Scan prompt/skill files for violations (deploy gate).
+
+    ``project_root`` is the deploying project; without it the selected product checkout.
+    """
     all_violations = []
 
-    for scan_dir in PROMPT_SCAN_DIRS:
+    root = _project_root(project_root)
+    for scan_dir in (root / rel for rel in PROMPT_SCAN_RELS):
         if not scan_dir.exists():
             continue
         for filepath in sorted(scan_dir.rglob("*.md")):
-            all_violations.extend(check_line_rules(filepath))
+            all_violations.extend(check_line_rules(filepath, project_root=root))
             all_violations.extend(check_file_level_rule(filepath))
 
-    all_violations.extend(scan_orchestrator_suites())
-    all_violations.extend(scan_seminar_prompt_suite_refs())
+    all_violations.extend(scan_orchestrator_suites(project_root=root))
     return all_violations
 
 
@@ -272,10 +280,11 @@ def make_violation(
     severity: str = "error",
     line: int = 1,
     content: str = "",
+    project_root: Path | None = None,
 ) -> dict:
     """Return a linter violation in the existing prompt-lint shape."""
     try:
-        rel_file = str(filepath.relative_to(PROJECT_ROOT))
+        rel_file = str(filepath.relative_to(_project_root(project_root)))
     except ValueError:
         rel_file = str(filepath)
     return {
@@ -286,38 +295,6 @@ def make_violation(
         "message": message,
         "content": content[:120],
     }
-
-
-def scan_seminar_prompt_suite_refs() -> list[dict]:
-    """Run the retired seminar template guard through prompt lint."""
-    validator_path = PROJECT_ROOT / "scripts" / "validate" / "seminar_prompt_suite_refs.py"
-    if not validator_path.is_file():
-        return []
-
-    spec = importlib.util.spec_from_file_location(
-        "_seminar_prompt_suite_refs",
-        validator_path,
-    )
-    if spec is None or spec.loader is None:
-        return [
-            make_violation(
-                "SEMINAR_PROMPT_SUITE_REFS",
-                "Unable to load seminar prompt-suite reference validator",
-                validator_path,
-            )
-        ]
-
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return [
-        make_violation(
-            "SEMINAR_PROMPT_SUITE_REFS",
-            error,
-            validator_path,
-            content=error,
-        )
-        for error in module.validate()
-    ]
 
 
 def line_number_for(text: str, needle: str) -> int:
@@ -339,8 +316,8 @@ def extract_section(text: str, heading: str) -> str:
     return text[start:next_heading]
 
 
-def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> set[str]:
-    """Extract active level/track keys from curriculum.yaml without PyYAML."""
+def extract_curriculum_level_keys(manifest_path: Path | None = None) -> set[str]:
+    """Extract active level/track keys from curriculum.yaml (default: the product's) without PyYAML."""
     return set(extract_curriculum_level_types(manifest_path))
 
 
@@ -407,8 +384,10 @@ def _manifest_text(manifest_path: Path) -> str | None:
     return _skip_worktree_blob(manifest_path)
 
 
-def extract_curriculum_level_types(manifest_path: Path = CURRICULUM_MANIFEST) -> dict[str, str]:
-    """Extract active level/track types from curriculum.yaml without PyYAML."""
+def extract_curriculum_level_types(manifest_path: Path | None = None) -> dict[str, str]:
+    """Extract active level/track types from curriculum.yaml (default: the product's) without PyYAML."""
+    if manifest_path is None:
+        manifest_path = product_root() / CURRICULUM_MANIFEST_REL
     text = _manifest_text(manifest_path)
     if text is None:
         return {}
@@ -445,6 +424,7 @@ def require_markers(
     message_prefix: str,
     *,
     line_anchor: str | None = None,
+    project_root: Path | None = None,
 ) -> list[dict]:
     """Return violations for missing text markers."""
     line = line_number_for(text, line_anchor) if line_anchor else 1
@@ -454,6 +434,7 @@ def require_markers(
             f"{message_prefix}: {marker}",
             filepath,
             line=line,
+            project_root=project_root,
         )
         for marker in markers
         if marker not in text
@@ -465,6 +446,8 @@ def check_suite_final_response(
     text: str,
     track: str,
     seminar_tracks: set[str],
+    *,
+    project_root: Path | None = None,
 ) -> list[dict]:
     """Validate the Expected Final Response contract."""
     final_section = extract_section(text, "## Expected Final Response")
@@ -484,6 +467,7 @@ def check_suite_final_response(
         "ORCH_SUITE_FINAL_RESPONSE",
         "Expected Final Response missing field",
         line_anchor="## Expected Final Response",
+        project_root=project_root,
     )
     reading_field = "Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>"
     if track in seminar_tracks and reading_field not in final_section:
@@ -492,6 +476,7 @@ def check_suite_final_response(
             f"Seminar suite final response missing field: {reading_field}",
             filepath,
             line=line_number_for(text, "## Expected Final Response"),
+            project_root=project_root,
         ))
     return violations
 
@@ -501,6 +486,8 @@ def check_suite_seminar_references(
     text: str,
     track: str,
     seminar_tracks: set[str],
+    *,
+    project_root: Path | None = None,
 ) -> list[dict]:
     """Validate seminar-only shared references."""
     if track not in seminar_tracks:
@@ -511,12 +498,15 @@ def check_suite_seminar_references(
         SEMINAR_SHARED_REFERENCES,
         "ORCH_SUITE_SEMINAR_REFERENCE",
         "Seminar suite missing shared reference",
+        project_root=project_root,
     )
 
 
 def check_orchestrator_suite_file(
     filepath: Path,
     seminar_tracks: set[str] | None = None,
+    *,
+    project_root: Path | None = None,
 ) -> list[dict]:
     """Validate one suite-orchestrator prompt contract."""
     violations: list[dict] = []
@@ -530,6 +520,7 @@ def check_orchestrator_suite_file(
         SUITE_REQUIRED_MARKERS,
         "ORCH_SUITE_REQUIRED_SECTION",
         "Missing required suite marker",
+        project_root=project_root,
     ))
     violations.extend(require_markers(
         text,
@@ -537,6 +528,7 @@ def check_orchestrator_suite_file(
         SUITE_SHARED_REFERENCES,
         "ORCH_SUITE_SHARED_REFERENCE",
         "Missing shared prompt reference",
+        project_root=project_root,
     ))
 
     worktree_section = extract_section(text, "## WORKTREE_ROOT Setup")
@@ -547,6 +539,7 @@ def check_orchestrator_suite_file(
         "ORCH_SUITE_WORKTREE_SANITY",
         "WORKTREE_ROOT setup missing",
         line_anchor="## WORKTREE_ROOT Setup",
+        project_root=project_root,
     ))
 
     forbidden_section = extract_section(text, "## Forbidden Writes")
@@ -557,13 +550,16 @@ def check_orchestrator_suite_file(
         "ORCH_SUITE_FORBIDDEN_WRITE",
         "Forbidden Writes missing protected marker",
         line_anchor="## Forbidden Writes",
+        project_root=project_root,
     ))
-    violations.extend(check_suite_final_response(filepath, text, track, seminar_tracks))
-    violations.extend(check_suite_seminar_references(filepath, text, track, seminar_tracks))
+    violations.extend(check_suite_final_response(filepath, text, track, seminar_tracks, project_root=project_root))
+    violations.extend(
+        check_suite_seminar_references(filepath, text, track, seminar_tracks, project_root=project_root)
+    )
     return violations
 
 
-def check_b2_prompt_contracts(root: Path) -> list[dict]:
+def check_b2_prompt_contracts(root: Path, *, project_root: Path | None = None) -> list[dict]:
     """Validate B2 legacy prompts still carry executable review/swarm gates."""
     marker_sets = {
         root / "b2" / "preflight-readiness-audit-orchestrator.md": [
@@ -621,6 +617,7 @@ def check_b2_prompt_contracts(root: Path) -> list[dict]:
             markers,
             "ORCH_B2_REVIEW_SWARM_CONTRACT",
             "B2 prompt missing executable review/swarm marker",
+            project_root=project_root,
         ))
     return violations
 
@@ -632,6 +629,7 @@ def check_orchestrator_track_coverage(
     suite_tracks: set[str],
     *,
     legacy_frozen: bool = False,
+    project_root: Path | None = None,
 ) -> list[dict]:
     """Validate prompt dirs and suites against active curriculum tracks."""
     violations: list[dict] = []
@@ -643,6 +641,7 @@ def check_orchestrator_track_coverage(
             "ORCH_TRACK_NOT_ACTIVE",
             f"Prompt directory has no active curriculum.yaml level: {track}",
             root / track,
+            project_root=project_root,
         ))
 
     if not legacy_frozen:
@@ -651,6 +650,7 @@ def check_orchestrator_track_coverage(
                 "ORCH_ACTIVE_TRACK_MISSING_PROMPT",
                 f"Active curriculum.yaml level has no orchestrator prompt dir: {track}",
                 manifest_display,
+                project_root=project_root,
             ))
 
         for track in sorted((active_tracks - LEGACY_NON_SUITE_PROMPT_TRACKS) - suite_tracks):
@@ -658,6 +658,7 @@ def check_orchestrator_track_coverage(
                 "ORCH_ACTIVE_TRACK_MISSING_SUITE",
                 f"Active non-legacy track has no suite-orchestrator.md: {track}",
                 root / track,
+                project_root=project_root,
             ))
 
     for stale_track in ["lit-crimea", "lit-doc"]:
@@ -666,21 +667,31 @@ def check_orchestrator_track_coverage(
                 "ORCH_STALE_LIT_TRACK",
                 f"Stale plan-only LIT track must not have prompt suite: {stale_track}",
                 root / stale_track,
+                project_root=project_root,
             ))
     return violations
 
 
 def scan_orchestrator_suites(
-    root: Path = ORCHESTRATOR_PROMPT_ROOT,
-    manifest_path: Path = CURRICULUM_MANIFEST,
+    root: Path | None = None,
+    manifest_path: Path | None = None,
     migration_path: Path | None = None,
+    *,
+    project_root: Path | None = None,
 ) -> list[dict]:
-    """Validate orchestrator prompt suite coverage and contracts."""
+    """Validate orchestrator prompt suite coverage and contracts.
+
+    Defaults come from ``project_root`` (the deploying project), else the product checkout.
+    """
+    product = _project_root(project_root)
+    default_root = product / ORCHESTRATOR_PROMPT_REL
+    root = default_root if root is None else root
+    manifest_path = product / CURRICULUM_MANIFEST_REL if manifest_path is None else manifest_path
     if not root.exists():
         return []
 
-    if migration_path is None and root.resolve() == ORCHESTRATOR_PROMPT_ROOT.resolve():
-        migration_path = LEGACY_PROMPT_MIGRATION
+    if migration_path is None and root.resolve() == default_root.resolve():
+        migration_path = product / LEGACY_PROMPT_MIGRATION_REL
     legacy_frozen = migration_path is not None and migration_path.is_file()
 
     violations: list[dict] = []
@@ -702,12 +713,15 @@ def scan_orchestrator_suites(
         prompt_track_dirs,
         suite_tracks,
         legacy_frozen=legacy_frozen,
+        project_root=product,
     ))
 
     for filepath in sorted(root.glob("*/suite-orchestrator.md")):
-        violations.extend(check_orchestrator_suite_file(filepath, seminar_tracks=seminar_tracks))
+        violations.extend(
+            check_orchestrator_suite_file(filepath, seminar_tracks=seminar_tracks, project_root=product)
+        )
 
-    violations.extend(check_b2_prompt_contracts(root))
+    violations.extend(check_b2_prompt_contracts(root, project_root=product))
     return violations
 
 
@@ -715,7 +729,7 @@ def scan_curriculum_research() -> list[dict]:
     """Scan curriculum research files for persona contamination."""
     violations = []
 
-    for base_dir in CURRICULUM_RESEARCH_DIRS:
+    for base_dir in (product_root() / rel for rel in CURRICULUM_RESEARCH_RELS):
         if not base_dir.exists():
             continue
         # Find all research directories
@@ -734,7 +748,7 @@ def scan_curriculum_research() -> list[dict]:
                             violations.append({
                                 "rule": rule_id,
                                 "severity": severity,
-                                "file": str(filepath.relative_to(PROJECT_ROOT)),
+                                "file": str(filepath.relative_to(product_root())),
                                 "line": i,
                                 "message": description,
                                 "content": line.strip()[:120],
@@ -762,7 +776,7 @@ def fix_research_persona(dry_run: bool = False) -> int:
         r"(Do NOT reference persona|NEVER.*persona|forbid)", re.IGNORECASE
     )
 
-    for base_dir in CURRICULUM_RESEARCH_DIRS:
+    for base_dir in (product_root() / rel for rel in CURRICULUM_RESEARCH_RELS):
         if not base_dir.exists():
             continue
         for research_dir in sorted(base_dir.rglob("research")):
@@ -781,7 +795,7 @@ def fix_research_persona(dry_run: bool = False) -> int:
                         new_lines.append(line)
 
                 if removed:
-                    rel_path = filepath.relative_to(PROJECT_ROOT)
+                    rel_path = filepath.relative_to(product_root())
                     if dry_run:
                         print(f"  Would fix: {rel_path} ({len(removed)} lines)")
                         for line_num, content in removed:
@@ -837,7 +851,14 @@ def main():
         "--dry-run", action="store_true",
         help="With --fix: show what would be changed without modifying files",
     )
+    parser.add_argument(
+        "--project-root", type=Path, default=None,
+        help="Absolute root of the project whose prompt and skill files to lint "
+        "(the deploy gate passes the deploying project); default: the product checkout",
+    )
     args = parser.parse_args()
+    if args.project_root is not None and not (args.project_root.is_absolute() and args.project_root.is_dir()):
+        parser.error(f"--project-root must name an existing absolute directory, got {str(args.project_root)!r}")
 
     # --- Fix mode ---
     if args.fix:
@@ -851,7 +872,7 @@ def main():
         return 0
 
     # --- Lint mode ---
-    prompt_violations = scan_prompts()
+    prompt_violations = scan_prompts(args.project_root)
 
     if not prompt_violations and not args.curriculum:
         print("✅ All prompts clean — no violations found.")

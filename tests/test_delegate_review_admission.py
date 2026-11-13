@@ -3,15 +3,20 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from scripts.agent_runtime import target_admission
-from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
-from tests.claude_route_accounts import HOST_ACCOUNT
+from lu_machinery.agent_runtime import target_admission
+from lu_machinery.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount
+
+# The release's own account type: the shared tests.claude_route_accounts binds the in-tree
+# copy's ClaudeAccount for held subjects (#10630 built-in default, which reads the lane row).
+HOST_ACCOUNT = ClaudeAccount("a", "builtin")
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
@@ -58,8 +63,8 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("grok",),
-            model="grok-4.7",
+            ("cursor",),
+            model="grok-4.7-high",
             mode="read-only",
             review_dispatch=True,
             review_profile="ukrainian",
@@ -92,14 +97,25 @@ def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5
     )
 
 
-@pytest.mark.parametrize("model", ["grok-4.7-high[fast]", "grok-4.7-high[1m]", "grok-4.7-high[]"])
-def test_a_suffixed_cursor_grok_slug_is_never_an_attempt_identity(model):
-    """#9488: eligibility is decided on the exact string the adapter would send as --model."""
+@pytest.mark.parametrize("suffix", ["[fast]", "[1m]", "[]"])
+def test_a_suffixed_cursor_slug_is_never_an_attempt_identity(monkeypatch, suffix):
+    """#9488: exact wire identity must bind even when the base pin is eligible."""
+    from lu_machinery.review import reviewer_resolver
+
+    pin = "gpt-6.1-sol"
+    candidate = replace(
+        reviewer_resolver.REVIEW_CANDIDATES["openai_frontier"],
+        name="stand-in-cursor", route="cursor", endpoint="cursor", transport="cursor",
+        participant="cursor", catalog_transport="cursor", invocation=f"--model {pin}",
+    )
+    monkeypatch.setattr(reviewer_resolver, "REVIEW_CANDIDATES", {candidate.name: candidate})
+    assert _review_target(pin, attempt=True) == ("cursor", pin)
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
-        _review_target(model, attempt=True)
+        _review_target(pin + suffix, attempt=True)
 
 
-def test_the_exact_cursor_grok_slug_is_kept_as_requested():
+def test_the_exact_cursor_grok_slug_retains_the_released_attempt_identity():
+    """Machinery #390 restores explicit Cursor review without changing its wire slug."""
     assert _review_target("grok-4.7-high", attempt=True) == ("cursor", "grok-4.7-high")
 
 
@@ -138,7 +154,7 @@ NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalo
 @pytest.mark.parametrize("seat,model", FABLE_PINS)
 def test_bridge_review_mode_refuses_a_fable_pin(seat, model):
     """``ask-* --review`` admits in ``REVIEW_MODE`` before any prompt or dispatch is written."""
-    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import REVIEW_MODE
 
     with pytest.raises(ReviewAdmissionRefused, match=NO_REVIEW_ROLE):
         resolve_and_admit((seat,), mode=REVIEW_MODE, model=model, review=True)
@@ -171,3 +187,36 @@ def test_review_admission_refuses_a_route_ignoring_the_reviewer_selector():
 
 
 # --- #9739: a trusted review reads the target branch's complete authorship ------------------------
+
+
+def test_budget_blocked_codex_seat_excludes_account_a_quota_bucket(monkeypatch):
+    """R1 (#12504): the budget guard excludes the blocked lane's quota bucket, ``codex:a``, never seat ``codex``.
+
+    ``agents.codex`` is account a's lane, so account b's bucket stays selectable.
+    """
+    import contextlib
+
+    from lu_machinery.review import capacity, reviewer_resolver
+
+    excluded = []
+    real = reviewer_resolver.resolve_reviewer
+
+    def resolve(inputs, **kwargs):
+        excluded.append(kwargs.get("excluded_quota_buckets"))
+        return real(inputs, **kwargs)
+
+    monkeypatch.setattr(capacity, "review_capacity_action", lambda *_a, **_k: (True, "fixture exhausted"))
+    monkeypatch.setattr(reviewer_resolver, "resolve_reviewer", resolve)
+    with contextlib.suppress(ReviewAdmissionRefused):
+        target_admission._resolve_review_target(
+            "codex",
+            "gpt-6.1-sol",
+            author_model="claude-opus-5-5",
+            risk="medium",
+            profile="code",
+            attempt=False,
+            snapshot={"agents": {}},
+            budget_seat="codex",
+            claude_account=HOST_ACCOUNT,
+        )
+    assert frozenset({"codex:a"}) in excluded and all("codex" not in buckets for buckets in excluded if buckets)

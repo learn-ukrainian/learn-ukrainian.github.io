@@ -12,15 +12,23 @@ stays on the ordinary author-family ladder.
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal, Protocol
 
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 
 ClassificationKind = Literal["seat", "ambiguous", "unrelated"]
+
+# Machinery paths below are checkout-relative: they start with the machinery package's directory
+# name, which Git and owned paths use, taken from this module's unresolved location: a symlinked
+# package keeps its checkout name, and a short import spelling (the package directory on
+# ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
 
 # Registry and catalog aliases that name one subject seat. Family names are
 # intentionally absent — those belong on --subject-family.
@@ -43,13 +51,13 @@ _SUBJECT_ALIASES: dict[str, str] = {
 # Reviewer-hook paths that govern exactly one seat. Shared hooks are listed
 # separately so inference leaves them unknown instead of picking one consumer.
 _HOOK_SEATS: dict[str, str] = {
-    "scripts/agent_runtime/grok_hook_bridge.py": "grok",
-    "scripts/hooks/apply_grok_hook_profile.py": "grok",
-    "scripts/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
-    "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
-    "scripts/agent_runtime/codex_hook_entry.sh": "codex",
-    "scripts/agent_runtime/codex_hook_policy.py": "codex",
-    "scripts/agent_runtime/codex_hook_probe.py": "codex",
+    f"{_MACHINERY}/agent_runtime/grok_hook_bridge.py": "grok",
+    f"{_MACHINERY}/hooks/apply_grok_hook_profile.py": "grok",
+    f"{_MACHINERY}/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
+    f"{_MACHINERY}/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
+    f"{_MACHINERY}/agent_runtime/codex_hook_entry.sh": "codex",
+    f"{_MACHINERY}/agent_runtime/codex_hook_policy.py": "codex",
+    f"{_MACHINERY}/agent_runtime/codex_hook_probe.py": "codex",
     "agents_extensions/codex/hooks.json": "codex",
 }
 
@@ -59,8 +67,8 @@ _AMBIGUOUS_PATHS = frozenset(
     }
 )
 
-_ADAPTER_PREFIX = "scripts/agent_runtime/adapters/"
-_PROVIDER_PREFIX = "scripts/dispatcher/providers/"
+_ADAPTER_PREFIX = f"{_MACHINERY}/agent_runtime/adapters/"
+_PROVIDER_PREFIX = f"{_MACHINERY}/dispatcher/providers/"
 
 # Adapter modules the registry does not name but that serve exactly one seat:
 # ``kimicc.py`` is the Kimi Claude Code harness, and ``codex_events.py`` parses
@@ -197,7 +205,13 @@ def normalize_owned_path(path: str) -> str:
     while text.startswith("./"):
         text = text[2:]
     text = text.rstrip("/")
-    for marker in (_ADAPTER_PREFIX, _PROVIDER_PREFIX, "scripts/agent_runtime/", "scripts/hooks/", "agents_extensions/"):
+    for marker in (
+        _ADAPTER_PREFIX,
+        _PROVIDER_PREFIX,
+        f"{_MACHINERY}/agent_runtime/",
+        f"{_MACHINERY}/hooks/",
+        "agents_extensions/",
+    ):
         index = text.find(marker)
         if index >= 0:
             return text[index:]

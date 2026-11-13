@@ -8,8 +8,9 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+from lu_machinery.api import state_helpers
 
-from scripts.api import state_helpers
+import scripts.project_api.state_router as product_state_router
 
 
 @pytest.fixture(autouse=True)
@@ -196,20 +197,20 @@ def test_replaced_generation_does_not_publish_again():
 
 
 def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
-    from scripts.api import state_router
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api import state_router
+    from lu_machinery.api.monitor_context import fixture_context
 
     ctx = fixture_context(tmp_path)
     pipe_payload = {"total": 0, "counts": {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}}
     weak_payload = {"count": 0, "modules": []}
 
     monkeypatch.setattr(
-        state_router,
+        product_state_router,
         "_compute_pipeline_versions_payload",
         lambda _ctx, track: {**pipe_payload, "track": track},
     )
     monkeypatch.setattr(
-        state_router,
+        product_state_router,
         "_compute_weak_points_payload",
         lambda _ctx, track, min_score, limit: {
             **weak_payload,
@@ -224,7 +225,7 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     # this call a no-op for this test's ctx.
     monkeypatch.setattr(state_router, "_state_scan_warm_thread", None)
 
-    warm_thread = state_router.schedule_state_scan_warmup(ctx)
+    warm_thread = state_router.schedule_state_scan_warmup(ctx, (product_state_router.warm_state_scans,))
     warm_thread.join(timeout=30)
     assert not warm_thread.is_alive(), "state scan warmup thread did not finish within 30s"
 

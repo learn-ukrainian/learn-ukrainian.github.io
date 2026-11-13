@@ -84,8 +84,6 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
 | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
 | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | grok-4.7 | high | gpt-6.1-sol | high |
-| grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 Escalate when: architecture, hard multi-file judgment, high-stakes synthesis — not routine queue.
@@ -129,9 +127,9 @@ Near-cap and open-circuit buckets receive no automatic work.
 | agy | false |
 | claude | true |
 | codex | true |
-| cursor | true |
+| cursor | false |
 | gemini | false |
-| grok | true |
+| grok | false |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
@@ -167,16 +165,11 @@ request replays the durable verdict without a provider call or reservation.
 
 ### Diagnose quota concentration
 
-- Open `runtime.html` → **Routing overview**. Start with the lifecycle,
-  automatic-versus-explicit, route-distribution, and failure-cause cards, then
-  filter by lifecycle, mode, route, initiator, model, reviewer, or failure.
-- Read the decision path as initiator → request → selected route/model →
-  outcome. Expand one assignment for the body-free selection trace, quota and
-  credential evidence, retry/failover/replay state, authority IDs, and ordered
-  lifecycle events.
-- Query `/api/runtime/routing-assignments?limit=100` for the same read-only
-  projection. Counts describe the loaded recent window, not all-time fleet
-  totals, configured routing weights, provider quotas, or caching.
+- Query `/api/runtime/routing-assignments?limit=100` for the body-free
+  read-only projection. Read each assignment's decision path as initiator,
+  request, selected route/model and outcome, including its selection trace,
+  authority IDs and ordered lifecycle events. Counts describe the loaded
+  recent window, not all-time fleet totals, routing weights or provider quotas.
 - Treat “No ledger update” as stale activity evidence only. It is not proof of
   provider liveness and does not authorize early lease reclamation.
 - Compare the decision trace's hard-gate and suitability reasons before blaming
@@ -255,7 +248,7 @@ accepts `--stdout-only`, which the audit callers retain for that family.
 | `scripts/audit/naturalness_check.py` | One-shot stdout through `ask-agy` and `ask-claude` |
 | `scripts/audit/llm_reviewer_dispatch.py`, `scripts/audit/qg_bakeoff.py` | Existing stdout/output-file contracts; formal review intent uses the separate toolful review path |
 | `scripts/pipeline/dispatch.py`, `scripts/tools/upgrade_activity_hints.py` | `ask-agy` stdout |
-| `scripts/build/build_module_direct.py`, `scripts/build/phases/plan_patch.py` | `ask-gemini` compatibility alias; stdout or explicit output file |
+| `scripts/build/build_module_direct.py` | `ask-gemini` compatibility alias; stdout or explicit output file |
 | `scripts/batch/batch_research.py`, `scripts/batch/batch_fix_review.py` | `ask-gemini` compatibility alias; explicit output file or stdout |
 | `scripts/projects/open_model_data/phase3_source_production_transport.py`, `phase3_rule_author_runner.py`, `phase3_heldout_label_transport.py` | Existing packet-bound stdout/output-file contracts; owning track controls execution |
 | `scripts/batch/batch_otaman.py`, `scripts/run_otaman_serial_12_15.sh` | Historical write-workflow callers; `--allow-write` does not make an ACP conversation a toolful implementation run |
@@ -277,11 +270,12 @@ enabling the old MCP server, or running retention helpers such as `bin/services`
 queue cleanup.
 
 The canonical read-only home for zombie, batch-progress, and broker-health
-diagnostics is `GET /api/fleet/operations`, rendered by `dashboards/fleet.html`.
+diagnostics is `GET /api/fleet/operations`. The former Fleet browser view
+was removed; `/machinery` provides Fleet Comms summary counts.
 `scripts/api/route_contracts.py` documents both contracts. These diagnostics are
 historical projections, not authority or proof that Fleet is healthy.
-`dashboards/comms.html` and `dashboards/channels.html` retain their compatibility
-redirects; channel/thread/delivery GET projections remain available. A source
+The former Comms and Channels pages are no longer served;
+channel/thread/delivery GET projections remain available. A source
 audit or a local API test does not establish deployed browser behavior.
 
 ### Observation and retirement gates

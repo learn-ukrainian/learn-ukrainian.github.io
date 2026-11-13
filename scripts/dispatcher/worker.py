@@ -20,6 +20,7 @@ import psutil
 
 from scripts.agent_runtime import bounded_advisory
 from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
+from scripts.common import task_scratch
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -34,6 +35,7 @@ from scripts.dispatcher.watchdog import (
     liveness_paths,
 )
 from scripts.review.model_catalog import advisory_role_policy
+from scripts.review.product_hooks import attempt_hooks
 
 
 def _seal_advisory_result(record: dict, result: Path) -> None:
@@ -51,6 +53,120 @@ def _seal_advisory_result(record: dict, result: Path) -> None:
     record[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
         response, model=record.get("model"), run_nonce=record.get("run_nonce"), fence=fence
     )
+
+
+# Re-creatable caches a worker leaves in its own task output directories. Settlement removes these directories
+# and keeps every log, result, receipt and hand-off beside them (C-4946(a)).
+TASK_CACHE_DIRS = frozenset({"venv", ".venv", "buildvenv", "npm-cache", ".npm", "node_modules", "pip-cache", ".cache",
+                             "__pycache__"})
+
+
+def _remove_cache_entry(dir_fd: int, name: str) -> None:
+    """Unlink a cache-named link, or remove one cache directory, relative to ``dir_fd``.
+
+    A link is unlinked and never followed. A directory is removed by the same remover
+    ``_remove_task_scratch`` uses: this directory gets owner rwx when it lacks it, children
+    are repaired on descent, and another device or a mount point is refused before anything
+    is unlinked. The chmod and the deletion stay inside ``name``.
+    """
+    info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    if stat.S_ISLNK(info.st_mode):
+        os.unlink(name, dir_fd=dir_fd)
+        return
+    if not stat.S_ISDIR(info.st_mode):
+        return
+    parent = os.fstat(dir_fd)
+    mount_id = task_scratch.fd_mount_id(dir_fd)
+    if info.st_dev != parent.st_dev:
+        raise task_scratch.ContainmentError(f"cache {name!r} is on another filesystem")
+    if mount_id is None:
+        raise task_scratch.ContainmentError("mount information unavailable")
+    if stat.S_IMODE(info.st_mode) & stat.S_IRWXU != stat.S_IRWXU:
+        # A read-only top directory would refuse to give up its entries; children are repaired on descent.
+        task_scratch.grant_owner_rwx(dir_fd, name, info, device=parent.st_dev, mount_id=mount_id)
+    # The held descriptor's path is what mountinfo names. The scratch remover refuses a mount
+    # below this directory before it unlinks anything, and it never chmods outside the directory.
+    task_scratch._remove_invocation_dir(
+        dir_fd,
+        name,
+        namespace=Path(os.readlink(f"/proc/self/fd/{dir_fd}")),
+        expected_dev=info.st_dev,
+        expected_ino=info.st_ino,
+    )
+
+
+def _task_caches(task_id: str, *, remove: bool) -> tuple[list[str], list[str]]:
+    """The cache directories in ``<task_id>.artifacts`` and ``<task_id>.evidence``, and what could not be walked or removed.
+
+    os.fwalk holds each directory open and checks it with lstat, open and fstat before it descends, so neither a
+    link nor an ancestor swapped during the walk takes it outside the task's outputs. Removal acts relative to the
+    held parent. ``DirEntry.is_dir`` follows links, so a dangling cache link or a link to a file is listed in
+    ``files``; those names are unlinked too. A real directory goes through the scratch remover.
+    """
+    tasks = store.record_path(task_id).parent  # refuses an invalid task id before any path is built from it
+    found: list[str] = []
+    failed: list[str] = []
+
+    def refused(error: OSError) -> None:
+        failed.append(f"{error.filename}: {type(error).__name__}")
+
+    def drop(directory: str, dir_fd: int, name: str) -> None:
+        found.append(f"{directory}/{name}")
+        if not remove:
+            return
+        try:
+            _remove_cache_entry(dir_fd, name)
+        except (OSError, task_scratch.ContainmentError) as exc:
+            failed.append(f"{directory}/{name}: {type(exc).__name__}")
+
+    tasks_fd = os.open(tasks, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for root in (f"{task_id}.artifacts", f"{task_id}.evidence"):
+            try:
+                os.stat(root, dir_fd=tasks_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                continue
+            try:
+                for directory, names, files, dir_fd in os.fwalk(root, onerror=refused, dir_fd=tasks_fd):
+                    for name in [name for name in names if name in TASK_CACHE_DIRS]:
+                        names.remove(name)  # do not descend into a directory this pass is removing
+                        drop(directory, dir_fd, name)
+                    for name in files:
+                        if name not in TASK_CACHE_DIRS:
+                            continue
+                        try:
+                            linked = stat.S_ISLNK(os.stat(name, dir_fd=dir_fd, follow_symlinks=False).st_mode)
+                        except OSError as exc:
+                            failed.append(f"{directory}/{name}: {type(exc).__name__}")
+                            continue
+                        if linked:
+                            drop(directory, dir_fd, name)
+            except OSError as exc:  # the root, or a listing os.fwalk does not pass to onerror
+                failed.append(f"{root}: {type(exc).__name__}")
+    finally:
+        os.close(tasks_fd)
+    return found, failed
+
+
+def _clear_task_caches(record: dict) -> bool:
+    """Remove a finished task's re-creatable caches from its own output directories; True when the record changed.
+
+    The caller holds the task state lock. Whatever could not be walked or removed is recorded in
+    ``task_cache_residue`` and retried by the scheduled settlement sweep.
+    """
+    if record.get("status") in store.ACTIVE:
+        return False
+    try:
+        residue = _task_caches(record["task_id"], remove=True)[1]
+    except Exception as exc:  # cache removal never stops the worktree settlement that follows it
+        residue = [f"scan: {type(exc).__name__}"]
+    if residue == record.get("task_cache_residue", []):
+        return False
+    if residue:
+        record["task_cache_residue"] = residue
+    else:
+        record.pop("task_cache_residue")
+    return True
 
 
 def _identity(pid: int | None) -> str | None:
@@ -118,7 +234,8 @@ def _dispatcher_code() -> dict:
             return None
 
     head = (git_out("rev-parse", "HEAD") or "").strip() or None
-    status = git_out("status", "--porcelain", "--", "scripts", "schemas")
+    package = Path(os.path.abspath(__file__)).parents[1].name  # the machinery package directory
+    status = git_out("status", "--porcelain", "--", package, "schemas")
     return {"root": str(root), "head": head, "clean": status == ""}
 
 
@@ -488,7 +605,140 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed",
                            "salvage_failed", "salvage_unverified", "large_ignored_output",
-                           "nested_repository_unpushed", "github_deferred"})
+                           "nested_repository_unpushed", "github_deferred", git.CODE_UNAVAILABLE})
+
+
+def _load_bound_review_code() -> None:
+    """Import what a bound formal review attempt (``review_attempt.run``) imports on demand.
+
+    Only that kind of run needs the build engine's manifest, the evidence sources, the review prompt checks and the agent runner with
+    its ``ai_llm`` package. The manifest import reaches ``scripts.wiki.dense_rerank``, which imports numpy, and numpy starts an
+    OpenBLAS thread pool in this process. The pool shares the file table. A supervisor that then holds review slots keeps those
+    flocks in the same table; SIGKILL makes the leader a zombie, which ``_identity`` treats as gone, while the pool still holds
+    the flocks, so the hold stays live. A bound attempt does not take review slots (``hold_review_test_slots`` returns immediately
+    when ``review_attempt`` is set), so only that run loads this code. The runner imports ``ai_llm`` from ``scripts/``, which
+    ``review_attempt.run`` puts on ``sys.path`` just before it imports the runner; do the same, and leave ``sys.path`` as it was.
+    """
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    added = scripts_dir not in sys.path
+    if added:
+        sys.path.insert(0, scripts_dir)
+    try:
+        with contextlib.suppress(Exception):
+            attempt_hooks().bind_bound_review_modules()
+        with contextlib.suppress(Exception):
+            from scripts.agent_runtime import runner  # noqa: F401
+    finally:
+        if added:
+            sys.path.remove(scripts_dir)
+
+
+def _load_provider_modules() -> None:
+    """Import the provider modules in their own scope.
+
+    ``load_post_start_code`` also imports ``scripts.agent_runtime.adapters`` under the names ``agy``, ``claude``, ``codex``,
+    ``cursor`` and ``muse``. Binding those names twice in one function is a mypy ``no-redef`` error. The imports stay
+    literal, and each module still lands in ``sys.modules``.
+    """
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher.providers import agy, claude, codex, cursor, muse, opencode, stream_json  # noqa: F401
+
+
+def load_post_start_code(bound_review: bool = False) -> None:
+    """Import, as the worker starts, the modules its later steps import inside functions.
+
+    Settlement and the other steps after the provider runs import part of their code on demand, from the
+    primary checkout. A dispatcher change that merged while the worker ran gave them new modules next to
+    the old ones loaded at start, and removal failed on the mix (#12634). Loading them now makes the whole
+    run use the version it started with. The list holds the deferred imports of the modules a worker runs
+    after start (this one, ``git``, the provider registry, the settlement chain, review attempts and
+    their helpers) and the modules the dispatcher tests loaded after start. A new deferred import in
+    those steps belongs here; ``bound_review`` adds what only a bound review attempt imports. Each group is skipped whole when any module in it fails to import, whatever
+    the error, so the worker still starts; a step that then cannot load its code records
+    ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
+    """
+    with contextlib.suppress(Exception):
+        from scripts.agent_runtime import (  # noqa: F401
+            agy_hook_config,
+            attempt_boundary,
+            attempt_network,
+            binary_resolve,
+            codex_accounts,
+            env_sanitize,
+            failure_codes,
+            jsonl,
+            review_mcp,
+            sources_read_only,
+            telemetry,
+            tool_calls,
+        )
+        from scripts.agent_runtime.adapters import (  # noqa: F401
+            _output_schema,
+            agy,
+            base,
+            claude,
+            codex,
+            codex_events,
+            cursor,
+            muse,
+        )
+    if bound_review:
+        _load_bound_review_code()
+    with contextlib.suppress(Exception):
+        from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
+
+        attempt_hooks().bind_evidence_modules()
+        from scripts.guardrails import delegate_ownership  # noqa: F401
+        from scripts.lib import git_identity  # noqa: F401
+        from scripts.opsec import git_push  # noqa: F401
+        from scripts.session_supervisor import remote  # noqa: F401
+        from scripts.utils import claude_version  # noqa: F401
+    with contextlib.suppress(Exception):
+        from scripts.review import (  # noqa: F401
+            capacity,
+            isolation,
+            record_cf_verdict,
+            render_contract,
+            repair_round,
+            review_contract,
+            reviewer_resolver,
+            role_resolution,
+            subject_seat,
+            verdict_parser,
+        )
+
+        attempt_hooks().bind_receipt_modules()
+    with contextlib.suppress(Exception):
+        from scripts.dispatcher import checks, host_admission, output_schema, review_attempt, scope  # noqa: F401
+    _load_provider_modules()
+    with contextlib.suppress(Exception):
+        from scripts.fleet import (  # noqa: F401
+            credit_lane,
+            ignored_task_output,
+            pr_owner_check,
+            regenerable_output,
+            reset_reserve,
+            terminal_abandon,
+        )
+    with contextlib.suppress(Exception):
+        from scripts.orchestration import (  # noqa: F401
+            admission_shadow,
+            dead_worker_state,
+            dispatch_admission,
+            pool_headroom,
+            pr_ownership,
+            preparation_evidence,
+            reaper_lifecycle,
+            slot_routing,
+            task_record_causes,
+            worker_leftovers,
+            worktree_artifacts,
+            worktree_claims,
+            worktree_git,
+            worktree_prep,
+        )
+
+
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 # Extra fallback scans, 0.2 s apart, before an unreadable one keeps the worktree.
@@ -652,7 +902,7 @@ def _end_own_scope(record: dict):
 
 
 def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
-    """Record the task worktree's disposition; never changes the task's execution status.
+    """Record the task worktree's disposition and remove the task's caches; never changes its execution status.
 
     The worktree goes only once the provider's whole process tree is proven gone; liveness that
     cannot be proven either way keeps it. A finished scope launch first ends whatever that scope
@@ -663,6 +913,7 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
     stopped = _end_own_scope(record)
+    _clear_task_caches(record)
     if record.get("launch_mode") == "popen-fallback" and stopped is not None and not stopped.ok:
         # Only the process group's id is recorded for a fallback launch, so a descendant that left it is
         # invisible to the liveness check below. Name each survivor so a later retry still sees it.
@@ -683,8 +934,25 @@ def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> N
 
     try:
         record.update(git.settle_worktree(record, borrowed=borrowed, salvage=salvage))
+    except ImportError as exc:
+        # Settlement's code could not be loaded: keep the tree and let the scheduled cleanup, a fresh process, finish.
+        record.update(worktree_disposition="retained", worktree_disposition_reason=git.CODE_UNAVAILABLE,
+                      worktree_disposition_detail=f"{type(exc).__name__}: {exc}")
     except Exception:
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
+
+
+def _holds_task_caches(record: dict) -> bool:
+    """Whether a finished task still has caches to remove, or a walk or removal failure to retry."""
+    if record.get("status") in store.ACTIVE:
+        return False
+    try:
+        found, failed = _task_caches(record["task_id"], remove=False)
+    except (KeyError, TypeError, ValueError):
+        return False  # no valid task identity, so no output directories of its own
+    except OSError:
+        return True
+    return bool(found or failed or "task_cache_residue" in record)
 
 
 def _unsettled(record: dict) -> bool:
@@ -693,7 +961,7 @@ def _unsettled(record: dict) -> bool:
 
 
 def settle_left_worktrees(salvage: bool = False) -> None:
-    """Retry finished tasks' worktrees during scheduled cleanup, including crash recovery.
+    """Retry finished tasks' worktrees and remove their caches during scheduled cleanup, including crash recovery.
 
     Admission and worker exit do not call this store-wide sweep. Each worker settles only
     its own task. The hourly hygiene run passes salvage for the trees settlement keeps.
@@ -705,13 +973,21 @@ def settle_left_worktrees(salvage: bool = False) -> None:
                 record = _observe(record)
             records.append(record)
     for record in records:
-        if not _unsettled(record) or not Path(record.get("worktree_path") or "").is_dir():
+        reap = _unsettled(record) and Path(record.get("worktree_path") or "").is_dir()
+        if not reap and not _holds_task_caches(record):
             continue
-        path = store.record_path(record["task_id"])
+        try:
+            path = store.record_path(record["task_id"])
+        except (KeyError, TypeError, ValueError):
+            continue  # a damaged identity never ends the sweep for the records after it
         # wait() takes this lock before it reports a terminal task, so it never returns mid-removal.
         with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
-            if _unsettled(current):
+            if not reap or not _unsettled(current):
+                # A task settled without a worktree, or by an earlier pass, still sheds its caches.
+                if _clear_task_caches(current):
+                    store.replace(current, path)
+            else:
                 _reap_settled(current, salvage=salvage)
                 store.replace(current, path)
 
@@ -860,6 +1136,7 @@ def _adopt_orphans() -> bool:
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
+    load_post_start_code(bool(record.get("review_attempt")))
     if record.get("require_review_verdict") is True:
         # The code this supervisor loaded; settlement records it again (#12399).
         record["dispatcher_code_start"] = _dispatcher_code()
@@ -910,7 +1187,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             return
         try:
             headroom.check_plan(spec.agent, spec.model, record, review=admission.review_typed(record))
-            headroom.check_runtime(spec.agent, spec.model)
+            headroom.check_runtime(spec.agent, spec.model, codex_account=record.get("codex_account"))
         except ValueError as exc:
             status, error = "failed", str(exc)
             return
@@ -996,11 +1273,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         while True:
             correcting = pending_correction is not None
             if pending_conversation:
-                from scripts.dispatcher.providers.agy import continuation
-
-                invocation = continuation(runtime_context.build(spec, child_env(spec)), pending_conversation)
+                invocation = runtime_context.build(spec, child_env(spec), conversation=pending_conversation)
             elif correcting:
-                invocation = replace(runtime_context.build(spec, child_env(spec)), stdin=pending_correction)
+                invocation = runtime_context.build(spec, child_env(spec), launch_prompt=pending_correction)
                 pending_correction = None
             # The first launch keeps the timeout the caller passed. Only a continuation
             # spends what remains of that same deadline, and a spent deadline does not

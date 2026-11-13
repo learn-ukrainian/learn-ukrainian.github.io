@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import launcher_environment
+
 REPO = Path(__file__).resolve().parents[1]
 
 pytestmark = [pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available"), pytest.mark.usefixtures("hermetic_monitor")]
@@ -32,11 +34,9 @@ _COPIED = (
     "scripts/lib/project_interpreter.sh",
     "scripts/lib/handoff_identity.sh",
     "scripts/lib/session_supervisor.sh",
-    "scripts/lib/kimicc_route.sh",
     "scripts/lib/claude_route_guard.sh",
     "scripts/lib/profile_resolver.sh",
     "scripts/launchers/claude.sh",
-    "scripts/launchers/kimi.sh",
     "scripts/launchers/codex.sh",
     "scripts/config/issue_streams.yaml",
     "scripts/config/launcher_stream_aliases.tsv",
@@ -44,40 +44,28 @@ _COPIED = (
 # Helper scripts the sites name by path; the stub interpreters never run them.
 _PLACEHOLDERS = (
     "scripts/orchestration/thread_handoff.py",
-    "scripts/lib/kimi_coding_oauth.py",
     "scripts/lib/context_profiles.py",
-    "scripts/review/model_catalog.py",
 )
 _SITES = (
     "import_bundle",
-    "observer_heartbeat",
     "renew_heartbeat",
     "lease_close",
     "driver_agent_type",
     "slot_registry",
     "claude_profile",
-    "kimi_route",
 )
 _EXPECTED_HONEST = {
     "import_bundle": "scripts/orchestration/thread_handoff.py",
-    "observer_heartbeat": "scripts.orchestration.observer_heartbeat",
     "renew_heartbeat": "scripts.session_supervisor heartbeat",
     "lease_close": "scripts.session_supervisor close",
     "driver_agent_type": "scripts.orchestration.driver_agent_type",
     "slot_registry": "scripts.orchestration.handoff_slot_registry",
     "claude_profile": "scripts/lib/context_profiles.py",
-    "kimi_route": "scripts/lib/kimi_coding_oauth.py",
 }
 
 
 def _clean_env(**extra: str) -> dict[str, str]:
-    env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(
-            ("GIT_", "LC_", "LEARN_UKRAINIAN_", "KIMI", "MOONSHOT", "CLAUDE_", "SESSION_", "CODEX_")
-        )
-    }
+    env = launcher_environment()
     env["GIT_CONFIG_GLOBAL"] = os.devnull
     env["GIT_CONFIG_NOSYSTEM"] = "1"
     env.update(extra)
@@ -104,9 +92,6 @@ def _stub_python(root: Path, owner: str, log: Path) -> None:
     python.write_text(
         "#!/usr/bin/env bash\n"
         f"printf '%s %s\\n' {owner} \"$*\" >> {str(log)!r}\n"
-        # The Kimi route asks the catalog for a route before reaching its
-        # OAuth helper; answer that one call so the helper line is reached.
-        'case "$1" in *model_catalog.py) printf \'k3\\tplat\\tcoding\\tkimicc_k3\\n\' ;; esac\n'
         "exit 0\n",
         encoding="utf-8",
     )
@@ -182,8 +167,6 @@ site() { printf 'SITE %s\n' "$1" >> "$SITE_LOG"; }
 
 site import_bundle
 ( LC_EPIC=devops; launcher_import_rollover_bundle ) >/dev/null 2>&1
-site observer_heartbeat
-( LC_PROVIDER=cursor LC_MODE=driver LC_DRY_RUN=0 LC_EPIC=devops; launcher_cursor_observer_presence ) >/dev/null 2>&1
 site renew_heartbeat
 (
   LC_MODE=driver LC_DRIVER_LEASE_CLAIMED=1 LC_DRY_RUN=0
@@ -201,12 +184,6 @@ site slot_registry
 ( launcher_require_registered_slot claude devops ) >/dev/null 2>&1
 site claude_profile
 ( LC_MODEL=claude-opus-5-5 source "$LC_ROOT/scripts/launchers/claude.sh"; launcher_adapter_preflight ) >/dev/null 2>&1
-site kimi_route
-(
-  LC_HARNESS=claude-code LC_ENDPOINT=coding LC_MODEL=k3 LC_ISOLATE_CONFIG=0
-  source "$LC_ROOT/scripts/launchers/kimi.sh"
-  launcher_adapter_preflight
-) >/dev/null 2>&1
 exit 0
 """
 
@@ -253,8 +230,6 @@ def _assert_every_site_ran_the_primary(
     # Helper scripts named by path come from the validated primary.
     joined = "\n".join(layout.lines())
     assert f"{layout.primary}/scripts/orchestration/thread_handoff.py" in joined
-    if "kimi_route" in sites:
-        assert f"{layout.primary}/scripts/lib/kimi_coding_oauth.py" in joined
 
 
 def _assert_refused_before_any_site(layout: Layout, result: subprocess.CompletedProcess[str]) -> None:
@@ -296,7 +271,7 @@ def test_ambient_git_dir_does_not_redirect_any_site(layout: Layout) -> None:
 
 
 def test_worktree_local_venv_never_runs(layout: Layout) -> None:
-    """The driver-agent and Kimi sites used to try the worktree's own .venv first."""
+    """The driver-agent site used to try the worktree's own .venv first."""
     _stub_python(layout.worktree, "WORKTREE", layout.log)
     result = _run_sites(layout, **_hostile_env(layout))
     _assert_every_site_ran_the_primary(layout, result)
@@ -529,8 +504,6 @@ def _assert_override_refused(layout: Layout, result: subprocess.CompletedProcess
     assert layout.lines() == [], layout.lines()
 
 
-# The Kimi route belongs to Kimi launches, which never read the override.
-_CODEX_REACHABLE_SITES = tuple(name for name in _SITES if name != "kimi_route")
 
 
 def test_override_names_a_separate_git_dir_primary(layout: Layout) -> None:
@@ -538,7 +511,7 @@ def test_override_names_a_separate_git_dir_primary(layout: Layout) -> None:
     refused = _run_codex_sites(sgd, None)
     _assert_refused_before_any_site(sgd, refused)
 
-    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _SITES)
 
 
 def test_codex_adapter_uses_the_validated_override(layout: Layout) -> None:
@@ -642,7 +615,7 @@ def test_override_copied_separate_git_dir_gitfile_residual(layout: Layout) -> No
     _assert_override_refused(
         sgd, _run_codex_sites(sgd, copy), f"is not the core.worktree Git records ({sgd.primary}): {copy}"
     )
-    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _SITES)
 
 
 def test_override_is_read_only_on_codex_launches(layout: Layout) -> None:
@@ -693,3 +666,38 @@ def test_session_supervisor_state_root_ignores_git_redirection(layout: Layout) -
     assert hostile.returncode == 1
     assert "cannot resolve canonical state root" in hostile.stderr
     assert hostile.stdout == ""
+
+
+@pytest.mark.parametrize("via", ["symlinked-checkout", "symlinked-lib-directory"])
+def test_machinery_dir_is_the_physical_package_when_reached_through_a_symlink(tmp_path: Path, via: str) -> None:
+    """Defect class: sourced helpers taken from a symlinked path instead of the physical package.
+
+    A planted environment value is replaced, and the value is readonly once set.
+    """
+    real = (tmp_path / "real").resolve()
+    (real / "scripts" / "lib").mkdir(parents=True)
+    shutil.copy2(REPO / "scripts/lib/launcher_core.sh", real / "scripts/lib/launcher_core.sh")
+    if via == "symlinked-checkout":
+        (tmp_path / "alias").symlink_to(real)
+    else:
+        (tmp_path / "alias" / "scripts").mkdir(parents=True)
+        (tmp_path / "alias" / "scripts" / "lib").symlink_to(real / "scripts" / "lib")
+    core = tmp_path / "alias" / "scripts/lib/launcher_core.sh"
+    result = subprocess.run(
+        [
+            "bash",
+            "-euo",
+            "pipefail",
+            "-c",
+            'source "$1"; source "$1"; printf "%s\\n" "$LC_MACHINERY_DIR"; readonly -p | grep -c " LC_MACHINERY_DIR="',
+            "bash",
+            str(core),
+        ],
+        env=_clean_env(LC_MACHINERY_DIR="/planted"),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == [str(real / "scripts"), "1"]

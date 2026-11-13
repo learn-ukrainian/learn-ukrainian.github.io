@@ -7,11 +7,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
-from scripts.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
-from scripts.orchestration import integration_sweep as sweep
-from scripts.publish.merge_guard import bound_rollup_states
-from scripts.review.record_cf_verdict import build_comment
+from lu_machinery.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
+from lu_machinery.orchestration import integration_sweep as sweep
+from lu_machinery.publish.merge_guard import bound_rollup_states
+from lu_machinery.review.record_cf_verdict import build_comment
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -19,15 +18,19 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 
 @pytest.fixture(autouse=True)
-def _advisory_fixture_workflow(monkeypatch):
-    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
-    from scripts.ci import advisory_checks
+def _advisory_fixture_workflow(monkeypatch, tmp_path):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow.
 
-    monkeypatch.setattr(
-        advisory_checks,
-        "CI_WORKFLOW_PATH",
-        Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
-    )
+    The release reads ``.github/workflows/ci.yml`` under ``product_root()``, so the
+    fixture workflow stands at that path in a stand-in product root.
+    """
+    from lu_machinery.ci import advisory_checks
+
+    workflow = tmp_path / "advisory-product-root/.github/workflows/ci.yml"
+    workflow.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml"
+    workflow.write_bytes(fixture.read_bytes())
+    monkeypatch.setattr(advisory_checks, "product_root", lambda *_args, **_kwargs: workflow.parents[2])
 
 
 def comment(
@@ -186,6 +189,25 @@ def test_learner_content_needs_its_ukrainian_seats_without_a_ukrainian_verdict(r
     assert verdict.state == state
     expected = "ready" if state == "APPROVED" else sweep.NEEDS_SEAT
     assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == expected
+
+
+@pytest.mark.parametrize(
+    "paths,learner_content",
+    [
+        (["registry/artifacts/classification-v1.meta.json"], False),
+        (["curriculum/l2-uk-en/curriculum_manifest.sha256.json"], False),
+        (["registry/artifacts/classification-v1.meta.json", "curriculum/l2-uk-en/a1/lesson.md"], True),
+        (["curriculum/l2-uk-en/curriculum_manifest.sha256.json", "site/src/content/docs/lesson.mdx"], True),
+        (["registry/artifacts/classification-v1.tsv"], True),
+        (["registry/artifacts/classification-v1.meta.json.bak"], True),
+        (["site/src/data/lexicon-manifest.fingerprint.json", "registry/lexicon/atlas-runtime-release.json"], False),
+        (["site/src/data/lexicon-manifest.fingerprint.json", "site/src/data/lexicon-search-index.json"], True),
+    ],
+)
+def test_metadata_only_manifests_do_not_change_learner_content(paths, learner_content):
+    """Metadata-only manifests avoid language review; payloads and lookalikes still require it."""
+    assert sweep.changes_learner_content(paths) is learner_content
+    assert sweep.requires_ukrainian_behavior_receipt(paths) is learner_content
 
 
 def pr(**updates):
@@ -761,8 +783,8 @@ def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, cap
         def comments(self, repository, number):
             return [*issue_11127_markers(), recorded(5000), malformed]
 
-        def pr_files(self, repository, number):
-            return ["scripts/example.py"]
+        def pr_file_rows(self, repository, number):
+            return [{"filename": "scripts/example.py"}]
 
         def queue_membership(self, repository, item):
             return False

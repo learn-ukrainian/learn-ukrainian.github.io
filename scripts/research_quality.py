@@ -1,19 +1,37 @@
 #!/usr/bin/env python3
-"""Stub: module moved to scripts/research/research_quality.py"""
-import importlib.util as _ilu
-import sys as _sys
-from pathlib import Path as _P
+"""Compatibility entry point for ``research/research_quality.py``, the implementation.
 
-_research_dir = str(_P(__file__).parent / "research")
+Run directly, this file runs the implementation as ``__main__``. Imported, it stays a
+module of its own and forwards every attribute it does not define to the implementation.
+Patch the implementation module, never this one: a value set here is not seen there.
+"""
+
+from __future__ import annotations
+
+import sys as _sys
+from pathlib import Path as _Path
+
+# The implementation's callers have always found its siblings on sys.path through this
+# entry point; keep that.
+_research_dir = str(_Path(__file__).parent / "research")
 if _research_dir not in _sys.path:
     _sys.path.insert(0, _research_dir)
-_f = _P(__file__).parent / "research" / "research_quality.py"
+
 if __name__ == "__main__":
     import runpy
+    from pathlib import Path
 
-    runpy.run_path(str(_f), run_name="__main__")
+    runpy.run_path(str(Path(__file__).parent / "research" / "research_quality.py"), run_name="__main__")
 else:
-    _s = _ilu.spec_from_file_location("research_quality", _f)
-    _m = _ilu.module_from_spec(_s)
-    _sys.modules[__name__] = _m
-    _s.loader.exec_module(_m)
+    from typing import Any
+
+    if __package__:
+        from .research import research_quality as _implementation
+    else:  # imported as a top-level module, with this file's directory on sys.path
+        from research import research_quality as _implementation  # type: ignore[no-redef]
+
+    def __getattr__(name: str) -> Any:
+        return getattr(_implementation, name)
+
+    def __dir__() -> list[str]:
+        return sorted({*globals(), *dir(_implementation)})

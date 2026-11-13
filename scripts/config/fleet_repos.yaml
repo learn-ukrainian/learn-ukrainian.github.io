@@ -15,6 +15,10 @@
 # `python -m scripts.publish pr-merge` refuses a head without a recorded
 # exact-head cross-family APPROVE; when false, a head with no recorded verdict
 # keeps the publisher's older behaviour.
+#
+# `required_workflow` (optional) is the workflow file whose failed PR or merge-queue run is the CI
+# evidence for a repair-verification review round (scripts/review/repair_round.py); default
+# `.github/workflows/ci.yml`.
 
 version: 1
 
@@ -55,4 +59,29 @@ repos:
     local_name: kubedojo-labs
     transport: https
     role: public-labs
+    verdict_recorder: true
+  # machinery: the public machinery repository. Role avoids "public-monorepo" (learn-ukrainian-only
+  # audits, Kimi and DeepSeek admission) and keeps the "public-" prefix for publisher privacy handling.
+  machinery:
+    github: learn-ukrainian/machinery
+    local_name: machinery
+    transport: https
+    role: public-machinery
+    verdict_recorder: true
+    required_workflow: .github/workflows/ci-gate.yml
+  # ukrainian-llm-eval: the public model-evaluation repository (EVAL-PROJECT-1103). Reuses the
+  # public-labs role: consumers only read the "public-" / "private" prefix, and it runs studies.
+  ukrainian-llm-eval:
+    github: learn-ukrainian/ukrainian-llm-eval
+    local_name: ukrainian-llm-eval
+    transport: https
+    role: public-labs
+    verdict_recorder: true
+  # Private sibling. The private- role prefix is what OPSEC and the publisher
+  # read as visibility. The row otherwise matches kubedojo-labs.
+  mnq-orb:
+    github: krisztiankoos/mnq-orb
+    local_name: mnq-orb
+    transport: https
+    role: private-labs
     verdict_recorder: true

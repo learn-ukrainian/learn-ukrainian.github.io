@@ -37,6 +37,12 @@ from scripts.orchestration.task_record_store import (
     relocated_result_file,
 )
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
 # Dispatch v2 has no grok alias (grok-build is the Grok TUI); the Grok seat runs as the Cursor TUI.
@@ -547,7 +553,7 @@ def resolve_prompt_file(repo_root: Path, args: argparse.Namespace) -> Path:
 def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[str]:
     command = [
         PYTHON,
-        "scripts/dispatch.py",
+        f"{_MACHINERY}/dispatch.py",
         "dispatch",
         "--agent",
         SEAT_PROVIDERS.get(args.agent, args.agent),
@@ -747,6 +753,13 @@ def cmd_inbox(args: argparse.Namespace) -> int:
         max_result_chars=args.max_result_chars,
         max_log_chars=args.max_log_chars,
     )
+    from scripts.ai_agent_bridge._channels_cli import authority_inbox_notice
+
+    # JSON stays machine-parseable: its pointer goes to stderr.
+    authority_inbox_notice(
+        os.environ.get("SESSION_HANDOFF_AGENT"),
+        file=sys.stderr if args.format == "json" else None,
+    )
     if args.format == "json":
         print(json.dumps(payload, indent=2, default=str))
     else:
@@ -778,7 +791,7 @@ def build_parser() -> argparse.ArgumentParser:
         "dispatch",
         help="Dispatch a v2 worker and record it in a run ledger.",
         description=(
-            "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
+            f"Launch via {_MACHINERY}/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "budget ceilings, lifecycle-file propagation, "
             "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
             "Seats grok-build, qwen, kimi are refused. "

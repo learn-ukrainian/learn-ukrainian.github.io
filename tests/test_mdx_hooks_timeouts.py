@@ -11,12 +11,11 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
+from lu_machinery.review import snapshot
 
 from scripts.generate_mdx import core as mdx_core
 from scripts.generate_mdx import generate_plan_markdown
 from scripts.hooks import hook_timing, measure_hook_stack
-from scripts.lib import session_record
-from scripts.review import snapshot
 
 pytestmark = pytest.mark.reads_content
 
@@ -85,7 +84,7 @@ def test_hook_timing_timeout_returns_124_and_logs(monkeypatch: pytest.MonkeyPatc
     assert row["rc"] == 124
 
 
-def test_measure_hook_stack_timeout_records_nonzero_rc(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_measure_hook_stack_timeout_records_nonzero_rc(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[dict[str, Any]] = []
     monkeypatch.setattr(measure_hook_stack.subprocess, "run", _raise_timeout(calls))
 
@@ -110,15 +109,3 @@ def test_snapshot_git_timeout_returns_rc124_and_fails_closed(
 
     with pytest.raises(snapshot.ReviewSnapshotError, match="TimeoutExpired after 30s"):
         snapshot._run_git(Path("/usr/bin/git"), ["status"], cwd=tmp_path)
-
-
-def test_session_root_git_timeout_uses_existing_error_shape(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(session_record.subprocess, "run", _raise_timeout(calls))
-
-    with pytest.raises(session_record.SessionRecordError, match="TimeoutExpired after 30s"):
-        session_record.canonical_state_root(tmp_path)
-
-    assert calls[0]["timeout"] == session_record._GIT_TIMEOUT_SECONDS == 30

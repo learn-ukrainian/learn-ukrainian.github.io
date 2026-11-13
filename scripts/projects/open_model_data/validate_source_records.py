@@ -15,8 +15,11 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+# isort: split
+
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT_DIR = ROOT / "registry/projects/open_model_data/contracts"

@@ -21,6 +21,11 @@ from types import ModuleType
 from typing import Any, Protocol, Self
 from urllib.parse import parse_qs, unquote, urlsplit
 
+try:
+    from ..common.repo_root import machinery_path, machinery_root
+except ImportError:  # loaded as ``lib.readonly_sqlite``, with the package directory on sys.path
+    from common.repo_root import machinery_path, machinery_root  # type: ignore[no-redef]
+
 
 class SQLiteConnection(Protocol):
     """Connection type for annotations, without exporting a constructor."""
@@ -224,7 +229,16 @@ _CORPUS_DATABASE_NAMES = frozenset({"sources.db", "vesum.db"})
 # Published Sources generations (scripts/storage/generations.py) live under
 # this directory with names that are not sources.db.
 _GENERATIONS_DIRNAME = "sources-generations"
-_GUARD_PATH = "scripts/lib/readonly_sqlite.py"
+
+
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``, in ``_script_path``'s form."""
+    return machinery_path(relative).relative_to(machinery_root().parent).as_posix()
+
+
+_GUARD_PATH = _checkout_relative("lib/readonly_sqlite.py")
+# The writer allowlist, relative to the checkout that holds it.
+_ALLOWLIST = Path(_checkout_relative("hygiene/sqlite_reference_allowlist.json"))
 
 
 class CorpusDatabaseWriteRefused(PermissionError):
@@ -275,7 +289,7 @@ def _uri_requests_read_only(database: str | os.PathLike[str] | bytes) -> bool:
 def _declared_writer_paths() -> frozenset[str]:
     """Writer paths from the allowlist file, without importing the linter."""
     for parent in Path(__file__).resolve().parents:
-        candidate = parent / "scripts" / "hygiene" / "sqlite_reference_allowlist.json"
+        candidate = parent / _ALLOWLIST
         if not candidate.is_file():
             continue
         entries = json.loads(candidate.read_text(encoding="utf-8"))
@@ -286,7 +300,7 @@ def _declared_writer_paths() -> frozenset[str]:
 def _script_path(filename: str) -> str | None:
     path = Path(filename).resolve()
     for parent in path.parents:
-        if (parent / "scripts" / "hygiene" / "sqlite_reference_allowlist.json").is_file():
+        if (parent / _ALLOWLIST).is_file():
             try:
                 return path.relative_to(parent).as_posix()
             except ValueError:
@@ -297,7 +311,7 @@ def _script_path(filename: str) -> str | None:
 _OPEN_HELPERS = frozenset({"_open_conn", "_open_writer_conn"})
 # The generic factory is itself an allowlisted connect. Its own frame must not
 # authorize the corpus write it is being asked to make.
-_SEAM_FUNCTIONS = frozenset({("scripts/api/resilience.py", "connect_sqlite")})
+_SEAM_FUNCTIONS = frozenset({(_checkout_relative("api/resilience.py"), "connect_sqlite")})
 
 
 def _stack_may_write(factory: str | None) -> bool:

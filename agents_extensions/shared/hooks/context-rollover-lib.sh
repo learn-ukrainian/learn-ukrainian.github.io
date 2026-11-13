@@ -100,6 +100,7 @@ context_effective_rollover_mode() {
 # Anything missing or failing means "not guard-managed": the operator text stays.
 context_driver_lane_name() {
   local project_dir="$1" interpreter session name
+  local registry_module=scripts.ops.driver_lanes
   [ -n "${SESSION_EPIC:-}" ] && [ -n "${TMUX:-}" ] && [ -n "${TMUX_PANE:-}" ] || return 0
   command -v tmux >/dev/null 2>&1 || return 0
   session=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}' 2>/dev/null) || return 0
@@ -112,15 +113,16 @@ context_driver_lane_name() {
   fi
   [ -x "$interpreter" ] || return 0
   name=$("$interpreter" -I -c '
+import importlib
 import sys
 sys.path.insert(0, sys.argv[1])
-from scripts.ops.driver_lanes import load_registry
+load_registry = importlib.import_module(sys.argv[2]).load_registry
 lanes = [
     lane.name
     for lane in load_registry().lanes
-    if lane.session == sys.argv[2] and lane.epic == sys.argv[3] and lane.kind == "claude"
+    if lane.session == sys.argv[3] and lane.epic == sys.argv[4] and lane.kind == "claude"
 ]
 print(lanes[0] if len(lanes) == 1 else "")
-' "$project_dir" "$session" "$SESSION_EPIC" 2>/dev/null) || return 0
+' "$project_dir" "$registry_module" "$session" "$SESSION_EPIC" 2>/dev/null) || return 0
   printf '%s\n' "$name"
 }

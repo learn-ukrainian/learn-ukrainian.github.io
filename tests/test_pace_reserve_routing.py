@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -12,9 +13,35 @@ from scripts.api import state_router
 from scripts.fleet import capacity_pick, credit_lane, idle_settle
 from scripts.fleet.reset_reserve import unavailable_reserve
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
+from scripts.telemetry.cost_report import CostRecord
 from tests.api.test_routing_budget import _configure_base
-from tests.api.test_routing_budget_endpoint import _record
 from tests.claude_route_accounts import HOST_ACCOUNT
+
+
+# Ported from tests/api/test_routing_budget_endpoint.py (deleted; C-5048 disposition b):
+# the cost record the in-tree state router reads.
+def _record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
+    return CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent=agent,
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=mtime.isoformat(),
+        mtime=mtime,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=cost_usd,
+    )
 
 
 @pytest.mark.parametrize(

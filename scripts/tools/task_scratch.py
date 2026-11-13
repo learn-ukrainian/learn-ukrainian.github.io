@@ -33,7 +33,10 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.common import task_scratch as lifecycle
 
-ATLAS_410K_EXAMPLE = """\
+_TASK_SCRATCH = (
+    f"{Path(__file__).parents[1].name}/{Path(__file__).parent.name}/{Path(__file__).name}"
+)
+ATLAS_410K_EXAMPLE = f"""\
 Atlas 410k scale check (both steps share one scratch directory; every large
 output lands under $LU_TASK_SCRATCH_DIR and is removed when the run ends).
 Copyable from any dispatch worktree: PRIMARY_REPO is the primary checkout
@@ -41,7 +44,7 @@ Copyable from any dispatch worktree: PRIMARY_REPO is the primary checkout
 site/public/lexicon decks); it is exported so the child shell sees it:
 
   export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k \\
+  "$PRIMARY_REPO/.venv/bin/python" {_TASK_SCRATCH} run --task-id atlas-8307-410k \\
       --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \\
       bash -euc '
         "$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas \\
@@ -63,8 +66,8 @@ smaller rehearsal, lower --target (e.g. 50) and keep everything else.
 Recovery of interrupted runs (dry-run by default; the scheduled hygiene
 runner applies it):
 
-  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover
-  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover --apply
+  "$PRIMARY_REPO/.venv/bin/python" {_TASK_SCRATCH} recover
+  "$PRIMARY_REPO/.venv/bin/python" {_TASK_SCRATCH} recover --apply
 """
 
 

@@ -97,3 +97,88 @@ the acquisition stops. Official population must use the documented official
 writer. Importing either mirror or companion staging into another collection
 needs its own reviewed writer change and reconciliation proof. No live store
 is written by this acquisition change.
+
+## ВТС staging import into `slovnyk_me_entries`
+
+`scripts/ingest/slovnyk_me_ingest.py --staging PATH` is the reviewed writer
+for the ВТС companion staging. It reads only `results` rows with status
+`positive`, and it never writes the staging file. It opens the file read-only
+and reads 2,000-row position chunks, each fetched completely, so no read lock
+outlasts a chunk and the live job's 1-second busy wait is never starved.
+Positive rows are final; rows the job adds meanwhile are read now or by the next
+run. Each row keeps the observed source URL,
+the original `fetched_at` and the full article text with its SHA-256.
+`importer_version` is `slovnyk-staging-ingest/1`, and `cache_path` names
+`staging:vts#position=N`, the frozen manifest position, which is independent of where a copy lives. Atlas `full_vts` authenticates the text
+from the row alone.
+
+Staging keys on exact source headwords, while the store keys on learner-lemma
+normalization. Every row keys on `normalize_word(article.word)`. It maps when
+that key equals the frozen lookup key. It also maps when the source URL suffix
+encodes the key exactly, with spaces and apostrophes as `_` and an optional
+three-hex-digit homonym suffix (`аве_марія`, `об_яв`, `авто_ea0`). Two
+classes are rejected and counted. `prefix_entry` covers combining-form
+articles such as `авто...`. `key_mismatch` covers bracketed variant headwords
+such as `ла[/'][']я`. Rows are upserted on
+`(normalized_word, dictionary_slug, source_url)`. Only new or changed rows
+are written, after the standard pre-import backup, so a run with nothing new
+writes nothing and takes no backup. The public ВТС export stays withheld by
+the permissions register.
+
+The ВТС definition card now reads `slovnyk_me_entries` when the per-lemma
+cache has no ВТС row, before any live fetch. Only rows whose text matches their
+SHA-256 qualify, so bounded 200-character cache imports never stand in for an
+article.
+
+The acquisition spec freezes `parser_sha256` as the hash of
+`scripts/lexicon/enrich_manifest.py`, so this change moves it, although the
+parser itself is unchanged. A job running from an updated checkout refuses
+with `frozen_input_mismatch` at its next `run` launch. Recover with the
+existing `rebind` action, and do the same for the Mac copy when its checkout
+updates.
+
+### Re-run runbook
+
+Run each import from the primary checkout on `main`, while no other writer
+holds `sources.db`. The pre-import backup needs free local disk at least the
+size of the current generation, about 7.1 GB.
+
+1. Dry run, then import, for new server data:
+
+   ```bash
+   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --staging "$ACQ_ROOT/vts/staging.sqlite3" --dry-run
+   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --staging "$ACQ_ROOT/vts/staging.sqlite3"
+   ```
+
+   The live acquisition can keep running, because the importer holds only
+   brief per-chunk read locks.
+2. For the Mac copy, sync its `staging.sqlite3` into a separate local
+   directory, never over the server file. Then run the same two commands with
+   that path. Rows from either copy share the store key, so they reconcile by
+   upsert: the same article unchanged, a refetched article updated.
+3. Record the printed identity line (job fingerprint, manifest SHA-256,
+   positions and positive-row digest), the generation and the counts below.
+   A second run must report `new=0 updated=0 written=0`.
+
+### Reconciliation proof
+
+The pre-merge dry run ran on 2026-11-13 at 10:02 UTC against generation
+`sources.20261030T191244Z-485bfef02834.db`, which held 31,687 ВТС rows.
+
+| Field | Value |
+| --- | --- |
+| Staging job fingerprint | `0a9b698858e980a63f564f6e092fd26d17564949c65e1a5f429218ac00139555` |
+| Manifest SHA-256 | `066fe4f1455ada3fddea25d4975651c0e38f5c45baa5f2bf6ad5b5c7d814c46b` |
+| Positions read | 0–131,803 of 202,270 |
+| Positive-row digest | `71960d4cde45f800fcb44bb1d2e06d2dfa9a1027fd7f49cfc1e6fff16661717a` |
+| Staged positives | 131,804 |
+| Mapped | 131,690 |
+| Rejected `prefix_entry` | 106 |
+| Rejected `key_mismatch` | 8 |
+| New rows | 108,868 |
+| Updated rows | 22,822 (cache-imported 200-character rows gaining full text) |
+| Unchanged rows | 0 |
+
+Of the 31,687 earlier rows, 8,865 are cache words not yet staged, and they
+remain unchanged. The first real import runs after this writer lands, against
+a later snapshot. Its counts are recorded in the import closeout.

@@ -16,6 +16,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 SCHEMA_VERSION = 1
 STATUS_PASS = "PASS"
 
@@ -48,7 +54,7 @@ def build_pass_proof(
         "replacement_thread_id": replacement_thread_id.strip(),
         "challenge_sha256": challenge_digest(challenge.strip()),
         "proven_at": isoformat_z(now),
-        "proven_by": "scripts/orchestration/thread_handoff_canary.py",
+        "proven_by": f"{_PACKAGE_DIR}/thread_handoff_canary.py",
     }
 
 
@@ -65,7 +71,7 @@ def validate_pass_proof(
         return "canary proof schema version is unsupported"
     if payload.get("status") != STATUS_PASS:
         return "canary proof did not report PASS"
-    if payload.get("proven_by") != "scripts/orchestration/thread_handoff_canary.py":
+    if payload.get("proven_by") != f"{_PACKAGE_DIR}/thread_handoff_canary.py":
         return "canary proof was not produced by the thread handoff canary script"
     if payload.get("rollover_id") != rollover_id:
         return "canary proof rollover_id does not match the pending rollover"

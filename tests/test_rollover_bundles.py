@@ -18,10 +18,13 @@ from types import SimpleNamespace
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
+from lu_machinery.orchestration import thread_handoff as release_th
+from lu_machinery.session_streams.store import ContentRejectedError as ReleaseContentRejectedError
 
 from agents_extensions.shared.session_streams.inventory import stream_anchor_id
 from agents_extensions.shared.session_streams.store import ContentRejectedError, validate_entry_body
 from scripts.orchestration import thread_handoff as th
+from tests.launcher_sandbox import launcher_environment
 
 HANDOFF_PATH = ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md"
 AGENT = "claude-infra"
@@ -31,6 +34,17 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # agent to it. Resolved from issue_streams.yaml so epic succession needs no edit.
 REGISTERED_STREAM = stream_anchor_id("infra-harness", REPO_ROOT)
 STREAMS_YAML = Path("scripts/config/issue_streams.yaml")
+
+
+def _served_store(client):
+    """The store the installed Monitor app serves: a release store over the caller's database (the epics stub)."""
+    return client.app.state.ctx.stores.epics_store
+
+
+def _set_bundle_bound(monkeypatch: pytest.MonkeyPatch, name: str, value: int) -> None:
+    """Shrink a bundle bound for the in-tree CLI/store and the installed app's route.  # TRANSITIONAL-PKG3-B2"""
+    for module in (th, release_th):  # TRANSITIONAL-PKG3-B2: the HTTP route runs the installed release
+        monkeypatch.setattr(module, name, value, raising=False)
 
 
 def _seed_state(
@@ -1165,6 +1179,7 @@ def test_launcher_import_is_silent_for_the_typed_none_only(tmp_path: Path, paylo
     )
     result = subprocess.run(
         ["bash", "-c", harness, "bash", str(REPO_ROOT), str(helper)],
+        env=launcher_environment(),
         capture_output=True,
         text=True,
         check=False,
@@ -1576,7 +1591,11 @@ def test_direct_store_upload_and_http_route_refuse_the_same_bundle_for_the_same_
     api_root.mkdir()
     api_store = SessionStreamStore(SessionStreamDatabase(api_root / "streams.sqlite3"))
     refused: list[BaseException] = []
-    upload = api_store.upload_rollover_bundle
+    client = TestClient(
+        epics_app_for_store(api_store, api_root), base_url="http://127.0.0.1", client=("127.0.0.1", 8765)
+    )
+    served = _served_store(client)
+    upload = served.upload_rollover_bundle
 
     def recording_upload(*args: object, **kwargs: object) -> dict:
         try:
@@ -1585,10 +1604,7 @@ def test_direct_store_upload_and_http_route_refuse_the_same_bundle_for_the_same_
             refused.append(exc)
             raise
 
-    monkeypatch.setattr(api_store, "upload_rollover_bundle", recording_upload)
-    client = TestClient(
-        epics_app_for_store(api_store, api_root), base_url="http://127.0.0.1", client=("127.0.0.1", 8765)
-    )
+    monkeypatch.setattr(served, "upload_rollover_bundle", recording_upload)
     claim = client.post(
         f"/api/epics/v1/{REGISTERED_STREAM}/claim",
         json={
@@ -2054,16 +2070,17 @@ def _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, b
     from dataclasses import asdict
 
     errors = []
-    upload = api_store.upload_rollover_bundle
+    served = _served_store(client)
+    upload = served.upload_rollover_bundle
 
     def record_upload(*args, **kwargs):
         try:
             return upload(*args, **kwargs)
-        except (ValueError, ContentRejectedError) as exc:
+        except (ValueError, ContentRejectedError, ReleaseContentRejectedError) as exc:
             errors.append(str(exc))
             raise
 
-    monkeypatch.setattr(api_store, "upload_rollover_bundle", record_upload)
+    monkeypatch.setattr(served, "upload_rollover_bundle", record_upload)
     response = client.post(
         f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
         json={
@@ -2086,15 +2103,15 @@ def test_expanded_bounds_refuse_without_rows_or_installation(tmp_path, monkeypat
     if case == "member":
         extra[BOUND_MEMBER] = b"x" * (8 * 1024 * 1024)
     elif case == "aggregate":
-        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES", 4096, raising=False)
+        _set_bundle_bound(monkeypatch, "ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES", 4096)
         extra = {f"{BOUND_MEMBER}.{i}": b"x" * 1024 for i in range(8)}
         reason = "aggregate expanded limit"
     elif case == "count":
-        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MEMBERS", 4, raising=False)
+        _set_bundle_bound(monkeypatch, "ROLLOVER_BUNDLE_MAX_MEMBERS", 4)
         extra = {f"{BOUND_MEMBER}.{i}": b"safe\n" for i in range(4)}
         reason = "member count limit"
     elif case == "manifest":
-        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES", 512, raising=False)
+        _set_bundle_bound(monkeypatch, "ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES", 512)
         reason = "manifest size limit"
     elif case == "casefold":
         extra[BOUND_MEMBER.replace(BOUND_SENTINEL, BOUND_SENTINEL.upper())] = b"other\n"
@@ -2165,17 +2182,18 @@ def test_secret_scan_refusal_never_echoes_member_name(tmp_path, monkeypatch, pay
     from tests.epics_monitor_stub import epics_app_for_store
 
     errors = []
-    upload = store.upload_rollover_bundle
+    client = TestClient(epics_app_for_store(store, tmp_path), base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
+    served = _served_store(client)
+    upload = served.upload_rollover_bundle
 
     def record_upload(*args, **kwargs):
         try:
             return upload(*args, **kwargs)
-        except ContentRejectedError as exc:
+        except (ContentRejectedError, ReleaseContentRejectedError) as exc:
             errors.append(str(exc))
             raise
 
-    monkeypatch.setattr(store, "upload_rollover_bundle", record_upload)
-    client = TestClient(epics_app_for_store(store, tmp_path), base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
+    monkeypatch.setattr(served, "upload_rollover_bundle", record_upload)
     response = client.post(
         f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
         json={
@@ -2218,7 +2236,7 @@ def test_maximum_member_round_trips_and_next_byte_is_refused(tmp_path, monkeypat
 
 def test_member_reader_enforces_cap_when_size_header_understates_output(tmp_path, monkeypatch, capsys):
     manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={BOUND_MEMBER: b"small"})
-    monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MEMBER_BYTES", 16, raising=False)
+    _set_bundle_bound(monkeypatch, "ROLLOVER_BUNDLE_MAX_MEMBER_BYTES", 16)
     extract = tarfile.TarFile.extractfile
 
     def understated_member(archive, member):

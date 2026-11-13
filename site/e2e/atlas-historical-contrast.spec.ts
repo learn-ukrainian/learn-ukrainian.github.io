@@ -1,5 +1,6 @@
 import { AxeBuilder } from '@axe-core/playwright';
-import { expect, test, type Page, type TestInfo } from '@playwright/test';
+import type { Page, TestInfo } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 /**
  * #10180 — historical-context source label and warning pill stay readable.

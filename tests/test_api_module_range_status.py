@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.api import state_build
+from scripts.project_api import state_build
 
 pytestmark = pytest.mark.reads_content
 

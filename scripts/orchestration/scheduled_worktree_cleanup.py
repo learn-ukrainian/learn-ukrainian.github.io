@@ -54,6 +54,12 @@ from scripts.orchestration.task_record_store import iter_task_records, read_task
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 SCHEMA_VERSION = "scheduled-git-hygiene.v3"
 DEFAULT_INTERVAL_MINUTES = 240
 GC_MEMORY_MAX = 2 * 1024**3
@@ -1586,10 +1592,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py
-  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --repo-root . --apply
-  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --git-maintenance --apply
+        epilog=f"""Examples:
+  .venv/bin/python {_PACKAGE_DIR}/scheduled_worktree_cleanup.py
+  .venv/bin/python {_PACKAGE_DIR}/scheduled_worktree_cleanup.py --repo-root . --apply
+  .venv/bin/python {_PACKAGE_DIR}/scheduled_worktree_cleanup.py --git-maintenance --apply
 Outputs:
   Private JSON receipt and aggregate JSON on stdout. Dry-run is the default.
   --apply deletes proven-merged branches and refs, snapshots and proven-ended Claude scratch.

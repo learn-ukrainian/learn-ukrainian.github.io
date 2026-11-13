@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -582,6 +583,9 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "resolved_risk": resolution.resolved_risk,
         "fail_closed_reason": resolution.fail_closed_reason,
     }
+    if resolution.review_scopes:
+        scopes = {scope.reviewer_family: asdict(scope) for scope in resolution.review_scopes}
+        payload["quorum"] = [{**asdict(seat), "scope": scopes[seat.family]} for seat in resolution.quorum]
     if not account.resolved:
         payload["claude_account_unresolved"] = account.refusal
         if resolution.selected is None and len(resolution.quorum) < 2:
@@ -601,7 +605,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     print(json.dumps(payload, indent=2))
     if payload["fail_closed_reason"]:
         return 1
-    # A dual-family quorum plan (unattested-harness author) is a successful
+    # A dual-family quorum or mixed-family pair is a successful
     # resolution: no single reviewer of record, both seats must PASS.
     if len(resolution.quorum) >= 2:
         return 0
@@ -903,14 +907,33 @@ def _cmd_behavior_proof_receipt(args: argparse.Namespace) -> int:
     return 0
 
 
-_CLOSEOUT_EPILOG = """\
+# The machinery package's directory name, which its files' checkout paths start with, from this module's
+# unresolved location: a symlinked package keeps its checkout name, and a short import spelling
+# (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _checkout_relative(relative: str) -> str:
+    """The checkout-relative name of machinery file ``relative``, as help text shows it."""
+    return f"{_MACHINERY}/{relative}"
+
+
+# Help-text names: this CLI as it was started (its import name under ``-m``, else its file),
+# and machinery files by their checkout-relative paths.
+_ENTRY = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+_EXAMPLE_OWNED_PATH = _checkout_relative("agent_runtime/adapters/grok_build.py")
+_RESOLVER_FILE = _checkout_relative("review/reviewer_resolver.py")
+_SUBJECT_SEAT_FILE = _checkout_relative("review/subject_seat.py")
+_CATALOG_FILE = _checkout_relative("config/model_catalog.yaml")
+
+_CLOSEOUT_EPILOG = f"""\
 Examples:
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     target --mode pr --pr 8946 --repo-root .
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     resolve-reviewer --author-model codex:gpt-6.1-sol --risk high --domain infra \\
-    --owned-path scripts/agent_runtime/adapters/grok_build.py
-  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
+    --owned-path {_EXAMPLE_OWNED_PATH}
+  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\
     resolve-reviewer --author-model claude --subject-seat grok
 
 NOTE: --state-file is a global argument and must precede the subcommand.
@@ -928,15 +951,15 @@ Exit codes:
 
 Related:
   agents_extensions/shared/skills/local-code-review/local-code-review-checklist.md
-  scripts/review/reviewer_resolver.py
-  scripts/config/model_catalog.yaml
+  {_RESOLVER_FILE}
+  {_CATALOG_FILE}
   issue #8946 (subject-seat exclusion) under epic #8875
 """
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog=".venv/bin/python -m scripts.review.closeout_cli",
+        prog=f".venv/bin/python {_ENTRY}",
         description=(
             "Drive one local code-review closeout from a single state file.\n"
             "Use it for target, scope freeze, findings, and cross-family reviewer "
@@ -1004,7 +1027,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p_freeze.add_argument(
         "--owner-boundary",
         required=True,
-        help="Paths or surfaces this change owns. Example: scripts/review",
+        help=f"Paths or surfaces this change owns. Example: {_checkout_relative('review')}",
     )
     p_freeze.add_argument(
         "--review-profile",
@@ -1053,13 +1076,15 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_reviewer = sub.add_parser(
         "resolve-reviewer",
-        help="Resolve the cross-family reviewer for this author",
+        help="Resolve a cross-family reviewer or a scoped Anthropic/OpenAI pair",
         description=(
-            "Pick the formal cross-family reviewer for one author.\n"
+            "Resolve the formal reviewer or the two-seat mixed-family review plan.\n"
             "Resolve the target first in the same state file, or supply --owned-path. "
             "For a committed target (commit, branch, pr), every author named by the "
-            "target's X-Agent trailers and task records is excluded too, as the verdict "
-            "recorder requires (#9739); --author-model adds to them. "
+            "target's X-Agent trailers and task records contributes to independence checks; "
+            "--author-model adds to them. Anthropic/OpenAI branches return two quorum seats, "
+            "each scoped to the other family's commits with the whole diff as context. "
+            "Both must approve the same exact head. Single-family routing is unchanged. "
             "Use it after the author model is known. Pass --subject-seat, "
             "--subject-family, or --owned-path when the change governs a seat's "
             "adapter or reviewer hooks. Do not use it to hand-pick a lane, and do "
@@ -1067,12 +1092,12 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --risk high\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model codex:gpt-6.1-sol --domain infra --risk high \\\n"
-            "    --owned-path scripts/agent_runtime/adapters/grok_build.py\n"
-            "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
+            f"    --owned-path {_EXAMPLE_OWNED_PATH}\n"
+            f"  .venv/bin/python {_ENTRY} --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --subject-seat grok --subject-family xai\n"
             "\n"
             "Outputs:\n"
@@ -1089,9 +1114,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "     seat/family, an unreadable default-account file, or no eligible reviewer)\n"
             "\n"
             "Related:\n"
-            "  scripts/review/reviewer_resolver.py\n"
-            "  scripts/review/subject_seat.py\n"
-            "  scripts/config/model_catalog.yaml\n"
+            f"  {_RESOLVER_FILE}\n"
+            f"  {_SUBJECT_SEAT_FILE}\n"
+            f"  {_CATALOG_FILE}\n"
             "  agents_extensions/shared/skills/local-code-review/local-code-review-checklist.md\n"
             "  issue #8946\n"
         ),
@@ -1186,7 +1211,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Repo path owned by the change (repeatable). Default: none, so nothing "
             "is inferred and selection is unchanged. Example: "
-            "--owned-path scripts/agent_runtime/adapters/grok_build.py. "
+            f"--owned-path {_EXAMPLE_OWNED_PATH}. "
             "An unambiguous per-seat adapter or reviewer hook infers that seat. "
             "An ambiguous path (shared acpx.py, base.py, guard-reviewer-publish.py) "
             "fails closed unless --subject-seat or --subject-family is also set."
@@ -1267,9 +1292,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Proof status. Example: pass. n/a requires --reason.",
     )
     command_or_step = behavior_record.add_mutually_exclusive_group()
-    command_or_step.add_argument(
-        "--command", help="Command that was run. Example: .venv/bin/python -m scripts.review.closeout_cli --help"
-    )
+    command_or_step.add_argument("--command", help=f"Command that was run. Example: .venv/bin/python {_ENTRY} --help")
     command_or_step.add_argument(
         "--step", help="Non-command step that was exercised. Example: clicked the submit control"
     )

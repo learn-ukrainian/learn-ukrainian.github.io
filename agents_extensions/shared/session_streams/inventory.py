@@ -8,6 +8,7 @@ participate in dual-write / cutover tracking without code edits per epic.
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,9 +16,14 @@ from typing import Any
 
 import yaml
 
+from scripts.common import repo_root as _machinery_roots
+
 from .model import validate_stream_id
 
-DEFAULT_STREAMS_YAML = Path("scripts/config/issue_streams.yaml")
+# The machinery package's directory name, from the unresolved file location. Never __name__: a short
+# import spelling would name the wrong package.
+_MACHINERY = Path(os.path.abspath(_machinery_roots.__file__)).parents[1].name
+DEFAULT_STREAMS_YAML = Path(_MACHINERY, "config", "issue_streams.yaml")
 REGISTRY_STREAM_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 MAX_EPIC_NUMBER = 9_999_999_999
 
@@ -352,7 +358,7 @@ def inventory_snapshot(
             }
             for r in records
         ],
-        "authority": "scripts/config/issue_streams.yaml",
+        "authority": str(DEFAULT_STREAMS_YAML),
         "hard_coded_subset_authoritative": False,
     }
 

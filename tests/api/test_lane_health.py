@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_helpers, state_router
 from scripts.api.lane_health import (
@@ -19,6 +18,7 @@ from scripts.api.lane_health import (
     sanitize_error_excerpt,
     scan_lane_health,
 )
+from scripts.telemetry.cost_report import CostRecord
 
 
 def test_is_spawn_phase_failure():
@@ -438,7 +438,7 @@ def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
     _budget_path = _configure_test_budgets(monkeypatch, tmp_path, records)
 
     # Every subscription lane is unhealthy (2 failures each).
-    for agent in ("claude", "codex", "gemini", "grok", "cursor", "kimi"):
+    for agent in state_router.SUBSCRIPTION_LANES:
         _write_task(tmp_path, f"task-{agent}-1", agent, "failed", 1, 10.0, now - timedelta(minutes=45))
         _write_task(tmp_path, f"task-{agent}-2", agent, "failed", 1, 10.0, now - timedelta(minutes=15))
 

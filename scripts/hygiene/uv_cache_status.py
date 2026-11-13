@@ -47,6 +47,17 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.common.jsonl import jsonl_lines
 
+
+def _machinery_top() -> str:
+    # Name the package from the unresolved file location, never from __package__
+    # (design-v1 amendment 1): a copy loaded without a package must name the same tree.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 HISTORY_FILENAME = "uv-cache-size.jsonl"
 LOCK_SUFFIX = ".lock"
 WINDOW_SECONDS = 24 * 3600
@@ -518,10 +529,10 @@ def main(argv: list[str] | None = None) -> int:
         description="Measure uv cache size and growth without deleting cache content.\n"
         "Use status mode for readers; reserve --record-history for the keeper's cadence.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR"
-  .venv/bin/python -m scripts.hygiene.uv_cache_status --record-history --state-dir "$KEEPER_STATE_DIR"
-  .venv/bin/python -m scripts.hygiene.uv_cache_status --json
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('hygiene', 'uv_cache_status')} --state-dir "$KEEPER_STATE_DIR"
+  .venv/bin/python -m {_mod('hygiene', 'uv_cache_status')} --record-history --state-dir "$KEEPER_STATE_DIR"
+  .venv/bin/python -m {_mod('hygiene', 'uv_cache_status')} --json
 Outputs: status on stdout. Only --record-history creates the state directory,
   uv-cache-size.jsonl, its lock and temporary files beside history. No cache deletion.
 Exit codes: 0 status printed, including timeout, unavailable history or busy lock;

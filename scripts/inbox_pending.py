@@ -17,15 +17,23 @@ if __package__ in (None, ""):
 from scripts.agent_runtime.agent_identity import seat_read_aliases
 from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import (
+    HOOK_BOOTSTRAP_DIAGNOSTIC,
+    HOOK_BOOTSTRAP_REASON,
+    configure_native_hook_roots,
+    state_root,
+)
 from scripts.fleet_comms.paths import default_plane_root
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
-ROOT = Path(__file__).resolve().parents[1]
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[0].name
+_AUTHORITY_HELP = f".venv/bin/python -m {_MACHINERY}.fleet_comms deliveries --help"
 UNKNOWN_LINE = (
     "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
-    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+    f"authority: {_AUTHORITY_HELP}"
 )
 LEGACY_PENDING = "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0"
 AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
@@ -66,8 +74,9 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
             return unknown
         placeholders = ",".join("?" for _ in legacy_recipients)
         legacy_where = f"to_llm IN ({placeholders}) AND {LEGACY_PENDING}"
-        legacy = configured_bridge_db_path(main_checkout_root(ROOT))
-        authority = default_plane_root(repo_root=ROOT) / "comms.sqlite3"
+        state = state_root()
+        legacy = configured_bridge_db_path(state)
+        authority = default_plane_root(repo_root=state) / "comms.sqlite3"
         stores = {}
         ids = []
         now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -126,7 +135,7 @@ def hook(stdin_text: str, recipient: str) -> dict:
             if result["stores"]["legacy"]:
                 suffix += f"; legacy: ai_agent_bridge inbox --for {resolve_recipient_alias(recipient)}"
             if result["stores"]["authority"]:
-                suffix += "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                suffix += f"; authority: {_AUTHORITY_HELP}"
             prefix = f"PENDING ORDERS: {result['count']} (ids "
             shown = []
             for identifier in result["ids"]:
@@ -150,12 +159,14 @@ class _SilentParser(argparse.ArgumentParser):
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = _SilentParser(
         description="Report pending orders without bodies or writes.\nUse for per-call announcements, never to consume or acknowledge orders.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            'Examples:\n  .venv/bin/python -m scripts.inbox_pending --recipient "$SESSION_HANDOFF_AGENT"\n'
-            "  .venv/bin/python -m scripts.inbox_pending --agy-hook < hook-input.json\n"
+            f'Examples:\n  .venv/bin/python {entry} --recipient "$SESSION_HANDOFF_AGENT"\n'
+            f"  .venv/bin/python {entry} --agy-hook < hook-input.json\n"
             "Outputs: JSON on stdout; no files or database writes.\n"
             "Exit codes: 0 including unknown probes; argparse help exits 0.\n"
             "Related: #10558, docs/agent-runtime-guide.md."
@@ -172,7 +183,20 @@ def main(argv: list[str] | None = None) -> int:
     try:
         args = parser.parse_args(argv)
         recipient = args.recipient if args.recipient is not None else os.environ.get("SESSION_HANDOFF_AGENT", "")
-        result = hook(sys.stdin.read(), recipient) if args.agy_hook else probe(recipient)
+        if args.agy_hook:
+            stdin_text = sys.stdin.read()
+            # The direct hook boundary: missing roots come from the working directory by the
+            # shared shell rule. A context that cannot resolve is a bootstrap refusal, not an
+            # "unknown" store read.
+            try:
+                configure_native_hook_roots(Path.cwd())
+            except (OSError, ValueError):
+                sys.stderr.write(HOOK_BOOTSTRAP_DIAGNOSTIC + "\n")
+                result = {"decision": "deny", "reason": HOOK_BOOTSTRAP_REASON}
+            else:
+                result = hook(stdin_text, recipient)
+        else:
+            result = probe(recipient)
     except SystemExit as exc:
         if exc.code == 0:
             return 0

@@ -511,23 +511,15 @@ stays open until measured zero use and operator approval permit retirement.
 
 ## Web dashboard
 
-`dashboards/channels.html` — read-only monitor plus post form,
-localhost only. Shows:
+The machinery overview at `http://localhost:8765/machinery` shows Fleet Comms
+counts. Use the CLI for channels, deliveries and conversations. The former
+Fleet, Channels and Comms pages were removed in the Monitor cull. The browser POST
+endpoint `/api/comms/channels/{name}/post` stays: user-only, gated
+by localhost binding. Agents still post via CLI.
 
-- All channels with message counts + pending deliveries + last activity
-- Per-channel message feed (auto-refresh every 5s)
-- Context preview with sha256 short-hash
-- Post form for dropping messages in from the browser
-
-Served by `scripts/api/main.py` at `http://localhost:8765`. The
-browser POST endpoint is `/api/comms/channels/{name}/post` — user-only,
-gated by localhost binding. Agents still post via CLI.
-
-`dashboards/comms.html` is the legacy operational dashboard for live
-activity, DM-style broker messages, zombie detection, and batch progress.
-Its hot message endpoints are bounded by server-side `limit` defaults
-and keyset cursors; keep client polling paced so heavy views refresh no
-more often than every 30 seconds.
+The broker message endpoints that the old comms page polled are bounded by
+server-side `limit` defaults and keyset cursors; keep client
+polling paced so heavy views refresh no more often than every 30 seconds.
 
 ## Broker storage hygiene
 

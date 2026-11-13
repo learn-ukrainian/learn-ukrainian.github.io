@@ -31,7 +31,12 @@ import sys
 from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
 
-DENOMINATOR_REL = "scripts/ci/dependency_change_denominator.json"
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.ci._location import checkout_relative
+
+DENOMINATOR_REL = checkout_relative("ci", "dependency_change_denominator.json").as_posix()
 
 # pull_request / merge_group: only the branch side of the fork counts.
 # push / schedule / workflow_dispatch: linear before..after two-dot.
@@ -279,8 +284,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
         epilog=(
             "Examples:\n"
-            '  .venv/bin/python scripts/ci/dependency_change_scope.py --event pull_request --base "$BASE_SHA" --head "$HEAD_SHA"\n'
-            '  .venv/bin/python scripts/ci/dependency_change_scope.py --event push --base "$PUSH_BEFORE"\n'
+            f'  .venv/bin/python {checkout_relative("ci", "dependency_change_scope.py").as_posix()} --event pull_request --base "$BASE_SHA" --head "$HEAD_SHA"\n'
+            f'  .venv/bin/python {checkout_relative("ci", "dependency_change_scope.py").as_posix()} --event push --base "$PUSH_BEFORE"\n'
             "\n"
             "Outputs:\n"
             "  Prints a dependency-scope decision line on stdout; appends run=true|false to\n"
@@ -291,9 +296,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             "  failure or timeout) fails closed to run=true so the full audit still executes.\n"
             "\n"
             "Related:\n"
-            "  Denominator: scripts/ci/dependency_change_denominator.json (#9871).\n"
+            f"  Denominator: {DENOMINATOR_REL} (#9871).\n"
             "  Consumer: the dependency-audit job in .github/workflows/ci.yml.\n"
-            "  Sibling: scripts/ci/frontend_change_scope.py (#6917 / #6930) uses the same pattern."
+            f"  Sibling: {checkout_relative('ci', 'frontend_change_scope.py').as_posix()} (#6917 / #6930) uses the same pattern."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

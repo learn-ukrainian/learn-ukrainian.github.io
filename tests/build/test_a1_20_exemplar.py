@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from scripts.build import linear_pipeline
-from scripts.common.thresholds import QG_DIMS
+from scripts.curriculum.quality.thresholds import QG_DIMS
 
 
 def test_a1_20_passing_review_aggregates_to_pass() -> None:

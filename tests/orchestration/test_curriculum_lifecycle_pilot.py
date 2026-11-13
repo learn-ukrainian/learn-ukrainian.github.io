@@ -8,8 +8,21 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.orchestration import curriculum_lifecycle_pilot as pilot
 
-from scripts.orchestration import curriculum_lifecycle_pilot as pilot
+
+def test_pilot_gate_bindings_are_the_original_product_objects() -> None:
+    from scripts.audit import post_build_review
+    from scripts.curriculum import readiness_gates
+    from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
+
+    gates = pilot.readiness_gates()
+    assert gates is readiness_gates
+    assert gates.post_build_review is post_build_review
+    assert gates.base_level is base_level
+    assert gates.resolve_content_track is resolve_content_track
+    assert gates.resolve_manifest_module_track is resolve_manifest_module_track
+
 
 pytestmark = pytest.mark.reads_content
 

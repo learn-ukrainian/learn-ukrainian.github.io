@@ -23,7 +23,7 @@ All qualifiers of a class must hold.
 
 - **D1** asserts only what a runtime-enforced schema/validator already rejects AND another
   kept test exercises that rejection. Python annotations are not runtime enforcement;
-  schema-rejection tests (e.g. `tests/api/test_fleet_board_v1.py:80-110`) stay.
+  schema-rejection tests (e.g. learn-ukrainian/machinery `tests/api/test_fleet_board_v1.py:80-110`) stay.
 - **D2** asserts only that a mock was called, where the call is not itself the contract.
   Interaction contracts stay: dispatch destination, read-only access, no network/process
   launch, exactly-once cleanup (e.g. `tests/test_mcp_sources_server.py:823-827`).
@@ -35,8 +35,8 @@ All qualifiers of a class must hold.
   stay).
 - **D5** speed claim (wall-clock "is fast") or fixed real sleep to force ordering.
   Bounded-liveness/stall guards and documented budgets stay until an equivalent
-  replacement passes (`tests/api/test_context_cost.py:178-198`,
-  `tests/api/test_fleet_board_ops.py:92-120`). Deterministic-clock tests are never
+  replacement passes (learn-ukrainian/machinery `tests/api/test_context_cost.py`,
+  learn-ukrainian/machinery `tests/api/test_fleet_board_ops.py:92-120`). Deterministic-clock tests are never
   "timer" tests.
 - **D6** incidental wording/format assertions. Required CLI help sections and exit-code
   descriptions (`agents_extensions/shared/rules/cli-help-standard.md:11-26`; e.g.
@@ -59,7 +59,7 @@ All qualifiers of a class must hold.
 - **K7** any identified regression test, any age.
 - **K8** fixture mirrors for rules/prompt deploy checks.
 - **K9** application lifecycle, resource cleanup (e.g.
-  `tests/api/test_context_cost.py:149-175`), bounded liveness, resource/call-count
+  learn-ukrainian/machinery `tests/api/test_context_cost.py`), bounded liveness, resource/call-count
   budgets.
 - **K10** public CLI/API/output contracts, clean-process packaging/startup,
   dependency-patch guards, platform/environment isolation.

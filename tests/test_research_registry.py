@@ -106,7 +106,6 @@ def run(data: dict[str, Any], project_root: Path, **kw: Any) -> crr.CheckResult:
 def copy_real_project(dst: Path) -> Path:
     for rel in (
         "docs/references/research-registry.yaml",
-        "scripts/config/issue_streams.yaml",
         "docs/decisions/decisions.yaml",
         "scripts/audit/text_difficulty.py",
     ):
@@ -679,3 +678,159 @@ def test_resolve_symbol_finds_module_level_constant(tmp_path: Path) -> None:
     ]
     root, data = build_project(tmp_path, recs, extra_files=extra)
     assert run(data, root).errors == []
+
+
+# Configured-loader refusals must retain the registry's data-file contract.
+@pytest.mark.parametrize(
+    ("raw", "message"),
+    [
+        ("{", "unreadable"),
+        ("[]", "schema mismatch"),
+        ('{"schema": "wrong"}', "schema mismatch"),
+        ('{"schema": "learn-ukrainian.research-check.v1"}', "fields mismatch"),
+        (
+            '{"schema": "learn-ukrainian.research-check.v1", "check_module": '
+            '"scripts.audit.check_research_registry", "corpus_module": '
+            '"scripts.audit.atlas_intake_registry", "extra": 1}',
+            "fields mismatch",
+        ),
+    ],
+)
+def test_research_config_json_refusals(tmp_path, monkeypatch, raw, message):
+    from lu_machinery.research import registry as reg
+
+    path = tmp_path / "research.json"
+    path.write_text(raw)
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
+    with pytest.raises(RuntimeError, match=message):
+        reg._load_configured_module("check_module")
+
+
+def test_research_config_missing_file_keeps_unreadable_error(tmp_path, monkeypatch):
+    from lu_machinery.research import registry as reg
+
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: tmp_path / "missing.json")
+    with pytest.raises(RuntimeError, match="research check config is unreadable"):
+        reg._load_configured_module("check_module")
+
+
+@pytest.mark.parametrize("key", ["check_module", "corpus_module"])
+@pytest.mark.parametrize(
+    "name", [None, 1, [], "", "scripts", "audit.check", ".scripts.audit", "scripts..audit", "scripts.bad-name", "scripts.audit\n", "scripts.українська"]
+)
+def test_research_config_refuses_malformed_names(tmp_path, monkeypatch, key, name):
+    import json
+
+    from lu_machinery.research import registry as reg
+
+    payload = {"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), key: name}
+    path = tmp_path / "research.json"
+    path.write_text(json.dumps(payload))
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
+    with pytest.raises(RuntimeError, match=f"{key} is not a module name"):
+        reg._load_configured_module(key)
+
+
+@pytest.mark.parametrize("name", ["scripts.Audit", "scripts.sqlite3", "scripts.audit._sqlite3"])
+def test_research_shared_loader_refuses_capitals_and_sqlite_names(tmp_path, monkeypatch, name):
+    import json
+
+    from lu_machinery.ops.product_entry import ConfiguredModuleError
+    from lu_machinery.research import registry as reg
+
+    path = tmp_path / "research.json"
+    path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
+    assert reg.research_check_config()["check_module"] == name
+    with pytest.raises(ConfiguredModuleError):
+        reg._load_configured_module("check_module")
+
+
+@pytest.mark.parametrize("key", ["check_module", "corpus_module"])
+def test_research_loader_refuses_foreign_cached_modules_without_repinning(tmp_path, monkeypatch, key):
+    import sys
+    from types import ModuleType
+
+    from lu_machinery.ops.product_entry import ConfiguredModuleError
+    from lu_machinery.research import registry as reg
+
+    pinned = reg.configured_check_module()
+    name = reg.research_check_config()[key]
+    foreign = ModuleType(name)
+    foreign.__file__ = str(tmp_path / "foreign.py")
+    monkeypatch.setitem(sys.modules, name, foreign)
+    with pytest.raises(ConfiguredModuleError, match="not a file in this checkout"):
+        reg._load_configured_module(key)
+    assert reg.configured_check_module() is pinned
+
+
+@pytest.mark.parametrize("name", ["scripts.audit.loader_slice_missing", "scripts.loader_slice_missing.child"])
+def test_research_missing_configured_target_keeps_file_not_found(tmp_path, monkeypatch, name):
+    import errno
+    import json
+
+    from lu_machinery.research import registry as reg
+
+    path = tmp_path / "research.json"
+    path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
+    with pytest.raises(FileNotFoundError) as caught:
+        reg._load_configured_module("check_module")
+    assert caught.value.errno == errno.ENOENT
+    missing = name.removesuffix(".child")
+    assert caught.value.filename == str(REPO_ROOT.joinpath(*missing.split(".")).with_suffix(".py"))
+
+
+@pytest.fixture
+def product_checkout_root(tmp_path, monkeypatch):
+    """``tmp_path`` as the selected, self-contained product checkout whose ``scripts`` package is cached.
+
+    The machinery's cached ``scripts`` and ``scripts.audit`` are hidden for the test, as once the
+    machinery is extracted (C-4764): the loader refuses a cached package from another checkout.
+    """
+    import importlib.util
+    import sys
+
+    from lu_machinery.common import repo_root
+    from lu_machinery.research import registry
+
+    # The product's research-check data travels with the product checkout.
+    config = registry._check_config_path(tmp_path)
+    config.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(registry._check_config_path(repo_root.product_root()), config)
+    for relative in ("__init__.py", "audit/__init__.py"):
+        (tmp_path / "scripts" / relative).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "scripts" / relative).write_text("")
+    marker = tmp_path / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
+    spec = importlib.util.spec_from_file_location(
+        "scripts", tmp_path / "scripts" / "__init__.py", submodule_search_locations=[str(tmp_path / "scripts")]
+    )
+    package = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(package)
+    monkeypatch.delitem(sys.modules, "scripts.audit", raising=False)
+    monkeypatch.setitem(sys.modules, "scripts", package)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
+    before = set(sys.modules)
+    yield tmp_path
+    for name in set(sys.modules) - before:
+        if name.startswith("scripts."):
+            sys.modules.pop(name, None)
+
+
+def test_research_existing_module_dependency_error_is_not_translated(product_checkout_root, tmp_path, monkeypatch):
+    import json
+    import sys
+
+    from lu_machinery.research import registry as reg
+
+    name = "scripts.audit.loader_slice_dependency"
+    (tmp_path / "scripts" / "audit" / "loader_slice_dependency.py").write_text("import loader_slice_missing_dependency\n")
+    path = tmp_path / "research.json"
+    path.write_text(json.dumps({"schema": reg._CHECK_SCHEMA, **reg.research_check_config(), "check_module": name}))
+    monkeypatch.setattr(reg, "_check_config_path", lambda _root: path)
+    with pytest.raises(ModuleNotFoundError) as caught:
+        reg._load_configured_module("check_module")
+    assert caught.value.name == "loader_slice_missing_dependency"
+    assert name not in sys.modules

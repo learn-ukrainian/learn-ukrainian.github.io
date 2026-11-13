@@ -48,7 +48,9 @@ gate failure and record their typed cause when storage permits.
 after compaction. ``Stop`` applies the same policy, worker target and
 continuation cap as ``agy-stop-hook`` and answers ``{"decision": "block",
 "reason": ...}`` to keep the turn going; gate failures allow the stop with a
-visible ``systemMessage``. Both act only in the launcher's driver session:
+visible ``systemMessage``. In a turn the transcript shows a human prompt
+started, a final question or plan is conversation, so only that check is
+skipped; an unclassifiable turn keeps it. Both act only in the launcher's driver session:
 the Claude project directory must be the checkout that owns the state file.
 Uses the shared project interpreter and its installed CommonMark parser.
 """
@@ -76,9 +78,20 @@ if __package__ in (None, ""):
 
 from scripts.common.epic_selector import validate_epic
 from scripts.common.jsonl import jsonl_lines
+from scripts.common.repo_root import (
+    HOOK_BOOTSTRAP_DIAGNOSTIC,
+    HOOK_BOOTSTRAP_REASON,
+    MachineryConfigError,
+    configure_native_hook_roots,
+)
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.task_record_store import read_task_record
+
+# The machinery package's import name, which is also the directory its files have in checkout
+# paths: from this module's package, or from its unresolved location when run as a file.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[0].name
+_DISPATCH = f"{_MACHINERY}/dispatch.py"
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
@@ -99,7 +112,7 @@ POLICY = f"""## {POLICY_TITLE}
 - Never ask for an admission or gate override; the answer is always no. Use the clean path (fresh recorded branch, rebase, new commit).
 - When you list an action for yourself, do it in the same turn; never end a turn on a plan.
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
-- End every turn with the privately configured worker target met and a wake-up armed (a background `scripts/dispatch.py wait` or the `schedule` tool), never with a question.
+- End every turn with the privately configured worker target met and a wake-up armed (a background `{_DISPATCH} wait` or the `schedule` tool), never with a question.
 """
 # Keep the existing envelope limit after removing the retired posting protocol.
 MAX_ENVELOPE_CHARS = 9_381
@@ -391,6 +404,70 @@ def last_model_text(transcript_path: str | None) -> str:
     return ""
 
 
+# A human-started turn can be long; scan this far back for its opening prompt, then enforce.
+MAX_TRANSCRIPT_SCAN_BYTES = 64 * 1024 * 1024
+_TRANSCRIPT_BLOCK_BYTES = 512 * 1024
+
+
+def _reverse_jsonl_rows(path: Path):
+    """Yield complete JSONL rows from the end of ``path``; an undecodable complete row raises ValueError."""
+    with path.open("rb") as handle:
+        position = handle.seek(0, os.SEEK_END)
+        floor = max(0, position - MAX_TRANSCRIPT_SCAN_BYTES)
+        pending = b""
+        trailing = True  # the last line may still be being written
+        while position > floor:
+            size = min(_TRANSCRIPT_BLOCK_BYTES, position - floor)
+            position -= size
+            handle.seek(position)
+            lines = (handle.read(size) + pending).split(b"\n")
+            pending = lines.pop(0)
+            for raw in reversed(lines):
+                if trailing:
+                    trailing = False
+                    continue  # the text after the final newline is empty or still being written
+                if raw.strip():
+                    yield json.loads(raw.decode("utf-8"))
+        if position == 0 and pending.strip() and not trailing:
+            yield json.loads(pending.decode("utf-8"))
+
+
+def claude_turn_started_by_human(transcript_path: object) -> bool:
+    """True only when the Claude Code transcript shows the current turn began with a human prompt.
+
+    The turn's opening row is the newest main-chain ``user`` row that is neither
+    a tool result nor harness metadata (``isMeta``, such as Stop hook feedback).
+    Claude Code marks it ``origin.kind`` and ``turnOrigin``; both must say
+    human. Task notifications and other system-started turns, missing fields, an
+    unreadable or undecodable transcript, or a turn start beyond the scan bound
+    return False so the Stop policy keeps enforcing.
+    """
+    if not isinstance(transcript_path, str) or not transcript_path.strip():
+        return False
+    try:
+        path = Path(os.path.expanduser(transcript_path))
+        if not path.is_file():
+            return False
+        for row in _reverse_jsonl_rows(path):
+            if not isinstance(row, dict):
+                return False
+            if row.get("type") != "user" or row.get("isSidechain") is True or row.get("isMeta") is True:
+                continue
+            message = row.get("message")
+            content = message.get("content") if isinstance(message, dict) else None
+            if (
+                isinstance(content, list)
+                and content
+                and all(isinstance(block, dict) and block.get("type") == "tool_result" for block in content)
+            ):
+                continue
+            origin = row.get("origin")
+            return isinstance(origin, dict) and origin.get("kind") == "human" and row.get("turnOrigin") == "human"
+    except (OSError, ValueError, RecursionError):
+        return False
+    return False
+
+
 def minimum_workers() -> int | None:
     """Read the private worker target; absent or invalid configuration is unknown."""
     raw = os.environ.get(MIN_WORKERS_ENV, "").strip()
@@ -593,6 +670,22 @@ def _gate_failure(
     return {"decision": "allow" if hook == "agy-stop-hook" else "deny", "reason": reason}
 
 
+def _context_refusal(hook: str) -> dict:
+    """The native refusal of ``hook`` when its product or shared-state context cannot resolve.
+
+    Never an allow: AGY Stop continues, the other AGY hooks deny, Claude Stop blocks
+    and Claude SessionStart/UserPromptSubmit stops. No counter or failure record is
+    written, since no task state could be located.
+    """
+    if hook == "agy-stop-hook":
+        return {"decision": "continue", "reason": HOOK_BOOTSTRAP_REASON}
+    if hook == "claude-stop-hook":
+        return {"decision": "block", "reason": HOOK_BOOTSTRAP_REASON}
+    if hook == "claude-hook":
+        return {"continue": False, "stopReason": HOOK_BOOTSTRAP_REASON}
+    return {"decision": "deny", "reason": HOOK_BOOTSTRAP_REASON}
+
+
 def cmd_agy_stop_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     path = _driver_session(payload)
@@ -625,6 +718,8 @@ def cmd_claude_stop_hook(stdin_text: str) -> dict:
         text if isinstance(text, str) else "",
         fully_idle=False,
         hook="claude-stop-hook",
+        # Questions and plans are normal conversation in a turn the operator started.
+        allow_question_or_plan=claude_turn_started_by_human(payload.get("transcript_path")),
     )
     if verdict is None:
         return {}
@@ -633,7 +728,9 @@ def cmd_claude_stop_hook(stdin_text: str) -> dict:
     return verdict
 
 
-def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, hook: str) -> str | dict | None:
+def _stop_policy(
+    path: Path, conversation: str, text: str, *, fully_idle: bool, hook: str, allow_question_or_plan: bool = False
+) -> str | dict | None:
     """Shared Stop policy: None allows, a string is the continuation reason, a dict is a gate failure."""
     if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
@@ -647,12 +744,12 @@ def _stop_policy(path: Path, conversation: str, text: str, *, fully_idle: bool, 
         reasons.append("live worker count is unknown; restore worker telemetry before stopping")
     elif workers is not None and workers < minimum:
         reasons.append("your running workers are below the privately configured target; dispatch ready work")
-    why = ends_on_question_or_plan(text)
+    why = None if allow_question_or_plan else ends_on_question_or_plan(text)
     if why:
         reasons.append(f"{why}; decide per the policy and execute it now")
     if not reasons and fully_idle:
         reasons.append(
-            "nothing is armed to wake you; start a background `scripts/dispatch.py wait` or set a `schedule` timer, then end the turn"
+            f"nothing is armed to wake you; start a background `{_DISPATCH} wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
@@ -732,19 +829,21 @@ def cmd_whoami(path: Path | None) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
     parser = argparse.ArgumentParser(
         prog="driver_state",
         description="Pinned per-epic driver state survives context compaction.\nUse in launcher-owned drivers; ordinary sessions receive no driver policy.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.driver_state whoami
-  .venv/bin/python -m scripts.driver_state init --epic infra
-  .venv/bin/python -m scripts.driver_state packet --epic infra
-  .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
-  .venv/bin/python -m scripts.driver_state claude-hook < hook-payload.json
+        epilog=f"""Examples:
+  .venv/bin/python {entry} whoami
+  .venv/bin/python {entry} init --epic infra
+  .venv/bin/python {entry} packet --epic infra
+  .venv/bin/python {entry} agy-stop-hook < hook-payload.json
+  .venv/bin/python {entry} claude-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
 Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
-Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
+Related: {_MACHINERY}/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -780,8 +879,19 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
     }
     if args.cmd in hooks:
         stdin_text = sys.stdin.read()
+        # The direct hook boundary: missing roots come from the working directory by the
+        # shared shell rule before any task state is read; invalid configured roots refuse.
+        try:
+            configure_native_hook_roots(Path.cwd())
+        except (OSError, ValueError):
+            sys.stderr.write(HOOK_BOOTSTRAP_DIAGNOSTIC + "\n")
+            sys.stdout.write(json.dumps(_context_refusal(args.cmd)))
+            return 0
         try:
             result = hooks[args.cmd](stdin_text)
+        except MachineryConfigError:
+            sys.stderr.write(HOOK_BOOTSTRAP_DIAGNOSTIC + "\n")
+            result = _context_refusal(args.cmd)
         except Exception:  # keep the hook protocol valid and expose driver errors
             payload = _payload(stdin_text)
             claude = args.cmd.startswith("claude-")

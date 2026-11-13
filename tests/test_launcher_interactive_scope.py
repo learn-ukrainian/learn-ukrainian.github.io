@@ -6,6 +6,13 @@ boundaries. Adapters, preparation, leases and the provider are recording
 stand-ins. Terminal behaviour runs through a pseudo-terminal under a minimal
 job-control shell. Live containment stays the opt-in soak in
 tests/test_launcher_driver_scope.py.
+
+The per-wrapper scope test runs twice: on this checkout's machinery copy, and
+on the installed lu-machinery release (machinery#100), whose shell core,
+helpers, machinery wrappers and Python modules are linked from the release's
+recorded files (`_install_release`). Every other test here runs on the
+checkout's copy. tests/test_launcher_installed_helper_chain.py runs the
+release's Python helper chain with nothing replaced.
 """
 
 from __future__ import annotations
@@ -28,8 +35,20 @@ from pathlib import Path
 
 import pytest
 
-from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_slot_registry, tracked_launcher_wrappers
+from tests.helpers import machinery_package
+from tests.launcher_libraries import (
+    freeze_product_wrapper,
+    installed_machinery,
+    launcher_catalog_files,
+    launcher_library_files,
+    link_installed_machinery,
+)
+from tests.launcher_sandbox import (
+    copy_slot_registry,
+    launcher_environment,
+    launcher_wrapper_source,
+    tracked_launcher_wrappers,
+)
 from tests.test_launcher_driver_scope import default_hup as default_hup
 from tests.test_launcher_driver_scope import (
     require_soak_opt_in,
@@ -43,6 +62,8 @@ from tests.wait_helpers import wait_until
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 REPO = Path(__file__).resolve().parents[1]
+# The machinery package directory: the rename moves it, so paths are built from it, not spelled.
+MACHINERY = machinery_package()
 UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 PROVIDER_RC = 42
 # A well-formed unit token for forged and parent scopes.
@@ -98,20 +119,15 @@ INTERACTIVE = {
     "start-claude.sh": ("claude", "claude"),
     "start-codex.sh": ("codex", "codex"),
     "start-gemini.sh": ("gemini", "gemini"),
-    "start-grok.sh": ("grok", "grok"),
-    "start-glm.sh": ("glm", "glm"),
-    "start-glmcc.sh": ("glm", "glmcc"),
-    "scripts/start-bio-driver.sh": ("claude", "bio"),
+    f"{MACHINERY}/start-bio-driver.sh": ("claude", "bio"),
 }
 DRIVERS = {
     "start-claude-driver.sh": ("claude", "devops"),
     "start-codex-driver.sh": ("codex", "devops"),
-    "start-cursor-driver.sh": ("cursor", "devops"),
     "start-gemini-driver.sh": ("gemini", "devops"),
-    "start-grok-driver.sh": ("grok", "devops"),
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
-    "scripts/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
+    f"{MACHINERY}/start-kube-dojo-driver.sh": ("claude", "kube-dojo"),
 }
 _EVENT = """lu_test_event() {
   local line cg=""
@@ -130,8 +146,9 @@ launcher_adapter_exec() {
   {
     printf 'wrapper=%s\\nprovider=%s\\nmode=%s\\nharness=%s\\nepic=%s\\n' \\
       "${0##*/}" "$LC_PROVIDER" "$LC_MODE" "$LC_HARNESS" "${LC_EPIC:-}"
-    printf 'glm_flash=%s\\nunit=%s\\nscope_pid=%s\\npid=%s\\n' \\
-      "${GLM_OPENCODE_FLASH-unset}" "${LU_DRIVER_SCOPE_UNIT:-}" "${LU_DRIVER_SCOPE_PID:-}" "$$"
+    printf 'unit=%s\\nscope_pid=%s\\npid=%s\\n' \\
+      "${LU_DRIVER_SCOPE_UNIT:-}" "${LU_DRIVER_SCOPE_PID:-}" "$$"
+    printf 'model=%s\\neffort=%s\\n' "$LC_MODEL" "$LC_EFFORT"
   } > "$TEST_IDENTITY"
   launcher_exec_command "$TEST_PROVIDER" ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}
 }
@@ -142,6 +159,7 @@ _PROVIDER = (
     + _EVENT
     + """lu_test_event "provider xdist=${PYTEST_XDIST_AUTO_NUM_WORKERS-unset}"
 printf '%s\\0' "$@" > "$TEST_ARGV"
+env -0 > "$TEST_PROVIDER_ENV"
 exit "${TEST_PROVIDER_RC:-42}"
 """
 )
@@ -172,8 +190,13 @@ done
 """
 _PYTHON = """#!/usr/bin/env bash
 {event}
+# `python -m <module> <command>`, or the release's isolated module bootstrap
+# `python -I -c <bootstrap> <code-root> <package> -m <module> <command>`, which
+# is matched on the arguments after its package; the real call keeps them all.
+argv=("$@")
+if [[ "${{1:-}}" == -I && "${{2:-}}" == -c && "${{3:-}}" == *"module bootstrap:"* ]]; then set -- "${{@:6}}"; fi
 case "${{1:-}}:${{2:-}}" in
-  -m:scripts.session_supervisor)
+  -m:{package}.session_supervisor)
     lu_test_event "lease-${{3:-}}"
     if [ "${{3:-}}" = open ]; then
       cat <<'JSON'
@@ -182,10 +205,11 @@ JSON
     fi
     exit 0
     ;;
-  -m:scripts.fleet_comms) lu_test_event publish; exit 0 ;;
+  -m:{package}.fleet_comms) lu_test_event publish; exit 0 ;;
+  -m:{package}.orchestration.thread_handoff) lu_test_event rollover-import; exit 0 ;;
 esac
-case "${{1:-}}" in */scripts/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
-exec {python} "$@"
+case "${{1:-}}" in */{package}/orchestration/thread_handoff.py) lu_test_event rollover-import; exit 0 ;; esac
+exec {python} "${{argv[@]}}"
 """
 # A job-control shell for one foreground job, as a login shell runs a launcher:
 # it owns the terminal, gives the job its own foreground process group, records
@@ -258,66 +282,113 @@ os._exit(code)
 
 def _write(path: Path, body: str, mode: int = 0o644) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
+    # An installed-runtime fixture links release files; replace a link, never write through it.
+    path.unlink(missing_ok=True)
     path.write_text(body, encoding="utf-8")
     path.chmod(mode)
     return path
 
 
-def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
-    """Copy every tracked wrapper and the shared core; stub only the edges."""
+# Where the launcher code under test comes from: this checkout's tracked copy,
+# or the installed lu-machinery release (`installed_machinery`).
+RUNTIMES = ("checkout", "installed")
+_PROVIDERS = ("claude", "codex", "gemini")
+# Package-relative boundary files each fixture replaces with a stub or redirect.
+_REPLACED = (
+    "lib/driver_scope.sh",
+    "lib/rules_core.sh",
+    "lib/deploy_extensions.sh",
+    "lib/claude_weekly_used.py",
+    "ai_agent_bridge/inbox_watch.sh",
+    *(f"launchers/{provider}.sh" for provider in _PROVIDERS),
+)
+
+
+def _runtime_wrapper(wrapper: str, runtime: str) -> str:
+    """The fixture path of tracked wrapper ``wrapper`` under ``runtime``.
+
+    A machinery wrapper lives in the package directory, which the installed
+    release names differently from this checkout.
+    """
+    if runtime == "installed" and wrapper.startswith(f"{MACHINERY}/"):
+        return f"{installed_machinery().name}/{wrapper.removeprefix(f'{MACHINERY}/')}"
+    return wrapper
+
+
+def _install_release(root: Path) -> tuple[Path, str]:
+    """Run the installed release: product wrappers are frozen data, machinery comes from the release.
+
+    Each product root wrapper is copied from this checkout with only its launcher-library
+    source line pointed at the package directory; the package directory links every other
+    file to the recorded release file, so the shell core, its helpers, the machinery
+    wrappers and every Python module the launcher runs are the release's own bytes.
+    """
+    release = link_installed_machinery(root / installed_machinery().name, _REPLACED)
+    core = root / release.name / "lib/launcher_core.sh"
+    assert core.resolve() == (release.directory / "lib/launcher_core.sh").resolve(), core
+    for wrapper in tracked_launcher_wrappers():
+        if "/" in wrapper:
+            # Machinery wrappers come from the release, linked above.
+            assert (root / _runtime_wrapper(wrapper, "installed")).is_symlink(), wrapper
+            continue
+        freeze_product_wrapper(launcher_wrapper_source(wrapper), root / wrapper, release.name)
+    return release.directory, release.name
+
+
+def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str, str]]:
+    """Copy every tracked wrapper and the shared core; stub only the edges.
+
+    ``runtime="installed"`` runs the installed release instead of this checkout's copy
+    (`_install_release`); the same boundary stubs replace the same package files.
+    """
     root = tmp_path / "repo"
-    for relative in (
-        *tracked_launcher_wrappers(),
-        "scripts/config/issue_streams.yaml",
-        "scripts/config/launcher_stream_aliases.tsv",
-        *launcher_library_files(REPO),
-        *launcher_catalog_files(REPO),
-    ):
-        destination = root / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPO / relative, destination)
-    # Recording adapters below model the retained wrapper ABI, independent of
-    # production retirement. Real GLM launch refusal remains covered separately.
-    import yaml
-
-    from scripts.review.model_catalog import validate_catalog
-
-    catalog_path = root / "scripts/config/model_catalog.yaml"
-    catalog = yaml.safe_load(catalog_path.read_text())
-    for identity in ("glm-5.3", "glm-5.3-flash"):
-        catalog["models"][identity]["lifecycle"] = "active"
-        catalog["models"][identity]["transports"] = ["opencode"]
-    validate_catalog(catalog)
-    catalog_path.write_text(yaml.safe_dump(catalog))
-    copy_slot_registry(root)
+    if runtime == "installed":
+        machinery, package = _install_release(root)
+    else:
+        assert runtime == "checkout", runtime
+        machinery, package = REPO / MACHINERY, MACHINERY
+        for wrapper in tracked_launcher_wrappers():
+            destination = root / wrapper
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(launcher_wrapper_source(wrapper), destination)
+        for relative in (
+            f"{MACHINERY}/config/issue_streams.yaml",
+            f"{MACHINERY}/config/launcher_stream_aliases.tsv",
+            *launcher_library_files(REPO),
+            *launcher_catalog_files(REPO),
+        ):
+            destination = root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPO / relative, destination)
+        copy_slot_registry(root)
     # The real helper with only its kernel cgroup read redirected.
-    env = scope_sandbox(root, tmp_path)
+    env = scope_sandbox(root, tmp_path, machinery=machinery, package=package)
     _write(
-        root / "scripts/lib/rules_core.sh",
+        root / package / "lib/rules_core.sh",
         _EVENT
         + 'rules_core_load() { lu_test_event rules; LC_RULES_CORE=""; LC_RULES_SEAT=core; LC_RULES_CORE_BYTES=0; }\n'
         + "rules_core_prefix() { printf '%s' \"$1\"; }\n",
     )
-    _write(root / "scripts/lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
-    _write(root / "scripts/lib/claude_weekly_used.py", "print('0')\n")
-    # The interpreter intercepts the rollover import by path; the slot registry
-    # may import the real module, so keep it when present.
-    handoff = root / "scripts/orchestration/thread_handoff.py"
+    _write(root / package / "lib/deploy_extensions.sh", _EVENT + "deploy_agent_extensions() { lu_test_event deploy; }\n")
+    _write(root / package / "lib/claude_weekly_used.py", "print('0')\n")
+    # The interpreter intercepts the rollover import by path or module name; the
+    # slot registry may import the real module, so keep it when present.
+    handoff = root / package / "orchestration/thread_handoff.py"
     if not handoff.exists():
         _write(handoff, "raise SystemExit('intercepted by the test interpreter')\n")
-    _write(root / "scripts/ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
-    for provider in ("claude", "codex", "cursor", "gemini", "glm", "grok", "kimi"):
-        _write(root / f"scripts/launchers/{provider}.sh", _ADAPTER)
-    _write(root / ".venv/bin/python", _PYTHON.format(event=_EVENT, python=shlex.quote(sys.executable)), 0o755)
+    _write(root / package / "ai_agent_bridge/inbox_watch.sh", "#!/usr/bin/env bash\nexec sleep 300\n", 0o755)
+    for provider in _PROVIDERS:
+        _write(root / package / f"launchers/{provider}.sh", _ADAPTER)
+    interpreter = _PYTHON.format(
+        event=_EVENT,
+        python=shlex.quote(sys.executable),
+        package=package,
+    )
+    _write(root / ".venv/bin/python", interpreter, 0o755)
     provider = _write(root / "provider.sh", _PROVIDER, 0o755)
     signal_provider = _write(root / "signal-provider.sh", _SIGNAL_PROVIDER, 0o755)
-    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30)
-    base = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(("GIT_", "LAUNCHER_", "SESSION_", "LC_", "LU_DRIVER_"))
-        and key not in {"PYTEST_XDIST_AUTO_NUM_WORKERS", "GLM_OPENCODE_FLASH", "LU_RULES_SEAT"}
-    }
+    subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, capture_output=True, timeout=30, env=launcher_environment())
+    base = launcher_environment()
     env = {
         **base,
         **env,
@@ -326,10 +397,13 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
         "TEST_EVENTS": str(tmp_path / "events"),
         "TEST_IDENTITY": str(tmp_path / "identity"),
         "TEST_ARGV": str(tmp_path / "argv"),
+        "TEST_PROVIDER_ENV": str(tmp_path / "provider-env"),
         "TEST_PROVIDER": str(provider),
         "TEST_SIGNAL_PROVIDER": str(signal_provider),
         "TEST_SIGNAL_LOG": str(tmp_path / "signal-log"),
     }
+    if runtime == "installed":
+        env["LU_PRODUCT_ROOT"] = str(root)
     return root, env
 
 
@@ -383,7 +457,7 @@ def _case_args(wrapper: str) -> tuple[str, ...]:
     if wrapper in INTERACTIVE:
         return ("prompt text", "--", *TRICKY)
     # Lane wrappers fix their own --epic.
-    if wrapper.endswith("-cto.sh") or wrapper == "scripts/start-kube-dojo-driver.sh":
+    if wrapper.endswith("-cto.sh") or wrapper == f"{MACHINERY}/start-kube-dojo-driver.sh":
         return ("--", *TRICKY)
     return ("--epic", "devops", "--", *TRICKY)
 
@@ -391,18 +465,23 @@ def _case_args(wrapper: str) -> tuple[str, ...]:
 def _expected_forward(wrapper: str) -> list[str]:
     if wrapper in INTERACTIVE:
         forward = ["prompt text", *TRICKY]
-        if wrapper == "scripts/start-bio-driver.sh":
+        if wrapper == f"{MACHINERY}/start-bio-driver.sh":
             forward = ["--agent", "curriculum-track-orchestrator", *forward]
         return forward
     return list(TRICKY)
 
 
+@pytest.mark.parametrize("runtime", RUNTIMES)
 @pytest.mark.parametrize("wrapper", sorted({**INTERACTIVE, **DRIVERS}))
-def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(tmp_path: Path, wrapper: str) -> None:
-    root, env = _checkout(tmp_path)
+def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
+    tmp_path: Path, wrapper: str, runtime: str
+) -> None:
+    root, env = _checkout(tmp_path, runtime)
     provider, label = {**INTERACTIVE, **DRIVERS}[wrapper]
     mode = "interactive" if wrapper in INTERACTIVE else "driver"
-    result = _launch(root, env, wrapper, *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC))
+    result = _launch(
+        root, env, _runtime_wrapper(wrapper, runtime), *_case_args(wrapper), TEST_PROVIDER_RC=str(PROVIDER_RC)
+    )
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     assert _lines(env["FAKE_STARTS"]) == ["start"]
     start = re.search(
@@ -414,13 +493,18 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
     assert result.stderr.count(f"DRIVER_SCOPE_VERIFIED unit={unit} ") == 2
     calls = _lines(env["FAKE_MANAGER_CALLS"])
     assert sum(call.startswith("systemd-run ") for call in calls) == 1
-    assert f"--slice=lu-driver.slice --unit={unit} " in next(c for c in calls if c.startswith("systemd-run "))
+    scope_start = next(c for c in calls if c.startswith("systemd-run "))
+    assert f"--slice=lu-driver.slice --unit={unit} " in scope_start
+    assert "--property=TimeoutStopSec=2s" not in scope_start
+    assert (f"systemctl --user show {unit} -p ActiveState --value" in calls) == (mode == "driver")
 
     identity = _identity(env)
     assert identity["wrapper"] == Path(wrapper).name
     assert (identity["provider"], identity["mode"], identity["unit"]) == (provider, mode, unit)
     # Same-PID re-entry: the replayed wrapper is the process systemd-run started.
     assert identity["scope_pid"] == identity["pid"]
+    child_names = Path(env["TEST_PROVIDER_ENV"]).read_bytes().split(b"\0")
+    assert not [entry for entry in child_names if entry.startswith(b"LAUNCHER_")]
     if mode == "driver":
         assert identity["epic"] == label
     else:
@@ -459,24 +543,18 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
 
 
 @pytest.mark.parametrize(
-    ("wrapper", "flash", "harness", "forward_head"),
+    ("wrapper", "harness", "forward_head"),
     [
-        # The provider-derived name would replay start-glm.sh and export the flag.
-        ("start-glmcc.sh", "unset", "claude-code", []),
-        ("start-glm.sh", "1", "claude-code", []),
-        ("scripts/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
+        (f"{MACHINERY}/start-bio-driver.sh", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
     ],
 )
-def test_route_identity_survives_reentry(
-    tmp_path: Path, wrapper: str, flash: str, harness: str, forward_head: list[str]
-) -> None:
+def test_route_identity_survives_reentry(tmp_path: Path, wrapper: str, harness: str, forward_head: list[str]) -> None:
     """Wrapper identity and provider argv are checked separately, injections once."""
     root, env = _checkout(tmp_path)
     result = _launch(root, env, wrapper, "--", *TRICKY)
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     identity = _identity(env)
     assert identity["wrapper"] == Path(wrapper).name
-    assert identity["glm_flash"] == flash
     assert identity["harness"] == harness
     assert _argv(env) == [*forward_head, *TRICKY]
 
@@ -484,7 +562,7 @@ def test_route_identity_survives_reentry(
 @pytest.mark.parametrize(
     ("wrapper", "mode"),
     [
-        ("scripts/start-bio-driver.sh", "interactive"),
+        (f"{MACHINERY}/start-bio-driver.sh", "interactive"),
         ("start-claude-cto.sh", "driver"),
     ],
 )
@@ -496,7 +574,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     argv = run_argv.read_bytes().decode().removesuffix("\0").split("\0")
     command = argv[argv.index("--") + 1 :]
-    assert command[:3] == ["bash", f"{root}/scripts/lib/driver_scope.sh", "--entry"]
+    assert command[:3] == ["bash", f"{root}/{MACHINERY}/lib/driver_scope.sh", "--entry"]
     assert command[3] == mode
     assert re.fullmatch(rf"lu-{mode}-[a-z]+-[a-z]+-{UUID}\.scope", command[4])
     assert command[5:] == ["-" if mode == "interactive" else "219", f"{root}/{wrapper}", "--", *TRICKY]
@@ -509,12 +587,11 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     ("wrapper", "args", "weekly", "code", "message"),
     [
         ("start-claude.sh", ("--does-not-exist",), "0", 2, "unknown launcher flag"),
-        ("start-glmcc.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
-        ("start-kimicc.sh", ("--harness", "kimi-code"), "0", 2, "always uses Claude Code"),
+        ("start-codex.sh", ("--epic", "devops"), "0", 2, "interactive launchers reject --epic"),
         ("start-claude-driver.sh", ("--epic", "devops", "--model", "not-certified"), "0", 4, "not certified"),
         ("start-gemini-driver.sh", ("--epic", "devops", "--model", "gemini-unknown"), "0", 4, "not certified"),
         ("start-claude.sh", ("--model", "opus"), "0", 7, "Opus is blocked"),
-        ("scripts/start-bio-driver.sh", (), "99", 7, "Claude weekly usage is 99%"),
+        (f"{MACHINERY}/start-bio-driver.sh", (), "99", 7, "Claude weekly usage is 99%"),
         ("start-codex-cto.sh", ("--force",), "0", 2, "CTO launchers reject --force"),
     ],
 )
@@ -522,7 +599,7 @@ def test_admission_refusals_keep_their_codes_before_manager_contact(
     tmp_path: Path, wrapper: str, args: tuple[str, ...], weekly: str, code: int, message: str
 ) -> None:
     root, env = _checkout(tmp_path)
-    _write(root / "scripts/lib/claude_weekly_used.py", f"print('{weekly}')\n")
+    _write(root / MACHINERY / "lib/claude_weekly_used.py", f"print('{weekly}')\n")
     result = _launch(root, env, wrapper, *args)
     assert result.returncode == code, result.stdout + result.stderr
     assert message in result.stderr
@@ -573,7 +650,7 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
     alias = tmp_path / "elsewhere" / "start-claude.sh"
     _write(
         alias,
-        f'#!/usr/bin/env bash\nset -euo pipefail\nsource {shlex.quote(str(root))}/scripts/lib/launcher_core.sh\nlauncher_main claude interactive "$@"\n',
+        f'#!/usr/bin/env bash\nset -euo pipefail\nsource {shlex.quote(str(root))}/{MACHINERY}/lib/launcher_core.sh\nlauncher_main claude interactive "$@"\n',
         0o755,
     )
     result = subprocess.run(
@@ -591,19 +668,15 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
 
 
 def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> None:
-    """A wrapper must refuse a provider that does not match its filename.
-
-    The stand-in is an active provider. Kimi's default model is retired and
-    refused in ``launcher_normalize_model``, before this scope gate.
-    """
+    """A wrapper must refuse a provider that does not match its filename."""
     root, env = _checkout(tmp_path)
-    wrapper = root / "start-glmcc.sh"
+    wrapper = root / "start-gemini.sh"
     wrapper.write_text(
         wrapper.read_text().replace(
-            "launcher_main glm interactive", "launcher_main grok interactive"
+            "launcher_main gemini interactive", "launcher_main codex interactive"
         )
     )
-    result = _launch(root, env, "start-glmcc.sh")
+    result = _launch(root, env, "start-gemini.sh")
     assert result.returncode == 6, result.stdout + result.stderr
     assert "DRIVER_SCOPE_REFUSED reason=entrypoint-mismatch;" in result.stderr
     assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
@@ -641,8 +714,7 @@ def _forged_reentry(
         # A driver adopting an interactive scope, and the reverse.
         ("start-claude-driver.sh", "lu-interactive-claude-claude-{uuid}.scope", "mode-mismatch"),
         ("start-claude.sh", "lu-driver-claude-devops-{uuid}.scope", "mode-mismatch"),
-        # The right mode, another wrapper's identity: glm into a glmcc scope.
-        ("start-glm.sh", "lu-interactive-glm-glmcc-{uuid}.scope", "identity-mismatch"),
+        # The right mode, another wrapper's identity: claude into a bio scope.
         ("start-claude.sh", "lu-interactive-claude-bio-{uuid}.scope", "identity-mismatch"),
         ("start-claude-driver.sh", "lu-driver-claude-devops-x-{uuid}.scope", "identity-mismatch"),
         ("start-claude.sh", "lu-interactive-claude-claude-not-a-uuid.scope", "mode-mismatch"),
@@ -663,8 +735,8 @@ def test_same_pid_reentry_refuses_mode_or_identity_mismatch(
 
 def test_matching_same_pid_reentry_is_accepted(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    unit = f"lu-interactive-glm-glmcc-{_PARENT}.scope"
-    result = _forged_reentry(root, env, "start-glmcc.sh", unit)
+    unit = f"lu-interactive-claude-bio-{_PARENT}.scope"
+    result = _forged_reentry(root, env, f"{MACHINERY}/start-bio-driver.sh", unit)
     assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
     assert not Path(env["FAKE_STARTS"]).exists()
     assert _identity(env)["unit"] == unit
@@ -720,7 +792,7 @@ def test_interactive_scope_start_failure_preserves_systemd_status_without_publis
     "parent",
     [f"lu-driver-claude-devops-{_PARENT}.scope", f"lu-interactive-codex-codex-{_PARENT}.scope"],
 )
-@pytest.mark.parametrize(("wrapper", "args"), [("start-claude.sh", ()), ("start-grok-driver.sh", ("--epic", "devops"))])
+@pytest.mark.parametrize(("wrapper", "args"), [("start-claude.sh", ()), ("start-codex-driver.sh", ("--epic", "devops"))])
 def test_launch_from_a_session_scope_starts_a_sibling_scope(
     tmp_path: Path, parent: str, wrapper: str, args: tuple[str, ...]
 ) -> None:
@@ -738,7 +810,7 @@ def test_launch_from_a_session_scope_starts_a_sibling_scope(
 
 @pytest.mark.parametrize(
     ("wrapper", "args"),
-    [("start-claude.sh", ()), ("scripts/start-bio-driver.sh", ()), ("start-claude-driver.sh", ("--epic", "devops"))],
+    [("start-claude.sh", ()), (f"{MACHINERY}/start-bio-driver.sh", ()), ("start-claude-driver.sh", ("--epic", "devops"))],
 )
 @pytest.mark.parametrize(
     "cgroup",
@@ -810,9 +882,9 @@ def test_dispatch_from_an_interactive_scope_stays_bounded(
 
 def test_adapter_refusal_inside_the_scope_keeps_its_code(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    adapter = root / "scripts/launchers/grok.sh"
+    adapter = root / MACHINERY / "launchers/codex.sh"
     adapter.write_text(adapter.read_text() + "launcher_adapter_validate() { lu_test_event validate; exit 2; }\n")
-    result = _launch(root, env, "start-grok.sh")
+    result = _launch(root, env, "start-codex.sh")
     assert result.returncode == 2, result.stdout + result.stderr
     assert _lines(env["FAKE_STARTS"]) == ["start"]
     assert [name for name, _ in _events(env)] == ["rules", "validate"]
@@ -1140,16 +1212,16 @@ def test_driver_relay_during_close_preserves_client_result(
     # trap window; the relay barrier orders the second INT after client start.
     barrier = 'printf "ready\\n" > "$TEST_FORWARD_READY"\nIFS= read -r _ < "$TEST_ENTRY_GATE" || true\n'
     if forward_path == "pending":
-        adapter = root / "scripts/launchers/claude.sh"
+        adapter = root / MACHINERY / "launchers/claude.sh"
         with adapter.open("a") as stream:
             stream.write("\nlauncher_driver_wait_hook() {\n" + barrier + "}\n")
     else:
-        core = root / "scripts/lib/launcher_core.sh"
+        core = root / MACHINERY / "lib/launcher_core.sh"
         body = core.read_text()
         needle = '  if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then\n'
         assert needle in body
         core.write_text(body.replace(needle, barrier + needle, 1))
-    scope = root / "scripts/lib/driver_scope.sh"
+    scope = root / MACHINERY / "lib/driver_scope.sh"
     body = scope.read_text()
     needle = '    kill -"$signal" "$1" 2>/dev/null || true\n'
     assert body.count(needle) == 1
@@ -1298,7 +1370,7 @@ def test_bounded_live_interactive_scope_soak(tmp_path: Path) -> None:
     require_soak_opt_in()
     root, _ = _checkout(tmp_path)
     # The production helper and manager, rather than the fake kernel/manager.
-    shutil.copy2(REPO / "scripts/lib/driver_scope.sh", root / "scripts/lib/driver_scope.sh")
+    shutil.copy2(REPO / MACHINERY / "lib/driver_scope.sh", root / MACHINERY / "lib/driver_scope.sh")
     hog, proof = soak_hog(tmp_path)
     provider = _write(
         root / "provider.sh",

@@ -9,13 +9,42 @@ Base URL: `http://localhost:8765`
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
 and `http://localhost:8765/redoc` (ReDoc).
 
-**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
+**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page).
 
-This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/**` and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+
+## Code layout: machinery and product halves (C-4687)
+
+One Monitor process on port 8765 serves both halves, so every URL is the same
+for the operator and for agents.
+
+- **Machinery** — `scripts/api/`: fleet, runtime, delegate, comms, epics,
+  occupancy, rules, session, orient composition, static delivery and the
+  contract registry. It never imports product code.
+- **Product** — `scripts/project_api/`: curriculum state (`/api/state/*`
+  except `routing-budget`, `github-budget` and `manifest`), dashboard,
+  artifacts, consultation, cost, decisions, governance, build events, images,
+  sources, site, wiki, batch, atlas jobs, `/api/comms/batch-progress*`,
+  `/api/telemetry/module-builds*`, `/api/config` and `/images/*`.
+- **The one product entry** — `scripts/curriculum/monitor_paths.v1.json` names
+  `product_api` (`scripts.project_api.entry`). `scripts/api/product_contribution.py`
+  imports it through `scripts.ops.product_entry.load_configured_module(name,
+  product_root=...)` and calls `build_api(context)`. The returned
+  contribution carries the product routers (mounted ahead of the machinery
+  routers, with the static catch-all last), the explicit static-file map,
+  route and page contracts, orient sections, preload names, warmup hooks,
+  and the Atlas provider and fleet batch projection that fleet views read.
+- **Pages** — this checkout serves only the learn-ukrainian product pages: the
+  5 files in `scripts/project_api/static/` (the home `index.html`, the
+  curriculum dashboard, artifacts, the shared `monitor.css` and
+  `product-nav.js`). They are served only when the entry declares them. The machinery pages (fleet, epics, work, runtime, routing,
+  delegate, ACP, orient) are served by machinery at `/machinery`. `dashboards/`
+  stays only as an empty placeholder, because the machinery release builder still
+  lists it as a required live-data path.
 
 ## Where agents onboard (not the HTML dashboards)
 
-Agents learn the Ops API from **live HTTP surfaces**, not from `dashboards/*.html`
+Agents learn the Ops API from **live HTTP surfaces**, not from the HTML pages
 (those are human chrome over the same contracts).
 
 | Step | Surface | Why |
@@ -88,7 +117,7 @@ curl -s http://localhost:8765/openapi.json | jq .info
 
 ## Work control plane — `/api/work/v1`
 
-Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation only; no mutations). Operator detail: [`docs/monitor-api/work.md`](monitor-api/work.md). UI: `/work.html`. ADR: [`docs/decisions/ADR-019-work-control-plane.md`](decisions/ADR-019-work-control-plane.md).
+Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation only; no mutations). Operator detail: [`docs/monitor-api/work.md`](monitor-api/work.md). UI: served by machinery at `/machinery`. ADR: [`docs/decisions/ADR-019-work-control-plane.md`](decisions/ADR-019-work-control-plane.md).
 
 | Method | Path | Notes |
 | --- | --- | --- |
@@ -200,7 +229,7 @@ The PR-tier invariant in
 enumerates the public FastAPI route tree at test time. Its denominator is the
 OpenAPI method/template set (276 operations in the reviewed snapshot) plus the
 WebSocket route set, cross-checked against a frozen route-tree digest. Every
-dashboard file under `dashboards/` is scanned as a static consumer as well.
+product page under `scripts/project_api/static/` is scanned as a static consumer as well.
 
 The test uses `TestClient(app)` without entering the lifespan context. Existing
 module seams are redirected to an isolated temporary store whose absolute path
@@ -513,7 +542,7 @@ Liveness map:
 curl -s http://localhost:8765/api/fleet/workers/v1 | python3 -m json.tool
 ```
 
-`fleet.html` includes an **AI workers** panel bound to this route.
+The machinery fleet page, served by machinery at `/machinery`, includes an **AI workers** panel bound to this route.
 
 ## Remote epic lifecycle v1 — `/api/epics/v1`
 
@@ -675,7 +704,7 @@ errors.
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The default payload always enumerates opaque hosts `host-teacher` and observer-only `mac-operator` (plus any additional mapped hosts). Ghost `host-job` is not a default glance row and is not queryable unless mapped via `MONITOR_OCCUPANCY_HOST_IDS`. When the map is empty, the Linux API process fills `host-teacher` in-process (local load + seats) instead of `unavailable/unreachable`. The Mac row stays visible when the observer store is empty or Monitor just restarted; with no live observer or load it is `status: "unavailable"` and is never rendered idle by omission. Live observer heartbeats still merge into that row. Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped remote hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
-The Hosts panel on `orient.html` displays each host's observation status, source age
+The Hosts panel of the machinery orient page (served by machinery at `/machinery`) displays each host's observation status, source age
 at lookup, occupancy, and error. Null or missing source age displays as unknown.
 Unavailable observations display unknown age even when the API supplies a placeholder
 zero. Stale and unavailable observations display unknown occupancy.
@@ -1412,9 +1441,6 @@ curl -s http://localhost:8765/api/dashboard/track/hist
 # Deep module inspection (plan + meta + gates + orchestration)
 curl -s http://localhost:8765/api/dashboard/module/a1/my-world-objects
 
-# Deep module inspection (legacy gold)
-curl -s http://localhost:8765/api/gold/inspect/hist/trypillian-civilization
-
 # Research coverage (detailed per-module scores)
 curl -s http://localhost:8765/api/dashboard/research
 ```
@@ -1616,86 +1642,6 @@ curl -s http://localhost:8765/api/state/preparation/c1/<slug>
 
 # Critical issues to fix
 curl -s "http://localhost:8765/api/state/issues?severity=critical"
-```
-
----
-
-## Consultation Endpoints — `/api/consultation/`
-
-Self-improving template loop: review proposals, approve/reject, track history and patterns.
-
-### `GET /api/consultation/queue`
-
-List all pending consultation proposals.
-
-```bash
-curl -s http://localhost:8765/api/consultation/queue | python3 -m json.tool
-```
-
-Response:
-```json
-{
-  "pending": [
-    {
-      "filename": "20260313T184951744734-being-and-becoming.yaml",
-      "source_module": "a2/being-and-becoming",
-      "track": "a2",
-      "slug": "being-and-becoming",
-      "confidence": "high",
-      "root_cause_summary": "The content template produces insufficient Ukrainian...",
-      "change_count": 3,
-      "queued_at": "2026-03-13T18:49:51.749342+00:00",
-      "target_files": ["claude_extensions/phases/gemini/content.md"]
-    }
-  ],
-  "count": 1
-}
-```
-
-### `GET /api/consultation/queue/{filename}`
-
-Full proposal detail including all FIND/REPLACE changes.
-
-### `POST /api/consultation/queue/{filename}/approve?confirm=true`
-
-Validate FIND strings exist in templates, apply patches, move YAML to `applied/`. Returns 409 if FIND strings don't match.
-
-### `POST /api/consultation/queue/{filename}/reject?confirm=true&reason=...`
-
-Move YAML to `rejected/`, optionally record reason.
-
-### `GET /api/consultation/history`
-
-All consultations across all modules. Params: `?track=`, `?outcome=`, `?limit=50`, `?offset=0`.
-
-```bash
-# All consultations for track a2
-curl -s "http://localhost:8765/api/consultation/history?track=a2" | python3 -m json.tool
-```
-
-### `GET /api/consultation/history/{track}/{slug}`
-
-Consultation timeline for one module.
-
-### `GET /api/consultation/metrics`
-
-Aggregate stats: total, by outcome/confidence/scope/track, top root cause keywords.
-
-```bash
-curl -s http://localhost:8765/api/consultation/metrics | python3 -m json.tool
-```
-
-Response:
-```json
-{
-  "total": 4,
-  "pending_queue": 2,
-  "by_outcome": {"queued": 2, "applied": 1, "no_action": 1},
-  "by_confidence": {"high": 3, "medium": 1},
-  "by_scope": {"all_modules": 3, "this_module": 1},
-  "by_track": {"a2": 4},
-  "top_root_causes": [["template", 3], ["ukrainian", 2]]
-}
 ```
 
 ---
@@ -2067,7 +2013,7 @@ artifact bodies. Stale `reserved`/`running` activity means only that the ledger
 has not changed recently; it is not proof that the provider is alive or dead.
 Corroborate provider headroom with CodexBar and durable authority job state.
 
-The `/runtime.html` **Routing overview** consumes this projection. Its summary
+The **Routing overview** on the machinery runtime page (served by machinery at `/machinery`) consumes this projection. Its summary
 cards, filters, search, lifecycle groups, decision-path cards, details, and
 load-more control are presentation-only.
 
@@ -2467,33 +2413,6 @@ task state.
   "total": 1,
   "tasks": [
     {"task_id": "issue-1166", "agent": "codex", "status": "running", "age_s": 45.0}
-  ]
-}
-```
-
-## Build Events — `/api/build/events/`
-
-### `GET /api/build/events/recent?level=&slug=&limit=100`
-
-Recent synthesized build events from dispatch metadata.
-
-```json
-{
-  "events": [
-    {"ts": "2026-04-10T21:50:27Z", "level": "a2", "slug": "a2-bridge", "phase": "skeleton", "ok": true},
-    {"ts": "2026-04-10T21:45:01Z", "level": "a2", "slug": "a2-bridge", "phase": "write", "ok": true}
-  ]
-}
-```
-
-### `GET /api/build/events/active?level=`
-
-Modules with recent dispatch activity and unfinished publish state.
-
-```json
-{
-  "active": [
-    {"level": "a2", "slug": "a2-bridge", "current_phase": "write", "started_at": "2026-04-10T21:50:27Z", "age_s": 240}
   ]
 }
 ```
@@ -3188,7 +3107,7 @@ future cleanup.
 
 | Deprecated | Replacement |
 |---|---|
-| `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
+| `GET /api/comms/live-activity` | `GET /api/state/build-status` (the deprecation header still also names the removed `/api/build/events`) |
 
 The deprecated routes still work for existing dashboards and scripts
 that haven't been updated — the contract is "log a warning and
@@ -3201,9 +3120,16 @@ The following legacy endpoints and route aliases have been completely retired an
 | Retired Route | Canonical Replacement | Status | Notes |
 |---|---|---|---|
 | `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
+| `GET /api/blue/*` | `GET /api/state/*`, `GET /api/artifacts/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
+| `GET /api/gold/*` | `GET /api/dashboard/module/{track}/{slug}`, `GET /api/state/*` | 404 Not Found | Router removed in the Monitor cull (C-4686, C-4687); no runtime caller and no access-log hit since 2026-11-03 |
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
 | `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
-| `GET /api/cost/*` | `GET /api/analytics/cost/*` | 404 Not Found | Retired in #7947; duplicate mount unmounted, canonical endpoints are under `/api/analytics/cost/*` |
+| `GET /api/cost/*` | none | 404 Not Found | Retired in #7947; its canonical `/api/analytics/cost/*` was removed in the 2026-11-12 product page trim |
+| `GET /api/analytics/cost/*` | `.venv/bin/python scripts/telemetry/cost_report.py` | 404 Not Found | Removed in the 2026-11-12 product page trim; every cost window was empty |
+| `/api/build/events/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; no dispatch metadata files exist to read |
+| `/api/consultation/*` | none | 404 Not Found | Removed in the 2026-11-12 product page trim; queue and history were empty and nothing writes them |
+| `/api/images/*` | `GET /api/sources/browse_images` | 404 Not Found | Removed in the 2026-11-12 product page trim; no textbook image index exists |
+| `/api/admin/*` | `GET /api/health` | 404 Not Found | Removed in the 2026-11-12 product page trim, including the backup DELETE endpoint |
 
 
 ---
@@ -3591,31 +3517,23 @@ process does not pick up this behavior until restart.
 
 | Page | URL | Data source |
 |------|-----|-------------|
-| Home | `/` | `/api/dashboard/overview`, `/api/state/summary` (warm cache; no per-load `fresh=true`), `/api/state/pipeline-versions`, `/api/orient`, … — client abort budget **20s** (#7976) |
-| Audit Dashboard | `/audit-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{id}` |
-| Progress | `/progress.html` | `/api/state/summary?fresh=true`, `/api/state/pipeline-versions?fresh=true`, `/api/state/pipeline/{track}?fresh=true` |
-| Agent Comms | `/comms.html` | redirects to `/fleet.html` (retired Broker Ops chrome) |
-| Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
-| Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
-| Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
-| Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
+| Home | `/` | `/api/dashboard/overview` — client abort budget **20s** (#7976) |
+| Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{track}`, `/api/dashboard/module/{track}/{slug}` |
+| Artifacts | `/artifacts/` | `/api/artifacts/html` |
 | API Docs | `/docs` | FastAPI auto-generated OpenAPI (**Ops API 2.0.0**) |
 
 Dashboard consolidation status:
-- `/progress.html` is the canonical fast visual overview for current
-  track/module state. It surfaces cache freshness, dossier coverage,
-  generated/published state, stale audit warnings, and next-action hints.
-- `/audit-dashboard.html` remains because it drills into QA gate
-  breakdowns through `/api/dashboard/track/{id}`.
-- `/quality.html` remains because it is a fix queue over research,
-  reviews, issues, and weak-point endpoints rather than a status overview.
-- `/track-health.html` remains because it uses build-status and
-  enrichment endpoints that are not shown in the progress overview.
-- `/curriculum-dashboard.html` remains for plan/meta inspection. It is
-  overlapping, but deleting it would remove a distinct module-inspection
-  workflow.
-- No page is removed in this slice; the safe consolidation is to make
-  `/progress.html` trustworthy and leave the specialized pages explicit.
+- `/curriculum-dashboard.html` is the one curriculum page: per-track
+  published, plan-review and research totals, then per-module inspection.
+- The 2026-11-12 product page trim removed `/progress.html`, `/quality.html`,
+  `/build-events.html`, `/cost.html`, `/consultation.html`,
+  `/image-explorer.html`, `/wiki.html` and `/admin.html`; they now return 404.
+  Their V7 pipeline, build-event, cost, consultation, image and wiki data was
+  empty or stale. The `/api/state/*` and `/api/wiki/*` routes stay for agents.
+- The redirect-only pages `/audit-dashboard.html`, `/track-health.html`,
+  `/channels.html`, `/comms.html` and `/images.html` were removed earlier in
+  the Monitor cull (C-4686, C-4687). The fleet view is served by machinery at
+  `/machinery`.
 
 ---
 

@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -61,6 +62,10 @@ from scripts.review.target_resolution import (
     TargetResolutionError,
     resolve_review_target,
 )
+
+# This tool's checkout-relative path, for its help text: the machinery package's import name
+# (the directory checkout paths use), or its unresolved directory when run as a file.
+_THIS_FILE = f"{Path(os.path.abspath(__file__)).parents[0].name}/verify_review.py"
 
 FORBIDDEN_RECEIPT_MARKERS = (
     "/status/",
@@ -151,13 +156,9 @@ def _load_behavior_proof_state(
     try:
         state = json.loads(state_file.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError) as exc:
-        raise ContractError(
-            f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID
-        ) from exc
+        raise ContractError(f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID) from exc
     except json.JSONDecodeError as exc:
-        raise ContractError(
-            f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID
-        ) from exc
+        raise ContractError(f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID) from exc
     if not isinstance(state, dict):
         raise ContractError("behavior_proof_state_must_be_object", exit_code=EXIT_INVALID)
     baseline = state.get("baseline")
@@ -182,10 +183,7 @@ def _load_behavior_proof_state(
     }
     if any(field not in saved_target for field in stable_target_fields):
         raise ContractError("behavior_proof_state_target_invalid", exit_code=EXIT_INVALID)
-    if any(
-        saved_target[field] != expected_value
-        for field, expected_value in stable_target_fields.items()
-    ):
+    if any(saved_target[field] != expected_value for field, expected_value in stable_target_fields.items()):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
     profile = str(baseline.get("review_profile") or "").strip().casefold()
     return proof, intended_behavior, profile
@@ -223,9 +221,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Use after review to produce a receipt, or before review to emit a target fingerprint."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python scripts/verify_review.py --emit-target-manifest --mode commit --commit HEAD
-  .venv/bin/python scripts/verify_review.py --review-file reply.txt --mode commit --commit HEAD
+        epilog=f"""Examples:
+  .venv/bin/python {_THIS_FILE} --emit-target-manifest --mode commit --commit HEAD
+  .venv/bin/python {_THIS_FILE} --review-file reply.txt --mode commit --commit HEAD
 
 Outputs: receipt JSON on stdout; --receipt-path writes a file; --post-comment opts into GitHub posting.
 Exit codes: 0 clean; 1 actionable; 2 invalid; 3 incomplete; 4 stale; 5 unverifiable.
@@ -422,12 +420,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         scope = _load_json_arg(args.scope_json or None, label="--scope-json")
         tests = _load_json_arg(args.tests_json or None, label="--tests-json")
-        dispositions = _load_json_arg(
-            args.dispositions_json or None, label="--dispositions-json"
-        )
-        routing_lineage = _load_json_arg(
-            args.routing_lineage_json or None, label="--routing-lineage-json"
-        )
+        dispositions = _load_json_arg(args.dispositions_json or None, label="--dispositions-json")
+        routing_lineage = _load_json_arg(args.routing_lineage_json or None, label="--routing-lineage-json")
     except ContractError as exc:
         print(
             json.dumps(
@@ -466,9 +460,7 @@ def main(argv: list[str] | None = None) -> int:
                 target=target,
             )
         else:
-            behavior_proof = _load_json_arg(
-                args.behavior_proof_json or None, label="--behavior-proof-json"
-            )
+            behavior_proof = _load_json_arg(args.behavior_proof_json or None, label="--behavior-proof-json")
             frozen_intended_behavior = ""
             review_profile = ""
     except ContractError as exc:
@@ -522,10 +514,7 @@ def main(argv: list[str] | None = None) -> int:
         tests=tests,
         behavior_proof=behavior_proof,
         frozen_intended_behavior=frozen_intended_behavior,
-        dispositions={
-            str(k): v if isinstance(v, dict) else {"disposition": str(v)}
-            for k, v in dispositions.items()
-        },
+        dispositions={str(k): v if isinstance(v, dict) else {"disposition": str(v)} for k, v in dispositions.items()},
         routing_lineage={str(k): str(v) for k, v in routing_lineage.items()},
     )
 

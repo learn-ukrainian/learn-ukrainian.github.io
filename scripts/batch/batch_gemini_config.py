@@ -11,9 +11,9 @@ from pathlib import Path
 import yaml
 
 try:
-    from common.repo_root import project_interpreter
+    from lu_machinery.common.repo_root import project_interpreter
 except ImportError:  # repo root on path, scripts/ is not
-    from scripts.common.repo_root import project_interpreter
+    from lu_machinery.common.repo_root import project_interpreter
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
@@ -28,7 +28,7 @@ def __getattr__(name: str) -> str:
     """
     if name != "VENV_PYTHON":
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    value = str(project_interpreter())
+    value = str(project_interpreter(PROJECT_ROOT.resolve()))
     globals()["VENV_PYTHON"] = value
     return value
 

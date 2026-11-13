@@ -104,10 +104,28 @@ def _proof(lemma: str) -> dict[str, object]:
 
 
 @pytest.fixture(autouse=True)
-def _fixture_usage_sources(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Fixture headwords get current proof next to the actual curated projection."""
+def _fixture_usage_sources(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Bind fixture headword proof and independent report inputs without ambient corpus reads."""
     proofs = {lemma: _proof(lemma) for lemma in ("всьо", "avoid", "red", "calque", "бета", "калька")}
     monkeypatch.setattr(generate_search_index, "_USAGE_SOURCES", {**generate_search_index.usage_sources(), **proofs})
+    from scripts.deploy import runtime_source_report as report
+    from tests.test_atlas_runtime_release import _source_files
+
+    # Keep the real census holds for the existing projection checks. Only the
+    # independently bound report source/receipt is local to this test.
+    with monkeypatch.context() as source_patch:
+        manifest, _, receipt_path, receipt = _source_files(tmp_path / "report-source", source_patch)
+    receipt["holds_sha256"] = report.file_digest(report.HOLDS)
+    receipt_path.write_bytes(report.canonical_bytes(receipt))
+    monkeypatch.setattr(generate_search_index, "DEFAULT_MANIFEST", manifest)
+    real_report = report.report_source_freshness
+
+    def bound_report(rows: list[dict[str, Any]], parity: dict[str, Any] | None, **kwargs: Any) -> dict[str, Any]:
+        kwargs.setdefault("pointer_dir", manifest.parent)
+        kwargs.setdefault("receipt_path", receipt_path)
+        return real_report(rows, parity, **kwargs)
+
+    monkeypatch.setattr(report, "report_source_freshness", bound_report)
 
 
 def _avoid_entry(lemma: str, gloss: str) -> dict[str, object]:
@@ -1036,7 +1054,7 @@ def _db_entry(
     return row
 
 
-def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> None:
+def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     """#9603: stored DB records keep source scope through the browse projection."""
     entries = [
         # Recommended replacement of «являтися» (reverse calque) with stale severity.
@@ -1202,6 +1220,13 @@ def test_db_mode_browse_flags_only_lemma_scoped_named_labels(tmp_path: Path) -> 
     assert [item["locator"] for item in usage["records"]["являтися"]["citations"]] == [
         "9-klas-ukrajinska-mova-avramenko-2017_s0159"
     ]
+    # The independent one-article source is not this ten-article DB. Exercise
+    # the actual rebuild/comparison rather than suppressing the report.
+    reports = [json.loads(line) for line in capsys.readouterr().out.splitlines() if line.startswith('{"')]
+    assert reports == [{
+        "status": "stale", "reasons": ["membership_diverged", "count_diverged"],
+        "raw_count": 10, "projected_count": 10, "source_raw_count": 1, "source_projected_count": 1,
+    }]
     # Editorial gloss metadata: verbatim only on the lemma-bound warning, a
     # qualified note in browse and search otherwise; ordinary glosses unchanged.
     browse = {row["l"]: row for path in (tmp_path / "browse").glob("*.json") for row in json.loads(path.read_text(encoding="utf-8"))}
@@ -1338,3 +1363,58 @@ def test_committed_usage_sources_keep_the_pryimaty_expression() -> None:
     records = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))["usageSources"]["records"]
     record = records["приймати"]
     assert (record["kind"], record["corrections"], record["sense"]) == ("phrasal", ["брати участь"], "приймати участь")
+
+
+def test_added_report_failure_preserves_existing_fatal_checks_and_mode_outputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+) -> None:
+    """T4: report exceptions must not swallow fatal checks or change either mode's artifacts."""
+    from scripts.deploy import runtime_source_report as report
+    from scripts.deploy import vendor_atlas_tree as vendor
+    from tests.test_atlas_runtime_release import _source_files
+
+    manifest, _, receipt_path, receipt = _source_files(tmp_path / "source", monkeypatch)
+    db = tmp_path / "atlas.db"
+    atlas_db.migrate_manifest(manifest, db)
+    rows, aliases, _ = build_atlas_db_search_artifacts(db)
+    parity = {**receipt["runtime"], "articles": 1, "projectedArticles": 1, "withheldArticles": []}
+    monkeypatch.setattr(vendor, "build_pinned_search", lambda tree: (rows, aliases, parity))
+    real_report = report.report_source_freshness
+    monkeypatch.setattr(report, "report_source_freshness", lambda rows, parity, **kwargs: real_report(
+        rows, parity, receipt_path=receipt_path, pointer_dir=manifest.parent, **kwargs,
+    ))
+
+    def outputs(root: Path) -> dict[str, bytes]:
+        return {path.relative_to(root).as_posix(): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+
+    report_call = generate_search_index.report_runtime_source
+    for mode in ("db", "runtime"):
+        run = tmp_path / mode
+        run.mkdir()
+        monkeypatch.chdir(run)
+        args = ["--manifest", str(manifest), "--db", str(db)] if mode == "db" else ["--manifest", str(manifest), "--runtime-tree", "tree"]
+        with monkeypatch.context() as baseline_patch:
+            baseline_patch.setattr(generate_search_index, "report_runtime_source", lambda *args: None)
+            assert main(args) == 0
+        baseline = outputs(run)
+        capsys.readouterr()
+        assert main(args) == 0
+        current_output = capsys.readouterr().out
+        assert '"status":"current"' in current_output
+        assert outputs(run) == baseline, mode
+
+        def fail_report(*args, **kwargs):
+            raise RuntimeError("report-only exception")
+
+        with monkeypatch.context() as failure_patch:
+            failure_patch.setattr(generate_search_index, "report_runtime_source", fail_report)
+            assert main(args) == 0
+            failure_output = capsys.readouterr().out
+            assert '{"reasons":["report_error"],"status":"unknown"}' in failure_output
+            assert outputs(run) == baseline, mode
+            if mode == "runtime":
+                failure_patch.setattr(generate_search_index, "pinned_set_digests", lambda *args: {})
+                with pytest.raises(SystemExit, match="pinned set changed on disk"):
+                    main(args)
+                assert "report_error" not in capsys.readouterr().out
+        assert generate_search_index.report_runtime_source is report_call

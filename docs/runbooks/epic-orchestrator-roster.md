@@ -141,8 +141,6 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
 | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
 | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | grok-4.7 | high | gpt-6.1-sol | high |
-| grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 <!-- fleet-roster-projection:begin formal_review_eligible -->
@@ -151,9 +149,9 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | false |
 | claude | true |
 | codex | true |
-| cursor | true |
+| cursor | false |
 | gemini | false |
-| grok | true |
+| grok | false |
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 

@@ -21,9 +21,9 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
 
-import scripts.api.dashboard_router as dashboard_router
-from scripts.api.main import app
+import scripts.project_api.dashboard_router as dashboard_router
 
 pytestmark = pytest.mark.reads_content
 
@@ -87,7 +87,7 @@ class TestDispatcherScanEndpoint:
 
     def test_returns_200_on_success(self):
         with patch(
-            "scripts.api.main.subprocess.run",
+            "lu_machinery.api.main.subprocess.run",
             return_value=subprocess.CompletedProcess(["scan"], 0),
         ) as mock_run:
             resp = client.post("/api/batch/dispatcher/scan")
@@ -99,7 +99,7 @@ class TestDispatcherScanEndpoint:
 
     def test_returns_500_on_subprocess_failure(self):
         with patch(
-            "scripts.api.main.subprocess.run",
+            "lu_machinery.api.main.subprocess.run",
             return_value=subprocess.CompletedProcess(["scan"], 1),
         ):
             resp = client.post("/api/batch/dispatcher/scan")
@@ -136,7 +136,7 @@ class TestBuildStatusEndpoint:
             assert all_tracks[track]["failed"] == per_track["failed"]
 
     def test_per_track_counts_failed_audit_before_running_phase(self, tmp_path, monkeypatch):
-        from scripts.api import state_build
+        from scripts.project_api import state_build
 
         monkeypatch.setattr(state_build, "get_plan_slugs", lambda _track_id, *args, **kwargs: [(1, "failed-module")])
         monkeypatch.setattr(state_build, "detect_pipeline_version", lambda _orch_dir: "v6")
@@ -214,7 +214,7 @@ class TestReadYamlFile:
     """_read_yaml_file safely reads YAML files."""
 
     def test_reads_valid_yaml(self, tmp_path):
-        from scripts.api.dashboard_helpers import read_yaml_file
+        from scripts.project_api.dashboard_helpers import read_yaml_file
 
         f = tmp_path / "test.yaml"
         f.write_text("key: value\nnum: 42")
@@ -222,7 +222,7 @@ class TestReadYamlFile:
         assert result == {"key": "value", "num": 42}
 
     def test_returns_none_for_invalid_yaml(self, tmp_path):
-        from scripts.api.dashboard_helpers import read_yaml_file
+        from scripts.project_api.dashboard_helpers import read_yaml_file
 
         f = tmp_path / "bad.yaml"
         f.write_text(":\n  - :\n    [invalid")
@@ -234,7 +234,9 @@ class TestExtractWordCountFromStatus:
     """_extract_word_count_from_status parses lesson gate message."""
 
     def test_parses_word_count_and_target(self):
-        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
+        from scripts.project_api.dashboard_helpers import (
+            extract_word_count_from_status as _extract_word_count_from_status,
+        )
 
         class FakeResult:
             def __init__(self):
@@ -251,7 +253,9 @@ class TestExtractWordCountFromStatus:
         assert la == "2026-03-01T00:00:00Z"
 
     def test_handles_deferred_count(self):
-        from scripts.api.dashboard_helpers import extract_word_count_from_status as _extract_word_count_from_status
+        from scripts.project_api.dashboard_helpers import (
+            extract_word_count_from_status as _extract_word_count_from_status,
+        )
 
         class FakeResult:
             def __init__(self):
@@ -269,7 +273,7 @@ class TestExtractReviewInfo:
     """_extract_review_info reads review files."""
 
     def test_no_reviews_exist(self, tmp_path):
-        from scripts.api.dashboard_helpers import extract_review_info as _extract_review_info
+        from scripts.project_api.dashboard_helpers import extract_review_info as _extract_review_info
 
         (tmp_path / "review").mkdir()
         (tmp_path / "audit").mkdir()
@@ -279,7 +283,7 @@ class TestExtractReviewInfo:
         assert info["review_score"] is None
 
     def test_review_exists_but_empty(self, tmp_path):
-        from scripts.api.dashboard_helpers import extract_review_info as _extract_review_info
+        from scripts.project_api.dashboard_helpers import extract_review_info as _extract_review_info
 
         review_dir = tmp_path / "review"
         review_dir.mkdir()
@@ -293,7 +297,7 @@ class TestGetOrchestrationInfo:
     """_get_orchestration_info collects phase data."""
 
     def test_missing_dir(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
+        from scripts.project_api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
 
         info = _get_orchestration_info(tmp_path / "nonexistent")
         assert info["orchestration"] == []
@@ -302,7 +306,7 @@ class TestGetOrchestrationInfo:
         assert info["friction_count"] == 0
 
     def test_v6_not_needs_rebuild(self, tmp_path):
-        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
+        from scripts.project_api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
 
         orch = tmp_path / "orch"
         orch.mkdir()
@@ -317,7 +321,7 @@ class TestBuildModuleInfo:
     """build_module_info keeps only v6 as current."""
 
     def test_v5_marks_needs_rebuild(self, tmp_path):
-        from scripts.api.dashboard_helpers import build_module_info
+        from scripts.project_api.dashboard_helpers import build_module_info
 
         track_dir = tmp_path / "track"
         plans_dir = tmp_path / "plans"
@@ -326,10 +330,10 @@ class TestBuildModuleInfo:
         plans_dir.mkdir()
 
         with (
-            patch("scripts.api.dashboard_helpers.get_source_paths", return_value={}),
-            patch("scripts.api.dashboard_helpers.find_research_path", return_value=None),
+            patch("scripts.project_api.dashboard_helpers.get_source_paths", return_value={}),
+            patch("scripts.project_api.dashboard_helpers.find_research_path", return_value=None),
             patch(
-                "scripts.api.dashboard_helpers.extract_review_info",
+                "scripts.project_api.dashboard_helpers.extract_review_info",
                 return_value={
                     "has_review": False,
                     "has_final_review": False,
@@ -339,7 +343,7 @@ class TestBuildModuleInfo:
                     "plan_review_verdict": None,
                 },
             ),
-            patch("scripts.api.dashboard_helpers.detect_pipeline_version", return_value="v5"),
+            patch("scripts.project_api.dashboard_helpers.detect_pipeline_version", return_value="v5"),
         ):
             result = build_module_info(track_dir, plans_dir, "a1", "test-slug", 0)
 
@@ -380,7 +384,7 @@ class TestDashboardModuleDetail:
         monkeypatch.setattr(dashboard_router, "get_orchestration_info", lambda _orch_dir: {})
 
 
-        from scripts.api.monitor_context import fixture_context
+        from lu_machinery.api.monitor_context import fixture_context
 
         ctx = fixture_context(tmp_path)
         ctx = ctx.with_roots(curriculum_root=tmp_path / "curriculum")
@@ -394,14 +398,14 @@ class TestClassifyModuleQueue:
     """_classify_module_queue routes modules to the right queue."""
 
     def test_missing_status_no_md_returns_otaman(self, tmp_path):
-        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
+        from scripts.project_api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         status_file = tmp_path / "status" / "test.json"
         result = _classify_module_queue("a1", tmp_path, "test", 0, status_file)
         assert result == "otaman"
 
     def test_missing_status_with_md_returns_none(self, tmp_path):
-        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
+        from scripts.project_api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         (tmp_path / "test.md").write_text("content")
         status_file = tmp_path / "nonexistent.json"
@@ -409,7 +413,7 @@ class TestClassifyModuleQueue:
         assert result is None
 
     def test_content_complete_returns_hetman(self, tmp_path):
-        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
+        from scripts.project_api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "content-complete", "deferred_count": 0}}))
@@ -417,7 +421,7 @@ class TestClassifyModuleQueue:
         assert result == "hetman"
 
     def test_pass_without_final_review_returns_final_review(self, tmp_path):
-        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
+        from scripts.project_api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "pass", "deferred_count": 0}}))
@@ -425,7 +429,7 @@ class TestClassifyModuleQueue:
         assert result == "final_review"
 
     def test_pass_with_final_review_returns_none(self, tmp_path):
-        from scripts.api.dashboard_helpers import classify_module_queue as _classify_module_queue
+        from scripts.project_api.dashboard_helpers import classify_module_queue as _classify_module_queue
 
         sf = tmp_path / "status.json"
         sf.write_text(json.dumps({"overall": {"status": "pass", "deferred_count": 0}}))

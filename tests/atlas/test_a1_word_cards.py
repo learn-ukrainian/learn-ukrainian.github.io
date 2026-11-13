@@ -6,6 +6,7 @@ Synthetic source text exercises receipt mechanics, not Ukrainian correctness.
 import copy
 import hashlib
 import json
+import unicodedata
 from collections import Counter
 from pathlib import Path
 
@@ -297,6 +298,8 @@ def test_site_projection_preserves_site_only_fields_without_exporting_them(batch
     assert site_row["status"] == dataset_row["status"] == "CANDIDATE"
     assert dataset.manifest["source_breakdown"][VTS]["filter_reasons"] == {"dataset_scope_absent": 1}
     assert site.manifest["source_breakdown"][VTS]["filter_reasons"] == {}
+    assert dataset.manifest["scope"] == "dataset"
+    assert site.manifest["scope"] == "site"
 
 
 def test_reviewed_lesson_links_require_exact_source_row_and_card_version(tmp_path, monkeypatch):
@@ -350,6 +353,15 @@ def test_reviewed_lesson_links_require_exact_source_row_and_card_version(tmp_pat
     assert links.for_vocabulary(wrong_source, items)[0] == {}
     stale = cards.LessonCardLinks(inventory, (batch,), released, {TARGET: "cv_" + "2" * 24})
     assert stale.for_vocabulary(source, items)[0] == {}
+    padded = copy.deepcopy(released[0])
+    padded["fields"][0]["value"] = " same "
+    decomposed = copy.deepcopy(released[0])
+    decomposed["fields"][0]["value"] = unicodedata.normalize("NFD", "й")
+    for row in (padded, decomposed):
+        refused = cards.LessonCardLinks(inventory, (batch,), (row, released[1]), {TARGET: version})
+        hrefs, observations = refused.for_vocabulary(source, items)
+        assert hrefs == {}
+        assert observations[0]["reason"] == "learner_page_unavailable"
 
 
 def test_reconciles_frozen_rows_and_preserves_pilot_identities(batch):
@@ -496,6 +508,21 @@ def test_rejects_wrong_lexeme_sense_span_and_source_role(batch):
         target(altered)["build"]["card_version"] = resolver.card_version(target(altered))
         with pytest.raises(Refusal):
             cards.verify(altered, batch["sources"], batch["manifest"])
+
+
+def test_soviet_normative_as_modern_is_refused_on_every_assertion_path(batch):
+    """#12658 AC7: a registered Soviet source cannot supply any modern facet."""
+    result = assemble(batch)
+    for card in result["cards"]:
+        for assertion in card["assertions"]:
+            bad = copy.deepcopy(result)
+            modified = next(a for c in bad["cards"] for a in c["assertions"]
+                            if a["assertion_id"] == assertion["assertion_id"])
+            modified["source_id"] = "sum11"
+            changed_card = next(c for c in bad["cards"] if c["card_id"] == card["card_id"])
+            changed_card["build"]["card_version"] = resolver.card_version(changed_card)
+            with pytest.raises(Refusal, match="soviet_normative_as_modern"):
+                cards.verify(bad, batch["sources"], batch["manifest"])
 
 
 def test_stress_fallback_and_forms_require_independent_receipts(batch):

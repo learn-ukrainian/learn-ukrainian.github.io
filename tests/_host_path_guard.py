@@ -1,7 +1,7 @@
 """Host-path and host-fact guards for anti-leak tests.
 
 Tests check for generic home-directory patterns plus the deployment's own
-needles (``scripts/opsec/needles.py``), so no test has to name a real
+needles (``lu_machinery/opsec/needles.py``), so no test has to name a real
 account or home directory. Reject samples use the fictional values below.
 
 Results and failures carry kinds and line numbers only, never matched text: with
@@ -16,8 +16,11 @@ import re
 from functools import lru_cache
 from ipaddress import AddressValueError, IPv4Address
 
-from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
-from scripts.opsec.needles import Needles, home_dir_pattern, load_needles
+from lu_machinery.opsec.needles import Needles, home_dir_pattern, load_needles
+
+from scripts.api.occupancy_sanitize import (
+    _CANONICAL_ALIASES,  # TRANSITIONAL-PKG3-B2: held guard requires alias-set identity.
+)
 
 # Fictional values for reject samples; only their shape matters.
 FIXTURE_USER = "fixture-user"
@@ -41,11 +44,17 @@ def host_path_re(needles: Needles | None = None) -> re.Pattern[str]:
     return re.compile(home_dir_pattern(_deployment_needles() if needles is None else needles))
 
 
+# The checkout pattern always ends in this literal. A text that lacks it cannot
+# match, so the scanner skips the regex. The same constant is interpolated into
+# the pattern, so the prefilter cannot drift from the expression.
+_CHECKOUT_NAME = "learn-ukrainian"
+
+
 @lru_cache(maxsize=8)
 def checkout_path_re(needles: Needles | None = None) -> re.Pattern[str]:
     """A checkout baked under a home directory (``<home>[/projects]/learn-ukrainian``)."""
     pattern = home_dir_pattern(_deployment_needles() if needles is None else needles)
-    return re.compile(pattern + r"(?:/projects)?/learn-ukrainian")
+    return re.compile(pattern + rf"(?:/projects)?/{_CHECKOUT_NAME}")
 
 
 @lru_cache(maxsize=8)
@@ -70,7 +79,16 @@ def host_path_lines(text: str, *, needles: Needles | None = None) -> list[int]:
 
 
 def checkout_path_lines(text: str, *, home_root: str | None = None, needles: Needles | None = None) -> list[int]:
-    """1-based line numbers of baked checkouts, optionally only under ``home_root``."""
+    """1-based line numbers of baked checkouts, optionally only under ``home_root``.
+
+    Every match contains ``learn-ukrainian``. With ``home_root``, a kept match
+    also starts with ``home_root + "/"``. Text missing either literal is empty,
+    so the regex runs only on text that could hold a finding.
+    """
+    if _CHECKOUT_NAME not in text:
+        return []
+    if home_root is not None and f"{home_root}/" not in text:
+        return []
     return _lines(checkout_path_re(needles), text, home_root)
 
 

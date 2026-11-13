@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.common.repo_root import machinery_path
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENTS = ROOT / "agents_extensions/shared/agents"
@@ -29,5 +30,5 @@ def test_reserved_agent_frontmatter_pins_assigned_model(name: str, model: str) -
     assert definition["tools"]
     assert body.strip()
     assert definition["model"] == model, f"{name} must pin its assigned model"
-    catalog = yaml.safe_load((ROOT / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
+    catalog = yaml.safe_load((machinery_path("config/model_catalog.yaml")).read_text(encoding="utf-8"))
     assert catalog["models"][definition["model"]].get("lifecycle", "active") == "active"

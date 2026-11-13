@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from collections.abc import Iterable, Mapping, Sequence
@@ -27,23 +28,30 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+# The machinery package's directory name, which a change lists its files under, from this module's
+# unresolved location: a symlinked package keeps its checkout name, and a short import spelling
+# (the package directory on ``sys.path``) cannot shorten it.
+_MACHINERY = Path(os.path.abspath(__file__)).parents[1].name
+
 # The one declaration of the review output contract: bound schemas, the receipt gate, the
 # verdict parser, the recorder, settlement, and each reviewer provider's schema or reply handling.
+# Machinery files are named wherever the machinery package is and whatever it is called;
+# the schema and settlement are product-repository files.
 CONTRACT_PATHS: tuple[str, ...] = (
-    "scripts/review/contract_canary.py",  # this gate: a change to it is proven on live routes too
+    f"{_MACHINERY}/review/contract_canary.py",  # this gate: a change to it is proven on live routes too
     "schemas/code-review-findings.v1.schema.json",
-    "scripts/review/review_contract.py",
-    "scripts/review/verdict_parser.py",
-    "scripts/review/record_cf_verdict.py",
+    f"{_MACHINERY}/review/review_contract.py",
+    f"{_MACHINERY}/review/verdict_parser.py",
+    f"{_MACHINERY}/review/record_cf_verdict.py",
     "scripts/review/settle.py",
-    "scripts/dispatcher/worker.py",
-    "scripts/dispatcher/output_schema.py",
-    "scripts/dispatcher/providers/agy.py",
-    "scripts/dispatcher/providers/claude.py",
-    "scripts/dispatcher/providers/codex.py",
-    "scripts/dispatcher/providers/cursor.py",
-    "scripts/dispatcher/providers/muse.py",
-    "scripts/dispatcher/providers/stream_json.py",
+    f"{_MACHINERY}/dispatcher/worker.py",
+    f"{_MACHINERY}/dispatcher/output_schema.py",
+    f"{_MACHINERY}/dispatcher/providers/agy.py",
+    f"{_MACHINERY}/dispatcher/providers/claude.py",
+    f"{_MACHINERY}/dispatcher/providers/codex.py",
+    f"{_MACHINERY}/dispatcher/providers/cursor.py",
+    f"{_MACHINERY}/dispatcher/providers/muse.py",
+    f"{_MACHINERY}/dispatcher/providers/stream_json.py",
 )
 
 REASON = "needs-contract-canary"

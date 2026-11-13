@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+from types import ModuleType
 
+import pytest
+
+from scripts.bakeoff import run_b1_writer, score_b1_writer_output
 from scripts.bakeoff.score_b1_writer_output import (
     _check_source_tool_evidence,
     score_writer_output,
@@ -326,3 +331,111 @@ def test_scorer_reads_sources_mcp_tool_call_names() -> None:
 
     assert report["telemetry_tools"] == ["search_text", "verify_words"]
     assert report["verify_words_telemetry_calls"] == 1
+
+
+@pytest.fixture(params=[run_b1_writer, score_b1_writer_output], ids=["runner", "scorer"])
+def bakeoff_caller(request: pytest.FixtureRequest) -> ModuleType:
+    return request.param
+
+
+def _configure_hooks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caller: ModuleType, payload: str) -> None:
+    from scripts.common import repo_root
+
+    path = tmp_path / "scripts/build/bakeoff_hooks.v1.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(payload, encoding="utf-8")
+    marker = tmp_path / repo_root.PRODUCT_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n", encoding="utf-8")
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "",
+        "build.bakeoff_hooks",
+        ".scripts.build.bakeoff_hooks",
+        "scripts.Build.bakeoff_hooks",
+        "scripts.build.bakeoff_hooks\n",
+        "scripts..build",
+        "scripts.sqlite3",
+        "scripts._sqlite3",
+        None,
+        3,
+    ],
+)
+def test_bakeoff_refuses_malformed_configured_names(
+    bakeoff_caller: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    name: object,
+) -> None:
+    _configure_hooks(tmp_path, monkeypatch, bakeoff_caller, json.dumps({"module": name}))
+    with pytest.raises(ImportError):
+        bakeoff_caller._product_hooks()
+
+
+@pytest.mark.parametrize(
+    ("payload", "error"),
+    [
+        ("{", json.JSONDecodeError),
+        ("{}", KeyError),
+        ("[]", TypeError),
+        ("null", TypeError),
+    ],
+)
+def test_bakeoff_config_parse_errors_propagate(
+    bakeoff_caller: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    payload: str,
+    error: type[Exception],
+) -> None:
+    _configure_hooks(tmp_path, monkeypatch, bakeoff_caller, payload)
+    with pytest.raises(error):
+        bakeoff_caller._product_hooks()
+
+
+def test_bakeoff_refuses_foreign_cached_hooks(
+    bakeoff_caller: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    name = "scripts.build.bakeoff_hooks"
+    foreign = ModuleType(name)
+    foreign.__file__ = str(tmp_path / "other-checkout/scripts/build/bakeoff_hooks.py")
+    monkeypatch.setitem(sys.modules, name, foreign)
+    with pytest.raises(ImportError, match="not a file in this checkout"):
+        bakeoff_caller._product_hooks()
+
+
+def test_bakeoff_configured_loads_count_each_caller_once() -> None:
+    from scripts.ci.components import scan_imports
+    from scripts.hygiene.lint_source_db_writable_connects import classify_source
+    from scripts.lint.boundary_ratchet import _configured_line
+
+    root = Path(__file__).resolve().parents[1]
+    callers = [
+        "scripts/bakeoff/run_b1_writer.py",
+        "scripts/bakeoff/score_b1_writer_output.py",
+    ]
+    sources = {
+        path: (root / path).read_bytes()
+        for path in [
+            *callers,
+            "scripts/ops/product_entry.py",
+        ]
+    }
+    graph = scan_imports(sources)
+    for path in callers:
+        configured = [row for row in graph["configured_loads"] if row["path"] == path]
+        dynamic = [
+            row
+            for row in graph["unresolved_edges"]
+            if row["path"] == path and row["reason"] == "nonliteral-or-missing-load"
+        ]
+        assert len(configured) == 1
+        assert dynamic == [{**configured[0], "reason": "nonliteral-or-missing-load"}]
+        assert classify_source(sources[path].decode(), path) == []
+    assert _configured_line(graph) == "configured-entry-point implementation=1 callers=2"

@@ -3,7 +3,7 @@ import sqlite3
 import typing
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 import pytest
 import requests_mock as requests_mock_lib
@@ -135,6 +135,7 @@ def isolated_canonical_sum20(monkeypatch):
     # These consumer unit tests supply canonical rows explicitly when needed.
     # Store-boundary behavior is exercised in test_sum20_lookup.py.
     monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda _word: ())
+    monkeypatch.setattr(enrich_manifest_module, "_vts_store_rows", lambda _word: ())
 
 
 def _canonical_sum20_row(monkeypatch, text: str, url: str = "https://example.invalid/sum20") -> None:
@@ -906,6 +907,38 @@ def test_slovnyk_article_parser_captures_bold_saying_paragraph_structure() -> No
     # The Джерело citation sits in a <small>, never a <p>, so it never becomes
     # a spurious "gloss" paragraph.
     assert not any("Джерело" in p["text"] for p in row["paragraphs"])
+
+
+def test_parse_slovnyk_entry_keeps_requested_https_url_when_canonical_scheme_drifts() -> None:
+    """Canonical scheme drift: a real article whose ``rel=canonical`` is
+    ``http://slovnyk.me/...`` must still validate.
+
+    ``_parse_slovnyk_entry`` used to store that canonical link as
+    ``source_url``. ``_valid_slovnyk_positive`` admits only ``https``, so every
+    such page became ``parse_error`` / ``unusable_article`` and five in a row
+    stopped the crawl. The retained locator is the https URL the caller
+    requested. The validator still rejects an http locator.
+    """
+    lookup = "постелити"
+    requested = f"https://slovnyk.me/dict/vts/{quote(lookup, safe='')}"
+    html = (
+        "<html><head><title>постелити</title>"
+        '<link rel="canonical" href="http://slovnyk.me/dict/vts/постелити">'
+        "</head><body>"
+        '<section id="dictionary-article"><article><h1>постелити</h1>'
+        "<p>синтетична стаття</p>"
+        "</article></section></body></html>"
+    )
+
+    row = enrich_manifest_module._parse_slovnyk_entry(html, lemma=lookup, lookup_word=lookup, slug="vts", url=requested)
+
+    assert row is not None
+    assert "синтетична стаття" in row["text"]
+    assert row["source_url"] == requested
+    assert enrich_manifest_module._valid_slovnyk_positive(row, "vts", lookup)
+    rejected = dict(row)
+    rejected["source_url"] = "http://slovnyk.me/dict/vts/постелити"
+    assert enrich_manifest_module._valid_slovnyk_positive(rejected, "vts", lookup) is False
 
 
 def test_parse_proverb_items_pairs_bold_saying_with_plain_gloss() -> None:

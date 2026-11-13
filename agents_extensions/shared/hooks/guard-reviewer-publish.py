@@ -30,6 +30,12 @@ def _shell_parser():
     return module
 
 
+# The typed GitHub publisher's entry module, by import name. This hook is outside the machinery
+# package; under a checkout the module's file is at the same dotted path.
+_PUBLISHER_ENTRY_MODULE = "scripts.publish.github"
+_PUBLISHER = _PUBLISHER_ENTRY_MODULE.rpartition(".")[0]
+_PUBLISHER_ENTRY_FILE = Path(*_PUBLISHER_ENTRY_MODULE.split(".")).with_suffix(".py").as_posix()
+
 _PR_ISSUE_WRITES = frozenset({"merge", "create", "comment", "review", "edit", "close", "reopen"})
 _API_FIELDS = frozenset({"-f", "-F", "--field", "--raw-field", "--input"})
 
@@ -90,11 +96,11 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
             if group == "release" or (group == "workflow" and len(rest) > 1 and rest[1] == "run"):
                 return f"gh {group} publish"
         elif binary and Path(binary).name.startswith("python"):
-            if args[:2] == ["-m", "scripts.publish"]:
+            if args[:2] == ["-m", _PUBLISHER]:
                 tail = args[2:]
                 if tail != ["--help"] and not (len(tail) == 2 and tail[-1] == "--help"):
                     return "typed GitHub publisher"
-            elif args and args[0].endswith("scripts/publish/github.py"):
+            elif args and args[0].endswith(_PUBLISHER_ENTRY_FILE):
                 return "typed GitHub publisher"
         elif binary in {"bash", "sh", "eval"}:
             if binary == "eval":

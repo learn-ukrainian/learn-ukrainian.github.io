@@ -84,7 +84,10 @@ def test_run_opencode_attaches_standing_notice_when_agent_chat():
             argv = run_mock.call_args[0][0]
             assert "--agent" in argv
             assert "chat" in argv
-            assert STANDING_TOOLLESS_NOTICE in argv[-1]
+            assert argv[-1] == "--"
+            prompt = run_mock.call_args.kwargs["input"]
+            assert STANDING_TOOLLESS_NOTICE in prompt
+            assert prompt not in argv
 
 
 def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(

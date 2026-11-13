@@ -43,7 +43,9 @@ import argparse
 import contextlib
 import json
 import os
+import re
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -53,6 +55,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from types import ModuleType
 from typing import Any, NamedTuple
 from urllib.parse import urlsplit
 
@@ -60,12 +63,85 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.rag.hang_diagnostics import (
-    DUMP_SIGNAL,
-    ensure_dump_dir,
-    faulthandler_log_path,
-    resolve_dump_dir,
-)
+from scripts.common.repo_root import ProductRootError
+from scripts.common.repo_root import product_root as resolve_product_root
+from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
+
+# The product data file that names the hang-diagnostics module, relative to the product root.
+HANG_DIAGNOSTICS_FILE = Path("scripts/rag/hang_diagnostics.v1.json")
+_GATES_MAX_BYTES = 4096
+# The product API the watchdog uses. A configured module without any of it is refused.
+_DIAGNOSTICS_EXPORTS = ("DUMP_SIGNAL", "ensure_dump_dir", "faulthandler_log_path", "resolve_dump_dir")
+
+
+def _gates_module_name(path: Path) -> str:
+    """Read the strict, bounded product configuration at ``path``."""
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode):
+        raise ImportError("hang diagnostics configuration must be a regular file, not a symlink")
+    if info.st_size > _GATES_MAX_BYTES:
+        raise ImportError("hang diagnostics configuration is too large")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
+            raise ImportError("hang diagnostics configuration changed while opening")
+        raw = handle.read(_GATES_MAX_BYTES + 1)
+    if len(raw) > _GATES_MAX_BYTES:
+        raise ImportError("hang diagnostics configuration is too large")
+
+    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        document: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in document:
+                raise ValueError("duplicate key")
+            document[key] = value
+        return document
+
+    def no_constants(token: str) -> Any:
+        raise ValueError(f"non-finite number {token}")
+
+    try:
+        document = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_keys, parse_constant=no_constants)
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
+        raise ImportError("hang diagnostics configuration must be strict UTF-8 JSON") from exc
+    if not isinstance(document, dict) or set(document) != {"schema", "schema_version", "origin", "module"}:
+        raise ImportError("hang diagnostics configuration fields mismatch")
+    if document["schema"] != "learn-ukrainian.hang-diagnostics" or type(document["schema_version"]) is not int:
+        raise ImportError("hang diagnostics configuration schema mismatch")
+    if document["schema_version"] != 1:
+        raise ImportError("hang diagnostics configuration version mismatch")
+    if document["origin"] != "scripts/rag/hang_diagnostics.v1.json":
+        raise ImportError("hang diagnostics configuration origin mismatch")
+    name = document["module"]
+    if not isinstance(name, str) or re.fullmatch(r"scripts(?:\.[a-z_][a-z0-9_]*)+", name) is None:
+        raise ImportError("hang diagnostics configuration module must be a lowercase scripts.* name")
+    return name
+
+
+def hang_diagnostics(*, product_root: Path | None = None) -> ModuleType:
+    """The product's hang-diagnostics module, loaded when a dump or state write needs it, never at import.
+
+    Its name comes from ``HANG_DIAGNOSTICS_FILE`` under ``product_root`` (an absolute path;
+    default: the checkout :func:`scripts.common.repo_root.product_root` selects, C-4746),
+    read strictly at each call; the module must come from that root
+    and provide every name in ``_DIAGNOSTICS_EXPORTS``. A missing or invalid configuration, or
+    a module without that API, raises (``ImportError`` or ``OSError``); ``main`` and
+    ``run_once`` load it before acting, so such a configuration refuses the whole run as before.
+    """
+    if product_root is not None and not (isinstance(product_root, Path) and product_root.is_absolute()):
+        raise ConfiguredModuleError(f"product root is not an absolute path: {product_root!r}")
+    if product_root is None:
+        try:
+            product_root = resolve_product_root()
+        except ProductRootError as exc:
+            raise ConfiguredModuleError(str(exc)) from None
+    module = load_configured_module(_gates_module_name(product_root / HANG_DIAGNOSTICS_FILE), product_root=product_root)
+    missing = [name for name in _DIAGNOSTICS_EXPORTS if not hasattr(module, name)]
+    if missing:
+        raise ConfiguredModuleError(f"{module.__name__} does not provide {', '.join(missing)}", name=module.__name__)
+    return module
+
 
 UNIT = "learn-ukrainian-sources.service"
 # The units this tool may probe, dump or restart. Checked where the action
@@ -300,13 +376,14 @@ def capture_python_stacks(
     The signal is sent only when that pid registered the handler: the default
     action of ``SIGUSR1`` would terminate the process.
     """
-    log = faulthandler_log_path(dump_dir, pid)
+    diagnostics = hang_diagnostics()
+    log: Path = diagnostics.faulthandler_log_path(dump_dir, pid)
     if not log.is_file():
         return f"<no faulthandler log for pid {pid}: server started without the dump handler>\n"
-    if not handles_signal(pid, DUMP_SIGNAL, proc_root):
-        return f"<pid {pid} has no {DUMP_SIGNAL.name} handler; signal not sent>\n"
+    if not handles_signal(pid, diagnostics.DUMP_SIGNAL, proc_root):
+        return f"<pid {pid} has no {diagnostics.DUMP_SIGNAL.name} handler; signal not sent>\n"
     offset = log.stat().st_size
-    send(pid, DUMP_SIGNAL)
+    send(pid, diagnostics.DUMP_SIGNAL)
     deadline = time.monotonic() + wait_s
     size = offset
     while time.monotonic() < deadline:
@@ -357,7 +434,7 @@ def capture_incident_dump(
     keep: int = DEFAULT_KEEP_INCIDENTS,
 ) -> Path:
     """Write one incident directory; return it. Order: /proc, py-spy, stacks."""
-    ensure_dump_dir(dump_dir)
+    hang_diagnostics().ensure_dump_dir(dump_dir)
     stamp = datetime.fromtimestamp(now, UTC).strftime("%Y%m%dT%H%M%SZ")
     incident = dump_dir / f"{INCIDENT_PREFIX}{stamp}-pid{pid}"
     incident.mkdir(mode=0o700, exist_ok=True)
@@ -407,7 +484,7 @@ def prune_dump_dir(dump_dir: Path, *, keep: int, proc_root: Path = Path("/proc")
 class Config:
     unit: str = UNIT
     health_url: str = HEALTH_URL
-    dump_dir: Path = field(default_factory=lambda: resolve_dump_dir(PROJECT_ROOT))
+    dump_dir: Path = field(default_factory=lambda: hang_diagnostics().resolve_dump_dir(PROJECT_ROOT))
     failures_to_act: int = DEFAULT_FAILURES_TO_ACT
     probe_timeout: float = DEFAULT_PROBE_TIMEOUT_S
     max_restarts: int = DEFAULT_MAX_RESTARTS
@@ -444,7 +521,7 @@ def read_state(path: Path) -> dict[str, Any]:
 
 
 def write_state(path: Path, state: Mapping[str, Any]) -> None:
-    ensure_dump_dir(path.parent)
+    hang_diagnostics().ensure_dump_dir(path.parent)
     temporary = path.with_name(f".{path.name}.tmp")
     _write_private(temporary, json.dumps(state, indent=2, sort_keys=True) + "\n")
     temporary.replace(path)
@@ -520,6 +597,8 @@ def _recheck_before_signal(config: Config, host: Host, unit: UnitState) -> str |
 
 def run_once(config: Config, host: Host) -> str:
     require_sources_unit(config.unit)
+    # Refuse before any notification, probe, state write or restart when the diagnostics are unavailable.
+    hang_diagnostics()
     state_path = config.dump_dir / STATE_FILE
     state = read_state(state_path)
     now = host.now()
@@ -655,7 +734,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    dump_dir = args.dump_dir or resolve_dump_dir(PROJECT_ROOT)
+    # Load the product diagnostics before acting: without them the watchdog refuses to run.
+    diagnostics = hang_diagnostics()
+    dump_dir = args.dump_dir or diagnostics.resolve_dump_dir(PROJECT_ROOT)
     port = urlsplit(args.health_url).port or 80
     if args.command == "dump":
         incident = capture_incident_dump(args.pid, dump_dir, port, time.time(), reason=args.reason)

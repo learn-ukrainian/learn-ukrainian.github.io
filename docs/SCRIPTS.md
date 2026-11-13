@@ -176,6 +176,53 @@ and rebuilt, because without it every read is charged in full and budget observa
 other callers; the call itself continues in memory. Only the damaged file is moved, under a directory
 lock a client never waits for: a fresh file another process already put in its place is left alone.
 
+## Issue transfer (`scripts.publish issue-transfer`)
+
+The typed publisher's `issue-transfer` verb moves one open issue between two repositories
+registered in `scripts/config/fleet_repos.yaml` that share an owner, through one GitHub
+`transferIssue` mutation (decision C-4682). It is the only transfer path: raw
+`gh issue transfer` stays refused. Use it for approved confidentiality or ownership moves,
+never for bulk moves. Run `--dry-run` first; it makes every check and writes a receipt with
+the labels the move would drop, but sends no mutation.
+
+```bash
+.venv/bin/python -m scripts.publish issue-transfer --repo public --number 123 --destination infra-private --dry-run
+```
+
+- **Refusals (exit 2, nothing sent).** The verb refuses an endpoint that is not exactly one
+  registered github.com repository with a `public-` or `private-` role, two different owners,
+  the same repository on both sides, and any move from a private-role repository to a
+  public-role one. It then reads both repositories fresh and refuses when the live name,
+  visibility (`PRIVATE` or `PUBLIC`, as the role says), write permission or archive state
+  disagrees with the registry. It also refuses when the source number is a pull request, a
+  closed issue, unreadable, or redirects to a repository other than the destination.
+- **Idempotency.** When the source number already resolves to an issue in the destination,
+  the verb confirms that the destination holds the same issue and exits 0 with outcome
+  `already-transferred`, without a mutation. After any exit 3, never retry: read the state
+  only with `--dry-run`, which sends no mutation and reports `already-transferred` when the
+  issue moved. A plain re-run sends a new mutation when the first one did not move the issue.
+- **One mutation, then verification.** The mutation sets `createLabelsIfMissing` to false, so
+  labels missing at the destination are dropped; create them first with `label-create`.
+  GitHub serves the old URL's redirect and the moved issue's labels some time after the
+  mutation returns (one issue took about 85 s on 2026-11-04). The verb re-reads them with a
+  bounded backoff, up to eight times over about 180 s, and never sends a second mutation.
+  The receipt's `verification_reads` counts the reads.
+- **Receipt.** A new 0600 JSON file in `--receipt-dir` (an absolute 0700 directory outside the
+  repository), by default `$XDG_STATE_HOME/learn-ukrainian/issue-transfer`, else
+  `~/.local/state/learn-ukrainian/issue-transfer`. The same JSON goes to stdout. It records
+  the outcome, both URLs and node ids, source labels, dropped labels, the verification reads
+  and anonymous HTTP probes of both URLs. A refusal after the static checks also leaves a
+  receipt, with outcome `refused`.
+- **The anonymous probe.** An anonymous `200` at the old URL is GitHub's transfer banner,
+  which tells a reader without access that the issue moved; it is not the issue's content.
+  On 2026-11-04 the titles of six transferred issues were absent from all six banner pages.
+  A status alone still proves nothing about confidentiality, so read the destination's
+  visibility, not the probe, for that.
+- **Exit codes.** `0` transferred and verified, already transferred, or dry run passed; `2`
+  invalid input or refusal, no mutation sent; `3` the mutation was sent but its result is
+  ambiguous or unverified (including an exhausted verification window, a failed anonymous
+  probe or any later local error); `75` a rate-limit refusal before the mutation.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
@@ -205,18 +252,13 @@ Project-local wrappers for interactive agent sessions:
 ./start-codex.sh       # native Codex
 ./start-grok.sh        # native Grok Build TUI
 ./start-gemini.sh      # native Gemini / Antigravity AGY Build TUI
-./start-kimi.sh        # retired catalog ids; the wrapper refuses (OO-58)
-./start-kimicc.sh      # retired catalog ids; the wrapper refuses (OO-58)
-./start-glm.sh         # Claude Code routed to Z.AI GLM
-./start-glmcc.sh       # same GLM route under the historical name
 ./start-claude-driver.sh --epic devops
 ./start-codex-driver.sh --epic devops
 ./start-grok-driver.sh --epic devops
 ```
 
 Kimi models are retired (OO-58, #11327). Do not dispatch `--agent kimi` or start a Kimi model.
-The bridge refuses every Kimi recipient, ask, inbox and discussion. Launcher names remain
-so a short name resolves and is refused.
+The bridge refuses every Kimi recipient, ask, inbox and discussion. There is no Kimi launcher.
 
 ### Rules core loading
 
@@ -226,8 +268,7 @@ Every launcher starts its seat with the rules core
 `scripts/lib/rules_core.sh`. The core always comes from the checkout the code
 runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
 native Codex `-c developer_instructions=…`, Grok `--rules`; AGY, Cursor, OpenCode and Hermes
-receive the core at the head of the initial prompt. A Kimi launcher exits 2 on the catalog
-retirement before rules attachment, so it never starts a coding task. ACP calls
+receive the core at the head of the initial prompt. ACP calls
 and legacy bridge prompts prepend the same block unless the prompt already
 starts with it. Dispatch v2 checks core availability but does not prepend the
 core or support rules-seat selection; the one exception is read-only Claude, which
@@ -244,15 +285,14 @@ and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
 
 ### Parallel routes and original Claude config
 
-`start-codex.sh --harness claude-code` and
-`start-glmcc.sh` / `start-glm.sh` route through process-scoped
+`start-codex.sh --harness claude-code` routes through process-scoped
 configuration. They **never rewrite** the live `~/.claude/settings.json`. That means:
 
 - `./start-claude.sh` always keeps the original Anthropic / Claude Code setup
 - You can run native Claude and a routed provider in **parallel terminals**
 - Tools like [cc-switch](https://github.com/farion1231/cc-switch) that pin
   `ANTHROPIC_*` into `settings.json env` will **block** these launchers until
-  those keys are removed (or you use `--isolate-config` / `CLAUDE_CONFIG_DIR`)
+  those keys are removed (or you use `CLAUDE_CONFIG_DIR`)
 
 ### Codex through Claude Code
 
@@ -281,45 +321,6 @@ The adapter uses `http://127.0.0.1:8317` and CLIProxyAPI's documented dummy
 client token by default. `CODEX_CC_BASE_URL` is restricted to that local
 endpoint; `CODEX_CC_AUTH_TOKEN` is process-scoped and never written to the
 repository.
-
-### Kimi through Claude Code
-
-Retired (OO-58, #11327). `start-kimi.sh` and `start-kimicc.sh` remain so a short
-name resolves, then the catalog refusal exits 2. There is no default Kimi model,
-no KimiCC opt-in, and no headless `--agent kimi` route. Do not log in or point a
-job at these wrappers. Historically the Claude Code UI reached Kimi models through
-an isolated config and an explicit Kimi credential, never an ambient
-`ANTHROPIC_AUTH_TOKEN`. Every Kimi catalog id now has empty transports.
-See [`agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
-
-### GLM through Claude Code (Z.AI)
-
-`start-glmcc.sh` / `start-glm.sh` routes Claude Code to the Z.AI Anthropic-compatible
-endpoint (`https://api.z.ai/api/anthropic`) per
-[Z.AI Claude Code docs](https://docs.z.ai/scenario-example/develop-tools/claude).
-
-```bash
-./start-glmcc.sh                     # coding endpoint + isolated ~/.claude-glmcc
-./start-glmcc.sh --endpoint platform
-./start-glm.sh --model glm-5.3
-```
-
-**Credentials (first match wins):** `GLMCC_AUTH_TOKEN`, `ZAI_API_KEY`,
-`ZHIPU_API_KEY`, `GLM_API_KEY`, then owner-only `~/.secret/zai.key`
-(mode `0600` or `0400`). Override the file path with `GLMCC_SECRET_FILE`.
-File-backed keys are loaded into process-scoped `ANTHROPIC_AUTH_TOKEN` only —
-they are never re-exported as `ZAI_*`, never written to
-`~/.claude/settings.json`, and never printed by dry-run. Ambient
-`ANTHROPIC_AUTH_TOKEN` is deliberately rejected as a GLM credential.
-
-Create the secret file once (avoid putting the key on the shell command line
-or in shell history):
-
-```bash
-mkdir -p ~/.secret
-touch ~/.secret/zai.key && chmod 600 ~/.secret/zai.key
-${EDITOR:-nano} ~/.secret/zai.key   # paste the key alone, save, quit
-```
 
 The trusted `agents_extensions/codex/config.toml` overlay leaves the root model
 and reasoning effort user-selectable while giving Codex App and CLI the same
@@ -785,7 +786,7 @@ of a second server:
 | `agents_extensions/shared/rules/ukrainian-linguistics.md` | Ukrainian language quality rules |
 | `agents_extensions/shared/phases/gemini/README.md` | Gemini phase map |
 | `agents_extensions/shared/phases/gemini/v6-write.md` | Current write phase reference |
-| `agents_extensions/shared/phases/gemini/v6-review.md` | Current review phase reference |
+| `agents_extensions/shared/phases/gemini/v6-review.md` | Retirement pointer; the V6 review prompt set was removed in REMOVE-UNNEEDED-1107, see git history |
 | `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md` | Activity schema quick reference |
 | `docs/agent-runtime-guide.md` | Agent runtime architecture |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Module richness requirements |
@@ -814,8 +815,6 @@ At `scripts/audit/checks/`:
 Additional audit guardrails:
 
 - `scripts/audit/lint_dispatch_brief.py` - dispatch brief `.venv/bin/python` worktree guardrail
-- `scripts/audit/typesafe_citation_verifier.py` - fail-closed TypeSafe citation and source-grounding check (#8192): deterministic quote match, then one System One Choice; only `supports` at confidence ≥ 0.80 is an accept. CLI: `.venv/bin/python -m scripts.audit.typesafe_citation_verifier --input cases.jsonl --out receipt.json`
-- `scripts/typesafe/client.py` - shared TypeSafe key load and `system_one` HTTP helper (`load_typesafe_api_key`, `system_one`); not a CLI
 - `scripts/audit/atlas_source_census.py` - aggregate-only Word Atlas source intake census; public reports must not include raw source text, private paths, or candidate lemma lists
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
 - `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
@@ -1201,8 +1200,6 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
 | `scripts/audit/lint_word_atlas.py` | Advisory sense-first Atlas entry lint (LINT-001–004, LINT-101, LINT-102, #6437; exit 0 unless `--strict`) | `.venv/bin/python scripts/audit/lint_word_atlas.py --manifest path/to/manifest.json` |
-| `scripts/audit/typesafe_citation_verifier.py` | Fail-closed citation grounding: quote must occur in the source, then one TypeSafe Choice (#8192) | `.venv/bin/python -m scripts.audit.typesafe_citation_verifier --input cases.jsonl --out receipt.json` |
-| `scripts/typesafe/client.py` | Shared TypeSafe API-key load and System One POST (library, not a CLI) | import `load_typesafe_api_key` / `system_one` from `scripts.typesafe.client` |
 | `scripts/lexicon/admit_teacher_table.py` | Locally admit a current teacher table and fill missing English cards; leaves VESUM failures in a private residual ledger | `.venv/bin/python -m scripts.lexicon.admit_teacher_table --extract path/to/current-table.json --manifest-in path/to/manifest.json --manifest-out batch_state/atlas/teacher-table/lexicon-manifest.staged.json --write` |
 | `scripts/atlas/atlas_db.py` | Rebuild `data/atlas.db`, materialize article payloads, and validate public alias targets | `.venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db` |
 | `scripts/atlas/fill_local.py` | Fill `data/atlas.db` with Phase-1 local Atlas enrichment rows | `.venv/bin/python -m scripts.atlas.fill_local --db data/atlas.db --report-json /tmp/atlas-fill-local-report.json` |
@@ -1694,12 +1691,13 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 
 ## Dashboards
 
+The learn-ukrainian pages (home, Curriculum Dashboard, Artifacts) are live pages in
+`scripts/project_api/static/`, served by the Monitor API; there is no build step. See
+`docs/MONITOR-API.md` for the routes they read.
+
 | Entry | Purpose |
 | --- | --- |
-| `scripts/generate_dashboard_data.py` | Aggregate audit cache into dashboard data |
-| `scripts/build_dashboards.py` | Build HTML dashboards with embedded data |
-| `npm run dashboards:data` | Regenerate `dashboards/data/status.json` |
-| `npm run dashboards:build` | Rebuild dashboard HTML |
+| `npm run dashboard:serve` | Run a local Monitor API (port 8765, auto-reload) that serves the pages |
 
 ---
 
@@ -1787,7 +1785,7 @@ Use the explicit bridge path. Do not rely on `ab`; on some machines it resolves 
 - `sync <agent>` drains the **channel deliveries queue** — this is how AGY and Codex actually receive channel posts when running headless.
 - `inbox` (in the Legacy broker section below) reads the **old 1:1 message queue ONLY**. It does NOT show channel messages. If you expected channel posts and `inbox` is empty, run `sync` instead.
 
-Web dashboard at `http://localhost:8765/channels.html` (localhost-only, read + post).
+Browser overview: `http://localhost:8765/machinery` shows Fleet Comms counts. Use the CLI for channel deliveries and conversations; the former Fleet observer was removed.
 
 ### One-off `ask-*`
 

@@ -33,6 +33,12 @@ from scripts.common.safe_unit_install import (
     remove_unit,
 )
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+
 LABEL = "com.learn-ukrainian.codex-archived-thread-cleanup"
 DEFAULT_WEEKDAY = "sunday"
 DEFAULT_HOUR = 3
@@ -86,7 +92,7 @@ def plist_path(home: Path) -> Path:
 
 def wrapper_path(repo_root: Path) -> Path:
     """Return the stable bash wrapper launchd executes."""
-    return repo_root / "scripts" / "orchestration" / WRAPPER_NAME
+    return repo_root / _PACKAGE_DIR / WRAPPER_NAME
 
 
 def state_dir(home: Path) -> Path:
@@ -198,7 +204,7 @@ def _failure(action: str, result: subprocess.CompletedProcess[str]) -> LaunchdEr
 def _validate_runtime(repo_root: Path, codex_binary: Path) -> None:
     # Intentional: validate the interpreter of the checkout this LaunchAgent runs.
     interpreter = repo_root / ".venv" / "bin" / "python"
-    cleanup_script = repo_root / "scripts" / "orchestration" / "archived_thread_cleanup.py"
+    cleanup_script = repo_root / _PACKAGE_DIR / "archived_thread_cleanup.py"
     wrapper = wrapper_path(repo_root)
     if not interpreter.is_file() or not os.access(interpreter, os.X_OK):
         raise LaunchdError(f"required interpreter is missing or not executable: {interpreter}")

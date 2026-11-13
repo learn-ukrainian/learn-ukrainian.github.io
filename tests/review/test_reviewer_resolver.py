@@ -3,9 +3,9 @@
 from dataclasses import replace
 
 import pytest
-
-from scripts.review.family_exclusions import family_exclusion
-from scripts.review.reviewer_resolver import (
+from lu_machinery.fleet.claude_account_lane import ClaudeAccount
+from lu_machinery.review.family_exclusions import family_exclusion
+from lu_machinery.review.reviewer_resolver import (
     REVIEW_CANDIDATES,
     ResolverInputs,
     evaluate_candidate,
@@ -14,7 +14,10 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
     review_task_id_comparison_keys,
 )
-from tests.claude_route_accounts import HOST_ACCOUNT
+
+# The release's own account type: the shared tests.claude_route_accounts binds the in-tree
+# copy's ClaudeAccount for held subjects (#10630 built-in default, which reads the lane row).
+HOST_ACCOUNT = ClaudeAccount("a", "builtin")
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
@@ -24,7 +27,7 @@ def test_native_claude_headroom_hold_does_not_exclude_agy_claude_seat(monkeypatc
     import io
     import json
 
-    from scripts.agent_runtime import model_pause
+    from lu_machinery.agent_runtime import model_pause
 
     monkeypatch.setattr(
         model_pause,
@@ -161,7 +164,7 @@ def test_gemini_risk_boundary(profile, risk, entrypoint):
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
 @pytest.mark.parametrize(
-    "path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
+    "path", ["scripts/review/reviewer_resolver.py", "lu_machinery/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
 )
 def test_gemini_security_paths_override_declared_risk(risk, scope, path):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)}, claude_account=HOST_ACCOUNT)
@@ -203,7 +206,7 @@ def test_automatic_ladder_uses_qualified_agy_model_when_other_routes_unavailable
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
-def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
+def test_near_cap_sol_precedes_agy_and_excludes_retired_grok_for_claude_author(risk):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="claude-opus-5-5",
@@ -221,9 +224,10 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
         )
     )
     assert result.selected.name == "openai_frontier"
-    grok = next(row for row in result.trace if row.name == "grok-4.7-cursor-fallback")
-    assert grok.status == "eligible"
-    assert result.selected.suitability_rank < grok.suitability_rank
+    agy = next(row for row in result.trace if row.name == "gemini-3.8-flash-high")
+    assert agy.status == "eligible"
+    assert result.selected.suitability_rank < agy.suitability_rank
+    assert not [row for row in result.trace if row.family == "xai"]
 
 
 @pytest.mark.parametrize(
@@ -394,8 +398,6 @@ def claude_on_cursor(row):
 
 def test_no_claude_review_candidate_runs_on_cursor():
     assert not [name for name, candidate in REVIEW_CANDIDATES.items() if claude_on_cursor(candidate)]
-    grok_cursor = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
-    assert (grok_cursor.family, grok_cursor.transport) == ("xai", "cursor")
 
 
 @pytest.mark.parametrize("author", D129_AUTHORS)
@@ -448,42 +450,47 @@ def test_security_path_at_routine_risk_resolves_critical_without_sonnet(risk, sc
 
 
 @pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "claude-sonnet-5-5"))
-def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
+def test_critical_grok_is_absent_and_frontier_authority_is_selected(author):
     healthy = {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}
     result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", routing_snapshot=healthy, claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
-    assert trace["grok-4.7-cursor-fallback"].status == "eligible"
+    assert "grok-4.7-cursor-fallback" not in trace
+    assert not [row for row in result.trace if row.family == "xai"]
     assert result.selected.name == ("openai_frontier" if author.startswith("claude") else "claude-opus-5-5")
     assert result.selected.family != "xai"
-    assert (result.selected.quality_tier, trace["grok-4.7-cursor-fallback"].quality_tier) == (
-        "frontier_authority",
-        "frontier_practical",
-    )
+    assert result.selected.quality_tier == "frontier_authority"
 
 
 def test_critical_grok_is_excluded_for_an_xai_author():
+    # An active stand-in reaches independence rather than the retired-model guard.
+    candidate = replace(REVIEW_CANDIDATES["openai_frontier"], name="stand-in-xai", family="xai")
+    result = evaluate_candidate(candidate, ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
+    assert result.status == "excluded"
+    assert "same family" in result.reason.lower()
+
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
     assert "grok-4.7" not in trace
-    assert trace["grok-4.7-cursor-fallback"].status == "excluded"
-    assert result.selected.family != "xai"
+    assert "grok-4.7-cursor-fallback" not in trace
+    assert not [row for row in result.trace if row.family == "xai"]
+    assert result.selected.family in {"anthropic", "openai"}
 
 
-def test_critical_cursor_grok_is_selected_when_frontier_is_ineligible():
+def test_critical_review_fails_closed_when_frontier_is_ineligible():
     cursor = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN, claude_account=HOST_ACCOUNT)
     )
-    assert cursor.selected.name == "grok-4.7-cursor-fallback"
-    assert cursor.selected.invocation == REVIEW_CANDIDATES["grok-4.7-cursor-fallback"].invocation
-    assert "--model grok-4.7-high" in cursor.selected.invocation
-    assert "grok-4.7" not in {row.name for row in cursor.trace}
-    assert {row.name: row.status for row in cursor.trace}["grok-4.7-cursor-fallback"] == "selected"
+    assert cursor.selected is None
+    assert {row.family: row.status for row in cursor.trace} == {"openai": "advisory_only", "anthropic": "excluded"}
+    assert not [row for row in cursor.trace if row.family == "xai"]
     fallback = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}, claude_account=HOST_ACCOUNT
         )
     )
-    assert fallback.selected.name == "grok-4.7-cursor-fallback"
+    assert fallback.selected is None
+    assert {row.family: row.status for row in fallback.trace} == {"openai": "advisory_only", "anthropic": "excluded"}
+    assert not [row for row in fallback.trace if row.family == "xai"]
 
 
 @pytest.mark.parametrize("stage", ["resolver", "dispatcher", "spawn", "recorder", "generic"])
@@ -495,10 +502,10 @@ def test_astra_exception_role_or_expiry_escape(monkeypatch, tmp_path, stage, cas
     """The operator exception never admits Astra outside its seat or at/after expiry."""
     from datetime import UTC, datetime, timedelta
 
-    from scripts.dispatcher import checks
-    from scripts.dispatcher.providers import codex
-    from scripts.dispatcher.types import TaskSpec
-    from scripts.review import model_catalog, record_cf_verdict
+    from lu_machinery.dispatcher import checks
+    from lu_machinery.dispatcher.providers import codex
+    from lu_machinery.dispatcher.types import TaskSpec
+    from lu_machinery.review import model_catalog, record_cf_verdict
 
     expiry = datetime(2026, 11, 4, tzinfo=UTC)
     clock = expiry if case == "at_expiry" else expiry + timedelta(seconds=1) if case == "after_expiry" else expiry - timedelta(microseconds=1)

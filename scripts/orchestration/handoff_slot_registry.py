@@ -24,6 +24,7 @@ module) means the check could not run and callers must treat it as unverified.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -31,6 +32,13 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.ai_agent_bridge import _channels
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MACHINERY = _PACKAGE.partition(".")[0]
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 
 def registry_readable(assignments_path: Path | None = None) -> bool:
@@ -66,12 +74,12 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --slot claude-infra\n"
-            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --list claude\n"
-            "  .venv/bin/python -m scripts.orchestration.handoff_slot_registry --registered claude-infra claude-devops\n"
+            f"  .venv/bin/python -m {_MODULE} --slot claude-infra\n"
+            f"  .venv/bin/python -m {_MODULE} --list claude\n"
+            f"  .venv/bin/python -m {_MODULE} --registered claude-infra claude-devops\n"
             "Outputs: registered slot names on stdout for --list/--registered; writes no files.\n"
             "Exit codes: 0 accepted/listed; 2 unreadable roster or invalid arguments; 3 unregistered --slot.\n"
-            "Related: scripts/config/area_assignments.yaml and scripts/lib/handoff_identity.sh."
+            f"Related: {_MACHINERY}/config/area_assignments.yaml and {_MACHINERY}/lib/handoff_identity.sh."
         ),
     )
     group = parser.add_mutually_exclusive_group(required=True)
@@ -87,11 +95,11 @@ def main(argv: list[str] | None = None) -> int:
         "--assignments",
         type=Path,
         default=None,
-        help="roster YAML path; default: scripts/config/area_assignments.yaml",
+        help=f"roster YAML path; default: {_MACHINERY}/config/area_assignments.yaml",
     )
     args = parser.parse_args(argv)
     if not registry_readable(args.assignments):
-        print("handoff slot registry unreadable: scripts/config/area_assignments.yaml", file=sys.stderr)
+        print(f"handoff slot registry unreadable: {_MACHINERY}/config/area_assignments.yaml", file=sys.stderr)
         return 2
     if args.list:
         print("\n".join(registered_slots(args.list, assignments_path=args.assignments)))

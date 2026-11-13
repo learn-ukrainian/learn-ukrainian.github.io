@@ -5,7 +5,8 @@ issue-stream membership cache and telemetry JSONL) under ``tmp_path``. No GitHub
 network, subprocess, ``sources.db``, or live ``.runtime`` state is touched. The
 strict gate and the observability monitor both read a FRESH cache produced by a
 separate auditor run — never the network — so these tests inject that cache
-directly and monkeypatch ``issue_stream_audit.CACHE_PATH``.
+directly: the release audit's ``state_root`` is monkeypatched, and the in-tree
+app's ``issue_stream_audit.CACHE_PATH`` for the endpoint sections.
 
 Covers: strict-gate ownership (native/body/wrong/closed/multi-home/missing/stale
 cache) and issue-consumer resolution; default ``--check`` unchanged and network
@@ -19,22 +20,28 @@ privacy allowlist, and window validation.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+# TRANSITIONAL-PKG3-B2: the release API cannot load the in-tree product factory until F lands,
+# so the endpoint sections (4 and 6) drive the in-tree app with the copies that app reads.
+import lu_machinery.api.main as api_main
 import pytest
 import yaml
 from fastapi.testclient import TestClient
+from lu_machinery.orchestration import issue_stream_audit as app_isa  # TRANSITIONAL-PKG3-B2
+from lu_machinery.orchestration import issue_stream_audit as isa
+from lu_machinery.research import consumption
+from lu_machinery.research import observability as obs
+from lu_machinery.research import registry as app_reg  # TRANSITIONAL-PKG3-B2
+from lu_machinery.research import registry as reg
 
-import scripts.api.main as api_main
 from scripts.audit import check_research_registry as crr
-from scripts.orchestration import issue_stream_audit as isa
-from scripts.research import consumption
-from scripts.research import observability as obs
-from scripts.research import registry as reg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -123,15 +130,6 @@ def _stub(root: Path, rel: str) -> None:
     p.write_text("# stub\n", "utf-8")
 
 
-def _write_streams(root: Path, epic: int = REAL_EPIC, stream: str = "core-quality") -> None:
-    path = root / "scripts" / "config" / "issue_streams.yaml"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        yaml.safe_dump({"schema_version": 1, "streams": {stream: {"title": stream, "epics": [epic]}}}),
-        "utf-8",
-    )
-
-
 def _write_cache(
     root_or_path: Path,
     membership: dict[str, dict] | None,
@@ -179,14 +177,21 @@ def _surface(root: Path, ts: datetime, task: str, rid: str) -> None:
     )
 
 
+def _state_cache(state: Path, monkeypatch) -> Path:
+    """Anchor the release audit's shared state at ``state``; return its membership cache path."""
+    monkeypatch.setattr(isa, "state_root", lambda *_args, **_kwargs: state)
+    return state / "batch_state" / "issue_stream_audit.json"
+
+
 # --------------------------------------------------------------------------- #
 # 1. Strict adoption gate (CLI) — fresh cache only, fail-closed, offline
 # --------------------------------------------------------------------------- #
 @pytest.fixture
 def strict_root(tmp_path, monkeypatch):
     """A registry root plus a monkeypatched cache path for the strict gate."""
-    cache = tmp_path / "cache.json"
-    monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    # The strict gate reads the release's cache, state_root()/batch_state/issue_stream_audit.json.
+    cache = _state_cache(tmp_path / "state", monkeypatch)
+    cache.parent.mkdir(parents=True)
     return tmp_path, cache
 
 
@@ -372,7 +377,7 @@ def test_default_check_uses_real_corpus_resolver_no_cache_needed(tmp_path):
 @pytest.fixture
 def obs_env(tmp_path, monkeypatch):
     """Hermetic observability root: no membership cache, feature flag off."""
-    monkeypatch.setattr(isa, "CACHE_PATH", tmp_path / "no-cache.json")
+    _state_cache(tmp_path / "no-state", monkeypatch)
     monkeypatch.delenv(reg.ENV_FLAG, raising=False)
     monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
     return tmp_path
@@ -411,8 +416,7 @@ def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeyp
     ambiguous → dead. Record ownership and issue-consumer resolution are
     validated independently (ADR-011 P4 review)."""
     root = obs_env
-    cache = root / "cache.json"
-    monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    cache = _state_cache(root / "state", monkeypatch)
     _write_cache(
         cache,
         {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"], "via": "native", "unique_stream": True}},
@@ -430,7 +434,7 @@ def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeyp
 
 def test_orphaned_vs_ownership_unverified(obs_env):
     root = obs_env
-    _write_streams(root)  # declares core-quality epic REAL_EPIC
+    # The monitor reads the packaged stream registry, which declares core-quality epic REAL_EPIC.
     # No ownership at all → orphaned.
     orphan = _make_record(root, "orphan", state="proposed", ownership=None)
     # Plausible ownership (declared epic) but no fresh cache → ownership_unverified,
@@ -774,16 +778,30 @@ def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
 # --------------------------------------------------------------------------- #
 # 4. Endpoint — ungated availability, fail-soft, privacy, validation
 # --------------------------------------------------------------------------- #
+def _primary_at(monkeypatch, root) -> None:
+    # The release accepts only a primary checkout whose .git is a real Git directory (0.1.6).
+    subprocess.run(
+        ["git", "init", "-q", str(root)],
+        check=True,
+        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        timeout=30,
+    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.delenv("LEARN_UKRAINIAN_STATE_ROOT", raising=False)
+
+
 @pytest.fixture
 def endpoint_root(tmp_path, monkeypatch):
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", tmp_path)
-    monkeypatch.setattr(isa, "CACHE_PATH", tmp_path / "no-cache.json")
+    monkeypatch.setattr(app_reg, "_ROOT_OVERRIDE", tmp_path)
+    # The release reads the audit cache from the configured primary checkout,
+    # not a module constant; an empty fixture primary has no cache.
+    _primary_at(monkeypatch, tmp_path)
     monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     return tmp_path
 
 
 def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
-    monkeypatch.setenv(reg.ENV_FLAG, "false")  # kill switch OFF
+    monkeypatch.setenv(app_reg.ENV_FLAG, "false")  # kill switch OFF
     _write_registry(endpoint_root, [_make_record(endpoint_root, "r1", state="deferred")])
     resp = client.get("/api/knowledge/monitor")
     assert resp.status_code == 200
@@ -793,7 +811,7 @@ def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
 
 
 def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
+    monkeypatch.setenv(app_reg.ENV_FLAG, "false")
     refs = endpoint_root / "docs" / "references"
     refs.mkdir(parents=True, exist_ok=True)
     (refs / "research-registry.yaml").write_text("{ this: [is not: valid", "utf-8")
@@ -803,7 +821,7 @@ def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
 
 
 def test_monitor_privacy_allowlist_no_sensitive_fields(endpoint_root, monkeypatch):
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
+    monkeypatch.setenv(app_reg.ENV_FLAG, "false")
     _write_registry(endpoint_root, [_make_record(endpoint_root, "r1")])
     _surface(endpoint_root, datetime.now(UTC) - timedelta(minutes=5), "secret-task-id-1234", "r1")
     blob = json.dumps(client.get("/api/knowledge/monitor").json())
@@ -862,12 +880,12 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
     assert "open_issue_numbers" not in body
     assert "open_issue_titles" not in body
     assert "root_results" not in body
-    assert not set(isa.PRIVATE_CACHE_KEYS) & set(body)
+    assert not set(app_isa.PRIVATE_CACHE_KEYS) & set(body)
     assert body["open_total"] == 3 and body["ok"] is True
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     calls = []
     monkeypatch.setattr(
@@ -899,13 +917,13 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     """#10793: a cache published by either writer (the strict checker's validated
     publication or a Monitor ``run_audit`` refresh) leaks no private key through
     the route or the Work projection, and keeps run_audit's warnings."""
-    from scripts.api import issues_router
-    from scripts.ci import check_issue_task_quality as checker
-    from scripts.work import sources_public
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
+    from lu_machinery.ci import check_issue_task_quality as checker  # TRANSITIONAL-PKG3-B2
+    from lu_machinery.work import sources_public  # TRANSITIONAL-PKG3-B2
 
     repo = "learn-ukrainian/learn-ukrainian.github.io"
     registry = {"devops": [5703], "harness": [6943]}
-    report = isa.classify(
+    report = app_isa.classify(
         [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}], registry, {5703: (set(), {123}), 6943: (set(), set())}
     )
     report.update(repository=repo, warnings=[])
@@ -913,8 +931,9 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         {"code": "closed_epic_reopened", "stream": "devops", "epic": 4000},
         {"code": "milestone_closed_issue", "stream": "devops", "issue": 77},
     ]
-    monkeypatch.setattr(checker, "ROOT", tmp_path)
-    monkeypatch.setattr(isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
+    # The release writes and reads the cache under the configured primary (no ROOT/CACHE_PATH).
+    _primary_at(monkeypatch, tmp_path)
+    monkeypatch.setattr(app_isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
     if publisher == "membership_writer":
         assert checker.write_membership_cache(report, repo, registry)
     else:
@@ -922,18 +941,19 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         (tmp_path / "scripts/config/issue_streams.yaml").write_text(
             "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
         )
-        monkeypatch.setattr(isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
-        monkeypatch.setattr(isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
+        # The release audits its packaged registry (REGISTRY_PATH), not one under the root.
+        monkeypatch.setattr(app_isa, "REGISTRY_PATH", tmp_path / "scripts/config/issue_streams.yaml")
+        monkeypatch.setattr(app_isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
+        monkeypatch.setattr(app_isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
         monkeypatch.setattr(
-            isa,
+            app_isa,
             "_fetch_subissue_batch",
             lambda cursors, *a: {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors},
         )
-        isa.run_audit(tmp_path)
+        app_isa.run_audit(tmp_path)
     cache = tmp_path / "batch_state/issue_stream_audit.json"
     assert json.loads(cache.read_text())["schema_version"] == 1
     assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
-    monkeypatch.setattr(isa, "CACHE_PATH", cache)
     monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
     monkeypatch.setattr(
         issues_router.audit,
@@ -950,14 +970,14 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
         "ok", "open_total", "orphans", "pending_native_link", "refresh", "refreshing", "repository",
         "schema_version", "streams", "warnings",
     }
-    assert "root_results" not in body and not set(isa.PRIVATE_CACHE_KEYS) & set(body)
+    assert "root_results" not in body and not set(app_isa.PRIVATE_CACHE_KEYS) & set(body)
     assert "PRIVATE_TITLE_CANARY" not in json.dumps(body)
     assert body["warnings"] == hygiene
 
     projection = sources_public.fetch_streams_projection()
     assert projection.status == "ok"
     assert "root_results" not in projection.payload
-    assert not set(isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
+    assert not set(app_isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
     assert "PRIVATE_TITLE_CANARY" not in json.dumps(projection.payload)
     assert projection.payload["open_stream_membership"] == {"123": ["devops"]}
 
@@ -993,7 +1013,7 @@ def test_strict_adoption_gate_runs_as_bare_script():
 
 
 def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     def _fake_read_cache(max_age_s):
         if max_age_s == 3600:
@@ -1017,7 +1037,7 @@ def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monke
 
 
 def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)
     monkeypatch.setattr(
@@ -1046,7 +1066,7 @@ def test_issues_streams_no_cache_and_failure_are_bounded_and_private(monkeypatch
 
 
 def test_issues_streams_no_cache_schedules_once_and_returns_immediately(monkeypatch):
-    from scripts.api import issues_router
+    from lu_machinery.api import issues_router  # TRANSITIONAL-PKG3-B2: the in-tree app's router
 
     calls = []
     monkeypatch.setattr(issues_router.audit, "read_cache", lambda max_age_s: None)

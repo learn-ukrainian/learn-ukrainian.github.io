@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
 from unittest.mock import patch
@@ -126,11 +125,8 @@ def test_kimicc_effort_overrides_never_build_a_retired_model(tmp_path, monkeypat
         )
 
 
-def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
-    """The parser still reads a kimicc plan. Building one from a retired id is refused."""
-    del monkeypatch
-    from scripts.agent_runtime.adapters.base import InvocationPlan
-
+def test_kimicc_harness_refuses_a_retired_model_before_building_a_plan(tmp_path):
+    """OO-58: the kimicc harness refuses a retired id, so no kimicc plan reaches a parser."""
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         KimiccHarness().build_invocation(
             prompt="Inspect the target.",
@@ -141,18 +137,6 @@ def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
             session_id=None,
             tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
         )
-    plan = InvocationPlan(cmd=["kimicc"], cwd=tmp_path, metadata={"harness": "kimicc"})
-
-    parsed = KimiAdapter().parse_response(
-        stdout=json.dumps({"type": "result", "result": "KimiCC response"}),
-        stderr="",
-        returncode=0,
-        output_file=None,
-        plan=plan,
-    )
-
-    assert parsed.ok is True
-    assert parsed.response == "KimiCC response"
 
 
 def _kimicc_ready(tmp_path, monkeypatch):
@@ -290,102 +274,6 @@ def test_effort_does_not_launch_a_retired_kimi_model(tmp_path, monkeypatch, capl
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         _build(tmp_path, monkeypatch, model="k3", effort="high")
     assert "max effort only" not in caplog.text
-
-
-def test_empty_stdout_with_rc_zero_fails():
-    parsed = KimiAdapter().parse_response(stdout="", stderr="", returncode=0, output_file=None)
-
-    assert parsed.ok is False
-    assert parsed.response == ""
-
-
-def test_nonzero_returncode_fails_even_with_assistant_text():
-    stdout = json.dumps({"role": "assistant", "content": "looks fine"})
-    parsed = KimiAdapter().parse_response(stdout=stdout, stderr="boom", returncode=1, output_file=None)
-
-    assert parsed.ok is False
-    assert parsed.response == ""
-    assert "boom" in (parsed.stderr_excerpt or "")
-
-
-def test_non_assistant_event_stream_is_never_promoted_to_success():
-    """Silent-error-as-content guard: tool/status-only streams must fail."""
-    stdout = "\n".join(
-        [
-            json.dumps({"role": "tool", "name": "Read", "content": "raw dump"}),
-            json.dumps({"role": "meta", "type": "status", "state": "working"}),
-        ]
-    )
-    parsed = KimiAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
-
-    assert parsed.ok is False
-    assert parsed.response == ""
-
-
-def test_parse_stream_json_response_session_and_tool_calls(tmp_path):
-    events = [
-        {
-            "role": "assistant",
-            "tool_calls": [
-                {
-                    "type": "function",
-                    "id": "tool-1",
-                    "function": {"name": "Read", "arguments": json.dumps({"path": "AGENTS.md"})},
-                }
-            ],
-        },
-        {"role": "tool", "tool_call_id": "tool-1", "content": "# AGENTS.md"},
-        {"role": "assistant", "content": "done"},
-        {
-            "role": "meta",
-            "type": "session.resume_hint",
-            "session_id": "session-123",
-        },
-    ]
-    parsed = KimiAdapter().parse_response(
-        stdout="\n".join(json.dumps(event) for event in events),
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert parsed.ok is True
-    assert parsed.response == "done"
-    assert parsed.session_id == "session-123"
-    assert parsed.tool_calls[0]["name"] == "Read"
-    assert parsed.tool_calls[0]["arguments"] == {"path": "AGENTS.md"}
-    assert parsed.tool_calls[0]["output_summary"] == "# AGENTS.md"
-
-
-def test_parse_rate_limit_failure():
-    parsed = KimiAdapter().parse_response(
-        stdout="",
-        stderr="HTTP 429: rate limit exceeded",
-        returncode=1,
-        output_file=None,
-    )
-    assert parsed.ok is False
-    assert parsed.rate_limited is True
-    assert parsed.response == ""
-
-
-def test_parse_gh_auth_prompt_is_not_rate_limited():
-    """#7166 / #7472: an unauthenticated gh prompt in a failed seat's output is
-    an auth failure — it must not be labeled rate-limited even when unrelated
-    rate-limit text appears alongside it."""
-    parsed = KimiAdapter().parse_response(
-        stdout="",
-        stderr=(
-            "To get started with GitHub CLI, please run:  gh auth login\n"
-            "Alternatively, populate the GH_TOKEN environment variable with a "
-            "GitHub API authentication token.\n"
-            "HTTP 429: rate limit exceeded"
-        ),
-        returncode=1,
-        output_file=None,
-    )
-    assert parsed.ok is False
-    assert parsed.rate_limited is False
 
 
 def test_kimi_mcp_request_fails_closed_without_per_call_selector():

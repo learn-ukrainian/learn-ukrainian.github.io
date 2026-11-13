@@ -11,6 +11,7 @@ import asyncio
 import json
 import logging
 import math
+import os
 import re
 import sqlite3
 from collections import Counter
@@ -27,7 +28,7 @@ from fastapi.responses import JSONResponse
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
 
@@ -51,6 +52,7 @@ from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 
 from . import comms_router as legacy_comms
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .product_contribution import fleet_batches
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
 router = APIRouter(tags=["fleet"])
@@ -872,63 +874,12 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
     return projected
 
 
-def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Collect the existing batch read models without populating their cache."""
-    resolved_ctx = resolve_context(ctx)
-    logs = legacy_comms._scan_preseed_logs(resolved_ctx)
-    processes, process_error = legacy_comms._check_build_processes()
-    all_tracks = {
-        str(item.get("track"))
-        for item in [*logs, *processes]
-        if isinstance(item, dict) and item.get("track")
-    }
-    tracks: dict[str, dict[str, Any]] = {}
-    for track in sorted(all_tracks):
-        progress = legacy_comms._scan_track_progress(ctx, track)
-        log = next(
-            (item for item in logs if isinstance(item, dict) and item.get("track") == track),
-            None,
-        )
-        process = next(
-            (
-                item
-                for item in processes
-                if isinstance(item, dict) and item.get("track") == track
-            ),
-            None,
-        )
-        if log and log.get("complete"):
-            health = "complete"
-        elif process:
-            recent = _non_negative_int(progress.get("recent_30min"))
-            log_is_recent = bool(
-                log
-                and "age_seconds" in log
-                and _non_negative_int(log.get("age_seconds")) < 900
-            )
-            health = "healthy" if recent > 0 or log_is_recent else "stalled"
-        elif process_error:
-            # A failed ps probe is not evidence the build exited.
-            health = "unknown"
-        elif (
-            log
-            and not log.get("complete")
-            and _non_negative_int(log.get("age_seconds")) > 600
-        ):
-            health = "dead"
-        else:
-            health = "unknown"
-        track_row = {**progress, "health": health}
-        if process_error and health == "unknown":
-            track_row["reason"] = process_error
-        tracks[track] = track_row
-    snapshot: dict[str, Any] = {
-        "running_processes": None if process_error else len(processes),
-        "tracks": tracks,
-    }
-    if process_error:
-        snapshot["errors"] = [process_error]
-    return snapshot
+async def _product_batch_snapshot(ctx: MonitorContext) -> dict[str, Any] | None:
+    """The product's raw curriculum batch snapshot, or ``None`` when no product supplies one."""
+    collect = fleet_batches()
+    if collect is None:
+        return None
+    return await asyncio.to_thread(collect, ctx)
 
 
 @router.get("/operations")
@@ -938,7 +889,7 @@ async def fleet_operations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, 
         asyncio.to_thread(_legacy_broker_snapshot, ctx),
         legacy_comms.active_processes(ctx=ctx),
         legacy_comms.detect_zombies(stale_hours=2.0, pingpong_threshold=5, ctx=ctx),
-        asyncio.to_thread(_legacy_batch_snapshot, ctx),
+        _product_batch_snapshot(ctx),
         return_exceptions=True,
     )
 

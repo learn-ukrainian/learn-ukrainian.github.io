@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import gzip
 import hashlib
-import io
 import json
 from pathlib import Path
 
@@ -162,7 +161,7 @@ def test_ensure_practice_deck_hydrated_returns_matching_local(
     def fail_urlopen(*args, **kwargs):
         raise AssertionError("matching local practice deck should not fetch")
 
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fail_urlopen)
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", fail_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path
@@ -190,12 +189,12 @@ def test_ensure_practice_deck_hydrated_fetches_decompresses_and_writes_when_abse
 
     expected_url = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck.json.gz"
 
-    def fake_urlopen(request: object, timeout: int):
+    def fake_urlopen(request: object, timeout: int = 60):
         assert _request_url(request) == expected_url
         assert timeout == 60
-        return io.BytesIO(gz_bytes)
+        return gz_bytes
 
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", fake_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path
@@ -232,7 +231,7 @@ def test_ensure_practice_deck_hydrated_refuses_to_clobber_richer_local_deck(
         lexeme_count=3,
     )
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", lambda *_args, **_kwargs: gz_bytes)
 
     with pytest.raises(practice_deck_io.PracticeDeckHydrationError, match="refusing to overwrite"):
         practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
@@ -267,7 +266,7 @@ def test_ensure_practice_deck_hydrated_force_restores_richer_local_deck(
     )
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
     monkeypatch.setenv("ATLAS_MANIFEST_FORCE_HYDRATE", "1")
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", lambda *_args, **_kwargs: gz_bytes)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
     assert shard_path.read_bytes() == release_content
@@ -292,10 +291,10 @@ def test_ensure_practice_deck_hydrated_raises_on_gz_sha256_mismatch(
     _write_pointer(pointer_path, package_bytes=package_bytes, gz_bytes=gz_bytes, gz_sha256="0" * 64)
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
 
-    def fake_urlopen(request: object, timeout: int):
-        return io.BytesIO(gz_bytes)
+    def fake_urlopen(request: object, timeout: int = 60):
+        return gz_bytes
 
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", fake_urlopen)
 
     with pytest.raises(RuntimeError, match="gz sha256 mismatch") as excinfo:
         practice_deck_io.ensure_practice_deck_hydrated(
@@ -327,12 +326,12 @@ def test_ensure_practice_deck_hydrated_retries_gz_sha256_mismatch_with_cache_bus
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
     urls: list[str] = []
 
-    def fake_urlopen(request: object, timeout: int):
+    def fake_urlopen(request: object, timeout: int = 60):
         assert timeout == 60
         urls.append(_request_url(request))
-        return io.BytesIO(stale_gz_bytes if len(urls) == 1 else gz_bytes)
+        return stale_gz_bytes if len(urls) == 1 else gz_bytes
 
-    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io, "download_release_asset", fake_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path

@@ -1,0 +1,888 @@
+"""Artifacts API router — content-delivery-to-production gate check.
+
+Mounted at /api/artifacts in main.py.
+
+Endpoints:
+    GET /api/artifacts/{track}/{slug}   Single-module gate snapshot
+    GET /api/artifacts/ship-ready       Aggregate artifact-gate list
+
+Why this exists (GH #1309): before this router, the only way to ask
+which modules pass the internal artifact gates was to scrape seven
+different endpoints and cross-reference them. The artifact layer
+answers that question in one call. The response field is
+``artifact_gates_green``. It is not a merged or published count.
+
+Boundary: this router is about the INTERNAL artifact state. The public
+site (is it up, was the latest build deployed, does the canonical URL
+404) lives in ``site_router.py`` — see that file for the public-facing
+checks. Codex flagged that mixing these would muddy the contract.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import json
+import re
+from pathlib import Path
+from typing import Any, cast
+
+from fastapi import APIRouter, Depends, Query
+from fastapi.responses import JSONResponse
+from lu_machinery.api.docs_router import collect_html_artifacts
+from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
+from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from lu_machinery.path_safety import safe_join
+
+from .config import LEVELS
+from .curriculum_state import (
+    find_content_file,
+    get_audit_status,
+    get_final_review_info,
+    get_plan_slugs,
+    get_word_target_from_plan,
+)
+from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
+from .state_compute import _get_review_score
+
+router = APIRouter(tags=["artifacts"])
+
+# Dashboard polls share one tree walk. Direct collector calls stay uncached so
+# a caller that just wrote a file still sees it.
+_ARTIFACT_LIST_TTL_S = 15.0
+
+
+# ---------------------------------------------------------------------
+# Gate checks — each returns a bool so ``artifact_gates_green`` is (all gates true).
+# ---------------------------------------------------------------------
+
+
+def _has_frontmatter(content_path: Path) -> bool:
+    """True if the MDX/MD file starts with a YAML frontmatter block.
+
+    We only check the shape, not the schema — schema checks live in the
+    audit layer and will have already run by the time anything reaches
+    ship-ready. This gate catches the worst failure mode: the content
+    file exists but is empty / half-written.
+    """
+    if not content_path.is_file():
+        return False
+    try:
+        head = content_path.read_text(encoding="utf-8", errors="replace")[:512]
+    except OSError:
+        return False
+    return bool(re.match(r"^---\s*\n.*?\n---\s*\n", head, re.DOTALL))
+
+
+def _plan_not_changed_after_build(plan_path: Path, content_path: Path) -> bool:
+    """True if the plan is not newer than the content file.
+
+    If the plan has been edited since the last build, the module needs
+    a rebuild before shipping. Missing either side → False (something
+    is incomplete).
+    """
+    if not plan_path.is_file() or not content_path.is_file():
+        return False
+    try:
+        return plan_path.stat().st_mtime <= content_path.stat().st_mtime
+    except OSError:
+        return False
+
+
+def _final_review_approved(final_review: dict | None) -> bool:
+    if not final_review or not final_review.get("exists"):
+        return False
+    verdict = str(final_review.get("verdict") or "").upper()
+    return verdict == "PASS"
+
+
+def _word_target_met(audit: dict, word_target: int) -> bool:
+    """True if the module meets its required word count.
+
+    Explicitly returns ``False`` when ``word_target == 0`` — per
+    project rule "word targets are MINIMUMS" (see
+    ``agents_extensions/shared/rules/non-negotiable-rules.md``), a module
+    with no resolvable target is a plan bug, not a pass. Shipping
+    it would hide that the plan is incomplete. Reviewer CONCERN
+    Gemini-B / #1309: this is intentional; the plan-review step
+    is where a missing ``word_target`` gets caught, not here.
+    """
+    wc = int(audit.get("word_count") or 0)
+    return bool(word_target) and wc >= word_target
+
+
+# ---------------------------------------------------------------------
+# Per-module snapshot
+# ---------------------------------------------------------------------
+
+
+@router.get("/html")
+async def html_artifacts(
+    class_: str | None = Query(None, alias="class"),
+    date_from: str | None = Query(None),
+    status: str | None = Query(None),
+    author: str | None = Query(None),
+    type_: str | None = Query(None, alias="type", pattern="^(html|md)$"),
+    ctx: MonitorContext = Depends(get_ctx),
+):
+    """List authored artifacts (HTML + MD) with parsed report metadata.
+
+    Query params:
+        type: Filter to 'html' or 'md'. Omit for both.
+        class: Filter by artifact class.
+        date_from: ISO date lower bound.
+        status: Filter by status.
+        author: Filter by author.
+    """
+    types: tuple[str, ...]
+    if type_ == "html":
+        types = ("html",)
+    elif type_ == "md":
+        types = ("md",)
+    else:
+        types = ("html", "md")
+
+    resolved = resolve_context(ctx)
+    # One JSON part, so a colon inside a filter cannot collide with another filter.
+    cache_key = ctx_scoped_ttl_key(
+        resolved,
+        "artifacts-html",
+        json.dumps(
+            [class_ or "", date_from or "", status or "", author or "", list(types)],
+            separators=(",", ":"),
+        ),
+    )
+    return await cache_get_or_compute_async(
+        cache_key,
+        _ARTIFACT_LIST_TTL_S,
+        lambda: collect_html_artifacts(
+            class_filter=class_,
+            date_from=date_from,
+            status=status,
+            author=author,
+            types=types,
+            ctx=resolved,
+        ),
+    )
+
+
+def _level_cfg(track: str) -> dict | None:
+    return next((cfg for cfg in LEVELS if cfg["id"] == track), None)
+
+
+def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    """Return the full gate-by-gate snapshot for one module.
+
+    Shape::
+        {
+          "track": "a1", "slug": "...",
+          "gates": {
+              "content_exists":    bool,
+              "frontmatter_valid": bool,
+              "word_target_met":   bool,
+              "audit_pass":        bool,
+              "final_review_pass": bool,
+              "plan_fresh":        bool,
+          },
+          "artifact_gates_green": bool,   # every gate green; not a delivery count
+          "audit":       {...},
+          "review":      {...},
+          "final_review": {...} | null,
+          "word_count": int, "word_target": int,
+          "content_path": "curriculum/l2-uk-en/a1/...md" | null,
+          "plan_path":    "plans/a1/...yaml" | null,
+        }
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return {"error": f"unknown track: {track}"}
+
+    resolved_ctx = resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+    plans_root = project_root / "plans"
+
+    try:
+        track_dir = safe_join(curriculum_root, cfg["path"])
+        plan_path = safe_join(plans_root, track, f"{slug}.yaml")
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+    content_path = find_content_file(track_dir, slug)
+
+    # If neither the content file nor the plan exists, the slug is
+    # unknown on this track. Return an error sentinel so the HTTP
+    # wrapper can 404 — otherwise a typo looks like "all gates
+    # false" which is indistinguishable from a known module that's
+    # legitimately unshippable (reviewer CONCERN Codex-1 / #1309).
+    if not (content_path and content_path.is_file()) and not (plan_path and plan_path.is_file()):
+        return {"error": f"unknown module: {track}/{slug}"}
+
+    audit = get_audit_status(track_dir, slug)
+    review = _get_review_score(track_dir, slug)
+    final_review = get_final_review_info(track_dir, slug)
+
+    word_target = int(audit.get("word_target") or 0)
+    if word_target == 0:
+        word_target = int(get_word_target_from_plan(track, slug) or 0)
+
+    gates = {
+        "content_exists": bool(content_path and content_path.is_file()),
+        "frontmatter_valid": bool(content_path) and _has_frontmatter(cast(Path, content_path)),
+        "word_target_met": _word_target_met(audit, word_target),
+        "audit_pass": str(audit.get("status") or "").lower() == "pass",
+        "final_review_pass": _final_review_approved(final_review),
+        "plan_fresh": bool(content_path and plan_path)
+        and _plan_not_changed_after_build(cast(Path, plan_path), cast(Path, content_path)),
+    }
+
+    return {
+        "track": track,
+        "slug": slug,
+        "gates": gates,
+        "artifact_gates_green": all(gates.values()),
+        "audit": {
+            "status": audit.get("status"),
+            "word_count": int(audit.get("word_count") or 0),
+            "word_target": word_target,
+            "blocking_issues": audit.get("blocking_issues", []),
+        },
+        "review": review,
+        "final_review": final_review,
+        "content_path": (str(content_path.relative_to(project_root)) if content_path else None),
+        "plan_path": (str(plan_path.relative_to(project_root)) if plan_path and plan_path.exists() else None),
+    }
+
+
+@router.get("/{track}/{slug}")
+async def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    """Single-module artifact snapshot."""
+    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug, ctx=resolve_context(ctx))
+    if "error" in result:
+        return JSONResponse(status_code=404, content=result)
+    return result
+
+
+# ---------------------------------------------------------------------
+# Aggregate ship-ready list
+# ---------------------------------------------------------------------
+
+
+def _list_artifact_gates_green(track_filter: str | None, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    """Walk every plan and return the modules whose every artifact gate is green.
+
+    ``track_filter`` narrows the scan to one level. Empty tracks or
+    missing plan dirs are silently skipped — the response reports what
+    was inspected. A green gate list is not merged and not published.
+    """
+    gates_green: list[dict[str, Any]] = []
+    inspected = 0
+    tracks_scanned: list[str] = []
+
+    for cfg in LEVELS:
+        if track_filter and cfg["id"] != track_filter:
+            continue
+        tracks_scanned.append(cfg["id"])
+        for _, slug in get_plan_slugs(cfg["id"]):
+            inspected += 1
+            snap = _compute_artifact_snapshot(cfg["id"], slug, ctx=ctx)
+            if snap.get("artifact_gates_green"):
+                gates_green.append(
+                    {
+                        "track": cfg["id"],
+                        "slug": slug,
+                        "review_score": snap.get("review", {}).get("score"),
+                        "word_count": snap.get("audit", {}).get("word_count"),
+                        "word_target": snap.get("audit", {}).get("word_target"),
+                    }
+                )
+
+    return {
+        "tracks_scanned": tracks_scanned,
+        "modules_inspected": inspected,
+        "artifact_gates_green_count": len(gates_green),
+        "artifact_gates_green": gates_green,
+    }
+
+
+# ---------------------------------------------------------------------
+# Force-preview — dry run for v6_build.py --force (#1313 / Codex-9)
+# ---------------------------------------------------------------------
+
+
+def _enumerate_force_deletions(track: str, slug: str, ctx: MonitorContext | None = None) -> list[dict[str, Any]]:
+    """Mirror ``v6_build._force_reset_module`` — enumerate what would go.
+
+    MUST stay in sync with ``scripts/build/v6_build.py`` helpers
+    ``_clean_build_artifacts`` (lines ~797-858) and
+    ``_force_reset_module`` (lines ~860-880). A separate helper
+    — not a direct import of v6_build — is deliberate: importing
+    v6_build here would pull the whole pipeline module (gemini SDK,
+    broker, runtime) into every API startup, which is too heavy for
+    a read-only preview.
+
+    Drift risk: if ``_clean_build_artifacts`` changes, this preview
+    diverges. The test pins the exact set of paths so a v6_build
+    change that adds or removes a target will flip a test red.
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return []
+
+    resolved_ctx = resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+
+    try:
+        base = safe_join(curriculum_root, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+    except ValueError:
+        return []
+    targets: list[dict[str, Any]] = []
+
+    def _add(path: Path | None, category: str, reason: str) -> None:
+        if not path or not path.exists():
+            return
+        targets.append(
+            {
+                "path": str(path.relative_to(project_root)),
+                "category": category,
+                "is_dir": path.is_dir(),
+                "size_bytes": (
+                    sum(p.stat().st_size for p in path.rglob("*") if p.is_file())
+                    if path.is_dir()
+                    else path.stat().st_size
+                ),
+                "reason": reason,
+            }
+        )
+
+    # Content + activities + vocab (see _clean_build_artifacts:812-819).
+    _add(safe_join(base, f"{slug}.md"), "content", "module markdown")
+    _add(safe_join(base, "activities", f"{slug}.yaml"), "activities", "activity YAML")
+    _add(safe_join(base, "vocabulary", f"{slug}.yaml"), "vocabulary", "vocabulary YAML")
+
+    # Review files (see _clean_build_artifacts:822-826).
+    review_dir = safe_join(base, "review")
+    if review_dir.is_dir():
+        for f in sorted(review_dir.glob(f"{slug}-review*")):
+            _add(f, "review", "review output")
+
+    # Audit + status (see _clean_build_artifacts:829-835).
+    _add(safe_join(base, "audit", f"{slug}-audit.md"), "audit", "audit report")
+    _add(safe_join(base, "status", f"{slug}.json"), "status", "status cache")
+
+    # Research (see _clean_build_artifacts:838-841).
+    _add(safe_join(base, "research", f"{slug}-knowledge-packet.md"), "research", "knowledge packet")
+
+    # Orchestration artifacts — everything except index.md + friction.yaml
+    # (see _clean_build_artifacts:844-854).
+    if orch.is_dir():
+        keep = {"index.md", "friction.yaml"}
+        for f in sorted(orch.iterdir()):
+            if f.name in keep:
+                continue
+            _add(f, "orchestration", "pipeline state / prompts / dispatch")
+
+    # Published MDX (see _force_reset_module:877-879).
+    mdx = safe_join(
+        project_root,
+        "site",
+        "src",
+        "content",
+        "docs",
+        track,
+        f"{slug}.mdx",
+    )
+    _add(mdx, "published", "site MDX output")
+
+    return targets
+
+
+@router.get("/{track}/{slug}/force-preview")
+async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    """Dry-run preview for ``v6_build.py --force {track} {num}``.
+
+    Returns the EXACT list of files ``--force`` would delete, without
+    touching anything. Classified by category so a reviewer can spot
+    anomalies (e.g. a 50 MB orchestration dir, or a stray published
+    MDX that shouldn't exist). Reviewer Codex-9 / #1313.
+
+    Shape::
+        {
+          "track": "a1", "slug": "...",
+          "count": 12,
+          "total_bytes": 234567,
+          "would_remove": [
+            {"path": "curriculum/l2-uk-en/a1/hello.md",
+             "category": "content", "is_dir": false,
+             "size_bytes": 8432, "reason": "module markdown"},
+            ...
+          ],
+          "preserved": ["plans/a1/hello.yaml", "orchestration/hello/index.md",
+                        "orchestration/hello/friction.yaml"]
+        }
+
+    **Never** deletes anything. This is a read-only endpoint.
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"unknown track: {track}"},
+        )
+
+    resolved_ctx = resolve_context(ctx)
+    targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug, ctx=resolved_ctx)
+
+    try:
+        base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
+    except ValueError:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"invalid track path: {track}"},
+        )
+    preserved: list[str] = []
+    plans_root = resolved_ctx.roots.project_root / "plans"
+    try:
+        plan = safe_join(plans_root, track, f"{slug}.yaml")
+    except ValueError:
+        plan = None
+    if plan and plan.is_file():
+        preserved.append(str(plan.relative_to(resolved_ctx.roots.project_root)))
+    for keep_name in ("index.md", "friction.yaml"):
+        try:
+            keep = safe_join(base, "orchestration", slug, keep_name)
+        except ValueError:
+            keep = None
+        if keep and keep.is_file():
+            preserved.append(str(keep.relative_to(resolved_ctx.roots.project_root)))
+
+    return {
+        "track": track,
+        "slug": slug,
+        "count": len(targets),
+        "total_bytes": sum(t.get("size_bytes", 0) for t in targets),
+        "would_remove": targets,
+        "preserved": preserved,
+    }
+
+
+# ---------------------------------------------------------------------
+# ship-ready (aggregate)
+# ---------------------------------------------------------------------
+
+
+@router.get("/ship-ready")
+async def ship_ready(
+    track: str | None = Query(
+        None,
+        description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
+    ),
+    ctx: MonitorContext = Depends(get_ctx),
+):
+    """Modules whose artifact gates are all green.
+
+    This is the internal artifact conjunction (content, frontmatter,
+    word target, audit, final review, plan freshness). It does not
+    mean the module is merged or published. Unknown ``track`` → 404
+    (consistent with ``/api/artifacts/{track}/{slug}``).
+    """
+    if track is not None and _level_cfg(track) is None:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"unknown track: {track}"},
+        )
+    return await asyncio.to_thread(_list_artifact_gates_green, track, ctx=resolve_context(ctx))
+
+
+# ---------------------------------------------------------------------
+# Classified file manifest (#1313 / Codex-2)
+# ---------------------------------------------------------------------
+
+
+_ARTIFACT_CATEGORIES: tuple[tuple[str, str], ...] = (
+    # (category, reason-for-classification)
+    ("source_of_truth", "editable by humans, never regenerated by the pipeline"),
+    ("generated", "pipeline output — regenerable from source of truth"),
+    ("published", "live on the public site"),
+    ("stale", "artifact from a prior build + source has since changed"),
+)
+
+
+def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    """Walk every file tied to one module and tag its lifecycle role.
+
+    Reviewer Codex-2 / #1313: "would make --force work and cleanup
+    reasoning much safer". Pipeline:
+    - ``plans/{track}/{slug}.yaml`` + ``orchestration/{slug}/friction.yaml``
+      + ``orchestration/{slug}/index.md`` → source of truth (never
+      regenerated).
+    - Everything else under the module's track directory → generated.
+    - ``site/src/content/docs/{track}/{slug}.mdx`` → published.
+    - A generated artifact is ``stale`` if the plan YAML mtime is
+      newer than its own mtime — the source has moved on.
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return {"error": f"unknown track: {track}"}
+
+    resolved_ctx = resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+    plans_root = project_root / "plans"
+
+    try:
+        base = safe_join(curriculum_root, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+        plan_path = safe_join(plans_root, track, f"{slug}.yaml")
+        mdx_path = safe_join(
+            project_root,
+            "site",
+            "src",
+            "content",
+            "docs",
+            track,
+            f"{slug}.mdx",
+        )
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+
+    plan_mtime = plan_path.stat().st_mtime if plan_path.is_file() else None
+
+    buckets: dict[str, list[dict[str, Any]]] = {
+        "source_of_truth": [],
+        "generated": [],
+        "published": [],
+        "stale": [],
+    }
+
+    def _record(path: Path | None, bucket: str) -> None:
+        if not path or not path.exists():
+            return
+        is_dir = path.is_dir()
+        size = sum(p.stat().st_size for p in path.rglob("*") if p.is_file()) if is_dir else path.stat().st_size
+        mtime = (
+            path.stat().st_mtime
+            if not is_dir
+            else max(
+                (p.stat().st_mtime for p in path.rglob("*") if p.is_file()),
+                default=path.stat().st_mtime,
+            )
+        )
+        entry = {
+            "path": str(path.relative_to(project_root)),
+            "is_dir": is_dir,
+            "size_bytes": size,
+            "mtime": mtime,
+        }
+        # Stale check: pipeline output older than the plan is suspect.
+        if bucket == "generated" and plan_mtime is not None and mtime < plan_mtime:
+            entry["reason"] = "older than plan.yaml — rebuild recommended"
+            buckets["stale"].append(entry)
+            return
+        buckets[bucket].append(entry)
+
+    # Source of truth
+    if plan_path.is_file():
+        _record(plan_path, "source_of_truth")
+    for keep in ("index.md", "friction.yaml"):
+        keep_path = safe_join(orch, keep)
+        if keep_path:
+            _record(keep_path, "source_of_truth")
+
+    # Generated — the same paths that --force would delete, minus the
+    # published MDX which has its own bucket.
+    _record(safe_join(base, f"{slug}.md"), "generated")
+    _record(safe_join(base, "activities", f"{slug}.yaml"), "generated")
+    _record(safe_join(base, "vocabulary", f"{slug}.yaml"), "generated")
+    review_dir = safe_join(base, "review")
+    if not review_dir:
+        return {
+            "track": track,
+            "slug": slug,
+            "counts": {k: 0 for k in ("source_of_truth", "generated", "published", "stale")},
+            "buckets": {k: [] for k in ("source_of_truth", "generated", "published", "stale")},
+            "categories": [{"name": name, "reason": reason} for name, reason in _ARTIFACT_CATEGORIES],
+        }
+    if review_dir.is_dir():
+        for f in sorted(review_dir.glob(f"{slug}-review*")):
+            _record(f, "generated")
+    _record(safe_join(base, "audit", f"{slug}-audit.md"), "generated")
+    _record(safe_join(base, "status", f"{slug}.json"), "generated")
+    _record(safe_join(base, "research", f"{slug}-knowledge-packet.md"), "generated")
+    if orch.is_dir():
+        kept_files = {"index.md", "friction.yaml"}
+        for f in sorted(orch.iterdir()):
+            if f.name in kept_files:
+                continue
+            _record(f, "generated")
+
+    # Published
+    _record(mdx_path, "published")
+
+    return {
+        "track": track,
+        "slug": slug,
+        "counts": {k: len(v) for k, v in buckets.items()},
+        "buckets": buckets,
+        "categories": [{"name": name, "reason": reason} for name, reason in _ARTIFACT_CATEGORIES],
+    }
+
+
+@router.get("/{track}/{slug}/files")
+async def module_files(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    """Classified file manifest for one module (#1313 / Codex-2)."""
+    result = await asyncio.to_thread(_classify_module_files, track, slug, ctx=resolve_context(ctx))
+    if "error" in result:
+        return JSONResponse(status_code=404, content=result)
+    return result
+
+
+# ---------------------------------------------------------------------
+# Review snapshot (#1313 / Codex-3)
+# ---------------------------------------------------------------------
+
+
+def _read_review_file(path: Path, project_root: Path) -> dict[str, Any] | None:
+    """Parse one review file. Extract score, verdict, findings count.
+
+    "Empty findings with high score" is the reviewer-gaming pattern
+    Codex wants flagged — ``empty_findings_flag`` captures it.
+    """
+    if not path.is_file():
+        return None
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+
+    score = extract_review_score(text)
+    verdict = extract_review_verdict(text)
+    findings = count_review_issues(text)
+
+    return {
+        "path": str(path.relative_to(project_root)),
+        "score": score,
+        "verdict": verdict,
+        "findings_count": findings,
+        "empty_findings_flag": (findings == 0 and score is not None and score >= 8.5),
+    }
+
+
+def _review_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    cfg = _level_cfg(track)
+    if not cfg:
+        return {"error": f"unknown track: {track}"}
+
+    resolved_ctx = resolve_context(ctx)
+    try:
+        base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
+        review_dir = safe_join(base, "review")
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+    if not review_dir:
+        return {
+            "track": track,
+            "slug": slug,
+            "main_review": None,
+            "final_review": None,
+            "style_review": None,
+            "any_empty_findings_flag": False,
+        }
+
+    # Main review = per-module content review. Final review has a
+    # DIFFERENT file format (Phase F verdict) parsed by
+    # ``get_final_review_info`` elsewhere; mixing it into main review
+    # candidates would silently return the wrong file with null /
+    # misleading score+verdict. Reviewer Codex BLOCKER on #1312
+    # pre-merge: keep main / final / style cleanly separated.
+    main_candidates: list[Path] = []
+    if review_dir.is_dir():
+        for p in review_dir.glob(f"{slug}-review*.md"):
+            # Belt-and-suspenders: some pipeline versions wrote
+            # ``{slug}-review-final-r1.md``; exclude anything whose
+            # name signals a final-review file so the glob stays
+            # strictly main-review.
+            if "final" in p.name.lower():
+                continue
+            main_candidates.append(p)
+    main_candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    main_review = _read_review_file(main_candidates[0], resolved_ctx.roots.project_root) if main_candidates else None
+
+    # Final review — Phase F approved/revise verdict, separate parser.
+    # Surface the parsed summary directly rather than re-parsing the
+    # file here.
+    final_review_summary = get_final_review_info(base, slug)
+
+    # Style review — separate file, same directory. Empty if absent.
+    style_candidates = sorted(review_dir.glob(f"{slug}-style-review*.md")) if review_dir.is_dir() else []
+    style_review = (
+        _read_review_file(style_candidates[-1], resolved_ctx.roots.project_root) if style_candidates else None
+    )
+
+    return {
+        "track": track,
+        "slug": slug,
+        "main_review": main_review,
+        "final_review": final_review_summary,
+        "style_review": style_review,
+        "any_empty_findings_flag": bool(
+            (main_review and main_review.get("empty_findings_flag"))
+            or (style_review and style_review.get("empty_findings_flag"))
+        ),
+    }
+
+
+@router.get("/{track}/{slug}/review-snapshot")
+async def review_snapshot(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    """Latest main + style review result with empty-findings flag.
+
+    Flags the reviewer-gaming pattern where a high score is reported
+    with zero actionable findings (#1313 / Codex-3). Deterministic
+    detection so bad-review cases don't slip through.
+    """
+    result = await asyncio.to_thread(_review_snapshot, track, slug, ctx=resolve_context(ctx))
+    if "error" in result:
+        return JSONResponse(status_code=404, content=result)
+    return result
+
+
+# ---------------------------------------------------------------------
+# Drift check (#1313 / Codex-8)
+# ---------------------------------------------------------------------
+
+
+def _state_drift_check(track: str, slug: str, ctx: MonitorContext | None = None) -> dict[str, Any]:
+    """Cross-check state.json vs audit vs review vs published MDX.
+
+    Catches the recurring pipeline failure where one system says
+    "done" and another says "missing". Reports each disagreement as
+    a named ``drift`` entry so callers can decide which side to
+    trust (#1313 / Codex-8).
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return {"error": f"unknown track: {track}"}
+
+    resolved_ctx = resolve_context(ctx)
+    curriculum_root = resolved_ctx.roots.curriculum_root
+    project_root = resolved_ctx.roots.project_root
+
+    try:
+        base = safe_join(curriculum_root, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+
+    content_path = find_content_file(base, slug)
+    state_path = safe_join(orch, "state.json") if orch else None
+    audit = get_audit_status(base, slug)
+    final_review = get_final_review_info(base, slug)
+    try:
+        mdx = safe_join(
+            project_root,
+            "site",
+            "src",
+            "content",
+            "docs",
+            track,
+            f"{slug}.mdx",
+        )
+    except ValueError:
+        mdx = None
+
+    drifts: list[dict[str, str]] = []
+
+    state_phases: dict[str, Any] = {}
+    if state_path and state_path.is_file():
+        try:
+            state_phases = (json.loads(state_path.read_text("utf-8")) or {}).get("phases") or {}
+        except Exception:
+            drifts.append(
+                {
+                    "kind": "state_unreadable",
+                    "detail": f"{state_path} exists but failed to parse",
+                }
+            )
+
+    publish_phase = state_phases.get("publish") if isinstance(state_phases, dict) else None
+
+    # state says publish complete, but no MDX on disk
+    if (
+        isinstance(publish_phase, dict)
+        and publish_phase.get("status") == "complete"
+        and mdx is not None
+        and not mdx.is_file()
+    ):
+        drifts.append(
+            {
+                "kind": "publish_mdx_missing",
+                "detail": "state.json says publish complete but site MDX missing",
+            }
+        )
+
+    # mdx exists but state disagrees
+    if (
+        mdx is not None
+        and mdx.is_file()
+        and not (isinstance(publish_phase, dict) and publish_phase.get("status") == "complete")
+    ):
+        drifts.append(
+            {
+                "kind": "mdx_without_state",
+                "detail": "published MDX on disk but state.json has no publish=complete",
+            }
+        )
+
+    # audit says pass but content file missing
+    if str(audit.get("status") or "").lower() == "pass" and not (content_path and content_path.is_file()):
+        drifts.append(
+            {
+                "kind": "audit_passes_without_content",
+                "detail": "status.json pass but no content .md on disk",
+            }
+        )
+
+    # final-review APPROVED but content file missing
+    if (
+        final_review
+        and final_review.get("verdict", "").upper() == "PASS"
+        and not (content_path and content_path.is_file())
+    ):
+        drifts.append(
+            {
+                "kind": "final_review_without_content",
+                "detail": "final review PASS but no content .md on disk",
+            }
+        )
+
+    # content exists but audit never ran
+    if content_path and content_path.is_file() and str(audit.get("status") or "") == "not_run":
+        drifts.append(
+            {
+                "kind": "content_without_audit",
+                "detail": "content .md exists but audit/status cache missing",
+            }
+        )
+
+    return {
+        "track": track,
+        "slug": slug,
+        "in_sync": not drifts,
+        "drift": drifts,
+        "snapshot": {
+            "state_phases": {name: data.get("status") for name, data in state_phases.items() if isinstance(data, dict)},
+            "audit_status": audit.get("status"),
+            "final_review_verdict": (final_review.get("verdict") if isinstance(final_review, dict) else None),
+            "content_on_disk": bool(content_path and content_path.is_file()),
+            "mdx_on_disk": bool(mdx and mdx.is_file()),
+        },
+    }
+
+
+@router.get("/{track}/{slug}/drift")
+async def drift_check(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+    """Cross-check module state across state.json, audit, review, disk."""
+    result = await asyncio.to_thread(_state_drift_check, track, slug, ctx=resolve_context(ctx))
+    if "error" in result:
+        return JSONResponse(status_code=404, content=result)
+    return result

@@ -123,17 +123,32 @@ _FAKE_CLAUDE = textwrap.dedent(
             status.update(authMethod="api_key", apiKeySource="ANTHROPIC_API_KEY")
         elif os.path.exists(os.path.join(config_dir, ".credentials.json")):
             status["authMethod"] = "claude.ai"
+            status["loginExpiresAt"] = "2026-11-12T20:16:18.529Z"  # the stored sign-in's end (2.1.318)
             # The plan Claude Code resolves for the login is the one stored with its credential.
             oauth = load(os.path.join(config_dir, ".credentials.json")).get("claudeAiOauth") or {}
             plan = "team" if mode == "team_plan" else oauth.get("subscriptionType")
             if plan is not None:
                 status["subscriptionType"] = plan
+            # 2.1.319: a constant marker, and the tier derived from the plan and the rate-limit tier.
+            limit = {"default_claude_max_5x": "max_5x", "default_claude_max_20x": "max_20x"}
+            tier = {"pro": "pro", "max": limit.get(oauth.get("rateLimitTier"), "max_other")}.get(plan, "other")
+            status.update(storedClaudeAiLogin=True, planTier=tier)
         else:
             status = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty"}
         if mode == "other_dir":
             status["configDirectory"] = os.environ["HOME"]
         if mode == "key_source":
             status["apiKeySource"] = "/login managed key"
+        if mode == "unknown_key":  # a 2.1.319 key no route admits
+            status["gatewaySignInOffered"] = True
+        if mode == "login_marker":  # the subscription-only marker beside any other method
+            status.update(storedClaudeAiLogin=True, planTier="max_20x")
+        if mode.startswith("status_set:"):  # status_set:<key>=<JSON value>[;...]; null drops the key
+            for item in mode[len("status_set:"):].split(";"):
+                name, _, value = item.partition("=")
+                status[name] = json.loads(value)
+                if status[name] is None:
+                    del status[name]
         if argv[-1] == "--json":
             print(json.dumps(status))
         else:
@@ -142,6 +157,8 @@ _FAKE_CLAUDE = textwrap.dedent(
             else:
                 lines = ["Login method: Claude Max account"] if status["authMethod"] == "claude.ai" else []
                 lines += ["Email: fixture@example.invalid"]
+                if "loginExpiresAt" in status:  # 2.1.318 prints the end date beside the login
+                    lines.append("Sign-in ends: between 2026-11-09 and 2026-11-12 (2026-11-12T20:16:18.529Z)")
             if env.get("ANTHROPIC_BASE_URL"):
                 lines.append("Anthropic base URL: " + env["ANTHROPIC_BASE_URL"])
             if env.get("HTTPS_PROXY"):
@@ -737,10 +754,26 @@ def test_bound_label_checkout_setting_that_changes_auth_is_refused(accounts, nam
 
 @pytest.mark.parametrize(
     ("mode", "code"),
-    [("garbage", "claude_account_auth_status_unavailable"), ("other_dir", "claude_account_auth_method_conflict")],
+    [
+        ("garbage", "claude_account_auth_status_unavailable"),
+        ("other_dir", "claude_account_auth_method_conflict"),
+        ("unknown_key", "claude_account_auth_method_conflict"),
+        # 2.1.319 sets the login marker to true, always beside the plan tier.
+        ("status_set:storedClaudeAiLogin=false", "claude_account_auth_method_conflict"),
+        ('status_set:storedClaudeAiLogin="true"', "claude_account_auth_method_conflict"),
+        ("status_set:storedClaudeAiLogin=1", "claude_account_auth_method_conflict"),
+        ("status_set:storedClaudeAiLogin=null", "claude_account_auth_method_conflict"),
+        ("status_set:planTier=null", "claude_account_auth_method_conflict"),
+        # The tier must be the one Claude Code derives for the reported consumer plan.
+        ('status_set:planTier="other"', "claude_account_plan_unverified"),
+        ('status_set:planTier="pro"', "claude_account_plan_unverified"),
+        ('status_set:planTier="max_fixture"', "claude_account_plan_unverified"),
+        ('status_set:planTier=["max_20x"]', "claude_account_plan_unverified"),
+        ('status_set:subscriptionType="pro";planTier="max_20x"', "claude_account_plan_unverified"),
+    ],
 )
 def test_bound_label_unconfirmed_auth_status_is_refused(accounts, monkeypatch, mode, code):
-    """No parseable status, or a status for another directory, never admits the run."""
+    """No parseable status, a status for another directory, an unknown key or a conflicting plan never admits."""
     monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_MODE", mode)
 
     with pytest.raises(ClaudeAccountRefused) as refused:
@@ -748,6 +781,26 @@ def test_bound_label_unconfirmed_auth_status_is_refused(accounts, monkeypatch, m
 
     assert refused.value.code == code
     assert _calls(accounts, "run") == []
+
+
+@pytest.mark.parametrize(
+    "mode",
+    [
+        'status_set:planTier="max_5x"',
+        'status_set:planTier="max_20x"',
+        'status_set:planTier="max_other"',
+        'status_set:subscriptionType="pro";planTier="pro"',
+        "status_set:storedClaudeAiLogin=null;planTier=null",  # 2.1.318 reports neither key
+    ],
+)
+def test_bound_label_consumer_plan_tier_is_admitted(accounts, monkeypatch, mode):
+    """Each tier Claude Code 2.1.319 derives for a consumer plan, beside its login marker, runs."""
+    monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_MODE", mode)
+
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+    assert len(_calls(accounts, "run")) == 1
 
 
 def test_bound_label_logged_out_status_is_refused(accounts):
@@ -1465,11 +1518,20 @@ def _real(accounts: SimpleNamespace, *args: str, sources: bool = True) -> str:
 
 
 def test_real_cli_admits_a_clean_bound_login(real_cli):
+    """The installed CLI's own status for the login, every key it reports included (2.1.319), is admitted."""
     _user_settings(real_cli, USER_SETTINGS["clean"])
 
     plan = _plan(real_cli, claude_account="b")
 
     assert plan.env_overrides["CLAUDE_CONFIG_DIR"] == str(real_cli.config_dir)
+    status = json.loads(_real(real_cli, "auth", "status", "--json"))
+    assert set(status) <= claude._LABELLED_AUTH_STATUS_KEYS
+    if "planTier" in status:  # 2.1.319: the fixture credential names no rate-limit tier
+        assert (status["storedClaudeAiLogin"], status["subscriptionType"], status["planTier"]) == (
+            True,
+            "max",
+            "max_other",
+        )
 
 
 @pytest.mark.parametrize(

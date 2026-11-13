@@ -19,10 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "agents_extensions/shared/rules"
 MANIFEST = RULES / "core-manifest.yaml"
 EXPECTED_IDS = RULES / "core-expected-ids.txt"
-# The frozen denominator: the 344 units (344 inventory units plus Q18, #9618, minus A28, the Entire intake rule retired
-# with the integration, C-2928) whose destination is P0-P9, an unconditional invariant or the content addendum.
+# The frozen denominator: the 345 units (344 inventory units plus Q18, #9618, minus A28, C-2928,
+# plus O41, #12830) whose destination is P0-P9, an unconditional invariant or the content addendum.
 # Changing the list must be deliberate and reviewed.
-EXPECTED_IDS_SHA256 = "896a4a5fb7711eab99a55afb6fd4e3112dd33c685534d52be145227769639784"
+EXPECTED_IDS_SHA256 = "c592564f69b5e745c0aa2bdbe5833abda20a3af6926c74648a552132f3ec2e35"
 SECTIONS = ("core", "content_addendum")
 UNIT_ID = re.compile(r"^[A-Z][a-z]?\d{2}$")
 ANCHOR_COMMENT = re.compile(r"<!-- ([a-z0-9]+(?:-[a-z0-9]+)*): ([A-Z][a-z]?\d{2}) -->")
@@ -102,17 +102,13 @@ def test_review_admission_preserves_anchor_manifest_and_dynamic_digest():
 
     text = (RULES / "core.md").read_text(encoding="utf-8")
     sentence = next(line for line in text.splitlines() if "<!-- p2-review: M30 -->" in line)
-    assert "Grok 4.7 reviews code and infra at every risk, including critical" in sentence
-    assert "through Cursor at `grok-4.7-high` with runtime model attestation" in sentence
-    assert "native Grok dispatch is retired" in sentence
-    assert "never for xAI authors or its own subject seat" in sentence
-    assert "operator decision 2026-10-05, #9769" in sentence
+    # Grok is retired (GROK-CANCEL-1110): the sentence names no Grok seat.
+    assert "grok" not in sentence.lower()
+    assert "Critical final sign-off: Opus 5.5 or Sol 6.1" in sentence
     assert "Native AGY admits low or medium risk code review." in sentence
     assert "Infra, high, critical and security reviews exclude Gemini." in sentence
     assert "Ukrainian reviews need Sources MCP." in sentence
     assert "Apply hard filters before quality; execute the returned invocation" in sentence
-    assert "Grok reviews: no sandbox, shell, tests or scripts; tracked-file reads only (#9987)." in sentence
-    assert "Execution-dependent reviews use Opus 5.5/Sol 6.1; Grok briefs: diff/CI evidence, no execution requests." in sentence
     assert _manifest()["core"]["M30"] == "p2-review"
     block = rules_core.core_block("core")
     assert f'sha256="{hashlib.sha256(rules_core.core_text("core").encode()).hexdigest()}"' in block

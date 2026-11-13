@@ -3,7 +3,7 @@
 Cursor already loads `AGENTS.md` + `CLAUDE.md` as workspace rules (~40–60k tokens).
 Those files are digests. When the Monitor API is up, fetch
 `GET /api/rules?format=markdown` before consequential work (AGENTS.md).
-`scripts/cursor_cold_start.py` hits `/api/rules?format=json` and prints the
+`lu_machinery.cursor_cold_start` hits `/api/rules?format=json` and prints the
 hash and source list; it does not reprint the rules blob.
 
 ## Budget
@@ -18,7 +18,7 @@ hash and source list; it does not reprint the rules blob.
 ## Sequence (every session)
 
 ```bash
-.venv/bin/python scripts/cursor_cold_start.py
+scripts/pre_commit/project_python.sh -I -m lu_machinery.cursor_cold_start
 ```
 
 Equivalent manual calls:

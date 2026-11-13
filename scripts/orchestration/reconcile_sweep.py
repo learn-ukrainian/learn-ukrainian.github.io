@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 for path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
@@ -38,6 +38,13 @@ from scripts.guardrails.delegate_ownership import (
 from scripts.orchestration import dispatch_admission, dispatch_settle
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, worker_liveness
 from scripts.orchestration.task_record_store import read_task_record
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -275,11 +282,11 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  # Dry-run report (default — read-only inspection, zero mutations):\n"
-            "  .venv/bin/python scripts/orchestration/reconcile_sweep.py\n\n"
+            f"  .venv/bin/python {_PACKAGE_DIR}/reconcile_sweep.py\n\n"
             "  # Apply reconciliation (observe v2 workers and release stale claims):\n"
-            "  .venv/bin/python scripts/orchestration/reconcile_sweep.py --apply\n\n"
+            f"  .venv/bin/python {_PACKAGE_DIR}/reconcile_sweep.py --apply\n\n"
             "  # Machine-readable JSON output:\n"
-            "  .venv/bin/python scripts/orchestration/reconcile_sweep.py --json\n\n"
+            f"  .venv/bin/python {_PACKAGE_DIR}/reconcile_sweep.py --json\n\n"
             "Outputs:\n"
             "  Stdout: one-line summary line (and optional JSON payload).\n"
             "  In --apply mode: reconciles dispatcher v2 records through dispatcher observation\n"
@@ -289,8 +296,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  0 on successful sweep (in dry-run or apply mode);\n"
             "  2 on invalid CLI arguments.\n\n"
             "Related:\n"
-            "  Dispatch settle: scripts/orchestration/dispatch_settle.py\n"
-            "  Ownership ledger: scripts/guardrails/delegate_ownership.py\n"
+            f"  Dispatch settle: {_PACKAGE_DIR}/dispatch_settle.py\n"
+            f"  Ownership ledger: {_MACHINERY}/guardrails/delegate_ownership.py\n"
             "  Systemd timer: packaging/systemd/learn-ukrainian-reconcile.timer\n"
             "  Decision: infra-private #625, issue #7584, PR #7585\n"
         ),

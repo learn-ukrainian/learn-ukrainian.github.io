@@ -255,6 +255,7 @@ KNOWN_SECRET_VARS = {
     "OPENAI_API_KEY",
 }
 WORKER_ENV_MODULE = "scripts.session_supervisor"
+WORKER_ENV_MODULES = frozenset({WORKER_ENV_MODULE, "lu_machinery.session_supervisor"})
 WORKER_ENV_COMMAND = "worker-env"
 
 _ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=.*\Z")
@@ -1392,16 +1393,16 @@ def _worker_env_reason(seg: list[str]) -> str | None:
     if command is None:
         return None
     cmd, args, _idx = command
-    if cmd == WORKER_ENV_MODULE and WORKER_ENV_COMMAND in args:
+    if cmd in WORKER_ENV_MODULES and WORKER_ENV_COMMAND in args:
         return "`worker-env` can print environment values"
     if _is_python_command(cmd):
         for index, arg in enumerate(args[:-1]):
             if (
                 _strip_quotes(arg) == "-m"
-                and _strip_quotes(args[index + 1]) == WORKER_ENV_MODULE
+                and _strip_quotes(args[index + 1]) in WORKER_ENV_MODULES
                 and any(_strip_quotes(candidate) == WORKER_ENV_COMMAND for candidate in args[index + 2 :])
             ):
-                return "`python -m scripts.session_supervisor worker-env` can print environment values"
+                return f"`python -m {_strip_quotes(args[index + 1])} {WORKER_ENV_COMMAND}` can print environment values"
     return None
 
 

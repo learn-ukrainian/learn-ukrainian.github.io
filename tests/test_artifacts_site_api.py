@@ -11,12 +11,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import lu_machinery.api.main as api_main
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.artifacts_router as artifacts_router
-import scripts.api.main as api_main
-import scripts.api.site_router as site_router
+import scripts.project_api.artifacts_router as artifacts_router
+import scripts.project_api.site_router as site_router
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("github_command_boundary")]
 
@@ -46,7 +46,7 @@ def _set_env(tmp_path: Path, monkeypatch):
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
 
-    from scripts.api.monitor_context import fixture_context
+    from lu_machinery.api.monitor_context import fixture_context
 
     ctx = fixture_context(tmp_path).with_roots(curriculum_root=tmp_path / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)

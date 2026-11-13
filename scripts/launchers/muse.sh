@@ -107,7 +107,8 @@ launcher_adapter_canary() {
   # Recall requires answers from a rollover session. No startup model probe.
   # shellcheck disable=SC2034 # Read by launcher_bind_drive_epic in the shared core.
   LC_PROVIDER_CANARY_RAN=0
-  echo 'muse adapter: provider canary: not run; rollover uses scripts.session_canary.muse_lane mint and score'
+  local canary_module=scripts.session_canary.muse_lane
+  echo "muse adapter: provider canary: not run; rollover uses ${canary_module} mint and score"
 }
 
 launcher_adapter_exec() {

@@ -290,6 +290,41 @@ def test_workspace_write_sha_base_is_refused_at_dispatch(sandbox):
     assert not (sandbox.repo / ".worktrees/dispatch/codex/sha-base-write").exists()
 
 
+def test_workspace_write_base_equal_to_branch_is_refused_at_dispatch(sandbox):
+    """A publish branch used as its own base is refused before a task or worktree exists (#12667)."""
+    branch = "codex/existing-pr"
+    remote_head = _published_branch(sandbox, branch)
+    refused = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover",
+        "--task-id", "base-equals-branch", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", f"origin/{branch}", "--branch", branch,
+        expected=2,
+    )
+    assert "workspace_write_base_equals_branch:" in refused.stderr
+    assert "--base origin/main --branch <PR head branch>" in refused.stderr
+    assert "with the PR's files as owned paths" in refused.stderr
+    assert not (sandbox.tasks / "base-equals-branch.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/base-equals-branch").exists()
+    # refs/remotes/origin/<branch> is the same base, and it is refused the same way.
+    prefixed = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "takeover",
+        "--task-id", "base-equals-branch-prefixed", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", f"refs/remotes/origin/{branch}", "--branch", branch,
+        expected=2,
+    )
+    assert "workspace_write_base_equals_branch:" in prefixed.stderr
+    assert not (sandbox.tasks / "base-equals-branch-prefixed.json").exists()
+    # The allowed form still dispatches: origin/main with a different publish branch.
+    allowed = sandbox.settle(sandbox.dispatch(
+        "pushed", "--task-id", "base-is-main", "--mode", "workspace-write",
+        "--owned-path", "delivered.txt", "--base", "origin/main", "--branch", branch,
+    ))
+    assert (allowed["status"], allowed["error"]) == ("done", None)
+    assert allowed["worktree_base_ref"] == "origin/main"
+    assert allowed["publish_branch"] == branch
+    assert allowed["worktree_start_sha"] == remote_head
+
+
 def test_read_only_sha_base_is_still_admitted(sandbox):
     """Read-only reviews keep a commit SHA as --base; settlement does not verify it."""
     sha = run_git(sandbox.repo, "rev-parse", "HEAD")
@@ -389,8 +424,12 @@ def test_failed_git_call_reports_its_operation_and_a_constant_summary_without_se
 
     assert fail(["git", "rev-parse", "--verify", "topic^{commit}"], "fatal: Needed a single revision") == (
         "dispatcher: CalledProcessError: git rev-parse exited 128: needed a single revision\n")
-    assert fail(["git", "fetch", "--", "https://user:token@example.com/org/repo.git", "abc"],
-                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (
+    assert fail(["git",
+                 "fetch",
+                 "--",
+                 "https://user:token@example.com/org/repo.git",  # trufflehog:ignore
+                 "abc"],
+                "fatal: could not read from https://user:token@example.com/org/repo.git\nsecond line\n") == (  # trufflehog:ignore
         "dispatcher: CalledProcessError: git fetch exited 128: remote not reachable\n")
     assert fail(["curl", "https://example.com"], "secret") == "dispatcher: CalledProcessError: external command exited 128\n"
     assert fail(["/usr/bin/git", "fetch"], "fatal: could not read from x") == (
@@ -444,7 +483,7 @@ def test_canonical_origins_does_not_reject_same_identity_when_clone_transport_di
         "https://github.com/org/other.git", "git@github.com:org/other.git", "https://github.com/org/rep.git",
         "https://github.com/org/repo-fork.git", "https://github.com/someone/repo.git", "git@github.com:someone/repo.git",
         "https://gitlab.com/org/repo.git", "git@gitlab.com:org/repo.git", "ssh://git@example.com/org/repo.git",
-        "/srv/org/repo.git", "file:///srv/org/repo.git", "https://user:token@github.com/org/repo.git",
+        "/srv/org/repo.git", "file:///srv/org/repo.git", "https://user:token@github.com/org/repo.git",  # trufflehog:ignore
         "https://token@github.com/org/repo.git", "ssh://user:token@github.com/org/repo.git",
         "https://github.com/Org/repo.git", "https://GitHub.com/org/repo.git", "git@github.com:org/Repo.git",
         "https://github.com/org/repo/", "https://github.com/org/repo.git/", "git@github.com:org/repo.git/",

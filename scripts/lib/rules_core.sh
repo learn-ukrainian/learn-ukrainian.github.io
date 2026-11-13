@@ -10,6 +10,14 @@
 # Fail-closed: a missing or unreadable core, seat or loader refuses the launch
 # (rules_core_load returns 1) before any adapter check or side effect runs.
 
+# The rules-core loader: this file's sibling, selected once from this file's
+# unresolved location (design-v1 amendment 1), whatever the machinery package
+# directory is called. ROOT names the machinery checkout for fleet rules;
+# product selection belongs to product_root(), including LU_PRODUCT_ROOT.
+_rules_core_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || _rules_core_lib_dir=''
+RULES_CORE_LOADER="${_rules_core_lib_dir:+$_rules_core_lib_dir/rules_core.py}"
+unset _rules_core_lib_dir
+
 # rules_core_refuse REASON — the refusal line for a launch that cannot load the core.
 rules_core_refuse() {
   printf 'Error: refusing to launch: rules core unavailable (%s).\n' "$*" >&2
@@ -21,7 +29,7 @@ rules_core_refuse() {
 # naming the path, when the core cannot be loaded.
 rules_core_load() {
   local py="$1" root="$2" lane="${3:-}" provider="${4:-claude}"
-  local script="$root/scripts/lib/rules_core.py"
+  local script="$RULES_CORE_LOADER"
   local -a lane_args=()
   LC_RULES_SEAT=""
   LC_RULES_CORE=""
@@ -33,15 +41,15 @@ rules_core_load() {
   if [ -n "$lane" ]; then
     lane_args=(--lane "$lane" --provider "$provider")
   fi
-  if ! LC_RULES_SEAT="$("$py" "$script" --root "$root" ${lane_args[@]+"${lane_args[@]}"} --format seat)"; then
+  if ! LC_RULES_SEAT="$("$py" "$script" --rules-root "$root" ${lane_args[@]+"${lane_args[@]}"} --format seat)"; then
     LC_RULES_SEAT=""
     rules_core_refuse "seat resolution failed: $script"
     return 1
   fi
-  if ! LC_RULES_CORE="$("$py" "$script" --root "$root" --seat "$LC_RULES_SEAT" --format block)"; then
+  if ! LC_RULES_CORE="$("$py" "$script" --rules-root "$root" --seat "$LC_RULES_SEAT" --format block)"; then
     LC_RULES_CORE=""
-    rules_core_refuse "seat $LC_RULES_SEAT needs $root/agents_extensions/shared/rules/core.md" \
-      "and, for a content seat, core-curriculum.md; both must be readable"
+    rules_core_refuse "seat $LC_RULES_SEAT needs readable fleet core.md" \
+      "and, for content, product agents_extensions/shared/rules/core-curriculum.md"
     return 1
   fi
   # shellcheck disable=SC2034  # read by launcher_core.sh (dry-run report, argv placeholder)
@@ -64,7 +72,7 @@ rules_core_prefix() {
 
 # rules_core_toml PYTHON ROOT — the framed core as one TOML basic string.
 rules_core_toml() {
-  "$1" "$2/scripts/lib/rules_core.py" --root "$2" --seat "$LC_RULES_SEAT" --format toml
+  "$1" "$RULES_CORE_LOADER" --rules-root "$2" --seat "$LC_RULES_SEAT" --format toml
 }
 
 # rules_core_kimi_agent_file PYTHON ROOT — writes a content-addressed Kimi agent
@@ -75,7 +83,7 @@ rules_core_kimi_agent_file() {
   { mkdir -p "$dir" && chmod 700 "$dir"; } || return 1
   digest="$(printf '%s' "$LC_RULES_CORE" | sha256sum | cut -c1-16)"
   path="$dir/kimi-agent-${LC_RULES_SEAT}-${digest}.md"
-  "$py" "$root/scripts/lib/rules_core.py" --root "$root" --seat "$LC_RULES_SEAT" \
+  "$py" "$RULES_CORE_LOADER" --rules-root "$root" --seat "$LC_RULES_SEAT" \
     --format kimi-agent-file --output "$path" || return 1
   printf '%s\n' "$path"
 }

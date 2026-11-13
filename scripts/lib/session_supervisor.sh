@@ -11,23 +11,29 @@
 # Usage:
 #   source "${PROJECT_DIR}/scripts/lib/session_supervisor.sh"
 #   claim_session_supervisor_env \
-#       "epic:4707" "grok" "grok-tui" "5512-pr-j1-launchers" "grok-$$" \
-#       "${PROJECT_DIR}" "start-grok.sh" "harness"
+#       "epic:4707" "codex" "codex-tui" "5512-pr-j1-launchers" "codex-$$" \
+#       "${PROJECT_DIR}" "start-codex.sh" "harness"
 #
 # The helper fails the launch closed (exit 1) if the supervisor returns an
 # error or if the exported lease envelope is incomplete.
+
+# The machinery package's name (its directory name in checkout paths and its
+# import name), from this file's unresolved location (design-v1 amendment 1).
+# Module names handed to Python are this name plus the package-relative suffix.
+_session_supervisor_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || _session_supervisor_lib_dir=''
+SESSION_SUPERVISOR_PACKAGE="${_session_supervisor_lib_dir%/*}"
+SESSION_SUPERVISOR_PACKAGE="${SESSION_SUPERVISOR_PACKAGE##*/}"
 
 # Load the selector SSOT when this helper is sourced independently.  The
 # launcher normally sources handoff_identity.sh first; this guarded import also
 # keeps stream resolution available to direct session-supervisor consumers.
 if ! declare -F launcher_selector_stream >/dev/null 2>&1; then
-  _session_supervisor_lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   if [ -f "$_session_supervisor_lib_dir/handoff_identity.sh" ]; then
     # shellcheck disable=SC1091
     source "$_session_supervisor_lib_dir/handoff_identity.sh"
   fi
-  unset _session_supervisor_lib_dir
 fi
+unset _session_supervisor_lib_dir
 
 # stream_id_for_epic <lane-or-lane.topic>
 # Return the canonical session stream id.  The exact allowlist lives in
@@ -406,8 +412,9 @@ try:
     # every original argument has one NUL, including an empty argument.
     if raw.count(b"\0") != int(sys.argv[4]) or (raw and not raw.endswith(b"\0")):
         raise ValueError("argument stream incomplete")
+    import importlib
     import tempfile
-    from scripts.common.task_scratch import allocate
+    allocate = importlib.import_module(sys.argv[6]).allocate
     scratch = allocate("cto-argument-capture")
     try:
         with tempfile.TemporaryFile(dir=scratch.payload_dir) as capture:
@@ -433,7 +440,8 @@ except Exception as exc:
     except OSError:
         pass
 os.execv(sys.argv[2], [sys.argv[2], sys.argv[3], "--live-supervisory", "--notify-parent"])
-' "$LC_ROOT" "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" "${#LC_DRIVER_ORIGINAL_ARGS[@]}" "$!"
+' "$LC_ROOT" "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" "${#LC_DRIVER_ORIGINAL_ARGS[@]}" "$!" \
+          "$SESSION_SUPERVISOR_PACKAGE.common.task_scratch"
       fi
     fi
     exec 216<&-
@@ -499,16 +507,17 @@ session_supervisor_cto_wrapper_signature() {
   py="$(launcher_project_python 2>/dev/null)" || return 3
   # Private launch values travel on stdin, never in helper argv or diagnostics.
   printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" | "$py" -c '
+import importlib
 import sys
 from pathlib import Path
 sys.path.insert(0, sys.argv[1])
-from scripts.session_supervisor import SupervisorError, cto_wrapper_signature
+supervisor = importlib.import_module(sys.argv[4])
 try:
     args = sys.stdin.buffer.read().decode().split("\0")[:-1]
-    print(cto_wrapper_signature(Path(sys.argv[2]), Path(sys.argv[1]), Path(sys.argv[3]), args))
-except (SupervisorError, UnicodeError):
+    print(supervisor.cto_wrapper_signature(Path(sys.argv[2]), Path(sys.argv[1]), Path(sys.argv[3]), args))
+except (supervisor.SupervisorError, UnicodeError):
     sys.exit(3)
-' "$LC_ROOT" "$LC_CTO_SUCCESSOR_WRAPPER" "$0" 2>/dev/null
+' "$LC_ROOT" "$LC_CTO_SUCCESSOR_WRAPPER" "$0" "$SESSION_SUPERVISOR_PACKAGE.session_supervisor" 2>/dev/null
 }
 
 session_supervisor_preflight_successor() {
@@ -583,7 +592,7 @@ session_supervisor_exec_successor() {
   case "${0##*/}" in
     start-codex-cto.sh) entrypoint="${0##*/}" ;;
     # A lane wrapper adds its fixed lane and instruction to the caller argv (#12553).
-    start-kube-dojo-driver.sh) entrypoint="scripts/${0##*/}" ;;
+    start-kube-dojo-driver.sh) entrypoint="$SESSION_SUPERVISOR_PACKAGE/${0##*/}" ;;
   esac
   exec "$LC_ROOT/$entrypoint" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }

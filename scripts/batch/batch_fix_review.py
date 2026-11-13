@@ -26,14 +26,19 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.repo_root import project_interpreter
-from common.thresholds import STYLE_REVIEW_TARGET
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # this checkout, for the bind below
+import scripts  # noqa: F401  (binds the product roots for the installed release)
+
+# isort: split
+from lu_machinery.common.repo_root import project_interpreter
+
+from curriculum.quality.thresholds import STYLE_REVIEW_TARGET
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
-VENV_PYTHON = project_interpreter()
+VENV_PYTHON = project_interpreter(REPO.resolve())
 MAX_RETRIES = 3
 # Batch fix loop targets the style-reviewer PASS score (9.0).
 PASS_THRESHOLD = STYLE_REVIEW_TARGET

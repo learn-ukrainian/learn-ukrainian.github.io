@@ -6,13 +6,15 @@ import json
 import sqlite3
 from pathlib import Path
 
+import lu_machinery.api.fleet_router as fleet_router
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api import product_contribution
+from lu_machinery.api.monitor_context import MonitorContext, fixture_context
+from lu_machinery.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
-import scripts.api.fleet_router as fleet_router
-from scripts.api.monitor_context import MonitorContext, fixture_context
-from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
+import scripts.project_api.batch_progress as product_batch_progress
 
 
 @pytest.fixture()
@@ -24,6 +26,23 @@ def client(tmp_path: Path) -> TestClient:
     app.state.ctx = fixture_context(tmp_path)
     app.include_router(fleet_router.router, prefix="/api/fleet")
     return TestClient(app)
+
+
+@pytest.fixture()
+def product_fleet_batches(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Install the product's fleet-batches provider for one test.
+
+    ``/operations`` reads curriculum batches through the provider the product
+    contributes, which a process holds only after some earlier test built a full
+    Monitor app. Install it here so these tests pass alone, in any order and in
+    any shard. The hook looks ``fleet_batch_snapshot`` up when called, so the
+    tests that replace it on its module are still seen.
+    """
+    from scripts.project_api.entry import build_api
+
+    provider = build_api(fixture_context(tmp_path)).fleet_batches
+    assert provider is not None
+    monkeypatch.setattr(product_contribution, "_fleet_batches", provider)
 
 
 def _broker_ctx(root: Path, broker_path: Path) -> MonitorContext:
@@ -539,7 +558,7 @@ def test_fleet_reviews_direct_python_call_with_defaults(fleet_root: Path) -> Non
     """Calling fleet_reviews directly as a Python function with defaults must not
     raise AttributeError or pass Query sentinel objects into SQL/filters (#6849)."""
     _seed_plane(fleet_root)
-    from scripts.api.fleet_router import fleet_reviews
+    from lu_machinery.api.fleet_router import fleet_reviews
 
     public_repo = "learn-ukrainian/learn-ukrainian.github.io"
     result = fleet_reviews(limit=10, offset=0, repository=public_repo)
@@ -719,6 +738,7 @@ def test_endpoints_and_migrations_omit_configuration_secrets(
     ]
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_projection_is_bounded_read_only_and_source_blind(
     client: TestClient,
     tmp_path: Path,
@@ -796,7 +816,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", fake_processes)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", fake_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", fake_batches)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", fake_batches)
 
     response = client.get("/api/fleet/operations")
 
@@ -844,6 +864,7 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
     client: TestClient,
     tmp_path: Path,
@@ -861,7 +882,7 @@ def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", unavailable)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", unavailable)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", unavailable_batch)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", unavailable_batch)
 
     response = client.get("/api/fleet/operations")
 
@@ -882,7 +903,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [
             {
@@ -895,12 +916,12 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
         ],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([{"track": "hist", "pid": 123, "cmd": "private command"}], None),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: {
             "track": track,
@@ -918,7 +939,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
         lambda *_args, **_kwargs: pytest.fail("operations snapshot must not write cache state"),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] == 1
     assert snapshot["tracks"]["hist"]["health"] == "healthy"
@@ -943,22 +964,22 @@ def test_legacy_batch_snapshot_old_log_is_unknown_when_process_probe_fails(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([], "ps: TimeoutExpired"),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: _batch_progress_stub(track),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] is None
     assert snapshot["errors"] == ["ps: TimeoutExpired"]
@@ -972,22 +993,22 @@ def test_legacy_batch_snapshot_old_log_stays_dead_when_process_probe_succeeds(
 ) -> None:
     ctx = fixture_context(tmp_path)
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_preseed_logs",
         lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_check_build_processes",
         lambda: ([], None),
     )
     monkeypatch.setattr(
-        fleet_router.legacy_comms,
+        product_batch_progress,
         "_scan_track_progress",
         lambda ctx, track: _batch_progress_stub(track),
     )
 
-    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+    snapshot = product_batch_progress.fleet_batch_snapshot(ctx)
 
     assert snapshot["running_processes"] == 0
     assert "errors" not in snapshot
@@ -995,6 +1016,7 @@ def test_legacy_batch_snapshot_old_log_stays_dead_when_process_probe_succeeds(
     assert "reason" not in snapshot["tracks"]["hist"]
 
 
+@pytest.mark.usefixtures("product_fleet_batches")
 def test_operations_timed_out_process_probe_degrades_batch_section(
     client: TestClient,
     tmp_path: Path,
@@ -1027,7 +1049,7 @@ def test_operations_timed_out_process_probe_degrades_batch_section(
 
     monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
     monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", timed_out_batches)
+    monkeypatch.setattr(product_batch_progress, "fleet_batch_snapshot", timed_out_batches)
 
     response = client.get("/api/fleet/operations")
 

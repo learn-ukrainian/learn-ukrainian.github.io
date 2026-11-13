@@ -21,11 +21,18 @@ import pytest
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.common.repo_root import PRODUCT_ROOT_ENV
 from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_launcher_sources, copy_slot_registry
+from tests.launcher_sandbox import (
+    copy_interactive_launcher_checkout,
+    copy_launcher_sources,
+    copy_slot_registry,
+    launcher_environment,
+    launcher_toolchain_path,
+)
 from tests.rules_core_view import (
     _build_view,
     install_loader_bypass,
@@ -46,20 +53,10 @@ PUBLIC = (
     "start-codex.sh",
     "start-codex-driver.sh",
     "start-codex-cto.sh",
-    "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
     "start-muse-driver.sh",
-    "start-grok.sh",
-    "start-grok-driver.sh",
-    "start-kimi.sh",
-    "start-kimicc.sh",
-    "start-glm.sh",
-    "start-glmcc.sh",
 )
-# Compat wrappers forward into the shared adapters; they are part of PUBLIC.
-COMPAT = ("start-kimicc.sh", "start-glmcc.sh")
-assert set(COMPAT).issubset(PUBLIC)
 
 
 def _install_claude_usage_fixture(root: Path) -> None:
@@ -74,14 +71,11 @@ def run_launcher(
     dry_run: bool = True,
     root: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    if (
-        dry_run
-        and root is None
-        and name in ("start-claude.sh", "start-claude-driver.sh", "start-claude-cto.sh")
-        and not any(arg in ("--help", "-h") for arg in args)
-    ):
+    if dry_run and root is None:
         with TemporaryDirectory(prefix="launcher-usage-", dir=ensure_scratch_root()) as temporary:
-            overrides = {("scripts", "lib", "claude_weekly_used.py"): "print('0')\n"}
+            overrides = {}
+            if name in ("start-claude.sh", "start-claude-driver.sh", "start-claude-cto.sh"):
+                overrides[("scripts", "lib", "claude_weekly_used.py")] = "print('0')\n"
             if LAUNCH_ROOT != REPO:
                 overrides[("scripts", "lib", "rules_core.sh")] = (LAUNCH_ROOT / "scripts/lib/rules_core.sh").read_text()
             checkout = _build_view(Path(temporary) / "checkout", overrides)
@@ -95,7 +89,7 @@ def run_launcher(
             install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
-    launch_env = os.environ.copy()
+    launch_env = launcher_environment({PRODUCT_ROOT_ENV: str(launch_root), "CODEX_CANONICAL_REPO_ROOT": str(launch_root)})
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
@@ -104,7 +98,9 @@ def run_launcher(
             # After the directories a test put ahead of the inherited PATH (its
             # fake manager), before the system ones: an unfaked call fails the
             # test rather than reaching this host's real user manager.
-            inherited, path = os.environ.get("PATH", ""), launch_env.get("PATH", "")
+            inherited, path = launcher_toolchain_path(), launch_env.get("PATH", "")
+            if path.endswith(os.defpath):
+                path = path[:-len(os.defpath)] + inherited
             prefix = path[: -len(inherited)] if inherited and path.endswith(inherited) else ""
             rest = path[len(prefix) :]
             launch_env["PATH"] = f"{prefix}{manager_guard(Path(guard) / 'bin')}{os.pathsep}{rest}"
@@ -133,12 +129,24 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     binary.parent.mkdir()
     binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
     binary.chmod(0o755)
+    toolchain = launcher_toolchain_path()
+    trace = tmp_path / "deployment-toolchain.log"
+    for name in ("node", "npm"):
+        executable = shutil.which(name, path=toolchain)
+        assert executable is not None
+        wrapper = binary.parent / name
+        wrapper.write_text(
+            f"#!/bin/sh\nprintf '%s\\n' {shlex.quote(name + '=' + executable)} >> {shlex.quote(str(trace))}\n"
+            f"exec {shlex.quote(executable)} \"$@\"\n",
+            encoding="utf-8",
+        )
+        wrapper.chmod(0o755)
     result = run_launcher(
         "start-claude.sh",
         dry_run=False,
         root=checkout,
         env={
-            "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+            "PATH": f"{binary.parent}{os.pathsep}{launcher_toolchain_path()}",
             "HOME": str(tmp_path / "home"),
             "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
         },
@@ -146,6 +154,10 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Agent extensions deployed (agents:deploy)" in result.stdout
     assert f"provider cwd={checkout}" in result.stdout
+    executed = trace.read_text().splitlines()
+    for name in ("node", "npm"):
+        assert f"{name}={shutil.which(name, path=toolchain)}" in executed
+    print(f"Deployment child toolchain: {executed}", flush=True)
     sources = checkout / "agents_extensions/shared/skills"
     deployed = checkout / ".agents/skills"
     expected = {path.relative_to(sources) for path in sources.rglob("*") if path.is_file()}
@@ -185,12 +197,6 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
         ("start-claude.sh", "interactive launchers reject --epic"),
         ("start-codex.sh", "interactive launchers reject --epic"),
         ("start-gemini.sh", "interactive launchers reject --epic"),
-        ("start-grok.sh", "interactive launchers reject --epic"),
-        ("start-glm.sh", "is retired in the model catalog"),
-        ("start-glmcc.sh", "is retired in the model catalog"),
-        # OO-58: the retired default is refused before the interactive --epic check.
-        ("start-kimi.sh", "is retired in the model catalog"),
-        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> None:
@@ -206,12 +212,6 @@ def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> No
         ("start-claude.sh", "interactive launchers reject --force"),
         ("start-codex.sh", "interactive launchers reject --force"),
         ("start-gemini.sh", "interactive launchers reject --force"),
-        ("start-grok.sh", "interactive launchers reject --force"),
-        ("start-glm.sh", "is retired in the model catalog"),
-        ("start-glmcc.sh", "is retired in the model catalog"),
-        # OO-58: the retired default is refused before the interactive --force check.
-        ("start-kimi.sh", "is retired in the model catalog"),
-        ("start-kimicc.sh", "is retired in the model catalog"),
     ),
 )
 def test_interactive_launchers_reject_force(name: str, message: str) -> None:
@@ -226,9 +226,7 @@ def test_interactive_launchers_reject_force(name: str, message: str) -> None:
     (
         "start-claude-driver.sh",
         "start-codex-driver.sh",
-        "start-cursor-driver.sh",
         "start-gemini-driver.sh",
-        "start-grok-driver.sh",
     ),
 )
 def test_driver_help_lists_force(name: str) -> None:
@@ -239,7 +237,7 @@ def test_driver_help_lists_force(name: str) -> None:
 
 
 def test_driver_dry_run_force_announces_release_then_claim() -> None:
-    result = run_launcher("start-grok-driver.sh", "--epic", "infra", "--force")
+    result = run_launcher("start-codex-driver.sh", "--epic", "infra", "--force")
     assert result.returncode == 0, result.stderr
     assert "would force-release any live holder on epic:" in result.stdout
     assert "then claim" in result.stdout
@@ -327,6 +325,8 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (root / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(root)
     install_loader_bypass(root)
     _install_claude_usage_fixture(root)
@@ -378,6 +378,7 @@ launcher_adapter_exec() { printf 'PROVIDER_EXEC\\n'; }
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-claude-driver.sh", claim_marker, close_marker
@@ -385,7 +386,7 @@ launcher_adapter_exec() { printf 'PROVIDER_EXEC\\n'; }
 
 def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -> None:
     launcher, claim_marker, close_marker = _core_canary_failure_fixture(tmp_path)
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -482,6 +483,8 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (root / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(root)
     install_loader_bypass(root)
     _install_claude_usage_fixture(root)
@@ -552,6 +555,7 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         text=True,
         check=False,
         timeout=30,
+        env=launcher_environment(),
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-claude-driver.sh", close_attempts, close_marker, child_started
@@ -602,7 +606,6 @@ LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
 LC_DRIVER_ORIGINAL_ARGS=()
 export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=1
 launcher_driver_renew_loop() {{ :; }}
-launcher_cursor_observer_renew_loop() {{ :; }}
 launcher_driver_wait_hook() {{ export PATH={shlex.quote(os.defpath)}; }}
 session_supervisor_start_inbox_watch() {{
   LC_SUPERVISORY_DELIVERY=''
@@ -630,7 +633,7 @@ launcher_close_driver_lease() {{
 }}
 launcher_exec_command fixture-cli
 """
-    env = {**os.environ, "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
+    env = {**launcher_environment(), "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{launcher_toolchain_path()}"}
     process = subprocess.Popen(
         ["/bin/bash", "-c", script],
         env=env,
@@ -739,7 +742,6 @@ LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
 LC_DRIVER_ORIGINAL_ARGS=()
 export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=1
 launcher_driver_renew_loop() {{ :; }}
-launcher_cursor_observer_renew_loop() {{ :; }}
 launcher_close_driver_lease() {{
   printf 'close\\n' >> {shlex.quote(str(events))}
   LC_DRIVER_LEASE_CLOSED=1
@@ -747,9 +749,9 @@ launcher_close_driver_lease() {{
 launcher_exec_command fixture-cli
 """
     env = {
-        **os.environ,
+        **launcher_environment(),
         "HOME": str(tmp_path / "home"),
-        "PATH": f"{cli.parent}{os.pathsep}{os.defpath}",
+        "PATH": f"{cli.parent}{os.pathsep}{launcher_toolchain_path()}",
         "FLEET_COMMS_ROOT": str(plane),
     }
     with AuthorityService(root=plane) as service:
@@ -801,7 +803,7 @@ def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path)
         provider_body=f"touch {os.fspath(tmp_path / 'child-started')!r}\nexit 7",
         failed_close_attempts=1,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -835,7 +837,7 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         provider_body=_blocking_signal_provider(signal_marker, child_ready),
         forward_ready=forward_ready,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
     try:
         process = subprocess.Popen(
@@ -875,7 +877,7 @@ def test_missing_close_environment_fails_fast_without_raw_stderr(
         failed_close_attempts=2,
         close_stderr=hostile_stderr,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -907,7 +909,7 @@ def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
         failed_close_attempts=2,
         close_stderr=hostile_stderr,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     result = subprocess.run(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -947,7 +949,7 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
         close_stderr=hostile_stderr,
         forward_ready=forward_ready,
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env["LC_DRIVER_CLOSE_RETRY_SECONDS"] = "1"
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
     try:
@@ -983,7 +985,7 @@ def test_renew_loops_spawn_no_orphanable_sleeps() -> None:
     timeout. The subshells wait on anonymous FIFO slices instead.
     """
     body = (REPO / "scripts" / "lib" / "launcher_core.sh").read_text(encoding="utf-8")
-    for name in ("launcher_driver_renew_loop", "launcher_cursor_observer_renew_loop"):
+    for name in ("launcher_driver_renew_loop",):
         section = body.split(f"{name}() {{", 1)[1].split("\n}", 1)[0]
         subshell = section.split("(\n", 1)[1].rsplit(") &", 1)[0]
         assert not re.search(r"sleep[^\n|;]*&", subshell), f"{name} backgrounds a sleep"
@@ -1015,7 +1017,7 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
         ),
         encoding="utf-8",
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     process = subprocess.Popen(
         ["bash", os.fspath(launcher), "--epic", "devops"],
         cwd=launcher.parent,
@@ -1070,7 +1072,7 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         encoding="utf-8",
     )
     adapter.chmod(0o755)
-    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
+    subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30, env=launcher_environment())
     subprocess.run(
         [
             "git",
@@ -1088,8 +1090,9 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
         capture_output=True,
         check=True,
         timeout=30,
+        env=launcher_environment(),
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env["PYTHONPATH"] = os.fspath(REPO)
     env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
     store = SessionStreamStore(SessionStreamDatabase(root / ".agent/session-streams/v1/session-streams.sqlite3"))
@@ -1132,8 +1135,8 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     store.open_session(
         stream_id=expired_stream,
         holder=LeaseHolder(
-            agent="grok",
-            harness="grok-tui",
+            agent="claude",
+            harness="claude-code",
             instance_id="expired-dead-holder",
             process_id=999_999_009,
         ),
@@ -1161,51 +1164,8 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     assert supervisor.close_driver(role=LaunchRole.DRIVER, lease=rerouted) == "closed"
 
 
-def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> None:
-    home = tmp_path / "home"
-    kimi_secret = "kimi-secret-must-not-appear"
-    kimi = run_launcher(
-        "start-kimi.sh",
-        "--harness",
-        "claude-code",
-        "--model",
-        "k3",
-        env={"HOME": str(home), "KIMICC_AUTH_TOKEN": kimi_secret},
-    )
-    assert kimi.returncode == 2, kimi.stdout
-    assert "is retired in the model catalog" in kimi.stderr
-    assert kimi_secret not in kimi.stdout + kimi.stderr
-    assert "would exec" not in kimi.stdout
-
-    glm_secret = "glm-secret-must-not-appear"
-    glm = run_launcher(
-        "start-glmcc.sh",
-        env={"HOME": str(home), "ZAI_API_KEY": glm_secret},
-    )
-    assert glm.returncode == 2, glm.stderr
-    assert "is retired in the model catalog" in glm.stderr
-    assert glm_secret not in glm.stdout + glm.stderr
-
-    unsupported = run_launcher("start-glm.sh", "--harness", "native")
-    assert unsupported.returncode == 2
-    assert "is retired in the model catalog" in unsupported.stderr
-
-
-def test_kimi_never_uses_ambient_anthropic_token(tmp_path: Path) -> None:
-    foreign = "anthropic-secret-must-not-appear"
-    result = run_launcher(
-        "start-kimi.sh",
-        "--harness",
-        "claude-code",
-        env={"HOME": str(tmp_path / "home"), "ANTHROPIC_AUTH_TOKEN": foreign},
-    )
-    assert result.returncode == 2, result.stdout
-    assert "is retired in the model catalog" in result.stderr
-    assert foreign not in result.stdout + result.stderr
-
-
 def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) -> None:
-    """A linked worktree has no own .venv; observer heartbeat and lease close must
+    """A linked worktree has no own .venv; lease close must
     run the durable helper root's interpreter (#F2, prompt audit r3)."""
     session_root = tmp_path / "worktree"
     session_root.mkdir()  # deliberately no session_root/.venv
@@ -1220,7 +1180,7 @@ def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) 
     stub.chmod(0o755)
     script = f"""
 set -euo pipefail
-LC_PROVIDER=cursor
+LC_PROVIDER=claude
 LC_MODE=driver
 LC_DRY_RUN=0
 LC_EPIC=devops
@@ -1228,13 +1188,11 @@ LC_ROOT={session_root}
 LC_SESSION_ROOT={session_root}
 LC_DURABLE_HELPER_ROOT={helper_root}
 source {REPO / "scripts" / "lib" / "launcher_core.sh"}
-launcher_cursor_observer_presence
 launcher_close_driver_lease
 """
-    result = subprocess.run(["bash", "-c", script], text=True, capture_output=True, check=False, timeout=30)
+    result = subprocess.run(["bash", "-c", script], text=True, capture_output=True, check=False, timeout=30, env=launcher_environment())
     assert result.returncode == 0, result.stderr
     body = log.read_text(encoding="utf-8")
-    assert "-m\nscripts.orchestration.observer_heartbeat\n" in body
     assert "-m\nscripts.session_supervisor\nclose\n--role\ndriver\n" in body
 
 
@@ -1280,7 +1238,7 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     )
     result = subprocess.run(
         ["bash", "-c", script, "bash", str(REPO / "scripts/lib/fleet_comms_cold_start.sh")],
-        env={**os.environ, "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
+        env={**launcher_environment(), "FLEET_COMMS_PLANE_MODE": "authority", "PROJECT_DIR": str(REPO), "LC_ROOT": str(REPO)},
         capture_output=True,
         text=True,
         check=False,
@@ -1291,12 +1249,17 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     assert default == lane
     assert "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " in lane
     assert cto == lane.replace("load skill drive-epic", "load skill cto")
-
-
-def test_compat_kimicc_rejects_harness_override() -> None:
-    result = run_launcher("start-kimicc.sh", "--harness", "kimi-code")
-    assert result.returncode == 2
-    assert "always uses Claude Code" in result.stderr
+    # #12671: the closeout sentence names the proof that still exists.
+    closeout = (
+        "Closeout: use the task-prescribed interpreter with "
+        "`-m scripts.orchestration.merge_closeout <N> --apply`; "
+        "the cleanup proof is that command exiting 0 after the worker's task has settled "
+        "(its worktree removed by the dispatcher). "
+    )
+    assert closeout in lane
+    assert closeout in cto
+    assert "common-reaper" not in result.stdout
+    assert "post-task-reaper" not in result.stdout
 
 
 @pytest.mark.rules_core_absent
@@ -1353,7 +1316,7 @@ SECONDS=0
 sleep() {{ printf 'delay=%s\n' "$1"; SECONDS=$((SECONDS + $1)); }}
 launcher_close_driver_lease
 """
-    result = subprocess.run(["bash", "-c", script], cwd=REPO, capture_output=True, text=True, timeout=10)
+    result = subprocess.run(["bash", "-c", script], cwd=REPO, capture_output=True, text=True, timeout=10, env=launcher_environment())
     assert result.returncode == (0 if recover else 1), result.stderr
     delays = [int(line.split("=")[1]) for line in result.stdout.splitlines()]
     assert delays[:6] == [1, 2, 4, 8, 16, 30]
@@ -1399,7 +1362,7 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
         capture_output=True,
         text=True,
         timeout=10,
-        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        env=launcher_environment(),
     )
     # Even 75 without a delivery is not a valid prepared wake.
     assert result.returncode == (0 if watcher_exit == 76 else 1), result.stdout + result.stderr
@@ -1430,7 +1393,7 @@ fi
 """
         + rest
     )
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env = launcher_environment()
     env.update(SESSION_STREAM_RENEW_INTERVAL_SECONDS="1", SESSION_STREAM_RENEW_JITTER_SECONDS="0")
     process = subprocess.Popen(
         ["bash", str(launcher), "--epic", "devops"],

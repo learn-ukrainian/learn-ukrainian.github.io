@@ -1,7 +1,7 @@
 """Tests for LLM QG terminal/warning dim split (PR-A, 2026-05-23)."""
 
 from scripts.build import linear_pipeline
-from scripts.common.thresholds import (
+from scripts.curriculum.quality.thresholds import (
     QG_DIMS,
     aggregate_review,
 )

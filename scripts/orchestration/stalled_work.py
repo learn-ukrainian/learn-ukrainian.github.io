@@ -29,6 +29,12 @@ from scripts.orchestration.task_record_store import iter_task_records, read_task
 from scripts.orchestration.validate_fleet_taxonomy import ASSIGNMENTS_PATH, TAXONOMY_PATH, _load_yaml
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
+
 UNPUSHED_STATUSES = frozenset({"needs_finalize", "failed", "timeout", "timed_out", "timed-out"})
 TERMINAL = RELEASED_TASK_STATUSES | UNPUSHED_STATUSES
 MAX_AGE_DAYS = 14
@@ -329,10 +335,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Report committed dispatch work stalled before landing.\nUse for supervision, never for branch or task-record repair.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.orchestration.stalled_work stalled
-  .venv/bin/python -m scripts.orchestration.stalled_work stalled --route
-  .venv/bin/python -m scripts.orchestration.stalled_work stalled --tick
+        epilog=f"""Examples:
+  .venv/bin/python -m {_MODULE} stalled
+  .venv/bin/python -m {_MODULE} stalled --route
+  .venv/bin/python -m {_MODULE} stalled --tick
 Outputs: JSON on stdout; --route enqueues Fleet requests; --tick writes cadence state.
 Fresh Git scan refs are fetched; no task records or dispatch branches are written.
 Exit codes: 0 complete or cadence skip; 1 incomplete evidence; 2 invalid usage/config.

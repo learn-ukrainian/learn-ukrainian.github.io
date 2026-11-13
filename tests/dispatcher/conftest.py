@@ -50,6 +50,27 @@ def end_detached_dispatcher_workers(request: pytest.FixtureRequest, tmp_path: Pa
 
 
 @pytest.fixture(autouse=True)
+def agy_dispatch_guards(monkeypatch):
+    """Record AGY guard provisioning only for in-process builds outside ``.worktrees/dispatch``.
+
+    Those builds use disposable checkouts, where provisioning refuses. A build in a dispatch
+    worktree, and every subprocess ``sandbox`` dispatch, runs the real provisioning.
+    """
+    from scripts.agent_runtime import agy_hook_config
+
+    real, calls = agy_hook_config.require_dispatch_guards, []
+
+    def provision(worktree, home):
+        if "/.worktrees/dispatch/" in Path(worktree).absolute().as_posix() + "/":
+            return real(worktree, home)
+        calls.append(worktree)
+        return None
+
+    monkeypatch.setattr(agy_hook_config, "require_dispatch_guards", provision)
+    return calls
+
+
+@pytest.fixture(autouse=True)
 def claude_doctor(tmp_path_factory, monkeypatch):
     """A read-only Claude dispatch asks ``claude doctor`` for server-managed settings; answer as a consumer login.
 
@@ -74,6 +95,11 @@ def install_claude_doctor_stub(bin_dir, monkeypatch):
 
 
 SOURCE = Path(__file__).resolve().parents[2]
+# Model strings the sandbox stub provider (stub_provider.py) or a sandbox test dispatches with.
+STUB_MODELS = (
+    "blocked", "cancel", "capacity", "capacity-dirty", "crash", "dirty", "echo", "empty", "error", "escape", "fail",
+    "file", "governed", "pushed", "pushed-dirty", "pushed-nested", "requested-model-is-not-proof", "tree", "unpushed",
+)
 
 
 def run_git(repo, *args):
@@ -92,7 +118,7 @@ def sandbox(tmp_path, hermetic_monitor):
     run_git(repo, "config", "user.name", "Stub")
     for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
-    for relative in ("scripts/agent_runtime/bounded_advisory.py",
+    for relative in ("scripts/lib/project_interpreter.sh", "scripts/agent_runtime/bounded_advisory.py",
                      "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -131,8 +157,26 @@ def sandbox(tmp_path, hermetic_monitor):
             }
         )
     )
-    shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    # Dispatch admission refuses a model the catalog does not name (C-4967). The stub provider reads its
+    # behaviour from the model string, so this disposable copy alone names each stub behaviour as an
+    # exact alias of the model the sandbox's --agent sol runs.
+    catalog = yaml.safe_load((SOURCE / "scripts/config/model_catalog.yaml").read_text())
+    catalog["models"]["gpt-6.1-sol"].setdefault("aliases", []).extend(STUB_MODELS)
+    (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
     shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
+    # This checkout is the product checkout of the copied machinery (product_root, C-4746): it
+    # carries the product marker, and the product files the dispatcher reads come from it, with
+    # the review hooks module the hooks file names.
+    marker = repo / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("levels: {}\n")
+    (repo / "scripts/curriculum").mkdir()
+    for name in ("review_hooks.v1.json", "review_attempt_hooks.py", "admission_policy.v1.json"):
+        shutil.copy(SOURCE / "scripts/curriculum" / name, repo / "scripts/curriculum")
+    # A workspace-write AGY dispatch provisions both workspace guards from the product checkout.
+    for relative in ("agents_extensions/agy/hooks.json", "agents_extensions/shared/hooks/guard-primary-checkout-write.py"):
+        (repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(SOURCE / relative, repo / relative)
     schema_dir = repo / "schemas"
     schema_dir.mkdir()
     shutil.copy(SOURCE / "schemas/code-review-findings.v1.schema.json", schema_dir)
@@ -148,6 +192,10 @@ def sandbox(tmp_path, hermetic_monitor):
     # manager and starts every stub worker in a real ``lu-worker-*`` scope.
     env = {**os.environ, "LU_TASKS_DIR": str(tasks), "LU_DISPATCH_ISOLATION": "fallback"}
     env.pop("PYTHONPATH", None)
+    # The sandbox is another checkout: the product and primary roots this test process named for
+    # its own checkout (scripts/__init__.py) are not the sandbox's configuration.
+    for name in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"):
+        env.pop(name, None)
 
     def cli(*args, expected=0, stdin=None):
         result = subprocess.run(

@@ -15,8 +15,10 @@ from scripts.dispatcher.types import TaskSpec
 from scripts.review.model_catalog import (
     advisory_role_policy,
     canonical_model_id,
+    is_cursor_auto_selector,
     load_model_catalog,
     retired_model_refusal,
+    unknown_model_refusal,
 )
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
@@ -126,11 +128,74 @@ def check_trial_shadow(agent: str, model: str, record: dict) -> dict:
     return {"trial_label": "trial", "trial_qualified_nonce": qualified["run_nonce"]}
 
 
+def execution_identity(agent: str, model: str, catalog: dict | None = None) -> str | None:
+    """The catalog id a dispatched ``--model`` runs, after native Claude alias normalization.
+
+    A native alias (``opus``, ``sonnet[1m]``) runs its family's newest catalog model. None means
+    the string names no catalog model.
+    """
+    alias = model.strip().casefold().split("[", 1)[0]
+    if agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
+        from scripts.agent_runtime.model_pause import _newest_claude
+
+        return _newest_claude(alias)
+    return canonical_model_id(model, catalog)
+
+
 def check_model_admission(agent: str, model: str, mode: str, options: dict, prompt: bytes) -> None:
-    """Keep the temporary reviewer exception closed at admission and again at spawn."""
+    """Refuse an unknown model, a reviewer without a review role, and keep the temporary reviewer exception closed.
+
+    An unknown explicit pin is refused before any model-specific exemption, so it can never run
+    under another model's identity. Cursor's ``auto`` selector names no model and stays admitted.
+    A review-typed request needs a catalog review role (#9583) before any worktree or provider
+    starts; the verdict recorder's later refusal would only discard a run that already happened.
+    """
+    from scripts.agent_runtime.model_pause import dispatch_roles
+    from scripts.review.model_catalog import (
+        CURSOR_APPROVED_WIRE_PINS,
+        CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+        CURSOR_NO_APPROVED_PIN_CODE,
+        REVIEW_ACTIVITY,
+        activity_role_refusal,
+        apply_cursor_model_pins,
+        cursor_pinned_models,
+    )
+
     catalog = load_model_catalog()
-    identity = canonical_model_id(model, catalog)
-    if not catalog["models"].get(identity, {}).get("red_team_only"):
+    # C-5307 restores an explicit review pin, not Cursor Auto or other catalog ids.
+    if agent == "cursor" and not (cursor_pinned_models(catalog) or CURSOR_APPROVED_WIRE_PINS):
+        raise ValueError(
+            f"there is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
+    if agent == "cursor":
+        if is_cursor_auto_selector(model):
+            raise ValueError(
+                f"Cursor dispatch requires an exact approved wire pin ({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE})"
+            )
+        apply_cursor_model_pins(model, catalog)
+    identity = execution_identity(agent, model, catalog)
+    if identity is None:
+        if agent == "cursor" and is_cursor_auto_selector(model):
+            return
+        raise ValueError(unknown_model_refusal(model))
+    if agent == "agy":
+        from scripts.dispatcher.providers.agy import _agy_model_ids, transport_model
+
+        # Generic effort suffixes can resolve to a catalog model that AGY cannot attest.
+        listed = _agy_model_ids()
+        if transport_model(model) not in listed:
+            names = sorted(name for name in listed if canonical_model_id(name, catalog) == identity)
+            raise ValueError(f"model {model!r} is not an AGY selector the model catalog lists for "
+                             f"{identity}; listed: {', '.join(names) or 'none'}")
+    if not catalog["models"][identity].get("red_team_only"):
+        if refusal := retired_model_refusal(model, catalog):
+            raise ValueError(refusal)
+        # Review typing is the one dispatch role admission infers: every review flag, --risk,
+        # --review-mode, --language-lane, the subject selectors and a review research role.
+        reviewed = "review" in dispatch_roles(options)
+        if reviewed and (refusal := activity_role_refusal(identity, REVIEW_ACTIVITY, catalog)):
+            raise ValueError(refusal)
         return
     context = {key: options.get(key) for key in ("review_mode", "review_profile", "requested_role")}
     context.update(author_model=options.get("review_author_model"),
@@ -161,14 +226,7 @@ def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:
 def check_bounded_advisory(args, model: str, repo: Path, prompt: bytes) -> dict:
     """Apply the legacy bounded-worker policy before creating a worktree or starting a provider."""
     try:
-        alias = model.strip().casefold().split("[", 1)[0]
-        if args.agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
-            from scripts.agent_runtime.model_pause import _newest_claude
-
-            model = _newest_claude(alias)
-            if model is None:
-                raise ValueError("cannot resolve native Claude model alias for bounded admission")
-        model = canonical_model_id(model)
+        model = execution_identity(args.agent, model)
         requirement = advisory.bounded_requirement(
             model, mode=args.mode, task_family=args.research_task_family, review_profile=args.review_profile,
             owned_paths=[*args.owned_path, *args.research_owned_path], repo_root=repo,
@@ -356,7 +414,18 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
                 raise ValueError(str(exc)) from None
         return
     reviewer = _model_families().get(reviewer_model)
-    if not reviewer or reviewer in facts.excluded_families:
+    scope = facts
+    if facts.mixed_family and args.review_profile in {"code", "infra"}:
+        try:
+            scope = facts.reviewer_scope(reviewer)
+        except RecordError as exc:
+            raise ValueError(f"review independence: {exc}") from None
+        from scripts.review.reviewer_resolver import review_task_id_comparison_keys
+
+        reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
+        if any(reviewer_ids & review_task_id_comparison_keys(task) for task in scope.author_task_ids):
+            raise ValueError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if not reviewer or reviewer in scope.excluded_families:
         raise ValueError(
             f"review independence: reviewer family {reviewer or 'unknown'} is not outside the branch's author "
             f"families {sorted(facts.excluded_families)}; choose a reviewer from another family"
@@ -364,21 +433,13 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
 
 
 def check_review_budget(args, repository: dict, head_sha: str) -> None:
-    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098).
-
-    A p2 fix-verification round is spent here, at dispatch, before its reviewer runs (#12548).
-    """
+    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098)."""
     from scripts.orchestration.integration_sweep import SweepError
     from scripts.review.record_cf_verdict import RecordError, dispatch_budget_check
 
     try:
-        decision = dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
-                                         task_root=store.tasks_dir())
-        p2_round = ((decision or {}).get("budget_grant") or {}).get("p2_fix_round")
-        if p2_round is not None:
-            from scripts.review.budget_grant import record_p2_round
-
-            record_p2_round(store.tasks_dir(), p2_round)
+        dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
+                              task_root=store.tasks_dir())
     except (RecordError, SweepError, OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review dispatch refused: {exc}") from None
 

@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
-from tests.launcher_sandbox import copy_slot_registry
+from tests.launcher_sandbox import copy_slot_registry, launcher_environment
 from tests.rules_core_view import install_loader_bypass
 from tests.test_launcher_driver_scope import install_scope_sandbox
 
@@ -39,7 +39,7 @@ def _write_executable(path: Path, body: str) -> None:
 
 
 def _run(command: list[str], cwd: Path, *, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
-    run_env = (env if env is not None else os.environ).copy()
+    run_env = (env if env is not None else launcher_environment()).copy()
     for name in (
         "GIT_ALTERNATE_OBJECT_DIRECTORIES",
         "GIT_COMMON_DIR",
@@ -68,6 +68,8 @@ def _prepare_repo(tmp_path: Path, *, separate_git_dir: bool = False) -> tuple[Pa
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    # The fixture has no package.json; the deploy gate is not under test here.
+    (primary / "scripts/lib/deploy_extensions.sh").write_text("deploy_agent_extensions() { :; }\n", encoding="utf-8")
     install_scope_sandbox(primary)
     install_loader_bypass(primary)
     # Driver launches check their handoff slot against the real roster (#8303).
@@ -212,7 +214,7 @@ def _launch(
 """,
     )
 
-    env = os.environ.copy()
+    env = launcher_environment()
     for name in tuple(env):
         if name.startswith("LEARN_UKRAINIAN_") or name in {
             "CODEX_CANONICAL_REPO_ROOT",
@@ -227,7 +229,7 @@ def _launch(
     env.update(
         {
             "HOME": os.fspath(tmp_path / "home"),
-            "PATH": f"{home_bin}:{os.environ.get('PATH', '')}",
+            "PATH": f"{home_bin}:{os.defpath}",
             "CODEX_LAUNCHER_TEST_CAPTURE": os.fspath(capture),
             "CODEX_LAUNCHER_TEST_ROLLOVER": rollover,
         }
@@ -363,7 +365,7 @@ def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
         home_bin / "codex",
         f"#!/usr/bin/env bash\ntouch {os.fspath(started)!r}\n",
     )
-    env = os.environ.copy()
+    env = launcher_environment()
     env.update({"HOME": os.fspath(tmp_path / "home")})
     for name in (
         "CODEX_CANONICAL_REPO_ROOT",
@@ -395,7 +397,7 @@ def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Pa
         expect_success=False,
     )
     assert result.returncode == 2
-    assert ("red-team" if model == "gpt-6-astra" else "is retired in the model catalog") in result.stderr
+    assert "is retired in the model catalog" in result.stderr
     assert model in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
@@ -454,7 +456,7 @@ def test_launcher_rejects_canonical_root_from_another_repository(
     unrelated.mkdir()
     assert _run(["git", "init", "-b", "main"], unrelated).returncode == 0
 
-    env = os.environ.copy()
+    env = launcher_environment()
     env["CODEX_CANONICAL_REPO_ROOT"] = os.fspath(unrelated)
     result = _run([os.fspath(linked / "start-codex.sh")], linked, env=env)
 
@@ -471,7 +473,7 @@ def test_launcher_refuses_a_resolved_primary_that_is_not_on_main(tmp_path: Path)
         tmp_path / "home" / ".local" / "bin" / "codex",
         f"#!/usr/bin/env bash\ntouch {os.fspath(started)!r}\n",
     )
-    env = os.environ.copy()
+    env = launcher_environment()
     env.update(
         {
             "HOME": os.fspath(tmp_path / "home"),

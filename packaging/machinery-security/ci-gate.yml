@@ -1,0 +1,915 @@
+# DRAFT for the public learn-ukrainian/machinery repository (machinery move
+# plan v1, section 4 steps 4 and 7). Install it there as
+# .github/workflows/ci-gate.yml before final history clearance. It is not a
+# check in this source repository.
+#
+# Bootstrap CI for the first push. Branch protection requires one check named
+# "CI Gate", and the merge queue ruleset waits for that check on merge groups,
+# so this workflow runs on pull_request and merge_group for main. Pins and their
+# upstream evidence are recorded in pins.txt beside this file; bump them
+# together there.
+#
+# - Jobs: Ruff over lu_machinery/ with the source repository's Ruff version and
+#   lint settings (the extracted tree has no Ruff configuration yet); compileall
+#   of lu_machinery on the pinned Python; actionlint (with a pinned ShellCheck) and zizmor (offline) over
+#   .github/workflows/; the TruffleHog secret scan and the Semgrep SAST scan.
+#   The secret-scan and sast jobs below are the only definition of each scan
+#   for the machinery repository.
+# - NOT in this bootstrap: importing lu_machinery and running its tests. Both
+#   need the step 8 packaging. Step 8 adds those jobs to `needs` of CI Gate and
+#   to the gate's expected job list in the same change.
+# - Every job counts its targets first and fails on zero, because the tools
+#   exit 0 on an empty or missing target. Each job prints what it inspected.
+# - CI Gate needs every other job, runs even when one of them fails, and passes
+#   only when every expected job reports `success`. A failed, cancelled or
+#   skipped job, a missing result or an unexpected job fails it, because GitHub
+#   counts a skipped required check as passing. There is no matrix, so each
+#   check name is the job name. A new job must be added to both `needs` and the
+#   gate's expected list; nothing else catches a job left out of both.
+# - Hosted runners only (ubuntu-24.04). Every tool is downloaded at a pinned
+#   version and checked against a pinned SHA-256 before it runs: release
+#   tarballs for actionlint and ShellCheck, hash-pinned PyPI wheels
+#   (pip --require-hashes --only-binary=:all:) for Ruff, zizmor and Semgrep.
+#   Install steps run from the job temp directory with isolated interpreters
+#   (python -I), so no Python module in the checkout is imported.
+# - Read-only contents permission (none for CI Gate), no kept checkout token,
+#   no secrets. Scanners and zizmor run under `env -i`, so no runner credential
+#   reaches them. zizmor runs offline: its online audits (impostor commits,
+#   known-vulnerable actions) need a token, and the action pins in pins.txt are
+#   checked against their upstream tags instead.
+# - Suppressions (.trufflehogignore, trufflehog:ignore, nosemgrep, noqa, Ruff
+#   and zizmor configuration) are repository content and are reviewed in the
+#   diff, like this workflow.
+name: CI Gate
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  merge_group:
+    branches: [main]
+    types: [checks_requested]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PYTHON_VERSION: "3.12.15"
+  RUFF_VERSION: "0.15.21"
+  ZIZMOR_VERSION: "1.31.1"
+  ACTIONLINT_VERSION: "1.7.12"
+  ACTIONLINT_LINUX_AMD64_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+  SHELLCHECK_VERSION: "0.11.0"
+  SHELLCHECK_LINUX_X86_64_SHA256: b7af85e41cc99489dcc21d66c6d5f3685138f06d34651e6d34b42ec6d54fe6f6
+  TRUFFLEHOG_VERSION: "3.99.0"
+  TRUFFLEHOG_LINUX_AMD64_SHA256: e35ae3fd1e4b7a0c1699d0fda1814282bf906d03379bd4337b092b3a84c6740b
+  SEMGREP_VERSION: "1.183.0"
+  SEMGREP_RULES_COMMIT: 16b9e6d45f10649f6a531ec4838ed9924372c3bc
+
+jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.15"
+
+      - name: Install Ruff (hash-pinned wheel)
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          venv="$RUNNER_TEMP/ruff-venv"
+          rm -rf "$venv"
+          python -I -m venv "$venv"
+          requirements="$RUNNER_TEMP/ruff-requirements.txt"
+          cat > "$requirements" <<'REQUIREMENTS'
+          ruff==0.15.21 \
+              --hash=sha256:bab0905d2f29e0d9fbc3c373ed23db0095edaa3f71f1f4f519ec15134d9e85c8
+          REQUIREMENTS
+          "$venv/bin/python" -I -m pip install --no-cache-dir --disable-pip-version-check \
+            --no-input --require-hashes --only-binary=:all: --requirement "$requirements"
+          reported="$("$venv/bin/ruff" --version)"
+          if [ "$reported" != "ruff ${RUFF_VERSION}" ]; then
+            echo "::error::Expected ruff ${RUFF_VERSION}, got: ${reported}"
+            exit 1
+          fi
+
+      - name: Ruff check lu_machinery/
+        run: |
+          set -euo pipefail
+          ruff="$RUNNER_TEMP/ruff-venv/bin/ruff"
+          if [ ! -d lu_machinery ]; then
+            echo "::error::lu_machinery/ is missing; nothing would be checked"
+            exit 1
+          fi
+          # Bootstrap lint settings: the source repository's pyproject.toml
+          # [tool.ruff] table with scripts/ renamed to lu_machinery/. A config
+          # file passed with --config applies to every file, its relative paths
+          # resolve from the working directory, and any repository config is
+          # ignored. Step 8 moves these settings into the machinery
+          # pyproject.toml and drops this file and the --config flag.
+          config="$RUNNER_TEMP/ruff-bootstrap.toml"
+          cat > "$config" <<'TOML'
+          line-length = 120
+          target-version = "py312"
+          src = [".", "lu_machinery"]
+          exclude = [".venv/", "node_modules/", "starlight/", "lu_machinery/oneoff/"]
+
+          [lint]
+          select = ["F", "E", "W", "I", "UP", "B", "SIM", "RUF", "PLC0415"]
+          ignore = ["RUF001", "RUF002", "RUF003", "E402", "E501", "E741"]
+
+          [lint.per-file-ignores]
+          "!lu_machinery/{api,project_api}/**.py" = ["PLC0415"]
+          "lu_machinery/api/*.py" = ["B008"]
+          "lu_machinery/project_api/*.py" = ["B008"]
+          TOML
+          python_files="$(find lu_machinery -type f -name '*.py' | wc -l)"
+          # The files Ruff itself selects, after the configured exclusions.
+          inspected="$("$ruff" check --no-cache --config "$config" --show-files lu_machinery | grep -c . || true)"
+          echo "Ruff inspects ${inspected} file(s); lu_machinery/ holds ${python_files} Python file(s)."
+          if [ "$python_files" -eq 0 ] || [ "$inspected" -eq 0 ]; then
+            echo "::error::Ruff would inspect no Python files in lu_machinery/"
+            exit 1
+          fi
+          "$ruff" check --no-cache --config "$config" --output-format=github lu_machinery
+
+  compileall:
+    name: Compile (Python 3.12.15)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.15"
+
+      - name: Compile lu_machinery
+        run: |
+          set -euo pipefail
+          reported="$(python -I -c 'import platform; print(platform.python_version())')"
+          if [ "$reported" != "$PYTHON_VERSION" ]; then
+            echo "::error::Expected Python ${PYTHON_VERSION}, got: ${reported}"
+            exit 1
+          fi
+          if [ ! -d lu_machinery ]; then
+            echo "::error::lu_machinery/ is missing; nothing would be compiled"
+            exit 1
+          fi
+          # compileall -q exits 0 on a missing or empty directory, so count first.
+          python_files="$(find lu_machinery -type f -name '*.py' | wc -l)"
+          if [ "$python_files" -eq 0 ]; then
+            echo "::error::lu_machinery/ holds no Python files; nothing would be compiled"
+            exit 1
+          fi
+          # Bytecode goes to the job temp directory, not the checkout, and its
+          # count proves compileall reached every file. The prefix mirrors each
+          # source's absolute directory and also receives the interpreter's own
+          # stdlib bytecode, so only the mirror of lu_machinery/ is counted.
+          prefix="$RUNNER_TEMP/pycache"
+          rm -rf "$prefix"
+          python -I -X pycache_prefix="$prefix" -m compileall -q lu_machinery
+          mirror="${prefix}${PWD}/lu_machinery"
+          if [ ! -d "$mirror" ]; then
+            echo "::error::compileall wrote no bytecode for lu_machinery/"
+            exit 1
+          fi
+          compiled="$(find "$mirror" -type f -name '*.pyc' | wc -l)"
+          echo "Compiled ${compiled} of ${python_files} Python file(s) with Python ${reported}."
+          if [ "$compiled" -ne "$python_files" ]; then
+            echo "::error::compileall produced ${compiled} bytecode file(s) for ${python_files} source file(s)"
+            exit 1
+          fi
+
+      - name: Remove bytecode
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/pycache"
+
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install actionlint and ShellCheck (pinned, checksum-verified)
+        run: |
+          set -euo pipefail
+          tool="$RUNNER_TEMP/actionlint"
+          rm -rf "$tool"
+          mkdir -p "$tool"
+          fetch() {
+            curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+              --retry 3 --output "$1" "$2"
+          }
+          tarball="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          fetch "$tool/$tarball" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/$tarball"
+          printf '%s  %s\n' "$ACTIONLINT_LINUX_AMD64_SHA256" "$tool/$tarball" | sha256sum --check --strict
+          tar -xzf "$tool/$tarball" -C "$tool" actionlint
+          sc_tarball="shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.gz"
+          fetch "$tool/$sc_tarball" \
+            "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/$sc_tarball"
+          printf '%s  %s\n' "$SHELLCHECK_LINUX_X86_64_SHA256" "$tool/$sc_tarball" | sha256sum --check --strict
+          tar -xzf "$tool/$sc_tarball" -C "$tool" --strip-components=1 "shellcheck-v${SHELLCHECK_VERSION}/shellcheck"
+          reported="$("$tool/actionlint" -version | head -n 1)"
+          if [ "$reported" != "$ACTIONLINT_VERSION" ]; then
+            echo "::error::Expected actionlint ${ACTIONLINT_VERSION}, got: ${reported}"
+            exit 1
+          fi
+          reported="$("$tool/shellcheck" --version | sed -n 's/^version: //p')"
+          if [ "$reported" != "$SHELLCHECK_VERSION" ]; then
+            echo "::error::Expected shellcheck ${SHELLCHECK_VERSION}, got: ${reported}"
+            exit 1
+          fi
+
+      - name: actionlint .github/workflows/
+        run: |
+          set -euo pipefail
+          tool="$RUNNER_TEMP/actionlint"
+          if [ ! -d .github/workflows ]; then
+            echo "::error::.github/workflows/ is missing; nothing would be linted"
+            exit 1
+          fi
+          mapfile -t files < <(find .github/workflows -maxdepth 1 -type f \
+            \( -name '*.yml' -o -name '*.yaml' \) | LC_ALL=C sort)
+          echo "actionlint inspects ${#files[@]} workflow file(s)."
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "::error::.github/workflows/ holds no workflow files"
+            exit 1
+          fi
+          printf '  %s\n' "${files[@]}"
+          # The pinned ShellCheck lints every run: script; pyflakes is disabled
+          # so the result never depends on what the runner image ships.
+          "$tool/actionlint" -shellcheck="$tool/shellcheck" -pyflakes= "${files[@]}"
+
+      - name: Remove tools
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/actionlint"
+
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.15"
+
+      - name: Install zizmor (hash-pinned wheel)
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          venv="$RUNNER_TEMP/zizmor-venv"
+          rm -rf "$venv"
+          python -I -m venv "$venv"
+          requirements="$RUNNER_TEMP/zizmor-requirements.txt"
+          cat > "$requirements" <<'REQUIREMENTS'
+          zizmor==1.31.1 \
+              --hash=sha256:58e878eb2dbd2c6183c105e1ac28c14f7dd1eca44a783f1fe2a69647d012c410
+          REQUIREMENTS
+          "$venv/bin/python" -I -m pip install --no-cache-dir --disable-pip-version-check \
+            --no-input --require-hashes --only-binary=:all: --requirement "$requirements"
+          reported="$("$venv/bin/zizmor" --version)"
+          if [ "$reported" != "zizmor ${ZIZMOR_VERSION}" ]; then
+            echo "::error::Expected zizmor ${ZIZMOR_VERSION}, got: ${reported}"
+            exit 1
+          fi
+
+      - name: zizmor .github/workflows/
+        run: |
+          set -euo pipefail
+          venv="$RUNNER_TEMP/zizmor-venv"
+          if [ ! -d .github/workflows ]; then
+            echo "::error::.github/workflows/ is missing; nothing would be audited"
+            exit 1
+          fi
+          mapfile -t files < <(find .github/workflows -maxdepth 1 -type f \
+            \( -name '*.yml' -o -name '*.yaml' \) | LC_ALL=C sort)
+          echo "zizmor audits ${#files[@]} workflow file(s) offline."
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "::error::.github/workflows/ holds no workflow files"
+            exit 1
+          fi
+          printf '  %s\n' "${files[@]}"
+          work="$RUNNER_TEMP/zizmor"
+          rm -rf "$work"
+          mkdir -p "$work/home"
+          # Any finding (exit 10 and above) or tool error fails the job.
+          env -i PATH=/usr/bin:/bin HOME="$work/home" \
+            "$venv/bin/zizmor" --offline --no-progress --format=github "${files[@]}"
+
+      - name: Remove tools
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/zizmor" "$RUNNER_TEMP/zizmor-venv" "$RUNNER_TEMP/zizmor-requirements.txt"
+
+  # Blocking secret scan with the pinned TruffleHog CLI (pins.txt).
+  # - pull_request and merge_group scan the commits between base and head;
+  #   workflow_dispatch scans the full history of the dispatched ref.
+  # - Verified, unknown and unverified results are reported (pins.txt records
+  #   why). Findings fail the job (exit 183), and so do scanner errors
+  #   (--fail-on-scan-errors), any other non-zero exit, unparsable output and
+  #   results arriving with a zero exit.
+  # - The CLI is the checksum-verified release binary, not a container, run
+  #   with the command line of the pinned upstream action script (pins.txt).
+  # - The job also fails when the range holds no commit, or when the root
+  #   .trufflehogignore is missing or leaves no Python or workflow file in scope.
+  secret-scan:
+    name: Secret scan (TruffleHog)
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && 120 || 20 }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # For the exclusion coverage check only; the scanner is a Go binary.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.15"
+
+      - name: Install TruffleHog (pinned, checksum-verified)
+        run: |
+          set -euo pipefail
+          tool="$RUNNER_TEMP/trufflehog"
+          rm -rf "$tool"
+          mkdir -p "$tool"
+          tarball="trufflehog_${TRUFFLEHOG_VERSION}_linux_amd64.tar.gz"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            --retry 3 --output "$tool/$tarball" \
+            "https://github.com/trufflesecurity/trufflehog/releases/download/v${TRUFFLEHOG_VERSION}/$tarball"
+          printf '%s  %s\n' "$TRUFFLEHOG_LINUX_AMD64_SHA256" "$tool/$tarball" | sha256sum --check --strict
+          tar -xzf "$tool/$tarball" -C "$tool" trufflehog
+          reported="$("$tool/trufflehog" --version 2>&1)"
+          if [ "$reported" != "trufflehog ${TRUFFLEHOG_VERSION}" ]; then
+            echo "::error::Expected trufflehog ${TRUFFLEHOG_VERSION}, got: ${reported}"
+            exit 1
+          fi
+
+      - name: Scan for secrets
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          MQ_BASE: ${{ github.event.merge_group.base_sha }}
+          MQ_HEAD: ${{ github.event.merge_group.head_sha }}
+        run: |
+          set -euo pipefail
+          case "$EVENT_NAME" in
+            pull_request) base="$PR_BASE"; head="$PR_HEAD" ;;
+            merge_group) base="$MQ_BASE"; head="$MQ_HEAD" ;;
+            workflow_dispatch) base=""; head="$(git rev-parse HEAD)" ;;
+            *) echo "::error::Unsupported event ${EVENT_NAME}"; exit 1 ;;
+          esac
+          for rev in $base $head; do
+            if ! git cat-file -e "${rev}^{commit}"; then
+              echo "::error::Commit ${rev} is not in the checkout; nothing was scanned"
+              exit 1
+            fi
+          done
+          if [ -n "$base" ] && [ "$base" = "$head" ]; then
+            echo "::error::Base and head are the same commit; nothing would be scanned"
+            exit 1
+          fi
+          if [ -n "$base" ]; then
+            commits="$(git rev-list --count "${base}..${head}")"
+          else
+            commits="$(git rev-list --count "$head")"
+          fi
+          echo "Scanning ${commits} commit(s) up to ${head}."
+          if [ "$commits" -eq 0 ]; then
+            echo "::error::No commits between base and head; nothing would be scanned"
+            exit 1
+          fi
+
+          work="$RUNNER_TEMP/secret-scan"
+          rm -rf "$work"
+          mkdir -p "$work/home" "$work/tmp"
+          findings="$work/findings.jsonl"
+
+          # Exclusion coverage. TruffleHog reports no per-file coverage, so the
+          # exclusions are applied here to the head tree the way TruffleHog
+          # 3.99.0 applies them (pkg/common/filter.go and pkg/sources/git/git.go:
+          # comment and blank lines are skipped, every other line is a regular
+          # expression searched in the repository-relative path, and a match
+          # skips the file). The job fails unless Python and workflow files
+          # remain in scope. Patterns are limited to a syntax subset that
+          # Python's re (ASCII mode) and Go's regexp read the same way; any
+          # other pattern fails the job. Only counts and line numbers are
+          # printed. Files changed in the scanned range are counted for the
+          # log only: a pull request that changes only documentation, or only
+          # deletes files, is still scanned and can pass.
+          ignore="${GITHUB_WORKSPACE}/.trufflehogignore"
+          if [ ! -f "$ignore" ]; then
+            echo "::error::.trufflehogignore is missing at the repository root; the scan cannot run"
+            exit 1
+          fi
+          git ls-tree -r -z --name-only "$head" > "$work/head-paths"
+          if [ -n "$base" ]; then
+            git diff -z --name-only --no-renames --diff-filter=d "$base" "$head" > "$work/range-paths"
+          else
+            : > "$work/range-paths"
+          fi
+          python -I - "$ignore" "$work/head-paths" "$work/range-paths" "${base:+range}" <<'PY'
+          import re
+          import sys
+
+          # Escapes both engines read alike; groups with flags, POSIX classes,
+          # {,n} (a quantifier in Python, a literal in Go), \s and \S (Python's
+          # ASCII \s also matches \v, Go's does not) and non-ASCII text are
+          # refused.
+          ESCAPES = set(".^$*+?()[]{}|\\/-dDwW")
+          # Go's \s is [\t\n\f\r ]; Go's line scanner drops one trailing \r.
+          SKIP = re.compile(r"[\t\n\f\r ]*(#|$)")
+
+          def supported(line):
+              if any(not " " <= c <= "~" for c in line) or "(?" in line or "[:" in line or "{," in line:
+                  return False
+              i = 0
+              while i < len(line):
+                  if line[i] == "\\":
+                      if i + 1 == len(line) or line[i + 1] not in ESCAPES:
+                          return False
+                      i += 2
+                  else:
+                      i += 1
+              return True
+
+          rules = []
+          with open(sys.argv[1], encoding="utf-8") as stream:
+              lines = stream.read().split("\n")
+          for number, line in enumerate(lines, 1):
+              line = line.removesuffix("\r")
+              if SKIP.match(line):
+                  continue
+              rule = None
+              if supported(line):
+                  try:
+                      rule = re.compile(line, re.ASCII)
+                  except re.error:
+                      rule = None
+              if rule is None:
+                  print(f"::error::.trufflehogignore line {number} uses regular expression syntax this check does not support")
+                  sys.exit(1)
+              rules.append(rule)
+
+          def paths(name):
+              with open(name, "rb") as stream:
+                  return [p.decode("utf-8", "surrogateescape") for p in stream.read().split(b"\0") if p]
+
+          def kept(items):
+              return [p for p in items if not any(rule.search(p) for rule in rules)]
+
+          tree = paths(sys.argv[2])
+          python = [p for p in tree if p.endswith(".py")]
+          workflows = [p for p in tree if re.fullmatch(r"\.github/workflows/[^/]+\.ya?ml", p)]
+          kept_python, kept_workflows = kept(python), kept(workflows)
+          print(f"Exclusions: {len(rules)} pattern(s). In scope at head: {len(kept_python)} of"
+                f" {len(python)} Python file(s), {len(kept_workflows)} of {len(workflows)} workflow file(s).")
+          if sys.argv[4]:
+              changed = paths(sys.argv[3])
+              print(f"Files added or modified in the range: {len(kept(changed))} of {len(changed)} in scope.")
+          if not kept_python or not kept_workflows:
+              print("::error::The exclusions leave no Python or no workflow files in scope; failing closed")
+              sys.exit(1)
+          PY
+          args=(
+            git "file://${GITHUB_WORKSPACE}"
+            --branch "$head"
+            --fail --no-update --json
+            "--results=verified,unknown,unverified"
+            --exclude-detectors=Lob
+            --fail-on-scan-errors
+            --exclude-paths="${GITHUB_WORKSPACE}/.trufflehogignore"
+          )
+          if [ -n "$base" ]; then
+            args+=(--since-commit "$base")
+          fi
+
+          diagnostics="$work/stderr.log"
+          # Scanner stderr can quote repository content (an ignore-file entry,
+          # for example), so it goes to a file that is never printed. Only its
+          # line count and the numeric fields of the final summary reach the log.
+          set +e
+          env -i PATH=/usr/bin:/bin HOME="$work/home" TMPDIR="$work/tmp" \
+            "$RUNNER_TEMP/trufflehog/trufflehog" "${args[@]}" > "$findings" 2> "$diagnostics"
+          rc=$?
+          set -e
+          echo "TruffleHog exited ${rc}; $(wc -l < "$diagnostics") stderr line(s) withheld from this log."
+          jq -R -r 'fromjson? | select(type == "object" and .msg == "finished scanning")
+            | [("chunks", "bytes", "verified_secrets", "unverified_secrets") as $k
+               | "\($k)=\(.[$k] | if type == "number" then tostring else "?" end)"]
+            | "Scan summary: " + join(" ")' "$diagnostics" 2> /dev/null || true
+
+          # jq's own error text can quote the input, so it is discarded.
+          if ! count="$(jq -s 'length' "$findings" 2> /dev/null)"; then
+            echo "::error::TruffleHog output is not valid JSON (exit ${rc}); failing closed"
+            exit 1
+          fi
+          if [ "$count" -gt 0 ]; then
+            echo "::error::TruffleHog reported ${count} finding(s). Secret values are redacted from this log."
+            # Location fields only, each a string, number or boolean; Raw, RawV2,
+            # Redacted and ExtraData never reach the log.
+            jq -r 'def s: if type == "string" or type == "number" or type == "boolean" then tostring else "?" end;
+              .SourceMetadata.Data.Git as $git
+              | "::error::TruffleHog \(.DetectorName | s) verified=\(.Verified | s)"
+              + " \($git.file | s):\($git.line | s) commit=\($git.commit | s)"' \
+              "$findings" 2> /dev/null || echo "::error::Finding locations could not be summarized"
+          fi
+          case "$rc" in
+            0)
+              if [ "$count" -ne 0 ]; then
+                echo "::error::Findings were reported with exit 0; failing closed"
+                exit 1
+              fi
+              echo "No secrets found."
+              ;;
+            183)
+              exit 1
+              ;;
+            *)
+              echo "::error::TruffleHog exited ${rc} (scan error); failing closed"
+              exit 1
+              ;;
+          esac
+
+      - name: Remove scan results
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/secret-scan" "$RUNNER_TEMP/trufflehog"
+
+  # Blocking SAST with the pinned Semgrep CE and the semgrep/semgrep-rules
+  # checkout at the pinned commit (pins.txt).
+  # - Rules come only from local directories of that checkout. No registry name
+  #   (p/..., r/..., auto) is used, so nothing is fetched from semgrep.dev and
+  #   metrics stay off. A missing checkout, a commit mismatch or a missing or
+  #   empty rule directory fails the job.
+  # - Findings fail the job (--error, exit 1), and so do scanner errors: any
+  #   other non-zero exit, warning-level errors (--strict), errors in the JSON
+  #   output, unparsable output, results arriving with a zero exit, and a scan
+  #   that covered no Python file.
+  # - Exclusions: Semgrep's built-in ignore list applies while the repository
+  #   has no .semgrepignore (it skips test/, tests/, vendor/, build/, dist/ and
+  #   similar), and files over 1 MB are skipped (Semgrep's default
+  #   --max-target-bytes). prepublication-gate.sh allows exactly these two skip
+  #   reasons and refuses a .semgrepignore anywhere in the history.
+  # - The scanner runs with PYTHONSAFEPATH=1, so no Python module in the
+  #   checkout is imported. Suppressions (.semgrepignore, nosemgrep comments)
+  #   are repository content and are reviewed in the diff, like this workflow.
+  sast:
+    name: SAST (Semgrep CE)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12.14"
+
+      - name: Install Semgrep (hash-pinned wheels)
+        run: |
+          set -euo pipefail
+          # Run from the job temp directory with isolated interpreters (-I), so a
+          # venv.py, pip.py or other module in the checkout is never imported.
+          cd "$RUNNER_TEMP"
+          venv="$RUNNER_TEMP/semgrep-venv"
+          rm -rf "$venv"
+          python -I -m venv "$venv"
+          requirements="$RUNNER_TEMP/semgrep-requirements.txt"
+          cat > "$requirements" <<'REQUIREMENTS'
+          annotated-types==0.8.0 \
+              --hash=sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0
+          anyio==4.16.0 \
+              --hash=sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026
+          attrs==26.1.0 \
+              --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
+          boltons==21.0.0 \
+              --hash=sha256:b9bb7b58b2b420bbe11a6025fdef6d3e5edc9f76a42fb467afe7ca212ef9948b
+          bracex==3.2.1 \
+              --hash=sha256:e8622d46b60ef6062b4091033f97a304e1b205e70c0285743c5038b73886a47e
+          certifi==2026.10.23 \
+              --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
+          cffi==2.1.1 \
+              --hash=sha256:c1453022f490d2459a11819d83ad1d586e9ff65a12ac3e705ffebd46d3685dcf
+          charset-normalizer==3.5.2 \
+              --hash=sha256:3d31298449090ab8d47b7b1b2a555ff73cac7ed438a08b7ac160980c7ebed649 \
+              --hash=sha256:1c50fe28bbc2ced33386f298650d91218076c05420e6cbd790b913adc41659e7 \
+              --hash=sha256:b6b751274acb69d77b3323d6b7dbaa3c7fdfc1eb829b7eb61d262f32e1af9685
+          click==8.4.2 \
+              --hash=sha256:e6f9f66136c816745b9d65817da91d61d957fb16e02e4dcd0552553c5a197b76
+          click-option-group==0.5.9 \
+              --hash=sha256:ad2599248bd373e2e19bec5407967c3eec1d0d4fc4a5e77b08a0481e75991080
+          colorama==0.4.6 \
+              --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6
+          cryptography==50.0.2 \
+              --hash=sha256:630ebfea3bf689d075f82316324ff7433dc447fe6bc1bfc76524b74b4a9567d2 \
+              --hash=sha256:4061c0079120205fb760c58acab6443e217307dcf05e3702cf970e0689972856 \
+              --hash=sha256:9dab55f57c74c3cad24c323bacbbd04be4705ba6eb0d92e920b1fc4837ed5079 \
+              --hash=sha256:ee247f5c245c9a2fe7c8e2214e295918838e44e00a45a6718451e4004219e767 \
+              --hash=sha256:f21e8a22c8605750c7af886bab299a363721264061b4ac0a30efb73cfd58efc5 \
+              --hash=sha256:1981f1db4630889b9ef7803fadef12b056f428cb6b85c27ba57b774793b6093c
+          exceptiongroup==1.2.2 \
+              --hash=sha256:3111b9d131c238bec2f8f516e123e14ba243563fb135d3fe885990585aa7795b
+          face==26.0.1 \
+              --hash=sha256:ab0a83c37c9789dce658a67a9a80eafaa113c9ec37c5a9d950ff5480542a062d
+          glom==25.12.0 \
+              --hash=sha256:b9f21e77f71a6576a43864e85066b8cc3f0f778d0d50961563f8981377a6dcb1
+          googleapis-common-protos==1.76.0 \
+              --hash=sha256:59e13344a9f3651aa201a03e2bee815a3bf43a4baf1f9ff8a9b62a840ce25fac
+          h11==0.16.0 \
+              --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86
+          httpcore==1.0.9 \
+              --hash=sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55
+          httpx==0.28.1 \
+              --hash=sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad
+          httpx-sse==0.4.3 \
+              --hash=sha256:0ac1c9fe3c0afad2e0ebb25a934a59f4c7823b60792691f779fad2c5568830fc
+          idna==3.20 \
+              --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
+          importlib-metadata==8.7.1 \
+              --hash=sha256:5a1f80bf1daa489495071efbb095d75a634cf28a8bc299581244063b53176151
+          jsonschema==4.25.1 \
+              --hash=sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63
+          jsonschema-specifications==2025.9.1 \
+              --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
+          markdown-it-py==4.2.0 \
+              --hash=sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a
+          mcp==1.29.0 \
+              --hash=sha256:f5a075bb611f23d6f4d080c6a1699fa62772eebc562ba9e66b306ddde1c755f7
+          mdurl==0.1.2 \
+              --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8
+          opentelemetry-api==1.37.0 \
+              --hash=sha256:accf2024d3e89faec14302213bc39550ec0f4095d1cf5ca688e1bfb1c8612f47
+          opentelemetry-exporter-otlp-proto-common==1.37.0 \
+              --hash=sha256:53038428449c559b0c564b8d718df3314da387109c4d36bd1b94c9a641b0292e
+          opentelemetry-exporter-otlp-proto-http==1.37.0 \
+              --hash=sha256:54c42b39945a6cc9d9a2a33decb876eabb9547e0dcb49df090122773447f1aef
+          opentelemetry-instrumentation==0.58b0 \
+              --hash=sha256:50f97ac03100676c9f7fc28197f8240c7290ca1baa12da8bfbb9a1de4f34cc45
+          opentelemetry-instrumentation-requests==0.58b0 \
+              --hash=sha256:672a0be0bb5b52bea0c11820b35e27edcf4cd22d34abe4afc59a92a80519f8a8
+          opentelemetry-instrumentation-threading==0.58b0 \
+              --hash=sha256:eacc072881006aceb5b9b6831bcdce718c67ef6f31ac0b32bd6a23a94d979b4a
+          opentelemetry-proto==1.37.0 \
+              --hash=sha256:8ed8c066ae8828bbf0c39229979bdf583a126981142378a9cbe9d6fd5701c6e2
+          opentelemetry-sdk==1.37.0 \
+              --hash=sha256:8f3c3c22063e52475c5dbced7209495c2c16723d016d39287dfc215d1771257c
+          opentelemetry-semantic-conventions==0.58b0 \
+              --hash=sha256:5564905ab1458b96684db1340232729fce3b5375a06e140e8904c78e4f815b28
+          opentelemetry-util-http==0.58b0 \
+              --hash=sha256:6c6b86762ed43025fbd593dc5f700ba0aa3e09711aedc36fd48a13b23d8cb1e7
+          packaging==26.3 \
+              --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
+          peewee==3.19.0 \
+              --hash=sha256:de220b94766e6008c466e00ce4ba5299b9a832117d9eb36d45d0062f3cfd7417
+          protobuf==6.33.6 \
+              --hash=sha256:e9db7e292e0ab79dd108d7f1a94fe31601ce1ee3f7b79e0692043423020b0593 \
+              --hash=sha256:77179e006c476e69bf8e8ce866640091ec42e1beb80b213c3900006ecfba6901
+          pycparser==3.12 \
+              --hash=sha256:a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e
+          pydantic==2.14.2 \
+              --hash=sha256:7efbf7507b937931cd32a5755acb00ea1cf5ccb1d4e8067a5850d5069e382118
+          pydantic-core==2.50.2 \
+              --hash=sha256:9667637665acba166a7dbbc786f14c50512d3a01f7199e0e1a13b929e92d7c7a
+          pydantic-settings==2.16.2 \
+              --hash=sha256:8d523e5c129b097686bde019bd6109bff53f4c8c3f63f1ddf9933ffa42e5ab4f
+          pygments==2.21.0 \
+              --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9
+          pyjwt==2.15.1 \
+              --hash=sha256:42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193
+          python-dotenv==1.2.4 \
+              --hash=sha256:42269a8a5b3fd54ffa6f3d84b18abed50064717576b4ecf03dc4a55d8aa04fdc
+          python-multipart==0.0.33 \
+              --hash=sha256:8f16c07b36add9da6b2ee87d3efcaf0a45a6de9c3d0a5dd94e9ccf7675a7bc45
+          referencing==0.37.0 \
+              --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
+          requests==2.34.2 \
+              --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0
+          rich==15.0.0 \
+              --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb
+          rpds-py==2026.9.1 \
+              --hash=sha256:addeda51556dac7c1a2f14cda62db8b621cd12afba3091d03a96c72932387eab
+          ruamel-yaml==0.19.1 \
+              --hash=sha256:27592957fedf6e0b62f281e96effd28043345e0e66001f97683aa9a40c667c93
+          ruamel-yaml-clib==0.2.15 \
+              --hash=sha256:11e5499db1ccbc7f4b41f0565e4f799d863ea720e01d3e99fa0b7b5fcd7802c9
+          semantic-version==2.10.0 \
+              --hash=sha256:de78a3b8e0feda74cabc54aab2da702113e33ac9d9eb9d2389bcf1f58b7d9177
+          semgrep==1.183.0 \
+              --hash=sha256:f36115c4d0cb43056ceb308273421a2f6a35e055e7e029601e130850f836646e
+          sse-starlette==3.6.0 \
+              --hash=sha256:e4dfa4d237d2712cb2b4d4918eda9b457cd6b44bbecdc838af75de836565bafd
+          starlette==1.10.0 \
+              --hash=sha256:478c0ab3b4ced6e82719849c118fa406f0278a3499c1a898cd15cd31bdc38ce4
+          tomli==2.4.1 \
+              --hash=sha256:136443dbd7e1dee43c68ac2694fde36b2849865fa258d39bf822c10e8068eac5 \
+              --hash=sha256:0d85819802132122da43cb86656f8d1f8c6587d54ae7dcaf30e90533028b49fe
+          typing-extensions==4.16.0 \
+              --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
+          typing-inspection==0.4.4 \
+              --hash=sha256:65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147
+          urllib3==2.8.0 \
+              --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3
+          uvicorn==0.54.0 \
+              --hash=sha256:505bdb0f318731d45f1f712071fc781a8981f6847a31c902c9f5e652d4f67faf
+          wcmatch==8.5.2 \
+              --hash=sha256:17d3ad3758f9d0b5b4dedc770b65420d4dac62e680229c287bf24c9db856a478
+          wrapt==1.17.3 \
+              --hash=sha256:042ec3bb8f319c147b1301f2393bc19dba6e176b7da446853406d041c36c7828 \
+              --hash=sha256:7171ae35d2c33d326ac19dd8facb1e82e5fd04ef8c6c0e394d7af55a55051c22
+          zipp==4.1.2 \
+              --hash=sha256:b30cb6cd253122169c47de245ca24a86bac2a5d3802ba15bf7ba6414eb9e144d
+          REQUIREMENTS
+          "$venv/bin/python" -I -m pip install --no-cache-dir --disable-pip-version-check \
+            --no-input --require-hashes --only-binary=:all: --requirement "$requirements"
+          mkdir -p "$venv/home"
+          reported="$(env -i PATH="$venv/bin:/usr/bin:/bin" HOME="$venv/home" PYTHONSAFEPATH=1 \
+            "$venv/bin/semgrep" --version)"
+          if [ "$reported" != "$SEMGREP_VERSION" ]; then
+            echo "::error::Expected semgrep ${SEMGREP_VERSION}, got: ${reported}"
+            exit 1
+          fi
+
+      - name: Fetch semgrep-rules at the pinned commit
+        run: |
+          set -euo pipefail
+          rules="$RUNNER_TEMP/semgrep-rules"
+          rm -rf "$rules"
+          git init --quiet "$rules"
+          git -C "$rules" fetch --quiet --depth 1 --no-tags \
+            https://github.com/semgrep/semgrep-rules.git "$SEMGREP_RULES_COMMIT"
+          git -C "$rules" -c advice.detachedHead=false checkout --quiet FETCH_HEAD
+          checked_out="$(git -C "$rules" rev-parse HEAD)"
+          if [ "$checked_out" != "$SEMGREP_RULES_COMMIT" ]; then
+            echo "::error::semgrep-rules is at ${checked_out}, expected ${SEMGREP_RULES_COMMIT}"
+            exit 1
+          fi
+
+      - name: Scan with Semgrep
+        run: |
+          set -euo pipefail
+          rules="$RUNNER_TEMP/semgrep-rules"
+          venv="$RUNNER_TEMP/semgrep-venv"
+          configs=(
+            python/lang
+            python/correctness
+            python/jinja2
+            python/jwt
+            python/requests
+            python/sh
+            generic/secrets
+            bash/lang
+            yaml/github-actions
+            yaml/kubernetes
+          )
+          args=()
+          for config in "${configs[@]}"; do
+            dir="$rules/$config"
+            if [ ! -d "$dir" ] || [ -z "$(find "$dir" -name '*.yaml' -print -quit)" ]; then
+              echo "::error::Rule config ${config} is missing from the semgrep-rules checkout"
+              exit 1
+            fi
+            args+=(--config "$dir")
+          done
+
+          work="$RUNNER_TEMP/sast"
+          rm -rf "$work"
+          mkdir -p "$work/home" "$work/tmp"
+          results="$work/results.json"
+          diagnostics="$work/stderr.log"
+          # Scanner stderr can quote repository content, so it goes to a file
+          # that is never printed; only its line count reaches the log.
+          set +e
+          env -i PATH="$venv/bin:/usr/bin:/bin" HOME="$work/home" TMPDIR="$work/tmp" \
+            PYTHONSAFEPATH=1 SEMGREP_SEND_METRICS=off SEMGREP_ENABLE_VERSION_CHECK=0 \
+            "$venv/bin/semgrep" scan "${args[@]}" \
+            --metrics=off --disable-version-check --strict --error \
+            --json --output "$results" --quiet . 2> "$diagnostics"
+          rc=$?
+          set -e
+          echo "Semgrep exited ${rc}; $(wc -l < "$diagnostics") stderr line(s) withheld from this log."
+
+          # Exactly one JSON object with results and errors arrays and a list of
+          # scanned paths; anything else (missing file, other JSON, several
+          # values) fails. jq's own error text can quote the input, so it is
+          # discarded.
+          if ! jq -s -e 'length == 1 and (.[0] | type == "object"
+                and (.results | type) == "array" and (.errors | type) == "array"
+                and (.paths.scanned | type) == "array")' \
+                "$results" > /dev/null 2>&1; then
+            echo "::error::Semgrep output is missing or malformed (exit ${rc}); failing closed"
+            exit 1
+          fi
+          scanned="$(jq '.paths.scanned | length' "$results")"
+          scanned_python="$(jq '[.paths.scanned[] | select(type == "string" and endswith(".py"))] | length' "$results")"
+          echo "Semgrep scanned ${scanned} file(s), ${scanned_python} of them Python."
+          if [ "$scanned" -eq 0 ] || [ "$scanned_python" -eq 0 ]; then
+            echo "::error::Semgrep scanned no Python files; failing closed"
+            exit 1
+          fi
+          findings="$(jq '.results | length' "$results")"
+          errors="$(jq '.errors | length' "$results")"
+          if [ "$findings" -gt 0 ]; then
+            echo "::error::Semgrep reported ${findings} finding(s). Matched code is redacted from this log."
+            # Rule id and location only; extra.lines (the matched code) never reaches the log.
+            # Every printed field must be a string or a number; anything else prints "?".
+            jq -r 'def s: if type == "string" or type == "number" then tostring else "?" end;
+              .results[]
+              | "::error file=\(.path | s),line=\(.start.line | s)::Semgrep \(.check_id | s)"
+              + " at \(.path | s):\(.start.line | s)"' \
+              "$results" 2> /dev/null || echo "::error::Finding locations could not be summarized"
+          fi
+          if [ "$errors" -gt 0 ]; then
+            echo "::error::Semgrep reported ${errors} scan error(s)."
+            # Type, level and path only; error messages can quote target code.
+            jq -r 'def s: if type == "string" or type == "number" then tostring else "?" end;
+              .errors[]
+              | "::error::Semgrep error level=\(.level | s)"
+              + " type=\(.type | if type == "array" then .[0] else . end | s)"
+              + " path=\(.path // .spans[0].file | s)"' \
+              "$results" 2> /dev/null || echo "::error::Scan errors could not be summarized"
+          fi
+          if [ "$rc" -eq 0 ] && [ "$findings" -eq 0 ] && [ "$errors" -eq 0 ]; then
+            echo "No findings."
+            exit 0
+          fi
+          if [ "$rc" -eq 0 ]; then
+            echo "::error::Semgrep exited 0 but reported findings or errors; failing closed"
+          elif [ "$rc" -ne 1 ]; then
+            echo "::error::Semgrep exited ${rc} (scan error); failing closed"
+          fi
+          exit 1
+
+      - name: Remove scan results
+        if: always()
+        run: >-
+          rm -rf "$RUNNER_TEMP/sast" "$RUNNER_TEMP/semgrep-rules"
+          "$RUNNER_TEMP/semgrep-venv" "$RUNNER_TEMP/semgrep-requirements.txt"
+
+  ci-gate:
+    name: CI Gate
+    # always(): a job skipped because a dependency failed would otherwise count
+    # as a passing required check.
+    if: always()
+    needs: [ruff, compileall, actionlint, zizmor, secret-scan, sast]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Require every job to succeed
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          # Keep this list equal to `needs` above.
+          expected=(actionlint compileall ruff sast secret-scan zizmor)
+          if ! actual="$(jq -r 'if type == "object" then keys[] else error("not an object") end' \
+                <<< "$NEEDS_JSON" 2> /dev/null)"; then
+            echo "::error::Job results are not a JSON object; failing closed"
+            exit 1
+          fi
+          failed=0
+          for job in "${expected[@]}"; do
+            result="$(jq -r --arg job "$job" \
+              '.[$job].result // "missing" | if type == "string" then . else "invalid" end' \
+              <<< "$NEEDS_JSON")"
+            echo "${job}: ${result}"
+            if [ "$result" != "success" ]; then
+              echo "::error::Required job ${job} finished with result ${result}"
+              failed=1
+            fi
+          done
+          while IFS= read -r job; do
+            [ -n "$job" ] || continue
+            if ! printf '%s\n' "${expected[@]}" | grep -qxF -- "$job"; then
+              echo "::error::Unexpected job ${job} in the gate's dependencies"
+              failed=1
+            fi
+          done <<< "$actual"
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo "CI Gate green: ${#expected[@]} of ${#expected[@]} jobs succeeded."

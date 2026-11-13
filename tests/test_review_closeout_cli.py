@@ -283,21 +283,23 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
 
 @pytest.mark.parametrize("injected_grok", [False, True])
 def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monkeypatch, injected_grok):
+    from dataclasses import replace
+
     from scripts.review import reviewer_resolver
 
     # The adapter path raises either requested risk to critical, so inject
     # Grok into the effective ladder that the resolver actually walks.
     risk = "high" if injected_grok else "medium"
     if injected_grok:
-        # Subject exclusion must still refuse a caller-supplied Grok ladder;
-        # automatic ladders list only the attested Cursor Grok seat (#9488).
+        # A caller-supplied Grok rung must still respect subject exclusion.
+        restored = replace(
+            reviewer_resolver.REVIEW_CANDIDATES["openai_frontier"],
+            name="grok-4.7-cursor-fallback", concrete_model="grok-4.7", family="xai", route="cursor", transport="cursor",
+        )
         monkeypatch.setitem(
             reviewer_resolver.REVIEW_LADDERS,
             "critical",
-            (
-                *reviewer_resolver.REVIEW_LADDERS["critical"],
-                (reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,),
-            ),
+            (*reviewer_resolver.REVIEW_LADDERS["critical"], (restored,)),
         )
     state_file = tmp_path / "state.json"
     proc = _run_cli(
@@ -322,12 +324,11 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
         for grok in grok_entries:
             assert grok["status"] == "excluded"
             assert "subject exclusion" in grok["reason"]
-            assert "grok_build.py" in grok["reason"]
+            assert "subject seat grok" in grok["reason"]
     else:
-        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
-        assert grok_entries[0]["status"] == "excluded"
-        assert "subject exclusion" in grok_entries[0]["reason"]
-        assert "grok_build.py" in grok_entries[0]["reason"]
+        # The automatic ladders list no Grok seat at all.
+        assert grok_entries == []
+    assert payload["selected"] is None or payload["selected"]["family"] != "xai"
     selected = payload["selected"]
     assert selected is None or selected["family"] not in {"openai", "xai"}
     assert proc.returncode == (1 if selected is None else 0)
@@ -796,13 +797,13 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
     medium = _run_cli(state, "resolve-reviewer", *common, "--risk", "medium")
     payload = json.loads(medium.stdout)
 
-    # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
+    # Both committed families require a pair; each reviews only the other family's commits.
     assert medium.returncode == 0, medium.stdout
-    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    assert payload["selected"] is None
+    assert {seat["family"] for seat in payload["quorum"]} == {"anthropic", "openai"}
+    assert all(seat["scope"]["author_family"] != seat["family"] for seat in payload["quorum"])
     assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
-    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
-    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
-    # The recorder, from its own collection of the same Git facts, accepts that reviewer and not Opus.
+    # The recorder qualifies both seats on the same complete Git facts.
     frozen = json.loads(state.read_text())["target"]
     facts = recorder.collect_branch_review_facts(
         repository=REPOSITORY,
@@ -811,12 +812,11 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
         head_sha=frozen["head_sha"],
         task_root=tasks,
     )
-    recorder._require_qualified_reviewer(
-        facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
-    )
-    with pytest.raises(recorder.RecordError, match="not qualified"):
+    for agent, model, family in (("claude", "claude-opus-5-5", "anthropic"), ("codex", "gpt-6.1-sol", "openai")):
+        recorder._require_qualified_reviewer(facts, task={"agent": agent, "review_risk": "medium"}, model=model, family=family)
+    with pytest.raises(recorder.RecordError, match="mixed-family review requires"):
         recorder._require_qualified_reviewer(
-            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+            facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
         )
 
     # Grok reviews at every risk (#9769); an xAI author leaves no reviewer at all.
@@ -1084,27 +1084,30 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         "medium",
     )
     body = json.loads(result.stdout)
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert body["selected"]["name"] == "gemini-3.8-flash-high"
     if excluded:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert body["selected"]["name"] == "gemini-3.8-flash-high"
         assert body["branch_facts"]["existing_families"] == ["anthropic"]
     else:
         # Not the default branch: the main squash stays in the PR's range and is
         # attributed by its own trailers; the clean sync merge adds no author.
         assert body["branch_facts"]["existing_families"] == ["anthropic", "openai"]
+        assert result.returncode == 1 and body["selected"] is None and not body["quorum"]
+        assert "cannot partition a commit authored by both families" in body["fail_closed_reason"]
 
 
-# Re-pinned after native Grok dispatch retirement; Cursor remains in automatic traces.
+# Re-pinned for the added b-sub trace/advisory row, then for GROK-CANCEL-1110: each receipt only
+# drops its retired grok-4.7-cursor-fallback trace row; every other field is unchanged.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "be44e33d6c9f42b5fb3776ff977149b958d1d1cf2e8a68befedc2b0fb792d662"),
-        ("claude-opus-5-5", "low", "ordinary.py", "5bcd41439d238f63a96eedb8f0ec634db4f230cc63e1d2ab977f4b593ccaa3f8"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "3ef1b5e5e38272f51b4813eff0fa38e2019dbfe3143d5a6362bf07d69ff9ecc6"),
+        ("claude-opus-5-5", "low", "ordinary.py", "91c9fff9a1e9206c124b48016a08de47e41246d471c02ec3c553fc0be2e04cba"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "c3d81093d6ca5d3fde36502dc5eba5bb1b434ed668d4232278add2a2f42c0599",
+            "37fd748851cb622b86adff843cd98ef3fda46c8dc363b54af472603bafbc8dd8",
         ),
     ],
 )

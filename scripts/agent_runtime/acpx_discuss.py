@@ -36,9 +36,11 @@ if str(_SCRIPTS_DIR) not in sys.path:
 try:
     from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
+from learn_ukrainian_v4_runtime.contracts import new_id
 
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,
@@ -55,14 +57,13 @@ from scripts.agent_runtime.runner import (
     resolve_inter_agent_route,
 )
 from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import classify_repo_path
 from scripts.lib import rules_core
 
 logger = logging.getLogger(__name__)
 
-PARTICIPANTS = ("codex", "grok")
+PARTICIPANTS = ("codex", "claude")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 MIN_PARTICIPANTS = 2
 MAX_PARTICIPANTS = 4
@@ -223,6 +224,7 @@ class AcpxDiscussionController:
         root: Path,
         participant_call: Callable[..., Result] | None = None,
         synthesis_call: Callable[..., Result] = _invoke_native_once,
+        rules_seat: str | None = None,
         clock: Callable[[], float] = time.monotonic,
         cancelled: Callable[[], bool] | None = None,
     ) -> None:
@@ -233,6 +235,7 @@ class AcpxDiscussionController:
         # compatibility seam remains read-only and cannot select a bridge.
         self.participant_call = participant_call
         self.synthesis_call = synthesis_call
+        self.rules_seat = rules_seat
         self.clock = clock
         self.cancelled = cancelled or (lambda: False)
 
@@ -387,9 +390,7 @@ class AcpxDiscussionController:
             """SELECT sender, outcome, duration_ms, token_count, round
                FROM acp_conversation_events
                WHERE conversation_id = ? AND event_type = 'CALL_TERMINAL'
-               ORDER BY round,
-                        CASE sender WHEN 'codex' THEN 0 WHEN 'grok' THEN 1 ELSE 2 END,
-                        sequence""",
+               ORDER BY round, sender, sequence""",
             (conversation_id,),
         ).fetchall()
         participant_outcomes = [
@@ -786,6 +787,7 @@ class AcpxDiscussionController:
                         model=model_overrides.get(participant),
                         effort=effort_overrides.get(participant),
                         hard_timeout=timeout,
+                        rules_seat=self.rules_seat,
                     )
                 else:
                     # Preserve the injectable legacy callback contract for
@@ -806,6 +808,7 @@ class AcpxDiscussionController:
                                 "idempotency_key": idempotency_key,
                             },
                             hard_timeout=timeout,
+                            **({"rules_seat": self.rules_seat} if self.rules_seat is not None else {}),
                             effort=effort_overrides.get(participant),
                             entrypoint="acpx-discuss",
                             initiator=source,
@@ -949,7 +952,7 @@ class AcpxDiscussionController:
         # Every discussion leg starts with the rules core: refuse before a
         # reservation is admitted, not one failed leg at a time.
         try:
-            rules_core.require_core()
+            rules_core.require_core(self.rules_seat)
         except rules_core.RulesCoreMissing as exc:
             raise AcpxDiscussionError(f"discussion refused: {exc}; the rules core is required") from exc
         idempotency_digest = _digest(idempotency_key)
@@ -1168,6 +1171,7 @@ class AcpxDiscussionController:
                         min(CALL_TIMEOUT_SECONDS, int(deadline - self.clock())),
                     ),
                     initiator=source,
+                    **({"rules_seat": self.rules_seat} if self.rules_seat is not None else {}),
                 )
                 if synthesis_result.ok:
                     synthesis = synthesis_result.response

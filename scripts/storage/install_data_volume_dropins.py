@@ -8,6 +8,7 @@ to a drop-in directory, is refused in preview and apply alike.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -16,6 +17,11 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.safe_unit_install import InstallError, install_unit, load_unit
+
+
+def _mp(relative: str) -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
 
 TEMPLATE_ROOT = REPO_ROOT / "packaging" / "systemd" / "dropins"
 DEFAULT_DESTINATION = Path("/etc/systemd/user")
@@ -39,9 +45,9 @@ def main() -> int:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python "
-            "scripts/storage/install_data_volume_dropins.py\n"
+            f"{_mp('storage/install_data_volume_dropins.py')}\n"
             "  .venv/bin/python "
-            "scripts/storage/install_data_volume_dropins.py --apply\n"
+            f"{_mp('storage/install_data_volume_dropins.py')} --apply\n"
             "Outputs: prints each target and complete rendered content; --apply writes "
             "nineteen data-volume.conf files (mode 0644, replaced by rename) under the destination; "
             "a symlinked drop-in or a symlinked directory on the way to it is refused.\n"

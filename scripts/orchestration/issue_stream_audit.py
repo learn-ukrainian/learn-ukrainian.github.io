@@ -51,12 +51,23 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.api.config import LIVE_REPO_ROOT
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import machinery_path, main_checkout_root
 from scripts.opsec.prepublish import publication_cli
 from scripts.publish.github import Request, request_run
 
-ROOT = Path(__file__).resolve().parents[2]
-REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_PACKAGE_DIR = _PACKAGE.replace(".", "/")
+_MACHINERY = _PACKAGE.partition(".")[0]
+
+# The product checkout this module was reached from: the directory that holds the package
+# entry, resolved itself (an immutable release snapshot reached through ``current`` stays
+# that snapshot) without following a symlinked package directory, so that the registry
+# under ``_MACHINERY``, the issues, the docs and the cache all belong to that checkout.
+ROOT = Path(os.path.abspath(__file__)).parents[2].resolve()
+REGISTRY_PATH = machinery_path("config/issue_streams.yaml")
 WORKSTREAMS_PATH = ROOT / "docs" / "WORKSTREAMS.md"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"
 ISSUE_REF_RE = re.compile(r"#(\d{2,6})\b")
@@ -1357,7 +1368,7 @@ def hygiene_warnings(
     membership cache writer both append them after the traversal warnings, so
     no publication of the shared cache serves a reduced hygiene report (#10793).
     """
-    registry_path = root / "scripts" / "config" / "issue_streams.yaml"
+    registry_path = root / _MACHINERY / "config" / "issue_streams.yaml"
     closed_epics = load_closed_epics(registry_path)
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
     milestone_numbers = {number for row in milestone_rows for number in row["issue_numbers"]}
@@ -1470,7 +1481,7 @@ def run_audit(
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
     repository = "/".join(_repo_owner_name(root))
-    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml", audit_only=True)
+    registry = load_registry(root / _MACHINERY / "config" / "issue_streams.yaml", audit_only=True)
     open_issues = fetch_open_issues(root)
     traversal_warnings: list[dict] = []
     membership = fetch_tree_membership(
@@ -1867,7 +1878,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Audit GitHub issue membership in registered streams.\nUse read-only reporting before any authorized repair.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/issue_stream_audit.py --help\nOutputs and exit codes: Membership report and authorized repair receipts. 0: successful command; >=1: audit or runtime error.\nRelated: #9297",
+        epilog=f"Examples:\n  .venv/bin/python {_PACKAGE_DIR}/issue_stream_audit.py --help\nOutputs and exit codes: Membership report and authorized repair receipts. 0: successful command; >=1: audit or runtime error.\nRelated: #9297",
     )
     parser.add_argument("--json", action="store_true")
     parser.add_argument(

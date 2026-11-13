@@ -1,5 +1,5 @@
 commit a2ff0db8aaf726652346bb2005ebaad6e69344e8
-Author: Krisztian oos <krisztian.koos@gmail.com>
+Author: Project Maintainer <maintainer@example.invalid>
 Date:   Sat May 16 14:57:24 2026 +0200
 
     fix(test): repin test_my_morning_module_passes_citations_resolve to Grade 1 cites

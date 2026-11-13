@@ -18,6 +18,12 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+
+def _mp(relative: str) -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return f"{Path(os.path.abspath(__file__)).parents[1].name}/{relative}"
+
+
 # Windows chosen from the measured X-Agent adoption curve in this script:
 # from 2026-07 the trailer is present on the large majority of commits.
 PRIMARY_SINCE = "2026-07-01"
@@ -128,13 +134,16 @@ def _path_bucket(path: str) -> str | None:
         return "ci_yml"
     if path.startswith(".github/workflows/"):
         return "workflows_other"
+    # scripts/review/ stays a product prefix. That directory is split: product
+    # files remain there after extraction, so a generated machinery prefix
+    # would miss them (#12785 F2). scripts/delegate.py is that file's path in
+    # the closed census window; the file was deleted later (#11807).
     if (
         path.startswith("scripts/delegate.py")
         or path.startswith("scripts/review/")
-        or path.startswith("scripts/orchestration/")
-        or path.startswith("scripts/fleet/")
-        or path.startswith("scripts/agent_runtime/")
-        or path.startswith("scripts/runtime/")
+        or path.startswith(_mp("orchestration") + '/')
+        or path.startswith(_mp("fleet") + '/')
+        or path.startswith(_mp("agent_runtime") + '/')
         or "/hooks/" in path
     ):
         return "delivery"
@@ -304,8 +313,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/evidence/agent_pitfall_census.py\n"
-            "  .venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty\n"
+            f"  .venv/bin/python {_mp('evidence/agent_pitfall_census.py')}\n"
+            f"  .venv/bin/python {_mp('evidence/agent_pitfall_census.py')} --pretty\n"
             "\n"
             "Outputs: JSON on stdout. Writes nothing.\n"
             "Exit codes: 0 on success, 1 if git fails, times out, or output contains a host path.\n"

@@ -1,5 +1,5 @@
 import { AxeBuilder } from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/hardened-browser.mjs';
 
 /**
  * #5376 check 4 / #8736 — axe-core accessibility scan.

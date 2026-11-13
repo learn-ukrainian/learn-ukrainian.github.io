@@ -99,7 +99,8 @@ For `full` and `plan-template`, `CANARY_INPUT_ROOT` must be the Git checkout
 top level containing the fixture, not its fixture subdirectory; otherwise the
 boundary refuses with `full_review_checkout_missing`. Paths in the manifest
 are relative to that root. The snippet's explicit `PYTHONPATH` supplies both
-the checkout's `scripts` import root (for `ai_llm`) and the checkout itself.
+the machinery package directory, the import root for `ai_llm`, and its parent
+checkout.
 Set `CANARY_INITIATOR` to the driver's own trusted Source identity.
 Use a public fixture whose first non-empty plan line is suitable for an output
 comparison; never use private text. These are real provider calls, reserved for
@@ -112,12 +113,16 @@ Define the function once, then run the exact command for each route:
 
 ```bash
 CANARY_CHECKOUT="$(git rev-parse --show-toplevel)"
+# The machinery package directory, named through one of its own packages.
+CANARY_MACHINERY="$(dirname "$CANARY_CHECKOUT/scripts/ai_llm")"
 # Default to the reviewed checkout; override only with another eligible input checkout.
 CANARY_INPUT_ROOT="${CANARY_INPUT_ROOT:-$CANARY_CHECKOUT}"
 agy_review_canary() {
-  PYTHONPATH="$CANARY_CHECKOUT/scripts:$CANARY_CHECKOUT" \
-    "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" <<'PY'
+  PYTHONPATH="$CANARY_MACHINERY:$(dirname "$CANARY_MACHINERY")" \
+    "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" \
+    scripts.agent_runtime.runner scripts.agent_runtime.review_mcp <<'PY'
 import hashlib
+import importlib
 import json
 import os
 import sys
@@ -126,14 +131,14 @@ from pathlib import Path
 
 import yaml
 
-from scripts.agent_runtime.runner import invoke
-from scripts.agent_runtime.review_mcp import prepare_review_attempt
-from scripts.review.prompts.render import render_prompt
+from scripts.review.prompts.render import render
 from scripts.review.receipts.ledger import records
 from scripts.review.record import attested_return
 from scripts.review.validate import validate_review
 
-route, manifest_arg, root_arg = sys.argv[1:]
+route, manifest_arg, root_arg, runner_module, review_mcp_module = sys.argv[1:]
+invoke = importlib.import_module(runner_module).invoke
+prepare_review_attempt = importlib.import_module(review_mcp_module).prepare_review_attempt
 assert route in {"full", "isolated", "ad-hoc", "plan-template"}
 manifest, root = Path(manifest_arg).resolve(), Path(root_arg).resolve()
 access = "full" if route in {"full", "plan-template"} else "isolated"
@@ -153,11 +158,12 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
     )
     if route == "plan-template":
         # Exact production template, without a forced first command or tool.
-        prompt, prompt_sha, _ = render_prompt(
+        rendering = render(
             manifest, "plan-review.md.j2", repo_root=root,
             review_id=prepared.review_id, attempt_id=prepared.attempt_id,
             review_access=access,
         )
+        prompt, prompt_sha = rendering.prompt, rendering.prompt_sha256
     tc = {
         **prepared.adapter_options,
         "review_id": "canary-9625", "attempt_id": route,
@@ -180,6 +186,8 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
         # record_return, including saved-return and fresh-render hash checks.
         tasks = Path(temp) / "tasks"
         tasks.mkdir()
+        saved_prompt = tasks / f"{task_id}.prompt"
+        saved_prompt.write_bytes(prompt.encode("utf-8"))
         raw = result.response.encode("utf-8")
         saved = tasks / f"{task_id}.result"
         saved.write_bytes(raw)
@@ -187,6 +195,9 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
             "status": "done", "result_file": str(saved),
             "result_sha256": hashlib.sha256(raw).hexdigest(),
             "prompt_sha256": prompt_sha, "review_access": access,
+            "prompt_file": str(saved_prompt),
+            "review_contract": {"prompt_sha256": prompt_sha,
+                                "machinery_dependencies": rendering.machinery_dependencies},
             "review_attempt": {"review_id": prepared.review_id,
                                "attempt_id": prepared.attempt_id,
                                "manifest_sha256": prepared.manifest_sha256},

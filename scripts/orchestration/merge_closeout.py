@@ -20,6 +20,7 @@ import argparse
 import contextlib
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -38,6 +39,12 @@ from scripts.orchestration import scheduled_worktree_cleanup as swc
 from scripts.orchestration import worktree_git as rw
 from scripts.orchestration.fleet_repos import canonical_repository, pull_request_repository
 from scripts.publish.github import Request, request_run
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
+_MODULE = f"{_PACKAGE}.{Path(__file__).stem}"
 
 DEFAULT_TIMEOUT = 30
 LIVE_PR_FETCH_TIMEOUT = 30
@@ -702,9 +709,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Dry-run by default."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.orchestration.merge_closeout 123 --json
-  .venv/bin/python -m scripts.orchestration.merge_closeout 123 --apply
+        epilog=f"""Examples:
+  .venv/bin/python -m {_MODULE} 123 --json
+  .venv/bin/python -m {_MODULE} 123 --apply
 Outputs: Cleanup report; apply records lifecycle observations and deletes branches.
 Exit codes: 0 = clean report; 1 = residual; 2 = PR state unavailable.
 Related: docs/runbooks/worktree-cleanup.md § Immediate cleanup after merge.

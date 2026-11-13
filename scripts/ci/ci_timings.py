@@ -35,6 +35,7 @@ from urllib.parse import quote
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import module_name
 from scripts.common import github_client
 
 DEFAULT_WORKFLOW = "CI"
@@ -1042,8 +1043,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --since 24h --event all --json\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --fixture runs.json --event merge_group\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} --since 24h --event all --json\n"
+            f"  .venv/bin/python -m {module_name(__spec__, __file__)} --fixture runs.json --event merge_group\n"
             "Outputs: Report on stdout; no files or database updates.\n"
             "Exit codes: 0 = report produced; 1 = fetch or data error; 2 = invalid arguments.\n"
             "Related: issue #9058; GitHub Actions CI workflow (ci.yml)."

@@ -35,7 +35,11 @@ steps:
     intent: Refresh an inbox receipt; bridge expiry behavior makes this a local write.
     command:
       adapter: shell
-      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-$HANDOFF_AGENT.txt" 2>&1 && echo inbox-receipt-written || echo inbox-refresh-failed']
+      argv:
+        - sh
+        - -c
+        - |-
+          .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-$HANDOFF_AGENT.txt" 2>&1 && echo inbox-receipt-written || echo inbox-refresh-failed
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
       timeout_seconds: 30
       mutation_class: local-write
@@ -80,7 +84,11 @@ steps:
     intent: Capture handoff readiness once; later steps observe its immutable receipt.
     command:
       adapter: shell
-      argv: [sh, -c, '.venv/bin/python -m scripts.orchestration.handoff_ready --json > "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null && echo readiness-recorded || echo readiness-failed']
+      argv:
+        - sh
+        - -c
+        - |-
+          .venv/bin/python -m scripts.orchestration.handoff_ready --json > "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null && echo readiness-recorded || echo readiness-failed
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
       timeout_seconds: 30
       mutation_class: local-write
@@ -199,7 +207,7 @@ steps:
   - step_id: sweep_judgment
     intent: >-
       Former judgment/summon. Observe a completed external sweep receipt; this trail
-      does not delete another lane's worktree or manufacture a sweep-success token.
+      does not delete a worktree of another lane or manufacture a sweep-success token.
     command:
       adapter: shell
       argv: [sh, -c, 'R="batch_state/rb5-sweep-$HANDOFF_AGENT.receipt"; test -s "$R" || { echo sweep-receipt-missing; exit 0; }; V=$(awk -F= "/^outcome=/{print \$2}" "$R"); case "$V" in sweep_applied) echo sweep-observed;; own_uncommitted_work) echo own-uncommitted-work;; *) echo sweep-receipt-invalid;; esac']
@@ -218,7 +226,11 @@ steps:
     intent: Refresh the final inbox receipt before observing its contents again.
     command:
       adapter: shell
-      argv: [sh, -c, '.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-final-$HANDOFF_AGENT.txt" 2>&1 && echo final-inbox-receipt-written || echo final-inbox-refresh-failed']
+      argv:
+        - sh
+        - -c
+        - |-
+          .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for "$HANDOFF_AGENT" show "$HANDOFF_AGENT" > "batch_state/rb5-inbox-final-$HANDOFF_AGENT.txt" 2>&1 && echo final-inbox-receipt-written || echo final-inbox-refresh-failed
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
       timeout_seconds: 30
       mutation_class: local-write

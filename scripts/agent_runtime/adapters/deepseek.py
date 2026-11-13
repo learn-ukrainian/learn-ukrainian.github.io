@@ -161,15 +161,16 @@ class DeepSeekAdapter:
         variant = _EFFORT_TO_VARIANT.get(effective_effort, effective_effort)
         cmd.extend(["--variant", variant])
 
+        # OpenCode reads non-TTY stdin when the positional message is empty.
+        # Keep large prepared prompts below execve's per-argument limit.
         cmd.append("--")
-        cmd.append(prompt)
 
         _logger.debug("deepseek invocation")
 
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload="",
+            stdin_payload=prompt,
             output_file=None,
             env_overrides={"OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX": "131072"},
             liveness_paths=self._liveness_paths(),

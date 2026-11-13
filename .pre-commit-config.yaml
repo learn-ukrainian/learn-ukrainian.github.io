@@ -98,7 +98,7 @@ repos:
       # pipeline's escape-hatch tag is available.
       - id: check-plan-immutability
         name: enforce plan version bump + .bak
-        entry: bash scripts/pre_commit/project_python.sh scripts/pre_commit/check_plan_immutability.py
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.pre_commit.check_plan_immutability
         language: system
         always_run: true
         stages: [commit-msg]
@@ -112,14 +112,14 @@ repos:
       # of ``-m venv`` does not exempt other bare-python commands.
       - id: no-bare-python
         name: block bare python/python3 in new scripts
-        entry: bash scripts/pre_commit/project_python.sh scripts/pre_commit/check_no_bare_python.py --staged
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.pre_commit.check_no_bare_python --staged
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: lint-tmp-paths
         name: block system-temp paths and unmanaged temp producers
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_tmp_paths
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.hygiene.lint_tmp_paths
         language: system
         pass_filenames: true
         files: ^(?:scripts|tests)/.*\.(?:py|sh|bash)$
@@ -127,7 +127,7 @@ repos:
 
       - id: lint-control-plane-sqlite
         name: block direct control-plane SQLite opens
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_control_plane_sqlite
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.hygiene.lint_control_plane_sqlite
         language: system
         pass_filenames: true
         files: ^(?!(?:scripts/control_plane|tests/))(?:scripts|agents_extensions/shared/session_streams)/.*\.py$
@@ -135,7 +135,7 @@ repos:
 
       - id: lint-raw-rm-rf
         name: block unscoped recursive shell deletion
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_raw_rm_rf
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.hygiene.lint_raw_rm_rf
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -205,7 +205,7 @@ repos:
         name: lesson schema drift gate
         entry: >-
           bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/pre_commit/regen_lesson_schema.py && git diff --exit-code
+          -P -m lu_machinery.pre_commit.regen_lesson_schema && git diff --exit-code
           docs/lesson-schema.yaml'
         language: system
         pass_filenames: false
@@ -227,7 +227,7 @@ repos:
         name: Atlas lexicon fingerprint freshness gate
         entry: >-
           bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/pre_commit/regen_lexicon_fingerprint.py && git diff --exit-code
+          -P -m lu_machinery.pre_commit.regen_lexicon_fingerprint && git diff --exit-code
           site/src/data/lexicon-manifest.fingerprint.json'
         language: system
         pass_filenames: false
@@ -291,23 +291,45 @@ repos:
 
       - id: subprocess-timeout-guard
         name: check subprocess calls for explicit timeout
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.ci.subprocess_timeout_guard
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.ci.subprocess_timeout_guard
         language: system
         files: ^(scripts|tests)/.*\.py$
         stages: [pre-commit]
 
       - id: no-secret-print-hook
         name: no-print hook blocks seeded secret echoes
-        entry: bash scripts/pre_commit/project_python.sh agents_extensions/shared/hooks/guard-secret-print.py --self-test
+        entry: bash scripts/pre_commit/project_python.sh -I agents_extensions/shared/hooks/guard-secret-print.py --self-test
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: lint-test-assertions
         name: check test assertions for stale pinned epic IDs
-        entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.lint_test_assertions
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.lint.lint_test_assertions
         language: system
         files: ^tests/.*\.py$
+        stages: [pre-commit]
+
+      # Same ratchet as the Checks job (#12642). Staged scripts Python is
+      # checked; staging only the baseline rechecks scripts/.
+      - id: mypy-ratchet
+        name: mypy ratchet (scripts/)
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.lint.mypy_ratchet
+        language: system
+        # Every invocation rebuilds the same search-root symlinks.
+        require_serial: true
+        files: ^scripts/.*\.py$|^scripts/lint/mypy_baseline\.json$
+        pass_filenames: true
+        stages: [pre-commit]
+
+      # Same boundary as the Checks job (#12660). Staged scripts Python is
+      # checked; staging only the baseline or the boundary file rechecks scripts/.
+      - id: boundary-ratchet
+        name: package boundary ratchet (scripts/)
+        entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.lint.boundary_ratchet
+        language: system
+        files: ^scripts/.*\.py$|^scripts/lint/boundary_baseline\.json$|^scripts/config/package_boundary\.yaml$
+        pass_filenames: true
         stages: [pre-commit]
 
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---

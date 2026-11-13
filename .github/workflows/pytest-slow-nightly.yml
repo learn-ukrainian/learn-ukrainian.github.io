@@ -65,8 +65,18 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -euo pipefail
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
+          # The hash-pinned lu-machinery release first, as .github/actions/python-ci-env installs it
+          # (machinery docs/release.md, Consumers); the lock's hashes decide which bytes install.
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          .venv/bin/python -m pip install --require-hashes --no-deps --find-links "$wheelhouse" -r requirements-machinery.lock
           grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
@@ -152,7 +162,9 @@ jobs:
           LU_FLAKE_DISABLE_RERUN: '1'
         run: |
           set -euo pipefail
-          mapfile -t nodeids < <(.venv/bin/python -c 'from scripts.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
+          # Only the registry lookup names the checkout for the release; pytest below inherits neither root.
+          mapfile -t nodeids < <(LU_PRODUCT_ROOT="$GITHUB_WORKSPACE" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$GITHUB_WORKSPACE" \
+            .venv/bin/python -c 'from lu_machinery.common.flake_quarantine import load_registry; print("".join(entry["node_id"] + "\n" for entry in load_registry()), end="")')
           if (( ${#nodeids[@]} )); then
             mkdir -p ci-artifacts
             .venv/bin/python -m pytest "${nodeids[@]}" --strict-markers \
@@ -164,13 +176,15 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           set -euo pipefail
           reports=(--nightly-junit ci-artifacts/slow-junit.xml)
           if [[ -f ci-artifacts/quarantine-junit.xml ]]; then
             reports+=(--nightly-junit ci-artifacts/quarantine-junit.xml)
           fi
-          .venv/bin/python scripts/ci/flake_ledger.py "${reports[@]}" \
+          .venv/bin/python -m lu_machinery.ci.flake_ledger "${reports[@]}" \
             --fetch-queue --output ci-artifacts/flake-ledger.json
 
       - name: Upload slow pytest evidence

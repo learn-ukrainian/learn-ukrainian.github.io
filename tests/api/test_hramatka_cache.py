@@ -7,7 +7,7 @@ import json
 import sqlite3
 from datetime import UTC, datetime, timedelta
 
-from scripts.api.hramatka_cache import HramatkaGenerationCache
+from scripts.project_api.hramatka_cache import HramatkaGenerationCache
 
 
 def test_cache_hit_miss_and_invalidation(tmp_path) -> None:

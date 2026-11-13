@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.agent_runtime.errors import AgentStalledError  # the subject v7_review.py runs the installed release
 
-from scripts.agent_runtime.errors import AgentStalledError
 from scripts.build import linear_pipeline, v7_review
-from scripts.common.thresholds import QG_DIMS
+from scripts.curriculum.quality.thresholds import QG_DIMS
 
 
 def _lesson(path: Path, *, writer: str = "gemini-tools") -> Path:

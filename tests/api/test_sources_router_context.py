@@ -11,15 +11,17 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api.monitor_context import fixture_context
-from scripts.api.sources_router import router
+from scripts.project_api.context import product_roots
+from scripts.project_api.sources_router import router
 from scripts.wiki.sources_db import _get_conn, using_connection
 
 pytestmark = pytest.mark.repo_invariant
 
 
 def _client_for(root: Path) -> TestClient:
+    root.mkdir(parents=True, exist_ok=True)  # the release refuses a product root that does not exist
     app = FastAPI()
     app.state.ctx = fixture_context(root)
     app.include_router(router, prefix="/api/sources")
@@ -70,8 +72,9 @@ def test_browse_images_does_not_see_sibling_context_files(tmp_path: Path) -> Non
 
 def test_stats_reads_context_sources_handle(tmp_path: Path) -> None:
     root = tmp_path / "isolated"
+    root.mkdir()  # the release refuses a product root that does not exist
     ctx = fixture_context(root)
-    _seed_sources_db(ctx.roots.sources_db_path, rows=4)
+    _seed_sources_db(product_roots(ctx).sources_db_path, rows=4)
 
     app = FastAPI()
     app.state.ctx = ctx

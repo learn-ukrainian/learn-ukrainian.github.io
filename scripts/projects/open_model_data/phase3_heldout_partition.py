@@ -27,15 +27,15 @@ if __package__ in (None, ""):
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.storage.paths import artifact_set
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as source_freeze
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR, resolve_open_model_path
-from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA = REGISTRY_OPEN_MODEL_DATA_DIR

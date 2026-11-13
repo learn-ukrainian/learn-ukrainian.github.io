@@ -1,15 +1,28 @@
 #!/usr/bin/env python3
-"""Stub: module moved to scripts/lint/lint_ipa.py"""
-import importlib.util as _ilu
-import sys as _sys
-from pathlib import Path as _P
+"""Compatibility entry point for ``lint/lint_ipa.py``, the implementation.
 
-_f = _P(__file__).parent / "lint" / "lint_ipa.py"
+Run directly, this file runs the implementation as ``__main__``. Imported, it stays a
+module of its own and forwards every attribute it does not define to the implementation.
+Patch the implementation module, never this one: a value set here is not seen there.
+"""
+
+from __future__ import annotations
+
 if __name__ == "__main__":
     import runpy
-    runpy.run_path(str(_f), run_name="__main__")
+    from pathlib import Path
+
+    runpy.run_path(str(Path(__file__).parent / "lint" / "lint_ipa.py"), run_name="__main__")
 else:
-    _s = _ilu.spec_from_file_location("lint_ipa", _f)
-    _m = _ilu.module_from_spec(_s)
-    _sys.modules[__name__] = _m
-    _s.loader.exec_module(_m)
+    from typing import Any
+
+    if __package__:
+        from .lint import lint_ipa as _implementation
+    else:  # imported as a top-level module, with this file's directory on sys.path
+        from lint import lint_ipa as _implementation  # type: ignore[no-redef]
+
+    def __getattr__(name: str) -> Any:
+        return getattr(_implementation, name)
+
+    def __dir__() -> list[str]:
+        return sorted({*globals(), *dir(_implementation)})

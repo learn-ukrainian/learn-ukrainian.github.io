@@ -20,23 +20,44 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import deque
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
-from scripts.ci import frontend_change_scope
+from scripts.ci import deploy_paths, frontend_change_scope
+from scripts.ci._location import checkout_relative, module_name, package_dir_name
 from scripts.ci.junit_results import parse_junit
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import project_interpreter
-from scripts.deploy import auto_deploy_eligibility
 from scripts.storage.test_baseline import nodeid_to_junit_id
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "scripts/ci/components.json"
+MANIFEST = ROOT / checkout_relative("ci", "components.json")
+_PACKAGE_NAME = Path(__file__).parents[1].name
+_PACKAGE_PREFIX = f"{_PACKAGE_NAME}."
 NODE_IDS = (
     "open-model-data", "atlas-data", "atlas-frontend", "practice-frontend",
     "curriculum-generation", "curriculum-display", "harness", "shared-core",
 )
+# The one configured-entry-point loader (#12504, LOADER-1104):
+# scripts.ops.product_entry.load_configured_module(name) imports the scripts.*
+# module that product data names. A call is a module load by name, plain,
+# aliased or qualified; a name the scanner cannot prove stays unresolved.
+CONFIGURED_LOADER = "load_configured_module"
+CONFIGURED_LOADER_PATH = checkout_relative("ops", "product_entry.py").as_posix()
+
+
+def configured_call(name: str, configured_names: set[str], loaders: Mapping[str, object], wrappers: set[str]) -> bool:
+    """True when a call named ``name`` is the configured-entry-point loader.
+
+    A qualified call ends in the loader's name; a bare name is the loader or an
+    alias imported from any module. Aliases are file-wide, so a name the file
+    also binds to another loader, or defines as a loading wrapper, keeps that
+    loader's reading: the helper never reinterprets another loader's call.
+    """
+    if name in loaders or name in wrappers:
+        return False
+    return name.rpartition(".")[2] == CONFIGURED_LOADER or name in configured_names
 
 
 def repo_path(value: str) -> str:
@@ -76,7 +97,34 @@ def load_manifest(path: Path = MANIFEST) -> dict:
     for edge in data["edges"]:
         if edge["producer"] not in NODE_IDS or edge["consumer"] not in NODE_IDS:
             raise ValueError("edge names an unknown node")
+    data["path_prefixes"] = _with_machinery_prefixes(data["path_prefixes"])
     return data
+
+
+# The manifest spells shared prefixes under the product scripts tree, which keeps
+# this name after the machinery package moves.
+_PRODUCT_TREE = "scripts"
+
+
+def _with_machinery_prefixes(prefixes: list[dict]) -> list[dict]:
+    """Repeat each product-tree prefix under the machinery package directory, same owners.
+
+    The package directory is named from this file's unresolved location
+    (``_location.package_dir_name``). A prefix wholly inside the machinery is
+    already spelled under that directory, so a listed path keeps its own entry.
+    In this checkout the two names are equal and the list is returned as is.
+    """
+    package = package_dir_name()
+    if package == _PRODUCT_TREE:
+        return prefixes
+    listed = {entry["path"] for entry in prefixes}
+    mapped = []
+    for entry in prefixes:
+        head, _, rest = entry["path"].partition("/")
+        path = f"{package}/{rest}"
+        if head == _PRODUCT_TREE and path not in listed:
+            mapped.append({"path": path, "components": list(entry["components"])})
+    return [*prefixes, *mapped]
 
 
 def tracked_paths(root: Path = ROOT) -> list[str]:
@@ -268,12 +316,17 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
     return edges, unresolved
 
 
-def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
+def dependency_nodes(tree: ast.AST, strings: set[str] | None = None) -> list[ast.AST]:
     """Keep imports, bindings and calls in breadth-first order.
 
     Parsed constants, import aliases, operators and contexts cannot contain
     dependencies. Retain every other subtree, including defaults and decorators.
     Standalone names only matter to the sys.path alias check.
+
+    The walk reaches every node that can hold a string literal, so ``strings``, when
+    given, receives the value of each one that is not prose: neither a bare string
+    statement, such as a docstring, nor a literal piece of an f-string, which is part
+    of a longer computed string (`pr_affected_tests.text_references`).
     """
     relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
                 ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute}
@@ -296,29 +349,48 @@ def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
         for field in node._fields:
             value = getattr(node, field)
             if isinstance(value, list):
+                if not value:
+                    continue
                 pending.extend(child for child in value
                                if isinstance(child, ast.AST) and child._fields
                                and not isinstance(child, ignored))
+                if strings is not None and not isinstance(node, ast.JoinedStr):
+                    strings.update(child.value for child in value
+                                   if isinstance(child, ast.Constant) and isinstance(child.value, str))
             elif isinstance(value, ast.AST) and value._fields and not isinstance(value, ignored):
                 pending.append(value)
+            elif (strings is not None and isinstance(value, ast.Constant) and isinstance(value.value, str)
+                  and not isinstance(node, ast.Expr)):
+                strings.add(value.value)
     if include_names:
         nodes.extend(node for node in ast.walk(tree) if isinstance(node, ast.Name))
     return nodes
 
 
-def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None) -> dict:
-    """Compute local import/load edges, retaining each unprovable target."""
+def scan_imports(
+    sources: dict[str, bytes], known_paths: set[str] | None = None, importers: set[str] | None = None,
+    on_strings: Callable[[str, bytes, frozenset[str]], None] | None = None,
+) -> dict:
+    """Compute local import/load edges, retaining each unprovable target.
+
+    A file's edges depend on its own bytes and on the other files' paths only, so
+    ``importers`` limits which files are parsed without changing their edges: every
+    source stays a resolvable target. ``None`` scans every source. ``on_strings``
+    receives each parsed file's string literals (`dependency_nodes`) from the same
+    walk, so a caller that also needs them parses and walks no file twice.
+    """
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
     packages = {".".join(name.split(".")[:index]) for name in modules
                 for index in range(1, len(name.split(".")))}
     edges = set()
     unresolved = set()
+    configured_loads = set()
     loads_unproven = {}
-    bare_packages = {name.split(".")[1] for name in packages if name.startswith("scripts.")}
+    bare_packages = {name.split(".")[1] for name in packages if name.startswith(_PACKAGE_PREFIX)}
 
     def resolve(module):
         # Legacy sys.path entries expose scripts packages without scripts.*.
-        return modules.get(module) or modules.get("scripts." + module)
+        return modules.get(module) or modules.get(_PACKAGE_PREFIX + module)
 
     def add_import(importer, module, *, required, line):
         target = resolve(module)
@@ -330,23 +402,29 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                 parent = modules.get(".".join(canonical.split(".")[:index]))
                 if parent and parent.endswith("/__init__.py"):
                     edges.add((importer, parent))
-        elif required and module not in packages and "scripts." + module not in packages and (
-            module == "scripts" or module.startswith("scripts.")
-            or "scripts." + module in packages
+        elif required and module not in packages and _PACKAGE_PREFIX + module not in packages and (
+            module == _PACKAGE_NAME or module.startswith(_PACKAGE_PREFIX)
+            or _PACKAGE_PREFIX + module in packages
             or module.split(".")[0] in bare_packages
         ):
             unresolved.add((importer, line, "missing-local-import"))
 
     for path, source in sources.items():
+        if importers is not None and path not in importers:
+            continue
         try:
             tree = ast.parse(source, filename=path)
         except (SyntaxError, ValueError):
             unresolved.add((path, 0, "parse-error"))
             continue
         bindings = {}
-        nodes = dependency_nodes(tree)
+        strings: set[str] | None = None if on_strings is None else set()
+        nodes = dependency_nodes(tree, strings)
+        if on_strings is not None:
+            on_strings(path, source, frozenset(strings or ()))
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
+        configured_names: set[str] = set()
         wrappers = set()
         for node in nodes:
             if isinstance(node, (ast.Assign, ast.AnnAssign)):
@@ -361,6 +439,9 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                             "file" if alias.name in {"spec_from_file_location", "run_path"} else "module",
                             1 if alias.name == "spec_from_file_location" else 0,
                         )
+            if isinstance(node, ast.ImportFrom):
+                configured_names.update(alias.asname or alias.name
+                                        for alias in node.names if alias.name == CONFIGURED_LOADER)
             if (has_specs
                 and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and any(
                 isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute)
@@ -394,12 +475,15 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
             if name in wrappers:
                 kind = "file"
                 index = 1
+            configured = configured_call(name, configured_names, loaders, wrappers)
+            if configured:
+                kind, index = "module", 0
             if not kind:
                 continue
             expression = node.args[index] if len(node.args) > index else next(
                 (kw.value for kw in node.keywords if kw.arg == (
                     "location" if kind == "file" and index == 1 else
-                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" else "name"
+                    "path_name" if kind == "file" else "mod_name" if leaf == "run_module" and not configured else "name"
                 )), None)
             value = literal_target(expression, bindings, path) if expression is not None else None
             target = resolve(str(value)) if kind == "module" and value is not None else str(value)
@@ -408,14 +492,17 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                     add_import(path, str(value), required=True, line=node.lineno)
                 else:
                     edges.add((path, target))
-            elif value is None or kind == "file" or str(value).startswith("scripts."):
+            elif value is None or kind == "file" or str(value).startswith(_PACKAGE_PREFIX):
                 unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
+                if configured:
+                    configured_loads.add((path, node.lineno))
                 if kind == "file":
                     loads_unproven[path] = bindings
     return {"file_edges": sorted(edges), "unresolved_edges": [
         {"path": path, "line": line, "reason": reason} for path, line, reason in sorted(unresolved)
     ], "directory_edges": directory_edges(set(sources) if known_paths is None else known_paths, loads_unproven),
-        "python_files": len(sources)}
+        "python_files": len(sources),
+        "configured_loads": [{"path": path, "line": line} for path, line in sorted(configured_loads)]}
 
 
 def directory_edges(known_paths: set[str], loaders: dict[str, dict]) -> list[tuple[str, str]]:
@@ -505,7 +592,7 @@ def parity_gaps(paths: Sequence[str], manifest: dict, root: Path = ROOT, graph: 
     graph = graph if graph is not None else import_graph(manifest, root)
     for path in paths:
         requires_front = frontend_change_scope.path_in_denominator(path, patterns)
-        deploy = auto_deploy_eligibility.decide_auto_deploy([path]).deploy
+        deploy = deploy_paths.decide_auto_deploy([path]).deploy
         owners, _ = assign_path(path, manifest)
         # Check the declared boundary independently of all-node fallback.
         selected = set(owners)
@@ -672,7 +759,7 @@ def current_identities(component: str, manifest: dict, root: Path = ROOT) -> dic
              if PurePosixPath(path).name in {"package-lock.json", "requirements-lock.txt", ".python-version", ".nvmrc"}}
     return {"source": digest(sources), "config": digest(configs), "lockfiles": digest(locks),
             "tools": digest({"node": manifest["components"][component], "manifest": manifest,
-                             "runner": hashlib.sha256((root / "scripts/ci/components.py").read_bytes()).hexdigest()})}
+                             "runner": hashlib.sha256((root / checkout_relative("ci", "components.py")).read_bytes()).hexdigest()})}
 
 
 def verify_inputs(path: Path, component: str, manifest: dict, root: Path = ROOT) -> dict[str, Path]:
@@ -774,7 +861,7 @@ def run_commands(commands: list[dict], root: Path, output_dir: Path | None,
             junit = Path(scratch) / "junit.xml"
             journal = Path(scratch) / "results.jsonl"
             is_pytest = "pytest" in argv
-            executed = [*argv, "-p", "scripts.ci.components", f"--junitxml={junit}"] if is_pytest else argv
+            executed = [*argv, "-p", module_name(__spec__, __file__), f"--junitxml={junit}"] if is_pytest else argv
             timeout = command.get("timeout", None if command["scope"].startswith("complete-node-") else 1800)
             env = os.environ | {"PYTHON": str(project_interpreter(root))}
             if is_pytest:
@@ -861,12 +948,15 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
 
 def parser() -> argparse.ArgumentParser:
     """Expose the complete wrapper contract in root and subcommand help."""
+    self_module = module_name(__spec__, __file__)
+    manifest = checkout_relative("ci", "components.json").as_posix()
     examples = (
-        "Examples:\n  .venv/bin/python -m scripts.ci.components inventory --check\n"
-        "  .venv/bin/python -m scripts.ci.components test --component atlas-data --workers 2\n"
-        "  .venv/bin/python -m scripts.ci.components junit --junit artifacts/pytest-shard-1.xml\n"
-        "  .venv/bin/python -m scripts.ci.components test --component atlas-frontend --list\n"
-        "  .venv/bin/python -m scripts.ci.components build --component atlas-frontend "
+        "Examples:\n"
+        f"  .venv/bin/python -m {self_module} inventory --check\n"
+        f"  .venv/bin/python -m {self_module} test --component atlas-data --workers 2\n"
+        f"  .venv/bin/python -m {self_module} junit --junit artifacts/pytest-shard-1.xml\n"
+        f"  .venv/bin/python -m {self_module} test --component atlas-frontend --list\n"
+        f"  .venv/bin/python -m {self_module} build --component atlas-frontend "
         "--inputs inputs.json --output-dir site/dist\n"
         "Defaults: complete-node pytest uses two workers; collection has a 15-minute timeout, "
         "complete-node commands no wall timeout (pytest per-test timeouts apply), other commands 30 minutes.\n"
@@ -879,7 +969,7 @@ def parser() -> argparse.ArgumentParser:
         "has a unique logical name, repository-relative path and sha256. Required families and exact\n"
         "build argv are exposed by list. Verify without --inputs runs code contracts only; an exit 0\n"
         "does not certify artifact readiness, independence or learner behavior.\n"
-        "Related: scripts/ci/components.json; plans/component-separation-9721.md v2; #9884."
+        f"Related: {manifest}; plans/component-separation-9721.md v2; #9884."
     )
     description = (
         "Inventory tracked paths and run explicit component contract suites/consumer commands.\n"
@@ -913,7 +1003,7 @@ def parser() -> argparse.ArgumentParser:
                              help="Positive wall timeout in seconds, e.g. 7200; default: none (pytest per-test timeouts apply)")
             sub.add_argument("--list", action="store_true", help="List complete resolved pytest/Vitest file sets and counts without execution; default: run all")
         if operation == "affected":
-            sub.add_argument("paths", nargs="*", help="Changed repository-relative paths, e.g. scripts/config.py; default: empty set")
+            sub.add_argument("paths", nargs="*", help=f"Changed repository-relative paths, e.g. {checkout_relative('config.py').as_posix()}; default: empty set")
             sub.add_argument("--paths-file", type=Path, help="NUL-delimited git diff path list, e.g. changed.z; default: positional paths only")
     return result
 

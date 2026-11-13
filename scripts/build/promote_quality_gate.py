@@ -17,7 +17,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
-from scripts.common.thresholds import seminar_promote_floors_for
+from scripts.curriculum.quality.thresholds import seminar_promote_floors_for
 
 ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM = ROOT / "curriculum" / "l2-uk-en"

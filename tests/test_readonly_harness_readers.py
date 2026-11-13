@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import builtins
+import os
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -64,7 +65,10 @@ def test_helper_fallback_only_handles_missing_scripts(reader, missing):
             )
         return builtins.__import__(name, *args, **kwargs)
 
-    namespace = {"__builtins__": {**vars(builtins), "__import__": controlled_import}}
+    # The guard names its package from the module's own location (design-v1 amendment 1), so the
+    # block runs with the module globals it reads: its file and the os and Path it imports.
+    namespace = {"__builtins__": {**vars(builtins), "__import__": controlled_import},
+                 "__file__": str(ROOT / reader), "os": os, "Path": Path}
     code = compile(ast.Module(body=[block], type_ignores=[]), reader, "exec")
     if missing == "scripts":
         exec(code, namespace)
@@ -112,7 +116,7 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
 
 
 def test_dashboard_broker_routes_through_monitor_context(tmp_path):
-    reader = "scripts/api/dashboard_comms.py"
+    reader = "scripts/project_api/dashboard_comms.py"
     tree = ast.parse((ROOT / reader).read_text())
     definition = next(
         node for node in tree.body

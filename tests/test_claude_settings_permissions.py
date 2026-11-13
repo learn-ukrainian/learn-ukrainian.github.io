@@ -130,6 +130,10 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
         assert not pattern.endswith(":*"), pattern
         if head.startswith("sudo"):
             assert pattern.split(" ")[1] in SUDO_SUBCOMMANDS, pattern
+        if head == "scripts/pre_commit/project_python.sh":
+            target = pattern[len(head):].lstrip()
+            assert target.startswith("-I -m lu_machinery."), pattern
+            assert "pytest" not in target, pattern
         if _is_interpreter_head(head):
             if head.endswith(("/bash", "/sh")) or head in {"bash", "sh"}:
                 pytest.fail(f"shell interpreter must never appear in an unrestricted allow rule: {pattern}")
@@ -137,7 +141,7 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
             # pytest imports any file it is pointed at, so an allow rule can
             # never shape-match "-m pytest ..." — that goes back to the
             # classifier (#9030 Grok review).
-            assert target.startswith(("scripts/", "-m scripts."))
+            assert target.startswith(("scripts/", "-m scripts.", "-m lu_machinery."))
             assert "pytest" not in target, pattern
 
 
@@ -155,6 +159,7 @@ def test_allow_list_has_no_broad_arbitrary_code_rule() -> None:
         ("gh pr merge 9030 --squash", "allow"),
         ("gh workflow run ci.yml --ref claude/x", "allow"),
         (".venv/bin/python -m scripts.fleet.capacity_pick --json", "allow"),
+        ("scripts/pre_commit/project_python.sh -I -m lu_machinery.fleet.capacity_pick --json", "allow"),
         ("npm run agents:deploy", "allow"),
         ("sudo systemctl restart caddy", "allow"),
         ("sudo caddy reload --config /etc/caddy/Caddyfile", "allow"),

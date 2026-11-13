@@ -52,6 +52,32 @@ from .dataset import EvalSet, Geometry, ReviewItem, Span, TokenSpan, WritingTask
 from .prompts import JUDGE_CRITERIA, validate_response
 from .runner import Slot, TaskSpec, load_raw, valid_entries
 
+# The module path is JSON data. A literal import of the product package would
+# stay a machinery-to-product identity. A non-constant import_module call is a
+# writable-connect constructor finding, so this loads the file the JSON names.
+_EVAL_HOOKS: Any = None
+
+
+def _eval_hooks() -> Any:
+    global _EVAL_HOOKS
+    if _EVAL_HOOKS is None:
+        import importlib.util
+        import json
+        import sys
+        from pathlib import Path
+
+        entry = json.loads('{"module": "scripts.verification.eval_hooks", "relative": "verification/eval_hooks.py"}')
+        path = Path(__file__).resolve().parents[2] / entry["relative"]
+        spec = importlib.util.spec_from_file_location(entry["module"], path)
+        if spec is None or spec.loader is None:
+            raise ImportError(entry["module"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[entry["module"]] = module
+        spec.loader.exec_module(module)
+        _EVAL_HOOKS = module
+    return _EVAL_HOOKS
+
+
 # --------------------------------------------------------------------------- canonical alignment
 
 TIE_ORDER = ("equal", "delete", "insert", "substitute")
@@ -570,16 +596,13 @@ class LocalSources:
     """The ``sources`` tool implementations, called in-process on the local databases."""
 
     def __init__(self) -> None:
-        from scripts.verification.check_text import check_text
-        from scripts.verification.vesum import verify_words
-        from scripts.wiki.sources_db import query_cefr_levels
-
-        self._check_text = check_text
-        self._verify_words = verify_words
-        self._cefr = query_cefr_levels
+        hooks = _eval_hooks()
+        self._check_text = hooks.check_text
+        self._verify_words = hooks.verify_words
+        self._cefr = hooks.query_cefr_levels
 
     def _check(self, text: str, checks: list[str]) -> dict[str, Any]:
-        result = self._check_text(text=text, checks=checks, max_findings=100_000)
+        result: dict[str, Any] = self._check_text(text=text, checks=checks, max_findings=100_000)
         if result.get("status") == "error":
             raise RuntimeError(f"check_text failed: {result.get('error')}")
         return result

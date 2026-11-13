@@ -48,7 +48,7 @@ from typing import Any
 try:
     from scripts.lib.readonly_sqlite import open_readonly
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
@@ -1231,11 +1231,10 @@ def _run_opencode(
         if not data_path.exists():
             raise SystemExit(f"ask-opencode: --data file does not exist: {data}")
         argv.extend(["--file", str(data_path.resolve())])
-    # `--` ends option parsing so a prompt starting with '-' (a diff line, a
-    # markdown list, etc.) is passed as the positional prompt, not misparsed by
-    # opencode as an unknown flag. Unconditional — content is always positional.
+    # Leave the positional message empty: OpenCode reads non-TTY stdin.
+    # --file remains an attachment, never the prepared prompt transport.
     argv.append("--")
-    argv.append(with_core_or_exit(content, "ask-opencode"))
+    prompt = with_core_or_exit(content, "ask-opencode")
 
     # Inject per-model (or env-overridable) output token budget for reasoning
     # models. This is passed via the known experimental lever so that glm/pool
@@ -1250,6 +1249,7 @@ def _run_opencode(
     try:
         result = subprocess.run(
             argv,
+            input=prompt,
             capture_output=True,
             text=True,
             timeout=timeout,

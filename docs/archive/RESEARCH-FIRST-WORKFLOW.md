@@ -3,11 +3,9 @@
 > **Applies to:** `hist`, `bio`, `istorio`, `lit`, `oes`, `ruth` (seminar tracks)
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
 
-> **Note:** Core (non-seminar) tracks have their own lighter research phases:
-> - **Core A** (A1, A2, B1 M01-05): See [CORE-A-WORKFLOW.md](CORE-A-WORKFLOW.md) — 15-20 min focused lookups
-> - **Core B** (B1 M06+, B2, C1, C2, PRO): See [CORE-B-WORKFLOW.md](CORE-B-WORKFLOW.md) — 20-30 min State Standard verification
+> **Note:** Core (non-seminar) tracks have their own lighter research phases; the Core A and Core B workflow guides were removed in REMOVE-UNNEEDED-1107 (see git history).
 >
-> Both require State Standard grammar verification but skip the deep academic research, callout planning, and primary source gathering described below.
+> Core tracks require State Standard grammar verification but skip the deep academic research, callout planning, and primary source gathering described below.
 
 ---
 

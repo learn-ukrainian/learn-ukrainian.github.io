@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { HARDENED_CONTEXT_OPTIONS, hardenedLaunchOptions } from './e2e/support/hardened-browser.mjs';
 
 // Actual Pages-style C37 proof. The suite starts the existing GH-Pages 404 server
 // for ATLAS_WORD_CARD_C37_ROOT (and optionally the controls root) and skips when
@@ -12,5 +13,9 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
   use: { trace: 'retain-on-failure' },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  // Installed Google Chrome, sandbox on, own origins only (#12689; e2e/support/hardened-browser.mjs).
+  projects: [{
+    name: 'chromium',
+    use: { ...devices['Desktop Chrome'], channel: 'chrome', launchOptions: hardenedLaunchOptions(), ...HARDENED_CONTEXT_OPTIONS },
+  }],
 });

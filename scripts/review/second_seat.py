@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -29,7 +30,9 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
+    # Only this package's own absence selects the short spelling; its name comes from this
+    # file's unresolved location (design-v1 amendment 1), never __package__.
+    if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
@@ -245,20 +248,26 @@ def record_agreement(
 
 
 def build_parser() -> argparse.ArgumentParser:
+    # Named as it was started: by its import name under ``-m``, else by its file.
+    entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
+    # Its parameters file by checkout path, which starts with the machinery package's directory
+    # name, taken from this module's unresolved location.
+    package = Path(os.path.abspath(__file__)).parents[1].name
+    parameters = f"{package}/config/review_parameters.yaml"
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.review.second_seat",
+        prog=f"python {entry}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Say whether a lesson is in the second-seat sample (1 in N; N is second_seat_divisor in\n"
-            "scripts/config/review_parameters.yaml), or list the sampled lessons of a plan.\n"
+            f"{parameters}), or list the sampled lessons of a plan.\n"
             "Use before dispatching a review: a sampled lesson is reviewed a second time, on the same\n"
             "manifest, by a seat of a third family; record --second-seat writes the comparison.\n"
             "Do NOT use it to record a review (scripts.review.record does)."
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.review.second_seat select a1 my-module 4\n"
-            "  .venv/bin/python -m scripts.review.second_seat plan a1 my-module --lessons 12\n"
+            f"  .venv/bin/python {entry} select a1 my-module 4\n"
+            f"  .venv/bin/python {entry} plan a1 my-module --lessons 12\n"
             "Outputs: one JSON object on stdout. Writes nothing. Exit 0."
         ),
     )

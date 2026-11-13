@@ -5,15 +5,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import lu_machinery.api.work_router as work_router
 import pytest
 from fastapi.testclient import TestClient
-
-import scripts.api.work_router as work_router
-from scripts.api.main import app
-from scripts.api.state_helpers import cache_invalidate
-from scripts.work.normalize import build_projection
-from scripts.work.schema import SchemaValidationError, parse_saved_view_params
-from scripts.work.sources_public import SectionResult, private_capability_seam
+from lu_machinery.api.main import app
+from lu_machinery.api.state_helpers import cache_invalidate
+from lu_machinery.work.normalize import build_projection
+from lu_machinery.work.schema import SchemaValidationError, parse_saved_view_params
+from lu_machinery.work.sources_public import SectionResult, private_capability_seam
 
 ROOT = Path(__file__).resolve().parents[1]
 pytestmark = pytest.mark.repo_wide
@@ -24,13 +23,10 @@ PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
 WORK_OWNED = [
     ROOT / "scripts" / "work",
     ROOT / "scripts" / "api" / "work_router.py",
-    ROOT / "dashboards" / "work.html",
     ROOT / "tests" / "fixtures" / "work",
     ROOT / "docs" / "decisions" / "ADR-019-work-control-plane.md",
     ROOT / "docs" / "monitor-api" / "work.md",
-    ROOT / "tests" / "test_work_dashboard.py",
     ROOT / "tests" / "test_work_privacy.py",
-    ROOT / "tests" / "test_work_dashboard_private_integration.py",
 ]
 
 client = TestClient(app, raise_server_exceptions=False)

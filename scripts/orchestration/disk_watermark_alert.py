@@ -16,11 +16,17 @@ It reuses the backup alert's publisher and state files
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from uuid import uuid4
 
 from scripts.orchestration import backup_failure_alert as alerts
 from scripts.orchestration import dispatch_admission as admission
+
+# This package's import name, from the unresolved file location: never from __package__, which a
+# short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
+# are also its directories in checkout-relative paths.
+_PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 
 STATE_NAME = "disk-watermark-alert.json"
 _ABOVE = "above"
@@ -32,7 +38,7 @@ def alert_message(probe: admission.DiskProbe, limits: admission.Thresholds, now:
         f"watermark of {limits.disk_reap_used_percent:g}% after the scheduled worktree cleanup. New write "
         f"dispatches are refused at {limits.disk_refuse_used_percent:g}%.\n"
         "Act: remove settled dispatch worktrees with "
-        "`python -m scripts.orchestration.worktree_claims remove` and clear other disk use.\n"
+        f"`python -m {_PACKAGE}.worktree_claims remove` and clear other disk use.\n"
         f"Change-only: no further alert until usage falls below {limits.disk_reap_used_percent:g}% and crosses again.\n"
     )
 

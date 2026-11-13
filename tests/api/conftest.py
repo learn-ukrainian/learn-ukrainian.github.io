@@ -12,6 +12,11 @@ The probe refuses a sandbox inside Git, and the pre-push gate runs pytest with
 its base temp inside the Git common directory, so every fixture path is truly
 inside Git there (#10646). The sandbox's Git check judges only the directories
 a test builds below ``tmp_path``.
+
+The same isolation is applied from ``tests/conftest.py``. A file collected
+directly under ``tests/`` makes pytest scan that package again, and the new
+``tests/api`` directory node does not receive the fixtures bound to the first
+node. The parent fixture covers that node; these fixtures cover the first one.
 """
 
 from __future__ import annotations
@@ -20,37 +25,17 @@ from pathlib import Path
 
 import pytest
 
-
-@pytest.fixture(autouse=True)
-def _judge_git_below_tmp_path(tmp_path, monkeypatch):
-    from scripts.api import claude_account_usage
-
-    boundary = tmp_path.resolve()
-
-    def inside_git(path: Path) -> bool:
-        return any(
-            claude_account_usage._git_tree(directory)
-            for directory in (path, *path.parents)
-            if directory.is_relative_to(boundary)
-        )
-
-    monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
-
-
-def _no_provider(_token: str) -> tuple[str, object]:
-    from scripts.api.claude_account_usage import ClaudeAccountRefused
-
-    raise ClaudeAccountRefused("claude_account_identity_unavailable")
+from tests.conftest import judge_api_git_below_tmp_path, refuse_api_claude_provider, reset_api_status_caches
 
 
 @pytest.fixture(autouse=True)
-def _isolate_status_ttl_cache(monkeypatch):
-    from scripts.api import claude_account_usage
-    from scripts.api.state_helpers import cache_invalidate
+def _judge_git_below_tmp_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    judge_api_git_below_tmp_path(tmp_path, monkeypatch)
 
-    cache_invalidate()
-    claude_account_usage._reset_for_tests()
-    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _no_provider)
+
+@pytest.fixture(autouse=True)
+def _isolate_status_ttl_cache(monkeypatch: pytest.MonkeyPatch):
+    reset_api_status_caches()
+    refuse_api_claude_provider(monkeypatch)
     yield
-    cache_invalidate()
-    claude_account_usage._reset_for_tests()
+    reset_api_status_caches()

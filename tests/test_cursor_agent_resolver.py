@@ -8,19 +8,26 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
+import lu_machinery.agent_runtime.binary_resolve as binary_resolve
 import pytest
-
-import scripts.agent_runtime.binary_resolve as binary_resolve
-from scripts.agent_runtime import telemetry as telemetry_mod
-from scripts.agent_runtime.adapters import cursor as cursor_mod
-from scripts.agent_runtime.adapters.cursor import (
+from lu_machinery.agent_runtime import telemetry as telemetry_mod
+from lu_machinery.agent_runtime.adapters import cursor as cursor_mod
+from lu_machinery.agent_runtime.adapters.cursor import (
     CursorAdapter,
     CursorAgentMissingError,
     probe_cursor_login,
     resolve_cursor_agent_binary,
 )
-from scripts.ai_agent_bridge._cursor import _invoke_cursor
+
 from scripts.audit import cursor_judge_calibration as calibration
+
+
+@pytest.fixture(autouse=True)
+def stand_in_cursor_pin(monkeypatch):
+    """Keep binary resolution reachable independently of production pin policy."""
+    pin = "stand-in-cursor-pin-high"
+    monkeypatch.setattr("lu_machinery.review.model_catalog.CURSOR_APPROVED_WIRE_PINS", frozenset({pin}))
+    monkeypatch.setattr("lu_machinery.review.model_catalog.cursor_pinned_models", lambda catalog=None: (pin,))
 
 
 def _plant(path: Path, marker: Path, label: str) -> None:
@@ -94,21 +101,19 @@ def test_resolver_uses_later_cursor_agent_and_never_executes_decoy(
         prompt="hello",
         mode="read-only",
         cwd=tmp_path,
-        model="grok-4.7",
+        model="stand-in-cursor-pin-high",
         task_id="resolver-a",
         session_id=None,
         tool_config=None,
     )
     probe = probe_cursor_login()
-    reply = _invoke_cursor("hello", "grok-4.7-high")
-    judged = calibration.call_cursor("judge this", "grok-4.7-high")
+    judged = calibration.call_cursor("judge this", "stand-in-cursor-pin-high")
 
     cursor_path = cursor.resolve()
     assert Path(resolved) == cursor_path
     assert Path(plan.cmd[0]) == cursor_path
-    assert [Path(call[0]) for call in guard.argv] == [cursor_path, cursor_path, cursor_path]
+    assert [Path(call[0]) for call in guard.argv] == [cursor_path, cursor_path]
     assert probe["lane"] == "cursor"
-    assert reply
     assert judged["verdict"] == "clean"
     assert seen
     assert set(seen) == {"cursor-agent"}
@@ -136,15 +141,13 @@ def test_resolver_refuses_when_only_decoy_agent_exists(tmp_path: Path, monkeypat
             prompt="hello",
             mode="read-only",
             cwd=tmp_path,
-            model="grok-4.7",
+            model="stand-in-cursor-pin-high",
             task_id="resolver-b",
             session_id=None,
             tool_config=None,
         )
     with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-        _invoke_cursor("hello", "grok-4.7-high")
-    with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-        calibration.call_cursor("judge this", "grok-4.7-high")
+        calibration.call_cursor("judge this", "stand-in-cursor-pin-high")
     probe = probe_cursor_login()
 
     assert probe["error_kind"] == "missing_binary"

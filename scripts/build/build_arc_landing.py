@@ -227,7 +227,7 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     doc = _read_mapping(roots.state / slug / "module-verdict.yaml")
     if doc is None or doc.get("verdict") != "APPROVE":
         return False
-    from scripts.review import findings_db
+    from lu_machinery.review import findings_db
 
     db_file = findings_db.db_path(roots.level, repo_root=roots.repo)
     if not db_file.is_file():

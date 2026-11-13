@@ -1,9 +1,9 @@
 """Claude route-key accounts for tests (#10630).
 
-Production builds a :class:`ClaudeAccount` only in ``scripts.fleet.claude_account_lane``
-(``resolve_route_account``, ``account_from_record``, ``no_claude_account``). Tests that call a
-routing or admission function directly name the account the same way a dispatch would, and a
-test that hands a raw routing-budget fixture straight to a decision helper binds it first
+Held A3 subjects require their own :class:`ClaudeAccount` identity until they migrate.
+Tests that call a routing or admission function directly name the account the same way a
+dispatch would. A test that hands a raw routing-budget fixture straight to a decision helper
+binds it first
 (:func:`bound`), as the helper's production boundary does (#10770).
 """
 
@@ -12,7 +12,12 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from scripts.fleet.claude_account_lane import UNRESOLVED_SOURCE, AccountSnapshot, ClaudeAccount, bind_snapshot
+from scripts.fleet.claude_account_lane import (  # TRANSITIONAL-PKG3-B2: A3 subjects require these exact types.
+    UNRESOLVED_SOURCE,
+    AccountSnapshot,
+    ClaudeAccount,
+    bind_snapshot,
+)
 
 # What a dispatch without a default-account file resolves: the built-in default, which reads the lane row.
 HOST_ACCOUNT = ClaudeAccount("a", "builtin")

@@ -13,7 +13,7 @@ from scripts.audit.lint_agent_trailer import ProvenanceContext, _check_commit, m
 @pytest.fixture(autouse=True)
 def _stub_primary_integrity_sweep(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep delegate tests hermetic from the ambient checkout (same as tests/test_delegate.py:59)."""
-    import scripts.audit.check_primary_integrity as cpi
+    import lu_machinery.hygiene.check_primary_integrity as cpi
 
     monkeypatch.setattr(
         cpi,
@@ -338,7 +338,7 @@ def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.Mon
 
 @pytest.mark.parametrize("agent", ["muse", "opencode"])
 def test_dispatcher_provider_agents_accepted(agent: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Every scripts/dispatcher/providers agent has a valid trailer; bare model names do not."""
+    """Every lu_machinery/dispatcher/providers agent has a valid trailer; bare model names do not."""
     provenance = ProvenanceContext(active=False)
     _mock_commit(monkeypatch, f"feat: x\n\nX-Agent: {agent}/task-1")
     assert _check_commit("sha", provenance=provenance) == ("PASS", f"X-Agent: {agent}/task-1")

@@ -38,7 +38,10 @@ Covered write surfaces
   targets; uncertain navigation blocks those targets. Common command wrappers,
   ``find -exec`` writers, and executable substitutions in unquoted heredocs
   feed the same writer parser. Decidable ``eval`` strings are parsed
-  recursively; undecidable ones always block. ``xargs`` / ``parallel`` writers block when their
+  recursively; undecidable ones always block. Literal ``trap`` actions and
+  simple ``coproc`` commands use the same nested writer and Git walks. Trap
+  cwd is unknown because execution is deferred; compound coprocess scopes
+  fail closed. ``xargs`` / ``parallel`` writers block when their
   generated arguments can supply a primary target.
 * ``Bash`` / Cursor ``Shell`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
   ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
@@ -48,6 +51,11 @@ Covered write surfaces
   or ``git -C``) is the protected primary checkout. Rescue clean forms
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
+* AGY (Antigravity CLI) ``toolCall`` payloads — ``write_file`` / ``edit_file``
+  ``args.Path`` and ``run_command`` ``args.CommandLine`` map onto the Write /
+  Bash rules above. AGY reads a denial only as ``{"decision": "deny", "reason"}``
+  on stdout, so an AGY payload exits 0 with that object; an allow prints nothing,
+  which leaves AGY's own permission flow unchanged.
 * Precise transfer parsing for rsync and git archive; conservative positional
   classification for long-tail writers (curl, wget, sort, SQLite, tar, unzip,
   patch, tee, truncate, split, csplit, ffmpeg, convert). Known short-option
@@ -96,7 +104,8 @@ Bash expands ``$'...'`` escapes, so a Bash command holding an unquoted marker
 ``$'`` — raw, or after backslash-newline removal (Bash joins ``$\\<newline>'``
 into ``$'``) — is blocked before parsing, target inference or any allowlisted
 early return, and so is every nested command string the parser re-reads
-(``eval`` / ``sh -c``). Bash performs ANSI-C quoting only for an unquoted
+(``eval`` / ``sh -c`` / ``trap`` / ``coproc``). Bash performs ANSI-C quoting
+only for an unquoted
 ``$'``: inside single quotes every character is literal and inside double quotes
 ``'`` is literal (bash(1), QUOTING), so ``grep -v '^\\s*$'`` and ``"end$'"`` are
 plain text and allowed. Quotes are tracked only when the command holds none of
@@ -190,6 +199,24 @@ except Exception as exc:
 # shared containment predicate (issue #4444) — imported, never re-derived
 # ---------------------------------------------------------------------------
 
+# Machinery modules by import name. This hook is outside the machinery package; under the checkout
+# that owns it, a module's file is at the same dotted path.
+_CONTAINMENT_MODULE = "scripts.guardrails.worktree_containment"
+_SIBLING_GIT_MODULE = "scripts.fleet.sibling_git"
+_MACHINERY = _CONTAINMENT_MODULE.partition(".")[0]
+
+
+def _module_file(module: str) -> Path:
+    """The checkout-relative file of a machinery module named by its import name."""
+    return Path(*module.split(".")).with_suffix(".py")
+
+
+def _package_init_files(module: str) -> tuple[str, ...]:
+    """Checkout-relative files Python executes to import ``module``: each package's, then its own."""
+    parts = module.split(".")
+    packages = ["/".join([*parts[:depth], "__init__.py"]) for depth in range(1, len(parts))]
+    return (*packages, _module_file(module).as_posix())
+
 
 def _load_containment():
     """Import ``scripts.guardrails.worktree_containment`` from any launch dir.
@@ -200,11 +227,13 @@ def _load_containment():
     ``sys.path``. The caller blocks if containment cannot be loaded.
     """
     here = Path(__file__).resolve()
-    for candidate in (here.parent, *here.parents):
-        if (candidate / "scripts" / "guardrails" / "worktree_containment.py").exists():
-            if str(candidate) not in sys.path:
-                sys.path.insert(0, str(candidate))
-            break
+    marker = _module_file(_CONTAINMENT_MODULE)
+    root = next((c for c in (here.parent, *here.parents) if (c / marker).exists()), None)
+    if root is None:
+        # No owning checkout: never import containment from elsewhere on sys.path.
+        return None
+    # The owning checkout comes first, even when PYTHONPATH already lists it later.
+    sys.path[:] = [str(root), *(entry for entry in sys.path if entry != str(root))]
     try:
         from scripts.guardrails import worktree_containment as wc
     except Exception:  # pragma: no cover - defensive import failure
@@ -213,8 +242,55 @@ def _load_containment():
 
 
 def _protected_repo_anchor() -> Path:
-    """The source or deployed hook location identifies its owning repository."""
-    return Path(__file__).resolve().parent
+    """The configured product context, never caller Git metadata."""
+    from scripts.common.repo_root import product_root
+
+    # The retained product resolver requires a curriculum marker even for an
+    # explicitly configured root. Match the canonical hook's directory-only
+    # contract here, including sparse worktrees and product snapshots.
+    configured = os.environ.get("LU_PRODUCT_ROOT")
+    if configured:
+        root = Path(configured)
+        if not root.is_absolute() or not root.is_dir():
+            raise ValueError("configured product root must be an absolute directory")
+        return root
+    return product_root()
+
+
+def _protected_repo_roots(wc) -> tuple[Path, ...]:
+    """Pin the explicit primary first; product metadata can only add protection."""
+    from scripts.common.repo_root import configured_primary_root
+
+    configured = configured_primary_root()
+    anchor = (configured if configured is not None else _protected_repo_anchor()).resolve(strict=True)
+    primary = wc.resolve_main_root_without_git(anchor)
+    if primary != anchor or wc.resolve_main_root(primary) != primary:
+        raise ValueError("configured authority is not a physical primary checkout")
+    # A product may be a worktree of a different repository than shared state.
+    # Its gitfile is inspected only after the mandatory authority is pinned.
+    product = _protected_repo_anchor().resolve(strict=True)
+    try:
+        product_primary = wc.resolve_main_root(product)
+    except wc.NotAGitRepositoryError:
+        # A non-Git product snapshot still has the explicit primary authority.
+        return (primary,)
+    if wc.resolve_main_root_without_git(product_primary) != product_primary:
+        raise ValueError("product primary metadata is inconsistent")
+    return tuple(dict.fromkeys((primary, product_primary)))
+
+
+def _evaluate_write(target: Path, wc, main_root: Path) -> object:
+    """A target-selected checkout may add a denial, never replace the pinned one."""
+    decision = wc.evaluate_write(target, cwd=main_root)
+    if not decision.allowed:
+        return decision
+    try:
+        target_root = wc.resolve_main_root(target.parent)
+    except wc.NotAGitRepositoryError:
+        return decision
+    if target_root != main_root and wc.is_protected_branch(target_root):
+        return wc.evaluate_write(target, cwd=target_root)
+    return decision
 
 
 # ---------------------------------------------------------------------------
@@ -819,11 +895,20 @@ class ShellWord(str):
 class ShellSegment(list):
     """Expanded words with their shell scope and neighboring control operators."""
 
-    def __init__(self, words: list[ShellWord], scope: tuple[int, ...], prev_op: str, next_op: str) -> None:
+    def __init__(
+        self,
+        words: list[ShellWord],
+        scope: tuple[int, ...],
+        prev_op: str,
+        next_op: str,
+        *,
+        simple_command: bool = False,
+    ) -> None:
         super().__init__(words)
         self.scope = scope
         self.prev_op = prev_op
         self.next_op = next_op
+        self.simple_command = simple_command
 
 
 Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
@@ -1057,10 +1142,20 @@ class _Expander:
                 current.append(tok)
                 continue
             if current:
+                # Reserved words and compound frames can defer or repeat this command.
+                simple_command = not self.frames and not self.poisoned
                 words = self._segment(current, prev_op, tok)
                 if words:
                     scope = tuple(int(frame.split(":", 1)[1]) for frame in self.frames if frame.startswith("paren:"))
-                    segments.append(ShellSegment(words, scope, prev_op, tok))
+                    segments.append(
+                        ShellSegment(
+                            words,
+                            scope,
+                            prev_op,
+                            tok,
+                            simple_command=simple_command and not self.frames and len(words) == len(current),
+                        )
+                    )
                 current = []
             elif tok == "\n" and prev_op in _CONTINUING_OPS:
                 continue
@@ -1337,6 +1432,73 @@ _LONG_TAIL_LONG_VALUES: dict[str, dict[str, bool]] = {
     "unzip": {"directory": True},
     "patch": {"output": True, "reject-file": True, "prefix": True, "directory": True, "input": False},
 }
+
+
+# tar options proven not to write in list mode: verbosity and decompression filters.
+# Any other option keeps the conservative long-tail classification.
+_TAR_LIST_SHORT = frozenset("vzjJZ")
+_TAR_LIST_LONG = frozenset(
+    {"verbose", "gzip", "gunzip", "ungzip", "bzip2", "xz", "lzma", "lzip", "lzop", "zstd", "compress", "uncompress"}
+)
+# Bash brace, pathname and extended-glob syntax: such a word can expand into other words,
+# including options outside the allowlist (``{--checkpoint=1,x}``, ``*``). Quoted or not,
+# a word holding one is not proven literal.
+_TAR_EXPANDABLE = frozenset("*?[]{}()")
+
+
+def _tar_lists_only(args: list[str]) -> bool:
+    """Whether tar only lists an archive (``-t``/``--list``), which reads ``-f`` and writes nothing.
+
+    tar takes a dash-less first word as bundled options (``tar tzf a.tgz``),
+    each value-taking letter consuming the next word. Positional words in list
+    mode are member names, not paths. Every word must be provably literal: an
+    expansion, brace or glob syntax, or any option outside the list-mode
+    allowlist is not proven read-only.
+    """
+    if any(
+        getattr(arg, "unresolved_at", None) is not None
+        or not _TAR_EXPANDABLE.isdisjoint(str(arg))
+        or not _TAR_EXPANDABLE.isdisjoint(str(getattr(arg, "raw", "")))
+        for arg in args
+    ):
+        return False
+    words = [str(arg) for arg in args]
+    listed = False
+    i = 0
+    if words and not words[0].startswith("-"):
+        if not words[0].isascii() or not words[0].isalpha():
+            return False
+        i = 1
+        for flag in words[0]:
+            if flag == "f":
+                i += 1
+            elif flag == "t":
+                listed = True
+            elif flag not in _TAR_LIST_SHORT:
+                return False
+    while i < len(words):
+        arg = words[i]
+        i += 1
+        if arg == "--":
+            break
+        if arg.startswith("--"):
+            name, sep, _ = arg[2:].partition("=")
+            if name == "file":
+                i += 0 if sep else 1
+            elif name == "list" and not sep:
+                listed = True
+            elif name not in _TAR_LIST_LONG or sep:
+                return False
+        elif arg.startswith("-") and arg != "-":
+            for offset, flag in enumerate(arg[1:], 1):
+                if flag == "f":
+                    i += 0 if offset + 1 < len(arg) else 1
+                    break
+                if flag == "t":
+                    listed = True
+                elif flag not in _TAR_LIST_SHORT:
+                    return False
+    return listed
 
 
 def _long_tail_targets(args: list[str], command: str) -> list[str]:
@@ -1692,10 +1854,51 @@ def _find_targets(args: list[str], *, cwd: str | None, main_root: Path | None, d
     return targets
 
 
+def _trap_coproc_script(segment: list[str]) -> str | None:
+    """Expose literal deferred/async actions to both existing nested walks."""
+    cmd, idx = _command_word(segment)
+    args = segment[idx + 1 :]
+    if cmd == "trap":
+        if args[:1] == ["--"]:
+            args = args[1:]
+        if not args or args[0] in {"", "-", "-p", "-l"}:
+            return None
+        action = args[0]
+        if getattr(action, "unresolved_at", None) is not None or action.startswith("-"):
+            raise ShellPreprocessLimit("trap action cannot be read safely")
+        # The action inherits future shell bindings, including HOME. Quoted
+        # literal dollars/tildes are masked by the existing tokenizer.
+        if any("$" in word or "~" in word or "`" in word for word in _tokenize(str(action))):
+            raise ShellPreprocessLimit("deferred trap expansion cannot be read safely")
+        # Cwd is deliberately unknown when this script is walked: a trap runs
+        # later, after arbitrary cwd changes. Absolute targets remain decidable.
+        return str(action)
+    if not args or any(getattr(arg, "unresolved_at", None) is not None for arg in args):
+        raise ShellPreprocessLimit("coproc command cannot be read safely")
+    compound_starts = _COMPOUND_OPENERS | _COMPOUND_PREFIXES | {"function"}
+    if args[0] in compound_starts or (len(args) > 1 and args[1] in compound_starts):
+        # Named and compound coprocesses need a subshell scope the bounded
+        # parser cannot attribute. Never let their cd/assignments affect the parent.
+        raise ShellPreprocessLimit("compound coproc scope cannot be read safely")
+    return shlex.join(args)
+
+
 def _writer_targets(
     segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
 ) -> list[str]:
     """Targets of the writer in one expanded segment, including exec wrappers."""
+    # GNU tar also reads options from TAR_OPTIONS (a --checkpoint-action can run a program), so
+    # list mode is proven read-only only where nothing can have set it: the command's first
+    # simple top-level segment, outside compound syntax, nested shells or templates,
+    # and an unset harness value.
+    tar_environment_fixed = (
+        depth == 0
+        and getattr(segment, "simple_command", False)
+        and getattr(segment, "prev_op", None) == ""
+        and getattr(segment, "scope", None) == ()
+        and getattr(segment, "next_op", None) != "("  # ``tar tf A @(x)``: an extended glob
+        and "TAR_OPTIONS" not in os.environ
+    )
     targets = _redirect_targets(segment)
     for target in targets:
         if isinstance(target, ShellWord):
@@ -1707,7 +1910,9 @@ def _writer_targets(
     # `tee /tmp/file >/dev/null` look like a write to a file named `>`.
     segment = _without_redirects(segment)
     cmd, idx = _command_word(segment)
-    if cmd in _LONG_TAIL_WRITERS:
+    if cmd == "tar" and idx == 0 and tar_environment_fixed and _tar_lists_only(segment[1:]):
+        pass  # List mode reads the archive and writes nothing; -x/-c/-r/-u/-A stay below.
+    elif cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
         if cmd == "curl" and (_has_short_option(segment[idx + 1 :], cmd, "O") or "--remote-name" in segment[idx + 1 :]):
             targets.extend(
@@ -1746,6 +1951,12 @@ def _writer_targets(
                     word.decision_reason = "unresolved_shell_variable"
                 word.base = str(git_base) if git_base is not None else None
                 targets.append(word)
+    elif cmd in {"trap", "coproc"}:
+        script = _trap_coproc_script(segment)
+        if script is not None:
+            targets.extend(
+                bash_write_targets(script, cwd=None if cmd == "trap" else cwd, main_root=main_root, depth=depth + 1)
+            )
     elif cmd == "eval":
         args = segment[idx + 1 :]
         if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
@@ -2174,6 +2385,20 @@ def bash_git_write_intents(
     for segment, effective_cwd, _shell_cwd in segments:
         segment = _without_redirects(segment)
         cmd, idx = _command_word(segment)
+        if cmd in {"trap", "coproc"}:
+            script = _trap_coproc_script(segment)
+            if script is not None:
+                if depth >= _MAX_SHELL_DEPTH:
+                    raise ShellPreprocessLimit("nested trap/coproc recursion limit")
+                intents.extend(
+                    bash_git_write_intents(
+                        script,
+                        cwd=None if cmd == "trap" else effective_cwd,
+                        depth=depth + 1,
+                        git_environment=git_environment,
+                    )
+                )
+            continue
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
@@ -2536,7 +2761,7 @@ def _final_component_matches(pattern: str, name: str) -> bool:
     return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
 
 
-def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None) -> object:
+def _bash_path_decision(word: str, base: str, wc, main_root: Path) -> object:
     """Containment decision for one expanded Bash path word.
 
     A word holding any unknown expansion is blocked outright: the unknown value
@@ -2548,7 +2773,7 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
     reason = getattr(word, "decision_reason", None)
     if reason is not None:
         return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
-    if main_root is not None and re.search(r"[*?\[\]{}]", word):
+    if re.search(r"[*?\[\]{}]", word):
         parts = Path(word).parts
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
         prefix = Path(*parts[:first]) if first else Path(".")
@@ -2562,7 +2787,7 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
                 parts[-1], main_root.relative_to(prefix).parts[0]
             )
         if main_root in prefix.parents:
-            may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
+            may_reach_primary = not _evaluate_write(prefix / "__guard_glob_probe__", wc, main_root).allowed
         if may_reach_primary:
             return _UndecidableWrite(
                 "undecidable_glob_write_target",
@@ -2570,9 +2795,9 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
             )
     base = getattr(word, "base", None) or base
     target = _resolve(word, base, expand_user=False)
-    # When the payload cwd belongs to another repository, containment must
-    # anchor on the target's repository rather than classify it as outside cwd.
-    return wc.evaluate_write(target, cwd=base if main_root is not None else target.parent)
+    # Cwd resolves relative words only. Its Git metadata is worker-controlled
+    # and must never select the checkout whose files are protected.
+    return _evaluate_write(target, wc, main_root)
 
 
 def _label(word: str) -> str:
@@ -2628,11 +2853,11 @@ def _sibling_git_invocation(command: str, cwd: str) -> bool:
     try:
         words = shlex.split(command)
         root = next(p for p in Path(__file__).resolve().parents
-                    if (p / "scripts/guardrails/worktree_containment.py").is_file())
+                    if (p / _module_file(_CONTAINMENT_MODULE)).is_file())
         execution = Path(cwd)
         if not execution.is_absolute() or execution.resolve(strict=True) != root:
             return False
-        for relative in ("scripts/__init__.py", "scripts/fleet/__init__.py", "scripts/fleet/sibling_git.py"):
+        for relative in _package_init_files(_SIBLING_GIT_MODULE):
             source = root / relative
             if not source.is_file() or source.resolve(strict=True) != source:
                 return False
@@ -2652,7 +2877,7 @@ def _sibling_git_invocation(command: str, cwd: str) -> bool:
         interpreters = {interpreter}
         if root == primary:
             interpreters.add(".venv/bin/python")
-        if len(words) < 4 or words[0] not in interpreters or words[1:3] != ["-m", "scripts.fleet.sibling_git"]:
+        if len(words) < 4 or words[0] not in interpreters or words[1:3] != ["-m", _SIBLING_GIT_MODULE]:
             return False
         if not Path(interpreter).is_file():
             return False
@@ -2677,15 +2902,64 @@ def _sibling_git_refusal() -> int:
         "Set PYTHONDONTWRITEBYTECODE=1 in the session first; use the shared project's absolute interpreter.\n"
         "No interpreter options, PYTHONPATH, prefixes, nested shells, redirects or trailing commands.\n"
         "Copyable examples from the primary root (use the shared absolute interpreter from a dispatch root):\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git status --repo infra-private\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git sync-main --repo infra-private\n"
-        "  .venv/bin/python -m scripts.fleet.sibling_git worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} status --repo infra-private\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} sync-main --repo infra-private\n"
+        f"  .venv/bin/python -m {_SIBLING_GIT_MODULE} worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'\n"
     )
     return 2
 
 
-def _main() -> int:
-    payload = _read_payload()
+# AGY tool name -> (guarded tool name, AGY argument, guarded argument). Any non-shell name
+# takes the structured write rules. AGY 1.5.5 has no other file-writing tool; its remaining
+# tools (read_file, search, MCP, subagents) take no write target this guard can classify.
+_AGY_WRITE_TOOLS = {
+    "write_file": ("write_file", "Path", "file_path"),
+    "edit_file": ("edit_file", "Path", "file_path"),
+    "run_command": ("Bash", "CommandLine", "command"),
+}
+
+
+def _agy_payload(payload: dict) -> dict | None:
+    """The guarded shape of an AGY ``toolCall``; None when it cannot be classified."""
+    call = payload["toolCall"]
+    if not isinstance(call, dict) or not isinstance(call.get("name"), str):
+        return None
+    mapped = _AGY_WRITE_TOOLS.get(call["name"])
+    if mapped is None:
+        return {}
+    tool_name, source, key = mapped
+    args, cwd = call.get("args"), payload.get("cwd")
+    value = args.get(source) if isinstance(args, dict) else None
+    if not isinstance(value, str) or (key == "file_path" and not value) or not isinstance(cwd, str) or not cwd:
+        return None
+    tool_input = {key: value}
+    if "Cwd" in args:
+        if not isinstance(args["Cwd"], str) or not args["Cwd"]:
+            return None
+        tool_input["cwd"] = args["Cwd"]
+    return {"tool_name": tool_name, "cwd": cwd, "tool_input": tool_input}
+
+
+def _agy_main(payload: dict) -> int:
+    """Decide an AGY call and answer in AGY's stdout contract."""
+    import io
+    from contextlib import redirect_stderr
+
+    reason = io.StringIO()
+    with redirect_stderr(reason):
+        try:
+            guarded = _agy_payload(payload)
+            code = _block_uncertain("malformed_agy_tool_call") if guarded is None else _main(guarded)
+        except Exception:
+            code = _block_uncertain("agy_inspection_failed")
+    if code == 0:
+        sys.stderr.write(reason.getvalue())
+        return 0
+    print(json.dumps({"decision": "deny", "reason": reason.getvalue() or "BLOCKED by guard-primary-checkout-write."}))
+    return 0
+
+
+def _main(payload: dict | None) -> int:
     if payload is None:
         return _block_uncertain("malformed_hook_payload")
     tool_name = _tool_name(payload)
@@ -2713,8 +2987,6 @@ def _main() -> int:
             words = shlex.split(command)
         except ValueError:
             words = []  # The existing shell parser handles malformed commands.
-        if any(words[i : i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
-            return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:
         raw_targets = write_tool_targets(tool_input)
@@ -2735,21 +3007,29 @@ def _main() -> int:
     if wc is None:
         return _block_uncertain("containment_unavailable")
 
-    # The cwd may be outside Git while an absolute target still names the
-    # protected checkout. In that case classify each resolved target below.
-    main_root = None
     try:
-        cwd_root = wc.resolve_main_root(cwd)
-        if wc.is_protected_branch(cwd_root):
-            main_root = cwd_root
-    except wc.NotAGitRepositoryError:
-        pass
+        protected_roots = _protected_repo_roots(wc)
     except Exception:
-        return _block_uncertain("undecidable_cwd")
+        return _block_uncertain("product_root_unavailable")
+
+    if is_shell_tool(tool_name) and any(
+        words[i : i + 2] == ["-m", _SIBLING_GIT_MODULE] for i in range(len(words) - 1)
+    ):
+        return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
 
     if is_shell_tool(tool_name):
         try:
-            raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
+            parse_roots = list(protected_roots)
+            try:
+                cwd_root = wc.resolve_main_root(cwd)
+            except wc.NotAGitRepositoryError:
+                pass
+            else:
+                # Preserve cwd's parser refusals without changing configured Git-write policy.
+                if wc.is_protected_branch(cwd_root) and cwd_root not in parse_roots:
+                    parse_roots.append(cwd_root)
+            for root in parse_roots:
+                raw_targets.extend(bash_write_targets(command, cwd=cwd, main_root=root))
         except ShellPreprocessLimit:
             return _block_uncertain("nested_shell_command")
         except _AnsiCQuotingRefused:
@@ -2759,9 +3039,8 @@ def _main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if is_shell_tool(tool_name) and command and not allow_primary_git:
         try:
-            for intent in git_intents:
+            for intent_root, intent in ((root, intent) for root in protected_roots for intent in git_intents):
                 summary = str(intent.get("summary") or "git write")
-                intent_root = wc.resolve_main_root(_protected_repo_anchor())
                 options = intent.get("git_options") or []
                 redirects = set(wc.GIT_REDIRECT_ENV_KEYS)
                 environment = intent.get("git_environment") or frozenset()
@@ -2821,33 +3100,23 @@ def _main() -> int:
 
     try:
         decisions: list[tuple[str, object]] = []
-        for raw in raw_targets:
+        for raw, decision_root in ((raw, root) for raw in raw_targets for root in protected_roots):
             if is_shell_tool(tool_name):
                 # Words were expanded from same-command assignments (#5404 /
                 # #8500); any unknown value blocks (_bash_path_decision).
-                decision = _bash_path_decision(raw, cwd, wc, main_root)
+                decision = _bash_path_decision(raw, cwd, wc, decision_root)
             else:
                 target = _resolve(raw, cwd)
-                decision = wc.evaluate_write(target, cwd=cwd if main_root is not None else target.parent)
+                decision = _evaluate_write(target, wc, decision_root)
             decisions.append((raw, decision))
     except Exception:
         return _block_uncertain("undecidable_write_target")
 
     for raw, decision in decisions:
         if not decision.allowed:
-            target_root = main_root
-            if target_root is None:
-                try:
-                    base = getattr(raw, "base", None) or cwd
-                    target_path = _resolve(raw, base, expand_user=False)
-                    target_root = wc.resolve_main_root(target_path.parent)
-                    if not wc.is_protected_branch(target_root):
-                        continue
-                except Exception:
-                    target_root = None
             sys.stderr.write(
                 f"BLOCKED by guard-primary-checkout-write: {tool_name} would write "
-                f"'{_label(raw)}' inside the protected primary checkout ({target_root or 'possible primary target'}) "
+                f"'{_label(raw)}' inside a protected primary checkout "
                 f"[{decision.reason}].\n\n"
                 "The primary checkout must stay clean on `main`. Do all write "
                 "work in a dispatch worktree instead:\n\n"
@@ -2877,7 +3146,7 @@ def _bypass_agent_shims() -> None:
     direct = os.pathsep.join(
         entry
         for entry in os.environ.get("PATH", "").split(os.pathsep)
-        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+        if Path(entry).parts[-3:] != (_MACHINERY, "agent_runtime", "shims")
     )
     if shutil.which("git", path=direct):
         os.environ["PATH"] = direct
@@ -2885,7 +3154,10 @@ def _bypass_agent_shims() -> None:
 
 def main() -> int:
     try:
-        return _main()
+        payload = _read_payload()
+        if payload is not None and "toolCall" in payload:
+            return _agy_main(payload)
+        return _main(payload)
     except Exception:
         print("BLOCKED by guard-primary-checkout-write: cannot inspect command.", file=sys.stderr)
         return 2

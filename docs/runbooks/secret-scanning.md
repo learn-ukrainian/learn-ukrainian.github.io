@@ -34,7 +34,7 @@ From a dispatch worktree, use the primary checkout's interpreter (see
 
 | Mode | Scans | How |
 | --- | --- | --- |
-| `tree` | Tracked and untracked-not-ignored files of the work tree | `trufflehog filesystem` over that file list (batched). Never `.git`, `.venv`, `node_modules`, `.worktrees` or database files under `data/`; symlinks and files beneath a symlinked directory are skipped. |
+| `tree` | Tracked and untracked-not-ignored files of the work tree | `trufflehog filesystem` walks the work tree. An include file lists the candidate paths. An exclude file is `.trufflehogignore` unchanged, plus denied directories (`.git`, `.venv`, `node_modules`, `.worktrees`). Database files under `data/` stay out of the include file. Symlinks and files beneath a symlinked directory are skipped. A rule TruffleHog rejects fails the scan. |
 | `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory under the temp directory, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory, also on SIGINT, SIGTERM or SIGHUP. A failed removal is exit 2. |
 | `show-keys REPORT` | An existing report | Prints only the report's top-level key names and the count of findings per detector. Runs nothing. |
 | `count REPORT [--path P]... [--detector NAME]` | An existing report | Prints only how many findings (of one detector, if given) lie in the given paths, outside them, and without a file location. A path ending in `/` is a directory. The paths and the name are never printed. Runs nothing. |
@@ -58,8 +58,8 @@ write the files directly.
 
 ## Fixed flags and parity with CI
 
-The wrapper passes these flags on every call and accepts no TruffleHog
-pass-through options:
+The wrapper passes these flags on every call, except `--exclude-paths` as
+that row describes, and accepts no TruffleHog pass-through options:
 
 | Flag | Why |
 | --- | --- |
@@ -67,7 +67,7 @@ pass-through options:
 | `--no-update` | No update check over the network. |
 | `--results=unverified` | Offline, every candidate is "unverified". CI runs verified mode and keeps `--results=verified,unknown`; offline that filter would hide everything, so the local scan reports the full unverified superset. Expect more false positives than CI. |
 | `--exclude-detectors=Lob` | Same as CI (#6575). |
-| `--exclude-paths=.trufflehogignore` | Same as CI's Secret scan job, when the file exists. |
+| `--exclude-paths` | History passes `.trufflehogignore` when the file exists, as CI's Secret scan job does. Tree passes an exclude file of those rules unchanged plus the denied directories, because TruffleHog applies exclude rules only while walking a directory. |
 | `--fail-on-scan-errors` | A scan error is a tool error (exit 2), not a clean result. |
 | `--json` | The report format the wrapper parses. |
 

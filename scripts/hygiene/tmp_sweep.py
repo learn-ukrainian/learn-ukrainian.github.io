@@ -81,6 +81,17 @@ from scripts.orchestration.tmp_leak_sweep import (
 )
 from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 
+
+def _machinery_top() -> str:
+    # Name the package from the unresolved file location, never from __package__
+    # (design-v1 amendment 1): a copy loaded without a package must name the same tree.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # Unsettled deliverables (needs_finalize), blocked work and dry-run records are held.
 REAPABLE_STATES = frozenset({"done", "failed", "timeout", "cancelled", "crashed", "rate_limited", "no_deliverable"})
@@ -286,146 +297,20 @@ def registered_worktrees(repo_root: Path) -> set[Path] | None:
         return None
 
 
-# Config that can make a ``.git`` directory the metadata of a checkout elsewhere, or pull in
-# settings the sweep cannot read, keeps the run. Every other key (remotes, branches, hooks
-# path, credentials, aliases) only describes the repository and cannot make it custodian of
-# anything outside its tree, so deleting the tree with it harms no one.
-_REDIRECT_CONFIG_PREFIXES = (b"include.", b"includeif.")
-_ALLOWED_EXTENSIONS = frozenset({b"extensions.worktreeconfig"})
-_ORDINARY_CONFIG_VALUES = {b"core.repositoryformatversion": b"0", b"core.bare": b"false"}
-_GIT_POINTER_LIMIT = 4096
-_GIT_DIRECTORY_SHAPE = frozenset({"HEAD", "objects", "refs"})
-
-
-def _inside(root: Path, target: str, *, base: Path) -> bool:
-    """Whether a path named by Git metadata resolves to ``root`` or below it, symlinks followed."""
-    try:
-        resolved = Path(os.path.realpath(os.path.join(base, target)))
-    except (OSError, ValueError):
-        return False
-    return resolved == root or root in resolved.parents
-
-
-def _read_pointer(path: Path) -> bytes | None:
-    """The short regular file at ``path`` without following a symlink, or ``None``."""
-    try:
-        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-        with os.fdopen(fd, "rb") as handle:
-            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
-                return None
-            content = handle.read(_GIT_POINTER_LIMIT + 1)
-    except OSError:
-        return None
-    return content if len(content) <= _GIT_POINTER_LIMIT else None
-
-
-def _custody_free_config(path: Path, root: Path, git_dir: Path, *, bare_ok: bool = False) -> bool:
-    """Parse one config file without includes or global config; refuse anything that redirects custody.
-
-    ``bare_ok`` admits ``core.bare = true`` for a Git directory that is not named ``.git``.
-    """
-    try:
-        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-        with os.fdopen(fd, "rb") as config:
-            if not stat.S_ISREG(os.fstat(config.fileno()).st_mode):
-                return False
-            content = config.read(1024 * 1024 + 1)
-        if len(content) > 1024 * 1024:
-            return False
-        result = subprocess.run(
-            ["git", "config", "--file", "-", "--no-includes", "--null", "--list"],
-            input=content, capture_output=True, check=False, timeout=15,
-            env={"PATH": os.environ.get("PATH", os.defpath)},
-        )
-    except (OSError, subprocess.SubprocessError):
-        return False
-    if result.returncode:
-        return False
-    for field in result.stdout.split(b"\0"):
-        if not field:
-            continue
-        name, _, value = field.partition(b"\n")
-        key = name.lower()
-        if key.startswith(_REDIRECT_CONFIG_PREFIXES):
-            return False
-        if key.startswith(b"extensions.") and key not in _ALLOWED_EXTENSIONS:
-            return False
-        if key == b"core.bare" and bare_ok:
-            continue
-        if key in _ORDINARY_CONFIG_VALUES and value.lower() != _ORDINARY_CONFIG_VALUES[key]:
-            return False
-        if key == b"core.worktree" and not _inside(root, os.fsdecode(value), base=git_dir):
-            return False
-    return True
-
-
-def _disposable_git_directory(path: Path, root: Path) -> bool:
-    """Recognize a ``.git`` directory that is custodian of nothing outside ``root``, the tree being removed.
-
-    The caller has checked every node's owner, type, links and mounts. Deleting
-    a repository only harms others when they depend on its storage: a checkout
-    elsewhere whose Git directory this is (``core.worktree``, a linked worktree
-    registered here but located outside ``root``, or a Git directory that is itself a
-    linked or external one), or settings the sweep cannot read (includes,
-    unfamiliar extensions). Anything it merely points at, such as alternate object
-    stores, remotes or hooks, stays untouched by the deletion. Parse only
-    this metadata, without includes, global config or repository discovery.
-    A Git directory is recognized by its shape (``HEAD``, ``objects``, ``refs``), not
-    its name, so a separate Git directory, a bare repository or a submodule's
-    administrative directory that a ``.git`` file points at is judged the same way.
-    """
-    try:
-        if not all(stat.S_ISDIR((path / name).lstat().st_mode) for name in ("objects", "refs")):
-            return False
-        if not stat.S_ISREG((path / "HEAD").lstat().st_mode):
-            return False
-        if any(os.path.lexists(path / name) for name in ("commondir", "gitdir", "objects/info/http-alternates")):
-            return False
-        if not _custody_free_config(path / "config", root, path, bare_ok=path.name != ".git"):
-            return False
-        if os.path.lexists(path / "config.worktree") and not _custody_free_config(path / "config.worktree", root, path):
-            return False
-        worktrees = path / "worktrees"
-        if os.path.lexists(worktrees):
-            if not stat.S_ISDIR(worktrees.lstat().st_mode):
-                return False
-            for entry in worktrees.iterdir():
-                pointer = _read_pointer(entry / "gitdir")
-                if pointer is None or not _inside(root, os.fsdecode(pointer.strip()), base=entry):
-                    return False
-                # A linked worktree keeps its own config, which can redirect custody like the main one.
-                if os.path.lexists(entry / "config.worktree") and not _custody_free_config(
-                    entry / "config.worktree", root, entry
-                ):
-                    return False
-        return True
-    except (OSError, ValueError):
-        return False
-
-
-def _disposable_git_file(node: Path, root: Path) -> bool:
-    """A linked worktree's ``.git`` file whose ``gitdir:`` target lies inside ``root``."""
-    pointer = _read_pointer(node)
-    if pointer is None or not pointer.startswith(b"gitdir: "):
-        return False
-    return _inside(root, os.fsdecode(pointer[len(b"gitdir: "):].strip()), base=node.parent)
-
-
-def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float, float, str | None]:
+def tree_facts(path: Path, *, run_contents: bool = False) -> tuple[int, float, float, str | None]:
     """Allocated bytes, latest write and latest change; refuse Git metadata, foreign owners and mounts.
 
     Never follow symlinks or cross devices. In-tree Git metadata also protects
-    worktrees registered with a repository other than this checkout. Only a
-    managed run's proven dead owner permits self-contained fixture metadata.
-    General scratch and ledger purges retain the default Git protection. A file
+    worktrees registered with a repository other than this checkout. A file
     can be a bind-mount target, so every node is checked against the mounts.
+    ``run_contents`` marks a managed pytest run whose owner is proven dead: its
+    contents are pytest's own scratch, so Git metadata, hard links and special
+    files inside it keep nothing; foreign owners and mounts still do.
     """
     allocated = 0
     newest = 0.0
     changed = 0.0
     reason = None
-    git_directories = []
-    git_files = []
     listeners: frozenset[str] | None = None
     try:
         mounts = mount_points()
@@ -444,9 +329,11 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
             if identity not in seen:
                 allocated += info.st_blocks * 512
                 seen.add(identity)
-            if not stat.S_ISDIR(info.st_mode) and info.st_nlink > 1:
+            if not run_contents and not stat.S_ISDIR(info.st_mode) and info.st_nlink > 1:
                 reason = reason or "hardlinked_content"
-            if not (stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+            if not run_contents and not (
+                stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)
+            ):
                 # Socket descriptors name kernel inodes, not filesystem paths;
                 # a cwd/FD-path scan cannot prove such an endpoint unused. Every
                 # special file keeps the tree, but a socket bound by a live
@@ -459,29 +346,13 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
                 reason = reason or "special_file"
             if info.st_uid != os.geteuid():
                 reason = reason or "foreign_tree_owner"
-            if node.name == ".git":
-                if disposable_git and stat.S_ISDIR(info.st_mode):
-                    git_directories.append(node)
-                elif disposable_git and stat.S_ISREG(info.st_mode):
-                    git_files.append(node)
-                else:
-                    reason = reason or "git_metadata"
-            if disposable_git and stat.S_ISLNK(info.st_mode) and ".git" in node.relative_to(path).parts:
+            if not run_contents and node.name == ".git":
                 reason = reason or "git_metadata"
             if info.st_dev != device or str(node) in mounts:
                 reason = reason or "mount_point"
                 continue
             if stat.S_ISDIR(info.st_mode):
-                children = list(node.iterdir())
-                if disposable_git and node.name != ".git" and {c.name for c in children} >= _GIT_DIRECTORY_SHAPE:
-                    git_directories.append(node)
-                pending.extend(children)
-        if reason is None:
-            tree_root = path.resolve()
-            if not all(_disposable_git_directory(node, tree_root) for node in git_directories) or not all(
-                _disposable_git_file(node, tree_root) for node in git_files
-            ):
-                reason = "git_metadata"
+                pending.extend(node.iterdir())
     except OSError:
         return allocated, newest, changed, "tree_unknown"
     return allocated, newest, changed, reason
@@ -1618,7 +1489,7 @@ def _quarantine_days_argument(parser: argparse.ArgumentParser) -> None:
 
 def build_ledger_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m scripts.hygiene.tmp_sweep",
+        prog=f"python -m {_mod('hygiene', 'tmp_sweep')}",
         description=(
             "Inspect the temp sweep's deletion ledger and quarantine, or restore a quarantined entry.\n"
             "Use to find what the sweep removed and bring it back within the window; "
@@ -1627,14 +1498,14 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --path my-scratch --since 2026-10-01\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --json\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --path my-scratch --since 2026-10-01\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore 3f9c2a7b1d04\n"
             "Outputs: stdout table or JSON; restore renames one entry back and appends ledger records.\n"
             "Exit codes: 0 success; 1 restore refused, failed or different, or ledger unavailable; "
             "2 invalid arguments or unknown ledger id; 3 restored, but files above the digest limit "
             "matched by size and mtime only (unverified).\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md; scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1648,10 +1519,10 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
             "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable.\n"
             "Related: #9887; docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
-            "scripts.hygiene.tmp_sweep_ledger."
+            f"{_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     ledger.add_argument("--path", help="Substring of the original path (example: hand-made-scratch).")
@@ -1674,9 +1545,9 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep quarantine --quarantine-days 7\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --quarantine-days 7\n"
             "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable.\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md (Purge); scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Purge); {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
@@ -1693,13 +1564,13 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: .venv/bin/python -m scripts.hygiene.tmp_sweep restore 3f9c2a7b1d04\n"
+            f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore 3f9c2a7b1d04\n"
             "Outputs: stdout JSON result with `verification` (verified, unverified_digest_skipped, mismatch "
             "or unreadable); ledger records restore and restored (or restore_failed).\n"
             "Exit codes: 0 restored and byte-verified; 1 refused, failed, restored but different, or a sweep "
             "holds the ledger; 2 unknown ledger id; 3 restored, but files above the digest limit matched "
             "by size and mtime only (listed in digest_unverified).\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md (Restore); scripts.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Restore); {_mod('hygiene', 'tmp_sweep_ledger')}."
         ),
     )
     restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
@@ -1770,18 +1641,18 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --json\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --summary\n"
-            "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --json\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --unattributed-scratch --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --unattributed-scratch --apply --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} --batch-state --summary\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} restore <ledger-id>\n"
             "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
             "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
             "expired, re-verified quarantined entries and inactive, unheld pytest run folders.\n"
             "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
             "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
-            "Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; scripts.hygiene.retention_engine; "
-            "scripts.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
+            f"Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'retention_engine')}; "
+            f"{_mod('hygiene', 'tmp_sweep_ledger')}; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
     parser.add_argument(

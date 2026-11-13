@@ -12,7 +12,7 @@ by default, or another allowlisted pin via ``--model``. Auto is refused before
 any provider call, and a queued ask with no stored model is refused rather than
 defaulted (operator decision 2026-09-30, #9274).
 
-Under the hood: cursor-agent -p PROMPT --model MODEL --output-format text --trust
+Under the hood: cursor-agent -p --model MODEL --output-format text --trust, prompt on stdin
 """
 
 from __future__ import annotations
@@ -45,10 +45,19 @@ CURSOR_DEFAULT_TIMEOUT_S = 900
 
 
 def cursor_default_model() -> str:
-    """The catalog's concrete Cursor seat pin, used when an ask names no model."""
-    from scripts.review.model_catalog import routing_model
+    """The catalog's concrete Cursor seat pin, used when an ask names no model.
 
-    return routing_model("orchestrator_seats", "cursor")
+    With no approved Cursor pin (GROK-CANCEL-1110), every ask is refused with a typed reason.
+    """
+    from scripts.review.model_catalog import CURSOR_NO_APPROVED_PIN_CODE, cursor_pinned_models
+
+    pins = cursor_pinned_models()
+    if not pins:
+        raise SystemExit(
+            f"ask-cursor: refused: there is no approved Cursor model pin ({CURSOR_NO_APPROVED_PIN_CODE}); "
+            "a new pin is an operator decision (GROK-CANCEL-1110)"
+        )
+    return pins[0]
 
 
 def _require_approved_cursor_model(model: str | None) -> str:
@@ -198,7 +207,6 @@ def _invoke_cursor(
     argv = [
         agent_bin,
         "-p",
-        prompt,
         "--model",
         model,
         "--output-format",
@@ -210,6 +218,7 @@ def _invoke_cursor(
     try:
         result = subprocess.run(
             argv,
+            input=prompt,
             capture_output=True,
             text=True,
             timeout=timeout,

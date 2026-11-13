@@ -12,6 +12,7 @@ from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
+from scripts.review.review_contract import captured_sources_events
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
@@ -234,7 +235,11 @@ def test_missing_saved_tool_result_is_marked_file_removed(tmp_path: Path) -> Non
 
 
 def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
-    """A completed Sources call with no stream output receives the step file through the inliner."""
+    """A completed Sources call with no stream output receives the step file through the inliner.
+
+    The event is the real AGY step_update shape: tool_name and tool_info.name are
+    both call_mcp_tool, and Arguments is a dict.
+    """
     app_data = (tmp_path / "antigravity-cli").resolve()
     steps = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "steps"
     output = steps / "34" / "output.txt"
@@ -248,7 +253,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
     saved = agy_module.export_saved_step_outputs(app_data)
 
     def event(step: int, body: str | None) -> dict:
-        info: dict = {"parameters": {"ServerName": "sources", "ToolName": "search_text", "Arguments": "{}"}}
+        info: dict = {
+            "name": "call_mcp_tool",
+            "parameters": {
+                "ServerName": "sources",
+                "ToolName": "search_text",
+                "Arguments": {},
+            },
+        }
         if body is not None:
             info["output"] = body
         return {
@@ -257,6 +269,7 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
                 "conversation_id": CONVERSATION_ID,
                 "state": "DONE",
                 "step_index": step,
+                "step_type": "tool",
                 "tool_name": "call_mcp_tool",
                 "tool_info": info,
             },
@@ -264,8 +277,14 @@ def test_stream_sources_body_copied_from_step_file(tmp_path: Path) -> None:
 
     pointer = f"The output was large and was saved to: {pointed.as_uri()}"
     stdout = json.dumps(event(34, None)) + "\n" + json.dumps(event(50, pointer)) + "\n"
+    captured = captured_sources_events(stdout)
+    assert [item["tool"] for item in captured] == ["search_text", "search_text"]
+    assert all(isinstance(item["arguments"], dict) for item in captured)
     merged, retained, missing = agy_module.merge_saved_step_outputs(stdout, saved)
     parsed = [json.loads(line) for line in merged.splitlines()]
+    assert parsed[0]["step_update"]["tool_name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["name"] == "call_mcp_tool"
+    assert parsed[0]["step_update"]["tool_info"]["parameters"]["Arguments"] == {}
     assert parsed[0]["step_update"]["tool_info"]["output"] == "kept body"
     assert parsed[1]["step_update"]["tool_info"]["output"] == "expanded body"
     assert "saved to:" not in merged
@@ -564,7 +583,7 @@ def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path
     prompt = 'quoted "text"\n' + "x" * size
     plan = AgyAdapter().build_invocation(
         prompt=prompt,
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="large-prompt",
@@ -586,7 +605,7 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
     prompt = "before\ud800after"
     plan = AgyAdapter().build_invocation(
         prompt=prompt,
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model=None,
         task_id="surrogate-prompt",
@@ -616,14 +635,18 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
     ],
 )
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high"])
-def test_argon_selectors_are_retired_regardless_of_effort(
+def test_argon_selectors_keep_their_listed_effort_regardless_of_effort(
     tmp_path: Path, requested: str, selector: str, effort: str | None
 ) -> None:
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        AgyAdapter.resolve_model_slug(requested)
-    with pytest.raises(ValueError, match="is retired in the model catalog"):
-        AgyAdapter().build_invocation(prompt="hello", mode="danger", cwd=tmp_path, model=requested,
-                                      task_id="t-argon", session_id=None, tool_config=None, effort=effort)
+    """Argon is an active Gemini work model again (operator decision 2026-11-10).
+
+    Each listed selector reaches ``agy --model`` as itself; the effort argument never
+    turns a -low or -medium pin into another listed effort.
+    """
+    assert AgyAdapter.resolve_model_slug(requested) == selector
+    plan = AgyAdapter().build_invocation(prompt="hello", mode="danger", cwd=tmp_path, model=requested,
+                                         task_id="t-argon", session_id=None, tool_config=None, effort=effort)
+    assert _model_after_flag(plan) == selector
 
 
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
@@ -742,7 +765,7 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(ValueError, match="retired in the model catalog" if model == "gemini-4-argon-high-preview" else "Unsupported AGY model") as error:
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         AgyAdapter().build_invocation(
             prompt="hello", mode="workspace-write", cwd=tmp_path, model=model,
             task_id=None, session_id=None, tool_config=None, effort=effort,
@@ -879,16 +902,37 @@ def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> Non
 # --- per-attempt scoped home (#8617) ---------------------------------------------------
 
 
-def _build_with(tmp_path: Path, tool_config: dict | None):
+def _build_with(tmp_path: Path, tool_config: dict | None, mode: str = "workspace-write"):
     return AgyAdapter().build_invocation(
         prompt="hello",
-        mode="read-only",
+        mode=mode,
         cwd=tmp_path,
         model=None,
         task_id="t-scoped",
         session_id=None,
         tool_config=tool_config,
     )
+
+
+@pytest.mark.parametrize(
+    "tool_config",
+    [None, {"output_format": "stream-json"}, {"bridge_repo_read": True}, {"mcp_server_names": ["sources"]}],
+    ids=["no-config", "pipeline-config", "bridge-read", "sources-mcp"],
+)
+def test_agy_read_only_without_attempt_boundary_is_refused_not_run_unguarded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tool_config: dict | None
+) -> None:
+    """Defect class: AGY read-only off the review route ran with skipped permissions.
+
+    The refusal comes before hook provisioning or any provider subprocess; the lane
+    health probe builds its version-only plan in a mode that needs no review route.
+    """
+    from scripts.agent_runtime import lane_probe
+
+    monkeypatch.setattr(agy_module, "require_hook_config", lambda *a, **k: pytest.fail("hooks ran before refusal"))
+    with pytest.raises(ValueError, match="agy_read_only_boundary_required"):
+        _build_with(tmp_path, tool_config, "read-only")
+    assert lane_probe._mode_for_probe(AgyAdapter()) == "workspace-write"
 
 
 def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
@@ -898,7 +942,10 @@ def test_read_only_agy_add_dir_pins_workspace(tmp_path: Path) -> None:
     (2026-09-24 evidence on #8516), so without ``--add-dir`` a read-only
     run's workspace is wherever agy drifted, not the pinned checkout.
     """
-    plan = _build_with(tmp_path, None)
+    # Read-only runs only on the review route, which needs a scoped home.
+    home = tmp_path / "scoped-home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    plan = _build_with(tmp_path, {"review_profile": "code", "agy_home_override": str(home)}, "read-only")
     assert "--add-dir" in plan.cmd
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 
@@ -2215,9 +2262,12 @@ def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape
 )
 def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
     from scripts.agent_runtime import agy_hook_config as hooks
+    from scripts.common.repo_root import _HOOK_ROOTS_SCRIPT, machinery_path, main_checkout_root
 
     cwd = tmp_path / "worker"
     cwd.mkdir()
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(cwd))
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(main_checkout_root(Path(__file__).resolve().parents[3])))
     real_home = Path.home()
     real_hook_paths = hooks.hook_locations(real_home, real_home)
 
@@ -2258,10 +2308,16 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         data[hooks.GUARD_NAME]["enabled"] = False
         paths[0].write_text(json.dumps(data))
     fake = _fake_agy(tmp_path, monkeypatch, "2.0.0")
-    monkeypatch.setenv("PATH", str(fake.parent))
+    monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
     calls = []
+    real_run = agy_module.subprocess.run
+    root_command = ["/bin/bash", "-c", _HOOK_ROOTS_SCRIPT, "lu-hook-roots",
+                    str(machinery_path("lib/project_interpreter.sh"))]
 
     def probe(argv, **kwargs):
+        if argv == root_command:
+            return real_run(argv, **kwargs)
+        assert argv == [str(fake), "--version"], "unexpected provider subprocess"
         calls.append(argv)
         return __import__("subprocess").CompletedProcess(argv, 0, "2.0.0", "")
 

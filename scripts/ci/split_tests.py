@@ -63,12 +63,16 @@ from xml.etree import ElementTree
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci._location import checkout_relative, module_name
 from scripts.common import github_client
 
+# Duration refresh checks this file out without scripts/common/repo_root.py.
+# _location derives the package name from its own unresolved path and imports
+# nothing from that module.
 DEFAULT_DURATIONS = Path(__file__).with_name("pytest-file-durations.json")
 # Repo-relative path the workflow passes to ``split``. It names DEFAULT_DURATIONS
 # without putting a runner path in the job log.
-COMMITTED_DURATION_PATH = Path("scripts/ci/pytest-file-durations.json")
+COMMITTED_DURATION_PATH = checkout_relative("ci", "pytest-file-durations.json")
 DEFAULT_HISTORY = Path(__file__).with_name("history-tests.txt")
 HISTORY_SHARD = 1  # ci.yml: the one pytest shard with a full-history checkout
 TIMING_ARTIFACT = "pytest-file-durations"
@@ -364,13 +368,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16 < files.txt
-  .venv/bin/python -m scripts.ci.split_tests durations junit/*.xml > durations.json
-  .venv/bin/python -m scripts.ci.split_tests durations --shards ci-artifacts/shards > durations.json
-  .venv/bin/python -m scripts.ci.split_tests refresh --repo owner/repo --output snapshot.json
-  .venv/bin/python -m scripts.ci.split_tests validate snapshot.json
-  .venv/bin/python -m scripts.ci.split_tests duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
+        epilog=f"""Examples:
+  .venv/bin/python -m {module_name(__spec__, __file__)} split --shard 1 --of 16 < files.txt
+  .venv/bin/python -m {module_name(__spec__, __file__)} durations junit/*.xml > durations.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} durations --shards ci-artifacts/shards > durations.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} refresh --repo owner/repo --output snapshot.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} validate snapshot.json
+  .venv/bin/python -m {module_name(__spec__, __file__)} duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
 Outputs: file paths or timing JSON on stdout; refresh writes one immutable timing snapshot.
 duration-source prints the weights path every shard must use, or ``snapshot`` / ``committed`` with ``--decide``.
 Exit codes: 0 = success (including refresh fallback and a committed duration source); 1 = invalid data, or the refresh job succeeded and the shared snapshot is missing or invalid; 2 = CLI usage error.

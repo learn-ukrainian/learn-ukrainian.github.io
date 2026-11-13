@@ -5,7 +5,7 @@ These tests pin the wiring so a refactor can't silently orphan the file:
 
 - Full API reference      -> contract first at /api/rules?scope=full
 - Unscoped API cold-start -> binding core, with boot-file contract digests
-- Codex / cursor / opencode slot-5 -> AGENTS.md digest section
+- Codex / cursor / opencode slot-5 -> AGENTS.md pointer to the contract
 - Deploy targets           -> excluded from .claude autoload, present in
                               .codex/.agent/.gemini rules (lock-step lists)
 """
@@ -36,6 +36,28 @@ def test_deploy_lock_step_lists_include_contract() -> None:
     assert "deploy_orphan_paths.sh" in deploy, "deploy does not source the shared lists"
     assert "deploy_orphan_paths.sh" in checker, "drift-checker does not source the shared lists"
     assert "deploy_orphan_paths.sh" in session_setup, "session-setup hook does not source the shared lists"
+
+    # #12830: the complete order must reach both rendered seats and boot digests.
+    from scripts.lib import rules_core
+
+    clause = (
+        "Be thorough in analysis and brave in recommendations. "
+        "Before deciding or reporting, examine the evidence, alternatives, consequences and root cause. "
+        "Do not stop at the first plausible answer. "
+        "State the strongest well-founded recommendation plainly and first, including larger or uncomfortable changes "
+        "(redesign, removal or reversal of an earlier decision) when the evidence supports them. "
+        "Note uncertainty briefly, never instead of a recommendation. "
+        "This loosens no gate, evidence requirement or approval rule. "
+        "New decisions still require the approval defined in `operator-expectations.md` item 12."
+    )
+    for relative in (
+        "agents_extensions/shared/rules/operator-expectations.md",
+        "CLAUDE.md",
+    ):
+        body = (REPO / relative).read_text(encoding="utf-8")
+        assert clause in " ".join(body.split()), relative
+    for seat in ("core", "content"):
+        assert clause in rules_core.core_block(seat), seat
 
 
 def _offline_fallback_list(body: str) -> list[str]:

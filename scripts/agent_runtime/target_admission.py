@@ -29,7 +29,7 @@ import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -637,7 +637,7 @@ def _resolve_review_target(
     """
     from scripts.fleet.claude_account_lane import lane_record, select_account
     from scripts.review.capacity import review_capacity_action
-    from scripts.review.model_catalog import risk_reviewer_refusal
+    from scripts.review.model_catalog import load_model_catalog, risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
         REVIEW_LADDERS,
@@ -685,6 +685,17 @@ def _resolve_review_target(
             raise ReviewAdmissionRefused(refusal)
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
+    if review_mode == "cross_family" and profile in {"code", "infra"} and facts is not None and facts.mixed_family:
+        from scripts.review.record_cf_verdict import RecordError
+
+        try:
+            scope = facts.reviewer_scope(family)
+        except RecordError as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {exc}") from exc
+        reviewer_ids = review_task_id_comparison_keys(reviewer_task_id or "", agent=seat)
+        author_ids = {key for identity in scope.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        if reviewer_ids & author_ids:
+            raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
     if attempt and seat in {"grok", "grok-build"}:
@@ -753,6 +764,9 @@ def _resolve_review_target(
             subject_evidence=subject.evidence,
             claude_account=claude_account,
         )
+    if review_mode == "red_team":
+        # Preserve the existing whole-branch precedence probes, rather than resolving a pair here.
+        inputs = replace(inputs, author_commits=())
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
     if (
         trusted
@@ -839,10 +853,15 @@ def _resolve_review_target(
     budget_blocked, _ = review_capacity_action(
         budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
     )
+    # The resolver excludes candidates by quota bucket, not seat. The lane read above is the seat's
+    # catalog endpoint: ``agents.codex`` is account a, bucket ``codex:a``; account b keeps its own.
+    budget_bucket = (
+        load_model_catalog()["review_scheduler"]["endpoints"].get(budget_seat, {}).get("quota_bucket") or budget_seat
+    )
     resolution = resolve_reviewer(
         inputs,
         ladder=ladder,
-        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
+        excluded_quota_buckets=frozenset({budget_bucket}) if snapshot and budget_blocked else frozenset(),
         review_mode=review_mode,
     )
     if resolution.fail_closed_reason:

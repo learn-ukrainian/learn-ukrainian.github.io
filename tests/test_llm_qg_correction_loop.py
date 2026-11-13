@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.build import linear_pipeline
-from scripts.common.thresholds import QG_DIMS
+from scripts.curriculum.quality.thresholds import QG_DIMS
 
 
 def _module_dir(tmp_path: Path, module_text: str = "# Lesson\n\nAnchor sentence.\n") -> Path:

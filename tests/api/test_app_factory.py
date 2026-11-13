@@ -16,13 +16,15 @@ from fastapi.exception_handlers import websocket_request_validation_exception_ha
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
+from lu_machinery.api import main as api_main
+from lu_machinery.api.monitor_context import fixture_context, production_context
+from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
+from lu_machinery.api.resilience import TimedSQLiteConnection, resilience_middleware
+from lu_machinery.session_streams import inventory as stream_inventory
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from scripts.api import dashboard_comms
-from scripts.api import main as api_main
-from scripts.api.monitor_context import fixture_context, production_context
-from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
-from scripts.api.resilience import TimedSQLiteConnection, resilience_middleware
+from scripts.project_api import dashboard_comms
+from scripts.project_api.context import product_roots, sources_db
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
@@ -94,7 +96,7 @@ def test_fixture_context_resolves_roots_and_rejects_symlink_escape(tmp_path: Pat
             assert Path(path).resolve().is_relative_to(tmp_path.resolve())
 
     assert context.roots.plans_root == context.roots.curriculum_root / "plans"
-    assert context.stores.sources_db.path.resolve().is_relative_to(tmp_path.resolve())
+    assert sources_db(context).path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.message_db.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.session_streams_database.path.resolve().is_relative_to(tmp_path.resolve())
     assert context.stores.epics_database.path.resolve().is_relative_to(tmp_path.resolve())
@@ -187,16 +189,16 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         assert "Second instance orchestrator state" in second_session.text
         assert "First instance" not in second_session.text
 
-        # Rules endpoint isolation
+        # Rules: the release serves its packaged rules; a context root never
+        # selects them (machinery #126), so neither planted body leaks in.
         first_rules = first_client.get("/api/rules")
         assert first_rules.status_code == 200
-        assert "First rule body" in first_rules.text
-        assert "Second rule body" not in first_rules.text
-
         second_rules = second_client.get("/api/rules")
         assert second_rules.status_code == 200
-        assert "Second rule body" in second_rules.text
-        assert "First rule body" not in second_rules.text
+        assert first_rules.headers["X-Rules-Hash"] == second_rules.headers["X-Rules-Hash"]
+        for rules in (first_rules, second_rules):
+            assert "First rule body" not in rules.text
+            assert "Second rule body" not in rules.text
 
         # Rollovers endpoint
         assert first_client.get("/api/rollovers").status_code == 200
@@ -283,8 +285,8 @@ def test_step2_state_router_cluster_isolation(tmp_path: Path) -> None:
         assert "session" in second_manifest
 
 
-def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
-    """Admin / ops / git-hygiene routes read only the app's MonitorContext."""
+def test_step8_ops_git_cluster_isolation(tmp_path: Path) -> None:
+    """Ops and git-hygiene routes read only the app's MonitorContext."""
 
     @asynccontextmanager
     async def no_lifespan(_app):
@@ -294,13 +296,6 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     second_root = tmp_path / "second"
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
-
-    first_backups = first_root / "data" / "backups"
-    second_backups = second_root / "data" / "backups"
-    first_backups.mkdir(parents=True)
-    second_backups.mkdir(parents=True)
-    (first_backups / "first.tar").write_bytes(b"first")
-    (second_backups / "second.tar").write_bytes(b"second")
 
     first_plan = first_root / "batch_state" / "fleet-comms" / "retention"
     second_plan = second_root / "batch_state" / "fleet-comms" / "retention"
@@ -319,13 +314,6 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_backups_body = first_client.get("/api/admin/backup/list").json()
-        second_backups_body = second_client.get("/api/admin/backup/list").json()
-        assert {item["filename"] for item in first_backups_body["backups"]} == {"first.tar"}
-        assert {item["filename"] for item in second_backups_body["backups"]} == {"second.tar"}
-        assert "first.tar" not in json.dumps(second_backups_body)
-        assert "second.tar" not in json.dumps(first_backups_body)
-
         first_retention = first_client.get("/api/ops/v1/retention/latest").json()
         second_retention = second_client.get("/api/ops/v1/retention/latest").json()
         assert first_retention["marker"] == "first-plan"
@@ -370,8 +358,8 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
 
     _write_textbook_png(first_root, grade="grade-01", name="first.png")
     _write_textbook_png(second_root, grade="grade-02", name="second.png")
-    _seed_sources_db(first_ctx.roots.sources_db_path, rows=3)
-    _seed_sources_db(second_ctx.roots.sources_db_path, rows=7)
+    _seed_sources_db(product_roots(first_ctx).sources_db_path, rows=3)
+    _seed_sources_db(product_roots(second_ctx).sources_db_path, rows=7)
 
     first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
     second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
@@ -417,8 +405,8 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
     (second_dist / "sitemap-index.xml").write_text("<second/>", encoding="utf-8")
 
     for root, ctx in ((first_root, first_ctx), (second_root, second_ctx)):
-        ctx.roots.sources_db_path.parent.mkdir(parents=True, exist_ok=True)
-        with sqlite3.connect(str(ctx.roots.sources_db_path)) as conn:
+        product_roots(ctx).sources_db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(str(product_roots(ctx).sources_db_path)) as conn:
             conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY)")
             count = 1 if root is first_root else 2
             conn.executemany("INSERT INTO textbooks DEFAULT VALUES", [()] * count)
@@ -471,10 +459,14 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
         assert second_worktrees["worktrees"][0]["path"] == REDACTED_ABSOLUTE_PATH
 
 
-def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
+def test_step12e_work_epics_cluster_isolation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     @asynccontextmanager
     async def no_lifespan(_app):
         yield
+
+    # The release reads the stream registry from its own package; resolve it
+    # under each context's checkout instead, so each app sees only its plant.
+    monkeypatch.setattr(stream_inventory, "DEFAULT_STREAMS_YAML", Path("scripts", "config", "issue_streams.yaml"))
 
     def _plant(root: Path, stream_id: str, epic: int, title: str) -> None:
         config = root / "scripts" / "config"
@@ -569,8 +561,9 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
 
     with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
         # Static serving isolation
-        first_static = first_client.get("/")
-        second_static = second_client.get("/")
+        # The product owns "/" (C-4687); the machinery home is always at /machinery.
+        first_static = first_client.get("/machinery")
+        second_static = second_client.get("/machinery")
         assert "First Dashboard" in first_static.text
         assert "Second Dashboard" not in first_static.text
         assert "Second Dashboard" in second_static.text

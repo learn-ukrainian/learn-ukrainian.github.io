@@ -33,6 +33,17 @@ from pathlib import Path
 from scripts.guardrails import primary_dirt_audit as audit
 from scripts.guardrails import worktree_containment as wc
 
+
+def _machinery_top() -> str:
+    # Name the package from the unresolved file location, never from __package__
+    # (design-v1 amendment 1): a copy loaded without a package must name the same tree.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 EXIT_OK = 0
 EXIT_NO_RECORD = 1
 EXIT_REFUSED = 2
@@ -189,9 +200,9 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.hygiene.primary_dirt_cleanup --session SESSION --record RECORD\n"
-            "  .venv/bin/python -m scripts.hygiene.primary_dirt_cleanup --session SESSION --record RECORD --apply\n"
-            "  .venv/bin/python -m scripts.hygiene.primary_dirt_cleanup --session SESSION   # all records, dry run\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'primary_dirt_cleanup')} --session SESSION --record RECORD\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'primary_dirt_cleanup')} --session SESSION --record RECORD --apply\n"
+            f"  .venv/bin/python -m {_mod('hygiene', 'primary_dirt_cleanup')} --session SESSION   # all records, dry run\n"
             "\n"
             "Outputs: a JSON report on stdout. With --apply, removes the eligible files and appends one receipt\n"
             "per entry to $XDG_STATE_HOME/learn-ukrainian/primary-dirt-audit/cleanup.jsonl.\n"

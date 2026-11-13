@@ -130,21 +130,24 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
 
 ## Architecture Overview
 
-Routers are mounted by domain from `scripts/api/main.py`:
+Routers are mounted by domain from `scripts/api/main.py`. The product half comes
+from the configured product entry (`scripts/project_api/entry.py`, C-4687) and is
+mounted ahead of the machinery routers; the static catch-all stays last:
 
-- Dashboard state: `state_router.py`, `dashboard_router.py`,
-  `dashboard_helpers.py`, `state_*`.
-- Agent communication: `comms_router.py`, with legacy broker routes marked
-  deprecated and channel routes as the current surface.
-- Operational dashboards: `admin_router.py`, `runtime_router.py`,
-  `build_events_router.py`, `delegate_router.py`, `cost_router.py`,
-  `telemetry_router.py`.
-- Content tooling: `wiki_router.py`, `images_router.py`, `rag_router.py`,
-  `consultation_router.py`, `artifacts_router.py`.
+- Curriculum state and dashboards (product, `scripts/project_api/`):
+  `state_router.py` (curriculum half), `dashboard_router.py`,
+  `dashboard_helpers.py`, `state_*`, `batch_progress.py`.
+- Agent communication (machinery, `scripts/api/`): `comms_router.py`, with legacy
+  broker routes marked deprecated and channel routes as the current surface.
+- Operational dashboards: `runtime_router.py`, `delegate_router.py` and
+  `telemetry_router.py` (machinery); `admin_router.py`, `build_events_router.py`,
+  `cost_router.py` and `module_builds.py` (product).
+- Content tooling (product): `wiki_router.py`, `images_router.py`,
+  `sources_router.py`, `consultation_router.py`, `artifacts_router.py`.
 - Agent bootstrap: `rules_router.py`, `session_router.py`, `/api/orient`, and
   `/api/state/manifest`.
-- Older team dashboards and compatibility endpoints: `blue_router.py`,
-  `gold_router.py`, `agent_router.py`, `reviewer_ghosts_router.py`.
+- Older compatibility endpoints: `agent_router.py`,
+  `reviewer_ghosts_router.py`.
 
 The full route and playground consumer inventory lives in
 `docs/api-endpoint-consumer-map-2026-05-06.md`.
@@ -184,7 +187,7 @@ The full route and playground consumer inventory lives in
 ## Deprecating An Endpoint
 
 1. Prove the endpoint has no active consumer with `rg` across `dashboards/`,
-   `scripts/`, and `docs/`.
+   `scripts/` (including the product pages in `scripts/project_api/static/`), and `docs/`.
 2. Mark the FastAPI route `deprecated=True` and add a response header or docs
    pointer to the replacement when compatibility clients still exist.
 3. Remove or hide the playground consumer first; do not delete a router section

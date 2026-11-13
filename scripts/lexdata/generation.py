@@ -28,10 +28,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage import topology
+
 from scripts.lexdata import transforms
 from scripts.lexdata.schema import GENERATION_SCHEMA_VERSION
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage import topology
 
 UNAVAILABLE_REASONS = frozenset({
     "lexdata_unavailable", "lexdata_unpublished", "normalizer_mismatch", "lexdata_stale",

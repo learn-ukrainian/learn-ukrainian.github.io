@@ -15,8 +15,7 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware, sanitize_document, sanitize_text
+from lu_machinery.api.opsec_sanitize import opsec_path_sanitizer_middleware, sanitize_document, sanitize_text
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -90,7 +89,6 @@ _CORPUS_PATHS = [
         "docs/best-practices/strict-reviewer-persona.md",
         "docs/best-practices/task-quality.md",
         "docs/best-practices/track-architecture.md",
-        "docs/best-practices/typesafe-jev.md",
         "docs/best-practices/ulp-presentation-pattern.md",
         "docs/best-practices/universal-rules-registry.md",
         "docs/best-practices/v7-design-and-corpus.md",

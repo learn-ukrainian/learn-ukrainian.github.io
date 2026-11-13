@@ -17,6 +17,8 @@ import yaml
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.storage.paths import artifact_path, load_manifest
+
 from scripts.audit.generate_source_inventory_review_candidates import (
     COMMITTED_SOURCE_INVENTORIES,
 )
@@ -26,7 +28,10 @@ from scripts.audit.source_inventory_intake import (
     read_source_inventories,
 )
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
-from scripts.storage.paths import DATA_ROOT, REGISTRY_ROOT, artifact_path, load_manifest
+
+DATA_ROOT = Path(__file__).resolve().parents[2] / "data"
+
+REGISTRY_ROOT = Path(__file__).resolve().parents[2] / "registry"
 
 DECISION_KIND = "atlas_source_inventory_review_decisions"
 DECISION_VERSION = 1

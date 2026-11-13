@@ -43,7 +43,7 @@
     ]
   },
   {
-    "path": "scripts/api/hramatka_cache.py",
+    "path": "scripts/project_api/hramatka_cache.py",
     "reference_count": 4,
     "kind": "writer",
     "target_db": "hramatka cache DB",
@@ -744,7 +744,7 @@
     ]
   },
   {
-    "path": "scripts/migrations/2026-05-06-broker-indexes.py",
+    "path": "scripts/ai_agent_bridge/broker_indexes.py",
     "reference_count": 4,
     "kind": "writer",
     "target_db": "legacy broker DB",
@@ -784,6 +784,13 @@
       "sqlite3.connect(sidecar)",
       "sqlite3.connect(sidecar)"
     ]
+  },
+  {
+    "path": "scripts/ops/product_entry.py",
+    "reference_count": 1,
+    "kind": "configured_entry_point",
+    "target_db": null,
+    "reason": "The one configured entry point (#12504, LOADER-1104). load_configured_module imports the scripts.* module that product data names; it refuses SQLite module names first. This is not a SQLite constructor. The kind pins this one call site."
   },
   {
     "path": "scripts/orchestration/thread_handoff.py",

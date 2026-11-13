@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=@REPO_ROOT@/site
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 ExecStart=/usr/bin/env npm run dev -- --host 127.0.0.1 --port 4321 --force
 Restart=on-failure
 RestartSec=5

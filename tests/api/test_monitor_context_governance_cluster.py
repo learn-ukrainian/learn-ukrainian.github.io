@@ -14,13 +14,13 @@ import pytest
 import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from lu_machinery.api.issues_router import router as issues_router
+from lu_machinery.api.knowledge_router import router as knowledge_router
+from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.api.governance_router import router as governance_router
-from scripts.api.issues_router import router as issues_router
-from scripts.api.knowledge_router import router as knowledge_router
-from scripts.api.monitor_context import fixture_context
-from scripts.api.reviewer_ghosts_router import router as reviewer_ghosts_router
 from scripts.audit import check_adrs
+from scripts.project_api.governance_router import router as governance_router
+from scripts.project_api.reviewer_ghosts_router import router as reviewer_ghosts_router
 
 pytestmark = pytest.mark.reads_content
 

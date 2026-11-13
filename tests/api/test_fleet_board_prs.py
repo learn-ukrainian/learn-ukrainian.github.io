@@ -8,17 +8,21 @@ import time
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
+from lu_machinery.orchestration.integration_sweep import lookup_verdict
+from lu_machinery.review.record_cf_verdict import build_comment
 
-from scripts.api import main as api_main
 from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import prs as prs_mod
 from scripts.api.fleet_board.envelope import endpoint_schema
-from scripts.orchestration.integration_sweep import lookup_verdict
-from scripts.review.record_cf_verdict import build_comment
+from scripts.api.fleet_board.router import router
 
-client = TestClient(api_main.app, raise_server_exceptions=False)
+# 0.1.10 removed this router; the product retains its source until B2b.
+app = FastAPI()
+app.include_router(router, prefix="/api/fleet/v1")
+client = TestClient(app, raise_server_exceptions=False)
 
 NOW = datetime(2026, 10, 9, 10, 0, tzinfo=UTC)
 SHA = "a" * 40

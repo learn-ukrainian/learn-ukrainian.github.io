@@ -25,7 +25,7 @@ tmp_path_retention_count = 1
 # atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
 # -p registers the dispatch xdist cap for every invocation that reads this
 # config, including paths outside tests/ (a tests/conftest.py hook does not).
-addopts = "-v --tb=short -m 'not atlas_release' -p ci.pytest_dispatch_cap"
+addopts = "-v --tb=short -m 'not atlas_release' -p lu_machinery.ci.pytest_dispatch_cap"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
@@ -70,7 +70,7 @@ select = [
     "B",     # flake8-bugbear (common bugs)
     "SIM",   # flake8-simplify
     "RUF",   # Ruff-specific rules
-    "PLC0415",  # import-outside-top-level (scripts/api only; advisory API import hygiene)
+    "PLC0415",  # import-outside-top-level (scripts/api and scripts/project_api only; advisory API import hygiene)
 ]
 ignore = [
     # Legitimate project-specific ignores (Ukrainian codebase)
@@ -83,8 +83,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"!scripts/api/**.py" = ["PLC0415"]  # advisory API import-hygiene scope
+"!scripts/{api,project_api}/**.py" = ["PLC0415"]  # advisory API import-hygiene scope (machinery and product Monitor API)
 "scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
+"scripts/project_api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
 "tests/*.py" = ["F841", "SIM117"]  # unused variables + nested with OK in tests
 # NOTE (#5930): do NOT use "scripts/*.py" here — ruff's per-file-ignores globs
 # treat `*` as matching across `/`, so that pattern silenced F401/F811/E302/F821

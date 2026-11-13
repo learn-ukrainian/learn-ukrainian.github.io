@@ -31,10 +31,11 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 from jsonschema import Draft202012Validator
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+from lu_machinery.lib.readonly_sqlite import open_readonly as _open_readonly
+from lu_machinery.opsec.needles import home_dir_pattern, load_needles
+from lu_machinery.storage.paths import ArtifactSet, artifact_set
 
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
@@ -51,7 +52,6 @@ from scripts.projects.open_model_data.v4_verify_trajectory_claims import (
     clean_word,
     resolve_data_path,
 )
-from scripts.storage.paths import ArtifactSet, artifact_set
 
 CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
@@ -160,14 +160,16 @@ def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, Artifa
         except (FileNotFoundError, ValueError) as exc:
             raise RuntimeError(
                 f"Managed artifact group {group} is unavailable; hydrate with "
-                f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+                'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+                f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
             ) from exc
     try:
         return snapshots[group].artifacts[rel]
     except KeyError as exc:
         raise RuntimeError(
             f"{path} is not a committed member of {group}; check the requested path or hydrate with "
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+            'LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" '
+            f".venv/bin/python -m lu_machinery.storage.artifacts hydrate --group {group}"
         ) from exc
 
 
@@ -1788,7 +1790,7 @@ def main() -> None:
         description="Verify the archived ULDR Phase 3.7 release. Regeneration is deferred to P3b (#8809).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/v4_production_shards_assembly.py --verify-only\n"
             "Outputs: none in verify mode; generation refuses before writing.\n"
             "Exit codes: 0 for a valid release, nonzero for invalid inputs or deferred generation.\n"

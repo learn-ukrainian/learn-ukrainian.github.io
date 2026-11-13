@@ -4,7 +4,7 @@
 launched script that ``cd``s into the primary checkout and redirects to a
 relative path writes there unseen. The audit hook snapshots the primary
 checkout's ``git status`` before and after every shell call and attributes any
-new entry to the call; ``scripts.hygiene.primary_dirt_cleanup`` removes exactly
+new entry to the call; ``lu_machinery.hygiene.primary_dirt_cleanup`` removes exactly
 the untracked files an attribution record proves a session created.
 """
 
@@ -14,24 +14,28 @@ import hashlib
 import json
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.guardrails import primary_dirt_audit as audit
+from lu_machinery.hygiene import primary_dirt_cleanup as cleanup
 
-from scripts.guardrails import primary_dirt_audit as audit
-from scripts.hygiene import primary_dirt_cleanup as cleanup
+from scripts.agent_runtime.agy_hook_config import native_hook_command
 
 REPO = Path(__file__).resolve().parent.parent
-HOOKS = REPO / "agents_extensions/shared/hooks"
+HOOKS = machinery_path("agents_extensions/shared/hooks")
 GUARD = HOOKS / "guard-primary-checkout-write.py"
 AUDIT = HOOKS / "audit-primary-checkout-dirt.py"
 SETTINGS = REPO / "agents_extensions/shared/settings.json"
-CODEX_ENTRY = REPO / "scripts/agent_runtime/codex_hook_entry.sh"
-CODEX_POLICY = REPO / "scripts/agent_runtime/codex_hook_policy.py"
-DEPLOYED_AUDIT = "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py"
+CODEX_ENTRY = machinery_path("agent_runtime/codex_hook_entry.sh")
+CODEX_POLICY = machinery_path("agent_runtime/codex_hook_policy.py")
+AUDIT_COMMAND = native_hook_command("claude-audit-hook")
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -51,16 +55,23 @@ def _make_primary(tmp_path: Path) -> Path:
     _git(primary, "config", "user.email", "t@example.invalid")
     _git(primary, "config", "user.name", "t")
     (primary / "tracked.txt").write_text("tracked\n", encoding="utf-8")
-    (primary / ".gitignore").write_text("ignored/\n*.log\n", encoding="utf-8")
+    (primary / ".gitignore").write_text("ignored/\n*.log\n.venv/\n", encoding="utf-8")
     _git(primary, "add", "tracked.txt", ".gitignore")
     _git(primary, "commit", "-q", "-m", "init")
+    interpreter = primary / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
+    interpreter.chmod(0o755)
     return primary
 
 
 def _env(tmp_path: Path, primary: Path) -> dict[str, str]:
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    for name in ("LU_PRODUCT_ROOT", "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", "LEARN_UKRAINIAN_STATE_ROOT", "LEARN_UKRAINIAN_PYTHON"):
+        env.pop(name, None)
     env["XDG_STATE_HOME"] = str(tmp_path / "state")
     env["CLAUDE_PROJECT_DIR"] = str(primary)
+    env["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(primary)
     return env
 
 
@@ -84,9 +95,23 @@ def _payload(
     )
 
 
-def _hook(hook: Path, payload: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _hook(
+    hook: Path, payload: str, env: dict[str, str], *, registered: bool = False,
+) -> subprocess.CompletedProcess[str]:
+    # The guard requires an explicit product. The audit owns its root boundary,
+    # so its tests keep the product and shared-state variables absent.
+    hook_env = env | {"LU_PRODUCT_ROOT": env["CLAUDE_PROJECT_DIR"]} if hook == GUARD else env
+    argv = [sys.executable, str(hook)]
+    if registered:
+        event = json.loads(payload)["hook_event_name"]
+        groups = json.loads(SETTINGS.read_text(encoding="utf-8"))["hooks"][event]
+        command = next(
+            entry["command"] for group in groups for entry in group["hooks"]
+            if "audit-primary-checkout-dirt" in entry["command"]
+        )
+        argv = ["/bin/bash", "-c", command]
     return subprocess.run(
-        [sys.executable, str(hook)], input=payload, capture_output=True, text=True, env=env, check=False, timeout=60
+        argv, input=payload, capture_output=True, text=True, env=hook_env, check=False, timeout=60
     )
 
 
@@ -134,7 +159,7 @@ def _write_in_primary(tmp_path: Path, relpath: str, body: str = "x") -> str:
 
 def _cleanup_cli(*args: str, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "scripts.hygiene.primary_dirt_cleanup", *args],
+        [sys.executable, "-m", "lu_machinery.hygiene.primary_dirt_cleanup", *args],
         cwd=REPO,
         capture_output=True,
         text=True,
@@ -155,6 +180,12 @@ def _outcomes(report: dict) -> dict[str, str]:
 
 def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path: Path) -> None:
     primary = _make_primary(tmp_path)
+    for relative in ("scripts/pre_commit/project_python.sh", "scripts/lib/project_interpreter.sh"):
+        target = primary / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO / relative, target)
+    _git(primary, "add", "scripts")
+    _git(primary, "commit", "-q", "-m", "fixture audit launcher")
     scratch = tmp_path / "scratch"
     script = _script(
         scratch,
@@ -162,20 +193,23 @@ def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path
         name="refresh-and-push.sh",
     )
     env = _env(tmp_path, primary)
+    # Exercise the real Claude registration when env python3 is the system
+    # interpreter, rather than letting the test runner select the audit Python.
+    env["PATH"] = "/usr/bin:/bin"
     command = f"bash {script} {primary} brief-review-10952.tmpl"
 
     # The static guard cannot see the redirect executed inside the script.
     guard = _hook(GUARD, _payload("PreToolUse", command, scratch), env)
     assert guard.returncode == 0, guard.stderr
 
-    pre = _hook(AUDIT, _payload("PreToolUse", command, scratch), env)
+    pre = _hook(AUDIT, _payload("PreToolUse", command, scratch), env, registered=True)
     assert pre.returncode == 0, pre.stderr
     ran = _run_bash(command, scratch, env)
     assert ran.returncode != 0  # sed fails on the missing relative brief ...
     assert (primary / "brief-review-10952.tmpl.resolved").exists()  # ... but the redirect wrote
 
     # Claude routes a non-zero Bash exit to PostToolUseFailure.
-    post = _hook(AUDIT, _payload("PostToolUseFailure", command, scratch), env)
+    post = _hook(AUDIT, _payload("PostToolUseFailure", command, scratch), env, registered=True)
     assert post.returncode == 2, post.stderr
     assert "?? brief-review-10952.tmpl.resolved" in post.stderr
     assert f"command: {command}" in post.stderr
@@ -185,9 +219,9 @@ def test_ac01_script_relative_write_after_cd_is_detected_and_attributed(tmp_path
     assert record["record_id"] in post.stderr
 
     # AC-03: the printed command clears exactly this file, without any override.
-    (line,) = [text for text in post.stderr.splitlines() if "scripts.hygiene.primary_dirt_cleanup" in text]
+    (line,) = [text for text in post.stderr.splitlines() if "lu_machinery.hygiene.primary_dirt_cleanup" in text]
     argv = shlex.split(line.replace("[--apply]", ""))
-    assert argv[:3] == [".venv/bin/python", "-m", "scripts.hygiene.primary_dirt_cleanup"]
+    assert argv[:3] == [".venv/bin/python", "-m", "lu_machinery.hygiene.primary_dirt_cleanup"]
     dry = _cleanup_cli(*argv[3:], env=env)
     assert dry.returncode == 0, dry.stdout
     assert _outcomes(json.loads(dry.stdout)) == {"brief-review-10952.tmpl.resolved": "removable"}
@@ -305,6 +339,71 @@ def test_stale_snapshots_are_collected(tmp_path: Path) -> None:
     os.utime(stale, (old, old))
     assert audit.collect_stale_snapshots(state) == 1
     assert not stale.exists() and fresh.exists()
+
+
+def test_concurrent_fast_forward_of_the_primary_is_not_attributed_as_dirt(tmp_path: Path, monkeypatch) -> None:
+    """Defect class: another process moving the primary's HEAD reported as dirt from this call.
+
+    A fast-forward rewrites tracked files under ``index.lock`` before it commits
+    the index and moves the branch, so a status taken in that window lists them
+    as modified although the tree is clean once it finishes. Controls: a file the
+    call itself created is still attributed, also when it is renamed while the
+    audit waits for the lock.
+    """
+    primary = _make_primary(tmp_path)
+    base = _git(primary, "rev-parse", "HEAD").strip()
+    (primary / "tracked.txt").write_text("fast-forwarded\n", encoding="utf-8")
+    _git(primary, "commit", "-q", "-am", "upstream")
+    _git(primary, "branch", "upstream")
+    upstream_index = tmp_path / "upstream.index"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    subprocess.run(
+        ["git", "-C", str(primary), "read-tree", "upstream"],
+        env={**env, "GIT_INDEX_FILE": str(upstream_index)},
+        check=True,
+        timeout=30,
+    )
+    lock = primary / ".git" / "index.lock"
+    moves: list[tuple[str, str]] = []
+
+    def fast_forward_finishes(_seconds: float) -> None:
+        if lock.exists():
+            _git(primary, "update-ref", "refs/heads/main", "upstream")
+            lock.replace(primary / ".git" / "index")
+            for source, target in moves:
+                (primary / source).rename(primary / target)
+
+    # Only the audit's own clock: subprocess polls with the global time.sleep.
+    monkeypatch.setattr(
+        audit, "time", SimpleNamespace(monotonic=time.monotonic, time=time.time, sleep=fast_forward_finishes)
+    )
+    state = _state(tmp_path)
+    calls = (("toolu_ff", None, None), ("toolu_ff_and_write", "new.txt", None), ("toolu_rename", "new.txt", "moved.txt"))
+    for tool_use, created, moved in calls:
+        _git(primary, "reset", "-q", "--hard", base)
+        _git(primary, "clean", "-fdq")
+        audit.take_snapshot(state, "sess-a", tool_use, [str(primary)])
+        moves[:] = [(created, moved)] if moved else []
+        if created:
+            (primary / created).write_text("written by the call\n", encoding="utf-8")
+        # The other process is mid-checkout: new file content, index and HEAD not yet moved.
+        lock.write_bytes(upstream_index.read_bytes())
+        (primary / "tracked.txt").write_text("fast-forwarded\n", encoding="utf-8")
+        result = audit.finish_call(
+            state,
+            session_id="sess-a",
+            tool_use_id=tool_use,
+            command="cat notes.txt",
+            cwd=str(primary),
+            hook_event="PostToolUse",
+            tool_name="Bash",
+            candidates=[str(primary)],
+        )
+        assert result["unaudited"] == {}
+        assert [[entry["path"] for entry in record["entries"]] for record in result["records"]] == (
+            [[moved or created]] if created else []
+        )
+        assert _git(primary, "rev-parse", "HEAD") == _git(primary, "rev-parse", "upstream")
 
 
 def test_overlapping_calls_both_record_the_new_path(tmp_path: Path) -> None:
@@ -469,7 +568,7 @@ def test_claude_settings_wire_the_audit_around_every_bash_call() -> None:
             (group.get("matcher"), hook)
             for group in hooks[event]
             for hook in group["hooks"]
-            if hook["command"] == DEPLOYED_AUDIT
+            if hook["command"] == AUDIT_COMMAND
         ]
         assert [matcher for matcher, _ in wired] == ["Bash"], event
         (_, hook) = wired[0]
@@ -478,7 +577,7 @@ def test_claude_settings_wire_the_audit_around_every_bash_call() -> None:
 
 
 def test_claude_workers_do_not_get_an_unpaired_snapshot() -> None:
-    from scripts.agent_runtime.adapters import claude
+    from lu_machinery.agent_runtime.adapters import claude
 
     settings = json.loads(claude._worker_guard_settings())
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
@@ -556,4 +655,4 @@ def test_codex_entry_post_tool_use_reports_attributed_dirt(tmp_path: Path) -> No
         timeout=60,
     )
     assert completed.returncode == 2, completed.stderr
-    assert "?? codex.txt" in completed.stderr and "scripts.hygiene.primary_dirt_cleanup" in completed.stderr
+    assert "?? codex.txt" in completed.stderr and "lu_machinery.hygiene.primary_dirt_cleanup" in completed.stderr

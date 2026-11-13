@@ -280,7 +280,7 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
 
     ``review``: run the per-dim review orchestrator (independent model
     calls per dim, strict persona, MIN aggregation) after compile. The
-    PASS floor is :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR` —
+    PASS floor is :data:`scripts.curriculum.quality.thresholds.REVIEW_PASS_FLOOR` —
     a single dim below the floor fails the whole review with the
     failing dim named in the report.
     """
@@ -550,7 +550,7 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     register) runs as an INDEPENDENT model call with the strict persona;
     the aggregator takes ``min(dim_scores)`` (see
     ``scripts.wiki.review.aggregate_min``) and fails the review if the
-    driving dim is below :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR`.
+    driving dim is below :data:`scripts.curriculum.quality.thresholds.REVIEW_PASS_FLOOR`.
 
     The orchestrator applies surgical fixes round-by-round to an
     in-memory copy of the article; when the final verdict is ``PASS``

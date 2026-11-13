@@ -4,11 +4,12 @@ import sqlite3
 
 import pytest
 from fastapi.testclient import TestClient
+from lu_machinery.api.main import app
+from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
 
-import scripts.api.wiki_router as wiki_router
-from scripts.api.main import app
-from scripts.api.monitor_context import fixture_context
-from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
+import scripts.project_api.wiki_router as wiki_router
+from scripts.project_api.context import product_roots
 
 pytestmark = pytest.mark.reads_content
 
@@ -24,7 +25,10 @@ def test_article_endpoint_returns_preview_and_word_count(tmp_path, monkeypatch):
 
     monkeypatch.setattr(wiki_router, "_known_tracks", lambda *_a, **_k: ["hist"])
     monkeypatch.setattr("wiki.config.WIKI_DIR", wiki_dir)
-    monkeypatch.setattr("wiki.sources.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr(
+        "wiki.sources.list_discovery_slugs_readonly",
+        lambda track: ["kyivan-rus"] if track == "hist" else [],
+    )
     monkeypatch.setattr(
         "wiki.state.list_wiki_articles",
         lambda: [{"path": "periods/kyivan-rus.md"}],
@@ -73,7 +77,7 @@ def test_sources_endpoint_handles_missing_table(tmp_path, monkeypatch):
     conn.close()
 
     ctx = fixture_context(tmp_path)
-    sources_path = ctx.roots.sources_db_path
+    sources_path = product_roots(ctx).sources_db_path
     sources_path.parent.mkdir(parents=True, exist_ok=True)
     db_path.replace(sources_path)
     monkeypatch.setattr(app.state, "ctx", ctx)

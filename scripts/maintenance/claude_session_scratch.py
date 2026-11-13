@@ -17,6 +17,20 @@ from pathlib import Path
 
 import psutil
 
+
+def _machinery_top() -> str:
+    # Unresolved package directory (design-v1 amendment 1). Never __package__.
+    return Path(os.path.abspath(__file__)).parents[1].name
+
+
+def _mp(relative: str) -> str:
+    return f"{_machinery_top()}/{relative}"
+
+
+def _mod(*parts: str) -> str:
+    return ".".join((_machinery_top(), *parts))
+
+
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _SESSION_RE = re.compile(r"(?<![a-zA-Z0-9-])[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}(?![a-zA-Z0-9-])", re.I)
 
@@ -271,6 +285,31 @@ def confirmed_sessions(roots: Iterable[Path], *, errors: list[dict] | None = Non
     return sessions
 
 
+def _grant_owner_write(fd: int, depth: int = 0) -> None:
+    """Let the owner unlink a tree that was extracted mode 0555/0444.
+
+    ``shutil.rmtree`` cannot remove a directory we own when that directory
+    itself is not owner-writable. Claude session scratch has shipped that
+    mode. The descriptor is the directory already opened with ``O_DIRECTORY``
+    and ``O_NOFOLLOW``. ``fchmod`` changes that directory, never a path that
+    could have been replaced by a file or a symlink.
+    """
+    if depth >= 128:
+        raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
+    info = os.fstat(fd)
+    if stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid() and not info.st_mode & stat.S_IWUSR:
+        os.fchmod(fd, stat.S_IMODE(info.st_mode) | stat.S_IWUSR)
+    for name in os.listdir(fd):
+        try:
+            child = os.open(name, _DIR_FLAGS, dir_fd=fd)
+        except OSError:
+            continue
+        try:
+            _grant_owner_write(child, depth + 1)
+        finally:
+            os.close(child)
+
+
 def _tree_bytes(fd: int, depth: int = 0) -> int:
     if depth >= 128:
         raise OSError(errno.ELOOP, "scratch tree exceeds traversal depth")
@@ -354,6 +393,7 @@ def sweep_sessions(
                         if reason in {"confirmed_rollover", "process_gone"}:
                             row["action"] = "would_remove"
                             if apply:
+                                _grant_owner_write(fd)
                                 shutil.rmtree(name, dir_fd=parent_fd)
                                 row["action"] = "removed"
                 finally:
@@ -398,16 +438,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Report and remove proven-ended Claude session scratch.\nUse at hygiene time; never use age as evidence of session death.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Examples:
-  .venv/bin/python -m scripts.maintenance.claude_session_scratch
-  .venv/bin/python -m scripts.maintenance.claude_session_scratch --apply
+        epilog=f"""Examples:
+  .venv/bin/python -m {_mod('maintenance', 'claude_session_scratch')}
+  .venv/bin/python -m {_mod('maintenance', 'claude_session_scratch')} --apply
 Outputs:
   JSON counts/bytes on stdout; --apply deletes only proven-ended session directories.
   Live, unknown and symlink entries are kept. No report files are written.
 Exit codes:
   0 report complete; 1 per-entry errors (remaining entries still processed).
 Related:
-  #8783; scripts/orchestration/scheduled_worktree_cleanup.py; thread_handoff.py
+  #8783; {_mp('orchestration/scheduled_worktree_cleanup.py')}; thread_handoff.py
 """,
     )
     parser.add_argument(

@@ -485,6 +485,7 @@ def test_delivery_attempt_exhaustion_moves_to_dead_letter(tmp_path: Path) -> Non
             body="deliver with bounded retries",
             recipients=("codex",),
             idempotency_key="delivery-exhaustion",
+            deadline_at="2037-01-01T00:00:00Z",
         )
         delivery_id = message.delivery_ids[0]
         first = service.claim_next_delivery(
@@ -655,6 +656,7 @@ def test_crash_reclaim_fences_stale_job_and_delivery_workers(tmp_path: Path) -> 
             channel=None,
             recipients=("codex",),
             idempotency_key="crash-message",
+            deadline_at="2037-01-01T00:00:00Z",
         )
         job = service.enqueue_request(
             recipient="claude",
@@ -1418,6 +1420,7 @@ def _supervisory_message(service: AuthorityService):
     return service.enqueue_supervisory_request(
         sender="operator", recipient="driver", body="restart after handoff",
         correlation_id="handoff-1", idempotency_key="supervisory-1",
+        deadline_at="2037-01-01T00:00:00Z",
     )
 
 

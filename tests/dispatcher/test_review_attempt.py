@@ -10,6 +10,7 @@ import pytest
 from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.record import attested_return, dispatch_prompt_sha256
+from scripts.review.render_contract import trusted_core_context
 
 
 @pytest.fixture
@@ -33,29 +34,42 @@ def test_attempt_cannot_write_or_reuse_a_worktree(attempt, monkeypatch, capsys, 
     launch.assert_not_called()
 
 
-def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prompt(attempt, tmp_path, monkeypatch):
+@pytest.mark.parametrize("path_status", ["done", "failed", "timeout", "cancelled", "overcap"])
+@pytest.mark.parametrize("harness", ["codex", "claude", "agy"])
+def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prompt(
+    attempt, tmp_path, monkeypatch, path_status, harness,
+):
     """A bound attempt is claimed, prepared and run by the runtime's boundary, and its record binds the result.
 
-    Defect class: a bound review executes outside isolation, or with altered prompt bytes (#12114).
+    Defect class: a bound review loses egress evidence on success, provider failure, timeout or cancellation (#12947).
     """
+    import os
+    import socket
+    import tempfile
+    from pathlib import Path
     from types import SimpleNamespace
 
     from scripts.agent_runtime import attempt_boundary, review_mcp, runner
+    from scripts.agent_runtime.attempt_network import MAX_EGRESS_DESTINATIONS, AttemptEgress
+    from scripts.agent_runtime.errors import AgentTimeoutError, AgentUnavailableError
     from scripts.dispatcher import headroom
+    from scripts.review.render_contract import trusted_core_context
 
     args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
                                           "--review-access", "full"])
     binding = store.review_binding(vars(args))
-    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
     prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
     prompt.content = rendered
     workspace = tmp_path / "checkout"
     workspace.mkdir()
-    spec = TaskSpec("task", "codex", "gpt-6.1-sol", "high", "read-only", workspace, prompt,
+    spec = TaskSpec("task", harness, "gpt-6.1-sol", "high", "read-only", workspace, prompt,
                     tmp_path / "tasks" / "task.result", options=dict(review_attempt=str(tmp_path / "manifest.yaml")))
     record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
                               dict(vars(args), research_owned_path=[]), binding=binding)
-    record["review_contract"] = dict(input_root=str(tmp_path))
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
     path = store.create(record, rendered)
 
     for name in ("check_plan", "check_runtime"):
@@ -80,30 +94,88 @@ def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prom
     monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
     calls = []
 
+    boundaries = []
+
+    def prepare_boundary(agent, mode, session_id, config):
+        # Real proxy + real cleanup; only the provider and OS launch are planted.
+        boundary = object.__new__(attempt_boundary.AttemptBoundary)
+        boundary.temp = tempfile.TemporaryDirectory(prefix="eg-", dir=tmp_path)
+        boundary.workspace = workspace
+        boundary.connection = None
+        boundary.egress_evidence = {}
+        # AF_UNIX paths must stay below the kernel's small length limit.
+        boundary.egress = AttemptEgress(Path(boundary.temp.name) / "egress.sock")
+        boundary.tool_config = config
+        boundaries.append(boundary)
+        return boundary
+
     def invoke_runtime(agent, text, **kwargs):
         calls.append((agent, text, kwargs))
+        proxy = boundaries[-1].egress
+
+        async def refuse_dns(host):
+            raise ValueError("planted DNS failure")
+
+        monkeypatch.setattr(proxy, "_resolve", refuse_dns)
+        hosts = ["audit.example"]
+        if path_status == "overcap":
+            hosts = [f"audit-{index}.example" for index in range(MAX_EGRESS_DESTINATIONS + 3)]
+            hosts += ["audit-0.example", f"audit-{MAX_EGRESS_DESTINATIONS}.example"]
+        for host in hosts:
+            with socket.socket(socket.AF_UNIX) as client:
+                client.settimeout(5)
+                directory = os.open(proxy.endpoint.parent, os.O_RDONLY | os.O_DIRECTORY)
+                try:
+                    client.connect(f"/proc/self/fd/{directory}/{proxy.endpoint.name}")
+                finally:
+                    os.close(directory)
+                client.sendall(f"CONNECT {host}:443 HTTP/1.1\r\n\r\n".encode())
+                assert client.recv(1024).startswith(b"HTTP/1.1 403")
+        if path_status == "failed":
+            raise AgentUnavailableError("planted provider failure")
+        if path_status == "timeout":
+            raise AgentTimeoutError(agent, 60)
+        if path_status == "cancelled":
+            import signal
+
+            os.kill(os.getpid(), signal.SIGTERM)
+            raise AssertionError("supervisor cancellation must unwind")
         return SimpleNamespace(ok=True, response="review: done\n", identity_state="unknown", observed_model=None,
                                observed_model_source=None, failure_code=None, stderr_excerpt=None)
 
-    monkeypatch.setattr(runner, "invoke", invoke_runtime)
+    monkeypatch.setattr(attempt_boundary, "prepare_attempt_boundary", prepare_boundary)
+    monkeypatch.setattr(runner, "prepare_trail_isolation", lambda **kwargs: None)
+    monkeypatch.setattr(runner, "_invoke_impl", invoke_runtime)
     worker.supervise(path, {}, 60)
 
     assert trees == [(tmp_path / "manifest.yaml", workspace)]
     [(agent, text, kwargs)] = calls
-    assert (agent, text) == ("codex", rendered.decode())  # verbatim: no dispatch-context header
+    assert (agent, text) == (harness, rendered.decode())
+    assert kwargs["rules_core_delivery"] is runner.RulesCoreDelivery.BOUND
     config = kwargs["tool_config"]
     assert {key: config[key] for key in ("review_id", "attempt_id", "review_access", "review_cwd")} == dict(
         review_id="review", attempt_id="attempt", review_access="full", review_cwd=str(workspace))
     assert config["strict_mcp_config"] is True and config["mcp_server_names"] == ["sources"]
     assert (kwargs["mode"], kwargs["cwd"], kwargs["allow_runner_failover"]) == ("read-only", workspace, False)
     done = store.read("task")
-    assert done["status"] == "done" and done["resolved_model_known"] is False
-    assert spec.final_file.read_bytes() == b"review: done\n"
-    assert done["result_sha256"] == store.digest(b"review: done\n") and done["sources_mcp_call_count"] == 0
-    # The recorder's binding accepts exactly this saved result for this attempt.
-    from scripts.review.record import _verify_task_return
+    assert done["status"] == ("done" if path_status == "overcap" else path_status), done.get("error")
+    expected_records = [{"destination": "audit.example:443", "bytes": 0}]
+    if path_status == "overcap":
+        expected_records = [{"destination": f"audit-{index}.example:443", "bytes": 0}
+                            for index in range(MAX_EGRESS_DESTINATIONS)]
+    assert done["review_attempt_egress"] == {
+        "records": expected_records, "overflow_count": 4 if path_status == "overcap" else 0,
+    }
+    assert not boundaries[0].egress.thread.is_alive()
+    assert not Path(boundaries[0].temp.name).exists()
+    print(json.dumps({"task_record": done}, sort_keys=True))
+    if path_status in {"done", "overcap"}:
+        assert done["resolved_model_known"] is False
+        assert spec.final_file.read_bytes() == b"review: done\n"
+        assert done["result_sha256"] == store.digest(b"review: done\n") and done["sources_mcp_call_count"] == 0
+        from scripts.review.record import _verify_task_return
 
-    _verify_task_return(b"review: done\n", "task", prompt.parent, **binding)
+        _verify_task_return(b"review: done\n", "task", prompt.parent, **binding)
 
 
 def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys):
@@ -351,7 +423,8 @@ def _run_manifest_ukrainian_attempt(
         "ukrainian",
     ])
     binding = store.review_binding(vars(args))
-    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
     prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
     prompt.content = rendered
     workspace = tmp_path / "checkout"
@@ -375,7 +448,8 @@ def _run_manifest_ukrainian_attempt(
         dict(vars(args), research_owned_path=[]),
         binding=binding,
     )
-    record["review_contract"] = dict(input_root=str(tmp_path))
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
     path = store.create(record, rendered)
 
     for name in ("check_plan", "check_runtime"):
@@ -882,3 +956,204 @@ def test_ukrainian_claim_text_cannot_hide_behind_valid_receipt_quote(attempt, tm
     row = json.loads(final_text.split("```ukrainian-item-judgments\n")[1].split("\n```")[0])["items"][0]
     assert row["_approval_void"] is True
     assert row["evidence"] == [{"receipt": rec["receipt_id"], "quote": output}]
+
+
+# --- Codex account b in bound attempts (#12504, C-4635) -------------------------------------------------------------
+
+
+@pytest.fixture
+def codex_accounts_ab(tmp_path, monkeypatch):
+    """Account a's default home and account b's bound home, each holding its own distinct login."""
+    import os
+
+    a = tmp_path / "home" / ".codex"
+    a.mkdir(parents=True)
+    b = tmp_path / "codex-b"
+    b.mkdir(mode=0o700)
+    for home, body in ((a, b'{"login": "account-a"}'), (b, b'{"login": "account-b"}')):
+        (home / "auth.json").write_bytes(body)
+        (home / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(b), "budget_usd": 200}}}))
+    binding.chmod(0o600)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "codex").write_text("#!/bin/sh\nexit 0\n")  # `codex login status` reports a login
+    (bin_dir / "codex").chmod(0o755)
+    monkeypatch.setenv("HOME", str(a.parent))
+    monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    for name in ("CODEX_HOME", "OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_ACCESS_TOKEN"):
+        monkeypatch.setenv(name, "unset")  # recorded, so teardown also undoes the supervisor's own CODEX_HOME
+        monkeypatch.delenv(name)
+    return a, b
+
+
+@pytest.mark.parametrize("label,admitted", [
+    (None, True), ("sub", True), ("b-sub", True), ("api", False), ("b-api", False),
+])
+def test_bound_attempt_admits_only_subscription_codex_accounts(label, admitted):
+    """Defect class: a bound attempt refuses account b, or runs on an API-billed route with no spending cap."""
+    from types import SimpleNamespace
+
+    from scripts.dispatcher import review_attempt
+
+    args = SimpleNamespace(review_access=None, full_checkout=False, output_schema=None, codex_account=label,
+                           prompt_file=None)
+    expected = "review_attempt_prompt_file_required" if admitted else "review_attempt_account_unsupported"
+    with pytest.raises(ValueError, match=expected):
+        review_attempt.admit(args, b"", {}, None, "a" * 40)
+
+
+def test_unknown_codex_account_refuses_a_bound_attempt_before_it_is_spent(attempt, tmp_path, monkeypatch, capsys):
+    """Defect class: an unknown account label is substituted by a known one, or spends the attempt id."""
+    launch = Mock()
+    monkeypatch.setattr(worker, "start", launch)
+    assert invoke(attempt, "--codex-account", "c-sub") == 2
+    assert "codex_account_unknown" in capsys.readouterr().err
+    launch.assert_not_called()
+    assert not (tmp_path / "tasks").exists()
+
+
+@pytest.mark.parametrize("label", ["c-sub", "API", ""])
+def test_attempt_boundary_refuses_an_unknown_codex_account_without_staging(codex_accounts_ab, tmp_path, label):
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    with pytest.raises(ReviewIsolationError, match="attempt_codex_account_unknown"):
+        stage_codex_account_auth(label, tmp_path / "staged")
+    assert not (tmp_path / "staged").exists()
+
+
+def test_attempt_boundary_stages_each_codex_account_own_login(codex_accounts_ab, tmp_path):
+    """Defect class: a b-sub attempt authenticates with account a's login, or the default account changes source."""
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+
+    a, b = codex_accounts_ab
+    for label, own in ((None, a), ("sub", a), ("b-sub", b), ("b", b)):
+        staged = tmp_path / f"staged-{label}"
+        env = stage_codex_account_auth(label, staged)
+        assert (staged / ".codex" / "auth.json").read_bytes() == (own / "auth.json").read_bytes()
+        assert env["CODEX_HOME"] == str(staged / ".codex")
+
+
+@pytest.mark.parametrize("case,code", [
+    ("ambient_home", "attempt_codex_account_ambient_conflict"),
+    ("ambient_key", "attempt_codex_account_ambient_conflict"),
+    ("unbound", "attempt_codex_account_binding_missing"),
+    ("logged_out", "attempt_codex_account_not_logged_in"),
+    ("keyring_login", "attempt_codex_account_login_missing"),
+])
+def test_attempt_boundary_never_substitutes_account_a_for_b(codex_accounts_ab, tmp_path, monkeypatch, case, code):
+    """Defect class: when account b's login cannot be staged, account a's (or an ambient credential) is used."""
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    a, b = codex_accounts_ab
+    if case == "ambient_home":
+        monkeypatch.setenv("CODEX_HOME", str(a))
+    elif case == "ambient_key":
+        monkeypatch.setenv("OPENAI_API_KEY", "fixture-credential")
+    elif case == "unbound":
+        monkeypatch.setenv("LU_CODEX_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
+    elif case == "logged_out":
+        codex = tmp_path / "bin" / "codex"
+        codex.write_text("#!/bin/sh\nexit 1\n")
+    else:
+        (b / "auth.json").unlink()  # `codex login status` passes, but the login is not a stageable file
+    staged = tmp_path / "staged"
+    with pytest.raises(ReviewIsolationError) as refused:
+        stage_codex_account_auth("b-sub", staged)
+    assert str(refused.value) == code
+    login = staged / ".codex" / "auth.json"
+    assert not login.exists() or login.read_bytes() != (a / "auth.json").read_bytes()
+
+
+def test_bound_attempt_on_codex_b_runs_as_account_b(codex_accounts_ab, attempt, tmp_path, monkeypatch):
+    """A b-sub attempt routes its label into the boundary, and the supervisor runs, stages and is metered as b.
+
+    Defect class: a bound attempt on b stages account a's login, or its usage and rate limits count against a.
+    """
+    import os
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp, runner, usage
+    from scripts.dispatcher import headroom
+
+    a, b = codex_accounts_ab
+    args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
+                                          "--codex-account", "b-sub", "--review-access", "full"])
+    binding = store.review_binding(vars(args))
+    prefix, dependency = trusted_core_context()
+    rendered = (prefix + "Rendered review prompt\nattempt: review/attempt\n").encode()
+    prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
+    prompt.content = rendered
+    workspace = tmp_path / "checkout"
+    workspace.mkdir()
+    spec = TaskSpec("task", "codex", "gpt-6.1-sol", "high", "read-only", workspace, prompt,
+                    tmp_path / "tasks" / "task.result", options=dict(review_attempt=str(tmp_path / "manifest.yaml")),
+                    codex_account="b-sub")
+    record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
+                              dict(vars(args), research_owned_path=[]), binding=binding)
+    assert record["codex_account"] == "b-sub"
+    record["review_contract"] = dict(input_root=str(tmp_path), machinery_dependencies={"rules_core": dependency},
+                                     prompt_sha256=store.digest(rendered))
+    path = store.create(record, rendered)
+    for name in ("check_plan", "check_runtime"):
+        monkeypatch.setattr(headroom, name, lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "settle_left_worktrees", lambda *_a, **_k: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    monkeypatch.setattr(attempt_boundary, "verify_full_review_tree", lambda *a: None)
+    receipts = tmp_path / "review-receipts" / "review"
+
+    def prepare(review_id, attempt_id, manifest, harness, **kwargs):
+        config = receipts / "attempt.mcp.json"
+        config.write_text("{}")
+        (receipts / "attempt.jsonl.sha256").write_text(store.digest(b"") + "\n")
+        return review_mcp.ReviewMcpPlan(config, {}, receipts / "attempt.jsonl", receipts / "attempt.jsonl.sha256",
+                                        binding["manifest_sha256"], review_id, attempt_id, harness)
+
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
+    seen = []
+
+    def invoke_runtime(agent, text, **kwargs):
+        label = kwargs["tool_config"][attempt_boundary.CODEX_ACCOUNT_KEY]
+        staged = tmp_path / "boundary-home"
+        attempt_boundary.stage_codex_account_auth(label, staged)  # what AttemptBoundary stages for this label
+        seen.append((label, os.environ["CODEX_HOME"], usage.current_codex_account(),
+                     (staged / ".codex" / "auth.json").read_bytes()))
+        return SimpleNamespace(ok=True, response="review: done\n", identity_state="unknown", observed_model=None,
+                               observed_model_source=None, failure_code=None, stderr_excerpt=None)
+
+    monkeypatch.setattr(runner, "invoke", invoke_runtime)
+    worker.supervise(path, {}, 60)
+
+    assert store.read("task")["error"] is None, store.read("task")["error"]
+    assert seen == [("b-sub", str(b), "b-sub", (b / "auth.json").read_bytes())]
+    assert seen[0][3] != (a / "auth.json").read_bytes()
+    assert store.read("task")["status"] == "done"
+
+
+@pytest.mark.parametrize("suffix", [" ", " ", "　"])
+def test_attempt_boundary_refuses_a_bound_home_that_staging_would_rename(codex_accounts_ab, tmp_path, monkeypatch, suffix):
+    """F1 (#12732 round 1): a bound home named like account a's home plus trailing whitespace stays b's.
+
+    Defect class: staging normalizes the bound CODEX_HOME (``str.strip``) into another directory and copies
+    account a's login for b.
+    """
+    from scripts.agent_runtime.attempt_boundary import stage_codex_account_auth
+    from scripts.review.isolation import ReviewIsolationError
+
+    a, b = codex_accounts_ab
+    twin = a.parent / f".codex{suffix}"
+    twin.mkdir(mode=0o700)
+    (twin / "auth.json").write_bytes((b / "auth.json").read_bytes())
+    (twin / "auth.json").chmod(0o600)
+    binding = tmp_path / "codex_accounts.json"
+    binding.write_text(json.dumps({"schema_version": 1, "accounts": {"b-sub": {"codex_home": str(twin), "budget_usd": 200}}}))
+    staged = tmp_path / "staged"
+    with pytest.raises(ReviewIsolationError, match=r"^attempt_codex_account_home_not_canonical$"):
+        stage_codex_account_auth("b-sub", staged)
+    login = staged / ".codex" / "auth.json"
+    assert not login.exists() or login.read_bytes() != (a / "auth.json").read_bytes()

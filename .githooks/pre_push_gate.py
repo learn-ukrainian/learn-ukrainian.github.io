@@ -57,6 +57,10 @@ MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
 MEASUREMENT_SCHEMA = "pre-push-measurement.v3"  # v3: no test-stage fields (#11276)
 SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
+# The publication scanner package, by import name. Its first component is the machinery package,
+# which is also the directory machinery files have under a checkout (this file is outside it).
+_SCANNER_PACKAGE = "scripts.opsec"
+_MACHINERY = _SCANNER_PACKAGE.partition(".")[0]
 # The blocking stage gets its own allowance from its own start (#10642); the run budget caps what every ref
 # update of one push spends together. A timeout is typed by the load observed at it (``stage_timeout``) and
 # is never green.
@@ -64,7 +68,7 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 # A receipt binds these tool fingerprints. The retained ``pytest`` fingerprint reads installed
 # package metadata only; it neither imports pytest nor executes tests during a push.
-TOOL_NAMES = ("gate_source", "launcher", "pre_commit_config", "python", "pytest", "pre_commit")
+TOOL_NAMES = ("gate_source", "launcher", "interpreter_resolver", "pre_commit_config", "python", "pytest", "pre_commit")
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host
 # test-slot wait of one stage allowance, its selector's bound and two cleanups. Checkouts that still run it
@@ -101,9 +105,6 @@ DEPLOYED_COPY_SOURCES = (
     (".codex/", ("agents_extensions/shared/", "agents_extensions/codex/")),
     (".agents/", ("agents_extensions/agy/",)),
     (".agents/skills/", ("agents_extensions/shared/skills/",)),
-    (".gemini/", ("gemini_extensions/",)),
-    (".gemini/skills/", ("agents_extensions/shared/skills/",)),
-    (".gemini/rules/", ("agents_extensions/shared/rules/",)),
 )
 
 
@@ -454,6 +455,7 @@ def tool_versions(launcher: str, config: str) -> dict[str, str | None]:
     return {
         "gate_source": digest(Path(__file__)),
         "launcher": digest(Path(launcher)),
+        "interpreter_resolver": digest(Path(launcher).parent.parent / "lib/project_interpreter.sh"),
         "pre_commit_config": digest(Path(config)),
         "python": sys.version,
         "pytest": installed("pytest"),
@@ -1396,8 +1398,20 @@ def run_pre_commit_stage(
     # learner-surface filter and scanner remain the source of truth.
     code, output = run_bounded(
         [
-            "bash", launcher, "-m", "pre_commit", "run", "check-no-internal-ids",
-            "--hook-stage", "pre-commit", "-c", config, "--from-ref", plan.base, "--to-ref", plan.head,
+            "bash",
+            launcher,
+            "-m",
+            "pre_commit",
+            "run",
+            "check-no-internal-ids",
+            "--hook-stage",
+            "pre-commit",
+            "-c",
+            config,
+            "--from-ref",
+            plan.base,
+            "--to-ref",
+            plan.head,
         ],
         cwd=root,
         deadline=deadline,
@@ -1746,6 +1760,7 @@ def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> d
     inputs = {
         "source": Path(__file__),
         "launcher": Path(launcher),
+        "interpreter_resolver": Path(launcher).parent.parent / "lib/project_interpreter.sh",
         "config": Path(config),
     }
     result: dict[str, str | None] = {"input": hashlib.sha256(text.encode()).hexdigest()}
@@ -1761,7 +1776,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__.splitlines()[0] + "\nInvoked by the tracked pre-push hook, with Git ref updates on stdin.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example:\n  pre_push_gate.py --launcher scripts/pre_commit/project_python.sh "
+        epilog=f"Example:\n  pre_push_gate.py --launcher {_MACHINERY}/pre_commit/project_python.sh "
         "--config .pre-commit-config.yaml < ref-updates.txt\n"
         "Outputs: private gate receipts and measurements; refusal diagnostics on stderr.\n"
         "Exit codes: 0 green; 1 refused; 75 validation incomplete.\n"
@@ -1904,9 +1919,14 @@ def message_gate(arguments: list[str]) -> int:
             environment = dict(os.environ)
             repository = git_push.Repository(git_push.real_git(environment), environment)
             hooks = repository.run("rev-parse", "--git-path", "hooks")
+            # The scanner's checkout-relative directory, from its unresolved file location. Never
+            # __name__: a short import spelling would name the wrong directory.
+            scanner_directory = Path(os.path.abspath(git_push.__file__)).parent
             scanner_hooks = {
                 git_push.HOOKS.resolve(),
-                (prepublish.primary_root() / "scripts/opsec/push_hooks").resolve(),
+                prepublish.primary_root()
+                .joinpath(scanner_directory.parent.name, scanner_directory.name, git_push.HOOKS.name)
+                .resolve(),
             }
             # When Git selected the shared scanner's hook, it scanned these
             # updates before chaining here. Scanning twice would consume its

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -35,7 +36,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
     """Refuse a bound launch whose prompt, tools or pinned inputs do not match; return its review contract."""
     from scripts.agent_runtime.review_mcp import check_review_contract, check_review_tool_requirements
     from scripts.orchestration.worktree_claims import required_review_input_root
-    from scripts.review.prompts.check import check_prompt
+    from scripts.review.product_hooks import attempt_hooks
     from scripts.review.render_contract import ReviewContractError
 
     access = args.review_access or "isolated"
@@ -43,8 +44,11 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
         raise ValueError("review_attempt_full_checkout_required: full review access needs --full-checkout")
     if args.output_schema is not None:
         raise ValueError("attempt_output_schema_unsupported: a bound attempt returns its review document")
-    if args.codex_account not in (None, "sub"):
-        # The runtime boundary stages only the default Codex login; another account is refused, never substituted.
+    from scripts.agent_runtime.codex_accounts import CODEX_SUBSCRIPTION_ACCOUNTS
+
+    if args.codex_account not in (None, *CODEX_SUBSCRIPTION_ACCOUNTS):
+        # The runtime boundary stages the named subscription account's own login (_route); an API-billed route
+        # has no per-attempt spending cap, so it is refused, never substituted.
         raise ValueError(f"review_attempt_account_unsupported: codex account {args.codex_account!r}")
     if args.prompt_file in (None, "-"):
         raise ValueError("review_attempt_prompt_file_required: a bound attempt's prompt is a rendered --prompt-file")
@@ -52,7 +56,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
     ids = dict(review_id=binding["review_id"], attempt_id=binding["attempt_id"])
     try:
         contract = check_review_contract(Path(args.prompt_file), text, **ids)
-        checked = check_prompt(
+        checked = attempt_hooks().check_prompt(
             text,
             Path(args.review_attempt),
             repo_root=Path(required_review_input_root(contract)),
@@ -62,6 +66,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
             template_sha256=contract["recorded_template_sha256"],
             recorded_templates=contract["recorded_templates"],
             review_access=access,
+            machinery_dependencies=contract["machinery_dependencies"],
             **ids,
         )
     except ReviewContractError as exc:
@@ -80,9 +85,9 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
 
 def _check_pins_at_commit(repo: Path, sha: str, manifest_path: Path) -> None:
     """Every manifest pin must hold the dispatch commit's bytes, before a worktree or record exists."""
-    from scripts.build.fresh.manifest import pinned_entries
+    from scripts.review.product_hooks import attempt_hooks
 
-    for _, entry in pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
+    for _, entry in attempt_hooks().pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
         shown = subprocess.run(
             ["git", "-C", str(repo), "cat-file", "blob", f"{sha}:{entry['path']}"],
             capture_output=True, timeout=60, check=False,
@@ -118,8 +123,9 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     )
     from scripts.agent_runtime.review_mcp import prepare_review_attempt, review_attempt_tool_config
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.receipts import ledger
+    from scripts.review.product_hooks import attempt_hooks
 
+    ledger = attempt_hooks().ledger()
     binding, access = record["review_attempt"], record.get("review_access") or "isolated"
     manifest = Path(record["options"]["review_attempt"])
     workspace = Path(record["worktree_path"])
@@ -133,8 +139,15 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         record.setdefault("unknown_items", 0)
         record.setdefault("dropped_claims", [])
     try:
+        from scripts.review.render_contract import check_rules_dependency
+
+        contract = record.get("review_contract") or {}
+        check_rules_dependency((contract.get("machinery_dependencies") or {}).get("rules_core"), prompt)
+        if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != contract.get("prompt_sha256"):
+            raise ValueError("review_render_record_stale: prompt changed after admission; re-render")
         if access == "full":
             verify_full_review_tree(manifest, workspace)
+        _bind_codex_account(spec)  # before the claim, so a refused account leaves the attempt id unspent
         store.check_review_attempt(binding, claim=True, owner=record["task_id"])
         plan = prepare_review_attempt(
             binding["review_id"], binding["attempt_id"], manifest, spec.agent,
@@ -152,12 +165,15 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     except (OSError, ValueError, ReviewIsolationError) as exc:
         return Outcome("failed", f"review_attempt_refused: {exc}"[:500], None, None, unknown)
     hard, silence, initial = deadlines
+    egress_evidence: dict = {}
     try:
         result = runner.invoke(
             spec.agent, prompt, mode="read-only", cwd=workspace, model=spec.model, task_id=record["task_id"],
             tool_config=dict(tool_config), entrypoint="dispatch", hard_timeout=int(hard) if hard else 86400,
             stdout_silence_timeout=silence or None, initial_response_timeout=initial or None, effort=spec.effort,
             allow_runner_failover=False,
+            rules_core_delivery=runner.RulesCoreDelivery.BOUND,
+            attempt_evidence=egress_evidence,
         )
     except (AgentTimeoutError, AgentStalledError) as exc:
         return Outcome("timeout", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
@@ -165,6 +181,10 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         return Outcome("rate_limited", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
     except AgentRuntimeError as exc:
         return Outcome("failed", str(exc)[:500], None, _ledger_count(ledger, plan.ledger_path), unknown)
+    finally:
+        # Cancellation unwinds past Outcome. The supervisor still settles this
+        # same record, so preserve cleanup's evidence here on every exit.
+        record["review_attempt_egress"] = egress_evidence
     # Only an identity the runtime observed from the provider is attested; a requested model never is.
     known = result.identity_state == "observed"
     identity = dict(
@@ -213,12 +233,38 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
                    _ledger_count(ledger, plan.ledger_path), identity, trace)
 
 
+def _bind_codex_account(spec: Any) -> None:
+    """Run this supervisor as the attempt's Codex account; the default account keeps its environment.
+
+    The runtime runs the attempt in this process, which supervises only this task, and attributes its
+    usage and rate limits to the account of this process's ``CODEX_HOME`` (``usage.current_codex_account``).
+    The binder refuses an unbound home, an ambient conflict or a missing login.
+    """
+    if spec.agent != "codex":
+        return
+    from scripts.agent_runtime.codex_accounts import (
+        DEFAULT_CODEX_ACCOUNT,
+        codex_account_env,
+        resolve_codex_account_label,
+    )
+
+    label = resolve_codex_account_label(spec.codex_account)
+    if label != DEFAULT_CODEX_ACCOUNT:
+        os.environ["CODEX_HOME"] = codex_account_env(label, os.environ)["CODEX_HOME"]
+
+
 def _route(spec: Any, record: dict) -> dict:
     """The admitted credential route, carried into the runtime exactly as dispatch recorded it."""
     from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
     from scripts.dispatcher import admission
 
     route: dict = {"run_nonce": record["run_nonce"]}
+    if spec.agent == "codex":
+        from scripts.agent_runtime.attempt_boundary import CODEX_ACCOUNT_KEY
+        from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+
+        # The boundary stages this account's own login and no other (stage_codex_account_auth).
+        route[CODEX_ACCOUNT_KEY] = resolve_codex_account_label(spec.codex_account)
     if spec.agent == "claude":
         # The boundary authenticates as this label and verifies its binding again at use.
         route[CLAUDE_ACCOUNT_KEY] = resolve_claude_account_label(spec.claude_account)
