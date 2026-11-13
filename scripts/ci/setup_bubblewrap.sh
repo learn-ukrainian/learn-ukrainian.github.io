@@ -28,7 +28,7 @@ dpkg_database_lock_held() {
 # script used to treat as a mirror failure.
 apt_failure_is_dpkg_lock() {
   local rc="$1" log="$2"
-  if grep -E -q 'Could not get lock|was locked by another process|Waiting for cache lock' "$log"; then
+  if grep -E -q '^(E: (Could not get lock|Unable to acquire the dpkg frontend lock|Unable to lock)|dpkg: error: .*was locked by another process)' "$log"; then
     return 0
   fi
   # 124: timeout sent TERM. 137: the command needed KILL.
