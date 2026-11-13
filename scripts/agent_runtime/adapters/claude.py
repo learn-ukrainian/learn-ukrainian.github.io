@@ -340,10 +340,14 @@ _LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvid
 # it also reports the date the stored sign-in ends (``loginExpiresAt``). Since
 # 2.1.319 a ``claude.ai`` login also carries ``storedClaudeAiLogin``, which that
 # branch sets to ``true`` and nothing else, and ``planTier``; the two are always
-# reported together.
+# reported together. Since 2.1.325 it may also carry ``consoleProfileSignInOffered``
+# (boolean only): whether keyless Console profile sign-in is offered on this
+# machine. Claude Code sets that key to true from the offer check and does not
+# change ``authMethod``, ``apiProvider`` or any key source; any other value refuses.
 _LABELLED_AUTH_STATUS_KEYS = frozenset(
     {*_LABELLED_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
     | {"email", "orgId", "orgName", "subscriptionType", "loginExpiresAt", "storedClaudeAiLogin", "planTier"}
+    | {"consoleProfileSignInOffered"}
 )
 # The ``planTier`` Claude Code 2.1.319 derives for each consumer ``subscriptionType``
 # (Max also by the login's rate-limit tier); any other plan is reported as ``other``.
@@ -355,6 +359,7 @@ _LABELLED_PLAN_TIERS = {"pro": frozenset({"pro"}), "max": frozenset({"max_5x", "
 _LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email", "Sign-in ends"})
 # An API-key label's run (C-2643): the key helper from its bound settings file and nothing else.
 # Claude Code 2.1.312 reports exactly these keys and the one text line below for it.
+# Since 2.1.325 the same status object may also carry boolean ``consoleProfileSignInOffered``.
 _API_KEY_AUTH_STATUS = {
     "loggedIn": True,
     "authMethod": "api_key_helper",
@@ -363,6 +368,7 @@ _API_KEY_AUTH_STATUS = {
 }
 _API_KEY_AUTH_STATUS_KEYS = frozenset(
     {*_API_KEY_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
+    | {"consoleProfileSignInOffered"}
 )
 _API_KEY_STATUS_TEXT = ["Auth token: apiKeyHelper"]
 _AUTH_STATUS_TIMEOUT_S = 30
@@ -1366,9 +1372,11 @@ def _verify_labelled_auth_method(
         if api_key
         else (_LABELLED_AUTH_STATUS, _LABELLED_AUTH_STATUS_KEYS)
     )
+    offered = parsed.get("consoleProfileSignInOffered", False)
     if (
         any(parsed.get(key) != value for key, value in expected.items())
         or not set(parsed) <= allowed
+        or ("consoleProfileSignInOffered" in parsed and not isinstance(offered, bool))
         or not (isinstance(directory, str) and Path(directory) == Path(login_dir))
     ):
         raise ClaudeAccountRefused("claude_account_auth_method_conflict")
