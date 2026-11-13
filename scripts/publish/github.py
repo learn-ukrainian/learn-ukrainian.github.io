@@ -1506,7 +1506,10 @@ def _publish_ruleset_merge_queue(
     try:
         after = _ruleset_get(runner, endpoint, cwd, environment)
         after_index, after_parameters = _merge_queue_rule(after.get("rules"))
-    except gate.PublishBlocked:
+    except Exception:
+        # After the PUT, every read-back failure is unverified, including a rate
+        # limit. Letting that exception reach the command wrapper reports exit 75
+        # or 2, as if the public write had not been sent.
         print(
             "OPSEC: ruleset update unverified: the write was sent and the read-back failed. Do not retry.",
             file=sys.stderr,

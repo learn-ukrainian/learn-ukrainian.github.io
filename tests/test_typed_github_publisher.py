@@ -2491,3 +2491,43 @@ def test_ruleset_merge_queue_changes_only_the_named_parameter(synthetic_opsec, c
     ) == 3
     assert calls == ["GET", "PUT", "GET"] and "Do not retry" in capsys.readouterr().err
     assert sent["body"]["rules"][1]["parameters"]["min_entries_to_merge_wait_minutes"] == 10
+
+    def readback(second_get):
+        calls = []
+
+        def runner(args, **kwargs):
+            method = args[args.index("--method") + 1]
+            calls.append(method)
+            if method == "GET" and calls.count("GET") == 1:
+                return subprocess.CompletedProcess(args, 0, json.dumps(document), "")
+            if method == "PUT":
+                return subprocess.CompletedProcess(args, 0, "", "")
+            if method == "GET":
+                return second_get(args)
+            raise AssertionError(method)
+
+        return runner, calls
+
+    def rate_limited(args):
+        return subprocess.CompletedProcess(
+            args, 75, json.dumps({"error": "github_rate_limited", "reset_at": 1}), "",
+        )
+
+    runner, calls = readback(rate_limited)
+    assert publisher.main(
+        ["ruleset-merge-queue", "--repo", "unit/public", "--ruleset", "20977023",
+         "--min-entries-to-merge-wait-minutes", "10"],
+        runner=runner,
+    ) == 3
+    assert calls == ["GET", "PUT", "GET"] and "Do not retry" in capsys.readouterr().err
+
+    def broken(args):
+        raise RuntimeError("read-back transport")
+
+    runner, calls = readback(broken)
+    assert publisher.main(
+        ["ruleset-merge-queue", "--repo", "unit/public", "--ruleset", "20977023",
+         "--min-entries-to-merge-wait-minutes", "10"],
+        runner=runner,
+    ) == 3
+    assert calls == ["GET", "PUT", "GET"] and "Do not retry" in capsys.readouterr().err
