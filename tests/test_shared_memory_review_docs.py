@@ -215,5 +215,5 @@ def test_documented_recorder_uses_completed_review_task_and_pr(monkeypatch, caps
 
     monkeypatch.setattr(recorder, "record", publication_boundary)
     assert recorder.main(argv[3:]) == 0
-    assert calls == [("review-fixture", {"pr_number": 7, "review_mode": None, "red_team_prompt": None})]
+    assert calls == [("review-fixture", {"pr_number": 7, "review_mode": None, "red_team_prompt": None, "second_review": False})]
     assert json.loads(capsys.readouterr().out) == {"status": "posted"}

@@ -124,6 +124,8 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     )
     _write_task(tasks_dir / "done.json", _task_payload("done", status="done"))
 
+    # Machinery #353: the lifespan writer publishes before HTTP readers run.
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     active_response = client.get("/api/delegate/active")
     orient_response = client.get("/api/orient?fresh=true")
 
@@ -175,6 +177,7 @@ def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
         ),
     )
 
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
 
     assert response.status_code == 200
@@ -215,6 +218,7 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
 
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
 
     assert response.status_code == 200
@@ -263,6 +267,7 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     )
 
     t0 = datetime.now(UTC)
+    delegate_router.active_snapshot(api_main.app.state.ctx).refresh()
     response = client.get("/api/delegate/active")
     t1 = datetime.now(UTC)
     duration_s = (t1 - t0).total_seconds()

@@ -14,13 +14,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from lu_machinery.api.fleet_board import prs
 from lu_machinery.fleet_comms import review_publication, review_publisher
 from lu_machinery.fleet_comms.review_publication import DEFAULT_GATE_KIND
 from lu_machinery.orchestration import integration_sweep as sweep
 from lu_machinery.orchestration import merge_queue_keeper as keeper
 from lu_machinery.review.record_cf_verdict import build_comment
 from lu_machinery.review.record_cf_verdict import build_comment as _recovery_build_comment
+
+from scripts.api.fleet_board import prs
 
 # Product fixtures retained from the machinery test consumers (C-5048).
 
@@ -597,12 +598,13 @@ class _recovery_Transport:
 # silently enter the approval path. These are handling labels, not endorsements.
 
 HANDLING = {
+    "lu_machinery/api/git_hygiene_router.py": "display-label",
     "lu_machinery/orchestration/merge_queue_keeper.py": "accept-as-approval",
     "lu_machinery/orchestration/integration_sweep.py": "accept-as-approval",
     "lu_machinery/orchestration/stalled_work.py": "ignore",
     "lu_machinery/publish/github.py": "accept-as-approval",
     "lu_machinery/fleet_comms/review_publisher.py": "accept-as-approval",
-    "lu_machinery/api/fleet_board/prs.py": "display-label",
+    "scripts/api/fleet_board/prs.py": "display-label",
     "lu_machinery/fleet_comms/review_publication.py": "ignore",
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "lu_machinery/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
@@ -684,7 +686,7 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
 
 def test_fleet_board_counts_red_team_as_ready():
     """#10452 AC-02: display the mode, and do not present it as an ordinary approval."""
-    from lu_machinery.api.fleet_board import prs
+    from scripts.api.fleet_board import prs
     _mq = _board_mq
     _pull = _board_pull
     _view = _board_view
@@ -713,7 +715,7 @@ def test_fleet_board_counts_red_team_as_ready():
         threshold=30,
     )
     assert ready is True and minutes == 60
-    assert HANDLING["lu_machinery/api/fleet_board/prs.py"] == "display-label"
+    assert HANDLING["scripts/api/fleet_board/prs.py"] == "display-label"
 
 
 def test_ci_blocker_exclusion_ignores_review_status():

@@ -91,7 +91,7 @@ def test_run_gemini_sync_429_retries_same_model_then_fails_loudly(
                 no_timeout=False,
                 stdout_only=True,
                 output_path=None,
-                allow_write=False,
+                allow_write=True,
                 skip_github=True,
                 auth_mode=None,
             )
@@ -160,7 +160,7 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
             no_timeout=False,
             stdout_only=True,
             output_path=None,
-            allow_write=False,
+            allow_write=True,
             skip_github=True,
             auth_mode="subscription",
         )
@@ -200,9 +200,7 @@ def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
     allow_write,
     expected_mode,
 ):
-    """#4446: the runtime write-mode tracks write *intent* (``--allow-write``),
-    not the CLI approval flag — plain Q&A runs ``read-only`` so an ``ask-gemini``
-    query can no longer silently mutate the primary checkout."""
+    """Machinery #367: AGY writes require explicit intent; plain queries refuse before launch."""
     message_id = send_message(
         "Please review this",
         task_id="issue-4446",
@@ -242,8 +240,14 @@ def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
             auth_mode=None,
         )
 
-    assert mock_invoke.call_args.kwargs["mode"] == expected_mode
-    assert mock_invoke.call_args.kwargs["initiator"] == "claude"
+    if allow_write:
+        assert mock_invoke.call_args.kwargs["mode"] == expected_mode
+        assert mock_invoke.call_args.kwargs["initiator"] == "claude"
+    else:
+        # Machinery #367 refuses plain read-only AGY before launching.
+        mock_invoke.assert_not_called()
+        _ack.assert_not_called()
+        _route.assert_not_called()
 
 
 def test_handle_ask_gemini_routes_to_agy(monkeypatch):
