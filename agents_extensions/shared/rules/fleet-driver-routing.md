@@ -55,7 +55,7 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
-card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. Cursor coding and code/infra review use native Cursor dispatch pinned to `grok-4.7-high` (C-5307). An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true` and records that executed ID and flag in provenance. Every other Cursor model is refused. The driver seat, design, recon and
+card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. Cursor coding and code/infra review use native Cursor dispatch pinned to `grok-4.7-high` (C-5307). An omitted-model Cursor ACP ask is refused: `apply_cursor_model_pins` accepts `grok-4.7-high` and rejects `grok-4.7`. Every other Cursor model is refused. The driver seat, design, recon and
 unclear work do not use Grok. A review runs the concrete model the reviewer
 resolver selects. A review of Grok-authored work runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
@@ -140,7 +140,7 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 ### Cursor pools (checked 2026-09-22)
 
-Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a previous-generation slug. An omitted-model Cursor ACP ask runs `grok-4.7` with `fast=true`; that flag is not another model slug. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
+Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a previous-generation slug. An omitted-model Cursor ACP ask is refused: `apply_cursor_model_pins` accepts `grok-4.7-high` and rejects `grok-4.7`. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
 **Cursor Models pool.** More included usage. The pin is `grok-4.7-high` (C-5307) for coding and code/infra review. grok-4.6 and grok-4.5 stay retired. Grok is not a driver.
 
