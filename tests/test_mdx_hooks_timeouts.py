@@ -11,11 +11,11 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from lu_machinery.hooks import hook_timing, measure_hook_stack
 from lu_machinery.review import snapshot
 
 from scripts.generate_mdx import core as mdx_core
 from scripts.generate_mdx import generate_plan_markdown
+from scripts.hooks import hook_timing, measure_hook_stack
 
 pytestmark = pytest.mark.reads_content
 
@@ -88,7 +88,7 @@ def test_measure_hook_stack_timeout_records_nonzero_rc(monkeypatch: pytest.Monke
     calls: list[dict[str, Any]] = []
     monkeypatch.setattr(measure_hook_stack.subprocess, "run", _raise_timeout(calls))
 
-    row = measure_hook_stack._time_one(tmp_path, "fake-hook", ["fake-hook"], None, {}, repeats=1)
+    row = measure_hook_stack._time_one("fake-hook", ["fake-hook"], None, {}, repeats=1)
 
     assert row["rc"] == 124
     assert len(row["samples"]) == 1

@@ -14,13 +14,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from lu_machinery.api.fleet_board import prs
 from lu_machinery.fleet_comms import review_publication, review_publisher
 from lu_machinery.fleet_comms.review_publication import DEFAULT_GATE_KIND
 from lu_machinery.orchestration import integration_sweep as sweep
 from lu_machinery.orchestration import merge_queue_keeper as keeper
 from lu_machinery.review.record_cf_verdict import build_comment
 from lu_machinery.review.record_cf_verdict import build_comment as _recovery_build_comment
+
+from scripts.api.fleet_board import prs
 
 # Product fixtures retained from the machinery test consumers (C-5048).
 
@@ -684,7 +685,7 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
 
 def test_fleet_board_counts_red_team_as_ready():
     """#10452 AC-02: display the mode, and do not present it as an ordinary approval."""
-    from lu_machinery.api.fleet_board import prs
+    from scripts.api.fleet_board import prs
     _mq = _board_mq
     _pull = _board_pull
     _view = _board_view
