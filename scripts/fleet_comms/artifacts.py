@@ -94,6 +94,9 @@ RETENTION_EXPIRED_PREFIX = "expired:"
 RETENTION_DEFAULT_DAYS = 30
 RETENTION_GRACE_SECONDS = 3600
 _OPEN_DELIVERY_STATES = ("queued", "running")
+# An expired delivery was never acknowledged. It still pins the message body,
+# so expiry cannot make an unread body eligible for retention deletion.
+_UNREAD_BODY_PIN_STATES = (*_OPEN_DELIVERY_STATES, "expired")
 _OPEN_REQUEST_STATES = ("queued", "running")
 # Every artifact column outside message links. An artifact named here is kept
 # whole: job payloads and results (idempotent replay, Kimi admission reads),
@@ -216,14 +219,16 @@ def _retention_candidate_sql(*, single: bool) -> str:
     narrows every set to that artifact). An artifact qualifies only when it
     is linked to at least one message, its class is collectable or already
     expired, nothing outside message links names it, and EVERY message that
-    links it is older than the cutoff with no open delivery, no pending
-    request and no open ACP discussion. Set-based on purpose: the reference
+    links it is older than the cutoff with no queued, running, or expired
+    delivery, no pending request and no open ACP discussion. An expired
+    delivery was never acknowledged, so it keeps an unread body ineligible.
+    Set-based on purpose: the reference
     columns carry no artifact index, so per-row correlated scans cost
     minutes on the live store.
     """
     only = " AND {column} = :artifact_id" if single else ""
     classes = ", ".join(f"'{name}'" for name in sorted(RETENTION_COLLECTABLE_CLASSES))
-    deliveries = ", ".join(f"'{state}'" for state in _OPEN_DELIVERY_STATES)
+    deliveries = ", ".join(f"'{state}'" for state in _UNREAD_BODY_PIN_STATES)
     requests = ", ".join(f"'{state}'" for state in _OPEN_REQUEST_STATES)
     held = "\n      UNION ALL ".join(
         f"SELECT {column} FROM {table} WHERE {column} IS NOT NULL"

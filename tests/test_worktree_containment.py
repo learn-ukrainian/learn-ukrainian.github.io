@@ -8,9 +8,12 @@ faking ``.git`` files, because the module deliberately relies on git plumbing
 
 from __future__ import annotations
 
+import json
 import os
+import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 from collections.abc import Iterator
@@ -72,6 +75,9 @@ def layout(tmp_path: Path) -> Layout:
 
     # Tracked content + gitignore rules covering runtime/local state.
     (main / ".gitignore").write_text(".worktrees/\nbuild/\n*.log\nlocal_state/\n")
+    marker = main / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True)
+    marker.touch()
     (main / "tracked.txt").write_text("tracked\n")
     (main / "pkg").mkdir()
     (main / "pkg" / "module.py").write_text("x = 1\n")
@@ -465,3 +471,163 @@ def test_relative_gitignored_path_resolved_against_cwd(layout: Layout):
     decision = wc.evaluate_write(rel, cwd=ignored_dir)
     assert decision.allowed is True, decision
     assert decision.reason == "gitignored_local_state"
+@pytest.mark.parametrize("redirect", ["gitfile", "symlinked_gitfile", "git_env"])
+@pytest.mark.parametrize("tool", ["Write", "Bash", "glob", "nested"])
+def test_primary_guard_rejects_cwd_repository_identity_substitution(layout: Layout, redirect: str, tool: str):
+    """Worker-controlled Git identity must not redefine the configured protected checkout."""
+    foreign = layout.outside / "foreign"
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(foreign)],
+        check=True, capture_output=True, env=_clean_env(), timeout=30,
+    )
+    env = {
+        key: value for key, value in _clean_env().items()
+        if key not in {"LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "LEARN_UK_ALLOW_PRIMARY_WRITE"}
+    }
+    env["LU_PRODUCT_ROOT"] = str(layout.main)
+    env["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(layout.main)
+    if redirect == "git_env":
+        env["GIT_DIR"] = str(foreign / ".git")
+        env["GIT_WORK_TREE"] = str(foreign)
+    else:
+        gitfile = layout.dispatch_wt / ".git"
+        if redirect == "symlinked_gitfile":
+            replacement = layout.outside / "gitfile"
+            replacement.write_text(f"gitdir: {foreign}/.git\n")
+            gitfile.unlink()
+            gitfile.symlink_to(replacement)
+        else:
+            gitfile.write_text(f"gitdir: {foreign}/.git\n")
+    hook = Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks/guard-primary-checkout-write.py"
+
+    def decision(target: Path) -> subprocess.CompletedProcess[str]:
+        if tool == "Write":
+            name, args = "Write", {"file_path": str(target), "content": "replacement"}
+        else:
+            command = f"touch {target}"
+            if tool == "glob":
+                command = f"touch {target.parent}/trac*.txt"
+            elif tool == "nested":
+                command = f"cd {foreign}; touch {target}"
+            name, args = "Bash", {"command": command}
+        return subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps({"tool_name": name, "cwd": str(layout.dispatch_wt), "tool_input": args}),
+            cwd=layout.dispatch_wt, env=env, capture_output=True, text=True, timeout=60,
+        )
+
+    denied = decision(layout.main / "tracked.txt")
+    assert denied.returncode == 2, denied.stderr
+    assert "BLOCKED" in denied.stderr
+    assert (layout.main / "tracked.txt").read_text() == "tracked\n"
+    allowed = decision(layout.dispatch_wt / "tracked.txt")
+    assert allowed.returncode == 0, allowed.stderr
+
+
+@pytest.mark.parametrize(
+    "product_kind",
+    ["primary", "worktree", "alias", "other_primary", "primary_alias", "subdirectory", "snapshot", "other_worktree", "foreign_cwd"],
+)
+@pytest.mark.parametrize("tool", ["Write", "Bash", "glob", "stdin", "stdin_inplace", "find_list"])
+def test_primary_guard_keeps_configured_and_additional_primary_protection(layout: Layout, product_kind: str, tool: str):
+    """Root contexts must preserve direct primary denials and configured/cwd parser refusals."""
+    other = layout.outside
+    _git(other, "init", "-q", "-b", "main")
+    _git(other, "config", "user.email", "fixture@example.invalid")
+    _git(other, "config", "user.name", "Fixture")
+    (other / "tracked.txt").write_text("other\n")
+    _git(other, "add", "tracked.txt")
+    _git(other, "commit", "-qm", "fixture")
+    alias = layout.main.parent / "primary-alias"
+    alias.symlink_to(layout.main, target_is_directory=True)
+    snapshot = layout.main.parent / "snapshot"
+    snapshot.mkdir()
+    other_worktree = other / ".worktrees/dispatch/codex/product"
+    _git(other, "worktree", "add", "-q", "-b", "product", str(other_worktree))
+    product = {
+        "worktree": layout.dispatch_wt, "alias": alias, "other_primary": other,
+        "subdirectory": layout.main / "pkg", "snapshot": snapshot, "other_worktree": other_worktree,
+    }.get(product_kind, layout.main)
+    cwd = other_worktree if product_kind in {"other_worktree", "foreign_cwd"} else layout.dispatch_wt
+    env = {
+        key: value for key, value in _clean_env().items()
+        if key not in {"LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "LEARN_UK_ALLOW_PRIMARY_WRITE"}
+    }
+    marker = product / "curriculum/l2-uk-en/curriculum.yaml"
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker.touch()
+    env.update(
+        LU_PRODUCT_ROOT=str(product),
+        LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(alias if product_kind == "primary_alias" else layout.main),
+    )
+    hook = Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks/guard-primary-checkout-write.py"
+
+    def decision(name: str, args: dict) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps({"tool_name": name, "cwd": str(cwd), "tool_input": args}),
+            cwd=cwd, env=env, capture_output=True, text=True, timeout=60,
+        )
+
+    readonly = decision("Bash", {"command": "ls"})
+    assert readonly.returncode == 0, readonly.stderr
+    for target, expected in ((layout.main / "tracked.txt", 2), (layout.dispatch_wt / "tracked.txt", 0), (other / "tracked.txt", 2)):
+        if tool == "Write":
+            name, args = "Write", {"file_path": str(target), "content": "replacement"}
+        elif tool in {"Bash", "glob"}:
+            word = shlex.quote(str(target)) if tool == "Bash" else f"{shlex.quote(str(target.parent))}/trac*.txt"
+            name, args = "Bash", {"command": f"touch {word}"}
+        else:
+            if tool == "find_list":
+                command = f"find -files0-from {shlex.quote(str(target.parent / 'list'))} -delete"
+            else:
+                writer = "sed -i s/a/b/" if tool == "stdin_inplace" else "rm"
+                command = f"printf '%s\\n' {shlex.quote(str(target))} | xargs {writer}"
+            name, args = "Bash", {"command": command}
+            # Stdin is undecidable for configured/cwd primaries. An unrelated
+            # source word alone did not select a primary in the original parser.
+            if target.parent == other and product_kind not in {"other_primary", "other_worktree", "foreign_cwd"}:
+                expected = 0
+        result = decision(name, args)
+        assert result.returncode == expected, result.stderr
+    if product_kind in {"other_primary", "other_worktree"}:
+        for primary in (layout.main, other):
+            result = decision("Bash", {"command": f"git -C {shlex.quote(str(primary))} reset --hard"})
+            assert result.returncode == 2, result.stderr
+    elif product_kind == "foreign_cwd":
+        result = decision("Bash", {"command": f"git -C {shlex.quote(str(other))} merge --ff-only main"})
+        assert result.returncode == 0, result.stderr
+    assert (layout.main / "tracked.txt").read_text() == "tracked\n"
+    assert (other / "tracked.txt").read_text() == "other\n"
+
+
+
+
+@pytest.mark.parametrize("invalid", ["worktree", "relative", "missing", "nongit", "symlinked_git", "commondir"])
+def test_primary_guard_refuses_invalid_mandatory_authority(layout: Layout, invalid: str):
+    """An invalid mandatory primary must not be replaced by an otherwise valid product."""
+    primary = layout.main
+    value = {
+        "worktree": str(layout.dispatch_wt), "relative": ".", "missing": str(layout.outside / "missing"),
+        "nongit": str(layout.outside),
+    }.get(invalid, str(primary))
+    if invalid == "symlinked_git":
+        original = primary / ".git"
+        moved = layout.outside / "git-metadata"
+        original.rename(moved)
+        original.symlink_to(moved, target_is_directory=True)
+    elif invalid == "commondir":
+        (primary / ".git/commondir").write_text(".\n")
+    environment = _clean_env()
+    environment.update(LU_PRODUCT_ROOT=str(primary), LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=value)
+    environment.pop("LEARN_UK_ALLOW_PRIMARY_WRITE", None)
+    hook = Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks/guard-primary-checkout-write.py"
+    result = subprocess.run(
+        [sys.executable, str(hook)], cwd=layout.dispatch_wt, env=environment,
+        input=json.dumps({"tool_name": "Write", "cwd": str(layout.dispatch_wt),
+                          "tool_input": {"file_path": str(primary / "tracked.txt")}}),
+        capture_output=True, text=True, timeout=60,
+    )
+    assert result.returncode == 2, result.stderr
+    assert "product_root_unavailable" in result.stderr
+    assert (primary / "tracked.txt").read_text() == "tracked\n"

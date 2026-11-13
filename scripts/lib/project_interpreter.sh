@@ -203,3 +203,154 @@ project_interpreter_resolve() {
     echo "Error: project interpreter not found: $tried" >&2
     return 1
 }
+
+_project_interpreter_lib_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" \
+    || _project_interpreter_lib_dir=''
+PROJECT_PACKAGE="${_project_interpreter_lib_dir%/*}"
+PROJECT_CODE_ROOT="${PROJECT_PACKAGE%/*}"
+PROJECT_PACKAGE="${PROJECT_PACKAGE##*/}"
+unset _project_interpreter_lib_dir
+
+# The one module bootstrap for every launcher-library Python child (#100 R68).
+# The child starts with -I, so the caller's PYTHONPATH, user site and cwd stay
+# off its import path. The bootstrap loads only the package from
+# PROJECT_CODE_ROOT by spec, so that directory never goes on sys.path and no
+# other name can resolve there; the tree that holds the library supplies the
+# code, whatever the interpreter or project has installed. It then runs
+# `-m <module>` as __main__, or `-c <code>` with sys.argv[0] == "-c", as Python
+# itself would. The environment is passed on unchanged.
+PROJECT_MODULE_BOOTSTRAP='
+import importlib.util, os, runpy, sys
+root, name, mode, target = sys.argv[1:5]
+del sys.argv[1:5]
+pkg = os.path.join(root, name)
+init = os.path.join(pkg, "__init__.py")
+if mode not in ("-m", "-c"):
+    sys.exit("module bootstrap: expected -m <module> or -c <code>, got %s" % mode)
+if not os.path.isfile(init):
+    sys.exit("module bootstrap: no %s package at %s" % (name, pkg))
+spec = importlib.util.spec_from_file_location(name, init, submodule_search_locations=[pkg])
+sys.modules[name] = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sys.modules[name])
+if mode == "-m":
+    runpy.run_module(target, run_name="__main__", alter_sys=True)
+else:
+    exec(compile(target, "<string>", "exec"), {"__name__": "__main__"})
+'
+
+project_python_command() {
+    PROJECT_PYTHON_COMMAND=("${1:?project_python_command: interpreter required}" -I -c "$PROJECT_MODULE_BOOTSTRAP" \
+        "$PROJECT_CODE_ROOT" "$PROJECT_PACKAGE")
+}
+
+project_python_run() {
+    project_python_command "$1" || return 1
+    shift
+    "${PROJECT_PYTHON_COMMAND[@]}" "$@"
+}
+
+
+# Prints the physical path of directory <dir>, or returns 1. The x sentinel keeps
+# a trailing newline $(...) would strip, so a directory is never checked as its
+# clean namesake; a physical path with a newline cannot be checked faithfully by
+# these helpers (or exported intact), so it refuses (#100).
+_project_physical_dir() {
+    local dir
+    dir="$(cd -P "$1" 2>/dev/null && pwd -P && printf x)" || return 1
+    dir="${dir%$'\n'x}"
+    [[ "$dir" != *$'\n'* ]] || return 1
+    printf '%s\n' "$dir"
+}
+
+
+# _project_hook_git_layout <checkout>
+#   true when <checkout>/.git passes Git's own repository test, as
+#   repo_root._is_primary_git_layout applies it (stricter here: a symlinked HEAD
+#   refuses): a real directory without commondir, with objects, refs and a valid
+#   HEAD (`ref: refs/...` or a 40/64-hex object id). An empty or stray .git is not
+#   a primary.
+_project_hook_git_layout() {
+    local git_dir="$1/.git" head=""
+    [[ -d "$git_dir" && ! -L "$git_dir" ]] || return 1
+    [[ ! -e "$git_dir/commondir" && ! -L "$git_dir/commondir" ]] || return 1
+    [[ -d "$git_dir/objects" && -d "$git_dir/refs" ]] || return 1
+    [[ -f "$git_dir/HEAD" && ! -L "$git_dir/HEAD" ]] || return 1
+    IFS= read -r head < "$git_dir/HEAD" || true
+    case "$head" in
+        ref:*)
+            head="${head#ref:}"
+            [[ "${head#"${head%%[![:space:]]*}"}" = refs/* ]]
+            ;;
+        *) [[ "$head" =~ ^[0-9a-fA-F]{40}([0-9a-fA-F]{24})?$ ]] ;;
+    esac
+}
+
+# project_hook_roots_resolve [<product-root>]
+#   exports LU_PRODUCT_ROOT and LEARN_UKRAINIAN_PRIMARY_REPO_ROOT (exit 0), or
+#   exports nothing (exit 1). The product is the argument when one is given,
+#   else LU_PRODUCT_ROOT, else CLAUDE_PROJECT_DIR, else the nearest physical
+#   ancestor of the working directory that has a .git entry; never this
+#   library's location. The first candidate given is the only one considered.
+#   The shared-state anchor is LEARN_UKRAINIAN_PRIMARY_REPO_ROOT when set, else
+#   the product's validated primary. A product with a .git entry must resolve
+#   to a primary, and the anchor must be one: both pass _project_hook_git_layout.
+#   A set LEARN_UKRAINIAN_STATE_ROOT must name the anchor. A release snapshot
+#   (no .git) therefore needs an explicit anchor.
+project_hook_roots_resolve() {
+    local root="${1-${LU_PRODUCT_ROOT:-${CLAUDE_PROJECT_DIR:-}}}"
+    local primary state_root state_config invocation
+    # Configured roots keep precedence, but cannot hide malformed invocation metadata.
+    # Every directory below is checked by its exact physical path; one whose path has
+    # a newline refuses (_project_physical_dir).
+    invocation="$(_project_physical_dir .)" || return 1
+    while [[ ! -e "$invocation/.git" && ! -L "$invocation/.git" && "$invocation" != / ]]; do
+        invocation="${invocation%/*}"
+        [[ -n "$invocation" ]] || invocation=/
+    done
+    if [[ -e "$invocation/.git" || -L "$invocation/.git" ]]; then
+        primary="$(project_primary_root_resolve "$invocation")" || return 1
+        _project_hook_git_layout "$primary" || return 1
+    fi
+    if [[ -z "$root" ]]; then
+        root="$(pwd -P)" || return 1
+        while [[ ! -e "$root/.git" && ! -L "$root/.git" ]]; do
+            [[ "$root" != / ]] || return 1
+            root="${root%/*}"
+            [[ -n "$root" ]] || root=/
+        done
+    fi
+    [[ "$root" = /* && -d "$root" ]] || return 1
+    primary="$(project_primary_root_resolve "$root")" || return 1
+    # A product with a .git entry must resolve to a real primary, whatever
+    # anchor is configured: an empty or stray .git directory would otherwise
+    # make the product its own primary and its .venv the interpreter.
+    if [[ -e "$root/.git" || -L "$root/.git" ]]; then
+        _project_hook_git_layout "$primary" || return 1
+    fi
+    state_root="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
+    [[ "$state_root" = /* ]] || return 1
+    state_root="$(_project_physical_dir "$state_root")" && _project_hook_git_layout "$state_root" || return 1
+    if [[ -n "${LEARN_UKRAINIAN_STATE_ROOT:-}" ]]; then
+        [[ "$LEARN_UKRAINIAN_STATE_ROOT" = /* ]] || return 1
+        state_config="$(_project_physical_dir "$LEARN_UKRAINIAN_STATE_ROOT")" || return 1
+        [[ "$state_config" = "$state_root" ]] || return 1
+    fi
+    export LU_PRODUCT_ROOT="$root"
+    export LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$state_root"
+}
+
+# project_hook_context_resolve [<product-root>]
+#   needs a configured LEARN_UKRAINIAN_PRIMARY_REPO_ROOT; then
+#   project_hook_roots_resolve, and exports LEARN_UKRAINIAN_PYTHON: the
+#   configured absolute executable, else the configured primary's .venv python
+#   (exit 0); exit 1 otherwise, before any interpreter starts. The product's own
+#   Git metadata never names the primary or the interpreter: whoever works in a
+#   checkout can rewrite it, and no local check tells it from a real primary
+#   (#100).
+project_hook_context_resolve() {
+    local interpreter
+    [[ -n "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-}" ]] || return 1
+    project_hook_roots_resolve "$@" || return 1
+    interpreter="$(project_interpreter_resolve "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")" || return 1
+    export LEARN_UKRAINIAN_PYTHON="$interpreter"
+}
