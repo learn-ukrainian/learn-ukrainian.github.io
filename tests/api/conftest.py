@@ -12,62 +12,30 @@ The probe refuses a sandbox inside Git, and the pre-push gate runs pytest with
 its base temp inside the Git common directory, so every fixture path is truly
 inside Git there (#10646). The sandbox's Git check judges only the directories
 a test builds below ``tmp_path``.
+
+The same isolation is applied from ``tests/conftest.py``. A file collected
+directly under ``tests/`` makes pytest scan that package again, and the new
+``tests/api`` directory node does not receive the fixtures bound to the first
+node. The parent fixture covers that node; these fixtures cover the first one.
 """
 
 from __future__ import annotations
 
-import importlib
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
-# Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-_API_PACKAGES = ("scripts.api", "lu_machinery.api")  # TRANSITIONAL-PKG3-B2
-
-
-def _api_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
-    return [importlib.import_module(f"{package}.{name}") for package in _API_PACKAGES]
+from tests.conftest import judge_api_git_below_tmp_path, refuse_api_claude_provider, reset_api_status_caches
 
 
 @pytest.fixture(autouse=True)
-def _judge_git_below_tmp_path(tmp_path, monkeypatch):
-    boundary = tmp_path.resolve()
-
-    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
-
-        def inside_git(path: Path, _module=claude_account_usage) -> bool:
-            return any(
-                _module._git_tree(directory)
-                for directory in (path, *path.parents)
-                if directory.is_relative_to(boundary)
-            )
-
-        monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
-
-
-def _no_provider_for(claude_account_usage):  # TRANSITIONAL-PKG3-B2
-    def _no_provider(directory: int, account: str) -> None:
-        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
-
-    return _no_provider
-
-
-def _reset_status_caches() -> None:
-    for state_helpers in _api_modules("state_helpers"):  # TRANSITIONAL-PKG3-B2
-        state_helpers.cache_invalidate()
-    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
-        claude_account_usage._reset_for_tests()
+def _judge_git_below_tmp_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    judge_api_git_below_tmp_path(tmp_path, monkeypatch)
 
 
 @pytest.fixture(autouse=True)
-def _isolate_status_ttl_cache(monkeypatch):
-    _reset_status_caches()
-    for claude_account_usage in _api_modules("claude_account_usage"):  # TRANSITIONAL-PKG3-B2
-        monkeypatch.setattr(
-            claude_account_usage,
-            "_private_usage",
-            lambda _module=claude_account_usage: SimpleNamespace(prove_claude_owner=_no_provider_for(_module)),
-        )
+def _isolate_status_ttl_cache(monkeypatch: pytest.MonkeyPatch):
+    reset_api_status_caches()
+    refuse_api_claude_provider(monkeypatch)
     yield
-    _reset_status_caches()
+    reset_api_status_caches()
