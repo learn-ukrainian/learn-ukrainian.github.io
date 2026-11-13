@@ -1342,11 +1342,6 @@ def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path:
     assert names.count("lease-open") == names.count("lease-close") == 1
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Residual (#9624, not fixed by D1): a terminal Ctrl-C reaches a driver's provider twice; "
-    "the supervisor shell re-sends the INT the provider already received from the terminal.",
-)
 def test_driver_keyboard_interrupt_reaches_the_provider_exactly_once(tmp_path: Path) -> None:
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:

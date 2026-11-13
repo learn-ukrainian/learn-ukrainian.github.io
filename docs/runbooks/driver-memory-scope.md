@@ -126,10 +126,20 @@ does not change the collected status or the last forwarded signal, including
 during exit logging. Interactive sessions have no
 collector whose completed status can be overwritten.
 
-Driver residuals remain owned by DevOps. A terminal Ctrl-C reaches a driver's
-provider twice, once from the terminal and once from the supervisor shell
-(`test_driver_keyboard_interrupt_reaches_the_provider_exactly_once`, expected
-failure). Driver group HUP/TERM can also be duplicated by the relay. A driver
+A terminal Ctrl-C reaches a driver's provider once. The provider shares the
+terminal's foreground process group, so the kernel delivers that INT; the
+supervisor shell records it and closes the lease but does not send it again.
+It relays INT only to a provider outside the terminal's foreground group (for
+example with no controlling terminal). An INT recorded before the provider
+subshell forks stops that subshell before it starts the provider.
+
+Driver residuals remain owned by DevOps. An INT sent to the supervisor alone
+(`kill -INT <pid>`) while its provider is in the terminal's foreground group
+is treated as a Ctrl-C and not relayed: the supervisor waits for the provider
+to exit, as Bash does for its own foreground command. A Ctrl-C in the moment
+between the provider subshell's fork and its signal reset is not relayed and
+reaches no provider; the supervisor then waits for the provider to exit.
+Driver group HUP/TERM can also be duplicated by the relay. A driver
 started with INT ignored cannot trap and relay that INT. A provider that
 suspends only itself can leave the driver waiter running until a second Ctrl-Z;
 this remains untested with a real TUI. Real interactive provider TUIs also
