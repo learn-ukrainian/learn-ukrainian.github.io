@@ -20,13 +20,12 @@ The prior product selection contained 556 entries. This revision retains 127 exa
 
 ## Deleted tests and absent inputs
 
-Tests requiring absent inputs are deleted rather than left as permanent skips. Other tests in the same files remain. Tests for existing data in the stopped open-model-data project remain in source but leave the nightly selection. No application code or learner content changes.
+Tests requiring absent inputs are deleted rather than left as permanent skips. Other tests in the same files remain. Tests for existing data in the stopped open-model-data project remain in source but leave the nightly selection. The bulk-bound lineage test in `test_layerb_shadow.py` remains in source under the DeepSeek keep-list, outside nightly. No application code or learner content changes.
 
 | Deleted test | Cases or definitions | Missing input |
 | --- | ---: | --- |
 | `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_layerb_shadow.py::test_stored_corpus_lineage_resolves_all_groundings_when_available` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_open_model_phase3_donnu_2023_morphemics_word_formation_intake.py::test_private_audit_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_open_model_phase3_evaluation_context_manifest.py::test_production_manifest_against_drive_custody` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_open_model_phase3_lnu_2024_phonetics_phonology_intake.py::test_optional_live_drive_audit` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |

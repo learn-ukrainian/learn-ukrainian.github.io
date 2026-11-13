@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+from collections import Counter
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -15,9 +17,11 @@ from scripts.audit.layerb_shadow import (
     JudgeRoute,
     ShadowRunner,
     _aggregate_relations,
+    _artifact_fact_checks,
     _build_event_index,
     _extract_lineages,
     _judge_window,
+    _read_artifacts,
     _select_route,
     _serialize_untrusted_window,
     _validate_judge_response,
@@ -461,6 +465,34 @@ def test_judged_replay_refuses_artifact_with_unknown_lineage(
     assert "synthetic.json=1" in capsys.readouterr().err
 
 
+def test_stored_corpus_lineage_resolves_all_groundings_when_available() -> None:
+    worktree_root = Path(__file__).resolve().parents[1]
+    common_git_dir = subprocess.run(
+        ["git", "-C", str(worktree_root), "rev-parse", "--git-common-dir"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=15,
+    ).stdout.strip()
+    corpus_dir = Path(common_git_dir).resolve().parent / "audit" / "2026-07-06-qg-bakeoff-multirun"
+    artifacts = _read_artifacts(corpus_dir)
+    if not artifacts:
+        pytest.skip("the frozen, gitignored Layer-B corpus is unavailable in this checkout")
+
+    rows = [
+        (path, artifact, fact_check)
+        for path, artifact in artifacts
+        for fact_check in _artifact_fact_checks(artifact)
+        if isinstance(fact_check, dict) and isinstance(fact_check.get("grounding"), dict)
+    ]
+    lineages = [
+        _extract_lineages(artifact, fact_check, fact_check["grounding"]) for _path, artifact, fact_check in rows
+    ]
+
+    assert len(rows) == 1310
+    assert all(writer is not None and reviewer is not None for writer, reviewer in lineages)
+    assert Counter(writer for writer, _reviewer in lineages) == {"fixture": 1310}
+    assert Counter(reviewer for _writer, reviewer in lineages) == {"deepseek": 892, "google": 418}
 
 
 def test_b2_rejects_incompatible_claim_number_without_deterministic_entailment(tmp_path: Path) -> None:
