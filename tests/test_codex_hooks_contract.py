@@ -790,6 +790,7 @@ def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
     completed = subprocess.run(
         ["bash", str(ENTRY), "pre-tool-use"],
         cwd=worktree,
+        env=_configured_hook_environment(primary, worktree),
         input=json.dumps(payload),
         text=True,
         capture_output=True,
@@ -1095,14 +1096,14 @@ def _post_tool_use_pytest_payload(worktree: Path, tool_name: str) -> dict:
     }
 
 
-def _stamp_environment(stamps: Path) -> dict[str, str]:
-    environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+def _stamp_environment(stamps: Path, primary: Path, product: Path) -> dict[str, str]:
+    environment = _configured_hook_environment(primary, product)
     environment["TMPDIR"] = str(stamps)
     return environment
 
 
 def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) -> None:
-    _, worktree = _make_linked_worktree(tmp_path)
+    primary, worktree = _make_linked_worktree(tmp_path)
     stamps = tmp_path / "stamps"
     stamps.mkdir()
     stamp_module = _load_pytest_stamp_module()
@@ -1117,7 +1118,7 @@ def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) ->
         text=True,
         capture_output=True,
         check=False,
-        env=_stamp_environment(stamps),
+        env=_stamp_environment(stamps, primary, worktree),
         timeout=30,
     )
 
@@ -1127,7 +1128,7 @@ def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) ->
 
 def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Path) -> None:
     """pytest_stamp only inspects a Bash command; other tools never invoke it (#8529)."""
-    _, worktree = _make_linked_worktree(tmp_path)
+    primary, worktree = _make_linked_worktree(tmp_path)
     stamps = tmp_path / "stamps"
     stamps.mkdir()
     stamp_module = _load_pytest_stamp_module()
@@ -1142,7 +1143,7 @@ def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Pa
         text=True,
         capture_output=True,
         check=False,
-        env=_stamp_environment(stamps),
+        env=_stamp_environment(stamps, primary, worktree),
         timeout=30,
     )
 
@@ -1162,3 +1163,119 @@ def test_compact_hydrate_bound_fits_its_retries() -> None:
     ]
     # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
     assert compact and compact[0]["timeout"] > 2 + 2 + 6
+
+
+def _configured_hook_environment(primary: Path, product: Path) -> dict[str, str]:
+    environment = {
+        key: value for key, value in os.environ.items()
+        if not key.startswith("GIT_")
+        and key not in {"LEARN_UKRAINIAN_PYTHON", "LEARN_UKRAINIAN_STATE_ROOT"}
+    }
+    environment.update(
+        LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=str(primary),
+        LU_PRODUCT_ROOT=str(product),
+    )
+    return environment
+
+
+@pytest.mark.parametrize("redirect", ["gitfile", "symlinked_gitfile", "git_env", "payload_cwd"])
+def test_codex_bootstrap_cannot_select_interpreter_from_caller_metadata(tmp_path: Path, redirect: str) -> None:
+    """Caller repository identity must never select the interpreter executing policy."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    _run(["git", "init", "-q", "-b", "main"], cwd=foreign)
+    selected = tmp_path / "selected"
+    for root, label in ((primary, "configured"), (foreign, "foreign")):
+        interpreter = root / ".venv/bin/python"
+        interpreter.parent.mkdir(parents=True, exist_ok=True)
+        interpreter.write_text(f"#!/bin/bash\nprintf '%s\\n' {label} >> {shlex.quote(str(selected))}\n")
+        interpreter.chmod(0o755)
+    environment = _configured_hook_environment(primary, worktree)
+    payload_cwd = worktree
+    if redirect in {"gitfile", "symlinked_gitfile"}:
+        pointer = worktree / ".git"
+        if redirect == "symlinked_gitfile":
+            pointer.unlink()
+            link = tmp_path / "pointer"
+            link.write_text(f"gitdir: {foreign}/.git\n")
+            pointer.symlink_to(link)
+        else:
+            pointer.write_text(f"gitdir: {foreign}/.git\n")
+    elif redirect == "git_env":
+        environment.update(GIT_DIR=str(foreign / ".git"), GIT_WORK_TREE=str(foreign))
+    else:
+        payload_cwd = foreign
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=worktree,
+        input=json.dumps({"tool_name": "Write", "cwd": str(payload_cwd),
+                          "tool_input": {"file_path": str(primary / "README.md")}}),
+        env=environment, capture_output=True, text=True, timeout=30,
+    )
+    if redirect in {"gitfile", "symlinked_gitfile"}:
+        assert completed.returncode == 2, completed.stderr
+        assert not selected.exists()
+        assert "HOOK-BOOTSTRAP-FAILED" in completed.stderr
+    else:
+        assert completed.returncode == 0, completed.stderr
+        assert selected.read_text() == "configured\n"
+    assert (primary / "README.md").read_text() == "hook test\n"
+
+
+@pytest.mark.parametrize("invalid", ["unset", "relative", "worktree", "missing", "empty_git"])
+def test_codex_bootstrap_refuses_invalid_mandatory_primary_before_interpreter(tmp_path: Path, invalid: str) -> None:
+    """Unusable mandatory authority must refuse before any interpreter executes."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selected = tmp_path / "selected"
+    interpreter = primary / ".venv/bin/python"
+    interpreter.write_text(f"#!/bin/bash\ntouch {shlex.quote(str(selected))}\n")
+    empty = tmp_path / "empty"
+    (empty / ".git").mkdir(parents=True)
+    environment = _configured_hook_environment(primary, worktree)
+    value = {"relative": "relative", "worktree": str(worktree), "missing": str(tmp_path / "missing"),
+             "empty_git": str(empty)}.get(invalid)
+    if value is None:
+        environment.pop("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")
+    else:
+        environment["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = value
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=worktree, input='{"tool_name":"Write"}',
+        env=environment, capture_output=True, text=True, timeout=30,
+    )
+    assert completed.returncode == 2, completed.stderr
+    assert "HOOK-BOOTSTRAP-FAILED" in completed.stderr
+    assert not selected.exists()
+
+
+@pytest.mark.parametrize("event", ["PreToolUse", "PostToolUse", "UserPromptSubmit", "SessionStart", "Stop", "SessionEnd"])
+def test_codex_tool_manifest_uses_configured_source_despite_foreign_cwd(tmp_path: Path, event: str) -> None:
+    """Caller checkout metadata must not choose the lifecycle entry executable."""
+    primary, worktree = _make_linked_worktree(tmp_path)
+    selected = tmp_path / "selected"
+    relative = {
+        "SessionStart": ".codex/hooks/session-setup.sh", "Stop": ".codex/hooks/goal-driver-stop.sh",
+        "SessionEnd": ".codex/hooks/release-thread-lease.sh",
+    }.get(event, "scripts/agent_runtime/codex_hook_entry.sh")
+    for root, label in ((primary, "configured"), (worktree, "caller")):
+        entry = root / relative
+        entry.parent.mkdir(parents=True)
+        entry.write_text(f"#!/bin/bash\nprintf '%s\\n' {label} >> {shlex.quote(str(selected))}\n")
+    command = _manifest()["hooks"][event][0]["hooks"][0]["command"]
+    environment = _configured_hook_environment(primary, worktree)
+    completed = subprocess.run(["bash", "-c", command], cwd=worktree, input="{}",
+                               env=environment, capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 0, completed.stderr
+    assert selected.read_text() == "configured\n"
+
+
+@pytest.mark.parametrize("failure", ["unset", "missing_entry"])
+def test_codex_manifest_bootstrap_start_failure_denies_tool(tmp_path: Path, failure: str) -> None:
+    """Missing bootstrap authority or executable must return the blocking hook status."""
+    environment = dict(os.environ)
+    environment.pop("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", None)
+    if failure == "missing_entry":
+        environment["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] = str(tmp_path)
+    command = _manifest()["hooks"]["PreToolUse"][0]["hooks"][0]["command"]
+    completed = subprocess.run(["bash", "-c", command], cwd=tmp_path, input="{}",
+                               env=environment, capture_output=True, text=True, timeout=30)
+    assert completed.returncode == 2, completed.stderr

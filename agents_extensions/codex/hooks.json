@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/session-setup.sh\"",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/.codex/hooks/session-setup.sh\") || exit 2",
             "timeout": 15,
             "statusMessage": "Checking learn-ukrainian session state",
             "additionalContextLimit": 1200
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CODEX_COMPACT_SESSION_START=1 bash \"$(git rev-parse --show-toplevel)/.codex/hooks/post-compact.sh\"",
+            "command": "(CODEX_COMPACT_SESSION_START=1 bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/.codex/hooks/post-compact.sh\") || exit 2",
             "timeout": 15,
             "statusMessage": "Hydrating bound fleet-driver context",
             "additionalContextLimit": 800
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" pre-tool-use",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/scripts/agent_runtime/codex_hook_entry.sh\" pre-tool-use) || exit 2",
             "timeout": 45,
             "statusMessage": "Running Codex tool policy"
           }
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/scripts/agent_runtime/codex_hook_entry.sh\" post-tool-use) || exit 2",
             "timeout": 15,
             "statusMessage": "Recording Codex tool result"
           }
@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/scripts/agent_runtime/codex_hook_entry.sh\" user-prompt-submit) || exit 2",
             "timeout": 5,
             "statusMessage": "Checking cross-agent inbox"
           }
@@ -69,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/goal-driver-stop.sh\"",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/.codex/hooks/goal-driver-stop.sh\") || exit 2",
             "timeout": 5,
             "statusMessage": "Checking goal-driver state"
           }
@@ -81,7 +81,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$(git rev-parse --show-toplevel)/.codex/hooks/release-thread-lease.sh\"",
+            "command": "(bash \"${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?configured primary required}/.codex/hooks/release-thread-lease.sh\") || exit 2",
             "timeout": 5,
             "statusMessage": "Releasing learn-ukrainian session state"
           }
