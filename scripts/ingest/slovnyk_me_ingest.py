@@ -7,12 +7,15 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import re
 import sqlite3
 import sys
 import time
 from collections import Counter
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal, cast
 from urllib.parse import quote, urlparse
 
 if __package__ in {None, ""}:
@@ -85,8 +88,11 @@ WHERE EXISTS (
 from scripts.storage.generations import GenerationError, store_writer
 from scripts.storage.topology import (
     ExplicitStoreWriteTarget,
+    StoreBinding,
     StoreRefusal,
+    WriteStoreBinding,
     _prepare_store_write_target,
+    resolve_store,
     resolve_store_for_write,
 )
 
@@ -329,6 +335,244 @@ def read_cache(
     return entries, misses, report
 
 
+STAGING_IMPORTER_VERSION = "slovnyk-staging-ingest/1"
+# Rows per read: each chunk is one fully fetched SELECT, so the shared lock on a live
+# staging file (rollback journal, the job's 1 s busy wait) is held for milliseconds only.
+_STAGING_CHUNK_ROWS = 2000
+
+
+@dataclass
+class StagingImportReport:
+    """What a dictionary-acquisition staging import read, classified and (unless dry-run) wrote."""
+
+    dictionary: str = ""
+    identity: dict = field(default_factory=dict)  # job fingerprint, manifest, positions, row digest
+    generation: str = ""  # file name of the sources generation compared against
+    staged_positive: int = 0
+    mapped: int = 0
+    rejected: Counter = field(default_factory=Counter)  # reason -> count
+    reject_samples: dict = field(default_factory=dict)  # reason -> a few source headwords
+    new: int = 0
+    updated: int = 0
+    unchanged: int = 0
+    written: int = 0
+    backup_removed: bool = False
+
+    def summary(self) -> str:
+        lines = [
+            f"dictionary={self.dictionary} generation={self.generation or 'unknown'}",
+            "staging " + " ".join(f"{key}={value}" for key, value in self.identity.items()),
+            f"staged_positive={self.staged_positive} mapped={self.mapped} "
+            f"rejected={sum(self.rejected.values())} new={self.new} updated={self.updated} "
+            f"unchanged={self.unchanged} written={self.written}",
+        ]
+        for reason in sorted(self.rejected):
+            samples = ", ".join(self.reject_samples.get(reason, []))
+            lines.append(f"  rejected {reason}: {self.rejected[reason]} (e.g. {samples})")
+        return "\n".join(lines)
+
+
+_SITE_SEPARATOR_RE = re.compile(r"[' ]")
+_SITE_HOMONYM_SUFFIX = r"(?:_[0-9a-f]{3})?"
+
+
+def _staging_key(word: str, lookup: str, target: str) -> tuple[str | None, str]:
+    """Return (store key, "") for a mapped row, or (None, reject reason).
+
+    The key is always ``normalize_word(article.word)``. It maps when it equals the
+    frozen learner lookup key, or when the site's own URL suffix encodes it exactly
+    (spaces and apostrophes as ``_``, an optional three-hex-digit homonym suffix).
+    Combining-form articles (``авто...``) and any other headword are rejected.
+    """
+    key = normalize_word(word)
+    if not key:
+        return None, "empty_headword"
+    if key.endswith(("...", "…")):
+        return None, "prefix_entry"
+    if key == lookup:
+        return key, ""
+    if re.fullmatch(re.escape(_SITE_SEPARATOR_RE.sub("_", key)) + _SITE_HOMONYM_SUFFIX, normalize_word(target)):
+        return key, ""
+    return None, "key_mismatch"
+
+
+def read_staging(staging: Path) -> tuple[list[dict], StagingImportReport]:
+    """Map every positive staged article to a slovnyk_me_entries row; nothing is written.
+
+    The staging job keys on exact source headwords; the store keys on learner-lemma
+    normalization. Each row keys on ``normalize_word(article.word)``; a key that
+    neither equals the frozen learner lookup key nor reproduces the source URL
+    suffix is rejected and counted by reason, never guessed (see ``_staging_key``).
+    Rows keep the observed source URL, original fetch time and the full article text
+    with its SHA-256, so Atlas authenticates the text from the row alone.
+
+    The file opens read-only and is read in short position-ordered chunks, never in one
+    long transaction, so a live acquisition job keeps committing. Positive rows are
+    final, so rows the job adds meanwhile are either read or left for the next run.
+    The row locator names the dictionary and the frozen manifest position, never the
+    file's local path, so identical copies (server or Mac) compare unchanged.
+    """
+    if not staging.is_file():
+        raise ValueError("staging file unavailable")
+    conn = cast(SQLiteConnection, open_readonly(staging))
+    report = StagingImportReport()
+    entries: list[dict] = []
+    try:
+        job = conn.execute("SELECT spec, fingerprint FROM job").fetchone()
+        if job is None:
+            raise ValueError("staging has no job record")
+        spec = json.loads(job[0])
+        slug = spec.get("dictionary")
+        if slug not in SLOVNYK_ME_DICTS or spec.get("lookup_mode") != "source_headword":
+            raise ValueError("staging is not a slovnyk.me source-headword acquisition")
+        report.dictionary = slug
+        rows_digest = hashlib.sha256()
+        positions: list[int] = []
+        for position, target, lookup, raw in _positive_chunks(conn):
+            payload = json.loads(raw)
+            article = payload.get("article") if isinstance(payload, dict) else None
+            if not isinstance(article, dict) or not isinstance(article.get("text"), str):
+                raise ValueError(f"staging position {position}: positive row lacks its article")
+            if payload.get("content_sha256") != _sha256(article["text"]):
+                raise ValueError(f"staging position {position}: article text does not match its SHA-256")
+            report.staged_positive += 1
+            positions.append(position)
+            rows_digest.update(f"{position}\t{payload['content_sha256']}\n".encode())
+            raw_word = article.get("word")
+            word = raw_word if isinstance(raw_word, str) else ""
+            key, reason = _staging_key(word, lookup, target)
+            if key is None:
+                report.rejected[reason] += 1
+                samples = report.reject_samples.setdefault(reason, [])
+                if len(samples) < 3:
+                    samples.append(target)
+                continue
+            row = _positive_row(
+                slug, {**article, "source_url": payload.get("source_url")}, {},
+                name=f"staging position {position}", locator=f"staging:{slug}#position={position}",
+                fetched_at=payload.get("fetched_at") or "", lemma=key, max_text_chars=len(article["text"]),
+            )
+            # Store the exact witness: Atlas verifies the stored text against its SHA-256.
+            row.update(text=article["text"], snippet=_truncate(article["text"], 200),
+                       importer_version=STAGING_IMPORTER_VERSION, normalized_word=key)
+            entries.append(row)
+        report.mapped = len(entries)
+        report.identity = {
+            "job_fingerprint": job[1],
+            "manifest_sha256": spec.get("manifest_sha256", ""),
+            "denominator": spec.get("denominator", ""),
+            "positions": f"{min(positions)}-{max(positions)}" if positions else "none",
+            "positive_rows_sha256": rows_digest.hexdigest(),
+        }
+    finally:
+        conn.close()
+    return entries, report
+
+
+def _positive_chunks(conn: SQLiteConnection) -> Iterator[tuple]:
+    after = -1
+    while True:
+        chunk = conn.execute(
+            "SELECT position, target, lookup, payload FROM results WHERE status = 'positive' AND position > ? "
+            "ORDER BY position LIMIT ?",
+            (after, _STAGING_CHUNK_ROWS),
+        ).fetchall()
+        if not chunk:
+            return
+        yield from chunk
+        after = chunk[-1][0]
+
+
+def _classify_staged(conn: SQLiteConnection, entries: list[dict], report: StagingImportReport) -> list[dict]:
+    """Count new, updated and unchanged rows; return only the rows that would change the store."""
+    existing: dict[tuple[str, str], tuple] = {}
+    has_table = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'slovnyk_me_entries'"
+    ).fetchone()
+    if has_table:
+        for row in conn.execute(
+            f"SELECT {', '.join(_ENTRY_COLUMNS)} FROM slovnyk_me_entries WHERE dictionary_slug = ?",
+            (report.dictionary,),
+        ):
+            existing[(row[2], row[6])] = tuple(row)
+    changed: list[dict] = []
+    for entry in entries:
+        values = _entry_values(entry)
+        current = existing.get((values[2], values[6]))
+        if current is None:
+            report.new += 1
+        elif current == values:
+            report.unchanged += 1
+            continue
+        else:
+            report.updated += 1
+        changed.append(entry)
+    return changed
+
+
+def ingest_staging(
+    db_path: Path | None, staging: Path, *, dry_run: bool, backup_dir: Path | None = None,
+    db_role: Literal["active", "staging", "shadow"] = "active",
+) -> StagingImportReport:
+    """Import positive dictionary-acquisition staging articles into slovnyk_me_entries, offline.
+
+    Re-runnable on any staging copy, live or synced: rows are upserted
+    on (normalized_word, dictionary_slug, source_url), and a run with nothing new or
+    changed writes nothing. The staging file is never written.
+    """
+    entries, report = read_staging(staging)
+    if dry_run:
+        read_binding = resolve_store(
+            "sources", REPO, binding=None if db_path is None else StoreBinding("sources", db_path)
+        )
+        if isinstance(read_binding, StoreRefusal):
+            raise ValueError(read_binding.reason) from None
+        report.generation = read_binding.path.resolve().name
+        reader = cast(SQLiteConnection, open_readonly(read_binding.path))
+        try:
+            _classify_staged(reader, entries, report)
+        finally:
+            reader.close()
+        return report
+    request = _prepare_store_write_target(
+        "sources", REPO, intent="update",
+        target=None if db_path is None else ExplicitStoreWriteTarget(db_path, db_role),
+    )
+    if isinstance(request, StoreRefusal):
+        raise ValueError(request.reason) from None
+    if is_network_filesystem_path(Path(request.location)):
+        raise ValueError("sources.db must stay on local storage")
+    with store_writer(request.location):
+        binding = resolve_store_for_write("sources", REPO, intent="update", target=request)
+        if isinstance(binding, StoreRefusal):
+            raise ValueError(binding.reason) from None
+        refuse_writable_corpus_database(str(binding.path))
+        report.generation = binding.path.resolve().name
+        conn = _open_store_writer(binding)
+        backup: Path | None = None
+        try:
+            conn.execute("PRAGMA busy_timeout = 60000")
+            changed = _classify_staged(conn, entries, report)
+            if not changed:
+                return report
+            backup = backup_database(conn, binding.path, backup_dir)
+            ensure_slovnyk_me_schema(conn)
+            with conn:
+                conn.executemany(INSERT_SQL, [_entry_values(row) for row in changed])
+                conn.execute(MISS_SUPERSEDED_SQL)
+            report.written = len(changed)
+            backup.unlink(missing_ok=True)
+            backup = None
+            report.backup_removed = True
+        except BaseException as exc:
+            if backup is not None:
+                exc.add_note(f"pre-import copy retained at {backup}")
+            raise
+        finally:
+            conn.close()
+    return report
+
+
 def backup_database(conn: SQLiteConnection, db_path: Path, backup_dir: Path | None = None) -> Path:
     """Temporary copy of the open (possibly live, WAL) store via ``VACUUM INTO``.
 
@@ -362,6 +606,13 @@ def backup_database(conn: SQLiteConnection, db_path: Path, backup_dir: Path | No
             exc.add_note(f"pre-import copy retained at {target}")
         raise
     return target
+
+
+def _open_store_writer(binding: WriteStoreBinding) -> SQLiteConnection:
+    """The one writable open shared by the offline cache and staging imports."""
+    if binding.sqlite_uri is None:
+        raise ValueError("sources store binding has no SQLite URI")
+    return cast(SQLiteConnection, sqlite3.connect(binding.sqlite_uri, uri=True))
 
 
 def _table_count(conn: SQLiteConnection, table: str) -> int:
@@ -407,7 +658,7 @@ def ingest_cache(
             raise ValueError(binding.reason) from None
         db_path = binding.path
         refuse_writable_corpus_database(str(db_path))
-        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        conn = _open_store_writer(binding)
         backup: Path | None = None
         try:
             conn.execute("PRAGMA busy_timeout = 60000")
@@ -450,6 +701,7 @@ def build_parser() -> argparse.ArgumentParser:
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --dry-run --dict newsum блакитний
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --cache-dir data/lexicon/slovnyk_cache --dry-run
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --cache-dir data/lexicon/slovnyk_cache --dict vts
+  .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --staging <acquisition-root>/vts/staging.sqlite3 --dry-run
 
 Outputs:
   Creates/updates the slovnyk_me_entries table plus FTS5 index in data/sources.db by default.
@@ -474,6 +726,14 @@ Related:
         help="Import existing schema-v4 per-word JSON snapshots offline; no network requests. "
         "Every cached dictionary is imported unless --dict narrows it; observed 404s are stored "
         "in slovnyk_me_lookup_misses. Positional words/--words-file optionally restrict the words.",
+    )
+    parser.add_argument(
+        "--staging",
+        type=Path,
+        help="Import every positive article from a dictionary-acquisition staging.sqlite3 (server or "
+        "Mac copy) offline. Reads a consistent snapshot, never writes the staging file, stores full "
+        "article text, rejects rows whose headword does not normalize to the learner lookup key, and "
+        "writes only new or changed rows; safe to re-run as data arrives.",
     )
     parser.add_argument(
         "--words-file",
@@ -531,6 +791,18 @@ Related:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     words = _read_words(args)
+    if args.staging is not None:
+        if words or args.cache_dir is not None or args.dicts:
+            print("--staging takes no words, --cache-dir or --dict.", file=sys.stderr)
+            return 2
+        staging_report = ingest_staging(
+            args.db, args.staging, dry_run=args.dry_run, backup_dir=args.backup_dir,
+            db_role=getattr(args, "db_role", "active"),
+        )
+        print(staging_report.summary())
+        print("[dry-run] nothing written" if args.dry_run else
+              f"backup: {'removed after successful commit' if staging_report.backup_removed else 'none (nothing to write)'}")
+        return 0
     if not words and args.cache_dir is None:
         print("No words supplied. Pass positional words or --words-file.", file=sys.stderr)
         return 2
