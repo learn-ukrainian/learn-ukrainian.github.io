@@ -620,7 +620,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 def test_pytest_is_skipped_only_on_pull_requests() -> None:
     jobs = _jobs_of_ci()
     assert "reuse" not in jobs
-    assert jobs["pytest"]["needs"] == ["refresh-pytest-durations"]
+    assert jobs["pytest"]["needs"] == ["refresh-pytest-durations", "hydrate-release-assets"]
     for name in ("pytest", "refresh-pytest-durations"):
         assert jobs[name]["if"] == "${{ !cancelled() && github.event_name != 'pull_request' }}"
     assert jobs["frontend"]["if"] == "${{ !cancelled() }}"

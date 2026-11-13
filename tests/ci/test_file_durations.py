@@ -169,7 +169,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert upload["with"]["name"] == "pytest-duration-input"
     assert upload["with"]["path"] == "ci-artifacts/pytest-file-durations.json"
     pytest_job = jobs["pytest"]
-    assert pytest_job["needs"] == ["refresh-pytest-durations"]
+    assert pytest_job["needs"] == ["refresh-pytest-durations", "hydrate-release-assets"]
     assert pytest_job["if"] == full
     assert pytest_job["timeout-minutes"] == 15
     assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 25))
@@ -197,12 +197,10 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     )
     assert download["with"] == {"name": "pytest-duration-input", "path": "ci-artifacts/pytest-duration-input"}
     assert not {"github-token", "run-id", "repository"} & set(download["with"])
+    # The shards take the run's one hydrated manifest as an artifact; no step holds a token.
     for step in steps:
         assert "gh run download" not in step.get("run", "")
-        if step.get("uses") == "./.github/actions/python-ci-env":
-            assert step.get("env") == {"GH_TOKEN": "${{ github.token }}"}
-        else:
-            assert "GH_TOKEN" not in step.get("env", {})
+        assert "GH_TOKEN" not in step.get("env", {})
     for step in (decide, download, validate):
         assert "continue-on-error" not in step
     assert validate["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
