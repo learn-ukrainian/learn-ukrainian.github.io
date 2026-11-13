@@ -27,14 +27,14 @@ PULLS = {
 }
 
 
-def _twin(number: int, sha: str) -> str:
-    return f"Summary.\n\nMachinery-Twin: {gate.MACHINERY_REPOSITORY}#{number} {sha}\n"
+def _twin(number: int, sha: str, newline: str = "\n") -> str:
+    return f"Summary.{newline}{newline}Machinery-Twin: {gate.MACHINERY_REPOSITORY}#{number} {sha}{newline}"
 
 
 @pytest.mark.parametrize(
     ("changed", "body", "merged_paths", "blocked"),
     [
-        pytest.param([MACHINERY], _twin(400, MERGED_SHA), [MACHINERY], False, id="pass-landed-twin"),
+        pytest.param([MACHINERY], _twin(400, MERGED_SHA, "\r\n"), [MACHINERY], False, id="pass-landed-twin-crlf-body"),
         pytest.param(
             [MACHINERY],
             f"Twin: {gate.MACHINERY_REPOSITORY}#400 and https://github.com/{gate.MACHINERY_REPOSITORY}/pull/400",
@@ -49,7 +49,7 @@ def _twin(number: int, sha: str) -> str:
     ],
 )
 def test_machinery_change_lands_only_with_a_merged_twin_until_expiry(changed, body, merged_paths, blocked):
-    """Defect classes: a bare or unmerged citation, or a SHA that is not the PR's merge commit, letting a
+    """Defect classes: a valid CRLF-terminated citation (web-edited body) read as missing; a bare or unmerged citation, or a SHA that is not the PR's merge commit, letting a
     product-only machinery edit land (fork); an approved cutover deletion forced to manufacture a new
     machinery change; the freeze outliving the in-tree copy."""
     result = gate.findings(changed, body, rows=ROWS, merged_paths=merged_paths, get=PULLS.__getitem__)

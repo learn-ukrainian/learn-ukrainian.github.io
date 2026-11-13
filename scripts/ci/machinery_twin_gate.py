@@ -62,7 +62,7 @@ RENAME_MAP_SHA256 = "5b72679da7cb48f4ed9805df256361f63aa40b0d6d37f54a79825699e5b
 RESIDUAL_PATHS = frozenset({"scripts/dispatcher/providers/opencode.py"})
 
 _CITATION = re.compile(
-    rf"^[ \t]*Machinery-Twin:[ \t]*{re.escape(MACHINERY_REPOSITORY)}#([1-9][0-9]*)[ \t]+([0-9a-f]{{40}})[ \t]*$",
+    rf"^[ \t]*Machinery-Twin:[ \t]*{re.escape(MACHINERY_REPOSITORY)}#([1-9][0-9]*)[ \t]+([0-9a-f]{{40}})[ \t]*\r?$",
     re.MULTILINE,
 )
 _SHA = re.compile(r"[0-9a-f]{40}\Z")
