@@ -109,7 +109,7 @@ Positive rows are final; rows the job adds meanwhile are read now or by the next
 run. Each row keeps the observed source URL,
 the original `fetched_at` and the full article text with its SHA-256.
 `importer_version` is `slovnyk-staging-ingest/1`, and `cache_path` names
-`vts/staging.sqlite3#position=N`. Atlas `full_vts` authenticates the text
+`staging:vts#position=N`, the frozen manifest position, which is independent of where a copy lives. Atlas `full_vts` authenticates the text
 from the row alone.
 
 Staging keys on exact source headwords, while the store keys on learner-lemma

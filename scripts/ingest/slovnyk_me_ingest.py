@@ -409,10 +409,11 @@ def read_staging(staging: Path) -> tuple[list[dict], StagingImportReport]:
     The file opens read-only and is read in short position-ordered chunks, never in one
     long transaction, so a live acquisition job keeps committing. Positive rows are
     final, so rows the job adds meanwhile are either read or left for the next run.
+    The row locator names the dictionary and the frozen manifest position, never the
+    file's local path, so identical copies (server or Mac) compare unchanged.
     """
     if not staging.is_file():
         raise ValueError("staging file unavailable")
-    staging_name = f"{staging.parent.name}/{staging.name}"
     conn = cast(SQLiteConnection, open_readonly(staging))
     report = StagingImportReport()
     entries: list[dict] = []
@@ -448,7 +449,7 @@ def read_staging(staging: Path) -> tuple[list[dict], StagingImportReport]:
                 continue
             row = _positive_row(
                 slug, {**article, "source_url": payload.get("source_url")}, {},
-                name=f"staging position {position}", locator=f"{staging_name}#position={position}",
+                name=f"staging position {position}", locator=f"staging:{slug}#position={position}",
                 fetched_at=payload.get("fetched_at") or "", lemma=key, max_text_chars=len(article["text"]),
             )
             # Store the exact witness: Atlas verifies the stored text against its SHA-256.

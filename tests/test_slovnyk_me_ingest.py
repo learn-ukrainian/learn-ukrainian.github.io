@@ -407,12 +407,12 @@ def test_staging_import_maps_source_headwords_and_rejects_unmatched_keys(tmp_pat
     for _key, url, text, sha, fetched_at, version, locator in rows:
         assert len(text) > 200 and hashlib.sha256(text.encode()).hexdigest() == sha  # full witness
         assert url.startswith("https://slovnyk.me/dict/vts/") and fetched_at == "2026-10-29T01:02:03+00:00"
-        assert version == ingest.STAGING_IMPORTER_VERSION and locator.startswith("vts/staging.sqlite3#position=")
+        assert version == ingest.STAGING_IMPORTER_VERSION and locator.startswith("staging:vts#position=")
     assert staging.read_bytes() == before
 
 
 def test_staging_import_rerun_changes_nothing_and_upgrades_truncated_rows(tmp_path):
-    """Defect class: a re-run duplicates or rewrites rows, or a truncated cache row is never upgraded."""
+    """Defect class: a re-run or another copy's location rewrites rows, or a truncated row stays truncated."""
     staging = tmp_path / "vts" / "staging.sqlite3"
     staging.parent.mkdir()
     _staging_file(staging, [("слово", "слово", "слово", "positive"), ("нове", "нове", "нове", "positive")])
@@ -425,8 +425,12 @@ def test_staging_import_rerun_changes_nothing_and_upgrades_truncated_rows(tmp_pa
     with sqlite3.connect(db) as conn:
         snapshot_rows = conn.execute("SELECT * FROM slovnyk_me_entries ORDER BY id").fetchall()
     assert len(snapshot_rows) == 2
-    again = ingest.ingest_staging(db, staging, dry_run=False, db_role="staging")
-    assert (again.new, again.updated, again.unchanged, again.written) == (0, 0, 2, 0)
-    assert not again.backup_removed  # nothing to write: no backup taken
+    copy = tmp_path / "synced-copy" / "staging-mac.sqlite3"  # the same data from another location
+    copy.parent.mkdir()
+    copy.write_bytes(staging.read_bytes())
+    for source in (staging, copy):
+        again = ingest.ingest_staging(db, source, dry_run=False, db_role="staging")
+        assert (again.new, again.updated, again.unchanged, again.written) == (0, 0, 2, 0)
+        assert not again.backup_removed  # nothing to write: no backup taken
     with sqlite3.connect(db) as conn:
         assert conn.execute("SELECT * FROM slovnyk_me_entries ORDER BY id").fetchall() == snapshot_rows
