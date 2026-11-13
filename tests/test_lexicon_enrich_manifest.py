@@ -135,6 +135,7 @@ def isolated_canonical_sum20(monkeypatch):
     # These consumer unit tests supply canonical rows explicitly when needed.
     # Store-boundary behavior is exercised in test_sum20_lookup.py.
     monkeypatch.setattr(enrich_manifest_module, "_sum20_official_rows", lambda _word: ())
+    monkeypatch.setattr(enrich_manifest_module, "_vts_store_rows", lambda _word: ())
 
 
 def _canonical_sum20_row(monkeypatch, text: str, url: str = "https://example.invalid/sum20") -> None:

@@ -16170,42 +16170,7 @@
     {
       "path": "scripts/ingest/slovnyk_me_ingest.py",
       "code": "arg-type",
-      "message": "Argument 1 to \"_table_count\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_table_count\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_table_count\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_table_count\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"backup_database\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
       "message": "Argument 1 to \"connect\" has incompatible type \"None | str\"; expected \"PathLike[bytes] | PathLike[str] | bytes | str\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"connect\" has incompatible type \"None | str\"; expected \"PathLike[bytes] | PathLike[str] | bytes | str\""
-    },
-    {
-      "path": "scripts/ingest/slovnyk_me_ingest.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"ensure_slovnyk_me_schema\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
     },
     {
       "path": "scripts/ingest/slovnyk_me_ingest.py",

@@ -49,6 +49,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import functools
+import hashlib
 import html
 import json
 import os
@@ -4508,6 +4509,41 @@ def _sum20_definition_card(
     return None
 
 
+def _vts_store_rows(lookup_word: str) -> tuple[dict[str, Any], ...]:
+    """Read admitted VTS rows from ``slovnyk_me_entries``; never fetches or writes.
+
+    These include articles imported from the dictionary-acquisition staging, which
+    have no per-lemma cache file; only rows whose text matches its SHA-256 qualify. An absent store is a local miss; other store
+    refusals propagate, as for the canonical СУМ-20 reader.
+    """
+    from scripts.lexicon.sum20_store import Sum20StoreError, open_sources
+
+    key = normalize_word(lookup_word)
+    if not key:
+        return ()
+    try:
+        conn = open_sources(repository_root=ROOT)
+    except Sum20StoreError as error:
+        if error.reason == "store_missing":
+            return ()
+        raise
+    try:
+        rows = conn.execute(
+            "SELECT word, text, source_url, dictionary_slug, content_sha256 FROM slovnyk_me_entries "
+            "WHERE dictionary_slug = 'vts' AND normalized_word = ? AND text != '' ORDER BY id",
+            (key,),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return ()  # a store without the slovnyk.me table has no VTS rows
+    finally:
+        conn.close()
+    # Only full witnesses: a bounded snippet row never stands in for the article.
+    return tuple(
+        dict(row) for row in rows
+        if hashlib.sha256(row["text"].encode("utf-8")).hexdigest() == row["content_sha256"]
+    )
+
+
 def _vts_definition_card(
     lemma: str,
     cache: dict[str, Any] | None = None,
@@ -4515,7 +4551,8 @@ def _vts_definition_card(
     resolve_xref: bool = True,
 ) -> dict[str, Any] | None:
     """Великий тлумачний словник (VTS) — a modern, Ukrainian-only explanatory
-    dictionary on slovnyk.me, fetched live (cached per lookup word). Shown as the
+    dictionary on slovnyk.me: the per-lemma cache, then admitted sources.db rows, then a
+    live fetch (cached per lookup word). Shown as the
     top definition card, with СУМ-20 below. Non-Soviet replacement for the removed
     СУМ-11 source (decolonization decision 2026-06-26). For inflected-form entries it
     falls back to the base lemma's entry via _slovnyk_base_row."""
@@ -4524,6 +4561,9 @@ def _vts_definition_card(
         return None
     cached_present = isinstance(cache, dict) and "vts" in (cache.get("lookups") or {})
     row = _cache_lookup(cache, "vts") if cache is not None else None
+    if not row:
+        # Admitted local rows (including acquisition-staging imports) before any fetch.
+        row = next(iter(_vts_store_rows(lookup_word)), None)
     if not row and not cached_present:
         transient = False
         try:
