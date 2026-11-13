@@ -840,6 +840,16 @@ jobs:
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
+      # TWIN-FREEZE-1113 (dec-018): a PR changing a machinery-classified path lands only after
+      # its twin landed in learn-ukrainian/machinery. Enforced on merge_group, where every
+      # member's body is read as it stands now; on pull_request it only warns, because ci.yml
+      # does not rerun on body edits.
+      - name: Require a landed machinery twin
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" -m scripts.ci.machinery_twin_gate'
       # Secret scan read the queue's PR metadata when this run started. A title or
       # body edit made since then would otherwise reach the merge unscanned, so
       # re-read every member's current metadata as the gate's last step.
