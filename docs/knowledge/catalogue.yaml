@@ -182,6 +182,19 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/api/fleet-v1.md"}
     content_searchable: true
 
+  - id: machinery-cutover
+    kind: doc_family
+    paths: [docs/machinery/**]
+    purpose: Plans for moving product code off the in-tree machinery mirror. Each plan waits on designated approval before anyone executes it.
+    keywords: [machinery cutover, scripts/api, lu_machinery, migration plan]
+    lifecycle: active
+    owner: epics
+    entrypoints:
+      - {topic: scripts/api migration plan, path: docs/machinery/scripts-api-migration-plan.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/machinery"}
+    content_searchable: true
+
   - id: core-lesson-contracts
     kind: doc_family
     paths:
