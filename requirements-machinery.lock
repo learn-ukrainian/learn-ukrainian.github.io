@@ -1,5 +1,5 @@
-lu-machinery==0.1.12 \
-    --hash=sha256:e71712c86143911941af85e173921b06ef77e5c713f26a8d484ff2ae17b5c0bd
+lu-machinery==0.1.13 \
+    --hash=sha256:da470421d12d8315b8090179a8ab9cc50f67ab3c10cc075b484d79f8b54d62d5
 # lu-machinery release dependency lock: every transitive runtime dependency of
 # pyproject.toml, exact version and the SHA-256 of the one wheel installed.
 # docs/release.md is the procedure; a consumer's requirements-machinery.lock is
@@ -80,8 +80,8 @@ mdurl==0.1.2 \
     --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8
 nodeenv==1.10.0 \
     --hash=sha256:5bb13e3eed2923615535339b3c620e76779af4cb4c6a90deccc9e36b274d3827
-opentelemetry-api==1.45.1 \
-    --hash=sha256:b31553efa588ae44bc306f863c785c5333a9ecc091248c6ee68b4b6c87fdedfb
+opentelemetry-api==1.45.2 \
+    --hash=sha256:2cbd737377e710ee740d261c94e93fa0f08e6d037c18f17513cc0a2d94479a34
 packaging==26.3 \
     --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
 platformdirs==4.11.11 \
