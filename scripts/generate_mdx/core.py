@@ -11,8 +11,12 @@ import re
 import sys
 from collections.abc import Callable
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import yaml
+
+if TYPE_CHECKING:
+    from scripts.atlas.a1_word_cards import LessonCardLinks
 
 from .converters import (
     activity_identity_key,
@@ -434,6 +438,9 @@ def generate_mdx(
     activity_plans: list[dict] | None = None,
     fresh: bool = False,
     unit_map: LessonUnitMap | None = None,
+    vocabulary_source: Path | None = None,
+    word_card_links: LessonCardLinks | None = None,
+    word_card_link_report: list[dict] | None = None,
 ) -> str:
     """Convert markdown content to MDX.
 
@@ -451,6 +458,9 @@ def generate_mdx(
             through every transform of the Lesson tab and the final document, and the
             component JSX of every activity is tracked in it (keys `("activity", id, n)`),
             so the caller can verify each unit at its own location in the returned MDX.
+        vocabulary_source: Original YAML path for exact-row word-card links.
+        word_card_links: Steward-supplied, individually reviewed local preview context.
+        word_card_link_report: Optional destination for every linked or unresolved row.
     """
     def edit(text: str) -> EditLog:
         """A log of one transform's edits; recorded only when a map is carried."""
@@ -627,7 +637,12 @@ sidebar:
     # --- TAB 2: Vocabulary ---
     if vocab_items:
         vocab_header = "\u0421\u043b\u043e\u0432\u043d\u0438\u043a" if is_ukrainian_forced else "Vocabulary"
-        vocab_content = vocab_items_to_components(vocab_items, vocab_header)
+        atlas_hrefs = None
+        if word_card_links is not None:
+            atlas_hrefs, observations = word_card_links.for_vocabulary(vocabulary_source, vocab_items)
+            if word_card_link_report is not None:
+                word_card_link_report.extend(observations)
+        vocab_content = vocab_items_to_components(vocab_items, vocab_header, atlas_hrefs=atlas_hrefs)
         # Strip the H2 header - the tab label serves as the header
         vocab_content = re.sub(r'^## [^\n]+\n+', '', vocab_content)
     else:
@@ -877,7 +892,7 @@ def get_modules_from_manifest(target_level: str | None = None) -> list[Module]:
     ]
 
 
-def main():
+def main(word_card_links: LessonCardLinks | None = None, word_card_link_report: list[dict] | None = None):
     """CLI entry point for MDX generation."""
     args = sys.argv[1:]
 
@@ -1093,7 +1108,9 @@ def main():
             if bs is None and isinstance(existing_fm.get("build_status"), str):
                 bs = existing_fm["build_status"]
 
-        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs, activity_plans=loaded_activity_plans)
+        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs, activity_plans=loaded_activity_plans,
+                                   vocabulary_source=vocab_file, word_card_links=word_card_links,
+                                   word_card_link_report=word_card_link_report)
 
         # Write output
         output_file.write_text(mdx_content, encoding='utf-8')  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
