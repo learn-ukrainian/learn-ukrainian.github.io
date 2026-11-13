@@ -143,7 +143,7 @@ def test_issue_9115_escaped_nested_backtick_write_is_visible():
 
 
 def test_issue_9115_backtick_depth_limit_blocks_write_hook(repo: Path, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setitem(hook.preprocess_shell_command.__globals__, "_MAX_BACKTICK_DEPTH", 2)
     body = "tee AGENTS.md"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
