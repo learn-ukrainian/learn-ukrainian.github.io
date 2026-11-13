@@ -281,6 +281,8 @@ def test_delivery_cli_help(operation):
     assert result.returncode == 0
     for section in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert section in result.stdout
+    if operation is None:
+        assert "expire-stale" in result.stdout
     assert result.stderr == ""
 
 
