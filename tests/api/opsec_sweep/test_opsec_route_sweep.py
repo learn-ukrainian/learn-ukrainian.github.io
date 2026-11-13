@@ -421,10 +421,13 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     )
     # GET /api/git/pull-requests reads GitHub through ``gh``; return its own
     # unavailable reading at the seam, as for ``issues_router._run_gh``.
+    # Machinery #413 passes the dispatcher task store so a branch suffix is
+    # shown only when a record stores that same id. This seam still returns
+    # the unavailable reading and does not read the store.
     monkeypatch.setattr(
         git_hygiene_router,
         "compute_pull_requests",
-        lambda _project_root: git_hygiene_router._unknown_pull_requests(
+        lambda _project_root, *, tasks_dir=None: git_hygiene_router._unknown_pull_requests(
             "github_unavailable", "2026-01-01T00:00:00Z"
         ),
     )
