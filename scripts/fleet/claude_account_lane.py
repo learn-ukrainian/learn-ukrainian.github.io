@@ -824,14 +824,25 @@ def other_lane_record(payload: Any, lane: str) -> Mapping[str, Any]:
     return record if isinstance(record, Mapping) else {}
 
 
+def _fresh_account_weekly_used_pct(row: Any) -> float | None:
+    """Used-% from one fresh account row, or None when the row is not that reading."""
+    if not isinstance(row, Mapping) or row.get("status") != "ok" or row.get("stale") is not False:
+        return None
+    left = account_left_pct(row.get("weekly"))
+    return None if left is None else 100.0 - left
+
+
 def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | None:
     """``account``'s weekly used-% from a routing-budget payload, or None.
 
-    The account's own ``ok`` row (measured within the cache TTL, no failure
-    since) with a known weekly ``left_pct`` takes precedence, including for
-    the default account. Only when its account row is absent may the default
-    account use its fresh lane probe. A stale, unknown or missing reading,
-    and an unresolved account, give None.
+    A fresh ``ok`` row (within the cache TTL, ``stale`` false) with a known
+    weekly ``left_pct`` takes precedence, including for the default account,
+    so it wins over a stale lane probe. The default account's lane probe
+    (``agents.claude``) is that same account's host meter. A row that is
+    absent or not itself a fresh reading does not hide that fresh lane
+    probe: a rate-limited or otherwise unknown row is not a reading.
+    Another account has no lane meter. A stale, unknown or missing lane
+    probe, and an unresolved account, give None.
     """
     from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
@@ -842,11 +853,11 @@ def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | 
     rows = payload.get("claude_accounts")
     row_key = f"claude:{account.label}"
     if isinstance(rows, Mapping) and row_key in rows:
-        row = rows[row_key]
-        if not isinstance(row, Mapping) or row.get("status") != "ok" or row.get("stale") is not False:
+        used = _fresh_account_weekly_used_pct(rows[row_key])
+        if used is not None:
+            return used
+        if account.label != DEFAULT_CLAUDE_ACCOUNT:
             return None
-        left = account_left_pct(row.get("weekly"))
-        return None if left is None else 100.0 - left
     if account.label == DEFAULT_CLAUDE_ACCOUNT:
         agents = payload.get("agents")
         info = agents.get(CLAUDE_LANE) if isinstance(agents, Mapping) else None
