@@ -311,7 +311,7 @@ def test_any_owned_page_compiler_error_is_an_engine_failure(tmp_path, monkeypatc
 
 
 @pytest.mark.parametrize("role", ["book", "video"])
-@pytest.mark.parametrize("url", ["javascript:probe", "data:text/plain,probe", "wiki/private.md", "https://", "https://example.com/a b", "https://[invalid", "//example.com/probe", "https://user:pass@example.com/probe"])
+@pytest.mark.parametrize("url", ["javascript:probe", "data:text/plain,probe", "wiki/private.md", "https://", "https://example.com/a b", "https://[invalid", "//example.com/probe", "https://user:pass@example.com/probe"])  # trufflehog:ignore
 def test_rejected_resource_url_cannot_be_a_fallback_label(role, url):
     from scripts.generate_mdx.resources import format_resources_for_mdx
 

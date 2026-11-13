@@ -464,11 +464,78 @@ def _exclude_args(repo: Path) -> list[str]:
     return [f"--exclude-paths={ignore}"] if ignore.is_file() else []
 
 
+# Directory names the filesystem walk must not enter. tree_candidates already drops
+# paths under these; the walk needs the same cut or it descends into .git.
+TREE_DIR_EXCLUDES: tuple[str, ...] = (
+    r"(?:^|/)\.git(?:/|$)",
+    r"(?:^|/)\.venv(?:/|$)",
+    r"(?:^|/)node_modules(?:/|$)",
+    r"(?:^|/)\.worktrees(?:/|$)",
+)
+
+
+def _include_rule(rel: str) -> str:
+    """One anchored RE2 literal. TruffleHog compiles it; this function does not match paths."""
+    if "\n" in rel or "\r" in rel:
+        raise ScanError("refused a tree path that breaks the include file")
+    return "^" + re.escape(rel) + "$"
+
+
+def _ignore_bytes(repo: Path) -> bytes:
+    """`.trufflehogignore` unchanged, including pattern whitespace. Empty when the file is absent."""
+    ignore = repo / IGNORE_FILE
+    if not ignore.is_file():
+        return b""
+    try:
+        data = ignore.read_bytes()
+    except OSError as exc:
+        raise ScanError(f"cannot read {IGNORE_FILE} ({_errno_name(exc)})") from exc
+    if data and not data.endswith(b"\n"):
+        data += b"\n"
+    return data
+
+
+def _write_private(directory: Path, name: str, data: bytes) -> Path:
+    path = directory / name
+    fd = _create_private(path)
+    try:
+        view = memoryview(data)
+        while view:
+            view = view[os.write(fd, view) :]
+    finally:
+        os.close(fd)
+    return path
+
+
+def _tree_filter_files(repo: Path, directory: Path, files: Sequence[str]) -> tuple[Path, Path]:
+    """Include file of candidate paths, and exclude file of the repo rules plus denied directories.
+
+    Both are owner-only files beside the report. TruffleHog's RE2 engine compiles them. A rule it
+    rejects fails the scan (`ScanError`) instead of dropping files the CI scan would still open.
+    """
+    include = _write_private(directory, "include-paths", "".join(f"{_include_rule(rel)}\n" for rel in files).encode())
+    exclude_body = _ignore_bytes(repo) + "".join(f"{line}\n" for line in TREE_DIR_EXCLUDES).encode()
+    exclude = _write_private(directory, "exclude-paths", exclude_body)
+    return include, exclude
+
+
 def scan_tree(binary: str, repo: Path, out_fd: int, log_fd: int, timeout: int) -> int:
+    # TruffleHog applies --exclude-paths only while walking a directory, not to explicit file
+    # arguments (pkg/sources/filesystem/filesystem.go scanRootPath, v3.99.8). Walking `.` with
+    # an include file of tree_candidates keeps that engine as the only matcher.
     files = tree_candidates(repo)
-    for chunk in batches(files):
-        cmd = [binary, "filesystem", *SAFE_FLAGS, *_exclude_args(repo), "--", *chunk]
-        _run_trufflehog(cmd, repo, out_fd, log_fd, timeout)
+    directory = Path(os.readlink(f"/proc/self/fd/{out_fd}")).parent
+    include, exclude = _tree_filter_files(repo, directory, files)
+    cmd = [
+        binary,
+        "filesystem",
+        *SAFE_FLAGS,
+        f"--include-paths={include}",
+        f"--exclude-paths={exclude}",
+        "--",
+        ".",
+    ]
+    _run_trufflehog(cmd, repo, out_fd, log_fd, timeout)
     return len(files)
 
 
@@ -690,7 +757,11 @@ def build_parser() -> argparse.ArgumentParser:
             '  .venv/bin/python scripts/audit/secret_scan_local.py --repo "$REPO" locate "$REPORT"\n'
             "\n"
             "Fixed TruffleHog flags: " + " ".join(SAFE_FLAGS) + "\n"
-            "  plus --exclude-paths=.trufflehogignore when the file exists.\n"
+            "  history: --exclude-paths=.trufflehogignore when the file exists.\n"
+            "  tree: walks the work tree (TruffleHog applies exclude rules only to a directory\n"
+            "  walk) with an include file of the candidate paths and an exclude file of the\n"
+            "  .trufflehogignore rules plus denied directories (.git, .venv, node_modules,\n"
+            "  .worktrees). Pattern whitespace is kept. A rule TruffleHog rejects is a scan error.\n"
             "\n"
             "Outputs:\n"
             "  Full JSON Lines report (contains RAW secret values) and TruffleHog's log\n"

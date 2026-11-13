@@ -882,7 +882,7 @@ def test_filename_exemption_rejects_embedded_hosts(tmp_path: Path, extension: st
         ("//example.py/core.md", "hostname"),
         ("https://reader@example.com/core.md", "email-address"),
         ("https://reader@example.py/core.md", "email-address"),
-        ("https://reader:fixture@example.com/core.md", "email-address"),
+        ("https://reader:fixture@example.com/core.md", "email-address"),  # trufflehog:ignore
         ("xn--bcher-kva.example.com", "hostname"),
         ("example.xn--p1ai", "hostname"),
         ("EXAMPLE.XN--P1AI.:443", "hostname"),
