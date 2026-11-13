@@ -2835,7 +2835,16 @@ def test_cache_eviction_and_index_bytes_roll_back_with_failed_store(tmp_path):
 
 
 def test_near_cap_multiprocess_304s_keep_shared_cache_and_observe_persisted_budget(tmp_path):
-    store, _ = client(tmp_path, [], env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    # The pinned lu-machinery wheel still abandons the shared cache when a lock
+    # wait expires. This scenario runs the in-tree client, which keeps it.
+    from scripts.common import github_client as gh
+
+    store = gh.GitHubClient(
+        cache_dir=tmp_path,
+        env={"GH_CONFIG_DIR": str(tmp_path / "no-config")},
+        clock=lambda: 1000,
+        transport=lambda *_args: gh.Response(500, {}, b""),
+    )
     with store._db() as db:
         db.executemany(
             "INSERT INTO cache VALUES(?,?,?,?,?)",
@@ -2846,7 +2855,8 @@ def test_near_cap_multiprocess_304s_keep_shared_cache_and_observe_persisted_budg
     script = r'''
 import json, sys
 from pathlib import Path
-from lu_machinery.common import github_client as gh
+sys.path.insert(0, sys.argv[3])
+from scripts.common import github_client as gh
 directory, index = Path(sys.argv[1]), int(sys.argv[2])
 calls = []
 def transport(method, endpoint, headers, body, timeout):
@@ -2870,7 +2880,7 @@ assert len(calls) == 15, calls
 print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed": True}), flush=True)
 '''
     processes = [subprocess.Popen(
-        [sys.executable, "-c", script, str(tmp_path), str(index)],
+        [sys.executable, "-c", script, str(tmp_path), str(index), str(Path(__file__).resolve().parents[1])],
         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
     ) for index in range(8)]
     try:
