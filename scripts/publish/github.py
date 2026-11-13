@@ -45,6 +45,15 @@ COMMON = {"repo": "repo"}
 TEXT = {"title": "text", "body": "text", "body_file": "file"}
 EDIT = {**TEXT, "add_labels": "texts", "remove_labels": "texts", "milestone": "text"}
 ASSETS = {"assets": "assets"}
+# Documented merge_queue parameter bounds (GitHub REST, rulesets, API 2022-11-28).
+# A value outside these bounds is refused before any request.
+MERGE_QUEUE_INT_BOUNDS = {
+    "check_response_timeout_minutes": (1, 360),
+    "max_entries_to_build": (0, 100),
+    "max_entries_to_merge": (0, 100),
+    "min_entries_to_merge": (0, 100),
+    "min_entries_to_merge_wait_minutes": (0, 360),
+}
 SCHEMAS = {
     "issue-create": ({"title", "body"}, {**COMMON, **TEXT, "labels": "texts", "milestone": "text", "parent": "number"}),
     "issue-edit": ({"number"}, {**COMMON, **EDIT, "number": "number", "remove_milestone": "bool"}),
@@ -132,6 +141,17 @@ SCHEMAS = {
         {**COMMON, "parent_id": "node", "child_id": "node", "replace_parent": "bool"},
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
+    # Named merge_queue parameters only. There is no generic ruleset editor.
+    "ruleset-merge-queue": (
+        {"ruleset"},
+        {
+            **COMMON,
+            "ruleset": "number",
+            **{name: "count" for name in MERGE_QUEUE_INT_BOUNDS},
+            "grouping_strategy": "grouping_strategy",
+            "merge_method": "merge_method",
+        },
+    ),
     # Both endpoints resolve through scripts/config/fleet_repos.yaml; the verb sends no text (C-4682).
     "issue-transfer": (
         {"repo", "number", "destination"},
@@ -170,7 +190,18 @@ ENUMS = {
     "verdict": {"approve", "comment", "request-changes"},
     "state": {"open", "closed"},
     "status": {"success", "failure", "error", "pending"},
+    "grouping_strategy": {"ALLGREEN", "HEADGREEN"},
+    "merge_method": {"MERGE", "SQUASH", "REBASE"},
 }
+_MERGE_QUEUE_FIELDS = frozenset(MERGE_QUEUE_INT_BOUNDS) | frozenset({"grouping_strategy", "merge_method"})
+# Keys a repository ruleset GET returns that PUT must not send back. A key in neither
+# this set nor _RULESET_WRITABLE refuses the update, so a new GitHub field is not dropped.
+_RULESET_READONLY = frozenset({
+    "_links", "created_at", "current_user_can_bypass", "id", "node_id", "source", "source_type", "updated_at",
+})
+_RULESET_WRITABLE = frozenset({
+    "name", "target", "enforcement", "bypass_actors", "conditions", "rules", "bypass_mode",
+})
 PATTERNS = {
     "repo": r"(?:[A-Za-z0-9.-]+/)?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
     "ref": r"[A-Za-z0-9_][A-Za-z0-9_./-]*",
@@ -336,6 +367,8 @@ def _validate(verb, fields):
         valid = True
         if kind == "bool":
             valid = type(value) is bool
+        elif kind == "count":
+            valid = type(value) is int and value >= 0
         elif kind == "number":
             valid = type(value) is int and value > 0
         elif kind == "file":
@@ -370,6 +403,12 @@ def _validate(verb, fields):
     for name in ("body", "notes"):
         if name in fields and name + "_file" in fields:
             raise gate.PublishBlocked("OPSEC: use one text input per field.")
+    if verb == "ruleset-merge-queue":
+        if not (set(fields) & _MERGE_QUEUE_FIELDS):
+            raise gate.PublishBlocked("OPSEC: edit requires explicit merge queue fields.")
+        for key, (low, high) in MERGE_QUEUE_INT_BOUNDS.items():
+            if key in fields and not low <= fields[key] <= high:
+                raise gate.PublishBlocked(f"OPSEC: invalid publisher field {key}.")
 
 
 class CfVerdictRecord(str):
@@ -1347,6 +1386,157 @@ def _transfer_checked(fields, source, destination, receipt, sink, temp, *, runne
     return settle("transferred", 0)
 
 
+def _ruleset_get(runner, endpoint, cwd, environment):
+    """Read one repository ruleset. A failed or unparsable read never continues into a write."""
+    result = runner(
+        ["gh", "api", "--method", "GET", endpoint],
+        cwd=cwd,
+        env=dict(environment),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if result.returncode:
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    try:
+        document = json.loads(result.stdout)
+    except (TypeError, json.JSONDecodeError):
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.") from None
+    if not isinstance(document, dict):
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    return document
+
+
+def _merge_queue_rule(rules):
+    """The single merge_queue rule, or a refusal when the ruleset has none or several."""
+    if not isinstance(rules, list):
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    found = [index for index, rule in enumerate(rules) if isinstance(rule, dict) and rule.get("type") == "merge_queue"]
+    if len(found) != 1:
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    rule = rules[found[0]]
+    parameters = rule.get("parameters")
+    if not isinstance(parameters, dict):
+        raise gate.PublishBlocked("OPSEC: ruleset has no single merge_queue rule.")
+    return found[0], parameters
+
+
+def _ruleset_body(before, rules):
+    """Writable ruleset fields only. An unrecognized key refuses, so it is not dropped on PUT."""
+    unknown = set(before) - _RULESET_READONLY - _RULESET_WRITABLE
+    if unknown or any(not isinstance(before.get(key), str) or not before[key] for key in ("name", "target", "enforcement")):
+        raise gate.PublishBlocked("OPSEC: ruleset has a field this verb does not preserve.")
+    if "conditions" not in before or "bypass_actors" not in before:
+        raise gate.PublishBlocked("OPSEC: ruleset has a field this verb does not preserve.")
+    body = {key: before[key] for key in ("name", "target", "enforcement", "bypass_actors", "conditions")}
+    if before.get("bypass_mode") is not None:
+        body["bypass_mode"] = before["bypass_mode"]
+    body["rules"] = rules
+    return body
+
+
+def _ruleset_unchanged(before, after, original_parameters):
+    """True when the read-back differs only by the merge_queue parameters already checked."""
+    if any(before.get(key) != after.get(key) for key in ("name", "target", "enforcement", "conditions", "bypass_actors")):
+        return False
+    if ("bypass_mode" in before or "bypass_mode" in after) and before.get("bypass_mode") != after.get("bypass_mode"):
+        return False
+    restored = []
+    seen = 0
+    for rule in after.get("rules", []):
+        if isinstance(rule, dict) and rule.get("type") == "merge_queue":
+            seen += 1
+            restored.append({**rule, "parameters": original_parameters})
+        else:
+            restored.append(rule)
+    return seen == 1 and restored == before.get("rules")
+
+
+def _publish_ruleset_merge_queue(
+    fields, *, gh_repo, dest, runner, cwd, environment, temp, capture_output, text,
+):
+    """Replace named merge_queue parameters on an existing ruleset and require the read-back to match.
+
+    PUT replaces the whole ruleset, so the body echoes GitHub's writable fields and edits
+    only parameters that already exist on its single merge_queue rule. A read-back that
+    does not match exits 3 and must not be retried: a retry would echo whatever the failed
+    write left behind.
+    """
+    ruleset_id = fields["ruleset"]
+    changes = {key: value for key, value in fields.items() if key in _MERGE_QUEUE_FIELDS}
+    endpoint = f"repos/{gh_repo}/rulesets/{ruleset_id}"
+    before = _ruleset_get(runner, endpoint, cwd, environment)
+    if type(before.get("id")) is not int or before["id"] != ruleset_id:
+        raise gate.PublishBlocked("OPSEC: ruleset read failed.")
+    index, parameters = _merge_queue_rule(before.get("rules"))
+    if any(key not in parameters for key in changes):
+        raise gate.PublishBlocked("OPSEC: merge queue parameter is not on this ruleset.")
+    updated = {**parameters, **changes}
+    rules = [
+        {**rule, "parameters": updated} if rule_index == index else rule
+        for rule_index, rule in enumerate(before["rules"])
+    ]
+    body = _ruleset_body(before, rules)
+    try:
+        raw = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    except (TypeError, ValueError):
+        raise gate.PublishBlocked("OPSEC: ruleset cannot be republished.") from None
+    try:
+        gate.check_texts(dest, [raw.decode("utf-8")], environment=environment, field_names=["ruleset"])
+    except gate.PublishBlocked:
+        raise
+    except Exception:
+        raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+    frozen = temp / "request.json"
+    frozen.write_bytes(raw)
+    put_argv = ["gh", "api", "--method", "PUT", endpoint, "--input", str(frozen)]
+    put = runner(
+        put_argv,
+        cwd=cwd,
+        env=dict(environment),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if put.returncode:
+        print("OPSEC: ruleset update was refused by GitHub.", file=sys.stderr)
+        return put
+    try:
+        after = _ruleset_get(runner, endpoint, cwd, environment)
+        after_index, after_parameters = _merge_queue_rule(after.get("rules"))
+    except Exception:
+        # After the PUT, every read-back failure is unverified, including a rate
+        # limit. Letting that exception reach the command wrapper reports exit 75
+        # or 2, as if the public write had not been sent.
+        print(
+            "OPSEC: ruleset update unverified: the write was sent and the read-back failed. Do not retry.",
+            file=sys.stderr,
+        )
+        return subprocess.CompletedProcess(put_argv, 3, "", "")
+    if (
+        type(after.get("id")) is not int
+        or after["id"] != ruleset_id
+        or after_index != index
+        or after_parameters != updated
+        or not _ruleset_unchanged(before, after, parameters)
+    ):
+        print(
+            "OPSEC: ruleset update unverified: the write was sent and the read-back does not match. Do not retry.",
+            file=sys.stderr,
+        )
+        return subprocess.CompletedProcess(put_argv, 3, "", "")
+    line = json.dumps(
+        {"merge_queue": after_parameters, "repo": gh_repo, "ruleset": ruleset_id},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    if not capture_output:
+        print(line)
+    return subprocess.CompletedProcess(put_argv, 0, line if text else line.encode(), "")
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -1563,6 +1753,18 @@ def publish(
             raise
         except Exception:
             raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+        if verb == "ruleset-merge-queue":
+            return _publish_ruleset_merge_queue(
+                fields,
+                gh_repo=gh_repo,
+                dest=dest,
+                runner=readiness_runner,
+                cwd=cwd,
+                environment=environment,
+                temp=temp,
+                capture_output=capture_output,
+                text=text,
+            )
         if verb == "comment-edit":
             try:
                 documents = []
@@ -1889,6 +2091,27 @@ def main(argv=None, *, runner=None):
                 "  75 rate-limit refusal before the mutation.\n"
                 "Related: decision C-4682; machinery-move contract v3 step 10; label-create; read issue."
             )
+        if verb == "ruleset-merge-queue":
+            sub.description = (
+                "Change named merge_queue parameters on one existing repository ruleset.\n"
+                "Use only for those parameters. This is not a ruleset editor: a name, enforcement,\n"
+                "condition, bypass actor, other rule, or unknown field is refused."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                f"  .venv/bin/python -m {_PUBLISHER} ruleset-merge-queue --repo unit/public --ruleset 20977023 "
+                "--min-entries-to-merge-wait-minutes 10\n"
+                "Outputs: reads the ruleset, replaces only the named merge_queue parameters that already exist\n"
+                "  on its single merge_queue rule, PUTs the writable ruleset fields, reads the ruleset again,\n"
+                "  and prints JSON {repo, ruleset, merge_queue} from that read-back. Other ruleset fields are\n"
+                "  echoed, not edited. An unrecognized ruleset field refuses before the PUT.\n"
+                "Exit codes: 0 update sent and the read-back matches; 1 GitHub refused the update (nothing landed);\n"
+                "  2 invalid input or a refusal before the update; 3 the update was sent and the read-back failed\n"
+                "  or does not match: do not retry. A rate limit on that read-back is exit 3, not 75;\n"
+                "  75 is a rate-limit refusal before the update.\n"
+                "Related: GitHub REST update a repository ruleset; decision C-5345."
+            )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
             if verb == "issue-transfer":
@@ -1909,6 +2132,18 @@ def main(argv=None, *, runner=None):
                     "comment_id": "Required positive comment ID (e.g. 123456), not an issue or PR number; no default",
                     "body": "Exact UTF-8 body text; use exactly one of --body or --body-file; no default",
                     "body_file": "UTF-8 body file (e.g. reply.md), or - for stdin; no default",
+                }[key]
+            if verb == "ruleset-merge-queue":
+                kwargs["help"] = {
+                    "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
+                    "ruleset": "Required existing ruleset ID (e.g. 20977023); no default",
+                    "check_response_timeout_minutes": "Minutes for a required check to finish, from 1 to 360; omitted keeps the current value",
+                    "grouping_strategy": "ALLGREEN or HEADGREEN; omitted keeps the current value",
+                    "max_entries_to_build": "Queued pull requests built at once, from 0 to 100; omitted keeps the current value",
+                    "max_entries_to_merge": "Maximum pull requests merged as one group, from 0 to 100; omitted keeps the current value",
+                    "merge_method": "MERGE, SQUASH or REBASE; omitted keeps the current value",
+                    "min_entries_to_merge": "Minimum group size, from 0 to 100; omitted keeps the current value",
+                    "min_entries_to_merge_wait_minutes": "Minutes to wait for that minimum, from 0 to 360; omitted keeps the current value",
                 }[key]
             if verb in {"run-rerun", "run-cancel"}:
                 kwargs["help"] = {
@@ -1931,7 +2166,7 @@ def main(argv=None, *, runner=None):
                             raise argparse.ArgumentTypeError("invalid artifact") from None
 
                     kwargs["type"] = asset_arg
-            elif kind == "number":
+            elif kind in {"number", "count"}:
                 kwargs["type"] = int
             if kind == "workflow_inputs":
                 kwargs["type"] = json.loads
