@@ -340,3 +340,93 @@ def test_wiki_fetch_entry_refusal_still_raises_and_still_identifies(monkeypatch)
 
     (request, _kwargs), = sent
     assert PUBLIC_CONTACT in request.headers["User-Agent"]
+
+
+def _staging_file(path, rows):
+    """A dictionary-acquisition staging file: (target, lookup, article word, status)."""
+    conn = sqlite3.connect(path)
+    conn.executescript(
+        "CREATE TABLE job (singleton INTEGER PRIMARY KEY, spec TEXT, fingerprint TEXT, state TEXT, reason TEXT,"
+        " started REAL, restarts INTEGER DEFAULT 0);"
+        "CREATE TABLE results (position INTEGER PRIMARY KEY, target TEXT UNIQUE, lookup TEXT, status TEXT,"
+        " attempts INTEGER DEFAULT 0, next_attempt_at REAL DEFAULT 0, http_status INTEGER, reason TEXT DEFAULT '',"
+        " payload TEXT);"
+    )
+    spec = {"dictionary": "vts", "lookup_mode": "source_headword", "manifest_sha256": "f" * 64, "denominator": 9}
+    conn.execute("INSERT INTO job VALUES (1, ?, ?, 'running', '', 0, 0)", (json.dumps(spec), "e" * 64))
+    for position, (target, lookup, word, status) in enumerate(rows):
+        text = f"{word} {word}́ ч. " + "Повне тлумачення статті. " * 20
+        url = "https://slovnyk.me/dict/vts/" + target
+        payload = None if status != "positive" else json.dumps({
+            "article": {"word": word, "lookup_word": lookup, "dictionary_slug": "vts", "dictionary_label": "ВТС",
+                        "source_url": url, "text": text, "title": word},
+            "content_sha256": hashlib.sha256(text.encode()).hexdigest(), "source_url": url,
+            "fetched_at": "2026-10-29T01:02:03+00:00", "http_status": 200, "provenance": "observed_http",
+        })
+        conn.execute("INSERT INTO results(position, target, lookup, status, payload) VALUES (?, ?, ?, ?, ?)",
+                     (position, target, lookup, status, payload))
+    conn.commit()
+    conn.close()
+
+
+def _empty_store(path):
+    from scripts.wiki.slovnyk_me import ensure_slovnyk_me_schema
+
+    with sqlite3.connect(path) as conn:
+        ensure_slovnyk_me_schema(conn)
+
+
+def test_staging_import_maps_source_headwords_and_rejects_unmatched_keys(tmp_path):
+    """Defect class: staged source headwords keyed wrongly, truncated, or silently dropped."""
+    staging = tmp_path / "vts" / "staging.sqlite3"
+    staging.parent.mkdir()
+    _staging_file(staging, [
+        ("Індій", "індій", "Індій", "positive"),            # case difference: maps
+        ("аве_марія", "аве_марія", "аве марія", "positive"),  # URL space encoding: maps
+        ("об_яв", "об_яв", "об'яв", "positive"),            # URL apostrophe encoding: maps
+        ("авто_ea0", "авто_ea0", "авто", "positive"),        # homonym suffix: maps
+        ("авто", "авто", "авто...", "positive"),            # combining-form article: rejected
+        ("ла[-_][_]я", "ла[-_][_]я", "ла[/'][']я", "positive"),  # bracketed variants: rejected
+        ("пізніше", "пізніше", "", "pending"),             # not fetched yet: not read
+    ])
+    before = staging.read_bytes()
+    db = tmp_path / "sources.db"
+    _empty_store(db)
+    report = ingest.ingest_staging(db, staging, dry_run=True, db_role="staging")
+    assert (report.staged_positive, report.mapped, report.new, report.written) == (6, 4, 4, 0)
+    assert report.rejected == {"prefix_entry": 1, "key_mismatch": 1}
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT count(*) FROM slovnyk_me_entries").fetchone()[0] == 0
+    assert ingest.main(["--staging", str(staging), "--db", str(db), "--db-role", "staging"]) == 0
+    with sqlite3.connect(db) as conn:
+        rows = conn.execute(
+            "SELECT normalized_word, source_url, text, content_sha256, fetched_at, importer_version, cache_path"
+            " FROM slovnyk_me_entries ORDER BY normalized_word"
+        ).fetchall()
+    assert {row[0] for row in rows} == {"аве марія", "авто", "індій", "об'яв"}
+    for _key, url, text, sha, fetched_at, version, locator in rows:
+        assert len(text) > 200 and hashlib.sha256(text.encode()).hexdigest() == sha  # full witness
+        assert url.startswith("https://slovnyk.me/dict/vts/") and fetched_at == "2026-10-29T01:02:03+00:00"
+        assert version == ingest.STAGING_IMPORTER_VERSION and locator.startswith("vts/staging.sqlite3#position=")
+    assert staging.read_bytes() == before
+
+
+def test_staging_import_rerun_changes_nothing_and_upgrades_truncated_rows(tmp_path):
+    """Defect class: a re-run duplicates or rewrites rows, or a truncated cache row is never upgraded."""
+    staging = tmp_path / "vts" / "staging.sqlite3"
+    staging.parent.mkdir()
+    _staging_file(staging, [("слово", "слово", "слово", "positive"), ("нове", "нове", "нове", "positive")])
+    db = tmp_path / "sources.db"
+    write_cache(tmp_path / "cache", snapshot(word="слово"))
+    ingest.ingest_cache(db, tmp_path / "cache", words=[], dictionaries=None, dry_run=False, max_text_chars=200,
+                        db_role="staging", create=True)
+    first = ingest.ingest_staging(db, staging, dry_run=False, db_role="staging")
+    assert (first.new, first.updated, first.unchanged, first.written) == (1, 1, 0, 2)
+    with sqlite3.connect(db) as conn:
+        snapshot_rows = conn.execute("SELECT * FROM slovnyk_me_entries ORDER BY id").fetchall()
+    assert len(snapshot_rows) == 2
+    again = ingest.ingest_staging(db, staging, dry_run=False, db_role="staging")
+    assert (again.new, again.updated, again.unchanged, again.written) == (0, 0, 2, 0)
+    assert not again.backup_removed  # nothing to write: no backup taken
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT * FROM slovnyk_me_entries ORDER BY id").fetchall() == snapshot_rows
