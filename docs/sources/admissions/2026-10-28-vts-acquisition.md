@@ -102,9 +102,11 @@ is written by this acquisition change.
 
 `scripts/ingest/slovnyk_me_ingest.py --staging PATH` is the reviewed writer
 for the ВТС companion staging. It reads only `results` rows with status
-`positive`, and it never writes the staging file. It first takes a consistent
-snapshot through SQLite online backup in 1,024-page steps, so the live job's
-1-second busy wait is never starved. Each row keeps the observed source URL,
+`positive`, and it never writes the staging file. It opens the file read-only
+and reads 2,000-row position chunks, each fetched completely, so no read lock
+outlasts a chunk and the live job's 1-second busy wait is never starved.
+Positive rows are final; rows the job adds meanwhile are read now or by the next
+run. Each row keeps the observed source URL,
 the original `fetched_at` and the full article text with its SHA-256.
 `importer_version` is `slovnyk-staging-ingest/1`, and `cache_path` names
 `vts/staging.sqlite3#position=N`. Atlas `full_vts` authenticates the text
@@ -148,8 +150,8 @@ size of the current generation, about 7.1 GB.
    .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --staging "$ACQ_ROOT/vts/staging.sqlite3"
    ```
 
-   The live acquisition can keep running, because the importer reads a
-   snapshot.
+   The live acquisition can keep running, because the importer holds only
+   brief per-chunk read locks.
 2. For the Mac copy, sync its `staging.sqlite3` into a separate local
    directory, never over the server file. Then run the same two commands with
    that path. Rows from either copy share the store key, so they reconcile by

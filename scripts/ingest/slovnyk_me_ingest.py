@@ -10,9 +10,9 @@ import json
 import re
 import sqlite3
 import sys
-import tempfile
 import time
 from collections import Counter
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal, cast
@@ -21,7 +21,6 @@ from urllib.parse import quote, urlparse
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.scratch import ensure_scratch_root
 from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
 from scripts.storage.topology import is_network_filesystem_path, store_data_dir
 from scripts.wiki.slovnyk_me import (
@@ -91,6 +90,7 @@ from scripts.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreBinding,
     StoreRefusal,
+    WriteStoreBinding,
     _prepare_store_write_target,
     resolve_store,
     resolve_store_for_write,
@@ -336,7 +336,9 @@ def read_cache(
 
 
 STAGING_IMPORTER_VERSION = "slovnyk-staging-ingest/1"
-_STAGING_SNAPSHOT_PAGES = 1024  # pages per backup step: the live writer's 1 s busy wait never starves
+# Rows per read: each chunk is one fully fetched SELECT, so the shared lock on a live
+# staging file (rollback journal, the job's 1 s busy wait) is held for milliseconds only.
+_STAGING_CHUNK_ROWS = 2000
 
 
 @dataclass
@@ -370,24 +372,6 @@ class StagingImportReport:
         return "\n".join(lines)
 
 
-def _snapshot_staging(staging: Path, target: Path) -> None:
-    """Consistent copy of a possibly live staging file, in short read-locked steps.
-
-    The acquisition job writes in rollback-journal mode with a 1 s busy wait, so a
-    long-running read lock could fail its commits; SQLite's online backup restarts
-    automatically when the source changes between steps. The source opens read-only.
-    """
-    if not staging.is_file():
-        raise ValueError("staging file unavailable")
-    source = sqlite3.connect(f"{staging.resolve().as_uri()}?mode=ro", uri=True, timeout=1)
-    copy = sqlite3.connect(target)
-    try:
-        source.backup(copy, pages=_STAGING_SNAPSHOT_PAGES)
-    finally:
-        copy.close()
-        source.close()
-
-
 _SITE_SEPARATOR_RE = re.compile(r"[' ]")
 _SITE_HOMONYM_SUFFIX = r"(?:_[0-9a-f]{3})?"
 
@@ -412,7 +396,7 @@ def _staging_key(word: str, lookup: str, target: str) -> tuple[str | None, str]:
     return None, "key_mismatch"
 
 
-def read_staging(snapshot: Path, *, staging_name: str) -> tuple[list[dict], StagingImportReport]:
+def read_staging(staging: Path) -> tuple[list[dict], StagingImportReport]:
     """Map every positive staged article to a slovnyk_me_entries row; nothing is written.
 
     The staging job keys on exact source headwords; the store keys on learner-lemma
@@ -421,8 +405,15 @@ def read_staging(snapshot: Path, *, staging_name: str) -> tuple[list[dict], Stag
     suffix is rejected and counted by reason, never guessed (see ``_staging_key``).
     Rows keep the observed source URL, original fetch time and the full article text
     with its SHA-256, so Atlas authenticates the text from the row alone.
+
+    The file opens read-only and is read in short position-ordered chunks, never in one
+    long transaction, so a live acquisition job keeps committing. Positive rows are
+    final, so rows the job adds meanwhile are either read or left for the next run.
     """
-    conn = open_readonly(snapshot)
+    if not staging.is_file():
+        raise ValueError("staging file unavailable")
+    staging_name = f"{staging.parent.name}/{staging.name}"
+    conn = cast(SQLiteConnection, open_readonly(staging))
     report = StagingImportReport()
     entries: list[dict] = []
     try:
@@ -436,9 +427,7 @@ def read_staging(snapshot: Path, *, staging_name: str) -> tuple[list[dict], Stag
         report.dictionary = slug
         rows_digest = hashlib.sha256()
         positions: list[int] = []
-        for position, target, lookup, raw in conn.execute(
-            "SELECT position, target, lookup, payload FROM results WHERE status = 'positive' ORDER BY position"
-        ):
+        for position, target, lookup, raw in _positive_chunks(conn):
             payload = json.loads(raw)
             article = payload.get("article") if isinstance(payload, dict) else None
             if not isinstance(article, dict) or not isinstance(article.get("text"), str):
@@ -479,7 +468,21 @@ def read_staging(snapshot: Path, *, staging_name: str) -> tuple[list[dict], Stag
     return entries, report
 
 
-def _classify_staged(conn: SQLiteConnection | sqlite3.Connection, entries: list[dict], report: StagingImportReport) -> list[dict]:
+def _positive_chunks(conn: SQLiteConnection) -> Iterator[tuple]:
+    after = -1
+    while True:
+        chunk = conn.execute(
+            "SELECT position, target, lookup, payload FROM results WHERE status = 'positive' AND position > ? "
+            "ORDER BY position LIMIT ?",
+            (after, _STAGING_CHUNK_ROWS),
+        ).fetchall()
+        if not chunk:
+            return
+        yield from chunk
+        after = chunk[-1][0]
+
+
+def _classify_staged(conn: SQLiteConnection, entries: list[dict], report: StagingImportReport) -> list[dict]:
     """Count new, updated and unchanged rows; return only the rows that would change the store."""
     existing: dict[tuple[str, str], tuple] = {}
     has_table = conn.execute(
@@ -512,14 +515,11 @@ def ingest_staging(
 ) -> StagingImportReport:
     """Import positive dictionary-acquisition staging articles into slovnyk_me_entries, offline.
 
-    Re-runnable on any staging copy: a consistent snapshot is read, rows are upserted
+    Re-runnable on any staging copy, live or synced: rows are upserted
     on (normalized_word, dictionary_slug, source_url), and a run with nothing new or
     changed writes nothing. The staging file is never written.
     """
-    with tempfile.TemporaryDirectory(prefix="slovnyk-staging-", dir=ensure_scratch_root()) as scratch:
-        snapshot = Path(scratch) / "staging.sqlite3"
-        _snapshot_staging(staging, snapshot)
-        entries, report = read_staging(snapshot, staging_name=f"{staging.parent.name}/{staging.name}")
+    entries, report = read_staging(staging)
     if dry_run:
         read_binding = resolve_store(
             "sources", REPO, binding=None if db_path is None else StoreBinding("sources", db_path)
@@ -527,7 +527,7 @@ def ingest_staging(
         if isinstance(read_binding, StoreRefusal):
             raise ValueError(read_binding.reason) from None
         report.generation = read_binding.path.resolve().name
-        reader = open_readonly(read_binding.path)
+        reader = cast(SQLiteConnection, open_readonly(read_binding.path))
         try:
             _classify_staged(reader, entries, report)
         finally:
@@ -547,9 +547,7 @@ def ingest_staging(
             raise ValueError(binding.reason) from None
         refuse_writable_corpus_database(str(binding.path))
         report.generation = binding.path.resolve().name
-        if binding.sqlite_uri is None:
-            raise ValueError("sources store binding has no SQLite URI")
-        conn = cast(SQLiteConnection, sqlite3.connect(binding.sqlite_uri, uri=True))
+        conn = _open_store_writer(binding)
         backup: Path | None = None
         try:
             conn.execute("PRAGMA busy_timeout = 60000")
@@ -609,6 +607,13 @@ def backup_database(conn: SQLiteConnection, db_path: Path, backup_dir: Path | No
     return target
 
 
+def _open_store_writer(binding: WriteStoreBinding) -> SQLiteConnection:
+    """The one writable open shared by the offline cache and staging imports."""
+    if binding.sqlite_uri is None:
+        raise ValueError("sources store binding has no SQLite URI")
+    return cast(SQLiteConnection, sqlite3.connect(binding.sqlite_uri, uri=True))
+
+
 def _table_count(conn: SQLiteConnection, table: str) -> int:
     return conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0]
 
@@ -652,7 +657,7 @@ def ingest_cache(
             raise ValueError(binding.reason) from None
         db_path = binding.path
         refuse_writable_corpus_database(str(db_path))
-        conn = sqlite3.connect(binding.sqlite_uri, uri=True)
+        conn = _open_store_writer(binding)
         backup: Path | None = None
         try:
             conn.execute("PRAGMA busy_timeout = 60000")
