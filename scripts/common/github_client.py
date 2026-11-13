@@ -1278,6 +1278,22 @@ def _open_cache(path):
     return sqlite3.connect(path, timeout=5)
 
 
+def _transient_lock(error):
+    """True when SQLite stopped waiting for a lock another process holds.
+
+    The primary result code is ``SQLITE_BUSY`` (5). Extended busy codes keep
+    that value in the low byte. A lock timeout is not a damaged file and must
+    not drop the caller onto a private memory cache.
+    """
+    if not isinstance(error, sqlite3.OperationalError):
+        return False
+    code = getattr(error, "sqlite_errorcode", None)
+    if type(code) is int and (code & 0xFF) == 5:
+        return True
+    text = str(error).lower()
+    return "database is locked" in text or "database is busy" in text
+
+
 class GitHubClient:
     def __init__(
         self,
@@ -1379,6 +1395,10 @@ class GitHubClient:
                     if "db" in locals() and db is not self._memory_db:
                         with suppress(Exception):
                             db.close()
+                    # Another process holds the writer lock. Keep the shared file; the
+                    # caller retries it. Switching to memory would hide later 304s and budgets.
+                    if _transient_lock(error):
+                        raise
                     if github_usage.corrupt(error):
                         # A damaged cache is rebuilt, not abandoned: without it every read is
                         # charged in full and budget observations stop reaching other callers.
@@ -1388,11 +1408,19 @@ class GitHubClient:
                     if attempt == 0:
                         continue
                 raise
+        changed = False
         try:
             with db:
                 changes = db.total_changes
                 yield db
-                if db.total_changes != changes:
+                changed = db.total_changes != changes
+            # Size accounting is a read of every response row. Running it inside the
+            # write transaction above holds the exclusive lock for the whole scan, and
+            # eight writers near the cap then wait past the lock timeout. Commit the
+            # response first, then prune in its own transaction so the deletes commit
+            # before this connection closes.
+            if changed:
+                with db:
                     _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
         except sqlite3.DatabaseError as error:
             # As above: the caller falls back to memory, and the next client opens a fresh file.
@@ -1582,6 +1610,24 @@ class GitHubClient:
         # refuses, or space it takes, can never cost the budget observation. 599 is this client's own
         # transport failure: nothing reached GitHub. A landing call is not counted at all.
         counted = resource == "core" and response.status != 599 and normalized.call_class != "landing"
+
+        def visible():
+            """Caller-visible result, independent of whether the cache write lands.
+
+            A lock timeout must not return the preliminary 304 or rate-limit error.
+            Conditional freshness and Retry-After handling use data already in memory.
+            """
+            if limit is not None:
+                return deferred(limit[2], limit[1])
+            if response.status == 304:
+                if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
+                    return Result(status=304, error="github_cache_miss", headers=h)
+                merged = {**json.loads(cached[1]), **h}
+                return Result(_cached_value(cached), status=304, headers=merged)
+            if result.error == "github_rate_limited":
+                return deferred("pool_exhausted", result.reset_at)
+            return result
+
         try:
             for persist_attempt in range(2):
                 try:
@@ -1629,7 +1675,11 @@ class GitHubClient:
                             # for stale status, but never treat them as fresh without GET.
                             pass
                     break
-                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError) as error:
+                    if _transient_lock(error):
+                        if persist_attempt == 0:
+                            continue
+                        return visible()
                     if self.cache_dir is not None:
                         self.cache_dir = None
                         if persist_attempt == 0:
@@ -3458,7 +3508,11 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
                         for hold in holds:
                             _store_budget(db, client.scope, hold, 0, reset, now=now)
                     break
-                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError) as error:
+                    if _transient_lock(error):
+                        if persist_attempt == 0:
+                            continue
+                        break
                     if client.cache_dir is not None:
                         client.cache_dir = None
                         if persist_attempt == 0:
