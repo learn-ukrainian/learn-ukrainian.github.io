@@ -25,13 +25,13 @@ case "$mode" in
 esac
 bootstrap_failed() {
   cat >/dev/null 2>&1
-  printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+  printf '%s %s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' "${1:-${PROJECT_HOOK_BOOTSTRAP_STEP:-machinery}}" >&2
   printf '%s\n' "$refusal"
   exit 0
 }
-code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed
+code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed root
 # shellcheck disable=SC1091
-source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed
+source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed machinery
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 py="$LEARN_UKRAINIAN_PYTHON"
 # Ordinary sessions have no driver gate and need no temporary files.
@@ -40,10 +40,14 @@ if [ -z "${LU_DRIVER_STATE_FILE:-}" ] || [ -z "${SESSION_HANDOFF_AGENT:-}" ]; th
   echo "$fallback"
   exit 0
 fi
-[ -n "${TMPDIR:-}" ] || bootstrap_failed
 # Drain the hook input before any child can fail without reading it. Keep the
 # original bytes in a file because shell variables cannot preserve NULs.
-input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || { cat >/dev/null; echo "$fallback"; exit 0; }
+input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || {
+  printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable. tmp' >&2
+  cat >/dev/null
+  echo "$fallback"
+  exit 0
+}
 output_file=
 trap 'rm -f "$input_file"; [ -z "$output_file" ] || rm -f "$output_file"' 0
 if ! cat >"$input_file"; then
@@ -52,7 +56,11 @@ if ! cat >"$input_file"; then
   exit 0
 fi
 # Validate output without storing its bytes in a shell variable.
-output_file=$(mktemp --tmpdir="$TMPDIR" agy-out.XXXXXX) || { echo "$fallback"; exit 0; }
+output_file=$(mktemp --tmpdir="$TMPDIR" agy-out.XXXXXX) || {
+  printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable. tmp' >&2
+  echo "$fallback"
+  exit 0
+}
 project_python_command "$py" || { echo "$fallback"; exit 0; }
 if (cd "$LU_PRODUCT_ROOT" && "${PROJECT_PYTHON_COMMAND[@]}" -m scripts.driver_state "$mode" <"$input_file" >"$output_file" 2>/dev/null); then
   # A successful child must produce exactly one strict JSON object. Keep the

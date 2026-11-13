@@ -8,17 +8,17 @@ fleet_module=scripts.fleet_comms
 fallback='{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; authority: project interpreter -m '"$fleet_module"' deliveries --help"}]}'
 bootstrap_failed() {
     cat >/dev/null 2>&1
-    printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+    printf '%s %s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' "${1:-${PROJECT_HOOK_BOOTSTRAP_STEP:-machinery}}" >&2
     printf '%s\n' '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}'
     exit 0
 }
-code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed
+code=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || bootstrap_failed root
 # shellcheck disable=SC1091
-source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed
+source "$code/scripts/lib/project_interpreter.sh" || bootstrap_failed machinery
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 py="$LEARN_UKRAINIAN_PYTHON"
 # The child drains stdin; on early import/exec failure the parent drains the rest.
-project_python_command "$py" || bootstrap_failed
+project_python_command "$py" || bootstrap_failed interpreter
 if output=$(cd "$LU_PRODUCT_ROOT" && "${PROJECT_PYTHON_COMMAND[@]}" -m scripts.inbox_pending --agy-hook 2>/dev/null); then
     child_ok=1
 else
@@ -27,7 +27,7 @@ fi
 cat >/dev/null
 # The child's own context refusal stays a refusal, never an "unknown" announcement.
 if [ "$child_ok" = 1 ] && [ "$output" = '{"decision":"deny","reason":"HOOK-BOOTSTRAP-FAILED: hook context unavailable."}' ]; then
-    bootstrap_failed
+    bootstrap_failed machinery
 fi
 if [ "$child_ok" = 1 ] && validated=$(printf '%s' "$output" | "$py" -I -c '
 import json, sys

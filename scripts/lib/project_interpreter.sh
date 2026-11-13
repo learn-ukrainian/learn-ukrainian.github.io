@@ -328,6 +328,7 @@ _project_hook_git_layout() {
 #   A set LEARN_UKRAINIAN_STATE_ROOT must name the anchor. A release snapshot
 #   (no .git) therefore needs an explicit anchor.
 project_hook_roots_resolve() {
+    PROJECT_HOOK_BOOTSTRAP_STEP=root
     local root="${1-${LU_PRODUCT_ROOT:-${CLAUDE_PROJECT_DIR:-}}}"
     local primary state_root state_config invocation
     # Configured roots keep precedence, but cannot hide malformed invocation metadata.
@@ -358,6 +359,7 @@ project_hook_roots_resolve() {
     if [[ -e "$root/.git" || -L "$root/.git" ]]; then
         _project_hook_git_layout "$primary" || return 1
     fi
+    PROJECT_HOOK_BOOTSTRAP_STEP=state
     state_root="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
     [[ "$state_root" = /* ]] || return 1
     state_root="$(_project_physical_dir "$state_root")" && _project_hook_git_layout "$state_root" || return 1
@@ -380,8 +382,10 @@ project_hook_roots_resolve() {
 #   (#100).
 project_hook_context_resolve() {
     local interpreter
+    PROJECT_HOOK_BOOTSTRAP_STEP=state
     [[ -n "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-}" ]] || return 1
     project_hook_roots_resolve "$@" || return 1
+    PROJECT_HOOK_BOOTSTRAP_STEP=interpreter
     interpreter="$(project_interpreter_resolve "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT")" || return 1
     export LEARN_UKRAINIAN_PYTHON="$interpreter"
 }

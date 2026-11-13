@@ -17,7 +17,7 @@ SCRIPT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 HOOKS_DIR="$SCRIPT_ROOT/agents_extensions/shared/hooks"
 
 bootstrap_failed() {
-  printf '%s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' >&2
+  printf '%s %s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' "${1:-${PROJECT_HOOK_BOOTSTRAP_STEP:-machinery}}" >&2
   exit 2
 }
 # The product, shared-state anchor and interpreter come from the one hook rule,
@@ -29,7 +29,7 @@ bootstrap_failed() {
 # metadata never names the primary: whoever works in a checkout can rewrite it.
 # The payload's working directory stays policy input, never bootstrap authority.
 # shellcheck source=scripts/lib/project_interpreter.sh
-source "$SCRIPT_ROOT/scripts/lib/project_interpreter.sh" || bootstrap_failed
+source "$SCRIPT_ROOT/scripts/lib/project_interpreter.sh" || bootstrap_failed machinery
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 PYTHON_BIN="$LEARN_UKRAINIAN_PYTHON"
 CANONICAL_ROOT="$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"

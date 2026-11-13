@@ -38,7 +38,10 @@ def run_hook(payload="{}", *, env=None, cwd=ROOT, bootstrap_refusal=False):
         ["bash", str(SCRIPT)], input=payload, text=True, capture_output=True, cwd=cwd, env=env, timeout=20
     )
     assert proc.returncode == 0
-    assert proc.stderr == ("HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.\n" if bootstrap_refusal else "")
+    assert proc.stderr == (
+        f"HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable. {bootstrap_refusal}\n"
+        if bootstrap_refusal else ""
+    )
     assert BODY_MARKER not in proc.stdout
     result = json.loads(proc.stdout)
     if bootstrap_refusal:
@@ -339,7 +342,7 @@ def test_root_resolution_failure_unknown(stores, tmp_path, monkeypatch):
     monkeypatch.setenv("PATH", f"{commands}:{os.environ['PATH']}")
     before = snapshot(stores)
     files = set(tmp_path.rglob("*"))
-    assert run_hook(BODY_MARKER, bootstrap_refusal=True)["decision"] == "deny"
+    assert run_hook(BODY_MARKER, bootstrap_refusal="root")["decision"] == "deny"
     assert snapshot(stores) == before
     assert set(tmp_path.rglob("*")) == files
 
@@ -369,7 +372,7 @@ def test_interpreter_failure_unknown(stores, tmp_path, monkeypatch, mode):
     before = snapshot(stores)
     files = set(tmp_path.rglob("*"))
     if mode == "missing":
-        assert run_hook(bootstrap_refusal=True)["decision"] == "deny"
+        assert run_hook(bootstrap_refusal="interpreter")["decision"] == "deny"
     else:
         shell_notice = EXPECTED_UNKNOWN_NOTICE.replace(".venv/bin/python", "project interpreter")
         assert run_hook() == {"injectSteps": [{"ephemeralMessage": shell_notice}]}
