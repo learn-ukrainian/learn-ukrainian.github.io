@@ -990,6 +990,24 @@ launcher_close_failed_driver_lease() {
   launcher_close_driver_lease || true
 }
 
+# True when process $1 is in the foreground process group of this shell's
+# controlling terminal. A terminal INT (Ctrl-C) is delivered by the kernel to
+# that whole group, the provider included, so relaying it would deliver it a
+# second time. No controlling terminal (tpgid -1) or an unreadable record is
+# not this case. The command name in stat(5) is parenthesised and can contain
+# spaces, parentheses or newlines: strip through its last ") ". A builtin read
+# keeps a vanished process non-fatal and forks nothing.
+launcher_driver_child_in_foreground() {
+  local own="" child="" tpgid="" child_pgrp=""
+  { IFS= read -r -d '' own < "/proc/$$/stat"; } 2>/dev/null || true
+  { IFS= read -r -d '' child < "/proc/$1/stat"; } 2>/dev/null || true
+  [ -n "$own" ] && [ -n "$child" ] || return 1
+  # Fields after the name: state ppid pgrp session tty_nr tpgid.
+  read -r _ _ _ _ _ tpgid _ <<< "${own##*) }"
+  read -r _ _ child_pgrp _ <<< "${child##*) }"
+  [[ "$tpgid" =~ ^[1-9][0-9]*$ ]] && [ "$child_pgrp" = "$tpgid" ]
+}
+
 launcher_forward_driver_signal() {
   local signal="$1"
   local exit_code="$2"
@@ -998,7 +1016,13 @@ launcher_forward_driver_signal() {
   # otherwise EXIT can close again before the successful-close flag is set.
   trap '' "$signal"
   if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
-    kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+    # A foreground provider already has the terminal's INT; only the kernel
+    # delivers it (#9624). The provider subshell refuses to start after an INT
+    # recorded before it could receive one, so this never waits on a provider
+    # that missed it. TERM/HUP and INT without a foreground terminal are relayed.
+    if [ "$signal" != INT ] || ! launcher_driver_child_in_foreground "$LC_DRIVER_CHILD_PID"; then
+      kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+    fi
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
   fi
   LC_DRIVER_CHILD_PID=""
@@ -1049,8 +1073,13 @@ launcher_exec_command() {
   # from /dev/null when job control is disabled, which would break TUIs. Reset
   # the background subshell's inherited signal dispositions before exec so
   # forwarded INT/TERM/HUP reach the provider rather than being ignored.
+  # An INT recorded before this fork never reached the provider, and the
+  # forwarder does not relay INT to a foreground child: end the subshell with
+  # status 130 instead of starting a provider that would wait for a second
+  # Ctrl-C.
   (
     trap - INT TERM HUP
+    [ "$LC_DRIVER_PENDING_SIGNAL" != INT ] || exit 130
     exec "${LC_CHILD_ENV_COMMAND[@]}" "$@"
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
