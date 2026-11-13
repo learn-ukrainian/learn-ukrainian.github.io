@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import socket
 import time
 from collections.abc import Iterator
 from contextlib import asynccontextmanager, contextmanager
@@ -64,20 +63,18 @@ def epics_monitor_stub(store: SessionStreamStore) -> Iterator[str]:
     """
     app = epics_app_for_store(store, store.database.path.parent)
 
-    with socket.socket() as probe:
-        probe.bind(("127.0.0.1", 0))
-        port = int(probe.getsockname()[1])
-
     server = uvicorn.Server(
         uvicorn.Config(
             app,
             host="127.0.0.1",
-            port=port,
+            port=0,
             lifespan="off",
             log_level="error",
         )
     )
-    thread = Thread(target=server.run, name="epics-monitor-stub", daemon=True)
+    listener = server.config.bind_socket()
+    port = listener.getsockname()[1]
+    thread = Thread(target=server.run, kwargs={"sockets": [listener]}, name="epics-monitor-stub", daemon=True)
     thread.start()
     base_url = f"http://127.0.0.1:{port}"
     health_url = f"{base_url}/api/epics/v1/health"
@@ -95,3 +92,4 @@ def epics_monitor_stub(store: SessionStreamStore) -> Iterator[str]:
     finally:
         server.should_exit = True
         thread.join(timeout=5)
+        listener.close()

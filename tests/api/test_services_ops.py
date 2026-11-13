@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import os
 import re
 import select
@@ -54,20 +55,12 @@ def isolate_systemd_user_manager(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     fake_stat.chmod(0o755)
     monkeypatch.setenv("PATH", f"{tmp_path}:{os.environ['PATH']}")
 
-def find_free_port() -> int:
-    """Find a free TCP port on localhost."""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
-
-def is_port_free(port: int) -> bool:
-    """Check if a port is free on localhost."""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        try:
-            s.bind(("127.0.0.1", port))
-            return True
-        except OSError:
-            return False
+@pytest.fixture
+def service_listener():
+    """Keep the ephemeral port owned until its server inherits the socket."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+        listener.bind(("127.0.0.1", 0))
+        yield listener
 
 
 def reap_process_on_exit(process: subprocess.Popen[object]) -> None:
@@ -75,9 +68,9 @@ def reap_process_on_exit(process: subprocess.Popen[object]) -> None:
     threading.Thread(target=process.wait, daemon=True).start()
 
 @pytest.fixture
-def temp_services_sh_real(tmp_path: Path):
+def temp_services_sh_real(tmp_path: Path, service_listener):
     """Create a copy of services.sh configured with a dynamic free port and the real API command."""
-    port = find_free_port()
+    port = service_listener.getsockname()[1]
     temp_script = tmp_path / f"services_test_real_{port}.sh"
 
     # Read and patch services.sh content
@@ -91,9 +84,9 @@ def temp_services_sh_real(tmp_path: Path):
     yield temp_script, port
 
 @pytest.fixture
-def temp_services_sh(tmp_path: Path):
+def temp_services_sh(tmp_path: Path, service_listener):
     """Create a copy of services.sh configured with a dynamic free port and a hermetic sleep API command."""
-    port = find_free_port()
+    port = service_listener.getsockname()[1]
     temp_script = tmp_path / f"services_test_{port}.sh"
 
     # Read and patch services.sh content
@@ -572,9 +565,9 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
                 health.stderr.close()
 
 
-def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> None:
+def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path, service_listener) -> None:
     """Start/status/stop owns the adapter without a manual private-repo command."""
-    port = find_free_port()
+    port = service_listener.getsockname()[1]
     script_path = tmp_path / "services.sh"
     script_path.write_text(
         SERVICES_SH.read_text(encoding="utf-8").replace("8769", str(port)),
@@ -594,7 +587,7 @@ def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> No
     (module / "__main__.py").write_text(
         """from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
-import re
+import socket
 
 with open(os.environ["WORK_FAKE_PID_FILE"], "w", encoding="utf-8") as pid_file:
     pid_file.write(str(os.getpid()))
@@ -614,7 +607,12 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_args):
         return
 
-HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_forever()
+server = HTTPServer(("127.0.0.1", 0), Handler, bind_and_activate=False)
+server.socket.close()
+server.socket = socket.fromfd(int(os.environ["WORK_TEST_FD"]), socket.AF_INET, socket.SOCK_STREAM)
+server.server_address = server.socket.getsockname()
+server.server_activate()
+server.serve_forever()
 """,
         encoding="utf-8",
     )
@@ -632,7 +630,7 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
     )
     mock_lsof.chmod(0o755)
     env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
-    env["WORK_TEST_PORT"] = str(port)
+    env["WORK_TEST_FD"] = str(service_listener.fileno())
     env["WORK_FAKE_PID_FILE"] = str(fake_pid_file)
     env["SVC_LSOF_BIN"] = str(mock_lsof)
     start = subprocess.run(
@@ -641,8 +639,10 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
         text=True,
         cwd=str(tmp_path),
         env=env,
+        pass_fds=(service_listener.fileno(),),
         timeout=30,
     )
+    service_listener.close()
     try:
         assert start.returncode == 0, f"{start.stdout}\n{start.stderr}"
         status = None
@@ -952,7 +952,7 @@ def test_failed_remote_delegate_does_not_spawn_local(
 
 def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
     """Healthy services print ok and do not restart."""
-    script_path, port = temp_services_sh
+    script_path, reserved_port = temp_services_sh
     _, _, env = mock_lsof_env
     env.pop("LU_SERVICES_SSH_HOST", None)
 
@@ -962,7 +962,6 @@ def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
             "-c",
             (
                 "from http.server import BaseHTTPRequestHandler, HTTPServer\n"
-                f"port = {port}\n"
                 "class H(BaseHTTPRequestHandler):\n"
                 "    def do_GET(self):\n"
                 "        body = b'ok'\n"
@@ -973,17 +972,27 @@ def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
                 "        self.wfile.write(body)\n"
                 "    def log_message(self, *args):\n"
                 "        return\n"
-                "HTTPServer(('127.0.0.1', port), H).serve_forever()\n"
+                "server = HTTPServer(('127.0.0.1', 0), H)\n"
+                "print(server.server_address[1], flush=True)\n"
+                "server.serve_forever()\n"
             ),
-        ]
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
     reap_process_on_exit(health)
     try:
-        deadline = time.monotonic() + 60
-        while time.monotonic() < deadline:
-            if not is_port_free(port):
-                break
-            time.sleep(0.05)
+        assert select.select([health.stdout], [], [], 5)[0], "Health server readiness timed out"
+        ready = health.stdout.readline().strip()
+        if not ready:
+            _, errors = health.communicate(timeout=5)
+            pytest.fail(f"Health server exited before readiness: {errors}")
+        port = int(ready)
+        script_path.write_text(
+            script_path.read_text(encoding="utf-8").replace(str(reserved_port), str(port)),
+            encoding="utf-8",
+        )
         result = subprocess.run(
             [str(script_path), "fix", "api"],
             capture_output=True,
@@ -998,6 +1007,8 @@ def test_fix_prints_ok_when_healthy(temp_services_sh, mock_lsof_env) -> None:
     finally:
         health.terminate()
         health.wait(timeout=5)
+        health.stdout.close()
+        health.stderr.close()
 
 
 def test_fix_unhealthy_ssh_tunnel_delegates_restart(
@@ -1174,3 +1185,12 @@ def test_ab_monitor_explicit_empty_disables() -> None:
     urls, url = _run_ab_monitor_env_defaults({"AB_MONITOR_URL": None, "AB_MONITOR_URLS": ""})
     assert urls == ""
     assert url == ""
+
+
+def test_service_fixture_port_cannot_be_stolen_before_server_start(temp_services_sh):
+    """A competing binder must not take the fixture's port before handover."""
+    _script, port = temp_services_sh
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as competitor:
+        with pytest.raises(OSError) as raised:
+            competitor.bind(("127.0.0.1", port))
+    assert raised.value.errno == errno.EADDRINUSE

@@ -448,10 +448,31 @@ _PUBLICATION_INPUT_ERRORS = (
 
 
 class PublicationInputError(RuntimeError):
-    """Carry only a fixed stage and exception class, never submitted values."""
+    """Name the failed stage, with a redacted cause for live metadata failures."""
 
     def __init__(self, stage: str, error: Exception):
-        super().__init__(f"{stage} ({type(error).__name__})")
+        cause = ""
+        if stage == "live PR fetch":
+            # Keep direct, stdlib-only script execution working too.
+            if str(REPO_ROOT) not in sys.path:
+                sys.path.insert(0, str(REPO_ROOT))
+            from scripts.secret_redactor import REDACTION, URL_PATTERN, redact_text, redact_value
+
+            message = str(error)
+            # Also remove held secrets whose shape the pattern redactor cannot know.
+            redacted_env = redact_value(dict(os.environ))
+            for name, value in os.environ.items():
+                if value and redacted_env[name] == REDACTION:
+                    message = message.replace(value, REDACTION)
+            # A query or an arbitrary header may carry secrets without a token name.
+            message = URL_PATTERN.sub("[REDACTED_URL]", message)
+            message = re.sub(
+                r"(?im)(?:\b(?:authorization|proxy-authorization|cookie|set-cookie|x-[\w-]+)|^(?!gh:)[a-z][\w-]*)\s*:[^\r\n]*",
+                "[REDACTED_HEADER]", message,
+            )
+            message = redact_text(message) or ""
+            cause = ": " + " ".join(message.split()) if message else ""
+        super().__init__(f"{stage} ({type(error).__name__}{cause})")
 
 
 @contextmanager
@@ -508,7 +529,11 @@ def current_publication_pr(repository: str, number: int) -> dict:
         fresh=True, capture_output=True, text=True, timeout=30,
     )
     if result.returncode:
-        raise ValueError("current publication metadata unavailable")
+        refusal = github_client.refusal_of(result)
+        if refusal is not None:
+            raise refusal
+        detail = (result.stderr or "").strip() or "no error message"
+        raise ValueError(f"current publication metadata unavailable (exit {result.returncode}): {detail}")
     pr = json.loads(result.stdout)
     if not isinstance(pr, dict) or pr.get("number") != number:
         raise ValueError("invalid current publication metadata")

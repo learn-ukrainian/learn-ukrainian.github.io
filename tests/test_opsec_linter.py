@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from scripts.audit import lint_opsec_leaks as opsec_linter
-from scripts.audit.lint_opsec_leaks import check_content
+from scripts.audit.lint_opsec_leaks import check_content, current_publication_pr
 
 
 @pytest.fixture
@@ -125,7 +125,7 @@ def test_incomplete_live_enrichment_fails_closed(publication, capsys, field):
     run, payload, live, _git = publication
     del live[field]
     assert run(payload) == 1
-    assert capsys.readouterr().err == "OPSEC publication: required input unavailable or invalid: live PR fetch (KeyError)\n"
+    assert capsys.readouterr().err == f"OPSEC publication: required input unavailable or invalid: live PR fetch (KeyError: {field!r})\n"
 
 
 @pytest.mark.parametrize("stage", [
@@ -136,6 +136,7 @@ def test_publication_input_failure_names_stage_without_disclosing_content(public
     """Opaque input failures must identify their stage and still block publication."""
     run, payload, _live, _git = publication
     private = "synthetic-private-field-content"
+    monkeypatch.setenv("PUBLICATION_TEST_SECRET", private)
     error = OSError(private)
     if stage.startswith("git fetch"):
         error = subprocess.CalledProcessError(1, [private], output=private, stderr=private)
@@ -182,7 +183,8 @@ def test_publication_input_failure_names_stage_without_disclosing_content(public
     assert run(payload, event) == 1
     output = capsys.readouterr()
     assert output.out == ""
-    assert output.err == f"OPSEC publication: required input unavailable or invalid: {stage} ({type(error).__name__})\n"
+    detail = ": [REDACTED_SECRET]" if stage == "live PR fetch" else ""
+    assert output.err == f"OPSEC publication: required input unavailable or invalid: {stage} ({type(error).__name__}{detail})\n"
     assert private not in output.out + output.err
 
 
@@ -583,3 +585,32 @@ def test_private_tracker_citation_not_flagged_in_private_code_or_tests():
         "tests/test_something.py",
     )
     assert findings == []
+
+
+def test_live_metadata_failure_keeps_cause_but_redacts_secrets(publication, monkeypatch, capsys):
+    """A failed GitHub fetch must explain its cause without exposing credentials."""
+    from types import SimpleNamespace
+
+    from scripts.common import github_client
+
+    run, payload, _live, _git = publication
+    monkeypatch.setattr(opsec_linter, "current_publication_pr", current_publication_pr)
+    secret = "synthetic-held-credential"
+    monkeypatch.setenv("GH_TOKEN", secret)
+    token = "ghp_" + "Ab9" * 12
+    query = "unlabelled-query-value"
+    header = "unlabelled-header-value"
+    diagnostic = (f"request denied token={token}\n"
+                  f"https://example.invalid/api?opaque={query}\n"
+                  f"Authorization: Bearer {header}\nheld {secret}")
+    monkeypatch.setattr(github_client, "run", lambda *a, **kw: SimpleNamespace(
+        returncode=1, stdout="", stderr=diagnostic))
+    assert run(payload) == 1
+    output = capsys.readouterr()
+    assert output.out == ""
+    assert "live PR fetch (ValueError: current publication metadata unavailable (exit 1): request denied" in output.err
+    for value in (secret, token, query, header):
+        assert value not in output.err
+    assert "[REDACTED_SECRET]" in output.err
+    assert "[REDACTED_URL]" in output.err
+    assert "[REDACTED_HEADER]" in output.err

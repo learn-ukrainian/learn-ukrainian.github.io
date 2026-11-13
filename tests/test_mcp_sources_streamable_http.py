@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import importlib.util
-import socket
 import threading
 import time
 from pathlib import Path
@@ -23,40 +22,37 @@ def _load_sources_server():
     return module
 
 
-def _free_port() -> int:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.bind(("127.0.0.1", 0))
-        return int(sock.getsockname()[1])
-
-
 @pytest.fixture(scope="module")
 def sources_http_url():
     module = _load_sources_server()
-    port = _free_port()
     app = module.create_http_app()
-    config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning")
+    config = uvicorn.Config(app, host="127.0.0.1", port=0, log_level="warning")
+    listener = config.bind_socket()
+    port = listener.getsockname()[1]
     server = uvicorn.Server(config)
-    thread = threading.Thread(target=server.run, daemon=True)
+    thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
 
-    thread.start()
-    base_url = f"http://127.0.0.1:{port}"
-    deadline = time.monotonic() + 10
-    while time.monotonic() < deadline:
-        try:
-            response = httpx.get(f"{base_url}/health", timeout=0.5)
-            if response.status_code == 200:
-                break
-        except httpx.HTTPError:
-            time.sleep(0.05)
-    else:
+    try:
+        thread.start()
+        base_url = f"http://127.0.0.1:{port}"
+        deadline = time.monotonic() + 10
+        while time.monotonic() < deadline:
+            try:
+                response = httpx.get(f"{base_url}/health", timeout=0.5)
+                if response.status_code == 200:
+                    break
+            except httpx.HTTPError:
+                time.sleep(0.05)
+        else:
+            server.should_exit = True
+            thread.join(timeout=5)
+            pytest.fail("MCP sources HTTP server did not start")
+
+        yield base_url
+    finally:
         server.should_exit = True
-        thread.join(timeout=5)
-        pytest.fail("MCP sources HTTP server did not start")
-
-    yield base_url
-
-    server.should_exit = True
-    thread.join(timeout=5)
+        thread.join(timeout=10)
+        listener.close()
 
 
 def test_streamable_http_initialize_returns_capabilities(sources_http_url):
