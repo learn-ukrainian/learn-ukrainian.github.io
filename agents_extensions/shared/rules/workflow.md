@@ -586,7 +586,10 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    applicability, due state, evidence types, and content hash in
    `task-lifecycle.v1`.
 4. **Implement in the dispatch worktree** — include the lifecycle ledger locator
-   in the brief; dispatch v2 does not propagate a lifecycle file.
+   in the brief; dispatch v2 does not propagate a lifecycle file. The existing
+   agent-config deploy duty (`npm run agents:deploy`, core `r2-exec`) applies to
+   the committed state: after the last commit under `agents_extensions/`, rerun it
+   before pushing so the deployed copies match the outgoing commit.
 5. **Record typed AC evidence** — checkboxes are a display projection, never proof.
    User-visible ACs require typed `behavior_proof` evidence referencing the
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
