@@ -1513,6 +1513,16 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             )
         elif consumer == "settle":
             module = importlib.import_module("lu_machinery.orchestration.dispatch_settle")
+            # #460 verifies host publication before the title reaches the text scanner.
+            git_outputs = {
+                "symbolic-ref": "refs/heads/unit\n",
+                "rev-parse": "a" * 40 + "\n",
+                "remote": "https://github.com/unit/public.git\n",
+            }
+            monkeypatch.setattr(module, "verification_credentials", lambda _url: [])
+            monkeypatch.setattr(
+                module.write_boundary, "_git", lambda _cwd, *args, **_kwargs: git_outputs.get(args[0], "")
+            )
             monkeypatch.setattr(module, "_find_pr", lambda *a: (None, None))
             module.push_and_maybe_open_pr(tmp_path, "unit", open_pr=True, title=TOKEN, body="clean")
         elif consumer == "closeout":
