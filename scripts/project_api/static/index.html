@@ -105,10 +105,10 @@ function freshnessLine(meta) {
     ? when.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
     : null;
   const lead = clock ? `Updated ${clock}` : 'Updated at an unknown time';
-  const age = known ? Math.max(0, Math.floor((Date.now() - when.getTime()) / 1000)) : null;
-  const stale = !known || meta.stale || age > meta.stale_after_s;
+  const age = meta && Number.isFinite(meta.age_s) ? Math.floor(meta.age_s) : null;
+  const stale = age == null || meta.stale || age > meta.stale_after_s;
   const ageLabel = age == null ? 'age unknown' : `${age}s old`;
-  return `${lead} · ${ageLabel}${stale ? ' · Stale' : ''}`;
+  return `${stale ? 'Stale · ' : ''}${lead} · ${ageLabel}`;
 }
 
 function stat(value, label, color) {
@@ -147,7 +147,7 @@ async function loadStats() {
     ].join('');
     document.getElementById('curriculum-stat').textContent = `${tracks.length} tracks · ${t.published} published modules`;
     freshness.textContent = freshnessLine(meta);
-    freshness.dataset.stale = String(freshness.textContent.endsWith(' · Stale'));
+    freshness.dataset.stale = String(freshness.textContent.startsWith('Stale · '));
   } catch (e) {
     row.innerHTML = [
       stat(null, 'Tracks', '--text3'),

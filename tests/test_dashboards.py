@@ -63,7 +63,7 @@ class TestHtmlValidation:
         assert "function freshnessLine" in text
         assert "toLocaleString" in text
         assert "s old" in text
-        assert " · Stale" in text
+        assert "Stale · " in text
         assert "setTimeout(refreshStats, 30000)" in text
         assert "white-space:nowrap" in text
 
