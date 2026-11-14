@@ -54,19 +54,17 @@ class TestHtmlValidation:
         assert "footer-origin" not in text
         assert "Serving from" not in text
 
-    def test_home_freshness_line_uses_local_time_without_an_alarm(self):
-        """Defect class: the freshness line printed a raw ISO timestamp plus an alarm.
-
-        ``cached copy older than N s limit`` is hard to scan and wraps at 390px.
-        The line must format local time and keep a short calm note on one line.
-        """
+    def test_home_freshness_line_shows_age_and_stale_source(self):
+        """Defect class: stale source data appeared current on the home page."""
         text = (PRODUCT_PAGES_DIR / "index.html").read_text()
         assert "cached copy older than" not in text
         assert "s limit" not in text
         assert "Computed ${meta.generated_at}" not in text
         assert "function freshnessLine" in text
         assert "toLocaleString" in text
-        assert "saved earlier" in text
+        assert "s old" in text
+        assert " · Stale" in text
+        assert "setTimeout(refreshStats, 30000)" in text
         assert "white-space:nowrap" in text
 
     def test_dashboard_tiles_stay_uniform_and_do_not_break_names(self):
@@ -382,3 +380,41 @@ class TestOverviewLastGoodHonesty:
         assert data["totals"]["missing"] != data["totals"]["total"]
         assert data["meta"]["track_scan"] == "stale"
         assert not data["meta"].get("refreshing")
+
+    @pytest.mark.parametrize("cached", [False, True])
+    @pytest.mark.parametrize("source_age", [30, 61, 46800, None])
+    def test_source_age_not_cache_age_and_stale_source_labelled(self, monkeypatch, tmp_path, cached, source_age):
+        """Defect class: a newly cached old snapshot reports age zero and fresh."""
+        from datetime import UTC, datetime, timedelta
+
+        import scripts.project_api.dashboard_router as dashboard_router
+
+        now = datetime(2026, 11, 14, 6, 0, tzinfo=UTC)
+
+        class Clock(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return now
+
+        monkeypatch.setattr(dashboard_router, "datetime", Clock)
+        monkeypatch.setenv(dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV, str(tmp_path / "last-good.json"))
+        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
+        summary = _published_summary()
+        generated_at = (now - timedelta(seconds=source_age)).isoformat() if source_age is not None else None
+        payload = {
+            "tracks": [{"id": "a1", "module_count": 80, "stats": {"missing": 25}}],
+            "totals": {"total": 80},
+            "meta": {"generated_at": generated_at, "age_s": 0.0},
+        }
+        # An unrelated, fresh state-summary cache must not reset the track scan age.
+        monkeypatch.setattr(dashboard_router, "_peek_state_summary", lambda *_a, **_k: (summary, "hit", 0.0))
+        if cached:
+            monkeypatch.setattr(dashboard_router, "cache_get_with_age", lambda *_a, **_k: (payload, 0.0))
+        else:
+            dashboard_router.persist_overview_last_good(payload)
+        response = self._client().get("/api/dashboard/overview")
+        assert response.status_code == 200
+        meta = response.json()["meta"]
+        assert meta["generated_at"] == generated_at
+        assert meta["age_s"] == source_age
+        assert meta["stale"] is (not cached or source_age is None or source_age > 60)
