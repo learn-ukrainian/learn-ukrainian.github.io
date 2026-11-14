@@ -187,8 +187,8 @@ def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "fetch"]:
-            assert command == ["git", "fetch", "origin", _branch_refspec(name)]
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
+            assert command == ["git", "-c", "core.hooksPath=/dev/null", "fetch", "origin", _branch_refspec(name)]
             code = 1 if fail == "fetch" else 0
             return subprocess.CompletedProcess(command, code, stderr="fetch failed" if code else "")
         if command[:3] == ["git", "rev-parse", "--verify"]:
@@ -245,8 +245,8 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "fetch"]:
-            assert command == ["git", "fetch", "origin", sha]
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
+            assert command == ["git", "-c", "core.hooksPath=/dev/null", "fetch", "origin", sha]
             return subprocess.CompletedProcess(command, 0, stdout="")
         assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"]
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
@@ -275,7 +275,7 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "fetch"]:
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
             assert command[-1] == sha
             return subprocess.CompletedProcess(command, 0, stdout="")
         assert command[-1] == f"origin/main...{sha}"
@@ -326,8 +326,8 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "fetch"]:
-            assert command == ["git", "fetch", "origin", sha]
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
+            assert command == ["git", "-c", "core.hooksPath=/dev/null", "fetch", "origin", sha]
             return subprocess.CompletedProcess(command, 0, stdout="")
         assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"]
         return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
@@ -418,7 +418,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "fetch"]:
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
             assert command[-1] == gate_sha
             return subprocess.CompletedProcess(command, 0, stdout="")
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
@@ -606,7 +606,7 @@ def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.Monkey
         if command[:2] == ["git", "diff"]:
             assert "--no-renames" in command
             return subprocess.CompletedProcess(command, 0, stdout=f"scripts/x.py\n{_CONTENT_PATH}\n")
-        if command[:2] == ["git", "fetch"]:
+        if command[:4] == ["git", "-c", "core.hooksPath=/dev/null", "fetch"]:
             return subprocess.CompletedProcess(command, 0, stdout="")
         if command[:3] == ["git", "rev-parse", "--verify"]:
             return subprocess.CompletedProcess(command, 0, stdout=f"{_REMOTE_SHA}\n")
