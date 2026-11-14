@@ -235,6 +235,18 @@ def sandbox(tmp_path, hermetic_monitor):
         )
         assert result.returncode == 0, (result.stdout, result.stderr)
 
+    def admit_retired_muse():
+        """Admit retired Wonder in this disposable catalog only.
+
+        Protocol tests still drive the dormant adapter. Production routing does not.
+        """
+        catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
+        model = catalog["models"]["muse-wonder-full-1.0"]
+        model["lifecycle"] = "active"
+        model["transports"] = ["native_muse"]
+        model["routing_wire_ids"] = {"native_muse": "muse-wonder-full-1.0"}
+        (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
+
     def review_models(*models):
         """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
         catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
@@ -252,7 +264,8 @@ def sandbox(tmp_path, hermetic_monitor):
         return "--base", "main", "--pinned-head", head
 
     box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
-                          sweep=sweep, review_models=review_models, review_target=review_target)
+                          sweep=sweep, review_models=review_models, review_target=review_target,
+                          admit_retired_muse=admit_retired_muse)
     try:
         yield box
     finally:

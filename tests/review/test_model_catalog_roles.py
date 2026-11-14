@@ -37,7 +37,6 @@ from tests.review.test_model_catalog import (
 from tests.review.test_model_catalog import (
     FIXED_NOW,
     GROK_REVIEW_CANDIDATE,
-    MUSE_REVIEW_CANDIDATE,
     assert_frozen_surfaces,
     encode,
     observed,
@@ -113,8 +112,10 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
         "native_claude": "claude-opus-5-5",
         "agy": "claude-opus-5-5-high",
     }
-    assert expanded_legacy_view(catalog)["review_candidates"] == {
-        **APPROVED_BASELINE["catalog"]["review_candidates"], "muse": MUSE_REVIEW_CANDIDATE,
+    live_candidates = expanded_legacy_view(catalog)["review_candidates"]
+    assert "muse" not in live_candidates
+    assert live_candidates == {
+        **{name: row for name, row in APPROVED_BASELINE["catalog"]["review_candidates"].items() if name != "muse"},
         "grok-4.7-cursor-fallback": GROK_REVIEW_CANDIDATE,
     }
 
@@ -126,7 +127,6 @@ def test_launch_explicitly_pins_current_review_models():
         "claude-opus-5-5",
         "claude-sonnet-5-5",
         "gemini-3.8-flash-high",
-        "muse-wonder-full-1.0",
         "grok-4.7",
     }
     for row in launched.candidates:
@@ -439,8 +439,11 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
                         now=FIXED_NOW))
     actual = observed(lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
     res = json.loads(encode(actual))
-    expected = APPROVED_BASELINE["reviewer"][index]
-    trace = res.get("value", {}).get("trace")
-    if trace and trace[-1].get("name") == "muse" and "muse" not in [r.get("name") for r in expected.get("value", {}).get("trace", [])]:
-        trace.pop()
+    expected = deepcopy(APPROVED_BASELINE["reviewer"][index])
+    # MUSE-RETIRE-1112 removed the seat. Frozen receipts still list that extra
+    # trace row; drop it on both sides so the rest of the receipt stays pinned.
+    for receipt in (res, expected):
+        trace = (receipt.get("value") or {}).get("trace")
+        if isinstance(trace, list):
+            receipt["value"]["trace"] = [row for row in trace if row.get("name") != "muse"]
     assert res == expected
