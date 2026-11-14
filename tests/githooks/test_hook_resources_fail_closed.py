@@ -121,6 +121,29 @@ def _venv(tmp_path: Path, ownership_source: str | None) -> str:
     return str(python)
 
 
+def test_unset_primary_root_makes_the_hook_refuse_and_name_the_bootstrap_step(tmp_path):
+    """Defect class: an unset primary root made the Git hook exit 127 with no message."""
+    env = _env(project_python())
+    repo = _product_repo(tmp_path, env)
+    (repo / "note.txt").write_text("note\n", encoding="utf-8")
+    assert _git(repo, "add", "note.txt", env=env).returncode == 0
+    refused = {key: value for key, value in env.items() if key != "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"}
+    base = _head(repo, env)
+    expected = (
+        "Git hook error: hook context unavailable (step=state); configure the primary-state anchor and interpreter."
+    )
+
+    hook = _run(["/usr/bin/bash", str(repo / ".githooks" / "pre-commit")], repo, refused)
+    commit = _git(repo, "commit", "-q", "-m", "unset primary", env=refused)
+
+    assert hook.returncode == 127
+    assert hook.stderr.splitlines() == [expected]
+    # Git reports a failed hook as exit 1; the hook process itself exits 127.
+    assert commit.returncode != 0
+    assert commit.stderr.splitlines() == [expected]
+    assert _head(repo, env) == base
+
+
 @pytest.mark.parametrize("damage", ["deleted", "not_executable"])
 def test_installed_delegator_refuses_when_the_tracked_hook_is_gone(tmp_path, damage):
     env = _env(project_python())

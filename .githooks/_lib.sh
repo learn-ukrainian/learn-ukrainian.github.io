@@ -8,8 +8,14 @@ worktree_root="$(git rev-parse --show-toplevel)"
 # Validate Git metadata with the same resolver as native hook commands before
 # accepting a primary root or interpreter. Never trust commondir for execution.
 source "$worktree_root/scripts/lib/project_interpreter.sh"
-project_hook_context_resolve "$worktree_root" || exit 127
-main_root="$(project_primary_root_resolve "$worktree_root")" || exit 127
+project_hook_context_resolve "$worktree_root" || {
+  echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
+  exit 127
+}
+main_root="$(project_primary_root_resolve "$worktree_root")" || {
+  echo "Git hook error: primary checkout unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown})." >&2
+  exit 127
+}
 
 source_root="$worktree_root"
 if [[ ! -x "$source_root/scripts/pre_commit/project_python.sh" || ! -f "$source_root/.pre-commit-config.yaml" ]]; then
