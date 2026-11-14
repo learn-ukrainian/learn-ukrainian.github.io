@@ -735,9 +735,7 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
 
     for model in ("muse-wonder-full-1.0", "muse-spark-1.3"):
         for activity in ("review", "consult"):
-            assert (activity_role_refusal(model, activity, load_model_catalog()) is None) == (
-                model == "muse-wonder-full-1.0"
-            )
+            assert activity_role_refusal(model, activity, load_model_catalog()) is not None
         plan = InvocationPlan(
             cmd=["/fixture/muse", "exec", "--model", model, "--reasoning-effort", "high"],
             cwd=Path("/fixture/workspace"),
@@ -1050,11 +1048,7 @@ GROK_REVIEW_CANDIDATE = {
     "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["standard_review"],
 }
 
-MUSE_REVIEW_CANDIDATE = {
-    "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
-    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high --contributor-mode off",
-    "review_profiles": ["code", "infra"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
-}
+
 def _pop_advisory_roles(catalog):
     """Remove the ``advisory_roles`` section, which the frozen catalogs predate."""
     # The envelope role is the one advisory_roles entry, of the bounded route; it is checked against the
@@ -1152,17 +1146,22 @@ def assert_frozen_surfaces(actual, *, surfaces):
             assert hashlib.sha256(encode(fable52)).hexdigest() == "04ee0a6324bb7c8afa5259b2a9fe503a1673854df2dc0844209bd11120c08d84"
             # The advisory_roles section moves no seat, route or review ranking.
             _pop_advisory_roles(value)
-            # Muse operator decision 2026-11-01: low/medium review ladders and contributor mode off
-            if value["review_ladders"]["low"] and value["review_ladders"]["low"][-1] == ["muse"]:
-                assert value["review_ladders"]["low"].pop() == ["muse"]
-            if value["review_ladders"]["medium"] and value["review_ladders"]["medium"][-1] == ["muse"]:
-                assert value["review_ladders"]["medium"].pop() == ["muse"]
-            muse_cand = value["review_candidates"]["muse"]
-            assert hashlib.sha256(encode(muse_cand)).hexdigest() == "641cdce0844039c04aadcbff572b54eed2c6927a243cfe172eefbddb802b9b5b"
+            # MUSE-RETIRE-1112: Wonder is retired, with no transport and no review seat.
+            # The frozen receipt still holds the 2026-11-01 candidate; restore it after
+            # the live retirement is checked.
+            assert value["review_ladders"]["low"][-1] != ["muse"]
+            assert value["review_ladders"]["medium"][-1] != ["muse"]
+            assert "muse" not in value["review_candidates"]
+            value["review_candidates"]["muse"] = deepcopy(expected["review_candidates"]["muse"])
             muse_model = value["models"]["muse-wonder-full-1.0"]
-            assert hashlib.sha256(encode(muse_model)).hexdigest() == "72ee5f7017790c3dd0fc3ebfbe47fa40c883010ff444875ad6403ca80fa305e5"
-            value["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
-            value["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
+            assert hashlib.sha256(encode(muse_model)).hexdigest() == (
+                "0b3ddf462fdf22956bac01e2a7bf86a0bf917ef93fd5b461a19e78e5fd9acc10"
+            )
+            assert muse_model["lifecycle"] == "retired" and muse_model["transports"] == []
+            value["models"]["muse-wonder-full-1.0"] = deepcopy(expected["models"]["muse-wonder-full-1.0"])
+            muse_endpoint = value["review_scheduler"]["endpoints"]["muse"]
+            assert muse_endpoint["models"] == []
+            muse_endpoint["models"] = deepcopy(expected["review_scheduler"]["endpoints"]["muse"]["models"])
             # REMOVE-UNNEEDED-1107: prose-only correction of two stale "Gemma retired" policy notes
             # (Gemma is live for hramatka through OpenCode). No seat, route or ranking moves.
             for index in (3, 7):
@@ -1192,9 +1191,12 @@ def refresh_current_baseline():
     _pop_advisory_roles(catalog)
     # Keep the previously approved overlays outside this current-baseline refresh.
     for risk in ("low", "medium"):
-        assert catalog["review_ladders"][risk].pop() == ["muse"]
+        assert catalog["review_ladders"][risk][-1] != ["muse"]
     catalog["review_candidates"]["muse"] = deepcopy(CURRENT_BASELINE["catalog"]["review_candidates"]["muse"])
     catalog["models"]["muse-wonder-full-1.0"] = deepcopy(CURRENT_BASELINE["catalog"]["models"]["muse-wonder-full-1.0"])
+    catalog["review_scheduler"]["endpoints"]["muse"]["models"] = deepcopy(
+        CURRENT_BASELINE["catalog"]["review_scheduler"]["endpoints"]["muse"]["models"]
+    )
     capture["baseline"]["catalog"] = catalog
     usage_dir = _V2_BASELINE_PATH.parent / ".recapture-no-live-usage"
     assert not usage_dir.exists()

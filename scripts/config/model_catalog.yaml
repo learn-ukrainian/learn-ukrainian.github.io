@@ -208,7 +208,7 @@ review_scheduler:
       capacity_weight: 1.0
     muse:
       formal_review_eligible: true
-      models: [{role: legacy_reviewers, seat: meta_reviewer}]
+      models: []
       participant: muse
       adapter_transport: native_muse
       catalog_transport: native_muse
@@ -346,10 +346,9 @@ models:
     family: meta
     # Minimum admitted code-review tier; runtime qualification remains pending.
     tier: economical
-    lifecycle: active
+    lifecycle: retired
     roles: [coding, standard_review, routine_review]
-    routing_wire_ids: {native_muse: muse-wonder-full-1.0}
-    transports: [native_muse]
+    transports: []
     strengths: [explicit_native_worker]
     weaknesses: [worker_qualification_pending, review_qualification_pending, no_driver_authority]
     notes: >-
@@ -1254,7 +1253,6 @@ models:
 
 review_candidates:
   grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
-  muse: {role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: candidate}
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
   openai_frontier_b: {role: openai_frontier_coder, seat: openai_frontier, route_name: native_b, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
@@ -1374,7 +1372,6 @@ review_ladders:
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: agy, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1412,23 +1409,6 @@ seats:
         transport: cursor
         invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id} --effort high
         review_profiles: [code, infra]
-        capabilities: [code_review]
-  meta_reviewer:
-    model_id: muse-wonder-full-1.0
-    bindings: [legacy_review_candidate]
-    priority: 5
-    decision_reference: agents_extensions/shared/rules/model-assignment.md
-    routes:
-      native:
-        legacy_name: muse
-        suitability_roles: [routine_review]
-        route: muse
-        transport: native_muse
-        effort: high
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent muse --model {wire_id} --effort high --contributor-mode off
-        review_profiles:
-        - code
-        - infra
         capabilities: [code_review]
   openai_frontier:
     model_id: gpt-6.1-sol
@@ -1609,7 +1589,6 @@ roles:
     order_by: priority
   code_review_low:
     routes:
-    - meta_reviewer/native
     - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native
@@ -1621,7 +1600,6 @@ roles:
     risk: low
   code_review_medium:
     routes:
-    - meta_reviewer/native
     - openai_frontier/native_b
     - openai_frontier/native
     - anthropic_authority/native

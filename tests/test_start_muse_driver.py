@@ -1,10 +1,9 @@
-"""Muse admission and shared lease lifecycle, with no provider/model calls."""
+"""Muse launcher admission after MUSE-RETIRE-1112: the retired Wonder pin refuses, with no provider/model calls."""
 
 from __future__ import annotations
 
 import contextlib
 import os
-import shutil
 import signal
 import subprocess
 import threading
@@ -15,11 +14,6 @@ from typing import Any
 import pytest
 
 from tests.launcher_sandbox import launcher_environment
-from tests.test_launcher_contract import (
-    _LAUNCHER_READY_TIMEOUT_S,
-    _blocking_signal_provider,
-    _core_driver_exit_fixture,
-)
 
 REPO = Path(__file__).resolve().parents[1]
 CORE = REPO / "scripts/lib/launcher_core.sh"
@@ -306,69 +300,44 @@ def test_help_needs_no_provider_or_visibility_probe(muse_env: dict[str, str]) ->
     assert "Unproven guards: shell, credential, publish, destructive-command, filesystem." in result.stdout
 
 
+RETIRED_MODEL = "model 'muse-wonder-full-1.0' is retired in the model catalog"
+SELECTORS = ["devops", "infra.devops", "monitor", "infra.monitor", "ops-api", "ops.api", "operator-api"]
+
+
+@pytest.mark.parametrize("selector", SELECTORS)
+@pytest.mark.parametrize("dry", [True, False])
 @pytest.mark.parametrize(
-    ("selector", "lane", "stream"),
-    [
-        ("devops", "devops", "epic:5703"),
-        ("infra.devops", "devops", "epic:5703"),
-        ("monitor", "monitor", "epic:7919"),
-        ("infra.monitor", "monitor", "epic:7919"),
-        ("ops-api", "monitor", "epic:7919"),
-        ("ops.api", "monitor", "epic:7919"),
-        ("operator-api", "monitor", "epic:7919"),
-    ],
+    "model_args",
+    [[], ["--model", "muse-wonder-full-1.0"]],
+    ids=["default-model", "explicit-model"],
 )
-@pytest.mark.parametrize("effort", ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"])
-def test_dry_run_argv_and_capsule_binding(
+def test_retired_model_refuses_before_lease_or_provider(
     muse_env: dict[str, str],
     tmp_path: Path,
     selector: str,
-    lane: str,
-    stream: str,
-    effort: str,
+    dry: bool,
+    model_args: list[str],
 ) -> None:
-    # allow-hardcoded-epic: literal seven-selector contract independent of resolver
+    """MUSE-RETIRE-1112: the retired Wonder pin stops the launch before any lease, canary or provider work."""
     argv_path = tmp_path / "argv"
     result = launch(
         {**muse_env, "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
         "--epic",
         selector,
-        "--effort",
-        effort,
-        "--dry-run",
+        *model_args,
         "--",
         "A bounded task",
+        dry=dry,
     )
-    assert result.returncode == 0, result.stderr
-    argv = argv_path.read_bytes().decode().rstrip("\0").split("\0")
-    assert argv[:-1] == [
-        "muse",
-        "--provider",
-        "meta",
-        "--model",
-        "muse-wonder-full-1.0",
-        "--reasoning-effort",
-        effort,
-        "--workspace",
-        str(REPO),
-        "--worktree",
-        "off",
-        "--disable-shell",
-        "--disable-write",
-    ]
-    assert argv[-1].startswith('<rules-core seat="core"')
-    assert "A bounded task" in argv[-1]
-    assert f"launcher already claimed the {lane} lease" in argv[-1]
-    assert f"would claim lease stream={stream} agent=muse harness=muse-cli" in result.stdout
-    assert f"slot=muse-{lane}" in result.stdout
-    assert "provider canary: not run; rollover uses scripts.session_canary.muse_lane mint and score" in result.stdout
-    assert "MUSE_GUARD_PARITY_UNPROVEN" in result.stdout
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert RETIRED_MODEL in result.stderr
+    assert not argv_path.exists()
+    assert "would claim" not in result.stdout
+    assert "would exec" not in result.stdout
 
 
-@pytest.mark.parametrize(
-    "selector", ["devops", "infra.devops", "monitor", "infra.monitor", "ops-api", "ops.api", "operator-api"]
-)
-def test_dry_run_never_calls_lease_or_provider_boundaries(
+@pytest.mark.parametrize("selector", SELECTORS)
+def test_retired_model_never_calls_lease_or_provider_boundaries(
     muse_env: dict[str, str],
     tmp_path: Path,
     selector: str,
@@ -393,7 +362,8 @@ def test_dry_run_never_calls_lease_or_provider_boundaries(
         check=False,
         timeout=60,
     )
-    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert RETIRED_MODEL in result.stderr
     assert not events.exists()
     assert not Path(muse_env["MUSE_TEST_CALLS"]).exists()
     assert "authentication-must-stay-hidden" not in result.stdout + result.stderr
@@ -410,31 +380,7 @@ def test_dry_run_never_calls_lease_or_provider_boundaries(
         (["--model", "claude-fable-5"], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
         (["--model="], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
         ([], {"LAUNCHER_MODEL": "unknown"}, 4, "MUSE_MODEL_UNCERTIFIED"),
-        (["--epic", "folk"], {}, 4, "MUSE_UKRAINIAN_CONTENT_FORBIDDEN"),
-        (["--epic", "bio"], {}, 4, "MUSE_UKRAINIAN_CONTENT_FORBIDDEN"),
-        (["--epic", "hramatka"], {}, 4, "MUSE_UKRAINIAN_CONTENT_FORBIDDEN"),
-        (["--epic", "open-model-data"], {}, 4, "MUSE_UKRAINIAN_CONTENT_FORBIDDEN"),
-        (["--epic", "curriculum-upgrade"], {}, 4, "MUSE_CURRICULUM_CONTENT_FORBIDDEN"),
-        (["--epic", "curriculum-upgrade"], {"LU_RULES_SEAT": "core"}, 4, "MUSE_CURRICULUM_CONTENT_FORBIDDEN"),
-        ([], {"LU_RULES_SEAT": "content"}, 4, "MUSE_CURRICULUM_CONTENT_FORBIDDEN"),
-        (["--epic", "infra"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        (["--epic", "harness"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        (["--epic", "infra.fleet-comms"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        (["--epic", "infra-harness"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        (["--epic", "atlas"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        (["--epic", "unknown"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
-        ([], {"MUSE_TEST_VISIBILITY": "PRIVATE"}, 4, "MUSE_PRIVATE_REPOSITORY_FORBIDDEN"),
-        ([], {"MUSE_TEST_VISIBILITY": "INTERNAL"}, 4, "MUSE_PRIVATE_REPOSITORY_FORBIDDEN"),
-        ([], {"MUSE_TEST_VISIBILITY": "UNKNOWN"}, 4, "MUSE_REPOSITORY_VISIBILITY_UNKNOWN"),
-        ([], {"MUSE_TEST_GH_RC": "1"}, 4, "MUSE_REPOSITORY_VISIBILITY_UNKNOWN"),
         (["--effort", "bogus"], {}, 2, "MUSE_EFFORT_UNSUPPORTED"),
-        (["--harness", "codex"], {}, 2, "MUSE_HARNESS_UNSUPPORTED"),
-        (["--force"], {}, 4, "MUSE_FORCE_FORBIDDEN"),
-        ([], {"LC_DRIVER_LEASE_ENABLED": "0"}, 4, "MUSE_LEASE_REQUIRED"),
-        (["--", "--model", "muse-wonder-full-1.0"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
-        (["--", "--config=hooks=[]"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
-        (["--", "--yolo"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
-        (["--", "resume", "--last"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
     ],
 )
 def test_typed_refusals_before_provider(
@@ -451,32 +397,6 @@ def test_typed_refusals_before_provider(
     assert reason in result.stderr
     assert "would exec" not in result.stdout
     assert "would claim" not in result.stdout
-
-
-@pytest.mark.parametrize(
-    "selector", ["devops", "infra.devops", "monitor", "infra.monitor", "ops-api", "ops.api", "operator-api"]
-)
-def test_real_guard_gate_cannot_be_overridden(muse_env: dict[str, str], selector: str) -> None:
-    result = launch({**muse_env, "MUSE_GUARD_PARITY_PROVEN": "1"}, "--epic", selector, dry=False)
-    assert result.returncode == 4
-    assert "MUSE_GUARD_PARITY_UNPROVEN: shell,credential,publish,destructive-command,filesystem" in result.stderr
-    assert result.stdout == ""
-
-
-def test_repository_override_cannot_hide_private_checkout(muse_env: dict[str, str]) -> None:
-    result = launch(
-        {
-            **muse_env,
-            "GH_REPO": "example/public",
-            "GITHUB_REPOSITORY": "example/public",
-            "MUSE_TEST_VISIBILITY": "PRIVATE",
-        },
-        "--epic",
-        "devops",
-        dry=False,
-    )
-    assert result.returncode == 4
-    assert "MUSE_PRIVATE_REPOSITORY_FORBIDDEN" in result.stderr
 
 
 def test_direct_exec_seam_still_refuses(muse_env: dict[str, str]) -> None:
@@ -499,190 +419,3 @@ def test_direct_exec_seam_still_refuses(muse_env: dict[str, str]) -> None:
     assert result.returncode == 4
     assert "MUSE_GUARD_PARITY_UNPROVEN" in result.stderr
     assert not Path(muse_env["MUSE_TEST_CALLS"]).exists()
-
-
-def lifecycle_fixture(tmp_path: Path, body: str, ready: Path | None = None) -> tuple[Path, Path, Path]:
-    """Isolate only Muse admission; exercise the unmodified shared lease machinery."""
-    old_launcher, attempts, closed, _ = _core_driver_exit_fixture(
-        tmp_path,
-        provider_body=body,
-        forward_ready=ready,
-    )
-    root = old_launcher.parent
-    launcher = root / "start-muse-driver.sh"
-    shutil.copy2(REPO / launcher.name, launcher)
-    # Reuse the fixture's scope exports for this new entrypoint as well.
-    original_body = old_launcher.read_text()
-    scope_exports = original_body.split("set -euo pipefail", 1)[0].split("\n", 1)[1]
-    body_text = launcher.read_text()
-    launcher.write_text(body_text.replace("set -euo pipefail", scope_exports + "set -euo pipefail", 1))
-    adapter = root / "scripts/launchers/muse.sh"
-    adapter.write_text(
-        "launcher_adapter_validate() { :; }\n"
-        "launcher_adapter_preflight() { :; }\n"
-        'launcher_adapter_canary() { printf "canary\\n" >> "$MUSE_TEST_EVENTS"; }\n'
-        "launcher_adapter_exec() { launcher_exec_command muse; }\n"
-    )
-    python_stub = root / ".venv/bin/python"
-    text = python_stub.read_text()
-    text = text.replace("  cat <<'JSON'", '  printf "claim\\n" >> "$MUSE_TEST_EVENTS"\n  cat <<\'JSON\'', 1)
-    text = text.replace("  touch ", '  printf "close\\n" >> "$MUSE_TEST_EVENTS"\n  touch ', 1)
-    python_stub.write_text(text)
-    bindir = tmp_path / "bin"
-    bindir.mkdir()
-    muse = bindir / "muse"
-    muse.write_text('#!/bin/bash\nprintf "exec\\n" >> "$MUSE_TEST_EVENTS"\n' + body + "\n")
-    muse.chmod(0o755)
-    return launcher, attempts, closed
-
-
-@pytest.mark.parametrize("exit_code", [0, 7])
-def test_shared_lease_claim_exec_close_order(muse_env: dict[str, str], tmp_path: Path, exit_code: int) -> None:
-    fixture_dir = tmp_path / "lifecycle"
-    fixture_dir.mkdir()
-    launcher, attempts, closed = lifecycle_fixture(fixture_dir, f'env -0 > "$MUSE_TEST_ENV"; exit {exit_code}')
-    events = tmp_path / "events"
-    capture = tmp_path / "provider-env"
-    result = run_launcher(
-        ["bash", str(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events),
-             "MUSE_TEST_ENV": str(capture), "LAUNCHER_MODEL": "muse-wonder-full-1.0",
-             "LAUNCHER_EFFORT": "medium", "LAUNCHER_UNKNOWN": "sentinel"},
-        timeout=60,
-    )
-    assert result.returncode == exit_code, result.stdout + result.stderr
-    assert events.read_text().splitlines() == ["claim", "canary", "exec", "close"]
-    assert attempts.read_text().strip() == "1"
-    assert closed.is_file()
-
-    assert not [entry for entry in capture.read_bytes().split(b"\0") if entry.startswith(b"LAUNCHER_")]
-
-@pytest.mark.parametrize(("sig", "exit_code"), [(signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)])
-def test_shared_signal_closes_muse_lease(
-    muse_env: dict[str, str],
-    tmp_path: Path,
-    sig: signal.Signals,
-    exit_code: int,
-) -> None:
-    fixture_dir = tmp_path / "lifecycle"
-    fixture_dir.mkdir()
-    ready, child_ready, received = (tmp_path / name for name in ("parent-ready", "child-ready", "received"))
-    launcher, attempts, closed = lifecycle_fixture(
-        fixture_dir,
-        _blocking_signal_provider(received, child_ready),
-        ready,
-    )
-    events = tmp_path / "events"
-    group = start_launcher_group(
-        ["bash", str(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-    )
-    try:
-        group.wait_for_readiness([ready, child_ready], timeout=_LAUNCHER_READY_TIMEOUT_S)
-        group.signal_leader(sig)
-        result = group.finish(60)
-        assert result.returncode == exit_code, result.stdout + result.stderr
-        assert received.is_file() and closed.is_file()
-        assert attempts.read_text().strip() == "1"
-        assert events.read_text().splitlines() == ["claim", "canary", "exec", "close"]
-    finally:
-        group.reap()
-
-
-def test_occupied_lease_refuses_before_canary_and_exec(muse_env: dict[str, str], tmp_path: Path) -> None:
-    fixture_dir = tmp_path / "lifecycle"
-    fixture_dir.mkdir()
-    launcher, attempts, closed = lifecycle_fixture(fixture_dir, "exit 99")
-    python_stub = launcher.parent / ".venv/bin/python"
-    body = python_stub.read_text().replace(
-        '  printf "claim\\n" >> "$MUSE_TEST_EVENTS"',
-        '  printf "occupied\\n" >> "$MUSE_TEST_EVENTS"\n  echo "already has live session" >&2\n  exit 1',
-        1,
-    )
-    python_stub.write_text(body)
-    events = tmp_path / "events"
-    result = run_launcher(
-        ["bash", str(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        timeout=60,
-    )
-    assert result.returncode == 1
-    assert "already has live session" in result.stderr
-    assert events.read_text().splitlines() == ["occupied"]
-    assert not attempts.exists() and not closed.exists()
-
-
-def test_canary_failure_closes_claim_without_provider(muse_env: dict[str, str], tmp_path: Path) -> None:
-    fixture_dir = tmp_path / "lifecycle"
-    fixture_dir.mkdir()
-    launcher, attempts, closed = lifecycle_fixture(fixture_dir, "exit 99")
-    adapter = launcher.parent / "scripts/launchers/muse.sh"
-    adapter.write_text(
-        adapter.read_text().replace(
-            'printf "canary\\n" >> "$MUSE_TEST_EVENTS"; }',
-            'printf "canary\\n" >> "$MUSE_TEST_EVENTS"; return 2; }',
-        )
-    )
-    events = tmp_path / "events"
-    result = run_launcher(
-        ["bash", str(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        timeout=60,
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert events.read_text().splitlines() == ["claim", "canary", "close"]
-    assert closed.is_file() and attempts.read_text().strip() == "1"
-
-
-@pytest.mark.parametrize("lost", [False, True])
-def test_shared_renewal_precedes_close_and_stops_on_lease_loss(
-    muse_env: dict[str, str],
-    tmp_path: Path,
-    lost: bool,
-) -> None:
-    fixture_dir = tmp_path / "lifecycle"
-    fixture_dir.mkdir()
-    launcher, attempts, closed = lifecycle_fixture(
-        fixture_dir,
-        'trap "exit 0" TERM\nwhile ! grep -q "^renew$" "$MUSE_TEST_EVENTS"; do sleep 0.05; done\n'
-        + ("sleep 0.5\n" if lost else "")
-        + "exit 0",
-    )
-    python_stub = launcher.parent / ".venv/bin/python"
-    body = python_stub.read_text()
-    first, rest = body.split("\n", 1)
-    heartbeat = (
-        'if [[ "${1:-}" == "-m" && "${2:-}" == "scripts.session_supervisor" && "${3:-}" == heartbeat ]]; then\n'
-        '  printf "renew\\n" >> "$MUSE_TEST_EVENTS"\n'
-        + ('  echo "LEASE LOST" >&2; exit 4\n' if lost else "  exit 0\n")
-        + "fi\n"
-    )
-    python_stub.write_text(first + "\n" + heartbeat + rest)
-    events = tmp_path / "events"
-    result = run_launcher(
-        ["bash", str(launcher), "--epic", "devops"],
-        cwd=launcher.parent,
-        env={
-            **muse_env,
-            "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}",
-            "MUSE_TEST_EVENTS": str(events),
-            "SESSION_STREAM_RENEW_INTERVAL_SECONDS": "1",
-            "SESSION_STREAM_RENEW_JITTER_SECONDS": "0",
-        },
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert events.read_text().splitlines() == ["claim", "canary", "exec", "renew", "close"]
-    assert closed.is_file() and attempts.read_text().strip() == "1"
-    if lost:
-        assert "LEASE LOST" in result.stderr
-    capsules = list((launcher.parent / ".agent/session-capsules/epic-5703").glob("*.json"))
-    assert len(capsules) == 1
-    import json
-
-    capsule = json.loads(capsules[0].read_text())
-    assert capsule["agent"] == "muse" and capsule["harness"] == "muse-cli"
