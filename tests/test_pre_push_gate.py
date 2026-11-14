@@ -4508,12 +4508,19 @@ def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path)
     install_message_scanner(root)
     message = root / ".git/test-message"
 
-    def scan(text: str) -> subprocess.CompletedProcess[str]:
+    def scan(text: str, **extra: str) -> subprocess.CompletedProcess[str]:
         message.write_text(text, encoding="utf-8")
         return subprocess.run(
             [sys.executable, str(root / ".githooks/pre_push_gate.py"), "--commit-message", str(message)],
-            cwd=root, env=_env(), capture_output=True, text=True, timeout=60,
+            cwd=root, env={**_env(), **extra}, capture_output=True, text=True, timeout=60,
         )
+
+    # Defect class: the boundary broker variable alone skips the scan. Deferral needs the inside
+    # broker socket too, which cannot exist on the host.
+    assert not os.path.exists("/run/lu-write-boundary/broker.sock")
+    named_only = scan("safe subject\n\n" + TOKEN, LU_WRITE_BOUNDARY_BROKER="/run/lu-write-boundary/broker.sock")
+    assert named_only.returncode != 0
+    assert "rule=synthetic-rule" in named_only.stderr and "deferred" not in named_only.stderr
 
     for comment in ("#", "!"):
         _git(root, "config", "core.commentChar", comment)
