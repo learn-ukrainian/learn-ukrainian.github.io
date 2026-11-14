@@ -150,6 +150,19 @@ def _peek_state_summary(ctx: MonitorContext | None = None) -> tuple[dict, str, f
     return {}, "miss", None
 
 
+def _age_overview_meta(meta: dict) -> None:
+    """Age the source snapshot, never the cache insertion or this response."""
+    age_s = None
+    try:
+        generated = datetime.fromisoformat(meta["generated_at"].replace("Z", "+00:00"))
+        if generated.tzinfo is not None:
+            age_s = max(0.0, (datetime.now(UTC) - generated).total_seconds())
+    except (KeyError, TypeError, ValueError, AttributeError):
+        pass
+    meta["age_s"] = round(age_s, 3) if age_s is not None else None
+    meta["stale"] = bool(meta.get("stale") or age_s is None or age_s > DASHBOARD_OVERVIEW_TTL_S)
+
+
 def _empty_overview_totals() -> dict[str, int]:
     return {key: 0 for key in _OVERVIEW_TOTAL_KEYS}
 
@@ -340,14 +353,13 @@ def _build_overview_from_state_summary(
         "source": "fs:manifest+state-summary",
         "cache": cache_state,
         "stale_after_s": DASHBOARD_OVERVIEW_TTL_S,
-        "stale": cache_state != "hit",
+        "stale": cache_state != "hit" or track_scan != "hit",
         "track_scan": track_scan,
     }
-    if age_s is not None:
-        meta["age_s"] = round(age_s, 3)
+    _age_overview_meta(meta)
     if cache_state == "miss" and track_scan == "skipped":
         meta["error"] = "overview_warming"
-    payload = {
+    payload: dict[str, Any] = {
         "tracks": tracks,
         "totals": totals,
         "timestamp": datetime.now(UTC).isoformat(),
@@ -425,7 +437,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
             elif key in s:
                 totals[key] += s[key]
 
-    payload = {
+    payload: dict[str, Any] = {
         "tracks": tracks,
         "totals": totals,
         "timestamp": datetime.now(UTC).isoformat(),
@@ -440,6 +452,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
         },
     }
     _apply_overview_summary_overlay(payload, state_tracks)
+    _age_overview_meta(payload["meta"])
     return payload
 
 
@@ -503,7 +516,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
 
     cached = cache_get_with_age(_overview_cache_key(ctx), ttl=DASHBOARD_OVERVIEW_TTL_S)
     if cached is not None:
-        value, overview_age_s = cached
+        value, _overview_age_s = cached
         payload = copy.deepcopy(cast(dict[str, Any], value))
         payload["timestamp"] = datetime.now(UTC).isoformat()
         meta = dict(payload.get("meta") or {})
@@ -513,10 +526,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
         meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
         meta.pop("error", None)
         meta.pop("refreshing", None)
-        if cache_state == "hit" and age_s is not None:
-            meta["age_s"] = round(age_s, 3)
-        elif overview_age_s is not None:
-            meta["age_s"] = round(overview_age_s, 3)
+        _age_overview_meta(meta)
         _apply_overview_summary_overlay(payload, state_tracks)
         payload["meta"] = meta
         return payload
@@ -534,8 +544,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
         meta["stale_after_s"] = DASHBOARD_OVERVIEW_TTL_S
         meta.pop("error", None)
         meta.pop("refreshing", None)
-        if age_s is not None:
-            meta["age_s"] = round(age_s, 3)
+        _age_overview_meta(meta)
         _apply_overview_summary_overlay(payload, state_tracks)
         payload["meta"] = meta
         return payload

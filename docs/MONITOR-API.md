@@ -3502,6 +3502,18 @@ revision of this endpoint was removed per reviewer BLOCKER on
 
 ## UI Pages
 
+Home polls the overview every 30 seconds while visible, matching the curriculum
+page. Refreshes read local curriculum files and use no model tokens. The overview
+has one on-demand background refresher per app context; it does not run an
+independent periodic scan. With no readers, the saved snapshot can age until the
+next request starts a refresh.
+
+`meta.age_s` measures elapsed time since `meta.generated_at`, including after a
+process restart. Cache insertion age and the response timestamp do not reset it.
+An absent or invalid source time yields `age_s: null` and `stale: true`. A source
+older than `stale_after_s` is stale even on a cache hit. Home shows the source age
+and a visible **Stale** label, including while the first scan is warming.
+
 `GET /api/dashboard/overview` is cache-first (#6983 / #7024): the request path
 never walks the curriculum tree. `meta.cache` remains the state-summary
 cache signal; `meta.track_scan` is `hit` / `stale` / `skipped`. A cold
