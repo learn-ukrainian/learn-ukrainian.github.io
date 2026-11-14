@@ -9,7 +9,7 @@ Run repository commands from the repository root. Use canonical resource paths
 under `agents_extensions/shared/skills/`; provider-specific skill directories
 are deploy mirrors, not alternate sources.
 
-Use `scripts/orchestration/curriculum_readiness.py` as the only readiness
+Use `lu_machinery.orchestration.curriculum_readiness` as the only readiness
 engine. Prepare prerequisite evidence only. Produce no learner module bundle and
 never invoke `$curriculum-lifecycle`; that skill may call this one, and this one
 returns its typed result to the caller.
@@ -41,7 +41,7 @@ before mutation and require the same track, `profile_id`, `profile_version`, and
 
 Treat `--missing-only` as deterministic, read-only inventory only. Resolve the
 roster with `load_active_manifest()` and `load_manifest_track()` from
-`scripts.orchestration.curriculum_readiness`, evaluate the whole active track
+`lu_machinery.orchestration.curriculum_readiness`, evaluate the whole active track
 locally, and return readiness candidates in manifest order. Rows may contain
 failed requirements owned by `plan` or `preparation`, plus preparation reason
 codes such as identity drift or an active HOLD; preserve those owners and codes
@@ -59,7 +59,7 @@ finite homogeneous packet with `--limit`.
 Run the canonical evaluator separately for every target:
 
 ```bash
-.venv/bin/python scripts/orchestration/curriculum_readiness.py \
+.venv/bin/python -m lu_machinery.orchestration.curriculum_readiness \
   --track <track> --slug <slug> \
   [--consumed-preparation-identity <sha256>] \
   > <gitignored-preparation-result.json>

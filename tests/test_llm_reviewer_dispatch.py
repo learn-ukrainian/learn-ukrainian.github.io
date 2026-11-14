@@ -8,9 +8,11 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.ai_agent_bridge._opencode import OpencodeStreamParse  # the subject runs the installed release
+from lu_machinery.ai_agent_bridge._opencode import (
+    OpencodeStreamParse,  # the subject runs the installed release
+    _extract_tool_event,
+)
 
-from scripts.ai_agent_bridge._opencode import _extract_tool_event
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 
 pytestmark = pytest.mark.reads_content

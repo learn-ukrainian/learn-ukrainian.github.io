@@ -556,11 +556,11 @@ def test_ci_gate_guard_step_order_and_event_conditions() -> None:
     aggregation_idx = step_names.index("Require every job")
     assert guard_idx < aggregation_idx
 
-    # Checkout/setup run for every event so the parser can verify the actual candidate.
+    # Checkout, setup and the release install run for every event so the parser can verify the actual candidate.
     guard_steps = steps[:aggregation_idx]
-    assert len(guard_steps) == 3
+    assert len(guard_steps) == 4
 
-    for step in guard_steps[2:]:
+    for step in guard_steps[3:]:
         cond = step.get("if")
         assert cond is not None, f"Step {step.get('name')} missing condition"
         # Test against all defined events
@@ -572,7 +572,7 @@ def test_ci_gate_guard_step_order_and_event_conditions() -> None:
         assert _condition(cond, {"github": _EVENTS["workflow_dispatch"]}) is False
 
     # Check checkout step configuration and expression bindings
-    assert all("if" not in step for step in guard_steps[:2])
+    assert all("if" not in step for step in guard_steps[:3])
     checkout_step = steps[0]
     assert checkout_step.get("uses", "").startswith("actions/checkout@")
     assert checkout_step["with"]["fetch-depth"] == 0
@@ -597,7 +597,7 @@ def test_ci_gate_guard_step_order_and_event_conditions() -> None:
     assert _interpolate(ref_template, mg_ctx) == "mg_head_sha_def"
 
     # Evaluate guard base SHA binding
-    guard_step = steps[2]
+    guard_step = steps[3]
     base_template = guard_step["env"]["BASE_SHA"]
     assert _interpolate(base_template, pr_ctx) == "pr_base_sha_abc"
     assert _interpolate(base_template, mg_ctx) == "mg_base_sha_123"
@@ -643,7 +643,7 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
     step_names = [step.get("name") for step in steps]
     aggregation_idx = step_names.index("Require every job")
     guard_steps = steps[:aggregation_idx]
-    assert len(guard_steps) == 3
+    assert len(guard_steps) == 4
     for step in guard_steps:
         assert "continue-on-error" not in step or not step["continue-on-error"], (
             f"Step {step.get('name')!r} must not have continue-on-error"

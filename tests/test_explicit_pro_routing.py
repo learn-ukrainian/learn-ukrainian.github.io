@@ -7,7 +7,8 @@ explicitly asks for it. An explicit --model / model= value must always win.
 
 from unittest.mock import MagicMock, patch
 
-from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+from lu_machinery.ai_agent_bridge._acp_compat import resolve_compat_model
+
 from scripts.batch.batch_otaman import dispatch_otaman
 
 

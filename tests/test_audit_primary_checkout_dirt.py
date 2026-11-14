@@ -22,11 +22,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.agent_runtime.agy_hook_config import native_hook_command
 from lu_machinery.common.repo_root import machinery_path
 from lu_machinery.guardrails import primary_dirt_audit as audit
 from lu_machinery.hygiene import primary_dirt_cleanup as cleanup
-
-from scripts.agent_runtime.agy_hook_config import native_hook_command
 
 REPO = Path(__file__).resolve().parent.parent
 HOOKS = machinery_path("agents_extensions/shared/hooks")

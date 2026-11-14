@@ -421,10 +421,11 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     _resolve_primary_checkout must agree with resolve_main_root and, when set,
     point at a directory owning the shared ``.git`` store (a primary checkout,
     not a worktree gitdir)."""
-    from scripts.guardrails.worktree_containment import (
+    from lu_machinery.guardrails.worktree_containment import (
         NotAGitRepositoryError,
         resolve_main_root,
     )
+
     from scripts.lexicon import heritage_classifier
 
     resolved = heritage_classifier._resolve_primary_checkout()

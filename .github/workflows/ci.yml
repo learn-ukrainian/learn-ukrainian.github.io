@@ -358,7 +358,10 @@ jobs:
           path: .mypy_cache
           key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Mypy ratchet
-        run: .venv/bin/python -m scripts.lint.mypy_ratchet
+        env:
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: .venv/bin/python -m lu_machinery.lint.mypy_ratchet
       - name: Save mypy cache
         if: github.ref == 'refs/heads/main' && steps.mypy-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -366,7 +369,10 @@ jobs:
           path: .mypy_cache
           key: mypy-scripts-v1-${{ runner.os }}-${{ hashFiles('.python-version', 'requirements-lock.txt', 'requirements-machinery.lock', 'pyproject.toml') }}
       - name: Package boundary ratchet
-        run: .venv/bin/python -m scripts.lint.boundary_ratchet
+        env:
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: .venv/bin/python -m lu_machinery.lint.boundary_ratchet
       - name: Collect pytest for PR admission
         if: github.event_name == 'pull_request'
         # Report per-file counts instead of potentially oversized parameter IDs.
@@ -796,9 +802,11 @@ jobs:
       - name: Run changed test files and guards
         env:
           EVENT_NAME: ${{ github.event_name }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           if [ "$EVENT_NAME" = pull_request ]; then
-            .venv/bin/python -m scripts.ci.pr_affected_tests
+            .venv/bin/python -m lu_machinery.ci.pr_affected_tests
           else
             echo 'Full tier: full pytest jobs remain required.'
           fi
@@ -806,7 +814,9 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         env:
           EVENT_NAME: ${{ github.event_name }}
-        run: .venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: .venv/bin/python -m lu_machinery.ci.pr_affected_tests --repo-wide
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ always() && github.event_name == 'pull_request' }}
         with:
@@ -893,6 +903,7 @@ jobs:
           fetch-depth: 0
           sparse-checkout: |
             scripts/
+            requirements-machinery.lock
             .python-version
           sparse-checkout-cone-mode: false
       - name: Set up Python
@@ -900,6 +911,21 @@ jobs:
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        env:
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Check large files guard
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         env:
@@ -907,6 +933,8 @@ jobs:
           BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           if [ "$EVENT_NAME" = "merge_group" ] && [ -z "$HEAD_SHA" ]; then
             echo "::error::Missing merge_group head_sha"
@@ -916,13 +944,15 @@ jobs:
             echo "::error::Missing base SHA for large file guard in $EVENT_NAME"
             exit 1
           fi
-          "$PYTHON_BIN" scripts/ci/check_large_files.py --changed-vs-base "$BASE_SHA"
+          "$PYTHON_BIN" -m lu_machinery.ci.check_large_files --changed-vs-base "$BASE_SHA"
       - name: Require every job
         env:
           EVENT_NAME: ${{ github.event_name }}
           NEEDS_JSON: ${{ toJSON(needs) }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
-        run: '"$PYTHON_BIN" -m scripts.ci.gate'
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: '"$PYTHON_BIN" -m lu_machinery.ci.gate'
       # Attribution retains the repository's existing enforcement mode.
       - name: Check agent attribution
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -933,6 +963,8 @@ jobs:
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
           GITHUB_TOKEN: ${{ github.token }}
           ATTRIBUTION_ENFORCE: ${{ vars.ATTRIBUTION_ENFORCE }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           set -euo pipefail
           if [ -z "$BASE_SHA" ] || [ -z "$HEAD_SHA" ]; then
@@ -944,7 +976,7 @@ jobs:
             markdown-it-py==4.2.0 mdurl==0.1.2
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
-          "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
+          "$PYTHON_BIN" -m lu_machinery.ci.check_agent_attribution "$mode" "$BASE_SHA" "$HEAD_SHA"
       # TWIN-FREEZE-1113 (dec-018): a PR changing a machinery-classified path lands only after
       # its twin landed in learn-ukrainian/machinery. Enforced on merge_group, where every
       # member's body is read as it stands now; on pull_request it only warns, because ci.yml
@@ -963,6 +995,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'
       # No PR lands without a current cross-family review, whatever command enqueued it.
       # Every PR in the candidate (earlier entries included, not just the ref's PR) needs
@@ -973,4 +1007,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
-        run: '"$PYTHON_BIN" -m scripts.ci.queue_review_gate'
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: '"$PYTHON_BIN" -m lu_machinery.ci.queue_review_gate'

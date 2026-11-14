@@ -1684,8 +1684,9 @@ def _rendered(world: World, made: dict[str, Any], access: str = "isolated") -> s
 
 def test_placeholder_attestation_keeps_recorded_core_but_rejects_tampering(world, monkeypatch, tmp_path):
     """Defect class: rules churn invalidates a paid return, or an archived prefix bypasses proof checks."""
+    from lu_machinery.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
+
     from scripts.review.prompts.render import REPO_ROOT, render_prompt
-    from scripts.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
 
     core = tmp_path / "rules" / "core.md"
     core.parent.mkdir()

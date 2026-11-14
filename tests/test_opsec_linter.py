@@ -299,13 +299,13 @@ def test_direct_script_publication_mode_needs_no_site_packages(tmp_path):
                             capture_output=True, text=True, timeout=30)
     assert result.returncode == 1
     assert result.stderr == "OPSEC publication: required input unavailable or invalid: event parse (ValueError)\n"
-    # Exercise the live-metadata import closure too, without network or site packages.
+    # Exercise the live-metadata import closure too, without network; it imports the installed release.
     code = """
 import runpy, sys
 from types import SimpleNamespace
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]).parents[2]))
-from scripts.common import github_client
+from lu_machinery.common import github_client
 github_client.run = lambda *a, **kw: SimpleNamespace(returncode=0, stdout='{}')
 module = runpy.run_path(sys.argv[1])
 try:
@@ -314,7 +314,7 @@ except ValueError:
     raise SystemExit(0)
 raise SystemExit(1)
 """
-    result = subprocess.run([sys.executable, "-S", "-c", code, str(script)],
+    result = subprocess.run([sys.executable, "-c", code, str(script)],
                             capture_output=True, text=True, timeout=30)
     assert result.returncode == 0
     assert result.stderr == ""
@@ -591,7 +591,7 @@ def test_live_metadata_failure_keeps_cause_but_redacts_secrets(publication, monk
     """A failed GitHub fetch must explain its cause without exposing credentials."""
     from types import SimpleNamespace
 
-    from scripts.common import github_client
+    from lu_machinery.common import github_client
 
     run, payload, _live, _git = publication
     monkeypatch.setattr(opsec_linter, "current_publication_pr", current_publication_pr)

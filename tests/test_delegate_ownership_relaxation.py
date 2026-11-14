@@ -18,9 +18,8 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.guardrails import delegate_ownership as ownership
-from scripts.guardrails.delegate_ownership import (
+from lu_machinery.guardrails import delegate_ownership as ownership
+from lu_machinery.guardrails.delegate_ownership import (
     AdmissionOutcome,
     ClaimKind,
     GuardMode,
@@ -631,7 +630,7 @@ def test_requeue_publish_failure_does_not_drop_waiter(
     env, tmp_path, monkeypatch, capsys, initiator, warning_io_failure,
 ):
     """AC-02: transient and permanent Fleet failures cannot refuse a queued writer."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     ledger, state_dir = env
     _hold(ledger, state_dir, "holder", ["a.py"])
@@ -728,7 +727,7 @@ def test_queue_budget_ignores_disjoint_holder_and_waits_for_all_blockers(env):
 
 def test_requeue_notice_uses_durable_initiator_delivery_once(tmp_path, monkeypatch):
     """AC-02: duplicate publication cannot create two Fleet messages or deliveries."""
-    from scripts.fleet_comms.authority import AuthorityService
+    from lu_machinery.fleet_comms.authority import AuthorityService
 
     root = tmp_path / "fleet"
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))

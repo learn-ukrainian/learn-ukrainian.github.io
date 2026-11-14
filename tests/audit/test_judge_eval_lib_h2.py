@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
 from scripts.audit import _judge_eval_lib
 from scripts.audit._judge_eval_lib import (
@@ -14,7 +15,6 @@ from scripts.audit._judge_eval_lib import (
     build_judge_prompt_h2,
     retrieve_evidence,
 )
-from scripts.guardrails.worktree_containment import resolve_main_root
 
 UA_GEC_ROOT = resolve_main_root(Path(__file__).resolve().parents[2]) / "data" / "ua-gec"
 

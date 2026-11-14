@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 import scripts.audit.generate_practice_deck as generate_practice_deck
 from scripts.audit.generate_practice_deck import (
@@ -65,7 +66,6 @@ from scripts.audit.generate_practice_deck import (
     verified_source_passages,
     write_shards,
 )
-from scripts.lib.readonly_sqlite import open_readonly
 
 pytestmark = pytest.mark.reads_content
 

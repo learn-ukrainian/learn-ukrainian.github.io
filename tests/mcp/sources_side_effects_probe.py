@@ -431,7 +431,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.hermetic:
         sys.path.insert(0, str(PROJECT_ROOT))
-        from scripts.storage.topology import ENV_VESUM_DB
+        from lu_machinery.storage.topology import ENV_VESUM_DB
 
         _sources_db, vesum_db = fixture.build(scratch)
         # The store's own override, honoured by every resolver of the active sources DB.

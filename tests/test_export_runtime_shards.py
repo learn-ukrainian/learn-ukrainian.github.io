@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import ClassVar
 
 import pytest
+from lu_machinery.guardrails.worktree_containment import resolve_main_root
 
 from scripts.atlas import export_runtime_shards as exporter
 from scripts.atlas.export_runtime_shards import (
@@ -48,7 +49,6 @@ from scripts.atlas.export_runtime_shards import (
     verify_tree,
 )
 from scripts.atlas.normalization import load_normalization_vectors, normalize_atlas_text
-from scripts.guardrails.worktree_containment import resolve_main_root
 
 ROOT = Path(__file__).resolve().parents[1]
 REAL_DB_PATH = resolve_main_root(ROOT) / "data" / "atlas.db"

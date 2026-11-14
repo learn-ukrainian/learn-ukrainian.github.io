@@ -274,7 +274,7 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
 
 
 def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() -> None:
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+    from lu_machinery.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
     for pin in qg_bakeoff.DEEPSEEK_DIRECT_PINS:
         route = qg_bakeoff.bakeoff_route_for_model(pin)
@@ -290,7 +290,7 @@ def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() 
     # user order 2026-07-07: OpenRouter deepseek pins are guard-REFUSED by
     # default (historical baselines; transport-comparison runs use the
     # override env — billing-safe under the user's OR BYOK).
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+    from lu_machinery.ai_agent_bridge.routing_guard import RoutingGuardError
 
     for pin in qg_bakeoff.DEEPSEEK_OPENROUTER_PINS:
         with pytest.raises(RoutingGuardError):
@@ -2219,7 +2219,7 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
     """#4642: bakeoff cells must not persist reviewer markdown under curriculum/."""
     from unittest.mock import patch
 
-    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+    from lu_machinery.ai_agent_bridge._opencode import OpencodeStreamParse
 
     repo = tmp_path / "repo"
     (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
@@ -2241,7 +2241,7 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
     with (
         patch(f"{_DISPATCH}._assert_sources_mcp_available"),
         patch(
-            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            "lu_machinery.ai_agent_bridge._opencode._invoke_opencode_detailed",
             return_value=parse,
         ),
     ):
