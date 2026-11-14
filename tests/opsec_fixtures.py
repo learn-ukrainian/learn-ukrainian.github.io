@@ -189,6 +189,12 @@ def gh_shim_sandbox(tmp_path):
     scripts = root / machinery_package()
     scripts.mkdir()
     copy_publisher_scripts(ROOT / machinery_package(), scripts)
+    # The product's scripts/publish/__main__.py runs the installed release (#13017). This fake checkout
+    # exercises the retained in-tree publisher until its retirement slice, so it carries that copy's entry.
+    (scripts / "publish/__main__.py").write_text(
+        f"from {machinery_package()}.publish.github import main\n\n"
+        'if __name__ == "__main__":\n    raise SystemExit(main())\n'
+    )
     # The advisory classifier reads workflow policy as well as importing code.
     workflow = root / ".github/workflows/ci.yml"
     workflow.parent.mkdir(parents=True)
