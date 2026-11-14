@@ -95,6 +95,26 @@ def install_claude_doctor_stub(bin_dir, monkeypatch):
 
 
 SOURCE = Path(__file__).resolve().parents[2]
+# The in-tree dispatcher's entry: a linked worktree re-executes its primary's copy before any dispatcher module loads.
+IN_TREE_ENTRY = """import sys
+from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.dispatcher.primary import exec_primary
+
+
+def main() -> int:
+    from scripts.dispatcher.cli import main as cli_main
+
+    return cli_main()
+
+
+if __name__ == "__main__":
+    exec_primary(sys.argv[1:])
+    raise SystemExit(main())
+"""
 # Model strings the sandbox stub provider (stub_provider.py) or a sandbox test dispatches with.
 STUB_MODELS = (
     "blocked", "cancel", "capacity", "capacity-dirty", "crash", "dirty", "echo", "empty", "error", "escape", "fail",
@@ -130,7 +150,9 @@ def sandbox(tmp_path, hermetic_monitor):
     audit = repo / "scripts/audit"
     audit.mkdir(parents=True)
     shutil.copy(SOURCE / "scripts/audit/lint_opsec_leaks.py", audit / "lint_opsec_leaks.py")
-    shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
+    # The product's scripts/dispatch.py runs the installed release (#13017). The sandbox exercises
+    # the retained in-tree copy until cutover slice 3 deletes it, so it carries that copy's entry.
+    (repo / "scripts/dispatch.py").write_text(IN_TREE_ENTRY)
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
     (repo / "scripts/fleet/__init__.py").touch()

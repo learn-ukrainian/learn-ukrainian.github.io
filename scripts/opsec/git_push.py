@@ -99,6 +99,12 @@ def _is_local(url: str) -> bool:
     return colon < 0 or 0 <= slash < colon
 
 
+# Inside a dispatched write worker's boundary (#443), ``git push`` to GitHub is rewritten to this remote-helper URL,
+# whose only transport is the launcher's host broker (lu_machinery.dispatcher.write_boundary, GIT_HELPER). The broker's
+# push verb runs the installed scanner on the exact update on the host, where the public history can be read; the
+# client here cannot read it, so its scan defers to the broker for that URL only.
+BROKER_HELPER_URL = "lu-write-boundary::"
+BROKER_ENV = "LU_WRITE_BOUNDARY_BROKER"
 HOSTED_URL = re.compile(r"(?:https?|ssh|git|git\+ssh|ssh\+git)://(?:[^@/]+@)?([^/:@]+)(?::\d*)?/(.+)", re.I)
 SCP_URL = re.compile(r"(?:[^@/]+@)?([^/:@]+):([^:].*)")
 
@@ -632,6 +638,14 @@ def scan_push(arguments: list[str], data: bytes, environment: dict[str, str], *,
     if len(arguments) != 2:
         raise gate.PublishBlocked("OPSEC: pre-push hook arguments malformed; push refused.")
     remote, url = arguments
+    if url.startswith(BROKER_HELPER_URL) and environment.get(BROKER_ENV):
+        # Only the broker can send this push; it scans this exact update on the host before it sends anything.
+        print(
+            "OPSEC: push scan deferred: this push goes to the write boundary broker, which scans the exact update "
+            "on the host before it sends anything.",
+            file=sys.stderr,
+        )
+        return
     if "GIT_SHALLOW_FILE" in environment:
         # git walks the file this names, while git rev-parse --git-path still names the repository's own.
         raise gate.PublishBlocked("OPSEC: GIT_SHALLOW_FILE is not supported for a scanned push; push refused.")
