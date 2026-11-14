@@ -52,10 +52,11 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.storage import generations, topology
+
 from scripts.lexicon import reconcile_sum20
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage import generations, topology
 from scripts.wiki import sum20_mirror
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 

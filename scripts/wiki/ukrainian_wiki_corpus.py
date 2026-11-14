@@ -20,14 +20,15 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
+from lu_machinery.storage.artifacts import write_artifact
+from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
+
 from scripts.audit.checks.cross_file_integrity import extract_ukrainian_words
 from scripts.audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
-from scripts.common.repo_root import main_checkout_root
-from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
 from scripts.rag.rag_batch_verify import vesum_batch_lookup
 from scripts.rag.source_query import pravopys_lookup
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 from scripts.wiki.config import PROJECT_ROOT
 from scripts.wiki.embedding_manifest import DEFAULT_MANIFEST_DB, EmbeddingManifest, reserve_corpus_shard
 from scripts.wiki.quality_gate import _check_citation_registry
