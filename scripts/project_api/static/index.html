@@ -29,6 +29,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 .card .card-stat { color:var(--text3); font-size:12px; margin-top:12px; }
 .card.curriculum { border-left-color:var(--cyan); }
 .card.artifacts { border-left-color:var(--accent); }
+.freshness[data-stale="true"] { color:var(--accent); font-weight:600; }
 .freshness { color:var(--text3); font-size:12px; margin:-14px 0 24px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 @media (max-width: 820px) {
   .hero { grid-template-columns:1fr; }
@@ -104,7 +105,10 @@ function freshnessLine(meta) {
     ? when.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
     : null;
   const lead = clock ? `Updated ${clock}` : 'Updated at an unknown time';
-  return meta && meta.stale ? `${lead} · saved earlier` : lead;
+  const age = meta && Number.isFinite(meta.age_s) ? Math.floor(meta.age_s) : null;
+  const stale = age == null || meta.stale || age > meta.stale_after_s;
+  const ageLabel = age == null ? 'age unknown' : `${age}s old`;
+  return `${stale ? 'Stale · ' : ''}${lead} · ${ageLabel}`;
 }
 
 function stat(value, label, color) {
@@ -143,17 +147,24 @@ async function loadStats() {
     ].join('');
     document.getElementById('curriculum-stat').textContent = `${tracks.length} tracks · ${t.published} published modules`;
     freshness.textContent = freshnessLine(meta);
+    freshness.dataset.stale = String(freshness.textContent.startsWith('Stale · '));
   } catch (e) {
     row.innerHTML = [
       stat(null, 'Tracks', '--text3'),
       stat(null, 'Modules', '--text3'),
       stat(null, 'Published', '--text3'),
     ].join('');
-    freshness.textContent = `Curriculum totals unavailable: ${e.message}`;
+    freshness.dataset.stale = 'true';
+    freshness.textContent = `Stale · Curriculum totals unavailable: ${e.message}`;
   }
 }
 
-loadStats();
+// Match the curriculum dashboard cadence. One request at a time, no model calls.
+async function refreshStats() {
+  if (!document.hidden) await loadStats();
+  setTimeout(refreshStats, 30000);
+}
+refreshStats();
 </script>
 </body>
 </html>
