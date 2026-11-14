@@ -14,6 +14,7 @@ Validates:
 """
 
 import asyncio
+import importlib.metadata
 import json
 import os
 import subprocess
@@ -40,6 +41,7 @@ class TestHealthEndpoint:
         data = client.get("/api/health").json()
         assert data["status"] == "ok"
         assert "version" in data
+        assert data["machinery_version"] == importlib.metadata.version("lu-machinery")
         assert "uptime_seconds" in data
         assert isinstance(data["uptime_seconds"], int)
         assert "instance" in data
