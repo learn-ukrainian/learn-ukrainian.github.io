@@ -5,7 +5,10 @@ description: Prepare missing or stale prerequisite evidence for a module, missin
 
 # Curriculum preparation
 
-Run repository commands from the repository root. Use canonical resource paths
+Run repository commands from the repository root. The installed
+`lu_machinery` release does not take its product checkout from the working
+directory, so bind it on every invocation (`LU_PRODUCT_ROOT="$PWD"`, as the
+commands below do), including in-process use of its modules. Use canonical resource paths
 under `agents_extensions/shared/skills/`; provider-specific skill directories
 are deploy mirrors, not alternate sources.
 
@@ -59,7 +62,7 @@ finite homogeneous packet with `--limit`.
 Run the canonical evaluator separately for every target:
 
 ```bash
-.venv/bin/python -m lu_machinery.orchestration.curriculum_readiness \
+LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_readiness \
   --track <track> --slug <slug> \
   [--consumed-preparation-identity <sha256>] \
   > <gitignored-preparation-result.json>
