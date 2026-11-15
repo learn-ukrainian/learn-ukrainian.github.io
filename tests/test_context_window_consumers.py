@@ -419,6 +419,17 @@ def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp
     transcript.write_text("\n".join(map(json.dumps, lines)) + "\n", encoding="utf-8")
     assert latest_tokens(transcript) == 306_000
 
+    # A zero from the latest real turn is live usage, never replaced by an older turn.
+    zero_cases = {
+        "real-zero": {"input_tokens": 0},
+        "final-iteration-zero": {**real, "iterations": [{"type": "message", **real}, {"type": "message"}]},
+    }
+    for name, latest in zero_cases.items():
+        probe = tmp_path / f"{name}.jsonl"
+        entries = [lines[0], {"type": "assistant", "message": {"model": "claude-opus-5-5", "usage": latest}}]
+        probe.write_text("\n".join(map(json.dumps, entries)) + "\n", encoding="utf-8")
+        assert latest_tokens(probe) == 0, name
+
     completed = subprocess.run(
         [os.fspath(CONTEXT_MONITOR)],
         input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),

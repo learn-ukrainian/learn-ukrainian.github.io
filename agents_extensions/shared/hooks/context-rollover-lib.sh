@@ -53,7 +53,7 @@ context_latest_usage_tokens() {
   tail -200 "$transcript" 2>/dev/null | jq -rs "$program"'
     [.[] | select(type == "object" and .type == "assistant" and (.message | type) == "object")
          | select(.message.model != "<synthetic>" and (.message.usage | type) == "object")
-         | .message.usage | context_tokens | select(. > 0)]
+         | .message.usage | context_tokens]
     | last // 0
   ' 2>/dev/null || printf '0\n'
 }
