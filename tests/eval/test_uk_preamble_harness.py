@@ -66,7 +66,8 @@ class FakeDispatcher:
         self.core = "[rules core]\n\n"
 
     def _composed(self, prompt: str) -> str:
-        sparse = "" if "curriculum/" in prompt else "Sparse-checkout is active: curriculum.\n"
+        # Keyed on the preamble's own path: the rules core rendered into every prompt names other curriculum/ paths.
+        sparse = "" if "curriculum/a1" in prompt else "Sparse-checkout is active: curriculum.\n"
         return f"{self.core}[delegate worktree] {self.cwd}\n{sparse}\n{prompt}"
 
     def compose(self, prompt: str) -> dict[str, Any]:

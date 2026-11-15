@@ -752,7 +752,7 @@
     },
     {
       "path": "scripts/eval/uk_preamble/__main__.py",
-      "sha256": "add3c749ebc224994644df32f390cd127ee5c6dd49a1099dd2e4644b2f25a701"
+      "sha256": "a826da38c0e8d25e2d68330fb5b64176865877f59f338ea271981ff3d0158faa"
     },
     {
       "path": "scripts/eval/uk_preamble/common.py",
@@ -768,7 +768,7 @@
     },
     {
       "path": "scripts/eval/uk_preamble/dispatch.py",
-      "sha256": "7d1f5012b784f2a39915f48d483aed231c22d96f16d0ca933c875060ccc9ddd7"
+      "sha256": "ead12a6cb9ca4deaaa876281bf71943643c0041bcb277dda322077d6464e721e"
     },
     {
       "path": "scripts/eval/uk_preamble/prompts.py",
@@ -780,7 +780,7 @@
     },
     {
       "path": "scripts/eval/uk_preamble/runner.py",
-      "sha256": "33efef2f1e78311ce6214fee345883e7c830638d39200e9e2ddb19b0bc1c9f58"
+      "sha256": "0452cef40d2b7a3302a39d11567aaeb3ab1f278e45964ce97f1b49e42b08a7e1"
     },
     {
       "path": "scripts/eval/uk_preamble/scoring.py",

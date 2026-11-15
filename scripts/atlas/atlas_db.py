@@ -38,9 +38,9 @@ from scripts.atlas.word_card_certification import (
     certified_inventory,
     guard_card_inventory,
 )
-from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
+REGISTRY_ROOT = ROOT / "registry"
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_DB = ROOT / "data" / "atlas.db"
 DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"

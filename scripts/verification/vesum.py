@@ -26,13 +26,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
-
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
 from lu_machinery.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 from scripts.rag import config as _rag_config

@@ -8,8 +8,8 @@ import os
 import sqlite3
 from pathlib import Path
 
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
-from scripts.storage.topology import store_data_dir
+from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from lu_machinery.storage.topology import store_data_dir
 
 RAW_TABLE = "ulif_dictua_raw_responses"
 RAW_SCHEMA = """

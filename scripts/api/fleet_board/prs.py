@@ -19,9 +19,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.common.github_client import GitHubClient
-from scripts.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, lookup_verdict, parse_marker
-from scripts.orchestration.merge_queue_keeper import (
+from lu_machinery.common.github_client import GitHubClient
+from lu_machinery.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, lookup_verdict, parse_marker
+from lu_machinery.orchestration.merge_queue_keeper import (
     KeeperError,
     _check_state,
     _hold,

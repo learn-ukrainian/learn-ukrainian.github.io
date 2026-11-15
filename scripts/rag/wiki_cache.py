@@ -24,7 +24,7 @@ import time
 from contextlib import closing
 from pathlib import Path
 
-from scripts.lib.readonly_sqlite import open_readonly
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 # Default cache location (relative to project root)
 _DEFAULT_DB = Path(__file__).resolve().parent.parent.parent / "data" / "wiki_cache.db"

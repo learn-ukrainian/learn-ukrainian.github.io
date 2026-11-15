@@ -29,6 +29,9 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+from lu_machinery.storage.paths import artifact_path
+
 from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup
 from scripts.lexicon.relation_pairs import (
     RELATION_TYPES,
@@ -36,8 +39,6 @@ from scripts.lexicon.relation_pairs import (
     is_exact_vesum_lemma,
     normalize_relation_word,
 )
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
-from scripts.storage.paths import artifact_path
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_CANDIDATES_DIR = ROOT / "data" / "lexicon"

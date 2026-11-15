@@ -15,8 +15,9 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+from lu_machinery.common.safe_unit_install import InstallError, install_unit, load_unit
 
-from scripts.common.safe_unit_install import InstallError, install_unit, load_unit
+import scripts  # noqa: F401  (binds the product roots for the installed release)
 
 
 def _mp(relative: str) -> str:
@@ -66,7 +67,7 @@ def main() -> int:
         "--destination",
         type=Path,
         default=DEFAULT_DESTINATION,
-        help="Systemd user-unit directory (default: /etc/systemd/user; example: /tmp/user-units).",
+        help="Systemd user-unit directory (default: /etc/systemd/user; example: $TMPDIR/user-units).",
     )
     args = parser.parse_args()
 

@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from scripts.api.occupancy_sanitize import producer_identity
+from lu_machinery.api.occupancy_sanitize import producer_identity
 
 from .activity import (
     derive_state,

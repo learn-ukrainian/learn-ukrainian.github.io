@@ -199,8 +199,11 @@ def test_lexical_render_admission_rejects_tampering(tmp_path, monkeypatch):
     from functools import partial
     from pathlib import Path
 
-    from scripts.agent_runtime import attempt_boundary, review_mcp
-    from scripts.dispatcher import review_attempt
+    # The product renderer embeds the installed release's trusted core, which the release
+    # dispatcher admits (the dispatch entry runs the release since the cutover).
+    from lu_machinery.agent_runtime import attempt_boundary, review_mcp
+    from lu_machinery.dispatcher import cli, review_attempt, store
+
     from scripts.review.prompts.render import render_prompt
     from tests.review.test_prompts import _setup_lexical_fixture
 

@@ -15,10 +15,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from scripts.agent_runtime.attribution import resolve_invocation_attribution
-from scripts.common.repo_root import main_checkout_root
-from scripts.dispatcher import providers
-from scripts.dispatcher.cli import build_parser
+from lu_machinery.agent_runtime.attribution import resolve_invocation_attribution
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.dispatcher import providers
+from lu_machinery.dispatcher.cli import build_parser
 
 from .common import Seat, sha256_bytes, sha256_text
 

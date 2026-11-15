@@ -16,12 +16,7 @@ from pathlib import Path
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 from scripts.verification.antonenko_citations import EVIDENCE_FORMS
 from scripts.verification.antonenko_patterns import PATTERNS, SOURCE_FILE, PhrasePattern

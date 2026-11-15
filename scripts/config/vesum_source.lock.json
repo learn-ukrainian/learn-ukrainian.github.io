@@ -15,7 +15,7 @@
     "marker_policy_version": "v1",
     "parser_module": {
       "path": "scripts/rag/vesum_reingest.py",
-      "sha256": "999754dcdea358ecd17e7c05d68076cacd044768d967f1f8e077af3595941be5"
+      "sha256": "5df55b88a1ed234434a282172ef285a7b5cf0eb6bfbb9e6ee2f85469df257c76"
     },
     "operator_entrypoint": {
       "path": "scripts/rag/build_vesum_shadow.py",

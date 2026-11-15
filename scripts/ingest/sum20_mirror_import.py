@@ -52,10 +52,11 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.repo_root import main_checkout_root
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from lu_machinery.storage import generations, topology
+
 from scripts.lexicon import reconcile_sum20
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage import generations, topology
 from scripts.wiki import sum20_mirror
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
@@ -116,16 +117,19 @@ class Target:
 def writer_target(repository_root: Path | None = None, *, test_data_dir: Path | None = None) -> Target:
     """The primary checkout's ``data/``, or an explicit test directory.
 
-    Like the lexdata writer it refuses a linked worktree, a symlinked ``data/``
-    and a network or unknown filesystem. The store is always the canonical
-    selector of that directory, never an environment override.
+    Like the lexdata writer it refuses a linked worktree (the given root, or
+    without one the product root and the checkout the process runs in), a
+    symlinked ``data/`` and a network or unknown filesystem. The store is always
+    the canonical selector of that directory, never an environment override.
     """
     if test_data_dir is not None:
         data_dir, root = test_data_dir, test_data_dir.parent
     else:
+        from scripts.lexdata.build_store import runs_in_linked_worktree
+
         root = topology.default_repository_root(repository_root).resolve()
         primary = main_checkout_root(root).resolve()
-        if root != primary:
+        if root != primary or (repository_root is None and runs_in_linked_worktree()):
             raise Refused("linked_worktree")
         data_dir = primary / "data"
     if data_dir.is_symlink():

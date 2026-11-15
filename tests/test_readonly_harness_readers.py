@@ -30,13 +30,11 @@ READERS = (
     "scripts/fleet_comms/legacy_broker_report.py",
     "scripts/orchestration/slot_routing.py",
     "scripts/orchestration/task_family/codex_state.py",
-    "scripts/review/integration_check.py",
     "scripts/review/seeds/score.py",
-    "scripts/verification/bench_check_text.py",
-    "scripts/verification/check_text.py",
-    "scripts/verification/verify_antonenko_citations.py",
-    "scripts/verification/vesum.py",
 )
+# Product readers (scripts/review/integration_check.py and scripts/verification/{bench_check_text,
+# check_text,verify_antonenko_citations,vesum}.py) import the installed lu_machinery release
+# directly (#13030): it is importable in every flavor, so they hold no fallback block to check.
 
 
 @pytest.mark.parametrize("reader", READERS)

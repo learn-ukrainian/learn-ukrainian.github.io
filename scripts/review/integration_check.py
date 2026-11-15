@@ -49,16 +49,10 @@ from jsonschema import Draft202012Validator
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-try:
-    from scripts.lib.readonly_sqlite import open_readonly
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
-
 from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
 from lu_machinery.common.repo_root import main_checkout_root, project_interpreter, resolve_repo_root
 from lu_machinery.common.task_store_paths import tasks_dir
+from lu_machinery.lib.readonly_sqlite import open_readonly
 from lu_machinery.review import findings_db, second_seat
 
 from scripts.build.fresh import assemble, plan_manifest, runner

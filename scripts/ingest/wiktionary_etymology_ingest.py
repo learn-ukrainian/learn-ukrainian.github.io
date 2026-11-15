@@ -22,10 +22,11 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 try:
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    import scripts  # binds the product roots for the installed release
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = None  # Selected by the connection owner at call time.
@@ -136,8 +137,8 @@ _LANG_LABELS = {
 
 
 
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreRefusal,
     _prepare_store_write_target,
