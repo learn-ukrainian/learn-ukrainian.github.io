@@ -54,7 +54,7 @@ IFS=$'\t' read -r TOKENS USAGE_SOURCE < <(context_live_usage "$RECORD_FILE" "$SE
 case "$TOKENS" in ''|*[!0-9]*) TOKENS=0 ;; esac
 if [ "$TOKENS" -le 0 ]; then
   # Unknown usage never sets a tier or asks for a handoff.
-  jq -n '{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"Context usage is unknown right now (no current status-line figure and no model usage in the transcript since its last compaction); no rollover tier applies."}}'
+  jq -n '{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"Context usage is unknown right now (no fresh status-line figure and no model usage in the transcript); no rollover tier applies."}}'
   exit 0
 fi
 

@@ -138,7 +138,7 @@ fi
 # The harness's own live figure, before any compatibility fallback below; it is
 # what the context hooks read back from the session record. No usable figure
 # (none yet, none since /compact, or malformed) is recorded as 0, so it
-# supersedes an older figure.
+# replaces the cached figure instead of leaving it to stand in.
 live_used="${ctx_used:-0}"
 [[ "$live_used" =~ ^[0-9]+$ ]] || live_used=0
 
@@ -190,8 +190,9 @@ if [ -n "$session_id" ] && [ -n "$PYTHON_BIN" ] && [ -x "$PYTHON_BIN" ] && [ -f 
     update_args+=(--transcript-path "$transcript_path" --transcript-path-provenance statusline.transcript_path)
     update_needed=1
   fi
-  # Live usage is re-recorded when it changes, and at most once a minute when it
-  # does not, so the hooks' freshness check (context-rollover-lib.sh) holds.
+  # Live usage is recorded at once when it changes and at least once a minute when
+  # it does not, so the record holds this run's figure stamped at most 60 seconds
+  # ago; context_live_usage (context-rollover-lib.sh) explains why that suffices.
   printf -v now_epoch '%(%s)T' -1
   case "$stored_used_at" in ''|*[!0-9]*) stored_used_at=0 ;; esac
   if [ "$live_used" != "$stored_used" ] || [ $((now_epoch - stored_used_at)) -ge 60 ]; then

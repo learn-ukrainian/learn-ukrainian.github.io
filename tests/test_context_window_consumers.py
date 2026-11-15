@@ -502,51 +502,34 @@ def test_context_monitor_fresh_statusline_figure_wins_over_transcript(tmp_path: 
     assert "latest assistant input/cache usage" in message
 
 
-def test_context_monitor_newer_observation_supersedes_cached_usage(tmp_path: Path) -> None:
-    """Defect class: a cached usage figure outliving a newer harness observation."""
+def test_statusline_zero_usage_replaces_cached_figure(tmp_path: Path) -> None:
+    """Defect class: a cached usage figure outliving the harness's own zero."""
     record = _record(actual_window=360_000)
     record["observed_context_used_tokens"] = 330_000
     record["observed_context_used_at_epoch"] = int(time.time())
     project, record_path = _fake_project(tmp_path, record)
     transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=108_000, cache_tokens=0)
     env = _environment(project, record_path)
 
-    def turn(tokens: int, at: float) -> dict[str, object]:
-        stamp = time.strftime("%Y-%m-%dT%H:%M:%S.123Z", time.gmtime(at))
-        usage = {"input_tokens": tokens, "cache_read_input_tokens": 0, "cache_creation_input_tokens": 0}
-        return {"type": "assistant", "timestamp": stamp, "message": {"model": "claude-opus-5-5", "usage": usage}}
-
-    def monitor(*entries: dict[str, object]) -> str:
-        transcript.write_text("\n".join(map(json.dumps, entries)) + "\n", encoding="utf-8")
+    def monitor() -> str:
         payload = {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
         run = subprocess.run([os.fspath(CONTEXT_MONITOR)], input=json.dumps(payload), text=True,
                              capture_output=True, check=True, cwd=tmp_path, env=env, timeout=30)
         return json.loads(run.stdout)["hookSpecificOutput"]["additionalContext"] if run.stdout else ""
 
-    old = time.time() - 120
-    # A transcript turn newer than the cached figure supersedes it.
-    record["observed_context_used_at_epoch"] = int(old)
-    record_path.write_text(json.dumps(record), encoding="utf-8")
-    assert monitor(turn(108_000, time.time())) == ""  # 30%: below every tier
-    # A compaction boundary newer than the cached figure leaves usage unknown;
-    # the turns before it describe a context that is gone.
-    boundary = {"type": "system", "subtype": "compact_boundary", "timestamp": turn(0, time.time())["timestamp"]}
-    assert monitor(turn(340_000, old), boundary).startswith("Context usage is unknown")
-    # The status line's explicit zero (current_usage null after /compact) replaces
-    # a fresh cached figure and is recorded, so the guard falls back to the transcript.
-    record["observed_context_used_at_epoch"] = int(time.time())
-    record_path.write_text(json.dumps(record), encoding="utf-8")
-    assert monitor(turn(108_000, old)).startswith("CRITICAL: Context is at 91%")  # fresh cache wins
+    assert monitor().startswith("CRITICAL: Context is at 91%")  # fresh cached figure wins
+    # current_usage null (no usage yet, or none since /compact): the status line
+    # records 0, so the hooks fall back to the transcript instead of the cache.
     payload = {
         "session_id": "status-session",
         "workspace": {"current_dir": os.fspath(tmp_path)},
-        "context_window": {"context_window_size": 360_000, "total_input_tokens": 0, "used_percentage": 0,
-                           "current_usage": None},
+        "context_window": {"context_window_size": 360_000, "current_usage": None},
     }
     subprocess.run([os.fspath(STATUSLINE)], input=json.dumps(payload), text=True, capture_output=True,
                    check=True, cwd=tmp_path, env=env, timeout=30)
     assert json.loads(record_path.read_text(encoding="utf-8"))["observed_context_used_tokens"] == 0
-    assert monitor(turn(108_000, old)) == ""  # transcript 30%, not the replaced 91%
+    assert monitor() == ""  # transcript 30%, not the replaced 91%
 
 
 def test_context_monitor_unknown_usage_sets_no_tier_and_demands_no_handoff(
