@@ -52,16 +52,16 @@ LAST_TOKENS=0
 read -r LAST_TIER LAST_TOKENS <<< "$(context_hook_state read "$PROJECT_DIR" "$SESSION_ID")"
 [ "$LAST_TIER" = "3" ] || exit 0
 case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
-TOKENS=0
 TRANSCRIPT=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
-[ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ] && TOKENS=$(context_latest_usage_tokens "$TRANSCRIPT")
+IFS=$'\t' read -r TOKENS _ < <(context_live_usage "$RECORD_FILE" "$SESSION_ID" "$TRANSCRIPT")
 case "$TOKENS" in ''|*[!0-9]*) TOKENS=0 ;; esac
-# A compaction-scale drop (manual or automatic compaction) re-arms context-monitor.sh's
-# tiers on the next tool call; do not remind about a context that is gone.
-if [ "$TOKENS" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
+# Unknown live usage never asks for a handoff. A compaction-scale drop (manual or
+# automatic compaction) re-arms context-monitor.sh's tiers on the next tool call;
+# do not remind about a context that is gone.
+[ "$TOKENS" -gt 0 ] || exit 0
+if [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
   exit 0
 fi
-[ "$TOKENS" -gt 0 ] || TOKENS="$LAST_TOKENS"
 LANE_NAME=$(context_driver_lane_name "$PROJECT_DIR")
 if [ -n "$LANE_NAME" ]; then
   # A guard-managed driver lane is restarted by scripts/ops/context_guard.py once

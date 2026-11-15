@@ -9,6 +9,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -38,20 +39,37 @@ def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
     }
 
 
-def _fake_project(tmp_path: Path, record: dict[str, object]) -> tuple[Path, Path]:
+def _fake_project(
+    tmp_path: Path, record: dict[str, object], *, linked_worktree: bool = False, resolver: bool = True
+) -> tuple[Path, Path]:
+    """A checkout whose session-record helper is driven by a fake interpreter.
+
+    With ``linked_worktree`` the checkout is a linked worktree without a .venv;
+    the interpreter lives in its primary checkout, as in dispatch worktrees.
+    Without ``resolver`` the checkout has no project-interpreter resolver.
+    """
     project = tmp_path / "project"
-    python_bin = project / ".venv/bin/python"
+    primary = tmp_path / "primary" if linked_worktree else project
+    python_bin = primary / ".venv/bin/python"
     session_helper = project / "scripts/lib/session_record.py"
     record_path = tmp_path / "record.json"
     record_path.write_text(json.dumps(record), encoding="utf-8")
     session_helper.parent.mkdir(parents=True)
     session_helper.write_text("# fake helper selected by fake python\n", encoding="utf-8")
+    if resolver:
+        shutil.copy(PROJECT_ROOT / "scripts/lib/project_interpreter.sh", session_helper.parent)
+    if linked_worktree:
+        admin = primary / ".git/worktrees/project"
+        admin.mkdir(parents=True)
+        (admin / "gitdir").write_text(f"{project / '.git'}\n", encoding="utf-8")
+        (project / ".git").write_text(f"gitdir: {admin}\n", encoding="utf-8")
     python_bin.parent.mkdir(parents=True)
     python_bin.write_text(
         """#!/usr/bin/env python3
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 record_path = Path(os.environ["TEST_SESSION_RECORD"])
@@ -85,6 +103,10 @@ if window is not None:
     )
 if transcript is not None:
     record["transcript_path"] = transcript
+used = value("--observed-context-used")
+if used is not None:
+    record["observed_context_used_tokens"] = int(used)
+    record["observed_context_used_at_epoch"] = int(time.time())
 record_path.write_text(json.dumps(record), encoding="utf-8")
 print(json.dumps(record))
 """,
@@ -111,6 +133,7 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
         }
     )
     for name in (
+        "LEARN_UKRAINIAN_PYTHON",
         "CLAUDE_NON_INTERACTIVE",
         "LEARN_UK_PIPELINE",
         "GEMINI_SESSION",
@@ -159,8 +182,10 @@ def _write_transcript(path: Path, *, input_tokens: int, cache_tokens: int) -> No
     )
 
 
-def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record())
+@pytest.mark.parametrize("linked_worktree", [False, True], ids=["primary", "linked-worktree"])
+def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path, linked_worktree: bool) -> None:
+    """Defect class: a checkout without its own .venv never recording live usage."""
+    project, record_path = _fake_project(tmp_path, _record(), linked_worktree=linked_worktree)
     transcript = tmp_path / "official transcript.jsonl"
     _write_transcript(transcript, input_tokens=10, cache_tokens=5)
     payload = {
@@ -197,6 +222,7 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
     assert persisted["actual_context_window_tokens"] == 260_000
     assert persisted["actual_context_window_provenance"] == ("statusline.context_window.context_window_size")
     assert persisted["transcript_path"] == os.fspath(transcript)
+    assert persisted["observed_context_used_tokens"] == 130_000
 
 
 @pytest.mark.parametrize("layout", ["source", "deployed"])
@@ -414,7 +440,7 @@ def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp
     synthetic = dict.fromkeys((*real, "output_tokens"), 0)
     lines = [{"type": "assistant", "message": {"model": "claude-opus-5-5", "usage": {**real, "output_tokens": 9}}}]
     lines += [{"type": "assistant", "message": {"model": "<synthetic>", "usage": synthetic}}] * 3
-    # Tool traffic large enough that the size estimate would report over 100%.
+    # Large tool traffic must not move the usage figure: only model usage counts.
     lines.append({"type": "user", "message": {"content": "x " * 1_500_000}})
     transcript.write_text("\n".join(map(json.dumps, lines)) + "\n", encoding="utf-8")
     assert latest_tokens(transcript) == 306_000
@@ -444,12 +470,72 @@ def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp
     message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert message.startswith("CRITICAL: Context is at 85%")
     assert "latest assistant input/cache usage" in message
-    assert "transcript-size estimate" not in message
 
 
-def test_context_monitor_size_fallback_handles_long_base64_portably(
+def test_context_monitor_fresh_statusline_figure_wins_over_transcript(tmp_path: Path) -> None:
+    """Defect class: the guard reporting a different usage than the status line shows."""
+    record = _record(actual_window=360_000)
+    record["observed_context_used_tokens"] = 108_000
+    record["observed_context_used_at_epoch"] = int(time.time())
+    project, record_path = _fake_project(tmp_path, record)
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=330_000, cache_tokens=0)
+
+    def run() -> str:
+        completed = subprocess.run(
+            [os.fspath(CONTEXT_MONITOR)],
+            input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+            text=True,
+            capture_output=True,
+            check=True,
+            cwd=tmp_path,
+            env=_environment(project, record_path),
+            timeout=30,
+        )
+        return completed.stdout
+
+    assert run() == ""  # 30% from the status line: below every tier
+    record["observed_context_used_at_epoch"] = int(time.time()) - 301
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    message = json.loads(run())["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("CRITICAL: Context is at 91%")  # stale figure: transcript
+    assert "latest assistant input/cache usage" in message
+
+
+def test_statusline_zero_usage_replaces_cached_figure(tmp_path: Path) -> None:
+    """Defect class: a cached usage figure outliving the harness's own zero."""
+    record = _record(actual_window=360_000)
+    record["observed_context_used_tokens"] = 330_000
+    record["observed_context_used_at_epoch"] = int(time.time())
+    project, record_path = _fake_project(tmp_path, record)
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=108_000, cache_tokens=0)
+    env = _environment(project, record_path)
+
+    def monitor() -> str:
+        payload = {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
+        run = subprocess.run([os.fspath(CONTEXT_MONITOR)], input=json.dumps(payload), text=True,
+                             capture_output=True, check=True, cwd=tmp_path, env=env, timeout=30)
+        return json.loads(run.stdout)["hookSpecificOutput"]["additionalContext"] if run.stdout else ""
+
+    assert monitor().startswith("CRITICAL: Context is at 91%")  # fresh cached figure wins
+    # current_usage null (no usage yet, or none since /compact): the status line
+    # records 0, so the hooks fall back to the transcript instead of the cache.
+    payload = {
+        "session_id": "status-session",
+        "workspace": {"current_dir": os.fspath(tmp_path)},
+        "context_window": {"context_window_size": 360_000, "current_usage": None},
+    }
+    subprocess.run([os.fspath(STATUSLINE)], input=json.dumps(payload), text=True, capture_output=True,
+                   check=True, cwd=tmp_path, env=env, timeout=30)
+    assert json.loads(record_path.read_text(encoding="utf-8"))["observed_context_used_tokens"] == 0
+    assert monitor() == ""  # transcript 30%, not the replaced 91%
+
+
+def test_context_monitor_unknown_usage_sets_no_tier_and_demands_no_handoff(
     tmp_path: Path,
 ) -> None:
+    """Defect class: guessing usage from transcript size and demanding a handoff on it."""
     project, record_path = _fake_project(tmp_path, _record(actual_window=100))
     transcript = tmp_path / "monitor-without-usage.jsonl"
     transcript.write_text(
@@ -478,11 +564,12 @@ def test_context_monitor_size_fallback_handles_long_base64_portably(
         timeout=30,
     )
 
-    hook_output = json.loads(completed.stdout)
-    message = hook_output["hookSpecificOutput"]["additionalContext"]
-    assert message.startswith("EMERGENCY: Context is at")
-    assert "transcript-size estimate" in message
-    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(encoding="utf-8")
+    message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("Context usage is unknown")
+    assert "no rollover tier applies" in message
+    for demand in ("HEADS UP", "CRITICAL", "EMERGENCY", "prepare", "handoff"):
+        assert demand not in message
+    assert not (project / "batch_state/context_monitor/status-session.tier").exists()
 
 
 def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> None:
@@ -646,7 +733,7 @@ def _monitor(
 
 def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path) -> None:
     """#8511: 650k/700k warnings, and at 750k hand off, tell the operator, end the turn."""
-    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    project, record_path = _fake_project(tmp_path, _native_claude_record(), resolver=False)
     transcript = tmp_path / "native.jsonl"
 
     assert _monitor(project, record_path, transcript, 640_000) == ""

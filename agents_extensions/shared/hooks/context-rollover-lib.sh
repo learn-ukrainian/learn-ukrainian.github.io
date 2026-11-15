@@ -23,8 +23,8 @@ context_hook_state() {
 # Output tokens are not current context usage and are deliberately excluded.
 # An optional usage object lets statuslines apply the same rule to current_usage.
 # Transcripts use the latest real model turn: Code Mode appends synthetic
-# assistant entries (model "<synthetic>") whose usage is all zeros, so those
-# and any entry whose input/cache usage sums to zero are skipped.
+# assistant entries (model "<synthetic>") whose usage is all zeros, so those are
+# skipped; a real turn reporting zero is unknown usage, never an older turn's.
 context_latest_usage_tokens() {
   local transcript="$1" usage="${2:-}" program
   # The #10471 measurement found top-level usage summed both main passes around
@@ -56,6 +56,48 @@ context_latest_usage_tokens() {
          | .message.usage | context_tokens]
     | last // 0
   ' 2>/dev/null || printf '0\n'
+}
+
+# Live context usage for a session as "<tokens>\t<source>"; tokens 0 means
+# unknown. Order: (1) the status line's harness figure from this session's
+# record, when observed within the last 300 seconds; (2) the latest real model
+# turn in the transcript (headless sessions have no status line); (3) unknown.
+# Usage is never estimated from transcript size. A status-line zero (no usage
+# yet, none since /compact, or malformed) is no figure and falls to (2).
+# 300 seconds: the status line runs after every model response. It records a
+# changed figure at once and an unchanged one at least once a minute, so the
+# record always holds the figure of its latest run, stamped at most 60 seconds
+# before that run. The stamp is a freshness bound, never an ordering key: a
+# throttled stamp can only retire the latest figure early (falling to the
+# transcript), never let an older figure stand in for a newer one. Past 300
+# seconds the status line has not run for four minutes, and the transcript
+# reports the same latest turn anyway.
+CONTEXT_STATUSLINE_MAX_AGE_SECONDS=300
+context_live_usage() {
+  local record_file="$1" session_id="$2" transcript="$3" tokens=0 now
+  if [ -f "$record_file" ] && [ ! -L "$record_file" ]; then
+    printf -v now '%(%s)T' -1
+    tokens=$(jq -r --arg sid "$session_id" --argjson now "$now" \
+      --argjson max "$CONTEXT_STATUSLINE_MAX_AGE_SECONDS" '
+      (.observed_context_used_tokens) as $used | (.observed_context_used_at_epoch) as $at
+      | if .session_id == $sid and ($used | type) == "number" and ($at | type) == "number"
+           and $used > 0 and ($now - $at) <= $max and ($at - $now) <= 60
+        then $used | floor else 0 end' "$record_file" 2>/dev/null) || tokens=0
+    case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
+    if [ "$tokens" -gt 0 ]; then
+      printf '%s\tstatus line (harness live usage)\n' "$tokens"
+      return 0
+    fi
+  fi
+  if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+    tokens=$(context_latest_usage_tokens "$transcript")
+    case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
+    if [ "$tokens" -gt 0 ]; then
+      printf '%s\tlatest assistant input/cache usage\n' "$tokens"
+      return 0
+    fi
+  fi
+  printf '0\tunknown\n'
 }
 
 # Canonical checkout that owns runtime state (.agent/): CODEX_CANONICAL_REPO_ROOT

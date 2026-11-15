@@ -2,9 +2,9 @@
 # Hook: PostToolUse — warn at the active session profile's rollover tiers.
 #
 # The official hook session/transcript identity and canonical session record are
-# authoritative. Latest assistant input/cache usage is preferred; transcript
-# size is a compatibility estimate only. Unknown capacity suppresses percentage
-# warnings rather than fabricating a 1M or auto-compaction denominator.
+# authoritative. Usage comes from the status line's fresh harness figure, then the
+# transcript's latest real model turn; unknown usage or unknown capacity
+# suppresses percentage warnings rather than guessing.
 # A profile with rollover_mode operator_restart gets hand-off-and-wait texts at
 # its critical and final tiers instead of the continuation texts (#8511).
 
@@ -47,22 +47,16 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 TRANSCRIPT=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
 [ -z "$TRANSCRIPT" ] || [ ! -f "$TRANSCRIPT" ] && exit 0
 
-# Prefer the latest assistant input/cache usage. Output tokens are not current
-# context usage and therefore are deliberately excluded.
-USAGE_SOURCE="transcript-size estimate"
-TOKENS=$(context_latest_usage_tokens "$TRANSCRIPT")
+# Live usage: the status line's fresh harness figure, else the transcript's latest
+# real turn, else unknown (context_live_usage). Output tokens are never counted.
+RECORD_FILE=$(context_session_record_file "$PROJECT_DIR" "$SESSION_ID")
+IFS=$'\t' read -r TOKENS USAGE_SOURCE < <(context_live_usage "$RECORD_FILE" "$SESSION_ID" "$TRANSCRIPT")
 case "$TOKENS" in ''|*[!0-9]*) TOKENS=0 ;; esac
-[ "$TOKENS" -gt 0 ] && USAGE_SOURCE="latest assistant input/cache usage"
 if [ "$TOKENS" -le 0 ]; then
-  RAW_SIZE=$(LC_ALL=C wc -c < "$TRANSCRIPT" 2>/dev/null) || RAW_SIZE=0
-  B64_EXCESS=$(LC_ALL=C tr -cs 'A-Za-z0-9+/=' '\n' < "$TRANSCRIPT" 2>/dev/null \
-    | LC_ALL=C awk 'length($0) >= 800 { removed += length($0) - 3 } END { print removed + 0 }')
-  [ -z "$B64_EXCESS" ] && B64_EXCESS=0
-  SIZE=$((RAW_SIZE - B64_EXCESS))
-  [ "$SIZE" -lt 0 ] && SIZE=0
-  TOKENS=$((SIZE / 7))
+  # Unknown usage never sets a tier or asks for a handoff.
+  jq -n '{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"Context usage is unknown right now (no fresh status-line figure and no model usage in the transcript); no rollover tier applies."}}'
+  exit 0
 fi
-[ "$TOKENS" -le 0 ] && exit 0
 
 WINDOW=""
 WINDOW_PROVENANCE="unavailable"
@@ -76,7 +70,6 @@ ROLLOVER_MODE=""
 # rollover_mode counts only from a record that names this session, the same rule
 # context-rollover-guard.sh applies; a foreign, missing or unreadable record (or
 # the environment alone) keeps the continuation behaviour.
-RECORD_FILE=$(context_session_record_file "$PROJECT_DIR" "$SESSION_ID")
 if [ -f "$RECORD_FILE" ] && [ ! -L "$RECORD_FILE" ]; then
   RECORD_ROW=$(jq -r --arg sid "$SESSION_ID" '
     [ (.actual_context_window_tokens // "" | tostring),

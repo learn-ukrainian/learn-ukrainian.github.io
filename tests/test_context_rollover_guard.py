@@ -241,7 +241,9 @@ def test_reminder_never_fires_for_continuation_profiles(tmp_path: Path, rollover
 
 def _tier_three_prompt(project: Path, record_path: Path, **extra_env: str) -> subprocess.CompletedProcess[str]:
     _tier_state(project, 3, 760_000)
-    return _run(project, record_path, {"hook_event_name": "UserPromptSubmit"}, **extra_env)
+    transcript = _transcript(project.parent, 760_000)
+    payload = {"hook_event_name": "UserPromptSubmit", "transcript_path": os.fspath(transcript)}
+    return _run(project, record_path, payload, **extra_env)
 
 
 def test_reminder_never_fires_when_the_record_is_missing_despite_env_mode(tmp_path: Path) -> None:

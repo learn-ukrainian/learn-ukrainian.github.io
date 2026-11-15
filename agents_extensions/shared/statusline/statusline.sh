@@ -135,6 +135,12 @@ if [ -z "$ctx_used" ]; then
     [ "$ctx_used" = "0" ] && ctx_used=""
   fi
 fi
+# The harness's own live figure, before any compatibility fallback below; it is
+# what the context hooks read back from the session record. No usable figure
+# (none yet, none since /compact, or malformed) is recorded as 0, so it
+# replaces the cached figure instead of leaving it to stand in.
+live_used="${ctx_used:-0}"
+[[ "$live_used" =~ ^[0-9]+$ ]] || live_used=0
 
 is_positive_integer() {
   case "${1:-}" in
@@ -149,10 +155,17 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$cwd}"
 if [ ! -f "$PROJECT_DIR/scripts/lib/session_record.py" ]; then
   PROJECT_DIR=$(git --no-optional-locks -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
 fi
-PYTHON_BIN="$PROJECT_DIR/.venv/bin/python"
+# The interpreter comes from the shared project resolver, as for the context
+# hooks: a linked worktree has no .venv of its own and uses the primary's. When
+# none resolves, the record is neither read nor written.
 SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
+PYTHON_BIN=""
+# shellcheck source=scripts/lib/project_interpreter.sh
+if source "$PROJECT_DIR/scripts/lib/project_interpreter.sh" 2>/dev/null; then
+  PYTHON_BIN=$(project_interpreter_resolve "$PROJECT_DIR" 2>/dev/null) || PYTHON_BIN=""
+fi
 record_json=""
-if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
+if [ -n "$session_id" ] && [ -n "$PYTHON_BIN" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
   record_json=$("$PYTHON_BIN" "$SESSION_RECORD" get --session-id "$session_id" 2>/dev/null || true)
 
   # Persist only changed official observations. This makes the record the shared
@@ -160,6 +173,8 @@ if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; the
   stored_model=$(printf '%s' "$record_json" | jq -r '.observed_model_id // empty' 2>/dev/null)
   stored_window=$(printf '%s' "$record_json" | jq -r '.observed_context_window_tokens // empty' 2>/dev/null)
   stored_transcript=$(printf '%s' "$record_json" | jq -r '.transcript_path // empty' 2>/dev/null)
+  stored_used=$(printf '%s' "$record_json" | jq -r '.observed_context_used_tokens // empty' 2>/dev/null)
+  stored_used_at=$(printf '%s' "$record_json" | jq -r '.observed_context_used_at_epoch // 0' 2>/dev/null)
   update_args=(update --session-id "$session_id" --provenance statusline)
   update_needed=0
   if [ -n "$observed_model_id" ] && [ "$observed_model_id" != "$stored_model" ]; then
@@ -173,6 +188,15 @@ if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; the
   if [ -n "$transcript_path" ] && [ "${transcript_path#/}" != "$transcript_path" ] \
      && [ "$transcript_path" != "$stored_transcript" ]; then
     update_args+=(--transcript-path "$transcript_path" --transcript-path-provenance statusline.transcript_path)
+    update_needed=1
+  fi
+  # Live usage is recorded at once when it changes and at least once a minute when
+  # it does not, so the record holds this run's figure stamped at most 60 seconds
+  # ago; context_live_usage (context-rollover-lib.sh) explains why that suffices.
+  printf -v now_epoch '%(%s)T' -1
+  case "$stored_used_at" in ''|*[!0-9]*) stored_used_at=0 ;; esac
+  if [ "$live_used" != "$stored_used" ] || [ $((now_epoch - stored_used_at)) -ge 60 ]; then
+    update_args+=(--observed-context-used "$live_used")
     update_needed=1
   fi
   if [ "$update_needed" -eq 1 ]; then
