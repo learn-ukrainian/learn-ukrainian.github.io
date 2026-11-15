@@ -1,0 +1,186 @@
+"""Cursor CF identity smoke tests (#6957).
+
+Pins the attested-vs-unattested Cursor identity contract for the formal
+cross-family review gate:
+
+1. An attested ``cursor:composer-2.5`` author + same-family reviewer -> refuse
+   (same-family checks use the ATTESTED model family: Cursor ``composer-2.5``
+   is Moonshot, Cursor ``grok-4.7`` is xAI — neither may be reviewed by its
+   native sibling).
+2. An attested Cursor author + eligible other-family exact-head -> allowed.
+3. ``cursor:auto`` with ``resolved_model=null`` -> not driver-of-record and
+   never a single-reviewer CF identity (Auto cannot launder into fake CF).
+4. The #6489 dual-family quorum path still exists for generic
+   unattested-harness authors (retained fallback history per #6955 — do not
+   delete it).
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+
+from scripts.review import reviewer_resolver
+from scripts.review.reviewer_resolver import (
+    CURSOR_AUTO_MODEL_TOKENS,
+    CURSOR_AUTO_UNION_FAMILY,
+    OPENAI_FRONTIER,
+    REVIEW_CANDIDATES,
+    UNATTESTED_AUTHOR_FAMILY,
+    ResolverInputs,
+    resolve_author_family,
+    resolve_reviewer,
+)
+from tests.claude_route_accounts import HOST_ACCOUNT
+
+_EXACT_HEAD = "6957cf" + "a" * 34  # 40-hex exact PR head
+
+
+# --- box 1: attested author + same-family reviewer -> refuse -------------------
+
+
+def test_cursor_attested_composer_author_refuses_same_family_review():
+    """Attested cursor:composer-2.5 is Moonshot: the Composer reviewer refuses.
+
+    Kimi is no longer a review candidate at all (web, UI and backend coding only).
+    """
+    inputs = ResolverInputs(author_model="cursor:composer-2.5", risk="medium", claude_account=HOST_ACCOUNT)
+    assert resolve_author_family(inputs.author_model) == "moonshot"
+    assert "kimi-k3" not in REVIEW_CANDIDATES
+
+    assert "composer-2.5" not in REVIEW_CANDIDATES
+
+    resolution = resolve_reviewer(inputs)
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != "moonshot"
+    for entry in resolution.trace:
+        assert entry.family != "moonshot" or entry.status == "excluded", entry.name
+
+
+def test_cursor_attested_grok_author_refuses_same_family_review():
+    """An attested xAI author cannot use the restored Grok reviewer (C-5307)."""
+    inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium", claude_account=HOST_ACCOUNT)
+    assert resolve_author_family(inputs.author_model) == "xai"
+    assert REVIEW_CANDIDATES["grok-4.7-cursor-fallback"].family == "xai"
+
+    resolution = resolve_reviewer(inputs)
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != "xai"
+
+
+# --- box 2: attested author + eligible other family exact-head -> allowed ------
+
+
+def test_cursor_attested_author_allows_other_family_exact_head_review():
+    for token, forbidden_family in (("cursor:composer-2.5", "moonshot"), ("cursor:grok-4.7", "xai")):
+        inputs = ResolverInputs(author_model=token, risk="medium", exact_head=_EXACT_HEAD, claude_account=HOST_ACCOUNT)
+        resolution = resolve_reviewer(inputs)
+        assert resolution.fail_closed_reason is None, token
+        assert resolution.selected is not None, token
+        assert resolution.selected.family != forbidden_family, token
+        assert resolution.selected.transport != "cursor", token
+        assert resolution.selected.selection_score is not None, token
+        assert resolution.quorum == (), token
+
+        # Exact-head selection is deterministic: same head, same reviewer.
+        again = resolve_reviewer(inputs)
+        assert again.selected is not None
+        assert again.selected.name == resolution.selected.name, token
+        assert again.selected.selection_score == resolution.selected.selection_score, token
+
+
+# --- box 3: cursor:auto + resolved_model=null -> not driver-of-record, not CF --
+
+
+def test_cursor_unattested_auto_is_not_a_single_reviewer_cf_identity():
+    """Auto is a Cursor author identity, but never a formal reviewer model.
+    Its reviewer comes from another family and never a Cursor transport."""
+    assert resolve_author_family("cursor:auto") == CURSOR_AUTO_UNION_FAMILY
+    # Auto is an author family; no Auto model is admitted as a reviewer.
+    assert CURSOR_AUTO_UNION_FAMILY not in {candidate.family for candidate in REVIEW_CANDIDATES.values()}
+
+    # No formal-review candidate is an unattested Cursor Auto identity.
+    assert "cursor-auto" not in REVIEW_CANDIDATES
+    for candidate in REVIEW_CANDIDATES.values():
+        assert candidate.family != CURSOR_AUTO_UNION_FAMILY, candidate.name
+        if candidate.transport == "cursor" or candidate.route == "cursor":
+            assert candidate.concrete_model not in CURSOR_AUTO_MODEL_TOKENS, candidate.name
+
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk="medium", claude_account=HOST_ACCOUNT))
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != "cursor"
+    assert resolution.selected.transport != "cursor"
+    assert resolution.quorum == ()
+
+
+# --- box 4: #6489 dual-family quorum path still exists -------------------------
+
+
+def test_cursor_unattested_author_dual_family_quorum_path_is_retained(monkeypatch):
+    """The #6489 dual-family quorum fallback is retained for generic
+    unattested-harness authors (superseded for Cursor Auto by the #6955 union
+    rule, but not deleted).
+
+    No current author token produces the unattested-harness sentinel — Cursor
+    Auto now resolves to the union family — so this test substitutes the
+    sentinel at the identity-resolution seam to exercise the quorum branch
+    itself. It does NOT touch resolved_model attestation: it simulates a
+    future/generic unattested multi-model harness, the exact case the quorum
+    machinery is kept for.
+    """
+    monkeypatch.setattr(
+        reviewer_resolver,
+        "resolve_author_family",
+        lambda *args, **kwargs: UNATTESTED_AUTHOR_FAMILY,
+    )
+
+    resolution = reviewer_resolver.resolve_reviewer(
+        ResolverInputs(author_model="generic-unattested-harness", risk="medium", exact_head=_EXACT_HEAD, claude_account=HOST_ACCOUNT)
+    )
+    assert resolution.fail_closed_reason is None
+    # There is no single reviewer of record: BOTH quorum seats must pass.
+    assert resolution.selected is None
+    assert len(resolution.quorum) == 2
+    first, second = resolution.quorum
+    assert first.family != second.family
+    assert first.status == second.status == "selected"
+    assert resolution.quorum_rule is not None
+    assert "two independent exact-head PASS verdicts" in resolution.quorum_rule
+    assert "distinct attested" in resolution.quorum_rule
+
+
+def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypatch):
+    monkeypatch.setattr(
+        reviewer_resolver,
+        "resolve_author_family",
+        lambda *args, **kwargs: UNATTESTED_AUTHOR_FAMILY,
+    )
+
+    # Fewer than two eligible distinct families fails closed — no quorum.
+    one_family = reviewer_resolver.resolve_reviewer(
+        ResolverInputs(author_model="generic-unattested-harness", claude_account=HOST_ACCOUNT),
+        ladder=((OPENAI_FRONTIER,),),
+    )
+    assert one_family.selected is None
+    assert one_family.quorum == ()
+    assert "dual-family quorum unsatisfiable" in one_family.fail_closed_reason
+
+    # An explicit reviewer pin can never substitute for the quorum.
+    pinned = reviewer_resolver.resolve_reviewer(
+        ResolverInputs(
+            author_model="generic-unattested-harness",
+            pinned_candidate="claude-sonnet-5-5",
+            pressure_override_reason="probe", claude_account=HOST_ACCOUNT,
+        )
+    )
+    assert pinned.selected is None
+    assert pinned.quorum == ()
+    assert "dual-family quorum" in pinned.fail_closed_reason
