@@ -156,7 +156,7 @@ def test_invalid_or_foreign_lease_allows(prepared, mutation):
     elif mutation == "schema":
         state["schema_version"] = 999
     elif mutation == "identity":
-        state["replacement"]["canary_challenge"] = "forged"
+        state["replacement"]["identity_receipt_path"] = "forged.json"
     elif mutation == "outside":
         state["replacement"]["handoff_path"] = os.fspath(handoff)
     elif mutation == "started":

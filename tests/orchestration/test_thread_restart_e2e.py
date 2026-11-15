@@ -1,7 +1,7 @@
 """End-to-end acceptance for durable Codex thread replacement.
 
-These tests deliberately cross subprocess, Git-worktree, shell-helper, hook,
-and strict-canary seams. Unit-level state-machine cases remain in
+These tests deliberately cross subprocess, Git-worktree, shell-helper and
+hook seams. Unit-level state-machine cases remain in
 ``test_thread_handoff.py``.
 """
 
@@ -33,8 +33,6 @@ from tests.test_launcher_driver_scope import _launcher, install_scope_sandbox
 REPO_ROOT = Path(__file__).resolve().parents[2]
 pytestmark = pytest.mark.repo_wide
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
-HANDOFF_CANARY = REPO_ROOT / "scripts/orchestration/thread_handoff_canary.py"
-CONTEXT_CANARY = REPO_ROOT / "scripts/context_canary.py"
 SOURCE_THREAD_ID = "00000000-0000-4000-8000-000000000001"
 REPLACEMENT_THREAD_ID = "00000000-0000-4000-8000-000000000002"
 SECOND_SOURCE_THREAD_ID = "00000000-0000-4000-8000-000000000003"
@@ -155,7 +153,6 @@ def init_repo(
         "scripts/context_canary.py",
         "scripts/orchestration/task_identity.py",
         "scripts/orchestration/thread_handoff.py",
-        "scripts/orchestration/thread_handoff_canary.py",
         # The consolidated SessionStart gate (perf(hooks), #6414) and its
         # primary-on-main phase dependency — the deployed session-setup.sh
         # hook execs `python -m scripts.hooks.session_start_gate`, which
@@ -567,171 +564,7 @@ def resume(primary: Path, packet: dict, replacement_thread_id: str = REPLACEMENT
     return json.loads(completed.stdout)
 
 
-def semantic_snapshot(lease: dict) -> dict:
-    replacement = lease["replacement"]
-    handoff_ref = replacement["handoff_path"]
-    return {
-        "generated_at": "2026-07-13T12:00:00Z",
-        "lineage_id": lease["lineage_id"],
-        "rollover_id": replacement["rollover_id"],
-        "seed": 5057,
-        "goals": [
-            {
-                "id": f"goal-{index}",
-                "statement": f"continue durable goal {index}",
-                "source_ref": f"handoff:{handoff_ref}#goal-{index}",
-            }
-            for index in range(3)
-        ],
-        "decision_records": [
-            {
-                "id": f"decision-{index}",
-                "decision": f"keep packet decision {index}",
-                "source_ref": f"decision:docs/decisions/thread-restart.md#decision-{index}",
-            }
-            for index in range(3)
-        ],
-        "constraint_records": [
-            {
-                "id": f"constraint-{index}",
-                "prohibition": f"never transfer provider history {index}",
-                "source_ref": f"handoff:{handoff_ref}#constraint-{index}",
-            }
-            for index in range(2)
-        ],
-        "next_actions": [
-            {
-                "id": f"action-{index}",
-                "action": f"execute durable action {index}",
-                "source_ref": f"queue:batch_state/orchestrator-runs/epic-5054-thread-continuity.json#action-{index}",
-            }
-            for index in range(2)
-        ],
-    }
-
-
-def fill_snapshot_template(template: dict) -> dict:
-    """Fill only the replacement-authored semantic fields in a wrapper template."""
-    snapshot = json.loads(json.dumps(template))
-    for index, record in enumerate(snapshot["goals"], start=1):
-        record["statement"] = f"continue durable goal {index}"
-    for index, record in enumerate(snapshot["decision_records"], start=1):
-        record["decision"] = f"keep packet decision {index}"
-    for index, record in enumerate(snapshot["constraint_records"], start=1):
-        record["prohibition"] = f"never transfer provider history {index}"
-    for index, record in enumerate(snapshot["next_actions"], start=1):
-        record["action"] = f"execute durable action {index}"
-    return snapshot
-
-
-def strict_evidence(primary: Path, packet: dict, *, wrong_answer: bool = False) -> tuple[Path, Path, Path]:
-    lease = load_lease(primary, packet)
-    replacement = lease["replacement"]
-    snapshot_path = primary / replacement["semantic_snapshot_path"]
-    probe_path = primary / replacement["strict_probe_path"]
-    questions_path = primary / replacement["strict_questions_path"]
-    answers_path = primary / replacement["strict_answers_path"]
-    verdict_path = primary / replacement["strict_verdict_path"]
-    snapshot = semantic_snapshot(lease)
-    write_json(snapshot_path, snapshot)
-    minted = run(
-        [project_python(), CONTEXT_CANARY, "mint", "--snapshot", snapshot_path, "--out", probe_path],
-        cwd=primary,
-        check=True,
-    )
-    assert "minted 10 anchors" in minted.stdout
-    run(
-        [project_python(), CONTEXT_CANARY, "questions", "--probe", probe_path, "--out", questions_path],
-        cwd=primary,
-        check=True,
-    )
-    probe = json.loads(probe_path.read_text(encoding="utf-8"))
-    questions = json.loads(questions_path.read_text(encoding="utf-8"))["questions"]
-    assert len(questions) == 10
-    assert all(set(question) == {"id", "q"} for question in questions)
-    assert {question["id"] for question in questions} == {anchor["id"] for anchor in probe["anchors"]}
-    snapshot_text = snapshot_path.read_text(encoding="utf-8")
-    assert all(str(anchor["a"]) in snapshot_text for anchor in probe["anchors"])
-    answers = {anchor["id"]: anchor["a"] for anchor in probe["anchors"]}
-    if wrong_answer:
-        answers[probe["anchors"][-1]["id"]] = "wrong answer"
-    write_json(answers_path, answers)
-    scored = run(
-        [
-            project_python(),
-            CONTEXT_CANARY,
-            "score",
-            "--probe",
-            probe_path,
-            "--answers",
-            answers_path,
-            "--expected-lineage-id",
-            packet["lineage_id"],
-            "--expected-rollover-id",
-            packet["rollover_id"],
-            "--verdict",
-            verdict_path,
-        ],
-        cwd=primary,
-    )
-    expected_score = "SCORE 9/10" if wrong_answer else "SCORE 10/10"
-    assert expected_score in scored.stdout
-    assert scored.returncode == (2 if wrong_answer else 0)
-    return probe_path, verdict_path, questions_path
-
-
-def canary_proof(primary: Path, packet: dict, *, challenge: str | None = None) -> Path:
-    lease = load_lease(primary, packet)
-    replacement = lease["replacement"]
-    proof_path = primary / replacement["canary_proof_path"]
-    run(
-        [
-            project_python(),
-            HANDOFF_CANARY,
-            "--rollover-id",
-            packet["rollover_id"],
-            "--replacement-thread-id",
-            REPLACEMENT_THREAD_ID,
-            "--challenge",
-            challenge or replacement["canary_challenge"],
-            "--proof-file",
-            proof_path,
-        ],
-        cwd=primary,
-        check=True,
-    )
-    return proof_path
-
-
-def confirm_command(
-    primary: Path,
-    packet: dict,
-    *,
-    proof: Path,
-    probe: Path,
-    verdict: Path,
-) -> list[str | Path]:
-    return handoff_command(
-        primary,
-        "confirm-started",
-        "--agent",
-        "codex",
-        "--lineage-id",
-        packet["lineage_id"],
-        "--rollover-id",
-        packet["rollover_id"],
-        "--new-thread-id",
-        REPLACEMENT_THREAD_ID,
-        "--canary-proof",
-        str(proof),
-        "--strict-probe",
-        str(probe),
-        "--strict-verdict",
-        str(verdict),
-    )
-
-
-def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
+def test_native_lifecycle_confirms_the_bound_replacement_and_unlocks_cleanup(
     tmp_path: Path, repo_template: tuple[Path, Path]
 ) -> None:
     primary, _ = init_repo(tmp_path, template=repo_template)
@@ -749,7 +582,6 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
     assert "bootstrap-replacement" in bootstrap
     assert "confirm-replacement" in bootstrap
     assert "thread_handoff.py resume" not in bootstrap
-    assert "thread_handoff_canary.py" not in bootstrap
     assert "thread_handoff.py confirm-started" not in bootstrap
     assert "codex exec resume" not in bootstrap
     assert not list(primary.glob(".agent/**/*state_5.sqlite"))
@@ -757,7 +589,7 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
     assert len(receipts) == 1
 
     # The app owns creation/title acknowledgement; the compact wrapper owns
-    # the replacement bind, resume, semantic-template, and confirmation flow.
+    # the replacement bind, resume, and confirmation flow.
     register_native_replacement(primary, packet, REPLACEMENT_THREAD_ID)
     bootstrapped = run(
         handoff_command(
@@ -788,24 +620,9 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
     assert bootstrap_payloads[0]["replacement_thread_id"] == REPLACEMENT_THREAD_ID
     bootstrap_result = bootstrap_payloads[1]
     assert bootstrap_result["status"] == "bootstrap_ready"
-    assert bootstrap_result["semantic_snapshot_file"] == lease["replacement"]["semantic_snapshot_path"]
+    assert bootstrap_result["handoff_path"] == lease["replacement"]["handoff_path"]
     assert load_lease(primary, packet)["replacement"]["resumed_thread_id"] == REPLACEMENT_THREAD_ID
-    template_path = primary / bootstrap_result["semantic_snapshot_template"]
-    template = json.loads(template_path.read_text(encoding="utf-8"))
-    assert template["lineage_id"] == packet["lineage_id"]
-    assert template["rollover_id"] == packet["rollover_id"]
-    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [
-        3,
-        3,
-        2,
-        2,
-    ]
-    assert all(not record["statement"] for record in template["goals"])
-    assert all(not record["decision"] for record in template["decision_records"])
-    assert all(not record["prohibition"] for record in template["constraint_records"])
-    assert all(not record["action"] for record in template["next_actions"])
-    snapshot_path = primary / bootstrap_result["semantic_snapshot_file"]
-    write_json(snapshot_path, fill_snapshot_template(template))
+    assert_cleanup_locked(primary, packet)
 
     confirm_wrapper = handoff_command(
         primary,
@@ -817,34 +634,12 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
         "--rollover-id",
         packet["rollover_id"],
     )
-    questions_only = run(confirm_wrapper, cwd=primary)
-    assert questions_only.returncode == 2
-    assert questions_only.stdout.strip(), questions_only.stderr
-    assert "minted 10 anchors" in questions_only.stdout
-    assert "questions written" in questions_only.stdout
-    question_payload = json.loads(questions_only.stdout[questions_only.stdout.index("{") :])
-    assert question_payload["schema"] == "production-handoff-v2-questions"
-    assert question_payload["lineage_id"] == packet["lineage_id"]
-    assert question_payload["rollover_id"] == packet["rollover_id"]
-    questions = question_payload["questions"]
-    assert len(questions) == 10
-    assert all(set(question) == {"id", "q"} for question in questions)
-    replacement = load_lease(primary, packet)["replacement"]
-    probe = json.loads((primary / replacement["strict_probe_path"]).read_text(encoding="utf-8"))
-    assert {question["id"] for question in questions} == {anchor["id"] for anchor in probe["anchors"]}
-    write_json(
-        primary / replacement["strict_answers_path"],
-        {anchor["id"]: anchor["a"] for anchor in probe["anchors"]},
-    )
-    assert_cleanup_locked(primary, packet)
-
     confirmed = run(
         confirm_wrapper,
         cwd=primary,
         check=True,
     )
-    assert "SCORE 10/10" in confirmed.stdout
-    result = json.loads(confirmed.stdout[confirmed.stdout.rfind("\n{") + 1 :])
+    result = json.loads(confirmed.stdout)
     assert result["replacement_status"] == "started"
     assert result["old_automation_ready_to_delete"] is True
     assert load_lease(primary, packet)["cleanup"]["old_automation_ready_to_delete"] is True
@@ -932,23 +727,6 @@ def test_pre_confirmation_failures_leave_cleanup_locked(
         assert_cleanup_locked(primary, packet)
 
 
-@pytest.mark.parametrize("case", ["nine-of-ten", "failed-canary"])
-def test_failed_replacement_proofs_leave_cleanup_locked(
-    tmp_path: Path, case: str, repo_template: tuple[Path, Path]
-) -> None:
-    primary, _ = init_repo(tmp_path, template=repo_template)
-    packet = prepare(primary)
-    resume(primary, packet)
-    probe, verdict, _ = strict_evidence(primary, packet, wrong_answer=case == "nine-of-ten")
-    proof = canary_proof(primary, packet, challenge="0" * 64 if case == "failed-canary" else None)
-    failed = run(
-        confirm_command(primary, packet, proof=proof, probe=probe, verdict=verdict),
-        cwd=primary,
-    )
-    assert failed.returncode == 2
-    assert_cleanup_locked(primary, packet)
-
-
 def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(
     tmp_path: Path, repo_template: tuple[Path, Path]
 ) -> None:
@@ -1018,8 +796,6 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(
         check=True,
     )
     assert json.loads(resumed.stdout)["status"] == "resumed"
-    probe, verdict, _ = strict_evidence(primary, packet)
-    proof = canary_proof(primary, packet)
 
     (replacement / "tracked.txt").write_text("dirty replacement\n", encoding="utf-8")
     assert git(replacement, "status", "--short").stdout.startswith(" M tracked.txt")
@@ -1036,12 +812,6 @@ def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(
             packet["rollover_id"],
             "--new-thread-id",
             REPLACEMENT_THREAD_ID,
-            "--canary-proof",
-            str(proof),
-            "--strict-probe",
-            str(probe),
-            "--strict-verdict",
-            str(verdict),
         ),
         cwd=replacement,
     )

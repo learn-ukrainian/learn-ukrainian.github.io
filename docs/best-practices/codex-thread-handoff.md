@@ -279,10 +279,7 @@ After the replacement thread is visibly running, confirm it:
   --agent orchestrator \
   --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
-  --new-thread-id <replacement-thread-id> \
-  --canary-proof <reserved-canary-proof-path> \
-  --strict-probe <reserved-strict-probe-path> \
-  --strict-verdict <reserved-strict-verdict-path>
+  --new-thread-id <replacement-thread-id>
 ```
 
 Only if the output shows `"old_automation_ready_to_delete": true` may the old
@@ -294,7 +291,7 @@ After confirmation, inspect the exact `predecessor_thread_id` through the app.
 Run `native-action --action archive` with authoritative status and pin facts.
 The command authorizes native `set_thread_archived` only when the exact bound
 predecessor is idle and unpinned, the replacement title is reconciled, and the
-canary plus strict 10/10 recall and cleanup proofs all pass. Pinned, running,
+replacement confirmation and cleanup proof pass. Pinned, running,
 ambiguous, unrelated, or unconfirmed tasks are preserved. Unknown status or pin
 state is a durable blocker. Record and reconcile an authorized archive exactly
 as for title.
@@ -330,10 +327,7 @@ Confirm the replacement with the same agent name:
   --agent codex \
   --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
-  --new-thread-id <replacement-thread-id> \
-  --canary-proof <reserved-canary-proof-path> \
-  --strict-probe <reserved-strict-probe-path> \
-  --strict-verdict <reserved-strict-verdict-path>
+  --new-thread-id <replacement-thread-id>
 ```
 
 ## Claude Operator-Restart Rollover (650k / 700k / 750k)
@@ -496,7 +490,7 @@ through the app and receipt that `create_thread` was never called, run:
 
 This command performs no Codex app mutation. It creates the correct
 packet-specific transition, receipts the exact untouched legacy operation, and
-updates the lease last while preserving the bootstrap, checkout binding, canary,
+updates the lease last while preserving the bootstrap, checkout binding
 and cleanup=false guard. Retries must use the same successor and evidence. Do
 not manually edit or delete the lease, plan, receipt, or operation directory.
 After a successful repair, restart at `native-action --action create`.
@@ -622,40 +616,9 @@ test -z "$(git status --porcelain)"
   | tee "$evidence/resume.json"
 ```
 
-Read the packet and durable role handoff named by SessionStart. Write the ten
-truthful semantic anchors to the lease's reserved snapshot path. Answer the
-generated questions from restored context; do not read the answer-bearing
-probe to manufacture recall answers.
+Read the packet and durable role handoff named by SessionStart, then confirm.
 
 ```bash
-snapshot_rel=$(jq -r .replacement.semantic_snapshot_path "$lease")
-probe_rel=$(jq -r .replacement.strict_probe_path "$lease")
-questions_rel=$(jq -r .replacement.strict_questions_path "$lease")
-answers_rel=$(jq -r .replacement.strict_answers_path "$lease")
-verdict_rel=$(jq -r .replacement.strict_verdict_path "$lease")
-proof_rel=$(jq -r .replacement.canary_proof_path "$lease")
-challenge=$(jq -r .replacement.canary_challenge "$lease")
-
-# The canonical destination writes "$canonical/$snapshot_rel" from the packet.
-.venv/bin/python scripts/context_canary.py mint \
-  --snapshot "$canonical/$snapshot_rel" --out "$canonical/$probe_rel"
-.venv/bin/python scripts/context_canary.py questions \
-  --probe "$canonical/$probe_rel" --out "$canonical/$questions_rel"
-# The canonical destination now writes {"<question-id>": "<recalled-answer>"} to
-# "$canonical/$answers_rel" without opening the probe.
-.venv/bin/python scripts/context_canary.py score \
-  --probe "$canonical/$probe_rel" \
-  --answers "$canonical/$answers_rel" \
-  --expected-lineage-id "$lineage_id" \
-  --expected-rollover-id "$rollover_id" \
-  --verdict "$canonical/$verdict_rel" \
-  | tee "$evidence/strict-score.txt"
-.venv/bin/python scripts/orchestration/thread_handoff_canary.py \
-  --rollover-id "$rollover_id" \
-  --replacement-thread-id "$claim_task_id" \
-  --challenge "$challenge" \
-  --proof-file "$canonical/$proof_rel" \
-  | tee "$evidence/canary.json"
 test "$(git rev-parse HEAD)" = "$source_head"
 test -z "$(git status --porcelain)"
 .venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
@@ -663,13 +626,10 @@ test -z "$(git status --porcelain)"
   --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
   --new-thread-id "$claim_task_id" \
-  --canary-proof "$canonical/$proof_rel" \
-  --strict-probe "$canonical/$probe_rel" \
-  --strict-verdict "$canonical/$verdict_rel" \
   | tee "$evidence/confirm.json"
 ```
 
-The smoke passes only when the score says `10/10`, the canary says `PASS`, the
+The smoke passes only when the
 logical fresh task differs from the predecessor, and `confirm.json` says
 `"old_automation_ready_to_delete": true`. Record the predecessor id, initial
 fresh task id, canonical claim task id, title, both checkout paths, and every

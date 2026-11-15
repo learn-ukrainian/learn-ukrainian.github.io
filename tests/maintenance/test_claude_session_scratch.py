@@ -50,8 +50,6 @@ def _confirmed(tmp_path: Path) -> Path:
                         "replacement_task_id": REPLACEMENT,
                         "lifecycle_state": "confirmed",
                     },
-                    "canary_proof": {"status": "PASS"},
-                    "strict_verdict": {"verdict": "PASS"},
                 },
                 "cleanup": {"old_automation_ready_to_delete": True, "confirmed_at": "2026-10-03T00:00:00Z"},
             }
@@ -236,7 +234,7 @@ def test_unknown_names_foreign_owner_and_unsafe_platform_kept(tmp_path: Path, mo
     assert report["summary"]["kept_by_reason"]["foreign_owner"] == 1
 
 
-@pytest.mark.parametrize("field", ["status", "identity", "canary_proof", "strict_verdict", "confirmed_at", "thread_id"])
+@pytest.mark.parametrize("field", ["status", "identity", "confirmed_at", "thread_id"])
 def test_incomplete_rollover_is_not_confirmation(tmp_path: Path, field: str) -> None:
     root = _confirmed(tmp_path)
     lease = root / "lineage/lease.json"

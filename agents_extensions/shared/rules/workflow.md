@@ -150,15 +150,6 @@ remain available in `agents_extensions/shared/rules/_load-via-api.md`.
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
-**Canary mint (production v2):** use this only inside a prepared rollover packet.
-The reserved snapshot has exactly 3 goals, 3 decision/rationale records, 2 negative
-constraint/prohibition records, and 2 next actions from durable allowed `source_ref`
-records. Never relabel Git, GitHub, or Monitor metadata as semantic anchors, fabricate,
-or pad. The replacement must run the exact reserved-path commands emitted by
-`thread_handoff.py detect --agent codex --format session-start`, including
-`context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
-the separate challenge proof and `confirm-started` can unlock cleanup.
-
 ### Review dispatch admission
 
 Resolve the qualified reviewer before dispatch and pass its explicit model,

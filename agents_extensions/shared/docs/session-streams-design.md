@@ -19,13 +19,13 @@ then only the last configured `N` other entries. The Monitor API renders this
 digest for every harness. Drivers write through the same source-owned CLI or
 library with an exact stream lease and fencing token. A stale heartbeat permits
 planning, never mutation. An intentionally prepared live rollover may transfer
-the lease only after the existing claim, strict-recall, canary, and confirmation
+the lease only after the existing claim and confirmation
 receipts pass. A crashed session follows a different path: after TTL expiry,
 the successor records heartbeat age and no-live-process proof, force-closes the
 old session, then opens a new session. `closed` is terminal and immutable.
 
 This is a storage layer beneath the existing rollover protocol. It does not
-replace provider task identity, native task creation, canary semantics,
+replace provider task identity, native task creation,
 Task Family Manager receipts, or proof-gated predecessor cleanup.
 
 ## Scope and non-goals
@@ -55,7 +55,7 @@ This design does not:
 | # | Disposition | Design consequence |
 | --- | --- | --- |
 | 1 | Accept: pinned entries beat last-N. | `binding_order` and `negative_constraint` are always selected. Explicit supersession labels an old pinned entry inactive but never hides or deletes it. |
-| 2 | Accept: integrate with rollover. | `thread_handoff.py`, the rollover registry, `context_canary.py`, and `thread_handoff_canary.py` continue to own replacement identity and continuity proof. Stream code consumes their exact receipts. |
+| 2 | Accept: integrate with rollover. | `thread_handoff.py` and the rollover registry continue to own replacement identity and confirmation. Stream code consumes their exact receipts. |
 | 3 | Accept with the final takeover clarification: one active driver lease. | One mutable lease projection per stream, an increasing fencing token, append-only lease events, and proof-gated transfer only for an intentional live rollover. Crash recovery force-closes the expired session with proof, then opens a new session. Sessions use `open`, `rolling`, and terminal `closed`. |
 | 4 | Accept: operator window and backups. | An argparse-standard CLI provides `tail`, `dump`, and `grep`; online SQLite snapshots and portable exports are periodic, immutable, verified, and never rotated away. |
 | 5 | Accept: shared stream and Monitor. | Fleet facts live once in `shared:fleet`; epic entries reference shared entry IDs. Monitor resolves references and is the only harness read surface. |
@@ -68,12 +68,7 @@ The current system already has the hard parts of safe thread continuity:
 
 - `scripts/orchestration/thread_handoff.py` prepares an exact lineage-scoped
   lease and replacement packet, binds predecessor and replacement task IDs,
-  reserves semantic-snapshot and proof paths, and keeps cleanup locked.
-- `scripts/context_canary.py` requires exactly 3 goals, 3
-  decisions/rationales, 2 negative constraints, and 2 next actions from
-  allowed durable sources, then emits a strict 10/10 verdict.
-- `scripts/orchestration/thread_handoff_canary.py` binds a PASS to the exact
-  rollover ID, replacement task ID, and challenge.
+  and keeps cleanup locked until the exact replacement is confirmed.
 - The rollover registry preserves exact identity and orders
   `PREPARED -> ... -> CONFIRMED -> PREDECESSOR_ARCHIVED -> HEARTBEAT_RETIRED`.
 - `agents_extensions/shared/hooks/session-setup.sh` detects a pending packet
@@ -87,10 +82,8 @@ The current system already has the hard parts of safe thread continuity:
 
 The session-stream layer changes only the durable semantic-memory source and
 the stream lease. Rollover packet files remain short-lived protocol evidence;
-they are not a second long-lived memory store. When a canary needs the current
-stream state, the adapter renders the selected DB entries into the existing
-reserved semantic-snapshot path under `.agent/thread-rollovers/`. That keeps
-the current closed `source_ref` grammar and confirmation commands intact.
+they are not a second long-lived memory store. The confirmation commands stay
+intact.
 
 ### Reuse map
 
@@ -99,9 +92,7 @@ the current closed `source_ref` grammar and confirmation commands intact.
 | Identify predecessor/replacement | `task-identity.v1`, Task Family Manager, rollover registry | Store exact receipt references and holder IDs; never match titles. |
 | Prepare rollover | `thread_handoff.py prepare` | Atomically mark the stream session `rolling` only after the prepared receipt exists. |
 | Claim replacement | `detect` then exact `resume` | Candidate receives the DB digest in SessionStart and claims only the detected packet. |
-| Prove restored context | `context_canary.py` strict snapshot/questions/score | Snapshot content is selected from pinned-plus-tail DB entries and rendered at the existing reserved path. |
-| Prove replacement process | `thread_handoff_canary.py` | No change. |
-| Confirm successor | `thread_handoff.py confirm-started` | Its exact PASS receipts authorize, but do not themselves perform, a planned live-rollover transfer. |
+| Confirm successor | `thread_handoff.py confirm-started` | Its exact confirmation receipt authorizes, but does not itself perform, a planned live-rollover transfer. |
 | Archive/retire predecessor | Task Family Manager and rollover cleanup proofs | A planned rollover records the new holder; crash recovery records force-close proof and a separate new-session open. Existing cleanup remains independently gated. |
 | Reconcile stale state | rollover registry `audit`/`reconcile-exact`/proof-gated maintenance | A stale heartbeat is only a signal. Recovery proves heartbeat age and no live holder, force-closes the exact crashed session, and never transfers that session to a successor. |
 
@@ -869,10 +860,9 @@ close its own lease.
    marks the current lease `transferring`. The predecessor remains the only
    writer.
 3. SessionStart detects the exact packet. The replacement reads the stream
-   digest, runs exact `resume`, writes the reserved semantic snapshot, scores
-   strict recall, runs the challenge canary, and calls `confirm-started`.
+   digest, runs exact `resume`, and calls `confirm-started`.
 4. `session-streams lease transfer-apply` validates the exact registry state
-   and both proof files. In one transaction it appends `transferred`, increments
+   and the confirmation receipt. In one transaction it appends `transferred`, increments
    generation and fencing token, installs the replacement holder, updates the
    heartbeat, and moves `rolling -> open`.
 5. Only then can the successor write stream entries. Existing rollover cleanup
@@ -889,13 +879,13 @@ The plan fails immediately if the session is `closed`. Otherwise:
 
 - If a live prepared/resumed rollover exists, crash recovery is refused. The
   plan names that exact `(agent, lineage_id, rollover_id)` and emits only the
-  existing detect/resume, strict-recall, canary, and confirmation commands. It
+  existing detect/resume and confirmation commands. It
   never chooses by age or filesystem order.
 - If rollover state is ambiguous or corrupt, the plan requires rollover
   registry `audit` and `reconcile-exact`. No DB mutation occurs.
 - If no packet exists because the holder died before preparation, an explicit
   recovery plan names the exact predecessor holder and session. The stream
-  layer reuses the existing canary/claim evidence shape rather than minting a
+  layer reuses the existing claim evidence shape rather than minting a
   weaker protocol, but the result authorizes force-close, not transfer.
 
 Recovery authority belongs only to the operator or to the accountable stream
@@ -1105,7 +1095,7 @@ Cut over one stream only after:
 - unresolved pinned candidates and broken refs are zero;
 - two successive cold starts for Claude and one non-Claude harness produce the
   expected pinned-plus-tail digest;
-- one real rollover passes exact resume, strict 10/10 recall, challenge canary,
+- one real rollover passes exact resume,
   confirmation, and stream lease transfer for an intentional live rollover;
 - one simulated crash proves TTL expiry plus exact no-live-process evidence,
   force-closes the predecessor session, and opens a distinct successor session;
