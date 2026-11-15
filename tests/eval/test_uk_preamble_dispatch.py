@@ -13,10 +13,10 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter
+from lu_machinery.agent_runtime.adapters.base import InvocationPlan
+from lu_machinery.dispatcher.cli import build_parser
 
-from scripts.agent_runtime.adapters.agy import AgyAdapter
-from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.dispatcher.cli import build_parser
 from scripts.eval.uk_preamble import dispatch as dispatch_module
 from scripts.eval.uk_preamble.__main__ import make_dispatcher
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
@@ -460,7 +460,7 @@ class SimulatedDelegate(DelegateDispatcher):
         )
 
     def _run(self, *args: str, **kwargs):
-        from scripts.dispatcher import cli
+        from lu_machinery.dispatcher import cli
 
         out, err = io.StringIO(), io.StringIO()
         with redirect_stdout(out), redirect_stderr(err):
@@ -472,7 +472,7 @@ class SimulatedDelegate(DelegateDispatcher):
 def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fresh_id(
     linked_worktree, outside_dir, monkeypatch, status
 ):
-    from scripts.dispatcher import git, store, worker
+    from lu_machinery.dispatcher import git, store, worker
 
     tasks_dir = outside_dir / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
@@ -528,8 +528,15 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
     assert read_json(tasks_dir / f"{task.task_id}.json") == original
     assert read_json(tasks_dir / "retry-seat-attempt-1.json") == previous
     worker.settle_left_worktrees()
-    # Only explicit scheduled settlement adds a disposition to the failed record.
-    settled = dict(worktree_disposition="retained", worktree_disposition_reason="provider_liveness_unknown")
+    # Only explicit scheduled settlement adds a disposition to the failed record; the released
+    # dispatcher records the task scratch's disposition with the worktree's.
+    settled = dict(
+        worktree_disposition="retained",
+        worktree_disposition_reason="provider_liveness_unknown",
+        task_scratch_bytes=None,
+        task_scratch_disposition="retained",
+        task_scratch_disposition_reason="worktree retained: scratch kept with it",
+    )
     assert read_json(tasks_dir / f"{task.task_id}.json") == {**original, **settled}
     assert raw_path(results, task.task_id).read_bytes() == original_raw
     assert read_json(tasks_dir / "retry-seat-attempt-1.json") == {**previous, **settled}
@@ -553,7 +560,7 @@ def test_done_with_error_is_refused_and_legacy_error_behavior_is_unchanged(fake,
 def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
     linked_worktree: Path, outside_dir: Path, monkeypatch
 ):
-    from scripts.dispatcher import git, providers, store, worker
+    from lu_machinery.dispatcher import git, providers, store, worker
 
     # The Claude seats are read-only, so the real CLI asks `claude doctor` for managed settings first.
     (outside_dir / "bin").mkdir()
@@ -657,7 +664,7 @@ def test_result_digest_mismatch_is_refused(fake):
 
 
 def test_caller_initiator_matches_delegate_attribution():
-    from scripts.agent_runtime.attribution import resolve_invocation_attribution
+    from lu_machinery.agent_runtime.attribution import resolve_invocation_attribution
 
     assert dispatch_module.caller_initiator() == resolve_invocation_attribution().initiator
 
