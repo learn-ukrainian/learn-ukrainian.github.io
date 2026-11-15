@@ -981,6 +981,9 @@ def reconcile_action(
     }
 
 
+RETIRED_AUTHORIZATION_FIELDS = ("canary_proof_sha256", "strict_verdict_sha256")
+
+
 def _confirmation_blockers(state: dict[str, Any], binding: dict[str, Any]) -> list[str]:
     replacement = state.get("replacement") or {}
     cleanup = state.get("cleanup") or {}
@@ -995,12 +998,6 @@ def _confirmation_blockers(state: dict[str, Any], binding: dict[str, Any]) -> li
         blockers.append("persisted predecessor identity does not match the native binding")
     if cleanup.get("old_automation_ready_to_delete") is not True:
         blockers.append("existing confirmation cleanup proof gate is still locked")
-    proof = replacement.get("canary_proof") or {}
-    verdict = replacement.get("strict_verdict") or {}
-    if proof.get("status") != "PASS":
-        blockers.append("script canary proof is not PASS")
-    if verdict.get("verdict") != "PASS" or verdict.get("correct") != 10 or verdict.get("k") != 10:
-        blockers.append("strict recall verdict is not PASS 10/10")
     return blockers
 
 
@@ -1067,14 +1064,16 @@ def authorize_archive(
         "source_status": "idle",
         "pin_state": "unpinned",
         "evidence": evidence,
-        "canary_proof_sha256": sha256_digest(replacement["canary_proof"]),
-        "strict_verdict_sha256": sha256_digest(replacement["strict_verdict"]),
         "confirmed_at": replacement["confirmed_at"],
     }
     if storage.rollover_archive_authorization_path.exists():
         existing_authorization = storage.read_json(storage.rollover_archive_authorization_path)
         stable_existing = dict(existing_authorization)
         stable_existing.pop("evidence", None)
+        # Authorizations written before the strict recall gate was retired still
+        # carry its digests; they no longer bind the retry.
+        for retired in RETIRED_AUTHORIZATION_FIELDS:
+            stable_existing.pop(retired, None)
         stable_retry = dict(authorization)
         stable_retry.pop("evidence", None)
         if stable_existing != stable_retry:

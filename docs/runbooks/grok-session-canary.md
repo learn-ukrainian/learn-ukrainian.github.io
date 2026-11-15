@@ -51,8 +51,6 @@ After every compact (including when canary still PASSes):
 3. Open the active phase receipt named there
 4. If open task is missing from dual-write → **STOP inventing** — stamp or hand off
 
-Production **thread rollover** still uses strict **10/10** via `scripts/context_canary.py mint --snapshot` (separate protocol).
-
 ## Handoff = DIARY (required)
 
 The dual-write board under `.claude/<epic>-epic/*-DRIVER-HANDOFF.md` is a **diary**, not a one-shot close note.
@@ -179,5 +177,4 @@ The launcher owns lease open/close for Grok. The agent never opens, claims, rene
 - `scripts/session_canary/diary.py` — stamp / handback / hydrate capsule helpers
 - `docs/runbooks/epic-stream-handoff.md` — continuity evidence; current launcher-owned lease rules bind
 - `scripts/context_canary.py` — shared mint/score engine
-- `docs/best-practices/codex-thread-handoff.md` — strict rollover canary
 - `start-grok-driver.sh --epic <name>` — core injects the lane protocol pointer

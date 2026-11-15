@@ -9924,33 +9924,13 @@
     },
     {
       "path": "scripts/context_canary.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"list\" has incompatible type \"tuple[Any, bool, Any, str, str]\"; expected \"tuple[Any, bool, float, Any, Any, Any | str]\""
-    },
-    {
-      "path": "scripts/context_canary.py",
-      "code": "misc",
-      "message": "Too many values to unpack (5 expected, 6 provided)"
-    },
-    {
-      "path": "scripts/context_canary.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"int\""
     },
     {
       "path": "scripts/context_canary.py",
-      "code": "no-redef",
-      "message": "Name \"rows\" already defined on line 612"
-    },
-    {
-      "path": "scripts/context_canary.py",
       "code": "return-value",
       "message": "Incompatible return value type (got \"None | int | str\", expected \"int\")"
-    },
-    {
-      "path": "scripts/context_canary.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"strip\""
     },
     {
       "path": "scripts/control_plane/health.py",
@@ -19610,11 +19590,6 @@
     {
       "path": "scripts/orchestration/thread_handoff.py",
       "code": "no-redef",
-      "message": "Name \"context_canary\" already defined (by an import)"
-    },
-    {
-      "path": "scripts/orchestration/thread_handoff.py",
-      "code": "no-redef",
       "message": "Name \"project_interpreter\" already defined (possibly by an import)"
     },
     {
@@ -19641,11 +19616,6 @@
       "path": "scripts/orchestration/thread_handoff.py",
       "code": "no-redef",
       "message": "Name \"task_identity\" already defined (by an import)"
-    },
-    {
-      "path": "scripts/orchestration/thread_handoff.py",
-      "code": "no-redef",
-      "message": "Name \"thread_handoff_canary\" already defined (by an import)"
     },
     {
       "path": "scripts/orchestration/trail_runner.py",

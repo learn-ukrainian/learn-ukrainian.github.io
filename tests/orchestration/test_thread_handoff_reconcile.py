@@ -314,7 +314,7 @@ _BUNDLE_HELPER_CALLS = {
     'validate_live_lease': {
         'LINEAGE_ID_RE.fullmatch', 'active.get', "active['thread_id'].strip", 'display.get',
         'expected_paths.items', 'isinstance', 'lineage_id.startswith', 'native.get',
-        'normalize_identity_state', 'normalize_rollover_id', 'normalized_state.get', 're.fullmatch',
+        'normalize_identity_state', 'normalize_rollover_id', 'normalized_state.get',
         'replacement.get', "replacement['resumed_thread_id'].strip", 'replacement_packet_paths',
         'source_checkout_binding_error', 'state.get', 'str', 'task_family_rollover.transition_identity',
         'task_identity.validate_identity', 'task_identity.validate_title_transition', 'utc_now',
@@ -326,11 +326,8 @@ _BUNDLE_HELPER_CALLS = {
         'binding.get', 'full_head.strip', 'head_advanced.strip', 'isinstance', 'replacement.get', 'set',
     },
     'replacement_packet_paths': {
-        "(packet_dir / 'bootstrap.md').as_posix", "(packet_dir / 'canary-pass.json').as_posix",
-        "(packet_dir / 'handoff.md').as_posix", "(packet_dir / 'identity-receipt.json').as_posix",
-        "(packet_dir / 'semantic-snapshot.json').as_posix", "(packet_dir / 'strict-answers.json').as_posix",
-        "(packet_dir / 'strict-probe.json').as_posix", "(packet_dir / 'strict-questions.json').as_posix",
-        "(packet_dir / 'strict-verdict.json').as_posix", 'packet_dir.as_posix', 'runtime_dir',
+        "(packet_dir / 'bootstrap.md').as_posix", "(packet_dir / 'handoff.md').as_posix",
+        "(packet_dir / 'identity-receipt.json').as_posix", 'packet_dir.as_posix', 'runtime_dir',
     },
     'runtime_dir': {
         'Path',

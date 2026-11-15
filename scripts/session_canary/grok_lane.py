@@ -22,7 +22,6 @@ Policy (operational, not production-rollover)
   handoff) plus the selection inputs. ``handoff_sha256`` is informational.
   Material edits after mint → re-mint to refresh facts. Score reports
   ``handoff_changed_since_mint`` and does not fail for that edit.
-- Production identity rollover remains ``context_canary mint --snapshot`` (strict 10/10).
 
 Paths (gitignored local; under ``.claude/<epic>-epic/canary/``)
 ---------------------------------------------------------------
@@ -1260,10 +1259,6 @@ In `~/.grok/config.toml`:
 auto_compact_threshold_percent = 85
 ```
 Operator 2026-09-21: keep the product default of 85%. Do not raise it.
-
-### Production rollover (different tool)
-Strict 10/10 identity rollover still uses:
-`{_MACHINERY}/context_canary.py mint --snapshot …` + score — not this operational lane canary.
 """
     print(text)
     return 0

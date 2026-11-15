@@ -48,9 +48,8 @@ if _LOCAL_REPO_ROOT not in sys.path:
     sys.path.insert(0, _LOCAL_REPO_ROOT)
 
 try:
-    from scripts import context_canary
     from scripts.common.repo_root import project_interpreter
-    from scripts.orchestration import task_identity, thread_handoff_canary
+    from scripts.orchestration import task_identity
     from scripts.orchestration.task_family import codex_state as task_family_codex_state
     from scripts.orchestration.task_family import rollover as task_family_rollover
     from scripts.orchestration.task_family import rollover_registry as task_family_rollover_registry
@@ -72,9 +71,7 @@ except ImportError as exc:
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import task_identity
-    import thread_handoff_canary
 
-    import context_canary
     from common.repo_root import project_interpreter
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover
@@ -381,55 +378,7 @@ def replacement_packet_paths(agent: str, lineage_id: str, generation: int, rollo
         "runtime_path": packet_dir.as_posix(),
         "bootstrap_prompt_path": (packet_dir / "bootstrap.md").as_posix(),
         "handoff_path": (packet_dir / "handoff.md").as_posix(),
-        "semantic_snapshot_path": (packet_dir / "semantic-snapshot.json").as_posix(),
-        "strict_probe_path": (packet_dir / "strict-probe.json").as_posix(),
-        "strict_questions_path": (packet_dir / "strict-questions.json").as_posix(),
-        "strict_answers_path": (packet_dir / "strict-answers.json").as_posix(),
-        "strict_verdict_path": (packet_dir / "strict-verdict.json").as_posix(),
-        "canary_proof_path": (packet_dir / "canary-pass.json").as_posix(),
         "identity_receipt_path": (packet_dir / "identity-receipt.json").as_posix(),
-    }
-
-
-def semantic_snapshot_template(state: dict[str, Any], *, generated_at: datetime) -> dict[str, Any]:
-    """Build the answer-free strict-snapshot scaffold for one reserved packet.
-
-    The source references deliberately satisfy the closed ``context_canary``
-    grammar while the empty semantic fields keep an unfilled scaffold from
-    being minted as a production probe.
-    """
-    replacement = state.get("replacement") or {}
-    lineage_id = state.get("lineage_id")
-    rollover_id = replacement.get("rollover_id")
-    handoff_path = replacement.get("handoff_path")
-    if not isinstance(lineage_id, str) or not isinstance(rollover_id, str) or not isinstance(handoff_path, str):
-        raise ValueError("prepared rollover is missing the reserved snapshot identity or handoff path")
-    handoff_ref = f"handoff:{handoff_path}"
-    return {
-        "generated_at": isoformat_z(generated_at),
-        "lineage_id": lineage_id,
-        "rollover_id": rollover_id,
-        "seed": 0,
-        "goals": [
-            {"id": f"goal-{index}", "statement": "", "source_ref": f"{handoff_ref}#goal-{index}"}
-            for index in range(1, 4)
-        ],
-        "decision_records": [
-            {"id": f"decision-{index}", "decision": "", "source_ref": f"{handoff_ref}#decision-{index}"}
-            for index in range(1, 4)
-        ],
-        "constraint_records": [
-            {
-                "id": f"constraint-{index}",
-                "prohibition": "",
-                "source_ref": f"{handoff_ref}#constraint-{index}",
-            }
-            for index in range(1, 3)
-        ],
-        "next_actions": [
-            {"id": f"action-{index}", "action": "", "source_ref": f"{handoff_ref}#action-{index}"}
-            for index in range(1, 3)
-        ],
     }
 
 
@@ -3361,10 +3310,6 @@ def new_rollover_id() -> str:
     return f"rollover-{uuid.uuid4().hex}"
 
 
-def new_canary_challenge() -> str:
-    return uuid.uuid4().hex + uuid.uuid4().hex
-
-
 def migration_error(state: dict[str, Any], state_path: Path, repo_root: Path) -> dict[str, Any]:
     return {
         "error": "schema v1 state requires an explicit migration before it can be used",
@@ -3544,7 +3489,6 @@ def prepare_state(
         "status": "pending_start",
         "prepared_at": isoformat_z(now),
         "thread_id": None,
-        "canary_challenge": new_canary_challenge(),
         "display": {
             "epic_title": epic_title,
             "goal": goal,
@@ -3667,82 +3611,7 @@ def validate_live_lease(
         for key, expected in expected_paths.items():
             if replacement.get(key) != expected:
                 return None, f"replacement {key} is missing, forged, or not the reserved packet path"
-        challenge = replacement.get("canary_challenge")
-        if not isinstance(challenge, str) or not re.fullmatch(r"[0-9a-f]{64}", challenge):
-            return None, "replacement canary_challenge is malformed"
     return replacement, None
-
-
-def _canonical_json_sha256(payload: dict[str, Any]) -> str:
-    encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
-
-
-def validate_strict_verdict(
-    *,
-    replacement: dict[str, Any],
-    state_root: Path,
-    strict_probe: Path,
-    strict_verdict: Path,
-) -> dict[str, Any]:
-    """Require the reserved strict v2 10/10 evidence before cleanup can unlock."""
-    expected_probe = repo_local_path(state_root, Path(replacement["strict_probe_path"]))
-    expected_verdict = repo_local_path(state_root, Path(replacement["strict_verdict_path"]))
-    if strict_probe != expected_probe or strict_verdict != expected_verdict:
-        raise ValueError("strict probe and verdict must use the paths reserved by this rollover")
-    try:
-        probe = json.loads(strict_probe.read_text(encoding="utf-8"))
-        verdict = json.loads(strict_verdict.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ValueError(f"strict production evidence is unreadable: {type(exc).__name__}: {exc}") from exc
-    if not isinstance(probe, dict) or not isinstance(verdict, dict):
-        raise ValueError("strict production evidence must be JSON objects")
-    validated_probe, probe_error = context_canary.validate_production_probe(
-        probe,
-        expected_lineage_id=replacement["lineage_id"],
-        expected_rollover_id=replacement["rollover_id"],
-    )
-    if probe_error:
-        raise ValueError(f"strict probe failed production validation: {probe_error}")
-    assert validated_probe is not None
-    probe = validated_probe
-    anchor_ids = [anchor["id"] for anchor in probe["anchors"]]
-    required_verdict_keys = {
-        "version",
-        "schema",
-        "lineage_id",
-        "rollover_id",
-        "probe_sha256",
-        "seed",
-        "k",
-        "correct",
-        "score",
-        "verdict",
-        "model",
-        "per_anchor",
-    }
-    if set(verdict) != required_verdict_keys:
-        raise ValueError("strict verdict has missing or forged fields")
-    if (
-        verdict.get("version") != "2"
-        or verdict.get("schema") != "production-handoff-v2"
-        or verdict.get("lineage_id") != replacement["lineage_id"]
-        or verdict.get("rollover_id") != replacement["rollover_id"]
-        or verdict.get("probe_sha256") != _canonical_json_sha256(probe)
-        or verdict.get("seed") != probe["seed"]
-        or verdict.get("k") != 10
-        or verdict.get("correct") != 10
-        or verdict.get("score") != 1.0
-        or verdict.get("verdict") != "PASS"
-    ):
-        raise ValueError("strict verdict is not the required PASS 10/10 for this reserved probe")
-    rows = verdict.get("per_anchor")
-    if not isinstance(rows, list) or len(rows) != 10:
-        raise ValueError("strict verdict does not attest every anchor")
-    row_ids = [row.get("id") for row in rows if isinstance(row, dict) and row.get("match") is True]
-    if set(row_ids) != set(anchor_ids) or len(row_ids) != 10:
-        raise ValueError("strict verdict does not report a matching PASS for every anchor")
-    return verdict
 
 
 def confirm_started(
@@ -3752,10 +3621,6 @@ def confirm_started(
     new_automation_id: str | None,
     confirmed_by: str,
     now: datetime,
-    canary_proof: Path,
-    strict_probe: Path,
-    strict_verdict: Path,
-    state_root: Path,
 ) -> dict[str, Any]:
     if not new_thread_id.strip():
         raise ValueError("--new-thread-id is required")
@@ -3787,39 +3652,16 @@ def confirm_started(
         replacement_task_id=new_thread_id.strip(),
     )
     if status == "started":
-        proof = replacement.get("canary_proof") or {}
-        verdict = replacement.get("strict_verdict") or {}
         cleanup = confirmed.get("cleanup") or {}
-        if (
-            identity["lifecycle_state"] != "confirmed"
-            or proof.get("status") != "PASS"
-            or verdict.get("verdict") != "PASS"
-            or cleanup.get("old_automation_ready_to_delete") is not True
-        ):
+        if identity["lifecycle_state"] != "confirmed" or cleanup.get("old_automation_ready_to_delete") is not True:
             raise ValueError("existing confirmation is incomplete or inconsistent")
         return state
     native = replacement.get("native_lifecycle")
-    proof, proof_error = thread_handoff_canary.load_and_validate_pass_proof(
-        canary_proof,
-        rollover_id=str(replacement.get("rollover_id") or ""),
-        replacement_thread_id=new_thread_id.strip(),
-        challenge=str(replacement.get("canary_challenge") or ""),
-    )
-    if proof_error:
-        raise ValueError(f"script-proven canary PASS is required: {proof_error}")
-    strict_evidence = validate_strict_verdict(
-        replacement=replacement,
-        state_root=state_root,
-        strict_probe=strict_probe,
-        strict_verdict=strict_verdict,
-    )
     replacement["status"] = "started"
     replacement["thread_id"] = new_thread_id.strip()
     replacement["confirmed_at"] = isoformat_z(now)
     if new_automation_id:
         replacement["automation_id"] = new_automation_id
-    replacement["canary_proof"] = proof
-    replacement["strict_verdict"] = strict_evidence
     replacement["identity"] = task_identity.mark_confirmed(
         identity,
         transition,
@@ -4088,7 +3930,7 @@ def render_bootstrap_prompt(
                 "```",
                 "",
                 "Use the compact capsule command card emitted by `detect --format session-start` for this packet.",
-                "It is the only execution card: `bootstrap-replacement` emits the strict snapshot template; `confirm-replacement` emits questions when answers are absent, then mints, scores, proves, and confirms on its idempotent rerun.",
+                "It is the only execution card: `bootstrap-replacement` binds and resumes this replacement; `confirm-replacement` then confirms it (idempotent on rerun).",
                 "",
                 "After confirmation, read the exact predecessor through the native app. Run `native-action --action archive` with its authoritative status and pin facts. If either fact is absent, use `unknown`; the durable receipt must block and preserve the predecessor. Only an actionable response authorizes `set_thread_archived` for the returned exact UUID, followed by `record-native-result` and `reconcile-native`.",
                 "",
@@ -4510,12 +4352,6 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
             "current_file": router_path.as_posix(),
             "would_write_router": bool(args.write_current),
             "old_automation_ready_to_delete": False,
-            "semantic_snapshot_file": replacement["semantic_snapshot_path"],
-            "strict_probe_file": replacement["strict_probe_path"],
-            "strict_questions_file": replacement["strict_questions_path"],
-            "strict_answers_file": replacement["strict_answers_path"],
-            "strict_verdict_file": replacement["strict_verdict_path"],
-            "canary_proof_file": replacement["canary_proof_path"],
             "intended_title": replacement["display"]["title"],
             "title_source": replacement["display"]["title_source"],
             "identity": replacement["identity"],
@@ -4723,12 +4559,6 @@ def _cmd_prepare_locked(args: argparse.Namespace) -> int:
         "current_file": rel(router_path, repo_root) if wrote_router else None,
         "replacement_status": prepared_state["replacement"]["status"],
         "old_automation_ready_to_delete": prepared_state["cleanup"]["old_automation_ready_to_delete"],
-        "semantic_snapshot_file": replacement["semantic_snapshot_path"],
-        "strict_probe_file": replacement["strict_probe_path"],
-        "strict_questions_file": replacement["strict_questions_path"],
-        "strict_answers_file": replacement["strict_answers_path"],
-        "strict_verdict_file": replacement["strict_verdict_path"],
-        "canary_proof_file": replacement["canary_proof_path"],
         "intended_title": replacement["display"]["title"],
         "title_source": replacement["display"]["title_source"],
         "identity": replacement["identity"],
@@ -5410,17 +5240,6 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
-    expected_proof = repo_local_path(state_root, Path(state["replacement"]["canary_proof_path"]))
-    try:
-        supplied_proof = repo_local_path(state_root, args.canary_proof)
-        supplied_strict_probe = repo_local_path(state_root, args.strict_probe)
-        supplied_strict_verdict = repo_local_path(state_root, args.strict_verdict)
-    except ValueError as exc:
-        print(json.dumps({"error": str(exc), "agent": agent}, indent=2))
-        return 2
-    if supplied_proof != expected_proof:
-        print(json.dumps({"error": "--canary-proof must be the proof path reserved by this rollover"}, indent=2))
-        return 2
     try:
         confirmed = confirm_started(
             state,
@@ -5428,10 +5247,6 @@ def _cmd_confirm_started_locked(args: argparse.Namespace) -> int:
             new_automation_id=args.new_automation_id,
             confirmed_by=args.confirmed_by,
             now=utc_now(),
-            canary_proof=supplied_proof,
-            strict_probe=supplied_strict_probe,
-            strict_verdict=supplied_strict_verdict,
-            state_root=state_root,
         )
     except ValueError as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
@@ -5556,11 +5371,6 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
                 "lineage_id": resumed.get("lineage_id"),
                 "rollover_id": replacement["rollover_id"],
                 "replacement_thread_id": replacement["resumed_thread_id"],
-                "canary_proof_file": replacement["canary_proof_path"],
-                "semantic_snapshot_file": replacement["semantic_snapshot_path"],
-                "strict_probe_file": replacement["strict_probe_path"],
-                "strict_answers_file": replacement["strict_answers_path"],
-                "strict_verdict_file": replacement["strict_verdict_path"],
                 "status": replacement["status"],
                 "identity": replacement["identity"],
                 "title_transition": replacement["title_transition"],
@@ -5603,16 +5413,6 @@ def _wrapper_packet_context(
     return repo_root, state_root, agent, state_path, state, replacement
 
 
-def _print_questions_only(path: Path) -> None:
-    """Return the answer-free recall view after a strict proof failure."""
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        print(json.dumps({"questions_only_error": f"{type(exc).__name__}: {exc}"}, indent=2))
-        return
-    print(json.dumps(payload, indent=2, ensure_ascii=False))
-
-
 def _derived_namespace(args: argparse.Namespace, **overrides: Any) -> argparse.Namespace:
     """Derive one sub-step namespace from the caller instead of rebuilding it field-by-field.
 
@@ -5628,7 +5428,7 @@ def _derived_namespace(args: argparse.Namespace, **overrides: Any) -> argparse.N
 
 
 def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
-    """Bind, resume, and create one answer-free semantic snapshot template."""
+    """Bind and resume one replacement through its exact rollover packet."""
     packet = _wrapper_packet_context(args)
     if packet is None:
         return 2
@@ -5669,16 +5469,6 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
     if packet is None:
         return 2
     _repo_root, state_root, agent, state_path, state, replacement = packet
-    snapshot_path = repo_local_path(state_root, Path(replacement["semantic_snapshot_path"]))
-    template_path = snapshot_path.with_name("semantic-snapshot.template.json")
-    template_created = False
-    try:
-        if not template_path.exists():
-            write_json_atomic(template_path, semantic_snapshot_template(state, generated_at=utc_now()))
-            template_created = True
-    except (OSError, ValueError) as exc:
-        print(json.dumps({"error": str(exc), "action": "bootstrap-replacement"}, indent=2))
-        return 2
     print(
         json.dumps(
             {
@@ -5689,11 +5479,6 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
                 "state_file": rel(state_path, state_root),
                 "handoff_path": replacement["handoff_path"],
                 "bootstrap_prompt_path": replacement["bootstrap_prompt_path"],
-                "semantic_snapshot_template": rel(template_path, state_root),
-                "semantic_snapshot_file": replacement["semantic_snapshot_path"],
-                "strict_questions_file": replacement["strict_questions_path"],
-                "strict_answers_file": replacement["strict_answers_path"],
-                "template_created": template_created,
             },
             indent=2,
         )
@@ -5702,11 +5487,11 @@ def cmd_bootstrap_replacement(args: argparse.Namespace) -> int:
 
 
 def cmd_confirm_replacement(args: argparse.Namespace) -> int:
-    """Run strict mint, recall questions, score, canary proof, and confirmation."""
+    """Confirm one resumed replacement through its exact rollover packet."""
     packet = _wrapper_packet_context(args)
     if packet is None:
         return 2
-    _repo_root, state_root, agent, _state_path, state, replacement = packet
+    _repo_root, _state_root, agent, _state_path, state, replacement = packet
     if replacement.get("status") not in {"resumed", "started"}:
         print(json.dumps({"error": "bootstrap-replacement must resume this packet before confirmation"}, indent=2))
         return 2
@@ -5749,54 +5534,6 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
             )
         )
         return 0
-    try:
-        snapshot_path = repo_local_path(state_root, Path(replacement["semantic_snapshot_path"]))
-        probe_path = repo_local_path(state_root, Path(replacement["strict_probe_path"]))
-        questions_path = repo_local_path(state_root, Path(replacement["strict_questions_path"]))
-        answers_path = repo_local_path(state_root, Path(replacement["strict_answers_path"]))
-        verdict_path = repo_local_path(state_root, Path(replacement["strict_verdict_path"]))
-        proof_path = repo_local_path(state_root, Path(replacement["canary_proof_path"]))
-    except (OSError, ValueError) as exc:
-        print(json.dumps({"error": str(exc), "action": "confirm-replacement"}, indent=2))
-        return 2
-
-    mint_args = _derived_namespace(args, snapshot=snapshot_path, facts=None, out=probe_path)
-    if context_canary.cmd_mint(mint_args) != 0:
-        return 2
-    questions_args = _derived_namespace(args, probe=probe_path, out=questions_path)
-    if context_canary.cmd_questions(questions_args) != 0:
-        return 2
-    score_args = _derived_namespace(
-        args,
-        probe=probe_path,
-        answers=answers_path,
-        expected_lineage_id=state["lineage_id"],
-        expected_rollover_id=replacement["rollover_id"],
-        verdict=verdict_path,
-        threshold=0.75,
-        pass_ratio=0.85,
-        context_tokens=0,
-        model="unknown",
-        log=None,
-    )
-    if context_canary.cmd_score(score_args) != 0:
-        _print_questions_only(questions_path)
-        return 2
-    canary_result = thread_handoff_canary.main(
-        [
-            "--rollover-id",
-            replacement["rollover_id"],
-            "--replacement-thread-id",
-            replacement_thread_id,
-            "--challenge",
-            replacement["canary_challenge"],
-            "--proof-file",
-            proof_path.as_posix(),
-        ]
-    )
-    if canary_result != 0:
-        _print_questions_only(questions_path)
-        return 2
     confirm_args = _derived_namespace(
         args,
         repo_root=args.repo_root,
@@ -5806,9 +5543,6 @@ def cmd_confirm_replacement(args: argparse.Namespace) -> int:
         rollover_id=args.rollover_id,
         new_thread_id=replacement_thread_id,
         new_automation_id=args.new_automation_id,
-        canary_proof=proof_path,
-        strict_probe=probe_path,
-        strict_verdict=verdict_path,
         confirmed_by=args.confirmed_by,
         stream=getattr(args, "stream", None),
     )
@@ -6980,7 +6714,7 @@ def render_session_start_context(
         [
             f".venv/bin/python {_PACKAGE_DIR}/thread_handoff.py confirm-replacement -a {agent} -l {lineage_id} -r {rollover_id}{stream_arg}",
             "```",
-            "Fill snapshot; first confirm emits questions. Failure keeps cleanup locked.",
+            "Read the durable handoff, then confirm; nothing to fill. Failure keeps cleanup locked.",
         ]
     )
     if candidate.get("excluded_terminal"):
@@ -7468,14 +7202,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         "runtime_path": replacement.get("runtime_path"),
         "handoff_path": replacement.get("handoff_path"),
         "bootstrap_prompt_path": replacement.get("bootstrap_prompt_path"),
-        "canary_challenge": replacement.get("canary_challenge"),
-        "canary_proof_path": replacement.get("canary_proof_path"),
         "resumed_thread_id": replacement.get("resumed_thread_id"),
-        "strict_probe_path": replacement.get("strict_probe_path"),
-        "semantic_snapshot_path": replacement.get("semantic_snapshot_path"),
-        "strict_questions_path": replacement.get("strict_questions_path"),
-        "strict_answers_path": replacement.get("strict_answers_path"),
-        "strict_verdict_path": replacement.get("strict_verdict_path"),
         "identity_receipt_path": replacement.get("identity_receipt_path"),
         "identity": replacement.get("identity"),
         "title_transition": replacement.get("title_transition"),
@@ -7812,9 +7539,6 @@ def build_parser() -> argparse.ArgumentParser:
     confirm.add_argument("--rollover-id", required=True)
     confirm.add_argument("--new-thread-id", required=True)
     confirm.add_argument("--new-automation-id")
-    confirm.add_argument("--canary-proof", type=Path, required=True)
-    confirm.add_argument("--strict-probe", type=Path, required=True)
-    confirm.add_argument("--strict-verdict", type=Path, required=True)
     confirm.add_argument("--confirmed-by", default=os.environ.get("USER", "operator"))
     confirm.add_argument("--stream", help="Explicit session stream id used for an optional bundle upload.")
     confirm.set_defaults(func=cmd_confirm_started)
@@ -7832,7 +7556,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     bootstrap_replacement = subparsers.add_parser(
         "bootstrap-replacement",
-        help="Bind and resume one fallback replacement, then write its answer-free strict snapshot template.",
+        help="Bind and resume one replacement through its exact rollover packet.",
     )
     bootstrap_replacement.add_argument("-a", "--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     bootstrap_replacement.add_argument("-l", "--lineage-id", type=argparse_lineage_id)
@@ -7844,7 +7568,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     confirm_replacement = subparsers.add_parser(
         "confirm-replacement",
-        help="Mint, ask, score, canary-prove, and confirm one resumed replacement in-process.",
+        help="Confirm one resumed replacement through its exact rollover packet.",
     )
     confirm_replacement.add_argument("-a", "--agent", type=argparse_agent_name, default=DEFAULT_AGENT)
     confirm_replacement.add_argument("-l", "--lineage-id", type=argparse_lineage_id)
