@@ -365,12 +365,15 @@ def test_every_event_runs_every_job(event: str) -> None:
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
     if event in {"opened", "synchronize", "reopened", "edited"}:
         expected |= {"refresh-pytest-durations", "pytest", "pytest-report"}
+    else:
+        expected.add("pr-invariants")
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
 
 def test_merge_queue_always_executes_full_suite() -> None:
     results, _ = _simulate(_EVENTS["merge_group"])
+    assert results.pop("pr-invariants") == "skipped"
     assert all(result == "success" for result in results.values())
     assert "reuse" not in results
 
@@ -423,6 +426,7 @@ _GREEN = {
     "HYDRATE": "success",
     "CHECKS": "success",
     "PR_AFFECTED": "success",
+    "REPO_INVARIANTS": "success",
     "FRONTEND": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
@@ -462,11 +466,13 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
         if event == "pull_request":
             jobs.update({name: "skipped" for name in ("REFRESH", "PYTEST", "PYTEST_REPORT")})
+        else:
+            jobs["REPO_INVARIANTS"] = "skipped"
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        mapping = {"REPO_INVARIANTS": "pr-invariants", "PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
@@ -506,7 +512,7 @@ def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]
 def test_gate_requires_real_event_and_candidate_identity() -> None:
     for event in ("pull_request", "merge_group", "schedule", "workflow_dispatch"):
         assert _run_gate(event).returncode == 0
-        for key in ("SECRET_SCAN", "CHECKS", "DEPENDENCY_AUDIT", "PYTEST", "PYTEST_REPORT", "REFRESH", "FRONTEND"):
+        for key in ("SECRET_SCAN", "CHECKS", "DEPENDENCY_AUDIT", "PYTEST", "PYTEST_REPORT", "REFRESH", "FRONTEND", "REPO_INVARIANTS"):
             assert _run_gate(event, **{key: "unknown"}).returncode != 0
         for corruption in ({"GITHUB_EVENT_JSON": "{}"}, {"GITHUB_EVENT_JSON": "{"}, {"GITHUB_SHA": "f" * 40}, {"GITHUB_REF": "refs/heads/wrong\n$(false)"}):
             result = _run_gate(event, **corruption)
@@ -674,16 +680,21 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m lu_machinery.ci.pr_affected_tests' in step['run'].replace('scripts.', 'lu_machinery.')
     assert '"$EVENT_NAME" = pull_request' in step['run']
-    invariants = next(s for s in job['steps'] if s.get('name') == 'Run repository invariants')
+    invariant_job = _load('ci.yml')['jobs']['pr-invariants']
+    assert invariant_job['needs'] == job['needs']
+    assert 'pr-invariants' in _ci_gate_job()['needs']
+    invariants = next(s for s in invariant_job['steps'] if s.get('name') == 'Run repository invariants')
     assert invariants['run'].replace('scripts.', 'lu_machinery.') == '.venv/bin/python -m lu_machinery.ci.pr_affected_tests --repo-wide'
-    assert job['steps'].index(step) < job['steps'].index(invariants)
+    assert not any(s.get('name') == 'Run repository invariants' for s in job['steps'])
     for event, status, expected in [('pull_request', 'success', True), ('pull_request', 'failure', True),
                                     ('pull_request', 'cancelled', False), ('merge_group', 'success', False)]:
+        assert _condition(invariant_job['if'], {'github': {'event_name': event}, 'job': {'status': status}}) is expected
         assert _condition(invariants['if'], {'github': {'event_name': event}, 'job': {'status': status}}) is expected
     assert not invariants.get('continue-on-error', False)
     for status in ('failure', 'skipped', 'cancelled', '', 'unknown'):
-        result = _run_gate('pull_request', PR_AFFECTED=status)
-        assert result.returncode == 1, result.stdout
+        for key in ('PR_AFFECTED', 'REPO_INVARIANTS'):
+            result = _run_gate('pull_request', **{key: status})
+            assert result.returncode == 1, result.stdout
     result = _run_gate('pull_request', PR_AFFECTED='success')
     assert result.returncode == 0
     assert 'ran on this head' in result.stdout
