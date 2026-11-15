@@ -19,6 +19,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from lu_machinery.common import safe_unit_install as released_unit_install
 
 from scripts.common import safe_unit_install
 from scripts.common.safe_unit_install import InstallError
@@ -294,7 +295,9 @@ def test_link_raced_in_before_rename_is_replaced(
     outside = tmp_path / "outside-unit"
     outside.write_text("outside unit")
     outside.chmod(0o644)
-    real_write = safe_unit_install.write_unit
+    # The drop-in installer runs on the installed release's unit installer; the others on the in-tree one.
+    unit_install = released_unit_install if installer.module is install_data_volume_dropins else safe_unit_install
+    real_write = unit_install.write_unit
     raced: list[str] = []
 
     def racing_write(dir_fd: int, name: str, content: bytes, *, mode: int) -> None:
@@ -302,7 +305,7 @@ def test_link_raced_in_before_rename_is_replaced(
         raced.append(name)
         real_write(dir_fd, name, content, mode=mode)
 
-    monkeypatch.setattr(safe_unit_install, "write_unit", racing_write)
+    monkeypatch.setattr(unit_install, "write_unit", racing_write)
     if hasattr(installer.module, "write_unit"):
         monkeypatch.setattr(installer.module, "write_unit", racing_write)
 

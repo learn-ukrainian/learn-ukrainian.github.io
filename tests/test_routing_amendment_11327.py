@@ -113,11 +113,11 @@ def test_reviewer_capacity_and_ranking_read_shared_allowance(monkeypatch):
     from scripts.review.capacity import review_capacity
     from scripts.review.reviewer_scheduler import _route_record, metrics_for
 
-    # The Cursor Grok candidate retired; the Muse route shares a simulated meter instead.
-    _simulate_usage_pool(monkeypatch, ("grok", "muse"))
+    # The live catalog lists no usage pool. This installs a simulated Grok/Cursor
+    # meter and reads it through the surviving Cursor review route.
+    _simulate_usage_pool(monkeypatch, ("grok", "cursor"))
     budget = snapshot()
-    budget["agents"]["muse"] = {**budget["agents"]["cursor"]}
-    candidate = REVIEW_CANDIDATES["muse"]
+    candidate = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
     record = _route_record(candidate, budget, prefer_route=True)
     assert review_capacity(record, budget["diagnostics"]).remaining_pct == 1
     assert review_capacity(record, budget["diagnostics"]).near_cap

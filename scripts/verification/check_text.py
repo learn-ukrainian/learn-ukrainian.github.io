@@ -16,13 +16,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-try:
-    from scripts.lib.readonly_sqlite import open_readonly
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
-
+from lu_machinery.lib.readonly_sqlite import open_readonly
 from lu_machinery.storage.topology import ActiveDatabaseNetworkError, require_local_active_sources_db
 
 from scripts.curriculum.evidence.sources import _signature

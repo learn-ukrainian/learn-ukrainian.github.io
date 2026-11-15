@@ -30,14 +30,14 @@ from urllib.parse import quote
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 try:
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
-    from scripts.lib.context_profiles import resolve_profile
+    import scripts  # binds the product roots for the installed release
 except ModuleNotFoundError as exc:
     if __package__ or exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
     sys.path.insert(0, os.fspath(PROJECT_ROOT))
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
-    from scripts.lib.context_profiles import resolve_profile
+    import scripts  # noqa: F401  (binds the product roots for the installed release)
+from lu_machinery.api.telemetry.transcript_tokens import usage_input_tokens
+from lu_machinery.lib.context_profiles import resolve_profile
 
 BASELINE_DOC = PROJECT_ROOT / "docs/monitor-api/cold-start-baseline.md"
 DEFAULT_MONITOR_BASE_URL = "http://127.0.0.1:8765"

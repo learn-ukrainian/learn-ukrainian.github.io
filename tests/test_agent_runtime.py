@@ -4282,74 +4282,33 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
     )
 
 
-def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch):
-    """M06: real parsing and usage persistence must not lose a completed run's accounting."""
-    import hashlib
-    import io
+def test_muse_runner_refuses_retired_wonder_before_spawn(tmp_path, monkeypatch):
+    """MUSE-RETIRE-1112: the retired Wonder pin is refused before planning, spawn or usage accounting."""
     from unittest.mock import MagicMock
 
     from agent_runtime import runner, usage
-    from agent_runtime.adapters import muse as runtime_muse
-    from scripts.agent_runtime.adapters.muse import MuseAdapter
 
-    plan, records = _muse_stream_fixture(tmp_path)
-    adapter = MuseAdapter()
-    # Planning/admission are synthetic inputs, not qualified cap or permission evidence.
-    monkeypatch.setattr(runtime_muse, "require_muse_execution_model", lambda model: model)
-    monkeypatch.setattr(adapter, "build_invocation", MagicMock(return_value=plan))
-    monkeypatch.setattr(runner, "_load_adapter", MagicMock(return_value=adapter))
-    monkeypatch.setattr(runner, "_resolve_plan_telemetry", MagicMock(return_value=SimpleNamespace(
-        model="muse-wonder-full-1.0", effort="high", cli_version=plan.metadata["cli_version"],
-    )))
-    proc = MagicMock()
-    proc.stdout = io.StringIO("\n".join(json.dumps(record) for record in records) + "\n")
-    proc.stderr = io.StringIO("")
-    proc.poll.return_value = proc.wait.return_value = proc.returncode = 0
-    monkeypatch.setattr(runner, "_spawn_subprocess", MagicMock(return_value=(proc, None, None)))
+    build = MagicMock()
+    spawn = MagicMock()
+    monkeypatch.setattr(runner, "_spawn_subprocess", spawn)
+    monkeypatch.setattr(type(runner._load_adapter("muse")), "build_invocation", build)
     store = tmp_path / "private-usage"
     store.mkdir(mode=0o700)
     monkeypatch.setattr(usage, "_usage_dir", lambda: store)
 
-    result = runner.invoke(
-        "muse", "fixture", mode="read-only", cwd=tmp_path,
-        model="muse-wonder-full-1.0", task_id="muse-interface", effort="high",
-        tool_config={"run_nonce": "0123456789abcdef"},
-    )
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Agent 'muse': model 'muse-wonder-full-1.0' is retired in the model catalog"),
+    ):
+        runner.invoke(
+            "muse", "fixture", mode="read-only", cwd=tmp_path,
+            model="muse-wonder-full-1.0", task_id="muse-interface", effort="high",
+            tool_config={"run_nonce": "0123456789abcdef"},
+        )
 
-    assert result.ok is True
-    assert result.response == "READY\n"
-    assert result.session_id == "11111111-1111-4111-8111-111111111111"
-    files = list(store.glob("usage_muse-runtime_*.jsonl"))
-    assert len(files) == 1
-    lines = files[0].read_text().splitlines()
-    assert len(lines) == 1
-    durable = json.loads(lines[0])
-    assert durable == result.usage_record
-    assert durable["outcome"] == "ok"
-    assert durable["tokens"] == 120
-    assert durable["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
-    companion = durable["muse_run"]
-    assert companion["task_id"] == "muse-interface"
-    assert companion["run_nonce"] == "0123456789abcdef"
-    assert companion["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
-    assert companion["provider_run_id"] == "22222222-2222-4222-8222-222222222222"
-    assert companion["requested_selector"] == companion["usage_model"] == "muse-wonder-full-1.0"
-    assert companion["input_tokens"] == 100
-    assert companion["output_tokens"] == 20
-    assert companion["cached_tokens"] == 30
-    assert companion["reasoning_tokens"] == 5
-    assert companion["total_tokens"] == 120
-    assert companion["observed_model"] is durable["observed_model"] is None
-    assert companion["identity_state"] == durable["identity_state"] == "unknown"
-    assert companion["effective_permissions"] == "unknown"
-    assert companion["cli_sha256"] == [170] * 32
-    assert companion["prompt_sha256"] == [187] * 32
-    assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
-    assert bytes(companion["prompt_sha256"]).hex() == plan.metadata["prompt_sha256"]
-    fields = {key: value for key, value in companion.items() if key not in {"receipt_ref", "receipt_sha256"}}
-    assert bytes(companion["receipt_sha256"]) == hashlib.sha256(
-        json.dumps(fields, sort_keys=True, separators=(",", ":")).encode(),
-    ).digest()
+    build.assert_not_called()
+    spawn.assert_not_called()
+    assert not list(store.iterdir())
 
 
 @pytest.mark.parametrize("case", [
@@ -4471,70 +4430,6 @@ def _muse_planning_fixture(tmp_path, monkeypatch, version):
 
     monkeypatch.setattr(muse, "subprocess", SimpleNamespace(run=probe))
     return muse.MuseAdapter(), workspace, scratch, probes
-
-
-def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
-    """M04: preserve task bounds and whole durable usage equality through real redaction."""
-    import io
-    from unittest.mock import MagicMock
-
-    from agent_runtime import runner, usage
-    from scripts.agent_runtime.adapters import muse
-    from scripts.lib import rules_core
-    from scripts.secret_redactor import REDACTION
-
-    # Delimit the assignment so opaque-token redaction of random tmp/xdist paths
-    # cannot consume the password key that this test checks below.
-    adapter, workspace, scratch, probes = _muse_planning_fixture(
-        tmp_path / f"workspace password={TOKEN}", monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
-    )
-    fixture_plan, records = _muse_stream_fixture(workspace)
-    monkeypatch.setattr(muse, "uuid4", lambda: fixture_plan.metadata["provider_session_id"])
-    monkeypatch.setattr(runner, "_load_adapter", MagicMock(return_value=adapter))
-    proc = MagicMock()
-    proc.stdout = io.StringIO("\n".join(json.dumps(record) for record in records) + "\n")
-    proc.stderr = io.StringIO("")
-    proc.poll.return_value = proc.wait.return_value = proc.returncode = 0
-    monkeypatch.setattr(runner, "_spawn_subprocess", MagicMock(return_value=(proc, None, None)))
-    execute = MagicMock(wraps=runner._execute_invocation_plan)
-    monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
-    store = tmp_path / "private-usage"
-    store.mkdir(mode=0o700)
-    monkeypatch.setattr(usage, "_usage_dir", lambda: store)
-
-    result = runner.invoke(
-        "muse", "fixture", mode="read-only", cwd=workspace, model="muse-wonder-full-1.0",
-        task_id="muse-interface", effort="high", hard_timeout=45,
-        tool_config={"muse_worker": True, "muse_role": "investigation",
-                     "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
-                     "max_model_steps": 8, "max_tool_output_bytes": 8192},
-    )
-    plan = execute.call_args.kwargs["plan"]
-    assert execute.call_args.kwargs["hard_timeout"] == 45
-    assert result.ok is True
-    assert result.response == "READY\n"
-    assert result.usage_record["tokens"] == 120
-    files = list(store.glob("usage_muse-runtime_*.jsonl"))
-    assert len(files) == 1
-    durable = json.loads(files[0].read_text())
-    assert durable == result.usage_record
-    assert f"password={REDACTION}" in durable["cwd"]
-    assert str(workspace) not in json.dumps(durable)
-    assert TOKEN not in json.dumps(result.usage_record)
-    assert usage.redact_value(result.usage_record) == result.usage_record
-    assert len(files[0].read_bytes()) <= 4096
-    assert plan.cwd == workspace
-    assert records[2]["payload"]["record"]["workspace_root"] == str(workspace)
-    assert durable["muse_run"]["total_tokens"] == 120
-    assert durable["muse_run"]["declared_mode"] == "read-only"
-    assert len(probes) == 1
-    assert plan.cmd[plan.cmd.index("--max-model-steps") + 1] == "8"
-    assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
-    assert plan.metadata["max_model_steps"] == 8
-    assert plan.metadata["max_tool_output_bytes"] == 8192
-    prompt = Path(plan.cmd[-1]).read_text()
-    assert prompt == rules_core.core_block(rules_core.resolve_seat()) + "\n\nfixture"
-    assert prompt.count(rules_core.BLOCK_OPEN) == 1
 
 
 @pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])

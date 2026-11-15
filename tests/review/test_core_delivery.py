@@ -8,21 +8,29 @@ import sys
 from unittest.mock import Mock
 
 import pytest
+from lu_machinery.dispatcher import review_attempt, store
+from lu_machinery.dispatcher.types import TaskSpec
+from lu_machinery.lib import rules_core
+from lu_machinery.review import render_contract
 
-from scripts.dispatcher import review_attempt, store
-from scripts.dispatcher.types import TaskSpec
-from scripts.lib import rules_core
-from scripts.review import render_contract
 from scripts.review.prompts.check import check_prompt
 from scripts.review.prompts.render import REPO_ROOT, render, render_prompt
 from tests.review.test_prompts import _setup_lexical_fixture
+
+
+def _rules_dir(monkeypatch, directory):
+    """Point the installed release's trusted rules at ``directory`` (the core the renderer embeds)."""
+    release_path = rules_core.machinery_path
+    prefix = rules_core.RULES_DIR_REL + "/"
+    monkeypatch.setattr(rules_core, "machinery_path", lambda rel:
+                        directory / rel[len(prefix):] if rel.startswith(prefix) else release_path(rel))
 
 
 def rendered_at(tmp_path, monkeypatch, access="isolated"):
     source = tmp_path / "machinery-rules" / "core.md"
     source.parent.mkdir()
     source.write_text("Trusted machinery rules. Writer prompt is forbidden in learner inputs.\n")
-    monkeypatch.setenv("LEARN_UKRAINIAN_RULES_DIR", str(source.parent))
+    _rules_dir(monkeypatch, source.parent)
     manifest, _, _ = _setup_lexical_fixture(tmp_path)
     output = tmp_path / "review.prompt"
     text, sha, reads = render_prompt(manifest, repo_root=tmp_path, output_path=output,
@@ -82,7 +90,7 @@ def test_bound_core_provenance_admits_identical_bytes_across_machinery_checkouts
     admission = """
 import json, sys
 from pathlib import Path
-from scripts.review.render_contract import (
+from lu_machinery.review.render_contract import (
     ReviewContractError, check_launch_contract, check_render_contract, trusted_core_context,
 )
 prompt = Path(sys.argv[1])
@@ -106,7 +114,8 @@ print(json.dumps(result))
     dependency = outcomes[0]["recorded_dependency"]
     assert dependency["seat"] == "core"
     assert dependency["sources"] == [{"path": "agents_extensions/shared/rules/core.md",
-                                      "sha256": hashlib.sha256((checkouts[0] / rules_core.CORE_REL).read_bytes()).hexdigest()}]
+                                      # Both checkouts run the installed release, whose core is the trusted one.
+                                      "sha256": hashlib.sha256(rules_core.machinery_path(rules_core.CORE_REL).read_bytes()).hexdigest()}]
     assert all(outcome["current_dependency"] == outcome["recorded_dependency"] == dependency for outcome in outcomes)
 
 
@@ -131,7 +140,7 @@ def test_admission_refuses_tampered_core_provenance(tmp_path, monkeypatch, field
 @pytest.mark.parametrize("change", ("changed", "missing", "prompt", "provenance"))
 def test_launch_refuses_core_drift_before_attempt_claim_or_provisioning(tmp_path, monkeypatch, change):
     """Defect class: stale, missing or altered rules spend an attempt before launch refusal."""
-    from scripts.agent_runtime import review_mcp, runner
+    from lu_machinery.agent_runtime import review_mcp, runner
 
     source, manifest, output, text, _, _ = rendered_at(tmp_path, monkeypatch)
     contract = render_contract.check_render_contract(output, text, REPO_ROOT)
@@ -167,7 +176,7 @@ def test_missing_core_render_writes_no_artifacts(tmp_path, monkeypatch):
     from scripts.review.prompts.render import RenderError
 
     manifest, _, _ = _setup_lexical_fixture(tmp_path)
-    monkeypatch.setenv("LEARN_UKRAINIAN_RULES_DIR", str(tmp_path / "absent"))
+    _rules_dir(monkeypatch, tmp_path / "absent")
     output = tmp_path / "not-created" / "prompt"
     with pytest.raises(RenderError, match="review_rules_core_unavailable"):
         render_prompt(manifest, repo_root=tmp_path, output_path=output)

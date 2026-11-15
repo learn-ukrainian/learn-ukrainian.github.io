@@ -19,10 +19,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.api.delegate_router import seat_delegate_tasks
-from scripts.api.epics_router import _response_registry_text
-from scripts.api.occupancy import occupancy_payload
-from scripts.api.occupancy_sanitize import producer_identity
+from lu_machinery.api.delegate_router import seat_delegate_tasks
+from lu_machinery.api.epics_router import _response_registry_text
+from lu_machinery.api.occupancy import occupancy_payload
+from lu_machinery.api.occupancy_sanitize import producer_identity
 
 from .snapshot import finite_number, mapping
 from .sources import SourceReport, read_location, report

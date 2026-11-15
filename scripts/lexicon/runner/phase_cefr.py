@@ -18,8 +18,9 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 from scripts.lexicon.runner.contracts import CEFR_ALGORITHM_VERSION, PhaseSeal, canonical_json
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _BANDS = ("A1", "A2", "B1", "B2", "C1")

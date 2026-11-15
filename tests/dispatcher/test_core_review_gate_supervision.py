@@ -60,13 +60,14 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
 )
 def test_schemaless_reviewer_missing_verdict_gets_one_correction_turn(sandbox, second):
     """Case 3: a reply from a reviewer that cannot bind a schema, with no recognised VERDICT line, gets one
-    format correction. Muse is that reviewer now; Cursor, which had this path, has no approved pin while
-    Grok is retired (GROK-CANCEL-1110).
+    format correction. The dormant Muse adapter supplies this protocol through a local stub;
+    its model is admitted only in this disposable sandbox.
 
     The second reply is accepted only when it is valid findings JSON and keeps the
     first reply's decision. A changed or still-invalid second reply fails closed,
     and there is no third launch.
     """
+    sandbox.admit_retired_muse()
     findings = (
         '{"schema_version":"code-review-findings.v1",'
         '"overall":{"correctness":"correct","explanation":"No defects.","confidence":0.9},'

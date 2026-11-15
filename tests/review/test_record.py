@@ -1684,6 +1684,7 @@ def _rendered(world: World, made: dict[str, Any], access: str = "isolated") -> s
 
 def test_placeholder_attestation_keeps_recorded_core_but_rejects_tampering(world, monkeypatch, tmp_path):
     """Defect class: rules churn invalidates a paid return, or an archived prefix bypasses proof checks."""
+    from lu_machinery.lib import rules_core
     from lu_machinery.review.render_contract import ReviewContractError, check_launch_contract, check_render_contract
 
     from scripts.review.prompts.render import REPO_ROOT, render_prompt
@@ -1691,7 +1692,11 @@ def test_placeholder_attestation_keeps_recorded_core_but_rejects_tampering(world
     core = tmp_path / "rules" / "core.md"
     core.parent.mkdir()
     core.write_text("Original trusted rules\n")
-    monkeypatch.setenv("LEARN_UKRAINIAN_RULES_DIR", str(core.parent))
+    # The installed release reads its own shipped rules and takes no rules directory from the environment.
+    released_source = rules_core.source_path
+    monkeypatch.setattr(rules_core, "source_path", lambda rel, root=None: (
+        core.parent / Path(rel).relative_to(rules_core.RULES_DIR_REL)
+        if Path(rel).is_relative_to(rules_core.RULES_DIR_REL) else released_source(rel, root)))
     made = world.make_return(2)
     sent = _rendered(world, made)
     world.task("review-historical", "claude", "claude-sonnet-5", prompt_sha256=sent,

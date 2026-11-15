@@ -46,10 +46,11 @@ import yaml
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from lu_machinery.review.render_contract import ReviewContractError, check_rules_dependency
+
 from scripts.build.fresh.manifest import pinned_entries
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import RenderError, render, resolve_template_name
-from scripts.review.render_contract import ReviewContractError, check_rules_dependency
 
 #: Jinja statements that make a template read another file; none is allowed in any template.
 EXTERNAL_READ_NODES: tuple[type[jinja2.nodes.Node], ...] = (

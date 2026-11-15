@@ -15,11 +15,12 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+
 from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
-from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
+REGISTRY_ROOT = ROOT / "registry"
 ZNO_ANNOTATIONS_WORKSHEET = REGISTRY_ROOT / "lexicon" / "paronym_worksheet_candidates.yaml"
 
 # Verified 33 booklet documents from the matrix (2010 to 2025, excluding 2009 and 3 demo sessions)

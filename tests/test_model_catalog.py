@@ -97,7 +97,7 @@ def test_runtime_substitution_matches_only_requested_model_ids(requested, runtim
 @pytest.mark.parametrize("roles", [[], ["not-a-role"], ["critical_review"]])
 def test_candidate_suitability_roles_must_be_nonempty_and_held(roles):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["muse"]["suitability_roles"] = roles
+    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["suitability_roles"] = roles
     with pytest.raises(ModelCatalogError, match="suitability_roles"):
         validate_catalog(catalog)
 

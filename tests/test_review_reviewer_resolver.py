@@ -1119,9 +1119,8 @@ def test_ladders_end_the_frontier_rungs_with_opus(risk):
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "claude-sonnet-5-5-agy"
         assert ladder[6][0].name == "gemini-3.8-flash-high"
-        assert ladder[7][0].name == "muse"
-        assert len(ladder) == 8
-        assert "muse" in {c.name for rung in ladder for c in rung}
+        assert len(ladder) == 7
+        assert "muse" not in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1201,10 +1200,10 @@ def _seat_trace(resolution, prefix):
     return {entry.name: entry for entry in resolution.trace if entry.name.startswith(prefix)}
 
 
-# The Grok seat these subject-seat cases used retired (GROK-CANCEL-1110); they now exercise the same
-# subject exclusions on surviving seats: Muse (meta) and Codex (openai).
+# The Grok seat these subject-seat cases used retired (GROK-CANCEL-1110). Muse retired
+# after that (MUSE-RETIRE-1112) and is no longer a review candidate; Codex remains.
 def test_resolve_reviewer_subject_seat_for_muse_adapter_never_selects_muse():
-    """AC-01: an adapter change excludes that seat's reviewers and says why."""
+    """A Muse adapter path cannot select the retired Muse seat."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="claude",
@@ -1215,16 +1214,8 @@ def test_resolve_reviewer_subject_seat_for_muse_adapter_never_selects_muse():
     )
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
-    assert resolution.selected.family != "meta"
     assert resolution.selected.family == "openai"
-    muse = _seat_trace(resolution, "muse")
-    assert set(muse) == {"muse"}
-    for entry in muse.values():
-        assert entry.status == "excluded"
-        assert entry.reason is not None
-        assert "subject exclusion" in entry.reason
-        assert "subject seat muse" in entry.reason
-        assert "scripts/agent_runtime/adapters/muse.py" in entry.reason
+    assert _seat_trace(resolution, "muse") == {}
 
 
 def test_resolve_reviewer_subject_seat_blocks_codex_for_its_adapter():
@@ -1262,10 +1253,7 @@ def test_resolve_reviewer_explicit_subject_family_excludes_meta_without_guessing
     )
     assert resolution.selected is not None
     assert resolution.selected.family != "meta"
-    muse = next(entry for entry in resolution.trace if entry.name == "muse")
-    assert muse.status == "excluded"
-    assert "subject family meta" in muse.reason
-    assert "paths=" not in muse.reason
+    assert all(entry.family != "meta" for entry in resolution.trace)
 
 
 def test_resolve_reviewer_without_subject_information_matches_empty_subject_fields():
@@ -1365,70 +1353,42 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
 
 
 def test_normalize_muse_subject_seat_and_meta_family():
+    """Muse still normalizes as a subject, and the retired model is not a reviewer."""
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
-    candidate = REVIEW_CANDIDATES["muse"]
-    assert candidate.model_roles == frozenset({
-        "coding", "standard_review", "routine_review",
-    })
-    assert candidate.suitability_roles == frozenset({"routine_review"})
-    assert candidate.formal_review_eligible
-    assert candidate.requires_data_egress_policy is None
-    inputs = ResolverInputs(
-        author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
-    )
-    formal = evaluate_candidate(candidate, inputs)
-    assert formal.status == "eligible"
-    advisory = replace(inputs, formal_review=False)
-    assert evaluate_candidate(candidate, advisory).status == "eligible"
-    for risk in ("low", "medium"):
-        assert candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}
-    for risk in ("high", "critical"):
-        assert candidate not in {c for rung in REVIEW_LADDERS[risk] for c in rung}
-        assert evaluate_candidate(candidate, replace(inputs, risk=risk)).status == "excluded"
-        pinned = replace(inputs, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
-        assert resolve_reviewer(pinned).selected is None
-    for role in ("critical_review", "security_review"):
-        assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
-    meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))
-    assert meta_author.status == "excluded"
-    assert "same family as author (meta)" in meta_author.reason
-    assert evaluate_candidate(candidate, replace(advisory, review_profile="infra")).status == "eligible"
-    for changes in (
-        {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
-        {"language_lane": True},
-        {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
-        {"changed_paths": ("scripts/hooks/admission.py",)},
-    ):
-        assert evaluate_candidate(candidate, replace(advisory, **changes)).status == "excluded"
+    assert "muse" not in REVIEW_CANDIDATES
+    for risk in ("low", "medium", "high", "critical"):
+        assert "muse" not in {c.name for rung in REVIEW_LADDERS[risk] for c in rung}
+        pinned = resolve_reviewer(ResolverInputs(
+            author_model="gpt-6.1-sol", risk=risk, claude_account=HOST_ACCOUNT,
+            pinned_candidate="muse", pressure_override_reason="fixture",
+        ))
+        assert pinned.selected is None
+        assert pinned.fail_closed_reason == "unknown explicit reviewer pin 'muse'"
 
 
 @pytest.mark.parametrize("data_egress_policy", [None, "private_repo", "public_only"])
 def test_muse_formal_review_eligibility_must_stay_limited_to_low_medium_code_review(data_egress_policy):
-    candidate = REVIEW_CANDIDATES["muse"]
+    """Retired Muse is not a formal reviewer at any risk or egress policy."""
+    assert "muse" not in REVIEW_CANDIDATES
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol", review_profile="code", formal_review=True,
         data_egress_policy=data_egress_policy, claude_account=HOST_ACCOUNT,
         pinned_candidate="muse", pressure_override_reason="explicit Muse formal-review control",
     )
-    for risk in ("low", "medium"):
-        permitted = replace(inputs, risk=risk)
-        assert evaluate_candidate(candidate, permitted).status == "eligible"
-        assert resolve_reviewer(permitted).selected.name == "muse"
-        security = replace(permitted, changed_paths=("scripts/hooks/admission.py",))
-        assert evaluate_candidate(candidate, security).status == "excluded"
-        assert resolve_reviewer(security).selected is None
-    for changes in (
-        {"risk": "critical"}, {"risk": "high"}, {"requested_role": "security_review"},
-    ):
-        refused = replace(inputs, **changes)
-        assert evaluate_candidate(candidate, refused).status == "excluded"
-        assert resolve_reviewer(refused).selected is None
+    for risk in ("low", "medium", "high", "critical"):
+        refused = replace(inputs, risk=risk)
+        result = resolve_reviewer(refused)
+        assert result.selected is None
+        assert result.fail_closed_reason == "unknown explicit reviewer pin 'muse'"
+    security = replace(inputs, risk="low", changed_paths=("scripts/hooks/admission.py",))
+    assert resolve_reviewer(security).selected is None
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_low_medium_resolves_to_muse_when_healthy(risk, profile):
+    """A healthy Muse lane is not a reviewer after MUSE-RETIRE-1112."""
     inputs = ResolverInputs(
         author_model="claude-opus-5-5",
         risk=risk,
@@ -1438,10 +1398,11 @@ def test_low_medium_resolves_to_muse_when_healthy(risk, profile):
     )
     result = resolve_reviewer(inputs)
     assert result.selected is not None
-    assert result.selected.name == "muse"
-    assert result.selected.concrete_model == "muse-wonder-full-1.0"
-    assert result.selected.family == "meta"
-    assert result.substitution_note == "selected muse by operator decision 2026-11-01 ahead of higher-tier seats"
+    assert result.selected.name == "openai_frontier"
+    assert result.selected.concrete_model == "gpt-6.1-sol"
+    assert result.selected.family == "openai"
+    assert "muse" not in {entry.name for entry in result.trace}
+    assert result.substitution_note is None
 
 
 def test_muse_not_selected_when_health_is_unknown_or_unhealthy():

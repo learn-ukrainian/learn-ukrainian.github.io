@@ -28,17 +28,18 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import (
+from lu_machinery.lib.readonly_sqlite import (
     open_readonly as _shared_open_readonly,
 )
-from scripts.lib.readonly_sqlite import (
+from lu_machinery.lib.readonly_sqlite import (
     refuse_writable_corpus_database,
 )
+
 from scripts.wiki.sum20_official import QUARANTINE_COLUMN, ensure_sum20_quarantine_column
 
 REPO = Path(__file__).resolve().parents[2]
-from scripts.storage.generations import GenerationError, store_writer
-from scripts.storage.topology import (
+from lu_machinery.storage.generations import GenerationError, store_writer
+from lu_machinery.storage.topology import (
     ExplicitStoreWriteTarget,
     StoreBinding,
     StoreRefusal,

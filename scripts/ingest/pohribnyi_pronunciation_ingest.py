@@ -73,6 +73,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from lu_machinery.lib.readonly_sqlite import refuse_writable_corpus_database
+
 from scripts.ingest._section_coverage import (
     LessonSection,
     ensure_section_schema,
@@ -85,7 +87,6 @@ from scripts.ingest.pohribnyi_tooling import (
     validate_notation,
     validate_rows,
 )
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"

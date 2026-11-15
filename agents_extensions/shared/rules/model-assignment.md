@@ -19,9 +19,7 @@ High-risk and critical review admit only Opus 5.5 and Sol 6.1, so an Anthropic-a
 critical change has one eligible reviewer (Sol 6.1) and an OpenAI-authored one has one (Opus 5.5).
 Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
-Operator decision 2026-11-01: Muse Wonder Full (`muse-wonder-full-1.0`) is the formal reviewer for low-risk and medium-risk code and infra reviews, placed ahead of the frontier seats in the low and medium review ladders when eligible and healthy.
-Operator order MUSE-REVIEW-1110 (2026-11-10): the routing budget reads `muse usage` into a Muse lane with the same cache, timeout and staleness rules as the other subscription lanes. A fresh weekly allowance below the near-cap line is healthy and admits this seat at low and medium risk; an unreadable reading stays unknown and is not treated as healthy. The medium and low ladder order is unchanged.
-It has no high, critical, security-final, Ukrainian, design or driver authority (AC-02).
+Operator decision MUSE-RETIRE-1112 (2026-11-12, C-5321) retires `muse-wonder-full-1.0`: lifecycle retired, no transport, and no review-ladder row, so the resolver never selects it. The 2026-11-01 admission of Muse Wonder Full as the low-risk and medium-risk formal reviewer, and operator order MUSE-REVIEW-1110 (2026-11-10) which admitted a healthy Muse lane at low and medium risk, are superseded. `muse-spark-1.3` stays on hold and is not a reviewer. Muse has no high, critical, security-final, Ukrainian, design or driver authority (AC-02).
 Private inputs require contributor mode off (operator order C-2401).
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
 Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5
@@ -463,7 +461,7 @@ or count as a formal review.
 * **Current subscriptions:** Codex Sol 6.1 and Luna,
   AGY Gemini 3.8 Flash High, 4 Carbon and 4 Argon, OpenCode DeepSeek V4.1 Flash on OpenCode credit,
   native Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5, and Cursor Grok 4.7 (`grok-4.7-high`, C-5307).
-  Muse uses the native dispatch route under the review limits above.
+  Muse Wonder Full is retired (MUSE-RETIRE-1112, 2026-11-12) and is not a current subscription.
 * **OpenRouter:** no general fleet routing. Existing DeepSeek compatibility
   remains subject to the named US provider allow-list and data restrictions.
 

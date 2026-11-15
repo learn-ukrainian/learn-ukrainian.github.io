@@ -36,9 +36,9 @@ DEFAULT_COUNTS = {
 
 
 # #10073 adds a native low/medium seat outside Google-authored work.
-# #12375 adds Muse as the first low/medium seat.
+# MUSE-RETIRE-1112 removes Muse, the former first low/medium seat (#12375).
 DEFAULT_COUNTS = {
-    family: ["muse", *seats, *(["gemini-3.8-flash-high"] if family != "google" else [])]
+    family: [*seats, *(["gemini-3.8-flash-high"] if family != "google" else [])]
     for family, seats in DEFAULT_COUNTS.items()
 }
 
@@ -75,7 +75,7 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     assert critical["anthropic"] == ["openai_frontier"]
     assert GROK not in {name for seats in critical.values() for name in seats}
     automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert automatic.selected.name == "muse"
+    assert automatic.selected.name == "openai_frontier"
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
 
@@ -86,10 +86,20 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
         {}, data_egress_policy="local_interactive", review_profile=profile, risk=risk
     )
     assert results == check_bench_health(routing_snapshot={}, review_profile=profile, risk=risk)
-    assert main(["--risk", risk, "--profile", profile], routing_snapshot={}) == 0
+    # MUSE-RETIRE-1112: with Muse retired and Gemini barred from infra, Sol is the only seat for
+    # Anthropic-authored infra review at low and medium risk, below the two-seat minimum.
+    shortfall = profile == "infra" and risk in {"low", "medium"}
+    assert main(["--risk", risk, "--profile", profile], routing_snapshot={}) == (1 if shortfall else 0)
     captured = capsys.readouterr()
-    assert captured.err == ""
-    assert "BENCH HEALTH PASS" in captured.out
+    if shortfall:
+        assert [
+            (finding["author_family"], finding["minimum"], finding["counted_seats"])
+            for finding in _findings(captured)
+        ] == [("anthropic", 2, ["openai_frontier"])]
+        assert "BENCH HEALTH FAIL" in captured.err
+    else:
+        assert captured.err == ""
+        assert "BENCH HEALTH PASS" in captured.out
     # Sol alone reviews Anthropic-authored high and critical work since Cursor Grok retired (GROK-CANCEL-1110).
     assert captured.out.count("[EXPECTED single seat]") == (1 if risk in {"high", "critical"} else 0)
     for family, seats in results.items():
@@ -221,7 +231,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == ["muse", "gemini-3.8-flash-high"]
+    assert results["anthropic"] == ["gemini-3.8-flash-high"]
     pinned = evaluate_candidate(
         retired_candidate("glm-5.3"),
         ResolverInputs(
@@ -256,14 +266,16 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
         assert all(not names.intersection(seats) for seats in results.values())
     else:
         assert results == DEFAULT_COUNTS
-    # Muse and Gemini supply Anthropic seats when Codex is unavailable (Cursor Grok retired, GROK-CANCEL-1110).
-    assert main([], routing_snapshot=data) == 0
+    # Gemini alone supplies Anthropic seats when Codex is unavailable (Cursor Grok retired, GROK-CANCEL-1110;
+    # Muse retired, MUSE-RETIRE-1112).
+    # With Codex down, Anthropic-authored medium review keeps one seat, below the two-seat minimum.
+    assert main([], routing_snapshot=data) == (1 if route == "codex" and blocked else 0)
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
     assert results["anthropic"] == (
-        ["muse", "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
+        ["gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
     )
     # Check exclusion reasons even when the remaining seats prevent a CLI shortfall.
     _, excluded = bench_health._bench_inventory(

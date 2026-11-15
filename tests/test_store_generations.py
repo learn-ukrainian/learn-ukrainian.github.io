@@ -17,11 +17,11 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import CorpusDatabaseWriteRefused, open_readonly, refuse_writable_corpus_database
+from lu_machinery.storage import cli as storage_cli
+from lu_machinery.storage import generations
+from lu_machinery.storage import topology as storage_topology
 
-from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused, open_readonly, refuse_writable_corpus_database
-from scripts.storage import cli as storage_cli
-from scripts.storage import generations
-from scripts.storage import topology as storage_topology
 from tests.test_sources_db import sample_data, sources_report_log_dir  # noqa: F401  (fixtures)
 
 SPAWN = multiprocessing.get_context("spawn")
@@ -362,7 +362,7 @@ def test_only_the_canonical_selector_carries_the_lock(selector, monkeypatch):
         monkeypatch.setenv(generations.ENV_WRITER_FD, str(held.fd))
         monkeypatch.setenv(generations.ENV_WRITER_SELECTOR, str(previous))
         assert generations._current(selector.parent) is held  # this process still holds it
-        from scripts.lib import readonly_sqlite
+        from lu_machinery.lib import readonly_sqlite
 
         assert readonly_sqlite.inherited_store_writer(selector.parent) is None
         monkeypatch.setenv(generations.ENV_WRITER_SELECTOR, str(selector))
@@ -478,7 +478,7 @@ def test_write_runs_a_writer_with_the_inherited_lock(selector, tmp_path, monkeyp
     monkeypatch.setenv("PYTHONPATH", str(Path(__file__).resolve().parents[1]))
     out = tmp_path / "child.txt"
     probe = (
-        "import sys, pathlib; from scripts.storage import generations; "
+        "import sys, pathlib; from lu_machinery.storage import generations; "
         "pathlib.Path(sys.argv[2]).write_text(str(generations.writable_open_refusal(sys.argv[1])))"
     )
     command = [sys.executable, "-c", probe, str(selector), str(out)]
