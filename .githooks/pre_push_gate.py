@@ -1906,6 +1906,24 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     return status
 
 
+# The broker socket's fixed path inside the write boundary (lu_machinery.dispatcher.write_boundary._BROKER_INSIDE).
+_BOUNDARY_BROKER = "/run/lu-write-boundary/broker.sock"
+
+
+def _inside_write_boundary() -> bool:
+    """True only when the environment names the inside broker and that path is a socket.
+
+    On the host /run is root-owned, so a worker cannot create the socket: the variable alone
+    defers nothing.
+    """
+    if os.environ.get("LU_WRITE_BOUNDARY_BROKER") != _BOUNDARY_BROKER:
+        return False
+    try:
+        return stat.S_ISSOCK(os.lstat(_BOUNDARY_BROKER).st_mode)
+    except OSError:
+        return False
+
+
 def message_gate(arguments: list[str]) -> int:
     """Reuse the publication scanner for both hook entry points, without chaining hooks twice."""
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -1934,6 +1952,13 @@ def message_gate(arguments: list[str]) -> int:
             if hooks.returncode == 0 and Path(hooks.stdout.decode().rstrip("\n")).resolve() in scanner_hooks:
                 return 0
             return git_push.main(arguments[1:], chain=lambda *_: 0)
+        if _inside_write_boundary():
+            print(
+                "OPSEC: commit-message scan deferred: inside the write boundary the broker scans the whole message "
+                "of every pushed commit on the host before it sends anything.",
+                file=sys.stderr,
+            )
+            return 0
         with git_push.deadline(git_push.scan_timeout(dict(os.environ))):
             repository = git_push.Repository(git_push.real_git(dict(os.environ)), dict(os.environ))
             message = Path(arguments[1]).read_text(encoding="utf-8")
