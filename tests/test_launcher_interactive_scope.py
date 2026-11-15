@@ -1345,6 +1345,16 @@ def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path:
 
 
 def test_driver_keyboard_interrupt_reaches_the_provider_exactly_once(tmp_path: Path) -> None:
+    """Terminal Ctrl-C reaches the provider once, and the driver then exits.
+
+    The supervisor forwards on its next 0.1s slice, then waits with no deadline
+    until the provider exits. A forwarded INT can interrupt the provider's
+    read and drop a single line, so one ``done`` can leave the provider blocked
+    and the driver still running at this deadline. Merge-group run 43710971929
+    failed here with ``returncode is None``. Repeat the exit line until the
+    provider records it. The three-second window still runs first, so a second
+    INT that arrives before the exit line is still counted.
+    """
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:
         terminal.send(b"\x03")
@@ -1352,7 +1362,18 @@ def test_driver_keyboard_interrupt_reaches_the_provider_exactly_once(tmp_path: P
         # The supervisor forwards after its 0.1 s wait slice; allow it to land.
         with suppress(AssertionError):
             wait_until(lambda: _signal_log(env).count("INT") > 1, timeout=3, message="a second INT")
-        terminal.send(b"done\n")
+        deadline = time.monotonic() + DEADLINE_S
+        flags = fcntl.fcntl(terminal.master, fcntl.F_GETFL)
+        fcntl.fcntl(terminal.master, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+        try:
+            while "LINE done" not in _signal_log(env) and terminal.process.poll() is None and time.monotonic() < deadline:
+                try:
+                    terminal.send(b"done\n")
+                except OSError:
+                    break
+                terminal.drain(0.05)
+        finally:
+            fcntl.fcntl(terminal.master, fcntl.F_SETFL, flags)
         terminal.finish()
     finally:
         terminal.close()
