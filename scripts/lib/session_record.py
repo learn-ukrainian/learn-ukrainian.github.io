@@ -11,6 +11,7 @@ import re
 import shlex
 import subprocess
 import sys
+import time
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -39,6 +40,8 @@ ALLOWED_RECORD_KEYS = {
     "observed_model_provenance",
     "observed_context_window_tokens",
     "observed_context_window_provenance",
+    "observed_context_used_tokens",
+    "observed_context_used_at_epoch",
     "requested_profile_id",
     "effective_profile_id",
     "profile_resolution_reason",
@@ -202,6 +205,8 @@ def _validate_record(record: Any, *, expected_session_id: str | None = None) -> 
         raise SessionRecordError("session record has an invalid transcript_path")
     for field in (
         "observed_context_window_tokens",
+        "observed_context_used_tokens",
+        "observed_context_used_at_epoch",
         "effective_context_window_tokens",
         "expected_context_window_tokens",
         "actual_context_window_tokens",
@@ -302,6 +307,7 @@ def update_session(
     provenance: str = "update",
     *,
     observed_context_window: int | None = None,
+    observed_context_used: int | None = None,
     transcript_path_provenance: str | None = None,
     observed_model_provenance: str | None = None,
     observed_context_window_provenance: str | None = None,
@@ -313,6 +319,7 @@ def update_session(
     observed_context_window = _positive_window(
         observed_context_window, "observed_context_window"
     )
+    observed_context_used = _positive_window(observed_context_used, "observed_context_used")
     record = read_record(session_id, state_root=state_root) or {
         "schema_version": SCHEMA_VERSION,
         "session_id": session_id,
@@ -340,6 +347,11 @@ def update_session(
         record["observed_context_window_provenance"] = (
             observed_context_window_provenance or provenance
         )
+    if observed_context_used is not None:
+        # The harness's live context usage (status line) and when it was seen;
+        # context hooks trust it only while it is fresh.
+        record["observed_context_used_tokens"] = observed_context_used
+        record["observed_context_used_at_epoch"] = int(time.time())
 
     requested_profile_id = profile_id if profile_id is not None else record.get("requested_profile_id")
     observed_model_id = record.get("observed_model_id")
@@ -437,6 +449,7 @@ def main() -> int:
     update_parser.add_argument("--source")
     update_parser.add_argument("--observed-model")
     update_parser.add_argument("--observed-context-window", type=int)
+    update_parser.add_argument("--observed-context-used", type=int)
     update_parser.add_argument("--agent-type")
     update_parser.add_argument("--profile-id")
     update_parser.add_argument("--provenance", default="cli")
@@ -458,6 +471,7 @@ def main() -> int:
                 source=args.source,
                 observed_model=args.observed_model,
                 observed_context_window=args.observed_context_window,
+                observed_context_used=args.observed_context_used,
                 agent_type=args.agent_type,
                 profile_id=args.profile_id,
                 provenance=args.provenance,

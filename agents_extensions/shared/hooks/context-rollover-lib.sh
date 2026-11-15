@@ -58,6 +58,43 @@ context_latest_usage_tokens() {
   ' 2>/dev/null || printf '0\n'
 }
 
+# Live context usage for a session as "<tokens>\t<source>"; tokens 0 means
+# unknown. Order: (1) the status line's harness figure from this session's
+# record, when observed within the last 300 seconds; (2) the latest real model
+# turn in the transcript (headless sessions have no status line); (3) unknown.
+# Usage is never estimated from transcript size.
+# 300 seconds: the status line runs after every model response and re-records
+# at least once a minute while it runs, so at PostToolUse its figure is about as
+# old as the tool call that just finished. An older figure means the status
+# line is not running, and the transcript reports the same latest turn anyway.
+CONTEXT_STATUSLINE_MAX_AGE_SECONDS=300
+context_live_usage() {
+  local record_file="$1" session_id="$2" transcript="$3" tokens=0 now
+  if [ -f "$record_file" ] && [ ! -L "$record_file" ]; then
+    printf -v now '%(%s)T' -1
+    tokens=$(jq -r --arg sid "$session_id" --argjson now "$now" \
+      --argjson max "$CONTEXT_STATUSLINE_MAX_AGE_SECONDS" '
+      (.observed_context_used_tokens) as $used | (.observed_context_used_at_epoch) as $at
+      | if .session_id == $sid and ($used | type) == "number" and ($at | type) == "number"
+           and $used > 0 and ($now - $at) <= $max and ($at - $now) <= 60
+        then $used | floor else 0 end' "$record_file" 2>/dev/null) || tokens=0
+    case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
+    if [ "$tokens" -gt 0 ]; then
+      printf '%s\tstatus line (harness live usage)\n' "$tokens"
+      return 0
+    fi
+  fi
+  if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+    tokens=$(context_latest_usage_tokens "$transcript")
+    case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
+    if [ "$tokens" -gt 0 ]; then
+      printf '%s\tlatest assistant input/cache usage\n' "$tokens"
+      return 0
+    fi
+  fi
+  printf '0\tunknown\n'
+}
+
 # Canonical checkout that owns runtime state (.agent/): CODEX_CANONICAL_REPO_ROOT
 # when set, else the git common dir's checkout, so linked worktrees share the
 # primary checkout's session records and rollover leases.

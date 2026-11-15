@@ -9,6 +9,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -85,6 +86,9 @@ if window is not None:
     )
 if transcript is not None:
     record["transcript_path"] = transcript
+used = value("--observed-context-used")
+if used is not None:
+    record["observed_context_used_tokens"] = int(used)
 record_path.write_text(json.dumps(record), encoding="utf-8")
 print(json.dumps(record))
 """,
@@ -197,6 +201,7 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
     assert persisted["actual_context_window_tokens"] == 260_000
     assert persisted["actual_context_window_provenance"] == ("statusline.context_window.context_window_size")
     assert persisted["transcript_path"] == os.fspath(transcript)
+    assert persisted["observed_context_used_tokens"] == 130_000
 
 
 @pytest.mark.parametrize("layout", ["source", "deployed"])
@@ -414,7 +419,7 @@ def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp
     synthetic = dict.fromkeys((*real, "output_tokens"), 0)
     lines = [{"type": "assistant", "message": {"model": "claude-opus-5-5", "usage": {**real, "output_tokens": 9}}}]
     lines += [{"type": "assistant", "message": {"model": "<synthetic>", "usage": synthetic}}] * 3
-    # Tool traffic large enough that the size estimate would report over 100%.
+    # Large tool traffic must not move the usage figure: only model usage counts.
     lines.append({"type": "user", "message": {"content": "x " * 1_500_000}})
     transcript.write_text("\n".join(map(json.dumps, lines)) + "\n", encoding="utf-8")
     assert latest_tokens(transcript) == 306_000
@@ -444,12 +449,42 @@ def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp
     message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert message.startswith("CRITICAL: Context is at 85%")
     assert "latest assistant input/cache usage" in message
-    assert "transcript-size estimate" not in message
 
 
-def test_context_monitor_size_fallback_handles_long_base64_portably(
+def test_context_monitor_fresh_statusline_figure_wins_over_transcript(tmp_path: Path) -> None:
+    """Defect class: the guard reporting a different usage than the status line shows."""
+    record = _record(actual_window=360_000)
+    record["observed_context_used_tokens"] = 108_000
+    record["observed_context_used_at_epoch"] = int(time.time())
+    project, record_path = _fake_project(tmp_path, record)
+    transcript = tmp_path / "monitor.jsonl"
+    _write_transcript(transcript, input_tokens=330_000, cache_tokens=0)
+
+    def run() -> str:
+        completed = subprocess.run(
+            [os.fspath(CONTEXT_MONITOR)],
+            input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+            text=True,
+            capture_output=True,
+            check=True,
+            cwd=tmp_path,
+            env=_environment(project, record_path),
+            timeout=30,
+        )
+        return completed.stdout
+
+    assert run() == ""  # 30% from the status line: below every tier
+    record["observed_context_used_at_epoch"] = int(time.time()) - 301
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    message = json.loads(run())["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("CRITICAL: Context is at 91%")  # stale figure: transcript
+    assert "latest assistant input/cache usage" in message
+
+
+def test_context_monitor_unknown_usage_sets_no_tier_and_demands_no_handoff(
     tmp_path: Path,
 ) -> None:
+    """Defect class: guessing usage from transcript size and demanding a handoff on it."""
     project, record_path = _fake_project(tmp_path, _record(actual_window=100))
     transcript = tmp_path / "monitor-without-usage.jsonl"
     transcript.write_text(
@@ -478,11 +513,12 @@ def test_context_monitor_size_fallback_handles_long_base64_portably(
         timeout=30,
     )
 
-    hook_output = json.loads(completed.stdout)
-    message = hook_output["hookSpecificOutput"]["additionalContext"]
-    assert message.startswith("EMERGENCY: Context is at")
-    assert "transcript-size estimate" in message
-    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(encoding="utf-8")
+    message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("Context usage is unknown")
+    assert "no rollover tier applies" in message
+    for demand in ("HEADS UP", "CRITICAL", "EMERGENCY", "prepare", "handoff"):
+        assert demand not in message
+    assert not (project / "batch_state/context_monitor/status-session.tier").exists()
 
 
 def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> None:

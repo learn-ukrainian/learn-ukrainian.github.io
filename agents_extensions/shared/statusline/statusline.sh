@@ -135,6 +135,9 @@ if [ -z "$ctx_used" ]; then
     [ "$ctx_used" = "0" ] && ctx_used=""
   fi
 fi
+# The harness's own live figure, before any compatibility fallback below; it is
+# what the context hooks read back from the session record.
+live_used="$ctx_used"
 
 is_positive_integer() {
   case "${1:-}" in
@@ -160,6 +163,8 @@ if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; the
   stored_model=$(printf '%s' "$record_json" | jq -r '.observed_model_id // empty' 2>/dev/null)
   stored_window=$(printf '%s' "$record_json" | jq -r '.observed_context_window_tokens // empty' 2>/dev/null)
   stored_transcript=$(printf '%s' "$record_json" | jq -r '.transcript_path // empty' 2>/dev/null)
+  stored_used=$(printf '%s' "$record_json" | jq -r '.observed_context_used_tokens // empty' 2>/dev/null)
+  stored_used_at=$(printf '%s' "$record_json" | jq -r '.observed_context_used_at_epoch // 0' 2>/dev/null)
   update_args=(update --session-id "$session_id" --provenance statusline)
   update_needed=0
   if [ -n "$observed_model_id" ] && [ "$observed_model_id" != "$stored_model" ]; then
@@ -173,6 +178,15 @@ if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; the
   if [ -n "$transcript_path" ] && [ "${transcript_path#/}" != "$transcript_path" ] \
      && [ "$transcript_path" != "$stored_transcript" ]; then
     update_args+=(--transcript-path "$transcript_path" --transcript-path-provenance statusline.transcript_path)
+    update_needed=1
+  fi
+  # Live usage is re-recorded when it changes, and at most once a minute when it
+  # does not, so the hooks' freshness check (context-rollover-lib.sh) holds.
+  printf -v now_epoch '%(%s)T' -1
+  case "$stored_used_at" in ''|*[!0-9]*) stored_used_at=0 ;; esac
+  if is_positive_integer "$live_used" \
+     && { [ "$live_used" != "$stored_used" ] || [ $((now_epoch - stored_used_at)) -ge 60 ]; }; then
+    update_args+=(--observed-context-used "$live_used")
     update_needed=1
   fi
   if [ "$update_needed" -eq 1 ]; then
