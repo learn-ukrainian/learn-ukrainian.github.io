@@ -1097,12 +1097,13 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
 
 
 # Re-pinned for the added b-sub trace/advisory row, then for GROK-CANCEL-1110: each receipt only
-# drops its retired grok-4.7-cursor-fallback trace row; every other field is unchanged.
+# drops its retired grok-4.7-cursor-fallback trace row; every other field is unchanged. MUSE-RETIRE-1112
+# re-pins the two receipts that listed Muse: each only drops its retired muse trace row.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "3ef1b5e5e38272f51b4813eff0fa38e2019dbfe3143d5a6362bf07d69ff9ecc6"),
-        ("claude-opus-5-5", "low", "ordinary.py", "91c9fff9a1e9206c124b48016a08de47e41246d471c02ec3c553fc0be2e04cba"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "52f0debcda1f067ace2663231355f776369324b32fbe839fe50def28132745cc"),
+        ("claude-opus-5-5", "low", "ordinary.py", "84cfa3b915799011f76c7f9ebacd0510665d035761ff8a70f1614d9f2b434760"),
         (
             "gpt-6.1-sol",
             "low",

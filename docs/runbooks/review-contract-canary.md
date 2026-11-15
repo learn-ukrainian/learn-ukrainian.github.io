@@ -20,7 +20,7 @@ those paths, both refuse the head with the typed reason `needs-contract-canary` 
 | `unverifiable: …` | The route list, a receipt or the settled task behind it could not be read, or the task no longer rebuilds the receipt. |
 
 The required routes are every route of an active formal-review candidate in
-`scripts/config/model_catalog.yaml` (today `agy`, `claude`, `codex`, `cursor`, `muse`). Print the
+`scripts/config/model_catalog.yaml` (today `agy`, `claude`, `codex`, `cursor`). Print the
 current list with `python -m scripts.review.contract_canary routes`. A route that is down or out of
 quota blocks the change; it never shrinks the list.
 
@@ -50,7 +50,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 HEAD_SHA="$(git rev-parse HEAD)"
 # One line per required route: agent and a formal model on it.
 for route_model in agy:gemini-3.8-flash-high claude:claude-sonnet-5-5 codex:gpt-6.1-sol \
-    cursor:grok-4.7-high muse:muse-wonder-full-1.0; do
+    cursor:grok-4.7-high; do
   route="${route_model%%:*}"; model="${route_model#*:}"
   "$PY" -c "import sys; from scripts.dispatcher import cli; sys.exit(cli.main(sys.argv[1:]))" dispatch \
     --agent "$route" --model "$model" --effort medium --mode read-only --worktree \

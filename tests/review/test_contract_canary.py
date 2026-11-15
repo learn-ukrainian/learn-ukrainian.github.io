@@ -23,7 +23,6 @@ MODELS = {
     "claude": "claude-sonnet-5-5",
     "codex": "gpt-6.1-sol",
     "cursor": "grok-4.7-high",
-    "muse": "muse-wonder-full-1.0",
 }
 
 
@@ -104,18 +103,18 @@ def write_all(root: Path, head: str) -> None:
 
 def test_routes_come_from_the_catalog_and_an_empty_list_blocks(repo, monkeypatch: pytest.MonkeyPatch) -> None:
     root, head = repo
-    # Muse is required too: the catalog, not the issue text, names the routes.
-    assert canary.required_routes() == ("agy", "claude", "codex", "cursor", "muse")
+    # The catalog names the routes. Retired Muse is not one of them.
+    assert canary.required_routes() == ("agy", "claude", "codex", "cursor")
     monkeypatch.setattr(canary, "_formal_candidates", lambda: {})
     assert canary.refusal([CONTRACT_FILE], head, root) == "unverifiable: reviewer routes unavailable"
 
 
 def test_contract_change_is_refused_until_every_route_has_a_receipt(repo) -> None:
     root, head = repo
-    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: agy,claude,codex,cursor,muse"
+    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: agy,claude,codex,cursor"
     write_all(root, head)
-    (canary.receipt_root(root) / head / "muse.json").unlink()
-    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: muse"
+    (canary.receipt_root(root) / head / "cursor.json").unlink()
+    assert canary.refusal([CONTRACT_FILE], head, root) == "missing: cursor"
     write_all(root, head)
     assert canary.refusal([CONTRACT_FILE, "docs/x.md"], head, root) is None
     stored = json.loads((canary.receipt_root(root) / head / "codex.json").read_text())

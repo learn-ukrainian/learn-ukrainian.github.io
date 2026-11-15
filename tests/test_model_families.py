@@ -223,21 +223,26 @@ def test_self_review_still_blocks_when_families_match() -> None:
             bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
         )
         llm_reviewer_dispatch.validate_cross_family(route, lineage)
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="medium", claude_account=HOST_ACCOUNT)
     # A classified selector does not grant the separate formal transport capability.
     candidate = ReviewerCandidate(
         name="muse",
         family="meta",
-        concrete_model="muse-wonder-full-1.0",
+        concrete_model="muse-spark-1.3",
         route="muse",
         transport="native_muse",
         invocation="",
         quality_tier="compatibility",
     )
-    refusal = evaluate_candidate(
-        candidate, ResolverInputs(author_model="gpt-6.1-sol", risk="medium", claude_account=HOST_ACCOUNT)
-    )
+    refusal = evaluate_candidate(candidate, inputs)
     assert refusal.status == "excluded"
     assert refusal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    # MUSE-RETIRE-1112: the retired Wonder pin is refused as retired before any transport check.
+    retired = evaluate_candidate(replace(candidate, concrete_model="muse-wonder-full-1.0"), inputs)
+    assert retired.status == "excluded"
+    assert retired.reason == (
+        "model 'muse-wonder-full-1.0' is retired in the model catalog (muse-wonder-full-1.0); use an active catalog model"
+    )
 
 
 # Cursor's runtime reports display names, not slugs (a recorded dispatch carries
