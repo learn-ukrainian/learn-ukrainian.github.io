@@ -11,11 +11,11 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from lu_machinery.review import snapshot
 
 from scripts.generate_mdx import core as mdx_core
 from scripts.generate_mdx import generate_plan_markdown
 from scripts.hooks import hook_timing, measure_hook_stack
+from scripts.review import snapshot
 
 pytestmark = pytest.mark.reads_content
 

@@ -4,9 +4,8 @@ import json
 from contextlib import contextmanager
 from types import SimpleNamespace
 
-from lu_machinery.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
-
 from scripts.ai_agent_bridge import _cli, _grok_build
+from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
 
 def _grok_bridge_message() -> dict[str, str]:
