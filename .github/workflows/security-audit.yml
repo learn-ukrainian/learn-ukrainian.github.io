@@ -219,11 +219,27 @@ jobs:
         with:
           python-version-file: '.python-version'
 
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Collect pinned versus latest stable
+        env:
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
         run: |
           python -m pip install --upgrade pip pyyaml
-          python -m scripts.ci.stack_currency_report collect --out ci-artifacts/stack-currency.json
-          python -m scripts.ci.stack_currency_report render --report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md
+          python -m lu_machinery.ci.stack_currency_report collect --out ci-artifacts/stack-currency.json
+          python -m lu_machinery.ci.stack_currency_report render --report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md
           cat ci-artifacts/stack-currency.md
 
       - name: Comment on the open dependency-advisory issue

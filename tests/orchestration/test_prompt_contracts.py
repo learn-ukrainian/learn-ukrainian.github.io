@@ -8,7 +8,7 @@ import yaml
 
 pytestmark = [pytest.mark.docs_skills, pytest.mark.reads_content]
 
-from scripts.orchestration import prompt_contracts as contracts
+from lu_machinery.orchestration import prompt_contracts as contracts
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = Path("agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml")
@@ -121,8 +121,16 @@ def test_resolved_record_detects_rendered_prompt_tampering() -> None:
 
 def test_policy_bytes_change_identity_without_changing_rendered_prompt(tmp_path: Path) -> None:
     repo_root = _copy_contract_repo(tmp_path / "repo")
+    # The release reads the fleet rules its inventory ships (workflow.md, operator-expectations.md)
+    # from its own package, so editing their product copies cannot reach it. Bind a product-owned
+    # rule as a policy instead: its bytes are read from ``repo_root``, where this test edits them.
+    product_policy = Path("agents_extensions/shared/rules/pipeline.md")
+    shutil.copyfile(REPO_ROOT / product_policy, repo_root / product_policy)
+    manifest = _load_yaml(repo_root, MANIFEST)
+    manifest["policy_ids"]["product-pipeline"] = product_policy.as_posix()
+    _write_yaml(repo_root, MANIFEST, manifest)
     before = _resolve_core(repo_root)
-    policy = repo_root / "agents_extensions/shared/rules/workflow.md"
+    policy = repo_root / product_policy
     policy.write_text(policy.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     after = _resolve_core(repo_root)
 

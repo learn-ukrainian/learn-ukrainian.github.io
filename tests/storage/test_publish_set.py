@@ -14,8 +14,7 @@ import time
 from pathlib import Path
 
 import pytest
-
-from scripts.storage import artifacts, paths
+from lu_machinery.storage import artifacts, paths
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -108,7 +107,7 @@ def test_sigkill_at_every_publication_boundary_recovers_twice(tmp_path: Path, po
     script = """
 import os, signal, sys
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage, point = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 old_a = artifacts.paths.find_entry('raw_source', 'raw/a.txt', repo)['sha256']
 old_b = artifacts.paths.find_entry('raw_source', 'raw/b.txt', repo)['sha256']
@@ -280,7 +279,7 @@ def test_set_reader_waits_during_install_and_returns_new_generation(
     script = """
 import sys, time
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage, pause, release = map(Path, sys.argv[1:])
 old_a = artifacts.paths.find_entry('raw_source', 'raw/a.txt', repo)['sha256']
 old_b = artifacts.paths.find_entry('raw_source', 'raw/b.txt', repo)['sha256']
@@ -712,7 +711,7 @@ def test_missing_old_store_object_blocks_recovery_and_set_reads(tmp_path: Path) 
     script = """
 import os, signal, sys
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage = map(Path, sys.argv[1:])
 a = artifacts.paths.find_entry('raw_source', 'raw/a.txt', repo)['sha256']
 b = artifacts.paths.find_entry('raw_source', 'raw/b.txt', repo)['sha256']
@@ -1315,7 +1314,7 @@ def test_sigkill_companion_only_at_every_boundary_recovers_twice(tmp_path: Path,
     script = """
 import os, signal, sys
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage, point, expected_manifest = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], sys.argv[4]
 companions = []
 for index in range(4):
@@ -1428,7 +1427,7 @@ def test_companion_only_reader_waits_for_the_complete_generation(
     script = """
 import sys, time
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage, pause, release = map(Path, sys.argv[1:5])
 expected_manifest = sys.argv[5]
 sha_k = artifacts.paths.hash_file(repo / 'registry/companion-0.json')
@@ -1497,7 +1496,7 @@ def test_companion_only_recovery_refuses_missing_store_object(tmp_path: Path) ->
     script = """
 import os, signal, sys
 from pathlib import Path
-from scripts.storage import artifacts
+from lu_machinery.storage import artifacts
 repo, stage, expected_manifest = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 sha_k = artifacts.paths.hash_file(repo / 'registry/companion-0.json')
 install = artifacts._install

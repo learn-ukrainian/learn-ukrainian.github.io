@@ -5,7 +5,10 @@ description: Process an active track in manifest order or resume an exact coordi
 
 # Curriculum lifecycle
 
-Run repository commands from the repository root. Use canonical resource paths
+Run repository commands from the repository root. The installed
+`lu_machinery` release does not take its product checkout from the working
+directory, so bind it on every invocation (`LU_PRODUCT_ROOT="$PWD"`, as the
+commands below do). Use canonical resource paths
 under `agents_extensions/shared/skills/`; provider-specific skill directories
 are deploy mirrors, not alternate sources.
 
@@ -40,7 +43,7 @@ only bounded-completion authority.
    `unbuilt`, `stale`, or `one`, then start exactly one manifest-backed run:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_coordinator.py start \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_coordinator start \
      --track <track> --owner <agent/task> --scope <scope> \
      --terminal-goal <merge|certify|deploy> \
      [--module <slug>] [--start <slug-or-position>] \
@@ -58,14 +61,14 @@ only bounded-completion authority.
    infer intent from `complete` or `PBR_PASS_QG_PENDING` history:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_coordinator.py \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_coordinator \
      migrate-terminal-goal --run-id <run-id> --owner <agent/task> \
      --terminal-goal <merge|certify|deploy>
    ```
 4. Resume only the exact recorded run:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_coordinator.py resume \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_coordinator resume \
      --run-id <run-id> --owner <agent/task>
    ```
 
@@ -86,7 +89,7 @@ only bounded-completion authority.
    mutation when its fresh health/capability gate is unavailable:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_coordinator.py acquire-next \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_coordinator acquire-next \
      --run-id <run-id> --owner <agent/task>
    ```
 
@@ -109,7 +112,7 @@ only bounded-completion authority.
    exact acquired target and use its full typed result to resolve ownership:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_readiness.py \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_readiness \
      --track <track> --slug <slug> \
      > <gitignored-readiness-result.json>
    ```
@@ -147,7 +150,7 @@ only bounded-completion authority.
    to a profile:
 
    ```bash
-   .venv/bin/python scripts/orchestration/prompt_contracts.py resolve-track \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.prompt_contracts resolve-track \
      --track <track> --context <runtime-context.json>
    ```
 
@@ -164,7 +167,7 @@ only bounded-completion authority.
    blocked rather than left stale:
 
    ```bash
-   .venv/bin/python scripts/orchestration/curriculum_coordinator.py record-module \
+   LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.curriculum_coordinator record-module \
      --run-id <run-id> --owner <agent/task> --module <slug> \
      --track-ledger <track-completion-ledger> --track-run-id <module-run-id>
    ```

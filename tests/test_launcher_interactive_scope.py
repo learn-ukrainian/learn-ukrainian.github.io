@@ -845,7 +845,8 @@ def test_dispatch_from_an_interactive_scope_stays_bounded(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, driver_scope_detection: Callable[[], bool]
 ) -> None:
     """Downstream: bounded worker scopes are allowed, the unbounded fallback is refused."""
-    from scripts.orchestration import dispatch_isolation as iso
+    from lu_machinery.orchestration import dispatch_isolation as iso
+
     from tests.test_dispatch_isolation import _PY, _env, _install_fakes, _subtree
 
     monkeypatch.setattr(iso, "_caller_in_driver_scope", driver_scope_detection)
@@ -1288,10 +1289,11 @@ def test_driver_relay_during_close_preserves_client_result(
 @pytest.mark.usefixtures("default_hup")
 def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) -> None:
     """Group HUP and the waiter relay can both close the same fenced lease."""
+    from lu_machinery.session_supervisor import SessionSupervisor
+
     from agents_extensions.shared.session_streams.db import SessionStreamDatabase
     from agents_extensions.shared.session_streams.model import LeaseHolder, SessionState
     from agents_extensions.shared.session_streams.store import SessionStreamStore
-    from scripts.session_supervisor import SessionSupervisor
 
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:

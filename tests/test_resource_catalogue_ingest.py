@@ -802,8 +802,7 @@ def test_publish_refuses_input_manifest_drift(publish_store, monkeypatch, capsys
 def test_publish_refuses_changed_source_generation(publish_store, monkeypatch, capsys):
     """Defect class: publishing over a selection other than the expected, held, unchanged one."""
     from lu_machinery.storage import generations
-
-    from scripts.storage.wal_permissions import hold_database, lift_database
+    from lu_machinery.storage.wal_permissions import hold_database, lift_database
 
     selector, generation, root = publish_store
     before = _store_files(selector)
@@ -946,9 +945,8 @@ def test_publish_records_post_switch_failure_without_retry(publish_store, monkey
 
 def test_publish_scratch_round_trip_preserves_non_catalogue_tables(publish_store, capsys):
     """Defect class: publication loses non-catalogue data or the previous generation cannot be restored."""
+    from lu_machinery.storage import cli as storage_cli
     from lu_machinery.storage import generations
-
-    from scripts.storage import cli as storage_cli
 
     selector, generation, root = publish_store
     with closing(catalogue.open_readonly(generation)) as conn:

@@ -4,9 +4,10 @@ import json
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import review_mcp
+from lu_machinery.review import render_contract
 
-from scripts.agent_runtime import review_mcp
-from scripts.review import record, render_contract
+from scripts.review import record
 from scripts.review.prompts.check import AttemptIdsUnreadableError, _return_schemas, parse_attempt_ids
 from scripts.review.prompts.render import data_fence
 

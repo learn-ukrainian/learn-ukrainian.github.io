@@ -1823,7 +1823,8 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     import sys
     from types import SimpleNamespace
 
-    from scripts.agent_runtime import review_mcp, runner
+    from lu_machinery.agent_runtime import review_mcp, runner
+
     from scripts.review import record
     from scripts.review import validate as review_validator
     from scripts.review.receipts.ledger import create_empty_ledger
@@ -1890,7 +1891,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     monkeypatch.setattr(
         sys,
         "argv",
-        ["-", "plan-template", str(path), str(tmp_path), "scripts.agent_runtime.runner", "scripts.agent_runtime.review_mcp"],
+        ["-", "plan-template", str(path), str(tmp_path), "lu_machinery.agent_runtime.runner", "lu_machinery.agent_runtime.review_mcp"],
     )
     runbook = Path(__file__).resolve().parents[2] / "docs/runbooks/agy-review-permissions.md"
     snippet = runbook.read_text().split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]

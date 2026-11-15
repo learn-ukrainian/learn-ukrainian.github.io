@@ -11,9 +11,8 @@ from types import SimpleNamespace
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
-
-from scripts.docs import catalogue as catalogue_module
-from scripts.docs.catalogue import (
+from lu_machinery.docs import catalogue as catalogue_module
+from lu_machinery.docs.catalogue import (
     CONTROL_CHARS,
     MAX_CATALOGUE_BYTES,
     MAX_CATALOGUE_DEPTH,

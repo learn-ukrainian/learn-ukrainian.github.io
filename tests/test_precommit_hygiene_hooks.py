@@ -5,8 +5,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-
-from scripts.pre_commit.declared_hook_stages import declared_stages
+from lu_machinery.pre_commit.declared_hook_stages import declared_stages
 
 
 @pytest.fixture

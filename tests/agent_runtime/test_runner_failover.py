@@ -1142,7 +1142,7 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
         (Path(__file__).resolve().parents[1] / "fixtures" / "accounting_10954.json").read_text()
     ) if row["pin"] == pin and row["case"] == case)
     expected_projection = expected_row["expected"]
-    from scripts.agent_runtime.accounting import recorded_model_accounting_fields
+    from lu_machinery.agent_runtime.accounting import recorded_model_accounting_fields
 
     for row in (saved, result.usage_record, vars(result), recorded_model_accounting_fields(saved)):
         assert {key: row[key] for key in expected_projection} == expected_projection

@@ -2259,7 +2259,7 @@ def test_issue_transfer_mutation_returning_another_repository_is_unverified(tran
 
 @pytest.mark.parametrize("where", ["inside", "shared", "relative"])
 def test_issue_transfer_receipt_directory_must_be_private_and_outside_the_repository(transfer, tmp_path, where):
-    from scripts.publish import github as product_publisher
+    from lu_machinery.publish import github as product_publisher
     directory = {"inside": str(ROOT / "receipts"), "shared": str(tmp_path / "shared"), "relative": "receipts"}[where]
     if where == "shared":
         (tmp_path / "shared").mkdir(mode=0o755)
@@ -2376,7 +2376,7 @@ def test_ruleset_merge_queue_changes_only_the_named_parameter(synthetic_opsec, c
     The defect is a merge-queue edit that also changes enforcement, another rule, an unnamed
     parameter, or a ruleset field the verb does not know how to preserve.
     """
-    from scripts.publish import github as publisher
+    from lu_machinery.publish import github as publisher
 
     assert [name for name in publisher.SCHEMAS if "ruleset" in name] == ["ruleset-merge-queue"]
     parameters = {

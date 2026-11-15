@@ -13,11 +13,11 @@ import textwrap
 from pathlib import Path
 
 import pytest
+from lu_machinery.guardrails import worktree_containment as containment
 
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as wa
 from scripts.atlas import word_card_foundation as foundation
-from scripts.guardrails import worktree_containment as containment
 from tests.test_word_card_assembly import (
     CORRESPONDENCE_DAMAGE,
     HOLDING_BUILD,

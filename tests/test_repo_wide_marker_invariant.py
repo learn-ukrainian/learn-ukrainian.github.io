@@ -57,8 +57,8 @@ from functools import lru_cache
 from pathlib import Path
 
 import pytest
+from lu_machinery.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV
 
-from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV
 from tests.process_group_child import run_in_process_group
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]

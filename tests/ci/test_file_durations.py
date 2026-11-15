@@ -233,7 +233,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert gate["timeout-minutes"] == 5
     assert "refresh-pytest-durations" in gate["needs"]
     verdict = next(step["run"] for step in gate["steps"] if step.get("name") == "Require every job")
-    assert verdict == '"$PYTHON_BIN" -m scripts.ci.gate'
+    assert verdict == '"$PYTHON_BIN" -m lu_machinery.ci.gate'
     aggregation = next(step for step in gate["steps"] if step.get("name") == "Require every job")
     assert aggregation["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
     for event in ("merge_group", "schedule", "workflow_dispatch"):

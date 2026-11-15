@@ -6,11 +6,11 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+from lu_machinery.storage.topology import GENERATIONS_DIRNAME, SELECTOR_NAME, store_data_dir
 
 from scripts.audit.verbatim_overlap_gate import get_default_index_db_path
 from scripts.ingest.slovnyk_me_ingest import backup_database
 from scripts.lexicon import ulif_raw_cache
-from scripts.storage.topology import GENERATIONS_DIRNAME, SELECTOR_NAME, store_data_dir
 
 GENERATION = "sources.20261030T191244Z-485bfef02834.db"
 

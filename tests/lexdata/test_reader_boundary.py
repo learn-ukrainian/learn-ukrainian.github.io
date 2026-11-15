@@ -6,9 +6,9 @@ from contextlib import closing
 from dataclasses import replace
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
 
 from scripts.lexdata import build_store, generation, transforms, verify
-from scripts.lib.readonly_sqlite import open_readonly
 from tests.lexdata._support import FIXTURE_SOURCE, fixture_binding, mutate_sqlite
 
 pytestmark = pytest.mark.usefixtures("local_fs")

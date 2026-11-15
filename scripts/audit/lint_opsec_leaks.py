@@ -456,7 +456,7 @@ class PublicationInputError(RuntimeError):
             # Keep direct, stdlib-only script execution working too.
             if str(REPO_ROOT) not in sys.path:
                 sys.path.insert(0, str(REPO_ROOT))
-            from scripts.secret_redactor import REDACTION, URL_PATTERN, redact_text, redact_value
+            from lu_machinery.secret_redactor import REDACTION, URL_PATTERN, redact_text, redact_value
 
             message = str(error)
             # Also remove held secrets whose shape the pattern redactor cannot know.
@@ -522,7 +522,7 @@ def current_publication_pr(repository: str, number: int) -> dict:
     # Direct script execution also works in a clean stdlib-only checkout.
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from scripts.common import github_client
+    from lu_machinery.common import github_client
 
     result = github_client.run(
         ["gh", "api", "-X", "GET", f"repos/{repository}/pulls/{number}"],

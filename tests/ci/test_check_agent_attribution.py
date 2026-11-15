@@ -1078,8 +1078,8 @@ def _fake_python(tmp_path: Path, checker_prefix: str) -> Path:
     wrapper = tmp_path / "python"
     wrapper.write_text(
         "#!/bin/bash\n"
-        '[ "$1" != -m ] || exit 0\n'
-        f'shift; {checker_prefix} exec "{sys.executable}" "{SCRIPT}" "$@"\n'.replace("{broken}", str(broken))
+        '[ "$1 $2" != "-m pip" ] || exit 0\n'
+        f'shift 2; {checker_prefix} exec "{sys.executable}" "{SCRIPT}" "$@"\n'.replace("{broken}", str(broken))
     )
     wrapper.chmod(0o755)
     return wrapper

@@ -12,12 +12,12 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from lu_machinery.review import findings_db
 
 from scripts.build.fresh import plan_manifest, plan_promote
 from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.validate import validate_plan
-from scripts.review import findings_db
 from tests.build.plan_review_records import record_plan_review
 from tests.build.test_fresh_plan_review import fake_verify
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
