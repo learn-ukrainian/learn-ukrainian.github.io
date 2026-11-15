@@ -89,8 +89,8 @@ markers, quarantine and governor apply. Hosted duration and the independent
 The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
 
-The `pr-affected-proof` artifact also contains `pr-repo-wide.json` and
-`pr-repo-wide.xml`. The JSON records the exact candidate, marker expression,
+The parallel `pr-invariants` job publishes `pr-repo-wide.json` and
+`pr-repo-wide.xml` in the `pr-invariants-proof` artifact. The JSON records the exact candidate, marker expression,
 requested paths, worker count, subprocess timeout, elapsed wall time,
 logical CPU count and initial load average, plus reported cases, failures and
 skips. The marker expression requires `repo_wide` and retains the supported
@@ -98,12 +98,14 @@ tier's `atlas_release`, `slow` and `site_toolchain` exclusions. It does not
 broaden execution to unmarked tests or move nightly or release tests into PR CI.
 An empty selection, failed execution, stale report or missing JUnit fails CI.
 Both invocations use two pytest workers with work stealing. Invariants have
-a 1,500-second subprocess timeout; the combined job has a 40-minute timeout.
+a 1,500-second subprocess timeout; each job retains a 40-minute timeout.
 The budget uses the hosted measurements on [PR #11922](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/11922):
 twice the initial superset's observed marker wall time, rounded up to five minutes, plus the
 existing 480-second changed-test ceiling, twice the observed setup time and
 one minute for report publication, again rounded up to five minutes.
-The same job runs both selections without additional PR jobs or shards.
+The `pr-affected` and `pr-invariants` jobs run independently after asset
+hydration, using the same setup and test commands. CI Gate requires both PR
+results. Full-tier events skip `pr-invariants` and retain the full pytest suite.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
 frontend toolchain tests and partition audits.
