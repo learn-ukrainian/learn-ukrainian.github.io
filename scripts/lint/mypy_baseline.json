@@ -473,11 +473,6 @@
       "message": "Need type annotation for \"supported\""
     },
     {
-      "path": "scripts/agent_runtime/livenessprobe.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
       "path": "scripts/agent_runtime/model_pause.py",
       "code": "arg-type",
       "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"Any | None\"; expected \"str\""
@@ -9043,41 +9038,6 @@
       "message": "Incompatible return value type (got \"tuple[list[Mapping[Any, Any]], str]\", expected \"tuple[list[dict[str, Any]], str]\")"
     },
     {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "index",
-      "message": "Value of type \"Any | object\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "index",
-      "message": "Value of type \"Any | object\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "index",
-      "message": "Value of type \"Any | object\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "index",
-      "message": "Value of type \"Any | object\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "index",
-      "message": "Value of type \"Any | object\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "union-attr",
-      "message": "Item \"object\" of \"Any | object\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/ci/comment_issue_task_quality.py",
-      "code": "union-attr",
-      "message": "Item \"object\" of \"Any | object\" has no attribute \"get\""
-    },
-    {
       "path": "scripts/ci/component_shadow.py",
       "code": "list-item",
       "message": "List item 0 has incompatible type \"StringIO\"; expected \"Path\""
@@ -9718,81 +9678,6 @@
       "message": "Unsupported operand types for > (\"int\" and \"None\")"
     },
     {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Iterator[bytes]\", variable has type \"list[bytes]\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"bool\", target has type \"None | list[Any] | str\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"bool\", target has type \"None | list[Any] | str\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"bool\", target has type \"None | list[Any] | str\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, int]\", target has type \"None | list[Any] | str\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"__getitem__\" of \"list\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"next\" matches argument type \"list[bytes]\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
-      "message": "Invalid index type \"str\" for \"str\"; expected type \"SupportsIndex | slice[None | SupportsIndex, None | SupportsIndex, None | SupportsIndex]\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "index",
-      "message": "Value of type \"None | list[Any] | str\" is not indexable"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "operator",
-      "message": "Unsupported operand types for > (\"list[Any]\" and \"str\")"
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/ci/pr_size_warning.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"result\""
-    },
-    {
       "path": "scripts/ci/pytest_dispatch_cap.py",
       "code": "no-redef",
       "message": "Name \"THREAD_CAPS\" already defined (possibly by an import)"
@@ -9801,11 +9686,6 @@
       "path": "scripts/ci/pytest_dispatch_cap.py",
       "code": "no-redef",
       "message": "Name \"apply_thread_caps\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/ci/slot_inventory.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"get\" of \"Mapping\" matches argument type \"bool\""
     },
     {
       "path": "scripts/ci/split_tests.py",
@@ -11248,31 +11128,6 @@
       "message": "Item \"None\" of \"None | dict[Any, Any]\" has no attribute \"pop\""
     },
     {
-      "path": "scripts/dispatcher/codex_meter.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/dispatcher/codex_meter.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"Decimal\""
-    },
-    {
-      "path": "scripts/dispatcher/codex_meter.py",
-      "code": "operator",
-      "message": "Unsupported left operand type for - (\"None\")"
-    },
-    {
-      "path": "scripts/dispatcher/codex_meter.py",
-      "code": "operator",
-      "message": "Unsupported left operand type for > (\"None\")"
-    },
-    {
-      "path": "scripts/dispatcher/codex_meter.py",
-      "code": "operator",
-      "message": "Unsupported operand types for * (\"None\" and \"Decimal\")"
-    },
-    {
       "path": "scripts/dispatcher/environment.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"dict[str, str]\", variable has type \"_Environ[str]\")"
@@ -12631,11 +12486,6 @@
       "path": "scripts/fix_external_resources.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/fleet/agy_failure_tally.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"tally\" has incompatible type \"list[dict[str, Any]]\"; expected \"list[Mapping[str, Any]]\""
     },
     {
       "path": "scripts/fleet/capacity_pick.py",
@@ -15018,126 +14868,6 @@
       "message": "Need type annotation for \"fixture_parameters\" (hint: \"fixture_parameters: set[<type>] = ...\")"
     },
     {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"Path\" has incompatible type \"Any | None | str\"; expected \"PathLike[str] | str\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"deque\" has incompatible type \"AST\"; expected Module"
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"deque\" has incompatible type \"AST\"; expected Module"
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"list\" has incompatible type Module; expected \"Call\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Call\", variable has type Module)"
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "\"shlex\" has no attribute \"pushback\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"col_offset\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"end_col_offset\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"end_lineno\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"func\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"func\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"keywords\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"level\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"lineno\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"lineno\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"lineno\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"module\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"module\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"module\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"names\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"names\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "attr-defined",
-      "message": "Module has no attribute \"value\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "union-attr",
-      "message": "Item \"UnicodeError\" of \"OSError | SyntaxError | UnicodeError\" has no attribute \"filename\""
-    },
-    {
-      "path": "scripts/hygiene/lint_tmp_paths.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"heredocs\" (hint: \"heredocs: list[<type>] = ...\")"
-    },
-    {
       "path": "scripts/hygiene/preserved_retention.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"CompletedProcess[str]\", variable has type \"CompletedProcess[bytes]\")"
@@ -15208,61 +14938,6 @@
       "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"Any | None\"; expected \"str\""
     },
     {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "union-attr",
-      "message": "Item \"str\" of \"None | list[Any] | str\" has no attribute \"append\""
-    },
-    {
-      "path": "scripts/hygiene/remote_branch_cleanup.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"report\""
-    },
-    {
       "path": "scripts/hygiene/root_entry_guard.py",
       "code": "arg-type",
       "message": "Argument \"stderr\" to \"CompletedProcess\" has incompatible type \"bytes | str\"; expected \"None | str\""
@@ -15296,11 +14971,6 @@
       "path": "scripts/hygiene/tmp_sweep.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"None | ScratchPolicy\" has no attribute \"quiet_s\""
-    },
-    {
-      "path": "scripts/hygiene/uv_cache_status.py",
-      "code": "operator",
-      "message": "Unsupported operand types for <= (\"int\" and \"object\")"
     },
     {
       "path": "scripts/inbox_pending.py",
@@ -18243,26 +17913,6 @@
       "message": "Need type annotation for \"violations\" (hint: \"violations: list[<type>] = ...\")"
     },
     {
-      "path": "scripts/lint/lint_test_assertions.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"object\", variable has type \"expr\")"
-    },
-    {
-      "path": "scripts/lint/lint_test_assertions.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"object\", variable has type \"expr\")"
-    },
-    {
-      "path": "scripts/lint/lint_test_assertions.py",
-      "code": "union-attr",
-      "message": "Item \"AsyncWith\" of \"AsyncFor | AsyncWith | For | If | While | With\" has no attribute \"orelse\""
-    },
-    {
-      "path": "scripts/lint/lint_test_assertions.py",
-      "code": "union-attr",
-      "message": "Item \"With\" of \"AsyncFor | AsyncWith | For | If | While | With\" has no attribute \"orelse\""
-    },
-    {
       "path": "scripts/manifest_utils.py",
       "code": "index",
       "message": "Unsupported target for indexed assignment (\"Any | None | dict[Any, Any] | int\")"
@@ -18376,66 +18026,6 @@
       "path": "scripts/open_dataset/hydrate.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"bytes\""
-    },
-    {
-      "path": "scripts/ops/budget_screen.py",
-      "code": "misc",
-      "message": "Generator has incompatible item type \"tuple[str, str, None]\"; expected \"tuple[str, str, Pool]\""
-    },
-    {
-      "path": "scripts/ops/budget_screen.py",
-      "code": "operator",
-      "message": "Unsupported operand types for / (\"None\" and \"float\")"
-    },
-    {
-      "path": "scripts/ops/budget_screen.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"counts\""
-    },
-    {
-      "path": "scripts/ops/budget_screen.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"samples\" (hint: \"samples: dict[<type>, <type>] = ...\")"
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"list[dict[str, Any]]\")"
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "attr-defined",
-      "message": "\"list[dict[str, Any]]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"__getitem__\" of \"list\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "dict-item",
-      "message": "Dict entry 1 has incompatible type \"str\": \"int\"; expected \"str\": \"str\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "dict-item",
-      "message": "Dict entry 2 has incompatible type \"str\": \"dict[Any, Any]\"; expected \"str\": \"str\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "dict-item",
-      "message": "Dict entry 3 has incompatible type \"str\": \"dict[Any, dict[Any, Any]]\"; expected \"str\": \"str\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "override",
-      "message": "Return type \"None\" of \"error\" incompatible with return type \"Never\" in supertype \"argparse.ArgumentParser\""
-    },
-    {
-      "path": "scripts/ops/context_cost_report.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"models\" (hint: \"models: dict[<type>, <type>] = ...\")"
     },
     {
       "path": "scripts/ops/context_guard.py",
@@ -18561,11 +18151,6 @@
       "path": "scripts/orchestration/execution_safe_git.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"Any | None\" has no attribute \"st_mtime_ns\""
-    },
-    {
-      "path": "scripts/orchestration/install_preserved_retention_timer.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"write_unit\" has incompatible type \"None | int\"; expected \"int\""
     },
     {
       "path": "scripts/orchestration/install_worktree_cleanup_launchd.py",
@@ -18901,26 +18486,6 @@
       "path": "scripts/orchestration/merge_queue_keeper.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"Any | None\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/orchestrator_control.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/orchestrator_control.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"get\" of \"dict\" has incompatible type \"None | str\"; expected \"None\""
-    },
-    {
-      "path": "scripts/orchestration/orchestrator_control.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | list[Any]\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/orchestration/orchestrator_control.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
     },
     {
       "path": "scripts/orchestration/pr_ownership.py",
@@ -20106,16 +19671,6 @@
       "path": "scripts/practice_deck/zno.py",
       "code": "arg-type",
       "message": "Argument 1 to \"build_zno_fill_residual\" has incompatible type \"Connection\"; expected \"SQLiteConnection\""
-    },
-    {
-      "path": "scripts/pre_commit/check_plan_immutability.py",
-      "code": "arg-type",
-      "message": "Argument \"stderr\" to \"CompletedProcess\" has incompatible type \"bytes | str\"; expected \"None | str\""
-    },
-    {
-      "path": "scripts/pre_commit/check_plan_immutability.py",
-      "code": "arg-type",
-      "message": "Argument \"stdout\" to \"CompletedProcess\" has incompatible type \"bytes | str\"; expected \"None | str\""
     },
     {
       "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
