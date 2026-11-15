@@ -22,19 +22,14 @@ context_hook_state() {
 # Latest assistant input/cache usage from a Claude Code transcript, or 0.
 # Output tokens are not current context usage and are deliberately excluded.
 # An optional usage object lets statuslines apply the same rule to current_usage.
+# Transcripts use the latest real model turn: Code Mode appends synthetic
+# assistant entries (model "<synthetic>") whose usage is all zeros, so those
+# and any entry whose input/cache usage sums to zero are skipped.
 context_latest_usage_tokens() {
-  local transcript="$1" usage="${2:-}"
-  if [ -z "$usage" ]; then
-    usage=$(tail -200 "$transcript" 2>/dev/null \
-      | jq -s '[.[] | select(.type == "assistant" and (.message.usage | type) == "object")] | last | .message.usage // empty' 2>/dev/null)
-  fi
-  if [ -z "$usage" ] || [ "$usage" = "null" ]; then
-    printf '0\n'
-    return 0
-  fi
+  local transcript="$1" usage="${2:-}" program
   # The #10471 measurement found top-level usage summed both main passes around
   # an advisor call. Only the last message iteration describes current main context.
-  printf '%s' "$usage" | jq -r '
+  program='
     def tokens:
       (if type == "number" then .
        elif type == "string" then
@@ -43,11 +38,23 @@ context_latest_usage_tokens() {
        else 0 end)
       | if isnan or (isfinite | not) or . > 1000000000000000 then 0
         else [., 0] | max | floor end;
-    (if (.iterations | type) == "array" then
-       ([.iterations[] | select(type == "object" and .type == "message")] | last) // .
-     else . end)
-    | ((.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens))
-    | floor
+    def context_tokens:
+      (if (.iterations | type) == "array" then
+         ([.iterations[] | select(type == "object" and .type == "message")] | last) // .
+       else . end)
+      | ((.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens))
+      | floor;
+  '
+  if [ -n "$usage" ]; then
+    printf '%s' "$usage" | jq -r "$program"' if type == "object" then context_tokens else 0 end' 2>/dev/null \
+      || printf '0\n'
+    return 0
+  fi
+  tail -200 "$transcript" 2>/dev/null | jq -rs "$program"'
+    [.[] | select(type == "object" and .type == "assistant" and (.message | type) == "object")
+         | select(.message.model != "<synthetic>" and (.message.usage | type) == "object")
+         | .message.usage | context_tokens]
+    | last // 0
   ' 2>/dev/null || printf '0\n'
 }
 

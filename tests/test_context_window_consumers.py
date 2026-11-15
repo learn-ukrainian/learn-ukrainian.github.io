@@ -406,6 +406,47 @@ def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(
     assert "999999" not in message
 
 
+def test_context_monitor_synthetic_zero_usage_entries_do_not_mask_live_usage(tmp_path: Path) -> None:
+    """Defect class: Code Mode `<synthetic>` zero-usage entries masking live usage."""
+    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
+    transcript = tmp_path / "code-mode.jsonl"
+    real = {"input_tokens": 2, "cache_read_input_tokens": 300_000, "cache_creation_input_tokens": 5_998}
+    synthetic = dict.fromkeys((*real, "output_tokens"), 0)
+    lines = [{"type": "assistant", "message": {"model": "claude-opus-5-5", "usage": {**real, "output_tokens": 9}}}]
+    lines += [{"type": "assistant", "message": {"model": "<synthetic>", "usage": synthetic}}] * 3
+    # Tool traffic large enough that the size estimate would report over 100%.
+    lines.append({"type": "user", "message": {"content": "x " * 1_500_000}})
+    transcript.write_text("\n".join(map(json.dumps, lines)) + "\n", encoding="utf-8")
+    assert latest_tokens(transcript) == 306_000
+
+    # A zero from the latest real turn is live usage, never replaced by an older turn.
+    zero_cases = {
+        "real-zero": {"input_tokens": 0},
+        "final-iteration-zero": {**real, "iterations": [{"type": "message", **real}, {"type": "message"}]},
+    }
+    for name, latest in zero_cases.items():
+        probe = tmp_path / f"{name}.jsonl"
+        entries = [lines[0], {"type": "assistant", "message": {"model": "claude-opus-5-5", "usage": latest}}]
+        probe.write_text("\n".join(map(json.dumps, entries)) + "\n", encoding="utf-8")
+        assert latest_tokens(probe) == 0, name
+
+    completed = subprocess.run(
+        [os.fspath(CONTEXT_MONITOR)],
+        input=json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)}),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+
+    message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith("CRITICAL: Context is at 85%")
+    assert "latest assistant input/cache usage" in message
+    assert "transcript-size estimate" not in message
+
+
 def test_context_monitor_size_fallback_handles_long_base64_portably(
     tmp_path: Path,
 ) -> None:
