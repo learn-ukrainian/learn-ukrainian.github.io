@@ -319,7 +319,14 @@ def update_session(
     observed_context_window = _positive_window(
         observed_context_window, "observed_context_window"
     )
-    observed_context_used = _positive_window(observed_context_used, "observed_context_used")
+    if observed_context_used is not None and (
+        isinstance(observed_context_used, bool)
+        or not isinstance(observed_context_used, int)
+        or observed_context_used < 0
+    ):
+        # 0 is a real observation (no usage yet, or none since /compact): it
+        # supersedes an older positive figure instead of being dropped.
+        raise SessionRecordError("observed_context_used must be a non-negative integer")
     record = read_record(session_id, state_root=state_root) or {
         "schema_version": SCHEMA_VERSION,
         "session_id": session_id,

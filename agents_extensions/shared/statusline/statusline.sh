@@ -136,8 +136,11 @@ if [ -z "$ctx_used" ]; then
   fi
 fi
 # The harness's own live figure, before any compatibility fallback below; it is
-# what the context hooks read back from the session record.
-live_used="$ctx_used"
+# what the context hooks read back from the session record. No usable figure
+# (none yet, none since /compact, or malformed) is recorded as 0, so it
+# supersedes an older figure.
+live_used="${ctx_used:-0}"
+[[ "$live_used" =~ ^[0-9]+$ ]] || live_used=0
 
 is_positive_integer() {
   case "${1:-}" in
@@ -152,10 +155,17 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$cwd}"
 if [ ! -f "$PROJECT_DIR/scripts/lib/session_record.py" ]; then
   PROJECT_DIR=$(git --no-optional-locks -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
 fi
-PYTHON_BIN="$PROJECT_DIR/.venv/bin/python"
+# The interpreter comes from the shared project resolver, as for the context
+# hooks: a linked worktree has no .venv of its own and uses the primary's. When
+# none resolves, the record is neither read nor written.
 SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
+PYTHON_BIN=""
+# shellcheck source=scripts/lib/project_interpreter.sh
+if source "$PROJECT_DIR/scripts/lib/project_interpreter.sh" 2>/dev/null; then
+  PYTHON_BIN=$(project_interpreter_resolve "$PROJECT_DIR" 2>/dev/null) || PYTHON_BIN=""
+fi
 record_json=""
-if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
+if [ -n "$session_id" ] && [ -n "$PYTHON_BIN" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then
   record_json=$("$PYTHON_BIN" "$SESSION_RECORD" get --session-id "$session_id" 2>/dev/null || true)
 
   # Persist only changed official observations. This makes the record the shared
@@ -184,8 +194,7 @@ if [ -n "$session_id" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; the
   # does not, so the hooks' freshness check (context-rollover-lib.sh) holds.
   printf -v now_epoch '%(%s)T' -1
   case "$stored_used_at" in ''|*[!0-9]*) stored_used_at=0 ;; esac
-  if is_positive_integer "$live_used" \
-     && { [ "$live_used" != "$stored_used" ] || [ $((now_epoch - stored_used_at)) -ge 60 ]; }; then
+  if [ "$live_used" != "$stored_used" ] || [ $((now_epoch - stored_used_at)) -ge 60 ]; then
     update_args+=(--observed-context-used "$live_used")
     update_needed=1
   fi

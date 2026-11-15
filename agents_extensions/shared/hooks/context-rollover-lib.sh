@@ -23,13 +23,11 @@ context_hook_state() {
 # Output tokens are not current context usage and are deliberately excluded.
 # An optional usage object lets statuslines apply the same rule to current_usage.
 # Transcripts use the latest real model turn: Code Mode appends synthetic
-# assistant entries (model "<synthetic>") whose usage is all zeros, so those
-# and any entry whose input/cache usage sums to zero are skipped.
-context_latest_usage_tokens() {
-  local transcript="$1" usage="${2:-}" program
-  # The #10471 measurement found top-level usage summed both main passes around
-  # an advisor call. Only the last message iteration describes current main context.
-  program='
+# assistant entries (model "<synthetic>") whose usage is all zeros, so those are
+# skipped; a real turn reporting zero is unknown usage, never an older turn's.
+# The #10471 measurement found top-level usage summed both main passes around
+# an advisor call. Only the last message iteration describes current main context.
+CONTEXT_USAGE_JQ='
     def tokens:
       (if type == "number" then .
        elif type == "string" then
@@ -45,52 +43,83 @@ context_latest_usage_tokens() {
       | ((.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens))
       | floor;
   '
+context_latest_usage_tokens() {
+  local transcript="$1" usage="${2:-}"
   if [ -n "$usage" ]; then
-    printf '%s' "$usage" | jq -r "$program"' if type == "object" then context_tokens else 0 end' 2>/dev/null \
+    printf '%s' "$usage" | jq -r "$CONTEXT_USAGE_JQ"' if type == "object" then context_tokens else 0 end' 2>/dev/null \
       || printf '0\n'
     return 0
   fi
-  tail -200 "$transcript" 2>/dev/null | jq -rs "$program"'
-    [.[] | select(type == "object" and .type == "assistant" and (.message | type) == "object")
+  context_transcript_usage "$transcript" | cut -f1
+}
+
+# The transcript's latest usage observation as "<tokens>\t<epoch seconds>"; tokens
+# 0 means unknown and epoch 0 means the time is unknown. Only turns after the
+# last compaction boundary (type=system, subtype=compact_boundary) count: the
+# turns before it describe a context that compaction replaced. A boundary with no
+# real turn after it is itself the latest observation, with unknown usage.
+context_transcript_usage() {
+  local transcript="$1"
+  tail -200 "$transcript" 2>/dev/null | jq -rs "$CONTEXT_USAGE_JQ"'
+    def epoch:
+      (.timestamp | strings | sub("\\.[0-9]+"; "") | fromdateiso8601? | floor) // 0;
+    [.[] | select(type == "object")] as $entries
+    | ([range(0; $entries | length)
+        | select($entries[.].type == "system" and $entries[.].subtype == "compact_boundary")]
+       | last) as $boundary
+    | (if $boundary == null then $entries else $entries[$boundary:] end) as $current
+    | ([$current[] | select(.type == "assistant" and (.message | type) == "object")
          | select(.message.model != "<synthetic>" and (.message.usage | type) == "object")
-         | .message.usage | context_tokens]
-    | last // 0
-  ' 2>/dev/null || printf '0\n'
+         | [(.message.usage | context_tokens), epoch]] | last) as $turn
+    | if $turn != null then "\($turn[0])\t\($turn[1])"
+      elif $boundary != null then "0\t\($entries[$boundary] | epoch)"
+      else "0\t0" end
+  ' 2>/dev/null || printf '0\t0\n'
 }
 
 # Live context usage for a session as "<tokens>\t<source>"; tokens 0 means
-# unknown. Order: (1) the status line's harness figure from this session's
-# record, when observed within the last 300 seconds; (2) the latest real model
-# turn in the transcript (headless sessions have no status line); (3) unknown.
-# Usage is never estimated from transcript size.
+# unknown. Usage is never estimated from transcript size. The newest harness
+# observation wins, and a newer one supersedes an older one even when it reports
+# no usage:
+#   - the status line's figure from this session's record (the status line
+#     records every value it sees, 0 included, with the time it saw it), while
+#     at most 300 seconds old;
+#   - the transcript's latest real model turn after the last compaction
+#     boundary (headless sessions have no status line), or that boundary.
+# A status-line figure older than the transcript's latest observation is
+# superseded by it. A status-line zero (no usage yet, or none since /compact)
+# falls back to the transcript. Anything else is unknown.
 # 300 seconds: the status line runs after every model response and re-records
 # at least once a minute while it runs, so at PostToolUse its figure is about as
 # old as the tool call that just finished. An older figure means the status
 # line is not running, and the transcript reports the same latest turn anyway.
 CONTEXT_STATUSLINE_MAX_AGE_SECONDS=300
 context_live_usage() {
-  local record_file="$1" session_id="$2" transcript="$3" tokens=0 now
+  local record_file="$1" session_id="$2" transcript="$3"
+  local tokens=0 observed_at=0 turn_tokens=0 turn_at=0 now
+  if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+    IFS=$'\t' read -r turn_tokens turn_at < <(context_transcript_usage "$transcript")
+    case "$turn_tokens" in ''|*[!0-9]*) turn_tokens=0 ;; esac
+    case "$turn_at" in ''|*[!0-9]*) turn_at=0 ;; esac
+  fi
   if [ -f "$record_file" ] && [ ! -L "$record_file" ]; then
     printf -v now '%(%s)T' -1
-    tokens=$(jq -r --arg sid "$session_id" --argjson now "$now" \
+    IFS=$'\t' read -r tokens observed_at < <(jq -r --arg sid "$session_id" --argjson now "$now" \
       --argjson max "$CONTEXT_STATUSLINE_MAX_AGE_SECONDS" '
       (.observed_context_used_tokens) as $used | (.observed_context_used_at_epoch) as $at
       | if .session_id == $sid and ($used | type) == "number" and ($at | type) == "number"
-           and $used > 0 and ($now - $at) <= $max and ($at - $now) <= 60
-        then $used | floor else 0 end' "$record_file" 2>/dev/null) || tokens=0
+           and $used >= 0 and ($now - $at) <= $max and ($at - $now) <= 60
+        then "\($used | floor)\t\($at | floor)" else "0\t0" end' "$record_file" 2>/dev/null)
     case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
-    if [ "$tokens" -gt 0 ]; then
+    case "$observed_at" in ''|*[!0-9]*) observed_at=0 ;; esac
+    if [ "$tokens" -gt 0 ] && [ "$observed_at" -ge "$turn_at" ]; then
       printf '%s\tstatus line (harness live usage)\n' "$tokens"
       return 0
     fi
   fi
-  if [ -n "$transcript" ] && [ -f "$transcript" ]; then
-    tokens=$(context_latest_usage_tokens "$transcript")
-    case "$tokens" in ''|*[!0-9]*) tokens=0 ;; esac
-    if [ "$tokens" -gt 0 ]; then
-      printf '%s\tlatest assistant input/cache usage\n' "$tokens"
-      return 0
-    fi
+  if [ "$turn_tokens" -gt 0 ]; then
+    printf '%s\tlatest assistant input/cache usage\n' "$turn_tokens"
+    return 0
   fi
   printf '0\tunknown\n'
 }

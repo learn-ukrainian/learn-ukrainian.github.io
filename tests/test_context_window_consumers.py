@@ -39,20 +39,37 @@ def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
     }
 
 
-def _fake_project(tmp_path: Path, record: dict[str, object]) -> tuple[Path, Path]:
+def _fake_project(
+    tmp_path: Path, record: dict[str, object], *, linked_worktree: bool = False, resolver: bool = True
+) -> tuple[Path, Path]:
+    """A checkout whose session-record helper is driven by a fake interpreter.
+
+    With ``linked_worktree`` the checkout is a linked worktree without a .venv;
+    the interpreter lives in its primary checkout, as in dispatch worktrees.
+    Without ``resolver`` the checkout has no project-interpreter resolver.
+    """
     project = tmp_path / "project"
-    python_bin = project / ".venv/bin/python"
+    primary = tmp_path / "primary" if linked_worktree else project
+    python_bin = primary / ".venv/bin/python"
     session_helper = project / "scripts/lib/session_record.py"
     record_path = tmp_path / "record.json"
     record_path.write_text(json.dumps(record), encoding="utf-8")
     session_helper.parent.mkdir(parents=True)
     session_helper.write_text("# fake helper selected by fake python\n", encoding="utf-8")
+    if resolver:
+        shutil.copy(PROJECT_ROOT / "scripts/lib/project_interpreter.sh", session_helper.parent)
+    if linked_worktree:
+        admin = primary / ".git/worktrees/project"
+        admin.mkdir(parents=True)
+        (admin / "gitdir").write_text(f"{project / '.git'}\n", encoding="utf-8")
+        (project / ".git").write_text(f"gitdir: {admin}\n", encoding="utf-8")
     python_bin.parent.mkdir(parents=True)
     python_bin.write_text(
         """#!/usr/bin/env python3
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 record_path = Path(os.environ["TEST_SESSION_RECORD"])
@@ -89,6 +106,7 @@ if transcript is not None:
 used = value("--observed-context-used")
 if used is not None:
     record["observed_context_used_tokens"] = int(used)
+    record["observed_context_used_at_epoch"] = int(time.time())
 record_path.write_text(json.dumps(record), encoding="utf-8")
 print(json.dumps(record))
 """,
@@ -115,6 +133,7 @@ def _environment(project: Path, record_path: Path) -> dict[str, str]:
         }
     )
     for name in (
+        "LEARN_UKRAINIAN_PYTHON",
         "CLAUDE_NON_INTERACTIVE",
         "LEARN_UK_PIPELINE",
         "GEMINI_SESSION",
@@ -163,8 +182,10 @@ def _write_transcript(path: Path, *, input_tokens: int, cache_tokens: int) -> No
     )
 
 
-def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path) -> None:
-    project, record_path = _fake_project(tmp_path, _record())
+@pytest.mark.parametrize("linked_worktree", [False, True], ids=["primary", "linked-worktree"])
+def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path, linked_worktree: bool) -> None:
+    """Defect class: a checkout without its own .venv never recording live usage."""
+    project, record_path = _fake_project(tmp_path, _record(), linked_worktree=linked_worktree)
     transcript = tmp_path / "official transcript.jsonl"
     _write_transcript(transcript, input_tokens=10, cache_tokens=5)
     payload = {
@@ -481,6 +502,53 @@ def test_context_monitor_fresh_statusline_figure_wins_over_transcript(tmp_path: 
     assert "latest assistant input/cache usage" in message
 
 
+def test_context_monitor_newer_observation_supersedes_cached_usage(tmp_path: Path) -> None:
+    """Defect class: a cached usage figure outliving a newer harness observation."""
+    record = _record(actual_window=360_000)
+    record["observed_context_used_tokens"] = 330_000
+    record["observed_context_used_at_epoch"] = int(time.time())
+    project, record_path = _fake_project(tmp_path, record)
+    transcript = tmp_path / "monitor.jsonl"
+    env = _environment(project, record_path)
+
+    def turn(tokens: int, at: float) -> dict[str, object]:
+        stamp = time.strftime("%Y-%m-%dT%H:%M:%S.123Z", time.gmtime(at))
+        usage = {"input_tokens": tokens, "cache_read_input_tokens": 0, "cache_creation_input_tokens": 0}
+        return {"type": "assistant", "timestamp": stamp, "message": {"model": "claude-opus-5-5", "usage": usage}}
+
+    def monitor(*entries: dict[str, object]) -> str:
+        transcript.write_text("\n".join(map(json.dumps, entries)) + "\n", encoding="utf-8")
+        payload = {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
+        run = subprocess.run([os.fspath(CONTEXT_MONITOR)], input=json.dumps(payload), text=True,
+                             capture_output=True, check=True, cwd=tmp_path, env=env, timeout=30)
+        return json.loads(run.stdout)["hookSpecificOutput"]["additionalContext"] if run.stdout else ""
+
+    old = time.time() - 120
+    # A transcript turn newer than the cached figure supersedes it.
+    record["observed_context_used_at_epoch"] = int(old)
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    assert monitor(turn(108_000, time.time())) == ""  # 30%: below every tier
+    # A compaction boundary newer than the cached figure leaves usage unknown;
+    # the turns before it describe a context that is gone.
+    boundary = {"type": "system", "subtype": "compact_boundary", "timestamp": turn(0, time.time())["timestamp"]}
+    assert monitor(turn(340_000, old), boundary).startswith("Context usage is unknown")
+    # The status line's explicit zero (current_usage null after /compact) replaces
+    # a fresh cached figure and is recorded, so the guard falls back to the transcript.
+    record["observed_context_used_at_epoch"] = int(time.time())
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    assert monitor(turn(108_000, old)).startswith("CRITICAL: Context is at 91%")  # fresh cache wins
+    payload = {
+        "session_id": "status-session",
+        "workspace": {"current_dir": os.fspath(tmp_path)},
+        "context_window": {"context_window_size": 360_000, "total_input_tokens": 0, "used_percentage": 0,
+                           "current_usage": None},
+    }
+    subprocess.run([os.fspath(STATUSLINE)], input=json.dumps(payload), text=True, capture_output=True,
+                   check=True, cwd=tmp_path, env=env, timeout=30)
+    assert json.loads(record_path.read_text(encoding="utf-8"))["observed_context_used_tokens"] == 0
+    assert monitor(turn(108_000, old)) == ""  # transcript 30%, not the replaced 91%
+
+
 def test_context_monitor_unknown_usage_sets_no_tier_and_demands_no_handoff(
     tmp_path: Path,
 ) -> None:
@@ -682,7 +750,7 @@ def _monitor(
 
 def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path) -> None:
     """#8511: 650k/700k warnings, and at 750k hand off, tell the operator, end the turn."""
-    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    project, record_path = _fake_project(tmp_path, _native_claude_record(), resolver=False)
     transcript = tmp_path / "native.jsonl"
 
     assert _monitor(project, record_path, transcript, 640_000) == ""
