@@ -448,7 +448,7 @@ decisions:
     depends_on: []
 
   - id: dec-018
-    status: active
+    status: superseded
     date: 2026-11-13
     expires: 2027-02-11
     scope: harness
@@ -477,5 +477,35 @@ decisions:
       - option: "Advisory pr-body-guard check"
         rejected_because: >-
           A failing advisory check does not block landing.
+    superseded_by: dec-019
+    depends_on: []
+
+  - id: dec-019
+    status: active
+    date: 2026-11-15
+    expires: 2027-02-13
+    scope: harness
+    title: "Machinery-classified product paths are frozen; fixes ship by release (FIXES-FIRST-1115)"
+    reasoning: >-
+      Product code, CI and tests run the installed lu-machinery release (#13045,
+      #13043), so a product edit of a path machinery's rename map classifies as
+      machinery changes nothing the product runs. Those paths are frozen dead
+      copies: no product PR edits them; the fix goes to learn-ukrainian/machinery
+      and reaches the product by a release pin. The twin gate is removed (#13033).
+      Exception until #13032 deletes them: classified files the product still
+      executes in CI, hooks or launchers (the #13033 PR lists them) may get a
+      product fix, with its twin in machinery. Enforcement is review plus the
+      #13032 deletions; no new gate.
+    evidence:
+      - "#13033; the twin gate doubled #13047, #13048 and #13049 and ejected #13047 twice"
+      - "Operator approval FIXES-FIRST-1115, 2026-11-15"
+    alternatives:
+      - option: "Keep the twin gate (dec-018)"
+        rejected_because: >-
+          Forces a duplicate machinery PR for edits the product no longer runs.
+      - option: "A CI gate refusing edits of classified paths"
+        rejected_because: >-
+          Needs a hand-kept exclusion list of still-executed copies and new tests,
+          for copies #13032 deletes.
     superseded_by: null
     depends_on: []
