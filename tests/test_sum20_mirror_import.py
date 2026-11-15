@@ -14,6 +14,7 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
+from lu_machinery.storage import generations
 
 from scripts.ingest import sum20_mirror_import as importer
 from scripts.lexdata import generation, transforms
@@ -21,7 +22,6 @@ from scripts.lexicon import sum20_lookup
 from scripts.lexicon.sum20_store import Sum20StoreError
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.storage import cli as storage_cli
-from scripts.storage import generations
 from scripts.wiki import sources_db, sum20_mirror
 from scripts.wiki.sum20_official import PARSER_VERSION, ensure_sum20_official_schema, normalize_sum20_lookup
 

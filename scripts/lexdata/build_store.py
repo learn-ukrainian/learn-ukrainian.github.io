@@ -111,12 +111,27 @@ def _refuse_symlinks(paths: Iterable[Path]) -> None:
             raise BuildRefused("symlinked_parent")
 
 
+def runs_in_linked_worktree(cwd: Path | None = None) -> bool:
+    """Whether the working directory lies in a linked Git worktree.
+
+    The nearest ancestor holding ``.git`` is the checkout the process runs in. The
+    product root (``LU_PRODUCT_ROOT``) does not decide this: a process started from a
+    worktree can name the primary checkout as its product.
+    """
+    start = (cwd or Path.cwd()).resolve()
+    for candidate in (start, *start.parents):
+        if (candidate / ".git").exists():
+            return main_checkout_root(candidate).resolve() != candidate
+    return False
+
+
 def writer_target(repository_root: Path | None = None, *, test_data_dir: Path | None = None) -> WriterTarget:
     """The primary checkout's ``data/`` directory, or an explicit test binding.
 
-    Refuses a linked worktree (a worktree never creates the canonical store), a
-    symlinked ``data``/``data/lexdata``/``data/lexdata.db``, and a network or
-    unknown filesystem.
+    Refuses a linked worktree (a worktree never creates the canonical store): the
+    given root, or without one the product root and the checkout the process runs in.
+    Also refuses a symlinked ``data``/``data/lexdata``/``data/lexdata.db``, and a
+    network or unknown filesystem.
     """
     if test_data_dir is not None:
         data_dir = test_data_dir
@@ -124,7 +139,7 @@ def writer_target(repository_root: Path | None = None, *, test_data_dir: Path | 
     else:
         root = topology.default_repository_root(repository_root)
         primary = main_checkout_root(root.resolve()).resolve()
-        if root.resolve() != primary:
+        if root.resolve() != primary or (repository_root is None and runs_in_linked_worktree()):
             raise BuildRefused("linked_worktree")
         data_dir = primary / "data"
         _refuse_symlinks([data_dir])

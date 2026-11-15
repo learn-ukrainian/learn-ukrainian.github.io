@@ -268,7 +268,7 @@ def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
 @pytest.mark.parametrize("boundary", [None, "bubblewrap (bwrap) is not installed"])
 def test_flash_dispatch_carries_no_effort(fake, monkeypatch, boundary):
     dispatcher, prompt, state = fake
-    monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: boundary)
+    monkeypatch.setattr("lu_machinery.dispatcher.agy_sandbox.unavailable", lambda: boundary)
     with pytest.raises(DispatchError, match="new evaluation run tag"):
         dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
     dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
