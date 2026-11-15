@@ -8,13 +8,13 @@ states plainly that full pytest was not run (operator decision, 2026-10-29).
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files, every entry in `scripts/ci/pr-affected-guards.txt` (a whole test path, or a pinned `path::test` id that runs only that test and costs nothing extra when its file is already selected), and
 the tests that directly import, load, read or run a changed non-test file.
-The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
-in a separate required step.
+The separate required `pr-invariants` job runs
+`pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`.
 This selects marked tests only, including marked functions in otherwise
 unmarked files. Its traversal includes `tests/build/`, which pytest normally
 excludes. It uses the same candidate identity and checkout-integrity checks.
-The invariant step runs even if changed tests defer or fail, unless the run
-is cancelled. Changed-file duration estimates never defer invariants.
+The invariants job runs independently of changed-test deferral or failure,
+unless the run is cancelled. Changed-file duration estimates never defer invariants.
 It verifies the checked-out candidate against `GITHUB_SHA` and the event's PR
 merge ref. The candidate must have two Git parents and its second parent must
 match the event's PR head. Its first parent supplies the actual tested base for
@@ -90,7 +90,8 @@ The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
 
 The parallel `pr-invariants` job publishes `pr-repo-wide.json` and
-`pr-repo-wide.xml` in the `pr-invariants-proof` artifact. The JSON records the exact candidate, marker expression,
+`pr-repo-wide.xml` in the `pr-invariants-proof` artifact. The JSON records the
+exact candidate, marker expression,
 requested paths, worker count, subprocess timeout, elapsed wall time,
 logical CPU count and initial load average, plus reported cases, failures and
 skips. The marker expression requires `repo_wide` and retains the supported
@@ -141,7 +142,8 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files, tests that import changed files, tests that name a changed file as text, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
+| PR changed tests and guards | PRs execute changed test files, tests that import changed files, tests that name a changed file as text, and all explicit guards; full tiers exit without duplicate execution. |
+| PR repository invariants | PR events only. Runs the marker-only `repo_wide` selection and publishes `pr-invariants-proof`; skipped on full tiers. |
 | Frontend | Every event. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
@@ -224,7 +226,9 @@ missing metadata, incorrect refs and malformed proof fail closed.
 
 The gate requires Secret scan, Checks, Dependency audit, Frontend and PR changed tests and guards to
 succeed on every event. Duration refresh, pytest and pytest report must succeed on the
-full tier and be skipped on PR admission. Queue commit metadata scanning must
+full tier and be skipped on PR admission. PR repository invariants must succeed
+on PR admission and be skipped on full tiers; the workflow validates this result
+before the installed gate checks its original dependency set. Queue commit metadata scanning must
 succeed on merge-group events and be skipped elsewhere. Every other result,
 including cancellation or unknown status, blocks the gate. `always()` ensures
 it reports after failed or cancelled dependencies.
@@ -403,7 +407,8 @@ checkout. Before this change, one checkout took 16 s to 424 s, and the
 5-minute jobs were cancelled at their limit.
 
 Jobs that run test files keep a full clone: pytest shard 1, coverage-ref shard
-1, pytest-slow-nightly, and PR changed tests and guards on `pull_request`.
+1, pytest-slow-nightly, PR changed tests and guards, and PR repository
+invariants on `pull_request`.
 `tests/test_storage_classification_table.py` sizes 1,706 `data/` blobs (about
 1 GB) at a frozen base with one `git cat-file -s` each. In a blobless clone each
 is a separate fetch, and in run 40762542278 the test hit its 120 s timeout. In
