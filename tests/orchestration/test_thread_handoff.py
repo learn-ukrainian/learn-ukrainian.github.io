@@ -17,7 +17,6 @@ from scripts.lib import session_record
 from scripts.orchestration import claudex_supervisor as cs
 from scripts.orchestration import task_identity
 from scripts.orchestration import thread_handoff as th
-from scripts.orchestration import thread_handoff_canary as canary
 from scripts.orchestration.task_family import rollover, rollover_registry
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
 from tests.project_python import project_python
@@ -273,100 +272,15 @@ def bind_native_lease(state_path: Path, thread_id: str) -> None:
     th.write_json_atomic(state_path, state)
 
 
-def resumed_with_proof(tmp_path: Path, state: dict, thread_id: str = "new-thread") -> tuple[dict, Path]:
+def resumed_replacement(state: dict, thread_id: str = "new-thread") -> dict:
     replacement = state["replacement"]
     bind_native_replacement(state, thread_id)
-    resumed = th.resume_state(
+    return th.resume_state(
         state,
         rollover_id=replacement["rollover_id"],
         replacement_thread_id=thread_id,
         now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
     )
-    proof_path = tmp_path / "canary-pass.json"
-    canary.write_json_atomic(
-        proof_path,
-        canary.build_pass_proof(
-            rollover_id=replacement["rollover_id"],
-            replacement_thread_id=thread_id,
-            challenge=replacement["canary_challenge"],
-            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-        ),
-    )
-    return resumed, proof_path
-
-
-def strict_artifacts(tmp_path: Path, state: dict) -> tuple[Path, Path]:
-    """Create script-scored strict evidence at this lease's reserved paths."""
-    replacement = state["replacement"]
-    snapshot = tmp_path / replacement["semantic_snapshot_path"]
-    probe = tmp_path / replacement["strict_probe_path"]
-    answers = tmp_path / replacement["strict_answers_path"]
-    verdict = tmp_path / replacement["strict_verdict_path"]
-    source = "handoff:.agent/thread-rollovers/evidence.json"
-    payload = {
-        "generated_at": "2026-07-13T12:00:00Z",
-        "lineage_id": state["lineage_id"],
-        "rollover_id": replacement["rollover_id"],
-        "seed": 7,
-        "goals": [{"id": f"goal-{i}", "statement": f"goal {i}", "source_ref": f"{source}#goal-{i}"} for i in range(3)],
-        "decision_records": [
-            {
-                "id": f"decision-{i}",
-                "decision": f"decision {i}",
-                "source_ref": f"decision:docs/decisions/evidence.md#decision-{i}",
-            }
-            for i in range(3)
-        ],
-        "constraint_records": [
-            {"id": f"constraint-{i}", "prohibition": f"prohibition {i}", "source_ref": f"{source}#constraint-{i}"}
-            for i in range(2)
-        ],
-        "next_actions": [
-            {
-                "id": f"action-{i}",
-                "action": f"action {i}",
-                "source_ref": f"queue:batch_state/orchestrator-runs/evidence.json#action-{i}",
-            }
-            for i in range(2)
-        ],
-    }
-    th.write_json_atomic(snapshot, payload)
-    assert th.context_canary.main(["mint", "--snapshot", str(snapshot), "--out", str(probe)]) == 0
-    minted = json.loads(probe.read_text(encoding="utf-8"))
-    th.write_json_atomic(answers, {anchor["id"]: anchor["a"] for anchor in minted["anchors"]})
-    assert (
-        th.context_canary.main(
-            [
-                "score",
-                "--probe",
-                str(probe),
-                "--answers",
-                str(answers),
-                "--expected-lineage-id",
-                state["lineage_id"],
-                "--expected-rollover-id",
-                replacement["rollover_id"],
-                "--verdict",
-                str(verdict),
-            ]
-        )
-        == 0
-    )
-    return probe, verdict
-
-
-def filled_snapshot_from_template(template: dict) -> dict:
-    """Model the two semantic fields the replacement is allowed to author."""
-    snapshot = json.loads(json.dumps(template))
-    for index, record in enumerate(snapshot["goals"], start=1):
-        record["statement"] = f"goal {index}"
-    for index, record in enumerate(snapshot["decision_records"], start=1):
-        record["decision"] = f"decision {index}"
-    for index, record in enumerate(snapshot["constraint_records"], start=1):
-        record["prohibition"] = f"prohibition {index}"
-    for index, record in enumerate(snapshot["next_actions"], start=1):
-        record["action"] = f"action {index}"
-    return snapshot
 
 
 def test_prepare_state_records_meaningful_title_and_native_identity():
@@ -407,18 +321,13 @@ def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
     assert state["replacement"]["status"] == "pending_start"
     assert state["cleanup"]["old_automation_ready_to_delete"] is False
 
-    resumed, proof_path = resumed_with_proof(tmp_path, state)
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
+    resumed = resumed_replacement(state)
     confirmed = th.confirm_started(
         resumed,
         new_thread_id="new-thread",
         new_automation_id=None,
         confirmed_by="tester",
         now=now + timedelta(minutes=2),
-        canary_proof=proof_path,
-        strict_probe=strict_probe,
-        strict_verdict=strict_verdict,
-        state_root=tmp_path,
     )
     assert confirmed["replacement"]["status"] == "started"
     assert confirmed["replacement"]["thread_id"] == "new-thread"
@@ -427,8 +336,7 @@ def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
 
 def test_confirm_started_requires_exact_predecessor_identity(tmp_path: Path):
     state = prepared()
-    resumed, proof_path = resumed_with_proof(tmp_path, state)
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
+    resumed = resumed_replacement(state)
     resumed.pop("active")
 
     with pytest.raises(ValueError, match="no exact predecessor"):
@@ -438,10 +346,6 @@ def test_confirm_started_requires_exact_predecessor_identity(tmp_path: Path):
             new_automation_id=None,
             confirmed_by="tester",
             now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-            canary_proof=proof_path,
-            strict_probe=strict_probe,
-            strict_verdict=strict_verdict,
-            state_root=tmp_path,
         )
 
 
@@ -453,10 +357,6 @@ def test_confirm_started_rejects_missing_pending_replacement():
             new_automation_id=None,
             confirmed_by="tester",
             now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
-            canary_proof=Path("missing-proof.json"),
-            strict_probe=Path("missing-probe.json"),
-            strict_verdict=Path("missing-verdict.json"),
-            state_root=Path("."),
         )
 
 
@@ -2330,14 +2230,12 @@ def test_unsupported_native_title_adapter_binds_exact_task_without_claiming_rena
     assert resumed["title_transition"]["fallback_receipt"]["attempted"] is False
 
 
-def test_prepare_dry_run_never_prints_canary_bearing_prompt(
+def test_prepare_dry_run_never_prints_or_writes_the_bootstrap_prompt(
     tmp_path: Path,
     capsys,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    challenge = "a" * 64
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    monkeypatch.setattr(th, "new_canary_challenge", lambda: challenge)
 
     assert (
         th.main(
@@ -2355,7 +2253,6 @@ def test_prepare_dry_run_never_prints_canary_bearing_prompt(
     raw = capsys.readouterr().out
     payload = json.loads(raw)
 
-    assert challenge not in raw
     assert "bootstrap_prompt" not in payload
     assert payload["bootstrap_prompt_bytes"] > 0
     assert len(payload["bootstrap_prompt_sha256"]) == 64
@@ -2642,12 +2539,6 @@ def test_prepare_repair_and_create_authorization_share_one_lineage_lock(tmp_path
             "rollover-current",
             "--new-thread-id",
             "replacement-thread",
-            "--canary-proof",
-            "canary.json",
-            "--strict-probe",
-            "probe.json",
-            "--strict-verdict",
-            "verdict.json",
         ]
     )
 
@@ -2686,19 +2577,6 @@ def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: 
     monkeypatch.setattr(th, "gather_git_state", lambda root: clean)
     assert th.main(resume_command) == 0
     capsys.readouterr()
-    resumed = json.loads(state_path.read_text(encoding="utf-8"))
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-    capsys.readouterr()
-    proof = tmp_path / resumed["replacement"]["canary_proof_path"]
-    canary.write_json_atomic(
-        proof,
-        canary.build_pass_proof(
-            rollover_id=packet["rollover_id"],
-            replacement_thread_id="new-thread",
-            challenge=resumed["replacement"]["canary_challenge"],
-            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-        ),
-    )
 
     monkeypatch.setattr(
         th,
@@ -2717,12 +2595,6 @@ def test_resume_and_confirm_independently_recheck_checkout_continuity(tmp_path: 
                 packet["rollover_id"],
                 "--new-thread-id",
                 "new-thread",
-                "--canary-proof",
-                str(proof),
-                "--strict-probe",
-                str(strict_probe),
-                "--strict-verdict",
-                str(strict_verdict),
             ]
         )
         == 2
@@ -2878,17 +2750,6 @@ def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
         replacement_thread_id="new-claude",
         now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
     )
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-    proof_path = tmp_path / resumed["replacement"]["canary_proof_path"]
-    canary.write_json_atomic(
-        proof_path,
-        canary.build_pass_proof(
-            rollover_id=resumed["replacement"]["rollover_id"],
-            replacement_thread_id="new-claude",
-            challenge=resumed["replacement"]["canary_challenge"],
-            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-        ),
-    )
     th.write_json_atomic(claude_path, resumed)
     capsys.readouterr()
 
@@ -2905,12 +2766,6 @@ def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
             resumed["replacement"]["rollover_id"],
             "--new-thread-id",
             "new-claude",
-            "--canary-proof",
-            str(proof_path),
-            "--strict-probe",
-            str(strict_probe),
-            "--strict-verdict",
-            str(strict_verdict),
         ]
     )
     payload = json.loads(capsys.readouterr().out)
@@ -3154,48 +3009,6 @@ def test_resume_is_deterministic_and_refuses_a_different_thread():
         )
 
 
-def test_confirm_requires_matching_script_proven_canary_pass(tmp_path: Path):
-    state = prepared()
-    resumed, proof_path = resumed_with_proof(tmp_path, state)
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-    confirmed = th.confirm_started(
-        resumed,
-        new_thread_id="new-thread",
-        new_automation_id=None,
-        confirmed_by="tester",
-        now=datetime(2026, 5, 30, 8, 3, tzinfo=UTC),
-        canary_proof=proof_path,
-        strict_probe=strict_probe,
-        strict_verdict=strict_verdict,
-        state_root=tmp_path,
-    )
-    assert confirmed["replacement"]["status"] == "started"
-    assert confirmed["cleanup"]["old_automation_ready_to_delete"] is True
-
-    wrong_proof = tmp_path / "wrong.json"
-    canary.write_json_atomic(
-        wrong_proof,
-        canary.build_pass_proof(
-            rollover_id="other-rollover",
-            replacement_thread_id="new-thread",
-            challenge=state["replacement"]["canary_challenge"],
-            now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-        ),
-    )
-    with pytest.raises(ValueError, match="script-proven canary PASS"):
-        th.confirm_started(
-            resumed,
-            new_thread_id="new-thread",
-            new_automation_id=None,
-            confirmed_by="tester",
-            now=datetime(2026, 5, 30, 8, 3, tzinfo=UTC),
-            canary_proof=wrong_proof,
-            strict_probe=strict_probe,
-            strict_verdict=strict_verdict,
-            state_root=tmp_path,
-        )
-
-
 def test_v1_state_requires_explicit_migration(tmp_path: Path, capsys, monkeypatch):
     state_path = tmp_path / ".agent/legacy.json"
     state_path.parent.mkdir(parents=True)
@@ -3321,7 +3134,7 @@ def test_parallel_lineages_do_not_collide_in_an_explicit_fixture(tmp_path: Path,
     assert payloads[0]["runtime_path"] != payloads[1]["runtime_path"]
 
 
-def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
+def test_bootstrap_replacement_binds_and_is_idempotent(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -3361,51 +3174,18 @@ def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
     capsys.readouterr()
     state_path = tmp_path / packet["state_file"]
     state = json.loads(state_path.read_text(encoding="utf-8"))
-    template_path = (tmp_path / state["replacement"]["semantic_snapshot_path"]).with_name(
-        "semantic-snapshot.template.json"
-    )
-    template = json.loads(template_path.read_text(encoding="utf-8"))
-    assert [len(template[key]) for key in ("goals", "decision_records", "constraint_records", "next_actions")] == [
-        3,
-        3,
-        2,
-        2,
-    ]
-    assert all(not record["statement"] for record in template["goals"])
-    assert all(not record["decision"] for record in template["decision_records"])
-    assert all(not record["prohibition"] for record in template["constraint_records"])
-    assert all(not record["action"] for record in template["next_actions"])
-    handoff_ref = f"handoff:{state['replacement']['handoff_path']}"
-    assert all(
-        record["source_ref"].startswith(f"{handoff_ref}#")
-        for category in ("goals", "decision_records", "constraint_records", "next_actions")
-        for record in template[category]
-    )
-    assert all(
-        th.context_canary._parse_and_validate_source_ref(record["source_ref"], category)
-        for category, records in (
-            ("goal", template["goals"]),
-            ("decision/rationale", template["decision_records"]),
-            ("negative-constraint/prohibition", template["constraint_records"]),
-            ("next-action", template["next_actions"]),
-        )
-        for record in records
-    )
-    assert (
-        th.context_canary.main(["mint", "--snapshot", str(template_path), "--out", str(tmp_path / "probe.json")]) == 1
-    )
+    assert state["replacement"]["status"] == "resumed"
+    assert state["replacement"]["resumed_thread_id"] == "new-thread"
 
     state_bytes = state_path.read_bytes()
-    template_bytes = template_path.read_bytes()
     assert th.main(command) == 0
     bootstrap = json.loads(capsys.readouterr().out)
     assert bootstrap["handoff_path"] == state["replacement"]["handoff_path"]
     assert bootstrap["bootstrap_prompt_path"] == state["replacement"]["bootstrap_prompt_path"]
     assert state_path.read_bytes() == state_bytes
-    assert template_path.read_bytes() == template_bytes
 
 
-def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
+def test_confirm_replacement_confirms_the_bound_packet_and_reruns_idempotently(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -3444,16 +3224,6 @@ def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
     assert th.main(bootstrap) == 0
     capsys.readouterr()
     state_path = tmp_path / packet["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    replacement = state["replacement"]
-    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
-    th.write_json_atomic(
-        tmp_path / replacement["semantic_snapshot_path"],
-        filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))),
-    )
-    probe_path = tmp_path / replacement["strict_probe_path"]
-    answers_path = tmp_path / replacement["strict_answers_path"]
-    verdict_path = tmp_path / replacement["strict_verdict_path"]
     confirm = [
         "--repo-root",
         str(tmp_path),
@@ -3465,104 +3235,23 @@ def test_confirm_replacement_composes_strict_flow_and_reruns_idempotently(
         "--rollover-id",
         packet["rollover_id"],
     ]
-    assert (
-        th.context_canary.main(
-            ["mint", "--snapshot", str(tmp_path / replacement["semantic_snapshot_path"]), "--out", str(probe_path)]
-        )
-        == 0
-    )
-    probe = json.loads(probe_path.read_text(encoding="utf-8"))
-    th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
-    probe_path.unlink()
+    # Binding-only confirmation still refuses a thread other than the resumed one.
+    resumed_bytes = state_path.read_bytes()
+    assert th.main([*confirm, "--replacement-thread-id", "other-thread"]) == 2
+    assert "does not match the thread that resumed" in capsys.readouterr().out
+    assert state_path.read_bytes() == resumed_bytes
     assert th.main(confirm) == 0
     capsys.readouterr()
     confirmed = json.loads(state_path.read_text(encoding="utf-8"))
     assert confirmed["replacement"]["status"] == "started"
     assert confirmed["cleanup"]["old_automation_ready_to_delete"] is True
     state_bytes = state_path.read_bytes()
-    verdict_bytes = verdict_path.read_bytes()
     assert th.main(confirm) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "already_confirmed"
     assert state_path.read_bytes() == state_bytes
-    assert verdict_path.read_bytes() == verdict_bytes
 
 
-def test_confirm_replacement_failed_or_skipped_score_leaves_confirmation_locked(
-    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
-):
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "prepare",
-                "--agent",
-                "codex",
-                "--harness",
-                "headless",
-                "--active-thread-id",
-                "old",
-            ]
-        )
-        == 0
-    )
-    packet = json.loads(capsys.readouterr().out)
-    bootstrap = [
-        "--repo-root",
-        str(tmp_path),
-        "bootstrap-replacement",
-        "--agent",
-        "codex",
-        "--lineage-id",
-        packet["lineage_id"],
-        "--rollover-id",
-        packet["rollover_id"],
-        "--replacement-thread-id",
-        "new-thread",
-        "--evidence",
-        "test exact binding",
-    ]
-    assert th.main(bootstrap) == 0
-    capsys.readouterr()
-    state_path = tmp_path / packet["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    replacement = state["replacement"]
-    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
-    th.write_json_atomic(
-        tmp_path / replacement["semantic_snapshot_path"],
-        filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))),
-    )
-    th.write_json_atomic(tmp_path / replacement["strict_answers_path"], {})
-    confirm = [
-        "--repo-root",
-        str(tmp_path),
-        "confirm-replacement",
-        "--agent",
-        "codex",
-        "--lineage-id",
-        packet["lineage_id"],
-        "--rollover-id",
-        packet["rollover_id"],
-    ]
-    assert th.main(confirm) == 2
-    failed_output = capsys.readouterr().out
-    assert '"schema": "production-handoff-v2-questions"' in failed_output
-    locked = json.loads(state_path.read_text(encoding="utf-8"))
-    assert locked["replacement"]["status"] == "resumed"
-    assert locked["cleanup"]["old_automation_ready_to_delete"] is False
-
-    original_score = th.context_canary.cmd_score
-    monkeypatch.setattr(th.context_canary, "cmd_score", lambda args: 0)
-    assert th.main(confirm) == 2
-    capsys.readouterr()
-    locked_after_skip = json.loads(state_path.read_text(encoding="utf-8"))
-    assert locked_after_skip["replacement"]["status"] == "resumed"
-    assert locked_after_skip["cleanup"]["old_automation_ready_to_delete"] is False
-    monkeypatch.setattr(th.context_canary, "cmd_score", original_score)
-
-
-def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_template(
+def test_bootstrap_replacement_wrong_id_fails_closed_without_rebinding(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -3601,63 +3290,15 @@ def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_templat
     assert th.main(command) == 0
     capsys.readouterr()
     state_path = tmp_path / packet["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    template_path = (tmp_path / state["replacement"]["semantic_snapshot_path"]).with_name(
-        "semantic-snapshot.template.json"
-    )
     state_bytes = state_path.read_bytes()
-    template_bytes = template_path.read_bytes()
     assert th.main([*command[:-3], "other-thread", "--evidence", "test exact binding"]) == 2
     assert "replacement task ID does not match the exact persisted binding" in capsys.readouterr().out
     assert state_path.read_bytes() == state_bytes
-    assert template_path.read_bytes() == template_bytes
-
-
-def test_canary_proof_rejects_tampering_after_atomic_write(tmp_path: Path):
-    proof_path = tmp_path / "proof.json"
-    payload = canary.build_pass_proof(
-        rollover_id="rollover-1",
-        replacement_thread_id="new-thread",
-        challenge="challenge",
-        now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
-    )
-    canary.write_json_atomic(proof_path, payload)
-    assert (
-        canary.load_and_validate_pass_proof(
-            proof_path,
-            rollover_id="rollover-1",
-            replacement_thread_id="new-thread",
-            challenge="challenge",
-        )[1]
-        is None
-    )
-
-    payload["status"] = "FAIL"
-    canary.write_json_atomic(proof_path, payload)
-    assert (
-        "did not report PASS"
-        in canary.load_and_validate_pass_proof(
-            proof_path,
-            rollover_id="rollover-1",
-            replacement_thread_id="new-thread",
-            challenge="challenge",
-        )[1]
-    )
 
 
 def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_path: Path):
     state = prepared()
     replacement = state["replacement"]
-    proof_path = tmp_path / "proof.json"
-    canary.write_json_atomic(
-        proof_path,
-        canary.build_pass_proof(
-            rollover_id=replacement["rollover_id"],
-            replacement_thread_id="new-thread",
-            challenge=replacement["canary_challenge"],
-            now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
-        ),
-    )
     with pytest.raises(ValueError, match="must be resumed"):
         th.confirm_started(
             state,
@@ -3665,10 +3306,6 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
             new_automation_id=None,
             confirmed_by="tester",
             now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-            canary_proof=proof_path,
-            strict_probe=tmp_path / "strict-probe.json",
-            strict_verdict=tmp_path / "strict-verdict.json",
-            state_root=tmp_path,
         )
     bind_native_replacement(state, "bound-thread")
     resumed = th.resume_state(
@@ -3677,7 +3314,6 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
         replacement_thread_id="bound-thread",
         now=datetime(2026, 5, 30, 8, 1, tzinfo=UTC),
     )
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
     with pytest.raises(ValueError, match="does not match the thread"):
         th.confirm_started(
             resumed,
@@ -3685,10 +3321,6 @@ def test_confirmation_refuses_unresumed_and_identity_mismatched_rollovers(tmp_pa
             new_automation_id=None,
             confirmed_by="tester",
             now=datetime(2026, 5, 30, 8, 2, tzinfo=UTC),
-            canary_proof=proof_path,
-            strict_probe=strict_probe,
-            strict_verdict=strict_verdict,
-            state_root=tmp_path,
         )
 
 
@@ -3710,13 +3342,6 @@ def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_
         "runtime_path",
         "handoff_path",
         "bootstrap_prompt_path",
-        "canary_challenge",
-        "canary_proof_path",
-        "semantic_snapshot_path",
-        "strict_probe_path",
-        "strict_questions_path",
-        "strict_answers_path",
-        "strict_verdict_path",
     ):
         assert detected[key]
 
@@ -3727,7 +3352,7 @@ def test_detect_is_structured_fail_closed_and_reports_reserved_packet_paths(tmp_
 
     state_path = tmp_path / detected["state_file"]
     state = json.loads(state_path.read_text(encoding="utf-8"))
-    state["replacement"]["strict_probe_path"] = "forged.json"
+    state["replacement"]["bootstrap_prompt_path"] = "forged.md"
     th.write_json_atomic(state_path, state)
     assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 2
     assert "reserved packet path" in json.loads(capsys.readouterr().out)["error"]
@@ -3747,13 +3372,6 @@ def test_detect_ignores_completed_started_rollovers_for_status_none(tmp_path: Pa
         "runtime_path",
         "handoff_path",
         "bootstrap_prompt_path",
-        "canary_challenge",
-        "canary_proof_path",
-        "semantic_snapshot_path",
-        "strict_probe_path",
-        "strict_questions_path",
-        "strict_answers_path",
-        "strict_verdict_path",
     ):
         state["replacement"].pop(key, None)
     th.write_json_atomic(state_file, state)
@@ -4475,7 +4093,7 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
     startup = capsys.readouterr().out
     assert "PENDING THREAD ROLLOVER DETECTED" in startup
     assert "bootstrap-replacement" in startup and "confirm-replacement" in startup
-    assert "context_canary.py questions" not in startup
+    assert "context_canary" not in startup
     assert (
         th.main(
             [
@@ -4518,28 +4136,6 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
     assert th.main(resume_command) == 0
     capsys.readouterr()
     assert state_path.read_bytes() == resumed_bytes
-    resumed = json.loads(state_path.read_text(encoding="utf-8"))
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-    questions = tmp_path / resumed["replacement"]["strict_questions_path"]
-    assert th.context_canary.main(["questions", "--probe", str(strict_probe), "--out", str(questions)]) == 0
-    assert all("a" not in item for item in json.loads(questions.read_text(encoding="utf-8"))["questions"])
-    proof = tmp_path / resumed["replacement"]["canary_proof_path"]
-    assert (
-        canary.main(
-            [
-                "--rollover-id",
-                packet["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-                "--challenge",
-                resumed["replacement"]["canary_challenge"],
-                "--proof-file",
-                str(proof),
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
     confirm_command = [
         "--repo-root",
         str(tmp_path),
@@ -4552,12 +4148,6 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
         packet["rollover_id"],
         "--new-thread-id",
         "new-thread",
-        "--canary-proof",
-        str(proof),
-        "--strict-probe",
-        str(strict_probe),
-        "--strict-verdict",
-        str(strict_verdict),
     ]
     assert th.main(confirm_command) == 0
     confirmed_payload = json.loads(capsys.readouterr().out)
@@ -4567,143 +4157,6 @@ def test_lifecycle_requires_strict_ten_of_ten_before_cleanup(tmp_path: Path, cap
     assert th.main(confirm_command) == 0
     capsys.readouterr()
     assert state_path.read_bytes() == confirmed_bytes
-
-
-def test_confirmation_rejects_nine_of_ten_and_wrong_reserved_paths(tmp_path: Path, capsys, monkeypatch):
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert (
-        th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "old-thread"]) == 0
-    )
-    packet = json.loads(capsys.readouterr().out)
-    bind_native_lease(tmp_path / packet["state_file"], "new-thread")
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "resume",
-                "--agent",
-                "codex",
-                "--lineage-id",
-                packet["lineage_id"],
-                "--rollover-id",
-                packet["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-    state_path = tmp_path / packet["state_file"]
-    resumed = json.loads(state_path.read_text(encoding="utf-8"))
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-    verdict = json.loads(strict_verdict.read_text(encoding="utf-8"))
-    verdict["correct"] = 9
-    verdict["score"] = 0.9
-    verdict["verdict"] = "FAIL-HANDOFF"
-    verdict["per_anchor"][-1]["match"] = False
-    th.write_json_atomic(strict_verdict, verdict)
-    proof = tmp_path / resumed["replacement"]["canary_proof_path"]
-    assert (
-        canary.main(
-            [
-                "--rollover-id",
-                packet["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-                "--challenge",
-                resumed["replacement"]["canary_challenge"],
-                "--proof-file",
-                str(proof),
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-    command = [
-        "--repo-root",
-        str(tmp_path),
-        "confirm-started",
-        "--agent",
-        "codex",
-        "--lineage-id",
-        packet["lineage_id"],
-        "--rollover-id",
-        packet["rollover_id"],
-        "--new-thread-id",
-        "new-thread",
-        "--canary-proof",
-        str(proof),
-        "--strict-probe",
-        str(strict_probe),
-        "--strict-verdict",
-        str(strict_verdict),
-    ]
-    assert th.main(command) == 2
-    assert json.loads(state_path.read_text(encoding="utf-8"))["cleanup"]["old_automation_ready_to_delete"] is False
-    assert th.main([*command[:-2], "--strict-probe", "wrong.json", "--strict-verdict", str(strict_verdict)]) == 2
-    assert json.loads(state_path.read_text(encoding="utf-8"))["cleanup"]["old_automation_ready_to_delete"] is False
-
-
-@pytest.mark.parametrize("forgery", ["minimal", "top_level", "category", "source_ref"])
-def test_confirmation_revalidates_probe_before_handwritten_pass_can_unlock_cleanup(tmp_path: Path, forgery: str):
-    """The Fable bypass cannot turn a resumed lease into a started lease."""
-    state = prepared()
-    resumed, proof_path = resumed_with_proof(tmp_path, state)
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, resumed)
-
-    if forgery == "minimal":
-        probe = {
-            "schema": "production-handoff-v2",
-            "strict_production": True,
-            "lineage_id": resumed["lineage_id"],
-            "rollover_id": resumed["replacement"]["rollover_id"],
-            "anchors": [{"id": f"forged-{index}"} for index in range(10)],
-        }
-    else:
-        probe = json.loads(strict_probe.read_text(encoding="utf-8"))
-        if forgery == "top_level":
-            probe.pop("source")
-        elif forgery == "category":
-            probe["anchors"][0]["category"] = "decision/rationale"
-        else:
-            probe["anchors"][0]["source_ref"] = "git:HEAD"
-    th.write_json_atomic(strict_probe, probe)
-
-    forged_verdict = {
-        "version": "2",
-        "schema": "production-handoff-v2",
-        "lineage_id": resumed["lineage_id"],
-        "rollover_id": resumed["replacement"]["rollover_id"],
-        "probe_sha256": th._canonical_json_sha256(probe),
-        "seed": probe.get("seed", 0),
-        "k": 10,
-        "correct": 10,
-        "score": 1.0,
-        "verdict": "PASS",
-        "model": "handwritten",
-        "per_anchor": [{"id": anchor["id"], "match": True} for anchor in probe["anchors"]],
-    }
-    th.write_json_atomic(strict_verdict, forged_verdict)
-    before_confirmation = json.loads(json.dumps(resumed))
-
-    with pytest.raises(ValueError, match="strict probe failed production validation"):
-        th.confirm_started(
-            resumed,
-            new_thread_id="new-thread",
-            new_automation_id=None,
-            confirmed_by="tester",
-            now=datetime(2026, 5, 30, 8, 3, tzinfo=UTC),
-            canary_proof=proof_path,
-            strict_probe=strict_probe,
-            strict_verdict=strict_verdict,
-            state_root=tmp_path,
-        )
-
-    assert resumed == before_confirmation
-    assert resumed["replacement"]["status"] == "resumed"
-    assert resumed["cleanup"]["old_automation_ready_to_delete"] is False
 
 
 def test_detect_excludes_registry_terminal_rollover_packets(tmp_path: Path, capsys, monkeypatch):
@@ -4964,21 +4417,6 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
     ]
     assert th.main(bootstrap) == 0
     capsys.readouterr()
-    state_path = tmp_path / packet["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    replacement = state["replacement"]
-    snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
-    template_path = snapshot_path.with_name("semantic-snapshot.template.json")
-    th.write_json_atomic(
-        snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8")))
-    )
-    probe_path = tmp_path / replacement["strict_probe_path"]
-    answers_path = tmp_path / replacement["strict_answers_path"]
-    assert th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
-    probe = json.loads(probe_path.read_text(encoding="utf-8"))
-    th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
-    probe_path.unlink()
-    capsys.readouterr()
 
     seen_base_urls: list[str] = []
 
@@ -5014,10 +4452,7 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
         )
         == 0
     )
-    out = capsys.readouterr().out
-    # confirm-replacement prints the mint/questions lines first, then its result JSON.
-    start = out.rfind("\n{")
-    payload = json.loads(out[start + 1 :] if start != -1 else out)
+    payload = json.loads(capsys.readouterr().out)
     assert payload["bundle_upload"]["status"] == "uploaded"
     assert payload["bundle_upload"]["upload_seq"] == 9
     assert seen_base_urls == [monitor_base_url]

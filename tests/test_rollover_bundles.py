@@ -1811,7 +1811,7 @@ def test_bundle_unicode_conversion_refusal(tmp_path, capsys, entry_point, member
         name = (
             th.default_state_path(AGENT, state["lineage_id"]).as_posix()
             if member == "lease"
-            else state["replacement"]["semantic_snapshot_path"]
+            else state["replacement"]["identity_receipt_path"]
         )
         value = json.loads(members.get(name, b"{}"))
         value["unused"] = "\ud800"
@@ -1931,7 +1931,7 @@ def test_bundle_json_refusal_parity(tmp_path, capsys, entry_point, member, inval
         name = (
             th.default_state_path(AGENT, state["lineage_id"]).as_posix()
             if member == "lease"
-            else state["replacement"]["semantic_snapshot_path"]
+            else state["replacement"]["identity_receipt_path"]
         )
         if nonfinite and member == "lease":
             payload = members[name].rstrip()[:-1] + b', "unused": ' + payload[len(b'{"unused": '):]

@@ -214,9 +214,7 @@ def _confirmed_record(record: object) -> str | None:
     if not all(isinstance(value, dict) for value in (active, replacement, cleanup)):
         return None
     identity = replacement.get("identity") or {}
-    proof = replacement.get("canary_proof") or {}
-    verdict = replacement.get("strict_verdict") or {}
-    if not all(isinstance(value, dict) for value in (identity, proof, verdict)):
+    if not isinstance(identity, dict):
         return None
     session = active.get("thread_id")
     if (
@@ -230,8 +228,6 @@ def _confirmed_record(record: object) -> str | None:
         and identity.get("predecessor_task_id") == session
         and identity.get("replacement_task_id") == replacement.get("thread_id")
         and identity.get("lifecycle_state") == "confirmed"
-        and proof.get("status") == "PASS"
-        and verdict.get("verdict") == "PASS"
         and cleanup.get("old_automation_ready_to_delete") is True
         and cleanup.get("confirmed_at")
     ):

@@ -132,12 +132,6 @@ def _lease(
             "runtime_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}",
             "handoff_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/handoff.md",
             "bootstrap_prompt_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/bootstrap.md",
-            "semantic_snapshot_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/semantic-snapshot.json",
-            "strict_probe_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/strict-probe.json",
-            "strict_questions_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/strict-questions.json",
-            "strict_answers_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/strict-answers.json",
-            "strict_verdict_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/strict-verdict.json",
-            "canary_proof_path": f".agent/thread-rollovers/{agent}/{lineage}/generation-0001/{rollover_id}/canary-pass.json",
         },
         "cleanup": {
             "old_automation_ready_to_delete": status == "started",
@@ -147,8 +141,6 @@ def _lease(
     }
     if status == "started":
         result["replacement"]["confirmed_at"] = prepared_at
-        result["replacement"]["strict_verdict"] = {"verdict": "PASS", "correct": 10, "k": 10}
-        result["replacement"]["canary_proof"] = {"status": "PASS"}
     return result
 
 
@@ -388,14 +380,7 @@ def test_confirmed_rollover_is_not_live_and_requires_cleanup(tmp_path: Path) -> 
     )
 
     assert record["state"] == registry.RolloverState.CONFIRMED.value
-    assert record["strict_recall"] == {
-        "state": "passed",
-        "score": 10,
-        "verdict_path": (
-            ".agent/thread-rollovers/codex/lineage-f039/generation-0001/"
-            "rollover-f039/strict-verdict.json"
-        ),
-    }
+    assert "strict_recall" not in record and "canary" not in record
     assert not registry.is_live_pending(record)
     audit = registry.audit_fleet(tmp_path, now=datetime(2026, 7, 16, 10, tzinfo=UTC))
     assert audit["entries"][0]["classification"] == "confirmed but incompletely cleaned"
@@ -566,8 +551,6 @@ def test_reconciliation_applies_exact_confirm_archive_and_retire_boundaries(tmp_
             status="resumed",
         ),
     )
-    for state in (registry.RolloverState.STRICT_RECALL_PASSED, registry.RolloverState.CANARY_PASSED):
-        record = registry.transition(tmp_path, **record["key"], state=state, reason="exact test proof")
     snapshot = _native_snapshot(record, replacement_id=record["task_identity"]["replacement_task_id"])
     snapshot["confirmation"] = {
         "confirmed": True,
@@ -1213,8 +1196,6 @@ def test_every_success_boundary_is_idempotent_after_crash_retry(tmp_path: Path) 
     boundaries = (
         registry.RolloverState.REPLACEMENT_CREATED,
         registry.RolloverState.RESUMED,
-        registry.RolloverState.STRICT_RECALL_PASSED,
-        registry.RolloverState.CANARY_PASSED,
         registry.RolloverState.CONFIRMED,
         registry.RolloverState.PREDECESSOR_ARCHIVED,
         registry.RolloverState.HEARTBEAT_RETIRED,

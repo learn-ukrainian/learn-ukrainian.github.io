@@ -460,7 +460,7 @@ assert_contains "$output" "PENDING THREAD ROLLOVER DETECTED" "pending packet"
 assert_contains "$output" "bootstrap-replacement -a claude" "pending packet"
 assert_contains "$output" "confirm-replacement -a claude" "pending packet"
 assert_contains "$output" "-t fixture-session-claude" "pending packet"
-assert_contains "$output" "Fill snapshot; first confirm emits questions." "pending packet"
+assert_contains "$output" "Read the durable handoff, then confirm; nothing to fill." "pending packet"
 assert_not_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "pending packet"
 
 # 12. No live packet + no legacy artifacts emits cold-start engine guidance.

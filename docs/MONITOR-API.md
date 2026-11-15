@@ -601,8 +601,7 @@ rows per `(stream, agent, lineage)`.
 
 Only text members are root-tokenised; the manifest's `tokenized_members` makes
 that explicit. JSON artifacts are byte-exact. `.native-intent.lock` is excluded;
-present semantic-snapshot templates, all strict JSON artifacts, identity
-receipts, and `canary-pass.json` are included. The list route omits blobs; the
+identity receipts and other JSON artifacts are included. The list route omits blobs; the
 latest route returns the manifest and blob for import.
 
 All three bundle routes use the same API-host loopback boundary as claim and
