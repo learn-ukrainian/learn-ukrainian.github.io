@@ -507,8 +507,9 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(
             timeout=60,
             check=False,
         )
-        assert result.returncode == 4
-        assert "MUSE_CURRICULUM_CONTENT_FORBIDDEN" in result.stderr
+        # MUSE-RETIRE-1112: the retired Wonder pin refuses before the content-seat check.
+        assert result.returncode == 2, result.stdout + result.stderr
+        assert "model 'muse-wonder-full-1.0' is retired in the model catalog" in result.stderr
         assert "would claim" not in result.stdout
         return
     assert gate[provider]["core"] == 0
