@@ -36,6 +36,14 @@ def guarded_repo(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, str]]:
     )
     services = repo / "services.sh"
     services.write_text((ROOT / "services.sh").read_text(encoding="utf-8"), encoding="utf-8")
+    # services.sh asks the checkout's interpreter for the installed guard; answer with the copy.
+    interpreter = repo / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(
+        f"#!/bin/sh\ncase \"$*\" in *storage/data_volume_guard.sh*) printf '%s\\n' '{guard}' ;; *) exit 127 ;; esac\n",
+        encoding="utf-8",
+    )
+    interpreter.chmod(0o755)
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     findmnt = bin_dir / "findmnt"
@@ -170,6 +178,30 @@ def test_services_refuses_mismatch_before_side_effects(
     )
     assert result.returncode == 78
     assert "not mounted from configured UUID" in result.stderr
+    assert not (services.parent / ".pids").exists()
+
+
+@pytest.mark.parametrize("interpreter_state", ["missing", "without_release"])
+@pytest.mark.parametrize("action", ["start", "restart", "fix"])
+def test_services_refuses_start_without_release_guard(
+    guarded_repo: tuple[Path, Path, Path, dict[str, str]], action: str, interpreter_state: str
+) -> None:
+    """Defect class: the data-volume guard is skipped (fail-open) when the release is not installed."""
+    _, services, _, env = guarded_repo
+    interpreter = services.parent / ".venv/bin/python"
+    if interpreter_state == "missing":
+        interpreter.unlink()
+    else:
+        interpreter.write_text("#!/bin/sh\necho \"No module named 'lu_machinery'\" >&2\nexit 1\n", encoding="utf-8")
+    result = subprocess.run(
+        ["bash", str(services), action, "api"],
+        env=env,
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+    assert result.returncode == 78
+    assert "the installed lu-machinery release is unavailable" in result.stderr
     assert not (services.parent / ".pids").exists()
 
 

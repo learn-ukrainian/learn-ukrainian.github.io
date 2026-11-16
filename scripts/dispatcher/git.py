@@ -16,6 +16,7 @@ from functools import partial
 from pathlib import Path, PurePosixPath
 
 import yaml
+from lu_machinery.storage.topology import STORE_FILES
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.git_credentials import canonical_origins as canonical_origins
@@ -26,7 +27,6 @@ from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
 from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.execution_safe_git import run_git as execution_safe_git
-from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"

@@ -386,7 +386,7 @@ data/raw/orphan-ocr/
 data/corpus_audit/
 
 # Untracked artifact bytes migrated out of git in #8809 P1 (restorable via
-# `scripts.storage.artifacts hydrate`; manifests under registry/artifacts/).
+# `lu_machinery.storage.artifacts hydrate`; manifests under registry/artifacts/).
 data/raw/pravopys.html
 data/references/interference-patterns-walexy.json
 data/youtube_discovery/ulp_grammar_guide_backfill.jsonl

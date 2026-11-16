@@ -464,7 +464,7 @@ by opening each restored database read-only, so the check sees a leftover
 sidecar the same way a normal reader would, and fails if any check is not
 `ok`. When the receipt records a Sources selector and its generation was
 restored, the restore then recreates `data/sources.db` over that generation
-with `python -m scripts.storage restore-generation`, which takes the store
+with `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation`, which takes the store
 writer lock, holds the file read-only and switches the link atomically; it
 refuses when the target filesystem lacks the publisher's free-space margin.
 `--path data/sources.db` on such a run restores the recorded generation and

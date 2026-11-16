@@ -244,13 +244,13 @@ class _SourcesProbe:
 def _repository_sources_db() -> Path:
     """Return this checkout's sources database path.
 
-    ``scripts.storage.topology`` already owns that path. An empty env keeps
+    ``lu_machinery.storage.topology`` already owns that path. An empty env keeps
     the lookup on the checkout file, which is the file the product module
     opens. This module does not build the path itself.
     """
     global _REPOSITORY_SOURCES_DB
     if _REPOSITORY_SOURCES_DB is None:
-        from scripts.storage.topology import resolve_active_sources_db
+        from lu_machinery.storage.topology import resolve_active_sources_db
 
         root = Path(__file__).resolve().parents[2]
         _REPOSITORY_SOURCES_DB = resolve_active_sources_db(root, env={}, refuse_network=False).path

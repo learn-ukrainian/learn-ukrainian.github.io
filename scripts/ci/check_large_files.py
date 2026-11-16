@@ -357,7 +357,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     script = checkout_relative("ci", "check_large_files.py").as_posix()
     allowlist = DEFAULT_ALLOWLIST
-    artifacts = checkout_relative("storage", "artifacts.py").as_posix()
+    artifacts = "lu_machinery/storage/artifacts.py"  # in the installed release
     epilog = (
         "Examples:\n"
         f"  .venv/bin/python {script} --changed-vs-base origin/main\n"
@@ -413,7 +413,7 @@ def main(argv: list[str] | None = None) -> int:
             print(
                 "\nNewly added or modified blobs over 5242880 bytes cannot be tracked directly in Git.\n"
                 "How to proceed:\n"
-                f"  1. Move the large file behind artifact storage using '{checkout_relative('storage', 'artifacts.py').as_posix()}'.\n"
+                "  1. Move the large file behind artifact storage using 'lu_machinery/storage/artifacts.py'.\n"
                 f"  2. If the file must remain tracked in Git, add an entry to '{DEFAULT_ALLOWLIST}'\n"
                 "     with the exact path, size in bytes, and an explicit reason.",
                 file=sys.stderr,
