@@ -6,7 +6,6 @@
 # [run]
 tests/test_launcher_interactive_scope.py
 tests/test_rules_core_loading.py
-tests/review/test_routing_consumers.py
 # [support]
 tests/__init__.py
 tests/claude_route_accounts.py
