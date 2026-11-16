@@ -55,6 +55,8 @@ _HOOK_SEATS: dict[str, str] = {
     f"{_MACHINERY}/hooks/apply_grok_hook_profile.py": "grok",
     f"{_MACHINERY}/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
     f"{_MACHINERY}/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
+    f"{_MACHINERY}/agent_runtime/codex_hook_entry.sh": "codex",
+    f"{_MACHINERY}/agent_runtime/codex_hook_policy.py": "codex",
     f"{_MACHINERY}/agent_runtime/codex_hook_probe.py": "codex",
     "agents_extensions/codex/hooks.json": "codex",
 }

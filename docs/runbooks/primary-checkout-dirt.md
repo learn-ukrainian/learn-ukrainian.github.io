@@ -36,9 +36,9 @@ Wiring:
 - Claude: `agents_extensions/shared/settings.json`, `Bash` matcher on
   PreToolUse, PostToolUse and PostToolUseFailure. These hooks are fail-open
   (no `onFailure`).
-- Codex: the installed release's `lu_machinery.agent_runtime.codex_hook_policy`
-  takes the snapshot only after every PreToolUse guard has allowed the call.
-  `lu_machinery/agent_runtime/codex_hook_entry.sh post-tool-use` runs the
+- Codex: `scripts/agent_runtime/codex_hook_policy.py` takes the snapshot
+  only after every PreToolUse guard has allowed the call.
+  `scripts/agent_runtime/codex_hook_entry.sh post-tool-use` runs the
   comparison for `Bash`. Codex runs PostToolUse after non-zero exits too, and
   its exit 2 replaces the tool result with the report.
 - Dispatched Claude workers are not wired: their settings carry PreToolUse

@@ -67,8 +67,8 @@ Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
   present in `tool_input.workdir` or `tool_input.cwd`.
 
 The Codex manifest therefore sends each tool event through one tracked,
-deterministic entry point: the installed release's
-`lu_machinery/agent_runtime/codex_hook_entry.sh` (the product keeps no copy, #13032). The Bash-command venv guard has
+deterministic entry point:
+`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv guard has
 its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate

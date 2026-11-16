@@ -1599,6 +1599,8 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "scripts/hooks/apply_grok_hook_profile.py": "grok",
         "scripts/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
         "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
+        "scripts/agent_runtime/codex_hook_entry.sh": "codex",
+        "scripts/agent_runtime/codex_hook_policy.py": "codex",
         "scripts/agent_runtime/codex_hook_probe.py": "codex",
         "agents_extensions/codex/hooks.json": "codex",
     }
