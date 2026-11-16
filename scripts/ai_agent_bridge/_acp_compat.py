@@ -648,7 +648,7 @@ def run_compat_ask(
             f"ask-{command_target} refused: {exc}; the rules core is required"
         ) from exc
 
-    from scripts.telemetry.legacy_bridge import (
+    from lu_machinery.telemetry.legacy_bridge import (
         finish_bridge_invocation_safely,
         start_bridge_invocation_safely,
     )

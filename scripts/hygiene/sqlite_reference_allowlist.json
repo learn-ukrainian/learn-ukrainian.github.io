@@ -734,16 +734,6 @@
     ]
   },
   {
-    "path": "scripts/maintenance/github_cache.py",
-    "reference_count": 3,
-    "kind": "writer",
-    "target_db": "GitHub client cache",
-    "reason": "reports storage and explicitly reclaims free pages in the existing owner-selected cache outside source databases; target, schema and locking checks remain the maintenance module's responsibility",
-    "calls": [
-      "sqlite3.connect(uri, uri=True, timeout=min(timeout_seconds, 1), isolation_level=None)"
-    ]
-  },
-  {
     "path": "scripts/ai_agent_bridge/broker_indexes.py",
     "reference_count": 4,
     "kind": "writer",
@@ -784,13 +774,6 @@
       "sqlite3.connect(sidecar)",
       "sqlite3.connect(sidecar)"
     ]
-  },
-  {
-    "path": "scripts/ops/product_entry.py",
-    "reference_count": 1,
-    "kind": "configured_entry_point",
-    "target_db": null,
-    "reason": "The one configured entry point (#12504, LOADER-1104). load_configured_module imports the scripts.* module that product data names; it refuses SQLite module names first. This is not a SQLite constructor. The kind pins this one call site."
   },
   {
     "path": "scripts/orchestration/thread_handoff.py",
@@ -976,26 +959,6 @@
     "calls": [
       "sqlite3.connect(candidate.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)",
       "sqlite3.connect(held.generation.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)"
-    ]
-  },
-  {
-    "path": "scripts/telemetry/legacy_bridge.py",
-    "reference_count": 7,
-    "kind": "writer",
-    "target_db": "legacy broker DB",
-    "reason": "writes legacy telemetry projection",
-    "calls": [
-      "sqlite3.connect(str(path), timeout=5.0)"
-    ]
-  },
-  {
-    "path": "scripts/tools/agent_watcher.py",
-    "reference_count": 1,
-    "kind": "writer",
-    "target_db": "legacy broker DB",
-    "reason": "updates watcher state",
-    "calls": [
-      "sqlite3.connect(DB_PATH)"
     ]
   },
   {

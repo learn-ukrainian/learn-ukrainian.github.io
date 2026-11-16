@@ -1165,8 +1165,9 @@ def test_sol_defaults_and_escalations_use_high_across_catalog():
 
 
 def test_live_claude_caller_defaults_are_active_catalog_models():
+    from lu_machinery.ai_llm.claude_call import CLAUDE_MODEL_LADDER
+
     from scripts.ai_agent_bridge._claude import CLAUDE_ADVISORY_MODEL, CLAUDE_DEFAULT_ASK_MODEL
-    from scripts.ai_llm.claude_call import CLAUDE_MODEL_LADDER
     catalog = load_model_catalog()
     for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
         assert catalog["models"][model]["lifecycle"] == "active"

@@ -1150,8 +1150,9 @@ def test_remove_takes_the_boundary_down(bounded_repo):
 
 
 def test_compat_ask_refuses_before_telemetry(monkeypatch):
+    from lu_machinery.telemetry import legacy_bridge
+
     from scripts.ai_agent_bridge import _acp_compat
-    from scripts.telemetry import legacy_bridge
 
     monkeypatch.setattr(legacy_bridge, "start_bridge_invocation_safely", _fail)
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", _fail)
@@ -1881,6 +1882,8 @@ def _kimi_effect_trap():
     usage telemetry. Every broker connection also gets an authorizer that
     records and denies any INSERT, UPDATE or DELETE on ``messages``.
     """
+    from lu_machinery.telemetry import legacy_bridge
+
     from agent_runtime import runner as agent_runner
     from scripts.agent_runtime import runner as scripts_runner
     from scripts.ai_agent_bridge import (
@@ -1895,7 +1898,6 @@ def _kimi_effect_trap():
         _opencode,
         _process,
     )
-    from scripts.telemetry import legacy_bridge
 
     effects: list[str] = []
 

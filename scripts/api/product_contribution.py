@@ -12,7 +12,7 @@ entry's ``build_api(context)`` returns a :class:`ProductContribution`
 
 ``load_product`` reads ``scripts/curriculum/monitor_paths.v1.json`` under
 ``config.PRODUCT_ROOT``, takes its ``product_api`` module name and imports it
-through :func:`scripts.ops.product_entry.load_configured_module`, which
+through :func:`lu_machinery.ops.product_entry.load_configured_module`, which
 checks the name and that the module comes from that product root.
 
 Two providers are process-wide because their machinery callers run outside a
@@ -35,8 +35,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, Protocol
 
 from fastapi import APIRouter
-
-from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
+from lu_machinery.ops.product_entry import ConfiguredModuleError, load_configured_module
 
 from . import config
 

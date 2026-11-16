@@ -142,9 +142,9 @@ def _install_fake_runtime(
 
     records: list[dict[str, Any]] = []
     emitted_events: list[tuple[str, dict[str, Any]]] = []
-    fake_emit = types.ModuleType("telemetry.emit")
+    fake_emit = types.ModuleType("lu_machinery.telemetry.emit")
     fake_emit.emit_event = lambda event_name, payload: emitted_events.append((event_name, payload))
-    monkeypatch.setitem(sys.modules, "telemetry.emit", fake_emit)
+    monkeypatch.setitem(sys.modules, "lu_machinery.telemetry.emit", fake_emit)
     monkeypatch.setattr(runner_mod, "write_record", records.append)
     monkeypatch.setattr(runner_mod, "has_headroom", lambda _agent, _model: (True, ""))
     monkeypatch.setattr(
@@ -1039,8 +1039,9 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
 
 @pytest.mark.parametrize("kill_reason", ["stdout_silence_timeout", "initial_response_timeout", "hard_timeout"])
 def test_watchdog_substitution_events_preserve_observed_identity(tmp_path, monkeypatch, kill_reason):
+    from lu_machinery.telemetry import emit as telemetry_emit
+
     from agent_runtime.errors import AgentTimeoutError
-    from telemetry import emit as telemetry_emit
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     pin, observed = "claude-sonnet-5-5-high", "claude-opus-5-5-high"
@@ -1097,9 +1098,10 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
 ):
     import json
 
+    from lu_machinery.telemetry import emit as telemetry_emit
+
     from agent_runtime import usage
     from agent_runtime.failover import FailoverChain, FailoverRoute
-    from telemetry import emit as telemetry_emit
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(

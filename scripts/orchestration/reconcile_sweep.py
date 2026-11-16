@@ -28,13 +28,14 @@ for path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from scripts.common.task_store_paths import tasks_dir
-from scripts.dispatcher import worker
-from scripts.guardrails.delegate_ownership import (
+from lu_machinery.guardrails.delegate_ownership import (
     OwnershipLedger,
     _task_still_active,
     default_ledger_path,
 )
+
+from scripts.common.task_store_paths import tasks_dir
+from scripts.dispatcher import worker
 from scripts.orchestration import dispatch_admission, dispatch_settle
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, worker_liveness
 from scripts.orchestration.task_record_store import read_task_record
@@ -44,7 +45,6 @@ from scripts.orchestration.task_record_store import read_task_record
 # are also its directories in checkout-relative paths.
 _PACKAGE = f"{Path(os.path.abspath(__file__)).parents[1].name}.{Path(os.path.abspath(__file__)).parent.name}"
 _PACKAGE_DIR = _PACKAGE.replace(".", "/")
-_MACHINERY = _PACKAGE.partition(".")[0]
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -297,7 +297,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  2 on invalid CLI arguments.\n\n"
             "Related:\n"
             f"  Dispatch settle: {_PACKAGE_DIR}/dispatch_settle.py\n"
-            f"  Ownership ledger: {_MACHINERY}/guardrails/delegate_ownership.py\n"
+            "  Ownership ledger: lu_machinery.guardrails.delegate_ownership\n"
             "  Systemd timer: packaging/systemd/learn-ukrainian-reconcile.timer\n"
             "  Decision: infra-private #625, issue #7584, PR #7585\n"
         ),

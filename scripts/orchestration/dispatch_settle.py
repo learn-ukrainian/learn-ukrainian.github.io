@@ -25,12 +25,13 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.fleet import idle_settle as idle_settle
-from scripts.guardrails.delegate_ownership import (
+from lu_machinery.guardrails.delegate_ownership import (
     TERMINAL_TASK_STATUSES,
     OwnershipLedger,
     default_ledger_path,
 )
+
+from scripts.fleet import idle_settle as idle_settle
 from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, mark_missing_worktree_failed
 from scripts.publish.github import Request, request_run

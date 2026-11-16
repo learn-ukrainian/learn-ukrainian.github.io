@@ -391,11 +391,7 @@ class _TelemetryIsolation:
         frame = sys._getframe(1)
         try:
             while frame is not None:
-                if frame.f_globals.get("__name__") in {
-                    "telemetry.emit",
-                    "scripts.telemetry.emit",
-                    "lu_machinery.telemetry.emit",  # TRANSITIONAL-PKG3-B2: installed release beside the in-tree copy
-                }:
+                if frame.f_globals.get("__name__") == "lu_machinery.telemetry.emit":
                     self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
                     # emit_event swallows ordinary write errors. Retain the
                     # attempt for sessionfinish as well as preventing the write.
@@ -520,7 +516,7 @@ SESSION_IDENTITY_ENV_VARS = (
     # This task's supported evidence directory; a leaked value makes a test
     # write into a live task's evidence instead of its own (#11342).
     "LU_TASK_EVIDENCE_DIR",
-    # Telemetry run/session ids (scripts/telemetry/emit.py).
+    # Telemetry run/session ids (lu_machinery.telemetry.emit).
     "LU_RUN_ID",
     "LU_SESSION_ID",
     # Codex hook probe session (scripts/agent_runtime/codex_hook_probe.py).

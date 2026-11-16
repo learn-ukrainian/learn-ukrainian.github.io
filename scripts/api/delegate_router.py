@@ -26,10 +26,11 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
+from lu_machinery.work.sources_public import public_repository_id
+
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
-from scripts.work.sources_public import public_repository_id
 
 from .lane_health import sanitize_error_excerpt
 from .monitor_context import MonitorContext, get_ctx, resolve_context

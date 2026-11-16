@@ -248,7 +248,7 @@ def _run_claude_sync_via_runtime(
         effort_reason: str | None = None
         effort_to_invoke = effort
         if effort:
-            from utils.claude_version import supports_effort
+            from lu_machinery.utils.claude_version import supports_effort
 
             if not supports_effort(CLAUDE_CMD):
                 effort_to_invoke = None

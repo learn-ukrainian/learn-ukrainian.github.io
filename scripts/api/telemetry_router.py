@@ -27,7 +27,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from scripts.telemetry.legacy_bridge import bridge_usage_summary
+from lu_machinery.telemetry.legacy_bridge import bridge_usage_summary
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .telemetry.legacy_comms import db_path_for_root as legacy_comms_db_path_for_root

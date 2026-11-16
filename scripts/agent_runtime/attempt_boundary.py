@@ -1465,7 +1465,7 @@ class AttemptBoundary:
         version_cmd, env = self.wrap([cmd[0], "--version"], env_overrides)
         version = subprocess.run(version_cmd, env=env, capture_output=True, text=True, timeout=5, check=False)
         if self.agent == "claude":
-            from scripts.utils.claude_version import _parse_claude_semver
+            from lu_machinery.utils.claude_version import _parse_claude_semver
 
             parsed = _parse_claude_semver(version.stdout + version.stderr)
             if version.returncode != 0 or parsed is None or parsed < CLAUDE_MIN_SUPPORTED_CLI_VERSION:

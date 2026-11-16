@@ -108,8 +108,8 @@ class Outcome:
 
 def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int]) -> Outcome:
     """Claim, prepare and run the bound attempt of ``record``; never falls back to an unbounded launch."""
-    # runner.py imports the top-level ``ai_llm`` package (``scripts/ai_llm``), and the supervisor runs as
-    # ``python -m`` from the repository root, which does not put ``scripts/`` on ``sys.path``.
+    # runner.py and its adapters keep top-level fallbacks under ``scripts/`` (``lib.readonly_sqlite``), and the
+    # supervisor runs as ``python -m`` from the repository root, which does not put ``scripts/`` on ``sys.path``.
     scripts_dir = str(Path(__file__).resolve().parents[1])
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)

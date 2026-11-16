@@ -9,7 +9,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
+from lu_machinery.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
+
 from scripts.orchestration.task_record_store import task_state_lock as task_state_lock
 from scripts.orchestration.task_record_store import write_record_unlocked
 from scripts.orchestration.task_record_store import write_state_unlocked as write_state_unlocked

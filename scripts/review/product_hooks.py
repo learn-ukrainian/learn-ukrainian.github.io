@@ -25,8 +25,9 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
+from lu_machinery.ops.product_entry import load_configured_module
+
 from scripts.common import repo_root
-from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.review-hooks"
 SCHEMA_VERSION = 1

@@ -5,7 +5,7 @@ files with product code. Machinery does not import that code. The product
 names each hook's entry point in one data file,
 ``scripts/build/pre_commit_entry_points.v1.json``, and this module is the only
 reader: it validates the file, imports the named module through the shared
-``scripts.ops.product_entry.load_configured_module`` boundary (which refuses
+``lu_machinery.ops.product_entry.load_configured_module`` boundary (which refuses
 SQLite modules) and calls the named function with the recorded arguments.
 
 The file is trusted because of where it is read from: the product checkout
@@ -38,8 +38,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.ops.product_entry import load_configured_module
+
 from scripts.common.repo_root import ProductRootError, product_root
-from scripts.ops.product_entry import load_configured_module
 
 SCHEMA = "learn-ukrainian.pre-commit-entry-points"
 SCHEMA_VERSION = 1

@@ -562,7 +562,7 @@ def phase_stack_drift(args: argparse.Namespace) -> dict[str, Any]:
     A probe failure does not stop the session and does not explain itself here.
     """
     try:
-        from scripts.ops.host_stack_drift import write_report
+        from lu_machinery.ops.host_stack_drift import write_report
 
         sink = io.StringIO()
         with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
