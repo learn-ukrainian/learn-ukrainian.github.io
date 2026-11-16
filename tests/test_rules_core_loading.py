@@ -99,9 +99,14 @@ def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 
 @pytest.fixture
-def absent_root(request: pytest.FixtureRequest) -> Path:
-    """The checkout view without the rules core (shared with ``rules_core_absent`` tests)."""
-    return absent_checkout(request)
+def absent_root(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """The checkout view without the rules core (shared with ``rules_core_absent`` tests).
+
+    It is built from this checkout, whichever product ``_core_present`` selected for in-process reads.
+    """
+    with monkeypatch.context() as building:
+        building.setenv(PRODUCT_ROOT_ENV, str(REPO))
+        return absent_checkout(request)
 
 
 @pytest.fixture
