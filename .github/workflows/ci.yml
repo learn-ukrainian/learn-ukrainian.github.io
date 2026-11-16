@@ -946,6 +946,88 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # Runs on every event, before the scope cheap-exit. The machinery lock is resolved with
+      # requirements-lock.txt as constraints (machinery docs/release.md, "Dependency lock"), and
+      # an install of both files is unsatisfiable when a shared package is pinned twice
+      # differently. CI's own install (python-ci-env) installs them one after the other, so the
+      # second silently wins there. Shared packages move only through a machinery release, so
+      # every one must also be fully ignored by each pip update in .github/dependabot.yml.
+      - name: Check shared pins with the machinery lock
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet "$(grep -E '^PyYAML==' requirements-lock.txt)"
+          python3 -I - requirements-lock.txt requirements-machinery.lock .github/dependabot.yml <<'PY'
+          import re
+          import sys
+
+          import yaml
+
+          PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*)==([^\s;#\\]+)( \\)?")
+          DIRECT = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*) @ (\S+)")
+          HASH = re.compile(r" +--hash=sha256:[0-9a-f]{64}( \\)?")
+
+
+          def canon(name):
+              return re.sub(r"[-_.]+", "-", name).lower()
+
+
+          def read_pins(path, errors):
+              pins = {}
+              with open(path, encoding="utf-8") as handle:
+                  for number, raw in enumerate(handle, 1):
+                      line = raw.rstrip("\n")
+                      if not line.strip() or line.lstrip().startswith("#") or HASH.fullmatch(line):
+                          continue
+                      if line.startswith("./"):
+                          continue  # a local path requirement names no index package
+                      match = PIN.fullmatch(line) or DIRECT.fullmatch(line)
+                      if match is None:
+                          errors.append(f"{path}:{number}: unrecognized requirement line: {line}")
+                          continue
+                      name = canon(match.group(1))
+                      token = match.group(2) if match.re is PIN else "@ " + match.group(2)
+                      if pins.setdefault(name, token) != token:
+                          errors.append(f"{path}:{number}: {name} pinned twice ({pins[name]}, {token})")
+              return pins
+
+
+          product_lock, machinery_lock, dependabot = sys.argv[1:4]
+          errors = []
+          product = read_pins(product_lock, errors)
+          machinery = read_pins(machinery_lock, errors)
+          shared = sorted(set(product) & set(machinery))
+          for name in shared:
+              if product[name] != machinery[name]:
+                  errors.append(
+                      f"{name}: {product_lock} pins {product[name]}, {machinery_lock} pins {machinery[name]}"
+                  )
+
+          with open(dependabot, encoding="utf-8") as handle:
+              updates = (yaml.safe_load(handle) or {}).get("updates") or []
+          for update in updates:
+              if update.get("package-ecosystem") != "pip":
+                  continue
+              where = update.get("directory") or update.get("directories")
+              # Only a bare entry blocks every update, and only the canonical spelling is
+              # matched here, so the check never depends on Dependabot's name folding.
+              ignored = {
+                  entry["dependency-name"]
+                  for entry in update.get("ignore") or []
+                  if isinstance(entry, dict) and set(entry) == {"dependency-name"}
+              }
+              for name in shared:
+                  if name not in ignored:
+                      errors.append(
+                          f'{dependabot}: pip update for {where} must ignore "{name}" '
+                          f"(pinned by {machinery_lock}; it moves only through a machinery release)"
+                      )
+
+          for error in errors:
+              print(f"::error::{error}")
+          if errors:
+              sys.exit(1)
+          print(f"{len(shared)} shared pins agree and every pip update in {dependabot} ignores them")
+          PY
       # The locked lu-machinery wheel alone (no dependencies): the release entry points this
       # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
       - name: Install the locked lu-machinery release
