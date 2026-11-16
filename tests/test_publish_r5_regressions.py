@@ -435,8 +435,8 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     assert len(queue_proofs) == (1 if state == "ready" else 0)
 
 
-def test_review_contract_change_without_canary_evidence_is_refused_before_write(synthetic_opsec):
-    # #12399: an approved green head that changes the review contract needs canary receipts first.
+def test_review_contract_change_without_canary_evidence_can_merge(synthetic_opsec):
+    # Contract canaries run at release cut; an approved green contract PR may merge.
     writes = []
     def spy(args, **kwargs):
         if args[1:3] == ["pr", "view"]:
@@ -457,9 +457,8 @@ def test_review_contract_change_without_canary_evidence_is_refused_before_write(
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
         return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
-    with pytest.raises(gate.PublishBlocked, match="merge refused: needs-contract-canary: "):
-        pub.publish("pr-merge", repo="unit/public", number=1, runner=spy, env={})
-    assert writes == []
+    assert pub.publish("pr-merge", repo="unit/public", number=1, runner=spy, env={}).returncode == 0
+    assert len(writes) == 1
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():
