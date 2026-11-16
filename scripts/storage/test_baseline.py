@@ -135,6 +135,11 @@ def _load_baseline(path: Path) -> dict[str, Any]:
     return value
 
 
+def _common_prefix_length(first: str, second: str) -> int:
+    """Length of the longest shared leading substring (character by character, not path components)."""
+    return next((i for i, (a, b) in enumerate(zip(first, second, strict=False)) if a != b), min(len(first), len(second)))
+
+
 def _pack_baseline(baseline: dict[str, Any]) -> dict[str, Any]:
     """Losslessly prefix-pack sorted IDs so the complete CI baseline stays reviewable in Git."""
     jobs = {}
@@ -148,7 +153,7 @@ def _pack_baseline(baseline: dict[str, Any]) -> dict[str, Any]:
             previous = ""
             rows = []
             for name, outcome in sorted(items):
-                prefix = len(os.path.commonprefix((previous, name)))
+                prefix = _common_prefix_length(previous, name)
                 rows.append([prefix, name[prefix:], _OUTCOME_CODE[outcome]])
                 previous = name
             packed[classname] = rows

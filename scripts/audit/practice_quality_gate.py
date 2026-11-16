@@ -977,15 +977,14 @@ def audit_practice_shards(
                             "message": "Cloze card is missing caseRule / provenance metadata",
                         }
                     )
-            elif mode == "imperative":
-                if not (item.get("notes") or item.get("slotLabelUa")):
-                    violations.append(
-                        {
-                            "type": "MISSING_EXPLANATION",
-                            "item": f"{name}:{cid}",
-                            "message": "Imperative card is missing grammatical notes metadata",
-                        }
-                    )
+            elif mode == "imperative" and not (item.get("notes") or item.get("slotLabelUa")):
+                violations.append(
+                    {
+                        "type": "MISSING_EXPLANATION",
+                        "item": f"{name}:{cid}",
+                        "message": "Imperative card is missing grammatical notes metadata",
+                    }
+                )
 
             # 5. Morphological attestation in VESUM
             if verify_vesum and vesum_db and Path(vesum_db).exists():

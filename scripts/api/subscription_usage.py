@@ -2635,7 +2635,7 @@ SUBSCRIPTION_REFRESH_KEYS: tuple[str, ...] = tuple(
 def _refresh_claude_accounts_live() -> None:
     """Per-account Claude rows (#10630). The ``claude`` lane above stays the default account."""
     # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
-    from scripts.api.claude_account_usage import refresh_claude_account_usage  # noqa: PLC0415, I001  # lazy-ok: import cycle
+    from scripts.api.claude_account_usage import refresh_claude_account_usage  # noqa: PLC0415  # lazy-ok: import cycle
 
     refresh_claude_account_usage()
 
@@ -2668,7 +2668,7 @@ def _claude_account_reading_past_ttl() -> bool:
     ``claude_accounts_snapshot`` only lstats and never starts a probe. An
     unknown row is not past TTL: a missing reading is not a stale one.
     """
-    from scripts.api.claude_account_usage import claude_accounts_snapshot  # noqa: PLC0415, I001  # lazy-ok: import cycle
+    from scripts.api.claude_account_usage import claude_accounts_snapshot  # noqa: PLC0415  # lazy-ok: import cycle
 
     rows = claude_accounts_snapshot()
     return any(bool(row.get("stale")) for row in rows.values() if isinstance(row, dict))

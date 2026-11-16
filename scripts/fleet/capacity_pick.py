@@ -371,7 +371,7 @@ def build_lane_rows(
         else:
             info, quota_source = _mirror_retired_quota(agents, lane, info)
         if lane == "codex:b":
-            picked: Any | None | dict[Any, Any] = accounts.get("codex:b")
+            picked: Any | dict[Any, Any] | None = accounts.get("codex:b")
             info = picked if isinstance(picked, dict) else info
             quota_source = None
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
