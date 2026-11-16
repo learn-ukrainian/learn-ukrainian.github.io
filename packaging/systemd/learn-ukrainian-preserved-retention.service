@@ -4,7 +4,7 @@ Description=Learn Ukrainian preserved residue 24-hour backstop (C-2481)
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.preserved_retention --expire-older-than-hours 24 --allow-empty-keep-list --apply
+ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.hygiene.preserved_retention --expire-older-than-hours 24 --allow-empty-keep-list --apply
 TimeoutStartSec=3600
 TimeoutStopSec=300
 Nice=15

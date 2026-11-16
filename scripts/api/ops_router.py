@@ -33,10 +33,7 @@ async def retention_latest(ctx: MonitorContext = Depends(get_ctx)) -> dict:
             "schema": "fleet-comms.retention.plan.v1",
             "missing": True,
             "plan_dir": str(plan_dir),
-            "hint": (
-                ".venv/bin/python "
-                f"{Path(__file__).parents[1].name}/hygiene/retention_engine.py plan"
-            ),
+            "hint": ".venv/bin/python -m lu_machinery.hygiene.retention_engine plan",
         }
     try:
         payload = json.loads(latest.read_text(encoding="utf-8"))

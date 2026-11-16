@@ -623,7 +623,7 @@ def _remove_path(
     expected_dev: int,
     expected_ino: int,
 ) -> None:
-    from scripts.hygiene.retention_engine import reap_attributed_temp
+    from lu_machinery.hygiene.retention_engine import reap_attributed_temp
 
     target = assert_delete_target(
         path,

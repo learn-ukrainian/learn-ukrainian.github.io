@@ -614,7 +614,7 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
 Confirm the restored install:
 
 ```bash
-.venv/bin/python scripts/hygiene/check_node_modules_integrity.py
+.venv/bin/python -m lu_machinery.hygiene.check_node_modules_integrity
 ```
 
 Operational details are in the private infra repository's `runbooks/recovery.md`.

@@ -19,7 +19,7 @@ pytest scratch is deleted directly, without quarantine.
 with up to 10 minutes of random delay. Missed runs catch up. It starts
 `learn-ukrainian-tmp-sweep.service`, which runs two steps in order:
 
-1. `scripts.hygiene.batch_state_retention`: the read-only staleness report.
+1. `lu_machinery.hygiene.batch_state_retention`: the read-only staleness report.
 2. `scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary`: the
    sweep. It purges expired quarantine entries, quarantines newly proven
    ones and deletes inactive, unheld pytest run folders. It logs counts and
@@ -332,7 +332,7 @@ scan. Both are outside what the boundary observes, and stay residuals.
 
 ### Deletion ledger and quarantine
 
-Code: `scripts/hygiene/tmp_sweep_ledger.py` (ledger, manifest) and
+Code: `lu_machinery/hygiene/tmp_sweep_ledger.py` (ledger, manifest) and
 `scripts/hygiene/tmp_sweep.py` (passes and CLI).
 
 **Where.** `$XDG_STATE_HOME/learn-ukrainian/tmp-sweep/ledger.jsonl`, or
@@ -512,7 +512,7 @@ belong in the system temp area. To keep a path, do one of the following:
 
 ## The batch_state staleness report
 
-`scripts.hygiene.batch_state_retention` lists every top-level `batch_state/`
+`lu_machinery.hygiene.batch_state_retention` lists every top-level `batch_state/`
 directory with no write for 7 days (`--stale-days`). For each one it shows the
 allocated size and the date of the newest write. It skips `tasks/`,
 `preserved/`, `reports/` and `branch-archive/`. It never deletes anything.
@@ -533,7 +533,7 @@ the later commands and retains scratch. Inspect without changing anything:
 
 This mode accepts only the repository's shared `batch_state` root. It cannot
 be combined with `--temp-root` or `--unattributed-scratch`. New producers can
-call `scripts.hygiene.batch_state_retention.write_scratch_expiry(directory,
+call `lu_machinery.hygiene.batch_state_retention.write_scratch_expiry(directory,
 owner=canonical_task_id, purpose="disposable output")` before writing payloads.
 The helper exclusively creates `.scratch-expiry.json` with a seven-day UTC
 expiry by default. An explicit timezone-aware UTC `delete_after` is supported.
@@ -568,7 +568,7 @@ branch-archive retention rule remains in force.
 
 ### Hold evidence in batch_state
 
-Add an entry to `scripts/hygiene/batch_state_retention.json`. Land it with a PR
+Add an entry to `lu_machinery/hygiene/batch_state_retention.json` in the lu-machinery repository (the installed release reads its own packaged list). Land it with a PR
 that cites the issue the evidence serves:
 
 ```json
