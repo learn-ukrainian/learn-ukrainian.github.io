@@ -2092,13 +2092,6 @@
       "scope": "test_unrelated_audit_events_pass",
       "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
       "occurrence": 0
-    },
-    {
-      "path": "tests/test_storage_resolver.py",
-      "kind": "store_path",
-      "scope": "test_refuse_network_sources_db_override",
-      "fingerprint": "57712c1c4cb9ba40066680343c2e0b2c1deaa983a3978cd863d8292e89671c21",
-      "occurrence": 0
     }
   ]
 }

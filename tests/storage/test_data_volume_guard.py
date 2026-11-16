@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+from importlib.resources import files as resource_files
 from pathlib import Path
 
 import pytest
@@ -24,8 +25,12 @@ def guarded_repo(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, str]]:
     marker.parent.mkdir()
     guard = storage / "data_volume_guard.sh"
     guard.write_text(
-        (ROOT / "scripts/storage/data_volume_guard.sh")
+        (Path(str(resource_files("lu_machinery.storage").joinpath("data_volume_guard.sh"))))
         .read_text(encoding="utf-8")
+        .replace('source "$GUARD_DIR/../lib/project_interpreter.sh"',
+                 f'source "{resource_files("lu_machinery.lib").joinpath("project_interpreter.sh")}"')
+        .replace('REPO_ROOT="$(project_product_root_resolve)"',
+                 f'REPO_ROOT="$(project_product_root_resolve "{repo}")"')
         .replace("UUID_FILE=/etc/learn-ukrainian/data-volume.uuid", f"UUID_FILE={marker}"),
         encoding="utf-8",
     )

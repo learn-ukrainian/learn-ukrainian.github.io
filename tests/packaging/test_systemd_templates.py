@@ -27,12 +27,6 @@ def test_systemd_templates_have_no_host_facts() -> None:
             continue
         text = path.read_text(encoding="utf-8")
         assert_no_host_facts(text, path.name)
-    for path in (
-        PACKAGING / "learn-ukrainian-worktree-gc.service",
-        DROPINS / "learn-ukrainian-worktree-gc.service.d/data-volume.conf",
-    ):
-        command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=") and line != "ExecStart=")
-        assert command.endswith("--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply")
     # Units that launch npm or node through /usr/bin/env must prefer the pinned Node
     # over the host Node. Without this line the Astro unit crash-loops on the older /usr/bin/node.
     pinned_node_path = "Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin"
@@ -122,16 +116,3 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
         f"--repo-root {primary_root.parent / 'learn-ukrainian-infra-private'} --apply"
         in (destination / "learn-ukrainian-worktree-gc.service.d/data-volume.conf").read_text(encoding="utf-8")
     )
-
-
-def test_git_maintenance_limits_and_schedule() -> None:
-    from lu_machinery.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
-
-    service = (PACKAGING / "learn-ukrainian-git-maintenance.service").read_text()
-    assert GC_MEMORY_MAX == 2 * 1024**3
-    assert {"MemoryMax=2G", "MemorySwapMax=0", "CPUQuota=100%", "TasksMax=32", "KillMode=control-group"} <= set(service.splitlines())
-    timeout = int(next(line.split("=", 1)[1] for line in service.splitlines() if line.startswith("TimeoutStartSec=")))
-    # Both repositories run sequentially; each may consume its full deadline.
-    assert timeout > 2 * GC_DEADLINE_SECONDS + 20
-    timer = (PACKAGING / "learn-ukrainian-git-maintenance.timer").read_text()
-    assert {"OnCalendar=*-*-* 03:30:00 UTC", "Persistent=false"} <= set(timer.splitlines())

@@ -129,16 +129,6 @@ ALLOWLIST: dict[str, tuple[str, dict[str, int]]] = {
         "so the npm shim must refuse that fallback; the test never spawns the hardcoded path",
         {"test_missing_project_interpreter_fails_closed:gate": 1},
     ),
-    "tests/test_handoff_slot_registry.py": (
-        "_helper_root() only picks the checkout that holds the shared interpreter; it never spawns "
-        "it and falls back to sys.prefix when the checkout has no .venv",
-        {"_helper_root:gate": 1},
-    ),
-    "tests/orchestration/test_thread_restart_e2e.py": (
-        "runs the handoff CLI inside a throwaway git repo built under tmp_path, whose .venv is a "
-        "symlink or shim to the primary interpreter; the repo root is not a checkout",
-        {"checkout_handoff_command:argv": 1},
-    ),
     "tests/test_lexicon_runner_pr1.py": (
         "asserts the production main_checkout_root()/.venv interpreter resolution; the primary "
         "checkout's venv always exists there, and no spawn uses the path",

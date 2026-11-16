@@ -104,9 +104,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importing repo_root installs the env formatter before any test runs.
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
-from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
-from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
+from lu_machinery.common.repo_root import main_checkout_root
+
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
@@ -139,7 +140,17 @@ def _under_tests_api(request: pytest.FixtureRequest) -> bool:
 
 
 def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
-    return [importlib.import_module(f"{package}.{name}") for package in _API_STATUS_PACKAGES]
+    modules = []
+    for package in _API_STATUS_PACKAGES:
+        module_name = f"{package}.{name}"
+        if package == "scripts.api":
+            module = sys.modules.get(module_name)
+            if module is None:
+                continue
+        else:
+            module = importlib.import_module(module_name)
+        modules.append(module)
+    return modules
 
 
 def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
@@ -559,7 +570,6 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
     if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
         regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
-        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
         modes = ("clean", "polluted") if regression else ("clean",)
         metafunc.parametrize(
             "_launcher_parent_environment", modes, indirect=True,
@@ -1177,7 +1187,7 @@ def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 def _bridge_db_paths() -> tuple[Path, Path]:
     """Return the primary bridge DB and any configured path before tests begin."""
-    primary_repo_root = resolve_repo_root(Path(__file__), 1)
+    primary_repo_root = main_checkout_root(Path(__file__).resolve().parents[1])
     return (
         default_bridge_db_path(primary_repo_root).resolve(),
         configured_bridge_db_path(primary_repo_root).resolve(),
@@ -1654,10 +1664,10 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
 
 def _primary_artifact_path(group: str, rel: str) -> Path:
     """Verify the current manifest against existing primary data, without copying."""
-    from scripts.guardrails.worktree_containment import resolve_main_root
-    from scripts.storage.paths import find_entry, verify_file
+    from lu_machinery.guardrails.worktree_containment import resolve_main_root
+    from lu_machinery.storage.paths import find_entry, verify_file
 
-    entry = find_entry(group, rel)
+    entry = find_entry(group, rel, repo=_REPO_ROOT)
     artifact = resolve_main_root(_REPO_ROOT) / "data" / rel
     verify_file(artifact, entry, group=group, rel=rel)
     return artifact
@@ -1694,9 +1704,6 @@ def requires_sources_db(data_store_factory) -> Path:
 def requires_vesum_db(data_store_factory) -> Path:
     """Skip a test requiring the uncommitted VESUM database."""
     return data_store_factory("vesum", required_sqlite_tables=("forms",))
-
-
-
 
 
 @pytest.fixture(autouse=True)
@@ -1799,7 +1806,12 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     themselves.
     """
     for name in ("scripts.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
-        credit_lane = importlib.import_module(name)
+        if name.startswith("scripts."):
+            credit_lane = sys.modules.get(name)
+            if credit_lane is None:
+                continue
+        else:
+            credit_lane = importlib.import_module(name)
         monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
         monkeypatch.setattr(
             credit_lane,
@@ -1932,7 +1944,7 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
 # All dispatch task-store consumers resolve ``LU_TASKS_DIR`` at call time.
 # The ownership ledger above is a separate seam (env override).
 
-_REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
+_REAL_TASKS_DIR = (main_checkout_root(Path(__file__).resolve().parents[1]) / "batch_state" / "tasks").resolve()
 # Legacy task-store paths derived from ``tasks_dir().parent``:
 # - ``tasks_dir().parent / "preflight_fast_fail.jsonl"``
 # - fallback ``tasks_dir().parent / worktree_claims.LOCK_DIR_NAME``
@@ -2210,7 +2222,7 @@ def _isolate_runtime_scratch_root(
     private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
     Scans stay inside ``tmp_path`` for those tests too.
     """
-    from scripts.common import scratch
+    from lu_machinery.common import scratch
 
     monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
 
@@ -2905,7 +2917,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     """Mark nightly groups and quarantined flakes; refuse unserved ``rules_core_absent`` tests."""
     _mark_nightly_groups(items)
     selected = rerun_node_ids(
-        load_registry(),
+        load_registry(Path(__file__).with_name("flake_quarantine.yaml")),
         today=datetime.now(UTC).date(),
         event_name="schedule"
         if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1"
@@ -3108,7 +3120,7 @@ def pytest_configure(config: pytest.Config) -> None:
             "WARNING: credential redaction cannot protect direct terminal output; "
             "keep capture enabled and log_cli disabled when credentials are present.\n"
         )
-    load_registry()
+    load_registry(Path(__file__).with_name("flake_quarantine.yaml"))
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
@@ -3168,15 +3180,15 @@ def pytest_runtest_setup(item: pytest.Item) -> None:
     if marker is not None:
         if len(marker.args) != 2 or marker.kwargs:
             raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
-        from scripts.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+        from lu_machinery.storage.paths import MissingArtifactError, find_entry, verify_file
 
         group, rel = marker.args
         try:
             if "data_artifact_factory" in getattr(item, "fixturenames", ()):
                 _primary_artifact_path(group, rel)
             else:
-                entry = find_entry(group, rel)
-                verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
+                entry = find_entry(group, rel, repo=_REPO_ROOT)
+                verify_file(_REPO_ROOT / "data" / rel, entry, group=group, rel=rel)
         except MissingArtifactError as error:
             detail = error.detail.casefold()
             if detail == "missing" or "manifest missing" in detail or "no unique manifest entry" in detail:
@@ -3551,7 +3563,7 @@ def _init_real_worktrees_dir() -> str:
     global _REAL_WORKTREES_DIR, _REAL_WORKTREES_PREFIX
     if _REAL_WORKTREES_DIR:
         return _REAL_WORKTREES_DIR
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
 
     worktrees = main_checkout_root(_REPO_ROOT) / ".worktrees"
     _REAL_WORKTREES_DIR = os.path.realpath(worktrees)
@@ -3940,7 +3952,7 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     if not is_shim and os.path.realpath(executable_path) != os.path.realpath(_REAL_GH_BINARY):
         return
 
-    from scripts.secret_redactor import redact_value
+    from lu_machinery.secret_redactor import redact_value
 
     rendered = redact_value(argv)
     pytest.fail(
@@ -4142,7 +4154,7 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
-from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
+from tests.opsec_fixtures import publisher_transport, synthetic_opsec  # noqa: F401
 
 
 @pytest.fixture(autouse=True)
@@ -4162,7 +4174,12 @@ def _hermetic_agy_claude_window(monkeypatch):
     empty window. A test of the real reader restores ``__wrapped__``.
     """
     for name in ("scripts.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
-        mp = importlib.import_module(name)
+        if name.startswith("scripts."):
+            mp = sys.modules.get(name)
+            if mp is None:
+                continue
+        else:
+            mp = importlib.import_module(name)
         real = mp.routing_budget_used_pct
 
         def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):

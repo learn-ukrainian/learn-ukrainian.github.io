@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 import shutil
 import subprocess
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -83,12 +85,15 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
 
     shutil.copytree(HOOK_DIR, repo / ".githooks")
     (repo / "scripts/lib").mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", repo / "scripts/lib/project_interpreter.sh")
+    _write_executable(
+        repo / "scripts/lib/project_interpreter.sh",
+        "#!/usr/bin/env bash\nsource " + shlex.quote(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))) + "\n",
+    )
     _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
-    shutil.copy2(REPO_ROOT / "scripts/install_git_hooks.sh", repo / "scripts/install_git_hooks.sh")
+    shutil.copy2(Path(str(files("lu_machinery").joinpath("install_git_hooks.sh"))), repo / "scripts/install_git_hooks.sh")
     _write_executable(
         repo / "scripts/pre_commit/project_python.sh",
         f'#!/usr/bin/env bash\nset -euo pipefail\nexec "{_project_python()}" "$@"\n',
@@ -164,6 +169,7 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     stamp_dir.mkdir()
     env = {
         "HOOK_LOG": str(hook_log),
+        "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(repo),
         "LFS_STDIN_LOG": str(lfs_stdin_log),
         "PATH": f"{bin_dir}:{os.environ['PATH']}",
         "PRE_COMMIT_HOME": str(tmp_path / "pre-commit-cache"),
@@ -325,29 +331,6 @@ def test_full_pre_push_chain_replays_updates_to_the_pytest_guard(tmp_path):
     assert "lfs-pre-push" in calls
 
 
-def test_installer_materializes_hooks_in_a_sparse_linked_worktree(tmp_path):
-    repo, _, env = _fixture_repository(tmp_path)
-    sparse = tmp_path / "sparse-worktree"
-    _git(repo, "worktree", "add", "-b", "sparse-test", str(sparse), env=env)
-    _git(sparse, "sparse-checkout", "init", "--no-cone", env=env)
-    _git(sparse, "sparse-checkout", "set", "README.md", env=env)
-
-    assert not (sparse / ".githooks").exists()
-
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
-    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
-
-    for hook_name in REQUIRED_HOOKS:
-        assert (sparse / ".githooks" / hook_name).is_file()
-
-    assert (sparse / "scripts/lib/project_interpreter.sh").is_file()
-    hook_log = Path(env["HOOK_LOG"])
-    before = hook_log.read_text(encoding="utf-8").splitlines() if hook_log.exists() else []
-    (sparse / "README.md").write_text("sparse change\n", encoding="utf-8")
-    _git(sparse, "add", "README.md", env=env)
-    _run(["bash", ".githooks/pre-commit"], cwd=sparse, env=env)
-    after = hook_log.read_text(encoding="utf-8").splitlines()
-    assert after.count("pre-commit") == before.count("pre-commit") + 1
 
 
 @pytest.mark.parametrize("hook_name", REQUIRED_HOOKS)

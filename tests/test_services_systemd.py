@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from importlib.resources import files as resource_files
 from pathlib import Path
 
 import pytest
@@ -22,8 +23,12 @@ def harness(tmp_path: Path):
     guard = tmp_path / "scripts/storage/data_volume_guard.sh"
     guard.parent.mkdir(parents=True)
     guard.write_text(
-        (ROOT / "scripts/storage/data_volume_guard.sh")
+        (Path(str(resource_files("lu_machinery.storage").joinpath("data_volume_guard.sh"))))
         .read_text(encoding="utf-8")
+        .replace('source "$GUARD_DIR/../lib/project_interpreter.sh"',
+                 f'source "{resource_files("lu_machinery.lib").joinpath("project_interpreter.sh")}"')
+        .replace('REPO_ROOT="$(project_product_root_resolve)"',
+                 f'REPO_ROOT="$(project_product_root_resolve "{tmp_path}")"')
         .replace(
             "UUID_FILE=/etc/learn-ukrainian/data-volume.uuid",
             f"UUID_FILE={tmp_path / 'data-volume.uuid'}",

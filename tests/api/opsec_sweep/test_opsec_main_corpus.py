@@ -20,28 +20,16 @@ from lu_machinery.api.opsec_sanitize import opsec_path_sanitizer_middleware, san
 pytestmark = pytest.mark.repo_invariant
 
 _ROOT = Path(__file__).resolve().parents[3]
-# A fixed corpus of 73 public documents, not a repository tree scanner.
+# A fixed corpus of product documents, not a repository tree scanner.
 _CORPUS_PATHS = [
     _ROOT / relative
     for relative in (
-        "agents_extensions/shared/rules/_load-via-api.md",
         "agents_extensions/shared/rules/activity-yaml.md",
-        "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/core-curriculum.md",
-        "agents_extensions/shared/rules/core.md",
-        "agents_extensions/shared/rules/critical-rules.md",
-        "agents_extensions/shared/rules/dispatch-must-use-worktree.md",
-        "agents_extensions/shared/rules/fleet-comms-coordination.md",
-        "agents_extensions/shared/rules/fleet-driver-routing.md",
         "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
-        "agents_extensions/shared/rules/model-assignment.md",
         "agents_extensions/shared/rules/non-negotiable-rules.md",
-        "agents_extensions/shared/rules/operator-expectations.md",
         "agents_extensions/shared/rules/pipeline.md",
-        "agents_extensions/shared/rules/storage-topology.md",
-        "agents_extensions/shared/rules/task-scoped-reading.md",
         "agents_extensions/shared/rules/ukrainian-linguistics.md",
-        "agents_extensions/shared/rules/workflow.md",
         "docs/best-practices/activity-pedagogy.md",
         "docs/best-practices/adr-management.md",
         "docs/best-practices/agent-activity-matrix.md",
@@ -63,8 +51,6 @@ _CORPUS_PATHS = [
         "docs/best-practices/deterministic-over-hallucination.md",
         "docs/best-practices/dialogue-situations.md",
         "docs/best-practices/dual-mode-design-tokens.md",
-        "docs/best-practices/fleet-role-scorecard.md",
-        "docs/best-practices/fleet-shared-doctrine.md",
         "docs/best-practices/force-flag-audit-2026-04-22.md",
         "docs/best-practices/git-hygiene.md",
         "docs/best-practices/gitflow.md",

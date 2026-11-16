@@ -14,9 +14,9 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
+from lu_machinery.lib.readonly_sqlite import open_readonly
+from lu_machinery.storage.topology import StoreBinding
 
-from scripts.lib.readonly_sqlite import open_readonly
-from scripts.storage.topology import StoreBinding
 from tests.helpers import source_db_write_guard as guard
 
 

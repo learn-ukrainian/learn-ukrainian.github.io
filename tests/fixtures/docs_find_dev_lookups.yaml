@@ -106,21 +106,9 @@ lookups:
      expect: [docs/practice/teacher-deck-artifacts.md, docs/runbooks/teacher-curated-seed-rebuild.md,
               registry/practice/function_words_deck.json],
      verify: [{path: docs/runbooks/teacher-curated-seed-rebuild.md, contains: rebuild}]}
-  - {id: L22, question: 'What is the default of the fleet-comms dual_write setting?', kind: doc, query: fleet-comms dual_write default,
-     expect: [docs/runbooks/fleet-comms-open-gaps.md],
-     verify: [{path: docs/runbooks/fleet-comms-open-gaps.md, contains: dual_write}]}
-  - {id: L33, question: 'How do I clear a stale git index.lock?', kind: doc, query: stale git index.lock,
-     expect: [docs/runbooks/clear-stale-git-lock.md],
-     verify: [{path: docs/runbooks/clear-stale-git-lock.md, contains: index.lock}]}
-  - {id: L34, question: 'How do I clean up worktrees and sweep stale branches?', kind: doc, query: worktree cleanup branch sweep,
-     expect: [docs/runbooks/worktree-cleanup.md, scripts/hygiene/branch_sweep.py],
-     verify: [{path: scripts/hygiene/branch_sweep.py, contains: stale agent branches}]}
   - {id: L38, question: 'Where is the CI speed program documented?', kind: doc, query: CI speed program,
      expect: [docs/epics/ci-speed-program.md],
      verify: [{path: docs/epics/ci-speed-program.md, contains: CI}]}
-  - {id: L39, question: 'What is the task lifecycle closeout contract?', kind: doc, query: task lifecycle closeout,
-     expect: [agents_extensions/shared/contracts/task-lifecycle-closeout.md],
-     verify: [{path: agents_extensions/shared/contracts/task-lifecycle-closeout.md, contains: closeout}]}
   - {id: L40, question: 'Where is the schema for fresh build plans?', kind: doc, query: fresh build plan schema,
      expect: [docs/epics/fresh-build-plan-schema.md, docs/epics/fresh-build-build-program.md],
      verify: [{path: docs/epics/fresh-build-plan-schema.md, contains: plan}]}
@@ -136,11 +124,6 @@ lookups:
   - {id: O04, question: 'Which CI checks are required by the merge gate?', kind: doc, query: required CI checks merge gate,
      expect: [docs/runbooks/ci-gate.md],
      verify: [{path: docs/runbooks/ci-gate.md, contains: CI Gate}]}
-  - {id: O05, question: 'Where are the model routing rules for each task?', kind: doc, query: model routing rules per task,
-     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml,
-              agents_extensions/shared/rules/catalog-routing-tables.md],
-     verify: [{path: agents_extensions/shared/rules/model-assignment.md, contains: review},
-              {path: agents_extensions/shared/rules/catalog-routing-tables.md, contains: '## Review ladders'}]}
 
   # ---------------------------------------------------------------- data stores
   - {id: L09, question: 'Where is the VESUM database and how do I query it?', kind: data_store, query: VESUM database,
@@ -165,29 +148,17 @@ lookups:
   - {id: D05, question: 'Where are the extracted textbook chunks stored?', kind: data_store, query: textbook chunks extracted text,
      expect: [data/textbook_chunks/, scripts/rag/extract_text.py],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/textbook_chunks/'}]}
-  - {id: D06, question: 'Where is the content-addressed artifact store?', kind: data_store, query: content addressed artifact store,
-     expect: [data/.artifact-store/, scripts/storage/artifacts.py],
-     verify: [{path: scripts/storage/artifacts.py, contains: content-addressed artifact store}]}
   - {id: D07, question: 'Where is the UberText word frequency data?', kind: data_store, query: ubertext word frequency data,
      expect: [data/ubertext-freq/, scripts/rag/convert_phase2.py],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/ubertext-freq/'}]}
   - {id: D08, question: 'Where is the slovnyk lexicon cache?', kind: data_store, query: slovnyk cache lexicon,
      expect: [data/lexicon/slovnyk_cache/, scripts/lexicon/enrich_manifest.py],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/lexicon/slovnyk_cache/'}]}
-  - {id: D09, question: 'Where are the API telemetry records stored?', kind: data_store, query: api telemetry records store,
-     expect: [data/telemetry/, scripts/api/telemetry_router.py],
-     verify: [{path: docs/knowledge/catalogue.yaml, contains: 'data/telemetry/'}]}
 
   # ---------------------------------------------------------------- status: still current, what replaced it
   - {id: L20, question: 'Is the wiki still the research input for the core rebuild, and what replaced it?', kind: status, query: wiki research input core rebuild,
      expect: [docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md],
      verify: [{path: docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md, contains: wiki}]}
-  - {id: S01, question: 'Is gpt-6-astra still current, and what replaced it?', kind: status, query: gpt-6-astra retired replacement,
-     expect: [scripts/config/model_catalog.yaml],
-     verify: [{path: scripts/config/model_catalog.yaml, contains: 'replaced_by: gpt-6.1-sol'}]}
-  - {id: S02, question: 'Is claude-fable-5 still a current model?', kind: status, query: is claude-fable-5 still current,
-     expect: [scripts/config/model_catalog.yaml],
-     verify: [{path: scripts/config/model_catalog.yaml, contains: 'claude-fable-5:'}]}
   - {id: S03, question: 'Is the pytest four-shard matrix still used, and what replaced it?', kind: status, query: pytest four shard matrix still used,
      expect: [docs/decisions/2026-07-22-pytest-four-shard-matrix.md, docs/runbooks/ci-gate.md],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: docs/runbooks/ci-gate.md'}]}
@@ -221,9 +192,6 @@ lookups:
   - {id: S13, question: 'Is the layer B entailment gate still active?', kind: status, query: layer b entailment gate shelved,
      expect: [docs/decisions/2026-10-01-layerb-entailment-gate-shelved.md],
      verify: [{path: docs/decisions/2026-10-01-layerb-entailment-gate-shelved.md, contains: entailment}]}
-  - {id: S14, question: 'What is the lifecycle of the gpt-5.6-terra model?', kind: status, query: gpt-5.6-terra model lifecycle,
-     expect: [scripts/config/model_catalog.yaml],
-     verify: [{path: scripts/config/model_catalog.yaml, contains: 'gpt-5.6-terra:'}]}
   - {id: S15, question: 'Is the content review workflow command still current, and what replaced it?', kind: status, query: content review workflow command replaced,
      expect: [docs/workflows/review-content.md, agents_extensions/shared/skills/content-review/SKILL.md],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'superseded_by: agents_extensions/shared/skills/content-review/SKILL.md'}]}
@@ -232,30 +200,18 @@ lookups:
   - {id: L27, question: 'Where is the immersion band for a module computed?', kind: process, query: immersion band,
      expect: [scripts/curriculum/pedagogy_config.py],
      verify: [{path: scripts/curriculum/pedagogy_config.py, contains: def compute_immersion_band}]}
-  - {id: L32, question: 'Where is the resolve-reviewer command implemented?', kind: process, query: resolve-reviewer,
-     expect: [scripts/review/closeout_cli.py, scripts/review/reviewer_resolver.py],
-     verify: [{path: scripts/review/closeout_cli.py, contains: resolve-reviewer}]}
   - {id: L35, question: 'Where is the backup data wrapper script?', kind: process, query: backup data wrapper,
      expect: [scripts/backup-data.sh],
      verify: [{path: scripts/backup-data.sh, contains: backup}]}
   - {id: L36, question: 'Where are the git pre-push and commit-msg hooks?', kind: process, query: git hooks pre-push commit-msg,
      expect: [.githooks/pre-push, .githooks/commit-msg],
      verify: [{path: .githooks/pre-push, contains: pre-push}]}
-  - {id: L37, question: 'Where is the heal-core-bare hook?', kind: process, query: heal-core-bare,
-     expect: [agents_extensions/shared/hooks/heal-core-bare.py],
-     verify: [{path: agents_extensions/shared/hooks/heal-core-bare.py, contains: bare}]}
-  - {id: L42, question: 'Where is the driver breadth report generated?', kind: process, query: driver breadth report,
-     expect: [scripts/fleet/driver_breadth_report.py],
-     verify: [{path: scripts/fleet/driver_breadth_report.py, contains: breadth}]}
   - {id: L43, question: 'Where is the sources MCP server implemented?', kind: process, query: sources MCP server,
      expect: [.mcp/servers/sources/server.py],
      verify: [{path: .mcp/servers/sources/server.py, contains: check_russian_shadow}]}
   - {id: L29, question: 'Where is the Python version pinned?', kind: process, query: python version pin,
      expect: [.python-version],
      verify: [{path: .python-version, contains: '3.'}]}
-  - {id: L30, question: 'Where is the model routing table and the model catalog?', kind: process, query: model routing table model catalog,
-     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml],
-     verify: [{path: scripts/config/model_catalog.yaml, contains: review_ladders}]}
   - {id: P01, question: 'Where is self-review detected and refused?', kind: process, query: where is self review detected,
      expect: [scripts/audit/checks/review_gaming.py],
      verify: [{path: scripts/audit/checks/review_gaming.py, contains: SELF_REVIEW_DETECTED}]}
@@ -268,24 +224,9 @@ lookups:
   - {id: P04, question: 'Where is the cross-family review preflight before a PR implemented?', kind: process, query: cross-family preflight before PR,
      expect: [scripts/build/cf_preflight.py],
      verify: [{path: scripts/build/cf_preflight.py, contains: class CfPreflightResult}]}
-  - {id: P05, question: 'What proves a merged PR left no dispatch worktree behind?', kind: process, query: reap dispatch worktrees after merge,
-     expect: [scripts/orchestration/merge_closeout.py],
-     verify: [{path: scripts/orchestration/merge_closeout.py, contains: prove no dispatch worktree still}]}
-  - {id: P06, question: 'Where does the reviewer resolver pick a ladder seat?', kind: process, query: reviewer resolver ladder selection,
-     expect: [scripts/review/reviewer_resolver.py],
-     verify: [{path: scripts/review/reviewer_resolver.py, contains: def resolve_reviewer}]}
-  - {id: P07, question: 'Where are review verdicts parsed?', kind: process, query: review verdict parsing,
-     expect: [scripts/review/verdict_parser.py],
-     verify: [{path: scripts/review/verdict_parser.py, contains: ACCEPTED_VERDICT_TOKENS}]}
   - {id: P09, question: 'Where is the one-command definition of done for a module?', kind: process, query: one command definition of done module,
      expect: [scripts/build/verify_shippable.py],
      verify: [{path: scripts/build/verify_shippable.py, contains: one-command Definition-of-Done}]}
   - {id: P10, question: 'Where is the pytest stamp checked before a push?', kind: process, query: pytest stamp check before push,
      expect: [.githooks/check-pytest-stamp.py, .githooks/pre-push],
      verify: [{path: .githooks/pre-push, contains: check-pytest-stamp.py}]}
-  - {id: P11, question: 'Where is the dispatch worktree anchor directory checked?', kind: process, query: dispatch worktree anchor directory check,
-     expect: [scripts/dispatcher/git.py],
-     verify: [{path: scripts/dispatcher/git.py, contains: def worktree_plan}]}
-  - {id: P12, question: 'What deletes stale agent branches safely?', kind: process, query: stale agent branches safe delete,
-     expect: [scripts/hygiene/branch_sweep.py],
-     verify: [{path: scripts/hygiene/branch_sweep.py, contains: List stale agent branches}]}

@@ -70,11 +70,7 @@ _TESTS_ROOT = _REPO_ROOT / "tests"
 # subtree of them) that carry the marker at module scope.
 KNOWN_REPO_WIDE_MODULES = frozenset(
     {
-        "tests/ai_agent_bridge/test_module_identity.py",
         "tests/hygiene/test_tracked_symlink_targets.py",
-        "tests/orchestration/test_thread_restart_e2e.py",
-        "tests/orchestration/test_worktree_removal_invariant.py",
-        "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
         "tests/test_browser_hardening_guard.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
@@ -87,8 +83,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_hooks_executable.py",
         "tests/test_issue_template_acceptance_criteria.py",
         "tests/test_lesson_atlas_link_census.py",
-        "tests/test_lint_fleet_roster.py",
-        "tests/test_lint_prompts.py",
         "tests/test_no_rewrite_contract.py",
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
@@ -107,7 +101,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
-    "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
     "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
     "tests/common/test_jsonl_splitlines_guard.py::test_scripts_structured_readers_do_not_use_str_splitlines",
@@ -120,12 +113,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/review/test_prompts.py::test_template_lint_refuses_unresolved_placeholders_in_what_a_template_renders",
     "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
-    "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
-    "tests/test_deploy_script_idempotency.py::test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
-    "tests/test_deploy_script_idempotency.py::test_claude_diff_excludes_do_not_mask_shipped_source",
-    "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
-    "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
     "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
@@ -135,7 +123,6 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
     "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
-    "tests/test_secret_redactor_urls.py::test_ordinary_repository_corpus_is_unchanged_by_url_pass",
     "tests/test_sources_db_hardening.py::test_shared_sqlite_connections_route_through_open_readonly",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
@@ -221,10 +208,6 @@ NOT_REPO_WIDE = {
     "tests/test_workflow_head_concurrency.py::test_merge_group_workflows_do_not_unconditionally_cancel": (
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
-    "tests/test_shared_hooks_deploy_depth.py::test_shell_shlex_importers_do_not_write_bytecode": (
-        "Globs only agents_extensions/shared/hooks/*.py to check that shell_shlex "
-        "is imported after dont_write_bytecode. It does not scan the repository tree."
-    ),
     "tests/audit/test_secret_scan_local.py::test_tracked_file_beneath_a_symlinked_parent_is_not_scanned": (
         "Runs `git ls-files` with cwd set to the tmp_path `repo` fixture to confirm a "
         "staged path exists there; it never lists or reads the live repository tree."
@@ -237,42 +220,6 @@ NOT_REPO_WIDE = {
 # They assert deployment behavior in the temporary tree, not an invariant
 # across the live repository. Keep each name explicit so the registry's
 # stale-entry check catches a renamed or removed test.
-NOT_REPO_WIDE.update(
-    {
-        f"tests/test_deploy_script_idempotency.py::{name}": (
-            "Copies declared source paths into a temporary checkout; the scanning "
-            "helper's whole-tree branch is not taken by this test."
-        )
-        for name in (
-            "test_codex_legacy_migration_preserves_modified_content",
-            "test_agent_manifest_rejects_symlinked_intermediate_component",
-            "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
-            "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
-            "test_codex_legacy_migration_recognizes_committed_source_before_edits",
-            "test_codex_legacy_python_cache_does_not_block_driver_deployment",
-            "test_agent_transient_briefs_are_preserved",
-            "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
-            "test_tracked_mirror_drift_is_detected_before_deploy",
-            "test_second_deploy_is_noop_for_codex_target",
-            "test_tracked_mirror_resolves_each_deploy_source",
-            "test_claude_epic_dirs_are_preserved",
-            "test_driver_runtime_state_is_preserved",
-            "test_tracked_agents_skill_declared_orphan_is_skipped",
-            "test_tracked_claude_glob_orphan_is_skipped",
-            "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
-            "test_drift_is_caught",
-            "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
-            "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact",
-            "test_codex_orphan_is_caught",
-            "test_codex_legacy_migration_works_after_updated_sources_are_committed",
-            "test_missing_codex_hooks_json_is_drift",
-            "test_agent_overlay_write_stays_in_held_directory_after_root_swap",
-            "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
-            "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
-            "test_bytecode_cache_is_not_an_orphan_and_is_not_declared",
-        )
-    }
-)
 
 # Repository-root path constants. A walk rooted at one of these (or a join into
 # tests/scripts/agents_extensions) is repo-wide, not a temp fixture. The

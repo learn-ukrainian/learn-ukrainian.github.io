@@ -62,7 +62,6 @@ from dagger import dag, function, object_type
 # therefore also not in Dagger's clean container.
 _IGNORED_TESTS: tuple[str, ...] = (
     "tests/test_rag.py",
-    "tests/test_agent_runtime.py",
     "tests/test_channels_registry.py",
     "tests/test_convergence_loop.py",
     "tests/test_morphological_validator.py",
@@ -174,7 +173,6 @@ class LearnUkrainianCi:
             mirror the PR-gate path (faster).
         """
         # System deps the project's tests and pip wheel-builds need:
-        #   - ``rsync`` — tests/test_deploy_script_idempotency.py
         #   - ``git``   — any test that shells out to git
         #   - ``curl``, ``ca-certificates`` — live-API + HTTPS
         #   - ``nodejs``, ``npm`` — ubuntu-latest includes npx; Claude

@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 import pytest
 import yaml
+from lu_machinery.ai_agent_bridge import _cli
 
-from scripts.ai_agent_bridge import _claude, _cli
 from scripts.audit import russianism_eval, russianism_judge
 
 
@@ -237,10 +237,3 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
         assert "seat substituted" in substituted["note"]
         assert "claude -> codex" in substituted["note"]
         assert "issues" not in substituted
-
-
-def test_claude_bridge_extracts_target_model_metadata() -> None:
-    msg = {"data": json.dumps({"to_model": "claude-sonnet-4-5"})}
-
-    assert _claude._extract_target_model(msg) == "claude-sonnet-4-5"
-    assert _claude._extract_target_model({"data": "{bad json"}) is None

@@ -15,6 +15,7 @@ import os
 import shutil
 import stat
 import subprocess
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -22,7 +23,7 @@ import pytest
 from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-INSTALLER = REPO_ROOT / "scripts" / "install_git_hooks.sh"
+INSTALLER = Path(str(files("lu_machinery").joinpath("install_git_hooks.sh")))
 MISSING_HOOK = "Git hook error: tracked hook is missing or not executable:"
 MISSING_CHECKER = "Git hook error: owned-path checker is not installed; refusing to skip enforcement."
 _HIDDEN = {
@@ -66,7 +67,7 @@ def _product_repo(tmp_path: Path, env: dict[str, str]) -> Path:
     shutil.copy2(REPO_ROOT / "scripts" / "pre_commit" / "project_python.sh", launcher)
     resolver = repo / "scripts" / "lib" / "project_interpreter.sh"
     resolver.parent.mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts" / "lib" / "project_interpreter.sh", resolver)
+    shutil.copy2(Path(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))), resolver)
     (repo / ".pre-commit-config.yaml").write_text("repos: []\n", encoding="utf-8")
     for args in (
         ("init", "-q", "-b", "main"),

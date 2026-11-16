@@ -1370,7 +1370,8 @@ class TestBatchDispatcherRunningTrackCleanup:
 class TestBatchDispatcherClaudeFixBackground:
     def test_claude_fix_runs_without_background_work(self, monkeypatch):
         """The headless Claude rebuild carries the #9690 controls from the adapter (#9750)."""
-        from agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+        from lu_machinery.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
+
         from batch import batch_dispatcher_helpers as helpers
 
         seen = {}

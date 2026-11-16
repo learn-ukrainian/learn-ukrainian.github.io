@@ -4,19 +4,9 @@
 # while those files ran at origin/main 0e2b0f5f12 (pytest with an import and open audit hook; 1256 passed).
 # One repository path per line; each exists at origin/main; no product test file is run.
 # [run]
-tests/test_fleet_repos.py
-tests/test_sibling_git_https.py
-tests/orchestration/test_merge_closeout.py
-tests/test_worktree_claims_lock_identity.py
-tests/orchestration/test_worktree_claims_cli.py
-tests/test_handoff_slot_registry.py
 tests/test_launcher_interactive_scope.py
-tests/test_session_supervisor.py
 tests/test_rules_core_loading.py
-tests/review/test_record_cf_verdict.py
-tests/publish/test_pr_merge_squash_scan.py
 tests/review/test_routing_consumers.py
-tests/githooks/test_owned_paths_hook.py
 # [support]
 tests/__init__.py
 tests/claude_route_accounts.py
@@ -68,16 +58,9 @@ tests/review/fixtures/word-card-tool-11084.json
 tests/review/test_model_catalog.py
 tests/rules_core_view.py
 tests/sparse_trees.py
-tests/test_agent_github_identity.py
-tests/test_authoring_review_feasibility.py
 tests/test_dispatch_isolation.py
 tests/test_launcher_contract.py
 tests/test_launcher_driver_scope.py
-tests/test_opsec_prepublish.py
-tests/test_record_cf_verdict.py
-tests/test_review_closeout_cli.py
-tests/test_sibling_git.py
-tests/test_verdict_parser.py
 tests/wait_helpers.py
 tests/fixtures/rules_core/core-curriculum.md
 tests/fixtures/rules_core/core.md

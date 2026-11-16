@@ -9,12 +9,14 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
 import sys
 import textwrap
 import time
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -29,7 +31,7 @@ GATE_PATH = HOOK_DIR / "pre_push_gate.py"
 PYTHON = project_python()
 ZERO_SHA = "0" * 40
 # Agent sessions shim ``git`` and refuse the fixture's pushes to a disposable remote; use the real binary there.
-GIT = os.environ.get("AGENT_REAL_GIT") or "git"
+GIT = shutil.which("git", path=os.defpath) or "git"
 
 # The repository-wide invariant registry the gate's test stage read before #11276: present, and ignored.
 REGISTRY = 'KNOWN_REPO_WIDE_MODULES = frozenset({"tests/test_invariant.py"})\nKNOWN_REPO_WIDE_FUNCTIONS = ()\n'
@@ -94,6 +96,9 @@ def _no_inherited_gate_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
+    env["AGENT_REAL_GIT"] = GIT  # disposable repositories never enter the task Git relay
+    # Disposable repositories use their synthetic scanner, without delegating to the task broker.
+    env.pop("LU_WRITE_BOUNDARY_BROKER", None)
     env.pop("PYTEST_ADDOPTS", None)
     env.pop("LU_TEST_SLOTS_HOLDER", None)  # a gate under test is never nested in this run's test slots
     # Nor does it inherit the invoking push's opt-in concurrency: under two slots a qualified host lets a
@@ -127,13 +132,18 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "repo"
     remote = tmp_path / "remote.git"
     root.mkdir()
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(root))
     subprocess.run([GIT, "init", "--bare", str(remote)], check=True, capture_output=True, timeout=60)
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     shutil.copytree(HOOK_DIR, root / ".githooks")
     (root / "scripts/lib").mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", root / "scripts/lib/project_interpreter.sh")
+    (root / "scripts/lib/project_interpreter.sh").write_text(
+        "#!/usr/bin/env bash\nsource " + shlex.quote(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))) + "\n",
+        encoding="utf-8",
+    )
     launcher = root / "scripts/pre_commit/project_python.sh"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
@@ -145,9 +155,6 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     fixture_python.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     fixture_python.chmod(0o755)
     _write(root, ".gitignore", "/.venv/\n")
-    from tests.githooks import install_message_scanner
-
-    install_message_scanner(root)
     _install_surface_scanners(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
@@ -294,6 +301,10 @@ def test_nothing_outgoing_is_accepted_without_running_a_stage(repo: Path) -> Non
     ids=["auto-finalize-form", "worker-head-form"],
 )
 def test_real_git_push_through_the_tracked_hook(repo: Path, push_args: tuple[str, ...], tmp_path: Path) -> None:
+    from tests.githooks import install_message_scanner
+
+    install_message_scanner(repo)
+    _commit(repo, "install scanner fixture", "lu_machinery")
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     lfs = bin_dir / "git-lfs"
@@ -1143,7 +1154,7 @@ def test_unproven_node_modules_overlays_are_refused(repo: Path, lock_state: str,
 def test_dependency_input_predicate_matches_reaper(
     repo: Path, monkeypatch: pytest.MonkeyPatch, relative: str, state: str, expected: bool
 ) -> None:
-    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+    from lu_machinery.fleet.regenerable_output import is_regenerable_ignored_path
 
     parts = Path(relative).parts
     parent = Path(*parts[:parts.index("node_modules")]) if "node_modules" in parts else Path("site")
@@ -4444,6 +4455,9 @@ def _tripwire(name: str, log: Path) -> str:
 @pytest.fixture
 def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
     """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
+    from tests.githooks import install_message_scanner
+
+    install_message_scanner(repo)
     log = tmp_path / "tripwire.log"
     for relative, name in TRIPWIRES.items():
         _write(repo, relative, _tripwire(name, log))
@@ -4496,7 +4510,7 @@ def _remote_feature(repo: Path) -> str:
     return _git(repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
 
 
-def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path) -> None:
+def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Generated editor text must not refuse a clean message; kept text must still refuse."""
     from tests.githooks import install_message_scanner
     from tests.opsec_fixtures import TOKEN
@@ -4504,6 +4518,7 @@ def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path)
     root = tmp_path / "repo"
     root.mkdir()
     _git(root, "init")
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
     shutil.copytree(HOOK_DIR, root / ".githooks")
     install_message_scanner(root)
     message = root / ".git/test-message"
@@ -4544,10 +4559,17 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
 
     accepted, output = _push(push_repo, "git-push")
     assert accepted, output
-    shim = push_repo / "scripts/agent_runtime/shims/git"
+    shim = push_repo / "lu_machinery/agent_runtime/shims/git"
     shim.parent.mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/agent_runtime/shims/git", shim)
-    _commit(push_repo, "install the agent push entry point", "scripts/agent_runtime/shims/git")
+    shutil.copy2(Path(str(files("lu_machinery").joinpath("agent_runtime/shims/git"))), shim)
+    library = push_repo / "lu_machinery/lib/project_interpreter.sh"
+    library.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(Path(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))), library)
+    _write(push_repo, "scripts/lib/project_interpreter.sh",
+           "#!/usr/bin/env bash\nsource " + shlex.quote(str(library)) + "\n")
+    _commit(push_repo, "install the agent push entry point",
+            "lu_machinery/agent_runtime/shims/git", "lu_machinery/lib/project_interpreter.sh",
+            "scripts/lib/project_interpreter.sh")
     chained = subprocess.run(
         [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
         capture_output=True, text=True, timeout=60,
@@ -4585,7 +4607,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     assert "Reword the commit message" in refused.stderr
     assert "--no-verify" in refused.stderr and "caught at push" in refused.stderr
     assert TOKEN not in refused.stderr
-
 
 @pytest.mark.parametrize("path", PUSH_PATHS)
 def test_a_push_runs_no_tests_takes_no_slot_and_calls_no_selector(push_repo: Path, path: str) -> None:

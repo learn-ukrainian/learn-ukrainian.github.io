@@ -26,14 +26,13 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-
-from scripts.docs import catalogue as cat
-from scripts.docs import store_census as sc
+from lu_machinery.docs import catalogue as cat
+from lu_machinery.docs import store_census as sc
 
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)
 REGISTRY = sc.registry(CATALOGUE)
-ALLOWLIST = json.loads((REPO / sc.ALLOWLIST_PATH).read_text(encoding='utf-8'))
+ALLOWLIST = json.loads((Path(sc.__file__).parents[2] / sc.ALLOWLIST_PATH).read_text(encoding="utf-8"))
 STUDY_EVIDENCE_DIRS = {'batch_state/preserved', 'batch_state/devops-*', 'batch_state/codex-atlas',
                        'batch_state/briefs', 'batch_state/open-model-data-*', 'batch_state/review-receipts'}
 
@@ -151,7 +150,7 @@ def _set(path: str, **fields):
 MUTATIONS = {
     'backup fact contradicts the allowlist': (
         _set('batch_state/tasks/write-ownership.sqlite3', backup='keep', protection_gap=DROP),
-        "backup is 'keep' but scripts/config/backup-allowlist.json gives 'none'"),
+        f"backup is 'keep' but {sc.ALLOWLIST_PATH} gives 'none'"),
     'protection below the nightly': (_set('data/atlas.db', protection='rebuild'), 'backup reduction'),
     'keep without a recorded gap': (_set('batch_state/review-findings/a1.sqlite', protection_gap=DROP),
                                     'needs protection_gap'),

@@ -2,20 +2,15 @@
 
 from __future__ import annotations
 
-import io
-import json
 import subprocess
 import sys
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
 from scripts.generate_mdx import core as mdx_core
 from scripts.generate_mdx import generate_plan_markdown
-from scripts.hooks import hook_timing, measure_hook_stack
-from scripts.review import snapshot
 
 pytestmark = pytest.mark.reads_content
 
@@ -65,47 +60,3 @@ def test_plan_diff_timeout_exits_nonzero(
     assert calls[0]["timeout"] == generate_plan_markdown._DIFF_TIMEOUT_SECONDS == 30
     assert "diff timed out after 30s" in capsys.readouterr().err
     assert not Path(calls[0]["args"][0][-1]).exists()
-
-
-def test_hook_timing_timeout_returns_124_and_logs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(hook_timing.subprocess, "run", _raise_timeout(calls))
-    log_path = tmp_path / "hook-timing.jsonl"
-    monkeypatch.setenv("HOOK_TIMING", "1")
-    monkeypatch.setenv("HOOK_TIMING_LOG", str(log_path))
-    monkeypatch.setattr(hook_timing.sys, "stdin", SimpleNamespace(buffer=io.BytesIO()))
-
-    rc = hook_timing.run_wrapped(["fake-hook"])
-
-    assert rc == 124
-    assert calls[0]["timeout"] == hook_timing._HOOK_TIMEOUT_SECONDS == 60
-    assert "hook command timed out after 60s" in capsys.readouterr().err
-    row = json.loads(log_path.read_text(encoding="utf-8"))
-    assert row["rc"] == 124
-
-
-def test_measure_hook_stack_timeout_records_nonzero_rc(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(measure_hook_stack.subprocess, "run", _raise_timeout(calls))
-
-    row = measure_hook_stack._time_one("fake-hook", ["fake-hook"], None, {}, repeats=1)
-
-    assert row["rc"] == 124
-    assert len(row["samples"]) == 1
-    assert calls[0]["timeout"] == measure_hook_stack._HOOK_TIMEOUT_SECONDS == 60
-
-
-def test_snapshot_git_timeout_returns_rc124_and_fails_closed(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(snapshot.subprocess, "run", _raise_timeout(calls))
-
-    result = snapshot._run_git(Path("/usr/bin/git"), ["status"], cwd=tmp_path, check=False)
-
-    assert result.returncode == 124
-    assert result.stderr == "TimeoutExpired after 30s"
-    assert calls[0]["timeout"] == snapshot.GIT_EVIDENCE_TIMEOUT_SECONDS == 30
-
-    with pytest.raises(snapshot.ReviewSnapshotError, match="TimeoutExpired after 30s"):
-        snapshot._run_git(Path("/usr/bin/git"), ["status"], cwd=tmp_path)

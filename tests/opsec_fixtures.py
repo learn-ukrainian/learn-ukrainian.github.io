@@ -4,16 +4,12 @@ from __future__ import annotations
 
 import ast
 import json
-import os
 import shutil
 import subprocess
-import sys
 from importlib.util import resolve_name
 from pathlib import Path
 
 import pytest
-
-from tests.helpers import machinery_package
 
 TOKEN = "SENTINEL-HOST-TOKEN"
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,7 +71,7 @@ def install_override(tooling, source=OVERRIDE):
 
 def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
     # The machinery package finds its own policy file, so this holds in either checkout layout.
-    from scripts.common.repo_root import machinery_path
+    from lu_machinery.common.repo_root import machinery_path
 
     policy = json.loads(machinery_path("opsec/blocking.json").read_text())
     rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
@@ -125,9 +121,24 @@ def synthetic_opsec(tmp_path, monkeypatch):
 
     directory = make_tooling(tmp_path / "tooling")
     # Product publishers run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-    for name in ("scripts.opsec.prepublish", "lu_machinery.opsec.prepublish"):  # TRANSITIONAL-PKG3-B2
+    for name in ("lu_machinery.opsec.prepublish",):  # TRANSITIONAL-PKG3-B2
         monkeypatch.setattr(importlib.import_module(name), "private_tooling", lambda: directory)
     return directory
+
+
+@pytest.fixture
+def publisher_transport(monkeypatch):
+    """Explicitly inject existing subprocess spies at the typed transport boundary."""
+    import importlib
+
+    # Product publishers send through the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
+    for name in ("lu_machinery.publish.github",):  # TRANSITIONAL-PKG3-B2
+        github = importlib.import_module(name)
+
+        def send(argv, *, runner, _original=github._send, **kwargs):
+            return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
+
+        monkeypatch.setattr(github, "_send", send)
 
 
 def copy_publisher_scripts(source: Path, destination: Path) -> None:
@@ -142,7 +153,7 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
         pending.extend((source / package).rglob("*.py"))
     visited = set()
 
-    package_name = machinery_package()
+    package_name = source.name
 
     def stage(module: str) -> None:
         parts = module.split(".")
@@ -180,65 +191,3 @@ def copy_publisher_scripts(source: Path, destination: Path) -> None:
                 for alias in node.names:
                     if alias.name != "*":
                         stage(f"{name}.{alias.name}")
-
-
-@pytest.fixture
-def gh_shim_sandbox(tmp_path):
-    root = tmp_path / "public-fixture"
-    root.mkdir()
-    scripts = root / machinery_package()
-    scripts.mkdir()
-    copy_publisher_scripts(ROOT / machinery_package(), scripts)
-    # The product's scripts/publish/__main__.py runs the installed release (#13017). This fake checkout
-    # exercises the retained in-tree publisher until its retirement slice, so it carries that copy's entry.
-    (scripts / "publish/__main__.py").write_text(
-        f"from {machinery_package()}.publish.github import main\n\n"
-        'if __name__ == "__main__":\n    raise SystemExit(main())\n'
-    )
-    # The advisory classifier reads workflow policy as well as importing code.
-    workflow = root / ".github/workflows/ci.yml"
-    workflow.parent.mkdir(parents=True)
-    shutil.copy2(ROOT / ".github/workflows/ci.yml", workflow)
-    # The merge gate's learner-content check reads the deploy path policy data, a product file
-    # that stays under the product checkout's scripts/ when the machinery package moves.
-    from scripts.common.repo_root import product_root
-
-    deploy_paths = root / "scripts/curriculum/deploy_paths.v1.json"
-    deploy_paths.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(product_root() / "scripts/curriculum/deploy_paths.v1.json", deploy_paths)
-    # Those reads go through product_root() (C-4746), so this fake checkout carries the product marker.
-    marker = root / "curriculum/l2-uk-en/curriculum.yaml"
-    marker.parent.mkdir(parents=True)
-    marker.write_text("")
-    shim = scripts / "agent_runtime/shims/gh"
-    shim.parent.mkdir(parents=True)
-    shutil.copy2(ROOT / machinery_package() / "agent_runtime/shims/gh", shim)
-    (scripts / "config").mkdir()
-    (scripts / "config/fleet_repos.yaml").write_text(json.dumps({"repos": CATALOG}))
-    (root / ".venv").symlink_to(Path(sys.executable).parent.parent, target_is_directory=True)
-    tooling = make_tooling(tmp_path / "private-fixture/tools/public_opsec_scan")
-    env = {k: v for k, v in os.environ.items() if not k.startswith(("GIT_", "PRE_COMMIT", "LU_OPSEC"))}
-    git = shutil.which("git", path=os.defpath)
-    subprocess.run([git, "init", "-q", str(root)], env=env, check=True, timeout=30)
-    subprocess.run(
-        [git, "-C", str(root), "remote", "add", "origin", "https://github.com/unit/public.git"],
-        env=env,
-        check=True,
-        timeout=30,
-    )
-    return root, shim, tooling
-
-
-@pytest.fixture
-def publisher_transport(monkeypatch):
-    """Explicitly inject existing subprocess spies at the typed transport boundary."""
-    import importlib
-
-    # Product publishers send through the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-    for name in ("scripts.publish.github", "lu_machinery.publish.github"):  # TRANSITIONAL-PKG3-B2
-        github = importlib.import_module(name)
-
-        def send(argv, *, runner, _original=github._send, **kwargs):
-            return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
-
-        monkeypatch.setattr(github, "_send", send)

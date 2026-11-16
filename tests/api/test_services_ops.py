@@ -6,12 +6,12 @@ import errno
 import os
 import re
 import select
-import shutil
 import socket
 import subprocess
 import sys
 import threading
 import time
+from importlib.resources import files as resource_files
 from pathlib import Path
 
 import pytest
@@ -169,7 +169,14 @@ def _copy_data_volume_guard(script_path: Path) -> None:
     """A copied services.sh needs the adjacent guard used by its early preflight."""
     guard = script_path.parent / "scripts/storage/data_volume_guard.sh"
     guard.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(PROJECT_ROOT / "scripts/storage/data_volume_guard.sh", guard)
+    guard.write_text(
+        Path(str(resource_files("lu_machinery.storage").joinpath("data_volume_guard.sh"))).read_text(encoding="utf-8")
+        .replace('source "$GUARD_DIR/../lib/project_interpreter.sh"',
+                 f'source "{resource_files("lu_machinery.lib").joinpath("project_interpreter.sh")}"')
+        .replace('REPO_ROOT="$(project_product_root_resolve)"',
+                 f'REPO_ROOT="$(project_product_root_resolve "{script_path.parent}")"'),
+        encoding="utf-8",
+    )
 
 
 def _copy_services_sh(root: Path) -> Path:
@@ -1123,7 +1130,6 @@ def test_local_role_skips_notebook_handoff(tmp_path, mock_lsof_env) -> None:
     assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
     assert "Usage:" in result.stdout
     assert not capture.exists()
-
 
 
 # ── GH #7489: typed AB_MONITOR_URLS (base URLs) vs AB_MONITOR_URL (endpoint) ──

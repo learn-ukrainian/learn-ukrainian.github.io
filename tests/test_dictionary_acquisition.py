@@ -17,9 +17,11 @@ from types import SimpleNamespace
 
 import pytest
 import requests
+from lu_machinery.hygiene import lint_source_db_writable_connects as sqlite_lint
 
-from scripts.hygiene import lint_source_db_writable_connects as sqlite_lint
 from scripts.ingest import dictionary_acquisition as acquisition
+
+REPO = Path(__file__).resolve().parents[1]
 
 SLOVNYK_HTML = '<html><section id="dictionary-article"><article><p>synthetic article</p></article></section></html>'
 OFFICIAL_HTML = (
@@ -31,7 +33,7 @@ OFFICIAL_HTML = (
 @pytest.fixture
 def acquisition_writer_entry():
     return next(
-        entry for entry in sqlite_lint.load_allowlist() if entry.path == "scripts/ingest/dictionary_acquisition.py"
+        entry for entry in sqlite_lint.load_scan_allowlist(REPO) if entry.path == "scripts/ingest/dictionary_acquisition.py"
     )
 
 
@@ -50,7 +52,7 @@ def acquisition_admission_scan(tmp_path, monkeypatch, acquisition_writer_entry):
 
 
 def test_acquisition_writer_source_pins(acquisition_writer_entry, acquisition_admission_scan):
-    source = (sqlite_lint.REPO_ROOT / acquisition_writer_entry.path).read_text()
+    source = (REPO / acquisition_writer_entry.path).read_text()
     assert len(sqlite_lint.classify_source(source, acquisition_writer_entry.path)) == 9
     calls = [
         ast.unparse(node)
@@ -64,7 +66,7 @@ def test_acquisition_writer_source_pins(acquisition_writer_entry, acquisition_ad
 
 @pytest.mark.parametrize("mutation", ["retarget", "extra_annotation", "escape"])
 def test_acquisition_writer_mutations_rejected(mutation, acquisition_writer_entry, acquisition_admission_scan):
-    source = (sqlite_lint.REPO_ROOT / acquisition_writer_entry.path).read_text()
+    source = (REPO / acquisition_writer_entry.path).read_text()
     if mutation == "retarget":
         changed = source.replace('directory / "staging.sqlite3"', 'directory / "other.sqlite3"')
         expected = "opens differ from declared target sites"
@@ -89,7 +91,7 @@ def test_acquisition_writer_mutations_rejected(mutation, acquisition_writer_entr
 def test_acquisition_writer_has_no_protected_store_eligibility(acquisition_writer_entry):
     protected = {
         entry.path
-        for entry in sqlite_lint.load_allowlist()
+        for entry in sqlite_lint.load_scan_allowlist(REPO)
         if entry.kind == "writer" and any(name in entry.target_db for name in ("sources.db", "vesum.db"))
     }
     assert acquisition_writer_entry.path not in protected
@@ -97,9 +99,9 @@ def test_acquisition_writer_has_no_protected_store_eligibility(acquisition_write
 
 @pytest.mark.parametrize("path", ["scripts/ingest/dictionary_acquisition.py", "tests/test_dictionary_acquisition.py"])
 def test_acquisition_admission_has_no_store_census_growth(path):
-    source = (sqlite_lint.REPO_ROOT / path).read_text()
+    source = (REPO / path).read_text()
     assert sqlite_lint.classify_store_source(source, path) == []
-    assert {entry for entry in sqlite_lint.baseline_entries() if entry.path == path} == set()
+    assert {entry for entry in sqlite_lint.baseline_entries(REPO / sqlite_lint.PRODUCT_BASELINE) if entry.path == path} == set()
 
 
 class Clock:
