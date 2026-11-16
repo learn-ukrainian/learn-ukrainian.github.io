@@ -130,7 +130,6 @@ Near-cap and open-circuit buckets receive no automatic work.
 | cursor | false |
 | gemini | false |
 | grok | false |
-| kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
 Practical seats @ **high** — not Sol on routine PRs:
@@ -208,7 +207,7 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 
 - Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol and Opus 5.5 authority first and excludes Sonnet 5.5; Fable holds no review role at any risk (#9583); **high** holds only Sol and Opus 5.5 (#9538), and returns no reviewer when neither is eligible; **medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
 - Grok uses the proven exact-head source-blind ACP path. Kimi is retired and has no adapter; the retired-seat gate refuses every Kimi request. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
-- Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
+- Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
 ## Closeout checklist
 

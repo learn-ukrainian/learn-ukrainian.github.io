@@ -152,7 +152,6 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | cursor | false |
 | gemini | false |
 | grok | false |
-| kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
 These tables project catalog fields, not proof of current reviewer health or
