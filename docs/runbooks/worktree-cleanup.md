@@ -483,7 +483,7 @@ not backed up (`docs/runbooks/data-backup.md`). Writers: `_write_verified_bundle
 changes it). It sweeps no branches. Dry run is the default. With `--apply` and, for each bundle,
 under the archive lock:
 
-1. The bulk root comes only from `scripts.storage.topology.resolve_bulk_root()` (marker-valid
+1. The bulk root comes only from `lu_machinery.storage.topology.resolve_bulk_root()` (marker-valid
    `literary_texts/` and `textbook_chunks/`; see `storage-topology.md`). With none, nothing is
    removed and the command exits 1.
 2. The file is created exclusively at `<bulk root>/branch-archive/<name>` (an existing file is

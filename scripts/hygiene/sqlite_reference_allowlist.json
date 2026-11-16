@@ -929,17 +929,6 @@
     ]
   },
   {
-    "path": "scripts/storage/generations.py",
-    "reference_count": 2,
-    "kind": "writer",
-    "target_db": "unpublished Sources generation candidate; the pre-bootstrap Sources store file (bootstrap WAL checkpoint, under the store writer lock)",
-    "reason": "declares WAL on a candidate before it is published as a generation, and folds the pre-bootstrap WAL before the bootstrap",
-    "calls": [
-      "sqlite3.connect(candidate.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)",
-      "sqlite3.connect(held.generation.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)"
-    ]
-  },
-  {
     "path": "scripts/vocab/auto_vocab_extract.py",
     "reference_count": 1,
     "kind": "writer",
@@ -1138,19 +1127,6 @@
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))"
-    ]
-  },
-  {
-    "path": "scripts/storage/topology.py",
-    "reference_count": 0,
-    "kind": "store_resolver",
-    "target_db": null,
-    "reason": "separate logical read and write location contracts; private frozen write-request selection only; no constructor exemption",
-    "functions": [
-      "resolve_store",
-      "resolve_active_sources_db",
-      "resolve_store_for_write",
-      "_prepare_store_write_target"
     ]
   },
   {

@@ -432,7 +432,7 @@ with an empty WAL and a complete checkpoint.
 .venv/bin/python -m scripts.ingest.sum20_mirror_import plan
 .venv/bin/python -m scripts.ingest.sum20_mirror_import import \
   --expect-staging-sha256 32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194
-.venv/bin/python -m scripts.storage generations
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage generations
 ```
 
 `plan` only reads. `import` holds the store writer lock from start to finish,
@@ -467,7 +467,7 @@ Every generation is retained. To go back, select the previous generation; the
 `import` output names it as `previous`:
 
 ```bash
-.venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation data/sources-generations/<previous>
 ```
 
 The generation it replaces stays retained too, so a rollback can be undone the

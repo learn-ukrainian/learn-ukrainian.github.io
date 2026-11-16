@@ -73,7 +73,7 @@ def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
     # historically read BATCH_STATE_DIR / "tasks". Keep that cheap fallback
     # so they do not construct a production MonitorContext (and its git
     # session-streams probe) just to resolve a directory.
-    from scripts.api import config  # noqa: PLC0415, I001  # lazy-ok: cheap BATCH_STATE_DIR fallback without production_context
+    from scripts.api import config  # noqa: PLC0415  # lazy-ok: cheap BATCH_STATE_DIR fallback without production_context
 
     return Path(config.BATCH_STATE_DIR) / "tasks"
 

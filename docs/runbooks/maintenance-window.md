@@ -71,7 +71,7 @@ access. An incomplete upgrade or lost recovery access blocks the reboot.
 4. Inspect storage resolution without moving or copying data:
 
    ```bash
-   .venv/bin/python -m scripts.storage status
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status
    ```
 
 5. Verify the work adapter, site response and every required timer against

@@ -35,6 +35,14 @@ def harness(tmp_path: Path):
         ),
         encoding="utf-8",
     )
+    # services.sh asks its checkout's interpreter for the installed guard; answer with the copy.
+    interpreter = tmp_path / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(
+        f"#!/bin/sh\ncase \"$*\" in *storage/data_volume_guard.sh*) printf '%s\\n' '{guard}' ;; *) exit 127 ;; esac\n",
+        encoding="utf-8",
+    )
+    interpreter.chmod(0o755)
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     ps = bin_dir / "ps"

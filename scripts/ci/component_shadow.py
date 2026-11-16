@@ -15,6 +15,8 @@ import xml.etree.ElementTree as ET
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from lu_machinery.common.repo_root import machinery_path as release_machinery_path
+
 from scripts.ci import components, pytest_report
 from scripts.ci import dependency_change_scope as dependency
 from scripts.ci._location import checkout_relative, module_name
@@ -31,11 +33,15 @@ def _tool(*parts: str) -> str:
     return checkout_relative(*parts).as_posix()
 
 
+# Tools that only the installed release carries; pytest_report and components import them from there.
+_RELEASE_PREFIX = "lu_machinery/"
+
+
 TOOLS = (_tool("ci", "component_shadow.py"), _tool("ci", "components.py"), _tool("ci", "components.json"),
          _tool("ci", "junit_results.py"), _tool("ci", "dependency_change_scope.py"),
          _tool("ci", "dependency_change_denominator.json"), _tool("ci", "pytest_report.py"),
          _tool("ci", "frontend_change_scope.py"), _tool("ci", "frontend_change_denominator.json"),
-         _tool("common", "repo_root.py"), _tool("common", "jsonl.py"), _tool("storage", "test_baseline.py"),
+         _tool("common", "repo_root.py"), _tool("common", "jsonl.py"), _RELEASE_PREFIX + "storage/test_baseline.py",
          _tool("ci", "deploy_paths.py"), POLICY_REL)
 REVIEW_EDGE_CENSUS = {
     "head_sha": "c3695226db3b18ec0e3ab42c9a7a3221e00df69c",
@@ -69,10 +75,16 @@ def write_json(path: Path, value: dict, *, exclusive: bool = False) -> None:
         stream.write("\n")
 
 
+def _tool_bytes(name: str) -> bytes:
+    if name.startswith(_RELEASE_PREFIX):
+        return release_machinery_path(name.removeprefix(_RELEASE_PREFIX)).read_bytes()
+    return (components.ROOT / name).read_bytes()
+
+
 def identities(root: Path, graph: dict) -> dict:
     return {"graph_hash": digest(graph), "source_hash": digest({
         path: hashlib.sha256(source).hexdigest() for path, source in components.python_sources(root).items()
-    }), "tool_hashes": {name: hashlib.sha256((components.ROOT / name).read_bytes()).hexdigest() for name in TOOLS}}
+    }), "tool_hashes": {name: hashlib.sha256(_tool_bytes(name)).hexdigest() for name in TOOLS}}
 
 
 def dependency_input(path: str, patterns: list[str]) -> bool:

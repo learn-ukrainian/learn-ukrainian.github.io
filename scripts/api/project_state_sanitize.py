@@ -201,6 +201,6 @@ def validate_report_document(document: dict[str, Any]) -> None:
 
     workers = document.get("workers")
     if workers is not None:
-        from scripts.api.fleet_workers_sanitize import validate_workers_list  # noqa: PLC0415, I001  # lazy-ok: breaks cycle with project_state_sanitize
+        from scripts.api.fleet_workers_sanitize import validate_workers_list  # noqa: PLC0415  # lazy-ok: breaks cycle with project_state_sanitize
 
         validate_workers_list(workers)

@@ -98,7 +98,6 @@ _OHOIKO_PARSER_MODULES = (
     "scripts/lexicon/lemma_normalization.py",
     "scripts/common/repo_root.py",
     "scripts/lib/readonly_sqlite.py",
-    "scripts/storage/topology.py",
 )
 _OHOIKO_REPAIR_PROPOSERS = ("scripts/lexicon/ulp_glossary_parse.py",)  # repair_ukrainian, join_split_stress
 _OHOIKO_SOURCE_IDS = ("ohoiko_1000_words", "ohoiko_500_verbs", "oho_a1_workbook_glossary", "ulp_lesson_notes")

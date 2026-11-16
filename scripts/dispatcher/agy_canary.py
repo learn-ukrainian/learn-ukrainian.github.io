@@ -32,8 +32,8 @@ def _read_store(store: str, repository: str) -> StoreReadResult:
     sys.path.insert(0, str(Path(__file__).parent / "store_contract"))
     import sqlite3
 
-    from scripts.lib.readonly_sqlite import open_readonly
-    from scripts.storage.topology import StoreRefusal, resolve_store
+    from lu_machinery.lib.readonly_sqlite import open_readonly
+    from lu_machinery.storage.topology import StoreRefusal, resolve_store
 
     binding = resolve_store(store, Path(repository), env={})
     if isinstance(binding, StoreRefusal):

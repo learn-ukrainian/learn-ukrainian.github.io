@@ -27,7 +27,7 @@ repos:
   # --- Ruff: the primary linter (same rules as CI) ---
   # Match the requirements-lock.txt pin installed by CI.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.21
+    rev: v0.17.4
     hooks:
       - id: ruff
         name: ruff (lint)

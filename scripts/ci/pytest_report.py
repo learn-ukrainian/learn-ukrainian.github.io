@@ -32,8 +32,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from lu_machinery.storage.test_baseline import nodeid_to_junit_id
+
 from scripts.ci.junit_results import parse_junit
-from scripts.storage.test_baseline import nodeid_to_junit_id
 
 EXPECTED_ARTIFACT_SKIPS = Path("registry/artifacts/needs-artifact-expected.txt")
 ARTIFACT_SKIP_PREFIX = "needs_artifact:"

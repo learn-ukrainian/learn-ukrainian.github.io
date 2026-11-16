@@ -141,7 +141,7 @@ def file_cache_bytes(directory: Path) -> int | None:
     return stats["active_file"] + stats["inactive_file"]
 
 
-def _read_limit(path: Path, slice_name: str) -> int | None | str:
+def _read_limit(path: Path, slice_name: str) -> int | str | None:
     """A ``memory.high``/``memory.max`` value in bytes, ``None`` for the literal ``max``.
 
     Anything else (missing, unreadable, not a number) is a reason string, so a

@@ -49,7 +49,7 @@ group. The command publishes both declared files through the artifact registry.
 On a checkout where they are absent, hydrate the group before reading them:
 
 ```bash
-.venv/bin/python -m scripts.storage.artifacts hydrate --group lexicon_end_dictionaries
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts hydrate --group lexicon_end_dictionaries
 ```
 
 Custom `--out-dir` values are for local scratch output and do not publish to the

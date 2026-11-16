@@ -33,7 +33,7 @@ Prerequisites outside Launch (once per machine):
 uv venv .venv --python 3.12
 uv pip install --python .venv/bin/python -r requirements-lock.txt
 # If you install from requirements.txt, pin ruff to the lockfile version before checks:
-#   uv pip install --python .venv/bin/python 'ruff==0.15.21'
+#   uv pip install --python .venv/bin/python 'ruff==0.17.4'
 (cd site && npm ci)
 ```
 

@@ -529,10 +529,9 @@ def extract_movne_word_pairs(
                 question_sections.append((current_q_num, current_paragraphs))
             current_q_num = int(m_marker.group(1))
             current_paragraphs = []
-        elif el.name == "p" and current_q_num is not None:
-            # Check if this paragraph is already contained in an enclosing tag or is a sub-element
-            if el.find_parent("p") is None:
-                current_paragraphs.append(txt)
+        elif el.name == "p" and current_q_num is not None and el.find_parent("p") is None:
+            # Skip a paragraph that is contained in an enclosing <p> (a sub-element)
+            current_paragraphs.append(txt)
 
     if current_q_num is not None and current_paragraphs:
         question_sections.append((current_q_num, current_paragraphs))

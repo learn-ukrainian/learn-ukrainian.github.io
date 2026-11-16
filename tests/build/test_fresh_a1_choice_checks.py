@@ -310,7 +310,7 @@ def _case_offer(
     level: str = "a1",
     extra_records: list[dict] | None = None,
     sentence_field: str = "sentence",
-    particle: dict | None | object = _DEFAULT_PARTICLE,
+    particle: dict | object | None = _DEFAULT_PARTICLE,
 ) -> dict:
     if particle is _DEFAULT_PARTICLE:
         particle = _store_record(NEGATION_PARTICLE_RECORD)

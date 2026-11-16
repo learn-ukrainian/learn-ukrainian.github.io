@@ -32,7 +32,7 @@ def _resolve_gdrive_data_dir() -> Path:
     """Resolve the bulk raw-source root for rebuild consumers.
 
     Name retained as ``GDRIVE_DATA`` for call-site compatibility. The single
-    source of truth is ``scripts.storage.topology.resolve_bulk_root``:
+    source of truth is ``lu_machinery.storage.topology.resolve_bulk_root``:
 
     1. ``LU_BULK_ROOT`` when marker-valid (invalid → unavailable)
     2. Marker-valid Windows ``UkrainianData`` SMB mirror

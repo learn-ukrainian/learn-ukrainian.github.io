@@ -12,7 +12,7 @@ aiosignal==1.4.0
 aiosqlite==0.22.1
 annotated-doc==0.0.5
 annotated-types==0.8.0
-anthropic==0.108.0
+anthropic==2.6.0
 anyio==4.15.1
 APScheduler==3.11.3
 ast-serialize==0.12.1
@@ -197,7 +197,7 @@ requests==2.34.2
 rich==15.0.0
 rpds-py==0.30.0
 ruamel.yaml==0.19.1
-ruff==0.15.21
+ruff==0.17.4
 safetensors==0.8.0
 scikit-learn==1.9.1
 scipy==1.18.1
