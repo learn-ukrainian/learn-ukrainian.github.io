@@ -493,8 +493,9 @@ def _fetch_monitor_task(task_id: str, *, run_nonce: str) -> dict | None:
 def running_workers(initiator: str) -> int | None:
     """Count own live runs, reading both task schemas without settling records."""
     try:
+        from lu_machinery.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
+
         from scripts.dispatcher.worker import _identity
-        from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
     except Exception:
         return None
 

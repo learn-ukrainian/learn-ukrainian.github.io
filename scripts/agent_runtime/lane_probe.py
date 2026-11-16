@@ -32,9 +32,10 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
+from lu_machinery.utils.claude_version import run_version_probe
+
 from scripts.common.repo_root import machinery_root
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registered_slots
-from scripts.utils.claude_version import run_version_probe
 
 from .registry import AGENTS, get_agent_entry
 

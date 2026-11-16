@@ -194,11 +194,6 @@
     },
     {
       "path": "scripts/agent_runtime/adapters/claude.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | tuple[int, int, int]\""
-    },
-    {
-      "path": "scripts/agent_runtime/adapters/claude.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"None | str\" has no attribute \"split\""
     },
@@ -631,11 +626,6 @@
       "path": "scripts/agent_runtime/runner.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"tuple[str, ...]\""
     },
     {
       "path": "scripts/agent_runtime/runner.py",
@@ -1326,11 +1316,6 @@
       "path": "scripts/ai_agent_bridge/openai_proxy.py",
       "code": "no-redef",
       "message": "Name \"run_headless_claude\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/openai_proxy.py",
-      "code": "no-redef",
-      "message": "Name \"run_version_probe\" already defined (possibly by an import)"
     },
     {
       "path": "scripts/analytics/vocab_progression.py",
@@ -11508,296 +11493,6 @@
       "message": "Item \"None\" of \"None | dict[Any, Any]\" has no attribute \"update\""
     },
     {
-      "path": "scripts/docs/catalogue.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"list\" has incompatible type \"AST\"; expected \"expr\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"join\" of \"str\" has incompatible type \"list[None | str]\"; expected \"Iterable[str]\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"banner_line\" has incompatible type \"Any | None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"banner_line\" has incompatible type \"Any | None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"list[expr]\", expected \"list[AST]\")"
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | Pattern[Any]\" has no attribute \"match\""
-    },
-    {
-      "path": "scripts/docs/catalogue.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | Pattern[Any]\" has no attribute \"match\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"list[Any]\", target has type \"str\")"
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "index",
-      "message": "Invalid index type \"object\" for \"Counter[str]\"; expected type \"str\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "index",
-      "message": "Invalid index type \"object\" for \"Counter[str]\"; expected type \"str\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "operator",
-      "message": "Unsupported operand types for + (\"object\" and \"int\")"
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"list[tuple[str, float | int | str]]\", expected \"list[tuple[str, str]]\")"
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"close\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"close\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"flush\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"read\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"read\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"readline\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"write\""
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"errors\" (hint: \"errors: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"facts\" (hint: \"facts: dict[<type>, <type>] = ...\")"
-    },
-    {
-      "path": "scripts/docs/docs_inventory.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"result\" (hint: \"result: dict[<type>, <type>] = ...\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_excerpt\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_line_args\" has incompatible type \"set[str]\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"append\" of \"list\" has incompatible type \"tuple[str, str]\"; expected \"tuple[str, tuple[str, ...]]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"object\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"setdefault\" of \"MutableMapping\" has incompatible type \"GitRun\"; expected \"tuple[str, ...]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | int\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"list[str]\", variable has type \"set[str]\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"set[str]\", variable has type \"bytes\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"tuple[str, ...]\", variable has type \"GitRun\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "misc",
-      "message": "List comprehension has incompatible type List[tuple[str, str]]; expected List[tuple[str, tuple[str, ...]]]"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, int]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, list[str]]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, list[str]]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"set[str]\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "operator",
-      "message": "Unsupported operand types for - (\"None\" and \"int\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "operator",
-      "message": "Unsupported operand types for < (\"int\" and \"object\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "operator",
-      "message": "Unsupported operand types for >= (\"float\" and \"object\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "union-attr",
-      "message": "Item \"IO[bytes]\" of \"IO[bytes] | None\" has no attribute \"read1\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[Any] | None\" has no attribute \"close\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"close\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"read1\""
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"first\" (hint: \"first: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/docs/find.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"later\" (hint: \"later: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_module_constants\" has incompatible type Module | None; expected Module"
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"Claims\" has incompatible type \"list[tuple[Pattern[Any], Claim]]\"; expected \"list[tuple[object, Claim]]\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"_check_claim\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"_read_header\" has incompatible type \"None | Path\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "attr-defined",
-      "message": "\"expr\" has no attribute \"value\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"match\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "attr-defined",
-      "message": "\"stmt\" has no attribute \"value\""
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "index",
-      "message": "Value of type \"None | dict[Any, Any]\" is not indexable"
-    },
-    {
-      "path": "scripts/docs/store_census.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"EllipsisType | None | bytes | complex | float | int | str\", expected \"None | float\")"
-    },
-    {
       "path": "scripts/driver_blockers.py",
       "code": "attr-defined",
       "message": "\"object\" has no attribute \"replace\""
@@ -14486,41 +14181,6 @@
       "path": "scripts/github_rest_cache.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"None | list[dict[str, Any]]\" has no attribute \"extend\""
-    },
-    {
-      "path": "scripts/guardrails/delegate_ownership.py",
-      "code": "arg-type",
-      "message": "Argument \"unprovable_peers\" to \"refusal_message\" has incompatible type \"list[dict[str, None | dict[str, str] | int | str]]\"; expected \"list[dict[str, object]]\""
-    },
-    {
-      "path": "scripts/guardrails/delegate_ownership.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
-      "path": "scripts/guardrails/delegate_ownership.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"None | int\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/guardrails/delegate_ownership.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"Any | Connection\", expected \"SQLiteConnection\")"
-    },
-    {
-      "path": "scripts/guardrails/primary_write_guard.py",
-      "code": "misc",
-      "message": "All conditional function variants must have identical signatures"
-    },
-    {
-      "path": "scripts/guardrails/primary_write_guard.py",
-      "code": "no-redef",
-      "message": "Name \"sanitized_git_env\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/guardrails/primary_write_guard.py",
-      "code": "no-redef",
-      "message": "Name \"wc\" already defined (by an import)"
     },
     {
       "path": "scripts/hygiene/batch_state_retention.py",
@@ -18016,21 +17676,6 @@
       "path": "scripts/open_dataset/hydrate.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"bytes\""
-    },
-    {
-      "path": "scripts/ops/context_guard.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"scope_active\" of \"Tmux\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/ops/context_guard.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"stop_scope\" of \"Tmux\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/ops/host_stack_drift.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"tuple[Path, Path, Path]\", variable has type \"tuple[Path, Path]\")"
     },
     {
       "path": "scripts/opsec/gh_entry.py",
@@ -27778,81 +27423,6 @@
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
     {
-      "path": "scripts/research/consumption.py",
-      "code": "no-redef",
-      "message": "Name \"emit_event\" already defined (possibly by an import)"
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"int\")"
-    },
-    {
-      "path": "scripts/research/observability.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", target has type \"int\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"None | int\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"None | int\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[Any, Any]\", target has type \"None | int\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, object]\", target has type \"None | int\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "dict-item",
-      "message": "Dict entry 2 has incompatible type \"str\": \"str\"; expected \"str\": \"None | int\""
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "dict-item",
-      "message": "Dict entry 7 has incompatible type \"str\": \"str\"; expected \"str\": \"None | int\""
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "dict-item",
-      "message": "Dict entry 8 has incompatible type \"str\": \"dict[Any, Any]\"; expected \"str\": \"None | int\""
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "dict-item",
-      "message": "Dict entry 9 has incompatible type \"str\": \"list[str]\"; expected \"str\": \"None | int\""
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | Path\""
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "operator",
-      "message": "Unsupported right operand type for in (\"object\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"object\", expected \"list[str]\")"
-    },
-    {
-      "path": "scripts/research/research_quality.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"empty\""
-    },
-    {
       "path": "scripts/review/capability_failure.py",
       "code": "operator",
       "message": "Unsupported left operand type for / (\"None\")"
@@ -29713,21 +29283,6 @@
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
     },
     {
-      "path": "scripts/tools/agent_watcher.py",
-      "code": "arg-type",
-      "message": "Argument 4 to \"notify_human\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/tools/agent_watcher.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/tools/agent_watcher.py",
-      "code": "return-value",
-      "message": "Incompatible return value type (got \"None\", expected \"int\")"
-    },
-    {
       "path": "scripts/tools/analyze_textbook_pages.py",
       "code": "var-annotated",
       "message": "Need type annotation for \"by_reason\" (hint: \"by_reason: dict[<type>, <type>] = ...\")"
@@ -31006,101 +30561,6 @@
       "path": "scripts/wiki/ukrainian_wiki_corpus.py",
       "code": "attr-defined",
       "message": "\"object\" has no attribute \"__iter__\"; maybe \"__dir__\" or \"__str__\"? (not iterable)"
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/attention.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, str]\", variable has type \"dict[int | str, str]\")"
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/normalize.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/schema/__init__.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/work/sources_public.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"int\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/work/sources_public.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/sources_public.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/work/sources_public.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
     },
     {
       "path": "scripts/yaml_activities.py",

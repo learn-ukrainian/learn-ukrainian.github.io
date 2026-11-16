@@ -9,6 +9,6 @@ Environment=PYTHONUNBUFFERED=1
 Environment=LANG=C.UTF-8
 # Codex lanes are respawned with the shims first, then this PATH (#10814).
 Environment=PATH=%h/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ops.context_guard tick
+ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.ops.context_guard tick
 TimeoutStartSec=4min
 Nice=5

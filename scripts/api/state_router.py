@@ -27,6 +27,8 @@ from typing import Any, Literal, cast
 import yaml
 from fastapi import APIRouter, Depends, Query, Request
 from lu_machinery.agent_identity import normalize_seat, seat_read_aliases
+from lu_machinery.research.registry import research_manifest_component
+from lu_machinery.telemetry.cost_report import CostRecord, load_cost_records
 
 from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.common.repo_root import machinery_path, main_checkout_root
@@ -37,8 +39,6 @@ from scripts.fleet.reset_reserve import (
     load_reset_reserve,
 )
 from scripts.github_graphql_budget import probe_graphql_budget
-from scripts.research.registry import research_manifest_component
-from scripts.telemetry.cost_report import CostRecord, load_cost_records
 
 from . import delegate_router as delegate_api
 from . import state_helpers

@@ -65,7 +65,7 @@ PRELOAD_MODULES = [
     "scripts.hygiene.check_tmp_usability",
     "hygiene.check_tmp_usability",
     "agent_runtime.adapters.gemini",
-    "scripts.research.registry",
+    "lu_machinery.research.registry",
     "scripts.audit.check_research_registry",
 ]
 

@@ -410,22 +410,17 @@ def test_bakeoff_refuses_foreign_cached_hooks(
 
 
 def test_bakeoff_configured_loads_count_each_caller_once() -> None:
-    from lu_machinery.ci.components import scan_imports
+    from lu_machinery.ci.components import CONFIGURED_LOADER_PATH, scan_imports
     from lu_machinery.hygiene.lint_source_db_writable_connects import classify_source
     from lu_machinery.lint.boundary_ratchet import _configured_line
 
-    root = Path(__file__).resolve().parents[1]
+    # The bakeoff callers and the configured loader run from the installed release (#13032).
+    install_root = Path(run_b1_writer.__file__).resolve().parents[2]
     callers = [
-        "scripts/bakeoff/run_b1_writer.py",
-        "scripts/bakeoff/score_b1_writer_output.py",
+        Path(run_b1_writer.__file__).resolve().relative_to(install_root).as_posix(),
+        Path(score_b1_writer_output.__file__).resolve().relative_to(install_root).as_posix(),
     ]
-    sources = {
-        path: (root / path).read_bytes()
-        for path in [
-            *callers,
-            "scripts/ops/product_entry.py",
-        ]
-    }
+    sources = {path: (install_root / path).read_bytes() for path in [*callers, CONFIGURED_LOADER_PATH]}
     graph = scan_imports(sources)
     for path in callers:
         configured = [row for row in graph["configured_loads"] if row["path"] == path]

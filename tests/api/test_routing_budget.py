@@ -8,10 +8,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+from lu_machinery.telemetry import cost_report
 
 from scripts.api import state_router
 from scripts.fleet import capacity_pick, credit_lane
-from scripts.telemetry import cost_report
 
 # Captured at import, before the conftest autouse fixture stubs the reader.
 REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits

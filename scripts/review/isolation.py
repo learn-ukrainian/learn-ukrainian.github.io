@@ -42,6 +42,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.utils.claude_version import _parse_claude_semver
+
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.scratch import ScratchScanRootError, ensure_scratch_root, scratch_scan_roots
@@ -50,7 +52,6 @@ from scripts.orchestration.thread_handoff import (
     _default_process_snapshot,
     _process_is_alive,
 )
-from scripts.utils.claude_version import _parse_claude_semver
 
 ISOLATION_POLICY_VERSION = "review-isolation-v2"
 CLAUDE_MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)

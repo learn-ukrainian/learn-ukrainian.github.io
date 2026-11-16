@@ -45,7 +45,7 @@ def effective_scope(record: dict) -> list[str]:
 
 def grants_used(record: dict, paths: Iterable[str]) -> list[dict]:
     """Each delivered path owned only through a grant, with its approval evidence."""
-    from scripts.guardrails.delegate_ownership import path_is_owned
+    from lu_machinery.guardrails.delegate_ownership import path_is_owned
 
     effective_scope(record)  # Refuse malformed grants even when no path needs one.
     if not record.get("owned_paths"):
@@ -57,7 +57,7 @@ def grants_used(record: dict, paths: Iterable[str]) -> list[dict]:
 
 def outside_owned(paths: Iterable[str], owned: Sequence[str]) -> list[str]:
     """The changed paths that no owned path covers, sorted and without repeats."""
-    from scripts.guardrails.delegate_ownership import path_is_owned
+    from lu_machinery.guardrails.delegate_ownership import path_is_owned
 
     return sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
 
@@ -145,7 +145,8 @@ def _pushed_paths(run: Callable[..., str], record: dict, updates: str) -> list[s
 
 
 def _refusal(stage: str, record: dict, outside: list[str]) -> str:
-    from scripts.guardrails.delegate_ownership import sanitize_for_display
+    from lu_machinery.guardrails.delegate_ownership import sanitize_for_display
+
     from scripts.secret_redactor import redact_text
 
     def shown(value: str) -> str:

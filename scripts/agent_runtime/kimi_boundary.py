@@ -183,8 +183,9 @@ def commit_changes(repo: Path, base_ref: str, commit: str, *, env: Mapping[str, 
 
 def ownership_reasons(paths: Sequence[str], owned: Sequence[str]) -> list[str]:
     """Why changed ``paths`` are refused: outside the task's owned paths or off the Kimi allowlist."""
+    from lu_machinery.guardrails.delegate_ownership import path_is_owned
+
     from scripts.agent_runtime.kimi_admission import owned_path_reason
-    from scripts.guardrails.delegate_ownership import path_is_owned
 
     if not owned:
         return ["the task declared no owned paths, so it may change none"]
