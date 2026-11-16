@@ -27,10 +27,10 @@ from typing import Any, Literal, cast
 import yaml
 from fastapi import APIRouter, Depends, Query, Request
 from lu_machinery.agent_identity import normalize_seat, seat_read_aliases
+from lu_machinery.agent_runtime.acp_health import probe_acp_health
 from lu_machinery.research.registry import research_manifest_component
 from lu_machinery.telemetry.cost_report import CostRecord, load_cost_records
 
-from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.common.repo_root import machinery_path, main_checkout_root
 from scripts.fleet import capacity_pick, credit_lane
 from scripts.fleet.reset_reserve import (

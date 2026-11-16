@@ -52,7 +52,7 @@ def invocation_codex_account(invocation: str) -> str:
         return "sub"
     if labels[0] in {"sub", "b-sub"}:
         return labels[0]
-    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+    from lu_machinery.agent_runtime.codex_accounts import resolve_codex_account_label
 
     return resolve_codex_account_label(labels[0])
 

@@ -33,7 +33,7 @@ def codex_account(agent: str, explicit: str | None) -> dict:
     """Resolve the label and refuse ambient conflicts before creating any task or worktree."""
     import os
 
-    from scripts.agent_runtime.codex_accounts import (
+    from lu_machinery.agent_runtime.codex_accounts import (
         CodexAccountRefused,
         codex_account_env,
         resolve_codex_account_label,

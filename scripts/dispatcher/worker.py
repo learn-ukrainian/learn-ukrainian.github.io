@@ -17,9 +17,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import psutil
+from lu_machinery.agent_runtime import bounded_advisory
+from lu_machinery.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 
-from scripts.agent_runtime import bounded_advisory
-from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 from scripts.common import task_scratch
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
@@ -659,17 +659,16 @@ def load_post_start_code(bound_review: bool = False) -> None:
     ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
     """
     with contextlib.suppress(Exception):
+        from lu_machinery.agent_runtime import codex_accounts, review_mcp, sources_read_only  # noqa: F401
+
         from scripts.agent_runtime import (  # noqa: F401
             agy_hook_config,
             attempt_boundary,
             attempt_network,
             binary_resolve,
-            codex_accounts,
             env_sanitize,
             failure_codes,
             jsonl,
-            review_mcp,
-            sources_read_only,
             telemetry,
             tool_calls,
         )

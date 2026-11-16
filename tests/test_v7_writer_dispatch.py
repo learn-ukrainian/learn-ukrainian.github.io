@@ -8,9 +8,8 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from lu_machinery.agent_runtime import tool_config as release_tool_config  # TRANSITIONAL-PKG3-B2
+from lu_machinery.agent_runtime import tool_config as tool_config_mod
 
-from scripts.agent_runtime import tool_config as tool_config_mod
 from scripts.agent_runtime.registry import get_agent_entry
 from scripts.build import linear_pipeline, v7_build
 
@@ -52,11 +51,8 @@ def _seed_sources_mcp_config(
         encoding="utf-8",
     )
     tool_config_mod._load_mcp_config.cache_clear()
-    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
-    # linear_pipeline runs the installed release's tool config.  # TRANSITIONAL-PKG3-B2
-    release_tool_config._load_mcp_config.cache_clear()  # TRANSITIONAL-PKG3-B2
-    monkeypatch.setattr(  # TRANSITIONAL-PKG3-B2
-        release_tool_config, "_resolved_mcp_config_path", lambda path: (path or mcp_config_path).resolve()
+    monkeypatch.setattr(
+        tool_config_mod, "_resolved_mcp_config_path", lambda path: (path or mcp_config_path).resolve()
     )
     monkeypatch.setenv(tool_config_mod._AGY_APP_DATA_ENV, str(agy_app_data_dir))
     # Hermetic `agy mcp list`: a live HTTP catalog row, so agy-tools writers
@@ -80,7 +76,6 @@ def _stub_agy_catalog(monkeypatch: pytest.MonkeyPatch, servers: dict[str, dict[s
         return "\n".join(["NAME  TYPE  STATUS  COMMAND/URL", *rows])
 
     monkeypatch.setattr(tool_config_mod, "_run_agy_mcp", fake_run)
-    monkeypatch.setattr(release_tool_config, "_run_agy_mcp", fake_run)  # TRANSITIONAL-PKG3-B2
     return calls
 
 
@@ -455,7 +450,6 @@ def test_agy_writer_refuses_dispatch_when_catalog_stays_dead(
     _seed_sources_mcp_config(tmp_path, monkeypatch)
     dead = "NAME  TYPE  STATUS  COMMAND/URL\nsources  stdio  enabled  "
     monkeypatch.setattr(tool_config_mod, "_run_agy_mcp", lambda _args: dead)
-    monkeypatch.setattr(release_tool_config, "_run_agy_mcp", lambda _args: dead)  # TRANSITIONAL-PKG3-B2
     events: list[dict[str, Any]] = []
     invoked: list[str] = []
 

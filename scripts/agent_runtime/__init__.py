@@ -37,7 +37,8 @@ DESIGN PRINCIPLES:
 
 HOW TO ADD A NEW AGENT:
 
-1. Create scripts/agent_runtime/adapters/myagent.py. Copy _template.py as a
+1. Create scripts/agent_runtime/adapters/myagent.py. Copy the release's
+   lu_machinery/agent_runtime/adapters/_template.py as a
    starting point. Implement the three AgentAdapter protocol methods:
    build_invocation, parse_response, liveness_signal_paths.
 2. Add an entry to registry.AGENTS with default_model, supported_modes,

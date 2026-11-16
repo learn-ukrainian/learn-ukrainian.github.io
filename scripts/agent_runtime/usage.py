@@ -113,10 +113,7 @@ _ACCOUNT_RATE_LIMIT_CACHE: dict[tuple[str, str, str], float] = {}
 
 
 def _codex_accounts() -> ModuleType:
-    try:
-        return importlib.import_module("scripts.agent_runtime.codex_accounts")
-    except ImportError:  # pragma: no cover - scripts/ on sys.path
-        return importlib.import_module("agent_runtime.codex_accounts")
+    return importlib.import_module("lu_machinery.agent_runtime.codex_accounts")
 
 
 def _codex_account_label(raw: object) -> str:

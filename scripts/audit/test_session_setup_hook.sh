@@ -26,6 +26,9 @@ VENV_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
 RELEASE_HOOKS="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
 print(machinery_path("agents_extensions/shared/hooks"))')"
 HOOK="$RELEASE_HOOKS/session-setup.sh"
+# The bounded runner the release hooks default to.
+BOUNDED_RUNNER="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
+print(machinery_path("agent_runtime/bounded_command.py"))')"
 POST_COMPACT_HOOK="$RELEASE_HOOKS/post-compact.sh"
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
@@ -130,7 +133,7 @@ run_hook() {
     CLAUDE_HANDOFF_IDENTITY_SH="$REPO_ROOT/scripts/lib/handoff_identity.sh" \
     CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
     CLAUDE_SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$VENV_PYTHON}" \
-    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
+    SESSION_BOUNDED_RUNNER="$BOUNDED_RUNNER" \
     CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$VENV_PYTHON" \
     THREAD_ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$VENV_PYTHON}" \
@@ -242,7 +245,7 @@ run_post_compact() {
     CLAUDE_PROJECT_DIR="$root" SESSION_HANDOFF_AGENT="codex" CODEX_CANONICAL_REPO_ROOT="$root" \
     THREAD_ROLLOVER_PYTHON="$VENV_PYTHON" \
     THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
-    SESSION_BOUNDED_RUNNER="$REPO_ROOT/scripts/agent_runtime/bounded_command.py" \
+    SESSION_BOUNDED_RUNNER="$BOUNDED_RUNNER" \
     "$POST_COMPACT_HOOK"
 }
 

@@ -1,4 +1,4 @@
-"""Removed machinery copies stay out of the product tree (#13032 slices 3 and 4).
+"""Removed machinery copies stay out of the product tree (#13032 slices 3 to 5).
 
 Defect class: a machinery module deleted from ``scripts/`` comes back, and product code
 imports that in-tree copy instead of the installed lu-machinery release, so the two drift.
@@ -10,8 +10,18 @@ import importlib.util
 
 import pytest
 
-# Slice 3 and 4 modules the product now takes from the installed release (or that the release retired).
+# Slice 3 to 5 modules the product now takes from the installed release (or that the release retired).
 REMOVED_COPIES = (
+    "scripts.agent_runtime.acp_health",
+    "scripts.agent_runtime.adapters._template",
+    "scripts.agent_runtime.attempt_forwarder",
+    "scripts.agent_runtime.attempt_proxy",
+    "scripts.agent_runtime.bounded_advisory",
+    "scripts.agent_runtime.bounded_command",
+    "scripts.agent_runtime.codex_accounts",
+    "scripts.agent_runtime.mechanical_admission",
+    "scripts.agent_runtime.review_mcp",
+    "scripts.agent_runtime.tool_config",
     "scripts.ai_llm.agent_runtime_call",
     "scripts.ai_llm.claude_call",
     "scripts.ai_llm.cooldown",

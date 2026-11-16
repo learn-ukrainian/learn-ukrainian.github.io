@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.repo_root import machinery_path as release_machinery_path
 
 from scripts.common.repo_root import project_interpreter
 
@@ -1034,14 +1035,14 @@ def stage_codex_account_auth(label: object, write_home: Path) -> dict[str, str]:
     without a login. A bound home that staging would read under another name, or whose login is not a
     file, refuses rather than copying another directory's login or launching unauthenticated.
     """
-    from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
-
-    from .codex_accounts import (
+    from lu_machinery.agent_runtime.codex_accounts import (
         DEFAULT_CODEX_ACCOUNT,
         CodexAccountRefused,
         codex_account_env,
         resolve_codex_account_label,
     )
+
+    from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
     try:
         label = resolve_codex_account_label(label)
@@ -1249,10 +1250,11 @@ def runtime_files(binary: Path) -> list[Path]:
 
 class AttemptBoundary:
     def __init__(self, *, agent: str, tool_config: dict[str, Any]):
+        from lu_machinery.agent_runtime.review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
+
         from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
         from .attempt_network import AttemptEgress
-        from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
         # Claude's adapter must land with its own eligible cross-family review
         # before formal attempts can stage credentials or launch any process.
@@ -1318,14 +1320,14 @@ class AttemptBoundary:
             self.env.pop("GIT_DIR", None)
             self.env.pop("GIT_WORK_TREE", None)
             proxy = self.write_root / "stdio.py"
-            proxy.write_bytes(Path(__file__).with_name("attempt_proxy.py").read_bytes())
+            proxy.write_bytes(release_machinery_path("agent_runtime/attempt_proxy.py").read_bytes())
             endpoint = self.write_root / "sources.sock"
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
             self.egress = AttemptEgress(self.egress_endpoint)
             self.forwarder = self.write_root / "forwarder.py"
-            self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
+            self.forwarder.write_bytes(release_machinery_path("agent_runtime/attempt_forwarder.py").read_bytes())
             proxy_server = {
                 "command": str(project_interpreter().resolve(strict=True)),
                 "args": [str(proxy), str(endpoint)],
@@ -1340,7 +1342,7 @@ class AttemptBoundary:
             }
             self.tool_config.pop("read_only_tmp_root", None)
             if agent == "codex":
-                from .review_mcp import _render_codex_review_config
+                from lu_machinery.agent_runtime.review_mcp import _render_codex_review_config
 
                 codex_home = home / ".codex"
                 (codex_home / "config.toml").write_text(
@@ -1351,14 +1353,15 @@ class AttemptBoundary:
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
             elif agent == "agy":
-                from .agy_hook_config import GUARD_NAME, guard_registration
-                from .review_mcp import (
+                from lu_machinery.agent_runtime.review_mcp import (
                     _create_file,
                     _open_owned_dir,
                     _real_agy_token,
                     agy_review_mcp_config_path,
                     agy_review_settings,
                 )
+
+                from .agy_hook_config import GUARD_NAME, guard_registration
 
                 target = home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -1449,9 +1452,13 @@ class AttemptBoundary:
         """Probe CLI compatibility and effective MCP inside the full OS boundary."""
         if not self.full:
             return
-        from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION, ReviewIsolationError
+        from lu_machinery.agent_runtime.review_mcp import (
+            _config_flags,
+            verify_agy_review_effective_mcp,
+            verify_codex_review_effective_mcp,
+        )
 
-        from .review_mcp import _config_flags, verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
+        from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION, ReviewIsolationError
 
         if self.agent == "codex":
             verify_codex_review_effective_mcp(
@@ -1612,7 +1619,7 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
         return AttemptBoundary(agent=agent, tool_config=tc)
     if access != "full":
         raise ReviewIsolationError("review_access_invalid")
-    from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
+    from lu_machinery.agent_runtime.review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
     if agent not in SUPPORTED_HARNESSES:
         raise ReviewIsolationError("full_review_harness_unsupported")

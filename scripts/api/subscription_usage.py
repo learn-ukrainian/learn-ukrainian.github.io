@@ -63,16 +63,10 @@ try:
 except ImportError:  # pragma: no cover
     from common.repo_root import main_checkout_root
 
-try:
-    from scripts.agent_runtime.codex_accounts import (
-        CODEX_SUBSCRIPTION_ACCOUNTS,
-        DEFAULT_CODEX_ACCOUNT,
-    )
-except ImportError:  # pragma: no cover
-    from agent_runtime.codex_accounts import (  # type: ignore
-        CODEX_SUBSCRIPTION_ACCOUNTS,
-        DEFAULT_CODEX_ACCOUNT,
-    )
+from lu_machinery.agent_runtime.codex_accounts import (
+    CODEX_SUBSCRIPTION_ACCOUNTS,
+    DEFAULT_CODEX_ACCOUNT,
+)
 
 # Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
 # ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a

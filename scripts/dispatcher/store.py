@@ -85,7 +85,7 @@ def check_review_attempt(binding: ReviewAttempt, *, claim=False, owner: str | No
         if path.exists() or path.is_symlink():
             raise ValueError("review attempt already spent")
     if claim:
-        from scripts.agent_runtime.review_mcp import _create_file, _open_attempt_dir
+        from lu_machinery.agent_runtime.review_mcp import _create_file, _open_attempt_dir
 
         fd = _open_attempt_dir(root, create=True)
         try:

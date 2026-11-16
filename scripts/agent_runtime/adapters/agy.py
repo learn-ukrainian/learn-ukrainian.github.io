@@ -1576,9 +1576,9 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
     killed, excused = _model_killed_tasks(events, reply=reply)
     if reply is None or events[reply].get("status") != "DONE":
         excused = set()
-    from ..sources_read_only import sources_tool_sets
+    from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
 
-    read_only_sources, persisting_sources = sources_tool_sets()
+    read_only_sources, persisting_sources = sources_tool_sets(Path(__file__).resolve().parents[3] / SERVER_RELATIVE_PATH)
     known_sources = set(read_only_sources) | set(persisting_sources)
     # Current AGY emits planner intents followed by GENERIC result slots in
     # FIFO order; a planner's step index is not its tool result's step index.
@@ -2206,7 +2206,12 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
     native permissions and the OS boundary. Existing settings must match exactly
     so global presets, ask/deny rules and wildcards cannot silently win.
     """
-    from ..review_mcp import _open_runtime_dir, _safe_open_below, _strict_json_object, agy_review_settings
+    from lu_machinery.agent_runtime.review_mcp import (
+        _open_runtime_dir,
+        _safe_open_below,
+        _strict_json_object,
+        agy_review_settings,
+    )
 
     access = tc.get("review_access", "isolated")
     if access not in {"full", "isolated"}:

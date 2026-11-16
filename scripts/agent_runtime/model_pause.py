@@ -44,7 +44,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+
 from scripts.orchestration.task_record_store import REVIEW_TASK_FLAG_FIELDS
 
 if TYPE_CHECKING:
@@ -607,7 +608,7 @@ def policy_for_seat(
     ``plan_metered=False`` (a claude seat on an API-key account, which has no
     plan meter) omits the ``claude`` plan entries; its spend cap guards it.
     """
-    from scripts.agent_runtime.codex_accounts import resolve_codex_account_label
+    from lu_machinery.agent_runtime.codex_accounts import resolve_codex_account_label
 
     codex_lane = ({"sub": "codex:a", "b-sub": "codex:b"}.get(resolve_codex_account_label(codex_account))
                   if seat == "codex" else None)

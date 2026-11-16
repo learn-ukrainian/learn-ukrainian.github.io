@@ -19,7 +19,7 @@ The approval carry-over and the repair-verification round
 (``scripts/review/repair_round.py``) both apply it before anything else. Ported from the carry-over's reviewed reader (#11907) so the two
 share one implementation.
 
-Cooperative threat model, as in ``scripts/agent_runtime/bounded_advisory.py``:
+Cooperative threat model, as in ``lu_machinery.agent_runtime.bounded_advisory``:
 a process that can rewrite task records or edit comments as the recorder's
 login is outside it.
 """

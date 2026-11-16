@@ -18,16 +18,6 @@
       "message": "Value of type \"Any | None\" is not indexable"
     },
     {
-      "path": "scripts/agent_runtime/acp_health.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"_probe_cli_help\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/acp_health.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"bool\", variable has type \"tuple[str, ...]\")"
-    },
-    {
       "path": "scripts/agent_runtime/acpx_discuss.py",
       "code": "arg-type",
       "message": "Argument \"body\" to \"_message\" of \"AcpxDiscussionController\" has incompatible type \"str | tuple[str, str, None | str]\"; expected \"str\""
@@ -438,16 +428,6 @@
       "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"write\""
     },
     {
-      "path": "scripts/agent_runtime/bounded_advisory.py",
-      "code": "arg-type",
-      "message": "Argument 3 has incompatible type \"Any | None\"; expected \"Mapping[str, Any]\""
-    },
-    {
-      "path": "scripts/agent_runtime/bounded_advisory.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
       "path": "scripts/agent_runtime/env_sanitize.py",
       "code": "attr-defined",
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
@@ -556,16 +536,6 @@
       "path": "scripts/agent_runtime/registry.py",
       "code": "attr-defined",
       "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/agent_runtime/review_mcp.py",
-      "code": "arg-type",
-      "message": "Argument \"cwd\" has incompatible type \"Path | str\"; expected \"Path\""
-    },
-    {
-      "path": "scripts/agent_runtime/review_mcp.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"Path\" has incompatible type \"None | Path\"; expected \"PathLike[str] | str\""
     },
     {
       "path": "scripts/agent_runtime/runner.py",
@@ -706,36 +676,6 @@
       "path": "scripts/agent_runtime/tool_calls.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"NATIVE_GROK_SEAT\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
-    },
-    {
-      "path": "scripts/agent_runtime/tool_config.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
     },
     {
       "path": "scripts/agent_runtime/trail_isolation.py",

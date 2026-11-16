@@ -6,7 +6,8 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
@@ -234,7 +235,9 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         argv += ["--restricted", "--tools", _READ_TOOLSET, "--append-system-prompt-file", str(core)]
         env = {**env, **review_shell_env(spec)}
     argv += ["--mcp-config", _sources_mcp_config(), "--strict-mcp-config"]
-    readers, writers = sources_tool_sets()
+    from scripts.common.repo_root import product_root
+
+    readers, writers = sources_tool_sets(product_root() / SERVER_RELATIVE_PATH)
     allowed_tools = ",".join([allowed_tools, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in readers)])
     denies = ",".join([denies, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in writers)])
     argv += ["--allowedTools", allowed_tools]
