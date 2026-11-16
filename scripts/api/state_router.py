@@ -26,7 +26,7 @@ from typing import Any, Literal, cast
 
 import yaml
 from fastapi import APIRouter, Depends, Query, Request
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, seat_read_aliases
+from lu_machinery.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.common.repo_root import machinery_path, main_checkout_root

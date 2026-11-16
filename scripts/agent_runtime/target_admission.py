@@ -942,7 +942,7 @@ def describe_slot_holder(slot: str) -> Any:
 
 
 def _retired_successor(seat: str | None) -> str | None:
-    from learn_ukrainian_v4_runtime.agent_identity import resolve_retired_agent_alias
+    from lu_machinery.agent_identity import resolve_retired_agent_alias
 
     successor = resolve_retired_agent_alias(seat)
     return successor if isinstance(successor, str) else None

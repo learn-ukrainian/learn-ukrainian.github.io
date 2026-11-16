@@ -23,8 +23,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
+from lu_machinery.contracts import CompletionState, ResponseEnvelope
+
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
-from learn_ukrainian_v4_runtime.contracts import CompletionState, ResponseEnvelope
 from learn_ukrainian_v4_runtime.identity import (
     CURSOR_AUTO_UNION_FAMILY,
     KNOWN_HARNESS_EXECUTABLES,
@@ -635,9 +636,8 @@ def claim_v4_runner_execution(executor: Any, *, request_id: str) -> dict[str, An
     """Atomically require the exact binding and ``queued -> running``
     while creating the one-attempt capability. Called by the native
     runner immediately before Popen."""
+    from lu_machinery.contracts import CompletionState
     from lu_machinery.fleet_comms.request_executor import RequestExecutorError
-
-    from learn_ukrainian_v4_runtime.contracts import CompletionState
 
     if executor._is_pg:
         raise RequestExecutorError("legacy V4 runner claim is retired; use the protected packaged V4 service runtime")

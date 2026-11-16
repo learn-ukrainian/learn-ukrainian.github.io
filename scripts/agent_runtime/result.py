@@ -19,7 +19,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, TypedDict
 
-from learn_ukrainian_v4_runtime.contracts import ResponseEnvelope
+from lu_machinery.contracts import ResponseEnvelope
 
 
 class AgyModelIdentity(TypedDict):

@@ -58,11 +58,6 @@
       "message": "Generator has incompatible item type \"int | str\"; expected \"bool\""
     },
     {
-      "path": "scripts/agent_runtime/acpx_discuss.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
       "path": "scripts/agent_runtime/adapters/_output_schema.py",
       "code": "return-value",
       "message": "Incompatible return value type (got \"object\", expected \"None | dict[str, Any]\")"
@@ -2546,11 +2541,6 @@
       "path": "scripts/api/state_router.py",
       "code": "misc",
       "message": "\"object\" object is not iterable"
-    },
-    {
-      "path": "scripts/api/state_router.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
     },
     {
       "path": "scripts/api/state_router.py",
@@ -28666,11 +28656,6 @@
       "path": "scripts/review/record_cf_verdict.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"Verdict\", variable has type \"dict[str, Any]\")"
-    },
-    {
-      "path": "scripts/review/record_cf_verdict.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"tuple[Any | None, ...]\", variable has type \"tuple[()] | tuple[Any, Any, Any | None] | tuple[str]\")"
     },
     {
       "path": "scripts/review/record_cf_verdict.py",

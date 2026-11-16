@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import argparse
 
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
-from learn_ukrainian_v4_runtime.model_families import Family, canonical_cursor_model, normalize_family
+from lu_machinery.agent_identity import normalize_seat
+from lu_machinery.model_families import Family, canonical_cursor_model, normalize_family
 
 _PROVIDER_FAMILIES = {
     "agy": Family.GOOGLE,
