@@ -126,7 +126,7 @@ THREE of the following in the PR body — quoted raw output, not paraphrase:**
 2. **AFTER** — quoted `sqlite3 data/sources.db "SELECT COUNT(*) FROM <table> WHERE <scope>"` output, taken after the write.
 3. **SAMPLE** — quoted `SELECT chunk_id, substr(text, 1, 80) FROM <table> WHERE <scope> LIMIT 3` showing 2-3 real rows with the new metadata visible.
 
-Resolve the canonical store through `scripts.storage.topology`; dispatch v2
+Resolve the canonical store through `lu_machinery.storage.topology`; dispatch v2
 does not provision the legacy data symlinks. Verify the selected store before
 comparing BEFORE/AFTER counts.
 

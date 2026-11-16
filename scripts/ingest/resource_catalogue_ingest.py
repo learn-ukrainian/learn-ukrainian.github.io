@@ -6,8 +6,8 @@ the store writer lock without lifting the selected generation, checks the
 expected generation name and catalogue-input digest, copies the complete
 selected database into a candidate beside the selector, ingests into the
 candidate only, verifies it and publishes it through
-``scripts.storage.generations.publish_generation``. The previous generation is
-kept, so ``python -m scripts.storage restore-generation --store <selector>``
+``lu_machinery.storage.generations.publish_generation``. The previous generation is
+kept, so ``scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation --store <selector>``
 rolls back. This follows ``scripts.ingest.sum20_mirror_import.run_import`` and
 reuses its target, copy, seal and refusal helpers.
 """
@@ -905,7 +905,7 @@ def main(argv: list[str] | None = None) -> int:
   <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --db data/sources-copy.db --no-network
   <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --publish --store <selector> \\
       --expect-generation <selected generation name> --expect-input-sha256 <catalogue input digest>
-  <shared-project-python> -m scripts.storage restore-generation --store <selector> <previous generation path>  # rollback
+  <shared-project-python> -I -m lu_machinery.storage restore-generation --store <selector> <previous generation path>  # rollback
 Outputs: --db: resource_catalogue and resource_catalogue_fts in the explicit local DB; JSON count reconciliation
   on stdout. --publish: one JSON object on stdout; a new generation under the selector's sources-generations/.
 Input digest: from the repository root, sha256sum of every CATALOGUES file in order, piped to sha256sum.
