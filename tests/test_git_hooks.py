@@ -94,9 +94,15 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
 
     install_message_scanner(repo)
     shutil.copy2(Path(str(files("lu_machinery").joinpath("install_git_hooks.sh"))), repo / "scripts/install_git_hooks.sh")
+    # The post-merge guard runs from the installed release; the fixture records that call instead.
     _write_executable(
         repo / "scripts/pre_commit/project_python.sh",
-        f'#!/usr/bin/env bash\nset -euo pipefail\nexec "{_project_python()}" "$@"\n',
+        "#!/usr/bin/env bash\nset -euo pipefail\n"
+        'if [[ "$*" == "-P -m lu_machinery.guardrails.primary_write_guard apply --hook" ]]; then\n'
+        '  printf "primary-write-guard\\n" >> "$HOOK_LOG"\n'
+        "  exit 0\n"
+        "fi\n"
+        f'exec "{_project_python()}" "$@"\n',
     )
     # The gate always runs this scanner from the repo being pushed. The fixture
     # has no secrets; the real scanner is covered by the opsec and gate tests.
@@ -107,13 +113,6 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     _write_executable(
         repo / "scripts/guardrails/primary_post_checkout_heal.sh",
         '#!/usr/bin/env bash\nprintf "primary-heal\\n" >> "$HOOK_LOG"\n',
-    )
-    (repo / "scripts/guardrails/primary_write_guard.py").write_text(
-        "import os\n"
-        "from pathlib import Path\n"
-        'with Path(os.environ["HOOK_LOG"]).open("a", encoding="utf-8") as stream:\n'
-        '    stream.write("primary-write-guard\\n")\n',
-        encoding="utf-8",
     )
     (repo / ".pre-commit-config.yaml").write_text(
         "repos:\n"

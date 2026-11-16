@@ -17,22 +17,22 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
-
-from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set, ctx_cache_scope
-from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
-from scripts.orchestration.issue_stream_audit import load_registry
-from scripts.orchestration.launcher_aliases import load_launcher_aliases
-from scripts.orientation_packet import cap_projection
-from scripts.work.attention import is_actionable
-from scripts.work.normalize import build_public_projection, downgrade_expired_projection, qualify_pr_snapshot_age
-from scripts.work.schema import (
+from lu_machinery.work.attention import is_actionable
+from lu_machinery.work.normalize import build_public_projection, downgrade_expired_projection, qualify_pr_snapshot_age
+from lu_machinery.work.schema import (
     SchemaValidationError,
     admit_projection_filters,
     parse_saved_view_params,
     schema_digest_sha256,
     validate_projection,
 )
-from scripts.work.sources_public import fetch_open_prs, private_capability_seam, public_repository_id
+from lu_machinery.work.sources_public import fetch_open_prs, private_capability_seam, public_repository_id
+
+from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set, ctx_cache_scope
+from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
+from scripts.orchestration.issue_stream_audit import load_registry
+from scripts.orchestration.launcher_aliases import load_launcher_aliases
+from scripts.orientation_packet import cap_projection
 
 from .load_samples import sample as sample_host_load
 from .monitor_context import (

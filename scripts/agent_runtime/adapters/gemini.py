@@ -43,10 +43,7 @@ import shutil
 from collections.abc import Mapping
 from pathlib import Path
 
-if __package__ == "agent_runtime.adapters":  # the historical top-level alias, with scripts/ on sys.path
-    from ai_llm.fallback import GEMINI_AUTH_ENV_VARS
-else:
-    from ...ai_llm.fallback import GEMINI_AUTH_ENV_VARS
+from lu_machinery.ai_llm.fallback import GEMINI_AUTH_ENV_VARS
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..result import ParseResult
@@ -375,10 +372,7 @@ class GeminiAdapter:
             # stripped ⇒ this call used API mode. Set cooldown so the
             # next auto-mode resolver flips to subscription for ~1h
             # without burning a probe call (#1384).
-            if __package__ == "agent_runtime.adapters":
-                from ai_llm.cooldown import set_api_cooldown
-            else:
-                from ...ai_llm.cooldown import set_api_cooldown  # type: ignore[no-redef]
+            from lu_machinery.ai_llm.cooldown import set_api_cooldown
 
             set_api_cooldown()
 

@@ -1,18 +1,16 @@
-"""Tests for batch_otaman, batch_dispatcher, batch_fix_review, and tools.agent_watcher.
+"""Tests for batch_otaman, batch_dispatcher and batch_fix_review.
 
 Targets batch/agent helper coverage with heavy mocking of subprocess, filesystem, etc.
 """
 
 import json
-import os
 import signal
-import sqlite3
 import subprocess
 import sys
 import textwrap
 import time
 from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -38,29 +36,6 @@ def tmp_state_dir(tmp_path):
 def mock_project_root(tmp_path):
     """Mock PROJECT_ROOT to tmp_path."""
     return tmp_path
-
-
-@pytest.fixture
-def sqlite_db(tmp_path):
-    """Create a temporary SQLite database mimicking messages.db."""
-    db_path = tmp_path / "messages.db"
-    conn = sqlite3.connect(db_path)
-    conn.execute("""
-        CREATE TABLE messages (
-            id INTEGER PRIMARY KEY,
-            task_id TEXT,
-            from_llm TEXT,
-            to_llm TEXT,
-            message_type TEXT,
-            content TEXT DEFAULT '',
-            timestamp TEXT,
-            acknowledged INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'pending'
-        )
-    """)
-    conn.commit()
-    conn.close()
-    return db_path
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -706,225 +681,6 @@ class TestBatchDispatcherPickTrack:
         result = d._pick_track({})
         assert result is None
 # ═══════════════════════════════════════════════════════════════════════
-# tools.agent_watcher.py
-# ═══════════════════════════════════════════════════════════════════════
-
-class TestAgentWatcherLoadConfig:
-    @patch("tools.agent_watcher._AGENTS_CONFIG", None)
-    def test_load_from_file(self, tmp_path):
-        import tools.agent_watcher
-        config_path = tmp_path / "agents.yaml"
-        config_path.write_text("agents:\n  claude:\n    bridge_command: process-claude\n    process_pattern: claude\n")
-
-        with patch.object(Path, "__new__", wraps=Path.__new__):
-            old_path = tools.agent_watcher.load_agent_config.__globals__
-            # Reset the cache
-            tools.agent_watcher._AGENTS_CONFIG = None
-            with patch("tools.agent_watcher.Path") as mock_path:
-                mock_path.return_value.__truediv__ = lambda *a: config_path
-                mock_path.__truediv__ = lambda *a: config_path
-                # Use a simpler approach: just patch the config path check
-                with patch("builtins.open", mock_open(read_data="agents:\n  test_agent:\n    bridge_command: test\n    process_pattern: test\n")), patch("pathlib.Path.exists", return_value=True):
-                        tools.agent_watcher._AGENTS_CONFIG = None
-                        config = tools.agent_watcher.load_agent_config()
-                        assert "test_agent" in config
-
-
-class TestAgentWatcherGetUnreadMessages:
-
-    def test_with_messages(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "claude", "gemini", "request", "2026-01-01T00:00:00"),
-        )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages()
-            assert len(msgs) == 1
-            assert msgs[0]["task_id"] == "task1"
-            assert msgs[0]["from"] == "claude"
-
-    def test_filter_by_agent(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "claude", "gemini", "request", "2026-01-01T00:00:00"),
-        )
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task2", "gemini", "claude", "response", "2026-01-01T00:00:01"),
-        )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages(for_agent="gemini")
-            assert len(msgs) == 1
-            assert msgs[0]["task_id"] == "task1"
-
-
-class TestAgentWatcherAcknowledgeMessage:
-    def test_acknowledge(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "claude", "gemini", "request", "2026-01-01T00:00:00"),
-        )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            tools.agent_watcher.acknowledge_message(1, "delivered")
-            msgs = tools.agent_watcher.get_unread_messages()
-            assert len(msgs) == 0
-
-
-class TestAgentWatcherCountTaskTurns:
-
-    def test_counts_non_error(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "claude", "gemini", "request", "2026-01-01T00:00:00"),
-        )
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "gemini", "claude", "response", "2026-01-01T00:00:01"),
-        )
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp) VALUES (?, ?, ?, ?, ?)",
-            ("task1", "gemini", "claude", "error", "2026-01-01T00:00:02"),
-        )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            assert tools.agent_watcher.count_task_turns("task1") == 2
-
-
-class TestAgentWatcherIsAnyAgentActive:
-    @patch("subprocess.run")
-    def test_no_agents(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = None
-        with patch("pathlib.Path.exists", return_value=False):
-            tools.agent_watcher._AGENTS_CONFIG = {
-                "claude": {"process_pattern": "claude"},
-            }
-            mock_run.return_value = MagicMock(returncode=1, stdout="")
-            assert tools.agent_watcher.is_any_agent_active() is False
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-    @patch("subprocess.run")
-    def test_agent_active(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
-            "claude": {"process_pattern": "claude"},
-        }
-        mock_run.return_value = MagicMock(returncode=0, stdout="12345")
-        assert tools.agent_watcher.is_any_agent_active() is True
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-
-class TestAgentWatcherTriggerAgent:
-    @patch("subprocess.run")
-    def test_success(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
-            "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
-        }
-        mock_run.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-        with patch.object(tools.agent_watcher, "DB_PATH", Path("/nonexistent")):
-            result = tools.agent_watcher.trigger_agent("gemini", 1, "task1", "claude")
-        assert result is True
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-    @patch("subprocess.run")
-    def test_failure(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
-            "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
-        }
-        mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="error")
-        result = tools.agent_watcher.trigger_agent("gemini", 1, "task1")
-        assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-    def test_unknown_agent(self):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {"claude": {"bridge_command": "x"}}
-        result = tools.agent_watcher.trigger_agent("nonexistent", 1)
-        assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-    @patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 360))
-    def test_timeout(self, mock_run):
-        import tools.agent_watcher
-        tools.agent_watcher._AGENTS_CONFIG = {
-            "gemini": {"bridge_command": "process", "process_pattern": "gemini"},
-        }
-        result = tools.agent_watcher.trigger_agent("gemini", 1)
-        assert result is False
-        tools.agent_watcher._AGENTS_CONFIG = None
-
-
-class TestAgentWatcherPidFile:
-    def test_write_pid(self, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            tools.agent_watcher.write_pid()
-            assert pid_file.exists()
-            assert int(pid_file.read_text().strip()) == os.getpid()
-
-    def test_read_pid_invalid(self, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        pid_file.write_text("not_a_number")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.read_pid() is None
-
-
-class TestAgentWatcherIsRunning:
-    @patch("os.kill")
-    def test_running(self, mock_kill, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        pid_file.write_text("12345")
-        mock_kill.return_value = None  # Process exists
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.is_running() is True
-
-    @patch("os.kill", side_effect=OSError("no such process"))
-    def test_stale_pid(self, mock_kill, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        pid_file.write_text("99999")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file):
-            assert tools.agent_watcher.is_running() is False
-
-
-class TestAgentWatcherStopDaemon:
-    @patch("os.kill")
-    def test_stop_success(self, mock_kill, tmp_path):
-        import tools.agent_watcher
-        pid_file = tmp_path / "watcher.pid"
-        pid_file.write_text("12345")
-        with patch.object(tools.agent_watcher, "PID_FILE", pid_file), patch("time.sleep"):
-            result = tools.agent_watcher.stop_daemon()
-        assert result is True
-        mock_kill.assert_called_with(12345, signal.SIGTERM)
-
-    def test_stop_no_pid(self, tmp_path, capsys):
-        import tools.agent_watcher
-        with patch.object(tools.agent_watcher, "PID_FILE", tmp_path / "nope.pid"):
-            result = tools.agent_watcher.stop_daemon()
-        assert result is False
-        assert "No watcher running" in capsys.readouterr().out
-# ═══════════════════════════════════════════════════════════════════════
 # Additional edge case tests
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1160,21 +916,6 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
         scan = {"a1": {"total": 10, "passed": 10, "failed": 0, "stale": 0, "unbuilt": 0, "pass_rate": 1.0}}
         d._update_track_states(scan)
         assert dstate["state"] == TrackState.DONE
-
-
-class TestAgentWatcherEdgeCases:
-    def test_get_unread_acknowledged_not_returned(self, sqlite_db):
-        import tools.agent_watcher
-        conn = sqlite3.connect(sqlite_db)
-        conn.execute(
-            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, timestamp, acknowledged) VALUES (?, ?, ?, ?, ?, ?)",
-            ("task1", "claude", "gemini", "request", "2026-01-01T00:00:00", 1),
-        )
-        conn.commit()
-        conn.close()
-        with patch.object(tools.agent_watcher, "DB_PATH", sqlite_db):
-            msgs = tools.agent_watcher.get_unread_messages()
-            assert len(msgs) == 0
 
 
 class TestBatchOtamanFindModuleScanEdgeCases:

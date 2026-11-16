@@ -2267,7 +2267,8 @@ store_registry:
       kind: operational
       activity: active
       presence: present
-      writers: [scripts/guardrails/delegate_ownership.py:OwnershipLedger._connect]
+      writers: []
+      writer_note: The installed lu-machinery release writes it (lu_machinery.guardrails.delegate_ownership, OwnershipLedger._connect); no tracked product file does.
       journal: wal
       busy_ms: 30000
       busy_source: explicit

@@ -36,10 +36,9 @@ budgeting; this module only maps them to HTTP, including the shared ``_matches_e
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
-
-from scripts.docs import find as docs_find
-from scripts.research import consumption, observability
-from scripts.research import registry as reg
+from lu_machinery.docs import find as docs_find
+from lu_machinery.research import consumption, observability
+from lu_machinery.research import registry as reg
 
 from .monitor_context import MonitorContext, get_ctx
 from .rules_router import _matches_etag
@@ -208,7 +207,7 @@ def knowledge_find(
 ):
     """Locate a document, data store or resource in one query (#9412).
 
-    The same search as ``python -m scripts.docs.find``: catalogue entries
+    The same search as ``python -m lu_machinery.docs.find``: catalogue entries
     (``docs/knowledge/catalogue.yaml``), tracked path names, the text of
     content-searchable families and the identifiers of tracked code and
     configuration files in Git's index of the live repository root. Each hit

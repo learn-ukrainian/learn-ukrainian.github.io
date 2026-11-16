@@ -55,7 +55,7 @@ NativeInvoker = Callable[..., Result]
 
 def _invoke_native(*args: Any, **kwargs: Any) -> Result:
     # Keep read-only receipt queries independent of the execution machinery.
-    # runner.py imports the top-level ``ai_llm`` package (``scripts/ai_llm``).
+    # runner.py keeps top-level fallbacks under ``scripts/`` (``lib.readonly_sqlite``).
     # ``python -m`` from the repo root does not put ``scripts/`` on ``sys.path``;
     # delegate's worker and ``acpx_discuss`` insert it before this import.
     scripts_dir = str(Path(__file__).resolve().parents[1])
