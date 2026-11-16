@@ -901,9 +901,17 @@ def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
     assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["review_profiles"] == ["code", "infra"]
 
 
+def guard_name(command):
+    """The guard file a hook command runs: a guard path, or a native ``claude-<guard>`` hook mode."""
+    if "lu-machinery-hook-v1" in command:
+        mode = command.rsplit("lu-machinery-hook-v1", 1)[1].split()[0]
+        return "audit-primary-checkout-dirt.py" if mode == "claude-audit-hook" else mode.removeprefix("claude-") + ".py"
+    return Path(command).name
+
+
 def guard_policy(settings):
     return [
-        (group["matcher"], Path(hook["command"]).name, hook["timeout"], hook.get("onFailure"))
+        (group["matcher"], guard_name(hook["command"]), hook["timeout"], hook.get("onFailure"))
         for group in settings["hooks"]["PreToolUse"]
         for hook in group["hooks"]
     ]
