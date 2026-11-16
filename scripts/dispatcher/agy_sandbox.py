@@ -784,7 +784,7 @@ def _empty_store_slot(worktree: Path, relative: str) -> None:
 
 def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
     """Select only from the agreed primary, independently of worktree content."""
-    from scripts.storage.topology import STORE_FILES, inspect_selector
+    from lu_machinery.storage.topology import STORE_FILES, inspect_selector
 
     if relative not in {f"data/{STORE_FILES[name][0]}" for name in ("sources", "vesum")}:
         raise Refused("unsupported_read_store")
@@ -1348,7 +1348,7 @@ class _Boundary:
             expect("chmod", target, "EROFS")
             if target.parent.name == "sources-generations":
                 expect("stat", target.with_name(target.name + ".receipt.json"), "ENOENT")
-                from scripts.storage.topology import is_generation_name
+                from lu_machinery.storage.topology import is_generation_name
 
                 absent_generation = next((path for path in sorted(target.parent.iterdir())
                                           if path != target and is_generation_name(path.name)),

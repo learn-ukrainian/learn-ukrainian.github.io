@@ -1331,27 +1331,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/storage/topology.py",
-      "kind": "store_path",
-      "scope": "resolve_active_sources_db",
-      "fingerprint": "f854e67e719d917a4cb31d831c588d23d82ccf73afbf59d7db5722e2eecc3b54",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/storage/topology.py",
-      "kind": "store_path",
-      "scope": "resolve_active_sources_db",
-      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/storage/topology.py",
-      "kind": "store_path",
-      "scope": "resolve_active_sources_db",
-      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
-      "occurrence": 1
-    },
-    {
       "path": "scripts/wiki/build_sources_db.py",
       "kind": "store_path",
       "scope": "<module>",

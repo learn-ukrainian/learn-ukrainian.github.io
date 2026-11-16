@@ -58,7 +58,7 @@
 
 - **Active DB:** `data/sources.db` stays on the Mac repository volume. Sources MCP
   and ordinary tests depend on this local file; an SMB outage must not break them.
-  `.venv/bin/python -m scripts.storage status` reports its size, `journal_mode` (read from
+  `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status` reports its size, `journal_mode` (read from
   the SQLite header, no connection opened) and the `-wal` sidecar size.
 - **Readers pin one snapshot per session.** `scripts/curriculum/evidence/sources.py` opens
   `sources.db` read-only with an explicit deferred `BEGIN` and keeps that read transaction
@@ -66,10 +66,10 @@
   cites (`built_with.sources_db_scheme: rows-v2`), never a digest of the file. While a
   session is open the WAL cannot be checkpointed past its read mark, so the reader stops
   itself (`snapshot_limit`) if `sources.db-wal` exceeds 4 GiB or free disk on the data
-  volume drops below 10 GiB (`scripts/storage/generations.py`; env overrides
+  volume drops below 10 GiB (`lu_machinery/storage/generations.py`; env overrides
   `LU_EVIDENCE_WAL_CEILING_BYTES` / `LU_EVIDENCE_FREE_DISK_FLOOR_BYTES`).
 - **Bulk raw-source root** (legacy name `GDRIVE_DATA` in `scripts/wiki/config.py`)
-  is resolved by `scripts.storage.topology.resolve_bulk_root`:
+  is resolved by `lu_machinery.storage.topology.resolve_bulk_root`:
   1. `LU_BULK_ROOT` when marker-valid
   2. Windows **UkrainianData** SMB mirror
      (`…/raw-sources/learn-ukrainian-data`) when mounted and marker-valid
@@ -77,8 +77,8 @@
      (`My Drive/Projects/learn-ukrainian-data` or `LU_GDRIVE_DATA`) when marker-valid
   4. Structured **unavailable** (no path guessing)
 - **Markers:** both `literary_texts/` and `textbook_chunks/` must exist.
-- **Status CLI (read-only):** `.venv/bin/python -m scripts.storage status`
-- **Windows mirror maintenance:** `scripts/storage/windows/` (`rclone copy` only;
+- **Status CLI (read-only):** `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status`
+- **Windows mirror maintenance:** `lu_machinery/storage/windows/` (`rclone copy` only;
   verify before receipt). Full contract: [`docs/runbooks/storage-topology.md`](runbooks/storage-topology.md).
 
 - **`GDRIVE_DATA`** is the bulk-root alias above (SMB preferred, Drive fallback).
@@ -214,7 +214,7 @@ and the generation layout in `docs/runbooks/storage-topology.md`:
   environment override. The primary checkout's store is accepted only from the
   primary checkout, and any other directory under its `data/` is refused.
   `--expect-generation` must equal the generation the selector selects (see
-  `python -m scripts.storage generations --store <selector>`). The input digest is
+  `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage generations --store <selector>`). The input digest is
   `sha256sum` over every catalogue file in the module's `CATALOGUES` order, run
   from the repository root and piped to `sha256sum` again. The run reads each file
   once and parses those same bytes, so a change after the check cannot be ingested.
@@ -238,7 +238,7 @@ and the generation layout in `docs/runbooks/storage-topology.md`:
   generation is selected; reconcile through the publisher or `restore-generation`.
   Never re-run the ingest. Nothing is retried automatically.
 - **Rollback.** The previous generation is retained and held. Restore it with
-  `python -m scripts.storage restore-generation --store <selector> <previous generation path>`.
+  `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation --store <selector> <previous generation path>`.
 
 Live activation is still an operator-approved driver operation. It needs
 data-owner approval, the current production GO and the SRE preflight; merging this

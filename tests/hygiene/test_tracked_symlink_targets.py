@@ -3,7 +3,7 @@
 A tracked symlink's target is committed verbatim, so an absolute target leaks
 the author's host layout (home directory, cloud-drive account folder) into the
 public history, and a target outside the repository is dead on every other
-host. Bulk data is reached through ``scripts.storage.topology.resolve_bulk_root``
+host. Bulk data is reached through ``lu_machinery.storage.topology.resolve_bulk_root``
 instead (``docs/runbooks/storage-topology.md``).
 """
 

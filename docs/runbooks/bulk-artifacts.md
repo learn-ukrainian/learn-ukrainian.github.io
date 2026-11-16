@@ -5,11 +5,11 @@ Repository policy prevents committing blobs > 5 MB (5,242,880 bytes) directly to
 
 ## Remediating Guard Failures
 When `check_large_files.py` fails with an unallowlisted oversized blob:
-1. **Move to artifact store (Recommended)**: Use `scripts/storage/artifacts.py` to manifest and manage bulk data out of Git:
+1. **Move to artifact store (Recommended)**: Use `lu_machinery/storage/artifacts.py` to manifest and manage bulk data out of Git:
    ```bash
-   .venv/bin/python -m scripts.storage.artifacts manifest build --group <group> --pre HEAD
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage.artifacts manifest build --group <group> --pre HEAD
    ```
-   Note: `scripts.storage.artifacts manifest build` covers only groups defined in the `data/` split (`registry/artifacts/classification-v1.tsv`). It is not a general storage mechanism for files under other trees such as `site/` or `curriculum/`.
+   Note: `lu_machinery.storage.artifacts manifest build` covers only groups defined in the `data/` split (`registry/artifacts/classification-v1.tsv`). It is not a general storage mechanism for files under other trees such as `site/` or `curriculum/`.
 2. **Add an allowlist entry**: If the blob is canonical source that must stay tracked, add an entry to `scripts/ci/large_files_allowlist.txt` with exact path, size in bytes, and reason.
 
 ## Allowlist Format

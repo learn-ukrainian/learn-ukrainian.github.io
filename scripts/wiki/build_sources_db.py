@@ -905,7 +905,7 @@ def _publishes_live_store(build_fn):
 
     A selector target is rebuilt under the store writer lock, from the
     generation it selects, and published as a new generation
-    (``scripts/storage/generations.py``). The pre-bootstrap live file is
+    (``lu_machinery/storage/generations.py``). The pre-bootstrap live file is
     refused: its in-place swap unlinks the sidecars and renames over a file
     that readers hold open. Other targets (staged copies, fixtures) and dry
     runs keep the in-place path.

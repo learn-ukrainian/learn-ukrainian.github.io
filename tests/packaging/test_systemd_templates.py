@@ -59,15 +59,13 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
         # A oneshot may run several commands; the guard must wrap each, in order.
         guarded = [line for line in dropin.splitlines() if line.startswith("ExecStart=") and line != "ExecStart="]
         assert len(guarded) == len(commands)
+        # The guard ships only in the installed release; the product has no copy to run by path.
         for line, command in zip(guarded, commands, strict=True):
-            if "lu_machinery.storage" in line:
-                argv = shlex.split(line.removeprefix("ExecStart="))
-                assert argv[:3] == ["/usr/bin/env", "@REPO_ROOT@/.venv/bin/python", "-c"]
-                assert 'files("lu_machinery.storage").joinpath("data_volume_guard.sh")' in argv[3]
-                assert argv[4:] == ["--", *shlex.split(command)]
-                assert "Environment=LU_PRODUCT_ROOT=@REPO_ROOT@" in dropin
-            else:
-                assert line.endswith(f"/data_volume_guard.sh -- {command}")
+            argv = shlex.split(line.removeprefix("ExecStart="))
+            assert argv[:3] == ["/usr/bin/env", "@REPO_ROOT@/.venv/bin/python", "-c"]
+            assert 'files("lu_machinery.storage").joinpath("data_volume_guard.sh")' in argv[3]
+            assert argv[4:] == ["--", *shlex.split(command)]
+            assert "Environment=LU_PRODUCT_ROOT=@REPO_ROOT@" in dropin
         assert "RestartPreventExitStatus=78" in dropin
 
 

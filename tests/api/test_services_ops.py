@@ -166,7 +166,12 @@ def _patch_script_pids_dir(script_path: Path, pids_dir: Path) -> None:
 
 
 def _copy_data_volume_guard(script_path: Path) -> None:
-    """A copied services.sh needs the adjacent guard used by its early preflight."""
+    """A copied services.sh needs the release guard its early preflight runs.
+
+    services.sh asks its checkout's interpreter for the installed guard. The stand-in
+    interpreter answers only that question with this patched copy; any other call
+    fails as an absent interpreter would.
+    """
     guard = script_path.parent / "scripts/storage/data_volume_guard.sh"
     guard.parent.mkdir(parents=True, exist_ok=True)
     guard.write_text(
@@ -177,6 +182,13 @@ def _copy_data_volume_guard(script_path: Path) -> None:
                  f'REPO_ROOT="$(project_product_root_resolve "{script_path.parent}")"'),
         encoding="utf-8",
     )
+    interpreter = script_path.parent / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True, exist_ok=True)
+    interpreter.write_text(
+        f"#!/bin/sh\ncase \"$*\" in *storage/data_volume_guard.sh*) printf '%s\\n' '{guard}' ;; *) exit 127 ;; esac\n",
+        encoding="utf-8",
+    )
+    interpreter.chmod(0o755)
 
 
 def _copy_services_sh(root: Path) -> Path:
