@@ -42,11 +42,11 @@ from lu_machinery.api import (
 )
 from lu_machinery.api import main as api_main
 from lu_machinery.api.monitor_context import fixture_context
+from lu_machinery.docs import catalogue as docs_catalogue
 from lu_machinery.fleet_comms import message_plane
 from lu_machinery.session_streams.db import SessionStreamDatabase
 from starlette.requests import Request
 
-from scripts.docs import catalogue as docs_catalogue
 from scripts.project_api import dashboard_helpers
 from scripts.wiki import sources_db
 

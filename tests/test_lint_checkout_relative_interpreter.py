@@ -37,29 +37,9 @@ SCAN_SKIP = {
 
 # path -> (hit count, why this checkout-local join stays)
 ALLOWLIST: dict[str, tuple[int, str]] = {
-    "scripts/common/repo_root.py": (
-        1,
-        "defines project_interpreter(); the join names a checkout's .venv interpreter (primary checkout, else that checkout)",
-    ),
-    "scripts/api/launchd_supervisor.py": (
-        2,
-        "LaunchAgent is bound to --repo-root; validation and the uvicorn child use that checkout's interpreter, rendered even when the file is absent",
-    ),
-    "scripts/api/project_state_collect.py": (
-        1,
-        "probes the private work-service checkout's interpreter, not this repo's",
-    ),
     "scripts/storage/install_data_volume_dropins.py": (
         1,
         "systemd drop-in names the primary checkout's interpreter; --apply refuses a worktree",
-    ),
-    "scripts/orchestration/issue_stream_audit.py": (
-        1,
-        "release snapshot has no .venv; the worker spawns LIVE_REPO_ROOT's interpreter",
-    ),
-    "scripts/orchestration/claudex_supervisor.py": (
-        2,
-        "relaunch contract prefers this checkout's venv, then the canonical checkout, then any sys.executable",
     ),
     "scripts/audit/post_build_review.py": (
         2,

@@ -53,7 +53,7 @@ def _run(cmd, **kwargs) -> subprocess.CompletedProcess:
 
 def _refusal(participants=("kimi",), models=(), **overrides) -> str | None:
     """The product gate's refusal (``target_admission.refuse_disallowed_targets``), or None when admitted."""
-    from lu_machinery.agent_runtime.target_admission import refuse_disallowed_targets
+    from lu_machinery.agent_runtime.retired_seat_admission import refuse_kimi_if_disallowed as refuse_disallowed_targets
 
     kwargs = {"mode": "workspace-write", "repo": "public-monorepo"}
     kwargs.update(overrides)
@@ -174,9 +174,9 @@ def test_ask_kimi_cli_refuses_before_pr_resolution_or_dispatch(monkeypatch, extr
     monkeypatch.setattr(_acp_compat, "run_compat_ask", _fail)
     monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", _fail)
     monkeypatch.setattr("sys.stdin", types.SimpleNamespace(read=_fail))
-    args = _cli._build_parser().parse_args(["ask-kimi", "-", "--task-id", "kimi-cli", *extra])
-    with pytest.raises(SystemExit, match=_TOKEN):
-        _cli._handle_ask_kimi(args)
+    with pytest.raises(SystemExit) as refusal:
+        _cli._build_parser().parse_args(["ask-kimi", "-", "--task-id", "kimi-cli", *extra])
+    assert refusal.value.code == 2
 
 
 def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
@@ -307,7 +307,7 @@ def broker_db(tmp_path, monkeypatch):
     """
     from lu_machinery.ai_agent_bridge import _ask_lifecycle, _db, _messaging, _process
 
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "messages.db")
+    monkeypatch.setattr(_db._config, "DB_PATH", tmp_path / "messages.db")
     seed = _db.get_db()
     seed.executemany(
         "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged)"
@@ -335,7 +335,7 @@ def broker_db(tmp_path, monkeypatch):
             monkeypatch.setattr(module, name, _fail)
 
     def unchanged() -> bool:
-        check = real_connect(_db.DB_PATH)
+        check = real_connect(_db._config.DB_PATH)
         try:
             return list(check.iterdump()) == before
         finally:
@@ -370,8 +370,13 @@ def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
     """A Kimi seat or model named on the command line is a Kimi request: refused before the broker is opened."""
     from lu_machinery.ai_agent_bridge import _cli
 
-    with pytest.raises(SystemExit, match=_TOKEN):
-        _cli._dispatch_command(_cli._build_parser().parse_args(argv))
+    if argv[0] == "process-kimi":
+        with pytest.raises(SystemExit) as refusal:
+            _cli._build_parser().parse_args(argv)
+        assert refusal.value.code == 2
+    else:
+        with pytest.raises(SystemExit, match=_TOKEN):
+            _cli._dispatch_command(_cli._build_parser().parse_args(argv))
     assert broker_db.connects == []
     assert broker_db.unchanged()
 
@@ -414,7 +419,7 @@ def test_the_query_only_connection_never_creates_or_writes_the_db(broker_db, tmp
         conn.execute("UPDATE messages SET acknowledged = 1")
     conn.close()
     assert broker_db.unchanged()
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "absent.db")
+    monkeypatch.setattr(_db._config, "DB_PATH", tmp_path / "absent.db")
     assert _db.connect_readonly() is None
     assert not (tmp_path / "absent.db").exists()
 
@@ -455,7 +460,7 @@ def write_trap(tmp_path, monkeypatch):
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
     from lu_machinery.ai_agent_bridge import _db
 
-    monkeypatch.setattr(_db, "DB_PATH", state / "broker" / "messages.db")
+    monkeypatch.setattr(_db._config, "DB_PATH", state / "broker" / "messages.db")
     attempts: list[str] = []
 
     def trap(name, real=None, reads=None):
@@ -568,16 +573,16 @@ def _seed_broker(live_wal: bool) -> list[sqlite3.Connection]:
     )
     conn.commit()
     conn.close()
-    plane = _db.DB_PATH.parent.parent / "plane"
+    plane = _db._config.DB_PATH.parent.parent / "plane"
     with AuthorityService(root=plane) as service:
-        service.create_channel("ops", subscribers=["claude", "kimi"])  # a legacy Kimi subscriber row
+        service.create_channel("ops", subscribers=["claude", "kimi"], legacy_import=True)
         comms = Path(service.store.db_path)
-    databases = (_db.DB_PATH, comms)
+    databases = (_db._config.DB_PATH, comms)
     sidecars = [path.with_name(path.name + suffix) for path in databases for suffix in ("-wal", "-shm")]
     assert not any(path.exists() for path in sidecars)
     if not live_wal:
         return []
-    broker = sqlite3.connect(_db.DB_PATH)
+    broker = sqlite3.connect(_db._config.DB_PATH)
     broker.execute(
         "INSERT INTO messages (id, task_id, from_llm, to_llm, content, timestamp)"
         " VALUES (9, 't', 'codex', 'kimi', 'q', '2026-09-30T00:00:00+00:00')"
@@ -708,7 +713,11 @@ def test_every_kimi_recipient_entry_leaves_existing_wal_databases_untouched(writ
         captured = capsys.readouterr()
 
         assert attempts == []
-        assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
+        if any(f"invalid choice: '{name}'" in captured.err
+               for name in ("kimi", "kimicc", "ask-kimi", "process-kimi")):
+            assert outcome == 2
+        else:
+            assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
         assert _stat_tree(write_trap.state) == before
     finally:
         for writer in writers:
@@ -792,7 +801,11 @@ def test_kimi_named_in_request_data_refuses_with_zero_effects(write_trap, capsys
         captured = capsys.readouterr()
 
         assert attempts == []
-        assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
+        if any(f"invalid choice: '{name}'" in captured.err
+               for name in ("kimi", "kimicc", "ask-kimi", "process-kimi")):
+            assert outcome == 2
+        else:
+            assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
         assert _stat_tree(write_trap.state) == before
     finally:
         for writer in writers:
@@ -805,7 +818,7 @@ def test_send_message_stores_no_kimi_row_for_data_supplied_model(write_trap):
 
     with pytest.raises(ValueError, match=_TOKEN):
         _messaging.send_message("q", to_llm="claude", data='{"to_model":"kimi-code/k3"}', quiet=True)
-    assert not _db.DB_PATH.exists()
+    assert not _db._config.DB_PATH.exists()
 
 
 def test_explicit_model_replaces_the_data_model_as_before(write_trap, monkeypatch):
@@ -1044,14 +1057,14 @@ def test_generic_drains_skip_stored_kimi_rows_before_any_kimi_effect(tmp_path, m
     """
     from lu_machinery.ai_agent_bridge import _ask_lifecycle, _db
 
-    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "state" / "broker" / "messages.db")
+    monkeypatch.setattr(_db._config, "DB_PATH", tmp_path / "state" / "broker" / "messages.db")
     broker, authority = _seed_broker(live_wal=True)
     authority.close()
     try:
         _stored_drain_rows(broker)
         launch_agent = getattr(call, "launch_agent", None)
         if launch_agent:
-            monkeypatch.setattr(_ask_lifecycle, "REPO_ROOT", tmp_path)
+            monkeypatch.setattr(_ask_lifecycle, "state_root", lambda: tmp_path)
             launch = tmp_path / "batch_state" / "asks" / "t" / "launch.json"
             launch.parent.mkdir(parents=True)
             launch.write_text(
@@ -1077,16 +1090,16 @@ def test_a_kimi_subscriber_gets_no_delivery(tmp_path):
     from lu_machinery.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
-        service.create_channel("ops", subscribers=["claude", "kimi", "kimicc"])
-        message = service.publish_message(sender="codex", body="Status.", channel="ops", idempotency_key="k")
+        service.create_channel("ops", subscribers=["claude-infra", "kimi", "kimicc"], legacy_import=True)
+        message = service.publish_message(sender="codex-infra", body="Status.", channel="ops", idempotency_key="k")
         recipients = {
             row["recipient"]
             for row in service._conn.execute(
                 "SELECT recipient FROM authority_deliveries WHERE message_id = ?", (message.message_id,)
             )
         }
-        assert recipients == {"claude"}
-        assert set(service.get_channel("ops").subscribers) == {"claude", "kimi", "kimicc"}
+        assert recipients == {"claude-infra"}
+        assert set(service.get_channel("ops").subscribers) == {"claude-infra", "kimi", "kimicc"}
 
 
 @pytest.mark.parametrize("broadcast", [False, True])
@@ -1118,8 +1131,8 @@ def delivery_db(tmp_path, monkeypatch):
 
     db_file = tmp_path / "messages.db"
     monkeypatch.setattr("lu_machinery.ai_agent_bridge._config.DB_PATH", db_file)
-    monkeypatch.setattr(_db, "DB_PATH", db_file)
-    monkeypatch.setattr(_channels, "WAKE_ROOT", tmp_path / "wake")
+    monkeypatch.setattr(_db._config, "DB_PATH", db_file)
+    monkeypatch.setenv("AB_WAKE_DIR", str(tmp_path / "wake"))
     _db.init_db().close()
     _channels.create_channel("topic")
     conn = _db.get_db()
@@ -1254,7 +1267,7 @@ def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tm
     from lu_machinery.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
-        message = service.publish_message(sender="user", body="q", recipients=["claude"], deadline_at=_OLD)
+        message = service.publish_message(sender="user", body="q", recipients=["claude-infra"], deadline_at=_OLD)
         conn = service._conn
         conn.execute(
             "INSERT INTO authority_deliveries (delivery_id, message_id, recipient, state, deadline_at,"
@@ -1311,7 +1324,7 @@ def test_create_request_refuses_a_kimi_model_in_its_metadata_before_any_insert(t
 def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(broker_db, capsys):
     from lu_machinery.ai_agent_bridge import _broker, _db
 
-    check = sqlite3.connect(_db.DB_PATH)
+    check = sqlite3.connect(_db._config.DB_PATH)
     check.execute("UPDATE messages SET timestamp = ?", (_OLD,))
     check.execute("UPDATE messages SET acknowledged = 0")
     check.commit()
@@ -1472,24 +1485,24 @@ def test_a_delivery_of_a_kimi_model_request_is_never_claimed_or_reclaimed(tmp_pa
     from lu_machinery.fleet_comms.authority import AuthorityService
 
     with AuthorityService(root=tmp_path / "plane") as service:
-        legacy = service.publish_message(sender="user", body="old", recipients=["claude"], deadline_at=_FUTURE)
-        stale = service.publish_message(sender="user", body="stale", recipients=["claude"], deadline_at=_OLD)
+        legacy = service.publish_message(sender="user", body="old", recipients=["claude-infra"], deadline_at=_FUTURE)
+        stale = service.publish_message(sender="user", body="stale", recipients=["claude-infra"], deadline_at=_OLD)
         for message in (legacy, stale):
             with service._write_transaction():
                 service._enqueue_job_tx(
                     job_kind="request",
                     subject_id=message.message_id,
-                    payload={"recipient": "claude", "metadata": {"requested_model": "kimi-code/k3"}},
+                    payload={"recipient": "claude-infra", "metadata": {"requested_model": "kimi-code/k3"}},
                     deadline_at=None,
                     idempotency_key=f"legacy-{message.message_id}",
                 )
-        fresh = service.publish_message(sender="user", body="new", recipients=["claude"], deadline_at=_FUTURE)
+        fresh = service.publish_message(sender="user", body="new", recipients=["claude-infra"], deadline_at=_FUTURE)
         conn = service._conn
         dump = lambda: {row["delivery_id"]: tuple(row) for row in conn.execute("SELECT * FROM authority_deliveries")}  # noqa: E731
         kimi_deliveries = {*legacy.delivery_ids, *stale.delivery_ids}
         before = dump()
 
-        lease = service.claim_next_delivery("claude", "worker", now="2026-09-30T00:00:00Z")
+        lease = service.claim_next_delivery("claude-infra", "worker", now="2026-09-30T00:00:00Z")
         assert lease is not None and lease.delivery.delivery_id == fresh.delivery_ids[0]
         after = dump()
         assert {key: after[key] for key in kimi_deliveries} == {key: before[key] for key in kimi_deliveries}
@@ -1512,8 +1525,8 @@ def message_db(tmp_path, monkeypatch):
     from lu_machinery.ai_agent_bridge import _broker, _db
 
     db_file = tmp_path / "messages.db"
-    monkeypatch.setattr(_db, "DB_PATH", db_file)
-    monkeypatch.setattr(_broker, "DB_PATH", db_file)
+    monkeypatch.setattr(_db._config, "DB_PATH", db_file)
+    monkeypatch.setattr(_broker._config, "DB_PATH", db_file)
     seed = _db.get_db()
     seed.executemany(
         "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged,"
@@ -1579,7 +1592,7 @@ def test_retention_keeps_stored_kimi_messages_and_deliveries(message_db, deliver
 
     assert set(message_db()) == set(_KIMI_MESSAGES)
     assert delivery_db() == _kimi_rows(deliveries_before)
-    check = sqlite3.connect(_db.DB_PATH)
+    check = sqlite3.connect(_db._config.DB_PATH)
     try:
         kept = {row[0] for row in check.execute("SELECT message_id FROM channel_messages")}
     finally:
@@ -1592,7 +1605,7 @@ def test_the_live_consumption_backfill_leaves_a_stored_kimi_message_as_it_is(tmp
     from lu_machinery.ai_agent_bridge import _db
 
     db_file = tmp_path / "messages.db"
-    monkeypatch.setattr(_db, "DB_PATH", db_file)
+    monkeypatch.setattr(_db._config, "DB_PATH", db_file)
     legacy = sqlite3.connect(db_file)
     legacy.execute(
         "CREATE TABLE messages (id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT NOT NULL, to_llm TEXT NOT NULL,"

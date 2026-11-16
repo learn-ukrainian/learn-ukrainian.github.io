@@ -6,10 +6,13 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+TASK_GIT_COMMON="$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)"
+TASK_PYTHON="${LEARN_UKRAINIAN_PYTHON:-$(dirname "$TASK_GIT_COMMON")/.venv/bin/python}"
+MACHINERY_ROOT="$("$TASK_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib").parent)')"
 # shellcheck source=scripts/lib/handoff_identity.sh
-source "$REPO_ROOT/scripts/lib/handoff_identity.sh"
+source "$MACHINERY_ROOT/lib/handoff_identity.sh"
 # shellcheck source=scripts/lib/thread_rollover_link.sh
-source "$REPO_ROOT/scripts/lib/thread_rollover_link.sh"
+source "$MACHINERY_ROOT/lib/thread_rollover_link.sh"
 
 fail() {
   printf 'FAIL: %s\n' "$1" >&2

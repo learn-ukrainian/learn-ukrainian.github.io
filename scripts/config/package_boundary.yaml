@@ -366,8 +366,8 @@ files:
     reason: Product curriculum lifecycle prompt contracts.
     role: product
   scripts/__init__.py:
-    reason: Binds this product checkout as the installed release consumer.
-    role: product
+    reason: Shared package-root binding for product and retained machinery consumers.
+    role: shared
   scripts/docs/catalogue.py:
     reason: Validates this product documentation and store index.
     role: product

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import ast
 import builtins
-import os
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -12,7 +11,8 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from lu_machinery.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 ROOT = Path(__file__).resolve().parents[1]
 READERS = (
@@ -37,43 +37,24 @@ READERS = (
 @pytest.mark.parametrize("reader", READERS)
 @pytest.mark.parametrize("missing", ["scripts", "sqlite3"])
 def test_helper_fallback_only_handles_missing_scripts(reader, missing):
-    """An internal dependency error must never select the legacy import path."""
-    tree = ast.parse((ROOT / reader).read_text())
-    block = next(
-        node for node in tree.body
-        if isinstance(node, ast.Try)
-        and any(isinstance(child, ast.ImportFrom) and child.module == "lu_machinery.lib.readonly_sqlite"
-                for child in node.body)
-    )
+    """Installed readers propagate missing dependencies instead of selecting a legacy import."""
+    source = machinery_path(reader.removeprefix("scripts/")).read_text()
+    tree = ast.parse(source)
+    imports = [node for node in tree.body if isinstance(node, ast.ImportFrom)
+               and node.module == "lu_machinery.lib.readonly_sqlite"]
+    assert imports, reader
     attempted = []
 
     def controlled_import(name, *args, **kwargs):
         attempted.append(name)
-        if name == "lu_machinery.lib.readonly_sqlite":
-            raise ModuleNotFoundError(name=missing)
-        if name == "lib.readonly_sqlite":
-            return SimpleNamespace(
-                SQLiteConnection=SQLiteConnection,
-                open_readonly=open_readonly,
-                import_named_module=import_named_module,
-                is_sqlite_connection=object(),
-            )
-        return builtins.__import__(name, *args, **kwargs)
+        raise ModuleNotFoundError(name=missing)
 
-    # The guard names its package from the module's own location (design-v1 amendment 1), so the
-    # block runs with the module globals it reads: its file and the os and Path it imports.
-    namespace = {"__builtins__": {**vars(builtins), "__import__": controlled_import},
-                 "__file__": str(ROOT / reader), "os": os, "Path": Path}
-    code = compile(ast.Module(body=[block], type_ignores=[]), reader, "exec")
-    if missing == "scripts":
+    namespace = {"__builtins__": {**vars(builtins), "__import__": controlled_import}}
+    code = compile(ast.Module(body=imports, type_ignores=[]), reader, "exec")
+    with pytest.raises(ModuleNotFoundError) as error:
         exec(code, namespace)
-        assert namespace["open_readonly"] is open_readonly
-        assert attempted == ["lu_machinery.lib.readonly_sqlite", "lib.readonly_sqlite"]
-    else:
-        with pytest.raises(ModuleNotFoundError) as error:
-            exec(code, namespace)
-        assert error.value.name == missing
-        assert attempted == ["lu_machinery.lib.readonly_sqlite"]
+    assert error.value.name == missing
+    assert attempted == ["lu_machinery.lib.readonly_sqlite"]
 
 
 @pytest.mark.parametrize("reader, function", [
@@ -88,7 +69,7 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
         connection.execute("INSERT INTO evidence VALUES ('intended')")
         connection.commit()
     before = db.read_bytes()
-    tree = ast.parse((ROOT / reader).read_text())
+    tree = ast.parse((machinery_path(reader.removeprefix("scripts/")) if reader in READERS else ROOT / reader).read_text())
     definition = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == function)
     namespace = {
         "open_readonly": open_readonly, "sqlite3": sqlite3, "SQLiteConnection": SQLiteConnection,
@@ -112,7 +93,7 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
 
 def test_dashboard_broker_routes_through_monitor_context(tmp_path):
     reader = "scripts/project_api/dashboard_comms.py"
-    tree = ast.parse((ROOT / reader).read_text())
+    tree = ast.parse((machinery_path(reader.removeprefix("scripts/")) if reader in READERS else ROOT / reader).read_text())
     definition = next(
         node for node in tree.body
         if isinstance(node, ast.FunctionDef) and node.name == "get_broker_db"

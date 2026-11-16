@@ -86,7 +86,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
         "tests/test_repo_wide_marker_invariant.py",
-        "tests/test_session_identity_env_isolation.py",
         "tests/test_source_ingest_entrypoints.py",
         "tests/test_subprocess_timeout_guard.py",
         "tests/test_sum11_source_guard.py",
@@ -926,7 +925,7 @@ def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
     fd = os.open(lock, os.O_CREAT | os.O_RDWR, 0o600)
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        marked = _collect_repo_wide_marks(_REPO_ROOT, [_REPO_ROOT / "tests/test_session_identity_env_isolation.py"])
+        marked = _collect_repo_wide_marks(_REPO_ROOT, [_REPO_ROOT / "tests/test_docs_catalogue_coverage.py"])
         refused = run_in_process_group(
             [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"],
             cwd=_REPO_ROOT,
@@ -935,7 +934,7 @@ def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
         )
     finally:
         os.close(fd)
-    assert marked == (frozenset({"tests/test_session_identity_env_isolation.py"}), frozenset())
+    assert marked == (frozenset({"tests/test_docs_catalogue_coverage.py"}), frozenset())
     assert refused.returncode != 0
     assert FULL_SUITE_BUSY in refused.stdout + refused.stderr
 

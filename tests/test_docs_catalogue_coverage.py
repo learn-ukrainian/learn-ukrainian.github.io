@@ -100,7 +100,7 @@ def test_status_markers_are_verified_not_skipped(checked):
 def test_the_store_registry_is_checked_against_code_and_the_allowlist(checked):
     report, catalogue = checked
     registry = store_census.registry(catalogue)
-    assert len(registry['stores']) == 48, 'expected 39 present stores and 9 declared-absent defaults'
+    assert len(registry['stores']) == 41, 'expected 33 present stores and 8 declared-absent defaults'
     assert [e for e in report.errors if e.startswith(store_census.REGISTRY_KEY)] == []
 
 

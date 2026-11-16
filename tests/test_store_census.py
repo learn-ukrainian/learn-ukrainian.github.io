@@ -89,6 +89,7 @@ def test_the_registry_records_the_declared_defaults_families_and_evidence():
     absent = {r['path'] for r in rows(presence='declared_absent')}
     assert absent == {
         'batch_state/hramatka/lessons.sqlite3', 'batch_state/trails/runs.sqlite3',
+        'data/telemetry/module_builds.db',
         'data/telemetry/llm_qg.db', 'data/telemetry/llm_qg_shadow.db', 'data/embeddings/manifest.db',
         'data/ubertext-freq/frequency.db', 'data/atlas-synthetic.db'}
     families = {f['id'] for f in REGISTRY['families']}
@@ -398,7 +399,7 @@ def test_a_materialised_registry_reproduces_the_33_count(tmp_path):
     assert counts['by_activity'] == {'active': 28, 'dormant': 2, 'orphan': 1, 'staged': 2}
     assert counts['active_by_kind'] == {'cache': 3, 'derived': 3, 'job_state': 8, 'operational': 5,
                                         'reference': 9}
-    assert counts['declared_absent_rows'] == 7
+    assert counts['declared_absent_rows'] == 8
 
 
 def snapshot(root: Path) -> dict[str, tuple[int, int]]:

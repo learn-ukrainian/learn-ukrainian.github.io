@@ -280,6 +280,7 @@ def _setup_dispatcher_scan(env: MutationEnv) -> None:
     interpreter = env.root / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True, exist_ok=True)
     interpreter.write_text("", encoding="utf-8")
+    env.monkeypatch.setattr(batch_router, "project_interpreter", lambda _root: interpreter)
     calls: list[tuple[list[str], Path]] = []
 
     def fixture_scan(cmd: list[str], cwd: Path) -> Any:

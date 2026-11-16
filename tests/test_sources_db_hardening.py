@@ -31,13 +31,6 @@ ALLOWED_SHARED_CONNECTS: dict[tuple[str, str], str] = {
     ("scripts/wiki/embedding_manifest.py", "EmbeddingManifest.__init__"): "writable embedding manifest",
     ("scripts/rag/wiki_cache.py", "WikiCache.__init__"): "writable response cache",
     (".mcp/servers/sources/server.py", "_discard_sources_conn"): ":memory: stand-in that fails every query",
-    ("scripts/lib/readonly_sqlite.py", "open_readonly"): "the hardened opener itself (sets cached_statements=0)",
-    (
-        "scripts/api/resilience.py",
-        "connect_sqlite",
-    ): "pass-through wrapper; no caller shares a connection or opens sources.db",
-    ("scripts/control_plane/storage.py", "_connect_postgres"): "psycopg connect, not sqlite",
-    ("scripts/control_plane/storage.py", "connect"): "control-plane stores; callers pass no check_same_thread",
 }
 
 

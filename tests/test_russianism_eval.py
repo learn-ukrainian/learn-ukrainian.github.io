@@ -167,18 +167,18 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
     codex = caller.plan(prompt, "gpt-5.5")
     gemini = caller.plan(prompt, "gemini-3.1-pro-high")
 
-    assert claude.argv[2] == "ask-claude"
+    assert claude.argv[3] == "ask-claude"
     assert claude.argv[claude.argv.index("ask-claude") + 1] == "-"
     assert russianism_eval._redacted_command(claude) == " ".join(claude.argv)
     assert "<prompt_text>" not in russianism_eval._redacted_command(claude)
     assert "--stdout-only" not in claude.argv
     assert "--to-model" in claude.argv
     assert claude.argv[claude.argv.index("--to-model") + 1] == "claude-opus-4-7"
-    assert codex.argv[2] == "ask-codex"
+    assert codex.argv[3] == "ask-codex"
     assert "--stdout-only" not in codex.argv
     assert codex.stdin == "Translate."
     assert "--to-model" in codex.argv
-    assert gemini.argv[2] == "ask-agy"
+    assert gemini.argv[3] == "ask-agy"
     assert "--stdout-only" in gemini.argv
     assert gemini.argv[gemini.argv.index("--to-model") + 1] == "gemini-3.1-pro-high"
 
@@ -187,7 +187,7 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
     with patch.object(russianism_eval.subprocess, "run", return_value=completed) as invoke:
         for planned in (claude, codex, gemini):
             assert planned.stdin == "Translate."
-            parsed = parser.parse_args(planned.argv[2:])
+            parsed = parser.parse_args(planned.argv[3:])
             assert parsed.command == f"ask-{'agy' if planned.family == 'gemini' else planned.family}"
             assert parsed.content == "-"
             assert parsed.task_id == planned.task_id
@@ -204,7 +204,7 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
             )
             assert judged["verdict"] == "clean"
             assert judged["issues"] == []
-            assert invoke.call_args.args[0][2:] == planned.argv[2:]
+            assert invoke.call_args.args[0][2:] == planned.argv[3:]
             assert parser.parse_args(invoke.call_args.args[0][2:]) == parsed
             assert invoke.call_args.kwargs["input"] == "Translate."
 

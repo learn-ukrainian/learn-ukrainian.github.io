@@ -22,6 +22,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 GIT_COMMON_DIR="$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)"
 CANONICAL_ROOT="$(dirname "$GIT_COMMON_DIR")"
 VENV_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
+export HARNESS_REAL_PYTHON="$VENV_PYTHON"
 # The hooks under test are the installed lu-machinery release's (#13032).
 RELEASE_HOOKS="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
 print(machinery_path("agents_extensions/shared/hooks"))')"
@@ -30,6 +31,7 @@ HOOK="$RELEASE_HOOKS/session-setup.sh"
 BOUNDED_RUNNER="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
 print(machinery_path("agent_runtime/bounded_command.py"))')"
 POST_COMPACT_HOOK="$RELEASE_HOOKS/post-compact.sh"
+MACHINERY_ROOT="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib").parent)')"
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
@@ -81,6 +83,9 @@ if [[ "$*" == *"check_research_registry.py"* ]]; then
   printf '%s\n' "$STRICT_GATE_FAKE_JSON"
   exit "${STRICT_GATE_FAKE_EXIT:-0}"
 fi
+if [[ "$*" == *lu_machinery* && ( "${1:-}" == "-c" || "${1:-}" == "-I" ) ]]; then
+  exec "$HARNESS_REAL_PYTHON" "$@"
+fi
 printf "Python 3.12.15\n"
 PYEOF
   printf 'fixture db\n' > "$root/.mcp/servers/message-broker/messages.db"
@@ -118,6 +123,7 @@ run_hook() {
 
   printf '%s' "$hook_json" | \
     HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
+    LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$root" \
     CLAUDE_PROJECT_DIR="${project_dir_override:-$root}" \
     CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000 \
     CODEX_THREAD_ID="$current_thread_id" \
@@ -127,17 +133,17 @@ run_hook() {
     LEARN_UKRAINIAN_CLAUDEX_RUN_ID="$supervisor_run_id" \
     LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION="$supervisor_generation" \
     CLAUDEX_SUPERVISOR_TEST_STATE_ROOT="$root" \
-    CLAUDE_PROFILE_RESOLVER_SH="$REPO_ROOT/scripts/lib/profile_resolver.sh" \
-    CLAUDE_PROFILE_RESOLVER_PY="$REPO_ROOT/scripts/lib/context_profiles.py" \
+    CLAUDE_PROFILE_RESOLVER_SH="$MACHINERY_ROOT/lib/profile_resolver.sh" \
+    CLAUDE_PROFILE_RESOLVER_PY="$MACHINERY_ROOT/lib/context_profiles.py" \
     CLAUDE_PROFILE_RESOLVER_PYTHON="$VENV_PYTHON" \
-    CLAUDE_HANDOFF_IDENTITY_SH="$REPO_ROOT/scripts/lib/handoff_identity.sh" \
-    CLAUDE_SESSION_RECORD_SCRIPT="$REPO_ROOT/scripts/lib/session_record.py" \
+    CLAUDE_HANDOFF_IDENTITY_SH="$MACHINERY_ROOT/lib/handoff_identity.sh" \
+    CLAUDE_SESSION_RECORD_SCRIPT="$MACHINERY_ROOT/lib/session_record.py" \
     CLAUDE_SESSION_RECORD_PYTHON="${CLAUDE_SESSION_RECORD_PYTHON:-$VENV_PYTHON}" \
     SESSION_BOUNDED_RUNNER="$BOUNDED_RUNNER" \
-    CLAUDEX_SUPERVISOR_SCRIPT="$REPO_ROOT/scripts/orchestration/claudex_supervisor.py" \
+    CLAUDEX_SUPERVISOR_SCRIPT="$MACHINERY_ROOT/orchestration/claudex_supervisor.py" \
     CLAUDEX_SUPERVISOR_PYTHON="$VENV_PYTHON" \
     THREAD_ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$VENV_PYTHON}" \
-    THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    THREAD_ROLLOVER_SCRIPT="$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     SESSION_HANDOFF_AGENT="$handoff_agent" \
     SESSION_EPIC="$session_epic" \
     SESSION_HANDOFF_ALLOW_GIT_ROUTER="$allow_git_router" \
@@ -151,7 +157,7 @@ prepare_fixture() {
 
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" \
     CODEX_CANONICAL_REPO_ROOT="$root" PATH="/usr/bin:/bin" \
-    "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 prepare --agent "$agent" --active-thread-id "$thread_id" >/dev/null
 }
 
@@ -202,18 +208,18 @@ with sqlite3.connect(db_path) as connection:
     )
 PYEOF
 
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action create >/dev/null
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action create --succeeded \
     --evidence "fixture create_thread returned $replacement_thread_id" >/dev/null
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 register-created --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --replacement-thread-id "$replacement_thread_id" \
     --db "$db_path" --evidence "fixture exact native create result" >/dev/null
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 native-action --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
   "$VENV_PYTHON" - "$db_path" "$replacement_thread_id" "$intended_title" <<'PYEOF'
@@ -224,16 +230,16 @@ db_path, replacement_id, intended_title = sys.argv[1:]
 with sqlite3.connect(db_path) as connection:
     connection.execute("UPDATE threads SET title = ? WHERE id = ?", (intended_title, replacement_id))
 PYEOF
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 record-native-result --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --succeeded \
     --evidence "fixture set_thread_title acknowledged" >/dev/null
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 reconcile-native --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" --action title --db "$db_path" >/dev/null
 
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
-    "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$root" --monitor-base-url http://127.0.0.1:1 resume --agent "$agent" \
     --state-file "$state_file" --rollover-id "$rollover_id" \
     --replacement-thread-id "$replacement_thread_id" >/dev/null
@@ -244,7 +250,7 @@ run_post_compact() {
   HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" \
     CLAUDE_PROJECT_DIR="$root" SESSION_HANDOFF_AGENT="codex" CODEX_CANONICAL_REPO_ROOT="$root" \
     THREAD_ROLLOVER_PYTHON="$VENV_PYTHON" \
-    THREAD_ROLLOVER_SCRIPT="$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+    THREAD_ROLLOVER_SCRIPT="$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     SESSION_BOUNDED_RUNNER="$BOUNDED_RUNNER" \
     "$POST_COMPACT_HOOK"
 }
@@ -428,7 +434,7 @@ NO TABLE FALLBACK BODY
 EOF
 output="$(run_hook "$fixture_root" 1)"
 assert_contains "$output" "WARN: Could not locate latest brief in current.md under legacy router opt-in." "no table"
-assert_contains "$output" "thread_handoff.py prepare --agent claude" "no table"
+assert_contains "$output" "lu_machinery.orchestration.thread_handoff prepare --agent claude" "no table"
 assert_not_contains "$output" "NO TABLE FALLBACK BODY" "no table"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
@@ -491,7 +497,7 @@ assert_not_contains "$output" "confirm-replacement" "foreign-only cold start"
 setup_fixture "$fixture_root"
 infra_fixture_stream=$(bash -c 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream infra' _ "$REPO_ROOT")
 for family in infra infra-driver; do
-  "$VENV_PYTHON" "$REPO_ROOT/scripts/orchestration/thread_handoff.py" \
+  "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$fixture_root" --monitor-base-url http://127.0.0.1:1 prepare \
     --agent claude-infra --active-thread-id "old-$family" \
     --stream-epic "${infra_fixture_stream#epic:}" --task-family "$family" \
@@ -559,7 +565,7 @@ output="$(run_post_compact "$fixture_root")"
 #     pending_start packet under claude-infra MUST surface at SessionStart —
 #     never a silent cold start under the phantom claude-harness slot.
 # shellcheck source=scripts/lib/handoff_identity.sh
-source "$REPO_ROOT/scripts/lib/handoff_identity.sh"
+source "$MACHINERY_ROOT/lib/handoff_identity.sh"
 harness_slot="$(handoff_identity_for_epic harness)"
 eq_slot() {
   # local assert: harness epic must resolve to claude-infra
