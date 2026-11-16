@@ -33,7 +33,6 @@
       "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",
       "Bash(.venv/bin/python -m scripts.orchestration.worktree_claims *)",
       "Bash(.venv/bin/python -m scripts.fleet.capacity_pick*)",
-      "Bash(.venv/bin/python -m scripts.storage.artifacts *)",
       "Bash(.venv/bin/python -m scripts.gh_merge_queue_status *)",
       "Bash(.venv/bin/python -m scripts.fleet_comms *)",
       "Bash(.venv/bin/python -m scripts.ai_agent_bridge *)",

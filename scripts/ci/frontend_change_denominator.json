@@ -15,8 +15,6 @@
     "scripts/__init__.py",
     "scripts/atlas/",
     "scripts/lexicon/",
-    "scripts/storage/__init__.py",
-    "scripts/storage/paths.py",
     "scripts/etymology/transliterate.py",
     "scripts/audit/__init__.py",
     "scripts/audit/generate_search_index.py",
