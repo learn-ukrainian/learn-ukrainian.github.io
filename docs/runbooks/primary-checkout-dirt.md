@@ -61,8 +61,8 @@ are fingerprinted: at most 200 per call, and files are hashed only up to
 The report prints the command. Run the dry run first, then apply:
 
 ```bash
-.venv/bin/python -m scripts.hygiene.primary_dirt_cleanup --session '<session>' --record '<record>'
-.venv/bin/python -m scripts.hygiene.primary_dirt_cleanup --session '<session>' --record '<record>' --apply
+.venv/bin/python -m lu_machinery.hygiene.primary_dirt_cleanup --session '<session>' --record '<record>'
+.venv/bin/python -m lu_machinery.hygiene.primary_dirt_cleanup --session '<session>' --record '<record>' --apply
 ```
 
 The command removes a file only when all of these hold:

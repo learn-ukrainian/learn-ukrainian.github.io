@@ -412,7 +412,7 @@ or unpushed work remains protected.
 
 ## Branch sweep evidence (#9909)
 
-`scripts.hygiene.branch_sweep` stays a dry run unless `--apply` is passed. A
+`lu_machinery.hygiene.branch_sweep` stays a dry run unless `--apply` is passed. A
 merged pull-request head that matches the branch tip, and a tip that is already
 an ancestor of `origin/main`, are still the only ancestry proofs. Any other
 agent or scratch branch is deleted only when one more proof holds: every commit
@@ -463,7 +463,7 @@ A bundle leaves the local archive only through the age-out below.
 
 `batch_state/branch-archive/` is the rescue copy of local branches the sweep deleted. It is
 not backed up (`docs/runbooks/data-backup.md`). Writers: `_write_verified_bundle` and
-`_write_archive_receipts` (`scripts/hygiene/branch_sweep.py`) for bundles and
+`_write_archive_receipts` (`lu_machinery/hygiene/branch_sweep.py`) for bundles and
 `stale-local-receipts.jsonl`; `_append_receipt` for `evidence.jsonl`. Readers:
 
 - `evidence.jsonl` has no program reader. It is the append-only audit trail for a human
@@ -492,7 +492,7 @@ under the archive lock:
 5. Only then is the local file unlinked. Any failure keeps the local file. A rerun after a crash finds
    the matching bulk copy and finishes. The bulk copy is never deleted or overwritten here.
 
-Restore: `.venv/bin/python -m scripts.hygiene.branch_sweep --restore-bundle NAME [--restore-to DIR]`
+Restore: `.venv/bin/python -m lu_machinery.hygiene.branch_sweep --restore-bundle NAME [--restore-to DIR]`
 copies the bulk file back (default: this archive directory, never replacing a file), checks its sha256
 against the `bundle-relocated` line and runs `git bundle verify`. Then use the original receipt's
 `git fetch <bundle> refs/heads/<branch>:refs/heads/<branch>`. An earlier receipt's local path in its
@@ -552,7 +552,7 @@ systemctl --user daemon-reload && systemctl --user reset-failed
 ## Deletion ownership
 
 Untracked files that a shell call left in the primary checkout itself are a
-separate path: `scripts.hygiene.primary_dirt_cleanup` removes only the files
+separate path: `lu_machinery.hygiene.primary_dirt_cleanup` removes only the files
 an audit record proves the calling session created
 ([`primary-checkout-dirt.md`](primary-checkout-dirt.md), #11253).
 
@@ -933,7 +933,7 @@ A red or missing scheduled run surfaces on the existing integrity canary
 pre-flight warning). Probe:
 
 ```bash
-.venv/bin/python scripts/hygiene/check_worktree_cleanup_integrity.py
+.venv/bin/python -m lu_machinery.hygiene.check_worktree_cleanup_integrity
 ```
 
 ## Uninstall

@@ -1244,32 +1244,6 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return isolated_path
 
 
-# Every by-path sibling key both copies cache and reuse (an AST scan of scripts/ and the
-# installed lu_machinery/ for literal loader names; the two OPSEC loader keys re-execute
-# their private file on every load and never read the cache).  # TRANSITIONAL-PKG3-B2
-_SHARED_SIBLING_MODULE_KEYS = (
-    "_node_modules_integrity_check_primary_integrity",
-    "_venv_integrity_check_primary_integrity",
-    "_worktree_cleanup_integrity_check_primary_integrity",
-)
-
-
-@pytest.fixture(autouse=True)
-def _drop_shared_sibling_module_keys() -> None:
-    """Let each machinery copy load its own by-path sibling module.
-
-    The in-tree ``scripts/hygiene/check_{venv,node_modules,worktree_cleanup}_integrity.py``
-    and the installed release's copies each cache ``check_primary_integrity.py`` under
-    a fixed ``sys.modules`` key. In one pytest process the copy imported second gets the
-    other copy's module (merge-group run 42931243455: the release app's preload
-    raised ``AttributeError: ... has no attribute 'product_root'``). A copy keeps
-    the reference it bound at import, so dropping the key only affects the next
-    import. TRANSITIONAL-PKG3-B2: delete with the in-tree copy.
-    """
-    for key in _SHARED_SIBLING_MODULE_KEYS:
-        sys.modules.pop(key, None)
-
-
 @pytest.fixture(autouse=True)
 def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
     """Fail the test that tries to open the live bridge DB with write access."""

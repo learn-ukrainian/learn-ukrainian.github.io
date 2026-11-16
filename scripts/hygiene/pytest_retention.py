@@ -44,11 +44,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.hygiene.tmp_sweep_ledger import Ledger
+
 from scripts.common import task_scratch as ownership
 from scripts.common.pytest_scratch import NAMESPACE, RUNS_DIRNAME
 from scripts.common.scratch import ScratchScanRootError, scratch_scan_roots
 from scripts.hygiene import tmp_sweep as sweep
-from scripts.hygiene.tmp_sweep_ledger import Ledger
 
 INACTIVE_S = 2 * 3600
 LARGEST_PRESERVED_RUNS = 10

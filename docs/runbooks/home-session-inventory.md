@@ -8,7 +8,7 @@ account mappings and raw inventory output in private operational evidence.
 Run from the project checkout with its configured project interpreter:
 
 ```bash
-.venv/bin/python scripts/hygiene/inventory_home_sessions.py --json
+.venv/bin/python -m lu_machinery.hygiene.inventory_home_sessions --json
 ```
 
 Missing roots are reported rather than created. Symlinked homes, session
@@ -23,7 +23,7 @@ retention boundary and stale-file budget. Unmeasurable stores are unknown,
 never evidence of compliance.
 
 ```bash
-.venv/bin/python scripts/hygiene/home_session_retention_check.py --json
+.venv/bin/python -m lu_machinery.hygiene.home_session_retention_check --json
 ```
 
 The check never archives or deletes files. Review its sanitized result before
@@ -36,7 +36,7 @@ apply gates. Read the command's help before preparing an authorized archive
 operation:
 
 ```bash
-.venv/bin/python scripts/hygiene/inventory_home_sessions.py --help
+.venv/bin/python -m lu_machinery.hygiene.inventory_home_sessions --help
 ```
 
 Choose an approved archive destination and retention boundary through the

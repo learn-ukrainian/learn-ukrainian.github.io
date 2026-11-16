@@ -13,7 +13,7 @@ entry; anything found or unknown renames it back.
 
 Recoverable retention (#9887): a clean result keeps the entry in quarantine
 instead of deleting it. Each step is recorded in the append-only ledger of
-:mod:`scripts.hygiene.tmp_sweep_ledger`, the first record before the entry
+:mod:`lu_machinery.hygiene.tmp_sweep_ledger`, the first record before the entry
 leaves its path. ``restore <ledger-id>`` puts an entry back; the purge pass
 at the start of a later run deletes it only once the window (7 days by
 default) has passed and the same checks still hold.
@@ -47,13 +47,10 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
-from scripts.common.task_scratch import TaskScratchError, mount_points
-from scripts.common.task_store_paths import tasks_dir
-from scripts.hygiene import batch_state_retention
-from scripts.hygiene.batch_state_retention import EXCLUDED, default_batch_root, load_holds, scratch_expiry
-from scripts.hygiene.retention_engine import plan_digest, reap_attributed_temp
-from scripts.hygiene.tmp_sweep_ledger import (
+from lu_machinery.hygiene import batch_state_retention
+from lu_machinery.hygiene.batch_state_retention import EXCLUDED, default_batch_root, load_holds, scratch_expiry
+from lu_machinery.hygiene.retention_engine import plan_digest, reap_attributed_temp
+from lu_machinery.hygiene.tmp_sweep_ledger import (
     DEFAULT_DIGEST_LIMIT,
     DEFAULT_QUARANTINE_S,
     HELD_STATES,
@@ -73,6 +70,10 @@ from scripts.hygiene.tmp_sweep_ledger import (
     utc_iso,
     validate_state_dir,
 )
+
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
+from scripts.common.task_scratch import TaskScratchError, mount_points
+from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.tmp_leak_sweep import (
     _process_state,
     _process_vanished,
@@ -1505,7 +1506,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             "Exit codes: 0 success; 1 restore refused, failed or different, or ledger unavailable; "
             "2 invalid arguments or unknown ledger id; 3 restored, but files above the digest limit "
             "matched by size and mtime only (unverified).\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'tmp_sweep_ledger')}."
+            f"Related: #9887; docs/runbooks/tmp-retention.md; lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1522,7 +1523,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
             "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable.\n"
             "Related: #9887; docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
-            f"{_mod('hygiene', 'tmp_sweep_ledger')}."
+            f"lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     ledger.add_argument("--path", help="Substring of the original path (example: hand-made-scratch).")
@@ -1547,7 +1548,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         epilog=(
             f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --quarantine-days 7\n"
             "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable.\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md (Purge); {_mod('hygiene', 'tmp_sweep_ledger')}."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Purge); lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
@@ -1570,7 +1571,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             "Exit codes: 0 restored and byte-verified; 1 refused, failed, restored but different, or a sweep "
             "holds the ledger; 2 unknown ledger id; 3 restored, but files above the digest limit matched "
             "by size and mtime only (listed in digest_unverified).\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md (Restore); {_mod('hygiene', 'tmp_sweep_ledger')}."
+            f"Related: #9887; docs/runbooks/tmp-retention.md (Restore); lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
@@ -1651,8 +1652,8 @@ def build_parser() -> argparse.ArgumentParser:
             "expired, re-verified quarantined entries and inactive, unheld pytest run folders.\n"
             "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
             "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
-            f"Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; {_mod('hygiene', 'retention_engine')}; "
-            f"{_mod('hygiene', 'tmp_sweep_ledger')}; packaging/systemd/learn-ukrainian-tmp-sweep.*."
+            f"Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; lu_machinery.hygiene.retention_engine; "
+            f"lu_machinery.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
     parser.add_argument(
