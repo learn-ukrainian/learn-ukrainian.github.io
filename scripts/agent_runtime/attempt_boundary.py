@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.repo_root import machinery_path as release_machinery_path
 
 from scripts.common.repo_root import project_interpreter
 
@@ -1319,14 +1320,14 @@ class AttemptBoundary:
             self.env.pop("GIT_DIR", None)
             self.env.pop("GIT_WORK_TREE", None)
             proxy = self.write_root / "stdio.py"
-            proxy.write_bytes(Path(__file__).with_name("attempt_proxy.py").read_bytes())
+            proxy.write_bytes(release_machinery_path("agent_runtime/attempt_proxy.py").read_bytes())
             endpoint = self.write_root / "sources.sock"
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
             self.egress = AttemptEgress(self.egress_endpoint)
             self.forwarder = self.write_root / "forwarder.py"
-            self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
+            self.forwarder.write_bytes(release_machinery_path("agent_runtime/attempt_forwarder.py").read_bytes())
             proxy_server = {
                 "command": str(project_interpreter().resolve(strict=True)),
                 "args": [str(proxy), str(endpoint)],
