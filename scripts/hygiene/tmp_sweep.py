@@ -1506,7 +1506,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             "Exit codes: 0 success; 1 restore refused, failed or different, or ledger unavailable; "
             "2 invalid arguments or unknown ledger id; 3 restored, but files above the digest limit "
             "matched by size and mtime only (unverified).\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md; lu_machinery.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/tmp-retention.md; lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -1522,7 +1522,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         epilog=(
             f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} ledger --run-id 20261006T053012Z-a1b2c3 --json\n"
             "Outputs: stdout table or JSON records (manifests only with --manifest). Exit codes: 0; 1 ledger unreadable.\n"
-            "Related: #9887; docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
+            "Related: #9887; https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/tmp-retention.md (Deletion ledger and quarantine); "
             f"lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
@@ -1548,7 +1548,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
         epilog=(
             f"Example: .venv/bin/python -m {_mod('hygiene', 'tmp_sweep')} quarantine --quarantine-days 7\n"
             "Outputs: stdout table or JSON. Exit codes: 0; 1 ledger unreadable.\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md (Purge); lu_machinery.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/tmp-retention.md (Purge); lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     quarantine.add_argument("--json", action="store_true", help="Print JSON instead of a table (default table).")
@@ -1571,7 +1571,7 @@ def build_ledger_parser() -> argparse.ArgumentParser:
             "Exit codes: 0 restored and byte-verified; 1 refused, failed, restored but different, or a sweep "
             "holds the ledger; 2 unknown ledger id; 3 restored, but files above the digest limit matched "
             "by size and mtime only (listed in digest_unverified).\n"
-            f"Related: #9887; docs/runbooks/tmp-retention.md (Restore); lu_machinery.hygiene.tmp_sweep_ledger."
+            f"Related: #9887; https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/tmp-retention.md (Restore); lu_machinery.hygiene.tmp_sweep_ledger."
         ),
     )
     restore_parser.add_argument("ledger_id", help="Ledger id from `ledger` or `quarantine` (example 3f9c2a7b1d04).")
@@ -1652,7 +1652,7 @@ def build_parser() -> argparse.ArgumentParser:
             "expired, re-verified quarantined entries and inactive, unheld pytest run folders.\n"
             "Exit codes: 0 inventory complete; 1 scan/quarantine/purge errors (including entries kept as "
             "purge_kept_ambiguous until restored or removed by hand) or ledger unavailable; 2 invalid arguments.\n"
-            f"Related: #8755, #9737, #9887, #11297; docs/runbooks/tmp-retention.md; lu_machinery.hygiene.retention_engine; "
+            f"Related: #8755, #9737, #9887, #11297; https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/tmp-retention.md; lu_machinery.hygiene.retention_engine; "
             f"lu_machinery.hygiene.tmp_sweep_ledger; packaging/systemd/learn-ukrainian-tmp-sweep.*."
         ),
     )
