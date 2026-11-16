@@ -2917,7 +2917,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     """Mark nightly groups and quarantined flakes; refuse unserved ``rules_core_absent`` tests."""
     _mark_nightly_groups(items)
     selected = rerun_node_ids(
-        load_registry(_REPO_ROOT / "tests/flake_quarantine.yaml"),
+        load_registry(Path(__file__).with_name("flake_quarantine.yaml")),
         today=datetime.now(UTC).date(),
         event_name="schedule"
         if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1"
@@ -3120,7 +3120,7 @@ def pytest_configure(config: pytest.Config) -> None:
             "WARNING: credential redaction cannot protect direct terminal output; "
             "keep capture enabled and log_cli disabled when credentials are present.\n"
         )
-    load_registry(_REPO_ROOT / "tests/flake_quarantine.yaml")
+    load_registry(Path(__file__).with_name("flake_quarantine.yaml"))
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
