@@ -226,7 +226,7 @@ def import_named_module(name: str) -> ModuleType:
 
 
 _CORPUS_DATABASE_NAMES = frozenset({"sources.db", "vesum.db"})
-# Published Sources generations (scripts/storage/generations.py) live under
+# Published Sources generations (lu_machinery/storage/generations.py) live under
 # this directory with names that are not sources.db.
 _GENERATIONS_DIRNAME = "sources-generations"
 
@@ -345,13 +345,13 @@ def _stack_may_write(factory: str | None) -> bool:
 
 
 # --- Sources store writer lock bookkeeping -------------------------------------
-# scripts/storage/generations.py takes the store-wide writer lock and registers
+# lu_machinery/storage/generations.py takes the store-wide writer lock and registers
 # the selector here, so this guard can require the lock without importing it.
 STORE_WRITER_LOCK_NAME = ".sources-writer.lock"
 # Only the canonical selector carries the lock; another link in the same
 # directory never authorizes a write.
 STORE_SELECTOR_NAME = "sources.db"
-# A process started by ``python -m scripts.storage write`` inherits the
+# A process started by ``scripts/pre_commit/project_python.sh -I -m lu_machinery.storage write`` inherits the
 # parent's locked descriptor and the selector it locked.
 ENV_STORE_WRITER_FD = "LU_SOURCES_WRITER_FD"
 ENV_STORE_WRITER_SELECTOR = "LU_SOURCES_WRITER_SELECTOR"
@@ -371,7 +371,7 @@ def unregister_store_writer(selector: Path) -> None:
 
 
 def inherited_store_writer(lock_dir: Path) -> tuple[int, Path] | None:
-    """The descriptor and selector a ``scripts.storage write`` parent passed down for this store."""
+    """The descriptor and selector a ``lu_machinery.storage write`` parent passed down for this store."""
     raw_fd = os.environ.get(ENV_STORE_WRITER_FD)
     raw_selector = os.environ.get(ENV_STORE_WRITER_SELECTOR)
     if raw_fd is None or raw_selector is None:
@@ -407,7 +407,7 @@ def writable_store_refusal(database: str | os.PathLike[str]) -> str | None:
     store needs this process to hold its writer lock (or to have inherited it),
     and the path must resolve to the generation the selector selects now.
     """
-    from scripts.storage.topology import inspect_selector, store_kind
+    from lu_machinery.storage.topology import inspect_selector, store_kind
 
     ref = store_kind(database)
     if ref.kind == "other":

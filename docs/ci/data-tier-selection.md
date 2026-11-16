@@ -8,7 +8,7 @@ The prior product selection contained 556 entries. This revision retains 127 exa
 
 | Removed selection group | Entries | Reason |
 | --- | ---: | --- |
-| No marker-valid bulk root | 4 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| No marker-valid bulk root | 4 | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | Paused open-model-data project | 383 | project paused; data not provisioned on this host |
 | benchmarks/v1/MANIFEST.json is absent from existing host data. | 3 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | 51 known citation-content xfails still reference closed #8403 | 1 | 51 known citation-content xfails still reference closed #8403; retained outside nightly for content repair on #9256. |
@@ -24,9 +24,9 @@ Tests requiring absent inputs are deleted rather than left as permanent skips. O
 
 | Deleted test | Cases or definitions | Missing input |
 | --- | ---: | --- |
-| `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
-| `tests/test_wiki_channels.py::test_registry_schema_covers_all_live_source_files` | 1 | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | 1 | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
+| `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | 1 | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
+| `tests/test_wiki_channels.py::test_registry_schema_covers_all_live_source_files` | 1 | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_benchmark_freeze.py::test_public_fixture_hashes_match_frozen_manifest` | 1 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | `tests/test_benchmark_freeze.py::test_reference_scorecard_hash_matches_frozen_manifest` | 1 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | `tests/test_benchmark_freeze.py::test_frozen_diagnostic_values_match_current_code` | 1 | benchmarks/v1/MANIFEST.json is absent from existing host data. |
@@ -59,13 +59,13 @@ The product change does not certify a post-landing nightly run until the machine
 
 | Entry | Reason |
 | --- | --- |
-| `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| `tests/ingest/test_esum_ingest.py::test_esum_ingest_djvutxt_regression` | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_benchmark_freeze.py::test_frozen_diagnostic_values_match_current_code` | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | `tests/test_benchmark_freeze.py::test_public_fixture_hashes_match_frozen_manifest` | benchmarks/v1/MANIFEST.json is absent from existing host data. |
 | `tests/test_benchmark_freeze.py::test_reference_scorecard_hash_matches_frozen_manifest` | benchmarks/v1/MANIFEST.json is absent from existing host data. |
-| `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| `tests/test_channels_registry.py::test_registry_covers_all_external_source_files` | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_citation_resolution_invariant.py` | 51 known citation-content xfails still reference closed #8403; retained outside nightly for content repair on #9256. |
-| `tests/test_layerb_shadow.py::test_stored_corpus_lineage_resolves_all_groundings_when_available` | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| `tests/test_layerb_shadow.py::test_stored_corpus_lineage_resolves_all_groundings_when_available` | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_practice_quality_gate.py::test_production_practice_shards_all_modes_gate_passes` | Learner content defects recorded on #9256; content edits frozen. |
 | `tests/test_reattribute_ukrlib.py::TestPostReattributedFilesValid::test_post_file_has_correct_author[ukrlib-kotlyarevsky.jsonl-\u041a\u043e\u0442\u043b\u044f\u0440\u0435\u0432\u0441\u044c\u043a\u0438\u0439 \u0406.]` | All five expected ukrlib JSONL outputs are absent; SQLite author checks remain. |
 | `tests/test_reattribute_ukrlib.py::TestPostReattributedFilesValid::test_post_file_has_correct_author[ukrlib-kotsyubynsky.jsonl-\u041a\u043e\u0446\u044e\u0431\u0438\u043d\u0441\u044c\u043a\u0438\u0439 \u041c.]` | All five expected ukrlib JSONL outputs are absent; SQLite author checks remain. |
@@ -74,7 +74,7 @@ The product change does not certify a post-landing nightly run until the machine
 | `tests/test_reattribute_ukrlib.py::TestPostReattributedFilesValid::test_post_file_has_correct_author[ukrlib-tychyna.jsonl-\u0422\u0438\u0447\u0438\u043d\u0430 \u041f.]` | All five expected ukrlib JSONL outputs are absent; SQLite author checks remain. |
 | `tests/test_scrape_diasporiana.py::TestDiasporianaJsonlSchema::test_chunk_schema_matches_existing_litopys_waves` | wave12-krupnytsky-orlyk-biohrafiia.jsonl is absent from existing host data. |
 | `tests/test_site_links.py::TestCurriculumSync::test_manifest_modules_have_mdx[a1]` | The only configured complete track is a1, whose manifest contains no modules. |
-| `tests/test_wiki_channels.py::test_registry_schema_covers_all_live_source_files` | No marker-valid bulk root; scripts.storage status reports no_marker_valid_bulk_root. |
+| `tests/test_wiki_channels.py::test_registry_schema_covers_all_live_source_files` | No marker-valid bulk root; lu_machinery.storage status reports no_marker_valid_bulk_root. |
 | `tests/test_atlas_conformance.py::test_real_lexicon_manifest_membership_conforms` | Learner content defects recorded on #9256; content edits frozen. |
 | `tests/audit/test_antonenko_prose_narrowing.py::test_marker_constant_excludes_overbroad_phrases` | Stale selection entry: the named test is absent from the current source tree. |
 | `tests/audit/test_antonenko_prose_narrowing.py::test_rendered_prompt_surfaces_narrowed_status` | Stale selection entry: the named test is absent from the current source tree. |

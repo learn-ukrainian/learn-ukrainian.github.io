@@ -2028,7 +2028,8 @@ entries:
   - id: data-artifact-store
     kind: data_store
     store: [data/.artifact-store/]
-    producer: [scripts/storage/artifacts.py]
+    producer: []
+    producer_note: Written by the installed lu-machinery release (lu_machinery.storage.artifacts).
     local_only: true
     purpose: Content-addressed objects for artifact groups whose manifests are tracked in registry/artifacts.
     keywords: [artifact store, content addressed, published artifacts]
@@ -2123,7 +2124,7 @@ entries:
     kind: data_store
     store: [data/references/]
     producer: []
-    producer_note: Classified as A-class data by scripts/storage/build_classification_table.py; no writer or reader found in scripts/.
+    producer_note: Classified as A-class data by lu_machinery.storage.build_classification_table; no writer or reader found in scripts/.
     local_only: true
     purpose: Untracked reference data, currently an interference-patterns JSON.
     keywords: [interference patterns]

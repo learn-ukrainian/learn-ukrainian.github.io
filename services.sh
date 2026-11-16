@@ -56,13 +56,6 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Check before local/remote routing, pid-directory creation, or stopping an
-# existing process. The UUID file is absent on notebooks and pre-migration hosts.
-case "${1:-}" in
-    start|restart|fix)
-        /usr/bin/env bash "$PROJECT_ROOT/scripts/storage/data_volume_guard.sh"
-        ;;
-esac
 SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
 SVC_SYSTEMCTL_BIN="${SVC_SYSTEMCTL_BIN:-systemctl}"
 SVC_PROC_ROOT="${SVC_PROC_ROOT:-/proc}"
@@ -101,6 +94,28 @@ if [[ "$LU_SERVICES_ROLE" == "notebook" ]]; then
     echo "ERROR: notebook role has no private launcher at $NOTEBOOK_LAUNCHER; clone the sibling private repo next to this checkout, or set LU_SERVICES_ROLE=local to run services locally." >&2
     exit 1
 fi
+
+# The data-volume guard ships in the installed lu-machinery release, so the
+# primary checkout's interpreter locates it. It checks this checkout's data/
+# and runs with this checkout as the product. Without that interpreter or the
+# release it refuses (exit 78) instead of skipping the check. A notebook has
+# handed off above; the host it delegates to runs its own guard.
+_data_volume_guard() {
+    local guard
+    if ! guard="$("$PUBLIC_PRIMARY_ROOT/.venv/bin/python" -I -c 'from importlib.resources import files; print(files("lu_machinery").joinpath("storage/data_volume_guard.sh"))')" \
+        || [[ ! -f "$guard" ]]; then
+        echo "data volume guard: the installed lu-machinery release is unavailable" >&2
+        exit 78
+    fi
+    LU_PRODUCT_ROOT="$PROJECT_ROOT" /usr/bin/env bash "$guard" "$@"
+}
+# Check before pid-directory creation or stopping an existing process. The UUID
+# file is absent on notebooks and pre-migration hosts.
+case "${1:-}" in
+    start|restart|fix)
+        _data_volume_guard
+        ;;
+esac
 
 mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 
@@ -1305,7 +1320,7 @@ _rebuild_astro() {
 _status() {
     local selected="${*:-$ALL_SERVICES}"
     local failed=0 route active sub main restarts listeners pid kind detail state pid_in_port
-    /usr/bin/env bash "$PROJECT_ROOT/scripts/storage/data_volume_guard.sh" --status
+    _data_volume_guard --status
     printf "%-12s %-11s %-8s %-15s %s\n" "SERVICE" "STATUS" "PID" "PORT" "DETAIL"
     printf "%-12s %-11s %-8s %-15s %s\n" "-------" "------" "---" "----" "------"
     for name in $selected; do

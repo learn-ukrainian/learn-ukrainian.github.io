@@ -6,7 +6,7 @@ with the SQLite online backup API into a candidate file in ``data/``. It
 imports every staged slovnyk.me ``newsum`` article from the frozen staging
 bytes into the candidate's ``sum20_mirror_*`` tables (``scripts.wiki.sum20_mirror``)
 and verifies the candidate. It then publishes the candidate as a new generation
-through ``scripts.storage.generations.publish_generation``, still under the
+through ``lu_machinery.storage.generations.publish_generation``, still under the
 same lock. The official ``sum20_*`` tables, their quarantine marks and the
 crawl tables are never written, and verification proves them unchanged.
 
@@ -15,7 +15,7 @@ changes the selection (docs/runbooks/storage-topology.md, "Sources store
 generations"). A reader that opened the store before the switch keeps the
 previous generation, whole and unchanged. Every generation is retained, so a
 rollback selects the previous one with
-``python -m scripts.storage restore-generation``.
+``scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation``.
 
 The writer runs only from the primary checkout, on a local filesystem, after
 the one-time generation bootstrap. A busy writer lock is refused, never waited
@@ -635,7 +635,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import plan\n"
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import import --expect-staging-sha256 <sha256>\n"
-            "  .venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
+            "  scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
             "Outputs: JSON on stdout; the new generation under data/sources-generations/.\n"
             "Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused (selection unchanged);\n"
             "3 published, but a step after the selector switch failed (the new generation is selected).\n"

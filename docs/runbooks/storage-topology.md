@@ -35,8 +35,8 @@ Read-only status (never materializes cloud-only files):
 
 ```bash
 # Primary checkout (or any tree that already has the shared project venv)
-.venv/bin/python -m scripts.storage status
-.venv/bin/python -m scripts.storage status --json
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status --json
 ```
 
 In a dispatch worktree, use the primary checkout interpreter supplied by the
@@ -63,8 +63,8 @@ creation, removal, or replacement of database components. Reopen connections
 afterwards: existing connections can retain writable file descriptors.
 
 ```bash
-.venv/bin/python -m scripts.storage hold example.db --json
-.venv/bin/python -m scripts.storage lift example.db --json
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage hold example.db --json
+scripts/pre_commit/project_python.sh -I -m lu_machinery.storage lift example.db --json
 ```
 
 `hold` sets the database and existing `-wal`, `-shm`, and `-journal` files to
@@ -79,7 +79,7 @@ is refused (`generation_named_directly`). A lifted store cannot be published
 [Sources store generations](#sources-store-generations).
 
 The programmatic API exports `hold_database`, `lift_database`,
-`get_companion_paths`, and `inspect_database_permissions` from `scripts.storage`.
+`get_companion_paths`, and `inspect_database_permissions` from `lu_machinery.storage`.
 Inspection returns integer modes, with `None` for absent components.
 `strict=False` on hold or lift skips missing paths, including the database.
 Other filesystem errors still raise.
@@ -93,13 +93,13 @@ users can bypass mode bits. See the helper's module documentation for its contra
 
 Tracked scripts (manual, non-destructive):
 
-1. `scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1` — `rclone copy` only
+1. `lu_machinery/storage/windows/Copy-BulkSourcesFromDrive.ps1` — `rclone copy` only
    (never `sync` / purge / delete) into the mirror's local path via
    `Get-SmbShare`.
-2. `scripts/storage/windows/Verify-BulkSources.ps1` — marker check and optional
+2. `lu_machinery/storage/windows/Verify-BulkSources.ps1` — marker check and optional
    exact-file JSONL manifest; writes a success receipt **only** on pass.
 
-See `scripts/storage/windows/README.md`. Scheduled Task install is optional and
+See `lu_machinery/storage/windows/README.md`. Scheduled Task install is optional and
 opt-in; default is a manual run.
 
 ## Local cache (report-only)
@@ -125,7 +125,7 @@ an accident of whichever ingest last touched the file (#8527):
   seeing the rows it started with. In **DELETE (rollback-journal) mode the same pinned
   read holds a SHARED lock**: the ULIF walk's commit waits `busy_timeout` and then
   raises `database is locked` — a snapshot reader would stall the writer.
-- **Who declares it.** The generation publisher (`scripts/storage/generations.py`)
+- **Who declares it.** The generation publisher (`lu_machinery/storage/generations.py`)
   puts every candidate in WAL before it publishes it, so a published generation
   is always WAL. `scripts/wiki/build_sources_db.py` folds its temp DB back to
   DELETE mode and, for any target other than the live store, re-enables WAL
@@ -137,7 +137,7 @@ an accident of whichever ingest last touched the file (#8527):
   its read mark, so the WAL can grow while writers commit. Readers report WAL
   size and snapshot duration and refuse with `snapshot_limit` at the configured
   limits. Verify the approved resource thresholds privately before long runs.
-- **Check it.** `.venv/bin/python -m scripts.storage status` prints `journal_mode: wal`
+- **Check it.** `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status` prints `journal_mode: wal`
   from the SQLite header (bytes 18–19 = `2 2`) without opening a connection; the same
   fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
 - **Never** run a long-lived read transaction against a DELETE-mode `sources.db` while
@@ -147,7 +147,7 @@ an accident of whichever ingest last touched the file (#8527):
 
 The Sources store can be republished while readers and writers are live. No
 reader sees mixed data and no writer loses a commit. The code is
-`scripts/storage/generations.py`.
+`lu_machinery/storage/generations.py`.
 
 ### Layout
 
@@ -193,7 +193,7 @@ lock is the refusal `writer_lock_busy`.
   `not_selected_generation`). Run such a script under the lock:
 
   ```bash
-  .venv/bin/python -m scripts.storage write -- .venv/bin/python scripts/ingest/<script>.py --db data/sources.db
+  scripts/pre_commit/project_python.sh -I -m lu_machinery.storage write -- .venv/bin/python scripts/ingest/<script>.py --db data/sources.db
   ```
 
   `write` refuses if the lock is busy. It makes the selected generation
@@ -240,12 +240,12 @@ The free-space check makes publication fail safely when the disk fills up.
 Pruning old generations is a separate, operator-run command that is not
 available yet.
 
-`.venv/bin/python -m scripts.storage generations` (read-only) prints the layout,
+`scripts/pre_commit/project_python.sh -I -m lu_machinery.storage generations` (read-only) prints the layout,
 the selected generation, whether it is held, and each retained generation with
 its receipt state. Backup and restore are described in
 [`data-backup.md`](data-backup.md): a backup copies only the selected
 generation; a restore puts it back under its own name and switches the selector
-with `.venv/bin/python -m scripts.storage restore-generation`.
+with `scripts/pre_commit/project_python.sh -I -m lu_machinery.storage restore-generation`.
 
 ### Bootstrap (one maintenance window)
 
@@ -281,13 +281,13 @@ once, from the primary checkout, with every Sources reader and writer stopped.
 4. **Check the starting state.** Expect `layout: legacy_file` and `held=True`:
 
    ```bash
-   .venv/bin/python -m scripts.storage generations
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage generations
    ```
 
 5. **Bootstrap:**
 
    ```bash
-   .venv/bin/python -m scripts.storage bootstrap --maintenance-window
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage bootstrap --maintenance-window
    ```
 
    This takes the writer lock and folds the WAL into the file. It refuses with
@@ -302,8 +302,8 @@ once, from the primary checkout, with every Sources reader and writer stopped.
    `readlink data/sources.db` must print `sources-generations/<that name>`.
 
    ```bash
-   .venv/bin/python -m scripts.storage generations --json
-   .venv/bin/python -m scripts.storage status
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage generations --json
+   scripts/pre_commit/project_python.sh -I -m lu_machinery.storage status
    readlink data/sources.db
    ```
 
@@ -364,7 +364,7 @@ stay gitignored, and no consumer reads bulk data through them:
 
 ## Managed artifact publication
 
-`scripts.storage.artifacts publish` uses the group transaction engine for one
+`lu_machinery.storage.artifacts publish` uses the group transaction engine for one
 existing A file. For a group-wide regeneration, stage every A output and tracked
 K companion away from `data/` and `registry/`, then pass a JSON plan to
 `publish-set --plan <path>` or call `write_artifact_set()` with staged writer
@@ -427,7 +427,7 @@ file descriptors with per-component `O_NOFOLLOW` and
 
 ## Logical read-store bindings (#9945)
 
-New callers use `scripts.storage.topology.resolve_store("sources")` or
+New callers use `lu_machinery.storage.topology.resolve_store("sources")` or
 `resolve_store("vesum")` at call time. A `StoreBinding` contains `store`,
 `path`, `access_mode="read"`, and `provenance`; pass its path to
 `scripts.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only

@@ -784,7 +784,7 @@ def _empty_store_slot(worktree: Path, relative: str) -> None:
 
 def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
     """Select only from the agreed primary, independently of worktree content."""
-    from scripts.storage.topology import STORE_FILES, inspect_selector
+    from lu_machinery.storage.topology import STORE_FILES, inspect_selector
 
     if relative not in {f"data/{STORE_FILES[name][0]}" for name in ("sources", "vesum")}:
         raise Refused("unsupported_read_store")
@@ -1125,11 +1125,12 @@ class _Boundary:
         interpreter = project_interpreter().resolve(strict=True)
         projected = {name: source.read_bytes() for name, source in _PROJECTED.items()}
         projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
-        # The canary imports these trusted contracts, never branch-controlled code.
-        # They keep their package-relative places under the machinery package's own name.
+        # The canary imports these trusted contracts, never branch-controlled code. They come
+        # from the installed release (the product no longer carries the storage contract) and
+        # keep their package-relative places under the release package's own name.
         for relative in ("storage/topology.py", "lib/readonly_sqlite.py", "common/repo_root.py"):
-            projected[f"store_contract/{_PACKAGE}/{relative}"] = machinery_path(relative).read_bytes()
-        for package in (_PACKAGE, f"{_PACKAGE}/storage", f"{_PACKAGE}/lib", f"{_PACKAGE}/common"):
+            projected[f"store_contract/lu_machinery/{relative}"] = release_machinery_path(relative).read_bytes()
+        for package in ("lu_machinery", "lu_machinery/storage", "lu_machinery/lib", "lu_machinery/common"):
             projected[f"store_contract/{package}/__init__.py"] = b""
         import psutil
 
@@ -1348,7 +1349,7 @@ class _Boundary:
             expect("chmod", target, "EROFS")
             if target.parent.name == "sources-generations":
                 expect("stat", target.with_name(target.name + ".receipt.json"), "ENOENT")
-                from scripts.storage.topology import is_generation_name
+                from lu_machinery.storage.topology import is_generation_name
 
                 absent_generation = next((path for path in sorted(target.parent.iterdir())
                                           if path != target and is_generation_name(path.name)),

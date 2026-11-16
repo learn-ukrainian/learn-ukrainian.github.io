@@ -31,6 +31,8 @@ import pytest
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from lu_machinery.storage.topology import StoreRefusal, resolve_store
+
 from scripts.ci._location import module_name
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
@@ -38,7 +40,6 @@ from scripts.common.scratch import resolve_scratch_root
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration import pool_headroom, worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
-from scripts.storage.topology import StoreRefusal, resolve_store
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
 SELECTION = Path(__file__).with_name("data_tier_selection.json")
@@ -384,6 +385,11 @@ def provision_host_files(primary: Path, checkout: Path) -> None:
                 shutil.copy2(file, destination)
 
 
+def _checkout_environment(checkout: Path) -> dict[str, str]:
+    """The release storage CLI reads the product named here: the test checkout, not this process's."""
+    return {**os.environ, "LU_PRODUCT_ROOT": str(checkout)}
+
+
 def hydrate(checkout: Path, groups: list[str], project_python: Path) -> dict[str, str]:
     failures = {}
     deadline = time.monotonic() + HYDRATION_BUDGET_SECONDS
@@ -394,8 +400,9 @@ def hydrate(checkout: Path, groups: list[str], project_python: Path) -> dict[str
             continue
         try:
             result = subprocess.run(
-                [str(project_python), "-m", "scripts.storage.artifacts", "hydrate", "--group", group],
+                [str(project_python), "-m", "lu_machinery.storage.artifacts", "hydrate", "--group", group],
                 cwd=checkout,
+                env=_checkout_environment(checkout),
                 capture_output=True,
                 text=True,
                 check=False,
@@ -412,8 +419,9 @@ def hydrate(checkout: Path, groups: list[str], project_python: Path) -> dict[str
 
 def bulk_status(checkout: Path, project_python: Path) -> tuple[str | None, str]:
     result = subprocess.run(
-        [str(project_python), "-m", "scripts.storage", "status", "--json"],
+        [str(project_python), "-m", "lu_machinery.storage", "status", "--json"],
         cwd=checkout,
+        env=_checkout_environment(checkout),
         capture_output=True,
         text=True,
         check=False,
