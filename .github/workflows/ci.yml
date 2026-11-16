@@ -2,7 +2,8 @@ name: CI
 
 # A PR runs Frontend, the admission checks and the affected tests (pr-affected: changed
 # tests, tests that import or read changed files and the guard list; pr-invariants:
-# repository invariants), not the pytest shards. merge_group runs the full supported suite on the
+# repository invariants), not the pytest shards, unless it changes pytest infrastructure
+# (pr-scope): then the shards run and CI Gate requires them. merge_group runs the full supported suite on the
 # queue candidate before it lands; nightly and opt-in workflow_dispatch run it too.
 # Every merge candidate must pass the same required "CI Gate" context.
 
@@ -484,11 +485,56 @@ jobs:
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
 
+  # A PR that changes pytest infrastructure runs guards only in pr-affected, so it runs
+  # the full pytest shards; the installed gate reads this job's output and requires them.
+  pr-scope:
+    name: PR pytest scope
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      full-suite: ${{ steps.scope.outputs.full-suite }}
+    steps:
+      # The test merge and both parents; sparse implies blob:none, and the diff reads trees only.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout: |
+            scripts/
+            requirements-machinery.lock
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
+      - name: Decide the PR pytest scope
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          LU_PRODUCT_ROOT: ${{ github.workspace }}
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
+        run: python3 -m lu_machinery.ci.gate --pr-scope
+
   # One snapshot per run, then every shard downloads that same artifact (#11040).
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+    needs: [pr-scope]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -542,8 +588,8 @@ jobs:
 
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [refresh-pytest-durations, hydrate-release-assets]
-    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+    needs: [pr-scope, refresh-pytest-durations, hydrate-release-assets]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
@@ -936,7 +982,7 @@ jobs:
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
     # Every dependency must finish with the result required by its event tier.
-    needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, pr-invariants, refresh-pytest-durations, pytest, pytest-report]
+    needs: [queue-metadata-scan, secret-scan, hydrate-release-assets, checks, frontend, dependency-audit, pr-affected, pr-invariants, pr-scope, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

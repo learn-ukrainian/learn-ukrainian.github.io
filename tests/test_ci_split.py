@@ -316,9 +316,10 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 def test_pytest_is_skipped_only_on_pull_requests() -> None:
     jobs = _jobs_of_ci()
     assert "reuse" not in jobs
-    assert jobs["pytest"]["needs"] == ["refresh-pytest-durations", "hydrate-release-assets"]
+    assert jobs["pytest"]["needs"] == ["pr-scope", "refresh-pytest-durations", "hydrate-release-assets"]
+    # A PR runs them only when pr-scope reports that it changes pytest infrastructure.
     for name in ("pytest", "refresh-pytest-durations"):
-        assert jobs[name]["if"] == "${{ !cancelled() && github.event_name != 'pull_request' }}"
+        assert jobs[name]["if"] == "${{ !cancelled() && (github.event_name != 'pull_request' || needs.pr-scope.outputs.full-suite == 'true') }}"
     assert jobs["frontend"]["if"] == "${{ !cancelled() }}"
     refresh = jobs["refresh-pytest-durations"]
     assert all("if" not in step for step in refresh["steps"])
