@@ -133,7 +133,6 @@ REMOVED_COPIES = (
     "scripts.review.findings",
     "scripts.review.findings_db",
     "scripts.review.language_lane",
-    "scripts.review.product_hooks",
     "scripts.review.record_cf_verdict",
     "scripts.review.render_contract",
     "scripts.review.repair_round",
