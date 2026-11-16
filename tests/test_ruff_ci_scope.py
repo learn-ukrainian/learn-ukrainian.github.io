@@ -67,7 +67,7 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
         for hook_id, hook in hooks.items()
         if any(
             target in hook.get("entry", "")
-            for target in ("tests/test_repo_wide_marker_invariant.py", "tests/test_conftest_task_store_guard.py")
+            for target in ("tests/test_repo_wide_marker_invariant.py",)
         )
     ]
     assert not stray, f"hooks {stray} run a CI-covered guard test under another id (#11315)"

@@ -218,7 +218,7 @@ def test_conftest_records_marked_tests_before_deselection(tmp_path: Path) -> Non
 def test_nested_pytest_leaves_the_collected_list_intact(tmp_path: Path) -> None:
     """A test that runs a child pytest (here with the inherited environment) must not
     replace the shard's collected list with the child's (CI run 36658788394 lost 77 ids)."""
-    nested = "tests/test_conftest_worktree_guard.py::test_acp_redirect_is_active_when_module_was_not_preimported"
+    nested = "tests/test_secret_redaction.py::test_xdist_redacts_parameter_ids_without_breaking_worker_routing"
     collected, expected = _collected_under_xdist(tmp_path, nested)
     assert collected == expected
 

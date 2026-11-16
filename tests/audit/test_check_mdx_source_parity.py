@@ -69,7 +69,7 @@ def test_fresh_hook_direct_script_invocation(fresh_page):
     root = sources.parents[1]
     repo = Path(__file__).resolve().parents[2]
     shutil.copytree(repo / "scripts" / "audit", root / "scripts" / "audit", ignore=shutil.ignore_patterns("__pycache__"))
-    for package in ("build", "curriculum", "review", "lexicon"):
+    for package in ("build", "curriculum", "review", "lexicon", "rag", "verification", "wiki"):
         (root / "scripts" / package).symlink_to(repo / "scripts" / package, target_is_directory=True)
     for module in ("__init__.py", "level_config.py"):
         (root / "scripts" / module).symlink_to(repo / "scripts" / module)
