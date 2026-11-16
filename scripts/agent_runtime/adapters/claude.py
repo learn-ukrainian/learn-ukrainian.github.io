@@ -240,15 +240,12 @@ import json
 import logging
 import os
 import re
-import shlex
 import shutil
 import subprocess
 from collections.abc import Mapping, Sequence
 from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
-
-from lu_machinery.common.repo_root import machinery_path as release_path
 
 from ..env_sanitize import (
     CLAUDE_CONFIG_DIR_ENV,
@@ -600,93 +597,10 @@ def _reviewer_mcp_config() -> str:
     return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
 
-_DEPLOYED_HOOKS_PREFIX = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
-_PROJECT_PYTHON_HOOK_WRAPPER = "run-project-python-hook.sh"
-# Guards that need the project interpreter (their parser dependency is not in
-# the system Python). Only these may appear in the wrapper form.
-PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", "guard-branch-switch-in-main.py"})
-# A command whose raw text or shell words contain any of these is a fleet guard
-# and must take one of the two supported forms.
-_FLEET_GUARD_MARKERS = (".claude/hooks/", _PROJECT_PYTHON_HOOK_WRAPPER, *sorted(PROJECT_PYTHON_GUARDS))
-# PreToolUse halves of observational pre/post pairs. Worker settings carry no
-# PostToolUse hooks, so the pre-call snapshot of the primary-checkout dirt
-# audit (#11253) would never be compared; workers write in their own worktree.
-_WORKER_UNPAIRED_HOOKS = frozenset({_DEPLOYED_HOOKS_PREFIX + "audit-primary-checkout-dirt.py"})
-
-
-def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
-    """Translate one deployed hook command into a tracked-source invocation.
-
-    The command is split into shell words first, so quoting and escaping never
-    change its classification; an unreadable command raises. The single word
-    ``$CLAUDE_PROJECT_DIR/.claude/hooks/<guard>`` becomes the tracked guard
-    path. The words ``bash $CLAUDE_PROJECT_DIR/.claude/hooks/run-project-python-hook.sh
-    <guard>`` become the project interpreter plus the tracked guard, for the
-    guards in ``PROJECT_PYTHON_GUARDS`` only. Any other command naming the hooks
-    directory, the wrapper or one of those guards raises, so a guard is never
-    silently dropped. Commands naming none of them are not fleet guards and
-    return ``None``.
-    """
-    try:
-        argv = shlex.split(command)
-    except ValueError as exc:
-        raise RuntimeError(f"Claude worker hook command is unreadable: {command}") from exc
-    if not any(marker in text for text in (command, *argv) for marker in _FLEET_GUARD_MARKERS):
-        return None
-    hooks_dir = release_path("agents_extensions/shared/hooks")  # the installed release's guards (#13032)
-    wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
-    if len(argv) == 3 and argv[:2] == ["bash", wrapper] and argv[2] in PROJECT_PYTHON_GUARDS:
-        tracked = hooks_dir / argv[2]
-        if not tracked.is_file():
-            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-        from scripts.common.repo_root import project_interpreter
-
-        return shlex.join([str(project_interpreter(source_root)), str(tracked)])
-    plain = len(argv) == 1 and argv[0].startswith(_DEPLOYED_HOOKS_PREFIX)
-    name = argv[0].removeprefix(_DEPLOYED_HOOKS_PREFIX) if plain else ""
-    if name not in {"", ".", "..", _PROJECT_PYTHON_HOOK_WRAPPER} and "/" not in name:
-        tracked = hooks_dir / name
-        if not tracked.is_file():
-            raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
-        return shlex.quote(str(tracked))
-    raise RuntimeError(f"Claude worker guard has an unsupported form: {command}")
-
-
-def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build worker hook settings: the product's hook list, run with this installation's guards.
-
-    The settings file is product configuration, read from the product checkout
-    ``product_root`` selects (C-4746). The guards it names and the interpreter that runs
-    them are machinery: they always come from the checkout this code runs from
-    (``source_root``), never from product configuration.
-    """
-    from scripts.common.repo_root import product_root
-
-    source_root = Path(__file__).resolve().parents[3]
-    source = json.loads((product_root() / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
-    groups = []
-    for group in source["hooks"]["PreToolUse"]:
-        hooks = []
-        for hook in group["hooks"]:
-            if hook.get("command") in _WORKER_UNPAIRED_HOOKS:
-                continue
-            invocation = _worker_guard_invocation(hook.get("command", ""), source_root)
-            if invocation is not None:
-                hooks.append({**hook, "command": invocation})
-        if hooks:
-            groups.append({"matcher": group["matcher"], "hooks": hooks})
-    if publish_guard:
-        guard = release_path("agents_extensions/shared/hooks/guard-reviewer-publish.py")
-        if not guard.is_file():
-            raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
-        # Same failure policy as the shared refusing guards (#10848): a timeout
-        # or failed start refuses the call instead of letting it run unguarded.
-        hook = {"type": "command", "command": shlex.quote(str(guard)), "timeout": 10, "onFailure": "block"}
-        groups.append({"matcher": "Bash", "hooks": [hook]})
-    if not groups:
-        raise RuntimeError("Claude worker PreToolUse guards unavailable")
-    settings: dict[str, Any] = {"hooks": {"PreToolUse": groups}}
-    return json.dumps(settings, separators=(",", ":"))
+# Worker guard settings come from the installed release's adapter (#13032): it translates the
+# product's Claude settings, including the release's native guard commands, into guard
+# invocations under this interpreter with -I, and refuses rather than drops an unknown form.
+from lu_machinery.agent_runtime.adapters.claude import _worker_guard_settings
 
 
 def _headless_worker_settings(*, publish_guard: bool) -> str:
