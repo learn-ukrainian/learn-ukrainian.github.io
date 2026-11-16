@@ -79,7 +79,7 @@ httpx2==2.16.0
 huggingface_hub==1.29.0
 humanfriendly==10.0
 hyperframe==6.1.0
-identify==2.6.19
+identify==2.6.20
 idna==3.20
 ifaddr==0.2.0
 ijson==3.6.0
