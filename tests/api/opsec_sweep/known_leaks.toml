@@ -28,16 +28,3 @@
 # field alone match the whole dashboard file body, so any other finding in
 # that body (a new leak, a swapped URL) would otherwise be absorbed too.
 version = 1
-
-# Temporary row (burn-down #13082): lu-machinery 0.1.22's model-stats route
-# contract (machinery #625) names batch_state/model-stats/rows.jsonl, which the
-# scanner's transcript-filename rule flags. The emitter fix is machinery#638;
-# the adopt PR that carries it deletes this row, its FROZEN_IDS id and its
-# tracking_issues.toml entry in the same diff.
-[[known_leaks]]
-id = "model-stats-contract-jsonl"
-operation = "GET /api/contracts/routes"
-field = "body.route_contracts[41].source_of_truth"
-owner = "claude-cto"
-expiry = "2026-12-15"
-issue = 13082
