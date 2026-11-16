@@ -23,7 +23,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 
-from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS
+from lu_machinery.review.verdict_parser import ACCEPTED_VERDICT_TOKENS
 
 # Soft orchestrator/consult caps (Sol fleet-comms advisory).
 MAX_ASK_CONTENT_BYTES = 12 * 1024

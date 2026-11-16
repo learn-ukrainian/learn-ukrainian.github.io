@@ -87,12 +87,12 @@ def check_trial_shadow(agent: str, model: str, record: dict) -> dict:
         elif not set(catalog[participant]["roles"]).intersection(allowed.get(role, {role})):
             refuse()
     if role == "review":
-        from scripts.fleet.claude_account_lane import account_from_record
-        from scripts.review.record_cf_verdict import (
+        from lu_machinery.fleet.claude_account_lane import account_from_record
+        from lu_machinery.review.record_cf_verdict import (
             collect_branch_review_facts,
             default_branch_review_base,
         )
-        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, evaluate_candidate
+        from lu_machinery.review.reviewer_resolver import REVIEW_CANDIDATES, evaluate_candidate
 
         for key in ("review_author_model", "review_profile", "review_mode"):
             if qualified.get(key) != record.get(key):
@@ -355,7 +355,7 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
     that family. A red-team review differs only in its seat rule, which the
     recorder applies: it may share an author family.
     """
-    from scripts.review.record_cf_verdict import (
+    from lu_machinery.review.record_cf_verdict import (
         RecordError,
         admitted_unknown_history,
         collect_branch_review_facts,
@@ -385,13 +385,15 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
         raise ValueError("review independence: the reviewed range has no attributed author commits")
     if red_team:
         if load_model_catalog()["models"].get(canonical_model_id(reviewer_model), {}).get("red_team_only"):
-            from scripts.fleet import claude_account_lane, credit_lane
-            from scripts.review.record_cf_verdict import (
+            from lu_machinery.fleet import claude_account_lane
+            from lu_machinery.review.record_cf_verdict import (
                 GitHubAdapter,
                 require_no_outside_rejection,
                 require_no_outside_review_in_flight,
             )
-            from scripts.review.reviewer_resolver import resolve_reviewer, review_task_id_comparison_keys
+            from lu_machinery.review.reviewer_resolver import resolve_reviewer, review_task_id_comparison_keys
+
+            from scripts.fleet import credit_lane
 
             reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
             if any(reviewer_ids & review_task_id_comparison_keys(task) for task in facts.author_task_ids):
@@ -420,7 +422,7 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
             scope = facts.reviewer_scope(reviewer)
         except RecordError as exc:
             raise ValueError(f"review independence: {exc}") from None
-        from scripts.review.reviewer_resolver import review_task_id_comparison_keys
+        from lu_machinery.review.reviewer_resolver import review_task_id_comparison_keys
 
         reviewer_ids = review_task_id_comparison_keys(args.task_id or "", agent=args.agent)
         if any(reviewer_ids & review_task_id_comparison_keys(task) for task in scope.author_task_ids):
@@ -434,8 +436,9 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
 
 def check_review_budget(args, repository: dict, head_sha: str) -> None:
     """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098)."""
+    from lu_machinery.review.record_cf_verdict import RecordError, dispatch_budget_check
+
     from scripts.orchestration.integration_sweep import SweepError
-    from scripts.review.record_cf_verdict import RecordError, dispatch_budget_check
 
     try:
         dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,

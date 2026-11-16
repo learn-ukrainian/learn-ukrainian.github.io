@@ -153,8 +153,9 @@ def test_claude_review_binds_findings_schema(dispatch):
 
     A VERDICT-only reply still cannot become a receipt.
     """
+    from lu_machinery.review.review_contract import ContractError, canonical_receipt_payload
+
     from scripts.dispatcher.providers import claude
-    from scripts.review.review_contract import ContractError, canonical_receipt_payload
 
     spec, record = dispatch.invoke(path=None, agent="claude", review=True, task_id="claude-schema")
     assert record["require_review_verdict"] is True
@@ -325,7 +326,7 @@ def test_agy_ukrainian_review_omits_findings_schema(dispatch):
 @pytest.mark.parametrize("case", ["valid", "missing-block", "malformed-json", "wrong-schema"])
 def test_agy_ukrainian_review_preserves_item_judgments_and_refuses_malformed(case):
     """Defect class: Ukrainian item judgments are dropped by schema enforcement, or invalid blocks are accepted."""
-    from scripts.review.review_contract import ContractError, build_item_packet, judge_item_reply
+    from lu_machinery.review.review_contract import ContractError, build_item_packet, judge_item_reply
 
     packet = build_item_packet([{"id": "item-1", "text": "слово"}])
     if case == "valid":
@@ -367,7 +368,7 @@ def test_agy_ukrainian_review_preserves_item_judgments_and_refuses_malformed(cas
 def _item_review_record(tmp_path, profile="ukrainian"):
     import hashlib
 
-    from scripts.review.review_contract import build_item_packet, render_item_packet
+    from lu_machinery.review.review_contract import build_item_packet, render_item_packet
 
     brief = tmp_path / "brief.prompt"
     brief.write_text("Review.\n\n" + render_item_packet(build_item_packet([{"id": "item-1", "text": "слово"}])))
@@ -407,8 +408,8 @@ def test_verdict_gate_code_review_without_verdict_still_fails(tmp_path):
                                  "terminal-error", "duplicate-terminal", "exit-failure"])
 def test_agy_structured_terminal_not_response(case):
     """Defect class: response prose or an unsuccessful terminal substitutes for structured findings."""
-    from scripts.review.review_contract import load_schema
-    from scripts.review.verdict_parser import recognized_verdicts
+    from lu_machinery.review.review_contract import load_schema
+    from lu_machinery.review.verdict_parser import recognized_verdicts
 
     payload = {"schema_version": "code-review-findings.v1", "findings": [],
                "overall": {"correctness": "correct", "explanation": "No defect found.", "confidence": 0.9}}
@@ -445,8 +446,8 @@ def test_agy_schema_argument_too_large_refused(dispatch, capsys):
 
 def test_agy_structured_missing_capability_preserved():
     """Defect class: native schema erases an existing capability-failure declaration."""
-    from scripts.review.review_contract import load_schema
-    from scripts.review.verdict_parser import recognized_verdicts
+    from lu_machinery.review.review_contract import load_schema
+    from lu_machinery.review.verdict_parser import recognized_verdicts
 
     payload = {"schema_version": "code-review-findings.v1", "findings": [],
                "overall": {"correctness": "uncertain", "explanation": "Required capability unavailable.",
@@ -477,7 +478,7 @@ def test_agy_structured_missing_capability_preserved():
 
 def test_review_path_pattern_portable_equivalence():
     """Defect class: a portable-schema rewrite changes which repository paths are accepted."""
-    from scripts.review.review_contract import load_schema
+    from lu_machinery.review.review_contract import load_schema
 
     original = re.compile(r"^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\.\.(?:/|$))"
                           r"[A-Za-z0-9._@+-]+(?:/[A-Za-z0-9._@+-]+)*$")
@@ -498,7 +499,7 @@ def test_review_path_pattern_portable_equivalence():
 @pytest.mark.parametrize("phase", ["before-init", "after-init", "success"])
 def test_agy_schema_rejection_is_typed_before_model_init(phase):
     """Defect class: a native schema refusal loses its reason or is misclassified after initialization."""
-    from scripts.review.review_contract import load_schema
+    from lu_machinery.review.review_contract import load_schema
 
     message = ("invalid --json-schema: standard validation failed\n\n"
                "- at schema: invalid regular expression\n    - unsupported Perl syntax: `(?!`")

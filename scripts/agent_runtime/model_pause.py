@@ -49,7 +49,7 @@ from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionR
 from scripts.orchestration.task_record_store import REVIEW_TASK_FLAG_FIELDS
 
 if TYPE_CHECKING:
-    from scripts.fleet.claude_account_lane import ClaudeAccount
+    from lu_machinery.fleet.claude_account_lane import ClaudeAccount
 
 DEFAULT_POLICY = Path("~/.config/learn-ukrainian/model-pause.json")
 
@@ -403,7 +403,7 @@ def _agy_claude_windows_used_pct(view: Mapping[str, Any]) -> float | None:
     Both the five-hour window and the weekly window must be fresh numbers.
     The headroom stop then compares that used percent with its cap.
     """
-    from scripts.fleet import claude_account_lane
+    from lu_machinery.fleet import claude_account_lane
 
     info = claude_account_lane.other_lane_record(view, _AGY_CLAUDE_PROBE_LANE)
     if _fresh_probe_record(info) is None:
@@ -456,7 +456,7 @@ def _window_reset_passed(block: object, now: datetime) -> bool:
 
 def _reading_window_passed(view: Mapping[str, Any], lane: str, account: ClaudeAccount | None, now: datetime) -> bool:
     """True when a window that ``routing_budget_used_pct`` would read has reset before ``now``."""
-    from scripts.fleet import claude_account_lane
+    from lu_machinery.fleet import claude_account_lane
 
     if lane == AGY_CLAUDE_WINDOW_LANE:
         info = claude_account_lane.other_lane_record(view, _AGY_CLAUDE_PROBE_LANE)
@@ -509,7 +509,7 @@ def _bound_routing_view(account: ClaudeAccount | None) -> Mapping[str, Any] | No
     Raises :class:`MonitorUnavailable` when the Monitor is unreachable, times
     out, fails the request or truncates its answer.
     """
-    from scripts.fleet import claude_account_lane
+    from lu_machinery.fleet import claude_account_lane
 
     base = _monitor_base()
     # A Monitor that has just restarted may refuse, time out or answer 5xx while its first
@@ -555,7 +555,7 @@ def routing_budget_used_pct(
     old window's and reads as unknown (#12467). A Monitor that does not
     answer raises :class:`MonitorUnavailable` instead of reading as unknown.
     """
-    from scripts.fleet import claude_account_lane
+    from lu_machinery.fleet import claude_account_lane
 
     if account is not None:
         claude_account_lane.require_account(account)
@@ -590,7 +590,7 @@ def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | N
     Required: None names no account, so the claude lane then reads as unknown.
     """
     if account is not None:
-        from scripts.fleet.claude_account_lane import require_account
+        from lu_machinery.fleet.claude_account_lane import require_account
 
         require_account(account)
     return functools.partial(routing_budget_used_pct, account=account)

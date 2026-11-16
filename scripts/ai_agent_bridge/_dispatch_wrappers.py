@@ -20,9 +20,10 @@ _local_repo_root = Path(__file__).resolve().parents[2]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from lu_machinery.review.verdict_parser import ACCEPTED_VERDICT_TOKENS, recognized_verdicts, unsupported_verdict_tokens
+
 from scripts.common import github_client
 from scripts.common.repo_root import resolve_repo_root, runtime_primary_root
-from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS, recognized_verdicts, unsupported_verdict_tokens
 from scripts.secret_redactor import redact_text
 
 from ._config import DISPATCH_ENTRY, MACHINERY_PACKAGE

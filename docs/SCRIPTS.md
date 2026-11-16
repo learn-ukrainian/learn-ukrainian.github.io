@@ -87,7 +87,7 @@ Key behaviors:
 
 ## Reviewer bench health
 
-`.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
+`.venv/bin/python -m lu_machinery.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
 counts only reviewers eligible for automatic routing. It exits 0 when every author
 family meets its required minimum and 1 for any shortfall, with JSON exclusion
 reasons on stderr. The default minimum is two seats. The documented

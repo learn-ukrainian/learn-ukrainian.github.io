@@ -273,7 +273,11 @@ def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, s
     number = int(pr_number)
     if number < 1:
         raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
-    from scripts.review.target_resolution import TargetResolutionError, _origin_github_repo, live_canonical_branch_head
+    from lu_machinery.review.target_resolution import (
+        TargetResolutionError,
+        _origin_github_repo,
+        live_canonical_branch_head,
+    )
 
     slug = _origin_github_repo(Path(repo_root))
     if slug is None:

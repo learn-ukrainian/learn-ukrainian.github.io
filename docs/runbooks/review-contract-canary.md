@@ -8,7 +8,7 @@ passed both and then no Codex, Claude or Grok review could settle (#12380, #1239
 
 ## What is gated
 
-`scripts/review/contract_canary.py` declares the contract paths once (`CONTRACT_PATHS`): the bound
+`lu_machinery/review/contract_canary.py` declares the contract paths once (`CONTRACT_PATHS`): the bound
 findings schema, the receipt gate, the verdict parser, the recorder, settlement, the dispatcher
 worker and output-schema binding, and each reviewer provider's schema and reply handling. The
 merge-queue keeper and `scripts.publish pr-merge` read the PR's file list. When it touches one of
@@ -20,8 +20,8 @@ those paths, both refuse the head with the typed reason `needs-contract-canary` 
 | `unverifiable: …` | The route list, a receipt or the settled task behind it could not be read, or the task no longer rebuilds the receipt. |
 
 The required routes are every route of an active formal-review candidate in
-`scripts/config/model_catalog.yaml` (today `agy`, `claude`, `codex`, `cursor`). Print the
-current list with `python -m scripts.review.contract_canary routes`. A route that is down or out of
+the installed release catalog (`lu_machinery/config/model_catalog.yaml`; today `agy`, `claude`, `codex`, `cursor`). Print the
+current list with `python -m lu_machinery.review.contract_canary routes`. A route that is down or out of
 quota blocks the change; it never shrinks the list.
 
 ## Canary evidence is not a review
@@ -64,7 +64,7 @@ done
 each task settles `done`, record it:
 
 ```bash
-"$PY" -m scripts.review.contract_canary record --task-id "$TASK"
+"$PY" -m lu_machinery.review.contract_canary record --task-id "$TASK"
 ```
 
 `record` refuses a task that did not settle `done`, was not read-only and verdict-bound, was not
@@ -74,7 +74,7 @@ canonical receipt. The receipt is keyed by that head; the gate reads only the PR
 receipts for an older head admit nothing. Check the head before enqueueing:
 
 ```bash
-"$PY" -m scripts.review.contract_canary check --head "$HEAD_SHA" $(gh pr diff "$PR" --name-only)
+"$PY" -m lu_machinery.review.contract_canary check --head "$HEAD_SHA" $(gh pr diff "$PR" --name-only)
 ```
 
 Leave the worktree unchanged until every canary has settled: a task whose dispatcher checkout

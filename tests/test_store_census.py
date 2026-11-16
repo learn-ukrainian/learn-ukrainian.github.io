@@ -155,7 +155,7 @@ MUTATIONS = {
     'keep without a recorded gap': (_set('batch_state/review-findings/a1.sqlite', protection_gap=DROP),
                                     'needs protection_gap'),
     'gap on a kept store': (_set('data/atlas.db', protection_gap='x'), 'remove the gap'),
-    'undefined writer': (_set('batch_state/review-findings/a1.sqlite', writers=['scripts/review/findings_db.py:nope']),
+    'undefined writer': (_set('batch_state/review-findings/a1.sqlite', writers=['scripts/atlas/atlas_db.py:nope']),
                          "'nope' is not defined"),
     'untracked writer file': (_set('data/atlas.db', writers=['scripts/no/such.py:main']), 'untracked file'),
     'no writer and no note': (_set('data/mphdict/etym.db', writer_note=DROP), 'writer_note'),

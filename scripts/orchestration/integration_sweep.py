@@ -54,18 +54,19 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
-from scripts.ci.deploy_paths import load_deploy_paths
-from scripts.common.github_client import GitHubRateLimited, timer
-from scripts.github_check_rollup import group_collapsed_by_name
-from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
-from scripts.review.language_lane import is_ukrainian_review
-from scripts.review.ukrainian_seats import (
+from lu_machinery.review.language_lane import is_ukrainian_review
+from lu_machinery.review.ukrainian_seats import (
     UKRAINIAN_SEAT_FAMILIES,
     UKRAINIAN_SEAT_ROUTES,
     attested_author_families,
     required_ukrainian_seats,
 )
+
+from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.ci.deploy_paths import load_deploy_paths
+from scripts.common.github_client import GitHubRateLimited, timer
+from scripts.github_check_rollup import group_collapsed_by_name
+from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
 
 # This package's import name, from the unresolved file location: never from __package__, which a
 # short import spelling (orchestration.x with scripts/ on sys.path) shortens. Its dotted parts
@@ -548,7 +549,7 @@ def recorded_p3_residuals(body: str) -> tuple[str, ...] | None:
     opener and the last closer, so the record's own lines never count as prose beside the
     findings object. A body with no reply, or whose repair mapping was withheld, keeps its verdict.
     """
-    from scripts.review.record_cf_verdict import REPAIR_WITHHELD, p3_residuals
+    from lu_machinery.review.record_cf_verdict import REPAIR_WITHHELD, p3_residuals
 
     _, opened, rest = body.partition(REPLY_OPENER)
     reply, closed, tail = rest.rpartition(REPLY_CLOSER)
@@ -562,8 +563,9 @@ def _repair_receipt_blocks(body: str, sha: str) -> bool:
 
     An unreadable receipt fails closed. A missing receipt directory means no repair round.
     """
+    from lu_machinery.review.repair_round import RECEIPT_DIR
+
     from scripts.common.repo_root import main_checkout_root
-    from scripts.review.repair_round import RECEIPT_DIR
 
     root = main_checkout_root(Path(__file__).resolve().parents[2]) / "batch_state" / RECEIPT_DIR
     if not root.is_dir():

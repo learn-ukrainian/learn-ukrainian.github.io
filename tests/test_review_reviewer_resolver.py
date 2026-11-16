@@ -13,8 +13,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.fleet import credit_lane
-from scripts.review.reviewer_resolver import (
+from lu_machinery.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
@@ -29,6 +28,8 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
+
+from scripts.fleet import credit_lane
 from scripts.review.subject_seat import (
     candidate_matches_subject_seat,
     normalize_subject_family,
@@ -1162,13 +1163,13 @@ def test_astra_authors_never_receive_openai_cross_family_review():
 def test_sealed_executable_catalog_and_resolver_parity():
     import dataclasses
 
-    from scripts.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
+    from lu_machinery.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
 
     assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
-                {"native_agy": "scripts/dispatch.py", "native_muse": "scripts/dispatch.py"}.get(
+                {"native_agy": "lu_machinery/dispatch.py", "native_muse": "lu_machinery/dispatch.py"}.get(
                     candidate.adapter_transport, _SEALED_REVIEW_EXECUTABLE
                 )
             )
@@ -2139,7 +2140,7 @@ def test_unreadable_credit_evidence_does_not_exclude_review(monkeypatch):
 
 
 def _complete(families, *, risk="medium", author_model="", author_family=None, paths=("docs/a.md",)):
-    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     return resolve_reviewer(
         ResolverInputs(
@@ -2154,7 +2155,7 @@ def _complete(families, *, risk="medium", author_model="", author_family=None, p
 
 
 def test_complete_author_set_excludes_every_member_not_only_the_latest():
-    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     latest_only = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
@@ -2190,7 +2191,7 @@ def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
     [({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
 )
 def test_complete_set_with_an_unresolved_member_fails_closed(families, author_model):
-    from scripts.review.reviewer_resolver import ResolverInputs, evaluate_candidate
+    from lu_machinery.review.reviewer_resolver import ResolverInputs, evaluate_candidate
 
     resolution = _complete(families, author_model=author_model)
     assert resolution.selected is None and "holds an unresolved family" in resolution.fail_closed_reason
@@ -2246,7 +2247,7 @@ def test_unknown_reviewer_family_is_always_refused(authors):
 
 
 def test_empty_complete_set_keeps_single_author_selection_identical():
-    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
     single = ResolverInputs(author_model="claude-opus-5-5", risk="high", changed_paths=("docs/a.md",), claude_account=HOST_ACCOUNT)
     assert resolve_reviewer(single) == resolve_reviewer(replace(single, author_families=frozenset()))

@@ -19,6 +19,7 @@ from pathlib import Path
 import psutil
 from lu_machinery.agent_runtime import bounded_advisory
 from lu_machinery.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
+from lu_machinery.review.product_hooks import attempt_hooks
 
 from scripts.common import task_scratch
 from scripts.common.repo_root import project_interpreter
@@ -35,7 +36,6 @@ from scripts.dispatcher.watchdog import (
     liveness_paths,
 )
 from scripts.review.model_catalog import advisory_role_policy
-from scripts.review.product_hooks import attempt_hooks
 
 
 def _seal_advisory_result(record: dict, result: Path) -> None:
@@ -694,18 +694,18 @@ def load_post_start_code(bound_review: bool = False) -> None:
         from scripts.opsec import git_push  # noqa: F401
         from scripts.session_supervisor import remote  # noqa: F401
     with contextlib.suppress(Exception):
-        from scripts.review import (  # noqa: F401
+        from lu_machinery.review import (  # noqa: F401
             capacity,
-            isolation,
             record_cf_verdict,
             render_contract,
             repair_round,
             review_contract,
             reviewer_resolver,
             role_resolution,
-            subject_seat,
             verdict_parser,
         )
+
+        from scripts.review import isolation, subject_seat  # noqa: F401
 
         attempt_hooks().bind_receipt_modules()
     with contextlib.suppress(Exception):
@@ -1015,7 +1015,7 @@ def _verdict_failure(record: dict, text: str | None) -> str | None:
     if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
         return None
     try:
-        from scripts.review.verdict_parser import recognized_verdicts
+        from lu_machinery.review.verdict_parser import recognized_verdicts
 
         verdicts = set(recognized_verdicts(text))
     except Exception:
@@ -1034,7 +1034,7 @@ def _item_judgments_verdict(record: dict, text: str | None) -> str | None:
     """
     if record.get("review_profile") != "ukrainian" or not text:
         return None
-    from scripts.review.review_contract import ContractError, item_judgments_verdict, load_frozen_item_packet
+    from lu_machinery.review.review_contract import ContractError, item_judgments_verdict, load_frozen_item_packet
 
     try:
         packet = load_frozen_item_packet(record)
@@ -1065,7 +1065,7 @@ def _format_correction(record: dict, schema: dict | None, text: str | None, laun
         return None
     if not text or not text.strip():
         return None
-    from scripts.review.review_contract import (
+    from lu_machinery.review.review_contract import (
         ContractError,
         canonical_receipt_payload,
         decision_lock,
@@ -1096,7 +1096,7 @@ def _receipt_failure(record: dict, text: str | None) -> str | None:
     """
     if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
         return None
-    from scripts.review.review_contract import ContractError, canonical_receipt_payload, schema_path
+    from lu_machinery.review.review_contract import ContractError, canonical_receipt_payload, schema_path
 
     if schema_path(profile=record.get("review_profile"), task=record) is None:
         return None
@@ -1109,7 +1109,7 @@ def _receipt_failure(record: dict, text: str | None) -> str | None:
 
 def _corrected_reply_refusal(lock: dict, text: str | None) -> str | None:
     """Refuse a correction that is still not a receipt, or that changes the locked decision."""
-    from scripts.review.review_contract import ContractError, canonical_receipt_payload, same_decision
+    from lu_machinery.review.review_contract import ContractError, canonical_receipt_payload, same_decision
 
     try:
         payload = canonical_receipt_payload(text or "")

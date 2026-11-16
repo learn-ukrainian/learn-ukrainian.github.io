@@ -15,11 +15,11 @@ from statistics import mean, median
 from typing import Any
 
 from lu_machinery.model_families import canonical_cursor_model
+from lu_machinery.review.record_cf_verdict import RecordError, normalize_verdict
+from lu_machinery.review.verdict_parser import _commonmark_lines, _without_code_fences, review_score
 
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp, _read_task_record, _task_record_paths
 from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, model_aliases
-from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences, review_score
 
 STATUSES = (
     "done",

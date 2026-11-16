@@ -212,7 +212,7 @@ def _built_lessons(roots: Roots, slug: str, plan: dict[str, Any]) -> list[int]:
 def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     """Whether ``module-verdict.yaml`` says APPROVE, trusted only when nothing can show it stale.
 
-    A local run has a findings database (``scripts.review.findings_db.db_path``): recompute the
+    A local run has a findings database (``lu_machinery.review.findings_db.db_path``): recompute the
     verdict with ``scripts.review.fixloop.module_verdict_problems`` (the same recomputation
     ``fixloop verdict --check`` runs) and raise instead of silently landing a stale ``APPROVE`` a
     later database write superseded (round 6 review of #8774: this generator is what CI's

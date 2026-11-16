@@ -12,7 +12,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from scripts.fleet.claude_account_lane import (  # TRANSITIONAL-PKG3-B2: A3 subjects require these exact types.
+from lu_machinery.fleet.claude_account_lane import (  # TRANSITIONAL-PKG3-B2: A3 subjects require these exact types.
     UNRESOLVED_SOURCE,
     AccountSnapshot,
     ClaudeAccount,

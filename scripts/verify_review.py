@@ -3,7 +3,7 @@
 
 Canonical reviewer output is versioned JSON (``code-review-findings.v1``).
 Legacy ``FINDING:`` text is rejected. Verification binds to an exact
-local/commit/branch/PR target from ``scripts.review.target_resolution``.
+local/commit/branch/PR target from ``lu_machinery.review.target_resolution``.
 
 Two-stage usage (target freshness):
 
@@ -45,10 +45,8 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.opsec.prepublish import publication_cli
-from scripts.publish.github import Request, request_run
-from scripts.review.evidence import build_target_manifest
-from scripts.review.review_contract import (
+from lu_machinery.review.evidence import build_target_manifest
+from lu_machinery.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
     EXIT_INVALID,
     AgentIdentity,
@@ -58,10 +56,13 @@ from scripts.review.review_contract import (
     sha256_text,
     verify_review,
 )
-from scripts.review.target_resolution import (
+from lu_machinery.review.target_resolution import (
     TargetResolutionError,
     resolve_review_target,
 )
+
+from scripts.opsec.prepublish import publication_cli
+from scripts.publish.github import Request, request_run
 
 # This tool's checkout-relative path, for its help text: the machinery package's import name
 # (the directory checkout paths use), or its unresolved directory when run as a file.

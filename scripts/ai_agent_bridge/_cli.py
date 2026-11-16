@@ -1549,7 +1549,11 @@ def _resolve_same_repo_pr_head(pr_number: int, *, repo_root: Path | None = None)
     One ``gh pr view`` plus a live ref observation. A cross-repository PR, or any failure to resolve
     a branch and a full head SHA, exits non-zero. Never falls back to main.
     """
-    from scripts.review.target_resolution import TargetResolutionError, _origin_github_repo, live_canonical_branch_head
+    from lu_machinery.review.target_resolution import (
+        TargetResolutionError,
+        _origin_github_repo,
+        live_canonical_branch_head,
+    )
 
     repo_root = Path(REPO_ROOT) if repo_root is None else repo_root
     try:
@@ -1710,8 +1714,9 @@ def _handle_acp_compat(args, target: str) -> None:
     if repo is not None:
         if not (review or pr_number is not None or branch is not None):
             raise SystemExit("--repo requires review intent (--review, --type review, --pr or --branch)")
+        from lu_machinery.review.target_resolution import TargetResolutionError, resolve_review_repository
+
         from scripts.orchestration.fleet_repos import FleetRepoError, canonical_repo_key
-        from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 
         try:
             repo = canonical_repo_key(repo)

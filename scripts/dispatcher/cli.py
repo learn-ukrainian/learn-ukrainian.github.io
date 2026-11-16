@@ -468,11 +468,12 @@ def _dispatch(args) -> int:
         options["inputs"] = json.dumps(bound_inputs, separators=(",", ":"), sort_keys=True)
     output_schema = args.output_schema
     if agent in {"codex", "agy", "claude"} and args.require_review_verdict and output_schema is None:
-        from scripts.review.review_contract import schema_path
+        from lu_machinery.review.review_contract import SCHEMA_RELATIVE_PATH, schema_path
 
-        selected = schema_path(profile=args.review_profile, task=vars(args))
-        if selected is not None:
-            output_schema = str(selected)
+        # This checkout's byte-identical copy, as before #13032: the attempt reader refuses the
+        # release's hard-linked package file, which only the release dispatcher reads as a resource.
+        if schema_path(profile=args.review_profile, task=vars(args)) is not None:
+            output_schema = str(Path(__file__).resolve().parents[2] / SCHEMA_RELATIVE_PATH)
     if output_schema is not None:
         from scripts.dispatcher.output_schema import bind
 
