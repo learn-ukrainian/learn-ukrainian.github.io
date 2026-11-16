@@ -14,7 +14,8 @@ echo "  Max runtime: ${MAX_HOURS}h | Restart delay: ${RESTART_DELAY}s"
 # The sanitizer prints only unknown API-key names. Failure refuses to start.
 drop_unneeded_dispatcher_secrets() {
     local name names
-    if ! names="$(.venv/bin/python scripts/agent_runtime/env_sanitize.py --provider dispatcher)"; then
+    # The installed lu-machinery release's policy; -I keeps the cwd and PYTHONPATH off sys.path.
+    if ! names="$(.venv/bin/python -I -m lu_machinery.agent_runtime.env_sanitize --provider dispatcher)"; then
         echo "dispatcher secret sanitizer failed; refusing to start" >&2
         return 1
     fi

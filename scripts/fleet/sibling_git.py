@@ -25,7 +25,8 @@ import yaml
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
+from lu_machinery.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
+
 from scripts.common.repo_root import machinery_path
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS, SafeGitRunner

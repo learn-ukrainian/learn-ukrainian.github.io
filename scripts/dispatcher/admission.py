@@ -119,6 +119,12 @@ def claude_launch(spec, invocation):
     the run's only credential; the background denies it replaces are also in ``--disallowedTools``.
     ``auth status`` must report that helper and nothing else, and the file is bound by the digest.
     """
+    from lu_machinery.agent_runtime.env_sanitize import (
+        claude_fingerprints_match,
+        claude_labelled_inputs_digest,
+        claude_login_credential_fingerprint,
+    )
+
     from scripts.agent_runtime.adapters import claude as adapter
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_AUTH_API_KEY_HELPER,
@@ -129,11 +135,6 @@ def claude_launch(spec, invocation):
         refuse_claude_machine_policy,
         resolve_claude_account_label,
         verify_claude_account,
-    )
-    from scripts.agent_runtime.env_sanitize import (
-        claude_fingerprints_match,
-        claude_labelled_inputs_digest,
-        claude_login_credential_fingerprint,
     )
     from scripts.common.repo_root import project_interpreter
     from scripts.dispatcher.types import Invocation
@@ -179,7 +180,7 @@ def claude_launch(spec, invocation):
         )
     except ClaudeAccountRefused as exc:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
-    guarded = [str(project_interpreter()), "-I", "-c", adapter._LAUNCH_GUARD_CODE, str(adapter._CODE_ROOT), verified]
+    guarded = [str(project_interpreter()), "-I", "-c", adapter._LAUNCH_GUARD_CODE, verified]
     return Invocation([*guarded, "--", *argv], invocation.stdin, env, invocation.final_file)
 
 

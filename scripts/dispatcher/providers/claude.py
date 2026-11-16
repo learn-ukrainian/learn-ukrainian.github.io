@@ -84,8 +84,9 @@ def managed_policy(env: Mapping[str, str]) -> str | None:
     Presence decides, not what a policy holds; a source whose state cannot be read counts as present,
     and an empty server-managed cache (``{}``) delivers no policy key.
     """
+    from lu_machinery.agent_runtime.env_sanitize import claude_machine_policy_state
+
     from scripts.agent_runtime.attempt_boundary import _claude_host_is_wsl
-    from scripts.agent_runtime.env_sanitize import claude_machine_policy_state
 
     if platform.system() != "Linux" or _claude_host_is_wsl(env):
         return "managed policy sources are checked on Linux only, not on this host"

@@ -1106,8 +1106,9 @@ def test_a_worker_push_fails_and_the_pre_push_hook_refuses_cyrillic(bounded_repo
 
 
 def test_the_kimi_worker_environment_carries_no_push_credential(bounded_repo, monkeypatch):
+    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+
     from scripts.agent_runtime import kimi_boundary
-    from scripts.agent_runtime.env_sanitize import build_agent_env
 
     for name in ("GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN"):
         monkeypatch.setenv(name, "ghp_" + "x" * 36)

@@ -312,7 +312,7 @@ quality degraded on earlier commits.
 ## Spawned-agent env hygiene
 
 The agent runtime does not pass the orchestrator's full `os.environ` to
-spawned CLIs. `scripts/agent_runtime/env_sanitize.py` builds a narrow
+spawned CLIs. The installed release's `lu_machinery.agent_runtime.env_sanitize` builds a narrow
 environment for each process:
 
 - Common runtime variables survive only from the safe allowlist:
@@ -392,12 +392,15 @@ a link every call passes through untouched. Because git is never asked
 where the worktree is, a nested repository, `core.worktree`, `GIT_DIR` or
 `GIT_WORK_TREE` cannot hide a link. A working directory that cannot be read
 (deleted, for example) is treated as protected: npm cannot run there either,
-so only clearly read-only calls are let through. The decision lives in
-`scripts/agent_runtime/npm_guard.py`. The shim runs it with the interpreter
-the `git` shim uses, looked up in the same order: `AGENT_GIT_SHIM_PYTHON`
-(the runner stamps it), else the main checkout's `.venv` found through the git
-common dir (so a linked worktree needs no `.venv` of its own), else the shim
-checkout's; with none of them it refuses to run npm. `AGENT_REAL_NPM`/
+so only clearly read-only calls are let through. The shims and the decision
+(`npm_guard.py`) live only in the installed lu-machinery release, under
+`lu_machinery/agent_runtime/`. The product's `scripts/agent_runtime/shims/npm`
+and `npx` (and `scripts/dispatcher/npm_shims/`, which run them) resolve the
+project interpreter (`LEARN_UKRAINIAN_PYTHON`, else the main checkout's `.venv`
+found through the git common dir, so a linked worktree needs no `.venv` of its
+own), locate the installed release with it and exec the release's shim; when
+either cannot be found they refuse to run npm or npx (#13032). The release shim
+runs the guard with that interpreter. `AGENT_REAL_NPM`/
 `AGENT_REAL_NPX` optionally pin the real tool; the guard runs before the pin
 is read, so a pin chooses the binary but never skips the guard. Shim
 directories on `PATH` are recognised by physical path, so a spelling such as
@@ -431,7 +434,7 @@ Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
   link) while `$PWD` is missing, stale or forged, so it does not name the same
   directory through the worktree: only the physical path is visible and every
   call passes through;
-- `AGENT_GIT_SHIM_PYTHON` naming a program that is not a Python interpreter
+- `LEARN_UKRAINIAN_PYTHON` naming a program that is not a Python interpreter
   (for example one that always exits 0), which replaces the guard's verdict.
 - a sibling `npm` that forges the marker line (a regular file copied beside
   `npx` that carries the marker but is not the guarded shim), or an

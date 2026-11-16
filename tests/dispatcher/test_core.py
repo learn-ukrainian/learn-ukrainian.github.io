@@ -472,7 +472,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         policy = json.dumps({"permissions": {"allow": [write_rule]}})
         # --restricted still loads managed settings (Sol F5): a managed file or a server-managed cache refuses.
         managed, config = tmp_path / "etc-claude-code", tmp_path / "config"
-        monkeypatch.setattr("scripts.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
+        monkeypatch.setattr("lu_machinery.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
         config.mkdir()
         run_env = {"PATH": os.environ["PATH"], "HOME": str(tmp_path), "CLAUDE_CONFIG_DIR": str(config)}
         for source, expected in ((managed / "managed-settings.json", "managed policy in /etc/claude-code is present"),

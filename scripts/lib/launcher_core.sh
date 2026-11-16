@@ -232,24 +232,27 @@ launcher_deployed_path() {
 
 # Apply launcher-control and credential cleanup only inside the child process.
 # The supervisor keeps its inputs for scope re-entry and successor replay.
+# The credential policy is the installed lu-machinery release's env_sanitize,
+# run with -I so neither the working directory nor PYTHONPATH can choose it
+# (#13032). It fails closed: when the project interpreter or that module cannot
+# run, the launch refuses instead of starting the provider with every key.
 launcher_drop_unneeded_secrets() {
-  local py sanitizer variable
+  local py variable
   LC_CHILD_ENV_COMMAND=(/usr/bin/env)
   while IFS= read -r -d '' variable; do
     case "$variable" in
       LAUNCHER_*=*) LC_CHILD_ENV_COMMAND+=(-u "${variable%%=*}") ;;
     esac
   done < <(/usr/bin/env -0)
-  sanitizer="$LC_MACHINERY_DIR/agent_runtime/env_sanitize.py"
-  py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
-  if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
-    return 0
-  fi
-  if ! "$py" "$sanitizer" --provider "$LC_PROVIDER" --check-helper; then
-    launcher_error "could not drop unneeded API keys"
+  if ! py="$(launcher_project_python)"; then
+    launcher_error "could not drop unneeded API keys: no project interpreter; refusing to launch"
     return 1
   fi
-  LC_CHILD_ENV_COMMAND+=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}")
+  if ! "$py" -I -m lu_machinery.agent_runtime.env_sanitize --provider "$LC_PROVIDER" --check-helper; then
+    launcher_error "could not drop unneeded API keys: the installed lu-machinery release's env_sanitize cannot run; refusing to launch"
+    return 1
+  fi
+  LC_CHILD_ENV_COMMAND+=("$py" -I -m lu_machinery.agent_runtime.env_sanitize --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}")
   if [ "${LC_MODE:-}" = driver ]; then
     LC_CHILD_ENV_COMMAND+=(--driver-launcher)
   fi

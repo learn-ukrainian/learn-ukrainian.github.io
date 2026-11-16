@@ -428,7 +428,7 @@ def get_agent_entry(name: str) -> AgentEntry:
         KeyError: If ``name`` is not in AGENTS. Runner catches this and
             converts to AgentUnavailableError with a friendlier message.
     """
-    from .agent_identity import normalize_seat
+    from lu_machinery.agent_identity import normalize_seat
 
     if name in AGENTS:
         return AGENTS[name]

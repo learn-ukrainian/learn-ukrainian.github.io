@@ -247,15 +247,15 @@ from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
-
-from ..env_sanitize import (
+from lu_machinery.agent_runtime.env_sanitize import (
     CLAUDE_CONFIG_DIR_ENV,
     build_agent_env,
     claude_fingerprints_match,
     claude_labelled_inputs_digest,
     claude_login_credential_fingerprint,
 )
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -372,16 +372,13 @@ _API_KEY_AUTH_STATUS_KEYS = frozenset(
 )
 _API_KEY_STATUS_TEXT = ["Auth token: apiKeyHelper"]
 _AUTH_STATUS_TIMEOUT_S = 30
-# Runs ``env_sanitize.run_claude_launch_guard`` from this checkout's code,
-# isolated from the worker's Python environment variables and working
-# directory. That module imports the standard library only, so the guard
-# needs no virtual environment (the runner resolves the interpreter link).
-# The guard is named under the machinery package's canonical import name (the
-# unresolved name of the package directory this file is in), whichever name this
-# module was imported by.
+# Runs the installed lu-machinery release's ``env_sanitize.run_claude_launch_guard``
+# (#13032) with the project interpreter, isolated by -I from the worker's Python
+# environment variables and working directory:
+# ``[python, "-I", "-c", _LAUNCH_GUARD_CODE, <digest>, "--", <argv>]``.
 _LAUNCH_GUARD_CODE = (
-    "import sys; sys.path.insert(0, sys.argv.pop(1)); "
-    f"from {Path(__file__).absolute().parents[2].name}.agent_runtime.env_sanitize import run_claude_launch_guard; "
+    "import sys; "
+    "from lu_machinery.agent_runtime.env_sanitize import run_claude_launch_guard; "
     "run_claude_launch_guard(sys.argv[1:])"
 )
 _CODE_ROOT = Path(__file__).resolve().parents[3]
@@ -1217,7 +1214,7 @@ def _verified_labelled_launch(
         raise ClaudeAccountRefused("claude_account_settings_changed")
     refuse_claude_machine_policy()
     note_claude_account_verified(account.label, CLAUDE_AUTH_SUBSCRIPTION_LOGIN)
-    return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, str(_CODE_ROOT), verified, "--", *cmd]
+    return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, verified, "--", *cmd]
 
 
 def _verify_labelled_auth_method(

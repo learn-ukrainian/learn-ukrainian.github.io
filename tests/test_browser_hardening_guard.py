@@ -107,7 +107,6 @@ PLAYWRIGHT_MCP = re.compile(r"@playwright/mcp|\bplaywright-mcp\b|mcp-server-play
 # Files that name a Playwright package for a reason other than loading it, with the exact
 # number of mentions; one more fails, one fewer asks to update the count.
 PLAYWRIGHT_TOKEN_EXEMPT = {
-    "scripts/agent_runtime/npm_guard.py": (1, "the npx program allowlist names the playwright program"),
     "tests/agent_runtime/test_npm_shim.py": (3, "argv cases for that npx allowlist"),
     "tests/fixtures/ci_timings/sample_ci_runs.json": (13, "recorded CI job names"),
     "docs/l2-uk-en/v4-seminar-section-templates.yaml": (1, "the English word playwright in seminar prose"),

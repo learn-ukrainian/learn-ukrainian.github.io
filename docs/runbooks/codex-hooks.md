@@ -67,8 +67,8 @@ Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
   present in `tool_input.workdir` or `tool_input.cwd`.
 
 The Codex manifest therefore sends each tool event through one tracked,
-deterministic entry point:
-`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv guard has
+deterministic entry point: the installed release's
+`lu_machinery/agent_runtime/codex_hook_entry.sh` (the product keeps no copy, #13032). The Bash-command venv guard has
 its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate
@@ -197,7 +197,7 @@ claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
 worker launched by `dispatch.py dispatch` carries
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
-environment (both names are allowlisted in `agent_runtime/env_sanitize.py`, name
+environment (both names are allowlisted in `lu_machinery.agent_runtime.env_sanitize`, name
 and value lists, so the markers survive sanitization for every dispatched
 provider — including a task id that contains `sk-`). The marker is the primary
 signal; the layout fallback — the session checkout sitting under

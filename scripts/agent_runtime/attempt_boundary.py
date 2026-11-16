@@ -31,6 +31,15 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.agent_runtime.env_sanitize import (
+    CLAUDE_LEGACY_GLOBAL_CONFIG,
+    CLAUDE_POLICY_CACHE_NAMES,
+    CLAUDE_PROFILE_STORE_ENTRIES,
+    build_agent_env,
+    claude_credential_fingerprint,
+    claude_machine_policy_state,
+    claude_profile_store_dirs,
+)
 from lu_machinery.common.repo_root import machinery_path as release_machinery_path
 
 from scripts.common.repo_root import project_interpreter
@@ -46,15 +55,6 @@ from .attempt_safe_read import (
 )
 from .attempt_safe_read import (
     safe_read_attempt_file as safe_read_attempt_file,
-)
-from .env_sanitize import (
-    CLAUDE_LEGACY_GLOBAL_CONFIG,
-    CLAUDE_POLICY_CACHE_NAMES,
-    CLAUDE_PROFILE_STORE_ENTRIES,
-    build_agent_env,
-    claude_credential_fingerprint,
-    claude_machine_policy_state,
-    claude_profile_store_dirs,
 )
 
 # Claude account labels. A run carries one label; the default account is the

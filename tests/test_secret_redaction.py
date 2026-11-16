@@ -207,15 +207,8 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
     scripts.mkdir()
     helper = tmp_path / ".venv/bin/python"
     helper.parent.mkdir(parents=True)
-    # Execute the real sanitizer, then use a synthetic dispatcher entry point.
-    helper.write_text(
-        "#!/bin/sh\n"
-        'case "$1" in\n'
-        f"scripts/agent_runtime/env_sanitize.py) shift; exec {shlex.quote(sys.executable)} "
-        '-m lu_machinery.agent_runtime.env_sanitize "$@" ;;\n'
-        f'*) exec {shlex.quote(sys.executable)} "$@" ;;\nesac\n',
-        encoding="utf-8",
-    )
+    # Execute the installed release's sanitizer, then use a synthetic dispatcher entry point.
+    helper.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} "$@"\n', encoding="utf-8")
     helper.chmod(0o755)
     (scripts / "batch_dispatcher.py").write_text(
         "import os\n"
@@ -240,6 +233,58 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
     assert proc.returncode == 0
     assert "Clean exit" in proc.stdout
     assert "synthetic-" not in proc.stdout + proc.stderr
+
+
+@pytest.mark.parametrize("release", ["installed", "missing"])
+def test_launcher_secret_drop_fails_closed_without_the_release_sanitizer(tmp_path: Path, release: str) -> None:
+    """Defect class: the launcher starts a provider with every inherited key when its sanitizer cannot run.
+
+    With the installed lu-machinery release the child loses unneeded keys; with the release module
+    unavailable (an interpreter whose site-packages are off), the launch refuses and the provider never runs.
+    """
+    interpreter = sys.executable
+    if release == "missing":
+        fake = tmp_path / "python"
+        fake.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} -S "$@"\n', encoding="utf-8")
+        fake.chmod(0o755)
+        interpreter = str(fake)
+    proc = subprocess.run(
+        [
+            "bash",
+            "-uc",
+            """
+source scripts/lib/launcher_core.sh
+LC_PROVIDER=claude
+LC_HARNESS=""
+LC_MODE=interactive
+launcher_project_python() { printf '%s\\n' "$TEST_PYTHON"; }
+launcher_drop_unneeded_secrets || exit 7
+exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import os; print("provider-ran", sorted(os.environ))'
+""",
+        ],
+        cwd=REPO,
+        env=launcher_environment({
+            "TEST_PYTHON": interpreter,
+            "TEST_REAL_PYTHON": sys.executable,
+            "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
+            "LAUNCHER_SYNTHETIC_CONTROL": "1",
+        }),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    if release == "installed":
+        assert proc.returncode == 0, proc.stderr
+        assert "provider-ran" in proc.stdout
+        assert "'HOME'" in proc.stdout
+        assert "UNRELATED_API_KEY" not in proc.stdout
+        assert "LAUNCHER_SYNTHETIC_CONTROL" not in proc.stdout
+    else:
+        assert proc.returncode == 7
+        assert "provider-ran" not in proc.stdout
+        assert "could not drop unneeded API keys" in proc.stderr
+        assert "refusing to launch" in proc.stderr
 
 
 @pytest.mark.parametrize("phase", ["collection", "call", "teardown"])

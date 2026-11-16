@@ -353,31 +353,6 @@
       "message": "Value of type \"object\" is not indexable"
     },
     {
-      "path": "scripts/agent_runtime/agent_github_identity.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/agent_github_identity.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | str\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/agent_runtime/agent_github_identity.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | str\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/agent_runtime/agent_github_identity.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"int\")"
-    },
-    {
-      "path": "scripts/agent_runtime/agent_github_identity.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"int\")"
-    },
-    {
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "code": "arg-type",
       "message": "Argument 1 to \"Path\" has incompatible type \"Sequence[str]\"; expected \"PathLike[str] | str\""
@@ -426,11 +401,6 @@
       "path": "scripts/agent_runtime/attempt_boundary.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"IO[bytes] | None\" has no attribute \"write\""
-    },
-    {
-      "path": "scripts/agent_runtime/env_sanitize.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
     },
     {
       "path": "scripts/agent_runtime/grok_hook_bridge.py",
@@ -508,11 +478,6 @@
       "message": "Item \"None\" of \"None | dict[Any, Any]\" has no attribute \"get\""
     },
     {
-      "path": "scripts/agent_runtime/npm_guard.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"found\" (hint: \"found: list[<type>] = ...\")"
-    },
-    {
       "path": "scripts/agent_runtime/redacted_env.py",
       "code": "misc",
       "message": "Signatures of \"__ior__\" and \"__or__\" are incompatible"
@@ -531,11 +496,6 @@
       "path": "scripts/agent_runtime/redacted_env.py",
       "code": "override",
       "message": "Signature of \"update\" incompatible with supertype \"typing.MutableMapping\""
-    },
-    {
-      "path": "scripts/agent_runtime/registry.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"normalize_seat\""
     },
     {
       "path": "scripts/agent_runtime/runner.py",
@@ -646,16 +606,6 @@
       "path": "scripts/agent_runtime/telemetry.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"tuple[str, ...]\", variable has type \"tuple[str]\")"
-    },
-    {
-      "path": "scripts/agent_runtime/telemetry.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
-    },
-    {
-      "path": "scripts/agent_runtime/telemetry.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"is_native_grok_seat\""
     },
     {
       "path": "scripts/agent_runtime/telemetry.py",
@@ -996,11 +946,6 @@
       "path": "scripts/ai_agent_bridge/_inbox_watch.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_inbox_watch.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"tuple[str, ...]\""
     },
     {
       "path": "scripts/ai_agent_bridge/_inbox_watch.py",
@@ -12259,11 +12204,6 @@
     },
     {
       "path": "scripts/fleet/capacity_pick.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"RETIRED_AGENT_ALIASES\""
-    },
-    {
-      "path": "scripts/fleet/capacity_pick.py",
       "code": "dict-item",
       "message": "Unpacked dict entry 0 has incompatible type \"Any | None | dict[Any, Any]\"; expected \"SupportsKeysAndGetItem[Any, Any]\""
     },
@@ -14526,11 +14466,6 @@
       "path": "scripts/hygiene/tmp_sweep.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"None | ScratchPolicy\" has no attribute \"quiet_s\""
-    },
-    {
-      "path": "scripts/inbox_pending.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"seat_read_aliases\""
     },
     {
       "path": "scripts/inbox_pending.py",
@@ -28364,23 +28299,8 @@
     },
     {
       "path": "scripts/review/reviewer_resolver.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"SEAT_ALIASES\""
-    },
-    {
-      "path": "scripts/review/reviewer_resolver.py",
-      "code": "attr-defined",
-      "message": "Module \"scripts.agent_runtime.agent_identity\" has no attribute \"resolve_retired_agent_alias\""
-    },
-    {
-      "path": "scripts/review/reviewer_resolver.py",
       "code": "misc",
       "message": "\"None\" object is not iterable"
-    },
-    {
-      "path": "scripts/review/reviewer_resolver.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"None | str\""
     },
     {
       "path": "scripts/review/reviewer_resolver.py",
