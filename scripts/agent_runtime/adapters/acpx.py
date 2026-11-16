@@ -2203,13 +2203,8 @@ def _claude_code_floor(model: str | None) -> tuple[int, int, int]:
 
 def _probe_pinned_claude_code(executable: Path, *, adapter_label: str) -> tuple[int, int, int]:
     """Run the pinned executable's ``--version`` with a minimal env and parse it."""
-    try:
-        from scripts.utils.claude_version import _parse_claude_semver, run_version_probe
-    except ImportError:  # pragma: no cover - stripped sys.path flavor
-        from utils.claude_version import (  # type: ignore[import-not-found, no-redef]
-            _parse_claude_semver,
-            run_version_probe,
-        )
+    from lu_machinery.utils.claude_version import _parse_claude_semver, run_version_probe
+
     try:
         proc = run_version_probe(
             [str(executable)],
@@ -2425,10 +2420,8 @@ def _attest_claude_code_child(parsed: ParseResult, *, plan: InvocationPlan | Non
         )
     if not parsed.ok:
         return parsed
-    try:
-        from scripts.utils.claude_version import _parse_claude_semver
-    except ImportError:  # pragma: no cover - stripped sys.path flavor
-        from utils.claude_version import _parse_claude_semver  # type: ignore[import-not-found, no-redef]
+    from lu_machinery.utils.claude_version import _parse_claude_semver
+
     # The plan metadata is the ask's adapter-owned record; the runner hands the
     # same object to parse and capture, so the post-run attestation lands there.
     attested = _claude_session_transcript_version(stdout)

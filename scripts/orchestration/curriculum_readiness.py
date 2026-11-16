@@ -23,17 +23,18 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.ops.product_entry import ConfiguredModuleError, load_configured_module
+from lu_machinery.research import research_quality
+
 from scripts.common.repo_root import ProductRootError
 from scripts.common.repo_root import product_root as resolve_product_root
 from scripts.common.schema_check import check_schema as check_schema_memoised
-from scripts.ops.product_entry import ConfiguredModuleError, load_configured_module
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
     RegistryValidationError,
     load_manual_evidence,
     load_yaml_mapping,
 )
-from scripts.research import research_quality
 
 # The product data file that names the readiness gates module, relative to the product root.
 READINESS_GATES_FILE = Path("scripts/curriculum/readiness_gates.v1.json")

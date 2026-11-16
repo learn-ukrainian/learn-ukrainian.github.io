@@ -15,7 +15,7 @@ to land because it has the most special-case logic:
 
 - **``--exclude-dynamic-system-prompt-sections``**: CC 2.1.98+ feature
   that improves cross-call prompt caching. Version-gated via
-  ``utils.claude_version``.
+  ``lu_machinery.utils.claude_version``.
 
 - **MCP tool restrictions**: ``--mcp-config <path> --allowedTools <list>``
   used by the pipeline reviewers to restrict which MCP tools are
@@ -723,10 +723,7 @@ def _discussion_readonly_requested(tool_config: dict | None) -> bool:
 @cache
 def _probe_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
     """Probe ``claude --version`` once per binary prefix for this process."""
-    try:
-        from utils.claude_version import _parse_claude_semver, run_version_probe
-    except ImportError:
-        return None
+    from lu_machinery.utils.claude_version import _parse_claude_semver, run_version_probe
 
     try:
         result = run_version_probe(cmd_prefix, timeout=5)
@@ -974,7 +971,7 @@ class ClaudeAdapter:
             # already-probed cli_version so the ``supports_effort`` call is a
             # cache hit in production. Min supported CLI is 2.1.116; --effort
             # landed at 2.1.98 (_EFFORT_MIN_VERSION).
-            from utils.claude_version import remember_support, supports_effort
+            from lu_machinery.utils.claude_version import remember_support, supports_effort
 
             if cli_version is not None:
                 remember_support(probe_prefix, cli_version >= _EFFORT_MIN_VERSION)

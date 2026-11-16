@@ -33,8 +33,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
+
 from scripts.dispatcher.admission import review_typed
-from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
 from scripts.opsec.prepublish import normalize_repository
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,

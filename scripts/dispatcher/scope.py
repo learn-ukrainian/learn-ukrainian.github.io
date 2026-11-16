@@ -33,7 +33,7 @@ def with_generated_outputs(owned_paths) -> tuple[list[str], list[str]]:
     An owned path needs a file when its literal part is the gate's input tree, inside it or above it.
     A file the owned paths already cover is not added again.
     """
-    from scripts.guardrails.delegate_ownership import path_is_owned
+    from lu_machinery.guardrails.delegate_ownership import path_is_owned
 
     owned = list(owned_paths)
     roots = [root for root in map(_literal_root, owned) if root]

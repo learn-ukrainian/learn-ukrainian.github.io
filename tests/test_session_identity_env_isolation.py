@@ -9,6 +9,7 @@ cover.
 from __future__ import annotations
 
 import ast
+import importlib.util
 import os
 import re
 from pathlib import Path
@@ -41,7 +42,8 @@ _PYTHON_ENV_SITES = (
     _SUPERVISOR,
     *sorted((REPO_ROOT / "scripts" / "agent_runtime").glob("*.py")),
 )
-_TELEMETRY = REPO_ROOT / "scripts" / "telemetry" / "emit.py"
+# The installed lu-machinery release mints the telemetry ids (#13032); read its source without importing it.
+_TELEMETRY = Path(importlib.util.find_spec("lu_machinery.telemetry.emit").origin)
 
 # Exported names in these namespaces must be classified: either session
 # identity (the conftest tuple) or host configuration (below). Other names

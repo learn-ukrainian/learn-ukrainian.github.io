@@ -19,11 +19,11 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+from lu_machinery.ops import product_entry
 
 import scripts
 from scripts.common import repo_root
 from scripts.hygiene import lint_source_db_writable_connects as lint
-from scripts.ops import product_entry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -71,9 +71,9 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
 
 
 def test_configured_entry_point_kind_names_only_the_helper():
-    """The kind pins one import site: the shared helper's, in the allowlist and in the lint."""
+    """The kind pins one import site, the shared helper's; the helper runs from the installed release (#13032)."""
     configured = [entry.path for entry in lint.load_allowlist() if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND]
-    assert configured == ["scripts/ops/product_entry.py"]
+    assert configured == []
     assert lint.CONFIGURED_ENTRY_POINTS == {
         "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
     }
@@ -180,7 +180,7 @@ def test_configured_entry_point_pin_rejects_other_files_and_extra_sites(tmp_path
     """Constructor rejection stays everywhere but the helper's one pinned call site."""
     import json
 
-    helper = (REPO_ROOT / "scripts/ops/product_entry.py").read_text()
+    helper = Path(product_entry.__file__).read_text()
     (tmp_path / "scripts" / "ops").mkdir(parents=True)
     pinned = lint.AllowedReference("scripts/ops/product_entry.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
     (tmp_path / "scripts/ops/product_entry.py").write_text(helper)

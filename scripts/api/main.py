@@ -29,6 +29,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from lu_machinery.research import registry as reg
 from prometheus_client import CollectorRegistry, Counter, Histogram, make_asgi_app
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
@@ -41,7 +42,6 @@ from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
 from scripts.orientation_packet import PACKET_MAX_BYTES, cap_response, json_bytes
-from scripts.research import registry as reg
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)

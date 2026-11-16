@@ -727,10 +727,11 @@ def test_bridge_ask_without_the_core_refuses_before_any_send(
 def test_acp_ask_without_the_core_refuses_before_forward_or_enqueue(
     monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:
+    from lu_machinery.telemetry import legacy_bridge
+
     from agent_runtime.runner import InterAgentTransportError
     from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
     from scripts.fleet_comms import authority
-    from scripts.telemetry import legacy_bridge
 
     calls = _spy_side_effects(
         monkeypatch,

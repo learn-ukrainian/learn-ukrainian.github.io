@@ -9,9 +9,6 @@ packages:
   ai_agent_bridge:
     reason: operator classification
     role: machinery
-  ai_llm:
-    reason: LLM invocation policy and cooldowns for agent adapters.
-    role: machinery
   analytics:
     reason: 'Unsure: cost windows are fleet spend and vocabulary progression is learner data. Product, so the monitor import stays on the ratchet.'
     role: product
@@ -27,9 +24,6 @@ packages:
   audit:
     reason: operator classification
     role: product
-  bakeoff:
-    reason: 'Unsure: writer bake-off harness. Machinery, so its build and audit imports stay on the ratchet.'
-    role: machinery
   batch:
     reason: Curriculum-generation batch runner.
     role: product
@@ -45,9 +39,6 @@ packages:
   build:
     reason: operator classification
     role: product
-  canary:
-    reason: Operational auth canaries.
-    role: machinery
   ci:
     reason: operator classification
     role: machinery
@@ -144,9 +135,6 @@ packages:
   lint:
     reason: operator classification
     role: machinery
-  maintenance:
-    reason: Task-state retention, session scratch, and venv drift.
-    role: machinery
   migrate:
     reason: One-shot curriculum and content tree migrations.
     role: product
@@ -230,9 +218,6 @@ packages:
     role: machinery
   tools:
     reason: CLIs both sides may run.
-    role: shared
-  utils:
-    reason: Version gates and small helpers with no domain policy.
     role: shared
   validate:
     reason: operator classification

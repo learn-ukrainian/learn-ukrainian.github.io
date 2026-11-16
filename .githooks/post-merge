@@ -11,8 +11,10 @@ else
   lfs_status=2
 fi
 
+# The guard is the installed lu-machinery release; it protects the product checkout it is given,
+# here the primary one unless the caller already selected a product checkout.
 guard_status=0
-run_project_python "$source_root/scripts/guardrails/primary_write_guard.py" apply --hook || guard_status=$?
+LU_PRODUCT_ROOT="${LU_PRODUCT_ROOT:-$main_root}" run_project_python -P -m lu_machinery.guardrails.primary_write_guard apply --hook || guard_status=$?
 if [[ "$guard_status" -ne 0 ]]; then
   exit "$guard_status"
 fi

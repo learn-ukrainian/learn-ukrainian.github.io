@@ -21,16 +21,15 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from lu_machinery.utils.claude_version import run_version_probe
 from pydantic import BaseModel, ConfigDict, Field
 
 from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 try:
     from scripts.agent_runtime.adapters.claude import run_headless_claude
-    from scripts.utils.claude_version import run_version_probe
 except ModuleNotFoundError:  # run as the top-level ai_agent_bridge package
     from agent_runtime.adapters.claude import run_headless_claude
-    from utils.claude_version import run_version_probe
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 

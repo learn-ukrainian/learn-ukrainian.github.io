@@ -41,11 +41,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from lu_machinery.maintenance.claude_session_scratch import sweep_sessions
+
 from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.dispatcher.store import retention_hold_disposition
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
-from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import backup_failure_alert, disk_watermark_alert, worktree_git
 from scripts.orchestration.execution_safe_git import GIT
 from scripts.orchestration.execution_safe_git import run_git as safe_git
@@ -1733,7 +1734,7 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     Large files are reported for owner disposition. The run also performs a
     separate once-per-host ended-session sweep in main().
     """
-    from scripts.maintenance.batch_state_retention import plan_retention
+    from lu_machinery.maintenance.batch_state_retention import plan_retention
 
     reports: list[dict[str, Any]] = []
     for repo_root in repo_roots:

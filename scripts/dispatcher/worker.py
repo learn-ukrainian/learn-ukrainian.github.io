@@ -372,7 +372,8 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _outside_cause(paths, owned) -> str | None:
-    from scripts.guardrails.delegate_ownership import sanitize_for_display
+    from lu_machinery.guardrails.delegate_ownership import sanitize_for_display
+
     from scripts.secret_redactor import redact_text
 
     outside = ownership.outside_owned(paths, owned)
@@ -688,11 +689,12 @@ def load_post_start_code(bound_review: bool = False) -> None:
         from scripts.common import fallback_substitutions, nofollow_walk, release_layout, safe_open  # noqa: F401
 
         attempt_hooks().bind_evidence_modules()
-        from scripts.guardrails import delegate_ownership  # noqa: F401
+        from lu_machinery.guardrails import delegate_ownership  # noqa: F401
+        from lu_machinery.utils import claude_version  # noqa: F401
+
         from scripts.lib import git_identity  # noqa: F401
         from scripts.opsec import git_push  # noqa: F401
         from scripts.session_supervisor import remote  # noqa: F401
-        from scripts.utils import claude_version  # noqa: F401
     with contextlib.suppress(Exception):
         from scripts.review import (  # noqa: F401
             capacity,

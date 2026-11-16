@@ -54,22 +54,15 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
-if __package__ == "agent_runtime":  # the historical top-level alias, imported with scripts/ on sys.path
-    from ai_llm.fallback import (
-        AttemptOutcome,
-        CallResult,
-        GeminiRung,
-        resolve_allowed_auth_modes,
-        run_gemini_fallback_ladder,
-    )
-else:
-    from ..ai_llm.fallback import (  # type: ignore[assignment]
-        AttemptOutcome,
-        CallResult,
-        GeminiRung,
-        resolve_allowed_auth_modes,
-        run_gemini_fallback_ladder,
-    )
+from lu_machinery.ai_llm.fallback import (
+    AttemptOutcome,
+    AuthMode,
+    CallResult,
+    GeminiRung,
+    resolve_allowed_auth_modes,
+    run_gemini_fallback_ladder,
+)
+from lu_machinery.telemetry.emit import current_run_id, current_session_id
 
 # Registry adapter paths are canonicalized under ``scripts.agent_runtime``.
 # Import the ACP scope from that same module identity even when this runner is
@@ -135,11 +128,6 @@ from .watchdog import (
     stop_watchdog,
     tail_liveness_file_for_debug,
 )
-
-try:
-    from telemetry.emit import current_run_id, current_session_id
-except ImportError:  # pragma: no cover - package import path
-    from scripts.telemetry.emit import current_run_id, current_session_id
 
 # Poll interval while waiting on subprocess + watchdog. 1s is a good balance:
 # fast enough that stall detection fires within 1s of the threshold, slow
@@ -1166,7 +1154,7 @@ def _build_usage_record(
         returncode=returncode,
         explicit_code=failure_code,
     )
-    record = {
+    record: dict[str, Any] = {
         "ts": datetime.now(UTC).isoformat(),
         "agent": agent,
         "entrypoint": entrypoint,
@@ -1327,10 +1315,7 @@ def _emit_substitution_event(
         with contextlib.suppress(Exception):
             event_sink("agent_runtime_substitution", **payload)
     try:
-        try:
-            from telemetry.emit import emit_event
-        except ImportError:  # pragma: no cover - package import path
-            from scripts.telemetry.emit import emit_event
+        from lu_machinery.telemetry.emit import emit_event
 
         emit_event("agent_runtime_substitution", payload)
     except Exception:
@@ -1637,7 +1622,7 @@ def _normalize_gemini_tool_auth_mode(raw: Any) -> str:
     return "auto"
 
 
-def _resolve_gemini_ladder_auth_modes(tool_config: dict | None) -> tuple[str, ...]:
+def _resolve_gemini_ladder_auth_modes(tool_config: dict | None) -> tuple[AuthMode, ...]:
     """Resolve which Gemini auth rungs are allowed for this runtime call."""
     env = dict(os.environ)
     if tool_config and "auth_mode" in tool_config:
