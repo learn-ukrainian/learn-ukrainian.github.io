@@ -1,5 +1,5 @@
-lu-machinery==0.1.22 \
-    --hash=sha256:fa602167221230e98d02a57ba60d1334bffa9982d6d78980cc106d7fec2892cf
+lu-machinery==0.1.23 \
+    --hash=sha256:f035c53fc84c74371c6b5d0dfbbdf3a7420e2ba75adc48238fe277e67858317d
 # lu-machinery release dependency lock: every transitive runtime dependency of
 # pyproject.toml, exact version and SHA-256 hashes of the accepted wheels.
 # docs/release.md is the procedure; a consumer's requirements-machinery.lock is
