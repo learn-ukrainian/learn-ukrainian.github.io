@@ -718,7 +718,8 @@ def _attribute_trailer(commit_sha: str | None, trailer: str, *, repository: str,
     has_record = source in {"task-record", "task-record-archived"}
     task_id = model if has_record or (TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model)) else None
     record_task_id = author_task.get("task_id") if has_record else None
-    model_values: tuple[str | None, ...] = (
+    # Task-record values are JSON, so each slot may hold any type; the filters below keep strings.
+    model_values: tuple[object, ...] = (
         (
             author_task.get("model"),
             author_model,
