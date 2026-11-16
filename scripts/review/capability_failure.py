@@ -32,7 +32,7 @@ recording authority may publish this classification for the run instead.
    A zero-finding reply that names a severity or a non-PASS security verdict in
    any decoded string is not an obstruction only (:func:`obstruction_refusal`).
 
-Cooperative threat model, as in ``scripts/agent_runtime/bounded_advisory.py``:
+Cooperative threat model, as in ``lu_machinery.agent_runtime.bounded_advisory``:
 the authority is recorded, not authenticated, so a process that rewrites task
 records or posts comments as the recorder's login is outside it. An event can
 classify only a run that qualifies on its own record and reply.

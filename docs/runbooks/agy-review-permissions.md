@@ -120,7 +120,7 @@ CANARY_INPUT_ROOT="${CANARY_INPUT_ROOT:-$CANARY_CHECKOUT}"
 agy_review_canary() {
   PYTHONPATH="$CANARY_MACHINERY:$(dirname "$CANARY_MACHINERY")" \
     "$PROJECT_PYTHON" - "$1" "$CANARY_MANIFEST" "$CANARY_INPUT_ROOT" \
-    scripts.agent_runtime.runner scripts.agent_runtime.review_mcp <<'PY'
+    lu_machinery.agent_runtime.runner lu_machinery.agent_runtime.review_mcp <<'PY'
 import hashlib
 import importlib
 import json

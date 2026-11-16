@@ -257,7 +257,7 @@ callers — the adapter's argv is fully confined and callers only ever set
 
 ## Add a new agent in 20 lines
 
-1. Copy `scripts/agent_runtime/adapters/_template.py` to `adapters/youragent.py`.
+1. Copy `lu_machinery/agent_runtime/adapters/_template.py` (installed release; adapters are added in the machinery repository) to `adapters/youragent.py`.
 2. Rename the class, fill in `name`, `default_model`, `supported_modes`.
 3. Implement `build_invocation`, `parse_response`, `liveness_signal_paths`.
 4. Add an entry to `registry.AGENTS` with `cli_available: True`.

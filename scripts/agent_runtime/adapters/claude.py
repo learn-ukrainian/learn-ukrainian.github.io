@@ -247,6 +247,8 @@ from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
 from ..env_sanitize import (
     CLAUDE_CONFIG_DIR_ENV,
     build_agent_env,
@@ -256,7 +258,6 @@ from ..env_sanitize import (
 )
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
-from ..sources_read_only import sources_tool_sets
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -592,7 +593,7 @@ def _reviewer_mcp_config() -> str:
     reviewed checkout, and passed inline with ``--strict-mcp-config``. The
     server starts with a pinned environment and isolated Python startup.
     """
-    from scripts.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
+    from lu_machinery.agent_runtime.review_mcp import isolated_sources_mcp_config, sources_server_launch
 
     return json.dumps(isolated_sources_mcp_config(*sources_server_launch()), separators=(",", ":"))
 
@@ -733,7 +734,7 @@ class ClaudeAdapter:
         tc: dict[str, Any] = tool_config or {}
         account = _claude_account_binding(tc)
         account_login_dir = None if account is None else str(account.config_dir)
-        from scripts.agent_runtime.mechanical_admission import refuse_mechanical_execution
+        from lu_machinery.agent_runtime.mechanical_admission import refuse_mechanical_execution
 
         refuse_mechanical_execution(model or self.default_model, mode=mode, cwd=cwd, tool_config=tc, prompt=prompt)
         discussion_readonly = _discussion_readonly_requested(tool_config)
@@ -935,7 +936,9 @@ class ClaudeAdapter:
         # ``mcp__<server>__*``, and any allow rule in user or checkout
         # settings, whatever name the server is registered under. An unreadable server
         # declaration raises here rather than launching without the denies.
-        sources_readers, sources_writers = sources_tool_sets() if mode == "read-only" else ((), ())
+        sources_readers, sources_writers = (
+            sources_tool_sets(_CODE_ROOT / SERVER_RELATIVE_PATH) if mode == "read-only" else ((), ())
+        )
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
         elif ordinary_reviewer:
@@ -944,7 +947,7 @@ class ClaudeAdapter:
             granted = [*profile["allow"]]
             denied = [*profile["deny"], *_sources_writer_denies(sources_writers)]
             if tc.get("mcp_config_path") and tc.get("review_access") == "full":
-                from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+                from lu_machinery.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 granted.extend(review_tools_allowed_csv("claude", "full").split(","))
             elif tc.get("mcp_config_path"):

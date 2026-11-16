@@ -87,9 +87,9 @@ def mechanical_worker_scope(
     prompt: str,
 ) -> dict[str, Any]:
     """Recheck mechanical-only scope against the stdin prompt, never the source file."""
-    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+    from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
 
-    from .mechanical_admission import MechanicalAdmissionRefused
+    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
 
     catalog = load_model_catalog()
     substitution = record.get("substitution") or {}
@@ -316,7 +316,7 @@ def resolve_and_admit(
     requested = _gate_names(seats, models)
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
-    from .mechanical_admission import refuse_mechanical_task
+    from lu_machinery.agent_runtime.mechanical_admission import refuse_mechanical_task
 
     mechanical_scope = {
         key: gate[key] for key in ("paths", "language_lane", "research_track", "prompt_file", "trees") if key in gate
@@ -480,7 +480,7 @@ def resolve_and_admit(
         and not claude_account.resolved
         and any(recipient == "claude" for recipient, _, _ in resolved)
     ):
-        from .mechanical_admission import MechanicalAdmissionRefused
+        from lu_machinery.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
 
         # #10733: whatever step chose it, no claude seat runs on an account that was not resolved and bound.
         raise MechanicalAdmissionRefused(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
@@ -699,7 +699,7 @@ def _resolve_review_target(
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
     if attempt and seat in {"grok", "grok-build"}:
-        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+        from lu_machinery.agent_runtime.review_mcp import UNSUPPORTED_HARNESS_REASONS
 
         # Native Grok model admission (#9769) does not prove the attempt
         # boundary (#8517). Refuse before budget probes or attempt setup.
@@ -804,7 +804,7 @@ def _resolve_review_target(
     risk_note = "" if eligible or profile == "ukrainian" else risk_reviewer_refusal(concrete, inputs.risk) or ""
     risk_note = f" ({risk_note})" if risk_note else ""
     if attempt and not eligible:
-        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+        from lu_machinery.agent_runtime.review_mcp import UNSUPPORTED_HARNESS_REASONS
 
         detail = UNSUPPORTED_HARNESS_REASONS.get(
             seat,

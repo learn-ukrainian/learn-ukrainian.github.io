@@ -72,6 +72,8 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
+from lu_machinery.common.repo_root import machinery_path as release_machinery_path
+
 from scripts.common.repo_root import machinery_path, main_checkout_root, project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 
@@ -88,8 +90,8 @@ _BOOTSTRAP = (
 )
 _PROJECTED = {
     "canary.py": machinery_path("dispatcher/agy_canary.py"),
-    "forwarder.py": machinery_path("agent_runtime/attempt_forwarder.py"),
-    "stdio.py": machinery_path("agent_runtime/attempt_proxy.py"),
+    "forwarder.py": release_machinery_path("agent_runtime/attempt_forwarder.py"),
+    "stdio.py": release_machinery_path("agent_runtime/attempt_proxy.py"),
 }
 _TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 _AGY_AUTH = ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY")
@@ -567,9 +569,9 @@ class SourcesRelay:
     """
 
     def __init__(self, endpoint: Path, readers: frozenset[str], env: dict[str, str]):
-        from scripts.agent_runtime.sources_read_only import SERVER_PATH
+        from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH
 
-        self.server = [str(project_interpreter()), str(SERVER_PATH)]
+        self.server = [str(project_interpreter()), str(ROOT / SERVER_RELATIVE_PATH)]
         self.readers, self.env = readers, env
         self.completed = self.failed = 0
         self.tools: dict[str, int] = {}
@@ -1056,10 +1058,11 @@ class _Boundary:
             item["copy"] = str(dest)
 
     def run(self) -> int:
+        from lu_machinery.agent_runtime.review_mcp import _real_agy_token
+        from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
         from scripts.agent_runtime.attempt_boundary import full_review_reads, runtime_files
         from scripts.agent_runtime.attempt_network import AttemptEgress
-        from scripts.agent_runtime.review_mcp import _real_agy_token
-        from scripts.agent_runtime.sources_read_only import sources_tool_sets
         from scripts.dispatcher import runtime_context
         from scripts.dispatcher.git import DATABASE_LINKS
         from scripts.review.isolation import prepare_host_sandbox, wrap_argv_with_sandbox
@@ -1143,7 +1146,7 @@ class _Boundary:
         for name in sorted(projected):
             digest.update(name.encode() + b"\0" + hashlib.sha256(projected[name]).digest())
         self.receipt["wrapper_sha256"] = digest.hexdigest()
-        readers, writers = sources_tool_sets()
+        readers, writers = sources_tool_sets(ROOT / SERVER_RELATIVE_PATH)
         if not self.shell:
             _write_private(config / "mcp_config.json", json.dumps({"mcpServers": {"sources": {
                 "command": str(interpreter), "args": [str(boundary / "stdio.py"), str(boundary / "sources.sock")],

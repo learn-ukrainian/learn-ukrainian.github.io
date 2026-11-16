@@ -8,8 +8,8 @@ from pathlib import Path
 from urllib.parse import unquote
 
 import yaml
+from lu_machinery.agent_runtime import bounded_advisory as advisory
 
-from scripts.agent_runtime import bounded_advisory as advisory
 from scripts.dispatcher import git, store
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.model_catalog import (

@@ -17,7 +17,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from lu_machinery.agent_runtime.sources_read_only import SERVER_RELATIVE_PATH, sources_tool_sets
+
 from scripts.common.jsonl import jsonl_lines
 from scripts.orchestration.integration_sweep import (
     ITEM_ID_RE,
@@ -1320,7 +1321,7 @@ _TOOL_NAME_PREFIX = re.compile(r"(?:verify|query|search|inspect|check|translate|
 @lru_cache(maxsize=1)
 def _cited_fact() -> re.Pattern[str]:
     """Compile once from the registered Sources tools; an unreadable server declaration propagates."""
-    readers, writers = sources_tool_sets()
+    readers, writers = sources_tool_sets(package_repo_root() / SERVER_RELATIVE_PATH)
     tools = sorted((name for name in (*readers, *writers) if _TOOL_NAME_PREFIX.fullmatch(name)), key=lambda n: (-len(n), n))
     if not tools:
         raise ValueError("sources_tool_names_empty")

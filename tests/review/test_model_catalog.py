@@ -853,7 +853,7 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration):
     """Only the approved word-card and cached Wikipedia grants alter the captured argv."""
-    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+    from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
 
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
     before = json.loads(gzip.decompress(path.read_bytes()))

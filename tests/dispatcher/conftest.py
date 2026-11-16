@@ -138,7 +138,7 @@ def sandbox(tmp_path, hermetic_monitor):
     run_git(repo, "config", "user.name", "Stub")
     for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
-    for relative in ("scripts/lib/project_interpreter.sh", "scripts/agent_runtime/bounded_advisory.py",
+    for relative in ("scripts/lib/project_interpreter.sh",
                      "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -196,8 +196,9 @@ def sandbox(tmp_path, hermetic_monitor):
     for name in ("review_hooks.v1.json", "review_attempt_hooks.py", "admission_policy.v1.json"):
         shutil.copy(SOURCE / "scripts/curriculum" / name, repo / "scripts/curriculum")
     # A workspace-write AGY dispatch provisions the product hook manifest; the primary-write guard
-    # it names is the installed release's (#13032).
-    for relative in ("agents_extensions/agy/hooks.json",):
+    # it names is the installed release's (#13032). The Sources server is a product file (C-4843):
+    # the read-only tool partition is read from it.
+    for relative in ("agents_extensions/agy/hooks.json", ".mcp/servers/sources/server.py"):
         (repo / relative).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(SOURCE / relative, repo / relative)
     schema_dir = repo / "schemas"

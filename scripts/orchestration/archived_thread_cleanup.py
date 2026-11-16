@@ -429,7 +429,7 @@ def cleanup_homes(
     The default is every subscription account the loader can resolve. Account
     a (``sub``) does not read ambient ``CODEX_HOME``.
     """
-    from scripts.agent_runtime.codex_accounts import (
+    from lu_machinery.agent_runtime.codex_accounts import (
         CODEX_SUBSCRIPTION_ACCOUNTS,
         CodexAccountRefused,
         codex_account_home,
@@ -480,7 +480,7 @@ def run_cleanup(
         raise ValueError("observation_interval_days must be at least 1")
     if codex_home is None:
         try:
-            from scripts.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
+            from lu_machinery.agent_runtime.codex_accounts import CodexAccountRefused, codex_account_home
 
             home = codex_account_home("sub", environ)
         except CodexAccountRefused as exc:

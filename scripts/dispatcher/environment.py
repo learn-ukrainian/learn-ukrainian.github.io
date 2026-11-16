@@ -4,7 +4,8 @@ import os
 import sys
 from pathlib import Path
 
-from scripts.agent_runtime.read_only_tmp import dispatch_lease
+from lu_machinery.agent_runtime.read_only_tmp import dispatch_lease
+
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import TaskSpec
 
@@ -61,7 +62,7 @@ def claude_config_dir(account: str, home: str | None = None) -> str | None:
 def child_env(spec: TaskSpec) -> dict[str, str]:
     source = os.environ
     if spec.agent == "codex":
-        from scripts.agent_runtime.codex_accounts import codex_account_env
+        from lu_machinery.agent_runtime.codex_accounts import codex_account_env
 
         source = codex_account_env(spec.codex_account, source)
     names = _CONTEXT + _AUTH[spec.agent]

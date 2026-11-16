@@ -7804,7 +7804,7 @@ def codex_account_audits(environ: Mapping[str, str] | None = None) -> dict[str, 
     Account a (``sub``) is always present. ``b-sub`` is present only when its
     binding resolves. Ambient ``CODEX_HOME`` is not an account.
     """
-    from scripts.agent_runtime.codex_accounts import (
+    from lu_machinery.agent_runtime.codex_accounts import (
         CODEX_SUBSCRIPTION_ACCOUNTS,
         CodexAccountRefused,
         codex_account_home,
@@ -7823,7 +7823,7 @@ def codex_account_audits(environ: Mapping[str, str] | None = None) -> dict[str, 
 
 def _begin_codex_audit(args: argparse.Namespace) -> dict[str, Any]:
     """Account a, plus account b when the loader binds it. One explicit home stays one."""
-    from scripts.agent_runtime.codex_accounts import codex_account_home
+    from lu_machinery.agent_runtime.codex_accounts import codex_account_home
 
     if args.codex_home:
         audit = inspect_codex_home(Path(args.codex_home).expanduser().resolve())
