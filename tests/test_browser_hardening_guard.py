@@ -129,7 +129,6 @@ NPM_MANIFEST_NAME = "package.json"
 
 # Files that name a sandbox flag for a reason other than a browser launch.
 SANDBOX_FLAG_EXEMPT = {
-    "tests/test_agent_runtime.py": "AGY's CLI has no --no-sandbox flag; a docstring about that CLI, not a browser",
 }
 
 

@@ -8,6 +8,41 @@ import pytest
 from scripts.ai_agent_bridge import measure_cold_start as cold_start
 
 
+def incident_usage() -> dict:
+    """Usage numbers from the measured main/advisor/main structure, without content."""
+    return {
+        "input_tokens": 4,
+        "cache_read_input_tokens": 1_172_621,
+        "cache_creation_input_tokens": 3325,
+        "output_tokens": 2416,
+        "cache_creation": {"ephemeral_1h_input_tokens": 177, "ephemeral_5m_input_tokens": 0},
+        "iterations": [
+            {
+                "type": "message",
+                "input_tokens": 2,
+                "cache_read_input_tokens": 586_222,
+                "cache_creation_input_tokens": 177,
+                "output_tokens": 2086,
+                "cache_creation": {"ephemeral_1h_input_tokens": 177, "ephemeral_5m_input_tokens": 0},
+            },
+            {
+                "type": "advisor_message",
+                "input_tokens": 593_221,
+                "cache_read_input_tokens": 0,
+                "cache_creation_input_tokens": 0,
+                "output_tokens": 3421,
+            },
+            {
+                "type": "message",
+                "input_tokens": 2,
+                "cache_read_input_tokens": 586_399,
+                "cache_creation_input_tokens": 3148,
+                "output_tokens": 330,
+                "cache_creation": {"ephemeral_1h_input_tokens": 0, "ephemeral_5m_input_tokens": 3148},
+            },
+        ],
+    }
+
 def _successful_loader(size: int):
     def load(spec: cold_start.SourceSpec):
         return b"x" * size, 200, 1.0, None
@@ -216,8 +251,6 @@ def test_advisor_incident_reports_last_message_iteration(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from tests.test_context_latest_usage import incident_usage
-
     monkeypatch.setattr(cold_start, "_load_source", _successful_loader(100))
     transcript = _write_rows(tmp_path / "session.jsonl", incident_usage())
 
@@ -338,8 +371,6 @@ def test_later_row_never_replaces_positive_first_row(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from tests.test_context_latest_usage import incident_usage
-
     monkeypatch.setattr(cold_start, "_load_source", _successful_loader(100))
     larger_later = _top_level(cache_read_input_tokens=9_000_000)
     transcript = _write_rows(tmp_path / "session.jsonl", incident_usage(), larger_later)
@@ -359,8 +390,6 @@ def test_estimate_stays_the_gate_when_larger_than_corrected_observation(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from tests.test_context_latest_usage import incident_usage
-
     monkeypatch.setattr(cold_start, "_load_source", _successful_loader(3_000_000))
     transcript = _write_rows(tmp_path / "session.jsonl", incident_usage())
 

@@ -14,11 +14,11 @@ from unittest.mock import Mock
 
 import pytest
 import yaml
+from lu_machinery.common.repo_root import main_checkout_root
+from lu_machinery.dispatcher.cli import build_parser
+from lu_machinery.review.seeds import manifest as sm
 
-from scripts.common.repo_root import main_checkout_root
-from scripts.dispatcher.cli import build_parser
 from scripts.review.seeds import adjudicate as adj
-from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
@@ -451,8 +451,6 @@ def test_an_unrelated_independent_dispatch_cannot_stand_in_for_the_adjudication(
     assert seeded.record(good)["new"] is True
 
 
-
-
 def test_a_dispatch_that_was_not_read_only_is_refused(seeded: Case) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     # The same task file dispatched write-capable is refused.
@@ -520,8 +518,6 @@ def test_a_dispatch_with_an_output_schema_is_refused(seeded: Case) -> None:
     # the same record without --output-schema (otherwise identical) is accepted
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
     assert seeded.record(good)["new"] is True
-
-
 
 
 def test_the_canonical_record_is_accepted(seeded: Case) -> None:

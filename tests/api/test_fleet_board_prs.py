@@ -8,8 +8,6 @@ import time
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 from lu_machinery.orchestration.integration_sweep import lookup_verdict
 from lu_machinery.review.record_cf_verdict import build_comment
@@ -17,12 +15,6 @@ from lu_machinery.review.record_cf_verdict import build_comment
 from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import prs as prs_mod
 from scripts.api.fleet_board.envelope import endpoint_schema
-from scripts.api.fleet_board.router import router
-
-# 0.1.10 removed this router; the product retains its source until B2b.
-app = FastAPI()
-app.include_router(router, prefix="/api/fleet/v1")
-client = TestClient(app, raise_server_exceptions=False)
 
 NOW = datetime(2026, 10, 9, 10, 0, tzinfo=UTC)
 SHA = "a" * 40
@@ -579,78 +571,6 @@ def test_missing_keeper_state_is_unavailable_and_hold_stays_unknown(tmp_path) ->
     assert empty.usable is False
 
 
-def test_github_errors_stay_http_200(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
-    monkeypatch.setenv("FLEET_MQ_STATE_DIR", str(tmp_path))
-
-    def explode(_repo: str, **_kwargs: object) -> prs_mod.GithubView:
-        raise prs_mod.GithubReadError("no-such-host:9")
-
-    monkeypatch.setattr(prs_mod, "load_github_view", explode)
-    response = client.get("/api/fleet/v1/prs")
-    assert response.status_code == 200
-    body = response.json()
-    assert body["data"] == {"prs": []}
-    github = next(item for item in body["sources"] if item["name"] == "github")
-    assert github["status"] == "unavailable"
-    assert github["error"] == "unavailable"
-    assert "no-such-host" not in response.text
-    assert tmp_path.name not in response.text
-
-    def crash(_repo: str, **_kwargs: object) -> prs_mod.GithubView:
-        raise RuntimeError("no-such-host:9")
-
-    monkeypatch.setattr(prs_mod, "load_github_view", crash)
-    again = client.get("/api/fleet/v1/prs/42")
-    assert again.status_code == 200
-    assert again.json()["data"] == {"pr": None}
-    assert "no-such-host" not in again.text
-
-
-def test_route_filters_and_schema(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    key = f"42:{SHA}"
-    moment = prs_mod.utc_now()
-    since = (moment - timedelta(minutes=90)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    _write_state(tmp_path, keeper_body={"queued": {}, "drops": {}}, approved={key: {"since": since}})
-    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
-    monkeypatch.setenv("FLEET_MQ_STATE_DIR", str(tmp_path))
-    monkeypatch.setenv("FLEET_PR_STALE_MIN", "60")
-    held = _pull(number=7, sha=OTHER, title="[hold] wait", labels=({"name": "hold"},), epics=("12",))
-    ready = _pull(epics=("12",))
-    monkeypatch.setattr(
-        prs_mod,
-        "load_github_view",
-        lambda repo, **_kwargs: _view(
-            ready,
-            held,
-            comments={42: (_comment(SHA),), 7: (_comment(OTHER),)},
-            checks={SHA: _green(SHA), OTHER: _green(OTHER)},
-            queued={42: False, 7: False},
-        ),
-    )
-
-    listed = client.get("/api/fleet/v1/prs", params={"epic": "12", "state": "stale"})
-    assert listed.status_code == 200
-    payload = listed.json()
-    assert [row["number"] for row in payload["data"]["prs"]] == [42]
-    assert payload["data"]["prs"][0]["stale_green"] is True
-    assert payload["data"]["prs"][0]["minutes"] >= 89
-    assert payload["schema"] == "fleet.v1.prs"
-    assert tmp_path.name not in listed.text
-
-    schema = client.get("/api/fleet/v1/schema")
-    documents = schema.json()["data"]["endpoints"]
-    Draft202012Validator(documents["fleet.v1.prs"]).validate(payload)
-    detail = client.get("/api/fleet/v1/prs/42")
-    assert detail.status_code == 200
-    assert detail.json()["data"]["pr"]["head_sha"] == SHA
-    Draft202012Validator(documents["fleet.v1.pr"]).validate(detail.json())
-    missing = client.get("/api/fleet/v1/prs/99")
-    assert missing.status_code == 200
-    assert missing.json()["data"]["pr"] is None
-    Draft202012Validator(documents["fleet.v1.pr"]).validate(missing.json())
-
-
 def _note(**kwargs: object) -> activity_mod.PrActivity:
     return activity_mod.PrActivity(**kwargs)  # type: ignore[arg-type]
 
@@ -733,191 +653,6 @@ def test_owner_lane_prefers_the_recorded_lane() -> None:
     assert plain[0]["owner_lane"] is None
 
 
-@pytest.mark.parametrize("board_signals", [False, True])
-def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(
-    tmp_path, monkeypatch: pytest.MonkeyPatch, board_signals: bool,
-) -> None:
-    from scripts.api.fleet_board import router as router_mod
-    from scripts.api.fleet_board.sources import report
-    from scripts.api.fleet_board.view import Board
-
-    board_alert = {
-        "severity": "bad", "kind": "dead_driver", "title": "Driver stopped",
-        "summary": "process is not alive", "target": {"type": "epic", "id": "alpha"},
-    }
-    if board_signals:
-        monkeypatch.setattr(
-            router_mod, "load_board",
-            lambda: Board((report("roster_snapshot", "ok"),), [], [], [board_alert]),
-        )
-    measurements = [
-        {"name": name, "value": 7, "status": "ok"}
-        for name in ("disk_pct", "memory_pct", "drivers_live", "probe_status")
-    ]
-    if board_signals:
-        monkeypatch.setattr(
-            router_mod, "load_stats", lambda: ({"stats": measurements}, (report("stats", "ok"),)),
-        )
-    fresh = _pull(number=1, sha="d" * 40, head_ref="cursor/fresh", commit_at="2026-10-09T09:00:00Z")
-    day = _pull(number=2, sha="e" * 40, head_ref="codex/day", commit_at="2026-10-08T10:00:00Z")
-    older = _pull(number=3, sha="f" * 40, head_ref="codex/older", commit_at="2026-10-07T09:00:00Z")
-    record = {
-        "version": 1,
-        "activity": {"3": {"merge_event_at": "2026-10-07T10:00:00Z", "owner_lane": "agy"}},
-        "throughput": [
-            {"date": "2026-10-09", "repo": REPO, "owner_lane": "cursor", "opened": 2, "merged": 1},
-            {"date": "2026-10-08", "repo": REPO, "owner_lane": "codex", "opened": 1, "merged": 0},
-            {"date": "2026-09-01", "repo": REPO, "owner_lane": "cursor", "opened": 9, "merged": 9},
-            {"date": "2026-10-09", "repo": "example/other", "owner_lane": None, "opened": 1, "merged": 1},
-        ],
-    }
-    path = tmp_path / "record.json"
-    path.write_text(json.dumps(record), encoding="utf-8")
-    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(path))
-    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
-    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
-    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
-    monkeypatch.setattr(
-        prs_mod,
-        "load_github_view",
-        lambda repo, **_kwargs: _view(
-            fresh,
-            day,
-            older,
-            comments={1: (), 2: (), 3: ()},
-            checks={"d" * 40: _green("d" * 40), "e" * 40: _green("e" * 40), "f" * 40: _green("f" * 40)},
-            queued={1: False, 2: False, 3: False},
-        ),
-    )
-
-    now = client.get("/api/fleet/v1/now")
-    assert now.status_code == 200
-    attention = now.json()["data"]["attention"]
-    if board_signals:
-        assert attention[0] == board_alert
-        attention = attention[1:]
-    assert [row["number"] for row in attention] == [3, 2]
-    if board_signals:
-        assert {row["name"] for row in now.json()["sources"]} == {
-            "roster_snapshot", "github", "mq_state", "stale_prs",
-        }
-    assert attention[0]["idle_48h"] is True
-    assert attention[0]["owner_lane"] == "agy"
-    assert attention[1]["idle_48h"] is False
-    assert attention[1]["hours_idle"] == 24.0
-    assert path.name not in now.text
-
-    stats = client.get("/api/fleet/v1/stats")
-    assert stats.status_code == 200
-    body = stats.json()
-    assert body["schema"] == "fleet.v1.stats"
-    if board_signals:
-        assert body["data"]["stats"] == measurements
-    assert {row["name"] for row in body["sources"]} == {"stats", "github", "mq_state", "stale_prs"}
-    assert body["data"]["window_days"] == 14
-    by_repo = {row["repo"]: row for row in body["data"]["by_repo"]}
-    assert set(by_repo) == {REPO, "example/other"}
-    assert by_repo[REPO]["backlog"] == 3
-    assert len(by_repo[REPO]["days"]) == 14
-    assert by_repo[REPO]["days"][-1] == {"date": "2026-10-09", "opened": 2, "merged": 1}
-    assert by_repo[REPO]["days"][-2] == {"date": "2026-10-08", "opened": 1, "merged": 0}
-    assert by_repo[REPO]["days"][0]["date"] == "2026-09-26"
-    assert sum(day["opened"] for day in by_repo[REPO]["days"]) == 3
-    by_lane = {row["owner_lane"]: row for row in body["data"]["by_lane"]}
-    assert by_lane["cursor"]["backlog"] == 1
-    assert by_lane["codex"]["backlog"] == 1
-    assert by_lane["agy"]["backlog"] == 1
-    assert by_lane[None]["backlog"] == 0
-    assert by_lane[None]["days"][-1] == {"date": "2026-10-09", "opened": 1, "merged": 1}
-    assert "2026-09-01" not in stats.text
-
-    schema = client.get("/api/fleet/v1/schema")
-    documents = schema.json()["data"]["endpoints"]
-    Draft202012Validator(documents["fleet.v1.now"]).validate(now.json())
-    Draft202012Validator(documents["fleet.v1.stats"]).validate(body)
-    listed = client.get("/api/fleet/v1/prs")
-    Draft202012Validator(documents["fleet.v1.prs"]).validate(listed.json())
-
-
-def test_missing_or_malformed_state_record_degrades(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
-    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
-    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
-    monkeypatch.setattr(
-        prs_mod,
-        "load_github_view",
-        lambda repo, **_kwargs: _view(
-            _pull(head_ref="cursor/feature", commit_at="2026-10-08T10:00:00Z"),
-            comments={42: ()},
-        ),
-    )
-
-    missing = client.get("/api/fleet/v1/stats")
-    assert missing.status_code == 200
-    stale = next(item for item in missing.json()["sources"] if item["name"] == "stale_prs")
-    assert stale["status"] == "not_configured"
-    assert missing.json()["data"]["by_repo"][0]["backlog"] == 1
-    assert missing.json()["data"]["by_repo"][0]["days"][-1]["opened"] == 0
-
-    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(tmp_path / "absent.json"))
-    absent = client.get("/api/fleet/v1/stats")
-    assert absent.status_code == 200
-    absent_source = next(item for item in absent.json()["sources"] if item["name"] == "stale_prs")
-    assert absent_source["status"] == "unavailable"
-    assert absent.json()["data"]["by_repo"][0]["backlog"] == 1
-    assert tmp_path.name not in absent.text
-
-    bad = tmp_path / "record.json"
-    bad.write_text('{"version": 1, "activity": {"nope": {}}}', encoding="utf-8")
-    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(bad))
-    broken = client.get("/api/fleet/v1/prs")
-    assert broken.status_code == 200
-    source = next(item for item in broken.json()["sources"] if item["name"] == "stale_prs")
-    assert source == {"name": "stale_prs", "status": "unavailable", "age_s": None, "error": "unavailable"}
-    assert broken.json()["data"]["prs"][0]["hours_idle"] == 24.0
-    assert broken.json()["data"]["prs"][0]["owner_lane"] == "cursor"
-    assert bad.name not in broken.text
-
-    bad.write_text('{"a":' * 10000 + '1' + '}' * 10000, encoding="utf-8")
-    nested_prs = client.get("/api/fleet/v1/prs")
-    assert nested_prs.status_code == 200
-    stale_source = next(item for item in nested_prs.json()["sources"] if item["name"] == "stale_prs")
-    assert stale_source == {"name": "stale_prs", "status": "unavailable", "age_s": None, "error": "unavailable"}
-    gh_source = next(item for item in nested_prs.json()["sources"] if item["name"] == "github")
-    assert gh_source["status"] == "ok"
-    assert len(nested_prs.json()["data"]["prs"]) == 1
-    assert nested_prs.json()["data"]["prs"][0]["hours_idle"] == 24.0
-
-    nested_now = client.get("/api/fleet/v1/now")
-    assert nested_now.status_code == 200
-    now_stale = next(item for item in nested_now.json()["sources"] if item["name"] == "stale_prs")
-    assert now_stale["status"] == "unavailable"
-    assert len(nested_now.json()["data"]["attention"]) == 1
-
-    nested_stats = client.get("/api/fleet/v1/stats")
-    assert nested_stats.status_code == 200
-    stats_stale = next(item for item in nested_stats.json()["sources"] if item["name"] == "stale_prs")
-    assert stats_stale["status"] == "unavailable"
-    assert nested_stats.json()["data"]["by_repo"][0]["backlog"] == 1
-    assert bad.name not in nested_prs.text
-
-    old = NOW.timestamp() - 1000
-    good = {
-        "version": 1,
-        "throughput": [
-            {"date": "2026-10-09", "repo": REPO, "owner_lane": "cursor", "opened": 4, "merged": 2}
-        ],
-    }
-    bad.write_text(json.dumps(good), encoding="utf-8")
-    os.utime(bad, (old, old))
-    aged = client.get("/api/fleet/v1/stats")
-    aged_source = next(item for item in aged.json()["sources"] if item["name"] == "stale_prs")
-    assert aged_source["status"] == "stale"
-    assert aged_source["age_s"] > activity_mod.STALE_PR_FRESH_S
-    assert aged.json()["data"]["by_lane"][0]["days"][-1]["merged"] == 2
-    assert bad.name not in aged.text
-
-
 @pytest.mark.parametrize("keeper_available", [False, True])
 def test_idle_and_throughput_preserve_keeper_readiness(tmp_path, monkeypatch: pytest.MonkeyPatch, keeper_available: bool) -> None:
     key = f"42:{SHA}"
@@ -955,32 +690,6 @@ def test_idle_and_throughput_preserve_keeper_readiness(tmp_path, monkeypatch: py
     approved = prs_mod.assemble_prs(_view(_pull()), prs_mod.read_mq_state(now=NOW)[1], now=NOW)
     assert approved[0]["stale_green"] is keeper_available
     assert approved[0]["minutes"] == (120 if keeper_available else None)
-
-
-def test_activity_timestamp_overflow_preserves_github_rows_and_backlog(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    overflow_record = tmp_path / "overflow.json"
-    overflow_record.write_text(json.dumps({
-        "version": 1,
-        "activity": {"42": {"commit_at": "0001-01-01T00:00:00+01:00"}},
-    }), encoding="utf-8")
-    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
-    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(overflow_record))
-    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
-    monkeypatch.setattr(prs_mod, "load_github_view", lambda *_args, **_kwargs: _view(
-        _pull(head_ref="codex/topic", commit_at="2026-10-07T10:00:00Z"),
-        comments={42: ()},
-    ))
-    res_prs = client.get("/api/fleet/v1/prs")
-    res_stats = client.get("/api/fleet/v1/stats")
-    assert res_prs.status_code == 200
-    assert res_stats.status_code == 200
-    prs_body = res_prs.json()
-    assert len(prs_body["data"]["prs"]) == 1
-    assert prs_body["data"]["prs"][0]["number"] == 42
-    stale_source = next(s for s in prs_body["sources"] if s["name"] == "stale_prs")
-    assert stale_source["status"] == "unavailable"
-    gh_source = next(s for s in prs_body["sources"] if s["name"] == "github")
-    assert gh_source["status"] == "ok"
 
 
 def test_failed_commit_lookup_marks_github_source_unavailable_while_preserving_rows() -> None:

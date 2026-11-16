@@ -104,9 +104,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importing repo_root installs the env formatter before any test runs.
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
-from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
-from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
+from lu_machinery.common.repo_root import main_checkout_root, resolve_repo_root
+
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
@@ -1654,8 +1655,8 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
 
 def _primary_artifact_path(group: str, rel: str) -> Path:
     """Verify the current manifest against existing primary data, without copying."""
-    from scripts.guardrails.worktree_containment import resolve_main_root
-    from scripts.storage.paths import find_entry, verify_file
+    from lu_machinery.guardrails.worktree_containment import resolve_main_root
+    from lu_machinery.storage.paths import find_entry, verify_file
 
     entry = find_entry(group, rel)
     artifact = resolve_main_root(_REPO_ROOT) / "data" / rel
@@ -1694,9 +1695,6 @@ def requires_sources_db(data_store_factory) -> Path:
 def requires_vesum_db(data_store_factory) -> Path:
     """Skip a test requiring the uncommitted VESUM database."""
     return data_store_factory("vesum", required_sqlite_tables=("forms",))
-
-
-
 
 
 @pytest.fixture(autouse=True)
@@ -2210,7 +2208,7 @@ def _isolate_runtime_scratch_root(
     private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
     Scans stay inside ``tmp_path`` for those tests too.
     """
-    from scripts.common import scratch
+    from lu_machinery.common import scratch
 
     monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
 
@@ -3168,7 +3166,7 @@ def pytest_runtest_setup(item: pytest.Item) -> None:
     if marker is not None:
         if len(marker.args) != 2 or marker.kwargs:
             raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
-        from scripts.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+        from lu_machinery.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
 
         group, rel = marker.args
         try:
@@ -3551,7 +3549,7 @@ def _init_real_worktrees_dir() -> str:
     global _REAL_WORKTREES_DIR, _REAL_WORKTREES_PREFIX
     if _REAL_WORKTREES_DIR:
         return _REAL_WORKTREES_DIR
-    from scripts.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import main_checkout_root
 
     worktrees = main_checkout_root(_REPO_ROOT) / ".worktrees"
     _REAL_WORKTREES_DIR = os.path.realpath(worktrees)
@@ -3940,7 +3938,7 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     if not is_shim and os.path.realpath(executable_path) != os.path.realpath(_REAL_GH_BINARY):
         return
 
-    from scripts.secret_redactor import redact_value
+    from lu_machinery.secret_redactor import redact_value
 
     rendered = redact_value(argv)
     pytest.fail(
@@ -4142,7 +4140,7 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
-from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
+from tests.opsec_fixtures import publisher_transport, synthetic_opsec  # noqa: F401
 
 
 @pytest.fixture(autouse=True)

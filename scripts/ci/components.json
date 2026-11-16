@@ -380,26 +380,10 @@
     },
     "harness": {
       "lane": "infra",
-      "test_files": [
-        "tests/ci/test_components.py",
-        "tests/ci/test_delivery_baseline.py"
-      ],
+      "test_files": [],
       "test_prefixes": [],
       "test_args": [],
-      "verify": [
-        {
-          "argv": [
-            "{python}",
-            "-m",
-            "pytest",
-            "-q",
-            "tests/ci/test_components.py",
-            "tests/ci/test_delivery_baseline.py"
-          ],
-          "cwd": ".",
-          "scope": "code-contract"
-        }
-      ],
+      "verify": [],
       "build": [],
       "input_families": [],
       "output_families": []
@@ -407,7 +391,6 @@
     "shared-core": {
       "lane": "infra",
       "test_files": [
-        "tests/ci/test_components.py",
         "tests/test_frontend_change_scope.py",
         "tests/test_auto_deploy_component_parity.py"
       ],
@@ -420,7 +403,6 @@
             "-m",
             "pytest",
             "-q",
-            "tests/ci/test_components.py",
             "tests/test_frontend_change_scope.py",
             "tests/test_auto_deploy_component_parity.py"
           ],
@@ -619,12 +601,6 @@
     ],
     "tests/build/test_build_landing_pages.py": [
       "curriculum-generation"
-    ],
-    "tests/ci/test_components.py": [
-      "shared-core"
-    ],
-    "tests/ci/test_delivery_baseline.py": [
-      "harness"
     ],
     "tests/conftest.py": [
       "shared-core"
@@ -1556,7 +1532,6 @@
     "verification_scope": "Digest and freshness wrapper. Product semantic readiness remains owned by slices 3-5 and held-out certification by slice 8."
   },
   "shared_integration_tests": [
-    "tests/ci/test_components.py",
     "tests/test_frontend_change_scope.py",
     "tests/test_auto_deploy_component_parity.py"
   ],

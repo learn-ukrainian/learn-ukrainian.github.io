@@ -68,7 +68,11 @@ def test_fresh_hook_direct_script_invocation(fresh_page):
     page, sources, _ = fresh_page
     root = sources.parents[1]
     repo = Path(__file__).resolve().parents[2]
-    shutil.copytree(repo / "scripts", root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(repo / "scripts" / "audit", root / "scripts" / "audit", ignore=shutil.ignore_patterns("__pycache__"))
+    for package in ("build", "curriculum", "review", "lexicon"):
+        (root / "scripts" / package).symlink_to(repo / "scripts" / package, target_is_directory=True)
+    for module in ("__init__.py", "level_config.py"):
+        (root / "scripts" / module).symlink_to(repo / "scripts" / module)
     for cmd in (["git", "init", "-q"], ["git", "add", "curriculum", "site"]):
         subprocess.run(cmd, cwd=root, check=True, capture_output=True, timeout=30)
     git = shutil.which("git")

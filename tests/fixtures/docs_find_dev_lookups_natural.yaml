@@ -34,13 +34,9 @@
 version: 1
 top_n: {query: 20, question: 20}
 known_misses:
-  N22: {query: 180, question: null, reason: 'Vocabulary gap: the guard says accidental disclosure, the question says leak and infrastructure details.'}
   N28: {question: null, reason: 'Vocabulary gap (#9531): the linter and its workflow say reject, negated, closing reference and PR body; the question says catch, accidentally, saying and description, the rarest four of its nine words, so prose about issues and PRs outranks both.'}
   N30: {query: 49, question: 123, reason: 'Vocabulary gap (#9531): the hook records committed ref updates in the primary checkout; the query says log, branch and main, the question also straight onto and example. Of seven query words the hook holds update, checkout and commit; documents holding all seven in prose share its relevance band and rank first as entry points.'}
-  N35: {query: 21, question: null, reason: 'Vocabulary gap (#9531): the question says flaky and expiry, the quarantine says flake and expires; flaky meets flake and expiry meets expires only through a dictionary (story is no store), so documents holding list, tests, owners, expiry and dates in prose rank first. Under the blind query, tests/test_comms_router_expiry_sweep.py holding expiry and tests pushes tests/flake_quarantine.yaml to rank 21.'}
-  N38: {query: 54, reason: 'Vocabulary gap (#9531): the query says reviewer, the deciding function says reviews; an -er word may be no agent noun (corner, proper, brother), so reviewer meets review only through a dictionary. The function holds seven of the eight words, not reviewer, and ranks below documents holding reviewer beside most of the others.'}
   N40: {query: 83, question: 36, reason: 'Vocabulary gap: the step says it sets the evidence digest, the question says updates.'}
-  N43: {question: null, reason: 'Vocabulary gap (#9531): roughly six hundred, half the question''s weight, is a count no tracked file states, and the runner says data-gated tests where the question says real local databases; only nightly and tests meet.'}
   N54: {question: 26, reason: 'Six places outside: the store record holds six of the question''s ten words (comms, data, empty, file, fleet, stored) but not agent, messages, database or folder, so 25 files about the fleet, its messages and its stores rank first, 14 of them holding seven or more of the words.'}
   N59: {question: 67, reason: 'The common words of the long question are held by prose; the short query ranks .gitattributes first.'}
 lookups:
@@ -126,16 +122,6 @@ lookups:
      query: 'vocabulary translation batches registry applied vocabulary files',
      expect: [registry/translations/README.md],
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'Legacy vocabulary translation batches'}]}
-  - {id: N19, kind: status, source: 'issue #9213',
-     question: 'Should a new agent still post to the old topic channels to coordinate with other agents, or has something replaced that?',
-     query: 'agent coordination topic channels replaced Fleet Comms',
-     expect: [agents_extensions/shared/rules/fleet-comms-coordination.md, docs/agent-bridge-setup-guide.md],
-     verify: [{path: agents_extensions/shared/rules/fleet-comms-coordination.md, contains: 'Do not create new authoritative bridge'}]}
-  - {id: N20, kind: status, source: 'CLAUDE.md Inter-Agent Communication (budget substitutions)',
-     question: 'Can I still send work to the GLM lane, and where does it go if I try?',
-     query: 'GLM lane dispatch rejected redirect',
-     expect: [scripts/config/agent_fallback_substitutions.yaml],
-     verify: [{path: scripts/config/agent_fallback_substitutions.yaml, contains: 'subscription backing the glm lane is retired'}]}
   - {id: N21, kind: status, source: 'issue #9270',
      question: 'Are the token usage reports under docs a current view of what we spend?',
      query: 'token usage reports docs spend',
@@ -143,76 +129,21 @@ lookups:
      verify: [{path: docs/knowledge/catalogue.yaml, contains: 'not current usage'}]}
 
   # ---------------------------------------------------------------- process: where is this check, guard or step done
-  - {id: N22, kind: process, source: 'issue #9297',
-     question: 'Before an agent posts an issue comment or pull request text to GitHub, where do we check it for internal infrastructure details?',
-     query: 'GitHub comment PR text infrastructure details leak check',
-     expect: [scripts/opsec/prepublish.py, docs/dev/agent-public-text.md],
-     verify: [{path: scripts/opsec/prepublish.py, contains: 'before public GitHub writes'}]}
-  - {id: N23, kind: process, source: 'issue #9088',
-     question: 'What stops an agent from dumping environment variables or a secrets file into the session transcript?',
-     query: 'block env dump secrets file transcript hook',
-     expect: [agents_extensions/shared/hooks/guard-secret-print.py],
-     verify: [{path: agents_extensions/shared/hooks/guard-secret-print.py, contains: 'block clear secret-value dumps'}]}
-  - {id: N24, kind: process, source: 'issue #9094',
-     question: 'What prevents an agent from editing files in the main checkout instead of in its own worktree?',
-     query: 'hook blocks editing main checkout outside worktree',
-     expect: [agents_extensions/shared/hooks/guard-primary-checkout-write.py],
-     verify: [{path: agents_extensions/shared/hooks/guard-primary-checkout-write.py, contains: 'block write tools from dirtying the primary checkout'}]}
-  - {id: N25, kind: process, source: 'AGENTS.md (Python invocation)',
-     question: 'What rejects a shell command that calls bare python3 instead of the project''s virtual environment?',
-     query: 'hook rejects bare python3 virtual environment',
-     expect: [agents_extensions/shared/hooks/enforce-venv.sh],
-     verify: [{path: agents_extensions/shared/hooks/enforce-venv.sh, contains: 'Enforce .venv/bin/python usage'}]}
-  - {id: N26, kind: process, source: 'issue #9455',
-     question: 'Which CI check blocks pull requests that pull in dependencies with serious known vulnerabilities, and where are the accepted advisories listed?',
-     query: 'CI dependency audit vulnerabilities accepted advisories',
-     expect: [.github/workflows/security-audit.yml, scripts/config/pip-audit-ignore.yaml],
-     verify: [{path: .github/workflows/security-audit.yml, contains: 'Blocking dependency-vulnerability security gate'}]}
-  - {id: N27, kind: process, source: 'issue #9101',
-     question: 'Where do we delete stale GitHub Actions cache entries so the repository stays under the cache size limit?',
-     query: 'delete stale GitHub Actions cache entries',
-     expect: [.github/workflows/cache-hygiene.yml, scripts/ci/cache_hygiene.py],
-     verify: [{path: .github/workflows/cache-hygiene.yml, contains: 'Deletes dead Actions cache entries'}]}
   - {id: N28, kind: process, source: 'issue #8505',
      question: 'Where do we catch a PR description that would accidentally close an issue by saying something like ''does not fix #123''?',
      query: 'PR description closing keyword "does not fix" lint',
      expect: [.github/workflows/pr-body-guard.yml, scripts/audit/lint_pr_closing_references.py],
      verify: [{path: .github/workflows/pr-body-guard.yml, contains: 'Negated-closing-reference guard'}]}
-  - {id: N29, kind: process, source: 'issue #9058',
-     question: 'How can I measure how long CI jobs take and how long pull requests wait in the merge queue?',
-     query: 'CI job duration merge queue wait metrics',
-     expect: [scripts/ci/ci_timings.py],
-     verify: [{path: scripts/ci/ci_timings.py, contains: 'how long do PRs'}]}
   - {id: N30, kind: process, source: 'docs/bug-autopsies/ci-hang-unbounded-jobs.md',
      question: 'Does anything record when a branch is updated directly in the main checkout, for example a commit straight onto main?',
      query: 'log direct branch update main checkout commit',
      expect: [.githooks/reference-transaction],
      verify: [{path: .githooks/reference-transaction, contains: 'records only committed ref updates in the primary'}]}
-  - {id: N31, kind: process, source: 'issue #9277',
-     question: 'Where do we refuse to give Ukrainian-language content, reviews or design work to the Moonshot coding seats?',
-     query: 'Moonshot Kimi seats refuse Ukrainian content routing',
-     expect: [scripts/agent_runtime/kimi_admission.py],
-     verify: [{path: scripts/agent_runtime/kimi_admission.py, contains: 'admit web, UI and backend coding only'}]}
-  - {id: N32, kind: process, source: 'issue #9021',
-     question: 'When a script runs inside an agent worktree, where is it decided which Python interpreter to launch?',
-     query: 'worktree script Python interpreter selection',
-     expect: [scripts/common/repo_root.py, scripts/lib/project_interpreter.sh],
-     verify: [{path: scripts/common/repo_root.py, contains: 'def project_interpreter'}]}
-  - {id: N33, kind: process, source: 'issue #8645',
-     question: 'Where is the shared memory ceiling for all background agent workers set, so one runaway worker cannot take down the driver?',
-     query: 'shared memory ceiling background agent workers cgroup',
-     expect: [packaging/systemd/README.md, packaging/systemd/lu-dispatch.slice],
-     verify: [{path: packaging/systemd/README.md, contains: 'One slice for every detached worker'}]}
   - {id: N34, kind: process, source: 'issue #9143',
      question: 'Where are memory limits enforced for the dictionary enrichment workers?',
      query: 'memory limit dictionary enrichment workers',
      expect: [scripts/lexicon/runner/memory.py],
      verify: [{path: scripts/lexicon/runner/memory.py, contains: 'Hard memory enforcement for enrichment workers'}]}
-  - {id: N35, kind: process, source: 'issue #9067',
-     question: 'Where is the list of tests temporarily excused as flaky, with owners and expiry dates, and what validates it?',
-     query: 'flaky tests quarantine list owners expiry validator',
-     expect: [scripts/common/flake_quarantine.py, tests/flake_quarantine.yaml],
-     verify: [{path: scripts/common/flake_quarantine.py, contains: 'Validate the bounded flake quarantine'}]}
   - {id: N36, kind: process, source: 'docs/decisions/INDEX.md',
      question: 'Where do we check whether a recorded team decision has passed its expiry date?',
      query: 'decision journal expiry check script',
@@ -223,11 +154,6 @@ lookups:
      query: 'ADR numbering gaps stale proposed check',
      expect: [scripts/audit/check_adrs.py],
      verify: [{path: scripts/audit/check_adrs.py, contains: 'Stale Proposed'}]}
-  - {id: N38, kind: process, source: 'issue #9364',
-     question: 'Where does the bridge refuse code review by the Google-family reviewer while native dispatch may admit it, and Ukrainian learner content review stays allowed?',
-     query: 'Gemini reviewer refuse code review Ukrainian learner content only',
-     expect: [scripts/ai_agent_bridge/_agy.py],
-     verify: [{path: scripts/ai_agent_bridge/_agy.py, contains: 'ACP callers leave ``native_code_review`` false'}]}
   - {id: N39, kind: process, source: 'docs/epics/fresh-build-build-program.md',
      question: 'Before we pay for a lesson-writing model call, where do we check that every example, quote and video the plan needs has an evidence record?',
      query: 'preflight evidence record check before writer call',
@@ -248,11 +174,6 @@ lookups:
      query: 'daily backup data folder server timer schedule',
      expect: [packaging/systemd/learn-ukrainian-backup.timer, packaging/systemd/learn-ukrainian-backup.service],
      verify: [{path: packaging/systemd/learn-ukrainian-backup.timer, contains: 'daily data backup timer'}]}
-  - {id: N43, kind: process, source: 'issue #9229',
-     question: 'Where do the roughly six hundred tests that need the real local databases get run every night?',
-     query: 'nightly tests real local databases',
-     expect: [packaging/systemd/learn-ukrainian-data-tier.timer, scripts/ci/data_tier.py],
-     verify: [{path: packaging/systemd/learn-ukrainian-data-tier.timer, contains: 'nightly host data-tier test timer'}]}
   - {id: N44, kind: process, source: 'issue #9305',
      question: 'Where should I add a regression test that replays a recorded production input through a parser without calling any model?',
      query: 'regression test replay recorded production input parser fixture',
@@ -260,26 +181,11 @@ lookups:
      verify: [{path: tests/replay/README.md, contains: 'deterministic, LLM-free regressions'}]}
 
   # ---------------------------------------------------------------- data stores and storage layout
-  - {id: N45, kind: data_store, source: 'docs/corpus-inventory.md',
-     question: 'Where do the big raw source files such as literary texts and textbook chunks live, as opposed to the working databases?',
-     query: 'raw source files literary texts textbook chunks location',
-     expect: [agents_extensions/shared/rules/storage-topology.md, docs/corpus-inventory.md],
-     verify: [{path: agents_extensions/shared/rules/storage-topology.md, contains: 'Bulk raw sources (primary)'}]}
-  - {id: N46, kind: data_store, source: 'issue #8804',
-     question: 'Can I move the main corpus database onto the network share to free up local disk space?',
-     query: 'move corpus database network share disk space',
-     expect: [agents_extensions/shared/rules/storage-topology.md, scripts/storage/topology.py],
-     verify: [{path: agents_extensions/shared/rules/storage-topology.md, contains: 'Never open SQLite from SMB'}]}
   - {id: N47, kind: data_store, source: 'issue #8803',
      question: 'Where does the code read the textbook PDFs from now that the old links under the data folder are gone?',
      query: 'textbook PDFs path after data symlinks removed',
      expect: [docs/runbooks/storage-topology.md],
      verify: [{path: docs/runbooks/storage-topology.md, contains: 'Textbook PDFs'}]}
-  - {id: N48, kind: data_store, source: 'issue #8804',
-     question: 'Is the data folder on its own disk, and what stops services from starting when that disk is not mounted?',
-     query: 'Linux server data disk mount required systemd',
-     expect: [docs/runbooks/storage-topology.md, scripts/storage/data_volume_guard.sh],
-     verify: [{path: docs/runbooks/storage-topology.md, contains: 'Linux repository data volume'}]}
   - {id: N49, kind: data_store, source: 'CLAUDE.md Reference Docs (corpus inventory)',
      question: 'I scraped a new literary text into the data folder. Why does a forced rebuild of the corpus database not pick it up, and where should the file go?',
      query: 'scraped literary text forced rebuild corpus database not picked up',
@@ -367,11 +273,6 @@ lookups:
      query: 'open-licensed university grammar textbook local copy',
      expect: [docs/references/dobra-forma/README.md],
      verify: [{path: docs/references/dobra-forma/README.md, contains: 'comprehensive Ukrainian grammar textbook'}]}
-  - {id: N66, kind: resource, source: 'agents_extensions/shared/rules/storage-topology.md',
-     question: 'How do I refresh the bulk raw-source mirror on the Windows machine from the cloud copy without deleting anything?',
-     query: 'refresh raw-source mirror Windows from cloud without deleting',
-     expect: [scripts/storage/windows/README.md, scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1],
-     verify: [{path: scripts/storage/windows/README.md, contains: 'Windows bulk-source maintenance'}]}
   - {id: N67, kind: resource, source: 'agents_extensions/shared/rules/ukrainian-linguistics.md',
      question: 'Where are the hand-labelled examples for testing whether a judge correctly spots Russianisms?',
      query: 'Russianism judge hand-labelled test examples',

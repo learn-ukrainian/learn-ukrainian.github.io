@@ -10,11 +10,11 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.review.seeds import manifest as sm
 
 from scripts.review import record
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import PinIneligibleError, render_prompt
-from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import (
     PLANTER_FAMILY,
     PLANTER_MODEL,

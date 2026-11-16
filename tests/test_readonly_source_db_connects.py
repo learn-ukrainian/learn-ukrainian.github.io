@@ -19,11 +19,11 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+from lu_machinery.common import repo_root
+from lu_machinery.hygiene import lint_source_db_writable_connects as lint
+from lu_machinery.ops import product_entry
 
 import scripts
-from scripts.common import repo_root
-from scripts.hygiene import lint_source_db_writable_connects as lint
-from scripts.ops import product_entry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -492,7 +492,6 @@ def test_baseline_cannot_grow_or_change_freeze(tmp_path, monkeypatch):
     assert lint.baseline_policy_violations(tmp_path)
 
 
-
 def test_resolver_kind_only_exempts_builder_expressions(tmp_path):
     path = tmp_path / 'scripts/storage/topology.py'
     path.parent.mkdir(parents=True)
@@ -507,14 +506,12 @@ def test_resolver_kind_only_exempts_builder_expressions(tmp_path):
     assert any('constructor reference' in v for v in lint.find_violations(tmp_path, (entry,))[0])
 
 
-
 def test_fixture_sibling_cannot_hide_repository_path():
     source = "check(ROOT / 'data' / 'sources.db', tmp_path)"
     assert any(f.kind == 'store_path' for f in lint.classify_store_source(source, 'tests/new.py'))
     source = "import sqlite3\ndb = choose(ROOT / 'data' / 'sources.db', tmp_path)\nsqlite3.connect(db)"
     assert any(f.kind == 'raw_store_constructor' for f in lint.classify_store_source(source, 'tests/new.py'))
     assert any(f.kind == 'store_path' for f in lint.classify_store_source("db = Path('data') / 'sources.db'", 'tests/new.py'))
-
 
 
 def test_cached_base_inputs_do_not_hide_changes_or_removed_entries(tmp_path, monkeypatch):
@@ -802,7 +799,6 @@ def test_literal_prefilter_has_no_false_negatives_for_concatenations():
             nodes = [ast.Constant(value=value) for value in parts]
             assert lint._may_fold_store(nodes), parts
     assert not lint._may_fold_store([ast.Constant(value='metadata'), ast.Constant(value='fixture.db')])
-
 
 
 def test_rebound_reader_alias_still_reports_collection_access():

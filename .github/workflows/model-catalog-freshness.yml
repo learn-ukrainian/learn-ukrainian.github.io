@@ -14,7 +14,6 @@ on:
       - 'docs/runbooks/fleet-comms-open-gaps.md'
       - 'docs/runbooks/epic-orchestrator-roster.md'
       - 'docs/best-practices/agent-activity-matrix.md'
-      - 'tests/test_lint_fleet_roster.py'
       - 'tests/test_model_catalog.py'
       - '.github/workflows/model-catalog-freshness.yml'
   push:
@@ -31,7 +30,6 @@ on:
       - 'docs/runbooks/fleet-comms-open-gaps.md'
       - 'docs/runbooks/epic-orchestrator-roster.md'
       - 'docs/best-practices/agent-activity-matrix.md'
-      - 'tests/test_lint_fleet_roster.py'
       - 'tests/test_model_catalog.py'
       - '.github/workflows/model-catalog-freshness.yml'
   schedule:

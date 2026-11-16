@@ -70,11 +70,7 @@ _TESTS_ROOT = _REPO_ROOT / "tests"
 # subtree of them) that carry the marker at module scope.
 KNOWN_REPO_WIDE_MODULES = frozenset(
     {
-        "tests/ai_agent_bridge/test_module_identity.py",
         "tests/hygiene/test_tracked_symlink_targets.py",
-        "tests/orchestration/test_thread_restart_e2e.py",
-        "tests/orchestration/test_worktree_removal_invariant.py",
-        "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
         "tests/test_browser_hardening_guard.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
@@ -87,8 +83,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_hooks_executable.py",
         "tests/test_issue_template_acceptance_criteria.py",
         "tests/test_lesson_atlas_link_census.py",
-        "tests/test_lint_fleet_roster.py",
-        "tests/test_lint_prompts.py",
         "tests/test_no_rewrite_contract.py",
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",

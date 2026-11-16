@@ -9,9 +9,9 @@ from types import SimpleNamespace
 
 import pytest
 import yaml
+from lu_machinery.common import flake_quarantine
+from lu_machinery.common.flake_quarantine import load_registry, rerun_node_ids
 
-from scripts.common import flake_quarantine
-from scripts.common.flake_quarantine import load_registry, rerun_node_ids
 from tests import conftest as root_conftest
 
 

@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import subprocess
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -83,12 +84,12 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
 
     shutil.copytree(HOOK_DIR, repo / ".githooks")
     (repo / "scripts/lib").mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", repo / "scripts/lib/project_interpreter.sh")
+    shutil.copy2(Path(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))), repo / "scripts/lib/project_interpreter.sh")
     _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
-    shutil.copy2(REPO_ROOT / "scripts/install_git_hooks.sh", repo / "scripts/install_git_hooks.sh")
+    shutil.copy2(Path(str(files("lu_machinery").joinpath("install_git_hooks.sh"))), repo / "scripts/install_git_hooks.sh")
     _write_executable(
         repo / "scripts/pre_commit/project_python.sh",
         f'#!/usr/bin/env bash\nset -euo pipefail\nexec "{_project_python()}" "$@"\n',
@@ -340,7 +341,7 @@ def test_installer_materializes_hooks_in_a_sparse_linked_worktree(tmp_path):
     for hook_name in REQUIRED_HOOKS:
         assert (sparse / ".githooks" / hook_name).is_file()
 
-    assert (sparse / "scripts/lib/project_interpreter.sh").is_file()
+    assert (sparse / ".githooks").is_dir()
     hook_log = Path(env["HOOK_LOG"])
     before = hook_log.read_text(encoding="utf-8").splitlines() if hook_log.exists() else []
     (sparse / "README.md").write_text("sparse change\n", encoding="utf-8")

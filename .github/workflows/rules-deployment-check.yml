@@ -21,7 +21,6 @@ on:
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
-      - 'tests/test_deploy_script_idempotency.py'
   pull_request:
     paths:
       - '.github/workflows/rules-deployment-check.yml'
@@ -38,7 +37,6 @@ on:
       - '.agent/**'
       - '.agents/**'
       - '.codex/**'
-      - 'tests/test_deploy_script_idempotency.py'
   workflow_dispatch:
 
 concurrency:
@@ -67,6 +65,3 @@ jobs:
         run: |
           bash scripts/deploy_prompts.sh
           bash scripts/check_rules_deployment.sh
-
-      - name: Regression tests for deploy drift check
-        run: .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -v

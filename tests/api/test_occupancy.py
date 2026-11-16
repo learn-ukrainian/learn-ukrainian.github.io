@@ -28,10 +28,10 @@ from lu_machinery.api.occupancy_sanitize import occupant as _occupant
 from lu_machinery.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from lu_machinery.api.occupancy_sanitize import safe_field as _safe_field
 from lu_machinery.api.occupancy_sanitize import safe_summary as _safe_summary
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.lexicon.runner import atlas_job
 from scripts.project_api import atlas_jobs_router as load_mod
 from tests import _host_path_guard as guard

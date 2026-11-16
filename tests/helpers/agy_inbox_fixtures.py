@@ -37,8 +37,7 @@ CLI_BOOTSTRAP = (
 def roster(tmp_path, monkeypatch):
     """Replace only the roster file and executable boundary, never alias logic."""
     from lu_machinery.ai_agent_bridge import _channels
-
-    from scripts.ai_agent_bridge import _channels as held_channels  # TRANSITIONAL-PKG3-B2: held hook readers.
+    from lu_machinery.ai_agent_bridge import _channels as held_channels  # TRANSITIONAL-PKG3-B2: held hook readers.
 
     path = tmp_path / "assignments.yaml"
     path.write_text("assignments:\n  infra:\n    slots: [gemini-infra, codex-core]\n  monitor:\n    slots: []\n")

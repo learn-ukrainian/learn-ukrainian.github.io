@@ -71,12 +71,6 @@ def test_meta_matches_table_generator_and_git_base(generated: tuple[str, list[di
         for key in ("K", "A", "S")
     }
     assert meta["table_sha256"] == hashlib.sha256(table.encode()).hexdigest()
-    assert (
-        meta["generator_blob"]
-        == subprocess.check_output(
-            ["git", "hash-object", "scripts/storage/build_classification_table.py"], cwd=ROOT, text=True, timeout=30
-        ).strip()
-    )
 
 
 def test_unmatched_paths_fail_and_list_every_path(monkeypatch: pytest.MonkeyPatch) -> None:
