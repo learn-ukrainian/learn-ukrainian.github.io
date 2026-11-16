@@ -519,7 +519,7 @@ SESSION_IDENTITY_ENV_VARS = (
     # Telemetry run/session ids (lu_machinery.telemetry.emit).
     "LU_RUN_ID",
     "LU_SESSION_ID",
-    # Codex hook probe session (scripts/agent_runtime/codex_hook_probe.py).
+    # Codex hook probe session (lu_machinery.agent_runtime.codex_hook_probe).
     "CODEX_HOOK_PROBE_LOG",
     "CODEX_HOOK_PROBE_DENY_TOOLS",
     # Harness-native ids the hooks read; the harness, not a launcher, sets them.

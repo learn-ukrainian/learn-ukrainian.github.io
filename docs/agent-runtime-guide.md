@@ -1129,7 +1129,7 @@ admission and overlap overrides are retired.
 
 A read-only Codex run gets a per-task writable scratch and nothing else writable.
 The worker creates `<scratch root>/learn-ukrainian/codex-read-only-<task>` (owner-only, exclusive)
-just before launch and removes it at settlement; `scripts/agent_runtime/read_only_tmp.py` names,
+just before launch and removes it at settlement; `lu_machinery.agent_runtime.read_only_tmp` names,
 creates, validates and discards it. The provider replaces `-s read-only` with the same permissions
 profile the legacy adapter uses (`_read_only_tmp_flags`): the root is read-only, the scratch is the
 single writable path, and network reaches any public host through Codex's network proxy, whose
