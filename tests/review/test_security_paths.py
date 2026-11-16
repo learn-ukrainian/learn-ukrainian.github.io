@@ -45,8 +45,16 @@ def _release_files() -> list[str]:
 
 # The deleted launcher locator remains classified for historical diffs, but has no tracked witness.
 # The release keeps its launchd pattern though it ships no launchd file (reported for machinery).
+# The product's in-tree hook scripts were removed when it switched to the installed deployer
+# (PR 13100, #13032); the pattern keeps any future product hook critical, and the product's hook
+# configurations stay covered by agents_extensions/*/hooks*.json.
 @pytest.mark.parametrize(
-    "pattern", [p for p in SECURITY_SENSITIVE_PATHS if p not in {"scripts/delegate.py", f"{MACHINERY}/launchd/**"}]
+    "pattern",
+    [
+        p
+        for p in SECURITY_SENSITIVE_PATHS
+        if p not in {"scripts/delegate.py", f"{MACHINERY}/launchd/**", "agents_extensions/*/hooks/**"}
+    ],
 )
 def test_every_security_glob_matches_a_tracked_file(pattern):
     """Product patterns match tracked product files; machinery patterns match files the installed release ships."""
