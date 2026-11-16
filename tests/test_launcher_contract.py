@@ -637,6 +637,7 @@ launcher_close_driver_lease() {{
   printf 'close\\n' >> {shlex.quote(str(events))}
   LC_DRIVER_LEASE_CLOSED=1
 }}
+launcher_drop_unneeded_secrets() {{ LC_CHILD_ENV_COMMAND=(/usr/bin/env); }}
 launcher_exec_command fixture-cli
 """
     env = {**launcher_environment(), "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{launcher_toolchain_path()}"}
@@ -752,6 +753,7 @@ launcher_close_driver_lease() {{
   printf 'close\\n' >> {shlex.quote(str(events))}
   LC_DRIVER_LEASE_CLOSED=1
 }}
+launcher_drop_unneeded_secrets() {{ LC_CHILD_ENV_COMMAND=(/usr/bin/env); }}
 launcher_exec_command fixture-cli
 """
     env = {

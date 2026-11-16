@@ -14,7 +14,8 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.agent_runtime.agent_identity import seat_read_aliases
+from lu_machinery.agent_identity import seat_read_aliases
+
 from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
 from scripts.common.repo_root import (
@@ -54,7 +55,8 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
     if type(limit) is not int or limit < 1 or limit > 500:
         return unknown
     try:
-        from scripts.agent_runtime.kimi_admission import BRIDGE_MODE
+        from lu_machinery.agent_runtime.retired_seat_admission import BRIDGE_MODE
+
         from scripts.agent_runtime.target_admission import resolve_and_admit
 
         if not re.fullmatch(r"[a-z]+-[a-z0-9]+(?:-[a-z0-9]+)*", recipient):

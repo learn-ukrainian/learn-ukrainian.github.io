@@ -66,7 +66,7 @@ google-auth==2.62.1
 google-genai==1.65.0
 graphql-core==3.3.1
 greenlet==3.5.6
-grpcio==1.82.1
+grpcio==1.85.1
 h11==0.16.0
 h2==4.4.1
 hf-xet==1.6.0
@@ -121,6 +121,7 @@ multidict==7.2.1
 multiprocess==0.70.19
 mypy==2.1.0
 mypy_extensions==1.1.0
+narwhals==2.28.0
 networkx==3.6.1
 nodeenv==1.10.0
 numpy==2.4.2
@@ -198,7 +199,7 @@ rpds-py==0.30.0
 ruamel.yaml==0.19.1
 ruff==0.15.21
 safetensors==0.8.0
-scikit-learn==1.8.0
+scikit-learn==1.9.1
 scipy==1.18.1
 secretstorage==3.5.0
 sentence-transformers==5.6.1
@@ -219,7 +220,7 @@ tabulate==0.10.0
 tenacity==9.1.4
 termcolor==3.3.0
 threadpoolctl==3.7.0
-timm==1.0.27
+timm==1.0.31
 tokenizers==0.22.2
 torch==2.13.0
 torchvision==0.28.0

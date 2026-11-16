@@ -514,7 +514,7 @@ def _handle_grok_build_incomplete_turn(
 
 def _fetch_grok_build_message(message_id: int) -> dict | None:
     """Fetch a message addressed to the native grok seat (or permanent alias)."""
-    from agent_runtime.agent_identity import seat_read_aliases
+    from lu_machinery.agent_identity import seat_read_aliases
 
     aliases = seat_read_aliases("grok")
     placeholders = ", ".join("?" for _ in aliases)

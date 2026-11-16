@@ -45,7 +45,8 @@ except ModuleNotFoundError as exc:
         raise
     from common.repo_root import machinery_path  # type: ignore[no-redef]
 
-from agent_runtime.agent_identity import seat_read_aliases
+from lu_machinery.agent_identity import seat_read_aliases
+
 from secret_redactor import redact_text
 
 from . import _config

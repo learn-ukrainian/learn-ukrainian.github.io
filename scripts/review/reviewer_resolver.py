@@ -40,8 +40,9 @@ from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Literal
 
+from lu_machinery.agent_identity import resolve_retired_agent_alias
+
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
-from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import ClaudeAccount, bind_snapshot, require_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
@@ -84,7 +85,8 @@ def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
 
 def review_task_id_comparison_keys(task_id: str, *, agent: str = "") -> frozenset[str]:
     """Retain raw and harness-stripped identities across reviewer seats."""
-    from scripts.agent_runtime.agent_identity import SEAT_ALIASES
+    from lu_machinery.agent_identity import SEAT_ALIASES
+
     from scripts.agent_runtime.registry import AGENTS
 
     value = task_id.strip().casefold()

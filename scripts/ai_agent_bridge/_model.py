@@ -9,7 +9,6 @@ from agent_runtime.adapters.agy import (
     AgyAdapter,
     _normalize_model,
 )
-from agent_runtime.adapters.kimi import KimiAdapter, resolve_kimi_model
 from common.http_status import has_http_status
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, AGY_CLI
@@ -20,7 +19,6 @@ GROK_BUILD_DEFAULT_EFFORT = "high"
 DEFAULT_CHECK_MODEL_TIMEOUT = int(os.environ.get("AB_CHECK_MODEL_TIMEOUT", "90"))
 
 _AGY_ADAPTER = AgyAdapter()
-_KIMI_ADAPTER = KimiAdapter()
 _REPO_ROOT = Path(__file__).parent.parent.parent
 
 
@@ -44,47 +42,26 @@ def _build_agy_probe_plan(model: str, task_id: str = "check-model"):
     )
 
 
-def _build_kimi_probe_plan(model: str, task_id: str = "check-model"):
-    """Build a native Kimi probe plan without executing a live request."""
-    from scripts.review.model_catalog import retired_model_refusal
-
-    if refusal := retired_model_refusal(model):
-        raise ValueError(refusal)
-    try:
-        resolve_kimi_model(model)
-    except ValueError:
-        return None
-    return _KIMI_ADAPTER.build_invocation(
-        prompt="Reply with exactly: MODEL_OK",
-        mode="read-only",
-        cwd=_REPO_ROOT,
-        model=model,
-        task_id=task_id,
-        session_id=None,
-        tool_config=None,
-    )
-
-
 def check_model(
     model: str,
     timeout: int | None = None,
     force: bool = False,
     agent: str = "agy",
 ) -> bool:
-    """Check an AGY or Kimi model by sending a trivial managed-seat prompt.
+    """Check an AGY model by sending a trivial managed-seat prompt.
 
     Results are cached for 1 hour to avoid burning API quota.
     Returns True if the model responds, False if unavailable or errors.
     """
     import time as _time
 
-    if agent not in {"agy", "kimi"}:
-        print(f"❌ Unsupported check-model agent {agent!r}; choose agy or kimi.")
+    if agent != "agy":
+        print(f"❌ Unsupported check-model agent {agent!r}; choose agy.")
         return False
     if timeout is None:
         timeout = DEFAULT_CHECK_MODEL_TIMEOUT
 
-    cache_key = model if agent == "agy" else f"{agent}:{model}"
+    cache_key = model
 
     # Check cache first (saves an API call)
     if not force and cache_key in _MODEL_CACHE:
@@ -96,14 +73,13 @@ def check_model(
             return available
 
     try:
-        plan = _build_agy_probe_plan(model) if agent == "agy" else _build_kimi_probe_plan(model)
+        plan = _build_agy_probe_plan(model)
     except ValueError as exc:
         print(f"❌ {exc}")
         return False
     if plan is None:
-        model_source = "AGY" if agent == "agy" else "Kimi"
         print(
-            f"❌ Model '{model}' is not a recognized {model_source} model."
+            f"❌ Model '{model}' is not a recognized AGY model."
         )
         _MODEL_CACHE[cache_key] = (False, _time.time())
         return False
@@ -131,7 +107,7 @@ def check_model(
         _MODEL_CACHE[cache_key] = (False, _time.time())
         return False
     except FileNotFoundError:
-        binary = AGY_CLI if agent == "agy" else plan.cmd[0]
+        binary = AGY_CLI
         print(f"❌ {agent.upper()} CLI not found at: {binary}")
         return False
 

@@ -54,6 +54,8 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from lu_machinery.ai_llm.fallback import (
     AttemptOutcome,
     AuthMode,
@@ -90,7 +92,6 @@ from .adapters.base import AgentAdapter
 from .adapters.codex_events import mcp_tool_event
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
-from .env_sanitize import build_agent_env
 from .errors import (
     AgentRuntimeError,
     AgentStalledError,
@@ -112,7 +113,6 @@ from .failover import (
     tool_config_with_route,
 )
 from .failure_codes import RUNTIME_FAILURE_CODES
-from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, MACHINERY_PACKAGE, get_agent_entry
 from .result import AgyModelIdentity, ParseResult, Result
@@ -3686,7 +3686,7 @@ def _invoke_impl(
             f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
-    # Catalog retirement binds explicit pins and the retired Kimi defaults.
+    # Catalog retirement binds explicit pins and retired defaults.
     _refuse_retired_launch_model(agent_name, model, tool_config)
 
     # ---------- 3. Validate cwd for write modes ----------
@@ -3716,16 +3716,7 @@ def _invoke_impl(
     _enforce_resume_policy(agent_name, session_id, entrypoint)
 
     # ---------- 5. Pre-call rate-limit check ----------
-    # Native Kimi's registry default stays k3-256k. An omitted --model on
-    # --harness kimicc must not inherit it: that id is not on the kimicc route.
-    # The catalog's first routable kimicc model is the dispatch default.
-    requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
-    if agent_name == "kimi" and requested_harness == "kimicc":
-        from .adapters.kimicc import resolve_kimicc_dispatch_model
-
-        effective_model = resolve_kimicc_dispatch_model(model)
-    else:
-        effective_model = model or adapter.default_model
+    effective_model = model or adapter.default_model
     allow_runner_failover = allow_runner_failover and agent_name != "muse"
     failover_chain = load_failover_chain(agent_name, effective_model=effective_model) if allow_runner_failover else None
     if allow_direct_only and failover_chain is not None:
@@ -3959,27 +3950,19 @@ def _invoke_impl(
 def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config: dict | None) -> None:
     """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
 
-    Direct ``_invoke_impl`` callers keep the same check. Omitted Kimi and Muse
-    models use their defaults; other adapter defaults are admitted during planning.
-    Coding-only admission still runs first.
+    Direct ``_invoke_impl`` callers keep the same check. Omitted Muse models
+    use their default; other adapter defaults are admitted during planning.
+    Retired-seat admission still runs first.
     """
-    requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
     if agent_name == "muse":
         from .adapters.muse import MuseAdapter
 
         effective_model = model or MuseAdapter.default_model
-    elif agent_name == "kimi" and requested_harness == "kimicc":
-        from .adapters.kimicc import resolve_kimicc_dispatch_model
-
-        effective_model = resolve_kimicc_dispatch_model(model)
     elif str(model or "").strip():
         effective_model = str(model).strip()
-    elif agent_name == "kimi":
-        from .adapters.kimi import KIMI_DEFAULT_MODEL
-
-        effective_model = KIMI_DEFAULT_MODEL
     else:
-        from .kimi_admission import is_kimi_seat
+        from lu_machinery.agent_runtime.retired_seat_admission import is_kimi_seat
+
         from .registry import AGENTS
 
         default_model = AGENTS.get(agent_name, {}).get("default_model")
@@ -4036,13 +4019,9 @@ def invoke(
     profiles receive a private one-server MCP configuration that is removed
     after success, refusal, timeout, or adapter error.
 
-    A Kimi seat is admitted only for workspace-write implementation with no
-    review marker, at least one owned path in
-    ``tool_config["kimi_owned_paths"]``, and no Cyrillic text in the owned
-    files read in ``cwd``; anything else raises ``KimiAdmissionRefused``
-    before attribution, trail provisioning, or adapter planning.
-    A retired model, including Kimi's historical default, is refused next,
-    still before attribution.
+    Retired Kimi seats and models raise ``KimiAdmissionRefused`` before
+    attribution, trail provisioning, ownership resolution or adapter planning.
+    Other retired models are refused next, still before attribution.
     """
     refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config)
     _refuse_retired_launch_model(agent_name, model, tool_config)

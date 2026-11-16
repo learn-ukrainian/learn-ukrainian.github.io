@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from lu_machinery.agent_runtime import env_sanitize
 
-from scripts.agent_runtime import env_sanitize
 from scripts.lib.git_identity import git_identity_env
 from tests.launcher_sandbox import launcher_environment
 

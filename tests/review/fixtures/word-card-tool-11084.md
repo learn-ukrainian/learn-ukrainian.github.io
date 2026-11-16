@@ -2,7 +2,7 @@
 
 The Sources MCP server gains the read-only `word_card` tool. It takes the
 server's default read-only annotation, so
-`scripts/agent_runtime/sources_read_only.sources_tool_sets` lists it among the
+`lu_machinery.agent_runtime.sources_read_only.sources_tool_sets` lists it among the
 read-only tools, and the Codex adapter's `_sources_read_only_flags`
 (`scripts/agent_runtime/adapters/codex.py`) grants it to read-only workers.
 The Claude adapters disallow only persisting Sources tools, so their argv is

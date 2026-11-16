@@ -604,6 +604,7 @@ launcher_close_driver_lease() {{
   [ '{scenario}' != close_failure ] || return 1
   LC_DRIVER_LEASE_CLOSED=1
 }}
+launcher_drop_unneeded_secrets() {{ LC_CHILD_ENV_COMMAND=(/usr/bin/env); }}
 launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
 """
     started = time.monotonic()

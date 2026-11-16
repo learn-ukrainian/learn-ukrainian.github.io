@@ -66,9 +66,8 @@ Re-verified against the current OpenAI Codex Hooks reference on 2026-07-26:
 - Hook commands start in the session cwd. The tool's actual cwd can instead be
   present in `tool_input.workdir` or `tool_input.cwd`.
 
-The Codex manifest therefore sends each tool event through one tracked,
-deterministic entry point:
-`scripts/agent_runtime/codex_hook_entry.sh`. The Bash-command venv guard has
+The Codex manifest sends each tool event through the installed release entry,
+`lu_machinery/agent_runtime/codex_hook_entry.sh`. The Bash-command venv guard has
 its own 3-second fail-closed deadline. `PreToolUse` local policy checks then run
 sequentially with their former 3–5 second individual deadlines. The two
 independent, network-backed merge guards run concurrently with separate
@@ -80,9 +79,12 @@ dirt audit run sequentially (the audit's pre-call snapshot runs in the
 prior seven-process Bash fan-out and the unsupported failure-event duplicate
 without letting one slow merge guard starve the other.
 
-`codex_hook_policy.py` converts an individual guard timeout into exit code `2`
-with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
-tool call; a timeout therefore fails closed. The manifest's 45-second outer
+`lu_machinery.agent_runtime.codex_hook_policy` converts an individual guard
+timeout into exit code `2` with a concrete reason. Per the Codex `PreToolUse`
+contract, exit `2` blocks the tool call; a timeout therefore fails closed.
+The manifest also maps every unsuccessful release entry to exit `2`, including
+a policy module that cannot load. This preserves refusal when release bootstrap
+fails before a guard runs. The manifest's 45-second outer
 timeout remains a last-resort ceiling above the 3-second venv guard, local-chain,
 and concurrent network-guard budgets.
 
@@ -197,7 +199,7 @@ claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
 worker launched by `dispatch.py dispatch` carries
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
-environment (both names are allowlisted in `agent_runtime/env_sanitize.py`, name
+environment (both names are allowlisted in `lu_machinery.agent_runtime.env_sanitize`, name
 and value lists, so the markers survive sanitization for every dispatched
 provider — including a task id that contains `sk-`). The marker is the primary
 signal; the layout fallback — the session checkout sitting under
@@ -388,7 +390,7 @@ Tests: `tests/test_agent_runtime.py` (`test_write_guard_*`,
 Run the probe from the repository root:
 
 ```bash
-.venv/bin/python scripts/agent_runtime/codex_hook_probe.py --keep-workdir
+.venv/bin/python -m lu_machinery.agent_runtime.codex_hook_probe --keep-workdir
 ```
 
 The probe creates a temporary Git repo under `/private/tmp`, installs a minimal
@@ -407,7 +409,7 @@ matching hook tool name, as evidence that the path is blockable.
 Use this command for a cheap harness-only check that does not call Codex:
 
 ```bash
-.venv/bin/python scripts/agent_runtime/codex_hook_probe.py --self-test
+.venv/bin/python -m lu_machinery.agent_runtime.codex_hook_probe --self-test
 ```
 
 ## Desktop/direct edit probe
@@ -436,7 +438,7 @@ Environment:
   `.worktrees/dispatch/codex/4447-codex-hooks-deploy`
 - Codex CLI: `codex-cli 0.142.5`
 - Command:
-  `.venv/bin/python scripts/agent_runtime/codex_hook_probe.py --keep-workdir --timeout 240`
+  `.venv/bin/python -m lu_machinery.agent_runtime.codex_hook_probe --keep-workdir --timeout 240`
 - Probe repo:
   `/private/tmp/codex-hook-probe-9w43s82u/codex-hook-probe-repo`
 
