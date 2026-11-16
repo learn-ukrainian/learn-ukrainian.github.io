@@ -1561,6 +1561,8 @@ def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
 
 @pytest.mark.repo_wide
 def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
+    from lu_machinery.common.repo_root import machinery_path
+
     from scripts.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
 
     repo = Path(__file__).resolve().parent.parent
@@ -1602,8 +1604,16 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "scripts/agent_runtime/codex_hook_probe.py": "codex",
         "agents_extensions/codex/hooks.json": "codex",
     }
+    released_hooks = {
+        f"scripts/agent_runtime/{name}"
+        for name in ("codex_hook_entry.sh", "codex_hook_policy.py", "codex_hook_probe.py")
+    }
     for rel, seat in hooks.items():
-        assert (repo / rel).is_file(), rel
+        if rel in released_hooks:
+            assert not (repo / rel).exists(), rel
+            assert machinery_path(rel.removeprefix("scripts/")).is_file(), rel
+        else:
+            assert (repo / rel).is_file(), rel
         classified = classify_owned_path(rel)
         if seat is None:
             assert classified.kind == "ambiguous", rel

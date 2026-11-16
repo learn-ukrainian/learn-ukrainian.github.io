@@ -573,16 +573,6 @@
       "message": "Return type \"None\" of \"error\" incompatible with return type \"Never\" in supertype \"argparse.ArgumentParser\""
     },
     {
-      "path": "scripts/agent_runtime/sources_read_only.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"persisting\" (hint: \"persisting: list[<type>] = ...\")"
-    },
-    {
-      "path": "scripts/agent_runtime/sources_read_only.py",
-      "code": "var-annotated",
-      "message": "Need type annotation for \"read_only\" (hint: \"read_only: list[<type>] = ...\")"
-    },
-    {
       "path": "scripts/agent_runtime/telemetry.py",
       "code": "assignment",
       "message": "Incompatible types in assignment (expression has type \"tuple[str, ...]\", variable has type \"tuple[str]\")"
