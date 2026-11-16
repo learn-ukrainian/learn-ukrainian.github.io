@@ -11,7 +11,6 @@ import argparse
 import gzip
 import hashlib
 import json
-import os
 import random
 import re
 import sqlite3
@@ -4128,6 +4127,11 @@ def _synonym_spelling_variant(a_plain: str, b_plain: str) -> bool:
     return a_plain != b_plain and not _euphonic_variants(a_plain).isdisjoint(_euphonic_variants(b_plain))
 
 
+def _common_prefix_length(first: str, second: str) -> int:
+    """Length of the longest shared leading substring (character by character, not path components)."""
+    return next((i for i, (a, b) in enumerate(zip(first, second, strict=False)) if a != b), min(len(first), len(second)))
+
+
 def _synonym_gender_counterpart(a_plain: str, b_plain: str, person_genders: dict[str, str] | None) -> bool:
     """кравець / кравчиня, студент / студентка: a person noun and its feminine derivative.
 
@@ -4138,7 +4142,7 @@ def _synonym_gender_counterpart(a_plain: str, b_plain: str, person_genders: dict
     if {genders.get(a_plain), genders.get(b_plain)} != {"m", "f"}:
         return False
     masculine, feminine = (a_plain, b_plain) if genders[a_plain] == "m" else (b_plain, a_plain)
-    shared = len(os.path.commonprefix((masculine, feminine)))
+    shared = _common_prefix_length(masculine, feminine)
     return bool(_FEMININE_PERSON_SUFFIX.search(feminine)) and shared >= 4 and shared >= len(masculine) - 3
 
 

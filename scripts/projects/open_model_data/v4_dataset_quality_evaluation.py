@@ -222,9 +222,8 @@ def assess_pilot_dataset(
                     raise ValueError(f"Training record on line {line_num} not builder cleared")
                 if not faithful.get("training_eligible"):
                     raise ValueError(f"Training record on line {line_num} not faithful training eligible")
-            elif split_part in ("heldout_evaluation", "development"):
-                if builder_cleared:
-                    raise ValueError(f"Non-training record on line {line_num} marked as builder cleared")
+            elif split_part in ("heldout_evaluation", "development") and builder_cleared:
+                raise ValueError(f"Non-training record on line {line_num} marked as builder cleared")
 
             if modern.get("loss_mask_count", -1) < 0:
                 raise ValueError(f"Invalid loss_mask_count on line {line_num}")

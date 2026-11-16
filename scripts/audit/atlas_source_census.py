@@ -196,7 +196,7 @@ def build_atlas_source_census(
     ohoiko_private_roots: Sequence[Path] = (DEFAULT_OHOIKO_PRIVATE_ROOT,),
     textbook_txt_root: Path | None = DEFAULT_TEXTBOOK_TXT_ROOT,
     textbook_pdf_root: Path | None = DEFAULT_TEXTBOOK_PDF_ROOT,
-    sources_db_path: Path | None | str = "default",
+    sources_db_path: Path | str | None = "default",
     textbook_jsonl_root: Path | None = None,
     include_pdfs: bool = False,
 ) -> AtlasSourceCensus:

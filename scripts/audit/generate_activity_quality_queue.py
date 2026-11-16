@@ -95,14 +95,13 @@ def extract_activity_text(activity: dict, item: dict | None = None) -> str:
         if 'statement' in item:
             text_parts.append(item['statement'])
 
-    elif activity_type == 'match-up':
+    elif activity_type == 'match-up' and 'pairs' in activity:
         # For match-up, combine all pairs
-        if 'pairs' in activity:
-            for pair in activity['pairs']:
-                if 'left' in pair:
-                    text_parts.append(pair['left'])
-                if 'right' in pair:
-                    text_parts.append(pair['right'])
+        for pair in activity['pairs']:
+            if 'left' in pair:
+                text_parts.append(pair['left'])
+            if 'right' in pair:
+                text_parts.append(pair['right'])
 
     return ' '.join(text_parts).strip()
 

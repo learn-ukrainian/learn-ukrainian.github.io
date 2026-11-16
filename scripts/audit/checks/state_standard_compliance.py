@@ -370,9 +370,12 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
             for ev in plan_ulp:
                 if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
                     return True
-        elif isinstance(plan_ulp, str) and not isinstance(plan_ulp, bool):
-            if _evidence_text_matches_move(plan_ulp, clean_key, item_id, item_name):
-                return True
+        elif (
+            isinstance(plan_ulp, str)
+            and not isinstance(plan_ulp, bool)
+            and _evidence_text_matches_move(plan_ulp, clean_key, item_id, item_name)
+        ):
+            return True
 
     # 3. Check curriculum arc metadata tied to this move
     for arc_dict in (arc, plan.get('arc'), plan.get('arc_ref')):
@@ -417,9 +420,12 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
                 and _evidence_text_matches_move(move_ev, clean_key, item_id, item_name)
             ):
                 return True
-        elif isinstance(move_entry, str) and not isinstance(move_entry, bool):
-            if _evidence_text_matches_move(move_entry, clean_key, item_id, item_name):
-                return True
+        elif (
+            isinstance(move_entry, str)
+            and not isinstance(move_entry, bool)
+            and _evidence_text_matches_move(move_entry, clean_key, item_id, item_name)
+        ):
+            return True
 
         # Check arc['ulp_evidence'] mapping
         for arc_ev_key in ('ulp_evidence', 'evidence'):
@@ -442,9 +448,12 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
                 for ev in arc_ulp:
                     if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
                         return True
-            elif isinstance(arc_ulp, str) and not isinstance(arc_ulp, bool):
-                if _evidence_text_matches_move(arc_ulp, clean_key, item_id, item_name):
-                    return True
+            elif (
+                isinstance(arc_ulp, str)
+                and not isinstance(arc_ulp, bool)
+                and _evidence_text_matches_move(arc_ulp, clean_key, item_id, item_name)
+            ):
+                return True
 
     return False
 
