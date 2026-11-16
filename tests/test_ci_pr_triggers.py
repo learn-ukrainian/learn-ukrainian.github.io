@@ -288,13 +288,15 @@ _EVENTS = {
 
 
 def _simulate(
-    github: dict[str, Any], *, failures: set[str] | None = None
+    github: dict[str, Any], *, failures: set[str] | None = None, full_suite: str = "false"
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Return (job id -> success|skipped, job id -> evaluated check name) for ci.yml.
 
     Follows GitHub's rule: a job whose `if` has no status function carries an
     implicit success() and is skipped when any `needs` job did not succeed.
     Every job that runs is assumed to succeed unless a failure is injected.
+    A pr-scope job that succeeds reports ``full-suite=<full_suite>``; a skipped
+    one has no outputs.
     """
     results: dict[str, str] = {}
     names: dict[str, str] = {}
@@ -307,7 +309,8 @@ def _simulate(
             "needs": {
                 need: {
                     "result": results[need],
-                    "outputs": {},
+                    "outputs": {"full-suite": full_suite}
+                    if need == "pr-scope" and results[need] == "success" else {},
                 }
                 for need in needs
             },
@@ -358,15 +361,18 @@ def test_publication_workflows_do_not_log_submitted_fields(tmp_path: Path) -> No
     assert result.stdout == "PR body contains a negated closing reference; use Refs #N instead\n"
 
 
+@pytest.mark.parametrize("full_suite", ["false", "true"])
 @pytest.mark.parametrize("event", sorted(_EVENTS))
-def test_every_event_runs_every_job(event: str) -> None:
-    results, names = _simulate(_EVENTS[event])
+def test_every_event_runs_every_job(event: str, full_suite: str) -> None:
+    # pr-scope full-suite=true (a PR changing pytest infrastructure) runs the shards on the PR.
+    results, names = _simulate(_EVENTS[event], full_suite=full_suite)
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
     if event in {"opened", "synchronize", "reopened", "edited"}:
-        expected |= {"refresh-pytest-durations", "pytest", "pytest-report"}
+        if full_suite == "false":
+            expected |= {"refresh-pytest-durations", "pytest", "pytest-report"}
     else:
-        expected.add("pr-invariants")
+        expected |= {"pr-invariants", "pr-scope"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
@@ -374,6 +380,7 @@ def test_every_event_runs_every_job(event: str) -> None:
 def test_merge_queue_always_executes_full_suite() -> None:
     results, _ = _simulate(_EVENTS["merge_group"])
     assert results.pop("pr-invariants") == "skipped"
+    assert results.pop("pr-scope") == "skipped"
     assert all(result == "success" for result in results.values())
     assert "reuse" not in results
 
@@ -434,7 +441,9 @@ _GREEN = {
 }
 
 
-def _run_gate(event: str, *, action: str = "opened", **results: str) -> subprocess.CompletedProcess[str]:
+def _run_gate(
+    event: str, *, action: str = "opened", full_suite: str = "false", **results: str
+) -> subprocess.CompletedProcess[str]:
     # Candidate identity and ancestry belong to this fixture, not the source
     # checkout, which may contain only HEAD in a real queue shard.
     with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as directory:
@@ -465,15 +474,19 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
             payload["ref"] = "refs/heads/main"
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
         if event == "pull_request":
-            jobs.update({name: "skipped" for name in ("REFRESH", "PYTEST", "PYTEST_REPORT")})
+            jobs["PR_SCOPE"] = "success"
+            if full_suite != "true":
+                jobs.update({name: "skipped" for name in ("REFRESH", "PYTEST", "PYTEST_REPORT")})
         else:
-            jobs["REPO_INVARIANTS"] = "skipped"
+            jobs.update(REPO_INVARIANTS="skipped", PR_SCOPE="skipped")
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"REPO_INVARIANTS": "pr-invariants", "PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        mapping = {"REPO_INVARIANTS": "pr-invariants", "PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "HYDRATE": "hydrate-release-assets", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan", "PR_SCOPE": "pr-scope"}
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
+        if needs["pr-scope"]["result"] == "success":
+            needs["pr-scope"]["outputs"] = {"full-suite": full_suite}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
         result = subprocess.run(
@@ -502,11 +515,31 @@ def test_gate_passes_a_green_pull_request_run(action: str) -> None:
         {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "failure"}, {"FRONTEND": "skipped"},
         {"DEPENDENCY_AUDIT": "failure"}, {"DEPENDENCY_AUDIT": "skipped"},
         {"REFRESH": "success"}, {"METADATA_SCAN": "success"},
+        {"PR_SCOPE": "failure"}, {"PR_SCOPE": "skipped"}, {"PR_SCOPE": "cancelled"},
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:
     result = _run_gate("pull_request", **overrides)
     assert result.returncode != 0, result.stdout
+
+
+def test_gate_requires_the_shards_when_pr_scope_reports_full_suite() -> None:
+    """Defect class: an infrastructure PR lands without its own pytest shards.
+
+    pr-scope full-suite=false keeps today's admission tier (shards skipped); true
+    requires refresh-pytest-durations, pytest and pytest-report to succeed, and a
+    missing or unknown decision fails closed.
+    """
+    assert _run_gate("pull_request", full_suite="false").returncode == 0
+    result = _run_gate("pull_request", full_suite="true")
+    assert result.returncode == 0, result.stdout
+    assert "full pytest suite" in result.stdout
+    for key in ("REFRESH", "PYTEST", "PYTEST_REPORT"):
+        for status in ("skipped", "failure", "cancelled"):
+            result = _run_gate("pull_request", full_suite="true", **{key: status})
+            assert result.returncode != 0, (key, status, result.stdout)
+    for decision in ("", "yes", "TRUE"):
+        assert _run_gate("pull_request", full_suite=decision).returncode != 0, decision
 
 
 def test_gate_requires_real_event_and_candidate_identity() -> None:
@@ -533,6 +566,7 @@ def test_gate_requires_real_event_and_candidate_identity() -> None:
         {"SECRET_SCAN": "cancelled"}, {"FRONTEND": "skipped"}, {"PYTEST": ""},
         {"REFRESH": "failure"}, {"REFRESH": "cancelled"}, {"REFRESH": "skipped"},
         {"METADATA_SCAN": "skipped"}, {"METADATA_SCAN": "failure"}, {"METADATA_SCAN": "cancelled"},
+        {"PR_SCOPE": "success"},
     ],
 )
 def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None:
