@@ -73,7 +73,7 @@ too, so a single bad root link breaks builds in N worktrees at once.
 1. **Immediate heal:** remove any already-materialised self-referential symlink —
    `rm learn-ukrainian/node_modules` (unlinks the symlink; never touches a real
    directory). Build works again immediately.
-2. **Durable, creator-agnostic canary:** `scripts/hygiene/check_self_symlinks.py`
+2. **Durable, creator-agnostic canary:** `lu_machinery/hygiene/check_self_symlinks.py`
    detects and (with `--fix`) removes any `node_modules` symlink whose
    resolution raises ELOOP, under the repo root, `starlight/`, and every
    `.worktrees/**`. Valid symlinks (worktree → real main `node_modules`) resolve
@@ -98,7 +98,7 @@ too, so a single bad root link breaks builds in N worktrees at once.
   self-referential `node_modules`/`.venv`/`data` link.
 - **Diagnostic tell:** `npm` exiting 194 with no output ⇒ check
   `ls -ld node_modules` for a self-pointing symlink and run
-  `python scripts/hygiene/check_self_symlinks.py --fix`. Confirm the toolchain is
+  `.venv/bin/python -m lu_machinery.hygiene.check_self_symlinks --fix`. Confirm the toolchain is
   fine by running astro directly: `node node_modules/astro/bin/astro.mjs build`.
 - **Root prevention (in this fix):** the symlink is removed from the tree and
   `.gitignore` now matches `node_modules` (no slash), so it can neither
@@ -115,7 +115,7 @@ too, so a single bad root link breaks builds in N worktrees at once.
 - Bug introduced (committed self-symlink): `124a1dee1f` (#3041, 2026-06-12).
 - Cure (this change): `git rm --cached node_modules` + `.gitignore`
   `node_modules/` → `node_modules`.
-- Canary: `scripts/hygiene/check_self_symlinks.py`; tests:
+- Canary: `lu_machinery/hygiene/check_self_symlinks.py`; tests:
   `tests/test_check_self_symlinks.py`
 - Wiring: `agents_extensions/shared/hooks/session-setup.sh`,
   `scripts/api/main.py::_self_symlink_canary`

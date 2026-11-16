@@ -237,18 +237,6 @@
     ]
   },
   {
-    "path": "scripts/hygiene/codex_rollout_reconcile.py",
-    "reference_count": 10,
-    "kind": "writer",
-    "target_db": "Codex rollout state/output DB",
-    "reason": "reconciles rollout state and writes backup destination",
-    "calls": [
-      "sqlite3.connect(_db_uri(path), uri=True, timeout=5.0)",
-      "sqlite3.connect(path, timeout=5.0)",
-      "sqlite3.connect(path)"
-    ]
-  },
-  {
     "path": "scripts/ingest/antonenko_full_book_ingest.py",
     "reference_count": 2,
     "kind": "writer",

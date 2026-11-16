@@ -1,6 +1,6 @@
 # Codex rollout state reconciliation
 
-`scripts/hygiene/codex_rollout_reconcile.py` is a project-owned, dry-run-first
+`lu_machinery/hygiene/codex_rollout_reconcile.py` is a project-owned, dry-run-first
 health tool for stale `threads.rollout_path` rows. It never changes the
 installed Codex CLI or deletes a rollout file.
 
@@ -19,7 +19,7 @@ tool selects the newest compatible exact `state_*.sqlite` under `--codex-home`.
 Rows and counts are emitted as stable, sorted JSON.
 
 ```bash
-.venv/bin/python scripts/hygiene/codex_rollout_reconcile.py scan \
+.venv/bin/python -m lu_machinery.hygiene.codex_rollout_reconcile scan \
   --codex-home "$HOME/.codex" \
   --db "$HOME/.codex/state_5.sqlite"
 ```
@@ -28,7 +28,7 @@ For a read-only health check suitable for automation, fail when eligible stale
 rows remain:
 
 ```bash
-.venv/bin/python scripts/hygiene/codex_rollout_reconcile.py scan \
+.venv/bin/python -m lu_machinery.hygiene.codex_rollout_reconcile scan \
   --codex-home "$HOME/.codex" --fail-on-stale
 ```
 
@@ -47,7 +47,7 @@ backup. It revalidates digest-bound identity and filesystem absence, deletes
 matching spawn edges before thread rows, and commits only after those deletes.
 
 ```bash
-.venv/bin/python scripts/hygiene/codex_rollout_reconcile.py apply \
+.venv/bin/python -m lu_machinery.hygiene.codex_rollout_reconcile apply \
   --codex-home "$HOME/.codex" \
   --db "$HOME/.codex/state_5.sqlite" \
   --expected-eligible-stale 3 \
@@ -72,7 +72,7 @@ closed, then reopen Codex and repeat the scan:
 
 ```bash
 codex doctor --json
-.venv/bin/python scripts/hygiene/codex_rollout_reconcile.py scan \
+.venv/bin/python -m lu_machinery.hygiene.codex_rollout_reconcile scan \
   --codex-home "$HOME/.codex" --fail-on-stale
 ```
 

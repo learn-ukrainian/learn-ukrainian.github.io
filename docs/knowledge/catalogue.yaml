@@ -2176,7 +2176,8 @@ entries:
   - id: data-telemetry
     kind: data_store
     store: [data/telemetry/]
-    producer: [scripts/api/telemetry_router.py, scripts/project_api/module_builds.py, scripts/hygiene/check_primary_integrity.py]
+    producer: [scripts/api/telemetry_router.py, scripts/project_api/module_builds.py]
+    producer_note: Integrity-watch events come from the installed lu-machinery release (lu_machinery.hygiene.check_primary_integrity).
     local_only: true
     purpose: Runtime telemetry - tool timings, legacy comms route usage and integrity-watch events.
     keywords: [telemetry, tool timings, integrity watch]

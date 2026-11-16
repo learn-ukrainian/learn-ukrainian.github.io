@@ -1,4 +1,4 @@
-"""Removed machinery copies stay out of the product tree (#13032 slice 3).
+"""Removed machinery copies stay out of the product tree (#13032 slices 3 and 4).
 
 Defect class: a machinery module deleted from ``scripts/`` comes back, and product code
 imports that in-tree copy instead of the installed lu-machinery release, so the two drift.
@@ -10,7 +10,7 @@ import importlib.util
 
 import pytest
 
-# Slice 3 modules the product now takes from the installed release (or that the release retired).
+# Slice 3 and 4 modules the product now takes from the installed release (or that the release retired).
 REMOVED_COPIES = (
     "scripts.ai_llm.agent_runtime_call",
     "scripts.ai_llm.claude_call",
@@ -29,6 +29,23 @@ REMOVED_COPIES = (
     "scripts.goal_driver.size_cap",
     "scripts.guardrails.delegate_ownership",
     "scripts.guardrails.primary_write_guard",
+    "scripts.hygiene.batch_state_retention",
+    "scripts.hygiene.branch_sweep",
+    "scripts.hygiene.check_node_modules_integrity",
+    "scripts.hygiene.check_primary_integrity",
+    "scripts.hygiene.check_self_symlinks",
+    "scripts.hygiene.check_tmp_usability",
+    "scripts.hygiene.check_venv_integrity",
+    "scripts.hygiene.check_worktree_cleanup_integrity",
+    "scripts.hygiene.codex_rollout_reconcile",
+    "scripts.hygiene.fetch_refspecs",
+    "scripts.hygiene.home_session_retention_check",
+    "scripts.hygiene.inventory_home_sessions",
+    "scripts.hygiene.lane_disk_retention",
+    "scripts.hygiene.preserved_retention",
+    "scripts.hygiene.primary_dirt_cleanup",
+    "scripts.hygiene.retention_engine",
+    "scripts.hygiene.tmp_sweep_ledger",
     "scripts.maintenance.batch_state_retention",
     "scripts.maintenance.claude_session_scratch",
     "scripts.maintenance.github_cache",

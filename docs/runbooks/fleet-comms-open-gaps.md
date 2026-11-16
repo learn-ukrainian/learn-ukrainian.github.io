@@ -60,7 +60,7 @@ Comms is already authoritative for message-plane coordination.
 | --- | --- |
 | **#5113** dead `gemini` inbox nags | Backlog warnings skip `dead_lane_agents()`; expire via `ab cleanup --expire` (already bulk-expires dead lanes). |
 | **#4915** empty body on background process | `assert_ask_content_present` on process paths — empty DB body fails as **transport**, not model stall. |
-| **#4956** disk retention | Read-only scanner: `.venv/bin/python scripts/hygiene/lane_disk_retention.py [--include-home] [--json]` |
+| **#4956** disk retention | Read-only scanner: `.venv/bin/python -m lu_machinery.hygiene.lane_disk_retention [--include-home] [--json]` |
 
 ## Orchestrator seats (fleet-comms stream)
 
