@@ -1269,9 +1269,10 @@ def test_overlays_outside_exact_node_modules_directories_remain_refused(
 
 DEPLOYED_HOOK = "import sys\nsys.exit(0)\n"
 DEPLOY_ROOTS_IGNORED = "/.venv/\n.claude/\n.agent/*\n.codex/\n.agents/\n.deploy-state/\n"
-# A release-only deployment: AGY needs no product source and no mandatory hook settings, and its
-# outputs include the release's Python hooks under .agent/hooks/ and .agents/.
-DEPLOY_DESCRIPTOR = '{"providers": ["agy"], "sources": {}, "preserve": []}\n'
+# An AGY deployment from one product hook source: AGY needs no mandatory hook settings, and the
+# release deploys no Python of its own (its hook modules run from the installed release), so the
+# Python output the gate must verify is the product's own hook under .agents/hooks/.
+DEPLOY_DESCRIPTOR = '{"providers": ["agy"], "sources": {"agy": {"path": "agents_extensions/agy", "required": true}}, "preserve": []}\n'
 
 
 def _deployer(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -1288,14 +1289,16 @@ def _deployer(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _deployed(repo: Path) -> list[str]:
-    """Commit a release-only descriptor, apply it, and return the deployed Python outputs."""
+    """Commit a product-hook descriptor, apply it, and return the deployed Python outputs."""
     _write(repo, ".gitignore", DEPLOY_ROOTS_IGNORED)
     _write(repo, "agents_extensions/deployment.v1.json", DEPLOY_DESCRIPTOR)
-    _commit(repo, "deploy descriptor", ".gitignore", "agents_extensions/deployment.v1.json")
+    _write(repo, "agents_extensions/agy/hooks/product.py", DEPLOYED_HOOK)
+    (repo / "agents_extensions/agy/hooks/product.py").chmod(0o755)
+    _commit(repo, "deploy descriptor", ".gitignore", "agents_extensions")
     applied = _deployer(repo)
     assert applied.returncode == 0, applied.stdout + applied.stderr
     deployed = [path for path in _git(repo, "ls-files", "-z", "--others", "--", "*.py").stdout.split("\0") if path]
-    assert any(path.startswith(".agent/hooks/") for path in deployed)  # the scans below are not vacuous
+    assert any(path.startswith(".agents/hooks/") for path in deployed)  # the scans below are not vacuous
     return deployed
 
 
@@ -1317,7 +1320,7 @@ def test_deployed_outputs_the_installed_deployer_verifies_are_not_validation_ove
 
 def test_an_edited_deployed_output_is_refused(repo: Path) -> None:
     repo = repo.resolve()
-    hook = next(path for path in _deployed(repo) if path.startswith(".agent/hooks/"))
+    hook = next(path for path in _deployed(repo) if path.startswith(".agents/hooks/"))
     with (repo / hook).open("a", encoding="utf-8") as handle:
         handle.write("# stale or edited\n")
 
@@ -1330,17 +1333,11 @@ def test_an_edited_deployed_output_is_refused(repo: Path) -> None:
 
 
 def test_outputs_deployed_for_another_commit_are_refused(repo: Path) -> None:
-    """The deployer checks the outgoing commit's descriptor and sources, never the checkout's."""
+    """The deployer checks the outgoing commit's sources, never the checkout's."""
     repo = repo.resolve()
     deployed = _deployed(repo)
     _write(repo, "agents_extensions/agy/hooks/extra.py", DEPLOYED_HOOK)
     (repo / "agents_extensions/agy/hooks/extra.py").chmod(0o755)
-    _write(
-        repo,
-        "agents_extensions/deployment.v1.json",
-        '{"providers": ["agy"], "sources": {"agy": {"path": "agents_extensions/agy", "required": true}}, '
-        '"preserve": []}\n',
-    )
     _commit(repo, "a product hook not yet deployed", "agents_extensions")
 
     with pytest.raises(gate.GateOutcome) as raised:
@@ -1380,7 +1377,7 @@ def test_a_deployed_output_name_with_a_carriage_return_is_refused(repo: Path) ->
 
 def test_a_symlinked_deployed_output_is_refused(repo: Path) -> None:
     repo = repo.resolve()
-    hook = next(path for path in _deployed(repo) if path.startswith(".agent/hooks/"))
+    hook = next(path for path in _deployed(repo) if path.startswith(".agents/hooks/"))
     copy = repo / "hook-copy.py"
     copy.write_bytes((repo / hook).read_bytes())
     (repo / hook).unlink()
@@ -1419,7 +1416,7 @@ def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(tmp_path
     deploy = _deployer(root)
     assert deploy.returncode == 0, deploy.stdout[-4000:] + deploy.stderr[-4000:]
     deployed = _git(root, "ls-files", "-z", "--others", "--", *gate.OVERLAY_PATHSPECS).stdout.split("\0")
-    assert any(path.startswith(".claude/hooks/") for path in deployed)  # the scan below is not vacuous
+    assert any(path.startswith(".claude/skills/") for path in deployed)  # the scan below is not vacuous
 
     assert gate.reject_untracked_inputs(root) == _identity(root)
 

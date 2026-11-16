@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.resources
 import json
 import os
 import re
@@ -166,6 +167,11 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
             if path.is_file() and "__pycache__" not in path.parts:
                 assert path.relative_to(sources) not in expected, path
                 expected[path.relative_to(sources)] = path
+    # A packaged skill file whose release record has no deploy targets is never deployed.
+    inventory = json.loads(importlib.resources.files("lu_machinery.agent_deploy").joinpath("release.v1.json").read_bytes())
+    for name, record in inventory["files"].items():
+        if name.startswith("skills/") and not record["targets"]:
+            expected.pop(Path(name).relative_to("skills"), None)
     deployed = checkout / ".agents/skills"
     actual = {path.relative_to(deployed) for path in deployed.rglob("*") if path.is_file()}
     assert actual == set(expected)
