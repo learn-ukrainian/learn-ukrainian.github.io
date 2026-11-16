@@ -13,7 +13,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, seat_read_aliases
+from lu_machinery.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records, read_task_record
 

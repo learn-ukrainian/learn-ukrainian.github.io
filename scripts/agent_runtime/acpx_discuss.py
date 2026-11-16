@@ -40,7 +40,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
-from learn_ukrainian_v4_runtime.contracts import new_id
+from lu_machinery.contracts import new_id
 
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_SUPPORTED_PARTICIPANTS,

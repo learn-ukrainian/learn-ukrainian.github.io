@@ -1,4 +1,4 @@
-"""Compatibility module for shared runtime contracts, ``learn_ukrainian_v4_runtime.contracts``.
+"""Compatibility module for shared runtime contracts, ``lu_machinery.contracts``.
 
 It stays a module of its own and forwards every attribute it does not define to the
 canonical implementation. Patch the implementation module, never this one: a value set
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from learn_ukrainian_v4_runtime import contracts as _implementation
+from lu_machinery import contracts as _implementation
 
 if not TYPE_CHECKING:
     # The forwarding is a runtime fact, as the ``sys.modules`` alias it replaces was, so

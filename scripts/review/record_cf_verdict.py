@@ -43,9 +43,9 @@ if __name__ == "__main__":
         raise SystemExit(2) from None
 
 import yaml
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
+from lu_machinery.agent_identity import normalize_seat
+from lu_machinery.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import machinery_path
@@ -718,7 +718,8 @@ def _attribute_trailer(commit_sha: str | None, trailer: str, *, repository: str,
     has_record = source in {"task-record", "task-record-archived"}
     task_id = model if has_record or (TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model)) else None
     record_task_id = author_task.get("task_id") if has_record else None
-    model_values = (
+    # Task-record values are JSON, so each slot may hold any type; the filters below keep strings.
+    model_values: tuple[object, ...] = (
         (
             author_task.get("model"),
             author_model,

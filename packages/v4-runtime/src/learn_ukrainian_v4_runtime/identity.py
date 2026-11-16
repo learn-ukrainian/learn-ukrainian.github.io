@@ -1,7 +1,7 @@
 """Shared harness and model family identity; no routing or subprocess dependency."""
 
-from learn_ukrainian_v4_runtime import model_families
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
+from lu_machinery import model_families
+from lu_machinery.agent_identity import normalize_seat, tools_writer_runtime_agent
 
 KNOWN_HARNESS_EXECUTABLES = frozenset({"claude", "codex", "agy", "kimi", "cursor", "opencode", "hermes"})
 

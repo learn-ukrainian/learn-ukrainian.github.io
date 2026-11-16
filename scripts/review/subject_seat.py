@@ -19,8 +19,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal, Protocol
 
-from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
+from lu_machinery.agent_identity import normalize_seat
 
 ClassificationKind = Literal["seat", "ambiguous", "unrelated"]
 

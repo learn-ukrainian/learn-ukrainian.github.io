@@ -27,7 +27,7 @@ from pathlib import Path
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
-from learn_ukrainian_v4_runtime.contracts import CompletionState, ResponseEnvelope
+from lu_machinery.contracts import CompletionState, ResponseEnvelope
 
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_candidate_family_floor as floor

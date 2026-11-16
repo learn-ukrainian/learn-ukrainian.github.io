@@ -14,7 +14,7 @@ from pathlib import Path
 from statistics import mean, median
 from typing import Any
 
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
+from lu_machinery.model_families import canonical_cursor_model
 
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp, _read_task_record, _task_record_paths
 from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, model_aliases
