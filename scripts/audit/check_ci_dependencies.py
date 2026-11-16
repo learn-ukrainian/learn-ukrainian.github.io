@@ -1,8 +1,10 @@
 """Allow only CI's intentional missing ML wheels after uv pip check.
 
 The CI lock is consistent, but the lean --no-deps install omits four ML wheels.
-Keep this list exact: a new diagnostic, package version, or dependency version
-must fail here instead of failing later in many pytest shards.
+Keep this list exact by package name: a new diagnostic, a new requiring package
+or a new missing dependency must fail here instead of failing later in many
+pytest shards. Versions are not part of the key, so a routine bump of an
+allowed package passes.
 """
 
 from __future__ import annotations
@@ -11,40 +13,28 @@ import re
 import subprocess
 import sys
 
-from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
-# (requiring package, its version, dependency, installed version or None)
-# These are the intentional omissions from the CI-filtered requirements-lock.txt.
+# (requiring package, missing dependency): the intentional omissions from the
+# CI-filtered requirements-lock.txt. Only "which is not installed" diagnostics
+# can match; a version conflict is never allowed.
 _ALLOWED = {
-    ("accelerate", "1.14.0", "torch", None),
-    ("flagembedding", "1.4.0", "torch", None),
-    ("peft", "0.20.0", "torch", None),
-    ("sentence-transformers", "5.6.1", "torch", None),
-    ("timm", "1.0.27", "torch", None),
-    ("timm", "1.0.27", "torchvision", None),
-    ("ukrainian-word-stress", "2.1.0", "stanza", None),
+    ("accelerate", "torch"),
+    ("flagembedding", "torch"),
+    ("peft", "torch"),
+    ("sentence-transformers", "torch"),
+    ("timm", "torch"),
+    ("timm", "torchvision"),
+    ("ukrainian-word-stress", "stanza"),
 }
 
-_MISSING = re.compile(r"^(\S+) (\S+) requires (\S+), which is not installed\.$")
-_CONFLICT = re.compile(
-    r"^(\S+) (\S+) has requirement (.+), but you have (\S+) (\S+)\.$"
-)
+_MISSING = re.compile(r"^(\S+) \S+ requires (\S+), which is not installed\.$")
 
 
-def _diagnostic_key(line: str) -> tuple[str, str, str, str | None] | None:
+def _diagnostic_key(line: str) -> tuple[str, str] | None:
     if match := _MISSING.fullmatch(line):
-        source, version, dependency = match.groups()
-        return canonicalize_name(source), version, canonicalize_name(dependency), None
-    if match := _CONFLICT.fullmatch(line):
-        source, version, requirement, dependency, installed = match.groups()
-        try:
-            required_name = canonicalize_name(Requirement(requirement).name)
-        except ValueError:
-            return None
-        if required_name != canonicalize_name(dependency):
-            return None
-        return canonicalize_name(source), version, required_name, installed
+        source, dependency = match.groups()
+        return canonicalize_name(source), canonicalize_name(dependency)
     return None
 
 
