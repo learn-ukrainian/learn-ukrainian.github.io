@@ -233,13 +233,13 @@ posting searches at the exact head.
 | Consumer | Typed publication |
 | --- | --- |
 | `scripts/ai_agent_bridge/_github.py` | Issue comments |
-| `scripts/orchestration/dispatch_settle.py` | Explicit PR creation |
+| `lu_machinery/orchestration/dispatch_settle.py` | Explicit PR creation |
 | `scripts/audit/check_decisions.py` | Label and issue creation |
 | `scripts/audit/check_review_issues.py`, `scripts/verify_review.py` | Issue comments and close |
 | `scripts/review/record_cf_verdict.py` | Verdict comments with JSON response |
 | `scripts/fleet_comms/review_publisher.py` | PR comments and exact-head commit status |
-| `scripts/orchestration/task_closeout.py` | Issue body edits, close, squash merge |
-| `scripts/orchestration/merge_queue_keeper.py` | Comments, issue creation, merge/disarm/dequeue |
+| `lu_machinery/orchestration/task_closeout.py` | Issue body edits, close, squash merge |
+| `lu_machinery/orchestration/merge_queue_keeper.py` | Comments, issue creation, merge/disarm/dequeue |
 | `scripts/orchestration/issue_stream_audit.py` | Fixed native membership mutation |
 | `scripts/practice_deck/publish.py`, `scripts/open_dataset/publish.py` | Release creation and artifact upload |
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
@@ -279,7 +279,7 @@ unreadable default refuses the merge.
 The enqueue mutation takes no commit text: the queue composes the squash from
 the PR's title and body when it builds the merge group. Every agent edit of a
 title or body goes through the publisher (`pr-edit`), which scans it. The merge
-queue keeper (`scripts/orchestration/merge_queue_keeper.py`, every minute;
+queue keeper (`lu_machinery/orchestration/merge_queue_keeper.py`, every minute;
 slow mode throttles it back to five minutes) also re-reads each queued PR's default squash subject and body, and
 the message of the queue entry's head commit once GitHub reports one, through
 the `squash-text` read, and dequeues the PR on a blocking finding

@@ -1,5 +1,11 @@
 # Agent seat onboarding — fleet cooperation and ACPX
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 For an authorized CLI seat move, follow [Move a driver seat to another CLI](driver-seat-cli-move.md); the launcher owns lease release.
 
 **Audience:** every supported fleet seat on cold-start (interactive TUI, driver
@@ -106,7 +112,7 @@ handoff creates a competing authority.
 The dispatcher removes each task's own worktree when the task settles and records
 `worktree_disposition` in the task record; a retained tree names its reason. After GitHub
 reports an exact-head PR as `MERGED`, run
-`.venv/bin/python -m scripts.orchestration.merge_closeout <PR> --apply` from the primary
+`.venv/bin/python -m lu_machinery.orchestration.merge_closeout <PR> --repo <owner/name> --repo-root <checkout> --apply` from the primary
 checkout. Remove a leftover worktree only with
 `.venv/bin/python -m scripts.orchestration.worktree_claims remove <path> --owner-task-id <id> --reason '<why>'`,
 following [the worktree-cleanup runbook](worktree-cleanup.md); never use raw `git worktree remove`.

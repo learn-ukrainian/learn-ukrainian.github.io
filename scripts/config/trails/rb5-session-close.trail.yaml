@@ -88,7 +88,7 @@ steps:
         - sh
         - -c
         - |-
-          .venv/bin/python -m scripts.orchestration.handoff_ready --json > "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null && echo readiness-recorded || echo readiness-failed
+          LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.handoff_ready --json > "batch_state/rb5-ready-$HANDOFF_AGENT.json" 2>/dev/null && echo readiness-recorded || echo readiness-failed
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", HANDOFF_AGENT: "{handoff_agent}"}
       timeout_seconds: 30
       mutation_class: local-write

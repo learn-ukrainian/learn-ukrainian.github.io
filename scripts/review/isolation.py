@@ -322,7 +322,7 @@ def _remove_review_temp_tree(root: Path) -> None:
     # before scanning so legitimate scratch trees remain removable.
     restore_review_temp_tree_permissions(root)
     # Legacy review scratch names must never authorize worktree removal.
-    from scripts.orchestration.tmp_leak_sweep import refuse_git_checkout_removal
+    from lu_machinery.orchestration.tmp_leak_sweep import refuse_git_checkout_removal
 
     try:
         refuse_git_checkout_removal(root)

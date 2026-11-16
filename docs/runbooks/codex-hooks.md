@@ -1,5 +1,11 @@
 # Codex hooks deployment and probe
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 Issue #4447 established `.codex/hooks.json` as a deployed runtime config, not a
 hand-edited destination file. The source of truth is
 `agents_extensions/codex/hooks.json`; run `npm run agents:deploy` to refresh the
@@ -19,7 +25,7 @@ kill every new process while an already-running App task remains healthy. Run a
 bounded fresh worker through the same bridge used by the fleet:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.codex_transport_health probe \
+.venv/bin/python -m lu_machinery.orchestration.codex_transport_health probe \
   --fresh --json
 ```
 
@@ -33,7 +39,7 @@ is classified as `reserved_collaboration_schema`.
 Read the cached result without spending a model call:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.codex_transport_health status --json
+.venv/bin/python -m lu_machinery.orchestration.codex_transport_health status --json
 ```
 
 Monitor exposes the same receipt at `GET /api/runtime/transport-health`; the
@@ -163,7 +169,7 @@ repeated inbox prompt. Confirm that a CLI 0.146 startup no longer prints the
 remains:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.codex_transport_health status --json
+.venv/bin/python -m lu_machinery.orchestration.codex_transport_health status --json
 ```
 
 To roll back, revert the tracked source change and rerun `npm run agents:deploy`;

@@ -132,7 +132,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 ## Definition of done — predicates, not prose
 - Built-module PRs render: `.venv/bin/python -m scripts.build.verify_shippable <level> <slug>
   --astro-build` or a green Frontend/astro CI build. `python_qg`-green alone does not mean it renders.
-- "Ready for handoff": `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — any red or
+- "Ready for handoff": `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.handoff_ready --pr <N>` — any red or
   unknown means not ready.
 - Before reporting progress, audit each claim against a tool result from this session. Only report
   work you can point to evidence for; if something is not yet verified, say so. If tests fail, say so

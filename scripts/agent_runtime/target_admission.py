@@ -952,7 +952,7 @@ def resolve_sender(agent: str, *, static_agents: Collection[str], warnings: list
 
 def describe_slot_holder(slot: str) -> Any:
     """The read-only lease facts for ``slot`` (``SlotHolderResult``), for display; never a delivery target."""
-    from scripts.orchestration import slot_routing
+    from lu_machinery.orchestration import slot_routing
 
     return slot_routing.resolve_slot_holder(slot)
 
@@ -1012,7 +1012,7 @@ def _slot_holder(
     if "-" not in agent or agent in static_agents:
         return agent
     try:
-        from scripts.orchestration import slot_routing
+        from lu_machinery.orchestration import slot_routing
 
         res = slot_routing.resolve_slot_holder(agent)
     except Exception as exc:

@@ -53,7 +53,7 @@ template `%h/projects/learn-ukrainian` placeholder differs. Prefer leaving
 `LU_MONITOR_HOST_ID` unset on the API host (in-process fill), or set
 `LU_MONITOR_HOST_ID=host-teacher` — never `host-job`.
 
-The wrapper script is `scripts/orchestration/run_project_state_reporter.sh`.
+The wrapper script is `lu_machinery/orchestration/run_project_state_reporter.sh`.
 
 ## macOS (LaunchAgent)
 

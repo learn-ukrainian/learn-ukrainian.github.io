@@ -49,18 +49,6 @@ ALLOWLIST: dict[str, tuple[int, str]] = {
         1,
         "probes the private work-service checkout's interpreter, not this repo's",
     ),
-    "scripts/orchestration/install_worktree_cleanup_launchd.py": (
-        1,
-        "validates the interpreter of the checkout the LaunchAgent unit is installed for",
-    ),
-    "scripts/orchestration/install_archived_thread_cleanup_launchd.py": (
-        1,
-        "validates the interpreter of the checkout the LaunchAgent unit is installed for",
-    ),
-    "scripts/orchestration/install_mac_observer_launchd.py": (
-        1,
-        "validates the interpreter of the checkout the LaunchAgent unit is installed for",
-    ),
     "scripts/storage/install_data_volume_dropins.py": (
         1,
         "systemd drop-in names the primary checkout's interpreter; --apply refuses a worktree",

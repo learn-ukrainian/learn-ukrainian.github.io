@@ -3,8 +3,8 @@
 Launcher tests run the real ``start-*.sh`` entry points inside a throwaway git
 repo that holds only the files the launcher needs.  Every driver launch passes
 ``launcher_require_registered_slot`` (#8303), which runs
-``python -m scripts.orchestration.handoff_slot_registry`` from the sandbox root
-and reads the fleet roster through ``scripts.ai_agent_bridge._channels``.  A
+``python -m lu_machinery.orchestration.handoff_slot_registry`` from the sandbox root
+and reads the fleet roster through the release's ``ai_agent_bridge._channels``.  A
 sandbox without that closure refuses every selector with exit 2 before the
 provider starts.
 
@@ -28,7 +28,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from scripts.common.scratch import ensure_scratch_root
-from tests.helpers import machinery_module, machinery_package, product_checkout
+from tests.helpers import machinery_package, product_checkout
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -333,7 +333,7 @@ print(json.dumps(sorted(paths)))
 def slot_registry_sources() -> tuple[Path, ...]:
     """Repo-relative tracked files the launcher's handoff-slot gate needs."""
     probe = subprocess.run(
-        [sys.executable, "-c", _PROBE, machinery_module("orchestration.handoff_slot_registry")],
+        [sys.executable, "-c", _PROBE, "lu_machinery.orchestration.handoff_slot_registry"],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,

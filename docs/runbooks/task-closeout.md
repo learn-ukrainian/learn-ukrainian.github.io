@@ -1,6 +1,12 @@
 # Recover preserved historical task evidence
 
-Use `scripts.orchestration.task_closeout recover-local` after a merged task's
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
+Use `lu_machinery.orchestration.task_closeout recover-local` after a merged task's
 dispatch worktree has been removed. Recovery appends a local observation to the
 existing lifecycle ledger. It preserves the original task, identity, acceptance
 snapshot and evidence files.
@@ -37,7 +43,7 @@ this proof. An absent original preserved record stays unmet; a later success
 wrapper cannot fill the gap. Recovery itself performs no cleanup or GitHub mutation.
 
 ```sh
-.venv/bin/python -m scripts.orchestration.task_closeout recover-local \
+.venv/bin/python -m lu_machinery.orchestration.task_closeout recover-local \
   --state-file ledger.json \
   --task-record original-task.json \
   --preserved-manifest batch_state/preserved/task/attempt.manifest.json \

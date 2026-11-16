@@ -17538,39 +17538,9 @@
       "message": "Item \"None\" of \"None | dict[str, str]\" has no attribute \"pop\""
     },
     {
-      "path": "scripts/orchestration/archived_thread_cleanup.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"contextmanager\" has incompatible type \"Callable[[Path], Iterable[TextIO]]\"; expected \"Callable[[Path], Iterator[Never]]\""
-    },
-    {
       "path": "scripts/orchestration/claudex_supervisor.py",
       "code": "arg-type",
       "message": "Argument 1 to \"is_terminal_state\" has incompatible type \"Any | None\"; expected \"RolloverState | str\""
-    },
-    {
-      "path": "scripts/orchestration/curriculum_coordinator.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"dict[str, Any]\")"
-    },
-    {
-      "path": "scripts/orchestration/curriculum_coordinator.py",
-      "code": "dict-item",
-      "message": "Dict entry 2 has incompatible type \"str\": \"None | dict[str, Any]\"; expected \"str\": \"Collection[str]\""
-    },
-    {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_sha256_bytes\" has incompatible type \"bytes | str\"; expected \"bytes\""
-    },
-    {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/orchestration/curriculum_lifecycle_pilot.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bytes | str\""
     },
     {
       "path": "scripts/orchestration/dispatch_admission.py",
@@ -17581,11 +17551,6 @@
       "path": "scripts/orchestration/dispatch_admission.py",
       "code": "operator",
       "message": "Unsupported right operand type for in (\"None | dict[str, Any]\")"
-    },
-    {
-      "path": "scripts/orchestration/dispatch_settle.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"CompletedProcess[str]\""
     },
     {
       "path": "scripts/orchestration/execution_safe_git.py",
@@ -17616,11 +17581,6 @@
       "path": "scripts/orchestration/execution_safe_git.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"Any | None\" has no attribute \"st_mtime_ns\""
-    },
-    {
-      "path": "scripts/orchestration/install_worktree_cleanup_launchd.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
     },
     {
       "path": "scripts/orchestration/integration_sweep.py",
@@ -17696,21 +17656,6 @@
       "path": "scripts/orchestration/integration_sweep.py",
       "code": "type-var",
       "message": "Value of type variable \"SupportsRichComparisonT\" of \"min\" cannot be \"None | datetime\""
-    },
-    {
-      "path": "scripts/orchestration/issue_quality_report.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"write_membership_cache\" has incompatible type \"None | dict[str, list[int]]\"; expected \"dict[Any, Any]\""
-    },
-    {
-      "path": "scripts/orchestration/issue_quality_report.py",
-      "code": "index",
-      "message": "Value of type \"object\" is not indexable"
-    },
-    {
-      "path": "scripts/orchestration/issue_quality_report.py",
-      "code": "index",
-      "message": "Value of type \"object\" is not indexable"
     },
     {
       "path": "scripts/orchestration/issue_stream_audit.py",
@@ -17793,166 +17738,6 @@
       "message": "Need type annotation for \"root_results\""
     },
     {
-      "path": "scripts/orchestration/job_host_exec.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/job_host_exec.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/job_host_exec.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/job_host_exec.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"deepcopy\" has incompatible type \"Mapping[str, Any]\"; expected \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "list-item",
-      "message": "List item 2 has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "list-item",
-      "message": "List item 2 has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "list-item",
-      "message": "List item 2 has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "list-item",
-      "message": "List item 3 has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "list-item",
-      "message": "List item 3 has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/lifecycle_observation.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"tuple[dict[str, Any], bool]\""
-    },
-    {
-      "path": "scripts/orchestration/merge_closeout.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"CompletedProcess[str]\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"add\" of \"set\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"json\" of \"GitHub\" has incompatible type \"Request\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"position\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | None\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"list[dict[str, Any]]\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "operator",
-      "message": "Unsupported right operand type for in (\"Any | None\")"
-    },
-    {
-      "path": "scripts/orchestration/merge_queue_keeper.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"get\""
-    },
-    {
       "path": "scripts/orchestration/pr_ownership.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"None | bool\""
@@ -17971,21 +17756,6 @@
       "path": "scripts/orchestration/prompt_contracts.py",
       "code": "valid-type",
       "message": "Variable \"scripts.orchestration.prompt_contracts._SafeLoaderBase\" is not valid as a type"
-    },
-    {
-      "path": "scripts/orchestration/red_ci_known_failures.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/orchestration/red_ci_known_failures.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/orchestration/rollover_registry_cli.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
     },
     {
       "path": "scripts/orchestration/safe_git_context.py",
@@ -18013,26 +17783,6 @@
       "message": "Need type annotation for \"pointers\" (hint: \"pointers: dict[<type>, <type>] = ...\")"
     },
     {
-      "path": "scripts/orchestration/scheduled_worktree_cleanup.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"build_receipt\" has incompatible type \"**dict[str, bool]\"; expected \"None | str\""
-    },
-    {
-      "path": "scripts/orchestration/scheduled_worktree_cleanup.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"update\" of \"MutableMapping\" matches argument types \"str\", \"str\", \"int\", \"int\", \"int\""
-    },
-    {
-      "path": "scripts/orchestration/scheduled_worktree_cleanup.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/orchestration/sources_watchdog.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"float\" has incompatible type \"Any | None\"; expected \"Buffer | SupportsFloat | SupportsIndex | str\""
-    },
-    {
       "path": "scripts/orchestration/stale_task_records.py",
       "code": "index",
       "message": "Value of type \"Any | None\" is not indexable"
@@ -18048,116 +17798,6 @@
       "message": "Item \"None\" of \"Any | None\" has no attribute \"get\""
     },
     {
-      "path": "scripts/orchestration/stalled_work.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/orchestration/stalled_work.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"FetchTarget | None\" has no attribute \"ref_prefix\""
-    },
-    {
-      "path": "scripts/orchestration/stalled_work.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"FetchTarget | None\" has no attribute \"ref_prefix\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"_json\" of \"GhGitHubAdapter\" has incompatible type \"Request\"; expected \"list[str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"Callable[[list[str], None | str], str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"bool\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/orchestration/task_closeout.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"casefold\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/cli.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
-      "path": "scripts/orchestration/task_family/cli.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
-      "path": "scripts/orchestration/task_family/cli.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
-    },
-    {
       "path": "scripts/orchestration/task_family/codex_state.py",
       "code": "arg-type",
       "message": "Argument 1 to \"int\" has incompatible type \"None | int\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
@@ -18166,86 +17806,6 @@
       "path": "scripts/orchestration/task_family/codex_state.py",
       "code": "arg-type",
       "message": "Argument 1 to \"int\" has incompatible type \"None | int\"; expected \"Buffer | SupportsIndex | SupportsInt | SupportsTrunc | str\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"dict\" has incompatible type \"tuple[str, Any | None | str]\"; expected \"tuple[str, str]\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"RuntimeTarget\", variable has type \"TaskTarget\")"
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"WorktreeTarget\", variable has type \"TaskTarget\")"
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"dict[str, object]\", target has type \"dict[str, str]\")"
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"branch\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"explicit_family\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"explicit_family\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"id\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"id\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"id\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"kind\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"pr_base\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/executor.py",
-      "code": "attr-defined",
-      "message": "\"TaskTarget\" has no attribute \"pr_number\""
-    },
-    {
-      "path": "scripts/orchestration/task_family/git_safety.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | None\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/orchestration/task_family/git_safety.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"Any | None\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/orchestration/task_family/git_safety.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"CompletedProcess[str]\""
     },
     {
       "path": "scripts/orchestration/task_family/model.py",
@@ -18493,31 +18053,6 @@
       "message": "Dict entry 3 has incompatible type \"str\": \"None | int\"; expected \"str\": \"str\""
     },
     {
-      "path": "scripts/orchestration/task_lifecycle.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"ac_content_hash\" has incompatible type \"list[dict[str, Any]]\"; expected \"list[Mapping[str, Any]]\""
-    },
-    {
-      "path": "scripts/orchestration/task_lifecycle.py",
-      "code": "attr-defined",
-      "message": "\"object\" has no attribute \"casefold\""
-    },
-    {
-      "path": "scripts/orchestration/task_lifecycle.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/task_lifecycle.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/orchestration/task_lifecycle.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"None | str\" has no attribute \"casefold\""
-    },
-    {
       "path": "scripts/orchestration/thread_handoff.py",
       "code": "arg-type",
       "message": "Argument 1 to \"_bundle_member_path\" has incompatible type \"Any | None\"; expected \"str\""
@@ -18648,41 +18183,6 @@
       "message": "Name \"task_identity\" already defined (by an import)"
     },
     {
-      "path": "scripts/orchestration/trail_runner.py",
-      "code": "override",
-      "message": "Return type \"None\" of \"error\" incompatible with return type \"Never\" in supertype \"argparse.ArgumentParser\""
-    },
-    {
-      "path": "scripts/orchestration/trails/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"PreparedInvocation | TrailRun | dict[str, Any]\", variable has type \"TrailRun\")"
-    },
-    {
-      "path": "scripts/orchestration/trails/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"TrailRun | TrailRunResult\", variable has type \"TrailRun\")"
-    },
-    {
-      "path": "scripts/orchestration/trails/executor.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"TrailRun | TrailRunResult\", variable has type \"TrailRun\")"
-    },
-    {
-      "path": "scripts/orchestration/trails/executor.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/orchestration/trails/trail_certification.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"float\""
-    },
-    {
-      "path": "scripts/orchestration/validate_trailspec.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"list[bool | str]\""
-    },
-    {
       "path": "scripts/orchestration/worktree_artifacts.py",
       "code": "arg-type",
       "message": "Argument 1 to \"update\" of \"HASH\" has incompatible type \"str\"; expected \"Buffer\""
@@ -18711,41 +18211,6 @@
       "path": "scripts/orchestration/worktree_claims.py",
       "code": "operator",
       "message": "Unsupported left operand type for / (\"None\")"
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"resolve_claim_path\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"resolve_claim_path\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"PullRequestState\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"PullRequestState\" has incompatible type \"Any | None\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"_sha_is_ancestor\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"CompletedProcess[str]\""
-    },
-    {
-      "path": "scripts/orchestration/worktree_git.py",
-      "code": "return",
-      "message": "Missing return statement"
     },
     {
       "path": "scripts/orientation_packet.py",

@@ -7,6 +7,7 @@ used when callers request ``tool_config={"trail_isolation": ...}``.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import shutil
@@ -19,11 +20,14 @@ from typing import Any
 from lu_machinery.agent_runtime.retired_seat_admission import format_refusal
 
 try:
-    from scripts.common.repo_root import machinery_path, project_interpreter
+    from scripts.common.repo_root import project_interpreter
 except ImportError:  # agent_runtime loaded with scripts/ on path
-    from common.repo_root import machinery_path, project_interpreter  # type: ignore[no-redef]
+    from common.repo_root import project_interpreter  # type: ignore[no-redef]
 
 TRAIL_MCP_SERVER_NAME = "trail"
+# The installed lu-machinery release's server (#13032), run isolated by module name, as the
+# release's own trail isolation runs it; the product carries no copy.
+TRAIL_MCP_ARGS: tuple[str, ...] = ("-I", "-m", "lu_machinery.orchestration.trails.trail_mcp")
 TRAIL_TOOL_NAMES: tuple[str, ...] = ("trail_status", "trail_step", "trail_summon")
 GROK_TRAIL_TOOLS: tuple[str, ...] = tuple(
     f"{TRAIL_MCP_SERVER_NAME}__{name}" for name in TRAIL_TOOL_NAMES
@@ -82,18 +86,17 @@ def _profile_for_agent(agent_name: str) -> str:
 def _write_private_mcp_config(root: Path) -> Path:
     """Write the sole admitted stdio MCP server without using ambient config."""
     python_bin = project_interpreter()
-    mcp_server = machinery_path("orchestration/trails/trail_mcp.py")
     if not python_bin.is_file() or not os.access(python_bin, os.X_OK):
         raise TrailIsolationError(f"trail isolation requires executable {python_bin}")
-    if not mcp_server.is_file():
-        raise TrailIsolationError(f"trail isolation MCP server missing: {mcp_server}")
+    if importlib.util.find_spec(TRAIL_MCP_ARGS[-1]) is None:
+        raise TrailIsolationError(f"trail isolation MCP server missing: {TRAIL_MCP_ARGS[-1]}")
 
     config_path = root / ".mcp.json"
     payload = {
         "mcpServers": {
             TRAIL_MCP_SERVER_NAME: {
                 "command": str(python_bin),
-                "args": [str(mcp_server)],
+                "args": list(TRAIL_MCP_ARGS),
             }
         }
     }
@@ -191,9 +194,8 @@ def assert_trail_isolation_config(tool_config: Mapping[str, Any], *, profile: st
     servers = payload.get("mcpServers") if isinstance(payload, dict) else None
     server = servers.get(TRAIL_MCP_SERVER_NAME) if isinstance(servers, dict) else None
     expected_python = project_interpreter()
-    expected_server = machinery_path("orchestration/trails/trail_mcp.py")
     if not isinstance(server, dict) or set(servers) != {TRAIL_MCP_SERVER_NAME}:
         raise TrailIsolationError("trail isolation MCP configuration exposes an unexpected server")
-    if server.get("command") != str(expected_python) or server.get("args") != [str(expected_server)]:
+    if server.get("command") != str(expected_python) or server.get("args") != list(TRAIL_MCP_ARGS):
         raise TrailIsolationError("trail isolation MCP server command is not parent-owned")
     return resolved_root

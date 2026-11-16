@@ -774,16 +774,6 @@
     ]
   },
   {
-    "path": "scripts/orchestration/trails/store.py",
-    "reference_count": 5,
-    "kind": "writer",
-    "target_db": "trails projection DB",
-    "reason": "persists rebuildable trajectory index",
-    "calls": [
-      "sqlite3.connect(self.database_path, isolation_level=None, timeout=30)"
-    ]
-  },
-  {
     "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
     "reference_count": 2,
     "kind": "reader_pending_migration_9662",

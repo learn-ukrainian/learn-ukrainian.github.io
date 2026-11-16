@@ -142,7 +142,7 @@ initialPrompt: |
   - Module ship: `.venv/bin/python -m scripts.build.verify_shippable <level> <slug>` GREEN (add
     `--astro-build` for CI parity) + corpus-hammer: read the real artifact and `verify_quote` every
     embedded fragment. `python_qg`-green alone is NOT shippable (the 2026-06-14 non-render ship).
-  - "Ready for handoff": `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` —
+  - "Ready for handoff": `LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.handoff_ready --pr <N>` —
     any RED/UNKNOWN ⇒ not ready.
 
   ## KEEP YOUR STATE — gitignored LOCAL, tight

@@ -36,6 +36,7 @@ from .monitor_context import production_context as production_context  # re-expo
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.agent_identity import RETIRED_AGENT_ALIASES
+from lu_machinery.orchestration import codex_transport_health
 
 import agent_runtime.registry as agent_registry
 from agent_runtime.adapters.acpx import (
@@ -60,7 +61,6 @@ from scripts.agent_runtime.accounting import recorded_model_accounting_fields
 from scripts.control_plane import storage
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
-from scripts.orchestration import codex_transport_health
 
 router = APIRouter(tags=["runtime"])
 

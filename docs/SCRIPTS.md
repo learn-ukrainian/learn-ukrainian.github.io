@@ -1,5 +1,11 @@
 # Scripts & Workflow Reference
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 Current operational reference for repo-local scripts and agent workflows.
 
 - Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
@@ -916,7 +922,7 @@ local dictionary-cache state.
 # inventory / reclaim interrupted runs (the scheduled hygiene runner applies this)
 .venv/bin/python scripts/tools/task_scratch.py recover [--apply]
 # ad-hoc /tmp leak sweep (exact Atlas/QA legacy names drain; other atlas-*/qa-* are inventory only)
-.venv/bin/python -m scripts.orchestration.tmp_leak_sweep [--apply]
+.venv/bin/python -m lu_machinery.orchestration.tmp_leak_sweep [--apply]
 ```
 
 `$LU_TASK_SCRATCH_DIR` (also `TMPDIR`) is the payload directory; it is removed on
@@ -1967,7 +1973,7 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ### Dispatch settle (Luna handoff)
 
-`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
+`.venv/bin/python -m lu_machinery.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
 
 ## Private open-model-data review build (RB-1)
 
@@ -1997,7 +2003,7 @@ training readiness or RB-1 delivery. No network calls or database writes are per
   unchecked. Unchecked ACs pass structure validation; closeout proof is separate.
 - `scripts/ci/comment_issue_task_quality.py`: issue-event entry point. Refetches
   current data, reconciles the existing bot marker, and records observation time.
-- `scripts/orchestration/issue_quality_report.py`: prepares a daily counts-only
+- `lu_machinery/orchestration/issue_quality_report.py`: prepares a daily counts-only
   fleet report. `--publish --sender devops` publishes persisted bytes to the
   epics channel. `--date YYYY-MM-DD` retries that day's immutable payload under
   ignored `batch_state/reports/`. Unknown or truncated sources stay incomplete;

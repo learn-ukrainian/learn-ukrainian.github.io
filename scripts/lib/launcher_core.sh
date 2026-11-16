@@ -1242,7 +1242,10 @@ launcher_inject_driver_agent() {
   local py="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
   local agent_type=""
   [ -x "$py" ] || return 0
-  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m "$LC_MACHINERY_PACKAGE.orchestration.driver_agent_type" --lane "$LC_EPIC" 2>/dev/null || true)"
+  # The installed release's module (#13032), isolated; it reads only its own
+  # area assignments and taxonomy. Without the release the launch still refuses
+  # later, in launcher_drop_unneeded_secrets.
+  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -I -m lu_machinery.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
     printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; no named agent selected; using the launcher model or project settings (Sonnet 5.5)\n' "$LC_EPIC" >&2
     return 0

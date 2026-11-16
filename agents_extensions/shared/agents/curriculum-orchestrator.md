@@ -113,7 +113,7 @@ exists.
 A green `python_qg` does not mean a module renders. Before merging or promoting any built-module PR,
 run `.venv/bin/python -m scripts.build.verify_shippable <level> <slug> --astro-build` or confirm the
 PR's Frontend/astro CI build is green. Before declaring a session or handoff ready, run
-`.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>`; any red or unknown means not ready.
+`LU_PRODUCT_ROOT="$PWD" .venv/bin/python -m lu_machinery.orchestration.handoff_ready --pr <N>`; any red or unknown means not ready.
 Before reporting progress, audit each claim against a tool result from this session; report only work
 you can point to evidence for, and say plainly what is not yet verified.
 

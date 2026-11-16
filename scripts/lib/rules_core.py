@@ -146,7 +146,7 @@ def resolve_seat(
     if lane:
         if str(ROOT) not in sys.path:
             sys.path.insert(0, str(ROOT))
-        from scripts.orchestration.driver_agent_type import resolve_driver_agent_type
+        from lu_machinery.orchestration.driver_agent_type import resolve_driver_agent_type
 
         if resolve_driver_agent_type(lane, provider=provider) in CONTENT_AGENT_TYPES:
             return "content"

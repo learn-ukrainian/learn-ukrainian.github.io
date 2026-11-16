@@ -1,5 +1,11 @@
 # Fleet Task Rollover and Codex Handoff Runbook
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 This runbook covers replacement-thread rollover when a Codex, Claude, Gemini,
 or orchestrator heartbeat thread approaches the auto-compaction zone.
 
@@ -422,10 +428,10 @@ order. A unique exact selector can proceed while unrelated packets remain
 untouched:
 
 ```bash
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py audit
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli audit
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli detect \
   --agent codex --source-thread-id <predecessor-task-id>
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py detect \
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli detect \
   --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id>
 ```
 
@@ -433,7 +439,7 @@ For an unrecorded native successor or disputed cleanup state, capture an
 authoritative app/automation snapshot and compare it without mutation:
 
 ```bash
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py reconcile-exact \
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli reconcile-exact \
   --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
   --snapshot <native-snapshot.json>
 ```
@@ -447,10 +453,10 @@ does not prove a native action.
 Cleanup, supersession, and abandonment use immutable evidence-gated plans:
 
 ```bash
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py supersede-exact \
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli supersede-exact \
   --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
   --plan --proof-file <proof.json>
-.venv/bin/python scripts/orchestration/rollover_registry_cli.py supersede-exact \
+.venv/bin/python -m lu_machinery.orchestration.rollover_registry_cli supersede-exact \
   --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
   --apply --plan-file <plan.json>
 ```

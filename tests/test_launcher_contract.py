@@ -1260,7 +1260,7 @@ def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:
     # #12671: the closeout sentence names the proof that still exists.
     closeout = (
         "Closeout: use the task-prescribed interpreter with "
-        "`-m scripts.orchestration.merge_closeout <N> --apply`; "
+        "`-m lu_machinery.orchestration.merge_closeout <N> --repo <owner/name> --repo-root <checkout> --apply`; "
         "the cleanup proof is that command exiting 0 after the worker's task has settled "
         "(its worktree removed by the dispatcher). "
     )

@@ -70,16 +70,16 @@ from lu_machinery.hygiene.tmp_sweep_ledger import (
     utc_iso,
     validate_state_dir,
 )
-
-from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
-from scripts.common.task_scratch import TaskScratchError, mount_points
-from scripts.common.task_store_paths import tasks_dir
-from scripts.orchestration.tmp_leak_sweep import (
+from lu_machinery.orchestration.tmp_leak_sweep import (
     _process_state,
     _process_vanished,
     listening_socket_paths,
     socket_node_listening,
 )
+
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
+from scripts.common.task_scratch import TaskScratchError, mount_points
+from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 
 

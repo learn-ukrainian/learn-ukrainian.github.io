@@ -10,10 +10,10 @@ import argparse
 import sys
 from pathlib import Path
 
+from lu_machinery.orchestration.launcher_aliases import load_launcher_aliases
 from lu_machinery.session_streams.inventory import stream_anchor_id
 
 from scripts.common.epic_selector import validate_epic
-from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.session_canary import grok_lane
 
 # This package's import name, as ``python -m`` names its modules (derived once, in grok_lane).
@@ -72,8 +72,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         args.epic = load_launcher_aliases().get(args.epic, args.epic)
         validate_epic(args.epic)
+        from lu_machinery.orchestration.driver_agent_type import resolve_driver_agent_type
+
         from scripts.lib.rules_core import resolve_seat
-        from scripts.orchestration.driver_agent_type import resolve_driver_agent_type
 
         if args.epic not in {"devops", "monitor"} or resolve_seat(lane=args.epic, provider="muse") != "core":
             raise ValueError("MUSE_STREAM_NOT_ADMITTED")

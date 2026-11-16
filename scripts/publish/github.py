@@ -772,7 +772,7 @@ def _refuse_unreadable_criteria(body):
     The lifecycle's own parser decides, so a body that publishes here also initializes
     there. A body with no criteria is not a task card and passes.
     """
-    from scripts.orchestration import task_lifecycle
+    from lu_machinery.orchestration import task_lifecycle
 
     try:
         task_lifecycle.parse_issue_acceptance_criteria(body)

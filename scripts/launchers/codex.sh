@@ -137,7 +137,19 @@ launcher_codex_native_profile_preflight() {
 launcher_codex_transport_probe() {
   local py
   py="$(launcher_project_python)" || exit 3
-  local probe=("$py" -m scripts.orchestration.codex_transport_health probe --ttl-seconds "${CODEX_TRANSPORT_PROBE_TTL_SECONDS:-900}" --timeout-seconds "${CODEX_TRANSPORT_PROBE_TIMEOUT_SECONDS:-120}" --model "$LC_MODEL" --effort low --json)
+  # The installed release's probe (#13032) needs the product root and shared-state
+  # anchor that importing scripts/ gave the old in-tree copy; bind them by the same
+  # rule as launcher_drop_unneeded_secrets.
+  local product_root primary inherited
+  [ -n "${LC_ROOT:-}" ] || { launcher_error 'Codex transport probe: launcher roots are unresolved.'; exit 3; }
+  primary="$(project_primary_root_resolve "$LC_ROOT" 2>/dev/null)" || primary="$LC_ROOT"
+  product_root="$LC_ROOT"
+  if [ -n "${LU_PRODUCT_ROOT:-}" ]; then
+    inherited="$(project_primary_root_resolve "$LU_PRODUCT_ROOT" 2>/dev/null)" || inherited="$LU_PRODUCT_ROOT"
+    [ "$inherited" = "$primary" ] || product_root="$LU_PRODUCT_ROOT"
+  fi
+  local probe=(/usr/bin/env "LU_PRODUCT_ROOT=$product_root" "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$primary}"
+    "$py" -I -m lu_machinery.orchestration.codex_transport_health probe --ttl-seconds "${CODEX_TRANSPORT_PROBE_TTL_SECONDS:-900}" --timeout-seconds "${CODEX_TRANSPORT_PROBE_TIMEOUT_SECONDS:-120}" --model "$LC_MODEL" --effort low --json)
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'codex adapter: would probe '; printf '%q ' "${probe[@]}"; printf '\n'; return 0; fi
   if ! "${probe[@]}"; then
     launcher_error 'Codex transport is degraded; do not retry Codex, route this cycle through the external fleet/epic roster.'

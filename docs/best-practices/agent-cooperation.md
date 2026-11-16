@@ -1,5 +1,11 @@
 # Agent Cooperation Best Practices
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 > **Scope:** How Claude, Codex, Cursor, and track orchestrators work
 > together without degrading each other's output quality.
 > Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
@@ -866,9 +872,9 @@ current content specifies GPT-6 Luna @ high. Require the `CLOSEOUT` ledger block
 When a worker leaves commits without a PR, or dies with `status=running` and a dead PID:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.dispatch_settle task \
+.venv/bin/python -m lu_machinery.orchestration.dispatch_settle task \
   --task-id <task> --push --open-pr
-.venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
+.venv/bin/python -m lu_machinery.orchestration.dispatch_settle release-stale
 ```
 
 Nobody arms auto-merge; the formal CF verdict is recorded with `review-loop`, and the owner of the delivery enqueues.

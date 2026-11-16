@@ -1,5 +1,11 @@
 # Agent Bridge — Channel Communication
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 > **Fleet roles:** operator doctrine and living scorecard live in
 > [`fleet-shared-doctrine.md`](fleet-shared-doctrine.md) and
 > [`fleet-role-scorecard.md`](fleet-role-scorecard.md). Machine routing remains
@@ -221,7 +227,7 @@ only when nothing in it can be lost; a kept tree records why in
 primary checkout:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.merge_closeout <PR> --apply
+.venv/bin/python -m lu_machinery.orchestration.merge_closeout <PR> --repo <owner/name> --repo-root <checkout> --apply
 ```
 
 It proves the PR merged and its branches gone, and reports any worktree still

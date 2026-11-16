@@ -1,5 +1,11 @@
 # Cursor Driver Seat Runbook & Identity Charter
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 Parent epic: [#6952](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6952) · Scope: [#6955](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6955) · Stream: `infra-harness` ([#6943](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6943)).
 
 ## Overview
@@ -11,10 +17,10 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 - **Canonical Driver = TUI Launcher:** The canonical Cursor driver runs as a launched TUI driver session (`start-cursor-driver.sh`, child #6956) sharing `scripts/lib/launcher_core.sh` with other driver seats. It claims the stream lease, respects lease lifecycles, and executes the standard `drive-epic` loop. On claim it heartbeats `POST /api/observer/presence` (`agent=cursor`) over the Monitor loopback tunnel and renews that row while the provider child is alive so occupancy can show the seat under `cloud-observer` without a RAM lease (#7075). A GUI Cursor driver session that is actually driving uses the same helper:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.observer_heartbeat \
+.venv/bin/python -m lu_machinery.orchestration.observer_heartbeat \
   --agent cursor --task-id <issue-or-task> --epic <epic> --status working
 ```
-- **GUI Cursor IDE = Human Supervision Only:** GUI Cursor chat is interactive human supervision and inspection. It is **not** a second driver protocol, does not claim autonomous stream leases, and does not run an unmonitored alternate orchestration loop. Idle GUI supervision heartbeats automatically via the Mac observer LaunchAgent with `instance_id: "gui"`; process existence alone never claims `working` (`scripts/orchestration/install_mac_observer_launchd.py`, #7104).
+- **GUI Cursor IDE = Human Supervision Only:** GUI Cursor chat is interactive human supervision and inspection. It is **not** a second driver protocol, does not claim autonomous stream leases, and does not run an unmonitored alternate orchestration loop. Idle GUI supervision heartbeats automatically via the Mac observer LaunchAgent with `instance_id: "gui"`; process existence alone never claims `working` (`lu_machinery/orchestration/install_mac_observer_launchd.py`, #7104).
 
 ## Identity Contract & Attestation
 

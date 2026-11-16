@@ -295,7 +295,7 @@ def cmd_hydrate(args: argparse.Namespace) -> int:
     lane = os.environ.get("SESSION_STREAM_AGENT", _HOLDER_AGENT)
     if lane != _HOLDER_AGENT:
         # The registry imports the bridge; bare-provider hooks do not need it.
-        from scripts.orchestration.handoff_slot_registry import registered_slots
+        from lu_machinery.orchestration.handoff_slot_registry import registered_slots
 
         if lane not in registered_slots(_HOLDER_AGENT):
             print("ACTION: hydration blocked — unregistered lane identity for this provider.", file=sys.stderr)

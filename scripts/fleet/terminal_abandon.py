@@ -19,12 +19,13 @@ _ROOT = Path(__file__).resolve().parents[2]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from lu_machinery.orchestration import worktree_git as rw
+
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common import task_store_paths
 from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration import worktree_claims as claims
-from scripts.orchestration import worktree_git as rw
 from scripts.orchestration.task_record_store import locate_task_record
 
 # The machinery package's import name, which is also the directory its files have in checkout

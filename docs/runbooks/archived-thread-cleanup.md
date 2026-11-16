@@ -1,5 +1,11 @@
 # Archived thread cleanup
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 This runbook operates the deterministic cleanup for old Codex archived threads. It does not run a
 model, submit a prompt, or use a Codex automation. A per-user macOS `launchd` job runs the same Python
 command every week.
@@ -28,7 +34,7 @@ The cleanup does not unlink session files or edit Codex's state database directl
 Run from the merged primary checkout with its project virtual environment:
 
 ```bash
-.venv/bin/python scripts/orchestration/archived_thread_cleanup.py
+.venv/bin/python -m lu_machinery.orchestration.archived_thread_cleanup
 ```
 
 The default performs no deletion, but it does persist observation state and a receipt. Review the JSON
@@ -36,7 +42,7 @@ result and its receipt before enabling or invoking apply mode. To test another r
 explicitly:
 
 ```bash
-.venv/bin/python scripts/orchestration/archived_thread_cleanup.py --retention-days 30
+.venv/bin/python -m lu_machinery.orchestration.archived_thread_cleanup --retention-days 30
 ```
 
 ## Manual apply
@@ -44,7 +50,7 @@ explicitly:
 Apply the policy once with:
 
 ```bash
-.venv/bin/python scripts/orchestration/archived_thread_cleanup.py --apply --repo-root "$PWD"
+.venv/bin/python -m lu_machinery.orchestration.archived_thread_cleanup --apply --repo-root "$PWD"
 ```
 
 The first qualifying run records observations; only a later qualifying run at least seven days after
@@ -67,7 +73,7 @@ retained, advanced to its second observation, skipped, or deleted.
 Render the plist without disk writes or `launchctl` calls:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py render \
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd render \
   --repo-root "$PWD" \
   --weekday sunday \
   --hour 3
@@ -83,7 +89,7 @@ so do not install from a disposable worktree. The default schedule is Sunday at 
 local time:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py install \
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd install \
   --repo-root "$PWD"
 ```
 
@@ -94,7 +100,7 @@ The installer atomically writes:
 ```
 
 Its `Program` is `/bin/bash` (Apple-signed, survives a `.venv` rebuild) plus
-`scripts/orchestration/run_archived_thread_cleanup.sh`, which execs the checkout's
+`lu_machinery/orchestration/run_archived_thread_cleanup.sh`, which execs the checkout's
 `.venv/bin/python` against `archived_thread_cleanup.py --apply --repo-root
 <checkout> --retention-days 30 --observation-interval-days 7`. Pointing `Program`
 at the venv interpreter is what produced exit 78 (`Unable to get updated LWCR
@@ -109,7 +115,7 @@ through `launchctl print`. A venv rebuild does not require reinstall anymore;
 If `codex` is not on the interactive shell's `PATH`, provide its absolute path explicitly:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py install \
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd install \
   --repo-root "$PWD" \
   --codex-binary "$HOME/.local/bin/codex"
 ```
@@ -117,7 +123,7 @@ If `codex` is not on the interactive shell's `PATH`, provide its absolute path e
 To choose another weekly local schedule, pass a lowercase weekday name and an hour from 0 through 23:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py install \
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd install \
   --repo-root "$PWD" \
   --weekday wednesday \
   --hour 4
@@ -128,7 +134,7 @@ To choose another weekly local schedule, pass a lowercase weekday name and an ho
 Check both the plist and launchd's live service state:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py status
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd status
 ```
 
 The command exits successfully only when the expected plist is installed, parses with the correct
@@ -156,7 +162,7 @@ deletion gate.
 Unload the service and remove its plist:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_archived_thread_cleanup_launchd.py uninstall
+.venv/bin/python -m lu_machinery.orchestration.install_archived_thread_cleanup_launchd uninstall
 ```
 
 Uninstall is idempotent. It intentionally preserves `~/.codex/thread-cleanup/`, including receipts and

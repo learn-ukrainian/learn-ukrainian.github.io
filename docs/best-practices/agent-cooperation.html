@@ -117,6 +117,9 @@
     <div class="title-block">
       <h1>Agent Cooperation Best Practices</h1>
       <div class="sub">Migrated from Markdown on 2026-10-28</div>
+<blockquote><p><strong>Roots for <code>lu_machinery</code> commands.</strong> Commands on this page that run <code>lu_machinery.*</code> modules use the installed lu-machinery release. It reads the product checkout from <code>LU_PRODUCT_ROOT</code> and the shared-state anchor from <code>LEARN_UKRAINIAN_PRIMARY_REPO_ROOT</code>; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:</p>
+<pre><code class="language-bash">export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+</code></pre></blockquote>
     </div>
     <div class="meta">
       <div>Source: docs/best-practices/agent-cooperation.md</div>
@@ -1057,9 +1060,9 @@ to bounded Luna dispatch briefs. The filename is retained for existing links; it
 current content specifies GPT-6 Luna @ high. Require the <code>CLOSEOUT</code> ledger block.</p>
 <h3>Deterministic settle (no LLM)</h3>
 <p>When a worker leaves commits without a PR, or dies with <code>status=running</code> and a dead PID:</p>
-<pre><code class="language-bash">.venv/bin/python -m scripts.orchestration.dispatch_settle task \
+<pre><code class="language-bash">.venv/bin/python -m lu_machinery.orchestration.dispatch_settle task \
   --task-id &lt;task&gt; --push --open-pr
-.venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
+.venv/bin/python -m lu_machinery.orchestration.dispatch_settle release-stale
 </code></pre>
 <p>Nobody arms auto-merge; the formal CF verdict is recorded with <code>review-loop</code>, and the owner of the delivery enqueues.</p>
 <h3>Formal CF budget rotation (Codex-authored PRs)</h3>

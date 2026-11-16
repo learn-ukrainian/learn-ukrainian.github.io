@@ -7,7 +7,6 @@ canonical_replacement:
   pilot_report: docs/architecture/curriculum-lifecycle-pilot-report.v1.json
 owner_paths:
   CODE:
-    - scripts/orchestration/curriculum_coordinator.py
     - scripts/orchestration/curriculum_readiness.py
     - agents_extensions/shared/skills/track-completion/scripts/track_completion.py
     - scripts/audit/post_build_review.py

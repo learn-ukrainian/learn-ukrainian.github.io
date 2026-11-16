@@ -2779,8 +2779,9 @@ store_registry:
       kind: job_state
       activity: not_created
       presence: declared_absent
-      absent_reason: RUNS_DATABASE_PATH in scripts/orchestration/trail_runner.py; created on the first trail run.
-      writers: [scripts/orchestration/trails/store.py:TrailStore._connect]
+      absent_reason: RUNS_DATABASE_PATH in lu_machinery.orchestration.trail_runner; created on the first trail run.
+      writers: []
+      writer_note: "The installed lu-machinery release writes it (lu_machinery.orchestration.trails.store, TrailStore._connect); no tracked product file does since #13032."
       journal: unknown
       busy_ms: 30000
       busy_source: explicit
@@ -2954,11 +2955,12 @@ store_registry:
       backup: none
       retention: Shingle index rebuilt from sources.db; none on disk today.
     - id: trail-certification
-      path_rule: <case_root>/state.sqlite3 under a caller-chosen runner root (scripts/orchestration/trails/trail_certification.py run)
+      path_rule: <case_root>/state.sqlite3 under a caller-chosen runner root (lu_machinery.orchestration.trails.trail_certification run)
       glob: null
       owner: infra-harness
       kind: job_state
-      writers: [scripts/orchestration/trails/store.py:TrailStore._connect]
+      writers: []
+      writer_note: "The installed lu-machinery release writes it (lu_machinery.orchestration.trails.store, TrailStore._connect); no tracked product file does since #13032."
       journal: unknown
       busy_ms: 30000
       busy_source: explicit
