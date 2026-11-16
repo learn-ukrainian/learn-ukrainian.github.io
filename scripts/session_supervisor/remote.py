@@ -11,7 +11,7 @@ from collections.abc import Callable, Mapping
 from typing import Any
 from urllib.parse import urlencode, urlparse
 
-from agents_extensions.shared.session_streams.model import (
+from lu_machinery.session_streams.model import (
     Entry,
     EntryRef,
     EntryType,

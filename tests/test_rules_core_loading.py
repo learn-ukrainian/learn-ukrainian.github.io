@@ -6,12 +6,13 @@ to each adapter's ``build_invocation``, an ACP call through ``invoke_inter_agent
 a legacy bridge prompt — and asserts that the core's first and last pillar anchors
 are in it. Bytes carried per row are printed (``pytest -s``).
 
-The core is ``agents_extensions/shared/rules/core.md`` when this checkout has it;
-otherwise ``tests/fixtures/rules_core/`` stands in: in-process through the loader's
+The fleet core ships with the installed lu-machinery release, and the loader reads it from
+there unless the machinery roots configuration (``LEARN_UKRAINIAN_RULES_DIR``) names another
+rules directory (#13032); the old ``LU_RULES_CORE_DIR`` override has no effect.
+``tests/fixtures/rules_core/`` stands in for the core: in-process through the loader's
 ``core_dir`` resolver, and for launcher and CLI subprocesses through a checkout view
-(``tests/rules_core_view.py``) whose rules directory holds the fixture. Only the machinery
-roots configuration (``LEARN_UKRAINIAN_RULES_DIR``) can move the core; the old
-``LU_RULES_CORE_DIR`` override has no effect.
+(``tests/rules_core_view.py``) whose rules directory holds the fixture, or no core, and which
+the configuration names.
 
 A missing core refuses: each entry point (launcher, ``delegate.py`` dispatch, ACP call and
 discussion, bridge builder, ``ask-*`` prompt, ``/api/rules`` scope) is exercised without the
@@ -31,9 +32,10 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path as release_path
 from lu_machinery.lib import rules_core as release_rules_core
 
-from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV
+from scripts.common.repo_root import PRODUCT_MARKER, PRODUCT_ROOT_ENV, RULES_DIR_ENV
 from scripts.lib import rules_core
 from tests.helpers import machinery_package
 from tests.launcher_sandbox import launcher_environment
@@ -50,6 +52,7 @@ CORE_DIR = (
     else FIXTURE_CORE_DIR
 )
 CHECKOUT_CORE_DIR = rules_core.core_dir
+RELEASE_RULES_DIR = release_path(rules_core.RULES_DIR_REL)
 OLD_OVERRIDE_ENV = "LU_RULES_CORE_DIR"
 
 
@@ -229,12 +232,11 @@ def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp
     hostile = str(_hostile_core_dir(tmp_path))
     monkeypatch.setenv(OLD_OVERRIDE_ENV, hostile)
     monkeypatch.chdir(tmp_path)
-    assert CHECKOUT_CORE_DIR() == REPO / rules_core.RULES_DIR_REL
-    assert CHECKOUT_CORE_DIR(core_root) == core_root / rules_core.RULES_DIR_REL
+    assert CHECKOUT_CORE_DIR() == RELEASE_RULES_DIR  # the installed release's fleet rules (#13032)
     monkeypatch.setattr(rules_core, "core_dir", CHECKOUT_CORE_DIR)
     text = rules_core.core_text("content", core_root)
     assert "HOSTILE" not in text
-    assert text.startswith((CORE_DIR / "core.md").read_text(encoding="utf-8").rstrip())
+    assert text.startswith((RELEASE_RULES_DIR / "core.md").read_text(encoding="utf-8").rstrip())
     script = REPO / machinery_package() / "lib" / "rules_core.py"
     cli = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "text"],
@@ -298,7 +300,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
         text=True,
         check=False,
         timeout=60,
-        env=launcher_environment(),
+        env=launcher_environment({RULES_DIR_ENV: os.fspath(core_root / rules_core.RULES_DIR_REL)}),
     )
     assert ok.returncode == 0, ok.stderr
     payload = json.loads(ok.stdout)
@@ -310,7 +312,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
         text=True,
         check=False,
         timeout=60,
-        env=launcher_environment(),
+        env=launcher_environment({RULES_DIR_ENV: os.fspath(absent / rules_core.RULES_DIR_REL)}),
     )
     assert missing.returncode == 3
     assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
@@ -350,6 +352,8 @@ def _launch(
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
     env = {**launcher_environment(), PRODUCT_ROOT_ENV: str(root), "CODEX_CANONICAL_REPO_ROOT": str(root), "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
+    # The view's rules directory holds the core under test, or none; the configuration names it.
+    env[RULES_DIR_ENV] = str(root / rules_core.RULES_DIR_REL)
     env.update(extra_env or {})
     result = subprocess.run(
         [str(root / name), *args], cwd=root, env=env, text=True, capture_output=True, check=False, timeout=120
@@ -410,7 +414,7 @@ def test_gemini_driver_core_leads_the_drive_epic_binding(tmp_path: Path, core_ro
     assert argv.count("-i") == 1
     prompt = argv[argv.index("-i") + 1]
     assert prompt.startswith(rules_core.core_block("core") + "\n\n")
-    assert "agents_extensions/shared/skills/drive-epic/SKILL.md" in prompt
+    assert ".agent/skills/drive-epic/SKILL.md" in prompt  # the deployed copy AGY discovers (#13032)
 
 
 def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_root: Path) -> None:

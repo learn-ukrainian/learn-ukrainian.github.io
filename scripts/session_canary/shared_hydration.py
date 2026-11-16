@@ -26,9 +26,9 @@ from typing import Any
 from urllib.parse import urlparse
 
 from jsonschema import Draft202012Validator, FormatChecker
+from lu_machinery.session_streams.hooks import lease_from_environment
+from lu_machinery.session_streams.model import parse_timestamp, validate_stream_id
 
-from agents_extensions.shared.session_streams.hooks import lease_from_environment
-from agents_extensions.shared.session_streams.model import parse_timestamp, validate_stream_id
 from scripts.session_supervisor.remote import RemoteEpicClient, monitor_url
 
 ROOT = Path(__file__).resolve().parents[2]

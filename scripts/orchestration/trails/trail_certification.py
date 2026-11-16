@@ -22,6 +22,7 @@ from typing import Any, Literal
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
+from lu_machinery.common.repo_root import machinery_path as release_path
 
 from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import (
@@ -32,10 +33,8 @@ from scripts.orchestration.trails.models import (
 from scripts.orchestration.trails.store import TrailStore, digest_json
 from scripts.orchestration.validate_trailspec import compute_trail_hash, validate_trailspec_data
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CERTIFICATION_ATTESTATION_SCHEMA_PATH = (
-    PROJECT_ROOT
-    / "agents_extensions/shared/schemas/trail-certification-attestation.v1.schema.json"
+    release_path("schemas/trail-certification-attestation.v1.schema.json")
 )
 CERTIFICATION_SCHEMA_VERSION = "trail-certification-attestation.v1"
 MINIMUM_PRODUCTION_SAMPLE_SIZE = 59

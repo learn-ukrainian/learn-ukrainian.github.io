@@ -195,8 +195,9 @@ def sandbox(tmp_path, hermetic_monitor):
     (repo / "scripts/curriculum").mkdir()
     for name in ("review_hooks.v1.json", "review_attempt_hooks.py", "admission_policy.v1.json"):
         shutil.copy(SOURCE / "scripts/curriculum" / name, repo / "scripts/curriculum")
-    # A workspace-write AGY dispatch provisions both workspace guards from the product checkout.
-    for relative in ("agents_extensions/agy/hooks.json", "agents_extensions/shared/hooks/guard-primary-checkout-write.py"):
+    # A workspace-write AGY dispatch provisions the product hook manifest; the primary-write guard
+    # it names is the installed release's (#13032).
+    for relative in ("agents_extensions/agy/hooks.json",):
         (repo / relative).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(SOURCE / relative, repo / relative)
     schema_dir = repo / "schemas"

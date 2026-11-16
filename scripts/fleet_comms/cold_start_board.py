@@ -56,13 +56,13 @@ from scripts.fleet_comms.opsec_store import (
 )
 
 try:
-    from agents_extensions.shared.session_streams.db import (
+    from lu_machinery.session_streams.db import (
         SessionStreamDatabase,
         default_database_path,
     )
-    from agents_extensions.shared.session_streams.handoff import diagnose_handoff
-    from agents_extensions.shared.session_streams.model import entry_as_dict
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from lu_machinery.session_streams.handoff import diagnose_handoff
+    from lu_machinery.session_streams.model import entry_as_dict
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     HAS_SESSION_STREAMS = True
 except ImportError:

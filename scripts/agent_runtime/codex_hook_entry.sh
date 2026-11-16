@@ -14,7 +14,6 @@ PAYLOAD=$(cat)
 # SCRIPT_ROOT is the machinery tree holding this file: it supplies the code
 # (the hooks and the policy module), never the project (machinery #100 R70).
 SCRIPT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-HOOKS_DIR="$SCRIPT_ROOT/agents_extensions/shared/hooks"
 
 bootstrap_failed() {
   printf '%s %s\n' 'HOOK-BOOTSTRAP-FAILED: product root, shared state, interpreter or machinery unavailable.' "${1:-${PROJECT_HOOK_BOOTSTRAP_STEP:-machinery}}" >&2
@@ -33,6 +32,9 @@ source "$SCRIPT_ROOT/scripts/lib/project_interpreter.sh" || bootstrap_failed mac
 project_hook_context_resolve 2>/dev/null || bootstrap_failed
 PYTHON_BIN="$LEARN_UKRAINIAN_PYTHON"
 CANONICAL_ROOT="$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+# The fleet hooks are the installed lu-machinery release's (#13032).
+HOOKS_DIR="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path
+print(machinery_path("agents_extensions/shared/hooks"))' </dev/null 2>/dev/null)" || bootstrap_failed machinery
 
 case "$MODE" in
   pre-tool-use)

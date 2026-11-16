@@ -29,7 +29,6 @@ _SHELL_EXPORT_SITES = (
     *sorted(REPO_ROOT.glob("start-*.sh")),
     *sorted((REPO_ROOT / "scripts" / "lib").glob("*.sh")),
     *sorted((REPO_ROOT / "scripts" / "launchers").glob("*.sh")),
-    *sorted((REPO_ROOT / "agents_extensions" / "shared" / "hooks").glob("*.sh")),
 )
 _SESSION_RECORD = REPO_ROOT / "scripts" / "lib" / "session_record.py"
 _SESSION_SUPERVISOR = REPO_ROOT / "scripts" / "lib" / "session_supervisor.sh"

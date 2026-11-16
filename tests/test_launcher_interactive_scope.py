@@ -1289,11 +1289,10 @@ def test_driver_relay_during_close_preserves_client_result(
 @pytest.mark.usefixtures("default_hup")
 def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) -> None:
     """Group HUP and the waiter relay can both close the same fenced lease."""
+    from lu_machinery.session_streams.db import SessionStreamDatabase
+    from lu_machinery.session_streams.model import LeaseHolder, SessionState
+    from lu_machinery.session_streams.store import SessionStreamStore
     from lu_machinery.session_supervisor import SessionSupervisor
-
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import LeaseHolder, SessionState
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
 
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:

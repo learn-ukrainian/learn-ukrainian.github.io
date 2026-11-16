@@ -137,10 +137,10 @@ temp/
 .agent/*
 !.agent/service-endpoints.env.example
 .agent/primary-ref-audit.jsonl
-# Local state owned by scripts/deploy_prompts.sh. It records which shared files
-# deploy placed in .agent/ so only those paths can be reaped on a later deploy.
+# Local state owned by the installed agent deployer (lu_machinery.agent_deploy):
+# its manifest of the files it deployed, so only those paths are ever replaced or reaped.
 .deploy-state/
-# deploy target (rsync'd from agents_extensions/shared/skills); like .claude/.codex/.agent
+# deploy target (shared skills from the installed release and the product); like .claude/.codex/.agent
 .agents/
 # Temporary/sample images in docs (textbook screenshots, vision test outputs)
 docs/temp_*.png

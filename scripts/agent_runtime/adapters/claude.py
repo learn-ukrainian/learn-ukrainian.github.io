@@ -248,6 +248,8 @@ from functools import cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from lu_machinery.common.repo_root import machinery_path as release_path
+
 from ..env_sanitize import (
     CLAUDE_CONFIG_DIR_ENV,
     build_agent_env,
@@ -631,7 +633,7 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
         raise RuntimeError(f"Claude worker hook command is unreadable: {command}") from exc
     if not any(marker in text for text in (command, *argv) for marker in _FLEET_GUARD_MARKERS):
         return None
-    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    hooks_dir = release_path("agents_extensions/shared/hooks")  # the installed release's guards (#13032)
     wrapper = _DEPLOYED_HOOKS_PREFIX + _PROJECT_PYTHON_HOOK_WRAPPER
     if len(argv) == 3 and argv[:2] == ["bash", wrapper] and argv[2] in PROJECT_PYTHON_GUARDS:
         tracked = hooks_dir / argv[2]
@@ -674,7 +676,7 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         if hooks:
             groups.append({"matcher": group["matcher"], "hooks": hooks})
     if publish_guard:
-        guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
+        guard = release_path("agents_extensions/shared/hooks/guard-reviewer-publish.py")
         if not guard.is_file():
             raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
         # Same failure policy as the shared refusing guards (#10848): a timeout

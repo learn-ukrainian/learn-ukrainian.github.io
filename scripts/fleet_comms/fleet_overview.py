@@ -22,15 +22,15 @@ from typing import Any
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 
 try:
-    from agents_extensions.shared.session_streams.db import (
+    from lu_machinery.session_streams.db import (
         SessionStreamDatabase,
     )
-    from agents_extensions.shared.session_streams.model import (
+    from lu_machinery.session_streams.model import (
         SessionState,
         parse_timestamp,
         utc_now,
     )
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from lu_machinery.session_streams.store import SessionStreamStore
 
     HAS_SESSION_STREAMS = True
 except ImportError:

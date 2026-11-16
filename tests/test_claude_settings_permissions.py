@@ -1,6 +1,6 @@
 """Contract for the native Claude Code permission rules in the shared settings.
 
-``npm run agents:deploy`` rsyncs ``agents_extensions/shared/settings.json``
+``npm run agents:deploy`` deploys ``agents_extensions/shared/settings.json``
 verbatim to ``.claude/settings.json``, so the source file IS the deployed shape.
 
 In auto mode, allow/ask/deny rules resolve before the classifier, so narrow

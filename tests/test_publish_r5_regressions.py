@@ -279,6 +279,10 @@ def catalog(monkeypatch):
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
+# Callers the installed lu-machinery release ships, beside its package (#13032).
+RELEASE_PREFIXES = ("lu_machinery/", "agents_extensions/shared/hooks/")
+
+
 # The actual REST/search argv families from every refused caller in the review,
 # plus the fresh inventory. GET fields in worktree_git are now query parameters.
 READ_CALLERS = [
@@ -304,7 +308,7 @@ READ_CALLERS = [
 
 @pytest.mark.parametrize("caller,args", READ_CALLERS)
 def test_listed_rest_read_reaches_transport(caller, args, tmp_path):
-    assert (files("lu_machinery").parent / caller if caller.startswith("lu_machinery/") else ROOT / caller).is_file()
+    assert (files("lu_machinery").parent / caller if caller.startswith(RELEASE_PREFIXES) else ROOT / caller).is_file()
     calls = []
     def spy(argv, **kwargs):
         calls.append(argv)
@@ -619,11 +623,11 @@ def test_invalid_asset_cli_name_is_masked_exit_two(capsys):
 
 
 def test_hook_recognises_typed_merge(monkeypatch):
-    spec = importlib.util.spec_from_file_location("r5_guard", ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")
+    spec = importlib.util.spec_from_file_location("r5_guard", files("lu_machinery").parent / "agents_extensions/shared/hooks/guard-pr-merge.py")
     guard = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(guard)
     for prefix in (sys.executable, "/fixture/bin/python"):
-        args = guard._merge_args([prefix, "-m", "scripts.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
+        args = guard._merge_args([prefix, "-m", "lu_machinery.publish", "pr-merge", "--repo", "unit/private", "--number", "1"])
         assert guard._pr_selector(args) == "1" and guard._repo_option(args) == "unit/private"
 
 
@@ -636,7 +640,7 @@ def test_hook_recognises_typed_merge(monkeypatch):
     ("lu_machinery/ci/cache_hygiene.py", "pr-bases", {"cursor": None}),
 ])
 def test_named_read_callers_have_closed_endpoint_plans(caller, name, fields):
-    assert (files("lu_machinery").parent / caller if caller.startswith("lu_machinery/") else ROOT / caller).is_file()
+    assert (files("lu_machinery").parent / caller if caller.startswith(RELEASE_PREFIXES) else ROOT / caller).is_file()
     sent = []
     def spy(args, **kwargs):
         sent.append(args)
@@ -691,10 +695,10 @@ def test_named_read_shell_cli(command):
 @pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
 @pytest.mark.parametrize("state", ["draft", "red", "pending", "ready"])
 def test_hook_judges_publisher_readiness(repo, state, monkeypatch, capsys):
-    spec = importlib.util.spec_from_file_location("r5_hook", ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")
+    spec = importlib.util.spec_from_file_location("r5_hook", files("lu_machinery").parent / "agents_extensions/shared/hooks/guard-pr-merge.py")
     guard = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(guard)
-    monkeypatch.setattr(guard, "_read_payload", lambda: {"tool_input": {"command": f".venv/bin/python -m scripts.publish pr-merge --repo {repo} --number 1"}})
+    monkeypatch.setattr(guard, "_read_payload", lambda: {"tool_input": {"command": f".venv/bin/python -m lu_machinery.publish pr-merge --repo {repo} --number 1"}})
     reads = []
     def snapshot(pr, target, cwd=None):
         reads.append((pr, target))

@@ -183,7 +183,7 @@ def sqlite_path(store: StoreId, *, repo_root: Path | None = None) -> Path:
         )
         return plane_root / "comms.sqlite3"
     if store is StoreId.SESSION_STREAMS:
-        from agents_extensions.shared.session_streams.db import default_database_path
+        from lu_machinery.session_streams.db import default_database_path
 
         return default_database_path(root)
     if store is StoreId.WRITE_OWNERSHIP:

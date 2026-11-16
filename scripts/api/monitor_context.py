@@ -14,12 +14,11 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any
 
 from fastapi import Request
-
-from agents_extensions.shared.session_streams.db import (
+from lu_machinery.session_streams.db import (
     SessionStreamDatabase,
     default_database_path,
 )
-from agents_extensions.shared.session_streams.store import SessionStreamStore
+from lu_machinery.session_streams.store import SessionStreamStore
 
 from . import config
 from .resilience import connect_sqlite

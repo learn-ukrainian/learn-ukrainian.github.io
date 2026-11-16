@@ -36,7 +36,7 @@ ATTRIBUTED_CHECKOUT_PATHS: tuple[str, ...] = (
 
 # Root -> (watched immediate children, live-runtime exclusions relative to root).
 # Watch .claude/ and .codex/ fully except runtime entries and the non-owned
-# orphans in scripts/deploy_orphan_paths.sh. Keep .agent/ allowlisted because
+# runtime names the agent deployer never owns. Keep .agent/ allowlisted because
 # its top level holds live leases and audits; .agents/ watches deployed skills.
 # Exclusions are root-anchored and pruned before traversal.
 MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {

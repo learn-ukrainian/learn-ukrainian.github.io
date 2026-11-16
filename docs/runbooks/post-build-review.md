@@ -148,8 +148,8 @@ For every review defect:
 3. Patch the single canonical source for that layer.
 4. Add or extend a regression test that fails before the patch.
 5. Increment the applicable protocol version above.
-6. Regenerate mirrors with `npm run agents:deploy` (or
-   `scripts/deploy_prompts.sh`) and never edit a mirror directly.
+6. Regenerate mirrors with `npm run agents:deploy` and never edit a mirror
+   directly.
 7. Run all affected fixtures, schema/prompt/track/read-only tests, deployment
    drift checks, and the Bilash exemplar.
 8. Obtain an independent review from outside the author's model family. Resolve
@@ -187,12 +187,11 @@ From the issue worktree:
 
 ```bash
 .venv/bin/python -m pytest tests/audit/test_post_build_review.py tests/audit/test_post_build_review_pipeline.py -q
-.venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -q
 .venv/bin/python scripts/lint/lint_agent_skills.py
 .venv/bin/python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
   agents_extensions/shared/skills/post-build-review
-scripts/deploy_prompts.sh
-bash scripts/check_rules_deployment.sh
+npm run agents:deploy
+.venv/bin/python -I -m lu_machinery.agent_deploy --project-root "$PWD" --check
 git diff --check
 ```
 

@@ -20,6 +20,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from lu_machinery.common.repo_root import machinery_path as release_path
+
 # Claude matchers auto-expand to some Grok ids (Bash → run_terminal_command,
 # Write|Edit|MultiEdit → search_replace). Write sessions also name the
 # model-facing ids that expansion does not cover. Unknown ids still deny.
@@ -67,7 +69,8 @@ def guard_argv(command: str) -> list[str]:
     except ValueError as exc:
         raise GuardInvocationError("unreadable fleet guard invocation") from exc
     source_root = Path(__file__).resolve().parents[2]
-    hooks_dir = source_root / "agents_extensions/shared/hooks"
+    # The fleet guards are the installed release's (#13032), as the Claude adapter names them.
+    hooks_dir = release_path("agents_extensions/shared/hooks")
     if len(argv) == 1:
         guard = Path(argv[0])
         if guard != hooks_dir / guard.name or guard.name == _PROJECT_PYTHON_HOOK_WRAPPER:

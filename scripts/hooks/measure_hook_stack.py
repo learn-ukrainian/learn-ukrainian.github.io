@@ -18,12 +18,17 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.common.repo_root import machinery_path as release_path
+
 ROOT = Path(__file__).resolve().parents[2]
 _HOOK_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from scripts.common.repo_root import machinery_path, project_interpreter
+
+# The fleet hooks are the installed lu-machinery release's (#13032).
+RELEASE_HOOKS = release_path("agents_extensions/shared/hooks")
 
 
 def _python_bin() -> str:
@@ -40,79 +45,79 @@ PYTHON = _python_bin()
 STACK: list[tuple[str, list[str], bytes | None, dict[str, str]]] = [
     (
         "session-setup.sh",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/session-setup.sh")],
+        ["bash", str(RELEASE_HOOKS / "session-setup.sh")],
         None,
         {},
     ),
     (
         "post-compact.sh",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/post-compact.sh")],
+        ["bash", str(RELEASE_HOOKS / "post-compact.sh")],
         b"{}",
         {},
     ),
     (
         "post-compact.sh+GROK_SESSION",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/post-compact.sh")],
+        ["bash", str(RELEASE_HOOKS / "post-compact.sh")],
         b"{}",
         {"SESSION_HANDOFF_AGENT": "grok", "GROK_AGENT": "1"},
     ),
     (
         "enforce-venv.sh",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/enforce-venv.sh")],
+        ["bash", str(RELEASE_HOOKS / "enforce-venv.sh")],
         b"{}",
         {},
     ),
     (
         "heal-core-bare.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/heal-core-bare.py")],
+        [PYTHON, str(RELEASE_HOOKS / "heal-core-bare.py")],
         None,
         {},
     ),
     (
         "guard-primary-checkout-write.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/guard-primary-checkout-write.py")],
+        [PYTHON, str(RELEASE_HOOKS / "guard-primary-checkout-write.py")],
         b"{}",
         {},
     ),
     (
         "guard-pr-merge.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")],
+        [PYTHON, str(RELEASE_HOOKS / "guard-pr-merge.py")],
         b"{}",
         {},
     ),
     (
         "guard-secret-print.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/guard-secret-print.py")],
+        [PYTHON, str(RELEASE_HOOKS / "guard-secret-print.py")],
         b"{}",
         {},
     ),
     (
         "guard-branch-switch-in-main.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/guard-branch-switch-in-main.py")],
+        [PYTHON, str(RELEASE_HOOKS / "guard-branch-switch-in-main.py")],
         b"{}",
         {},
     ),
     (
         "guard-admin-merge.py",
-        [PYTHON, str(ROOT / "agents_extensions/shared/hooks/guard-admin-merge.py")],
+        [PYTHON, str(RELEASE_HOOKS / "guard-admin-merge.py")],
         b"{}",
         {},
     ),
     (
         "context-monitor.sh",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/context-monitor.sh")],
+        ["bash", str(RELEASE_HOOKS / "context-monitor.sh")],
         b'{"session_id":"","transcript_path":""}',
         {},
     ),
     (
         "context-monitor.sh+GROK_AGENT",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/context-monitor.sh")],
+        ["bash", str(RELEASE_HOOKS / "context-monitor.sh")],
         b'{"session_id":"x","transcript_path":"/nonexistent"}',
         {"GROK_AGENT": "1", "SESSION_HANDOFF_AGENT": "grok"},
     ),
     (
         "tool-timing.sh",
-        ["bash", str(ROOT / "agents_extensions/shared/hooks/tool-timing.sh")],
+        ["bash", str(RELEASE_HOOKS / "tool-timing.sh")],
         b'{"tool_name":"Bash","duration_ms":1,"hook_event_name":"PostToolUse"}',
         {},
     ),

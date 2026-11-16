@@ -101,7 +101,7 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 1. **36 top-level docs/ files, no semantic grouping.** Authoritative `north-star.md` sits among April archives. Use this README as primary index.
 2. **18 HTML/MD duplicate pairs.** Prefer `.md` for AI-consumption; `.html` is a human-rendering companion only.
-3. **Rule deploy drift risk.** `agents_extensions/` is source; deployed copies may lag if `npm run agents:deploy` hasn't been run. Verify with `scripts/check_rules_deployment.sh`.
+3. **Rule deploy drift risk.** `agents_extensions/` is source; deployed copies may lag if `npm run agents:deploy` hasn't been run. Verify with `.venv/bin/python -I -m lu_machinery.agent_deploy --project-root "$PWD" --check`.
 4. **V5/V6 era docs not in `_legacy/`.** `docs/architecture/ARCHITECTURE.md` is legacy but at canonical path; its front matter and banner mark it superseded. `scripts.docs.find` reports each hit's status.
 5. **`docs/architecture/adr/` vs `docs/decisions/`.** ADRs are architectural decisions; decisions are operational/policy. Both authoritative within scope.
 

@@ -127,9 +127,9 @@ def _close_exact_lease(repo: Path, epic: str) -> bool:
         return False
     environment = _read_lease_environment(env_path)
     try:
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.hooks import clean_exit_hook, lease_from_environment
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         clean_exit_hook(SessionStreamStore(SessionStreamDatabase()), lease_from_environment(environment))
     except (OSError, ValueError, RuntimeError):

@@ -26,12 +26,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     __package__ = "scripts.session_supervisor"
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.dual_write import resolve_handoff_path
-from agents_extensions.shared.session_streams.handoff import diagnose_handoff, remote_lease_reason
-from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
-from agents_extensions.shared.session_streams.inventory import epic_handoff_map
-from agents_extensions.shared.session_streams.model import (
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.dual_write import resolve_handoff_path
+from lu_machinery.session_streams.handoff import diagnose_handoff, remote_lease_reason
+from lu_machinery.session_streams.hooks import clean_exit_hook, lease_from_environment
+from lu_machinery.session_streams.inventory import epic_handoff_map
+from lu_machinery.session_streams.model import (
     EntryType,
     Lease,
     LeaseHolder,
@@ -41,8 +41,8 @@ from agents_extensions.shared.session_streams.model import (
     parse_timestamp,
     sha256_text,
 )
-from agents_extensions.shared.session_streams.receipts import list_migration_state
-from agents_extensions.shared.session_streams.store import (
+from lu_machinery.session_streams.receipts import list_migration_state
+from lu_machinery.session_streams.store import (
     LifecycleError,
     SessionStreamError,
     SessionStreamStore,

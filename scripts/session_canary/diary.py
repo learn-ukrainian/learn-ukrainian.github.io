@@ -586,10 +586,10 @@ def try_stream_state_note(stream_id: str, body: str, *, idempotency_key: str) ->
     try:
         import os
 
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.hooks import lease_from_environment
-        from agents_extensions.shared.session_streams.model import EntryType
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.hooks import lease_from_environment
+        from lu_machinery.session_streams.model import EntryType
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         if not os.environ.get("SESSION_STREAM_LEASE_ID"):
             return False
@@ -849,9 +849,9 @@ def build_hydrate_capsule(
 def try_stream_tail_text(stream_id: str, *, limit: int = 5) -> str:
     """Best-effort formatted stream tail for hydrate. Fail-open to empty."""
     try:
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.model import entry_as_dict
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.model import entry_as_dict
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         store = SessionStreamStore(SessionStreamDatabase())
         digest = store.load_digest(stream_id, limit=limit)

@@ -45,7 +45,6 @@ def test_hygiene_hooks_use_project_python_at_commit(config, hook_id, module, pas
         ("tests/a.py", True, False),
         ("tests/a.sh", True, False),
         ("tests/a.bash", True, False),
-        ("agents_extensions/shared/session_streams/a.py", False, True),
         ("agents_extensions/shared/other/a.py", False, False),
         ("scripts/control_plane/storage.py", True, False),
         ("scripts/control_plane_extra.py", True, False),
