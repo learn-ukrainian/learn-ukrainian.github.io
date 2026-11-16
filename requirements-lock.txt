@@ -196,7 +196,7 @@ requests==2.34.2
 rich==15.0.0
 rpds-py==0.30.0
 ruamel.yaml==0.19.1
-ruff==0.15.21
+ruff==0.17.4
 safetensors==0.8.0
 scikit-learn==1.8.0
 scipy==1.18.1
