@@ -1150,7 +1150,8 @@ def post(
     ``attachments``, or a slot whose live holder is a Kimi seat raises
     ``KimiAdmissionRefused`` before any snapshot, broker access, insert or wake.
     """
-    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import BRIDGE_MODE
+
     from agent_runtime.target_admission import resolve_and_admit, resolve_sender
 
     warnings: list[str] = []

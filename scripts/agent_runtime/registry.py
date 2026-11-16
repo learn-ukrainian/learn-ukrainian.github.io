@@ -248,27 +248,6 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
-    "kimi": {
-        # Native Kimi Code OAuth subscription lane (no proxy-provider route).
-        # Operator 2026-08-13: dispatch/native default is k3-256k (everyday
-        # coding) with no forced effort; full K3 (high/max, 1M window) is the
-        # advisor/complex seat selected via --model k3 --effort high|max.
-        # Ukrainian content capabilities remain separately gated.
-        "adapter": f"{_ADAPTERS}.kimi:KimiAdapter",
-        "default_model": "k3-256k",
-        "cost_tier": "medium",
-        "capabilities": frozenset(
-            {
-                "code_writing",
-                "code_review",
-                "adversarial_review",
-                "debugging",
-                "multimodal",
-            }
-        ),
-        "cli_available": True,
-        "resume_policy": "bridge_only",
-    },
     "acpx-codex-shadow": {
         # Direct-only ACP transport (#6027): never returned by
         # ``available_agents()`` and never a general dispatch or failover
@@ -303,24 +282,6 @@ AGENTS: dict[str, AgentEntry] = {
     "acpx-claude-shadow": {
         "adapter": f"{_ADAPTERS}.acpx:AcpxClaudeShadowAdapter",
         "default_model": None,
-        "cost_tier": "unknown",
-        "capabilities": frozenset(),
-        "cli_available": False,
-        "direct_only": True,
-        "resume_policy": "never",
-    },
-    "acpx-kimi-shadow": {
-        "adapter": f"{_ADAPTERS}.acpx:AcpxKimiShadowAdapter",
-        "default_model": None,
-        "cost_tier": "unknown",
-        "capabilities": frozenset(),
-        "cli_available": False,
-        "direct_only": True,
-        "resume_policy": "never",
-    },
-    "acpx-kimicc-shadow": {
-        "adapter": f"{_ADAPTERS}.acpx:AcpxKimiCcShadowAdapter",
-        "default_model": "kimi-code/k3",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,

@@ -7,8 +7,8 @@ decides who a request reaches — the explicit recipients and model, the models
 and recipients its ``data`` attachments carry, legacy compat command names,
 the ACP route registry's adapter agent and model pin, retired-CLI aliases,
 role slots resolved to their live holder, quota substitution, and a launch
-route (the legacy budget substitution) — and runs the Kimi gate
-(``kimi_admission.refuse_kimi_if_disallowed``) twice: on the original request
+route (the legacy budget substitution) — and runs the retired-seat gate
+(``refuse_disallowed_targets``) twice: on the original request
 before any resolution step reads state or has an effect, and on the final
 seats and models together with the original request, raising
 ``KimiAdmissionRefused`` before it returns. A sink therefore receives exactly
@@ -17,7 +17,7 @@ the target that was gated; nothing resolves after the gate.
 The named resolvers are called from this module only
 (``tests/test_target_admission_structure.py`` scans the callers). That scan is
 bounded — named calls and local bindings, not callbacks or aliased calls — so
-the execution-time re-check (``kimi_admission.refuse_kimi_execution``) stays
+the execution-time re-check (``retired_seat_admission.refuse_kimi_execution``) stays
 the backstop.
 """
 
@@ -35,16 +35,41 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
-from .kimi_admission import (
+from lu_machinery.agent_runtime.retired_seat_admission import (
     BRIDGE_MODE,
     REVIEW_MODE,
     KimiAdmissionRefused,
     effective_request_targets,
-    refuse_kimi_if_disallowed,
 )
+from lu_machinery.agent_runtime.retired_seat_admission import (
+    refuse_kimi_if_disallowed as _refuse_retired_seat,
+)
+
+from .deepseek_admission import refuse_deepseek_if_disallowed
 
 if TYPE_CHECKING:
     from scripts.fleet.claude_account_lane import ClaudeAccount
+
+
+def refuse_disallowed_targets(
+    effective_participants: Iterable[str | None],
+    effective_models: Iterable[str | None] = (),
+    *,
+    mode: str,
+    **gate: Any,
+) -> None:
+    """Refuse a disallowed DeepSeek input, then every retired Kimi seat or model.
+
+    DeepSeek admission runs first against this checkout's
+    ``deepseek_admission``, so its refusal stays this checkout's
+    ``DeepSeekAdmissionRefused``. The release's retired-seat gate then raises
+    ``KimiAdmissionRefused`` for any Kimi seat or model; it repeats the same
+    DeepSeek check, which has already passed. Never writes.
+    """
+    participants, models = tuple(effective_participants), tuple(effective_models)
+    refuse_deepseek_if_disallowed(participants, models, repo=gate.get("repo"), prompt_file=gate.get("prompt_file"))
+    _refuse_retired_seat(participants, models, mode=mode, **gate)
+
 
 # Legacy ``ask-<name>`` command names and the ACP participant each one selects.
 COMPAT_TARGETS: dict[str, str] = {
@@ -247,7 +272,7 @@ def resolve_and_admit(
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
 
-    ``mode`` and ``**gate`` are the Kimi gate's (``refuse_kimi_if_disallowed``).
+    ``mode`` and ``**gate`` are the retired-seat gate's (``refuse_disallowed_targets``).
     ``model`` is the explicit model every target pins; ``attachments`` are the
     request's ``data`` payloads, whose model and recipient keys are gated
     (an explicit ``model`` overrides an attached ``to_model``); ``also_models``
@@ -314,7 +339,7 @@ def resolve_and_admit(
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)
-    refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
+    refuse_disallowed_targets(*requested, mode=mode, **gate)
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
     from lu_machinery.agent_runtime.mechanical_admission import refuse_mechanical_task
 
@@ -489,7 +514,7 @@ def resolve_and_admit(
         [*models, *(target_model for _, target_model, _ in resolved)],
     )
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
-        refuse_kimi_if_disallowed(*final, mode=mode, **gate)
+        refuse_disallowed_targets(*final, mode=mode, **gate)
         refuse_mechanical_task(
             final[1],
             mode=mode,
@@ -536,17 +561,10 @@ def seat_default_model(seat: str, harness: str | None = None) -> str | None:
 def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
     """The model a seat runs when the request pins none.
 
-    A harness picks its own default (kimicc runs the first routable kimicc model);
+    A harness may pick its own fixed default;
     otherwise the registry default applies.
     """
-    if harness == "kimicc":
-        try:
-            from .adapters.kimicc import kimicc_default_model
-
-            return kimicc_default_model()
-        except Exception:  # no catalog: fall back to the registry default
-            pass
-    elif harness:
+    if harness:
         try:
             from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 

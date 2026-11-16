@@ -142,7 +142,8 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     the ``data`` one), raises ``KimiAdmissionRefused`` before the sidecar or
     any broker connection.
     """
-    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import BRIDGE_MODE
+
     from agent_runtime.target_admission import resolve_and_admit
 
     (target,) = resolve_and_admit((to_llm,), mode=BRIDGE_MODE, model=to_model, attachments=(data,))
@@ -174,7 +175,8 @@ def _insert_message(
     quiet: bool,
 ):
     """Store one bridge message for the admitted ``target`` (sidecar, row, notification)."""
-    from agent_runtime.kimi_admission import attachment_metadata
+    from lu_machinery.agent_runtime.retired_seat_admission import attachment_metadata
+
     from agent_runtime.target_admission import require_admitted
 
     target = require_admitted(target)

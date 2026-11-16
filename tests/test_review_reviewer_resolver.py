@@ -1578,8 +1578,6 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "gemini.py": "gemini",
         "glm.py": "glm",
         "grok_build.py": "grok",
-        "kimi.py": "kimi",
-        "kimicc.py": "kimi",
         "muse.py": "muse",
     }
     adapter_dir = repo / "scripts/agent_runtime/adapters"

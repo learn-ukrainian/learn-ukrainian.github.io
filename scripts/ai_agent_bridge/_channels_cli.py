@@ -53,7 +53,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from agent_runtime.kimi_admission import is_kimi_seat
+from lu_machinery.agent_runtime.retired_seat_admission import is_kimi_seat
 
 from . import _channels
 from ._channels_watch import watch_channel_events
@@ -1439,7 +1439,8 @@ def _handle_p(args) -> int:
 
 def _handle_inbox_run(args) -> int:
     """Handle `ab inbox run <agent>`."""
-    from agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
+    from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, KimiAdmissionRefused
+
     from agent_runtime.target_admission import resolve_and_admit
 
     from ._inbox import run_inbox

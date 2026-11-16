@@ -38,32 +38,29 @@ No other subprocess building anywhere else in the codebase. If you find
 yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 `runner.invoke()`.
 
-## Kimi routes and KimiCC headless route
+## Retired Kimi seats
 
-Kimi models are retired (OO-58, #11327). Dispatch, substitution, launchers and
-the bridge refuse every Kimi id. Short names still resolve so the refusal can
-name the catalog id. There is no default interactive route and no KimiCC opt-in.
+Kimi models are retired (OO-58, #11327). The product has no Kimi adapter,
+KimiCC harness, Kimi git hooks or headless launcher, and the agent registry
+has no Kimi seat. Dispatch, substitution, launchers and the bridge refuse every
+Kimi id. Short names still resolve so the refusal can name the catalog id.
 
-The admission gate still runs first on a Kimi request. Asks, consults,
-discussions, reviews, trail sessions and read-only or danger modes raise the
-coding-only refusal before the catalog retirement is reached. An admitted
-workspace-write then hits the retired-model refusal and does not plan a launch.
-Ukrainian-content checks in `scripts/agent_runtime/kimi_admission.py` remain on
-that path; they are not a way to send work. A diff that would have been a Kimi
-commit still fails closed with `kimi_content_refusal` when it adds Cyrillic.
+The installed release's retired-seat gate
+(`lu_machinery.agent_runtime.retired_seat_admission`) runs first on any request
+that names a Kimi seat or model, in any mode, and raises `KimiAdmissionRefused`
+("Kimi is retired") before telemetry, state writes or a launch plan.
 
 Targets are admitted in the same step they are resolved:
 `scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
 resolution a request goes through (explicit recipients and model, `data`
 attachments, compat names, ACP route pins, slot holders, registry lookups,
-quota substitution) and then runs the Kimi gate. Delivery, insertion, wake and
+quota substitution) and then runs the retired-seat gate. Delivery, insertion, wake and
 launch sinks in the bridge, channels, ACP, fleet-comms and `dispatch.py` take
 the `AdmittedTarget` it returns, never a raw name, and the resolvers are
 called from that module only (`tests/test_target_admission_structure.py`).
 
-Do not dispatch `--agent kimi` or start `start-kimi.sh` / `start-kimicc.sh`.
-The historical headless Claude Code harness (`kimicc_headless.sh`) is not an
-opt-in. Catalog retirement runs after admission and before a launch plan.
+Do not dispatch `--agent kimi`. Catalog retirement runs after admission and
+before a launch plan.
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
@@ -95,7 +92,7 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   runner, routing, dispatch, failover, or review setting. Rollback is setting
   the flag to `off` (or unsetting it) and using native transport.
 - Direct-only seats cover Codex, Grok, Claude, Cursor, Pool,
-  AGY/Gemini, GLM, Gemma, and DeepSeek (the registry still names the Kimi and KimiCC seats, but `kimi_admission` refuses them before any side effect) through the fixed registry in
+  AGY/Gemini, GLM, Gemma, and DeepSeek (Kimi and KimiCC are retired and have no seat) through the fixed registry in
   `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
   `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`). They
@@ -936,9 +933,8 @@ The admission policy is fail-closed:
 - Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
   allows for those tools, and explicit denies for Bash, reads/writes/edits,
   web, and discovery tools.
-- Every Kimi seat (native and KimiCC) refuses trail sessions. Kimi models are
-  retired (OO-58); `scripts/agent_runtime/kimi_admission.py` still refuses the
-  request before a launch is planned.
+- A Kimi request refuses trail sessions. Kimi models are retired (OO-58); the
+  release's retired-seat gate refuses the request before a launch is planned.
 - GLM/opencode, Hermes Grok, and every unproven harness refuse before spawn. GLM currently ignores tool restrictions, so a refusal is more
   honest than a pretend sandbox.
 

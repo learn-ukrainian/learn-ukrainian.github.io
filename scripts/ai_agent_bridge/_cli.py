@@ -9,11 +9,11 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+from lu_machinery.agent_runtime.retired_seat_admission import KimiAdmissionRefused
+
 from agent_runtime import usage as runtime_usage
-from agent_runtime.adapters.kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
-from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
 from scripts.common import github_client
 
@@ -1025,7 +1025,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh"
     )
     ask_kimi_parser.add_argument(
-        "--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})"
+        "--model", help="Deprecated alias for --to-model"
     )
     ask_kimi_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_kimi_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
@@ -1197,10 +1197,10 @@ def _build_parser() -> argparse.ArgumentParser:
     # check-model
     check_model_parser = subparsers.add_parser(
         "check-model",
-        help="Check if an AGY or Kimi model is available",
+        help="Check if an AGY model is available",
     )
     check_model_parser.add_argument("model", help="Model slug or display label")
-    check_model_parser.add_argument("--agent", choices=["agy", "kimi"], default="agy")
+    check_model_parser.add_argument("--agent", choices=["agy"], default="agy")
 
     # cleanup
     cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state and old acknowledged rows")
