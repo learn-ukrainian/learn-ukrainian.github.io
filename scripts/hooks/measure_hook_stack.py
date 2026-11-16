@@ -25,7 +25,7 @@ _HOOK_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from scripts.common.repo_root import machinery_path, project_interpreter
+from scripts.common.repo_root import project_interpreter
 
 # The fleet hooks are the installed lu-machinery release's (#13032).
 RELEASE_HOOKS = release_path("agents_extensions/shared/hooks")
@@ -123,7 +123,7 @@ STACK: list[tuple[str, list[str], bytes | None, dict[str, str]]] = [
     ),
     (
         "codex_hook_entry pre-tool-use",
-        ["bash", str(machinery_path("agent_runtime/codex_hook_entry.sh")), "pre-tool-use"],
+        ["bash", str(release_path("agent_runtime/codex_hook_entry.sh")), "pre-tool-use"],
         b"{}",
         {},
     ),
