@@ -53,8 +53,10 @@ these examples in a dispatch worktree to repair the primary installation.
   mkdir -p .venv/lu-machinery-wheelhouse
   curl -fsSL -o ".venv/lu-machinery-wheelhouse/lu_machinery-${version}-py3-none-any.whl" \
     "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+  awk '/^lu-machinery==/{f=1;print;next} f&&/^[[:space:]]/{print;next} f{exit}' \
+    requirements-machinery.lock > .venv/lu-machinery.req
   uv pip install --python .venv/bin/python --require-hashes --no-deps \
-    --find-links .venv/lu-machinery-wheelhouse -r requirements-machinery.lock
+    --find-links .venv/lu-machinery-wheelhouse -r .venv/lu-machinery.req
   uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
 )
 ```
