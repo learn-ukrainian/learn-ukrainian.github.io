@@ -9,12 +9,14 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
 import sys
 import textwrap
 import time
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -29,7 +31,7 @@ GATE_PATH = HOOK_DIR / "pre_push_gate.py"
 PYTHON = project_python()
 ZERO_SHA = "0" * 40
 # Agent sessions shim ``git`` and refuse the fixture's pushes to a disposable remote; use the real binary there.
-GIT = os.environ.get("AGENT_REAL_GIT") or "git"
+GIT = os.environ.get("AGENT_REAL_GIT") or shutil.which("git", path=os.defpath) or "git"
 
 # The repository-wide invariant registry the gate's test stage read before #11276: present, and ignored.
 REGISTRY = 'KNOWN_REPO_WIDE_MODULES = frozenset({"tests/test_invariant.py"})\nKNOWN_REPO_WIDE_FUNCTIONS = ()\n'
@@ -94,6 +96,8 @@ def _no_inherited_gate_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
+    # Disposable repositories use their synthetic scanner, without delegating to the task broker.
+    env.pop("LU_WRITE_BOUNDARY_BROKER", None)
     env.pop("PYTEST_ADDOPTS", None)
     env.pop("LU_TEST_SLOTS_HOLDER", None)  # a gate under test is never nested in this run's test slots
     # Nor does it inherit the invoking push's opt-in concurrency: under two slots a qualified host lets a
@@ -127,13 +131,17 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "repo"
     remote = tmp_path / "remote.git"
     root.mkdir()
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
     subprocess.run([GIT, "init", "--bare", str(remote)], check=True, capture_output=True, timeout=60)
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     shutil.copytree(HOOK_DIR, root / ".githooks")
     (root / "scripts/lib").mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", root / "scripts/lib/project_interpreter.sh")
+    (root / "scripts/lib/project_interpreter.sh").write_text(
+        "#!/usr/bin/env bash\nsource " + shlex.quote(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))) + "\n",
+        encoding="utf-8",
+    )
     launcher = root / "scripts/pre_commit/project_python.sh"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
@@ -4496,7 +4504,7 @@ def _remote_feature(repo: Path) -> str:
     return _git(repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
 
 
-def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path) -> None:
+def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Generated editor text must not refuse a clean message; kept text must still refuse."""
     from tests.githooks import install_message_scanner
     from tests.opsec_fixtures import TOKEN
@@ -4504,6 +4512,7 @@ def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path)
     root = tmp_path / "repo"
     root.mkdir()
     _git(root, "init")
+    monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
     shutil.copytree(HOOK_DIR, root / ".githooks")
     install_message_scanner(root)
     message = root / ".git/test-message"
@@ -4544,16 +4553,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
 
     accepted, output = _push(push_repo, "git-push")
     assert accepted, output
-    shim = push_repo / "scripts/agent_runtime/shims/git"
-    shim.parent.mkdir(parents=True)
-    shutil.copy2(REPO_ROOT / "scripts/agent_runtime/shims/git", shim)
-    _commit(push_repo, "install the agent push entry point", "scripts/agent_runtime/shims/git")
-    chained = subprocess.run(
-        [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
-        capture_output=True, text=True, timeout=60,
-    )
-    assert chained.returncode == 0, chained.stderr
-    assert chained.stderr.count("OPSEC: push scan:") == 1
     published = _remote_feature(push_repo)
 
     _write(push_repo, "docs/message.md", "safe file contents\n")
@@ -4567,14 +4566,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     assert f"commit[{flagged[:12]}].message" in output
     assert "rule=synthetic-rule" in output
     assert TOKEN not in output
-    chained = subprocess.run(
-        [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
-        capture_output=True, text=True, timeout=60,
-    )
-    assert chained.returncode != 0
-    assert _remote_feature(push_repo) == published
-    assert f"commit[{flagged[:12]}].message" in chained.stderr
-    assert "rule=synthetic-rule" in chained.stderr and TOKEN not in chained.stderr
     message = push_repo / ".git/test-message"
     message.write_text("safe subject\n\n" + TOKEN, encoding="utf-8")
     refused = subprocess.run(

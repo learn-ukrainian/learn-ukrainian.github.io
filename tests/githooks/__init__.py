@@ -1,19 +1,16 @@
 """Synthetic dependencies for repositories exercising the tracked hook chain."""
 
-import shutil
 from importlib.resources import files
 from pathlib import Path
 
 import yaml
 
-from tests.helpers import machinery_package
-from tests.opsec_fixtures import CATALOG, make_tooling
+from tests.opsec_fixtures import CATALOG, copy_publisher_scripts, make_tooling
 
 
 def install_message_scanner(repo: Path) -> None:
-    package = machinery_package()
-    shutil.copytree(Path(str(files("lu_machinery.opsec"))), repo / package / "opsec",
-                    ignore=shutil.ignore_patterns("__pycache__"))
+    package = "lu_machinery"
+    copy_publisher_scripts(Path(str(files(package))), repo / package)
     config = repo / package / "config/fleet_repos.yaml"
     config.parent.mkdir(parents=True, exist_ok=True)
     config.write_text(yaml.safe_dump({"repos": CATALOG}), encoding="utf-8")

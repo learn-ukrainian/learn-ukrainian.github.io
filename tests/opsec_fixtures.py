@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import ast
 import json
+import shutil
 import subprocess
+from importlib.util import resolve_name
 from pathlib import Path
 
 import pytest
@@ -136,3 +139,55 @@ def publisher_transport(monkeypatch):
             return _original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
 
         monkeypatch.setattr(github, "_send", send)
+
+
+def copy_publisher_scripts(source: Path, destination: Path) -> None:
+    """Stage publisher assets and their transitive local Python imports.
+
+    Parse imports without executing modules, including imports inside functions.
+    Only reachable dependency modules are staged; sibling tools are unnecessary.
+    """
+    pending = []
+    for package in ("opsec", "publish"):
+        shutil.copytree(source / package, destination / package, ignore=shutil.ignore_patterns("__pycache__"))
+        pending.extend((source / package).rglob("*.py"))
+    visited = set()
+
+    package_name = source.name
+
+    def stage(module: str) -> None:
+        parts = module.split(".")
+        if parts[0] != package_name:
+            return
+        # Package initializers can have dependencies of their own.
+        for length in range(1, len(parts) + 1):
+            relative = Path(*parts[1:length])
+            path = source / relative / "__init__.py"
+            if not path.is_file() and length > 1:
+                path = (source / relative).with_suffix(".py")
+            if path.is_file() and path not in visited:
+                target = destination / path.relative_to(source)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(path, target)
+                pending.append(path)
+
+    stage(package_name)
+    while pending:
+        path = pending.pop()
+        if path in visited:
+            continue
+        visited.add(path)
+        module = (package_name, *path.relative_to(source).with_suffix("").parts)
+        package = ".".join(module[:-1])
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"), filename=str(path))):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    stage(alias.name)
+            elif isinstance(node, ast.ImportFrom):
+                name = node.module or ""
+                if node.level:
+                    name = resolve_name("." * node.level + name, package)
+                stage(name)
+                for alias in node.names:
+                    if alias.name != "*":
+                        stage(f"{name}.{alias.name}")

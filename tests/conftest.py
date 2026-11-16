@@ -106,7 +106,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
 from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from lu_machinery.common.repo_root import main_checkout_root, resolve_repo_root
+from lu_machinery.common.repo_root import main_checkout_root
 
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
@@ -140,7 +140,17 @@ def _under_tests_api(request: pytest.FixtureRequest) -> bool:
 
 
 def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
-    return [importlib.import_module(f"{package}.{name}") for package in _API_STATUS_PACKAGES]
+    modules = []
+    for package in _API_STATUS_PACKAGES:
+        module_name = f"{package}.{name}"
+        if package == "scripts.api":
+            module = sys.modules.get(module_name)
+            if module is None:
+                continue
+        else:
+            module = importlib.import_module(module_name)
+        modules.append(module)
+    return modules
 
 
 def _no_api_claude_provider(claude_account_usage):  # TRANSITIONAL-PKG3-B2
@@ -1178,7 +1188,7 @@ def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 def _bridge_db_paths() -> tuple[Path, Path]:
     """Return the primary bridge DB and any configured path before tests begin."""
-    primary_repo_root = resolve_repo_root(Path(__file__), 1)
+    primary_repo_root = main_checkout_root(Path(__file__).resolve().parents[1])
     return (
         default_bridge_db_path(primary_repo_root).resolve(),
         configured_bridge_db_path(primary_repo_root).resolve(),
@@ -1797,7 +1807,12 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     themselves.
     """
     for name in ("scripts.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
-        credit_lane = importlib.import_module(name)
+        if name.startswith("scripts."):
+            credit_lane = sys.modules.get(name)
+            if credit_lane is None:
+                continue
+        else:
+            credit_lane = importlib.import_module(name)
         monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
         monkeypatch.setattr(
             credit_lane,
@@ -1930,7 +1945,7 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
 # All dispatch task-store consumers resolve ``LU_TASKS_DIR`` at call time.
 # The ownership ledger above is a separate seam (env override).
 
-_REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
+_REAL_TASKS_DIR = (main_checkout_root(Path(__file__).resolve().parents[1]) / "batch_state" / "tasks").resolve()
 # Legacy task-store paths derived from ``tasks_dir().parent``:
 # - ``tasks_dir().parent / "preflight_fast_fail.jsonl"``
 # - fallback ``tasks_dir().parent / worktree_claims.LOCK_DIR_NAME``
@@ -2903,7 +2918,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     """Mark nightly groups and quarantined flakes; refuse unserved ``rules_core_absent`` tests."""
     _mark_nightly_groups(items)
     selected = rerun_node_ids(
-        load_registry(),
+        load_registry(_REPO_ROOT / "tests/flake_quarantine.yaml"),
         today=datetime.now(UTC).date(),
         event_name="schedule"
         if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1"
@@ -3106,7 +3121,7 @@ def pytest_configure(config: pytest.Config) -> None:
             "WARNING: credential redaction cannot protect direct terminal output; "
             "keep capture enabled and log_cli disabled when credentials are present.\n"
         )
-    load_registry()
+    load_registry(_REPO_ROOT / "tests/flake_quarantine.yaml")
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
@@ -4160,7 +4175,12 @@ def _hermetic_agy_claude_window(monkeypatch):
     empty window. A test of the real reader restores ``__wrapped__``.
     """
     for name in ("scripts.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
-        mp = importlib.import_module(name)
+        if name.startswith("scripts."):
+            mp = sys.modules.get(name)
+            if mp is None:
+                continue
+        else:
+            mp = importlib.import_module(name)
         real = mp.routing_budget_used_pct
 
         def wrapped(lane, *, account, _real=real, _window=mp.AGY_CLAUDE_WINDOW_LANE):

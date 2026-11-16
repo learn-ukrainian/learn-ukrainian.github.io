@@ -59,7 +59,7 @@ SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
 # The publication scanner package, by import name. Its first component is the machinery package,
 # which is also the directory machinery files have under a checkout (this file is outside it).
-_SCANNER_PACKAGE = "scripts.opsec"
+_SCANNER_PACKAGE = "lu_machinery.opsec"
 _MACHINERY = _SCANNER_PACKAGE.partition(".")[0]
 # The blocking stage gets its own allowance from its own start (#10642); the run budget caps what every ref
 # update of one push spends together. A timeout is typed by the load observed at it (``stage_timeout``) and
@@ -1928,7 +1928,7 @@ def message_gate(arguments: list[str]) -> int:
     """Reuse the publication scanner for both hook entry points, without chaining hooks twice."""
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     try:
-        from scripts.opsec import git_push, prepublish
+        from lu_machinery.opsec import git_push, prepublish
     except Exception:
         print("OPSEC: message scanner unavailable; operation refused.", file=sys.stderr)
         return EXIT_REFUSED
