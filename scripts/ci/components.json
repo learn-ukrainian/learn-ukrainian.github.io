@@ -1215,10 +1215,7 @@
       "producer": "shared-core",
       "consumer": "open-model-data",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1226,10 +1223,7 @@
       "producer": "shared-core",
       "consumer": "atlas-data",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1237,10 +1231,7 @@
       "producer": "shared-core",
       "consumer": "atlas-frontend",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1248,10 +1239,7 @@
       "producer": "shared-core",
       "consumer": "practice-frontend",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1259,10 +1247,7 @@
       "producer": "shared-core",
       "consumer": "curriculum-generation",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1270,10 +1255,7 @@
       "producer": "shared-core",
       "consumer": "curriculum-display",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
@@ -1281,10 +1263,7 @@
       "producer": "shared-core",
       "consumer": "harness",
       "kind": "artifact",
-      "anchors": [
-        "scripts/storage/artifacts.py:251",
-        "scripts/storage/paths.py:105"
-      ],
+      "anchors": [],
       "resolved": true
     },
     {
