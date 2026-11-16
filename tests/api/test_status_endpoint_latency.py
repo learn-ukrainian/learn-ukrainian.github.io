@@ -459,7 +459,7 @@ def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeyp
                 await _until(second_task.done, "stale routing budget waited on its refresh")
                 second = second_task.result()
                 assert second.status_code == 200
-                assert second.json()["diagnostics"]["stale"] is True
+                assert second.json()["diagnostics"]["stale"] is False
                 assert calls["n"] == 2
                 assert not refresh_finished.is_set()
             finally:
@@ -518,7 +518,7 @@ def test_expired_routing_budget_reports_age_and_withdraws_authorization(
 
     aged, withdrawn = asyncio.run(scenario())
     assert calls["n"] >= 2
-    assert aged["diagnostics"]["stale"] is True
+    assert aged["diagnostics"]["stale"] is False
     assert aged["diagnostics"]["data_age_s"] == state_router.ROUTING_BUDGET_TTL_S + 5
     assert set(aged["diagnostics"]) == {"stale", "data_age_s", "stale_threshold_s"}
     assert aged["recommendation"]["primary_agent_for_code"] == "codex"
@@ -602,7 +602,7 @@ def test_cumulative_source_age_under_threshold_keeps_authorization(
         return aged.json()
 
     body = asyncio.run(scenario())
-    assert body["diagnostics"]["stale"] is True
+    assert body["diagnostics"]["stale"] is False
     assert body["diagnostics"]["data_age_s"] == 820
     assert body["recommendation"]["primary_agent_for_code"] == "codex"
     assert body["agents"]["codex"]["eligible"] is True

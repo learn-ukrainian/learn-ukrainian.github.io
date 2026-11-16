@@ -6,6 +6,7 @@
 # `build_registry` and the known-leak check fail when a cited issue is missing
 # here or is "closed", and when `checked_on` predates the renewal window of a
 # cited row (so every renewal must refresh these states).
-checked_on = "2026-09-24"
+checked_on = "2026-11-16"
 
 [issues]
+13082 = "open"
