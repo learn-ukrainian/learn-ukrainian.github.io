@@ -124,6 +124,8 @@ in [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
 PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.15
 pyenv local 3.12.15
 python -m venv .venv
+# Install the pinned lu-machinery release first (not on PyPI):
+# CONTRIBUTING.md, Installation, step 2.
 .venv/bin/pip install -r requirements.txt
 
 # 2. Frontend

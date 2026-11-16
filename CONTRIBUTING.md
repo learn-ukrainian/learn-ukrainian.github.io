@@ -40,6 +40,15 @@ cd learn-ukrainian.github.io
 PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.15
 pyenv local 3.12.15
 python -m venv .venv
+# The pinned lu-machinery release comes first: it is not on PyPI, and
+# packages/v4-runtime (in requirements.txt) depends on it. As in CI, the
+# lock's hashes decide which bytes install.
+version="$(sed -nE 's/^lu-machinery==([0-9.]+) \\$/\1/p' requirements-machinery.lock)"
+mkdir -p .venv/lu-machinery-wheelhouse
+curl -fsSL -o ".venv/lu-machinery-wheelhouse/lu_machinery-${version}-py3-none-any.whl" \
+  "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+.venv/bin/pip install --require-hashes --no-deps \
+  --find-links .venv/lu-machinery-wheelhouse -r requirements-machinery.lock
 .venv/bin/pip install -r requirements.txt
 
 # 3. Frontend

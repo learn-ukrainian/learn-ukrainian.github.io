@@ -23,6 +23,9 @@ pyenv exec python -m venv .venv
 .venv/bin/python -m pip install -r requirements-lock.txt
 ```
 
+Before the last command, install the pinned lu-machinery release, which is not on
+PyPI: [CONTRIBUTING.md, Installation, step 2](../../../CONTRIBUTING.md#installation).
+
 No provider credential is read. The commands below operate on local JSON or
 JSONL only. Teams that already have the repository environment can start with
 the trial.

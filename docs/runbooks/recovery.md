@@ -48,6 +48,13 @@ these examples in a dispatch worktree to repair the primary installation.
   pyenv local 3.12.15
   uv venv --python 3.12.15 .venv
   .venv/bin/python -m pip install --upgrade pip
+  # The pinned lu-machinery release first (not on PyPI; CONTRIBUTING.md, Installation, step 2).
+  version="$(sed -nE 's/^lu-machinery==([0-9.]+) \\$/\1/p' requirements-machinery.lock)"
+  mkdir -p .venv/lu-machinery-wheelhouse
+  curl -fsSL -o ".venv/lu-machinery-wheelhouse/lu_machinery-${version}-py3-none-any.whl" \
+    "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+  uv pip install --python .venv/bin/python --require-hashes --no-deps \
+    --find-links .venv/lu-machinery-wheelhouse -r requirements-machinery.lock
   uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
 )
 ```
