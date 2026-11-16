@@ -31,7 +31,7 @@ GATE_PATH = HOOK_DIR / "pre_push_gate.py"
 PYTHON = project_python()
 ZERO_SHA = "0" * 40
 # Agent sessions shim ``git`` and refuse the fixture's pushes to a disposable remote; use the real binary there.
-GIT = os.environ.get("AGENT_REAL_GIT") or shutil.which("git", path=os.defpath) or "git"
+GIT = shutil.which("git", path=os.defpath) or "git"
 
 # The repository-wide invariant registry the gate's test stage read before #11276: present, and ignored.
 REGISTRY = 'KNOWN_REPO_WIDE_MODULES = frozenset({"tests/test_invariant.py"})\nKNOWN_REPO_WIDE_FUNCTIONS = ()\n'
@@ -96,6 +96,7 @@ def _no_inherited_gate_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
+    env["AGENT_REAL_GIT"] = GIT  # disposable repositories never enter the task Git relay
     # Disposable repositories use their synthetic scanner, without delegating to the task broker.
     env.pop("LU_WRITE_BOUNDARY_BROKER", None)
     env.pop("PYTEST_ADDOPTS", None)
@@ -132,6 +133,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     remote = tmp_path / "remote.git"
     root.mkdir()
     monkeypatch.setenv("LEARN_UKRAINIAN_PRIMARY_REPO_ROOT", str(root))
+    monkeypatch.setenv("LU_PRODUCT_ROOT", str(root))
     subprocess.run([GIT, "init", "--bare", str(remote)], check=True, capture_output=True, timeout=60)
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.email", "gate@example.invalid")
@@ -4553,6 +4555,23 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
 
     accepted, output = _push(push_repo, "git-push")
     assert accepted, output
+    shim = push_repo / "lu_machinery/agent_runtime/shims/git"
+    shim.parent.mkdir(parents=True)
+    shutil.copy2(Path(str(files("lu_machinery").joinpath("agent_runtime/shims/git"))), shim)
+    library = push_repo / "lu_machinery/lib/project_interpreter.sh"
+    library.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(Path(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))), library)
+    _write(push_repo, "scripts/lib/project_interpreter.sh",
+           "#!/usr/bin/env bash\nsource " + shlex.quote(str(library)) + "\n")
+    _commit(push_repo, "install the agent push entry point",
+            "lu_machinery/agent_runtime/shims/git", "lu_machinery/lib/project_interpreter.sh",
+            "scripts/lib/project_interpreter.sh")
+    chained = subprocess.run(
+        [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
+        capture_output=True, text=True, timeout=60,
+    )
+    assert chained.returncode == 0, chained.stderr
+    assert chained.stderr.count("OPSEC: push scan:") == 1
     published = _remote_feature(push_repo)
 
     _write(push_repo, "docs/message.md", "safe file contents\n")
@@ -4566,6 +4585,14 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     assert f"commit[{flagged[:12]}].message" in output
     assert "rule=synthetic-rule" in output
     assert TOKEN not in output
+    chained = subprocess.run(
+        [str(shim), "push", "origin", "feature"], cwd=push_repo, env=_env(),
+        capture_output=True, text=True, timeout=60,
+    )
+    assert chained.returncode != 0
+    assert _remote_feature(push_repo) == published
+    assert f"commit[{flagged[:12]}].message" in chained.stderr
+    assert "rule=synthetic-rule" in chained.stderr and TOKEN not in chained.stderr
     message = push_repo / ".git/test-message"
     message.write_text("safe subject\n\n" + TOKEN, encoding="utf-8")
     refused = subprocess.run(
@@ -4576,7 +4603,6 @@ def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path
     assert "Reword the commit message" in refused.stderr
     assert "--no-verify" in refused.stderr and "caught at push" in refused.stderr
     assert TOKEN not in refused.stderr
-
 
 @pytest.mark.parametrize("path", PUSH_PATHS)
 def test_a_push_runs_no_tests_takes_no_slot_and_calls_no_selector(push_repo: Path, path: str) -> None:

@@ -1232,15 +1232,5 @@
       "sqlite3.connect(':memory:')",
       "sqlite3.connect(path)"
     ]
-  },
-  {
-    "path": "tests/test_store_resolver.py",
-    "reference_count": 1,
-    "kind": "fixture_factory",
-    "target_db": null,
-    "reason": "Synthetic SQLite factory for resolver read-binding tests (#9945).",
-    "calls": [
-      "sqlite3.connect(path)"
-    ]
   }
 ]

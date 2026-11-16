@@ -570,7 +570,6 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
     if _repo_rel(str(metafunc.definition.path)) in LAUNCHER_TEST_FILES:
         regression = metafunc.definition.nodeid in {node.split("[", 1)[0] for node in POLLUTED_PARENT_TESTS}
-        regression = regression or _repo_rel(str(metafunc.definition.path)) == "tests/test_launcher_env_hermetic.py"
         modes = ("clean", "polluted") if regression else ("clean",)
         metafunc.parametrize(
             "_launcher_parent_environment", modes, indirect=True,

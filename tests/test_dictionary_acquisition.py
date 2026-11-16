@@ -101,7 +101,7 @@ def test_acquisition_writer_has_no_protected_store_eligibility(acquisition_write
 def test_acquisition_admission_has_no_store_census_growth(path):
     source = (REPO / path).read_text()
     assert sqlite_lint.classify_store_source(source, path) == []
-    assert {entry for entry in sqlite_lint.baseline_entries() if entry.path == path} == set()
+    assert {entry for entry in sqlite_lint.baseline_entries(REPO / sqlite_lint.PRODUCT_BASELINE) if entry.path == path} == set()
 
 
 class Clock:
