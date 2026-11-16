@@ -62,7 +62,7 @@ flatbuffers==25.12.19
 frozenlist==1.8.0
 fsspec==2026.6.0
 ftfy==6.3.1
-google-auth==2.49.2
+google-auth==2.62.1
 google-genai==1.65.0
 graphql-core==3.3.1
 greenlet==3.5.6
