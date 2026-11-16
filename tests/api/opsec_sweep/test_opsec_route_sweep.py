@@ -58,10 +58,12 @@ pytestmark = pytest.mark.repo_invariant
 KNOWN_LEAKS_PATH = Path(__file__).with_name("known_leaks.toml")
 REPO_ROOT = Path(__file__).resolve().parents[3]
 # #8542's burn-down is complete: no production known-leak row should exist
-# (see known_leaks.toml's header). This sentinel id exists solely so
+# (see known_leaks.toml's header) except the temporary
+# "model-stats-contract-jsonl" row, which #13082 removes. The sentinel id
+# "opsec-sweep-test-row" exists solely so
 # test_known_leak_table_rejects_unmatched_dead_and_expired_rows can exercise
 # _validate_known_leaks without pointing at a real emitter regression.
-FROZEN_IDS = frozenset({"opsec-sweep-test-row"})
+FROZEN_IDS = frozenset({"opsec-sweep-test-row", "model-stats-contract-jsonl"})
 # No production approved exemption exists since the machinery pages left this
 # checkout (dashboards/work.html carried the only one). This sentinel id exists
 # solely so the exemption tests can exercise _validate_approved_exemptions.
