@@ -95,22 +95,80 @@ updates:
     # fully-pinned lock) lets Dependabot propose past their parent's pin,
     # producing structurally un-mergeable PRs. See issue #2716.
     ignore:
-      # pydantic pins pydantic-core exactly. Dependabot groups do not guarantee
-      # an atomic pair update, so block standalone core bumps. The install-
-      # integrity check tracked in #9061 must catch mismatched pins on pydantic bumps.
-      # Closed PR: #2540. Incomplete bump: #9033, #9045.
+      # Every package requirements-machinery.lock also pins. That lock is resolved
+      # with requirements-lock.txt as constraints (machinery docs/release.md,
+      # "Dependency lock"), so a bump here alone makes installing both locks
+      # unsatisfiable (#13086, #13087, #13088). These move only through a
+      # machinery release. Canonical names, sorted, no version filters: the
+      # "Check shared pins with the machinery lock" step of ci.yml fails when one
+      # is missing. pydantic and pydantic-core (#2540) and starlette (#2710) are
+      # in this list.
+      - dependency-name: "annotated-doc"
+      - dependency-name: "annotated-types"
+      - dependency-name: "anyio"
+      - dependency-name: "attrs"
+      - dependency-name: "blinker"
+      - dependency-name: "cffi"
+      - dependency-name: "cfgv"
+      - dependency-name: "click"
+      - dependency-name: "coverage"
+      - dependency-name: "cryptography"
+      - dependency-name: "distlib"
+      - dependency-name: "execnet"
+      - dependency-name: "fastapi"
+      - dependency-name: "filelock"
+      - dependency-name: "flask"
+      - dependency-name: "graphql-core"
+      - dependency-name: "h11"
+      - dependency-name: "httpcore2"
+      - dependency-name: "httpx2"
+      - dependency-name: "identify"
+      - dependency-name: "idna"
+      - dependency-name: "ijson"
+      - dependency-name: "iniconfig"
+      - dependency-name: "itsdangerous"
+      - dependency-name: "jinja2"
+      - dependency-name: "jsonschema"
+      - dependency-name: "jsonschema-specifications"
+      - dependency-name: "markdown-it-py"
+      - dependency-name: "markupsafe"
+      - dependency-name: "mcp"
+      - dependency-name: "mcp-types"
+      - dependency-name: "mdurl"
+      - dependency-name: "nodeenv"
+      - dependency-name: "opentelemetry-api"
+      - dependency-name: "packaging"
+      - dependency-name: "platformdirs"
+      - dependency-name: "pluggy"
+      - dependency-name: "pre-commit"
+      - dependency-name: "prometheus-client"
+      - dependency-name: "psutil"
+      - dependency-name: "psycopg"
+      - dependency-name: "psycopg-binary"
+      - dependency-name: "pycparser"
+      - dependency-name: "pydantic"
       - dependency-name: "pydantic-core"
+      - dependency-name: "pygments"
+      - dependency-name: "pyjwt"
+      - dependency-name: "pytest"
+      - dependency-name: "pytest-xdist"
+      - dependency-name: "python-discovery"
+      - dependency-name: "python-multipart"
+      - dependency-name: "pyyaml"
+      - dependency-name: "referencing"
+      - dependency-name: "rpds-py"
+      - dependency-name: "sse-starlette"
+      - dependency-name: "starlette"
+      - dependency-name: "truststore"
+      - dependency-name: "typing-extensions"
+      - dependency-name: "typing-inspection"
+      - dependency-name: "uvicorn"
+      - dependency-name: "virtualenv"
+      - dependency-name: "werkzeug"
       # pypdfium2 is exact-pinned by pdftext AND surya-ocr (both require
       # pypdfium2==4.30.0). A standalone bump (e.g. 4.30.0->5.9.0, #3359) breaks
       # the OCR/PDF stack; it moves only via a pdftext/surya-ocr bump. Full block.
       - dependency-name: "pypdfium2"
-      # starlette is capped by fastapi (fastapi==0.136.1 requires
-      # starlette<0.51.0); starlette 1.x makes the lock unresolvable by pip.
-      # Allow 0.50.x patches but block >=0.51 until a fastapi bump loosens the
-      # cap — REMOVE this entry when fastapi supports starlette 1.x. Closed
-      # PR: #2710.
-      - dependency-name: "starlette"
-        versions: [">=0.51.0"]
       # lxml is capped by inscriptis (inscriptis==2.7.1 requires lxml<6.1.0);
       # lxml 6.1.0 re-breaks the inscriptis import that #2732 fixed by pinning
       # down to 6.0.4 (#3282). Allow 6.0.x patches but block >=6.1.0 until
