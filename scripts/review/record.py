@@ -43,7 +43,7 @@ rejections is re-implemented), then:
 
 Identities are trusted, not self-reported: the reviewer's model and harness come from the dispatch
 record (``batch_state/tasks/<task-id>.json``), its family from the closeout resolver
-(``scripts.review.reviewer_resolver.resolve_author_family``), the writer's family from
+(``lu_machinery.review.reviewer_resolver.resolve_author_family``), the writer's family from
 ``lesson-<n>.writer.yaml`` through the same resolver. An unknown model or family fails closed: an
 unresolvable writer refuses the attempt (``writer_identity_unknown``, nothing recorded), and a first- or
 second-seat reviewer of the writer's own family is rejected (``same_family_review``, a REJECTED row).
@@ -54,7 +54,7 @@ A lesson attempt is also refused as **stale** when any file its manifest pins (f
 An attempt recorded with ``--seed-id`` (a seeded lesson ``seed-<id>``, or a measurement lesson meant to be clean
 ``clean-<id>``, R3) is kept apart: it never writes a verdict file, a budget or a settle item, and the fix loop never
 reads it. It is also refused unless its identities are established and independent
-(``scripts.review.seeds.manifest.check_attempt_identity``): the writer (from ``lesson-<n>.writer.yaml``), the
+(``lu_machinery.review.seeds.manifest.check_attempt_identity``): the writer (from ``lesson-<n>.writer.yaml``), the
 reviewer (from the dispatch record), and for a linguistic seed the planter and gold checker recorded in its scoring
 manifest, all as families the resolver confirms. Each violated rule is refused with its named code
 (``same_family_review``, ``planter_is_writer``, ``planter_is_reviewer``, ``gold_checker_is_planter``,

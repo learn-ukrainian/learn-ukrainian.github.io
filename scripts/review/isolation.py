@@ -2699,7 +2699,7 @@ def canonical_isolated_review_schema(changed_paths: Sequence[str]) -> dict[str, 
     Target identity remains parent-owned isolation evidence; reviewer output
     uses the repository-wide ``code-review-findings.v1`` contract unchanged.
     """
-    from scripts.review.review_contract import load_schema
+    from lu_machinery.review.review_contract import load_schema
 
     paths = list(dict.fromkeys(changed_paths))
     if not all(isinstance(path, str) and path for path in paths):
@@ -2728,7 +2728,7 @@ def transport_isolated_review_schema() -> dict[str, Any]:
     :func:`canonical_isolated_review_schema`. Embedding every changed path in
     one ``--json-schema`` argument can exceed the kernel's per-argument limit.
     """
-    from scripts.review.review_contract import load_schema
+    from lu_machinery.review.review_contract import load_schema
 
     schema = copy.deepcopy(load_schema())
     schema.pop("$schema", None)

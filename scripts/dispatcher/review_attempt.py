@@ -35,10 +35,10 @@ from scripts.dispatcher import store
 def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict:
     """Refuse a bound launch whose prompt, tools or pinned inputs do not match; return its review contract."""
     from lu_machinery.agent_runtime.review_mcp import check_review_contract, check_review_tool_requirements
+    from lu_machinery.review.product_hooks import attempt_hooks
+    from lu_machinery.review.render_contract import ReviewContractError
 
     from scripts.orchestration.worktree_claims import required_review_input_root
-    from scripts.review.product_hooks import attempt_hooks
-    from scripts.review.render_contract import ReviewContractError
 
     access = args.review_access or "isolated"
     if access == "full" and not args.full_checkout:
@@ -86,7 +86,7 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
 
 def _check_pins_at_commit(repo: Path, sha: str, manifest_path: Path) -> None:
     """Every manifest pin must hold the dispatch commit's bytes, before a worktree or record exists."""
-    from scripts.review.product_hooks import attempt_hooks
+    from lu_machinery.review.product_hooks import attempt_hooks
 
     for _, entry in attempt_hooks().pinned_entries(yaml.safe_load(manifest_path.read_bytes())):
         shown = subprocess.run(
@@ -115,6 +115,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     if scripts_dir not in sys.path:
         sys.path.insert(0, scripts_dir)
     from lu_machinery.agent_runtime.review_mcp import prepare_review_attempt, review_attempt_tool_config
+    from lu_machinery.review.product_hooks import attempt_hooks
 
     from scripts.agent_runtime import runner
     from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
@@ -125,14 +126,13 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         RateLimitedError,
     )
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.product_hooks import attempt_hooks
 
     ledger = attempt_hooks().ledger()
     binding, access = record["review_attempt"], record.get("review_access") or "isolated"
     manifest = Path(record["options"]["review_attempt"])
     workspace = Path(record["worktree_path"])
     unknown = dict(resolved_model="unknown", resolved_model_known=False, resolved_model_source="unobserved")
-    from scripts.review.language_lane import is_ukrainian_review
+    from lu_machinery.review.language_lane import is_ukrainian_review
 
     ukrainian = is_ukrainian_review(record)
     if ukrainian:
@@ -141,7 +141,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
         record.setdefault("unknown_items", 0)
         record.setdefault("dropped_claims", [])
     try:
-        from scripts.review.render_contract import check_rules_dependency
+        from lu_machinery.review.render_contract import check_rules_dependency
 
         contract = record.get("review_contract") or {}
         check_rules_dependency((contract.get("machinery_dependencies") or {}).get("rules_core"), prompt)
@@ -198,7 +198,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
     response_text = result.response if ok else None
     if ukrainian and ok and response_text:
-        from scripts.review.review_contract import ContractError, validate_ukrainian_reply_claims
+        from lu_machinery.review.review_contract import ContractError, validate_ukrainian_reply_claims
 
         try:
             response_text, validation = validate_ukrainian_reply_claims(

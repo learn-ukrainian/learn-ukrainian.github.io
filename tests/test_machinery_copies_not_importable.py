@@ -1,4 +1,4 @@
-"""Removed machinery copies stay out of the product tree (#13032 slices 3 to 5 and orchestration).
+"""Removed machinery copies stay out of the product tree (#13032 slices 3 to 5, orchestration and review).
 
 Defect class: a machinery module deleted from ``scripts/`` comes back, and product code
 imports that in-tree copy instead of the installed lu-machinery release, so the two drift.
@@ -10,7 +10,7 @@ import importlib.util
 
 import pytest
 
-# Slice 3 to 5 and orchestration-slice modules the product now takes from the installed release (or that the release retired).
+# Slice 3 to 5, orchestration- and review-slice modules the product now takes from the installed release (or that the release retired).
 REMOVED_COPIES = (
     "scripts.agent_runtime.acp_health",
     "scripts.agent_runtime.adapters._template",
@@ -122,6 +122,33 @@ REMOVED_COPIES = (
     "scripts.research.registry",
     "scripts.research.research_markdown_utils",
     "scripts.research.research_quality",
+    "scripts.review.app_bot_authorship",
+    "scripts.review.bench_health",
+    "scripts.review.capability_failure",
+    "scripts.review.capacity",
+    "scripts.review.closeout_cli",
+    "scripts.review.contract_canary",
+    "scripts.review.evidence",
+    "scripts.review.family_exclusions",
+    "scripts.review.findings",
+    "scripts.review.findings_db",
+    "scripts.review.language_lane",
+    "scripts.review.product_hooks",
+    "scripts.review.record_cf_verdict",
+    "scripts.review.render_contract",
+    "scripts.review.repair_round",
+    "scripts.review.review_contract",
+    "scripts.review.review_lineage",
+    "scripts.review.reviewer_resolver",
+    "scripts.review.reviewer_scheduler",
+    "scripts.review.role_resolution",
+    "scripts.review.scope_baseline",
+    "scripts.review.second_seat",
+    "scripts.review.seeds.manifest",
+    "scripts.review.seeds.score",
+    "scripts.review.target_resolution",
+    "scripts.review.ukrainian_seats",
+    "scripts.review.verdict_parser",
     "scripts.telemetry.cost_report",
     "scripts.telemetry.emit",
     "scripts.telemetry.legacy_bridge",

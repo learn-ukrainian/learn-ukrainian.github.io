@@ -2,7 +2,7 @@
 
 The dispatcher, the agent runtime and the review contract are machinery. They reach the product
 modules below only through this module, which they load by the name configured in
-``scripts/curriculum/review_hooks.v1.json`` (``scripts.review.product_hooks.attempt_hooks``).
+``scripts/curriculum/review_hooks.v1.json`` (``lu_machinery.review.product_hooks.attempt_hooks``).
 Each function imports its product module when it is called, as the callers did before, so loading
 this module imports nothing else: ``scripts.build.fresh.manifest`` reaches numpy, and a worker that
 holds review slots must not import it (``scripts.dispatcher.worker._load_bound_review_code``).

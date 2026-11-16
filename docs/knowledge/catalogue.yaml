@@ -2325,7 +2325,8 @@ store_registry:
       activity: active
       presence: present
       family: review-findings
-      writers: [scripts/review/findings_db.py:connect]
+      writers: []
+      writer_note: "Written by the installed lu-machinery release (lu_machinery.review.findings_db.connect, busy timeout 30000 ms); no tracked product file writes it since #13032."
       journal: delete
       busy_ms: 30000
       busy_source: explicit
@@ -2889,12 +2890,13 @@ store_registry:
       retention: Benchmark fixture generated on demand.
   families:
     - id: review-findings
-      path_rule: batch_state/review-findings/<level>.sqlite (scripts/review/findings_db.py db_path)
+      path_rule: batch_state/review-findings/<level>.sqlite (lu_machinery.review.findings_db db_path)
       glob: batch_state/review-findings/*.sqlite
       example: batch_state/review-findings/a1.sqlite
       owner: core-quality
       kind: operational
-      writers: [scripts/review/findings_db.py:connect]
+      writers: []
+      writer_note: "Written by the installed lu-machinery release (lu_machinery.review.findings_db.connect, busy timeout 30000 ms); no tracked product file writes it since #13032."
       journal: delete
       busy_ms: 30000
       busy_source: explicit

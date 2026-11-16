@@ -1,7 +1,7 @@
 # Review-loop parameters (#8430, work package R2b-A). One place for every number the
 # review contract leaves to the operator or the driver; nothing here is baked into code.
 # Each parameter carries the date it was decided and where the decision is recorded.
-# Loaded and validated by scripts/review/findings_db.py (load_parameters).
+# Loaded and validated by lu_machinery/review/findings_db.py (load_parameters).
 parameters_schema: 1
 
 # Operator decision 5 (2026-09-21): a second seat of another family reviews 1 lesson in

@@ -29,7 +29,6 @@ READERS = (
     "scripts/fleet_comms/efficiency_metrics.py",
     "scripts/fleet_comms/legacy_broker_report.py",
     "scripts/orchestration/task_family/codex_state.py",
-    "scripts/review/seeds/score.py",
 )
 # Product readers (scripts/review/integration_check.py and scripts/verification/{bench_check_text,
 # check_text,verify_antonenko_citations,vesum}.py) import the installed lu_machinery release

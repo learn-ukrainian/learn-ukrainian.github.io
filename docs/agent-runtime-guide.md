@@ -1168,7 +1168,7 @@ unavailable. The retained rendering and MCP helpers define the following
 contract for their other callers. A bound review seat runs the Sources MCP server from the primary
 checkout, but its prompt may have been rendered in any checkout. The two must
 come from the same code, so the check binds the prompt to the checkout that
-rendered it (`scripts/review/render_contract.py`):
+rendered it (`lu_machinery/review/render_contract.py`):
 
 - **Render time.** `scripts/review/prompts/render.py --output <prompt>` writes a
   `render_contract` record into `<prompt>.files_read.json`: the render checkout,

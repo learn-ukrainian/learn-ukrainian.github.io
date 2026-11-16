@@ -461,7 +461,7 @@ def main(argv: list[str] | None = None) -> int:
             "with full first-parent history and an origin remote.\n"
             "Outputs: one line per member PR on stdout, ::error:: annotations; fetches missing commits, no other writes.\n"
             "Exit codes: 0 every member approved; 1 a member unapproved or the candidate unverifiable; 2 invalid arguments.\n"
-            "Related: .github/workflows/ci.yml (CI Gate); docs/runbooks/ci-gate.md; scripts/review/record_cf_verdict.py."
+            "Related: .github/workflows/ci.yml (CI Gate); docs/runbooks/ci-gate.md; lu_machinery/review/record_cf_verdict.py."
         ),
     )
     parser.add_argument("--event-file", help="merge_group event JSON; default: $GITHUB_EVENT_PATH")

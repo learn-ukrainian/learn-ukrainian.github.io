@@ -48,7 +48,7 @@ from lu_machinery.agent_runtime.retired_seat_admission import (
 from .deepseek_admission import refuse_deepseek_if_disallowed
 
 if TYPE_CHECKING:
-    from scripts.fleet.claude_account_lane import ClaudeAccount
+    from lu_machinery.fleet.claude_account_lane import ClaudeAccount
 
 
 def refuse_disallowed_targets(
@@ -329,7 +329,7 @@ def resolve_and_admit(
     is admitted (#10733). Other admissions make no claude reading and may omit it.
     """
     if claude_account is not None:
-        from scripts.fleet.claude_account_lane import require_account
+        from lu_machinery.fleet.claude_account_lane import require_account
 
         require_account(claude_account)
     elif new_dispatch or review_dispatch:
@@ -367,7 +367,7 @@ def resolve_and_admit(
     if review_mode == "red_team" and not review_dispatch:
         raise ReviewAdmissionRefused("RED_TEAM_REFUSED: red_team requires a review dispatch")
     if review_mode == "red_team":
-        from scripts.review.language_lane import is_ukrainian_review
+        from lu_machinery.review.language_lane import is_ukrainian_review
 
         if is_ukrainian_review({**gate, "review_profile": review_profile, "task_family": task_family}) or str(
             gate.get("research_track") or ""
@@ -387,7 +387,7 @@ def resolve_and_admit(
     else:
         initial_snapshot = review_initial_snapshot
     if review_mode == "red_team":
-        from scripts.review.reviewer_resolver import normalize_routing_snapshot
+        from lu_machinery.review.reviewer_resolver import normalize_routing_snapshot
 
         try:
             normalize_routing_snapshot(initial_snapshot)
@@ -653,10 +653,9 @@ def _resolve_review_target(
     claude lane on it, and the resolver excludes claude seats on an
     unresolved one (``ResolverInputs.claude_account``).
     """
-    from scripts.fleet.claude_account_lane import lane_record, select_account
-    from scripts.review.capacity import review_capacity_action
-    from scripts.review.model_catalog import load_model_catalog, risk_reviewer_refusal
-    from scripts.review.reviewer_resolver import (
+    from lu_machinery.fleet.claude_account_lane import lane_record, select_account
+    from lu_machinery.review.capacity import review_capacity_action
+    from lu_machinery.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
         REVIEW_LADDERS,
         UNKNOWN_AUTHOR_FAMILY,
@@ -670,6 +669,8 @@ def _resolve_review_target(
         resolve_reviewer,
         review_task_id_comparison_keys,
     )
+
+    from scripts.review.model_catalog import load_model_catalog, risk_reviewer_refusal
     from scripts.review.security_paths import effective_review_risk
     from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
@@ -704,7 +705,7 @@ def _resolve_review_target(
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
     if review_mode == "cross_family" and profile in {"code", "infra"} and facts is not None and facts.mixed_family:
-        from scripts.review.record_cf_verdict import RecordError
+        from lu_machinery.review.record_cf_verdict import RecordError
 
         try:
             scope = facts.reviewer_scope(family)
@@ -785,7 +786,9 @@ def _resolve_review_target(
     if review_mode == "red_team":
         # Preserve the existing whole-branch precedence probes, rather than resolving a pair here.
         inputs = replace(inputs, author_commits=())
-    author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
+    author_family: str | None = (
+        resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
+    )
     if (
         trusted
         and author_model

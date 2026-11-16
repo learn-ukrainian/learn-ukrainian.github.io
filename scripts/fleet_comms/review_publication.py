@@ -45,7 +45,7 @@ _VERDICT_LINE_RE = re.compile(
 )
 
 # A verdict a reviewer states inside a structured reply's explanation. This is
-# the prose verdict-line grammar (``scripts/review/verdict_parser.py``
+# the prose verdict-line grammar (``lu_machinery/review/verdict_parser.py``
 # ``_REVIEW_VERDICT_LINE_RE``, Markdown emphasis and code spans included),
 # unanchored, because explanation prose states it mid-line.
 _STATED_VERDICT_RE = re.compile(
@@ -348,7 +348,7 @@ def parse_review_evidence(payload: Mapping[str, Any]) -> ReviewEvidence | None:
         return None
 
     try:
-        from scripts.review.review_contract import ContractError, validate_reviewer_payload
+        from lu_machinery.review.review_contract import ContractError, validate_reviewer_payload
 
         validated = validate_reviewer_payload(canonical)
     except ContractError as exc:

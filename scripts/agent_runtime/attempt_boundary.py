@@ -1102,8 +1102,9 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
     schema. A re-review additionally admits exactly previous review, previous
     ledger and diff. No file referred to by an input's contents is opened.
     """
+    from lu_machinery.review.product_hooks import attempt_hooks
+
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.product_hooks import attempt_hooks
 
     hooks = attempt_hooks()
     if manifest.get("kind") not in {"plan", "lesson", "lexical"}:
@@ -1517,8 +1518,9 @@ def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
     A separate review tree is allowed only when its pinned bytes match. Other
     repository files are context, never evidence without a sources receipt.
     """
+    from lu_machinery.review.product_hooks import attempt_hooks
+
     from scripts.review.isolation import ReviewIsolationError
-    from scripts.review.product_hooks import attempt_hooks
 
     hooks = attempt_hooks()
     try:

@@ -13,7 +13,7 @@ from collections.abc import Iterable
 from fnmatch import fnmatchcase
 from pathlib import Path
 
-from scripts.review.target_resolution import TargetResolutionError, _run_git
+from lu_machinery.review.target_resolution import TargetResolutionError, _run_git
 
 # Machinery files are matched by their checkout-relative paths, which start with the
 # machinery package's directory name: the one Git, owned paths and the catalog use, taken

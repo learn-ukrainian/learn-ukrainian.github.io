@@ -126,7 +126,7 @@ def _missing_checkout_error(repo: FleetRepo, supplied_key: str | None, detail: s
     which names the checkout path.
     """
     if repo.key == "infra-private" and supplied_key != repo.key:
-        from scripts.review.target_resolution import PRIVATE_REVIEW_TARGET_UNRESOLVED
+        from lu_machinery.review.target_resolution import PRIVATE_REVIEW_TARGET_UNRESOLVED
 
         return MissingFleetCheckout(PRIVATE_REVIEW_TARGET_UNRESOLVED)
     return MissingFleetCheckout(detail)

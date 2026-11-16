@@ -26,7 +26,7 @@ if __name__ == "__main__":
     raise SystemExit(package_main())
 
 if TYPE_CHECKING:
-    from scripts.review.role_resolution import RoleResolution
+    from lu_machinery.review.role_resolution import RoleResolution
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 PROJECT_ROOT = CATALOG_PATH.parents[2]
@@ -123,8 +123,9 @@ CURSOR_NO_APPROVED_PIN_CODE = "cursor_no_approved_model_pin"
 CURSOR_FORMAL_REVIEW_EXCLUDED_FAMILIES = frozenset({"moonshot", "google", "deepseek", "anthropic"})
 
 
-class ModelCatalogError(ValueError):
-    """The model catalog is missing or violates its structural contract."""
+# One class with the release: role validation now runs in lu_machinery.review.role_resolution,
+# so a second ModelCatalogError would escape every caller that catches this module's (#13032).
+from lu_machinery.review.model_catalog import ModelCatalogError
 
 
 def _require_mapping(value: Any, label: str) -> dict[str, Any]:
@@ -693,7 +694,7 @@ def _validate_ukrainian_seat_catalog(models: Mapping[str, Any]) -> None:
 
     Eligible families come from ``ukrainian_seats``.
     """
-    from scripts.review.ukrainian_seats import UKRAINIAN_SEAT_FAMILIES
+    from lu_machinery.review.ukrainian_seats import UKRAINIAN_SEAT_FAMILIES
 
     held: set[str] = set()
     for model_id, model in models.items():
@@ -725,7 +726,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             f"schema_version must be one of {sorted(SUPPORTED_SCHEMA_VERSIONS)!r}, got {catalog.get('schema_version')!r}"
         )
 
-    from scripts.review.role_resolution import expand_routing_references
+    from lu_machinery.review.role_resolution import expand_routing_references
 
     catalog = expand_routing_references(catalog)
     reviewed_on = catalog.get("reviewed_on")
@@ -1004,7 +1005,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             seen_models.update(rung_models)
     _validate_usage_pools(catalog.get("usage_pools"))
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
-    from scripts.review.role_resolution import validate_role_catalog
+    from lu_machinery.review.role_resolution import validate_role_catalog
 
     validate_role_catalog(catalog)
     _validate_ukrainian_seat_catalog(catalog["models"])
@@ -1017,7 +1018,7 @@ def resolve_role(
     context: dict[str, Any] | None = None, health: dict[str, Any] | None = None,
 ) -> RoleResolution:
     """Shared Python/shell API for additive routing roles; never launch a process."""
-    from scripts.review.role_resolution import resolve_role as resolve
+    from lu_machinery.review.role_resolution import resolve_role as resolve
 
     return resolve(role, catalog=catalog, purpose=purpose, transport=transport,
                    family=family, context=context, health=health)

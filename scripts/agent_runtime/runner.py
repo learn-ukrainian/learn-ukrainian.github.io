@@ -3555,8 +3555,9 @@ def _prepare_rules_core(
     if delivery is not RulesCoreDelivery.BOUND:
         raise RulesCoreDeliveryError("runtime rules delivery must be INJECT or admitted BOUND")
 
+    from lu_machinery.review.render_contract import check_rules_dependency, recorded_core_context
+
     from scripts.dispatcher import store
-    from scripts.review.render_contract import check_rules_dependency, recorded_core_context
 
     try:
         if not task_id:

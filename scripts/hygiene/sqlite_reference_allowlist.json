@@ -919,16 +919,6 @@
     ]
   },
   {
-    "path": "scripts/review/findings_db.py",
-    "reference_count": 42,
-    "kind": "writer",
-    "target_db": "review findings DB",
-    "reason": "persists review findings and dispositions",
-    "calls": [
-      "sqlite3.connect(path, timeout=30, isolation_level=None)"
-    ]
-  },
-  {
     "path": "scripts/vocab/auto_vocab_extract.py",
     "reference_count": 1,
     "kind": "writer",

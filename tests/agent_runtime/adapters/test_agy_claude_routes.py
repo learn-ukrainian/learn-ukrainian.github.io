@@ -7,10 +7,10 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from lu_machinery.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 
 from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.claude_route_accounts import HOST_ACCOUNT
 

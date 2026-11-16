@@ -372,7 +372,7 @@ eligible cross-family review: changing that adapter excludes Claude reviewers
 because it governs their own boundary. A Claude Opus worker owns the follow-up
 PR, reviewed by `gpt-6.1-sol`.
 
-At high and critical risk the automatic bench (`scripts.review.bench_health`,
+At high and critical risk the automatic bench (`lu_machinery.review.bench_health`,
 #9394) accepts a single automatic cross-family reviewer for Anthropic-authored
 code (`openai_frontier`) and OpenAI-authored code (`claude-opus-5-5`) under
 #9423 AC-02. High is limited to Sol/Opus by #9538; critical by the catalog's

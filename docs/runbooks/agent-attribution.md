@@ -135,7 +135,7 @@ setting; only the merge-group check proves what actually lands.
 
 A commit with no line is exempt only when GitHub's REST commit object for that exact
 SHA (`GET repos/{repo}/commits/{sha}`) passes
-`scripts.review.app_bot_authorship.verified_app_bot_login`: allowlisted account, `Bot`
+`lu_machinery.review.app_bot_authorship.verified_app_bot_login`: allowlisted account, `Bot`
 type, matching Git author, created and signed by `web-flow`. A Git author name or a
 `[bot]` suffix proves nothing, and an API failure is "not proven". In a merge group a
 landed commit with no line is exempt only when every commit of its PR is verified; a PR

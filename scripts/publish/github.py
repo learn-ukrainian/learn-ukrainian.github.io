@@ -171,7 +171,7 @@ WORKFLOWS = frozenset({
     "coverage-ref.yml",
 })
 # The merge-queue reader trusts review-verdict markers from the shared fleet login, so
-# only scripts/review/record_cf_verdict.py may write them (#11127). Comment fields
+# only lu_machinery/review/record_cf_verdict.py may write them (#11127). Comment fields
 # refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
 CF_VERDICT_MARKER_PREFIX = "<!-- cf-verdict"
 COMMENT_FIELDS = {
@@ -555,7 +555,7 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     status alone is unverifiable. A PR whose files change learner content takes its
     Ukrainian seats even with no Ukrainian verdict recorded yet (#12181). A change to the
     review output contract is refused until its canary evidence covers every reviewer route
-    (``scripts.review.contract_canary``, #12399).
+    (``lu_machinery.review.contract_canary``, #12399).
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
     from scripts.orchestration.integration_sweep import (
@@ -605,8 +605,7 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked(
             f"OPSEC: merge refused: no cross-family APPROVE from {_RECORDER} is recorded at {head}."
         )
-    from scripts.review import contract_canary
-
+    from lu_machinery.review import contract_canary
     # A review-contract change also needs live canary evidence on every reviewer route (#12399).
     if (canary := contract_canary.refusal(paths, head)) is not None:
         raise gate.PublishBlocked(f"OPSEC: merge refused: {contract_canary.REASON}: {canary}.")

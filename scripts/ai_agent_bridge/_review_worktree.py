@@ -37,16 +37,19 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.common import github_client
-from scripts.common.repo_root import project_interpreter
-from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
-from scripts.review.evidence import (
+from lu_machinery.review.evidence import (
     OUTCOME_LINE_MISMATCH,
     OUTCOME_VERIFIED,
     expected_end_line_for_quote,
     split_lines_preserve_content,
     verify_finding_evidence,
 )
+from lu_machinery.review.review_contract import ContractError, validate_reviewer_payload
+from lu_machinery.review.target_resolution import ReviewTarget as CanonicalReviewTarget
+
+from scripts.common import github_client
+from scripts.common.repo_root import project_interpreter
+from scripts.orchestration.task_identity import DEFAULT_REPOSITORY
 from scripts.review.isolation import (
     ISOLATION_POLICY_VERSION,
     REVIEW_TEMP_ROOT_MANIFEST_NAME,
@@ -64,7 +67,6 @@ from scripts.review.isolation import (
     secret_like_findings,
     sweep_review_temp_orphans,
 )
-from scripts.review.review_contract import ContractError, validate_reviewer_payload
 from scripts.review.snapshot import (
     ReviewSnapshot,
     ReviewSnapshotError,
@@ -74,7 +76,6 @@ from scripts.review.snapshot import (
     resolve_head_identity,
     verify_review_acceptance,
 )
-from scripts.review.target_resolution import ReviewTarget as CanonicalReviewTarget
 
 DEFAULT_COMMAND_TIMEOUT_SECONDS: float = 60.0
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0

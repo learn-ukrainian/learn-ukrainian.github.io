@@ -1,6 +1,6 @@
 """The fix loop (#8430 r4): layer assignment, budgets, dependency closure, the module verdict.
 
-Reads the findings database (``scripts.review.findings_db``), the engine's provenance file
+Reads the findings database (``lu_machinery.review.findings_db``), the engine's provenance file
 ``lesson-<n>.provenance.yaml`` and closure file ``module.closure.yaml``, and prints a
 report for the driver. It performs no repair and takes no automatic branch:
 

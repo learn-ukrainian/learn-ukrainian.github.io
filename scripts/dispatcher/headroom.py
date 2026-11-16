@@ -7,9 +7,10 @@ mirrors runner.invoke's pre-call has_headroom check. Neither selects a route.
 
 import logging
 
+from lu_machinery.fleet import claude_account_lane
+
 from scripts.agent_runtime import model_pause, usage
 from scripts.agent_runtime.errors import RateLimitedError
-from scripts.fleet import claude_account_lane
 
 
 def check_plan(agent: str, model: str, record: dict, *, review: bool = False) -> None:

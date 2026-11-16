@@ -10,6 +10,7 @@ import unicodedata
 from collections.abc import Mapping
 
 from lu_machinery.agent_runtime.read_only_tmp import dispatch_lease
+from lu_machinery.review.product_hooks import attempt_hooks
 
 from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.adapters.codex_events import classify_provider_message
@@ -17,7 +18,6 @@ from scripts.agent_runtime.attempt_safe_read import safe_read_attempt_file
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.providers.stream_json import SOURCES_SERVER
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
-from scripts.review.product_hooks import attempt_hooks
 
 
 @functools.cache

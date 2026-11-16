@@ -1,6 +1,6 @@
 # Automatic review-round budget per target repository (#12584).
 #
-# The verdict recorder (scripts/review/record_cf_verdict.py) counts the review
+# The verdict recorder (lu_machinery/review/record_cf_verdict.py) counts the review
 # rounds of one PR against a budget. A repository whose own review policy sets
 # a different automatic budget is listed here by its GitHub owner/name, with
 # `review_rounds` an integer from 1 to 5 and `basis` naming that policy.

@@ -49,9 +49,9 @@ from typing import TYPE_CHECKING, Any
 
 from lu_machinery.agent_runtime.read_only_tmp import validate_read_only_tmp_root
 from lu_machinery.agent_runtime.sources_read_only import sources_tool_sets
+from lu_machinery.review.product_hooks import attempt_hooks
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
-from scripts.review.product_hooks import attempt_hooks
 from scripts.secret_redactor import redact_text
 
 from ..result import ParseResult

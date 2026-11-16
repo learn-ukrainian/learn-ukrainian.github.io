@@ -1204,9 +1204,10 @@ def refresh_current_baseline():
     """Recapture the existing cases with frozen time, no live usage, and no dispatches."""
     from functools import partial
 
+    from lu_machinery.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+    from lu_machinery.review.role_resolution import expanded_legacy_view
+
     from scripts.fleet import credit_lane
-    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
-    from scripts.review.role_resolution import expanded_legacy_view
     from tests.claude_route_accounts import HOST_ACCOUNT
 
     capture = deepcopy(_V2_BASELINE)

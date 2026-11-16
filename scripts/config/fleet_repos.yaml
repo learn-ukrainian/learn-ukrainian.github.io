@@ -11,13 +11,13 @@
 # `worktree_registry` (optional) names the repository's own worktree registry; see kube-dojo.
 #
 # `verdict_recorder` (required, boolean) says whether the repository's PRs carry
-# review verdicts from scripts/review/record_cf_verdict.py. When true,
+# review verdicts from lu_machinery/review/record_cf_verdict.py. When true,
 # `python -m scripts.publish pr-merge` refuses a head without a recorded
 # exact-head cross-family APPROVE; when false, a head with no recorded verdict
 # keeps the publisher's older behaviour.
 #
 # `required_workflow` (optional) is the workflow file whose failed PR or merge-queue run is the CI
-# evidence for a repair-verification review round (scripts/review/repair_round.py); default
+# evidence for a repair-verification review round (lu_machinery/review/repair_round.py); default
 # `.github/workflows/ci.yml`.
 
 version: 1

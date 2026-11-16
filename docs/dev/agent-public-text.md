@@ -236,7 +236,7 @@ posting searches at the exact head.
 | `lu_machinery/orchestration/dispatch_settle.py` | Explicit PR creation |
 | `scripts/audit/check_decisions.py` | Label and issue creation |
 | `scripts/audit/check_review_issues.py`, `scripts/verify_review.py` | Issue comments and close |
-| `scripts/review/record_cf_verdict.py` | Verdict comments with JSON response |
+| `lu_machinery/review/record_cf_verdict.py` | Verdict comments with JSON response |
 | `scripts/fleet_comms/review_publisher.py` | PR comments and exact-head commit status |
 | `lu_machinery/orchestration/task_closeout.py` | Issue body edits, close, squash merge |
 | `lu_machinery/orchestration/merge_queue_keeper.py` | Comments, issue creation, merge/disarm/dequeue |
@@ -261,7 +261,7 @@ any transport. A ready merge pins the observed head with `--match-head-commit`.
 The hook recognises the publisher command and uses the same readiness parser.
 
 `pr-merge` also reads the head's recorded review verdicts
-(`scripts/review/record_cf_verdict.py`). A rejection, an incomplete seat set or
+(`lu_machinery/review/record_cf_verdict.py`). A rejection, an incomplete seat set or
 unverifiable evidence refuses the merge. Each row of
 `scripts/config/fleet_repos.yaml` sets `verdict_recorder`: where it is `true`, a
 head with no recorded exact-head cross-family APPROVE is refused too; where it

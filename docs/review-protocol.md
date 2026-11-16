@@ -116,7 +116,7 @@ still shows the old text block to this JSON contract.
 
 ## Exact-target verification
 
-Bind verification to one explicit mode from `scripts.review.target_resolution`
+Bind verification to one explicit mode from `lu_machinery.review.target_resolution`
 (PR #5286 foundation — do not invent a parallel target API):
 
 | Mode | Meaning |
@@ -230,11 +230,11 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
 # The recorder emits behavior_proof.schema_version = behavior-proof.v1 and
 # derives `claim` from `--intended-behavior`; it does not accept a separate
 # behavior-surface field.
-.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+.venv/bin/python -m lu_machinery.review.closeout_cli --state-file "$STATE_FILE" \
   behavior-proof record --surface source_aware --status pass \
   --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
   --exit-code 0 --observation 'help rendered' --evidence-ref 'terminal:proof-aware'
-.venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \
+.venv/bin/python -m lu_machinery.review.closeout_cli --state-file "$STATE_FILE" \
   behavior-proof record --surface source_blind --status pass \
   --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
   --exit-code 0 --observation 'help rendered as a user' --evidence-ref 'terminal:proof-blind'
@@ -351,7 +351,7 @@ Multi-finding validation order is deterministic: sort by
 
 ## Universal review loop
 
-1. Freeze scope and resolve the exact target (`scripts.review.closeout_cli` /
+1. Freeze scope and resolve the exact target (`lu_machinery.review.closeout_cli` /
    `target_resolution`).
 2. **Emit target manifest** (`--emit-target-manifest`) and record
    `input_sha256` (+ head when applicable).
@@ -371,7 +371,7 @@ Multi-finding validation order is deterministic: sort by
 ## Changing this contract
 
 A change to the review output contract (the paths in
-`scripts/review/contract_canary.py` `CONTRACT_PATHS`) cannot be queued until a live
+`lu_machinery/review/contract_canary.py` `CONTRACT_PATHS`) cannot be queued until a live
 read-only canary review on every required reviewer route settles `done` with a canonical
 receipt on its exact head, under the candidate's dispatcher. The keeper and `pr-merge`
 refuse it with `needs-contract-canary` until then. Canary evidence is never a review of

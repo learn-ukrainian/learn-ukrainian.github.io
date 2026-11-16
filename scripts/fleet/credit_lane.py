@@ -1392,7 +1392,7 @@ def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | Non
     raw = read_routing_budget()
     if raw is None:
         return None
-    from scripts.fleet.claude_account_lane import bind_snapshot, no_claude_account, other_lane_record
+    from lu_machinery.fleet.claude_account_lane import bind_snapshot, no_claude_account, other_lane_record
 
     # A credit lane is one no Claude account owns: the snapshot is bound to no account where it
     # enters, and the claude lane is never read without its account (#10630, #10770).
