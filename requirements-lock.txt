@@ -79,7 +79,7 @@ httpx2==2.16.0
 huggingface_hub==1.29.0
 humanfriendly==10.0
 hyperframe==6.1.0
-identify==2.6.20
+identify==2.6.19
 idna==3.20
 ifaddr==0.2.0
 ijson==3.6.0
@@ -140,7 +140,7 @@ pip==26.2.1
 pillow==13.0.0
 platformdirs==4.11.11
 playwright==1.64.1
-pluggy==1.7.0
+pluggy==1.6.0
 portalocker==4.4.1
 pre_commit==4.6.0
 prometheus-client==0.26.0
@@ -162,7 +162,7 @@ pydantic_core==2.46.5
 pydantic-settings==2.15.0
 pyee==13.0.1
 Pygments==2.21.0
-PyJWT==2.15.1
+PyJWT==2.15.0
 pymorphy2==0.9.1
 pymorphy2-dicts-ru==2.4.417127.4579844
 pymorphy2-dicts-uk==2.4.1.1.1460299261
