@@ -1586,29 +1586,15 @@ def _checkout_relative(relative: str) -> str:
 
 
 def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
-    """Reject local alias maps so all Kimi surfaces stay catalog-backed."""
+    """Reject a local alias map in the KimiCC route helper so it stays catalog-backed."""
     route_helper = _checkout_relative("lib/kimicc_route.sh")
-    adapter_file = _checkout_relative("agent_runtime/adapters/kimi.py")
-    consumers = {
-        route_helper: ("--resolve-kimi-model", "--format kimicc"),
-        adapter_file: ("kimi_model_aliases()",),
-    }
-    for relative_path, required_snippets in consumers.items():
-        path = project_root / relative_path
-        try:
-            source = path.read_text(encoding="utf-8")
-        except OSError as exc:
-            raise ModelCatalogError(f"cannot read Kimi alias consumer {relative_path}: {exc}") from exc
-        missing = [snippet for snippet in required_snippets if snippet not in source]
-        if missing:
-            raise ModelCatalogError(
-                f"{relative_path} must resolve Kimi aliases through model_catalog.yaml; missing {missing}"
-            )
-
-    adapter = (project_root / adapter_file).read_text(encoding="utf-8")
-    if "KIMI_MODEL_ALIASES: dict[str, str] = {" in adapter:
-        raise ModelCatalogError("KimiAdapter contains a local Kimi alias map")
-    kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
+    try:
+        kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ModelCatalogError(f"cannot read Kimi alias consumer {route_helper}: {exc}") from exc
+    missing = [snippet for snippet in ("--resolve-kimi-model", "--format kimicc") if snippet not in kimicc_helper]
+    if missing:
+        raise ModelCatalogError(f"{route_helper} must resolve Kimi aliases through model_catalog.yaml; missing {missing}")
     if 'case "$MODEL_ALIAS"' in kimicc_helper:
         raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
 

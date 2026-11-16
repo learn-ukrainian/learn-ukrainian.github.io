@@ -113,7 +113,6 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
-    "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",

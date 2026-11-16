@@ -216,9 +216,6 @@ def _deepseek_catalog_identity(model: str | None) -> str | None:
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     if _is_acp_shadow_identity(agent_name, plan):
         return _metadata_text(plan, "model") or _arg_after(plan.cmd, "-m", "--model") or _NOT_EXPOSED
-    if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
-        alias = plan.metadata.get("kimicc_alias")
-        return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
     if agent_name == "deepseek":
         return _deepseek_catalog_identity(_arg_after(plan.cmd, "--model"))
     return _arg_after(plan.cmd, "-m", "--model")
@@ -242,37 +239,7 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return None
     if agent_name == "deepseek":
         return _arg_after(plan.cmd, "--variant")
-    if agent_name == "kimi":
-        if plan.metadata.get("harness") == "kimicc":
-            return _arg_after(plan.cmd, "--effort") or (
-                "high" if plan.metadata.get("kimicc_alias") == "k3" else _NOT_EXPOSED
-            )
-        # K3 is always-max; the k2.7 coding models expose no effort knob.
-        # Read the resolved model off the plan so telemetry never mislabels
-        # an ignored caller request as effective (#5326 multi-model lane).
-        return "max" if _arg_after(plan.cmd, "-m") == "kimi-code/k3" else _NOT_EXPOSED
     return None
-
-
-def _kimicc_alias(requested_model: str | None) -> str | None:
-    """Resolve the KimiCC route alias the harness would run for a request.
-
-    An omitted model uses the catalog kimicc default (``kimi-code/k3`` today).
-    Telemetry reports that route's ``kimicc_alias``, the same label recorded
-    after spawn, rather than the native ``k3-256k`` default.
-    """
-    from scripts.review.model_catalog import ModelCatalogError, resolve_kimi_model
-
-    from .adapters.kimicc import KimiccHarness
-
-    candidate = (requested_model or KimiccHarness.default_model).strip()
-    try:
-        _, route = resolve_kimi_model(candidate)
-    except ModelCatalogError:
-        # An unresolvable request fails later at adapter build time; report
-        # the raw candidate here so telemetry never invents an alias.
-        return candidate
-    return route.get("kimicc_alias")
 
 
 def _resolve_model_from_defaults(
@@ -281,10 +248,6 @@ def _resolve_model_from_defaults(
     *,
     harness: str | None = None,
 ) -> str | None:
-    if agent_name == "kimi" and harness == "kimicc":
-        # Same alias the harness writes onto the plan, so dispatch-time and
-        # after-spawn labels agree for an omitted model.
-        return _kimicc_alias(requested_model)
     if agent_name == "deepseek" and requested_model:
         return _deepseek_catalog_identity(requested_model)
     if requested_model:
@@ -329,19 +292,6 @@ def _resolve_effort_from_defaults(
     if _is_acp_shadow_identity(agent_name):
         return requested_effort or _NOT_EXPOSED
     if agent_name in {"agy", "cursor", "gemini"}:
-        return _NOT_EXPOSED
-    if agent_name == "kimi":
-        if harness == "kimicc":
-            if requested_effort:
-                return requested_effort
-            # Gate the default on the requested model exactly like
-            # KimiccHarness.build_invocation does: only the full-k3 route
-            # gets an implicit --effort high. The omitted-model kimicc pin
-            # is that route; k2.7 runs with no effort flag.
-            return "high" if _kimicc_alias(requested_model) == "k3" else _NOT_EXPOSED
-        # Without a plan the resolved model is unknowable (K3 is always-max,
-        # the k2.7 models expose no effort knob) — report the honest marker
-        # rather than guessing.
         return _NOT_EXPOSED
     if requested_effort:
         return requested_effort
@@ -510,11 +460,6 @@ def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",), cwd: str | N
     return _probe_version_at(resolved_prefix, cwd)
 
 
-@lru_cache(maxsize=8)
-def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",), cwd: str | None = None) -> str | None:
-    return _probe_version_at(prefix, cwd)
-
-
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
     probe_cwd = str(plan.cwd) if plan is not None else None
     if agent_name == "muse":
@@ -549,22 +494,6 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "cursor":
         prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
         return cursor_cli_version(prefix, probe_cwd)
-    if agent_name == "kimi":
-        if plan is not None and plan.metadata.get("harness") == "kimicc":
-            claude_bin = plan.metadata.get("claude_bin")
-            prefix = (str(claude_bin),) if isinstance(claude_bin, str) and claude_bin else ("claude",)
-            return claude_cli_version(prefix, probe_cwd)
-        if plan is not None and plan.cmd:
-            bin_path = plan.cmd[0]
-        else:
-            try:
-                from .adapters.kimi import _resolve_kimi_binary
-
-                bin_path = _resolve_kimi_binary()
-            except Exception:
-                bin_path = "kimi"
-        prefix = (bin_path,)
-        return kimi_cli_version(prefix, probe_cwd)
     from lu_machinery.agent_identity import is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
@@ -655,4 +584,3 @@ def _reset_version_cache_for_tests() -> None:
     claude_cli_version.cache_clear()
     agy_cli_version.cache_clear()
     cursor_cli_version.cache_clear()
-    kimi_cli_version.cache_clear()

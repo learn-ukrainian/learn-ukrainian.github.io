@@ -730,7 +730,8 @@ def _invoke_thread(
         requested_model = PRO_MODEL
     # The seat and the model the thread's deliveries pin are admitted together,
     # before any reply telemetry or invocation.
-    from agent_runtime.kimi_admission import ACP_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE
+
     from agent_runtime.target_admission import resolve_and_admit
 
     (target,) = resolve_and_admit((agent,), mode=ACP_MODE, model=requested_model)
@@ -828,7 +829,8 @@ def _invoke_gemini_thread_with_fallback(
         mode=mode,
     )
 
-    from agent_runtime.kimi_admission import ACP_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE
+
     from agent_runtime.target_admission import resolve_and_admit
 
     while True:
@@ -914,7 +916,8 @@ def run_inbox(
 
     # Inbox replies are consults and discussions; a Kimi inbox is refused
     # before any claim, lease, telemetry or delivery write.
-    from agent_runtime.kimi_admission import ACP_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE
+
     from agent_runtime.target_admission import resolve_and_admit
 
     resolve_and_admit((agent,), mode=ACP_MODE)

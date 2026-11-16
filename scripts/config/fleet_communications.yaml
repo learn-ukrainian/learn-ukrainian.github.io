@@ -108,7 +108,7 @@ endpoints:
     # Kimi models are retired (OO-58, #11327). The participant record stays so a
     # refusal can name the seat. Dispatch refuses every Kimi id. Requests,
     # ACP asks, consults, discussion panels and reviews are still refused by
-    # scripts/agent_runtime/kimi_admission.py before that catalog refusal.
+    # the retired-seat admission gate before that catalog refusal.
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: cursor
