@@ -1667,7 +1667,7 @@ def _primary_artifact_path(group: str, rel: str) -> Path:
     from lu_machinery.guardrails.worktree_containment import resolve_main_root
     from lu_machinery.storage.paths import find_entry, verify_file
 
-    entry = find_entry(group, rel)
+    entry = find_entry(group, rel, repo=_REPO_ROOT)
     artifact = resolve_main_root(_REPO_ROOT) / "data" / rel
     verify_file(artifact, entry, group=group, rel=rel)
     return artifact
@@ -3180,15 +3180,15 @@ def pytest_runtest_setup(item: pytest.Item) -> None:
     if marker is not None:
         if len(marker.args) != 2 or marker.kwargs:
             raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
-        from lu_machinery.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+        from lu_machinery.storage.paths import MissingArtifactError, find_entry, verify_file
 
         group, rel = marker.args
         try:
             if "data_artifact_factory" in getattr(item, "fixturenames", ()):
                 _primary_artifact_path(group, rel)
             else:
-                entry = find_entry(group, rel)
-                verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
+                entry = find_entry(group, rel, repo=_REPO_ROOT)
+                verify_file(_REPO_ROOT / "data" / rel, entry, group=group, rel=rel)
         except MissingArtifactError as error:
             detail = error.detail.casefold()
             if detail == "missing" or "manifest missing" in detail or "no unique manifest entry" in detail:

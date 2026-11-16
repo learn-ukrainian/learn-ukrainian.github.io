@@ -150,7 +150,7 @@ def _set(path: str, **fields):
 MUTATIONS = {
     'backup fact contradicts the allowlist': (
         _set('batch_state/tasks/write-ownership.sqlite3', backup='keep', protection_gap=DROP),
-        "backup is 'keep' but scripts/config/backup-allowlist.json gives 'none'"),
+        f"backup is 'keep' but {sc.ALLOWLIST_PATH} gives 'none'"),
     'protection below the nightly': (_set('data/atlas.db', protection='rebuild'), 'backup reduction'),
     'keep without a recorded gap': (_set('batch_state/review-findings/a1.sqlite', protection_gap=DROP),
                                     'needs protection_gap'),

@@ -155,9 +155,6 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     fixture_python.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     fixture_python.chmod(0o755)
     _write(root, ".gitignore", "/.venv/\n")
-    from tests.githooks import install_message_scanner
-
-    install_message_scanner(root)
     _install_surface_scanners(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
@@ -304,6 +301,10 @@ def test_nothing_outgoing_is_accepted_without_running_a_stage(repo: Path) -> Non
     ids=["auto-finalize-form", "worker-head-form"],
 )
 def test_real_git_push_through_the_tracked_hook(repo: Path, push_args: tuple[str, ...], tmp_path: Path) -> None:
+    from tests.githooks import install_message_scanner
+
+    install_message_scanner(repo)
+    _commit(repo, "install scanner fixture", "lu_machinery")
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     lfs = bin_dir / "git-lfs"
@@ -4454,6 +4455,9 @@ def _tripwire(name: str, log: Path) -> str:
 @pytest.fixture
 def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
     """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
+    from tests.githooks import install_message_scanner
+
+    install_message_scanner(repo)
     log = tmp_path / "tripwire.log"
     for relative, name in TRIPWIRES.items():
         _write(repo, relative, _tripwire(name, log))

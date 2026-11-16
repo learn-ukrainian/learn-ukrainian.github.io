@@ -583,14 +583,24 @@ def test_the_adjudicate_module_help_runs_under_dash_m(tmp_path: Path) -> None:
 
 
 def _worktree_copy_of(repo_root: Path, tmp_path: Path) -> Path:
-    """A plain (non-git) copy of just the ``scripts/`` tree, standing in for a worktree checkout.
+    """A plain checkout of the product CLI with its product dependencies.
 
     Sufficient here: the regression under test (``ModuleNotFoundError: agent_runtime`` under
     ``python -m``) is entirely about ``sys.path`` resolution within ``scripts/``, never about repo
     content outside it — ``--help`` never reads ``SCHEMAS`` or anything else under the repo root.
     """
     dest = tmp_path / "worktree-copy"
-    shutil.copytree(repo_root / "scripts", dest / "scripts")
+    for relative in ("__init__.py", "review/record.py", "review/fixloop.py", "review/seeds/adjudicate.py"):
+        target = dest / "scripts" / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(repo_root / "scripts" / relative, target)
+    # These trees are product-owned. Machinery dependencies come from the
+    # installed release, rather than a second copy of the scripts tree.
+    for relative in (
+        "audit", "build", "curriculum", "level_config.py", "lexicon", "practice", "rag",
+        "review/digest", "review/receipts", "review/validate", "verification", "wiki",
+    ):
+        (dest / "scripts" / relative).symlink_to(repo_root / "scripts" / relative)
     return dest
 
 

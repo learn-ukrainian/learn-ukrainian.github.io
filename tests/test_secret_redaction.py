@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 
 import pytest
-from lu_machinery.agent_runtime import env_sanitize
 
 from tests.launcher_sandbox import launcher_environment
 
@@ -213,7 +212,7 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
         "#!/bin/sh\n"
         'case "$1" in\n'
         f"scripts/agent_runtime/env_sanitize.py) shift; exec {shlex.quote(sys.executable)} "
-        f'{shlex.quote(str(Path(env_sanitize.__file__)))} "$@" ;;\n'
+        '-m lu_machinery.agent_runtime.env_sanitize "$@" ;;\n'
         f'*) exec {shlex.quote(sys.executable)} "$@" ;;\nesac\n',
         encoding="utf-8",
     )
