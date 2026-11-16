@@ -17,7 +17,7 @@ name still identifies the same runtime.
 
 ```bash
 .venv/bin/python scripts/dispatch.py status
-.venv/bin/python -m scripts.ops.lane_relaunch --dry-run
+.venv/bin/python -m lu_machinery.ops.lane_relaunch --dry-run
 ```
 
 ### Host-specific wrappers and accounts
@@ -51,7 +51,7 @@ All checks must pass before the upgrade starts:
 - Record present-tense operator approval for this maintenance window.
 
 ```bash
-.venv/bin/python scripts/gh_merge_queue_status.py '<pr-number>' --json
+.venv/bin/python -m lu_machinery.gh_merge_queue_status '<pr-number>' --json
 ./scripts/backup-data.sh doctor
 ```
 
@@ -81,7 +81,7 @@ access. An incomplete upgrade or lost recovery access blocks the reboot.
 7. Verify the context guard's sanitized result for every lane:
 
    ```bash
-   .venv/bin/python -m scripts.ops.context_guard tick
+   .venv/bin/python -m lu_machinery.ops.context_guard tick
    ```
 
 8. Each lane drains its inbox and re-arms the waits recorded in its handoff.

@@ -11,9 +11,9 @@ operator contract, safety requirements, or delivery gates.
 ### Start with a bounded orientation packet
 
 Use the task-prescribed project interpreter with
-`-m scripts.driver_state packet --epic <lane>` and `--recipient` for the assigned Fleet recipient's unconsumed order IDs. The
-[packet CLI](../../scripts/driver_state.py) calls `render_packet` in
-[orientation_packet.py](../../scripts/orientation_packet.py). The packet contains
+`-m lu_machinery.driver_state packet --epic <lane>` and `--recipient` for the assigned Fleet recipient's unconsumed order IDs. The
+[packet CLI](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/driver_state.py) calls `render_packet` in
+[orientation_packet.py](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orientation_packet.py). The packet contains
 goals, next steps, holds, stops, order IDs, session metadata, source locators, and
 freshness. It is an orientation view, not a replacement for its canonical sources.
 
@@ -22,9 +22,9 @@ notes, to 16,384 UTF-8 bytes. Oversized content is shortened or omitted with
 `complete: false` and retrieval locators. Open PRs and live workers appear as
 source locators with unknown freshness rather than fabricated live results. See
 `build_packet`, `_fit`, and `render_packet` in
-[orientation_packet.py](../../scripts/orientation_packet.py).
+[orientation_packet.py](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orientation_packet.py).
 
-The separate [cold-start board](../../scripts/fleet_comms/cold_start_board.py)
+The separate [cold-start board](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/cold_start_board.py)
 uses `MAX_BOARD_BYTES` and `build_cold_start_board` to bound its serialized JSON
 to 16 KiB. It caps strings and lists and marks truncation. These are limits on
 specific outputs, not a universal context or token cap. Neither a bounded board
@@ -67,7 +67,7 @@ definitively confirmed (such as on network timeouts, interrupted turns, or
 missing acknowledgments), retain an explicit uncertain-delivery state for subsequent
 reconciliation rather than assuming success or dropping the event. Reconcile this
 state using existing Fleet authority and receipts
-([fleet_comms](../../scripts/fleet_comms/__init__.py)) rather than introducing a
+([fleet_comms](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/__init__.py)) rather than introducing a
 separate bookmark store or secondary state machine. This guidance describes
 target cursor semantics and does not claim that current Fleet automation already
 implements automatic cursor progression.
@@ -91,10 +91,10 @@ It is a target contract, not a claim that every harness implements it:
 - If the revision or persistence evidence is missing, return to the full bounded
   snapshot. Do not infer continuity from a provider label or a prior success.
 
-The [packet implementation](../../scripts/orientation_packet.py) exposes a session
+The [packet implementation](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orientation_packet.py) exposes a session
 hash and freshness, but those fields alone do not confirm the consuming session's
 revision or prove injection persistence. The
-[current driver-state CLI](../../scripts/driver_state.py) provides the packet
+[current driver-state CLI](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/driver_state.py) provides the packet
 reader. A validated-update interface remains an approved target here, not a
 verified implemented command. This documentation does not add that interface.
 
@@ -203,9 +203,9 @@ and does not authorize paid qualification runs.
 ## Measurement and budgets
 
 The [cold-start measurement tool](../../scripts/ai_agent_bridge/measure_cold_start.py)
-and [transcript token parser](../../scripts/api/telemetry/transcript_tokens.py)
+and [transcript token parser](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/telemetry/transcript_tokens.py)
 measure different things. Keep the following quantities separate. The
-[context-cost baseline definitions](../runbooks/context-cost-baseline.md#frozen-definitions),
+[context-cost baseline definitions](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/context-cost-baseline.md#frozen-definitions),
 including their superseding amendments, govern stored-session accounting.
 
 | Quantity | Meaning and evidence |
@@ -217,7 +217,7 @@ including their superseding amendments, govern stored-session accounting.
 | Peak occupancy | The largest observed per-call context occupancy over a stated interval. Neither cumulative usage nor a first-turn sample establishes the session peak. |
 
 For Claude transcript usage, `usage_input_tokens` in the
-[token parser](../../scripts/api/telemetry/transcript_tokens.py) sums input,
+[token parser](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/telemetry/transcript_tokens.py) sums input,
 cache-read input, and cache-creation input for the latest main `message` iteration
 when one exists in `iterations`. Otherwise it uses the top-level usage sum.
 The main-iteration selection excludes advisor-only passes from that context total.
@@ -238,7 +238,7 @@ Missing telemetry stays unknown, never zero or a passing result, under
 Use only the session's documented identity and transcript under the
 [lease and identity invariants](../../agents_extensions/shared/rules/core.md#unconditional-invariants).
 Report coverage and unknown reasons when aggregating, following the
-[baseline amendments](../runbooks/context-cost-baseline.md#amendment-1).
+[baseline amendments](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/context-cost-baseline.md#amendment-1).
 
 Budget targets are targets. They do not prove feasibility, savings, or task
 success. Resolve capacity for the actual model and runtime as described in the

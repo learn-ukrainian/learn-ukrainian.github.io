@@ -44,7 +44,7 @@ from pathlib import Path
 
 # Executed by the hook as a file, so imports do not depend on the hook's cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from scripts.opsec import prepublish as gate
+from lu_machinery.opsec import prepublish as gate
 
 # The hooks directory the shim pins; chain runs the caller's own hook of a name.
 HOOKS = Path(__file__).resolve().parent / "push_hooks"
@@ -336,7 +336,7 @@ class CanonicalPublicRepository:
         """
         self.calls += 1
         try:
-            from scripts.publish.github import read
+            from lu_machinery.publish.github import read
 
             result = read(
                 "default-head",

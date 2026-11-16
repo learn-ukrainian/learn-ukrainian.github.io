@@ -120,6 +120,8 @@ def test_installed_release_runs_a_driver_launch_helper_chain_without_a_provider(
         f'exec {shlex.quote(sys.executable)} -I {shlex.quote(str(audit))} {shlex.quote(str(children))} "$@"\n'
     )
     interpreter.chmod(0o755)
+    env["LEARN_UKRAINIAN_PYTHON"] = str(interpreter)
+    env["LU_PRODUCT_ROOT"] = str(root)
 
     result = subprocess.run(
         ["bash", str(root / WRAPPER), "--epic", "devops", "--model", "claude-sonnet-5-5", "--effort", "high"],

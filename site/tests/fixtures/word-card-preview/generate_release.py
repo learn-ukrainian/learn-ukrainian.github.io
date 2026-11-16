@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 PRODUCER_COMMIT = "7d4680686862d4ef2a66870a883aed6583bd64f7"
-PRODUCER_SHA256 = "6fe2cbbb791acabe05c54a3e1df61d0110b73e43356ae838c3bee3526b933da5"
+PRODUCER_SHA256 = "f17747b443e3f3da1e02293fac0cb26c0811db58480b0206a055ec94aecb6fa4"
 FROZEN_SOURCE = Path(__file__).with_name("producer_dataset_projection.py")
 
 

@@ -818,7 +818,8 @@ def invoke_bridge_route(
             task_id,
             [
                 ".venv/bin/python",
-                "scripts/ai_agent_bridge/__main__.py",
+                "-m",
+                "lu_machinery.ai_agent_bridge",
                 "ask-agy",
                 "-",
                 "--task-id",

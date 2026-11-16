@@ -15,11 +15,11 @@ export LEARN_UK_PRIMARY_HEAL_DISABLE=1
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SELF="${BASH_SOURCE[0]}"
-PYTHON_BIN="$REPO_ROOT/.venv/bin/python"
+PYTHON_BIN="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$REPO_ROOT}/.venv/bin/python}"
 # The hooks under test are the installed lu-machinery release's (#13032).
 RELEASE_HOOKS="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path
 print(machinery_path("agents_extensions/shared/hooks"))')"
-THREAD_HANDOFF_PY="$REPO_ROOT/scripts/orchestration/thread_handoff.py"
+THREAD_HANDOFF_PY="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("orchestration/thread_handoff.py"))')"
 RELEASE_HOOK="$RELEASE_HOOKS/release-thread-lease.sh"
 STOP_HOOK="$RELEASE_HOOKS/goal-driver-stop.sh"
 
@@ -73,7 +73,7 @@ PYEOF
 
 __scenario_stop_hook_advances_heartbeat_without_generation_env() {
   local root="$1" agent="$2" session_id="$3"
-  "$PYTHON_BIN" "$THREAD_HANDOFF_PY" --repo-root "$root" \
+  "$PYTHON_BIN" -m lu_machinery.orchestration.thread_handoff --repo-root "$root" \
     claim-thread-lease --agent "$agent" --current-thread-id "$session_id" >/dev/null
 
   rewind_heartbeat "$(lease_file_path "$root" "$agent")"
@@ -89,7 +89,7 @@ __scenario_stop_hook_advances_heartbeat_without_generation_env() {
 
 __scenario_release_hook_tombstones_without_generation_env() {
   local root="$1" agent="$2" session_id="$3"
-  "$PYTHON_BIN" "$THREAD_HANDOFF_PY" --repo-root "$root" \
+  "$PYTHON_BIN" -m lu_machinery.orchestration.thread_handoff --repo-root "$root" \
     claim-thread-lease --agent "$agent" --current-thread-id "$session_id" >/dev/null
 
   printf '%s' "{\"session_id\":\"$session_id\"}" | \
@@ -298,7 +298,7 @@ import os, sys
 root = sys.argv[1]
 sys.path.insert(0, os.environ.get("REPO_ROOT_FOR_PROBE", "."))
 import importlib.util
-spec = importlib.util.spec_from_file_location("sr_probe", os.path.join(os.environ["REPO_ROOT_FOR_PROBE"], "scripts/lib/session_record.py"))
+spec = importlib.util.spec_from_file_location("sr_probe", __import__("lu_machinery.common.repo_root", fromlist=["machinery_path"]).machinery_path("lib/session_record.py"))
 sr = importlib.util.module_from_spec(spec); spec.loader.exec_module(sr)
 print("module file:", sr.__file__)
 print("has fd walker:", hasattr(sr, "_open_sessions_dir_fd"))

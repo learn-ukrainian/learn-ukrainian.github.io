@@ -52,7 +52,7 @@ Non-trivial issues must carry the **task-quality pack** (DoR before dispatch,
 DoD before close): see [`task-quality.md`](task-quality.md). Advisory check:
 
 ```bash
-.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
+.venv/bin/python -m lu_machinery.ci.check_issue_task_quality --issue N
 ```
 
 A good issue has:
@@ -101,7 +101,7 @@ Never abandon or half-close. For partly done work, move the rest to a named issu
 For example, the CTO closes a duplicate with:
 
 ```bash
-.venv/bin/python -m scripts.publish issue-close --number N --reason "not planned" --comment "Duplicate of #M ..."
+.venv/bin/python -m lu_machinery.publish issue-close --number N --reason "not planned" --comment "Duplicate of #M ..."
 ```
 
 ---
@@ -147,19 +147,19 @@ gh issue list --label area:content --state open
 
 1. User assigns → agent claims:
    ```bash
-   .venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "working:{agent}"
-   .venv/bin/python -m scripts.publish issue-comment --number {N} --body "Starting: [brief plan]"
+   .venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels "working:{agent}"
+   .venv/bin/python -m lu_machinery.publish issue-comment --number {N} --body "Starting: [brief plan]"
    ```
 
 2. Agent completes → removes working label:
    ```bash
-   .venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels "working:{agent}"
-   .venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "review:human"  # or review:{agent}
+   .venv/bin/python -m lu_machinery.publish issue-edit --number {N} --remove-labels "working:{agent}"
+   .venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels "review:human"  # or review:{agent}
    ```
 
 3. Work done, no review needed:
    ```bash
-   .venv/bin/python -m scripts.publish issue-close --number {N} --comment "Done: [what was done]"
+   .venv/bin/python -m lu_machinery.publish issue-close --number {N} --comment "Done: [what was done]"
    ```
 
 ---
@@ -188,15 +188,15 @@ When handing off to another agent:
 
 ```bash
 # Post content on the issue
-.venv/bin/python -m scripts.publish issue-comment --number {N} --body "[full review/spec/request]"
+.venv/bin/python -m lu_machinery.publish issue-comment --number {N} --body "[full review/spec/request]"
 
 # Ping AGY
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy \
   "New task posted on #N. Please read and start." \
   --task-id issue-N --to-model gemini-3.8-flash-high
 
 # Ping Codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex \
   "New task posted on #N. Please read and start." --task-id issue-N
 ```
 
@@ -216,7 +216,7 @@ Never put the substantive request in the broker message. The issue is the source
 
 ## GitHub API Rate Limiting
 
-The `gh` CLI shares the GitHub REST API budget (5000 req/hr authenticated). Heavy issue-hygiene loops — bulk `gh issue list` / `gh issue view` / `.venv/bin/python -m scripts.publish issue-comment --number <N>` across many issues — can drain it.
+The `gh` CLI shares the GitHub REST API budget (5000 req/hr authenticated). Heavy issue-hygiene loops — bulk `gh issue list` / `gh issue view` / `.venv/bin/python -m lu_machinery.publish issue-comment --number <N>` across many issues — can drain it.
 
 **Claude Code 2.1.116+** surfaces a rate-limit hint from the Bash tool when `gh` hits the limit. When you see it:
 

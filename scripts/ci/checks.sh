@@ -87,7 +87,7 @@ check "Atlas manifest freshness" .venv/bin/python scripts/lexicon/check_manifest
 check "Atlas manifest enrichment" .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
 check "Static practice assets" .venv/bin/python scripts/audit/check_static_practice_assets.py
 check "Bug autopsy fields and INDEX" .venv/bin/python scripts/audit/check_postmortems.py --check
-check "Validate BIO preparation capsules and active holds" .venv/bin/python -m scripts.ci.bio_preparation_gate
+check "Validate BIO preparation capsules and active holds" .venv/bin/python -m lu_machinery.ci.bio_preparation_gate
 
 if [ "${#failed[@]}" -gt 0 ]; then
   printf 'Failed checks:\n'

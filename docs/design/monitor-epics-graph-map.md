@@ -19,14 +19,14 @@ epic's live status (lease/session/last-decision), and a click-through to the iss
 The issue names three sources as sufficient for v1. Verifying each against the actual code before
 designing on top of it:
 
-1. **`scripts/config/issue_streams.yaml`** — 13 streams, 18 epic slots, **last updated
+1. **`lu_machinery/config/issue_streams.yaml`** — 13 streams, 18 epic slots, **last updated
    2026-08-23** (`cf3553e226`, registered the monitor stream itself). This is the area/stream SSOT
    this design uses (see §2.1 for why the alternative registry is rejected for v1).
 2. **`GET /api/epics/v1`** (`scripts/api/epics_router.py:526`) — per-stream rows: `stream_id`,
    registry fields, `lease`, `session_state`, `last_state`/`last_decision`/`last_next_action`.
    Already the exact per-epic status source `dashboards/epics.html` uses today; this design adds
    to the same router rather than inventing a second epic-status path.
-3. **GitHub issue graph** — `scripts/orchestration/issue_stream_audit.py` already has
+3. **GitHub issue graph** — `lu_machinery/orchestration/issue_stream_audit.py` already has
    `fetch_epic_membership(epic)` (native sub-issues via GraphQL + `#N` body-ref fallback) and
    `fetch_open_issues()` (all open issue numbers/titles), plus a **rate-limit-aware refresh state
    machine** (`schedule_refresh` / `read_refresh_state` / file-lock + background worker,
@@ -35,7 +35,7 @@ designing on top of it:
 
 ### 2.1 A second area registry exists — `fleet_taxonomy.yaml` — and it is stale; not used for v1
 
-`scripts/config/fleet_taxonomy.yaml` is a **separate**, coarser area registry (`resolve_area()` in
+`lu_machinery/config/fleet_taxonomy.yaml` is a **separate**, coarser area registry (`resolve_area()` in
 `scripts/orchestration/fleet_taxonomy.py`, consumed by `work_router.py`'s `/api/work/v1/projection`
 for per-item area tagging). It groups several `issue_streams.yaml` streams under one "area" id
 (e.g. `atlas` area = `atlas-practice` + `atlas-intake` streams). It looked like a plausible reuse
@@ -69,7 +69,7 @@ change with its own blast radius.
 
 ### 4.1 Endpoint: `GET /api/epics/graph/v1`
 
-Lives in the existing `scripts/api/epics_router.py` (mount prefix `/api/epics`), **not** a new
+Lives in the existing `lu_machinery/api/epics_router.py` (mount prefix `/api/epics`), **not** a new
 router module — it shares the same store dependency (`_store()`) as every other `/api/epics/*`
 route and needs no root/store the router doesn't already have. This keeps the OPSEC seam count
 and #7269's inventory (§5.2 of the app-factory doc, in flight in parallel) unaffected by this

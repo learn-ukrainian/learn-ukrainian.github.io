@@ -11,7 +11,7 @@ and `http://localhost:8765/redoc` (ReDoc).
 
 **Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every dashboard page).
 
-This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/**` and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/**` and `scripts/project_api/**` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `lu_machinery/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
 ## Code layout: machinery and product halves (C-4687)
 
@@ -27,8 +27,8 @@ for the operator and for agents.
   sources, site, wiki, batch, atlas jobs, `/api/comms/batch-progress*`,
   `/api/telemetry/module-builds*`, `/api/config` and `/images/*`.
 - **The one product entry** — `scripts/curriculum/monitor_paths.v1.json` names
-  `product_api` (`scripts.project_api.entry`). `scripts/api/product_contribution.py`
-  imports it through `scripts.ops.product_entry.load_configured_module(name,
+  `product_api` (`scripts.project_api.entry`). `lu_machinery/api/product_contribution.py`
+  imports it through `lu_machinery.ops.product_entry.load_configured_module(name,
   product_root=...)` and calls `build_api(context)`. The returned
   contribution carries the product routers (mounted ahead of the machinery
   routers, with the static catch-all last), the explicit static-file map,
@@ -55,8 +55,8 @@ Agents learn the Ops API from **live HTTP surfaces**, not from the HTML pages
 | 4 | `GET /docs` / `GET /openapi.json` | Interactive + OpenAPI **Ops API 2.0.0** |
 | 5 | This file (`docs/MONITOR-API.md`) | Human narrative reference |
 
-Python helper: `scripts/ai_agent_bridge/monitor_client.py` (`MonitorClient().bootstrap()`).
-Seat/process onboarding (harness, ownership): [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+Python helper: `lu_machinery/ai_agent_bridge/monitor_client.py` (`MonitorClient().bootstrap()`).
+Seat/process onboarding (harness, ownership): [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 After any API behavior change that agents must observe (caching, timeouts,
 schema, retirement), update **all three**: OpenAPI description / `route_contracts.py`
@@ -68,7 +68,7 @@ Versioning is intentional and multi-layer. Do not collapse them into one number.
 
 ### 1. Application version — `2.0.0`
 
-Set on the FastAPI app (`scripts/api/main.py`). Exposed identically by:
+Set on the FastAPI app (`lu_machinery/api/main.py`). Exposed identically by:
 
 - `GET /api/health` → `version`
 - `GET /api/config` → `api_version`
@@ -128,7 +128,7 @@ Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation onl
 
 ## Fleet facade — `/api/fleet/facade`
 
-This thin, read-only namespace makes the existing `python -m scripts.fleet_comms fleet …` seat-facing surfaces available to Monitor clients. It does not introduce a message bus, write to the Fleet Comms plane, retrieve message bodies, or expose reaper apply mode.
+This thin, read-only namespace makes the existing `python -m lu_machinery.fleet_comms fleet …` seat-facing surfaces available to Monitor clients. It does not introduce a message bus, write to the Fleet Comms plane, retrieve message bodies, or expose reaper apply mode.
 
 | Method | Path | Existing source |
 | --- | --- | --- |
@@ -241,7 +241,7 @@ real dashboards publish it verbatim. The fixture proves those seams are wired
 before scanning. Socket and subprocess seams are denied, so a new route
 cannot quietly make a live network, SSH, Git, or child-process call.
 
-[`scripts/api/opsec_scan.py`](../scripts/api/opsec_scan.py) is the shared
+[`lu_machinery/api/opsec_scan.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/opsec_scan.py) is the shared
 scanner. It reports operation and field-path provenance while scanning JSON or
 text bodies, every response-header value, and `_telemetry` independently. It
 recognizes IPv4/IPv6 (including ports), bounded absolute filesystem roots,
@@ -250,7 +250,7 @@ canaries. It exempts SHA values, RFC3339 timestamps, `epic:<N>` identifiers,
 `/api/...` route strings, and ISO durations. The committed positive/negative
 corpus protects those boundaries.
 
-[`scripts/api/opsec_sanitize.py`](../scripts/api/opsec_sanitize.py) is the
+[`lu_machinery/api/opsec_sanitize.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/opsec_sanitize.py) is the
 route-wide rewriter. `create_app` wraps JSON responses so any remaining
 absolute filesystem-root token is replaced with the opaque placeholder
 `[redacted-path]` before the body leaves the process. The sanitizer reuses the
@@ -355,8 +355,8 @@ Agents should keep a small on-disk cache keyed by manifest hash
 (`.agent/cache/monitor/*.body`). When the manifest's hash matches
 what you cached, skip the payload fetch entirely — the bytes are
 still authoritative. A ready-to-use helper lives at
-``scripts/ai_agent_bridge/_monitor_cache.py``; the client SDK
-(``scripts/ai_agent_bridge/monitor_client.py``) will wrap this in P3.
+``lu_machinery/ai_agent_bridge/_monitor_cache.py``; the client SDK
+(``lu_machinery/ai_agent_bridge/monitor_client.py``) will wrap this in P3.
 
 ---
 
@@ -364,7 +364,7 @@ still authoritative. A ready-to-use helper lives at
 
 Access log formats that reference uvicorn-only fields like
 `%(client_addr)s`, `%(request_line)s`, or `%(status_code)s` must declare
-`"()": "uvicorn.logging.AccessFormatter"` in `scripts/api/logging.json`.
+`"()": "uvicorn.logging.AccessFormatter"` in `lu_machinery/api/logging.json`.
 Python's default `logging.Formatter` does not populate those fields and
 will raise during response logging. See uvicorn's
 [`AccessFormatter`](https://github.com/encode/uvicorn/blob/master/uvicorn/logging.py)
@@ -392,7 +392,7 @@ Sample response:
 }
 ```
 
-For live agent progress from the channel bridge, Monitor can consume the event stream directly: `Monitor(command=".venv/bin/python scripts/ai_agent_bridge/__main__.py channel watch <thread_id> --follow --event-stream", ...)`. The watch command replays historical events first, then keeps streaming line-buffered JSONL for `reply_started`, `heartbeat`, `reply_complete`, and delivery outcome events as the inbox worker updates the thread.
+For live agent progress from the channel bridge, Monitor can consume the event stream directly: `Monitor(command=".venv/bin/python -m lu_machinery.ai_agent_bridge channel watch <thread_id> --follow --event-stream", ...)`. The watch command replays historical events first, then keeps streaming line-buffered JSONL for `reply_started`, `heartbeat`, `reply_complete`, and delivery outcome events as the inbox worker updates the thread.
 
 Related MCP source lookup: `mcp__sources__search_external` searches the chunked external articles corpus with channel/register/decolonization filters and optional track-aware reranking.
 
@@ -494,7 +494,7 @@ IPs, SSH aliases, and ports return `400` with nothing stored. TTL matches the
 read freshness window (15 minutes).
 
 ```bash
-.venv/bin/python scripts/api/project_state_local.py report
+.venv/bin/python -m lu_machinery.api.project_state_local report
 ```
 
 The reporter includes `lane_usage` by probing local subscription lanes; set
@@ -549,7 +549,7 @@ The machinery fleet page, served by machinery at `/machinery`, includes an **AI 
 This is the M2 remote lease surface from design #7178. It is exact-stream
 only (`epic:<positive-number>`), uses the API-host session-stream store, and
 seeds one store row for each canonical `epic:<N>` record in the release
-snapshot's `scripts/config/issue_streams.yaml` at API process startup. The
+snapshot's `lu_machinery/config/issue_streams.yaml` at API process startup. The
 server never probes a client PID. Mutation requests must arrive through a
 direct loopback connection; a loopback tunnel is therefore the client
 boundary for another machine.
@@ -574,7 +574,7 @@ preferring one, and a replayed key returns the original entry with an
 `Idempotent-Replayed: true` response header (`append_entry` reports
 `{entry, is_replay}` so the router does not probe the digest for replay).
 `MonitorClient` (the stdlib `[A, B]` failover client in
-`scripts/ai_agent_bridge/monitor_client.py`) keeps GET failover and
+`lu_machinery/ai_agent_bridge/monitor_client.py`) keeps GET failover and
 distinguishes an ambiguous edge failure (`502`/`503`/`504` whose JSON body
 is not the app's documented 503 shape) from the API's own well-formed `503`
 busy answer; `500`/`501`/`408`/`429` never trigger a hop. Keyed-mutation
@@ -659,7 +659,7 @@ opaque ID such as `host-teacher`, `host-job`, or `mac-operator`; this keeps
 holders from being reported as `local`. Do not use a hostname, alias, or IP
 address as the host ID.
 
-The client is `scripts.session_supervisor` and uses stdlib `urllib` with a
+The client is `lu_machinery.session_supervisor` and uses stdlib `urllib` with a
 10-second request timeout. Launchers use its default remote Monitor mode; the
 explicit `--local` mode prints `LOCAL-ONLY LEASE — not visible to the fleet`.
 Claim preflight requires a healthy (`ok: true`) Monitor response before it
@@ -671,7 +671,7 @@ Example remote lifecycle probe (the client emits one JSON document per call):
 
 ```bash
 LU_MONITOR_HOST_ID="<opaque id>" \
-  .venv/bin/python -m scripts.session_supervisor claim \
+  .venv/bin/python -m lu_machinery.session_supervisor claim \
   --role driver --stream epic:7177 --agent codex --harness codex-cli \
   --instance-id example-driver --process-id 1234 \
   --lineage-id example-lineage
@@ -733,7 +733,7 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 ### GitHub GraphQL budget
 
-`GET /api/state/github-budget` returns one `python -m scripts.publish read budget` observation of
+`GET /api/state/github-budget` returns one `python -m lu_machinery.publish read budget` observation of
 `rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
 seconds, with concurrent cache misses coalesced into one probe. A successful
 zero remaining balance and GitHub's explicit `RATE_LIMIT` /
@@ -2419,7 +2419,7 @@ task state.
 ## Document and data catalogue locator — `GET /api/knowledge/find` (#9412)
 
 One query that says where a document, data store or resource lives and whether it is
-current. It is the HTTP mirror of `.venv/bin/python -m scripts.docs.find` (the entry point
+current. It is the HTTP mirror of `.venv/bin/python -m lu_machinery.docs.find` (the entry point
 named in `docs/README.md`); both call `scripts/docs/find.py`. It shares only the
 `/api/knowledge` prefix with the research registry below: **it is never behind the
 `research_registry` kill switch** and does not use the registry schema.
@@ -2765,7 +2765,7 @@ The unwrapped sync collectors are cheap enough in practice that
 they've never been observed to block, but they are **not** inside a
 real timeout. If the underlying filesystem hangs, those threads will
 tie up threadpool slots past the 5 s ceiling. See the comment near
-`ORIENT_SECTION_TTLS` in `scripts/api/main.py` for the constraint.
+`ORIENT_SECTION_TTLS` in `lu_machinery/api/main.py` for the constraint.
 
 If a section fails or times out, its own payload degrades to a
 fallback (e.g. `git: {"error": "..."}`) while every other section
@@ -2785,7 +2785,7 @@ GitHub is slow or unavailable. `?lean=true` omits this section; request
 
 If the `issues` collector returns `issues_error` or the GitHub
 subsection times out, run
-`.venv/bin/python scripts/orchestration/issue_stream_audit.py --json`
+`.venv/bin/python -m lu_machinery.orchestration.issue_stream_audit --json`
 to refresh the issue-stream hygiene cache instead of retrying the full
 orient bundle blindly.
 
@@ -2985,7 +2985,7 @@ starts with; `scope=content` adds `core-curriculum.md` for curriculum
 seats; `scope=task:<name>` serves one `task-scoped-reading.md` row
 (`repo-change`, `cli`, `curriculum`, `fresh-build`, `routing`, `driver`,
 `fleet-comms`, `intake`, `review`, `task-family`, `rollover`). Sources and
-assembly come from `scripts/lib/rules_core.py`, the loader launchers,
+assembly come from `lu_machinery/lib/rules_core.py`, the loader launchers,
 `dispatch.py` workers and ACP calls use offline, so online and offline
 bytes are identical. `scope=full` retains the reference archive's source order,
 bytes and hash. A core, content or task hash is sha256 over
@@ -3026,19 +3026,19 @@ endpoint is for "do I have work waiting?" checks during cold-start.
 
 ### Agent-side cache + SDK (P3)
 
-`scripts/ai_agent_bridge/_monitor_cache.py` — small, pure-stdlib
+`lu_machinery/ai_agent_bridge/_monitor_cache.py` — small, pure-stdlib
 on-disk cache under `.agent/cache/monitor/`. Low-level API for
 callers that want fine-grained control:
 
 ```python
-from scripts.ai_agent_bridge import _monitor_cache as cache
+from lu_machinery.ai_agent_bridge import _monitor_cache as cache
 
 body = cache.get("rules", expected_hash="...")
 # ... fetch if None ...
 cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
 ```
 
-For most callers, **use the SDK**: `scripts/ai_agent_bridge/monitor_client.py`.
+For most callers, **use the SDK**: `lu_machinery/ai_agent_bridge/monitor_client.py`.
 
 ```python
 # Requires ``scripts/`` on sys.path. Tests + any caller launched via
@@ -3711,8 +3711,8 @@ In the follow-up PR-B release, this guarantee is reinforced by serving the API f
 ## Host test slots — `/api/ops/v1/test-slots`
 
 `GET /api/ops/v1/test-slots` is the read-only view of the host test-slot pool that worker pytest runs and
-the launcher share (#10662; runbook: [`docs/runbooks/test-slots.md`](runbooks/test-slots.md)). It
-returns the same object as `.venv/bin/python -m scripts.common.test_slots status --json`
+the launcher share (#10662; runbook: [`docs/runbooks/test-slots.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/test-slots.md)). It
+returns the same object as `.venv/bin/python -m lu_machinery.common.test_slots status --json`
 (schema `test-slots.status.v1`):
 
 - `enabled`, `pool_size`, `wait_timeout_s`, `location` (`default` or `override`), `pool_exists`;
@@ -3748,7 +3748,7 @@ at most once per 60 seconds, and retains 500 lines in ignored runtime state. Pro
 a shared 0.1-second observation interval. It never collects arguments, paths, environments or PIDs.
 Malformed command names become `unknown`. Reads never trigger collection or create files.
 Missing state returns an empty list; unreadable state returns `error: "load_samples_unavailable"`.
-See [High-load attribution](runbooks/test-slots.md#high-load-attribution) for configuration and limits.
+See [High-load attribution](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/test-slots.md#high-load-attribution) for configuration and limits.
 
 ---
 

@@ -31,7 +31,7 @@
 
 | # | Title | Agent | Key files |
 |---|---|---|---|
-| P2-A | Unify thresholds — single exported table | Codex | `scripts/audit/config.py`, `scripts/config.py`, `scripts/build/v6_build.py:112` |
+| P2-A | Unify thresholds — single exported table | Codex | `scripts/audit/config.py`, `lu_machinery/config.py`, `scripts/build/v6_build.py:112` |
 | P2-B | Migrate wiki review to per-dim + MIN | Codex | `scripts/wiki/compile.py:623-639`, wiki review prompt |
 | P2-C | Decision-vs-code parity — kill-or-revert rewrite strategies | Claude (decision) + Codex (code) | `docs/decisions/` (new ADR), `scripts/build/convergence_loop.py:595-607` |
 

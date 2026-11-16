@@ -7,7 +7,7 @@
 - `POST /v1/chat/completions`
 - `GET /healthz`
 
-The model registry lives in `scripts/ai_agent_bridge/openai_proxy.py` as
+The model registry lives in `lu_machinery/ai_agent_bridge/openai_proxy.py` as
 `_ROUTABLE_MODELS`. Add or remove routable public model IDs there first; the
 models endpoint reads from that single source of truth.
 

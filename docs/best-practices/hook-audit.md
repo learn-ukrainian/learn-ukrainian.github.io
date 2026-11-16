@@ -24,14 +24,14 @@ compat scanning of `.claude/settings.json`.
 
 ## Git hook delegator architecture
 
-Tracked hook source files live in `.githooks/` as the single source of truth across all linked worktrees. Historically, `scripts/install_git_hooks.sh` set `core.hooksPath=.githooks`. A tool that installs git hook wrappers writes into whichever directory `core.hooksPath` points at; when that was `.githooks`, the since-removed Entire CLI overwrote the tracked files and left untracked artifacts, leaving the primary checkout dirty and breaking automated dispatch and handoff gates.
+Tracked hook source files live in `.githooks/` as the single source of truth across all linked worktrees. Historically, `lu_machinery/install_git_hooks.sh` set `core.hooksPath=.githooks`. A tool that installs git hook wrappers writes into whichever directory `core.hooksPath` points at; when that was `.githooks`, the since-removed Entire CLI overwrote the tracked files and left untracked artifacts, leaving the primary checkout dirty and breaking automated dispatch and handoff gates.
 
 To prevent dirty checkout drift:
 - `core.hooksPath` is kept **unset** (or cleared if set to `.githooks`).
-- `scripts/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
+- `lu_machinery/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
 - Each delegator dynamically resolves the current worktree root (`git rev-parse --show-toplevel`) and delegates to `$root/.githooks/<name>` if executable.
 - The Entire CLI integration was removed (C-2928). A host may still carry its wrappers (marked `# Entire CLI hooks`) with the delegator moved to `<name>.pre-entire`. The installer replaces each such wrapper with the delegator, removes the Entire-only `prepare-commit-msg` and `post-rewrite` wrappers, and removes the `<name>.pre-entire` delegators it generated. The installer refuses, before changing anything, when the hooks directory or any hook path it would write is a symlink, dangling or not.
-- `scripts/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper remains (`RETIRED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`scripts/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
+- `scripts/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper remains (`RETIRED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`lu_machinery/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
 
 ## Keep / drop matrix
 
@@ -62,25 +62,14 @@ Then restart Grok. Project trust remains for MCP; Claude seats keep their own st
 Helper:
 
 ```bash
-.venv/bin/python -m scripts.hooks.apply_grok_hook_profile          # dry-run
-.venv/bin/python -m scripts.hooks.apply_grok_hook_profile --apply   # write
-```
-
-## Instrumentation
-
-```bash
-export HOOK_TIMING=1
-export HOOK_TIMING_LOG=batch_state/hook-timing.jsonl   # optional
-# wrap any hook:
-./scripts/hooks/run_hook_timed.sh path/to/hook.sh
-# or:
-.venv/bin/python -m scripts.hooks.hook_timing wrap -- bash path/to/hook.sh
+.venv/bin/python -m lu_machinery.hooks.apply_grok_hook_profile          # dry-run
+.venv/bin/python -m lu_machinery.hooks.apply_grok_hook_profile --apply   # write
 ```
 
 ## Measure harness
 
 ```bash
-.venv/bin/python -m scripts.hooks.measure_hook_stack --repeats 3 \
+.venv/bin/python -m lu_machinery.hooks.measure_hook_stack --repeats 3 \
   --out batch_state/hook-audit-measure.json
 ```
 

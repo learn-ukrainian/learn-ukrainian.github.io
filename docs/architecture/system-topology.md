@@ -182,9 +182,9 @@ user → compile.py --track hist --slug kyivan-rus
 | --- | --- |
 | `scripts/build/v7_build.py` | The one pipeline entry point |
 | `scripts/agent_runtime/runner.py` | The one LLM dispatch function |
-| `scripts/api/main.py` | The one API server |
+| `lu_machinery/api/main.py` | The one API server |
 | `scripts/wiki/compile.py` | The one wiki compiler |
-| `scripts/ai_agent_bridge/__main__.py` | The one bridge CLI |
+| `lu_machinery/ai_agent_bridge/__main__.py` | The one bridge CLI |
 | `scripts/dispatch.py` | Fire-and-forget task runner |
 | `data/sources.db` | SQLite FTS5 — 660K source chunks |
 | `.mcp/servers/sources/server.py` | MCP sources tool server (port 8766) |

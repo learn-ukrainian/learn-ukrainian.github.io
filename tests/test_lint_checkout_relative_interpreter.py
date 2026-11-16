@@ -1,7 +1,7 @@
 """Fail when production code hardcodes a checkout-relative project interpreter.
 
 A dispatch worktree has no ``.venv``. Spawns must use
-``scripts.common.repo_root.project_interpreter`` (the primary checkout's
+``lu_machinery.common.repo_root.project_interpreter`` (the primary checkout's
 interpreter). ``tests/`` is not scanned: those joins build fixture
 interpreters. The allowlist is the files that intentionally name one
 checkout's interpreter, with the reason and the exact hit count.

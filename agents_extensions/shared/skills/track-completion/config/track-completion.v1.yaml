@@ -192,7 +192,7 @@ certification_identity_paths:
       - scripts/audit/qg_tier2_canary_check.py
       - scripts/audit/tier2_canary_allowlist.json
       - scripts/audit/llm_qg_canaries.py
-      - scripts/api/config.py
+      - lu_machinery/api/config.py
     cost: [scripts/audit/llm_qg_store.py]
     circuit: [scripts/audit/llm_qg_store.py]
     resume: [scripts/audit/qg_workflow.py]

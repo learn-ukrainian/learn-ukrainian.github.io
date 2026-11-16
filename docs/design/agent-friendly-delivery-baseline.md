@@ -11,7 +11,7 @@ evaluator: scripts/ci/delivery_baseline.py
 
 This document states which timestamps, cohorts, exclusions and unknowns a before/after delivery comparison under program #9737 may use. It qualifies the timing map in [the versioned plan](../plans/agent-friendly-delivery.md) (source lines 92–108). It does not measure anything, set a speed target or gate any repair.
 
-The offline evaluator `scripts/ci/delivery_baseline.py` applies these rules to an authored cohort file and returns a verdict per stratum. Its tests (`tests/ci/test_delivery_baseline.py`) replay synthetic fixtures in `tests/fixtures/delivery_baseline/`. Existing tools report spans but cannot apply these rules. `scripts.ci.ci_timings` and `collect_stream_bottleneck_metrics` in `scripts/fleet_comms/efficiency_metrics.py` have no definition of a delivered outcome, no per-stratum floor, no union of overlapping spans and no inconclusive verdict. `ci_timings.compute_metric_stats` also reports an empty sample as `0.0`, which this specification forbids.
+The offline evaluator `scripts/ci/delivery_baseline.py` applies these rules to an authored cohort file and returns a verdict per stratum. Its tests (`tests/ci/test_delivery_baseline.py`) replay synthetic fixtures in `tests/fixtures/delivery_baseline/`. Existing tools report spans but cannot apply these rules. `lu_machinery.ci.ci_timings` and `collect_stream_bottleneck_metrics` in `lu_machinery/fleet_comms/efficiency_metrics.py` have no definition of a delivered outcome, no per-stratum floor, no union of overlapping spans and no inconclusive verdict. `ci_timings.compute_metric_stats` also reports an empty sample as `0.0`, which this specification forbids.
 
 ## 1. Kinds of time
 
@@ -36,9 +36,9 @@ A span is **qualified** only if both endpoints are values of the canonical field
 | Capacity | — | — | — | Routing selection and admission | **Unqualified.** The task record writes `started_at` at admission (`admitted_at`) or at worktree reservation (`reserved_at`). No field records when the worker process actually started. Admission delay therefore cannot be measured. Deriving it as `finished_at − started_at − duration_s` assumes endpoints that no field records, so it is not allowed. |
 | Authoring | `worker_wall` | Task `started_at` | Task `finished_at` | `scripts/delegate.py` | Qualified. The span includes the admission hold and any checks run inside the task. The task record field `duration_s` (worker monotonic runtime) may be reported next to this span, but it is a duration without endpoints and is never merged into a union. |
 | Verification/review | `worker_wall` | Reviewer task `started_at` | Reviewer task `finished_at` | `scripts/delegate.py` | Qualified only if the reviewer task is linked to the reviewed PR head, through `pinned_head` or `review_attempt`. |
-| Verification/review | `elapsed` | Fleet `formal_review_jobs.created_at` | Fleet `github_publications.published_at` | `scripts/fleet_comms/migrations.py` schema; read by `collect_stream_bottleneck_metrics` (span `formal_cf_publication`) | Qualified. This is request-to-publication time, not reviewer execution time. Lifecycle evidence `recorded_at` is a single point and never a duration. |
-| CI/landing | `check_wall` | Check run `startedAt` | Check run `completedAt` | GitHub `statusCheckRollup` via `task_closeout.project_closeout_checks`; Actions job `started_at`/`completed_at` via `scripts/ci/ci_timings.py` | Qualified per check. Concurrent checks overlap (§3). |
-| CI/landing | `queue_delay` | Actions job `created_at` | Actions job `started_at` | `scripts/ci/ci_timings.py` (`job_queue_wait_minutes`) | Qualified. This is runner wait only. |
+| Verification/review | `elapsed` | Fleet `formal_review_jobs.created_at` | Fleet `github_publications.published_at` | `lu_machinery/fleet_comms/migrations.py` schema; read by `collect_stream_bottleneck_metrics` (span `formal_cf_publication`) | Qualified. This is request-to-publication time, not reviewer execution time. Lifecycle evidence `recorded_at` is a single point and never a duration. |
+| CI/landing | `check_wall` | Check run `startedAt` | Check run `completedAt` | GitHub `statusCheckRollup` via `task_closeout.project_closeout_checks`; Actions job `started_at`/`completed_at` via `lu_machinery/ci/ci_timings.py` | Qualified per check. Concurrent checks overlap (§3). |
+| CI/landing | `queue_delay` | Actions job `created_at` | Actions job `started_at` | `lu_machinery/ci/ci_timings.py` (`job_queue_wait_minutes`) | Qualified. This is runner wait only. |
 | CI/landing | `queue_delay` | GitHub timeline `AddedToMergeQueueEvent.createdAt` | PR `mergedAt` | GitHub GraphQL timeline | The field pair is canonical, but no repository module collects the historical enqueue event yet. Until a cohort supplies it, merge-queue delay is **unknown**. The `ci_timings` time-in-queue (first `merge_group` run `created_at` to the landing run `updated_at`) is a lower bound that omits scheduling before the first run. It is reported separately and never substituted for this metric. |
 | CI/landing | `elapsed` | PR `createdAt` | PR `mergedAt` | GitHub; `task_closeout` reads `mergedAt` | Qualified PR lifetime. |
 | CI/landing | `elapsed` | Fleet `github_publications.published_at` | PR `mergedAt` | `collect_stream_bottleneck_metrics` (span `gate_to_merge`) | Qualified gate-to-merge time. |
@@ -68,7 +68,7 @@ A record counts as delivered only if it has all of the following:
 1. **Linked outcome:** an issue number and a PR number, each a positive integer. A JSON boolean, zero, negative, fractional or string value is not an identifier (`unlinked_outcome`).
 2. **Review of record:** an `APPROVE` verdict on the merged head SHA, with both `author_family` and `reviewer_family` known (non-empty strings) and different, compared without regard to case or surrounding whitespace. Independence is never inferred from a missing identity. Otherwise the reason is `no_review_of_record`, `review_identity_unknown`, `review_not_independent` or `review_not_exact_head`.
 3. **Merge:** a `mergedAt` value and a merged head SHA.
-4. **Cleanup:** a lifecycle `CLEANED_UP` observation, or an equivalent `scripts.orchestration.merge_closeout` proof. Either is entered in the cohort as `cleanup.state: CLEANED_UP` with its `observed_at`.
+4. **Cleanup:** a lifecycle `CLEANED_UP` observation, or an equivalent `lu_machinery.orchestration.merge_closeout` proof. Either is entered in the cohort as `cleanup.state: CLEANED_UP` with its `observed_at`.
 
 A task with status `done`, a receipt file, an open or queued PR, or a green dashboard is not delivered.
 
@@ -86,7 +86,7 @@ A task with status `done`, a receipt file, an open or queued PR, or a green dash
 Input schema `delivery-baseline-input.v1` has two fields. `records[]` holds each record's `task_id`, `arm`, `stratum`, `matched_setup`, `outcome`, `review_of_record`, `merge`, `cleanup`, optional `exclusion` and `spans[]`. Each span carries `stage`, `kind`, `start_field`, `end_field`, `start` and `end`. The optional `claims[]` lists `{stratum, metric}` pairs. Run it with:
 
 ```bash
-.venv/bin/python -m scripts.ci.delivery_baseline <cohort.json>
+.venv/bin/python -m lu_machinery.ci.delivery_baseline <cohort.json>
 ```
 
 The evaluator exits 0 with a `delivery-baseline-report.v1` JSON document, or exits 2 on malformed input: an unreadable or non-JSON file, a wrong `schema_version`, a top level, record, span, sub-object or claim of the wrong JSON type, a duplicate `task_id`, or two records sharing one outcome without an exclusion (§4). `--help` lists examples, outputs, exit codes and related documents. It reads no task store, GitHub or Fleet database. Extracting canonical values into a cohort file is a separate, later step, and it must not commit real task records or telemetry.

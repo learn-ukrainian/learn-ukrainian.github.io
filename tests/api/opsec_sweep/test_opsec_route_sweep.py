@@ -42,11 +42,11 @@ from lu_machinery.api import (
 )
 from lu_machinery.api import main as api_main
 from lu_machinery.api.monitor_context import fixture_context
-from lu_machinery.docs import catalogue as docs_catalogue
 from lu_machinery.fleet_comms import message_plane
 from lu_machinery.session_streams.db import SessionStreamDatabase
 from starlette.requests import Request
 
+from scripts.docs import catalogue as docs_catalogue
 from scripts.project_api import dashboard_helpers
 from scripts.wiki import sources_db
 
@@ -457,10 +457,10 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     # The route sweep also traverses diagnostics that import their own local
-    # stores outside ``scripts.api``. Repoint those module-level paths before
+    # stores outside ``lu_machinery.api``. Repoint those module-level paths before
     # installing the global guard, so missing fixture state is handled by each
     # route's documented empty/read-only envelope instead of as a 500.
-    # ``scripts.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
+    # ``lu_machinery.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
     # comms routes now hand the bridge the MonitorContext's broker DB
     # explicitly, so the bridge's import-time default DB_PATH globals are no
     # longer seams this sweep must repoint.

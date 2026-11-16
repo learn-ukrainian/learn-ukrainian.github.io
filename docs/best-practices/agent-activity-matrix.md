@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.17 — Grok 4.7 codes and reviews again through Cursor at `grok-4.7-high` (operator order C-5307, 2026-11-12; trial C-5308; PR 12986). grok-4.6 and grok-4.5 stay retired. Grok holds no driver, Ukrainian, advisory, or high/critical final-signoff seat. The Grok QA bot (eggbot) is a tasked fleet seat for UI QA, design review, UX review and retesting (C-5336). Advisors refreshed 2026-10-03 for #9583 and #9616: Opus 5.5 and Sol 6.1 are the advisors and designated approvers (approval when they agree; when one of them authored the proposal, the other's approval completes it, and any other author needs both; the operator decides on disagreement); Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Astra (`gpt-6-astra`) is routable only for the Codex red-team code-review exception for Sol-authored PRs until 2026-11-04T00:00Z (#10437), as specified in `agents_extensions/shared/rules/fleet-driver-routing.md`. Since v1.17: route Grok coding and code/infra review to `--agent cursor --model grok-4.7-high`, and task eggbot with `bot_gateway.py send`. Since v1.11 (#9394): Opus / Sol first for reviews, critiques, design input and Ukrainian work. The mandatory #9275 Sol envelope is unchanged. Codex defaults to GPT-6.1 Terra (`gpt-6.1-terra`) @ high for routine non-security coding, including `multi_agent_v2` children. Sol 6.1 @ high retains hard tasks, advisory work, drivers and review; explicit Luna scouting and bounded-work contracts remain available. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash High on AGY is a general read-only and workspace-write worker and does not take an advisory task (#12291). Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
+> **Status:** v1.17 — Grok 4.7 codes and reviews again through Cursor at `grok-4.7-high` (operator order C-5307, 2026-11-12; trial C-5308; PR 12986). grok-4.6 and grok-4.5 stay retired. Grok holds no driver, Ukrainian, advisory, or high/critical final-signoff seat. The Grok QA bot (eggbot) is a tasked fleet seat for UI QA, design review, UX review and retesting (C-5336). Advisors refreshed 2026-10-03 for #9583 and #9616: Opus 5.5 and Sol 6.1 are the advisors and designated approvers (approval when they agree; when one of them authored the proposal, the other's approval completes it, and any other author needs both; the operator decides on disagreement); Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Astra (`gpt-6-astra`) is routable only for the Codex red-team code-review exception for Sol-authored PRs until 2026-11-04T00:00Z (#10437), as specified in `agents_extensions/shared/rules/fleet-driver-routing.md`. Since v1.17: route Grok coding and code/infra review to `--agent cursor --model grok-4.7-high`, and task eggbot with `bot_gateway.py send`. Since v1.11 (#9394): Opus / Sol first for reviews, critiques, design input and Ukrainian work. The mandatory #9275 Sol envelope is unchanged. Codex defaults to GPT-6.1 Terra (`gpt-6.1-terra`) @ high for routine non-security coding, including `multi_agent_v2` children. Sol 6.1 @ high retains hard tasks, advisory work, drivers and review; explicit Luna scouting and bounded-work contracts remain available. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash High on AGY is a general read-only and workspace-write worker and does not take an advisory task (#12291). Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `lu_machinery/config/model_catalog.yaml`. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -18,7 +18,7 @@ Each cell carries:
 - **Known weakness** — failure mode we've observed.
 - **Known strength** — what they do uniquely well.
 
-**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. For code review, follow `model-assignment.md` Code review row and the machine-enforced ladder in `scripts/config/model_catalog.yaml`.
+**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. For code review, follow `model-assignment.md` Code review row and the machine-enforced ladder in `lu_machinery/config/model_catalog.yaml`.
 
 ---
 
@@ -28,10 +28,10 @@ Each cell carries:
 | --- | --- | --- | --- | --- |
 | **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Sonnet 5.5 (strong practical), Haiku 5.5 (routine mechanical, classification and read-only recon). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor, never as a review route (D-129, #10464) | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice and designated approval jointly with Sol; Haiku 5.5 handles routine lockfile/pointer/smoke work first (Sonnet fallback), mechanical classification/triage and read-only recon/search. It never handles Ukrainian content, review, design/approval, security, bounded code or driver work; resolve the catalog task roles. |
 | **Codex a and b** | GPT-6.1 Terra @ high for routine non-security code; Sol 6.1 @ high for hard tasks, advice, drivers and review; explicit Luna scouting | Native Codex CLI and `multi_agent_v2` children | Two Pro 20x subscriptions; quota and pace per account | Terra gets bounded owned paths, a complete brief and verification command. No security tools or security-sensitive code, destructive cleanup, driver seat, orchestration, formal review, critique, designated approval or Ukrainian-content judgment. Reserved Codex roles pin Sol explicitly; existing Ukrainian authoring seats remain. See the Terra coder boundary in `model-assignment.md`. |
-| **agy** | Gemini 3.8 Flash High | `scripts/dispatch.py dispatch --model <catalog-model> --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Gemini 3.8 Flash High is a general read-only and workspace-write worker and does not take an advisory task (#12291). Give it a complete one-unit brief and acceptance criteria. Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
-| **DeepSeek** | Latest `deepseek-v4.1-flash` only | opencode coding on the direct DeepSeek API or OpenRouter with a named US provider allow-list | Never private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; Pro and older retired. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. |
+| **agy** | Gemini 3.8 Flash High | `scripts/dispatch.py dispatch --model <catalog-model> --agent agy` / `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy` | Metered | Gemini 3.8 Flash High is a general read-only and workspace-write worker and does not take an advisory task (#12291). Give it a complete one-unit brief and acceptance criteria. Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
+| **DeepSeek** | Latest `deepseek-v4.1-flash` only | opencode coding on the direct DeepSeek API or OpenRouter with a named US provider allow-list | Never private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; Pro and older retired. `lu_machinery/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. |
 | **Grok** | `grok-4.7` (Cursor wire `grok-4.7-high`; native selector `grok-4.7`, attested `grok-4.7-build`). grok-4.6 and grok-4.5 stay retired | `--agent cursor --model grok-4.7-high` for coding and code/infra review. `dispatch.py` rejects `--agent grok`. Native transport supports coding; formal review uses the Cursor pin | Metered Cursor pool and native subscription | Active on trial (C-5307, C-5308; PR 12986). No driver, Ukrainian, advisory, or high/critical final-signoff seat. Does not review xAI-authored work. `cursor:auto` is never the review identity. |
-| **Grok Bot (eggbot)** | Grok QA bot, fleet member for UI QA | Not `dispatch.py`. Task with `bot_gateway.py send` (bot-gateway role; infra-private `docs/runbooks/bot-gateway.md`). Never `--agent grok-bot` | — | UI QA, design review, UX review and retesting (C-5336). Wakes by webhook, works through a read-only UI tunnel, replies `EGGBOT-RESULT id=<task> status=<done\|partial\|blocked>` to claude-cto over Fleet Comms, and keeps a daily safety check. Every UI change that lands locally gets an eggbot retest before anything goes public (C-5346). See [`docs/runbooks/grok-bot-qa-observer.md`](../runbooks/grok-bot-qa-observer.md). |
+| **Grok Bot (eggbot)** | Grok QA bot, fleet member for UI QA | Not `dispatch.py`. Task with `bot_gateway.py send` (bot-gateway role; infra-private `docs/runbooks/bot-gateway.md`). Never `--agent grok-bot` | — | UI QA, design review, UX review and retesting (C-5336). Wakes by webhook, works through a read-only UI tunnel, replies `EGGBOT-RESULT id=<task> status=<done\|partial\|blocked>` to claude-cto over Fleet Comms, and keeps a daily safety check. Every UI change that lands locally gets an eggbot retest before anything goes public (C-5346). See [`docs/runbooks/grok-bot-qa-observer.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/grok-bot-qa-observer.md). |
 | **Kimi** (**retired**, OO-58, #11327) | none | dispatch refuses every Kimi id | — | Unused since 2026-10-13; reconfirmed 2026-10-18 and 2026-10-21. No executable route and no substitution. |
 | **cursor** | coding and code/infra review pin `grok-4.7-high` | `dispatch.py dispatch --agent cursor --model grok-4.7-high` for those two roles | Metered monthly pools; unused resets | Coding and explicit code/infra review (C-5307). Not a driver, advisory, design, consult, recon, or language seat. `auto` is never a formal CF identity. |
 | *web-verify note* | — | — | — | **Live web fact-check is an opencode + lightpanda HARNESS capability, not model-specific** — ANY opencode-hosted model browses (kubedojo-verified incl. deepseek). Don't attribute it to a single model. |
@@ -57,7 +57,7 @@ limits above follow this evidence; the driver launcher remains Sol-only for Code
 Codex capacity is two Pro 20x subscriptions: account a (`sub`, `codex:a`)
 and account b (`b-sub`, `codex:b`), each with its own credential, weekly window,
 pace and reserve. New Sol work uses `--codex-account b-sub` first (C-4606).
-Use `.venv/bin/python -m scripts.fleet.usage json` and inspect each
+Use `.venv/bin/python -m lu_machinery.fleet.usage json` and inspect each
 `codex_accounts` row separately. `agents.codex` remains account a; a scarce a
 does not exhaust b. `b-api` is planned and unset, not a subscription meter.
 
@@ -67,7 +67,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
 
 - **Cursor / Grok:** route coding and code/infra review to `dispatch.py dispatch --agent cursor --model grok-4.7-high` (C-5307). `cursor:auto` is never CF-of-record. Grok holds no driver, Ukrainian, advisory, or high/critical final-signoff seat. grok-4.6 and grok-4.5 stay retired. Task the Grok QA bot (eggbot) with `bot_gateway.py send` for UI QA, design review, UX review and retesting (C-5336). Every UI change that lands locally gets an eggbot retest before anything goes public (C-5346). DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first.
 - **Concurrent drivers (operator 2026-08-08):** typically **~1 Claude + 1–4 Codex** live. Free workers are a **shared pool** — check `/api/delegate/active` before dispatch; claim disjoint owned paths. Use active catalog lanes; retired seats receive no work. Timed lane pauses have a **return-at** (never permanent neglect). Canonical survey issue: **#6468**.
-- **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read native usage (`python -m scripts.fleet.usage show`; `json` for pace metadata, `refresh` for blocking probes) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `ask-deepseek` is consult-only for non-language work.
+- **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read native usage (`python -m lu_machinery.fleet.usage show`; `json` for pace metadata, `refresh` for blocking probes) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `ask-deepseek` is consult-only for non-language work.
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Sol / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, schema edits, bounded refactors. Ukrainian wiki/content writing is agy (Gemini), codex (GPT), or claude only. **agy/Flash (#5737):** treat as a **worker given a complete brief**, not an orchestrator that invents its own micro-PR sequence; one shippable unit per dispatch.
@@ -75,7 +75,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
   - **DeepSeek:** V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. `deepseek-v4.1-flash` stays active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work.
   - **Cursor / grok:** pull coding and code/infra review onto `--agent cursor --model grok-4.7-high`. Send UI QA, design review, UX review and retesting to eggbot with `bot_gateway.py send`.
   - **OpenRouter:** use only active catalog routes with their data and provider restrictions.
-  - **hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
+  - **hermes / opencode (explicit `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
 - **Where "next work" comes from:** the active track handoff's NEXT-ACTIONS, open GH issues, and the build/review queue. If nothing genuinely fits a free lane, log it and leave it idle — do **not** manufacture busywork (quality > utilization).
 - **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a qualified cross-family code review selected by `resolve-reviewer` before it ships; Ukrainian review follows LANGUAGE-LANES. See `model-assignment.md` Code review row. "Keep the lane busy" never lowers the bar.
@@ -216,8 +216,8 @@ bound attempt.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-09-25 | `scripts/config/model_catalog.yaml` | Resolve by risk and follow `model-assignment.md` Code review row; Gemini is excluded. |
-| Historical result | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Historical probe only; DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. |
+| **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-09-25 | `lu_machinery/config/model_catalog.yaml` | Resolve by risk and follow `model-assignment.md` Code review row; Gemini is excluded. |
+| Historical result | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `lu_machinery/config/model_catalog.yaml` · Arena Code leaderboard | Historical probe only; DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. |
 | Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 
 **Known weakness (DeepSeek-flash):** historical promotion evidence is preliminary and frontend-specific;
@@ -240,9 +240,9 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperformed 3.1 Pro; Pro is retired, not subscribed, operator 2026-10-23); Codex/Claude high for higher stakes; Opus / Sol advice. |
-| Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
+| **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `lu_machinery/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
+| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperformed 3.1 Pro; Pro is retired, not subscribed, operator 2026-10-23); Codex/Claude high for higher stakes; Opus / Sol advice. |
+| Runner-up 1 | Codex via `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
 ---
@@ -278,9 +278,9 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Adversarial review | `.venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6.1-sol --effort high --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
 | Content review (load-bearing, VESUM) | Review-loop ukrainian seats: Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is retired; DeepSeek review-of-record and Ukrainian work need measured evidence first; latest V4.1 Flash coding through opencode is allowed). |
-| Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
-| Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
-| Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
+| Q&A (routine) | `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
+| Q&A (deep) | `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
+| Discuss (multi-agent) | `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss CHANNEL "TOPIC" --with codex,claude,agy` |
 | Search / locate | `Agent(subagent_type="Explore", model="haiku", description="...", prompt="...")` |
 | Status check (state) | `curl -s http://localhost:8765/api/state/...` |
 
@@ -291,7 +291,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 The matrix updates when bakeoff signal flips a champion. The protocol:
 
 1. **Operator initiates** a challenge on one task-type cell. Says: *"Cell 4.X primary is currently $AGENT. We want to test whether $CHALLENGER can do better with $PROPOSED_CHANGES (prompt / context / harness)."*
-2. **Challenger receives a structured request** via `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`:
+2. **Challenger receives a structured request** via `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss`:
    ```
    You are the candidate. The current primary on task type X is $PRIMARY with score $S, last verified $D. We are open to promoting you IF you can show > $S on the same eval set. You may propose ONE OF: (a) prompt change, (b) added context, (c) harness change. State your proposal in 5 lines max + the smallest viable bakeoff that would prove it. If you are not confident, respond DECLINE.
    ```
@@ -396,7 +396,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 
 | Rank | Model | Cost | Quality status |
 | --- | --- | --- | --- |
-| Policy | Risk-specific catalog ladder | varies | Machine-enforced quality floor; see `scripts/config/model_catalog.yaml`. |
+| Policy | Risk-specific catalog ladder | varies | Machine-enforced quality floor; see `lu_machinery/config/model_catalog.yaml`. |
 | Historical ✅ | DeepSeek-v4-flash | $ | E:A+ 15s in the 2026-05-13 bakeoff; low-risk economical classification at that time, superseded by the 2026-08-02 practical-code promotion. |
 | Historical ✅ | Codex GPT-5.5 | $$ | Architectural catches; cannot independently review OpenAI-authored work. |
 | Excluded | Qwen-3.6-flash | $ | User-excluded from active routing. |
@@ -416,7 +416,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 | --- | --- | --- |
 | 1 ✅ | AGY Gemini 3.8 Flash (High) | metered |
 | 1 deep ✅ | AGY Gemini 3.8 Flash (High) (3.1 Pro is retired, not subscribed, operator 2026-10-23) | metered |
-| 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
+| 2 ✅ | Codex GPT-5.5 (`.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex`) | $$ |
 | ❓ | Qwen-3.6-plus | $ |
 
 ### 8.10 The Chinese-model question (user-asked)
@@ -500,7 +500,7 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 - Every cell's `last_verified` ages. Re-bakeoff cadence: **30 days** for primary cells, **60 days** for runner-ups.
 - New agent added → add to §2 roster + audit every relevant cell.
 - Decision card flipping a primary (e.g. 2026-05-12 night's writer reversal) → update the relevant cell's `last_verified` + `evidence` rows.
-- `scripts/config/agent_fallback_substitutions.yaml` is the operational projection of this matrix's runner-ups. Keep them in sync.
+- `lu_machinery/config/agent_fallback_substitutions.yaml` is the operational projection of this matrix's runner-ups. Keep them in sync.
 - API endpoint `/api/activity-matrix?format={json,html}` (future) projects this matrix to agents (JSON) and humans (HTML). Until that endpoint ships, the markdown is the source of truth.
 
 ---
@@ -551,7 +551,7 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 - v1: 2026-05-18 by orchestrator (Claude inline) per user direction.
 - Sources:
   - `memory/MEMORY.md` #M-0 (per-task model assignment)
-  - `scripts/config/agent_fallback_substitutions.yaml`
+  - `lu_machinery/config/agent_fallback_substitutions.yaml`
   - `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` (writer + reviewer split)
   - `docs/decisions/2026-05-06-writer-selection-codex-gpt55.md` (REVISED-AGAIN 2026-05-13)
   - `audit/bakeoff-2026-05-12-night/REPORT.md` (writer flip)

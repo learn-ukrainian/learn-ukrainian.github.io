@@ -1,7 +1,7 @@
 # Agent GitHub publishing
 
-Use `python -m scripts.publish <verb>` for public GitHub writes. Project code
-uses `scripts.publish.github.publish()` or a `Request` with `request_run()`.
+Use `python -m lu_machinery.publish <verb>` for public GitHub writes. Project code
+uses `lu_machinery.publish.github.publish()` or a `Request` with `request_run()`.
 Both interfaces validate the same closed field schemas. PR creation requires
 explicit base and head names so implicit branch names cannot escape scanning. Arbitrary flags,
 endpoints, GraphQL documents and payload passthrough are unavailable.
@@ -11,10 +11,10 @@ malformed destinations remain `unknown`. Repository-bound operations refuse
 `unknown`; both `GH_HOST` and API hostname flags use the resolved host.
 
 ```sh
-python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md
-python -m scripts.publish pr-review --repo unit/public --number 1 --verdict approve
-python -m scripts.publish release-upload --repo unit/public --tag unit --assets unit.json.gz
-python -m scripts.publish workflow-run --repo unit/public --workflow ci.yml --ref main --inputs '{"secret_scan_mode": "full-history-audit"}'
+python -m lu_machinery.publish issue-comment --repo unit/public --number 1 --body-file reply.md
+python -m lu_machinery.publish pr-review --repo unit/public --number 1 --verdict approve
+python -m lu_machinery.publish release-upload --repo unit/public --tag unit --assets unit.json.gz
+python -m lu_machinery.publish workflow-run --repo unit/public --workflow ci.yml --ref main --inputs '{"secret_scan_mode": "full-history-audit"}'
 ```
 
 Run Python with the task's prescribed project interpreter. Every subcommand's
@@ -26,7 +26,7 @@ scanned. Transport paths are never published or scanned as public text.
 
 | Verbs | Public fields scanned |
 | --- | --- |
-| `issue-create`, `issue-edit` | Title, body, labels, milestone name. A body is refused when its acceptance-criterion checkboxes are ones the task lifecycle's parser rejects (`**AC-01**:` instead of `**AC-01** —`); the refusal names the line. A body with no criteria passes. The `issue-create` parent rule is per repository: the default fleet repository, whose issues `scripts/config/issue_streams.yaml` numbers, requires `--parent` (one of its registered open stream epics) and links the new issue to it in the same command after the epic is checked, a repository registered in `scripts/config/fleet_repos.yaml` with no stream registry of its own accepts no `--parent`, and a repository absent from that catalog is refused, with the same text scan either way |
+| `issue-create`, `issue-edit` | Title, body, labels, milestone name. A body is refused when its acceptance-criterion checkboxes are ones the task lifecycle's parser rejects (`**AC-01**:` instead of `**AC-01** —`); the refusal names the line. A body with no criteria passes. The `issue-create` parent rule is per repository: the default fleet repository, whose issues `lu_machinery/config/issue_streams.yaml` numbers, requires `--parent` (one of its registered open stream epics) and links the new issue to it in the same command after the epic is checked, a repository registered in `lu_machinery/config/fleet_repos.yaml` with no stream registry of its own accepts no `--parent`, and a repository absent from that catalog is refused, with the same text scan either way |
 | `issue-comment`, `issue-comment-json` | Body (JSON variant returns the API response) |
 | `comment-edit` | Body; edits an existing issue or PR conversation comment by `--comment-id` |
 | `issue-close` | Optional comment; reason is a closed enum |
@@ -50,7 +50,7 @@ its `#issuecomment-ID` URL fragment. Issue numbers, PR numbers, and inline revie
 comment IDs are different identifiers. Supply exactly one body source:
 
 ```sh
-python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md
+python -m lu_machinery.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md
 ```
 
 The Python equivalent is `publish("comment-edit", repo="unit/public",
@@ -132,8 +132,8 @@ a malicious local writer.
 the same run. Use the task's prescribed project interpreter.
 
 ```sh
-.venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901
-.venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901
+.venv/bin/python -m lu_machinery.publish read run --repo unit/public --number 12345678901
+.venv/bin/python -m lu_machinery.publish run-rerun --repo unit/public --number 12345678901
 ```
 
 The write always selects failed jobs with `--failed`. It retests the original
@@ -168,8 +168,8 @@ state and obtain explicit authorization before cancelling it. Use the task's
 prescribed project interpreter.
 
 ```sh
-.venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901
-.venv/bin/python -m scripts.publish run-cancel --repo unit/public --number 12345678901
+.venv/bin/python -m lu_machinery.publish read run --repo unit/public --number 12345678901
+.venv/bin/python -m lu_machinery.publish run-cancel --repo unit/public --number 12345678901
 ```
 
 The publisher sends an ordinary cancellation request to
@@ -206,7 +206,7 @@ their exposure controls. Aliases and extensions remain outside the raw boundary.
 `gh pr checkout <N>` still requires a real dispatch worktree.
 
 Specific API reads also have a shell interface,
-`python -m scripts.publish read <name> --repo <owner/repo> ...`.
+`python -m lu_machinery.publish read <name> --repo <owner/repo> ...`.
 `gh pr checkout <N>` is permitted only inside a real dispatch worktree.
 Named `read()` operations include: identity, issue, comments,
 labels, timeline, reviews, commits, comment, checks, jobs, issues, runs,
@@ -232,22 +232,22 @@ posting searches at the exact head.
 
 | Consumer | Typed publication |
 | --- | --- |
-| `scripts/ai_agent_bridge/_github.py` | Issue comments |
+| `lu_machinery/ai_agent_bridge/_github.py` | Issue comments |
 | `lu_machinery/orchestration/dispatch_settle.py` | Explicit PR creation |
 | `scripts/audit/check_decisions.py` | Label and issue creation |
-| `scripts/audit/check_review_issues.py`, `scripts/verify_review.py` | Issue comments and close |
+| `scripts/audit/check_review_issues.py`, `lu_machinery/verify_review.py` | Issue comments and close |
 | `lu_machinery/review/record_cf_verdict.py` | Verdict comments with JSON response |
-| `scripts/fleet_comms/review_publisher.py` | PR comments and exact-head commit status |
+| `lu_machinery/fleet_comms/review_publisher.py` | PR comments and exact-head commit status |
 | `lu_machinery/orchestration/task_closeout.py` | Issue body edits, close, squash merge |
 | `lu_machinery/orchestration/merge_queue_keeper.py` | Comments, issue creation, merge/disarm/dequeue |
-| `scripts/orchestration/issue_stream_audit.py` | Fixed native membership mutation |
+| `lu_machinery/orchestration/issue_stream_audit.py` | Fixed native membership mutation |
 | `scripts/practice_deck/publish.py`, `scripts/open_dataset/publish.py` | Release creation and artifact upload |
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
 | `agents_extensions/shared/hooks/guard-public-github-text.py` | Routing only |
-| `scripts/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
-| `scripts/agent_runtime/shims/git` push, Git's pre-push hook `scripts/opsec/git_push.py` | Branch, tag and other ref names; annotated tag names and messages; new commit messages with their embedded mergetag tag names and messages |
-| `scripts/ci/data_tier.py`, `scripts/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
-| Printed templates and `scripts/wt.sh` | No outbound publication; executed public writes require publisher verbs |
+| `lu_machinery/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
+| `lu_machinery/agent_runtime/shims/git` push, Git's pre-push hook `scripts/opsec/git_push.py` | Branch, tag and other ref names; annotated tag names and messages; new commit messages with their embedded mergetag tag names and messages |
+| `lu_machinery/ci/data_tier.py`, `lu_machinery/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
+| Printed templates and `lu_machinery/wt.sh` | No outbound publication; executed public writes require publisher verbs |
 
 This boundary protects cooperative agents. Absolute executables, raw HTTP,
 PATH resets and processes launched outside the project environment remain
@@ -263,7 +263,7 @@ The hook recognises the publisher command and uses the same readiness parser.
 `pr-merge` also reads the head's recorded review verdicts
 (`lu_machinery/review/record_cf_verdict.py`). A rejection, an incomplete seat set or
 unverifiable evidence refuses the merge. Each row of
-`scripts/config/fleet_repos.yaml` sets `verdict_recorder`: where it is `true`, a
+`lu_machinery/config/fleet_repos.yaml` sets `verdict_recorder`: where it is `true`, a
 head with no recorded exact-head cross-family APPROVE is refused too; where it
 is `false`, a head with no recorded verdict is not. A missing or non-boolean
 setting refuses.
@@ -414,7 +414,7 @@ File contents are not scanned.
 **History already on the public default branch.** Nothing the destination
 reports counts as evidence of what it already has. Per push that sends commits,
 one typed `default-head` read asks the catalogue's canonical public repository
-(the `public-monorepo` row of `scripts/config/fleet_repos.yaml`) for its name
+(the `public-monorepo` row of `lu_machinery/config/fleet_repos.yaml`) for its name
 and the name and head of its default branch, through the publisher's read path,
 never the push URL or local configuration. The reply counts only when it names
 the catalogue repository and the `main` branch, the head is 40 lowercase hex

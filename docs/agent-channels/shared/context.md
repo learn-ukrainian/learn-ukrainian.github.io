@@ -89,13 +89,13 @@ Communication protocol:
 - **Python:** `.venv/bin/python` — never bare `python3` or `python`
 - **Tests:** `.venv/bin/pytest` — colocated in `tests/`
 - **Lint:** `.venv/bin/ruff check` — pre-commit hook enforced
-- **Bridge CLI:** `scripts/ai_agent_bridge/__main__.py` — for agent delegations
-- **Channel bridge (#1190):** `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel`, `p`, `post`, `discuss`
+- **Bridge CLI:** `lu_machinery/ai_agent_bridge/__main__.py` — for agent delegations
+- **Channel bridge (#1190):** `.venv/bin/python -m lu_machinery.ai_agent_bridge channel`, `p`, `post`, `discuss`
 - **GH issues as memory:** reference issue numbers in commits, close when all ACs met
 
 ## Multi-agent deliberation protocol (2026-05-02 onward)
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is the tool for design / framing / architecture / pedagogy decisions where any single agent reasoning alone has a known failure mode. **It is NOT a quorum** — Claude/AGY/Codex have correlated training-data priors (e.g., Russian-imperial framings show up in all three). What it gives us: more angles per decision, adversarial pressure, and a written deliberation record.
+`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` is the tool for design / framing / architecture / pedagogy decisions where any single agent reasoning alone has a known failure mode. **It is NOT a quorum** — Claude/AGY/Codex have correlated training-data priors (e.g., Russian-imperial framings show up in all three). What it gives us: more angles per decision, adversarial pressure, and a written deliberation record.
 
 **When you (any agent) participate in a discussion:**
 

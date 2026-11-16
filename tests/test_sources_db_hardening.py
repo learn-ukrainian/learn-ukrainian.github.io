@@ -205,7 +205,7 @@ def test_shared_sqlite_connections_route_through_open_readonly() -> None:
                 else:
                     violations.append(f"{rel}:{line} ({scope or '<module>'})")
     assert not violations, (
-        "check_same_thread=False connections must use scripts.lib.readonly_sqlite.open_readonly "
+        "check_same_thread=False connections must use lu_machinery.lib.readonly_sqlite.open_readonly "
         f"(cached_statements=0), or be allowlisted with a reason: {violations}"
     )
     assert seen == set(ALLOWED_SHARED_CONNECTS), "stale allowlist entries: " + str(

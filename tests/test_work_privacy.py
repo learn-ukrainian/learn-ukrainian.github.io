@@ -22,7 +22,7 @@ PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
 # the oracle asserts they never appear in public outputs or non-test artifacts.
 WORK_OWNED = [
     ROOT / "scripts" / "work",
-    ROOT / "scripts" / "api" / "work_router.py",
+    Path(work_router.__file__),
     ROOT / "tests" / "fixtures" / "work",
     ROOT / "docs" / "decisions" / "ADR-019-work-control-plane.md",
     ROOT / "docs" / "monitor-api" / "work.md",
@@ -146,7 +146,7 @@ def test_private_capability_seam_is_truthful_and_non_proxying():
     assert seam["reason_if_unavailable"] == "not_configured"
     assert seam["endpoint"] is None
     # Public router module must not implement private HTTP fetch helpers.
-    source = (ROOT / "scripts" / "api" / "work_router.py").read_text(encoding="utf-8")
+    source = (Path(work_router.__file__)).read_text(encoding="utf-8")
     assert "requests.get" not in source
     assert "httpx" not in source
     assert "private-local-adapter" in source or "private_capability" in source

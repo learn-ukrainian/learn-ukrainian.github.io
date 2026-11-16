@@ -140,7 +140,7 @@ def test_terms_drop_stopwords_and_casefold_without_stemming():
 
 def _state(repo, data):
     schema = json.loads(SCHEMA)
-    from lu_machinery.docs import catalogue as cat
+    from scripts.docs import catalogue as cat
     files = cat.index_entries(repo)
     report = cat.validate(data, schema, list(files), {'docs-knowledge', 'infra-harness'})
     return find_module.State(repo, data, report, files, by_id={e['id']: e for e in data['entries']})

@@ -21,7 +21,7 @@ Every build specializes this contract with three per-module artifacts:
 2. **Shared contract YAML** rendered as `{CONTRACT_YAML}` in both
    writer and reviewer prompts — the plan's section contract, activity
    obligations, dialogue acts, factual anchors, banned error patterns.
-3. **Level-immersion policy** from `scripts/config.py`
+3. **Level-immersion policy** from `lu_machinery/config.py`
    `IMMERSION_POLICIES[{level}]` — the band-specific scaffolding rule
    for the module's number within its level (e.g. `a1-m07-14`).
 
@@ -31,7 +31,7 @@ per-dim reviewer see all three.
 
 ## §1 Level contract — scaffolding language (binding)
 
-**Authority:** `scripts/config.py` `IMMERSION_POLICIES[{level}]`.
+**Authority:** `lu_machinery/config.py` `IMMERSION_POLICIES[{level}]`.
 
 The immersion band for the current module sets a quantitative target
 (e.g. 10–38 % Ukrainian for `a1-m07-14`) AND a qualitative role for

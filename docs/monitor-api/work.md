@@ -33,7 +33,7 @@ Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 
 Machine contract for a lane's next actionable picks. Params:
 `stream=<stream key>` (required; keys from
-`scripts/config/issue_streams.yaml`, unknown keys 400 with `valid_streams`) and
+`lu_machinery/config/issue_streams.yaml`, unknown keys 400 with `valid_streams`) and
 `limit` (default 7, max 25). Unambiguous fleet-taxonomy area aliases are
 accepted and echoed (`?stream=infra` → `stream: "infra-harness"` +
 `requested_stream: "infra"`, via the same `fleet_taxonomy.yaml` resolver the

@@ -159,7 +159,7 @@ Two rows. Infra and rubric drift are code review. Vocabulary stays with AGY.
 
 ```bash
 # Code review — non-Gemini seat
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex - \
   --task-id <N>-review --type review <<'EOF'
 Adversarial review of #<N> review-and-lock for <slug> wiki + plan.
 Read the diff. Look for:
@@ -170,7 +170,7 @@ Read the diff. Look for:
 EOF
 
 # VESUM / vocabulary — AGY, Ukrainian profile required
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy - \
   --task-id <N>-vesum --review --review-profile ukrainian \
   --to-model gemini-3.8-flash-high <<'EOF'
 Check hallucinated vocab in the <slug> wiki + plan diff.
@@ -186,7 +186,7 @@ Address findings. If non-trivial, a second round is expected — don't short-cir
 
 - PR title: `feat(quality): review-and-lock <slug> wiki + plan (#<N>)`
 - Do NOT merge the PR yourself. The user merges.
-- Do NOT use `.venv/bin/python -m scripts.publish pr-merge --admin`.
+- Do NOT use `.venv/bin/python -m lu_machinery.publish pr-merge --admin`.
 
 ---
 

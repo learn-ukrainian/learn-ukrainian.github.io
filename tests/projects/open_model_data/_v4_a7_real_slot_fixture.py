@@ -199,7 +199,7 @@ REVIEWER_RUN_NONCE = "fixture-reviewer-run-nonce-001"
 # runtime-resolved seat/model strings and canonical harness executables the
 # fixture's own synthetic terminal task-state attests to. "claude"/"codex"
 # are both members of the project's canonical known-harness allowlist
-# (``scripts.orchestration.thread_handoff.KNOWN_HARNESS_EXECUTABLES``); the
+# (``lu_machinery.orchestration.thread_handoff.KNOWN_HARNESS_EXECUTABLES``); the
 # seat strings resolve, via the canonical cross-family resolver, to two
 # distinct concrete families (anthropic vs. openai) -- never the same table
 # twice, never a caller-asserted family string.
@@ -382,7 +382,7 @@ def build_reviewer_task_state(
 
 def build_terminal_envelope(*, raw_capture_sha256: str, session_id: str, raw_capture_artifact_id: str) -> ResponseEnvelope:
     """A synthetic, terminally-complete ``ResponseEnvelope`` -- the shared
-    transport-neutral completion contract (``scripts.fleet_comms.contracts``)
+    transport-neutral completion contract (``lu_machinery.fleet_comms.contracts``)
     the attester requires alongside authoritative task-state evidence before
     it will ever sign (PR #7662 repair 5)."""
     return ResponseEnvelope(

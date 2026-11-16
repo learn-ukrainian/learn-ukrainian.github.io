@@ -16,7 +16,7 @@ def github_transport(monkeypatch):
 
     # Product tests run the installed release; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
     modules = [
-        importlib.import_module(name) for name in ("scripts.common.github_client", "lu_machinery.common.github_client")
+        importlib.import_module(name) for name in ("lu_machinery.common.github_client", "lu_machinery.common.github_client")
     ]  # TRANSITIONAL-PKG3-B2
 
     def install(handler):

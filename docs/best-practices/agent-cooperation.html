@@ -166,7 +166,7 @@ Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 <tr>
 <td><strong>Fleet-comms + file handoffs</strong></td>
 <td>Durable coordination</td>
-<td>Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>.venv/bin/python -m scripts.fleet_comms plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane</td>
+<td>Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>.venv/bin/python -m lu_machinery.fleet_comms plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane</td>
 </tr>
 <tr>
 <td><strong>ACPX</strong></td>
@@ -946,13 +946,13 @@ mcp__memory__search_nodes(query=&quot;next session todo&quot;)
 <h2>Issue Claiming Protocol</h2>
 <p><strong>Agents never self-assign.</strong> Only the user or orchestrator assigns work.</p>
 <p>When starting an issue:</p>
-<pre><code class="language-bash">.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels &quot;working:{agent}&quot;
-.venv/bin/python -m scripts.publish issue-comment --number {N} --body &quot;Starting work on X&quot;
+<pre><code class="language-bash">.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels &quot;working:{agent}&quot;
+.venv/bin/python -m lu_machinery.publish issue-comment --number {N} --body &quot;Starting work on X&quot;
 </code></pre>
 <p>When done:</p>
-<pre><code class="language-bash">.venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels &quot;working:{agent}&quot;
-.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels &quot;review:{reviewer}&quot;  # or review:human
-# or: .venv/bin/python -m scripts.publish issue-close --number {N}
+<pre><code class="language-bash">.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --remove-labels &quot;working:{agent}&quot;
+.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels &quot;review:{reviewer}&quot;  # or review:human
+# or: .venv/bin/python -m lu_machinery.publish issue-close --number {N}
 </code></pre>
 <hr />
 <h2>Cross-Review Requirements</h2>

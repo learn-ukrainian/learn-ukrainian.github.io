@@ -48,8 +48,9 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
+from lu_machinery.lib.readonly_sqlite import open_readonly
+
 from scripts.docs import catalogue as cat
-from scripts.lib.readonly_sqlite import open_readonly
 
 REGISTRY_KEY = 'store_registry'
 CENSUS_ROOTS = ('data', '.agent', '.mcp', 'batch_state')

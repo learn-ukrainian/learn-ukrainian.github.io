@@ -4,7 +4,7 @@
 
 Use these project entry points for agent fleet work:
 
-- `.venv/bin/python scripts/ai_agent_bridge/__main__.py ...` for bridge
+- `.venv/bin/python -m lu_machinery.ai_agent_bridge ...` for bridge
   messages, channel posts, one-shot review requests, and discussion commands.
 - `scripts/dispatch.py dispatch ...` for worktree-isolated implementation,
   review, validation, and long-running delegated work.
@@ -91,6 +91,6 @@ environment before relying on it.
 
 ## AGY Model Names
 
-AGY model ids come from `scripts/config/model_catalog.yaml`: Gemini work uses
+AGY model ids come from `lu_machinery/config/model_catalog.yaml`: Gemini work uses
 `gemini-4-carbon-medium`, then `gemini-4-argon-medium`; the driver and review
 seats use `gemini-3.8-flash-high`. Gemini Pro and older Flash generations are retired.

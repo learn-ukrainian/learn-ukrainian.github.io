@@ -173,7 +173,7 @@ We have already been doing harness engineering for ~6 months. The OpenAI posts g
 | Per-worktree isolated runs | `dispatch.py dispatch --worktree` (mandatory per #M0 dispatch routing) |
 | Bug autopsies / continuous GC | `docs/bug-autopsies/INDEX.md`, MEMORY trim cadence, ADR hygiene flags |
 | Repo as only state | Decisions, comms, channel history all in-repo or DB-served |
-| Multi-agent feedback loops | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` channels, dispatch with cross-agent code review |
+| Multi-agent feedback loops | `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` channels, dispatch with cross-agent code review |
 | Two-tier handoffs | brief.md + .html (epic #1865 item #1, shipped 2026-05-11) |
 | Objectives over rigid state transitions | `/goal` rule (#1884, shipped 2026-05-12) |
 

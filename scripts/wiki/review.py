@@ -76,12 +76,7 @@ from curriculum.quality.review_loop import aggregate_min, best_round_index, min_
 from curriculum.quality.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
-from wiki.review_merger import (
-    Fix,
-    MergeReport,
-    apply_fixes,
-    merge_fixes,
-)
+from wiki.review_merger import Fix, MergeReport, apply_fixes, merge_fixes
 from wiki.sources_schema import registry_path_for
 from wiki.state import log_event
 

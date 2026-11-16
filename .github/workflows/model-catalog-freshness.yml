@@ -45,6 +45,9 @@ jobs:
   freshness:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      LU_PRODUCT_ROOT: ${{ github.workspace }}
+      LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -76,7 +79,11 @@ jobs:
             --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
 
       - name: Validate catalog structure and freshness
-        run: .venv/bin/python scripts/lint/lint_model_catalog.py
+        run: .venv/bin/python -m lu_machinery.lint.lint_model_catalog
 
       - name: Validate fleet roster + formal-CF eligibility projections
-        run: .venv/bin/python scripts/lint/lint_fleet_roster.py
+        run: |
+          .venv/bin/python -m lu_machinery.lint.lint_fleet_roster \
+            --projection "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("agents_extensions/shared/rules/model-assignment.md"))')" \
+            --projection docs/runbooks/fleet-comms-open-gaps.md \
+            --projection docs/runbooks/epic-orchestrator-roster.md

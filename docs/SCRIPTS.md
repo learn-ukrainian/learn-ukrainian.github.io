@@ -10,10 +10,10 @@ Current operational reference for repo-local scripts and agent workflows.
 
 - Main build entry point: `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree`
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
-- Typed sub-issue removal: `.venv/bin/python -m scripts.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
+- Typed sub-issue removal: `.venv/bin/python -m lu_machinery.publish issue-unlink --repo owner/repo --parent-id PARENT_NODE_ID --child-id CHILD_NODE_ID` (#9647)
 - This document intentionally omits retired pipelines and legacy script paths
 - **Seat onboarding (ownership matrix, ACPX boundary, Kimi routes retired, Buzz deferral):**
-  [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md)
+  [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)
 
 Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
@@ -104,7 +104,7 @@ For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github
 
 ## Routing facts (capacity and admission)
 
-`scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
+`lu_machinery.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
 is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
 `idle_settle` and the curriculum wave gate use its
 facts before adding their own restrictions (role, risk, egress, transport, wave
@@ -121,7 +121,7 @@ fresh or healthy.
   and before AVOID rows. They never appear in `cooler_lanes` and never satisfy
   `--strict`. Near cap, runtime-blocked hot, unhealthy, `NEED_LOGIN` and ineligible
   lanes stay AVOID.
-- **Lane health scan:** `scripts.api.lane_health.scan_lane_health` returns a typed
+- **Lane health scan:** `lu_machinery.api.lane_health.scan_lane_health` returns a typed
   `LaneHealthScan`. Each lane's `health_for(lane)` record carries a `basis`:
   `recent_tasks` (computed from tasks in the window), `scan_observed_idle` (scan ran,
   no tasks, so healthy) or `scan_unavailable` (scan failed; `healthy` and failure
@@ -152,7 +152,7 @@ fresh or healthy.
 
 ## GitHub REST budget: who spends it
 
-The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
+The shared GitHub client (`lu_machinery/common/github_client.py`) counts every request it sends to
 the REST core pool in a `usage` table of its own cache (`batch_state/github-client/cache.sqlite3`,
 owner-only, rows kept six hours). A request's row is written in a short transaction of its own,
 after the call's budget observation and cache writes committed; opening it and taking the write
@@ -161,14 +161,14 @@ budget. Each row names the caller (the dispatched task id with its command, else
 the calling command's module or script, never its arguments; for the `gh` shim, the command that
 ran `gh`) and an endpoint template such as
 `GET repos/:repo/actions/runs/:n`. The template is the route the path matches in a table of
-GitHub's REST routes (`_ROUTES` in `scripts/common/github_usage.py`), so a repository, number, SHA, account,
+GitHub's REST routes (`_ROUTES` in `lu_machinery/common/github_usage.py`), so a repository, number, SHA, account,
 team, branch, tag or label (a ref with slashes included) is replaced by the position it holds,
 however it is spelled; a path no route matches keeps only its root (`repos/:repo/:other`). A native `gh` command with no readable request is named by its
 known command words alone (`gh pr view`), never by an argument. Print the top consumers
 of the last hour:
 
 ```bash
-.venv/bin/python -m scripts.common.github_usage top            # --hours 3, --limit 50, --json
+.venv/bin/python -m lu_machinery.common.github_usage top            # --hours 3, --limit 50, --json
 ```
 
 `charged` excludes `304` responses, which GitHub does not charge. A landing call (a PR merge,
@@ -182,17 +182,17 @@ and rebuilt, because without it every read is charged in full and budget observa
 other callers; the call itself continues in memory. Only the damaged file is moved, under a directory
 lock a client never waits for: a fresh file another process already put in its place is left alone.
 
-## Issue transfer (`scripts.publish issue-transfer`)
+## Issue transfer (`lu_machinery.publish issue-transfer`)
 
 The typed publisher's `issue-transfer` verb moves one open issue between two repositories
-registered in `scripts/config/fleet_repos.yaml` that share an owner, through one GitHub
+registered in `lu_machinery/config/fleet_repos.yaml` that share an owner, through one GitHub
 `transferIssue` mutation (decision C-4682). It is the only transfer path: raw
 `gh issue transfer` stays refused. Use it for approved confidentiality or ownership moves,
 never for bulk moves. Run `--dry-run` first; it makes every check and writes a receipt with
 the labels the move would drop, but sends no mutation.
 
 ```bash
-.venv/bin/python -m scripts.publish issue-transfer --repo public --number 123 --destination infra-private --dry-run
+.venv/bin/python -m lu_machinery.publish issue-transfer --repo public --number 123 --destination infra-private --dry-run
 ```
 
 - **Refusals (exit 2, nothing sent).** The verb refuses an endpoint that is not exactly one
@@ -231,7 +231,7 @@ the labels the move would drop, but sends no mutation.
 
 ## Git hooks
 
-Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
+Run `lu_machinery/install_git_hooks.sh` once after cloning to install delegators in
 `$GIT_COMMON_DIR/hooks` that delegate to the tracked `.githooks/` of the current
 worktree. `core.hooksPath` stays unset so hook-installing tools cannot write into
 tracked files. The delegators ensure the complete tracked hook chain is
@@ -270,8 +270,8 @@ The bridge refuses every Kimi recipient, ask, inbox and discussion. There is no 
 
 Every launcher starts its seat with the rules core
 (`agents_extensions/shared/rules/core.md`; curriculum driver lanes add
-`core-curriculum.md`), read offline by `scripts/lib/rules_core.py` through
-`scripts/lib/rules_core.sh`. The core always comes from the checkout the code
+`core-curriculum.md`), read offline by `lu_machinery/lib/rules_core.py` through
+`lu_machinery/lib/rules_core.sh`. The core always comes from the checkout the code
 runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
 native Codex `-c developer_instructions=…`, Grok `--rules`; AGY, Cursor, OpenCode and Hermes
 receive the core at the head of the initial prompt. ACP calls
@@ -285,8 +285,8 @@ the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints
 and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
 
 ```bash
-.venv/bin/python scripts/lib/rules_core.py --format json          # seat, bytes, first/last pillar anchors
-.venv/bin/python scripts/lib/rules_core.py --lane core --format seat   # content
+.venv/bin/python -m lu_machinery.lib.rules_core --format json          # seat, bytes, first/last pillar anchors
+.venv/bin/python -m lu_machinery.lib.rules_core --lane core --format seat   # content
 ```
 
 ### Parallel routes and original Claude config
@@ -918,9 +918,9 @@ local dictionary-cache state.
 
 ```bash
 # run a big producer inside a disposable, task-owned scratch directory
-.venv/bin/python scripts/tools/task_scratch.py run --task-id atlas-8307-410k -- COMMAND [ARGS...]
+.venv/bin/python -m lu_machinery.tools.task_scratch run --task-id atlas-8307-410k -- COMMAND [ARGS...]
 # inventory / reclaim interrupted runs (the scheduled hygiene runner applies this)
-.venv/bin/python scripts/tools/task_scratch.py recover [--apply]
+.venv/bin/python -m lu_machinery.tools.task_scratch recover [--apply]
 # ad-hoc /tmp leak sweep (exact Atlas/QA legacy names drain; other atlas-*/qa-* are inventory only)
 .venv/bin/python -m lu_machinery.orchestration.tmp_leak_sweep [--apply]
 ```
@@ -935,9 +935,9 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 
 ```bash
 # run a multi-process test command inside host test slots (caps -n at the slots held)
-.venv/bin/python -m scripts.common.test_slots run -- .venv/bin/python -m pytest -n 4 -q tests/x.py
+.venv/bin/python -m lu_machinery.common.test_slots run -- .venv/bin/python -m pytest -n 4 -q tests/x.py
 # who holds slots and who waits, by task (same data: GET /api/ops/v1/test-slots)
-.venv/bin/python -m scripts.common.test_slots status [--json]
+.venv/bin/python -m lu_machinery.common.test_slots status [--json]
 ```
 
 Use the test-slot wrapper for dispatch-worker pytest runs: v2 does not inject
@@ -984,14 +984,14 @@ disposition. The briefed worker runs its chain to the end and nobody arms auto-m
 
 The dispatcher requires the local rules core to exist. It does not inject rules
 or research pointers into the worker prompt, with one exception: a read-only
-Claude run (`scripts/dispatcher/providers/claude.py` `build`) passes the rules
+Claude run (`lu_machinery/dispatcher/providers/claude.py` `build`) passes the rules
 core to `claude` as an appended system prompt (`--append-system-prompt-file`),
 because `--restricted` skips `CLAUDE.md`. Put the required instructions and
 source locators in the brief. Research flags record metadata; they do not fetch
 or deliver registry records. `--owned-path` records scope without a path-claim
 queue. Check disjoint ownership before launch.
 
-Resolve capacity with `scripts.fleet.capacity_pick` and `scripts.fleet.usage`.
+Resolve capacity with `lu_machinery.fleet.capacity_pick` and `lu_machinery.fleet.usage`.
 Dispatch v2 has no budget substitution guard, pricing/cost telemetry, preflight
 triage, lifecycle-file propagation, keep/force-worktree switches, repository
 backfill, Cursor self-dispatch/DoR/dirty-primary gates, open-PR freeze, or Kimi
@@ -1010,7 +1010,7 @@ project or local settings file can add an allow rule, and OpenCode's
 dispatched run no enforceable write lock, so read-only on it exits 2 with
 `read_only_unenforceable` before anything launches. AGY has none of its own
 either, so read-only AGY runs inside the dispatcher's bubblewrap boundary
-(`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home,
+(`lu_machinery/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home,
 and a dispatcher-owned Sources relay that forwards only the read-only tools. It
 exits 2 with the same refusal only on a host that cannot start that boundary
 (not Linux, or no `bwrap`). Read-only runs on Claude and OpenCode cannot run
@@ -1034,10 +1034,10 @@ Claude login can carry such a policy: both are individual Max accounts
 (`oauthAccount.organizationType = claude_max`), and `/etc/claude-code` is
 absent. Revisit before any Team or Enterprise login is added to this host.
 
-Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `scripts/dispatcher/git.py`.
+Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `lu_machinery/dispatcher/git.py`.
 Re-include a tree explicitly with `--sparse-include DIR`, or use
 `--full-checkout`. There are no sparse anchors or owned-path re-inclusions.
-The environment contract is `scripts/dispatcher/environment.py`; do not assume
+The environment contract is `lu_machinery/dispatcher/environment.py`; do not assume
 the retired launcher's extra exports or nested-pytest plugin injection.
 
 For review, pass the exact branch/head, author model, profile and risk selected
@@ -1058,7 +1058,7 @@ values. Put relevant record locators in the brief and verify attributed
 consumption separately. A metadata label is not evidence of delivery or use.
 
 Task-record maintenance remains available through
-`scripts.orchestration.stale_task_records`; it is separate from dispatch.
+`lu_machinery.orchestration.stale_task_records`; it is separate from dispatch.
 
 ## Build & Validation Workflow
 
@@ -1201,7 +1201,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/assess_research.py` | Assess and upgrade research | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
 | `scripts/consultation_cli.py` | Review consultation proposals | `.venv/bin/python scripts/consultation_cli.py list` |
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
-| `scripts/ci/check_issue_task_quality.py` | Advisory DoR/DoD field check for issue bodies (#7854) | `.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N` |
+| `lu_machinery/ci/check_issue_task_quality.py` | Advisory DoR/DoD field check for issue bodies (#7854) | `.venv/bin/python -m lu_machinery.ci.check_issue_task_quality --issue N` |
 | `scripts/audit/atlas_source_census.py` | Build aggregate-safe Word Atlas source planning counts | `.venv/bin/python scripts/audit/atlas_source_census.py --markdown-out docs/runbooks/word-atlas-source-census-planning.md` |
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
@@ -1217,15 +1217,15 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/audit/curriculum_manifest_canary.py` | SHA-256 integrity and drift canary for published curriculum; regenerates or verifies canonical file hashes | `.venv/bin/python scripts/audit/curriculum_manifest_canary.py {--check\|--write}` |
-| `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
-| `scripts/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343). With `--baseline-data` it names the baseline tests covering each lost line/arc lists every deleted test covering a loss in non-dead production files (`candidate_tests`), picks a small `restore_set` from them with greedy set cover (within ln(n) + 1 of the minimum), and reports losses no deleted test covered as `unrestorable_identities` | `.venv/bin/python scripts/ci/coverage_diff.py baseline/coverage.json candidate/coverage.json --baseline-data baseline/.coverage --git-range <base>..<head>` |
-| `scripts/ci/coverage_ref.py` | Record selected, completed, failed and crashed test IDs; combine valid branch data even after failures. `manifest.json` separates measurement `complete` from `tests_passed` and lists non-Python measured paths as non-reportable. Set `COVERAGE_REF_CONTEXTS=true` to retain pytest-cov per-test contexts | `.venv/bin/python scripts/ci/coverage_ref.py combine --input ci-artifacts/shards --output ci-artifacts/combined --sha <40-hex> --matrix-result success` |
-| `scripts/ci/coverage_ref_environment.py` | Install coverage storage isolation in the disposable coverage-ref runner venv only. Source write guards remain active; never install in a shared interpreter | `.venv/bin/python scripts/ci/coverage_ref_environment.py` |
-| `scripts.publish workflow-run` | Dispatch `coverage-ref.yml` with a required 40-hex `sha` and optional typed boolean `contexts`; other admitted workflows accept no inputs | `.venv/bin/python -m scripts.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>","contexts":true}'` |
-| `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
-| `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
-| `scripts/ci/gate.py` | Validate event-specific CI results: PR admission includes full pytest collection; merge-group, nightly and manual events require the full suite. Green PR-run reuse is retired; the queue tests its real candidate | `.venv/bin/python -m scripts.ci.gate` |
-| `scripts/ci/metadata_commit.py` | Merge queue: an empty-diff commit carrying the queue commit's metadata, so TruffleHog scans message, author and committer alone | run by ci.yml's `queue-metadata-scan` job |
+| `lu_machinery/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python -m lu_machinery.ci.ci_timings --event merge_group --since 2026-08-22` |
+| `lu_machinery/ci/coverage_diff.py` | Compare lost executed lines and arcs in paired branch coverage reports from `coverage-ref.yml` (#11226, PR #11343). With `--baseline-data` it names the baseline tests covering each lost line/arc lists every deleted test covering a loss in non-dead production files (`candidate_tests`), picks a small `restore_set` from them with greedy set cover (within ln(n) + 1 of the minimum), and reports losses no deleted test covered as `unrestorable_identities` | `.venv/bin/python -m lu_machinery.ci.coverage_diff baseline/coverage.json candidate/coverage.json --baseline-data baseline/.coverage --git-range <base>..<head>` |
+| `lu_machinery/ci/coverage_ref.py` | Record selected, completed, failed and crashed test IDs; combine valid branch data even after failures. `manifest.json` separates measurement `complete` from `tests_passed` and lists non-Python measured paths as non-reportable. Set `COVERAGE_REF_CONTEXTS=true` to retain pytest-cov per-test contexts | `.venv/bin/python -m lu_machinery.ci.coverage_ref combine --input ci-artifacts/shards --output ci-artifacts/combined --sha <40-hex> --matrix-result success` |
+| `lu_machinery/ci/coverage_ref_environment.py` | Install coverage storage isolation in the disposable coverage-ref runner venv only. Source write guards remain active; never install in a shared interpreter | `.venv/bin/python scripts/ci/coverage_ref_environment.py` |
+| `lu_machinery.publish workflow-run` | Dispatch `coverage-ref.yml` with a required 40-hex `sha` and optional typed boolean `contexts`; other admitted workflows accept no inputs | `.venv/bin/python -m lu_machinery.publish workflow-run --workflow coverage-ref.yml --ref main --inputs '{"sha":"<40 hex>","contexts":true}'` |
+| `lu_machinery/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m lu_machinery.ci.split_tests split --shard 1 --of 16` |
+| `lu_machinery/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m lu_machinery.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
+| `lu_machinery/ci/gate.py` | Validate event-specific CI results: PR admission includes full pytest collection; merge-group, nightly and manual events require the full suite. Green PR-run reuse is retired; the queue tests its real candidate | `.venv/bin/python -m lu_machinery.ci.gate` |
+| `lu_machinery/ci/metadata_commit.py` | Merge queue: an empty-diff commit carrying the queue commit's metadata, so TruffleHog scans message, author and committer alone | run by ci.yml's `queue-metadata-scan` job |
 | `scripts/audit/secret_scan_local.py` | Offline local TruffleHog scan (`tree` or full-history `history` mirror); console shows only totals and per-detector counts (no path, commit, line or value); raw JSON report 0600 in a new 0700 temp directory outside the repo; triage only through its `show-keys` and `count` subcommands. Runbook: `docs/runbooks/secret-scanning.md` (#9416) | `.venv/bin/python scripts/audit/secret_scan_local.py tree` |
 | `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
@@ -1712,7 +1712,7 @@ The learn-ukrainian pages (home, Curriculum Dashboard, Artifacts) are live pages
 Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right one for the job.
 
 > **Authoritative sources:**
-> - [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md) — **canonical ownership matrix** (`discuss` / `delegate` / fleet-comms / ACPX / Buzz deferred), formal CF separation, Kimi routes
+> - [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) — **canonical ownership matrix** (`discuss` / `delegate` / fleet-comms / ACPX / Buzz deferred), formal CF separation, Kimi routes
 > - [`docs/best-practices/agent-bridge.md`](best-practices/agent-bridge.md) — channel bridge mechanics, pinned context, include chains, bridge `discuss`
 > - [`docs/best-practices/agent-cooperation.md`](best-practices/agent-cooperation.md) — agent roles, Green Team protocol, review discipline
 >
@@ -1725,7 +1725,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only; **not** formal CF) |
 | One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
 | Fire-and-forget execution — run code, commit, push | **`scripts/dispatch.py dispatch`** | Yes |
-| Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
+| Durable fleet coordination / topology | **`lu_machinery.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
 | Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3; retired, OO-58; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
@@ -1742,14 +1742,14 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   there. `ask-gemini` is retired; AGY is the Gemini-family route.
 - `ai_agent_bridge` is for **communication**. `dispatch.py dispatch` is for **execution**. Don't confuse them.
 - **`discuss` is not formal review.** Use direct `ask-* --type review` + PR comment for CF (sealed `review-pr` / `publish-review-verdict` removed in #8520).
-- Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
+- Query `.venv/bin/python -m lu_machinery.fleet_comms plane-status` — never hard-code a live plane mode.
 - ACPX is the structured transport for supported bounded 2-to-4-seat panels;
   rollback is feature-flag off + native runtime. It is
   not a new coordination plane, and fleet-comms/file handoffs remain durable
   authority.
 - Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
 - A local service that must intentionally outlive its launching task needs the
-  [detached-session contract](runbooks/background-session-tasks.md); do not
+  [detached-session contract](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/background-session-tasks.md); do not
   weaken process-group cleanup or keep its state in task `$TMPDIR`.
 
 ### Channel bridge — preferred for multi-turn
@@ -1762,28 +1762,28 @@ Use the explicit bridge path. Do not rely on `ab`; on some machines it resolves 
 
 ```bash
 # Inspect
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel info pipeline
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail reviews -n 20
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail reviews --thread THREAD_ID
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel list
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel info pipeline
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel tail reviews -n 20
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel tail reviews --thread THREAD_ID
 
 # Create a new topic-scoped channel
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new mytopic --include shared --agents claude,agy,codex
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel new mytopic --include shared --agents claude,agy,codex
 
 # Post — short form (one recipient)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py p reviews agy "Review the heal-loop changes in scripts/build/linear_pipeline.py"
+.venv/bin/python -m lu_machinery.ai_agent_bridge p reviews agy "Review the heal-loop changes in scripts/build/linear_pipeline.py"
 
 # Post — long form (multi-recipient, threading)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Adversarial review of #1299 docs patch" --to agy,codex --parent MSG_ID
+.venv/bin/python -m lu_machinery.ai_agent_bridge post reviews "Adversarial review of #1299 docs patch" --to agy,codex --parent MSG_ID
 
 # Multi-agent bounded discussion (parallel rounds, short-circuits on [AGREE])
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "Should we extract the V6 god object?" \
+.venv/bin/python -m lu_machinery.ai_agent_bridge discuss architecture "Should we extract the V6 god object?" \
     --with claude,agy,codex --max-rounds 2
 
 # Drain incoming channel deliveries (REQUIRED for headless AGY/Codex;
 # Claude Code drains automatically via OS-level watchers)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py sync agy
-.venv/bin/python scripts/ai_agent_bridge/__main__.py sync --all
+.venv/bin/python -m lu_machinery.ai_agent_bridge sync agy
+.venv/bin/python -m lu_machinery.ai_agent_bridge sync --all
 ```
 
 **Reading messages — critical distinction:**
@@ -1807,26 +1807,26 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 # AGY bridge — Ukrainian content review; bridge code reviews are refused.
 # Native AGY admits low/medium risk code review through dispatch.py;
 # high/critical, infra and security reviews exclude Gemini.
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --review \
   --review-profile ukrainian \
   --to-model gemini-3.1-pro-high
 
 # Codex — code / adversarial review
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Adversarial review for #NNN. Read {path}." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex "Adversarial review for #NNN. Read {path}." \
   --task-id issue-NNN
 
 # Codex — quick question
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Review posted on #1177. Please read and respond." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex "Review posted on #1177. Please read and respond." \
   --task-id issue-1177
 
 # Claude — routed from AGY/Codex or a script
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude "Please verify the stress marks in curriculum/l2-uk-en/a1/hello.md" \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-claude "Please verify the stress marks in curriculum/l2-uk-en/a1/hello.md" \
   --task-id stress-verify-hello --from agy
 
 # AGY with skill activation + write access
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Activate skill final-review. ..." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "Activate skill final-review. ..." \
   --task-id fr-{slug} --allow-write \
   --delimiters FINAL_REVIEW,FRICTION \
   --to-model gemini-3.1-pro-high
@@ -1836,18 +1836,18 @@ AGY examples:
 
 ```bash
 # Default: AGY bridge call (not a code review)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick check of the greeting in curriculum/l2-uk-en/a1/hello.md." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "Quick check of the greeting in curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --to-model gemini-3.1-pro-high
 
 # Fast AGY one-off
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick one-off check." \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "Quick one-off check." \
   --task-id adhoc-agy-check \
   --to-model gemini-3.8-flash-high
 
 # Drain AGY channel inbox explicitly
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run agy
-.venv/bin/python scripts/ai_agent_bridge/__main__.py sync agy
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox run agy
+.venv/bin/python -m lu_machinery.ai_agent_bridge sync agy
 ```
 
 > **Note.** You rarely call `ask-claude` from inside a Claude session — you already *are* Claude. It's the return path for AGY/Codex or for scripts routing work to Claude.
@@ -1879,14 +1879,14 @@ reuse, because hard links share one inode: do not edit package files in place (`
 for every worktree holding that file). Before editing, patching or changing the permissions of package files,
 run `site_deps detach [--path <dir-or-file under site/node_modules>]` to turn them into private copies.
 `npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
-`LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m scripts.dispatcher.site_deps
+`LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m lu_machinery.dispatcher.site_deps
 {ensure|status|prune|detach}` runs it by hand.
 
 ### Monitoring
 
 Two event surfaces, split by agent:
 
-- **Claude Code** has a built-in `Monitor` tool that streams stdout events as notifications with ~zero context cost. Use it to watch `v7_build.py` JSONL events, `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel watch --event-stream`, or any long-running command. Invoke the tool directly — do **not** wrap it in a shell poll loop.
+- **Claude Code** has a built-in `Monitor` tool that streams stdout events as notifications with ~zero context cost. Use it to watch `v7_build.py` JSONL events, `.venv/bin/python -m lu_machinery.ai_agent_bridge channel watch --event-stream`, or any long-running command. Invoke the tool directly — do **not** wrap it in a shell poll loop.
 - **Gemini / Codex** (headless) do not have `Monitor`. Poll the Monitor API via `curl` when they need to check state.
 
 State queries (all agents):
@@ -1917,8 +1917,8 @@ Defaults:
 ### Usage telemetry
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 5h
-.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 24h --entrypoint bridge --json
+.venv/bin/python -m lu_machinery.ai_agent_bridge codex-usage --window 5h
+.venv/bin/python -m lu_machinery.ai_agent_bridge codex-usage --window 24h --entrypoint bridge --json
 ```
 
 Reads recent `batch_state/api_usage/usage_codex-*.jsonl` records, groups by outcome and entrypoint, lists recent rate-limit events, and reports whether `gpt-5.5` currently has bridge headroom.
@@ -1930,12 +1930,12 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 > **Do not confuse with channel draining.** `inbox` reads **only** the legacy 1:1 queue. Channel deliveries require `sync <agent>` (see Channel bridge above). An empty `inbox` does NOT mean you have no channel messages.
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
-.venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
-.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
-.venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox --for codex
+.venv/bin/python -m lu_machinery.ai_agent_bridge read <message_id>
+.venv/bin/python -m lu_machinery.ai_agent_bridge conversation <task_id>
+.venv/bin/python -m lu_machinery.ai_agent_bridge send "Your message" --type query --task-id my-task
+.venv/bin/python -m lu_machinery.ai_agent_bridge interactive
 ```
 
 | Message type | Purpose |
@@ -1973,7 +1973,7 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ### Dispatch settle (Luna handoff)
 
-`.venv/bin/python -m lu_machinery.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
+`.venv/bin/python -m lu_machinery.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m lu_machinery.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
 
 ## Private open-model-data review build (RB-1)
 
@@ -1997,7 +1997,7 @@ training readiness or RB-1 delivery. No network calls or database writes are per
 
 ### Issue readiness and daily counts
 
-- `scripts/ci/check_issue_task_quality.py`: `--issue NUMBER --repo OWNER/REPO
+- `lu_machinery/ci/check_issue_task_quality.py`: `--issue NUMBER --repo OWNER/REPO
   --strict --json` checks DoR, canonical stable-ID DoD structure and live
   repository-qualified ancestry. `--body` and `--body-file` leave membership
   unchecked. Unchecked ACs pass structure validation; closeout proof is separate.
@@ -2007,7 +2007,7 @@ training readiness or RB-1 delivery. No network calls or database writes are per
   fleet report. `--publish --sender devops` publishes persisted bytes to the
   epics channel. `--date YYYY-MM-DD` retries that day's immutable payload under
   ignored `batch_state/reports/`. Unknown or truncated sources stay incomplete;
-  private issue data never enters the report. `scripts.publish read issue-count
+  private issue data never enters the report. `lu_machinery.publish read issue-count
   --repo OWNER/REPO` is the fixed independent open-count reader.
 - `scripts/orchestration/install_issue_quality_report_timer.py`: `--check`
   compares daily user units; `--apply` installs safely and reloads systemd;

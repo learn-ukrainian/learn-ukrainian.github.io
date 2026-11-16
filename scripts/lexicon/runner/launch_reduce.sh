@@ -48,7 +48,7 @@ for _arg in "$@"; do
 done
 
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
-SCOPE_ENTRY="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../lib" && pwd)/job_memory_scope.sh"
+SCOPE_ENTRY="$("${LEARN_UKRAINIAN_PYTHON:-$REPO/.venv/bin/python}" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/job_memory_scope.sh"))')"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_REDUCE_UNIT:-atlas-20k-reduce.service}"
 LOG="$WORK_DIR/reduce.log"

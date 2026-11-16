@@ -53,9 +53,9 @@ hesitation): emergency CI/main breakage; green out-of-lane PRs abandoned >1h per
 ## Streams = GitHub Epics (#4708 — supersedes hand-maintained tier rows for scheduling)
 
 Scheduling lives in GitHub stream epics; this doc keeps the framework, the pillars, and
-one **current milestone** per stream. The registry `scripts/config/issue_streams.yaml`
+one **current milestone** per stream. The registry `lu_machinery/config/issue_streams.yaml`
 is the single source of truth for membership (auditor:
-`scripts/orchestration/issue_stream_audit.py`; live view: `GET /api/issues/streams`).
+`lu_machinery/orchestration/issue_stream_audit.py`; live view: `GET /api/issues/streams`).
 
 | Stream | Epic(s) | Scope |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ is the single source of truth for membership (auditor:
 | seminars-bio | #4431, #4215 (#4215 closed) | BIO readiness + builds |
 | seminars-cross | #3120, #3079 | Cross-seminar gates |
 | hramatka | #4542 | Teacher lesson service, production-path qualification, and teacher-ready release |
-| kube-dojo | #12556 | Coordinating stream for the kube-dojo lane; the work is kube-dojo/kube-dojo.github.io#2272 (evidence-backed KubeDojo content upgrade), driven by `scripts/start-kube-dojo-driver.sh` (#12553) |
+| kube-dojo | #12556 | Coordinating stream for the kube-dojo lane; the work is kube-dojo/kube-dojo.github.io#2272 (evidence-backed KubeDojo content upgrade), driven by `lu_machinery/start-kube-dojo-driver.sh` (#12553) |
 
 The `eval-harness` and `a1-upgrade` launcher streams were retired on 2026-09-24. Closed #4913's residual was folded into #6943 and #6321 per #8305; #7995 closed with no sub-issues.
 

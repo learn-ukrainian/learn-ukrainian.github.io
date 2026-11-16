@@ -8,7 +8,7 @@ tags: [contracts, verification, vesum, quality-gates, docs-inventory]
 # Content Contracts and Quality Assurance
 
 > [!NOTE]
-> OpenWiki is a non-authoritative locator. Authoritative verification logic resides in executable scripts under [`scripts/audit/`](../scripts/audit/) and the documentation inventory tool [`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py).
+> OpenWiki is a non-authoritative locator. Authoritative verification logic resides in executable scripts under [`scripts/audit/`](../scripts/audit/) and the documentation inventory tool [`lu_machinery/docs/docs_inventory.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/docs/docs_inventory.py).
 
 ## Linguistic Integrity & VESUM Verification
 
@@ -23,7 +23,7 @@ To maintain the highest standard of modern Ukrainian language instruction:
 
 Owned by [#5536](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5536) and defined in [`docs/knowledge/inventory/README.md`](../docs/knowledge/inventory/README.md):
 
-- **Tool:** [`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py)
+- **Tool:** [`lu_machinery/docs/docs_inventory.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/docs/docs_inventory.py)
 - **Source of Truth:** Git's staged and committed index (`git ls-files --stage -z`). Untracked files, local caches, and gitignored paths are strictly ignored.
 - **Determinism:** Identical index, HEAD, and tool version yield byte-identical manifests. No run timestamps, wall-clock age, or absolute paths affect output digests.
 

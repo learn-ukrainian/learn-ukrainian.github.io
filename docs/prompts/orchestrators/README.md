@@ -78,7 +78,7 @@ FOLK is the pilot seminar track. Its prompts should be treated as the model for 
 
 ## Automated Prompt Guards
 
-`scripts/lint/lint_prompts.py` continues to validate the retained prompt surface.
+`lu_machinery/lint/lint_prompts.py` continues to validate the retained prompt surface.
 `scripts/orchestration/prompt_contracts.py audit` additionally verifies exact
 inventory, migration disposition, replacement metadata, and byte hashes. Active
 track/profile coverage comes only from `curriculum.yaml`; stale track overrides

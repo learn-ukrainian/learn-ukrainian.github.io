@@ -1,6 +1,6 @@
-"""Product entry for the installed lu-machinery publisher: ``python -m scripts.publish <verb>``.
+"""Product entry for the installed lu-machinery publisher: ``python -m lu_machinery.publish <verb>``.
 
-Importing the ``scripts`` package (``-m scripts.publish`` does) names this checkout as the product
+Importing the ``scripts`` package (``-m lu_machinery.publish`` does) names this checkout as the product
 and its primary as the shared-state anchor in the environment. The publisher itself then runs in a
 fresh interpreter under ``-I`` (which implies ``-E``, ``-P`` and ``-s``), so no publisher module can
 come from ``PYTHONPATH``, the user site or the current directory: it is the installed release's.

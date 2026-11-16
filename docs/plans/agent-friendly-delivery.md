@@ -177,7 +177,7 @@ Everything above this heading is the reviewed text, except for the two publicati
 | 26 | Ignored local-state path to a review receipt | Task-id locator: the result of task `devops-pstack-opus-plan` | Ignored state cannot be retrieved from the repository; the task id is the stable locator |
 | 137 | Reported speech of the operator (one sentence) | `[Redacted for public-repository OPSEC.]` | The repository is public. Operator words stay out of public text |
 
-The OPSEC pre-publication matcher (`scripts.opsec.prepublish.check_texts`) also flagged source line 42 (rule `4-backup-context`) and source line 133 (rule `6-speaker-label`, non-blocking). Both are false positives. Line 42 uses an ordinary routing-credit term, and line 133 is a section label followed by an owner field. Neither line contains host, backup, credential or personal detail, so both were kept verbatim. Changing them would have been a material edit.
+The OPSEC pre-publication matcher (`lu_machinery.opsec.prepublish.check_texts`) also flagged source line 42 (rule `4-backup-context`) and source line 133 (rule `6-speaker-label`, non-blocking). Both are false positives. Line 42 uses an ordinary routing-credit term, and line 133 is a section label followed by an owner field. Neither line contains host, backup, credential or personal detail, so both were kept verbatim. Changing them would have been a material edit.
 
 ## Publication verification
 

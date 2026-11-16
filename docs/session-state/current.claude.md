@@ -7,7 +7,7 @@
 
 ## STARTUP (repeats — do this)
 Local main cold-started **28 behind origin** with a half-staged **#3601 system-file contamination**
-(`agents_extensions/shared/hooks/heal-core-bare.py`, `scripts/core_bare_watchdog.sh`, `settings.json` +5)
+(`agents_extensions/shared/hooks/heal-core-bare.py`, `lu_machinery/core_bare_watchdog.sh`, `settings.json` +5)
 in the index + stale lexicon artifacts. Resolved via `git reset --hard origin/main` (dirty-startup
 protocol). #3601's work is safe on its PR branch. If you see that staged contamination again, reset is
 correct — it reverts an *unauthorized* local system change, not making one.

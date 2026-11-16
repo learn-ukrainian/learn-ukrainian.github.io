@@ -27,9 +27,9 @@ RELEASE_CLI_BOOTSTRAP = (
 # TRANSITIONAL-PKG3-B2: held shell hooks must still execute their in-tree subject.
 CLI_BOOTSTRAP = (
     f"import os, runpy, sys; from pathlib import Path; sys.path.insert(0, {str(ROOT)!r}); "
-    "from scripts.ai_agent_bridge import _channels; "  # TRANSITIONAL-PKG3-B2: held roster reader.
+    "from lu_machinery.ai_agent_bridge import _channels; "  # TRANSITIONAL-PKG3-B2: held roster reader.
     "_channels.ASSIGNMENTS_PATH = Path(os.environ['TEST_INBOX_ROSTER']); "
-    "runpy.run_module('scripts.inbox_pending', run_name='__main__')"  # TRANSITIONAL-PKG3-B2: held CLI.
+    "runpy.run_module('lu_machinery.inbox_pending', run_name='__main__')"  # TRANSITIONAL-PKG3-B2: held CLI.
 )
 
 
@@ -47,8 +47,8 @@ def roster(tmp_path, monkeypatch):
     interpreter = tmp_path / "roster-interpreter"
     interpreter.write_text(
         f"#!{sys.executable}\nimport os, sys\n"
-        f"if 'scripts.inbox_pending' in sys.argv:\n"  # TRANSITIONAL-PKG3-B2: held shell hooks.
-        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {CLI_BOOTSTRAP!r}, *sys.argv[sys.argv.index('scripts.inbox_pending') + 1:]])\n"
+        f"if 'lu_machinery.inbox_pending' in sys.argv:\n"  # TRANSITIONAL-PKG3-B2: held shell hooks.
+        f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {CLI_BOOTSTRAP!r}, *sys.argv[sys.argv.index('lu_machinery.inbox_pending') + 1:]])\n"
         f"if 'lu_machinery.inbox_pending' in sys.argv:\n"
         f" os.execv({sys.executable!r}, [{sys.executable!r}, '-c', {RELEASE_CLI_BOOTSTRAP!r}, *sys.argv[sys.argv.index('lu_machinery.inbox_pending') + 1:]])\n"
         f"os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n"
@@ -62,7 +62,7 @@ def run_cli(recipient):
     command = (
         [sys.executable, "-c", CLI_BOOTSTRAP]
         if "TEST_INBOX_ROSTER" in os.environ
-        else [sys.executable, "-m", "scripts.inbox_pending"]  # TRANSITIONAL-PKG3-B2: held CLI subject.
+        else [sys.executable, "-m", "lu_machinery.inbox_pending"]  # TRANSITIONAL-PKG3-B2: held CLI subject.
     )
     proc = subprocess.run([*command, "--recipient", recipient], cwd=ROOT, capture_output=True, text=True, timeout=20)
     assert proc.returncode == 0

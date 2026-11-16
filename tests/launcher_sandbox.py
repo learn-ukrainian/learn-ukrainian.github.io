@@ -27,7 +27,8 @@ import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 
-from scripts.common.scratch import ensure_scratch_root
+from lu_machinery.common.scratch import ensure_scratch_root
+
 from tests.helpers import machinery_package, product_checkout
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 

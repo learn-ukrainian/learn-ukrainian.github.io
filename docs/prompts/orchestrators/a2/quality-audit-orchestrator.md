@@ -6,7 +6,7 @@ Last reviewed: 2026-06-21
 ## Source Assumptions
 
 - A2 is a transition track, not A1 with more words and not early B1.
-- Current repo policy gives A2 a steep Ukrainian immersion ramp. Verify exact bands from `scripts/config.py` before judging.
+- Current repo policy gives A2 a steep Ukrainian immersion ramp. Verify exact bands from `lu_machinery/config.py` before judging.
 - A2 must prepare learners for B1 grammar-in-Ukrainian while preserving controlled register, concrete examples, and support.
 - This audit must not modify curriculum or site sources. Its only content write is the durable report under `docs/audits/`, plus PR text needed to deliver that report.
 
@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - `curriculum/l2-uk-en/curriculum.yaml`, A2 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - `docs/runbooks/module-build-token-telemetry.md`
-- `scripts/config.py`
+- `lu_machinery/config.py`
 - `scripts/audit/config.py`
 - representative A2 files before expanding scope:
   - `curriculum/l2-uk-en/a2/a2-bridge/module.md`
@@ -119,7 +119,7 @@ git add "$REPORT"
 git commit -m "docs: add A2 quality audit" --trailer "X-Agent: codex/a2-quality-audit"
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 git push -u origin codex/a2-quality-audit
-.venv/bin/python -m scripts.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/a2-quality-audit --base main
+.venv/bin/python -m lu_machinery.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/a2-quality-audit --base main
 ```
 
 ## Expected Final Response

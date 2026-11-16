@@ -18,7 +18,7 @@ follow-on).
 
 Retention (#12530): ``expire_message_blobs`` removes the blob files of
 finished messages past an age floor while keeping every row and digest
-(``python -m scripts.fleet_comms retention``; dry run unless ``--apply``).
+(``python -m lu_machinery.fleet_comms retention``; dry run unless ``--apply``).
 
 Unreferenced artifacts (#12574): ``expire_unreferenced_blobs`` owns artifacts
 that no row names. It expires only an allow-listed class past a long window
@@ -47,22 +47,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.control_plane.storage import (
-    Authority,
-    StoreId,
-    assert_component_supported,
-)
-from scripts.control_plane.storage import connect as cp_connect
-from scripts.fleet_comms.contracts import new_id
-from scripts.fleet_comms.migrations import apply_migrations
-from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
-from scripts.fleet_comms.paths import validate_plane_root as validate_plane_root
-from scripts.fleet_comms.pg_schema import (
-    PG_BLOB_TABLE,
-    PgSchemaError,
-    apply_pg_schema,
-    verify_pg_schema,
-)
+from lu_machinery.contracts import new_id
+from lu_machinery.control_plane.storage import Authority, StoreId, assert_component_supported
+from lu_machinery.control_plane.storage import connect as cp_connect
+from lu_machinery.fleet_comms.migrations import apply_migrations
+from lu_machinery.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
+from lu_machinery.fleet_comms.paths import validate_plane_root as validate_plane_root
+from lu_machinery.pg_schema import PG_BLOB_TABLE, PgSchemaError, apply_pg_schema, verify_pg_schema
 
 DEFAULT_ROOT = DEFAULT_ROOT_REL
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")

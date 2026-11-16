@@ -87,8 +87,8 @@ assert usage.redact_value is redactor.redact_value
         [
             sys.executable, "-I", "-c", probe,
             str(root / "scripts" if scripts_on_path else root),
-            "secret_redactor" if scripts_on_path else "lu_machinery.secret_redactor",
-            "agent_runtime.usage" if scripts_on_path else "lu_machinery.agent_runtime.usage",
+            "lu_machinery.secret_redactor",
+            "lu_machinery.agent_runtime.usage",
         ],
         cwd=root,
         capture_output=True,

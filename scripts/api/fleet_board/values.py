@@ -10,7 +10,8 @@ from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
-from ..observer_presence import ALLOWED_AGENTS
+from lu_machinery.api.observer_presence import ALLOWED_AGENTS
+
 from .cache import CACHE, CACHE_TTL_S
 from .sources import SourceReport, report
 

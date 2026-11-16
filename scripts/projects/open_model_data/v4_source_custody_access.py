@@ -178,7 +178,7 @@ def _resolve_archive_mount(archive_locator: str) -> Path | None:
 
     ``gdrive:learn-ukrainian-data/<rel>``, ``gdrive:<rel>`` and a bare ``<rel>`` all
     name ``<rel>`` inside the retained data store, reached only through
-    ``scripts.storage.topology.resolve_bulk_root`` — never a repository symlink
+    ``lu_machinery.storage.topology.resolve_bulk_root`` — never a repository symlink
     such as ``data/textbooks`` (#8803). ``None`` when no marker-valid root resolves
     or the directory is absent, so the source is recorded as unmounted (ACCESS-4).
 

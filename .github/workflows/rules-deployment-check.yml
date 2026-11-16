@@ -82,3 +82,8 @@ jobs:
           [[ "$second" == *"; 0 changes" ]] || { echo "::error::a second deploy changed outputs"; exit 1; }
           # The pre-push gate verifies deployed files against the outgoing commit.
           LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" "${check[@]}" --print-manifest --inputs-commit "$(git rev-parse HEAD)" >/dev/null
+
+# The installed release resolves its consumer explicitly.
+env:
+  LU_PRODUCT_ROOT: ${{ github.workspace }}
+  LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}

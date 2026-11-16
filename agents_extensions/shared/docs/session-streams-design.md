@@ -66,7 +66,7 @@ This design does not:
 
 The current system already has the hard parts of safe thread continuity:
 
-- `scripts/orchestration/thread_handoff.py` prepares an exact lineage-scoped
+- `lu_machinery/orchestration/thread_handoff.py` prepares an exact lineage-scoped
   lease and replacement packet, binds predecessor and replacement task IDs,
   and keeps cleanup locked until the exact replacement is confirmed.
 - The rollover registry preserves exact identity and orders
@@ -74,7 +74,7 @@ The current system already has the hard parts of safe thread continuity:
 - `agents_extensions/shared/hooks/session-setup.sh` detects a pending packet
   first. It then tells an epic driver to read
   `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md`.
-- `scripts/api/session_router.py` serves file-backed agent handoffs through
+- `lu_machinery/api/session_router.py` serves file-backed agent handoffs through
   `/api/session/current` and exposes their hash through
   `/api/state/manifest`.
 - Task Family Manager uses exact task UUIDs and typed relations. Its Codex
@@ -154,7 +154,7 @@ A stream is provider-independent and stable:
 - `shared:fleet` for fleet-wide facts referenced by multiple epics.
 
 Issue-to-epic membership remains authoritative in
-`scripts/config/issue_streams.yaml` and `/api/issues/streams`. Agent name,
+`lu_machinery/config/issue_streams.yaml` and `/api/issues/streams`. Agent name,
 harness, branch prefix, mutable title, and most-recent activity never establish
 stream identity.
 

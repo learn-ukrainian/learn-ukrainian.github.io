@@ -23,7 +23,7 @@ own process and restores all changed process state afterwards.
 `tests/test_research_registry_p6.py` invokes this checker, so the existing pytest
 CI path keeps these invariants durable without a separate workflow.
 
-The checker protects the production caps from `scripts.research.registry`:
+The checker protects the production caps from `lu_machinery.research.registry`:
 filtered pointers are at most 1,536 bytes, a record body at most 4,096 bytes, the
 research manifest component at most 512 bytes, and the whole state manifest under
 2,048 bytes. It has no dependency on mutable consumption telemetry or task state.

@@ -6,7 +6,7 @@ raw capture, store the raw artifact, and advance request state only on proven
 completion.
 
 Bridge defaults remain legacy. Opt-in message plane (PR-E) may shadow/dual_write
-via ``scripts.fleet_comms.message_plane`` without flipping production defaults.
+via ``lu_machinery.fleet_comms.message_plane`` without flipping production defaults.
 """
 
 from __future__ import annotations
@@ -19,20 +19,20 @@ from pathlib import Path
 from typing import Any
 
 from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE
-
-from scripts.agent_runtime.target_admission import resolve_and_admit, stored_kimi_request
-from scripts.control_plane.storage import (
+from lu_machinery.agent_runtime.target_admission import resolve_and_admit, stored_kimi_request
+from lu_machinery.contracts import CompletionState, ResponseEnvelope, new_id
+from lu_machinery.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
     StoreId,
     assert_component_supported,
 )
-from scripts.fleet_comms.adapter_conformance import CaptureInput, conform, parse_capture_events
+from lu_machinery.fleet_comms.adapter_conformance import CaptureInput, conform, parse_capture_events
+from lu_machinery.fleet_comms.endpoints import EndpointRegistry, load_endpoint_registry
+from lu_machinery.fleet_comms.migrations import apply_migrations
+from lu_machinery.pg_schema import apply_pg_schema
+
 from scripts.fleet_comms.artifacts import ArtifactStore
-from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope, new_id
-from scripts.fleet_comms.endpoints import EndpointRegistry, load_endpoint_registry
-from scripts.fleet_comms.migrations import apply_migrations
-from scripts.fleet_comms.pg_schema import apply_pg_schema
 
 REQUEST_STATES = frozenset(
     {"queued", "running", "complete", "incomplete", "failed", "expired", "dead_lettered"}
@@ -556,7 +556,7 @@ class RequestExecutor:
         whose claim has gone stale (#7485 CF r1 — production reclaim path).
 
         Returns the re-queued request ids; unexpired requests only. Callers
-        (ops sweeps, ``python -m scripts.fleet_comms requests requeue-stale``)
+        (ops sweeps, ``python -m lu_machinery.fleet_comms requests requeue-stale``)
         then re-execute them normally.
 
         The default floor (7200s) sits at the adapter HARD-timeout ceiling, so

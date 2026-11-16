@@ -21,15 +21,14 @@ import json
 import subprocess
 from pathlib import Path
 
-from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
-
-from ._ask_contract import (
+from lu_machinery.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
+from lu_machinery.ai_agent_bridge._ask_contract import (
     requested_effort,
     resolve_model_selection,
     response_provenance,
     unsupported_effort_note,
 )
-from ._ask_lifecycle import (
+from lu_machinery.ai_agent_bridge._ask_lifecycle import (
     ask_attachment,
     ask_sender_model,
     ask_target_model,
@@ -38,8 +37,8 @@ from ._ask_lifecycle import (
     record_ask_reply,
     register_ask,
 )
-from ._messaging import acknowledge, send_message
-from ._prompts import require_core_or_exit, with_core_or_exit
+from lu_machinery.ai_agent_bridge._messaging import acknowledge, send_message
+from lu_machinery.ai_agent_bridge._prompts import require_core_or_exit, with_core_or_exit
 
 CURSOR_DEFAULT_TIMEOUT_S = 900
 
@@ -49,7 +48,7 @@ def cursor_default_model() -> str:
 
     With no approved Cursor pin (GROK-CANCEL-1110), every ask is refused with a typed reason.
     """
-    from scripts.review.model_catalog import CURSOR_NO_APPROVED_PIN_CODE, cursor_pinned_models
+    from lu_machinery.review.model_catalog import CURSOR_NO_APPROVED_PIN_CODE, cursor_pinned_models
 
     pins = cursor_pinned_models()
     if not pins:
@@ -62,7 +61,7 @@ def cursor_default_model() -> str:
 
 def _require_approved_cursor_model(model: str | None) -> str:
     """Return the wire model when it is a concrete approved Cursor pin; otherwise exit with the typed refusal."""
-    from scripts.review.model_catalog import (
+    from lu_machinery.review.model_catalog import (
         ModelCatalogError,
         apply_cursor_model_pins,
         cursor_non_dispatch_model_refusal,
@@ -146,7 +145,7 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
     """Process an existing Cursor ask, shared by sync and detached paths."""
     msg = fetch_ask_message(message_id, "cursor")
     if msg is not None:
-        from ._ask_lifecycle import assert_ask_content_present
+        from lu_machinery.ai_agent_bridge._ask_lifecycle import assert_ask_content_present
 
         assert_ask_content_present(msg, message_id=message_id, target="cursor")
     if not msg:

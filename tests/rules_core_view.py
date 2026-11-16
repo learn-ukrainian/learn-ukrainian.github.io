@@ -36,9 +36,9 @@ from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import PRODUCT_MARKER, machinery_path
+from lu_machinery.lib import rules_core
 
-from scripts.common.repo_root import PRODUCT_MARKER
-from scripts.lib import rules_core
 from tests.helpers import machinery_package, product_checkout
 from tests.launcher_sandbox import launcher_environment
 
@@ -116,7 +116,7 @@ def _view_sources() -> tuple[Path, ...]:
         return (product,)
     # Two checkouts only in the extracted layout: the machinery side must be the tested machinery
     # tree, never an unrenamed source checkout whose scripts/ still holds the machinery.
-    assert machinery_package() != "scripts" and not (REPO / "scripts" / "common" / "repo_root.py").exists(), (
+    assert machinery_package() != "scripts" and not (machinery_path('common/repo_root.py')).exists(), (
         f"the machinery side of a checkout view is an unrenamed source checkout: {REPO}"
     )
     return (product, REPO)

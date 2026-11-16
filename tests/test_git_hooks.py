@@ -89,7 +89,14 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         repo / "scripts/lib/project_interpreter.sh",
         "#!/usr/bin/env bash\nsource " + shlex.quote(str(files("lu_machinery.lib").joinpath("project_interpreter.sh"))) + "\n",
     )
-    _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{_project_python()}" "$@"\n')
+    _write_executable(repo / ".venv/bin/python", (
+        "#!/bin/sh\n"
+        'if [ "${1-}" = -I ] && [ "${2-}" = -c ]; then\n'
+        'case "${3-}" in *guardrails/primary_post_checkout_heal.sh*)\n'
+        f"echo {shlex.quote(str(repo / 'scripts/guardrails/primary_post_checkout_heal.sh'))}; exit 0 ;;\n"
+        'esac\nfi\n'
+        f'exec "{_project_python()}" "$@"\n'
+    ))
     from tests.githooks import install_message_scanner
 
     install_message_scanner(repo)
@@ -169,6 +176,7 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     env = {
         "HOOK_LOG": str(hook_log),
         "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(repo),
+        "LEARN_UKRAINIAN_PYTHON": str(repo / ".venv/bin/python"),
         "LFS_STDIN_LOG": str(lfs_stdin_log),
         "PATH": f"{bin_dir}:{os.environ['PATH']}",
         "PRE_COMMIT_HOME": str(tmp_path / "pre-commit-cache"),

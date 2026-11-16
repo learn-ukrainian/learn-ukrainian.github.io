@@ -706,7 +706,7 @@ from types import SimpleNamespace
 
 state_root, repo_root = sys.argv[1:]
 sys.path.insert(0, repo_root)
-from scripts.orchestration.claudex_supervisor import ClaudexSupervisor
+from lu_machinery.orchestration.claudex_supervisor import ClaudexSupervisor
 
 env = {
     "LEARN_UKRAINIAN_PROFILE_ID": "sol_lead",

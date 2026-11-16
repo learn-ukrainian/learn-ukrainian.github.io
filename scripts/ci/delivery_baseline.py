@@ -37,7 +37,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.ci._location import module_name
+from lu_machinery.ci._location import module_name
 
 SCHEMA_VERSION = "delivery-baseline-input.v1"
 ARMS = ("before", "after")

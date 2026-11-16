@@ -138,7 +138,7 @@ class TestNaturalnessCheck:
     def _unit_test_interpreter(self, monkeypatch):
         """These file helpers do not spawn providers or require a checkout venv."""
         monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
-        from common import repo_root
+        from lu_machinery.common import repo_root
 
         monkeypatch.setattr(repo_root, "project_interpreter", lambda root=None: Path(sys.executable))
 

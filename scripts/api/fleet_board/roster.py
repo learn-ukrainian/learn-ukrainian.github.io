@@ -16,7 +16,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from ..opsec_scan import scan_text
+from lu_machinery.api.opsec_scan import scan_text
+
 from .envelope import TIMESTAMP_PATTERN
 from .sources import SourceReport, report
 

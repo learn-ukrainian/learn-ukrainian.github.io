@@ -98,8 +98,8 @@ xychart-beta
   - `openwiki/docs-lifecycle.md`: 4,100 bytes
 - **Context Byte Reduction:** **53.4% reduction** via quickstart entrypoint (**77.8% reduction** on direct locator read; 53.5% under snapshot).
 - **Scored Answer Evidence:**
-  - *Baseline Answer:* Config-as-policy in `scripts/config.py` wins over stale curated docs. Under `docs-authority-lifecycle.md`, the 5-step conflict resolution procedure applies: (1) classify fact type, (2) check authority table, (3) decide by evidence of staleness (prefer newer commits, tool reads over prose), (4) record disposition, (5) OpenWiki never breaks ties. (Citations: `docs/architecture/docs-authority-lifecycle.md#L31-L45`).
-  - *OpenWiki Answer:* Config-as-policy in `scripts/config.py` overrides curated narrative docs for configuration facts. The 5-step deterministic resolution protocol governs: fact classification, authority matrix lookup, staleness evaluation, disposition logging, with explicit guarantee that OpenWiki cannot break ties. (Citations: `docs-lifecycle.md` -> `../docs/architecture/docs-authority-lifecycle.md`, `../scripts/config.py`).
+  - *Baseline Answer:* Config-as-policy in `lu_machinery/config.py` wins over stale curated docs. Under `docs-authority-lifecycle.md`, the 5-step conflict resolution procedure applies: (1) classify fact type, (2) check authority table, (3) decide by evidence of staleness (prefer newer commits, tool reads over prose), (4) record disposition, (5) OpenWiki never breaks ties. (Citations: `docs/architecture/docs-authority-lifecycle.md#L31-L45`).
+  - *OpenWiki Answer:* Config-as-policy in `lu_machinery/config.py` overrides curated narrative docs for configuration facts. The 5-step deterministic resolution protocol governs: fact classification, authority matrix lookup, staleness evaluation, disposition logging, with explicit guarantee that OpenWiki cannot break ties. (Citations: `docs-lifecycle.md` -> `../docs/architecture/docs-authority-lifecycle.md`, `../scripts/config.py`).
   - *Correctness Scoring:*
     - Factual accuracy: 5/5 (both)
     - Authority compliance: 5/5 (both)
@@ -121,8 +121,8 @@ xychart-beta
   - `openwiki/pipeline-runtime.md`: 3,166 bytes
 - **Context Byte Reduction:** **42.7% to 70.2% reduction** via quickstart entrypoint (**76.4% to 87.7% reduction** on direct locator read).
 - **Scored Answer Evidence:**
-  - *Baseline Answer:* Primary build entrypoint is `scripts/build/v7_build.py`. Curriculum MDX generation is performed via `scripts/generate_mdx/core.py`. Lesson immersion is governed by config-as-policy in `scripts/config.py` (`IMMERSION_POLICIES` and `TRACK_CONFIG`). (Citations: `agents_extensions/shared/rules/pipeline.md`, `scripts/config.py`, `docs/README.md`).
-  - *OpenWiki Answer:* Pipeline runtime entrypoints: `scripts/build/v7_build.py` (assembly) and `scripts/generate_mdx/core.py` (conversion/navigation). Lesson immersion is governed by config-as-policy in `scripts/config.py` (`IMMERSION_POLICIES`), superseding narrative documentation. (Citations: `pipeline-runtime.md` -> `../scripts/build/v7_build.py`, `../scripts/generate_mdx/core.py`, `../scripts/config.py`).
+  - *Baseline Answer:* Primary build entrypoint is `scripts/build/v7_build.py`. Curriculum MDX generation is performed via `scripts/generate_mdx/core.py`. Lesson immersion is governed by config-as-policy in `lu_machinery/config.py` (`IMMERSION_POLICIES` and `TRACK_CONFIG`). (Citations: `agents_extensions/shared/rules/pipeline.md`, `lu_machinery/config.py`, `docs/README.md`).
+  - *OpenWiki Answer:* Pipeline runtime entrypoints: `scripts/build/v7_build.py` (assembly) and `scripts/generate_mdx/core.py` (conversion/navigation). Lesson immersion is governed by config-as-policy in `lu_machinery/config.py` (`IMMERSION_POLICIES`), superseding narrative documentation. (Citations: `pipeline-runtime.md` -> `../scripts/build/v7_build.py`, `../scripts/generate_mdx/core.py`, `../scripts/config.py`).
   - *Correctness Scoring:*
     - Factual accuracy: 5/5 (both)
     - Subsystem entrypoint fidelity: 5/5 (both)
@@ -145,7 +145,7 @@ Consistent with ADR-013's non-authoritative posture for OpenWiki and the reserva
    *Proposal:* For any recurring regeneration PRs, adhere to the ADR-013 LANGUAGE-LANES allocation: AGY Gemini Flash executes and Codex Astra reviews (or the recorded one-time outage swap), recording concrete model identities and families on every PR.
 
 4. **Proposed Visual Knowledge Browser in Ops UI (Post-Adopt Scope):**
-   *Proposal:* In accordance with operator guidance, if and only if the pilot is formally adopted after #5543 cold-start measurement, consider adding `openwiki/` to the allowlist in `scripts/api/docs_router.py` to serve a visual knowledge browser under `/artifacts/openwiki/` in developer dashboards (with explicit freshness digest, never as live-state authority).
+   *Proposal:* In accordance with operator guidance, if and only if the pilot is formally adopted after #5543 cold-start measurement, consider adding `openwiki/` to the allowlist in `lu_machinery/api/docs_router.py` to serve a visual knowledge browser under `/artifacts/openwiki/` in developer dashboards (with explicit freshness digest, never as live-state authority).
 
 5. **Proposed Automated Token Usage Receipt Capture:**
    *Proposal:* For Wave 3 updates, wire generator harnesses to capture and record machine-readable provider usage receipts (`usage_metadata` / `usage.json`) alongside operational logs, upgrading Criterion 5 from estimate-based to fully receipt-verified accounting.

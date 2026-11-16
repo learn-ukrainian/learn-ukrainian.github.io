@@ -80,7 +80,7 @@ landed the same day, so the two effects are not separable. **What now dominates*
   the Frontend job unless site paths changed.
 - **D2 — Flake control (#9067).** A quarantine registry (node id, fix issue, owner, expiry ≤ 30 days, one renewal).
   *Admission:* an open fix issue, two distinct reproduced failures on unmodified main, equivalent behavior coverage
-  and designated admission approval. The [admission checker](../runbooks/flake-quarantine.md) verifies changed
+  and designated admission approval. The [admission checker](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/flake-quarantine.md) verifies changed
   registry entries against GitHub metadata and exact-node JUnit evidence; pytest lint stays offline.
   *Behaviour:* `pytest-rerunfailures` reruns **only** listed tests and **never** on the nightly
   `schedule` run, so a still-flaky test shows up red on the nightly; every rerun (first-attempt failure, rerun green)
@@ -145,7 +145,7 @@ Out of this program: #8921 (Claude workers backgrounding pytest — harness), #8
 - **Nightly reliability:** the 2026-09-27 nightly started ~6 h late and the 2026-09-28 one had not started by 09:40Z.
   GitHub does not guarantee `schedule` timing. #8877 (moving tests to the nightly tier) waits until the nightly has run
   on 7 consecutive days; #8876 AC-02 uses whichever nightly completes.
-- **Metric drift:** every §2 number must be reproducible by `scripts.ci.ci_timings` once #9058 lands; a number that
+- **Metric drift:** every §2 number must be reproducible by `lu_machinery.ci.ci_timings` once #9058 lands; a number that
   cannot be traced to a run id is marked unverified.
 
 ## 6. Done when

@@ -4,7 +4,7 @@
 > Generate one with:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent gemini
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare --agent gemini
 ```
 
 Gemini agents should read `docs/session-state/current.md` for the router, then

@@ -6,7 +6,7 @@ that requires structured investigation (not simple fixes).
 ## Usage
 
 ```bash
-.venv/bin/python -m scripts.publish issue-create \
+.venv/bin/python -m lu_machinery.publish issue-create \
   --title "bug: Brief description of the problem" \
   --body-file /tmp/issue-body.md \
   --parent <stream-epic-number> \

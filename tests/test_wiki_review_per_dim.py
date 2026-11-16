@@ -7,7 +7,7 @@ places where the semantics matter:
 1. MIN aggregation: a single weak dim must drive the score, not be
    averaged away by stronger siblings.
 2. Threshold source-of-truth: the PASS floor comes from
-   ``scripts.common.thresholds.REVIEW_PASS_FLOOR`` (post-#1454), not a
+   ``lu_machinery.common.thresholds.REVIEW_PASS_FLOOR`` (post-#1454), not a
    local placeholder.
 3. No legacy weighted-average code path reachable from the wiki review
    module — the new pattern does not co-exist with the old.
@@ -25,13 +25,7 @@ pytestmark = pytest.mark.reads_content
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from wiki.review import (
-    DimResult,
-    ReviewReport,
-    RoundResult,
-    aggregate_min,
-    default_thresholds,
-)
+from wiki.review import DimResult, ReviewReport, RoundResult, aggregate_min, default_thresholds
 
 
 def _dim_result(dim: str, score: float, verdict: str = "PASS") -> DimResult:

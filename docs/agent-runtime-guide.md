@@ -51,7 +51,7 @@ that names a Kimi seat or model, in any mode, and raises `KimiAdmissionRefused`
 ("Kimi is retired") before telemetry, state writes or a launch plan.
 
 Targets are admitted in the same step they are resolved:
-`scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
+`lu_machinery/agent_runtime/target_admission.py` `resolve_and_admit` performs every
 resolution a request goes through (explicit recipients and model, `data`
 attachments, compat names, ACP route pins, slot holders, registry lookups,
 quota substitution) and then runs the retired-seat gate. Delivery, insertion, wake and
@@ -63,7 +63,7 @@ Do not dispatch `--agent kimi`. Catalog retirement runs after admission and
 before a launch plan.
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
-[`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 Claude through AGY supports the existing `claude-sonnet-5-5-high` and
 `claude-opus-5-5-high` pins for implementation in verified dispatch worktrees.
 Sonnet remains excluded from security work. The dispatch keeps the requested
@@ -72,7 +72,7 @@ same-run provenance through failure and cancellation. Missing or invalid
 identity cannot establish successful Claude dispatch. Review permissions and
 formal-review eligibility remain separate. Per-variant stop conditions and
 post-merge driver qualification:
-[`docs/runbooks/agy-claude-routes.md`](runbooks/agy-claude-routes.md).
+[`docs/runbooks/agy-claude-routes.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agy-claude-routes.md).
 
 ## ACPX structured transport (runtime boundary)
 
@@ -93,7 +93,7 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   the flag to `off` (or unsetting it) and using native transport.
 - Direct-only seats cover Codex, Grok, Claude, Cursor, Pool,
   AGY/Gemini, GLM, Gemma, and DeepSeek (Kimi and KimiCC are retired and have no seat) through the fixed registry in
-  `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
+  `lu_machinery/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
   `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`). They
   are never returned by
@@ -121,7 +121,7 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
   profile is digest-checked before every spawn and removes write, shell,
   subagent, memory, web, MCP, and LSP tools at the Grok server boundary.
-- AGY and DeepSeek use `scripts/agent_runtime/acp_text_agent.mjs`: one text
+- AGY and DeepSeek use `lu_machinery/agent_runtime/acp_text_agent.mjs`: one text
   prompt, source-blind temporary cwd, provider-local sandbox/isolation, and
   cleanup after the turn. GLM uses native `opencode acp --pure` with a fixed
   Z.AI subscription model plus deny-all permissions and disabled tools.
@@ -144,7 +144,7 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
 - Correlation / shadow telemetry is **evidence only** — the existing participant
   result stays authoritative under shadow compare.
 - The only supported comparison caller is
-  `scripts.agent_runtime.acpx_pilot`: an explicit worktree-only command that
+  `lu_machinery.agent_runtime.acpx_pilot`: an explicit worktree-only command that
   runs native first, then one shadow under a global non-blocking lock. It
   suppresses replayed idempotency digests before either call, never queues or
   retries, and persists sanitized classification/parity/duration/token
@@ -177,7 +177,7 @@ formal review, or coordination authority.
 ```bash
 printf '%s\n' 'Compare the two bounded options and name risks.' |
   ACPX_AUTH_CHAT_GPT=1 \
-  .venv/bin/python -m scripts.fleet_comms acp-discuss --cwd . \
+  .venv/bin/python -m lu_machinery.fleet_comms acp-discuss --cwd . \
   --task-id acp-6078 --correlation-id acp-6078-v1 \
   --idempotency-key acp-6078-v1 --rounds 2 --json
 ```
@@ -211,7 +211,7 @@ replay the recorded terminal disposition without scheduling model work.
 Finally verify the body-free receipt:
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms acp-verify \
+.venv/bin/python -m lu_machinery.fleet_comms acp-verify \
   --conversation-id conversation_<id> --require-replay --json
 ```
 
@@ -250,7 +250,7 @@ produce review authority or replace formal cross-family review (sealed `review-p
 Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in
 callers — the adapter's argv is fully confined and callers only ever set
 `tool_config` keys the adapter allowlists. Full operator contract:
-[`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+[`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 ## Add a new agent in 20 lines
 
@@ -733,7 +733,7 @@ request sent to a local fake endpoint); the explicit controls keep the route
 closed if that reduced tool set changes.
 
 The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
-Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
+Code through the repo-owned `lu_machinery/agent_runtime/claude_acp_exec.sh`, which
 `CLAUDE_CODE_EXECUTABLE` names. The adapter reads the launcher only from the
 canonical primary checkout, which the adapter's own checkout names through its
 git links (`resolve_main_root_without_git`: no git process, so PATH, git
@@ -801,7 +801,7 @@ The plan also sets `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`,
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,
-`start-claude-driver.sh`, `start-claude-cto.sh`, `scripts/launchers/claude.sh`) do not use the adapter
+`start-claude-driver.sh`, `start-claude-cto.sh`, `lu_machinery/launchers/claude.sh`) do not use the adapter
 and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
 call is a different path: `worker_leftovers.py` handles it (#8991).
 `tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
@@ -864,7 +864,7 @@ before the command runs, including a write worker's push of its own branch
 classifier is not the session mode. Both also install the tracked fleet
 PreToolUse guards from `agents_extensions/shared/settings.json` (primary-checkout
 write, secret-print, merge, and the other worker hooks) through
-`scripts/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
+`lu_machinery/agent_runtime/grok_hook_bridge.py` and a per-invocation `lu-write-worker`
 agent. That agent does not load `guard-reviewer-publish.py` and does not set
 the read-only Git push rewrite. The read-only reviewer opt-in keeps its publish
 hook and push rewrite on `auto`. Matchers for the write worker also name the
@@ -976,7 +976,7 @@ Every `runner.invoke()` call writes exactly one JSONL record to:
 batch_state/api_usage/usage_<agent>-<entrypoint>_YYYY-MM-DD.jsonl
 ```
 
-Schema and atomicity details in `scripts/agent_runtime/usage.py`. Key
+Schema and atomicity details in `lu_machinery/agent_runtime/usage.py`. Key
 points:
 
 - **Atomic append**: `os.open(O_APPEND|O_CREAT|O_WRONLY) + os.write()`.
@@ -995,7 +995,7 @@ points:
 ## Runner-level provider failover (#4497)
 
 Provider failover is optional and configured per runtime lane in
-`scripts/config/agent_runtime_failover.yaml`. The default file has
+`lu_machinery/config/agent_runtime_failover.yaml`. The default file has
 `chains: {}`; absent lane chain means `runner.invoke()` keeps the previous
 single-route behavior exactly.
 
@@ -1040,7 +1040,7 @@ timeouts still mean `transport`.
 
 The Codex adapter runs `codex exec --json`. Exec prints typed JSONL events on
 stdout, already filtered to this invocation's thread and turn, and that stream
-is the only outcome authority (`scripts/agent_runtime/adapters/codex_events.py`):
+is the only outcome authority (`lu_machinery/agent_runtime/adapters/codex_events.py`):
 
 - **Completed**: one `turn.completed` with exit 0. The answer is always the `-o`
   file (schema-validated when an output schema is bound), never a streamed
@@ -1100,7 +1100,7 @@ and `workspace-write`.
 Automatic paths are `.worktrees/dispatch/<agent>/<task>/`. Explicit `--worktree`
 paths and `--cwd` must name a valid dispatch checkout for that agent. The primary
 checkout stays on `main` and is read-only to agents. The worktree planner lives
-in `scripts/dispatcher/git.py`.
+in `lu_machinery/dispatcher/git.py`.
 
 Default sparse exclusions are defined by `SPARSE_EXCLUDE_DEFAULT` in that
 module. Use repeatable `--sparse-include DIR` or `--full-checkout` when a task
@@ -1110,11 +1110,11 @@ anchor files are added automatically.
 The dispatcher checks rules-core availability but does not prepend the core or
 research pointers to the prompt. The one exception is a read-only Claude run,
 which receives the rules core as an appended system prompt because `--restricted`
-skips `CLAUDE.md` (`scripts/dispatcher/providers/claude.py` `build`). Include
+skips `CLAUDE.md` (`lu_machinery/dispatcher/providers/claude.py` `build`). Include
 required instructions and relevant source locators in the brief.
 
 A read-only AGY run executes inside the dispatcher's bubblewrap boundary
-(`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home
+(`lu_machinery/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home
 and a dispatcher-owned Sources relay that forwards only the read-only tools.
 Before that scratch is removed, the launcher copies each saved Sources tool
 body out with the adapter's existing inliner. The worker writes the body, or
@@ -1141,7 +1141,7 @@ the exact run. `list --status running` reports active tasks. Write-task delivery
 requires a pushed branch; inspect the terminal record and Git evidence.
 A dirty or empty deliverable is not success. The dispatcher removes the task's
 worktree at settlement only when nothing in it can be lost; remove a kept one
-only with `python -m scripts.orchestration.worktree_claims remove`, whose
+only with `python -m lu_machinery.orchestration.worktree_claims remove`, whose
 custody checks still apply.
 
 Budget/cost/pricing guards, preflight triage, lifecycle-file propagation,
@@ -1149,7 +1149,7 @@ keep/force-worktree switches, repository backfill, Cursor self-dispatch and DoR
 checks, dirty-primary admission, open-PR freeze, Kimi boundary hooks, danger
 mode and RB2 are retired. Native Grok dispatch is retired; `grok` is not a
 dispatch agent, so use `--agent cursor --model grok-4.7-high`.
-No additional worker exports beyond `scripts/dispatcher/environment.py` are
+No additional worker exports beyond `lu_machinery/dispatcher/environment.py` are
 promised. The provider adapter layer still serves its other callers.
 
 Bounded workers retain the v2 driver-brief and `--advisory-task` admission paths.

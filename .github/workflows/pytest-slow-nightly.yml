@@ -37,8 +37,6 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - run: bash scripts/ci/test_env.sh start postgres
-
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
@@ -86,6 +84,8 @@ jobs:
 
       # The loader imports locked project dependencies (jsonschema), so it runs
       # in the project venv after Install dependencies, never the setup interpreter.
+      - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start postgres
+
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
         run: |
           .venv/bin/python - <<'PY'
@@ -142,7 +142,7 @@ jobs:
           path: ${{ env.STANZA_RESOURCES_DIR }}
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
-      - run: bash scripts/ci/test_env.sh wait
+      - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
         timeout-minutes: 5
 
       - name: Run slow pytest selection
@@ -195,3 +195,8 @@ jobs:
           path: ci-artifacts/
           if-no-files-found: ignore
           retention-days: 14
+
+# The installed release resolves its consumer explicitly.
+env:
+  LU_PRODUCT_ROOT: ${{ github.workspace }}
+  LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}

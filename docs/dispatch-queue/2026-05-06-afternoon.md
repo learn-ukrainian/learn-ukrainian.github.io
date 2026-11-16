@@ -1,7 +1,7 @@
 > Historical command examples are evidence, not current execution instructions.
 > `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
-> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
-> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> Use `"$PROJECT_PYTHON" -m lu_machinery.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m lu_machinery.publish read <name>` for named API reads;
 > see [the current command fields](/docs/dev/agent-public-text.md).
 
 # Dispatch queue — 2026-05-06 afternoon (14:00-20:00 CET peak window)
@@ -49,7 +49,7 @@ Brief at `/tmp/codex-1731-adr-r3-brief.md` lists Codex's own 6 REVISE findings (
   --prompt-file /tmp/codex-ab-review-deep-brief.md
 ```
 
-Brief: add `ab review-deep <PR-or-file>` subcommand to `scripts/ai_agent_bridge/__main__.py` that ALWAYS runs `delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh`. Add `ab dispatch-fix <issue>` that ALWAYS runs Codex via worktree. Tooling-enforced model assignment per `claude_extensions/rules/model-assignment.md`.
+Brief: add `ab review-deep <PR-or-file>` subcommand to `lu_machinery/ai_agent_bridge/__main__.py` that ALWAYS runs `delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh`. Add `ab dispatch-fix <issue>` that ALWAYS runs Codex via worktree. Tooling-enforced model assignment per `claude_extensions/rules/model-assignment.md`.
 
 ### 3. #1708 — v7_build.py per-writer subprocess timeout
 
@@ -64,7 +64,7 @@ gh issue view 1708 --json body --jq .body > /tmp/brief-1708.md
 
 ### 4. #1710 — Gemini auth-mode priority flip (API first, OAuth fallback)
 
-Small fix in `scripts/agent_runtime/adapters/gemini.py`. Issue has the AC.
+Small fix in `lu_machinery/agent_runtime/adapters/gemini.py`. Issue has the AC.
 
 ```bash
 gh issue view 1710 --json body --jq .body > /tmp/brief-1710.md

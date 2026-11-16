@@ -40,23 +40,23 @@ export AB_WAKE_DIR="${AB_REPO_ROOT}/.agent/wake"
 Create your base channels. It is recommended to create a `shared` channel for global context, and include it in topic-specific channels.
 ```bash
 # Create the global shared channel
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new shared
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel new shared
 
 # Create a topic channel and include shared context
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new ops --include shared
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel new ops --include shared
 ```
 
 ### Step 3.4: Test the Setup
 Verify the bridge is functioning correctly:
 ```bash
 # List available channels
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel list
 
 # Post a test message
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post ops "Initialization test" --to claude
+.venv/bin/python -m lu_machinery.ai_agent_bridge post ops "Initialization test" --to claude
 
 # Check the inbox queue
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show claude
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox show claude
 ```
 
 ## 4. Environment Variable Reference
@@ -79,15 +79,15 @@ The bridge is fully configurable via `AB_*` environment variables to support por
 Bridge commands should use the explicit project entry point. Avoid bare `ab ...`
 examples because `ab` resolves to ApacheBench on the user's machine.
 
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py channel ...`**: Manage channels.
-  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new <name> [--include <other>]`: Create a new channel.
-  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list`: List all channels.
-  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context <name> --edit`: Edit the pinned context for a channel.
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py post <channel> "<message>"`**: Send a message to a channel. Use `--to <agent1,agent2>` to specify recipients, or `--parent <id>` to reply to a thread.
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "<topic>"`**: Start a bounded multi-agent debate. Use `--with <agents>` and `--max-rounds <N>`.
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show <agent>`**: View pending messages waiting for agents.
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run <agent> [--until-idle]`**: Run the inbox worker to process messages for a specific agent.
-- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py sync <agent>`**: Manually drain the queue and sync messages for an agent (alternative to `inbox run`).
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge channel ...`**: Manage channels.
+  - `.venv/bin/python -m lu_machinery.ai_agent_bridge channel new <name> [--include <other>]`: Create a new channel.
+  - `.venv/bin/python -m lu_machinery.ai_agent_bridge channel list`: List all channels.
+  - `.venv/bin/python -m lu_machinery.ai_agent_bridge channel context <name> --edit`: Edit the pinned context for a channel.
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge post <channel> "<message>"`**: Send a message to a channel. Use `--to <agent1,agent2>` to specify recipients, or `--parent <id>` to reply to a thread.
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss <channel> "<topic>"`**: Start a bounded multi-agent debate. Use `--with <agents>` and `--max-rounds <N>`.
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge inbox show <agent>`**: View pending messages waiting for agents.
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge inbox run <agent> [--until-idle]`**: Run the inbox worker to process messages for a specific agent.
+- **`.venv/bin/python -m lu_machinery.ai_agent_bridge sync <agent>`**: Manually drain the queue and sync messages for an agent (alternative to `inbox run`).
 
 ## 6. Architecture Diagram
 

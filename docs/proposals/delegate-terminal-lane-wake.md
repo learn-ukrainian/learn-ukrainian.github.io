@@ -55,7 +55,7 @@ of an installed watcher, a current native session, or successful activation.
 
 1. [`cmd_dispatch`](../../scripts/delegate.py#L14194) chooses `run_nonce` from
    the argument, inherited runtime value, or generator, then resolves caller
-   attribution. [`resolve_invocation_attribution`](../../scripts/agent_runtime/attribution.py#L47)
+   attribution. [`resolve_invocation_attribution`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/agent_runtime/attribution.py#L47)
    accepts explicit attribution, forwarded attribution, or session environment.
    A Codex environment can resolve to bare `codex`; unknown remains `unknown`.
    Attribution identifies a caller label. It does not authenticate a native seat.
@@ -75,7 +75,7 @@ of an installed watcher, a current native session, or successful activation.
    later telemetry emitter or count enrichment as another settlement.
 4. [`_write_state_atomic`](../../scripts/delegate.py#L919) holds the per-task
    lock and calls `_write_record_unlocked`, which sanitizes public reasons and
-   calls [`write_state_unlocked`](../../scripts/orchestration/dead_worker_state.py#L166).
+   calls [`write_state_unlocked`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orchestration/dead_worker_state.py#L166).
    That writer writes a temporary JSON file and replaces the task file.
    It has no Fleet publication call or explicit file/directory `fsync`.
    Atomic visibility is not proof of power-loss durability.
@@ -91,10 +91,10 @@ of an installed watcher, a current native session, or successful activation.
    1. It calls no native initiating-seat activation path. Wait timeout can occur
    while the task remains active and must not create a terminal wake.
 7. Terminal production is broader than the telemetry call. The
-   [dead-worker markers](../../scripts/orchestration/dead_worker_state.py#L180),
+   [dead-worker markers](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orchestration/dead_worker_state.py#L180),
    [provisioning refusal](../../scripts/delegate.py#L13422), and forwarding refusal
    also persist terminal records. A callback only at normal worker exit misses
-   these paths. [`task_record_store`](../../scripts/orchestration/task_record_store.py#L1)
+   these paths. [`task_record_store`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orchestration/task_record_store.py#L1)
    distinguishes hot records, by-ID archive fallback, and historical enumeration.
    An empty active projection does not cover this denominator.
 
@@ -107,20 +107,20 @@ worker success; even that does not prove initiating-seat re-entry.
 
 | Path | Current call graph and boundary |
 | --- | --- |
-| Durable Fleet message | [`AuthorityService.publish_message`](../../scripts/fleet_comms/authority.py#L541) admits recipients, starts a transaction, and calls `_publish_message_tx`. It commits an immutable body reference, metadata, recipient deliveries, an emitted wake receipt, and an idempotency entry together. Exact replay returns the existing message; changed payload with the same key fails. |
-| Fleet receipt lifecycle | [`claim_next_delivery`](../../scripts/fleet_comms/authority.py#L1204) claims queued delivery with a fence and increments attempts. Expired claims requeue or dead-letter; deadlines expire. `acknowledge_delivery` calls `finish_delivery`, validates the current claim, and records a terminal receipt. These delivery claims are not stream lease claims. |
-| Supervisory consumption | [`record_supervisory_consumption`](../../scripts/fleet_comms/authority.py#L1274) records generation-bound intent for `supervisory-request`. It requires that kind. It does not prove an external action finished. The existing supervisory request body accepts only wake or restart, not this proposed settlement notification. |
-| Existing ordinary Codex wake | [`run_supervisory_wake_watcher`](../../scripts/ai_agent_bridge/_inbox_watch.py#L456) polls the ordinary bridge database through `poll_once`, reading unconsumed integer message IDs and seat aliases. With events, `wake_driver_once` checks the remote active Codex lease, discovers the exact owner process's open rollout, rechecks authority and readiness, then calls `_ui_codex.send`. It does not read ordinary Fleet authority deliveries here. |
-| Existing native resume | [`find_live_session`](../../scripts/ai_agent_bridge/_ui_codex.py#L471) verifies the process's inherited lease envelope and requires one matching native thread. [`send`](../../scripts/ai_agent_bridge/_ui_codex.py#L558) starts `codex exec resume` for a UUID and returns parsed events and process outcome. This is a candidate mechanism already in source, not a selected or newly authorized activation route. |
+| Durable Fleet message | [`AuthorityService.publish_message`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/authority.py#L541) admits recipients, starts a transaction, and calls `_publish_message_tx`. It commits an immutable body reference, metadata, recipient deliveries, an emitted wake receipt, and an idempotency entry together. Exact replay returns the existing message; changed payload with the same key fails. |
+| Fleet receipt lifecycle | [`claim_next_delivery`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/authority.py#L1204) claims queued delivery with a fence and increments attempts. Expired claims requeue or dead-letter; deadlines expire. `acknowledge_delivery` calls `finish_delivery`, validates the current claim, and records a terminal receipt. These delivery claims are not stream lease claims. |
+| Supervisory consumption | [`record_supervisory_consumption`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/authority.py#L1274) records generation-bound intent for `supervisory-request`. It requires that kind. It does not prove an external action finished. The existing supervisory request body accepts only wake or restart, not this proposed settlement notification. |
+| Existing ordinary Codex wake | [`run_supervisory_wake_watcher`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/ai_agent_bridge/_inbox_watch.py#L456) polls the ordinary bridge database through `poll_once`, reading unconsumed integer message IDs and seat aliases. With events, `wake_driver_once` checks the remote active Codex lease, discovers the exact owner process's open rollout, rechecks authority and readiness, then calls `_ui_codex.send`. It does not read ordinary Fleet authority deliveries here. |
+| Existing native resume | [`find_live_session`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/ai_agent_bridge/_ui_codex.py#L471) verifies the process's inherited lease envelope and requires one matching native thread. [`send`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/ai_agent_bridge/_ui_codex.py#L558) starts `codex exec resume` for a UUID and returns parsed events and process outcome. This is a candidate mechanism already in source, not a selected or newly authorized activation route. |
 | Post-resume observation | `RolloutReader.wake_result` observes lifecycle overlap and uncertainty. `wake_driver_once` requires `CLEAN`, exit 0, one start, and one completion before advancing its in-memory bridge cursor. OVERLAP and UNKNOWN retain watcher-owned receipts. Durable consumption still belongs to the live driver. |
 | Offline supervisory wake | Without ordinary inbox events, the watcher uses the separate generation-fenced supervisory path and existing launcher. This proposal must never fall through to that path to wake a terminal notification's offline initiator. |
 
-[`supervisory_recipient`](../../scripts/ai_agent_bridge/_inbox_watch.py#L85)
+[`supervisory_recipient`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/ai_agent_bridge/_inbox_watch.py#L85)
 keeps automated events outside the ordinary human/worker inbox, at
 `supervisor:<stream_id>`. The generic Fleet
-[`deliveries claim/ack`](../../scripts/fleet_comms/cli.py#L810) commands use
+[`deliveries claim/ack`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/cli.py#L810) commands use
 kind-unaware recipient FIFO claims and fenced acknowledgment. In
-[`finish_delivery`](../../scripts/fleet_comms/authority.py#L1399), only
+[`finish_delivery`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/authority.py#L1399), only
 `supervisory-request` requires prior supervisory consumption. A new kind would
 not acquire that protection automatically. A generic consumer could acknowledge
 it without semantic proof or exhaust its attempt budget.
@@ -140,13 +140,13 @@ to fill this gap.
 
 ### Busy state, human source, and known activation limits
 
-[`RolloutReader.ready`](../../scripts/ai_agent_bridge/_ui_codex.py#L360) streams
+[`RolloutReader.ready`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/ai_agent_bridge/_ui_codex.py#L360) streams
 complete lifecycle records. Starts mean BUSY; completions and aborts mean READY.
 Missing, partial, malformed, or changing input refuses wake. Its pre-send state
 uses the last lifecycle event. In particular, `start A, start B, end A` can be
 reported READY despite B remaining open.
 
-The [session-supervisor contract](../runbooks/session-supervisor.md#post-resume-overlap-detection-10217)
+The [session-supervisor contract](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/session-supervisor.md#post-resume-overlap-detection-10217)
 explicitly documents the final-check-to-attach race and limits of `CLEAN`.
 The overlap detector cannot close that race or prove visible TUI delivery.
 The document names #10217 and owner `claude-monitor` for prevention; that is a
@@ -158,15 +158,15 @@ possible human activity. This is an existing guard for its own actions, not an
 authoritative Codex turn or human-origin classifier. In particular, no attached
 tmux client does not establish that a native seat is safe for automation.
 
-[`session_record.update_session`](../../scripts/lib/session_record.py#L295)
+[`session_record.update_session`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/lib/session_record.py#L295)
 persists `session_source` for Claude session metadata, and
-[`claudex_supervisor`](../../scripts/orchestration/claudex_supervisor.py#L369)
+[`claudex_supervisor`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/orchestration/claudex_supervisor.py#L369)
 can carry that field. Those fields do not establish a Codex human-source
 contract. The inspected Codex wake path checks neither a human-source field nor
 the context guard's human activity observation. A Codex human-source authority
 and an atomic human/busy suppression boundary remain UNKNOWN.
 
-The [Codex hooks runbook](../runbooks/codex-hooks.md#L139) also distinguishes
+The [Codex hooks runbook](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/codex-hooks.md#L139) also distinguishes
 inbox notices from consumption and reports limits on Desktop context delivery.
 A hook notice, a latest transcript, a quiet pane, elapsed time, or PID existence
 cannot substitute for native re-entry evidence.
@@ -221,7 +221,7 @@ routing decision recorded with the binding. Persist the envelope before any
 Fleet call. Retries read it unchanged; they never rebuild it from publication
 time, mutable routing, a successor, or rollover metadata.
 
-The pinned [`_publish_message_tx`](../../scripts/fleet_comms/authority.py#L1864)
+The pinned [`_publish_message_tx`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/fleet_comms/authority.py#L1864)
 hashes `sender`, `body_sha256`, `channel_id`, `recipients`, `kind`,
 `conversation_id`, `thread_id`, `in_reply_to`, `correlation_id`, `provenance`,
 `context_revisions`, `deadline_at`, and `imported_source`. The captured envelope
@@ -306,7 +306,7 @@ transaction durability, not atomicity with an unrelated JSON replacement.
 These are engineering references, not authority to add a database or service.
 
 The [Fleet ownership contract](../../agents_extensions/shared/rules/fleet-comms-coordination.md)
-and [seat onboarding contract](../runbooks/agent-seat-onboarding.md#infra-atlas-and-supervisor-cold-start)
+and [seat onboarding contract](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md#infra-atlas-and-supervisor-cold-start)
 supply the binding authority and consumption boundaries. The
 [agent-runtime ADR](../architecture/adr/adr-004-agent-runtime.md) and
 [broker storage decision](../decisions/2026-05-06-broker-stays-on-sqlite.md)
@@ -503,10 +503,10 @@ proves an existing boundary cannot supply the required invariant.
 
 | Owner role | Candidate existing paths | Bounded responsibility |
 | --- | --- | --- |
-| Delegate authoring lane | `scripts/delegate.py`, `scripts/agent_runtime/attribution.py` | Capture authenticated initiating binding and stable terminal core. Keep worker success independent of notification availability. |
-| Storage/reaper owner | `scripts/orchestration/dead_worker_state.py`, `scripts/orchestration/task_record_store.py`, `scripts/orchestration/stale_task_records.py` | Prove durable replay and archive coverage. Propose any necessary repair for separate approval before touching retention or cleanup. |
-| Fleet authority owner | `scripts/fleet_comms/authority.py`, `scripts/fleet_comms/contracts.py`, `scripts/fleet_comms/migrations.py` only if required | Define settlement-kind selection, fenced intent, semantic consumption, and typed holds using the existing authority store. No new database. Schema extension needs explicit design approval. |
-| Inbox/native adapter owner | `scripts/ai_agent_bridge/_inbox_watch.py`, `scripts/ai_agent_bridge/_ui_codex.py` | Reconcile facts and consume Fleet deliveries in the existing process. Resolve atomic native admission, exact-seat proof, and human suppression before activation. |
+| Delegate authoring lane | `scripts/delegate.py`, `lu_machinery/agent_runtime/attribution.py` | Capture authenticated initiating binding and stable terminal core. Keep worker success independent of notification availability. |
+| Storage/reaper owner | `lu_machinery/orchestration/dead_worker_state.py`, `lu_machinery/orchestration/task_record_store.py`, `lu_machinery/orchestration/stale_task_records.py` | Prove durable replay and archive coverage. Propose any necessary repair for separate approval before touching retention or cleanup. |
+| Fleet authority owner | `lu_machinery/fleet_comms/authority.py`, `lu_machinery/fleet_comms/contracts.py`, `lu_machinery/fleet_comms/migrations.py` only if required | Define settlement-kind selection, fenced intent, semantic consumption, and typed holds using the existing authority store. No new database. Schema extension needs explicit design approval. |
+| Inbox/native adapter owner | `lu_machinery/ai_agent_bridge/_inbox_watch.py`, `lu_machinery/ai_agent_bridge/_ui_codex.py` | Reconcile facts and consume Fleet deliveries in the existing process. Resolve atomic native admission, exact-seat proof, and human suppression before activation. |
 | Documentation owner | This proposal and `docs/runbooks/session-supervisor.md` | Record approved behavior and remaining limits alongside implementation. No plan, rule, launcher, or agent configuration changes in this packet. |
 
 No new test is authorized. After runtime scope approval, root obtains approval

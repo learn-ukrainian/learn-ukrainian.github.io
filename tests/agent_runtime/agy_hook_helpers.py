@@ -3,9 +3,10 @@
 import json
 from pathlib import Path
 
-from lu_machinery.agent_runtime.agy_hook_config import GUARD_NAME
-
-from scripts.agent_runtime.agy_hook_config import guard_registration  # TRANSITIONAL-PKG3-B2: held gate command format.
+from lu_machinery.agent_runtime.agy_hook_config import (
+    GUARD_NAME,
+    guard_registration,  # TRANSITIONAL-PKG3-B2: held gate command format.
+)
 
 
 def register_agy_hooks(cwd: Path, *, home: Path | None = None) -> None:

@@ -26,6 +26,8 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
+from lu_machinery.common.repo_root import machinery_path
+
 from scripts.lexdata import case_signal, normalize, records, rights, rule_tables, schema, stress
 from scripts.lexdata.canonical import sha256_canonical, sha256_file
 from scripts.lexdata.derive import ROW_SHA256_FIELDS
@@ -96,8 +98,8 @@ _OHOIKO_PARSER_MODULES = (
     "scripts/lexicon/oho_workbook_glossary_parse.py",
     "scripts/lexicon/ohoiko_quality_enrichment.py",
     "scripts/lexicon/lemma_normalization.py",
-    "scripts/common/repo_root.py",
-    "scripts/lib/readonly_sqlite.py",
+    "lu_machinery/common/repo_root.py",
+    "lu_machinery/lib/readonly_sqlite.py",
 )
 _OHOIKO_REPAIR_PROPOSERS = ("scripts/lexicon/ulp_glossary_parse.py",)  # repair_ukrainian, join_split_stress
 _OHOIKO_SOURCE_IDS = ("ohoiko_1000_words", "ohoiko_500_verbs", "oho_a1_workbook_glossary", "ulp_lesson_notes")
@@ -138,7 +140,7 @@ DEFAULT_BINDING = TransformBinding()
 
 
 def _module_entry(root: Path, rel: str) -> dict[str, str]:
-    path = root / rel
+    path = machinery_path(rel.removeprefix("lu_machinery/")) if rel.startswith("lu_machinery/") else root / rel
     try:
         return {"path": rel, "sha256": sha256_file(path)}
     except OSError as exc:
@@ -275,7 +277,8 @@ def module_imports(root: Path, rel: str) -> set[str]:
 
     Command-line entries are omitted; see ``_is_cli_entrypoint``.
     """
-    tree = ast.parse((root / rel).read_text(encoding="utf-8"), filename=rel)
+    path = machinery_path(rel.removeprefix("lu_machinery/")) if rel.startswith("lu_machinery/") else root / rel
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=rel)
     package = rel.rsplit("/", 1)[0].replace("/", ".")
     found: set[str] = set()
 

@@ -4,7 +4,7 @@ generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
   components_sha256: bfecc7e9a009e26c288151ac309c08def3ea301060da4976645ffab323d7b98a
   config_tables_sha256: 630f93d171d2daa5a6b90fc452350fe1915a503db02207c72716ad38e570bad1
-  lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
+  lesson_contract_sha256: 6dcd0c7588a13d8eca1662eaa49ac21f369fa5663d3f0bea5e8d333eec7839bf
 components:
   Anagram:
     tab: activities

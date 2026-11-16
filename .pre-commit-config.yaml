@@ -349,7 +349,7 @@ repos:
       #
       # Manual invocation still available:
       #
-      #     bash scripts/pre_push/dagger_pytest.sh
+      #     bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("pre_push/dagger_pytest.sh"))')"
       #
       # The script remains in-tree for ad-hoc GHA-replay debugging of a
       # CI-only failure. CI's `Test (pytest)` workflow remains the

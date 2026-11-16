@@ -97,7 +97,7 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
 
 def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
     module_name, class_name = ADAPTERS[route]
-    module = importlib.import_module(f"scripts.agent_runtime.adapters.{module_name}")
+    module = importlib.import_module(f"lu_machinery.agent_runtime.adapters.{module_name}")
     if route == "cursor":
         # Binary lookup is the shared resolver; which() still stubs the other adapters.
         monkeypatch.setattr(module, "resolve_cursor_agent_binary", lambda: "/usr/bin/cursor-agent")

@@ -324,7 +324,7 @@ class SourceAdapter(Protocol):
     """A read-only parser for one source, registered in ``transforms.SOURCES``.
 
     ``l0`` maps a logical store id (``"sources"``, ``"vesum"``) to a read-only
-    handle opened through ``scripts.lib.readonly_sqlite.open_readonly``.
+    handle opened through ``lu_machinery.lib.readonly_sqlite.open_readonly``.
     """
 
     source_id: str

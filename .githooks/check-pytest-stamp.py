@@ -26,7 +26,7 @@ from pytest_stamp import (
 # machinery package, which is also the directory of machinery files in the pushing checkout (this
 # hook is outside the package). The literal "scripts/" is the product package directory of a
 # consumer checkout; until the move both are the same directory.
-_MACHINERY_MODULE = "scripts.common.repo_root"
+_MACHINERY_MODULE = "lu_machinery.common.repo_root"
 _MACHINERY = _MACHINERY_MODULE.partition(".")[0]
 
 TRIGGER_PREFIXES = (

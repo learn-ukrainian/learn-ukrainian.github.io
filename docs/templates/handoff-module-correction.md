@@ -5,7 +5,7 @@ Use this template when creating issues to fix audit failures or module quality i
 ## Usage
 
 ```bash
-.venv/bin/python -m scripts.publish issue-create \
+.venv/bin/python -m lu_machinery.publish issue-create \
   --title "fix(level): Module slug - failing gates" \
   --body-file /tmp/issue-body.md \
   --parent <stream-epic-number> \

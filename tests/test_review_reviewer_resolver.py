@@ -10,9 +10,11 @@ from pathlib import Path
 
 import pytest
 import yaml
+from lu_machinery.common.repo_root import machinery_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from lu_machinery.fleet import credit_lane
 from lu_machinery.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
@@ -28,14 +30,13 @@ from lu_machinery.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
-
-from scripts.fleet import credit_lane
-from scripts.review.subject_seat import (
+from lu_machinery.review.subject_seat import (
     candidate_matches_subject_seat,
     normalize_subject_family,
     normalize_subject_seat,
     prepare_subject_exclusion,
 )
+
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 # Synthetic same-tier OpenAI candidate for ranking tests, never a fleet route.
@@ -189,7 +190,7 @@ def test_agy_author_alias_keeps_every_same_family_seat_out_of_formal_review(
     import subprocess
     import urllib.request
 
-    from scripts.agent_runtime import model_pause
+    from lu_machinery.agent_runtime import model_pause
 
     provider_calls = []
 
@@ -260,8 +261,8 @@ def test_agy_author_alias_keeps_every_same_family_seat_out_of_formal_review(
 
 def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
     root = Path(__file__).resolve().parent.parent
-    catalog = yaml.safe_load((root / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
-    fleet = yaml.safe_load((root / "scripts/config/fleet_communications.yaml").read_text(encoding="utf-8"))
+    catalog = yaml.safe_load(machinery_path("config/model_catalog.yaml").read_text(encoding="utf-8"))
+    fleet = yaml.safe_load(machinery_path("config/fleet_communications.yaml").read_text(encoding="utf-8"))
     assert fleet["formal_review_eligibility_source"].endswith("#review_scheduler.endpoints")
     policy = catalog["review_scheduler"]["endpoints"]
     aliases = {"glm-local": "glm", "kimi": "kimicc"}
@@ -1209,7 +1210,7 @@ def test_resolve_reviewer_subject_seat_for_muse_adapter_never_selects_muse():
         ResolverInputs(
             author_model="claude",
             risk="medium",
-            owned_paths=("scripts/agent_runtime/adapters/muse.py",), claude_account=HOST_ACCOUNT,
+            owned_paths=("lu_machinery/agent_runtime/adapters/muse.py",), claude_account=HOST_ACCOUNT,
         ),
         ladder=REVIEW_LADDERS["medium"],
     )
@@ -1236,7 +1237,7 @@ def test_resolve_reviewer_subject_seat_blocks_codex_for_its_adapter():
             author_model="claude-opus-5-5",
             domain="infra",
             risk="medium",
-            owned_paths=("scripts/agent_runtime/adapters/codex.py",), claude_account=HOST_ACCOUNT,
+            owned_paths=("lu_machinery/agent_runtime/adapters/codex.py",), claude_account=HOST_ACCOUNT,
         ),
     )
     assert resolution.selected is None or resolution.selected.family != "openai"
@@ -1284,7 +1285,7 @@ def test_resolve_reviewer_without_subject_information_matches_empty_subject_fiel
 
 
 def test_resolve_reviewer_ambiguous_adapter_defaults_without_guessing_subject():
-    shared = "scripts/agent_runtime/adapters/acpx.py"
+    shared = "lu_machinery/agent_runtime/adapters/acpx.py"
     unknown = prepare_subject_exclusion(owned_paths=(shared,))
     assert unknown.seats == unknown.families == frozenset()
     assert unknown.evidence == ()
@@ -1293,7 +1294,7 @@ def test_resolve_reviewer_ambiguous_adapter_defaults_without_guessing_subject():
         ResolverInputs(
             author_model="codex",
             risk="high",
-            owned_paths=("scripts/agent_runtime/adapters/acpx.py",), claude_account=HOST_ACCOUNT,
+            owned_paths=("lu_machinery/agent_runtime/adapters/acpx.py",), claude_account=HOST_ACCOUNT,
         )
     )
     assert resolution.fail_closed_reason is None
@@ -1303,11 +1304,11 @@ def test_resolve_reviewer_ambiguous_adapter_defaults_without_guessing_subject():
     assert resolution == resolve_reviewer(ResolverInputs(author_model="codex", risk="critical", claude_account=HOST_ACCOUNT))
 
     known = prepare_subject_exclusion(
-        owned_paths=(shared, "scripts/agent_runtime/adapters/grok_build.py"),
+        owned_paths=(shared, "lu_machinery/agent_runtime/adapters/grok_build.py"),
     )
     assert known.seats == {"grok"}
     assert known.families == frozenset()
-    assert known.evidence == ("scripts/agent_runtime/adapters/grok_build.py",)
+    assert known.evidence == ("lu_machinery/agent_runtime/adapters/grok_build.py",)
     assert known.fail_closed_reason is None
 
     explicit = resolve_reviewer(
@@ -1315,7 +1316,7 @@ def test_resolve_reviewer_ambiguous_adapter_defaults_without_guessing_subject():
             author_model="claude",
             risk="high",
             subject_seats=frozenset({"grok"}),
-            owned_paths=("scripts/agent_runtime/adapters/acpx.py",), claude_account=HOST_ACCOUNT,
+            owned_paths=("lu_machinery/agent_runtime/adapters/acpx.py",), claude_account=HOST_ACCOUNT,
         )
     )
     assert explicit.fail_closed_reason is None
@@ -1382,7 +1383,7 @@ def test_muse_formal_review_eligibility_must_stay_limited_to_low_medium_code_rev
         result = resolve_reviewer(refused)
         assert result.selected is None
         assert result.fail_closed_reason == "unknown explicit reviewer pin 'muse'"
-    security = replace(inputs, risk="low", changed_paths=("scripts/hooks/admission.py",))
+    security = replace(inputs, risk="low", changed_paths=("lu_machinery/hooks/admission.py",))
     assert resolve_reviewer(security).selected is None
 
 
@@ -1512,7 +1513,7 @@ def test_muse_adapter_infers_registry_subject_without_explicit_metadata():
     inputs = ResolverInputs(
         author_model="codex",
         risk="high",
-        owned_paths=("scripts/agent_runtime/adapters/muse.py",),
+        owned_paths=("lu_machinery/agent_runtime/adapters/muse.py",),
         claude_account=HOST_ACCOUNT,
     )
     subject = prepare_subject_exclusion(owned_paths=inputs.owned_paths)
@@ -1563,8 +1564,7 @@ def test_resolve_reviewer_subject_seat_pin_cannot_select_the_governed_seat():
 @pytest.mark.repo_wide
 def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     from lu_machinery.common.repo_root import machinery_path
-
-    from scripts.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
+    from lu_machinery.review.subject_seat import KNOWN_SUBJECT_SEATS, adapter_subject_index, classify_owned_path
 
     repo = Path(__file__).resolve().parent.parent
     expected = {
@@ -1583,11 +1583,11 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "grok_build.py": "grok",
         "muse.py": "muse",
     }
-    adapter_dir = repo / "scripts/agent_runtime/adapters"
+    adapter_dir = machinery_path("agent_runtime/adapters")
     found = sorted(path.name for path in adapter_dir.glob("*.py"))
     assert found == sorted(expected)
     for name, seat in expected.items():
-        classified = classify_owned_path(f"scripts/agent_runtime/adapters/{name}")
+        classified = classify_owned_path(f"lu_machinery/agent_runtime/adapters/{name}")
         if seat is None:
             assert classified.kind == "ambiguous", name
         else:
@@ -1596,23 +1596,23 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
             assert seat in KNOWN_SUBJECT_SEATS
 
     hooks = {
-        "scripts/agent_runtime/grok_hook_bridge.py": "grok",
-        "scripts/hooks/apply_grok_hook_profile.py": "grok",
-        "scripts/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
-        "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
-        "scripts/agent_runtime/codex_hook_entry.sh": "codex",
-        "scripts/agent_runtime/codex_hook_policy.py": "codex",
-        "scripts/agent_runtime/codex_hook_probe.py": "codex",
+        "lu_machinery/agent_runtime/grok_hook_bridge.py": "grok",
+        "lu_machinery/hooks/apply_grok_hook_profile.py": "grok",
+        "lu_machinery/agent_runtime/profiles/acpx-grok-read-only.md": "grok",
+        "lu_machinery/agent_runtime/profiles/acpx-grok-sealed-review.md": "grok",
+        "lu_machinery/agent_runtime/codex_hook_entry.sh": "codex",
+        "lu_machinery/agent_runtime/codex_hook_policy.py": "codex",
+        "lu_machinery/agent_runtime/codex_hook_probe.py": "codex",
         "agents_extensions/codex/hooks.json": "codex",
     }
     released_hooks = {
-        f"scripts/agent_runtime/{name}"
+        f"lu_machinery/agent_runtime/{name}"
         for name in ("codex_hook_entry.sh", "codex_hook_policy.py", "codex_hook_probe.py")
     }
     for rel, seat in hooks.items():
-        if rel in released_hooks:
+        if rel.startswith("lu_machinery/"):
             assert not (repo / rel).exists(), rel
-            assert machinery_path(rel.removeprefix("scripts/")).is_file(), rel
+            assert machinery_path(rel.removeprefix("lu_machinery/")).is_file(), rel
         else:
             assert (repo / rel).is_file(), rel
         classified = classify_owned_path(rel)
@@ -1623,7 +1623,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
-    assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
+    assert classify_owned_path("lu_machinery/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
 
 
 _AUTHOR_MODELS = {
@@ -2102,7 +2102,7 @@ def test_review_ranks_by_load_regardless_of_credit_balance(practical_astra):
 
 def _shared_rate_limit(monkeypatch, tmp_path, *, at: datetime) -> None:
     """One codex ``rate_limited`` record at ``at`` in a simulated shared runtime log, read by the real reader."""
-    from scripts.agent_runtime import usage
+    from lu_machinery.agent_runtime import usage
 
     usage._reset_rate_limit_cache_for_tests()
     monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)

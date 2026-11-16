@@ -20,22 +20,22 @@ The `learn-ukrainian` repository powers a comprehensive, open-source Ukrainian l
 This pilot covers the code-anchored allowlist v1 surface (≤8 pages). Explore the focused domain guides below:
 
 1. [Architecture Overview](architecture-overview.md)
-   High-level architectural structure, separation of concerns, stream governance ([`scripts/config/issue_streams.yaml`](../scripts/config/issue_streams.yaml)), and architectural decision records ([ADR-013](../docs/architecture/adr/adr-013-docs-knowledge-openwiki.md)).
+   High-level architectural structure, separation of concerns, stream governance ([`lu_machinery/config/issue_streams.yaml`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config/issue_streams.yaml)), and architectural decision records ([ADR-013](../docs/architecture/adr/adr-013-docs-knowledge-openwiki.md)).
 
 2. [Learner Site & UI Architecture](learner-site.md)
    Plain Astro static builder architecture ([`site/astro.config.mjs`](../site/astro.config.mjs)), custom [`CourseLayout.astro`](../site/src/layouts/CourseLayout.astro), de-Starlight verification ([`docs/architecture/2026-06-09-ui-astro-without-starlight.md`](../docs/architecture/2026-06-09-ui-astro-without-starlight.md)), and search index routing.
 
 3. [Pipeline & Build Runtime](pipeline-runtime.md)
-   Curriculum MDX generation ([`scripts/generate_mdx/`](../scripts/generate_mdx/)), build orchestration ([`scripts/build/`](../scripts/build/)), and config-as-policy knobs ([`scripts/config.py`](../scripts/config.py)).
+   Curriculum MDX generation ([`scripts/generate_mdx/`](../scripts/generate_mdx/)), build orchestration ([`scripts/build/`](../scripts/build/)), and config-as-policy knobs ([`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py)).
 
 4. [Monitor API & Tooling Surface](monitor-api.md)
-   FastAPI operational server structure ([`scripts/api/main.py`](../scripts/api/main.py)), router inventory, and static contracts. (Live leases and session streams are strictly non-authoritative here).
+   FastAPI operational server structure ([`lu_machinery/api/main.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/main.py)), router inventory, and static contracts. (Live leases and session streams are strictly non-authoritative here).
 
 5. [Agent Runtime & Security Harness](agent-runtime.md)
    Agent bridging mechanisms ([`scripts/ai_agent_bridge/`](../scripts/ai_agent_bridge/)), environment sanitization ([`tests/test_agent_runtime_env_sanitize.py`](../tests/test_agent_runtime_env_sanitize.py)), and secret protection rules.
 
 6. [Content Quality & Contracts](content-contracts.md)
-   Linguistic verification gates, deterministic documentation inventory ([`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py)), and quality assurance scripts ([`scripts/audit/`](../scripts/audit/)).
+   Linguistic verification gates, deterministic documentation inventory ([`lu_machinery/docs/docs_inventory.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/docs/docs_inventory.py)), and quality assurance scripts ([`scripts/audit/`](../scripts/audit/)).
 
 7. [Documentation Authority & Lifecycle](docs-lifecycle.md)
    Hierarchy of repository truth ([`docs/architecture/docs-authority-lifecycle.md`](../docs/architecture/docs-authority-lifecycle.md)), conflict resolution rules, and the worked immersion policy example.
@@ -58,5 +58,5 @@ flowchart TD
 
 ### Key Truth Invariants
 - **Learner UI:** Plain Astro builder (`site/`). Starlight integration is deleted; `@astrojs/starlight` exists solely as a Vite alias to [`site/src/starlight-compat/index.ts`](../site/src/starlight-compat/index.ts).
-- **Immersion Policy:** Config-as-policy in [`scripts/config.py`](../scripts/config.py) (`IMMERSION_POLICIES`) and operator expectations win over narrative docs.
+- **Immersion Policy:** Config-as-policy in [`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py) (`IMMERSION_POLICIES`) and operator expectations win over narrative docs.
 - **Rules:** Source rules live in [`agents_extensions/shared/rules/`](../agents_extensions/shared/rules/) and serve via `/api/rules`; `.claude/`, `.codex/`, `.gemini/` are deployed mirror copies.

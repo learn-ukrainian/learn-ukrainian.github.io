@@ -22,7 +22,7 @@ Residual behavior change shipping as a result: **Opus 4.7 default effort is now 
 
 ## 2. Our exposure during the incident window
 
-Every Claude call in this repo flows through `scripts/agent_runtime/adapters/claude.py`, which exec's `npx @anthropic-ai/claude-code@latest` (or a local `claude` binary) in `-p` print mode. Three call paths:
+Every Claude call in this repo flows through `lu_machinery/agent_runtime/adapters/claude.py`, which exec's `npx @anthropic-ai/claude-code@latest` (or a local `claude` binary) in `-p` print mode. Three call paths:
 
 | Path | File | Session? | Effort flag? | Affected by |
 |---|---|---|---|---|

@@ -7,8 +7,8 @@
 > ```
 
 > **Fleet roles:** operator doctrine and living scorecard live in
-> [`fleet-shared-doctrine.md`](fleet-shared-doctrine.md) and
-> [`fleet-role-scorecard.md`](fleet-role-scorecard.md). Machine routing remains
+> [`fleet-shared-doctrine.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/best-practices/fleet-shared-doctrine.md) and
+> [`fleet-role-scorecard.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/best-practices/fleet-role-scorecard.md). Machine routing remains
 > `agents_extensions/shared/rules/model-assignment.md` (takes precedence on conflict).
 
 The agent bridge is how Claude, AGY, and Codex (and you, the
@@ -54,7 +54,7 @@ the thread_id and get `round_index = parent.round_index + 1`.
 
 ## Discussion vs execution
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is
+`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` is
 deliberation, not implementation. The bridge invokes
 participants in read-only mode, passes the `AB_DISCUSS_READONLY=1`
 contract through the adapter layer, and fails the round if the git
@@ -65,14 +65,14 @@ be treated as the write source. Filesystem writes during discussion are
 a hard stop; dispatch the work as a separate `scripts/dispatch.py dispatch`
 brief.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py post` creates channel
+`.venv/bin/python -m lu_machinery.ai_agent_bridge post` creates channel
 messages and delivery rows. Its default
 delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
 a PR should normally go through `scripts/dispatch.py dispatch` or
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix`, not
+`.venv/bin/python -m lu_machinery.ai_agent_bridge dispatch-fix`, not
 through discussion.
 
 Current adapter policy for discussion calls:
@@ -93,20 +93,20 @@ Current adapter policy for discussion calls:
 
 ```bash
 # Channel management
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new pipeline --include shared --agents claude,agy,codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel info pipeline
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline -n 20
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline --thread ABC
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel new pipeline --include shared --agents claude,agy,codex
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel list
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel info pipeline
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel context pipeline --edit
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel tail pipeline -n 20
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel tail pipeline --thread ABC
 
 # Posting (short + long form)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py p pipeline agy "quick question about X"
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "full form with --to options" --to agy,codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "reply" --parent MESSAGE_ID
+.venv/bin/python -m lu_machinery.ai_agent_bridge p pipeline agy "quick question about X"
+.venv/bin/python -m lu_machinery.ai_agent_bridge post pipeline "full form with --to options" --to agy,codex
+.venv/bin/python -m lu_machinery.ai_agent_bridge post pipeline "reply" --parent MESSAGE_ID
 
 # Multi-agent discussion (B.4). Agy joins only with --review-profile ukrainian.
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,codex --max-rounds 2
+.venv/bin/python -m lu_machinery.ai_agent_bridge discuss architecture "should we refactor X?" --with claude,codex --max-rounds 2
 ```
 
 ## Desktop Participation
@@ -121,28 +121,28 @@ the Desktop session.
 Orchestrator dispatch to Codex Desktop:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks "<brief>" --to codex-desktop --from-agent claude
+.venv/bin/python -m lu_machinery.ai_agent_bridge post desktop-tasks "<brief>" --to codex-desktop --from-agent claude
 ```
 
 Codex Desktop watches the task channel from its own session:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail desktop-tasks --follow
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel tail desktop-tasks --follow
 ```
 
 Codex Desktop can also pull its pending inbox:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show codex-desktop
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox show codex-desktop
 ```
 
-### Explicit ack: `.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack <delivery_id>`
+### Explicit ack: `.venv/bin/python -m lu_machinery.ai_agent_bridge inbox ack <delivery_id>`
 
 When an external worker processes a delivery without going through
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run`, ack it explicitly:
+`.venv/bin/python -m lu_machinery.ai_agent_bridge inbox run`, ack it explicitly:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack <delivery_id> [--error "processed by <thing>"]
+.venv/bin/python -m lu_machinery.ai_agent_bridge inbox ack <delivery_id> [--error "processed by <thing>"]
 ```
 
 Without an explicit ack, deliveries stay `pending` forever and the inbox
@@ -152,7 +152,7 @@ automatically, so no manual intervention is needed for that path.
 Codex Desktop posts replies with its own sender identity:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks "<status>" --from-agent codex-desktop
+.venv/bin/python -m lu_machinery.ai_agent_bridge post desktop-tasks "<status>" --from-agent codex-desktop
 ```
 
 Limitation: this MVP stores a flat sender/recipient string. The pending
@@ -165,7 +165,7 @@ SSE replay, and attachments.
 Use these wrappers when the task needs the project-standard model/mode
 assignment enforced by tooling instead of memory.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
+`.venv/bin/python -m lu_machinery.ai_agent_bridge dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
 Codex worktree implementation run for "fix this and ship a PR" tasks.
 It hardcodes `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --mode workspace-write
 --worktree --base origin/main --effort high`, and every generated
@@ -203,14 +203,14 @@ already wrote a formal review wastes work (sealed `review-pr` and `publish-revie
 **Size caps remain fail-closed** for oversized bodies/attachments. Silence the
 steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
-**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`.venv/bin/python -m scripts.publish pr-comment --number <N>` or `.venv/bin/python -m scripts.publish pr-review --number <N>`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
+**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`.venv/bin/python -m lu_machinery.publish pr-comment --number <N>` or `.venv/bin/python -m lu_machinery.publish pr-review --number <N>`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
 (operator 2026-09-25): a missing `--review-profile` is refused, `code` is
 refused, and Ukrainian content review must pass `--review-profile ukrainian`.
 `scripts/audit/llm_reviewer_dispatch.py` content-review routes remain
 `ask-* --review` (module QG, not PR CF), with that Ukrainian profile on the
 AGY factual route.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
+`.venv/bin/python -m lu_machinery.ai_agent_bridge review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode
 read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
 effort override is passed, then builds a review prompt from either
@@ -236,13 +236,13 @@ tied to it; it removes no worktree.
 Every worktree remover (the dispatcher's settlement removal,
 dispatch's superseded-review and stale-branch-holder release, task-family
 cleanup, ACP runtime cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
-one chokepoint in `scripts/orchestration/worktree_claims.py` (#8610). It takes
+one chokepoint in `lu_machinery/orchestration/worktree_claims.py` (#8610). It takes
 the per-worktree lock in `<git common dir>/lu-worktree-locks/` that dispatch
 holds from attach until its task record is published, and under that lock it
 refuses while another task's unfinished record names the checkout. The skip
 reasons are `worktree lock busy` and `worktree claimed by active task <id>`.
 Finish or cancel that task, then rerun the cleanup. From a shell, remove a
-worktree with `.venv/bin/python -m scripts.orchestration.worktree_claims
+worktree with `.venv/bin/python -m lu_machinery.orchestration.worktree_claims
 remove PATH`, never raw `git worktree remove`; a repo-wide test rejects any
 other removal call site under `scripts/`. Dispatch never attaches to
 `.worktrees/dispatch/acp/`, where the ACP bridge's runtimes live.
@@ -290,12 +290,12 @@ and you have another way to detect parked sessions.
 
 | Situation | Use |
 | --- | --- |
-| One-off question, no history needed | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` / `ask-claude` / `ask-codex` |
-| Sustained discussion on a topic | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` to a channel |
-| Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
+| One-off question, no history needed | `.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy ...` / `ask-claude` / `ask-codex` |
+| Sustained discussion on a topic | `.venv/bin/python -m lu_machinery.ai_agent_bridge post` to a channel |
+| Need a 2-3 agent debate on a design | `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
 | Formal PR review (CF gate) | Direct `ask-<lane> --type review` (headless dispatch; sealed `review-pr` removed in #8520) |
-| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to` a non-Gemini seat |
+| Code review discussion (non-gate) | `.venv/bin/python -m lu_machinery.ai_agent_bridge post reviews ... --to` a non-Gemini seat |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 
 ## The hygiene rule
@@ -305,7 +305,7 @@ agent.** Per channel conventions:
 
 1. Write code → stage with `git add`
 2. `git diff --cached > /tmp/diff.txt`
-3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to codex`
+3. `.venv/bin/python -m lu_machinery.ai_agent_bridge post reviews "Review request for #NNN" --to codex`
 4. Apply feedback or argue back in writing
 5. Commit only after the review is CLEAN or BLOCKING is resolved
 6. Commit message includes `Reviewed-By: <qualified cross-family reviewer> (task-id)` trailer
@@ -400,7 +400,7 @@ where the worktree is, a nested repository, `core.worktree`, `GIT_DIR` or
 (deleted, for example) is treated as protected: npm cannot run there either,
 so only clearly read-only calls are let through. The shims and the decision
 (`npm_guard.py`) live only in the installed lu-machinery release, under
-`lu_machinery/agent_runtime/`. The product's `scripts/agent_runtime/shims/npm`
+`lu_machinery/agent_runtime/`. The product's `lu_machinery/agent_runtime/shims/npm`
 and `npx` (and `scripts/dispatcher/npm_shims/`, which run them) resolve the
 project interpreter (`LEARN_UKRAINIAN_PYTHON`, else the main checkout's `.venv`
 found through the git common dir, so a linked worktree needs no `.venv` of its
@@ -496,7 +496,7 @@ of repeated context avoided** on this one issue alone — and the
 savings grow roughly linearly with round count.
 
 **Compound wins on multi-round debates:** the same trick applies to
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` round 2+. When an agent is handed their own prior
+`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` round 2+. When an agent is handed their own prior
 response via `_channels.build_agent_prompt` it doesn't need to be
 re-typed. The B.2 prompt assembler caps history at 5KB (configurable
 via `DEFAULT_MAX_HISTORY_CHARS`), so even a 4-round, 4-agent
@@ -549,8 +549,8 @@ Run retention explicitly; the API server must not delete broker history
 on startup:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d --dry-run
-.venv/bin/python scripts/ai_agent_bridge/__main__.py cleanup --older-than 30d
+.venv/bin/python -m lu_machinery.ai_agent_bridge cleanup --older-than 30d --dry-run
+.venv/bin/python -m lu_machinery.ai_agent_bridge cleanup --older-than 30d
 ```
 
 Recommended schedule: run the dry-run weekly, then run the cleanup if
@@ -576,7 +576,7 @@ If `context.md` for a channel goes stale (the rules no longer match
 reality), fix it immediately:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
+.venv/bin/python -m lu_machinery.ai_agent_bridge channel context pipeline --edit
 ```
 
 This bumps the sha256, and the next post will record the new rev.
@@ -594,17 +594,17 @@ does not roll back the message or delivery insert.
 
 Who writes:
 
-- `scripts/ai_agent_bridge/_channels.py` after a successful post commit
+- `lu_machinery/ai_agent_bridge/_channels.py` after a successful post commit
 
 Who reads:
 
 - Any external watcher you configure locally
-- `.venv/bin/python scripts/ai_agent_bridge/__main__.py sync` if you prefer manual draining instead of OS integration
+- `.venv/bin/python -m lu_machinery.ai_agent_bridge sync` if you prefer manual draining instead of OS integration
 
 Recommended mental model:
 
 - The SQLite `deliveries` table is the source of truth
-- Wake files are only a nudge to run `.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run <agent>`
+- Wake files are only a nudge to run `.venv/bin/python -m lu_machinery.ai_agent_bridge inbox run <agent>`
 - Missing a wake is safe because the work is still pending in SQLite
 
 Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
@@ -643,14 +643,14 @@ PathChanged=%h/projects/learn-ukrainian/.agent/wake/codex
 [Service]
 Type=oneshot
 WorkingDirectory=%h/projects/learn-ukrainian
-ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
+ExecStart=%h/projects/learn-ukrainian/.venv/bin/python -m lu_machinery.ai_agent_bridge inbox run codex --until-idle
 ```
 
 If you do not want OS-level watchers, use the manual fallback:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py sync claude
-.venv/bin/python scripts/ai_agent_bridge/__main__.py sync --all
+.venv/bin/python -m lu_machinery.ai_agent_bridge sync claude
+.venv/bin/python -m lu_machinery.ai_agent_bridge sync --all
 ```
 
 That path reads the same `deliveries` queue and drains it on demand.
@@ -658,7 +658,7 @@ That path reads the same `deliveries` queue and drains it on demand.
 ## See also
 
 - Issue #1190 — the channel bridge spec and implementation history
-- `scripts/ai_agent_bridge/_channels.py` — storage primitives
-- `scripts/ai_agent_bridge/_channels_cli.py` — CLI commands
-- `scripts/api/comms_router.py` — HTTP endpoints
+- `lu_machinery/ai_agent_bridge/_channels.py` — storage primitives
+- `lu_machinery/ai_agent_bridge/_channels_cli.py` — CLI commands
+- `lu_machinery/api/comms_router.py` — HTTP endpoints
 - `docs/MONITOR-API.md` — the Monitor API used for volatile state snapshots

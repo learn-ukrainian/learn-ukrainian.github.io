@@ -212,9 +212,9 @@ other failures.
 | **Monitor / API** | Health needed for the task is green (e.g. Monitor loopback, `/api/rules` when rules bind) |
 | **Task infra** | Dependencies for *this* task work (name them: sources MCP, VESUM/`sources.db`, CI, deploy target, …) — not “all infra forever” |
 | **Disk** | Free disk + `.worktrees` headroom for the actual task (incl. build/test trees); **disk wins over quota** |
-| **Capacity check** | Live usage + pick (`python -m scripts.fleet.usage show`, `python -m scripts.fleet.capacity_pick`) — prove numbers now |
+| **Capacity check** | Live usage + pick (`python -m lu_machinery.fleet.usage show`, `python -m lu_machinery.fleet.capacity_pick`) — prove numbers now |
 | **Worker headroom** | When terminal goal ∈ {`merge`,`deploy`,`certify`}: ≥2 **non-orchestrator** agents with real capacity, and each required role named (implement vs independent CF — headcount ≠ independence). For `decision-only`/`audit-only`, keep applicable advisor + independent-review rules without forcing unused CF seats |
-| **Fleet usable** | Target epic/stream not lease-wedged (`.venv/bin/python -m scripts.fleet_comms plane-status`); WIP / active dispatches OK (`/api/delegate/active`); no conflicting driver claim that blocks this start |
+| **Fleet usable** | Target epic/stream not lease-wedged (`.venv/bin/python -m lu_machinery.fleet_comms plane-status`); WIP / active dispatches OK (`/api/delegate/active`); no conflicting driver claim that blocks this start |
 | **Env / secrets** | Only if required: named credentials/paths present (never print secrets) |
 | **Research / routing** | Role · task-family · track · owned paths classified when dispatching (`--research-*` or deliberately generic); `ROUTING_CARD_V1` when the lane requires it |
 
@@ -235,13 +235,13 @@ curl -sfS http://127.0.0.1:8765/api/health >/dev/null
 df -h /
 du -sh "$(dirname "$(git rev-parse --git-common-dir)")/.worktrees"
 # Capacity + pick + worker headroom (unknown ≠ green)
-.venv/bin/python -m scripts.fleet.usage show
-.venv/bin/python -m scripts.fleet.capacity_pick
+.venv/bin/python -m lu_machinery.fleet.usage show
+.venv/bin/python -m lu_machinery.fleet.capacity_pick
 # Fleet usable / lease / active dispatches
-.venv/bin/python -m scripts.fleet_comms plane-status
+.venv/bin/python -m lu_machinery.fleet_comms plane-status
 curl -sfS 'http://127.0.0.1:8765/api/delegate/active' | head -c 2000; echo
 # Issue card
-.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
+.venv/bin/python -m lu_machinery.ci.check_issue_task_quality --issue N
 ```
 
 Record pass/fail with timestamp + receipt for each command above.
@@ -341,9 +341,9 @@ Waiting on review/CI is an actionable nonterminal state — **not** “blocked�
 Before dispatch and before close:
 
 ```bash
-.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
+.venv/bin/python -m lu_machinery.ci.check_issue_task_quality --issue N
 # or score a draft body:
-.venv/bin/python scripts/ci/check_issue_task_quality.py --body-file /tmp/issue.md
+.venv/bin/python -m lu_machinery.ci.check_issue_task_quality --body-file /tmp/issue.md
 ```
 
 Without `--strict`, the advisory CLI exits `0` with `PASS` or `WARN` (missing
