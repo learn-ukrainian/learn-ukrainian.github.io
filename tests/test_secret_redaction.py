@@ -6,6 +6,7 @@ These tests use synthetic values only.
 
 from __future__ import annotations
 
+import json
 import os
 import shlex
 import subprocess
@@ -239,9 +240,12 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
 def test_launcher_secret_drop_fails_closed_without_the_release_sanitizer(tmp_path: Path, release: str) -> None:
     """Defect class: the launcher starts a provider with every inherited key when its sanitizer cannot run.
 
-    With the installed lu-machinery release the child loses unneeded keys; with the release module
-    unavailable (an interpreter whose site-packages are off), the launch refuses and the provider never runs.
+    With the installed lu-machinery release the child loses unneeded keys and keeps the product root and
+    shared-state anchor its hooks need; with the release module unavailable (an interpreter whose
+    site-packages are off), the launch refuses and the provider never runs.
     """
+    from lu_machinery.common.repo_root import main_checkout_root
+
     interpreter = sys.executable
     if release == "missing":
         fake = tmp_path / "python"
@@ -254,12 +258,14 @@ def test_launcher_secret_drop_fails_closed_without_the_release_sanitizer(tmp_pat
             "-uc",
             """
 source scripts/lib/launcher_core.sh
+source scripts/lib/project_interpreter.sh
+LC_ROOT="$PWD"
 LC_PROVIDER=claude
 LC_HARNESS=""
 LC_MODE=interactive
 launcher_project_python() { printf '%s\\n' "$TEST_PYTHON"; }
 launcher_drop_unneeded_secrets || exit 7
-exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import os; print("provider-ran", sorted(os.environ))'
+exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import json, os; print("provider-ran", json.dumps(dict(os.environ)))'
 """,
         ],
         cwd=REPO,
@@ -277,9 +283,12 @@ exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import os; print("prov
     if release == "installed":
         assert proc.returncode == 0, proc.stderr
         assert "provider-ran" in proc.stdout
-        assert "'HOME'" in proc.stdout
-        assert "UNRELATED_API_KEY" not in proc.stdout
-        assert "LAUNCHER_SYNTHETIC_CONTROL" not in proc.stdout
+        child = json.loads(proc.stdout.split("provider-ran", 1)[1])
+        assert "HOME" in child
+        assert "UNRELATED_API_KEY" not in child
+        assert "LAUNCHER_SYNTHETIC_CONTROL" not in child
+        assert child["LU_PRODUCT_ROOT"] == str(REPO)
+        assert child["LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"] == str(main_checkout_root(REPO))
     else:
         assert proc.returncode == 7
         assert "provider-ran" not in proc.stdout

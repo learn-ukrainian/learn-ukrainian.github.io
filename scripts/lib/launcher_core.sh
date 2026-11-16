@@ -237,13 +237,31 @@ launcher_deployed_path() {
 # (#13032). It fails closed: when the project interpreter or that module cannot
 # run, the launch refuses instead of starting the provider with every key.
 launcher_drop_unneeded_secrets() {
-  local py variable
+  local py variable product_root checkout_primary inherited_primary
   LC_CHILD_ENV_COMMAND=(/usr/bin/env)
   while IFS= read -r -d '' variable; do
     case "$variable" in
       LAUNCHER_*=*) LC_CHILD_ENV_COMMAND+=(-u "${variable%%=*}") ;;
     esac
   done < <(/usr/bin/env -0)
+  # The isolated release module imports no product package, so it no longer
+  # binds the product root and shared-state anchor that importing scripts/
+  # (scripts/__init__.py) gave the old in-tree copy. Hooks and the GitHub App
+  # identity in the provider child need both; bind them the same way: this
+  # checkout, unless an inherited product root belongs to another primary, and
+  # this checkout's primary unless an anchor is already set.
+  if [ -z "${LC_ROOT:-}" ]; then
+    launcher_error "could not drop unneeded API keys: launcher roots are unresolved; refusing to launch"
+    return 1
+  fi
+  checkout_primary="$(project_primary_root_resolve "$LC_ROOT" 2>/dev/null)" || checkout_primary="$LC_ROOT"
+  product_root="$LC_ROOT"
+  if [ -n "${LU_PRODUCT_ROOT:-}" ]; then
+    inherited_primary="$(project_primary_root_resolve "$LU_PRODUCT_ROOT" 2>/dev/null)" || inherited_primary="$LU_PRODUCT_ROOT"
+    [ "$inherited_primary" = "$checkout_primary" ] || product_root="$LU_PRODUCT_ROOT"
+  fi
+  LC_CHILD_ENV_COMMAND+=("LU_PRODUCT_ROOT=$product_root"
+    "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$checkout_primary}")
   if ! py="$(launcher_project_python)"; then
     launcher_error "could not drop unneeded API keys: no project interpreter; refusing to launch"
     return 1
