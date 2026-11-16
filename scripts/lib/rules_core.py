@@ -5,10 +5,11 @@ workers and review dispatches, every runtime invocation
 (``agent_runtime.runner._invoke_impl``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
 configured source trees, never from the working directory or the Monitor API.
-For fleet rules, the operator's
-machinery configuration (``LEARN_UKRAINIAN_RULES_DIR``, see
-``scripts/common/repo_root.py``) names it for every root, so machinery installed outside
-the checkout serves the configured rules. Unset, it is ``<root>/agents_extensions/shared/rules``.
+Fleet sources (the rules and skills the installed lu-machinery release ships under
+``agents_extensions/shared``) come from that release (#13032); the operator's machinery
+configuration (``LEARN_UKRAINIAN_RULES_DIR``, see ``scripts/common/repo_root.py``) can name
+another fleet rules directory. Product sources, such as the product-only rules, come from the
+selected checkout.
 
 Seats:
     core     ``core.md`` in the rules directory
@@ -52,6 +53,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 if __package__ in (None, "") and str(ROOT) not in sys.path:  # run as a file by rules_core.sh
     sys.path.insert(0, str(ROOT))
+
+from lu_machinery.common.repo_root import machinery_path as release_path
 
 from scripts.common.repo_root import RULES_DIR_REL, ProductRootError, product_root, rules_dir
 
@@ -150,9 +153,19 @@ def resolve_seat(
     return "core"
 
 
-def core_dir(root: Path | None = None) -> Path:
-    """The rules directory: the configured one, else that of ``root``, else of this checkout."""
-    return rules_dir(ROOT if root is None else Path(root))
+def core_dir() -> Path:
+    """The fleet rules directory: the configured one, else the installed release's (#13032)."""
+    return rules_dir()
+
+
+def release_source(rel: str) -> Path | None:
+    """The installed release's copy of fleet source ``rel``, or ``None`` for a product source."""
+    if not Path(rel).is_relative_to("agents_extensions/shared"):
+        return None
+    try:
+        return release_path(rel)
+    except (OSError, ValueError):
+        return None
 
 
 def seat_sources(seat: str) -> tuple[str, ...]:
@@ -178,19 +191,22 @@ def scope_sources(scope: str) -> tuple[str, ...]:
 def source_path(rel: str, root: Path | None = None, *, rules_root: Path | None = None) -> Path:
     """Resolve product curriculum separately from fleet rules.
 
-    ``root`` explicitly selects the product as well as the default rules checkout.
-    ``rules_root`` only selects the machinery checkout; it never overrides the
-    configured product. Core seats therefore never call the product resolver.
+    A fleet source (shipped by the installed release) comes from the release, its rules from
+    ``core_dir()``. Any other source comes from ``rules_root``, else ``root``, else this checkout;
+    ``rules_root`` never overrides the configured product. Core seats therefore never call the
+    product resolver.
     """
     if rel == CONTENT_ADDENDUM_REL:
         try:
             return product_root(root) / rel
         except ProductRootError as exc:
             raise RulesCoreMissing(f"rules source unavailable: {rel} ({exc})") from exc
+    released = release_source(rel)
+    if released is not None:
+        if Path(rel).is_relative_to(RULES_DIR_REL):
+            return core_dir() / Path(rel).relative_to(RULES_DIR_REL)
+        return released
     checkout = root if rules_root is None else rules_root
-    rel_path = Path(rel)
-    if rel_path.is_relative_to(RULES_DIR_REL):
-        return core_dir(checkout) / rel_path.relative_to(RULES_DIR_REL)
     return (ROOT if checkout is None else Path(checkout)) / rel
 
 
@@ -354,8 +370,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--rules-root",
         type=Path,
-        help="machinery checkout for fleet rules only, e.g. /machinery "
-        "(default: --root, then this checkout; LEARN_UKRAINIAN_RULES_DIR overrides fleet rules)",
+        help="checkout for sources the installed release does not ship, e.g. /product "
+        "(default: --root, then this checkout; fleet rules come from the release or LEARN_UKRAINIAN_RULES_DIR)",
     )
     parser.add_argument("--seat", choices=SEATS, help=f"seat to load (default: ${SEAT_ENV}, then --lane, then core)")
     parser.add_argument(

@@ -13,10 +13,10 @@ import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any, Protocol
 
 from jsonschema import Draft202012Validator, FormatChecker
+from lu_machinery.common.repo_root import machinery_path as release_path
 
 from .authority import (
     APPROVED_SOURCE_KINDS,
@@ -26,9 +26,8 @@ from .authority import (
 from .models import TrailRun, TrailRunnerError
 from .store import TrailStore, digest_json
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CLOSURE_ATTESTATION_SCHEMA_PATH = (
-    PROJECT_ROOT / "agents_extensions/shared/schemas/trail-closure-attestation.v1.schema.json"
+    release_path("schemas/trail-closure-attestation.v1.schema.json")
 )
 OPAQUE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$")
 SHA256 = re.compile(r"^[a-f0-9]{64}$")

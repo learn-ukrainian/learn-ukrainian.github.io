@@ -22,8 +22,11 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 GIT_COMMON_DIR="$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)"
 CANONICAL_ROOT="$(dirname "$GIT_COMMON_DIR")"
 VENV_PYTHON="$CANONICAL_ROOT/.venv/bin/python"
-HOOK="$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh"
-POST_COMPACT_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/post-compact.sh"
+# The hooks under test are the installed lu-machinery release's (#13032).
+RELEASE_HOOKS="$("$VENV_PYTHON" -I -c 'from lu_machinery.common.repo_root import machinery_path
+print(machinery_path("agents_extensions/shared/hooks"))')"
+HOOK="$RELEASE_HOOKS/session-setup.sh"
+POST_COMPACT_HOOK="$RELEASE_HOOKS/post-compact.sh"
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 

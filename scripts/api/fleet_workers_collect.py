@@ -21,7 +21,8 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
-from agents_extensions.shared.session_streams.model import parse_timestamp
+from lu_machinery.session_streams.model import parse_timestamp
+
 from scripts.api import delegate_router
 from scripts.api.delegate_router import _derived_task_status
 from scripts.api.fleet_workers_models import (

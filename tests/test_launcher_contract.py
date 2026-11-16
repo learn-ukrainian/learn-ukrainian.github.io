@@ -17,10 +17,11 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path as release_path
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import LeaseHolder, utc_now
+from lu_machinery.session_streams.store import SessionStreamStore
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.common.repo_root import PRODUCT_ROOT_ENV
 from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
@@ -158,16 +159,21 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     for name in ("node", "npm"):
         assert f"{name}={shutil.which(name, path=toolchain)}" in executed
     print(f"Deployment child toolchain: {executed}", flush=True)
-    sources = checkout / "agents_extensions/shared/skills"
+    # The deployer composes the installed release's skills with the product's (#13032).
+    expected = {}
+    for sources in (release_path("agents_extensions/shared/skills"), checkout / "agents_extensions/shared/skills"):
+        for path in sources.rglob("*"):
+            if path.is_file() and "__pycache__" not in path.parts:
+                assert path.relative_to(sources) not in expected, path
+                expected[path.relative_to(sources)] = path
     deployed = checkout / ".agents/skills"
-    expected = {path.relative_to(sources) for path in sources.rglob("*") if path.is_file()}
     actual = {path.relative_to(deployed) for path in deployed.rglob("*") if path.is_file()}
-    assert actual == expected
+    assert actual == set(expected)
     assert any(path.name == "SKILL.md" for path in actual)
-    for relative in expected:
-        assert (deployed / relative).read_bytes() == (sources / relative).read_bytes()
+    for relative, source in expected.items():
+        assert (deployed / relative).read_bytes() == source.read_bytes()
     for name in ("session-setup.sh", "post-compact.sh"):
-        canonical = (checkout / "agents_extensions/shared/hooks" / name).read_bytes()
+        canonical = (release_path("agents_extensions/shared/hooks") / name).read_bytes()
         for destination in (".claude", ".codex", ".agent"):
             assert (checkout / destination / "hooks" / name).read_bytes() == canonical
     assert not (checkout / ".codex/skills").exists()
@@ -720,7 +726,7 @@ def tick(*args, **kwargs):
     with polls.open('a') as handle: handle.write('tick\\n')
     return result
 with (
-    patch('agents_extensions.shared.session_streams.hooks.lease_from_environment', return_value=lease),
+    patch('lu_machinery.session_streams.hooks.lease_from_environment', return_value=lease),
     patch('scripts.session_supervisor.SessionSupervisor', return_value=supervisor),
     patch.object(_inbox_watch, 'consume_supervisory_event', side_effect=tick),
 ):
@@ -1212,7 +1218,7 @@ def test_cto_wrapper_start_builds_cto_prompt_not_lane_driver_prompt(tmp_path: Pa
     assert "launcher: would bind cto after lease" in cto.stdout
     prompt = argv_file.read_bytes().decode().removesuffix("\0").split("\0")[-1]
     assert prompt.startswith("First run lu-driver-state render --lane cto, then lu-driver-state check --lane cto.")
-    assert "agents_extensions/shared/skills/cto/SKILL.md" in prompt
+    assert ".claude/skills/cto/SKILL.md" in prompt  # the deployed copy (#13032)
     assert "The launcher already claimed the epics lease" in prompt
     assert "first repeat lu-driver-state render --lane cto and lu-driver-state check --lane cto" in prompt
     assert "drive-epic" not in prompt
@@ -1227,7 +1233,7 @@ def test_cto_wrapper_start_builds_cto_prompt_not_lane_driver_prompt(tmp_path: Pa
     assert lane_prompt.startswith(
         "First run lu-driver-state render --lane epics, then lu-driver-state check --lane epics."
     )
-    assert "agents_extensions/shared/skills/drive-epic/SKILL.md" in lane_prompt
+    assert ".claude/skills/drive-epic/SKILL.md" in lane_prompt
 
 
 def test_fleet_cold_clause_keeps_lane_drivers_on_drive_epic() -> None:

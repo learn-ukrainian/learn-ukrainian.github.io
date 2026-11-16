@@ -197,7 +197,7 @@ claim_session_supervisor_env() {
       sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
       if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
         echo "  hint: Monitor still holds a live lease for this epic stream." >&2
-        echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
+        echo "  diagnose: .venv/bin/python -m lu_machinery.session_streams handoff-status --stream ${stream}" >&2
         echo "  follow the holder and expiry diagnosis; retry the Monitor claim after expiry." >&2
         if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
           echo "  supervisory successor launches cannot --force; the operator flag is one-shot." >&2

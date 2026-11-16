@@ -118,7 +118,7 @@ def _cold_start_body(
 
 ## Immediate steps (do in order)
 1. Tail the stream:
-   `.venv/bin/python -m agents_extensions.shared.session_streams tail --stream {stream_id} --limit 20`
+   `.venv/bin/python -m lu_machinery.session_streams tail --stream {stream_id} --limit 20`
 2. Read the dual-write handoff(s) under `.claude/{epic}-epic/` (INTERIM / KIMI-DRIVER first).
 3. Confirm canary:
    `.venv/bin/python -m {_PACKAGE}.kimi_lane mint --epic {epic} --stream {stream_id}`
@@ -128,8 +128,8 @@ def _cold_start_body(
 ## Heartbeat / close
 ```bash
 # source .claude/{epic}-epic/session-lease.env first
-.venv/bin/python -m agents_extensions.shared.session_streams hook heartbeat
-.venv/bin/python -m agents_extensions.shared.session_streams hook close
+.venv/bin/python -m lu_machinery.session_streams hook heartbeat
+.venv/bin/python -m lu_machinery.session_streams hook close
 ```
 
 ## Hands-off
@@ -243,12 +243,12 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     stream_limit = int(getattr(args, "stream_limit", 40))
 
     try:
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.model import (
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.model import (
             EntryType,
             LeaseHolder,
         )
-        from agents_extensions.shared.session_streams.store import (
+        from lu_machinery.session_streams.store import (
             LeaseConflictError,
             LifecycleError,
             SessionStreamStore,

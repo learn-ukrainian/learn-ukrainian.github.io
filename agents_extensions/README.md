@@ -28,16 +28,14 @@ npm run agents:deploy
 
 ## Codex skill discovery
 
-Git-tracked `agents_extensions/shared/skills/` is canonical. Run
-`scripts/deploy_prompts.sh` to deploy shared skills to `.agents/skills/`, the
-single Codex discovery root. `.codex/` continues to receive its hooks, config,
-and other shared resources, but no skills. Other harness skill mirrors remain.
-The deploy helper requires legacy source bytes to match tracked current source
-or a regular-file blob in that exact source path's Git history. Standard tagged
-`.pyc` files directly inside `__pycache__/` are retained as opaque runtime
-artifacts when their mapped `.py` source is tracked and regular. The canonical
-source need not have a cache directory. Cache bytes are never executed or
-authenticated as compiled source; unrelated files and symlinks still fail closed.
+`npm run agents:deploy` runs the installed lu-machinery deployer
+(`lu_machinery.agent_deploy`). It composes the release's fleet rules, skills,
+hooks and prompts with the product sources that `agents_extensions/deployment.v1.json`
+names (`shared/`, `codex/`, `agy/`), refuses a product file at a release path, and
+deploys shared skills to `.agents/skills/`, the single Codex discovery root. `.codex/`
+continues to receive its hooks, config, and other shared resources, but no skills.
+It owns only the files its manifest (`.deploy-state/agent-deploy.v1.json`) records;
+`--check` verifies every deployed file's bytes and mode.
 It atomically moves
 the whole legacy `.codex/skills/` tree into a unique
 `.codex/retired-skills/<capture>/skills` backup outside skill discovery, without

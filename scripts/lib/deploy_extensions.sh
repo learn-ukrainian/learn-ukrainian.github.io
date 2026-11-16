@@ -15,8 +15,8 @@
 # npm exit code otherwise; the shared launcher core refuses to launch on failure.
 #
 # Usage: deploy_agent_extensions <project_dir> <npm_script>
-# Load-bearing tests: scripts/agent_deploy/test_deploy_extensions.sh (wrapped by
-# tests/test_deploy_extensions.py in the required pytest gate).
+# The deploy and its status helper are the installed lu-machinery release
+# (`lu_machinery.agent_deploy`, described by agents_extensions/deployment.v1.json).
 
 # The deploy-status helper runs under the project interpreter resolved by
 # scripts/lib/project_interpreter.sh (primary checkout's .venv; never trusts a
@@ -59,10 +59,11 @@ deploy_agent_extensions() {
     # .agent is concurrent agent-owned state. The helper opens it with
     # O_NOFOLLOW|O_DIRECTORY and updates leaves by dir_fd; plain shell
     # redirection/cp/rm here would reintroduce deploy's path-swap escape.
-    local scripts_dir helper_project_root status_helper status_python status_rc=0
-    scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-    helper_project_root="$(cd "$scripts_dir/.." && pwd)"
-    status_helper="$scripts_dir/agent_deploy/update_agent_deploy_status.py"
+    local helper_project_root status_python status_rc=0
+    helper_project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+    # The status helper ships with the installed release; -I keeps the checkout
+    # off its import path.
+    local -a status_helper=(-I -m lu_machinery.agent_deploy.update_agent_deploy_status)
 
     # A missing interpreter must not read as an unsafe .agent root: the
     # resolver prints its own "project interpreter not found" line. The helper
@@ -76,7 +77,7 @@ deploy_agent_extensions() {
             rm -f "$log_file"
             return 1
         fi
-        "$status_python" "$status_helper" clear --agent-root "$project_dir/.agent" || status_rc=$?
+        "$status_python" "${status_helper[@]}" clear --agent-root "$project_dir/.agent" || status_rc=$?
         if [ "$status_rc" -eq 1 ]; then
             echo "Error: agent extensions deployed but deploy-status cleanup refused an unsafe .agent root." >&2
             rm -f "$log_file"
@@ -98,7 +99,7 @@ deploy_agent_extensions() {
         if [ -z "$status_python" ]; then
             echo "Error: deploy-status update skipped (project interpreter missing)." >&2
         else
-            "$status_python" "$status_helper" record-failure \
+            "$status_python" "${status_helper[@]}" record-failure \
                 --agent-root "$project_dir/.agent" \
                 --script "$npm_script" \
                 --exit-code "$exit_code" \

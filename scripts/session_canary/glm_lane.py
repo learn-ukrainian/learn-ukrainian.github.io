@@ -109,7 +109,7 @@ def _cold_start_body(
 
 ## Immediate steps (do in order)
 1. Tail the stream:
-   `.venv/bin/python -m agents_extensions.shared.session_streams tail --stream {stream_id} --limit 20`
+   `.venv/bin/python -m lu_machinery.session_streams tail --stream {stream_id} --limit 20`
 2. Read the dual-write handoff(s) under `.claude/{epic}-epic/`.
 3. Confirm canary:
    `.venv/bin/python -m {_PACKAGE}.glm_lane mint --epic {epic} --stream {stream_id}`
@@ -271,9 +271,9 @@ def _close_exact_lease(repo: Path, epic: str) -> bool:
         return False
     environment = _read_lease_environment(env_path)
     try:
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.hooks import clean_exit_hook, lease_from_environment
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         clean_exit_hook(SessionStreamStore(SessionStreamDatabase()), lease_from_environment(environment))
     except (OSError, ValueError, RuntimeError):

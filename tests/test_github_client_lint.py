@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path as release_path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUSIONS = {
@@ -433,7 +434,7 @@ def test_deferred_file_rejects_added_raw_call(tmp_path, path, count):
 
 @pytest.mark.parametrize("name", ["guard-pr-merge.py", "guard-admin-merge.py"])
 def test_standalone_hook_colour_stripping_is_pinned(name, monkeypatch):
-    source = (ROOT / "agents_extensions/shared/hooks" / name).read_text()
+    source = (release_path("agents_extensions/shared/hooks") / name).read_text()  # the installed release's hook
     tree = ast.parse(source)
     function = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_gh_env")
     import os

@@ -28,8 +28,9 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase, default_database_path
-from agents_extensions.shared.session_streams.model import parse_timestamp
+from lu_machinery.session_streams.db import SessionStreamDatabase, default_database_path
+from lu_machinery.session_streams.model import parse_timestamp
+
 from scripts.ai_agent_bridge import _channels
 from scripts.ai_agent_bridge._db import get_db
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics

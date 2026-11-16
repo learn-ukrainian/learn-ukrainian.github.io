@@ -126,12 +126,11 @@ following [the worktree-cleanup runbook](worktree-cleanup.md); never use raw `gi
 ### Caveman output-style skill
 
 Shared skill `agents_extensions/shared/skills/caveman/` — default intensity **lite**
-(drop filler/hedging; keep articles and full sentences). `npm run agents:deploy`
-(`scripts/deploy_prompts.sh`) rsyncs it to `.claude/skills/caveman`, the `.agent`
-overlay, `.agents/skills/caveman`, and `.gemini/skills/caveman`. Codex discovers
-shared skills only through `.agents/skills`; Git `agents_extensions` remains
-canonical. Verified legacy `.codex/skills` trees move atomically to unique
-`.codex/retired-skills/<capture>/skills` backups, retained across later deploys.
+(drop filler/hedging; keep articles and full sentences). It ships with the installed
+lu-machinery release; `npm run agents:deploy` (`lu_machinery.agent_deploy`) deploys it to
+`.claude/skills/caveman`, `.agent/skills/caveman` and `.agents/skills/caveman`. Codex
+discovers shared skills only through `.agents/skills`; the deployer refuses while a
+legacy `.codex/skills` tree remains.
 Migration never deletes backup contents, including concurrent writes; modified
 or unverified content and recreated active paths require reconciliation. Never
 hand-edit active deploy copies. Caveman is **style only** — never persisted artifacts (commits, PR/issue

@@ -285,8 +285,8 @@ def _clip(text: str, max_len: int = 220) -> str:
 def _load_stream_entries(stream_id: str, *, limit: int = 40) -> list[dict[str, str]]:
     """Return [{type, body}, ...] from session stream; empty if store unavailable."""
     try:
-        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-        from agents_extensions.shared.session_streams.store import SessionStreamStore
+        from lu_machinery.session_streams.db import SessionStreamDatabase
+        from lu_machinery.session_streams.store import SessionStreamStore
 
         store = SessionStreamStore(SessionStreamDatabase())
         digest = store.load_digest(stream_id, limit=limit)

@@ -52,7 +52,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 12  # 12: no test stage; a receipt binds only what the remaining stages read (#11276)
+GATE_VERSION = 13  # 13: deployed agent files are proven by the installed deployer; receipts bind it (#13032)
 MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
 MEASUREMENT_SCHEMA = "pre-push-measurement.v3"  # v3: no test-stage fields (#11276)
 SCOPE_MEMORY_MAX = 6 * 1024**3
@@ -64,7 +64,17 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 # A receipt binds these tool fingerprints. The retained ``pytest`` fingerprint reads installed
 # package metadata only; it neither imports pytest nor executes tests during a push.
-TOOL_NAMES = ("gate_source", "launcher", "interpreter_resolver", "pre_commit_config", "python", "pytest", "pre_commit")
+TOOL_NAMES = (
+    "gate_source",
+    "launcher",
+    "interpreter_resolver",
+    "pre_commit_config",
+    "python",
+    "pytest",
+    "pre_commit",
+    "lu_machinery",
+    "agent_deploy",
+)
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host
 # test-slot wait of one stage allowance, its selector's bound and two cleanups. Checkouts that still run it
@@ -92,16 +102,13 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
-# Where scripts/deploy_prompts.sh writes its ignored copies, and the committed trees it copies them from
-# (#12387). A copy byte-identical to the outgoing commit's blob at one of its source paths is fixed by
-# the commit the receipt binds, so it is not an overlay. Keep in parity with the deploy's rsync targets.
-DEPLOYED_COPY_SOURCES = (
-    (".claude/", ("agents_extensions/shared/",)),
-    (".agent/", ("agents_extensions/shared/",)),
-    (".codex/", ("agents_extensions/shared/", "agents_extensions/codex/")),
-    (".agents/", ("agents_extensions/agy/",)),
-    (".agents/skills/", ("agents_extensions/shared/skills/",)),
-)
+# The output roots of the installed agent deployer (``lu_machinery.agent_deploy``, which
+# ``npm run agents:deploy`` runs). An ignored file below one of them is accepted only when the deployer's
+# isolated ``--check --print-manifest --inputs-commit <outgoing commit>`` succeeds and lists it: the
+# installed release and the commit's descriptor and sources then fix its bytes and mode (#12387, #13032).
+DEPLOY_ROOTS = (".claude/", ".codex/", ".agent/", ".agents/")
+DEPLOY_CHECK_TIMEOUT_S = 120.0
+DEPLOY_IDENTITY_RE = re.compile(r"[0-9a-f]{64}")
 
 
 class GateOutcome(Exception):
@@ -328,63 +335,65 @@ def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str])
     return False
 
 
-def deployed_copy_sources(path: str) -> list[str]:
-    """The committed paths ``DEPLOYED_COPY_SOURCES`` says the deploy may have copied ``path`` from."""
-    return [
-        source + path.removeprefix(target)
-        for target, sources in DEPLOYED_COPY_SOURCES
-        if path.startswith(target)
-        for source in sources
-    ]
+def deployed_outputs(root: Path, head: str) -> tuple[set[str], str]:
+    """The outputs the installed deployer verifies in ``root`` for commit ``head``, and its identity.
 
-
-def blob_id(data: bytes, object_format: str) -> str:
-    """Git's object id for a blob holding ``data``, in the repository's object format."""
-    return hashlib.new(object_format, b"blob %d\0" % len(data) + data).hexdigest()
-
-
-def committed_deployed_copies(paths: list[str], *, root: Path) -> set[str]:
-    """The ``paths`` that are regular files byte-identical to HEAD's blob at a deploy source path.
-
-    Anything Git cannot answer, a symlink or other non-regular leaf, or a mismatch stays an overlay.
+    Runs ``lu_machinery.agent_deploy --check --print-manifest --inputs-commit <head>`` under this
+    interpreter with ``-I`` and a Git-free environment: the descriptor and product sources come from the
+    commit's objects, the release from the installed wheel, and every planned output is verified by bytes
+    and mode. The identity is ``<release>:<configuration>`` from that manifest. Anything else (a failed or
+    timed-out check, malformed output) raises ``GateOutcome`` with the check's reason, so no file below a
+    deploy root is accepted.
     """
-    sources = {path: deployed_copy_sources(path) for path in paths}
-    wanted = sorted({source for listed in sources.values() for source in listed})
-    if not wanted:
-        return set()
-    object_format = (git_ok("rev-parse", "--show-object-format", cwd=root) or "").strip()
-    records = git_records("--literal-pathspecs", "ls-tree", "-z", "HEAD", "--", *wanted, cwd=root)
-    if object_format not in ("sha1", "sha256") or records is None:
-        return set()
-    blobs: dict[str, str] = {}
-    for record in records:
-        meta, _, name = record.partition("\t")
-        fields = meta.split(" ")
-        if len(fields) == 3 and fields[1] == "blob" and fields[0] in ("100644", "100755"):
-            blobs[name] = fields[2]
-    proven = set()
-    for path, listed in sources.items():
-        try:
-            descriptor = os.open(root / path, os.O_RDONLY | os.O_NOFOLLOW)
-        except OSError:
-            continue
-        with os.fdopen(descriptor, "rb") as handle:
-            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
-                continue
-            digest = blob_id(handle.read(), object_format)
-        if any(blobs.get(source) == digest for source in listed):
-            proven.add(path)
-    return proven
+    command = [
+        sys.executable,
+        "-I",
+        "-m",
+        "lu_machinery.agent_deploy",
+        "--project-root",
+        str(root),
+        "--check",
+        "--print-manifest",
+        "--inputs-commit",
+        head,
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            check=False,
+            cwd=root,
+            env=clean_environment(),
+            timeout=DEPLOY_CHECK_TIMEOUT_S,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise GateOutcome("deploy_unverified", f"the agent deployment check did not run: {exc}") from exc
+    if result.returncode != 0:
+        reason = result.stderr.decode("utf-8", errors="replace").strip().splitlines()
+        raise GateOutcome("deploy_unverified", reason[-1] if reason else f"exit {result.returncode}")
+    try:
+        manifest = json.loads(result.stdout)
+        files, release, configuration = manifest["files"], manifest["release"], manifest["configuration"]
+    except (ValueError, TypeError, KeyError) as exc:
+        raise GateOutcome("deploy_unverified", "the agent deployment check printed no valid manifest") from exc
+    if (
+        not isinstance(files, dict)
+        or not all(isinstance(path, str) for path in files)
+        or not all(isinstance(value, str) and DEPLOY_IDENTITY_RE.fullmatch(value) for value in (release, configuration))
+    ):
+        raise GateOutcome("deploy_unverified", "the agent deployment check printed no valid manifest")
+    return set(files), f"{release}:{configuration}"
 
 
-def reject_untracked_inputs(root: Path) -> None:
+def reject_untracked_inputs(root: Path, head: str | None = None) -> str | None:
     """Refuse when untracked or ignored Python/config files could change the run but not the receipt.
 
-    Two derived sets are not overlays: dependency directories proven by their lockfile, and copies the
-    deploy wrote that are byte-identical to the outgoing commit's sources (#12387).
+    Two derived sets are not overlays: dependency directories proven by their lockfile, and the agent
+    files the installed deployer verifies for the outgoing commit ``head`` (default: ``HEAD``; #12387,
+    #13032). Returns the deployer identity that proved files (``deployed_outputs``), else ``None``.
     """
-    # Names stay byte for byte (``git_records``): a text-mode read turns CR and CRLF into LF, so the
-    # deployed-copy proof would hash a different, committed-identical file than the one Git listed.
+    # Names stay byte for byte (``git_records``): a text-mode read turns CR and CRLF into LF, so a
+    # name Git listed could not be matched exactly against the deployer's manifest.
     listing = git_records("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
@@ -396,13 +405,26 @@ def reject_untracked_inputs(root: Path) -> None:
             raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
         tracked = set(tracked_listing)
     overlays = [path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)]
-    copies = committed_deployed_copies(overlays, root=root)
-    overlays = sorted(path for path in overlays if path not in copies)
+    identity: str | None = None
+    unverified = ""
+    if any(path.startswith(DEPLOY_ROOTS) for path in overlays):
+        if head is None:
+            head = (git_ok("rev-parse", "HEAD", cwd=root) or "").strip()
+        try:
+            outputs, identity = deployed_outputs(root, head)
+        except GateOutcome as error:
+            outputs, unverified = set(), f" ({error.detail})"
+        proven = [path for path in overlays if path in outputs]
+        overlays = [path for path in overlays if path not in outputs]
+        if not proven:
+            identity = None
+    overlays.sort()
     if overlays:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
         stale = (
-            "Deployed agent copies must match the commit: rerun `npm run agents:deploy` after committing. "
-            if any(deployed_copy_sources(path) for path in overlays)
+            "Deployed agent files must be the installed deployer's verified outputs for the outgoing commit"
+            f"{unverified}: rerun `npm run agents:deploy` after committing. "
+            if any(path.startswith(DEPLOY_ROOTS) for path in overlays)
             else ""
         )
         raise GateOutcome(
@@ -411,6 +433,7 @@ def reject_untracked_inputs(root: Path) -> None:
             f"commit them or remove them first. {stale}"
             "For agent task artifacts, use the preserved task evidence directory ($LU_TASK_EVIDENCE_DIR).",
         )
+    return identity
 
 
 def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan | None:
@@ -424,17 +447,18 @@ def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan |
     dirty = git_records("status", "--porcelain", "-z", "--untracked-files=no", "--ignore-submodules=none", cwd=root)
     if dirty is None or dirty:
         raise GateOutcome("dirty_tree", "tracked files differ from the outgoing commit; commit or restore them first")
-    reject_untracked_inputs(root)
+    deployment = reject_untracked_inputs(root, head)
     base, base_fallback = outgoing_base(update, root)
     if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, base_fallback=base_fallback, tools=tool_versions(launcher, config))
+    return Plan(head, tree, base, base_fallback=base_fallback, tools=tool_versions(launcher, config, deployment))
 
 
-def tool_versions(launcher: str, config: str) -> dict[str, str | None]:
-    """``TOOL_NAMES``: the gate, launcher, pre-commit configuration, interpreter and installed hook tools;
-    unknown is ``None``."""
+def tool_versions(launcher: str, config: str, deployment: str | None = None) -> dict[str, str | None]:
+    """``TOOL_NAMES``: the gate, launcher, pre-commit configuration, interpreter and installed hook tools,
+    and the deployer identity that proved deployed agent files (``reject_untracked_inputs``); unknown or
+    unused is ``None``."""
 
     def digest(path: Path) -> str | None:
         try:
@@ -456,6 +480,8 @@ def tool_versions(launcher: str, config: str) -> dict[str, str | None]:
         "python": sys.version,
         "pytest": installed("pytest"),
         "pre_commit": installed("pre-commit"),
+        "lu_machinery": installed("lu-machinery"),
+        "agent_deploy": deployment,
     }
 
 

@@ -712,7 +712,7 @@ _BUNDLE_SQLITE_INT_MAX = 2**63 - 1
 
 def _bundle_canonical_agent(value: object) -> bool:
     """A handoff slot name exactly as written, that the bundle store also accepts on upload."""
-    from agents_extensions.shared.session_streams.store import rollover_bundle_identity_is_safe
+    from lu_machinery.session_streams.store import rollover_bundle_identity_is_safe
 
     if not isinstance(value, str) or not rollover_bundle_identity_is_safe(value):
         return False
@@ -724,7 +724,7 @@ def _bundle_canonical_agent(value: object) -> bool:
 
 def _bundle_canonical_stream_id(value: object) -> bool:
     """A stream id the session-stream store accepts, exactly as written."""
-    from agents_extensions.shared.session_streams.model import validate_stream_id
+    from lu_machinery.session_streams.model import validate_stream_id
 
     if not isinstance(value, str):
         return False
@@ -819,7 +819,7 @@ def _select_bundle_state(
 
 def _bundle_handoff_candidates(repo_root: Path, stream_id: str) -> tuple[str, ...]:
     try:
-        from agents_extensions.shared.session_streams.inventory import epic_handoff_map
+        from lu_machinery.session_streams.inventory import epic_handoff_map
 
         return tuple(epic_handoff_map(repo_root).get(stream_id, ()))
     except (OSError, ValueError, ImportError):
@@ -828,14 +828,14 @@ def _bundle_handoff_candidates(repo_root: Path, stream_id: str) -> tuple[str, ..
 
 def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent: str) -> tuple[str, ...]:
     """Resolve the inventory lane first, then the canonical agent-slug template."""
-    from agents_extensions.shared.session_streams.store import rollover_bundle_handoff_candidates
+    from lu_machinery.session_streams.store import rollover_bundle_handoff_candidates
 
     return rollover_bundle_handoff_candidates(_bundle_handoff_candidates(repo_root, stream_id), agent)
 
 
 def _bundle_check_members(repo_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes]) -> None:
     """Refuse the whole bundle unless every member is its own lineage file or its agent's handoff path."""
-    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
+    from lu_machinery.session_streams.store import validate_rollover_bundle_members
 
     agent = normalize_agent_name(str(manifest["agent"]))
     validate_rollover_bundle_members(
@@ -887,7 +887,7 @@ def _bundle_source_members(
 
 def _bundle_secret_hits(members: Mapping[str, bytes]) -> list[tuple[str, str]]:
     try:
-        from agents_extensions.shared.session_streams.store import SECRET_PATTERNS
+        from lu_machinery.session_streams.store import SECRET_PATTERNS
     except ImportError:
         return []
     hits: list[tuple[str, str]] = []

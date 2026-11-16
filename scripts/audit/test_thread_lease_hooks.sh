@@ -16,9 +16,12 @@ export LEARN_UK_PRIMARY_HEAL_DISABLE=1
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SELF="${BASH_SOURCE[0]}"
 PYTHON_BIN="$REPO_ROOT/.venv/bin/python"
+# The hooks under test are the installed lu-machinery release's (#13032).
+RELEASE_HOOKS="$("$PYTHON_BIN" -I -c 'from lu_machinery.common.repo_root import machinery_path
+print(machinery_path("agents_extensions/shared/hooks"))')"
 THREAD_HANDOFF_PY="$REPO_ROOT/scripts/orchestration/thread_handoff.py"
-RELEASE_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/release-thread-lease.sh"
-STOP_HOOK="$REPO_ROOT/agents_extensions/shared/hooks/goal-driver-stop.sh"
+RELEASE_HOOK="$RELEASE_HOOKS/release-thread-lease.sh"
+STOP_HOOK="$RELEASE_HOOKS/goal-driver-stop.sh"
 
 # Each hook derives its OWN python/script paths from $CLAUDE_PROJECT_DIR
 # (".venv/bin/python", "scripts/orchestration/thread_handoff.py") — there is
@@ -105,7 +108,7 @@ __scenario_worktree_layout_claims_lease() {
         -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
         -u CLAUDE_SESSION_RECORD_PYTHON -u THREAD_ROLLOVER_PYTHON -u CLAUDE_PROFILE_RESOLVER_PYTHON \
     CLAUDE_PROJECT_DIR="$fakewt" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
-    bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" >/dev/null
+    bash "$RELEASE_HOOKS/session-setup.sh" >/dev/null
   :
 }
 
@@ -182,7 +185,7 @@ session_id="fixture-session-sidecar"
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
       CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
-      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+      bash "$RELEASE_HOOKS/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 sidecar="$root/.agent/sessions/${session_id}.generation"
 [ ! -e "$sidecar" ] || fail "session-setup hook: forbidden generation sidecar was written (round-3 regression)"
@@ -241,7 +244,7 @@ evil_id='../evil-traversal'
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
       CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
-      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$evil_id\"}" >/dev/null
+      bash "$RELEASE_HOOKS/session-setup.sh" <<< "{\"session_id\":\"$evil_id\"}" >/dev/null
 )
 [ ! -e "$root/.agent/evil-traversal.generation" ] || fail "path-safety: traversal session_id escaped .agent/sessions"
 if [ -d "$root/.agent/sessions" ]; then
@@ -281,7 +284,7 @@ session_id="fixture-session-symlink"
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
       CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
-      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+      bash "$RELEASE_HOOKS/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 outside_count="$(find "$outside" -type f 2>/dev/null | wc -l | tr -d ' ')"
 if [ "$outside_count" != "0" ]; then
@@ -330,7 +333,7 @@ ln -s "$target" "$root/.agent/sessions/${session_id}.json"
       -u LEARN_UKRAINIAN_PIPELINE -u GEMINI_SESSION \
       CLAUDE_PROJECT_DIR="$REPO_ROOT" SESSION_HANDOFF_AGENT="claude" CODEX_CANONICAL_REPO_ROOT="$root" \
       CLAUDE_SESSION_RECORD_PYTHON="$PYTHON_BIN" CLAUDE_PROFILE_RESOLVER_PYTHON="$PYTHON_BIN" THREAD_ROLLOVER_PYTHON="$PYTHON_BIN" \
-      bash "$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
+      bash "$RELEASE_HOOKS/session-setup.sh" <<< "{\"session_id\":\"$session_id\"}" >/dev/null
 )
 target_size="$(wc -c < "$target" | tr -d ' ')"
 [ "$target_size" = "0" ] || fail "symlink escape: sidecar write followed a symlinked destination entry ($target_size bytes written through)"

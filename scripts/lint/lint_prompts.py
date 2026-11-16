@@ -3,7 +3,8 @@
 Prompt linter — catches known anti-patterns in Gemini skill/phase files
 and (optionally) curriculum research files.
 
-Runs automatically during `npm run agents:deploy` (add to package.json).
+The installed deployer (`npm run agents:deploy`) applies the same error rules to product
+skills and phases.
 Can also be run standalone:
   .venv/bin/python scripts/lint_prompts.py               # Prompts only (deploy gate)
   .venv/bin/python scripts/lint_prompts.py --curriculum   # Also check research files

@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import errno
 import fcntl
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -1266,107 +1267,138 @@ def test_overlays_outside_exact_node_modules_directories_remain_refused(
     assert relative in raised.value.detail
 
 
-DEPLOY_ROOTS_IGNORED = ".claude/\n.agent/*\n.codex/\n.agents/\n"
 DEPLOYED_HOOK = "import sys\nsys.exit(0)\n"
+DEPLOY_ROOTS_IGNORED = "/.venv/\n.claude/\n.agent/*\n.codex/\n.agents/\n.deploy-state/\n"
+# A release-only deployment: AGY needs no product source and no mandatory hook settings, and its
+# outputs include the release's Python hooks under .agent/hooks/ and .agents/.
+DEPLOY_DESCRIPTOR = '{"providers": ["agy"], "sources": {}, "preserve": []}\n'
 
 
-def _commit_deploy_source(repo: Path, source: str, text: str = DEPLOYED_HOOK) -> None:
+def _deployer(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    """The installed deployer, as ``npm run agents:deploy`` and the gate run it."""
+    return subprocess.run(
+        [str(PYTHON), "-I", "-m", "lu_machinery.agent_deploy", "--project-root", str(repo), *args],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=_env(),
+        text=True,
+        timeout=300,
+    )
+
+
+def _deployed(repo: Path) -> list[str]:
+    """Commit a release-only descriptor, apply it, and return the deployed Python outputs."""
     _write(repo, ".gitignore", DEPLOY_ROOTS_IGNORED)
-    _write(repo, source, text)
-    _commit(repo, "deploy source", ".gitignore", source)
+    _write(repo, "agents_extensions/deployment.v1.json", DEPLOY_DESCRIPTOR)
+    _commit(repo, "deploy descriptor", ".gitignore", "agents_extensions/deployment.v1.json")
+    applied = _deployer(repo)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    deployed = [path for path in _git(repo, "ls-files", "-z", "--others", "--", "*.py").stdout.split("\0") if path]
+    assert any(path.startswith(".agent/hooks/") for path in deployed)  # the scans below are not vacuous
+    return deployed
 
 
-@pytest.mark.parametrize(
-    ("source", "deployed"),
-    [
-        ("agents_extensions/shared/hooks/guard.py", ".claude/hooks/guard.py"),
-        ("agents_extensions/shared/hooks/guard.py", ".agent/hooks/guard.py"),
-        ("agents_extensions/shared/hooks/guard.py", ".codex/hooks/guard.py"),
-        ("agents_extensions/codex/hooks/guard.py", ".codex/hooks/guard.py"),
-        ("agents_extensions/shared/skills/s/run.py", ".agents/skills/s/run.py"),
-        ("agents_extensions/agy/hooks/guard.py", ".agents/hooks/guard.py"),
-    ],
-)
-def test_deployed_copies_identical_to_the_commit_are_not_validation_overlays(
-    repo: Path, source: str, deployed: str
-) -> None:
-    _commit_deploy_source(repo, source)
-    _write(repo, deployed, DEPLOYED_HOOK)
-
-    assert gate.reject_untracked_inputs(repo) is None
+def _identity(repo: Path) -> str:
+    manifest = json.loads(_deployer(repo, "--check", "--print-manifest").stdout)
+    return f"{manifest['release']}:{manifest['configuration']}"
 
 
-def test_a_deployed_copy_that_differs_from_its_committed_source_is_refused(repo: Path) -> None:
-    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard.py")
-    _write(repo, ".claude/hooks/guard.py", DEPLOYED_HOOK + "# stale or edited\n")
+def test_deployed_outputs_the_installed_deployer_verifies_are_not_validation_overlays(repo: Path) -> None:
+    repo = repo.resolve()
+    _deployed(repo)
+
+    assert gate.reject_untracked_inputs(repo) == _identity(repo)
+    plan = gate.build_plan(_update(repo, ZERO_SHA), repo, *_hook_inputs(repo))
+    # The receipt binds the deployer that proved the files, and the installed release.
+    assert plan is not None and plan.tools["agent_deploy"] == _identity(repo)
+    assert plan.tools["lu_machinery"] == importlib.metadata.version("lu-machinery")
+
+
+def test_an_edited_deployed_output_is_refused(repo: Path) -> None:
+    repo = repo.resolve()
+    hook = next(path for path in _deployed(repo) if path.startswith(".agent/hooks/"))
+    with (repo / hook).open("a", encoding="utf-8") as handle:
+        handle.write("# stale or edited\n")
 
     with pytest.raises(gate.GateOutcome) as raised:
         gate.reject_untracked_inputs(repo)
 
     assert raised.value.reason == "untracked_inputs"
-    assert ".claude/hooks/guard.py" in raised.value.detail
+    assert hook in raised.value.detail
     assert "npm run agents:deploy" in raised.value.detail
 
 
-@pytest.mark.parametrize(
-    "deployed",
-    [".claude/hooks/extra.py", ".claude/guard.py", ".agents/guard.py"],
-)
-def test_a_file_under_a_deploy_root_with_no_committed_source_is_refused(repo: Path, deployed: str) -> None:
-    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard.py")
-    _write(repo, deployed, DEPLOYED_HOOK)
+def test_outputs_deployed_for_another_commit_are_refused(repo: Path) -> None:
+    """The deployer checks the outgoing commit's descriptor and sources, never the checkout's."""
+    repo = repo.resolve()
+    deployed = _deployed(repo)
+    _write(repo, "agents_extensions/agy/hooks/extra.py", DEPLOYED_HOOK)
+    (repo / "agents_extensions/agy/hooks/extra.py").chmod(0o755)
+    _write(
+        repo,
+        "agents_extensions/deployment.v1.json",
+        '{"providers": ["agy"], "sources": {"agy": {"path": "agents_extensions/agy", "required": true}}, '
+        '"preserve": []}\n',
+    )
+    _commit(repo, "a product hook not yet deployed", "agents_extensions")
 
     with pytest.raises(gate.GateOutcome) as raised:
         gate.reject_untracked_inputs(repo)
 
     assert raised.value.reason == "untracked_inputs"
-    assert deployed in raised.value.detail
+    assert any(path in raised.value.detail for path in deployed)
+    assert "npm run agents:deploy" in raised.value.detail
 
 
-def test_a_deployed_copy_name_with_a_carriage_return_is_refused(repo: Path) -> None:
-    _commit_deploy_source(repo, "agents_extensions/shared/hooks/guard\n.py")
-    _write(repo, ".claude/hooks/guard\n.py", DEPLOYED_HOOK)
+@pytest.mark.parametrize("extra", [".agent/extra.py", ".claude/guard.py", ".agents/hooks/extra.py"])
+def test_a_file_under_a_deploy_root_outside_the_verified_manifest_is_refused(repo: Path, extra: str) -> None:
+    repo = repo.resolve()
+    _deployed(repo)
+    _write(repo, extra, DEPLOYED_HOOK)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert extra in raised.value.detail
+
+
+def test_a_deployed_output_name_with_a_carriage_return_is_refused(repo: Path) -> None:
+    repo = repo.resolve()
+    _deployed(repo)
     for name in ("guard\r.py", "guard\r\n.py"):
-        _write(repo, f".claude/hooks/{name}", "raise SystemExit(0)\n")
+        _write(repo, f".agent/hooks/{name}", "raise SystemExit(0)\n")
 
     with pytest.raises(gate.GateOutcome) as raised:
         gate.reject_untracked_inputs(repo)
 
     assert raised.value.reason == "untracked_inputs"
-    assert ".claude/hooks/guard\r.py" in raised.value.detail
-    assert ".claude/hooks/guard\r\n.py" in raised.value.detail
-    assert ".claude/hooks/guard\n.py" not in raised.value.detail
+    assert ".agent/hooks/guard\r.py" in raised.value.detail
+    assert ".agent/hooks/guard\r\n.py" in raised.value.detail
 
 
-def test_a_symlinked_deployed_copy_is_refused(repo: Path) -> None:
-    source = "agents_extensions/shared/hooks/guard.py"
-    _commit_deploy_source(repo, source)
-    (repo / ".claude/hooks").mkdir(parents=True)
-    (repo / ".claude/hooks/guard.py").symlink_to(repo / source)
+def test_a_symlinked_deployed_output_is_refused(repo: Path) -> None:
+    repo = repo.resolve()
+    hook = next(path for path in _deployed(repo) if path.startswith(".agent/hooks/"))
+    copy = repo / "hook-copy.py"
+    copy.write_bytes((repo / hook).read_bytes())
+    (repo / hook).unlink()
+    (repo / hook).symlink_to(copy)
 
     with pytest.raises(gate.GateOutcome) as raised:
         gate.reject_untracked_inputs(repo)
 
     assert raised.value.reason == "untracked_inputs"
-    assert ".claude/hooks/guard.py" in raised.value.detail
+    assert hook in raised.value.detail
 
 
-DEPLOY_INPUTS = (
-    ".gitignore",
-    "agents_extensions",
-    "scripts/check_rules_deployment.sh",
-    "scripts/agent_deploy",
-    "scripts/deploy_orphan_paths.sh",
-    "scripts/deploy_prompts.sh",
-    "scripts/lib",
-    "scripts/lint",
-    "scripts/lint_prompts.py",
-)
+DEPLOY_INPUTS = ("agents_extensions", "curriculum/l2-uk-en/curriculum.yaml")
 
 
 def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(tmp_path: Path) -> None:
-    """DEPLOYED_COPY_SOURCES restates the deploy's targets; a drift between them fails here (#12387)."""
-    root = tmp_path / "deployed"
+    """The product's own descriptor and sources deploy outputs the gate accepts (#12387, #13032)."""
+    root = (tmp_path / "deployed").resolve()
     root.mkdir()
     archive = subprocess.run(
         [GIT, "archive", "--format=tar", "HEAD", "--", *DEPLOY_INPUTS],
@@ -1377,30 +1409,19 @@ def test_the_deploy_of_the_committed_tree_leaves_no_validation_overlays(tmp_path
         timeout=60,
     )
     subprocess.run(["tar", "-x", "-C", str(root)], input=archive.stdout, check=True, timeout=60)
+    _write(root, ".gitignore", DEPLOY_ROOTS_IGNORED)
     _git(root, "init", "-b", "main")
     _git(root, "config", "user.email", "gate@example.invalid")
     _git(root, "config", "user.name", "Gate Test")
     _git(root, "add", "-A")
-    _git(root, "commit", "-q", "-m", "deploy inputs")
-    interpreter = root / ".venv/bin/python"
-    interpreter.parent.mkdir(parents=True)
-    interpreter.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
-    interpreter.chmod(0o755)
+    _git(root, "commit", "-q", "--no-verify", "-m", "deploy inputs")
 
-    deploy = subprocess.run(
-        ["bash", "scripts/deploy_prompts.sh"],
-        capture_output=True,
-        check=False,
-        cwd=root,
-        env=_env(),
-        text=True,
-        timeout=300,
-    )
+    deploy = _deployer(root)
     assert deploy.returncode == 0, deploy.stdout[-4000:] + deploy.stderr[-4000:]
     deployed = _git(root, "ls-files", "-z", "--others", "--", *gate.OVERLAY_PATHSPECS).stdout.split("\0")
     assert any(path.startswith(".claude/hooks/") for path in deployed)  # the scan below is not vacuous
 
-    assert gate.reject_untracked_inputs(root) is None
+    assert gate.reject_untracked_inputs(root) == _identity(root)
 
 
 def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:

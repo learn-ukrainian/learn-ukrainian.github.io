@@ -130,7 +130,7 @@ repos:
         entry: bash scripts/pre_commit/project_python.sh -P -m lu_machinery.hygiene.lint_control_plane_sqlite
         language: system
         pass_filenames: true
-        files: ^(?!(?:scripts/control_plane|tests/))(?:scripts|agents_extensions/shared/session_streams)/.*\.py$
+        files: ^(?!(?:scripts/control_plane|tests/))scripts/.*\.py$
         stages: [pre-commit]
 
       - id: lint-raw-rm-rf
@@ -298,7 +298,8 @@ repos:
 
       - id: no-secret-print-hook
         name: no-print hook blocks seeded secret echoes
-        entry: bash scripts/pre_commit/project_python.sh -I agents_extensions/shared/hooks/guard-secret-print.py --self-test
+        # The installed release hook (-I keeps the checkout off the import path).
+        entry: bash scripts/pre_commit/project_python.sh -I -m agents_extensions.shared.hooks.guard-secret-print --self-test
         language: system
         pass_filenames: false
         stages: [pre-commit]

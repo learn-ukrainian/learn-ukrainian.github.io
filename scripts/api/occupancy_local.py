@@ -22,8 +22,9 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.model import parse_timestamp
+from lu_machinery.session_streams.db import SessionStreamDatabase
+from lu_machinery.session_streams.model import parse_timestamp
+
 from scripts.api import config
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id

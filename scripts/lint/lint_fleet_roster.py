@@ -31,9 +31,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CATALOG_PATH = machinery_path("config/model_catalog.yaml")
 COMMS_PATH = machinery_path("config/fleet_communications.yaml")
 
-# Source rules only (not deploy copies under .claude/.agent/.gemini).
+# Product sources only. The fleet rules (model-assignment.md) ship with, and are linted by, the
+# installed lu-machinery release (#13032); deploy copies under .claude/.agent are never sources.
 DEFAULT_PROJECTION_PATHS = (
-    PROJECT_ROOT / "agents_extensions/shared/rules/model-assignment.md",
     PROJECT_ROOT / "docs/runbooks/fleet-comms-open-gaps.md",
     PROJECT_ROOT / "docs/runbooks/epic-orchestrator-roster.md",
 )

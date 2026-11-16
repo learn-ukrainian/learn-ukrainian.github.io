@@ -3,20 +3,26 @@ name: Rules Deployment Check
 permissions:
   contents: read
 
+# Agent files are deployed by the installed lu-machinery release
+# (`lu_machinery.agent_deploy`, pinned in requirements-machinery.lock) from the
+# release resources plus the product sources agents_extensions/deployment.v1.json
+# names. Every input of that composition is in the path filters below.
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/rules-deployment-check.yml'
-      - 'scripts/deploy_prompts.sh'
-      - 'scripts/deploy_orphan_paths.sh'
-      - 'scripts/deploy/**'
-      - 'scripts/agent_deploy/**'
-      - 'scripts/check_rules_deployment.sh'
-      - 'scripts/lint_prompts.py'
-      - 'scripts/lint/**/*.py'
+      - '.github/actions/python-ci-env/**'
+      - 'agents_extensions/deployment.v1.json'
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
+      - 'agents_extensions/agy/**'
+      - 'package.json'
+      - 'requirements-machinery.lock'
+      - 'scripts/pre_commit/project_python.sh'
+      - 'scripts/lib/project_interpreter.sh'
+      - 'scripts/lib/deploy_extensions.sh'
+      - 'curriculum/l2-uk-en/curriculum.yaml'
       - '.claude/**'
       - '.agent/**'
       - '.agents/**'
@@ -24,15 +30,17 @@ on:
   pull_request:
     paths:
       - '.github/workflows/rules-deployment-check.yml'
-      - 'scripts/deploy_prompts.sh'
-      - 'scripts/deploy_orphan_paths.sh'
-      - 'scripts/deploy/**'
-      - 'scripts/agent_deploy/**'
-      - 'scripts/check_rules_deployment.sh'
-      - 'scripts/lint_prompts.py'
-      - 'scripts/lint/**/*.py'
+      - '.github/actions/python-ci-env/**'
+      - 'agents_extensions/deployment.v1.json'
       - 'agents_extensions/shared/**'
       - 'agents_extensions/codex/**'
+      - 'agents_extensions/agy/**'
+      - 'package.json'
+      - 'requirements-machinery.lock'
+      - 'scripts/pre_commit/project_python.sh'
+      - 'scripts/lib/project_interpreter.sh'
+      - 'scripts/lib/deploy_extensions.sh'
+      - 'curriculum/l2-uk-en/curriculum.yaml'
       - '.claude/**'
       - '.agent/**'
       - '.agents/**'
@@ -45,7 +53,7 @@ concurrency:
 
 jobs:
   verify-rules-deployment:
-    name: Verify Deploy Script Idempotency
+    name: Verify Agent Deployment
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -58,10 +66,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Verify committed mirrors before deploy
-        run: bash scripts/check_rules_deployment.sh --tracked-mirrors-only
+      # The checkout is its own primary, so the package script's default
+      # interpreter anchor (the checkout) resolves .venv/bin/python through
+      # scripts/pre_commit/project_python.sh with its usual validation.
+      - name: Deploy agent files from the installed release
+        run: npm run --silent --if-present=false --script-shell=/bin/sh agents:deploy
 
-      - name: Verify deploy script is idempotent (rules/prompts sync)
+      - name: Verify the deployment and its idempotency
         run: |
-          bash scripts/deploy_prompts.sh
-          bash scripts/check_rules_deployment.sh
+          set -euo pipefail
+          check=(scripts/pre_commit/project_python.sh -I -m lu_machinery.agent_deploy --project-root "$PWD" --check)
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" "${check[@]}"
+          second="$(npm run --silent --if-present=false --script-shell=/bin/sh agents:deploy)"
+          printf '%s\n' "$second"
+          [[ "$second" == *"; 0 changes" ]] || { echo "::error::a second deploy changed outputs"; exit 1; }
+          # The pre-push gate verifies deployed files against the outgoing commit.
+          LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="$PWD" "${check[@]}" --print-manifest --inputs-commit "$(git rev-parse HEAD)" >/dev/null

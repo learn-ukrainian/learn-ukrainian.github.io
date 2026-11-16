@@ -16,9 +16,8 @@ from lu_machinery.api.main import create_app
 from lu_machinery.api.monitor_context import fixture_context
 from lu_machinery.api.product_contribution import ProductContribution
 from lu_machinery.session_streams.db import SessionStreamDatabase as ReleaseSessionStreamDatabase
+from lu_machinery.session_streams.store import SessionStreamStore
 from lu_machinery.session_streams.store import SessionStreamStore as ReleaseSessionStreamStore
-
-from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 
 @asynccontextmanager

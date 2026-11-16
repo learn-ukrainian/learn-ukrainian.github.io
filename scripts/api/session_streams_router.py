@@ -9,15 +9,14 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-
-from agents_extensions.shared.session_streams.dual_write import list_handoff_candidates
-from agents_extensions.shared.session_streams.handoff import diagnose_handoff
-from agents_extensions.shared.session_streams.model import entry_as_dict
-from agents_extensions.shared.session_streams.projection import (
+from lu_machinery.session_streams.dual_write import list_handoff_candidates
+from lu_machinery.session_streams.handoff import diagnose_handoff
+from lu_machinery.session_streams.model import entry_as_dict
+from lu_machinery.session_streams.projection import (
     detect_projection_drift,
     list_projection_receipts,
 )
-from agents_extensions.shared.session_streams.store import NotFoundError, SessionStreamStore
+from lu_machinery.session_streams.store import NotFoundError, SessionStreamStore
 
 from .monitor_context import MonitorContext, get_ctx
 from .repository_authority import build_repository_identity

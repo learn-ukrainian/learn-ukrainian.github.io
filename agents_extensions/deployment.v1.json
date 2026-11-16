@@ -1,0 +1,9 @@
+{
+  "providers": ["claude", "codex", "agy"],
+  "sources": {
+    "shared": {"path": "agents_extensions/shared", "required": true},
+    "codex": {"path": "agents_extensions/codex", "required": true},
+    "agy": {"path": "agents_extensions/agy", "required": true}
+  },
+  "preserve": [".claude/settings.local.json"]
+}

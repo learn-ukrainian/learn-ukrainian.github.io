@@ -217,6 +217,19 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
+# The checkout-relative path where this provider's harness finds a deployed fleet
+# skill or prompt. The launch deploys them from the installed release first
+# (npm run agents:deploy, #13032); the checkout has no source copy to read.
+launcher_deployed_path() {
+  local kind="$1" name="$2"
+  case "${LC_PROVIDER:-}:$kind" in
+    claude:*) printf '.claude/%s/%s' "$kind" "$name" ;;
+    codex:skills) printf '.agents/skills/%s' "$name" ;;
+    codex:*) printf '.codex/%s/%s' "$kind" "$name" ;;
+    *) printf '.agent/%s/%s' "$kind" "$name" ;;
+  esac
+}
+
 # Apply launcher-control and credential cleanup only inside the child process.
 # The supervisor keeps its inputs for scope re-entry and successor replay.
 launcher_drop_unneeded_secrets() {
@@ -685,7 +698,7 @@ launcher_validate_mode() {
     fi
     LC_MODEL="${LC_MODEL:-gpt-6.1-sol}"
     unset SESSION_EPIC
-    LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
+    LC_GOVERNOR_PROMPT="Follow $(launcher_deployed_path prompts dynamic-area-epic-fleet-governor.md) for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
     return
   fi
@@ -1299,7 +1312,7 @@ launcher_bind_drive_epic() {
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
-  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load agents_extensions/shared/skills/${entry_skill}/SKILL.md before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m ${LC_MACHINERY_PACKAGE}.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
+  LC_DRIVER_PROMPT="First run lu-driver-state render --lane ${state_lane}, then lu-driver-state check --lane ${state_lane}. Read the newest full-content DB handoff_note as authority for goals, tasks, decisions and handoff state. Load $(launcher_deployed_path skills "${entry_skill}/SKILL.md") before continuing. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause}${work_clause} Obtain independent cross-family review. The .claude/${LC_EPIC}-epic/DRIVER-STATE.md pointer holds only pinned provider/stream facts and DB render instructions; keep it under 4 KiB and do not update it when a goal lands. After any compaction or doubt, first repeat lu-driver-state render --lane ${state_lane} and lu-driver-state check --lane ${state_lane}; use .venv/bin/python -m ${LC_MACHINERY_PACKAGE}.driver_state whoami only as a pinned-identity diagnostic. For each handoff, write exactly one full-content DB handoff_note carrying rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed."
   if [ "${LC_PROVIDER:-}" = codex ]; then
     LC_DRIVER_PROMPT+=" Hand off after the fourth compaction and before the eighth; native automatic compaction remains enabled."
   fi

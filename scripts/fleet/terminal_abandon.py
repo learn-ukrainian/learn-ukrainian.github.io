@@ -82,7 +82,7 @@ def _activity(
 
 def _caller_lease(caller: Any) -> Any:
     """The launcher-issued lease envelope this session was started with, if any."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from lu_machinery.session_streams.hooks import lease_from_environment
 
     if caller.source == "unknown" or caller.initiator == "unknown":
         raise Refusal("NOT_CREATOR", "caller initiator does not match the dispatch creator-of-record")
@@ -122,7 +122,8 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
 
 def verify_current_custody(expected: dict[str, Any]) -> None:
     """Revalidate writer or receipt custody against Monitor without acquiring a lease."""
-    from agents_extensions.shared.session_streams.model import parse_timestamp
+    from lu_machinery.session_streams.model import parse_timestamp
+
     from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError
 
     stream = expected["stream_id"]

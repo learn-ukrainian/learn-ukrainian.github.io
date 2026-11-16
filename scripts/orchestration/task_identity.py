@@ -6,10 +6,10 @@ import json
 import re
 from collections.abc import Mapping
 from copy import deepcopy
-from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
+from lu_machinery.common.repo_root import machinery_path as release_path
 
 from scripts.common.repo_root import github_slug
 
@@ -31,8 +31,7 @@ FALLBACK_CARRIERS = (
 NATIVE_TITLE_HARNESSES = frozenset({"codex-app"})
 
 # The schema ships with this code, so it is read beside this file (the runtime checkout).
-_ROOT = Path(__file__).resolve().parents[2]
-_SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-identity.v1.schema.json"
+_SCHEMA_PATH = release_path("schemas/task-identity.v1.schema.json")
 _IDENTITY_SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _IDENTITY_VALIDATOR = Draft202012Validator(_IDENTITY_SCHEMA, format_checker=FormatChecker())
 

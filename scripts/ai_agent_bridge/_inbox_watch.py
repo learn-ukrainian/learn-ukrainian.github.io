@@ -53,7 +53,8 @@ from ._channels import resolve_recipient_alias
 from ._config import MACHINERY_PACKAGE, PRIMARY_REPO_ROOT
 
 if TYPE_CHECKING:
-    from agents_extensions.shared.session_streams.model import Lease
+    from lu_machinery.session_streams.model import Lease
+
     from scripts.fleet_comms.authority import AuthorityDelivery, AuthorityService
     from scripts.session_supervisor import SessionSupervisor
     from scripts.session_supervisor.remote import RemoteEpicClient
@@ -445,7 +446,8 @@ def preflight_supervisory_successor() -> bool:
 
 def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS) -> int:
     """Watch in the launcher-owned generation; return 75 only after preparation."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from lu_machinery.session_streams.hooks import lease_from_environment
+
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor import SessionSupervisor
     from scripts.session_supervisor.remote import RemoteEpicClient, RemoteUnavailableError
@@ -1002,7 +1004,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.live_supervisory:
             if args.notify_parent:
-                from agents_extensions.shared.session_streams.hooks import lease_from_environment
+                from lu_machinery.session_streams.hooks import lease_from_environment
 
                 if lease_from_environment().holder.process_id != os.getppid():
                     raise ValueError("supervisory watcher must be a direct child of its lease-owning launcher")

@@ -13,7 +13,7 @@ runtime (machinery code)  none: the checkout this file is in    ``Path(__file__)
 primary checkout          ``LEARN_UKRAINIAN_PRIMARY_REPO_ROOT``  ``main_checkout_root`` of the runtime checkout
 GitHub slug               ``LEARN_UKRAINIAN_GITHUB_SLUG``        ``learn-ukrainian/learn-ukrainian.github.io``
 state root                ``LEARN_UKRAINIAN_STATE_ROOT``         the primary checkout (holds ``batch_state/``)
-rules directory (policy)  ``LEARN_UKRAINIAN_RULES_DIR``          ``<checkout>/agents_extensions/shared/rules``
+rules directory (policy)  ``LEARN_UKRAINIAN_RULES_DIR``          the installed release's fleet rules (#13032)
 interpreter               ``LEARN_UKRAINIAN_PYTHON``             :func:`project_interpreter`'s resolution order
 ========================  ====================================  =================================================
 
@@ -218,12 +218,17 @@ def state_root(start: Path | None = None, env: Mapping[str, str] | None = None) 
     return configured
 
 
-def rules_dir(root: Path | None = None, env: Mapping[str, str] | None = None) -> Path:
-    """The configured rules directory, else ``root``'s (default: the runtime's) rules directory."""
+def rules_dir(env: Mapping[str, str] | None = None) -> Path:
+    """The configured fleet rules directory, else the installed lu-machinery release's (#13032).
+
+    The product keeps only its own rules in ``RULES_DIR_REL``; the fleet rules ship with the release.
+    """
     configured = _configured_path(RULES_DIR_ENV, env)
     if configured is not None:
         return configured
-    return (RUNTIME_ROOT if root is None else Path(root)) / RULES_DIR_REL
+    from lu_machinery.common.repo_root import machinery_path
+
+    return machinery_path(RULES_DIR_REL)
 
 
 def configured_interpreter(env: Mapping[str, str] | None = None) -> Path | None:

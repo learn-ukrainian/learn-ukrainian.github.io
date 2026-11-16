@@ -10,7 +10,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+from lu_machinery.session_streams.inventory import stream_anchor_id
+
 from scripts.common.epic_selector import validate_epic
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.session_canary import grok_lane
