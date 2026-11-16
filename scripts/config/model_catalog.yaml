@@ -218,36 +218,6 @@ review_scheduler:
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
-    kimi:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
-      models: []
-      participant: kimi
-      adapter_transport: acp
-      # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
-      catalog_transport: native_kimi
-      sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: kimi
-      credential_bucket: kimi
-      quota_limit: 1
-      credential_limit: 1
-      capacity_weight: 1.0
-    kimicc:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
-      # OO-58 (#11327): every Kimi id is retired. No routable kimicc model.
-      # Historical note (#8745): the coding endpoint rejected k3-256k.
-      models: []
-      participant: kimicc
-      adapter_transport: acp
-      # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
-      catalog_transport: native_kimi
-      sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: kimi
-      credential_bucket: kimi
-      quota_limit: 1
-      credential_limit: 1
-      capacity_weight: 1.0
     cursor:
       # Operator decision 2026-10-02 (#9488): only the pinned models below are
       # formal identities on this multi-model harness. Each is dispatched with an
@@ -939,16 +909,9 @@ models:
     tier: frontier_practical
     lifecycle: retired
     # OO-58 (#11327, 2026-10-21): unused since 2026-10-13; reconfirmed 2026-10-18
-    # and 2026-10-21. Historical route metadata only. No executable transport.
-    # Every Kimi launcher/runtime input is listed here. The canonical model id
-    # above is also accepted implicitly; consumers resolve aliases through
-    # scripts.review.model_catalog rather than carrying local maps.
+    # and 2026-10-21. No executable transport. The id and aliases stay so the
+    # retired-seat refusal recognises every historical Kimi spelling.
     aliases: [k3, kimi-k3, "kimi-k3[1m]"]
-    kimi_routes:
-      kimicc_alias: k3
-      platform_model_id: "kimi-k3[1m]"
-      coding_model_id: k3
-      context_profile: kimicc_k3
     # Historical limit: web, UI and backend coding only. Not a usable lane (OO-58).
     roles: [consequential_coding, long_context_debugging]
     transports: []
@@ -971,14 +934,8 @@ models:
     # and 2026-10-21. Was the native dispatch default. No executable transport.
     # Historical: K3 capped at 256K, once the headless default (operator 2026-08-07).
     # Not a kimicc route (#8745): the coding endpoint rejected k3-256k.
-    # kimi_routes stays as historical metadata, the same way retired GLM keeps
-    # glm_routes. Do not invent a replacement 256k coding id.
+    # Retain historical aliases for refusal. No executable Kimi route remains.
     aliases: [k3-256k, kimi-k3-256k]
-    kimi_routes:
-      kimicc_alias: k3-256k
-      platform_model_id: kimi-k3-256k
-      coding_model_id: k3-256k
-      context_profile: kimicc_k3_256k
     roles: [routine_coding]
     transports: []
     strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
@@ -991,11 +948,6 @@ models:
     lifecycle: retired
     # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k3-max]
-    kimi_routes:
-      kimicc_alias: k3-max
-      platform_model_id: kimi-k3-max
-      coding_model_id: kimi-k3-max
-      context_profile: kimicc_k3
     roles: [consequential_coding, long_context_debugging]
     transports: []
     strengths: [frontier_reasoning, max_effort, long_context_review]
@@ -1008,11 +960,6 @@ models:
     lifecycle: retired
     # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k2.7, k2.7-coding, kimi-for-coding, kimi-k2.7-code]
-    kimi_routes:
-      kimicc_alias: k2.7
-      platform_model_id: kimi-k2.7-code
-      coding_model_id: kimi-for-coding
-      context_profile: kimicc_k27
     roles: [routine_coding, bounded_implementation]
     transports: []
     strengths: [coding_specialization, subscription_capacity]
@@ -1025,11 +972,6 @@ models:
     lifecycle: retired
     # OO-58 (#11327, 2026-10-21): unused since 2026-10-13. No executable transport.
     aliases: [k2.7-highspeed, k2.7-coding-highspeed, kimi-for-coding-highspeed, kimi-k2.7-code-highspeed]
-    kimi_routes:
-      kimicc_alias: k2.7-highspeed
-      platform_model_id: kimi-k2.7-code-highspeed
-      coding_model_id: kimi-for-coding-highspeed
-      context_profile: kimicc_k27_highspeed
     roles: [fast_routine_coding]
     transports: []
     strengths: [speed]
@@ -1265,7 +1207,7 @@ review_candidates:
 # cold-start loop (prioritize → delegate → CF → merge-in-lane).
 # Native AGY reviews low/medium code in an exact-head worktree; its ACP wrapper cannot consume the
 # parent-owned sealed MCP. Grok reviews through Cursor and holds no driver seat;
-# Kimi: web, UI and backend coding only, never review.
+# Kimi is retired (OO-58, #11327) and holds no seat.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:

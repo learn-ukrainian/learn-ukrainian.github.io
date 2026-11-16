@@ -136,7 +136,6 @@ sys.addaudithook(record)
 script = root / package / "review" / "model_catalog.py"
 for arguments in (
     ["--check-retired-model", "gpt-6.1-sol"],
-    ["--resolve-kimi-model", "k3"],
     ["--resolve-glm-model", "glm"],
     ["--resolve-role", "bounded_advisor"],
 ):
@@ -146,11 +145,9 @@ for arguments in (
             runpy.run_path(str(script), run_name="__main__")
         except SystemExit as exc:
             code = 0 if exc.code in (None, 0) else exc.code
-            # Retired Kimi and GLM aliases still open the catalog; include their
-            # refusal import closures. Every active command must exit 0.
-            if code != 0 and not (
-                arguments in (["--resolve-kimi-model", "k3"], ["--resolve-glm-model", "glm"]) and code == 2
-            ):
+            # Retired GLM aliases still open the catalog; include their
+            # refusal import closure. Every active command must exit 0.
+            if code != 0 and not (arguments == ["--resolve-glm-model", "glm"] and code == 2):
                 raise
 # The launcher now executes the shared credential policy rather than only
 # printing intermediate drop names. Include that real import closure too.

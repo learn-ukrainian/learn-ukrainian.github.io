@@ -255,14 +255,9 @@ def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp
     assert cli.stdout == rules_core.core_text("core", core_root)
 
 
-def test_toml_and_kimi_forms_round_trip() -> None:
+def test_toml_form_round_trips() -> None:
     block = rules_core.core_block("core")
     assert tomllib.loads("v=" + rules_core.toml_basic_string(block + '\t"\\\x01'))["v"] == block + '\t"\\\x01'
-    agent_file = rules_core.kimi_agent_file_text(block)
-    assert agent_file.startswith("---\nname: rules-core\n")
-    assert "${base_prompt}\n\n" + block in agent_file
-    with pytest.raises(rules_core.RulesCoreError):
-        rules_core.kimi_agent_file_text("x ${injected} y")
 
 
 def test_cli_help_paths_follow_relocated_module(tmp_path: Path) -> None:
@@ -386,10 +381,6 @@ def _carrier(argv: list[str], carrier: str) -> str:
         return values[0]
     assert argv.count(carrier) == 1, f"expected one {carrier} in {argv[:12]}"
     value = argv[argv.index(carrier) + 1]
-    if carrier == "--agent-file":
-        text = Path(value).read_text(encoding="utf-8")
-        assert "${base_prompt}" in text, "the Kimi agent file must keep the default prompt"
-        return text
     return value
 
 
@@ -400,11 +391,10 @@ def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat,
     result, argv = _launch(core_root, name, args, tmp_path, env_kind)
     text = _carrier(argv, carrier)
     _assert_core(text, seat, row)
-    assert text.startswith(rules_core.core_block(seat)) or carrier == "--agent-file"
+    assert text.startswith(rules_core.core_block(seat))
     # stdout names the seat and size, never the 20 KB body
     assert f"launcher: rules core seat={seat} bytes=" in result.stdout
-    if carrier != "--agent-file":
-        assert f"<rules-core seat={seat} bytes=" in result.stdout.replace("\\", "")
+    assert f"<rules-core seat={seat} bytes=" in result.stdout.replace("\\", "")
     assert _anchors("core")[0] not in result.stdout
 
 
@@ -478,7 +468,6 @@ def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
 
 
 # (row, adapter "module:Class", mode, tool_config) — review dispatches reuse these adapters read-only
-# (Kimi rows are workspace-write: the coding-only gate admits nothing else)
 
 
 # Every CLI a WORKER_ROWS adapter resolves at plan time; stubs keep the rows host-independent.

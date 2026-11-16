@@ -17323,11 +17323,6 @@
       "message": "Need type annotation for \"wiktionary_data\" (hint: \"wiktionary_data: dict[<type>, <type>] = ...\")"
     },
     {
-      "path": "scripts/lib/kimi_coding_oauth.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
       "path": "scripts/lib/readonly_sqlite.py",
       "code": "attr-defined",
       "message": "\"Connection\" has no attribute \"_operation_lock\""

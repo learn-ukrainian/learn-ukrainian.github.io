@@ -128,47 +128,6 @@ def _stream_id(args: argparse.Namespace) -> str:
     return resolve_stream_id(args.epic, getattr(args, "stream", None))
 
 
-def _epic_stream_defaults() -> dict[str, str]:
-    """Compatibility export for Kimi, derived entirely from the shell SSOT."""
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            """
-source "$1" || exit 1
-{
-  _launcher_registry_stream_keys
-  _launcher_registry_stream_keys | sed 's/^/infra./'
-  awk -F '\t' '!/^#/ && NF == 3 { print $1 }' "$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
-} | while IFS= read -r selector; do
-  stream=$(launcher_selector_stream "$selector") || exit 1
-  printf '%s\t%s\n' "$selector" "$stream"
-done
-""",
-            "lane-defaults",
-            str(machinery_path("lib/handoff_identity.sh")),
-        ],
-        capture_output=True,
-        text=True,
-        timeout=2,
-        check=True,
-    )
-    return dict(line.split("\t", 1) for line in result.stdout.splitlines())
-
-
-def __getattr__(name: str) -> dict[str, str]:
-    """Load the Kimi compatibility table on first use, not at import.
-
-    Post-compact hydration is killed when the whole process overruns its
-    deadline. Importing a lane must not spend that budget on this scan.
-    """
-    if name != "EPIC_STREAM_DEFAULTS":
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    defaults = _epic_stream_defaults()
-    globals()["EPIC_STREAM_DEFAULTS"] = defaults
-    return defaults
-
-
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75
 N_ANCHORS = 10

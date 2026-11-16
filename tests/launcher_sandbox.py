@@ -42,8 +42,6 @@ LAUNCHER_TEST_FILES = (
     "tests/test_git_identity.py",
     "tests/test_session_supervisor_shell.py",
     "tests/test_start_glm_launcher.py",
-    "tests/test_start_kimi_claude_code.py",
-    "tests/test_start_kimi_launcher.py",
     "tests/test_secret_redaction.py",
 )
 
@@ -78,8 +76,6 @@ POLLUTED_PARENT_TESTS = {
     "tests/test_session_supervisor_shell.py::test_claim_exports_all_session_stream_variables_and_writes_capsule": "supervisor _clean_environ builder",
     "tests/test_start_glm_launcher.py::test_glm_retirement_precedes_profile_export": "retired GLM wrapper and explicit fake PATH",
     "tests/test_start_glm_launcher.py::test_claude_route_guard_checks_primary_checkout_settings_for_linked_worktree": "GLM Git fixture and direct route-guard environments",
-    "tests/test_start_kimi_claude_code.py::test_kimicc_interactive_dry_run_refuses_retired_pins": "retired Kimi Claude-Code shared launcher consumer",
-    "tests/test_start_kimi_launcher.py::test_kimi_native_is_default_and_interactive_rejects_epic": "retired native Kimi shared launcher consumer",
     "tests/test_secret_redaction.py::test_launcher_preserves_parent_api_key_and_fails_closed": "credential helper parent-preservation and fail-closed shell environments",
     "tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy": "explicit synthetic credential environments across active and retired adapters",
     "tests/test_secret_redaction.py::test_round4_exec_restores_signal_defaults": "shared _round4_launcher_probe environment builder",

@@ -36,7 +36,7 @@ streams:
       - codex-infra    # slot
       - gemini-infra   # slot
       - grok-infra     # slot
-      - kimi-infra     # slot
+      - kimi-infra     # retired
       - cursor-infra   # slot
   # monitor (Ops API + UI): selector monitor -> monitor -> issue_streams 7919.
   # area_assignments: muse-monitor and grok-monitor are slots; the rest are retired seats.
@@ -61,7 +61,7 @@ streams:
       - codex-devops    # slot
       - gemini-devops   # slot
       - grok-devops     # slot
-      - kimi-devops     # slot
+      - kimi-devops     # retired
       - cursor-devops   # slot
       - muse-devops     # slot
   # atlas: selector atlas -> atlas-practice -> issue_streams 4387.
@@ -71,7 +71,7 @@ streams:
       - codex-atlas    # slot
       - gemini-atlas   # slot
       - grok-atlas     # slot
-      - kimi-atlas     # slot
+      - kimi-atlas     # retired
       - cursor-atlas   # slot
   # practice: selector practice -> practice -> issue_streams 11151.
   "epic:11151":

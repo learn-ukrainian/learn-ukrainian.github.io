@@ -39,9 +39,6 @@ _SUBJECT_ALIASES: dict[str, str] = {
     "grok-4.5": "grok",
     "grok-4.7-cursor-fallback": "grok",
     "opencode": "deepseek",
-    "kimicc": "kimi",
-    "kimi-k3": "kimi",
-    "kimi-code/k3": "kimi",
     "claude-desktop": "claude",
     "claude-infra": "claude",
     "claude-monitor": "claude",
@@ -71,11 +68,10 @@ _ADAPTER_PREFIX = f"{_MACHINERY}/agent_runtime/adapters/"
 _PROVIDER_PREFIX = f"{_MACHINERY}/dispatcher/providers/"
 
 # Adapter modules the registry does not name but that serve exactly one seat:
-# ``kimicc.py`` is the Kimi Claude Code harness, and ``codex_events.py`` parses
+# ``codex_events.py`` parses
 # the ``codex exec --json`` stream for ``codex.py`` and the runner's Codex-only
 # MCP observer.
 _ADAPTER_COMPANION_SEATS: dict[str, str] = {
-    "kimicc.py": "kimi",
     "codex_events.py": "codex",
 }
 
@@ -107,12 +103,6 @@ def _matches_codex(candidate: _SeatCandidate) -> bool:
 
 def _matches_cursor(candidate: _SeatCandidate) -> bool:
     return candidate.route.casefold() == "cursor" or candidate.transport.casefold() == "cursor"
-
-
-def _matches_kimi(candidate: _SeatCandidate) -> bool:
-    name = candidate.name.casefold()
-    model = candidate.concrete_model.casefold()
-    return candidate.route.casefold() in {"kimi", "kimicc"} or name.startswith("kimi") or model.startswith("kimi")
 
 
 def _matches_deepseek(candidate: _SeatCandidate) -> bool:
@@ -175,7 +165,6 @@ _MATCHERS: dict[str, Callable[[_SeatCandidate], bool]] = {
     "gemma": _matches_gemma,
     "glm": _matches_glm,
     "grok": _matches_grok,
-    "kimi": _matches_kimi,
     "muse": _matches_muse,
     "pool": _matches_pool,
     "qwen": _matches_qwen,

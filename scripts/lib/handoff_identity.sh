@@ -461,16 +461,6 @@ handoff_identity_for_codex_epic() {
   printf 'codex-%s' "$lane"
 }
 
-# handoff_identity_for_kimi_epic "<epic-name>"
-# Echo the per-epic Kimi Code orchestrator rollover slot. Provider-specific so
-# a Kimi seat never adopts Claude/Codex/Grok packets.
-handoff_identity_for_kimi_epic() {
-  local lane=''
-  [ -n "${1:-}" ] || return 0
-  lane="$(launcher_selector_lane "$1")" || return 1
-  printf 'kimi-%s' "$lane"
-}
-
 # handoff_identity_for_gemini_epic "<epic-name>"
 # Echo the per-epic Gemini / Antigravity driver rollover slot (2026-10-08
 # approval). Provider-specific so a Gemini seat never adopts Claude/Codex/Grok/
