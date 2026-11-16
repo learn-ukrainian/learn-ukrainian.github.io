@@ -1125,11 +1125,12 @@ class _Boundary:
         interpreter = project_interpreter().resolve(strict=True)
         projected = {name: source.read_bytes() for name, source in _PROJECTED.items()}
         projected["bin/gh"] = _GH_SHIM.format(interpreter=interpreter).encode()
-        # The canary imports these trusted contracts, never branch-controlled code.
-        # They keep their package-relative places under the machinery package's own name.
+        # The canary imports these trusted contracts, never branch-controlled code. They come
+        # from the installed release (the product no longer carries the storage contract) and
+        # keep their package-relative places under the release package's own name.
         for relative in ("storage/topology.py", "lib/readonly_sqlite.py", "common/repo_root.py"):
-            projected[f"store_contract/{_PACKAGE}/{relative}"] = machinery_path(relative).read_bytes()
-        for package in (_PACKAGE, f"{_PACKAGE}/storage", f"{_PACKAGE}/lib", f"{_PACKAGE}/common"):
+            projected[f"store_contract/lu_machinery/{relative}"] = release_machinery_path(relative).read_bytes()
+        for package in ("lu_machinery", "lu_machinery/storage", "lu_machinery/lib", "lu_machinery/common"):
             projected[f"store_contract/{package}/__init__.py"] = b""
         import psutil
 
