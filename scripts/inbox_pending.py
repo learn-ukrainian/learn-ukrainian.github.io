@@ -15,6 +15,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.agent_identity import seat_read_aliases
+from lu_machinery.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
 from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
@@ -26,7 +27,6 @@ from scripts.common.repo_root import (
 )
 from scripts.fleet_comms.paths import default_plane_root
 from scripts.lib.readonly_sqlite import open_readonly
-from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
 # The machinery package's import name, which is also the directory its files have in checkout
 # paths: from this module's package, or from its unresolved location when run as a file.

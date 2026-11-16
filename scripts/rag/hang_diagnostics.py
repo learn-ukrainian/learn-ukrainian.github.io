@@ -4,7 +4,7 @@ The standalone server registers a ``faulthandler`` dump on ``SIGUSR1`` at
 startup. ``faulthandler`` writes every thread's Python stack from inside the
 signal handler without taking the GIL, so it still works when every thread,
 including the event loop, is blocked on a lock. The watchdog
-(``scripts/orchestration/sources_watchdog.py``) sends the signal and copies
+(``lu_machinery/orchestration/sources_watchdog.py``) sends the signal and copies
 the new bytes into an incident directory before it restarts the service.
 
 Both sides find the dump directory the same way: ``LU_SOURCES_DUMP_DIR`` when

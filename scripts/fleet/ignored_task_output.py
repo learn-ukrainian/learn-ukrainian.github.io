@@ -93,7 +93,8 @@ def preservation_root(control_root: Path) -> Path:
 
 def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) -> dict[str, Any]:
     """Require an authoritative MERGED PR containing every checkout commit."""
-    from scripts.orchestration import worktree_git as rw
+    from lu_machinery.orchestration import worktree_git as rw
+
     from scripts.orchestration.worktree_claims import checked_out_branch
 
     branch = checked_out_branch(worktree) or creator.get("worktree_branch")
@@ -124,7 +125,7 @@ def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) 
 
 def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
     """Committed patch equivalence, with dirty bytes separately bound to the abandon manifest."""
-    from scripts.orchestration import worktree_git as rw
+    from lu_machinery.orchestration import worktree_git as rw
 
     if not info.head or not pr.head_sha:
         return False
@@ -143,7 +144,7 @@ def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
 
 def abandon_task_is_terminal(member: Mapping[str, Any], *, successor: bool, merged: bool) -> bool:
     """Merge evidence substitutes only for terminal status and retention, never liveness."""
-    from scripts.orchestration import worktree_git as rw
+    from lu_machinery.orchestration import worktree_git as rw
 
     return bool(
         member.get("status") in rw._TERMINAL_DISPATCH_STATUSES
@@ -975,7 +976,7 @@ def terminal_abandon_creator(
     A successor's receipt adds ``succession`` and a manifest ``output`` copy;
     both are revalidated here, at removal (#10617).
     """
-    from scripts.orchestration import worktree_git as rw
+    from lu_machinery.orchestration import worktree_git as rw
 
     recovery = _recovery_source(matches, worktree, primary=primary, tasks=tasks_dir)
     creators = [item for item in matches if item[0] != recovery and record_created_worktree(item[1])]
@@ -1730,7 +1731,7 @@ def preserve_worktree_artifacts(
             for _, member in _current_reuse_records(matches, tasks_dir)
         )
         if merged_preservation:
-            from scripts.orchestration.worktree_git import _preservation_merged_creator
+            from lu_machinery.orchestration.worktree_git import _preservation_merged_creator
 
             _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         if any("worktree_abandon" in member for _, member in matches):
@@ -1754,7 +1755,7 @@ def preserve_worktree_artifacts(
             # branch, so strict attribution refuses. Preservation may use that
             # creator only after the merged-head proof; resolve itself stays strict
             # so branch-holder release and retention release do not (#10548).
-            from scripts.orchestration.worktree_git import (
+            from lu_machinery.orchestration.worktree_git import (
                 _preservation_merged_creator,
                 _switched_branch_merge_proven,
                 _switched_branch_structural_cohort,

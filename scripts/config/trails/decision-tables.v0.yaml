@@ -11,7 +11,7 @@
 # roster.
 #
 # This file validates against agents_extensions/shared/schemas/decision-tables.v0.schema.json
-# (validate_decision_tables in scripts/orchestration/validate_trailspec.py) and is covered
+# (validate_decision_tables in lu_machinery/orchestration/validate_trailspec.py) and is covered
 # by tests/test_validate_trailspec.py.
 schema_version: decision-tables.v0
 precedence: first-match

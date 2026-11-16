@@ -729,14 +729,14 @@ def load_post_start_code(bound_review: bool = False) -> None:
             pr_ownership,
             preparation_evidence,
             reaper_lifecycle,
-            slot_routing,
             task_record_causes,
             worker_leftovers,
             worktree_artifacts,
             worktree_claims,
-            worktree_git,
             worktree_prep,
         )
+    with contextlib.suppress(Exception):
+        from lu_machinery.orchestration import slot_routing, worktree_git  # noqa: F401
 
 
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.

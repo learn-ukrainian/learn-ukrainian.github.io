@@ -280,7 +280,7 @@ steps:
           import os
           from pathlib import Path
 
-          import scripts.orchestration.trail_predicates as tp
+          import lu_machinery.orchestration.trail_predicates as tp
 
           facts = json.load(open(os.environ["GATE_FACTS_RECEIPT"], encoding="utf-8"))
           tables = tp.load_decision_tables(Path(os.environ["TABLES_PATH"]))

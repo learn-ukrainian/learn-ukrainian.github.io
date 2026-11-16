@@ -1,5 +1,11 @@
 # Worktree cleanup
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 This runbook covers immediate post-merge cleanup and the local Linux systemd and macOS launchd Git
 hygiene backstops for both Learn Ukrainian repositories.
 
@@ -257,7 +263,7 @@ Infra owns this attribution residual.
 Task records written by the retired reaper may carry `worktree_reap_proof`
 (`merged-reuse-reap.v1`) for a keep-false continuation cohort. Preservation and
 lifecycle recovery still read and verify that proof against current identities
-(`scripts/orchestration/worktree_git.py`); nothing writes new ones. The proof
+(`lu_machinery/orchestration/worktree_git.py`); nothing writes new ones. The proof
 does not release retention intent.
 A switched-branch proof identifies the checkout using Git's raw common-directory
 and configured-origin output, then checks Git's porcelain registration list in
@@ -668,7 +674,7 @@ record, successful push record and complete preservation tree first. Keep the
 tree's `batch_state/preserved/<task>/<attempt>` layout within the copy root.
 
 ```bash
-.venv/bin/python -m scripts.orchestration.task_closeout recover-local \
+.venv/bin/python -m lu_machinery.orchestration.task_closeout recover-local \
   --state-file ledger.json \
   --task-record task.json \
   --preserved-manifest batch_state/preserved/example/attempt.manifest.json \
@@ -727,7 +733,7 @@ typed refusal with no append. The association supplies local observation only;
 review, CI and behavior evidence require their own verification.
 
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
-`scripts.orchestration.merge_closeout`. This is the one command that proves the PR
+`lu_machinery.orchestration.merge_closeout`. This is the one command that proves the PR
 MERGED, finds every worktree still tied to it (by branch, by exact merged head SHA,
 or by an earlier commit that exists only on that PR, including detached
 review-checkout siblings), and proves the remote and local branch are both gone. It
@@ -739,7 +745,7 @@ a residual.
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 cd "$PRIMARY_REPO"
 
-"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
+"$PRIMARY_REPO/.venv/bin/python" -m lu_machinery.orchestration.merge_closeout <PR_NUMBER> --repo <owner/name> --repo-root "$PRIMARY_REPO" --apply
 ```
 
 Starting a later review round (`review-<topic>-rN`) also removes earlier clean
@@ -778,13 +784,13 @@ evidence for an arbitrary dispatch worktree.
 Dry run:
 
 ```bash
-.venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py
+.venv/bin/python -m lu_machinery.orchestration.scheduled_worktree_cleanup
 ```
 
 Apply:
 
 ```bash
-.venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --apply
+.venv/bin/python -m lu_machinery.orchestration.scheduled_worktree_cleanup --apply
 ```
 
 Each run performs the following in both repository roots:
@@ -888,12 +894,12 @@ instructions.
 Render the plist without writing system configuration:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py render
+.venv/bin/python -m lu_machinery.orchestration.install_worktree_cleanup_launchd render
 ```
 
 The job runs at load and every 4 hours. launchd `Program` is `/bin/bash`
 (Apple-signed, survives a `.venv` rebuild) plus
-`scripts/orchestration/run_scheduled_worktree_cleanup.sh`, which execs the
+`lu_machinery/orchestration/run_scheduled_worktree_cleanup.sh`, which execs the
 public checkout's `.venv/bin/python`. Pointing `Program` at the venv
 interpreter is what produced exit 78 (`Unable to get updated LWCR ... error
 0x3`) after the 2026-08-15 venv rewrite. The wrapper passes both repository
@@ -909,7 +915,7 @@ Install only after the cleanup code is merged into the public primary checkout.
 Both primary checkouts must be on `main`.
 
 ```bash
-.venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py install
+.venv/bin/python -m lu_machinery.orchestration.install_worktree_cleanup_launchd install
 ```
 
 Installation is idempotent. It writes and loads:
@@ -921,7 +927,7 @@ Installation is idempotent. It writes and loads:
 Verify the persisted plist and live service:
 
 ```bash
-.venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py status
+.venv/bin/python -m lu_machinery.orchestration.install_worktree_cleanup_launchd status
 ```
 
 After installation, inspect the first receipt for errors. A venv rebuild does not require
@@ -939,7 +945,7 @@ pre-flight warning). Probe:
 ## Uninstall
 
 ```bash
-.venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py uninstall
+.venv/bin/python -m lu_machinery.orchestration.install_worktree_cleanup_launchd uninstall
 ```
 
 Uninstalling preserves receipts and logs for audit and recovery.
@@ -952,10 +958,10 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 
 ```bash
 # dry-run
-.venv/bin/python -m scripts.orchestration.tmp_leak_sweep
+.venv/bin/python -m lu_machinery.orchestration.tmp_leak_sweep
 
 # apply
-.venv/bin/python -m scripts.orchestration.tmp_leak_sweep --apply
+.venv/bin/python -m lu_machinery.orchestration.tmp_leak_sweep --apply
 ```
 
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same

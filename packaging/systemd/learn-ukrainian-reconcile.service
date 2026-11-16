@@ -5,8 +5,10 @@ After=network.target
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep --apply
+ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.orchestration.reconcile_sweep --apply
 
 [Install]
 WantedBy=default.target

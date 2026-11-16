@@ -1,5 +1,11 @@
 # launchd inventory
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 This runbook inventories the per-user macOS LaunchAgents the project owns,
 their delete authority, and the log/receipt locations that must survive a
 checkout loss. It is the reference for the post-incident reinstall step in
@@ -56,7 +62,7 @@ dispatch worktree.
 
 - Purpose: Git hygiene backstop for both Learn Ukrainian repositories.
 - Program: `/bin/bash --noprofile --norc
-  scripts/orchestration/run_scheduled_worktree_cleanup.sh --apply` with both
+  lu_machinery/orchestration/run_scheduled_worktree_cleanup.sh --apply` with both
   repository roots passed explicitly. The wrapper execs the primary
   `.venv/bin/python`. `Program` must stay `/bin/bash` so a venv rebuild
   cannot invalidate launchd LWCR (exit 78; #6937).
@@ -67,8 +73,8 @@ dispatch worktree.
   deletion.
 - Receipts and logs: `~/.codex/worktree-cleanup/receipts/v2/` and
   `~/.codex/worktree-cleanup/logs/` — outside the repository.
-- Manage: `.venv/bin/python
-  scripts/orchestration/install_worktree_cleanup_launchd.py
+- Manage: `.venv/bin/python -m
+  lu_machinery.orchestration.install_worktree_cleanup_launchd
   render|install|status|uninstall`.
 - Reference: [Worktree cleanup](worktree-cleanup.md).
 
@@ -76,7 +82,7 @@ dispatch worktree.
 
 - Purpose: deterministic cleanup of old archived Codex threads.
 - Program: `/bin/bash --noprofile --norc
-  scripts/orchestration/run_archived_thread_cleanup.sh --apply` with both
+  lu_machinery/orchestration/run_archived_thread_cleanup.sh --apply` with both
   `--repo-root` and an absolute `--codex-binary`. The wrapper execs the
   primary `.venv/bin/python`. `Program` must stay `/bin/bash` so a venv
   rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
@@ -89,8 +95,8 @@ dispatch worktree.
   directly.
 - State, receipts, and logs: `~/.codex/thread-cleanup/` — outside the
   repository.
-- Manage: `.venv/bin/python
-  scripts/orchestration/install_archived_thread_cleanup_launchd.py
+- Manage: `.venv/bin/python -m
+  lu_machinery.orchestration.install_archived_thread_cleanup_launchd
   render|install|status|uninstall`.
 - Reference: [Archived thread cleanup](archived-thread-cleanup.md).
 
@@ -103,9 +109,9 @@ dispatch worktree.
   SessionStart markers for Claude/Codex/Cursor sessions and carries local
   context counters when available (#7189).
 - Program: `/bin/bash --noprofile --norc
-  scripts/orchestration/run_mac_observer_heartbeat.sh --repo-root <primary
+  lu_machinery/orchestration/run_mac_observer_heartbeat.sh --repo-root <primary
   checkout>`. The wrapper execs the primary `.venv/bin/python` with
-  `scripts/orchestration/observer_heartbeat.py --mac-gui`. `Program` must stay
+  `lu_machinery/orchestration/observer_heartbeat.py --mac-gui`. `Program` must stay
   `/bin/bash` so a venv rebuild cannot invalidate launchd LWCR (exit 78; #6937, #6941).
 - Schedule: at load and every 5 minutes (`StartInterval=300`), well within
   the 15-minute presence TTL.
@@ -113,8 +119,8 @@ dispatch worktree.
   files in the observer's own runtime marker directory; it has no repository
   or checkout deletion authority.
 - Logs: `~/.codex/mac-observer/logs/` — outside the repository.
-- Manage: `.venv/bin/python
-  scripts/orchestration/install_mac_observer_launchd.py
+- Manage: `.venv/bin/python -m
+  lu_machinery.orchestration.install_mac_observer_launchd
   render|install|status|uninstall`.
 - Reference: [Cursor driver](cursor-driver.md) and #7104.
 

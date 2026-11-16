@@ -1,13 +1,19 @@
 # Stalled dispatch work
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 Issue #11212 returns committed work to its dispatching lane until it lands or
 the owner explicitly abandons it. The report scans hot task records younger
 than 14 days and open PRs in the public repository. It imports the existing
 stale-record classifiers without settling, archiving or editing any record.
 
 ```bash
-.venv/bin/python -m scripts.orchestration.stalled_work stalled
-.venv/bin/python -m scripts.orchestration.stalled_work stalled --route
+.venv/bin/python -m lu_machinery.orchestration.stalled_work stalled
+.venv/bin/python -m lu_machinery.orchestration.stalled_work stalled --route
 ```
 
 The JSON rows name the task, dispatch `initiator` lane, commit or PR, stall
@@ -37,7 +43,7 @@ are excluded. This observer does not authorize abandonment or cleanup.
 The packaged keeper service calls this command after its queue pass:
 
 ```bash
-.venv/bin/python -m scripts.orchestration.stalled_work stalled --tick
+.venv/bin/python -m lu_machinery.orchestration.stalled_work stalled --tick
 ```
 
 The same command can be called by an existing five-minute lane-wake tick.

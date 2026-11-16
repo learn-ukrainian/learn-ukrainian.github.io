@@ -1,5 +1,11 @@
 # Systemd unit templates (loopback services & scheduled maintenance)
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 Templates only — do not commit machine-specific paths. Copy a unit into
 `~/.config/systemd/user/` (linger enabled via `loginctl enable-linger $USER`) or
 `/etc/systemd/system/`, replace `@REPO_ROOT@` / `@PRIVATE_ROOT@`, run
@@ -134,11 +140,11 @@ runner, and orchestrator hosts).
 ### 1. Reconciliation Sweep (`learn-ukrainian-reconcile.service` + `.timer`)
 
 - **Frequency**: Every 5 minutes (`OnBootSec=2min`, `OnUnitActiveSec=5min`, `AccuracySec=30s`), so a worker killed by the OOM killer or SIGKILL stops reading `running` within one interval (#8645). Dispatch admission also sweeps dead pids before it counts write workers.
-- **What it does**: Runs `scripts/orchestration/reconcile_sweep.py --apply` which:
+- **What it does**: Runs `lu_machinery/orchestration/reconcile_sweep.py --apply` which:
   1. Releases write-ownership claims for inactive tasks via `dispatch_settle release-stale` (the same reconciliation every dispatch runs at admission).
   2. Marks running/spawning task records whose pid is dead as `crashed` via the existing lazy heal path (`scripts/dispatch.py list`). The mark re-checks status, pid, run nonce and liveness under the task's writer lock, so it cannot overwrite a worker's own terminal write; a pid owned by another user, or reused, counts as alive.
   3. Logs a one-line summary count (`scanned_tasks`, `zombies_crashed`, `stale_claims_released`) to stdout/journal.
-- **Default mode**: Apply. Run `.venv/bin/python -m scripts.orchestration.reconcile_sweep` by hand (no `--apply`) for a report-only dry run. To make the timer report-only, drop `--apply` from `~/.config/systemd/user/learn-ukrainian-reconcile.service`.
+- **Default mode**: Apply. Run `.venv/bin/python -m lu_machinery.orchestration.reconcile_sweep` by hand (no `--apply`) for a report-only dry run. To make the timer report-only, drop `--apply` from `~/.config/systemd/user/learn-ukrainian-reconcile.service`.
 - **Enable or update** (the unit files are templates; install them with `@REPO_ROOT@` replaced):
   ```bash
   systemctl --user daemon-reload
@@ -149,7 +155,7 @@ runner, and orchestrator hosts).
 
 - **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
 - **Frequency**: The shipped systemd timer schedules cleanup hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min` and `Persistent=true`.
-- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and sweep temp and session scratch with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles. GC runs separately through `learn-ukrainian-git-maintenance.timer` at 03:30 UTC, with no catch-up, verified cgroup limits and validation exclusion. Install its service, timer and data-volume drop-in together. See [bounded Git maintenance](../../docs/runbooks/worktree-cleanup.md#bounded-git-maintenance-11157) for prerequisites and rollout checks.
+- **What it does**: Runs `lu_machinery/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and sweep temp and session scratch with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles. GC runs separately through `learn-ukrainian-git-maintenance.timer` at 03:30 UTC, with no catch-up, verified cgroup limits and validation exclusion. Install its service, timer and data-volume drop-in together. See [bounded Git maintenance](../../docs/runbooks/worktree-cleanup.md#bounded-git-maintenance-11157) for prerequisites and rollout checks.
 - **Default mode**: Apply. The shipped unit passes both repository roots and `--apply` to the wrapper. Protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
 - **Disable branch cleanup**: Set `LU_REAPER_DISABLED=1` in the user unit environment to skip the terminal-worktree inventory and every branch deletion. Reload systemd after changing the unit:
   ```bash
@@ -163,7 +169,7 @@ runner, and orchestrator hosts).
 ### 3. Project State Reporter (`learn-ukrainian-project-state-reporter.service` + `.timer`)
 
 - **Frequency**: Every 5 minutes (`OnUnitActiveSec=5min`, `OnBootSec=2min`).
-- **What it does**: Runs `scripts/orchestration/run_project_state_reporter.sh` to report periodic host project state.
+- **What it does**: Runs `lu_machinery/orchestration/run_project_state_reporter.sh` to report periodic host project state.
 - **Enable command**:
   ```bash
   systemctl --user enable --now learn-ukrainian-project-state-reporter.timer
@@ -305,13 +311,13 @@ so Codex compaction counts restart from zero.
 
 - **Why**: a hung sources server stays `active/running` in systemd, so `Restart=` never fires (#10674).
 - **Frequency**: every 15 seconds (`OnUnitActiveSec=15s`, `AccuracySec=1s`).
-- **What it does**: runs `scripts/orchestration/sources_watchdog.py run-once --apply`. It probes `http://127.0.0.1:8766/health` with a 5 s timeout. After three consecutive failures of the same main process of a running unit (about 45 s) it:
+- **What it does**: runs `lu_machinery/orchestration/sources_watchdog.py run-once --apply`. It probes `http://127.0.0.1:8766/health` with a 5 s timeout. After three consecutive failures of the same main process of a running unit (about 45 s) it:
   1. writes an incident directory under `batch_state/sources-dumps/` (or `$LU_SOURCES_DUMP_DIR`): a `/proc` snapshot of thread states, wait channels, socket states on the port and the accept backlog; `py-spy dump --native` when py-spy is installed and allowed to attach; and the server's all-thread Python stacks, which it asks for with `SIGUSR1` (the server registers a `faulthandler` dump at startup, so this needs no py-spy and works while every thread is blocked);
   2. probes `/health` once more and re-reads the unit's main process (pid and start time). If the server recovered during the dump, or the unit now runs another process or is no longer active, it does not restart and records `restart aborted: recovered` or `restart aborted: changed`;
   3. otherwise sends `SIGKILL` to the unit (a process blocked on the GIL never runs its `SIGTERM` handler) and starts it again, then waits up to 90 s for `/health`;
   4. posts one report to the Fleet Comms `cto` channel per incident (`--sender sre-timers`, the publisher `backup_failure_alert.py` uses). An incident closes after 10 minutes of health following its last restart.
 - **No restart loop**: at most three restarts per rolling hour, counted from a restart history in `watchdog-state.json` that closing an incident does not clear; beyond that it does not dump or restart, and an incident that opens with the budget spent is still reported once. It acts only on `learn-ukrainian-sources.service`: `--unit` accepts no other name, and the restart code refuses any other unit too. A unit that is not active is never touched, so an operator stop or a crash stays with systemd. The newest 20 incidents are kept.
-- **Preview and drills**: `.venv/bin/python -m scripts.orchestration.sources_watchdog run-once` (no `--apply`) reports what it would do. `... sources_watchdog dump --pid <MainPID>` captures an incident dump of a live process without restarting it.
+- **Preview and drills**: `.venv/bin/python -m lu_machinery.orchestration.sources_watchdog run-once` (no `--apply`) reports what it would do. `... sources_watchdog dump --pid <MainPID>` captures an incident dump of a live process without restarting it.
 - **Install** (the driver, after review and merge, from the primary checkout):
   ```bash
   repo_root=$(pwd -P)
@@ -325,7 +331,7 @@ so Codex compaction counts restart from zero.
     > "$unit_dir/learn-ukrainian-sources-watchdog.service.d/data-volume.conf"
   systemd-analyze verify "$unit_dir/learn-ukrainian-sources-watchdog.service" "$unit_dir/learn-ukrainian-sources-watchdog.timer"
   systemctl --user daemon-reload
-  .venv/bin/python -m scripts.orchestration.sources_watchdog run-once   # preview: expect "healthy"
+  .venv/bin/python -m lu_machinery.orchestration.sources_watchdog run-once   # preview: expect "healthy"
   systemctl --user restart learn-ukrainian-sources.service              # loads the SIGUSR1 dump handler
   systemctl --user enable --now learn-ukrainian-sources-watchdog.timer
   journalctl --user -u learn-ukrainian-sources-watchdog.service -n 20

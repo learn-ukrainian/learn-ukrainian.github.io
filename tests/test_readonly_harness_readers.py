@@ -28,7 +28,6 @@ READERS = (
     "scripts/fleet_comms/cold_start_board.py",
     "scripts/fleet_comms/efficiency_metrics.py",
     "scripts/fleet_comms/legacy_broker_report.py",
-    "scripts/orchestration/slot_routing.py",
     "scripts/orchestration/task_family/codex_state.py",
     "scripts/review/seeds/score.py",
 )

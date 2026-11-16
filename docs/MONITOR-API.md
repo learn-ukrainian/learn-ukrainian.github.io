@@ -2616,7 +2616,7 @@ curl -s "${MONITOR_API_BASE}/api/rollovers?agent=codex&lineage_id=<lineage-id>&r
 The `rollovers` section in `/api/orient` is the compact cold-start projection:
 counts plus live pending or confirmed-but-incompletely-cleaned entries. Use this
 endpoint for complete evidence and registry validation errors. Use
-`scripts/orchestration/rollover_registry_cli.py` for evidence-gated exact
+`lu_machinery/orchestration/rollover_registry_cli.py` for evidence-gated exact
 reconciliation or maintenance.
 
 ## Orientation — `/api/orient`

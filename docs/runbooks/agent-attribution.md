@@ -83,7 +83,7 @@ carries those lines into the landed message.
 With `BLANK` the body is only GitHub's `Co-authored-by` block and every attribution is
 lost; this is the state that began on 2026-10-08. The merge queue ignores any message
 supplied at enqueue time (`scripts/publish/github.py`,
-`scripts/orchestration/merge_queue_keeper.py`), so the setting is the only transport.
+`lu_machinery/orchestration/merge_queue_keeper.py`), so the setting is the only transport.
 A PR-body footer was rejected: it is a second source of truth that goes stale after
 review-fix pushes and puts review prose on `main`.
 

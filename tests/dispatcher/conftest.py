@@ -138,8 +138,7 @@ def sandbox(tmp_path, hermetic_monitor):
     run_git(repo, "config", "user.name", "Stub")
     for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
-    for relative in ("scripts/lib/project_interpreter.sh",
-                     "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
+    for relative in ("scripts/lib/project_interpreter.sh", "scripts/orchestration/task_record_store.py"):
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(SOURCE / relative, target)

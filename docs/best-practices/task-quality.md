@@ -1,5 +1,11 @@
 # Task quality — DoR, DoD, blocked, residual, terminal goal
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 > **Scope:** Ticket- and brief-level quality for non-trivial work.
 > **Nests under:** operator contract §14 / `workflow.md` pre-dispatch outcome
 > adequacy (epic/phase SHA-256 packets) and
@@ -265,7 +271,7 @@ Naming a residual owner does **not** satisfy an unmet acceptance criterion;
 in-scope residual keeps the task unfinished unless an authorized scope revision
 and transfer resolve it.
 
-After merge, run `.venv/bin/python -m scripts.orchestration.postmerge_criteria
+After merge, run `.venv/bin/python -m lu_machinery.orchestration.postmerge_criteria
 --pr N --apply`. For the PR's closing links and explicit `Closes #N` references,
 the command reopens closed issues with unchecked acceptance criteria and posts
 one comment per outstanding item set with each owner and deadline. Missing or

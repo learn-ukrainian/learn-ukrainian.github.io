@@ -61,7 +61,7 @@ launcher_adapter_validate() {
       launcher_error 'MUSE_UKRAINIAN_CONTENT_FORBIDDEN'; exit 4 ;;
   esac
   py="$(launcher_project_python)" || exit 3
-  classification="$("$py" "$LC_ROOT/scripts/orchestration/driver_agent_type.py" --lane "$lane" --provider muse)" || {
+  classification="$("$py" -I -m lu_machinery.orchestration.driver_agent_type --lane "$lane" --provider muse)" || {
     launcher_error 'MUSE_LANE_CLASSIFICATION_UNKNOWN'; exit 4;
   }
   if [ "$classification" = curriculum-orchestrator ] || [ "${LU_RULES_SEAT:-core}" = content ]; then

@@ -1,5 +1,11 @@
 # Parallel Agent Coordination Ledger
 
+> **Roots for `lu_machinery` commands.** Commands on this page that run `lu_machinery.*` modules use the installed lu-machinery release. It reads the product checkout from `LU_PRODUCT_ROOT` and the shared-state anchor from `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT`; launcher sessions and dispatched workers set both. In any other shell, run them from the product checkout after:
+>
+> ```bash
+> export LU_PRODUCT_ROOT="$PWD" LEARN_UKRAINIAN_PRIMARY_REPO_ROOT="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")}"
+> ```
+
 ## Problem
 
 Shared `docs/session-state/*` files are not a safe coordination mechanism for
@@ -78,7 +84,7 @@ without pretending they are one serial session.
 Examples:
 
 ```bash
-.venv/bin/python scripts/orchestration/agent_ledger.py upsert-task \
+.venv/bin/python -m lu_machinery.orchestration.agent_ledger upsert-task \
   --task-id 2823-ui-worker \
   --agent codex \
   --status running \
@@ -92,7 +98,7 @@ Examples:
   --owned-path starlight/src/pages \
   --owned-path starlight/src/styles
 
-.venv/bin/python scripts/orchestration/agent_ledger.py heartbeat \
+.venv/bin/python -m lu_machinery.orchestration.agent_ledger heartbeat \
   --task-id 2823-ui-worker \
   --actor codex \
   --message "browser QA passed; awaiting independent review"

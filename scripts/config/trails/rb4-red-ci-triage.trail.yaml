@@ -216,7 +216,7 @@ steps:
           import os
           from pathlib import Path
 
-          import scripts.orchestration.trail_predicates as tp
+          import lu_machinery.orchestration.trail_predicates as tp
 
           facts = json.load(open(os.environ["TRIAGE_FACTS_RECEIPT"], encoding="utf-8"))
           tables = tp.load_decision_tables(Path(os.environ["TABLES_PATH"]))
@@ -313,7 +313,7 @@ steps:
         - sh
         - -c
         - |-
-          RUN=$(jq -r '.databaseId // empty' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); REPO=$(gh repo view --json databaseId --jq .databaseId 2>/dev/null); OUT="batch_state/rb4-lookup-$PR_NUMBER.json"; if [ -z "$RUN" ] || [ -z "$REPO" ]; then echo lookup-failed; elif .venv/bin/python scripts/orchestration/red_ci_known_failures.py lookup --registry "$KNOWN_FAILURES_REGISTRY_PATH" --receipt "$SIGNATURE_RECEIPT_PATH" --repository-id "$REPO" --pr "$PR_NUMBER" --run-id "$RUN" --as-of "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --output "$OUT" >/dev/null 2>&1; then jq -r 'if .status == "matched" then "matched-" + .action.kind else "table-unknown" end' "$OUT"; else echo lookup-failed; fi
+          RUN=$(jq -r '.databaseId // empty' "batch_state/rb4-run-$PR_NUMBER.json" 2>/dev/null); REPO=$(gh repo view --json databaseId --jq .databaseId 2>/dev/null); OUT="batch_state/rb4-lookup-$PR_NUMBER.json"; if [ -z "$RUN" ] || [ -z "$REPO" ]; then echo lookup-failed; elif .venv/bin/python -m lu_machinery.orchestration.red_ci_known_failures lookup --registry "$KNOWN_FAILURES_REGISTRY_PATH" --receipt "$SIGNATURE_RECEIPT_PATH" --repository-id "$REPO" --pr "$PR_NUMBER" --run-id "$RUN" --as-of "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --output "$OUT" >/dev/null 2>&1; then jq -r 'if .status == "matched" then "matched-" + .action.kind else "table-unknown" end' "$OUT"; else echo lookup-failed; fi
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"
