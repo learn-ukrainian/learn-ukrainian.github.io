@@ -659,14 +659,13 @@ def load_post_start_code(bound_review: bool = False) -> None:
     ``git.CODE_UNAVAILABLE`` and the scheduled cleanup completes it from a fresh process.
     """
     with contextlib.suppress(Exception):
-        from lu_machinery.agent_runtime import codex_accounts, review_mcp, sources_read_only  # noqa: F401
+        from lu_machinery.agent_runtime import codex_accounts, env_sanitize, review_mcp, sources_read_only  # noqa: F401
 
         from scripts.agent_runtime import (  # noqa: F401
             agy_hook_config,
             attempt_boundary,
             attempt_network,
             binary_resolve,
-            env_sanitize,
             failure_codes,
             jsonl,
             telemetry,

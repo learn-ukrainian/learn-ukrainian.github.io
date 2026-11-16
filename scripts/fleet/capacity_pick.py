@@ -50,10 +50,7 @@ except ImportError:  # pragma: no cover - script path fallback
         unavailable_reserve,
     )
 
-try:
-    from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
-except ImportError:  # pragma: no cover - script path fallback
-    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
+from lu_machinery.agent_identity import RETIRED_AGENT_ALIASES
 
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import credit_lane

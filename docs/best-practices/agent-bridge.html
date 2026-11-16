@@ -409,7 +409,7 @@ agent.</strong> Per channel conventions:</p>
 quality degraded on earlier commits.</p>
 <h2>Spawned-agent env hygiene</h2>
 <p>The agent runtime does not pass the orchestrator's full <code>os.environ</code> to
-spawned CLIs. <code>scripts/agent_runtime/env_sanitize.py</code> builds a narrow
+spawned CLIs. The installed release's <code>lu_machinery.agent_runtime.env_sanitize</code> builds a narrow
 environment for each process:</p>
 <ul>
 <li>Common runtime variables survive only from the safe allowlist:
@@ -487,12 +487,15 @@ a link every call passes through untouched. Because git is never asked
 where the worktree is, a nested repository, <code>core.worktree</code>, <code>GIT_DIR</code> or
 <code>GIT_WORK_TREE</code> cannot hide a link. A working directory that cannot be read
 (deleted, for example) is treated as protected: npm cannot run there either,
-so only clearly read-only calls are let through. The decision lives in
-<code>scripts/agent_runtime/npm_guard.py</code>. The shim runs it with the interpreter
-the <code>git</code> shim uses, looked up in the same order: <code>AGENT_GIT_SHIM_PYTHON</code>
-(the runner stamps it), else the main checkout's <code>.venv</code> found through the git
-common dir (so a linked worktree needs no <code>.venv</code> of its own), else the shim
-checkout's; with none of them it refuses to run npm. <code>AGENT_REAL_NPM</code>/
+so only clearly read-only calls are let through. The shims and the decision
+(<code>npm_guard.py</code>) live only in the installed lu-machinery release, under
+<code>lu_machinery/agent_runtime/</code>. The product's <code>scripts/agent_runtime/shims/npm</code>
+and <code>npx</code> (and <code>scripts/dispatcher/npm_shims/</code>, which run them) resolve the
+project interpreter (<code>LEARN_UKRAINIAN_PYTHON</code>, else the main checkout's <code>.venv</code>
+found through the git common dir, so a linked worktree needs no <code>.venv</code> of its
+own), locate the installed release with it and exec the release's shim; when
+either cannot be found they refuse to run npm or npx (#13032). The release shim
+runs the guard with that interpreter. <code>AGENT_REAL_NPM</code>/
 <code>AGENT_REAL_NPX</code> optionally pin the real tool; the guard runs before the pin
 is read, so a pin chooses the binary but never skips the guard. Shim
 directories on <code>PATH</code> are recognised by physical path, so a spelling such as
@@ -525,7 +528,7 @@ through; workers do not run from there);</li>
 link) while <code>$PWD</code> is missing, stale or forged, so it does not name the same
 directory through the worktree: only the physical path is visible and every
 call passes through;</li>
-<li><code>AGENT_GIT_SHIM_PYTHON</code> naming a program that is not a Python interpreter
+<li><code>LEARN_UKRAINIAN_PYTHON</code> naming a program that is not a Python interpreter
 (for example one that always exits 0), which replaces the guard's verdict.</li>
 <li>a sibling <code>npm</code> that forges the marker line (a regular file copied beside
 <code>npx</code> that carries the marker but is not the guarded shim), or an

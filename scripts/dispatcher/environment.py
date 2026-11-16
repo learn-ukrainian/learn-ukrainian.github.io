@@ -25,15 +25,17 @@ _NPM_SHIM_PARTS = (Path(os.path.abspath(__file__)).parents[1].name, "dispatcher"
 
 
 def npm_shim_dir() -> Path | None:
-    """Share only the npm/npx protection, without importing the legacy runner."""
+    """Share only the npm/npx protection, without importing the legacy runner.
+
+    The shims run the installed lu-machinery release's guarded shims (#13032) and refuse to run npm or npx
+    when the interpreter or that release is missing, so only the shim files themselves are checked here.
+    """
     runtime = Path(__file__).resolve().parents[1] / "agent_runtime"
     executables = [
         Path(sys.executable), *(_NPM_SHIMS / name for name in ("npm", "npx")),
         *(runtime / "shims" / name for name in ("npm", "npx")),
     ]
-    guard = runtime / "npm_guard.py"
-    if (all(os.access(path, os.X_OK) and path.is_file() for path in executables)
-            and os.access(guard, os.R_OK) and guard.is_file()):
+    if all(os.access(path, os.X_OK) and path.is_file() for path in executables):
         return _NPM_SHIMS
     return None
 

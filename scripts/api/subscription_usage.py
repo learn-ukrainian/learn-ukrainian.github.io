@@ -25,11 +25,12 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from scripts.agent_runtime.env_sanitize import (
+from lu_machinery.agent_runtime.env_sanitize import (
     _looks_sensitive_name,
     _looks_sensitive_value,
     build_probe_env,
 )
+
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
 from scripts.common.scratch import make_scratch_dir
 from scripts.fleet.credit_lane import SUBSCRIPTION_NEAR_CAP_USED_PCT

@@ -197,7 +197,7 @@ claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
 worker launched by `dispatch.py dispatch` carries
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
-environment (both names are allowlisted in `agent_runtime/env_sanitize.py`, name
+environment (both names are allowlisted in `lu_machinery.agent_runtime.env_sanitize`, name
 and value lists, so the markers survive sanitization for every dispatched
 provider — including a task id that contains `sk-`). The marker is the primary
 signal; the layout fallback — the session checkout sitting under

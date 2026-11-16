@@ -880,11 +880,11 @@ standard bundle (`read_file`, `search_replace`, `grep`); one session does not
 offer both. The file toolset is selected by `[toolset] file_toolset` in the
 Grok home `config.toml` (preserved probe: `batch_state/probe-evidence/9008/`,
 where that file sets `file_toolset = "hashline"`). Delegate's environment
-sanitizer drops `GROK_HOME` and `GROK_CONFIG`: `build_agent_env` in
-`scripts/agent_runtime/env_sanitize.py` (lines 421-439) copies a name only
-from an allowlist, and neither name is on `_SAFE_NAME_ALLOWLIST` (line 37),
-`_SAFE_VALUE_NAME_ALLOWLIST` (line 68), `_PROVIDER_SECRET_ALLOWLIST`
-(line 78), or `_PROVIDER_SAFE_NAME_ALLOWLIST` (line 108). A live hashline
+sanitizer drops `GROK_HOME` and `GROK_CONFIG`: `build_agent_env` in the
+installed release's `lu_machinery/agent_runtime/env_sanitize.py` copies a name
+only from an allowlist, and neither name is on `_SAFE_NAME_ALLOWLIST`,
+`_SAFE_VALUE_NAME_ALLOWLIST`, `_PROVIDER_SECRET_ALLOWLIST` or
+`_PROVIDER_SAFE_NAME_ALLOWLIST`. A live hashline
 session uses a temporary `GROK_HOME` whose `config.toml` sets `file_toolset`.
 The write-worker matcher still names `hashline_edit`, and the primary-checkout
 guard blocks that tool the same way it blocks `search_replace`.

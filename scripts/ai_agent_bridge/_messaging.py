@@ -28,7 +28,7 @@ def check_inbox(for_llm: str = "gemini"):
 
     for_llm = resolve_recipient_alias(for_llm)
     try:
-        from agent_runtime.agent_identity import seat_read_aliases
+        from lu_machinery.agent_identity import seat_read_aliases
 
         recipients = seat_read_aliases(for_llm) or (for_llm,)
     except Exception:
@@ -338,7 +338,7 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
 
     for_llm = resolve_recipient_alias(for_llm)
     try:
-        from agent_runtime.agent_identity import seat_read_aliases
+        from lu_machinery.agent_identity import seat_read_aliases
 
         recipients = seat_read_aliases(for_llm) or (for_llm,)
     except Exception:

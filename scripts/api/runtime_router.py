@@ -35,6 +35,8 @@ from .monitor_context import production_context as production_context  # re-expo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from lu_machinery.agent_identity import RETIRED_AGENT_ALIASES
+
 import agent_runtime.registry as agent_registry
 from agent_runtime.adapters.acpx import (
     ACPX_CLI_COMPATIBILITY_CONTRACT,
@@ -51,7 +53,6 @@ from agent_runtime.adapters.acpx import (
     TRANSPORT_ENV as ACPX_TRANSPORT_ENV,
 )
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
-from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom

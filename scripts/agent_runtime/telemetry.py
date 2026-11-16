@@ -234,7 +234,7 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _config_override(plan.cmd, "model_reasoning_effort")
     if agent_name == "muse":
         return _arg_after(plan.cmd, "--reasoning-effort")
-    from .agent_identity import is_native_grok_seat
+    from lu_machinery.agent_identity import is_native_grok_seat
 
     if agent_name == "claude" or is_native_grok_seat(agent_name):
         return _arg_after(plan.cmd, "--effort")
@@ -409,8 +409,9 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
     # Version checks must not update the Muse executable pinned by its adapter.
     probe_env = {}
     if prefix and Path(prefix[0]).name == "muse":
+        from lu_machinery.agent_runtime.env_sanitize import build_probe_env
+
         from .adapters.muse import require_muse_execution_model
-        from .env_sanitize import build_probe_env
 
         try:
             require_muse_execution_model(None)
@@ -564,7 +565,7 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
                 bin_path = "kimi"
         prefix = (bin_path,)
         return kimi_cli_version(prefix, probe_cwd)
-    from .agent_identity import is_native_grok_seat
+    from lu_machinery.agent_identity import is_native_grok_seat
 
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — probe it directly.

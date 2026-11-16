@@ -714,14 +714,15 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     import os
     from unittest.mock import MagicMock
 
+    from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+
     from scripts.agent_runtime import telemetry
     from scripts.agent_runtime.adapters.base import InvocationPlan
-    from scripts.agent_runtime.env_sanitize import build_agent_env
     from scripts.review.model_catalog import activity_role_refusal
 
     with (
         patch.dict(os.environ, {"PATH": "/usr/bin", "HOME": "/nonexistent", "MUSE_OTHER": "drop"}, clear=True),
-        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity", return_value=None),
+        patch("lu_machinery.agent_runtime.agent_github_identity.resolve_agent_github_identity", return_value=None),
     ):
         env = build_agent_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
         assert env["MUSE_NO_AUTO_UPDATE"] == "1"
@@ -761,7 +762,7 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
             "LD_PRELOAD": "/fixture/inject.so", "LU_PROBE_TOKEN": "sentinel-parent",
         }, clear=True),
         patch("scripts.agent_runtime.adapters.muse.require_muse_execution_model"),
-        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity") as identity,
+        patch("lu_machinery.agent_runtime.agent_github_identity.resolve_agent_github_identity") as identity,
         patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", return_value=process) as spawn,
     ):
         resolved = telemetry.resolve_dispatch_start_telemetry(

@@ -54,6 +54,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
 from lu_machinery.ai_llm.fallback import (
     AttemptOutcome,
     AuthMode,
@@ -90,7 +91,6 @@ from .adapters.base import AgentAdapter
 from .adapters.codex_events import mcp_tool_event
 from .attribution import InvocationAttribution, resolve_invocation_attribution
 from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
-from .env_sanitize import build_agent_env
 from .errors import (
     AgentRuntimeError,
     AgentStalledError,
