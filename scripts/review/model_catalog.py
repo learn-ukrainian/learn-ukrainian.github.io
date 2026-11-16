@@ -52,12 +52,6 @@ EXPECTED_SELECTION_ORDER = [
     "health_and_quota_within_tier",
     "cost_within_equivalent_fit",
 ]
-KIMI_ROUTE_FIELDS = (
-    "kimicc_alias",
-    "platform_model_id",
-    "coding_model_id",
-    "context_profile",
-)
 GLM_ROUTE_FIELDS = (
     "glmcc_alias",
     "platform_model_id",
@@ -827,14 +821,6 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             alias_owner[alias] = model_id
         if "replaced_by" in model and lifecycle != "retired":
             raise ModelCatalogError(f"models.{model_id}.replaced_by is only valid on retired models")
-        if "native_kimi" in model["transports"]:
-            routes = _require_mapping(model.get("kimi_routes"), f"models.{model_id}.kimi_routes")
-            for field in KIMI_ROUTE_FIELDS:
-                _require_string(routes.get(field), f"models.{model_id}.kimi_routes.{field}")
-            if routes["kimicc_alias"] not in aliases:
-                raise ModelCatalogError(
-                    f"models.{model_id}.kimi_routes.kimicc_alias must be listed in models.{model_id}.aliases"
-                )
         if "glmcc" in model["transports"]:
             routes = _require_mapping(model.get("glm_routes"), f"models.{model_id}.glm_routes")
             for field in GLM_ROUTE_FIELDS:
@@ -1490,28 +1476,11 @@ def require_execution_model(
     return model_id
 
 
-def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
-    """Return every supported Kimi input alias mapped to its native CLI model id."""
-    models = (catalog or load_model_catalog())["models"]
-    aliases: dict[str, str] = {}
-    for model_id, model in models.items():
-        if "native_kimi" not in model["transports"]:
-            continue
-        aliases[model_id] = model_id
-        aliases.update({alias: model_id for alias in model.get("aliases", [])})
-    return aliases
-
-
-_KIMI_ROUTE_LABELS = ("kimicc_alias", "platform_model_id", "coding_model_id")
-
-
 def kimi_historical_labels(catalog: dict[str, Any] | None = None) -> frozenset[str]:
-    """Casefolded ids, aliases and route spellings of every Kimi catalog model.
+    """Casefolded ids and aliases of every retired Kimi catalog model.
 
     Admission still recognises a stored ``k3`` after transports are emptied.
-    This is not an executable map: ``kimi_model_aliases`` stays empty while no
-    model lists ``native_kimi``. ``context_profile`` is a window name, not a
-    model id, and other Moonshot models (Composer) are not included.
+    Other Moonshot models, including Composer, are not included.
     """
     models = (catalog or load_model_catalog())["models"]
     labels: set[str] = set()
@@ -1522,30 +1491,7 @@ def kimi_historical_labels(catalog: dict[str, Any] | None = None) -> frozenset[s
         for alias in model.get("aliases") or []:
             if isinstance(alias, str) and alias.strip():
                 labels.add(alias.casefold())
-        routes = model.get("kimi_routes") or {}
-        if isinstance(routes, dict):
-            for key in _KIMI_ROUTE_LABELS:
-                value = routes.get(key)
-                if isinstance(value, str) and value.strip():
-                    labels.add(value.casefold())
     return frozenset(labels)
-
-
-def resolve_kimi_model(model: str, catalog: dict[str, Any] | None = None) -> tuple[str, dict[str, str]]:
-    """Resolve one Kimi input alias to native and KimiCC route metadata.
-
-    A retired id has no executable route. The refusal is the catalog message,
-    raised before the empty alias map can call the id unsupported.
-    """
-    source = catalog or load_model_catalog()
-    if refusal := retired_model_refusal(model, source):
-        raise ModelCatalogError(refusal)
-    aliases = kimi_model_aliases(source)
-    try:
-        model_id = aliases[model]
-    except KeyError as exc:
-        raise ModelCatalogError(f"unsupported Kimi model {model!r}; allowed: {sorted(aliases)}") from exc
-    return model_id, source["models"][model_id]["kimi_routes"]
 
 
 def glm_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
@@ -1585,20 +1531,6 @@ def _checkout_relative(relative: str) -> str:
     return f"{package}/{relative}"
 
 
-def validate_kimi_alias_consumers(project_root: Path = PROJECT_ROOT) -> None:
-    """Reject a local alias map in the KimiCC route helper so it stays catalog-backed."""
-    route_helper = _checkout_relative("lib/kimicc_route.sh")
-    try:
-        kimicc_helper = (project_root / route_helper).read_text(encoding="utf-8")
-    except OSError as exc:
-        raise ModelCatalogError(f"cannot read Kimi alias consumer {route_helper}: {exc}") from exc
-    missing = [snippet for snippet in ("--resolve-kimi-model", "--format kimicc") if snippet not in kimicc_helper]
-    if missing:
-        raise ModelCatalogError(f"{route_helper} must resolve Kimi aliases through model_catalog.yaml; missing {missing}")
-    if 'case "$MODEL_ALIAS"' in kimicc_helper:
-        raise ModelCatalogError("KimiCC route helper contains a local Kimi alias case map")
-
-
 def _main() -> int:
     """Expose catalog-backed model resolution for shell launchers."""
     import argparse
@@ -1606,16 +1538,15 @@ def _main() -> int:
 
     # Named as it was started: by its import name under ``-m``, else by its file.
     entry = f"-m {__spec__.name}" if __spec__ is not None else os.fspath(__file__)
-    related = f"{_checkout_relative('config/model_catalog.yaml')}; {_checkout_relative('lib/kimicc_route.sh')}"
+    related = _checkout_relative("config/model_catalog.yaml")
     parser = argparse.ArgumentParser(
         description=(
-            "Resolve routing roles or Kimi/GLM aliases and refuse retired models for shell launchers.\n"
+            "Resolve routing roles or GLM aliases and refuse retired models for shell launchers.\n"
             "Use for catalog admission and route lookup, not provider-health or quota probing."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            f"  .venv/bin/python {entry} --resolve-kimi-model k3\n"
             f"  .venv/bin/python {entry} --resolve-glm-model glm --format glmcc\n"
             f"  .venv/bin/python {entry} --check-retired-model claude-fable-5\n"
             f"  .venv/bin/python {entry} --resolve-role bounded_advisor\n"
@@ -1625,7 +1556,6 @@ def _main() -> int:
         ),
     )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--resolve-kimi-model", metavar="ALIAS", help="Kimi catalog alias to resolve, e.g. k3")
     group.add_argument("--resolve-glm-model", metavar="ALIAS", help="GLM catalog alias to resolve, e.g. glm")
     group.add_argument("--resolve-role", metavar="ROLE", help="Stable routing role to inspect as JSON, e.g. bounded_advisor")
     group.add_argument(
@@ -1633,8 +1563,8 @@ def _main() -> int:
         help="Launcher gate: refuse retired identities and mechanical-only pins; aliases/context suffixes resolve through the catalog",
     )
     parser.add_argument(
-        "--format", choices=("native", "kimicc", "glmcc"), default="native",
-        help="Alias output: model id (native, default) or route fields (kimicc/glmcc); roles always emit JSON",
+        "--format", choices=("native", "glmcc"), default="native",
+        help="Alias output: model id (native, default) or route fields (glmcc); roles always emit JSON",
     )
     parser.add_argument("--purpose", choices=("inspect", "launch"), default="inspect",
                         help="Role inspection or explicit launch argv construction (default: inspect; never executes)")
@@ -1666,24 +1596,6 @@ def _main() -> int:
         if refusal:
             print(refusal, file=sys.stderr)
             return 2
-    elif args.resolve_kimi_model:
-        try:
-            model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
-        except ModelCatalogError as exc:
-            parser.error(str(exc))
-        if args.format == "native":
-            print(model_id)
-        else:
-            print(
-                "\t".join(
-                    (
-                        routes["kimicc_alias"],
-                        routes["platform_model_id"],
-                        routes["coding_model_id"],
-                        routes["context_profile"],
-                    )
-                )
-            )
     elif args.resolve_glm_model:
         try:
             model_id, routes = resolve_glm_model(args.resolve_glm_model)

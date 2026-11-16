@@ -126,7 +126,6 @@ SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "cursor",
     "gemini",
     "grok",
-    "kimi",
     "muse",
 )
 
@@ -153,7 +152,6 @@ PROVIDER_TO_LANE = {
     "antigravity": "gemini",
     "agy": "gemini",
     "grok": "grok",
-    "kimi": "kimi",
     "muse": "muse",
 }
 
@@ -743,8 +741,6 @@ def _probe_codex_account(label: str, *, usage_key: str, timeout_s: float) -> dic
     return _private_subscription("codex", usage_key=usage_key, account=label, timeout_s=timeout_s)
 
 
-def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
-    return _private_subscription("kimi", timeout_s=timeout_s)
 
 
 def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
@@ -1824,7 +1820,6 @@ _NATIVE_PROBES: dict[str, Callable[..., dict[str, Any]]] = {
     "codex": _probe_codex_native,
     "codex:a": functools.partial(_probe_codex_native, usage_key="codex:a"),
     "codex:b": functools.partial(_probe_codex_native, usage_key="codex:b"),
-    "kimi": _probe_kimi_native,
     "grok": _probe_grok_native,
     "gemini": _probe_antigravity_native,
     "antigravity": _probe_antigravity_native,

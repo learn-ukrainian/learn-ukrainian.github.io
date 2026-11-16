@@ -3869,7 +3869,7 @@ def prepare_isolated_review_launch(
             "kimi_isolated_review_unsupported: Kimi never reviews (Kimi: web, UI and backend "
             "coding only). Use direct ask-* cross-family review on another seat "
             "(sealed review-pr was removed in #8520). "
-            "See #5556 / docs/runbooks/kimi-formal-cf-isolation.md."
+            "See #5556 / the retired-seat policy."
         )
     if engine_key == "agy":
         raise ReviewIsolationError(

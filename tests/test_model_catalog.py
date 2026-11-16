@@ -22,19 +22,16 @@ from scripts.review.model_catalog import (
     cursor_non_dispatch_model_refusal,
     glm_model_aliases,
     is_cursor_auto_selector,
-    kimi_model_aliases,
     load_model_catalog,
     model_aliases,
     require_execution_model,
     resolve_catalog_model_id,
     resolve_glm_model,
-    resolve_kimi_model,
     retired_model_refusal,
     risk_reviewer_refusal,
     runtime_model_matches_requested,
     unknown_model_refusal,
     validate_catalog,
-    validate_kimi_alias_consumers,
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
 
@@ -176,39 +173,14 @@ def test_kimi_is_absent_from_review_candidates_and_every_ladder() -> None:
         assert "glm-5.3" not in candidates
 
 
-def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
-    """OO-58: empty transports yield no executable alias. Historical routes stay on the record."""
-    assert kimi_model_aliases() == {}
-    with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
-        resolve_kimi_model("kimi-k3[1m]")
-    routes = load_model_catalog()["models"]["kimi-code/k3"]["kimi_routes"]
-    assert routes == {
-        "kimicc_alias": "k3",
-        "platform_model_id": "kimi-k3[1m]",
-        "coding_model_id": "k3",
-        "context_profile": "kimicc_k3",
-    }
-    validate_kimi_alias_consumers()
-
-
 def test_generic_model_aliases_resolve_k3_256k_but_kimicc_does_not_route_it() -> None:
-    """k3-256k stays a historical alias. OO-58 leaves the kimicc endpoint with no routable model."""
+    """k3-256k stays a historical alias. OO-58 leaves no Kimi review_scheduler endpoint to route it."""
     aliases = model_aliases()
     assert aliases["kimi-code/k3-256k"] == "kimi-code/k3-256k"
     assert aliases["k3-256k"] == "kimi-code/k3-256k"
     assert aliases["kimi-k3-256k"] == "kimi-code/k3-256k"
     endpoints = load_model_catalog()["review_scheduler"]["endpoints"]
-    assert endpoints["kimicc"]["models"] == []
-
-
-def test_every_kimicc_routable_alias_has_coding_model_id() -> None:
-    """OO-58: the endpoint lists no model, so resolve refuses the historical alias."""
-    catalog = load_model_catalog()
-    endpoint_ids = catalog["review_scheduler"]["endpoints"]["kimicc"]["models"]
-    assert endpoint_ids == []
-    assert kimi_model_aliases(catalog) == {}
-    with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
-        resolve_kimi_model("k3", catalog)
+    assert not {"kimi", "kimicc"} & set(endpoints)
 
 
 def test_glm_retirement_refuses_aliases_and_keeps_historical_identity() -> None:
@@ -218,17 +190,6 @@ def test_glm_retirement_refuses_aliases_and_keeps_historical_identity() -> None:
         with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
             resolve_glm_model(alias)
     assert model_aliases()["glm52"] == "glm-5.2"
-
-
-def test_catalog_rejects_kimi_route_without_its_friendly_alias():
-    """The alias rule still binds if a Kimi transport is put back. The live row stays retired."""
-    broken = deepcopy(load_model_catalog())
-    model = broken["models"]["kimi-code/k3"]
-    model["lifecycle"] = "active"
-    model["transports"] = ["native_kimi"]
-    model["aliases"].remove("k3")
-    with pytest.raises(ModelCatalogError, match="kimicc_alias must be listed"):
-        validate_catalog(broken)
 
 
 def test_runtime_registry_defaults_resolve_to_catalog_model_or_alias():
@@ -985,7 +946,7 @@ def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
         _main()
     assert exc.value.code == 0
     output = capsys.readouterr().out
-    for text in ("--resolve-kimi-model", "--resolve-glm-model", "default", "Examples:", "no writes", "Exit codes:", "Related:"):
+    for text in ("--resolve-glm-model", "default", "Examples:", "no writes", "Exit codes:", "Related:"):
         assert text in output
 
 

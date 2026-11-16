@@ -39,7 +39,6 @@ SECURITY_SENSITIVE_PATHS = (
     f"{_MACHINERY}/launchers/**",
     f"{_MACHINERY}/launchd/**",
     f"{_MACHINERY}/lib/*.sh",
-    f"{_MACHINERY}/lib/kimi_coding_oauth.py",
     f"{_MACHINERY}/hooks/**",
     f"{_MACHINERY}/guardrails/**",
     "scripts/lexical_sandbox.py",

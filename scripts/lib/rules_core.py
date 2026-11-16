@@ -31,7 +31,7 @@ selects for a task; ``/api/rules?scope=task:<name>`` serves them, and
 
 Usage:
     rules_core.py [--root DIR] [--rules-root DIR] [--seat core|content] [--lane LANE] [--provider P]
-                  [--format text|block|toml|kimi-agent-file|seat|json] [--output PATH]
+                  [--format text|block|toml|seat|json] [--output PATH]
 
 Exit codes:
     0  printed (or wrote) the requested form
@@ -300,24 +300,6 @@ def toml_basic_string(text: str) -> str:
     return "".join(out)
 
 
-def kimi_agent_file_text(block: str) -> str:
-    """A Kimi Code agent file that keeps the default prompt and appends the core.
-
-    Kimi renders ``${base_prompt}`` as its default system prompt; any other
-    ``${...}`` in the body would be template-substituted, so it is refused.
-    """
-    if "${" in block:
-        raise RulesCoreError("the rules core contains '${', which Kimi agent files would substitute")
-    return (
-        "---\n"
-        "name: rules-core\n"
-        "description: Kimi Code default agent with the project rules core appended.\n"
-        "---\n"
-        "${base_prompt}\n\n"
-        f"{block}\n"
-    )
-
-
 def _render(fmt: str, seat: str, root: Path | None, *, rules_root: Path | None = None) -> str:
     if fmt == "seat":
         return seat + "\n"
@@ -328,8 +310,6 @@ def _render(fmt: str, seat: str, root: Path | None, *, rules_root: Path | None =
         return block + "\n"
     if fmt == "toml":
         return toml_basic_string(block) + "\n"
-    if fmt == "kimi-agent-file":
-        return kimi_agent_file_text(block)
     text = core_text(seat, root, rules_root=rules_root)
     first, last = pillar_anchors(text)
     payload = {
@@ -380,10 +360,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--provider", default="claude", help="slot provider for --lane lookup (default: claude)")
     parser.add_argument(
         "--format",
-        choices=("text", "block", "toml", "kimi-agent-file", "seat", "json"),
+        choices=("text", "block", "toml", "seat", "json"),
         default="block",
         help="text: sources joined; block: framed for a prompt; toml: block as a TOML string; "
-        "kimi-agent-file: Kimi agent definition; seat: resolved seat; json: sizes and anchors (default: block)",
+        "seat: resolved seat; json: sizes and anchors (default: block)",
     )
     parser.add_argument("--output", type=Path, help="write to this file, e.g. rules.md (default: stdout)")
     args = parser.parse_args(argv)

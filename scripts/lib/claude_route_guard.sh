@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared guards for interactive Claude Code alternate routes (Claudex, KimiCC).
+# Shared guards for interactive Claude Code alternate routes (Claudex).
 #
 # Contract:
 # - NEVER mutate ~/.claude/settings.json or other Claude config files.
@@ -198,6 +198,6 @@ assert_claude_settings_route_clean() {
   echo "  3) Emergency only: CLAUDE_ROUTE_GUARD_ALLOW_SETTINGS_ENV=1 (not recommended)." >&2
   echo >&2
   echo "cc-switch and similar tools often write these keys — prefer project launchers" >&2
-  echo "(./start-claude.sh, ./start-glmcc.sh, ./start-kimicc.sh) over global switches." >&2
+  echo "(./start-claude.sh, ./start-glmcc.sh) over global switches." >&2
   return 1
 }

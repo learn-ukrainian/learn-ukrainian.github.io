@@ -1179,6 +1179,24 @@ def assert_frozen_surfaces(actual, *, surfaces):
             frozen_notes = CURRENT_BASELINE["catalog"]["models"]["claude-haiku-5-5"]["notes"]
             value["models"]["claude-haiku-5-5"]["notes"] = frozen_notes
             value["orchestrator_seats"]["agy"]["note"] = CURRENT_BASELINE["catalog"]["orchestrator_seats"]["agy"]["note"]
+            # Issue 13032: the retired kimi and kimicc endpoints and every Kimi model's kimi_routes
+            # are removed; the retired ids and aliases stay. Restore the frozen rows after the check.
+            endpoints = value["review_scheduler"]["endpoints"]
+            for endpoint in ("kimi", "kimicc"):
+                assert endpoint not in endpoints
+                frozen_endpoint = expected["review_scheduler"]["endpoints"][endpoint]
+                assert frozen_endpoint["models"] == []
+                endpoints[endpoint] = deepcopy(frozen_endpoint)
+            for model_id in (
+                "kimi-code/k3",
+                "kimi-code/k3-256k",
+                "kimi-k3-max",
+                "kimi-code/kimi-for-coding",
+                "kimi-code/kimi-for-coding-highspeed",
+            ):
+                model = value["models"][model_id]
+                assert "kimi_routes" not in model and model["transports"] == []
+                model["kimi_routes"] = deepcopy(expected["models"][model_id]["kimi_routes"])
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

@@ -5,7 +5,6 @@
 #   claude-code  --append-system-prompt "$LC_RULES_CORE"
 #   codex        -c developer_instructions=<rules_core_toml>
 #   grok         --rules "$LC_RULES_CORE"
-#   kimi-code    --agent-file <rules_core_kimi_agent_file>   (keeps ${base_prompt})
 #   agy, cursor-agent, opencode: the core leads the initial prompt
 # Fail-closed: a missing or unreadable core, seat or loader refuses the launch
 # (rules_core_load returns 1) before any adapter check or side effect runs.
@@ -73,17 +72,4 @@ rules_core_prefix() {
 # rules_core_toml PYTHON ROOT — the framed core as one TOML basic string.
 rules_core_toml() {
   "$1" "$RULES_CORE_LOADER" --rules-root "$2" --seat "$LC_RULES_SEAT" --format toml
-}
-
-# rules_core_kimi_agent_file PYTHON ROOT — writes a content-addressed Kimi agent
-# file under the user's temp directory and prints its path.
-rules_core_kimi_agent_file() {
-  local py="$1" root="$2" dir digest path
-  dir="${TMPDIR:-/tmp}/lu-rules-core-$(id -u)"
-  { mkdir -p "$dir" && chmod 700 "$dir"; } || return 1
-  digest="$(printf '%s' "$LC_RULES_CORE" | sha256sum | cut -c1-16)"
-  path="$dir/kimi-agent-${LC_RULES_SEAT}-${digest}.md"
-  "$py" "$RULES_CORE_LOADER" --rules-root "$root" --seat "$LC_RULES_SEAT" \
-    --format kimi-agent-file --output "$path" || return 1
-  printf '%s\n' "$path"
 }

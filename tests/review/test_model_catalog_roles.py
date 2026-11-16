@@ -393,8 +393,6 @@ def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
 @pytest.mark.parametrize("args,expected_status,expected_output", [
     (["--check-retired-model", "claude-opus-5-5"], 0, ""),
     (["--check-retired-model", "claude-fable-5"], 2, ""),
-    (["--resolve-kimi-model", "k3"], 2, ""),
-    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 2, ""),
     (["--resolve-role", "bounded_advisor"], 0, None),
     (["--resolve-role", "bounded_advisor", "--purpose", "launch"], 0, None),
     (["--resolve-role", "unregistered"], 2, ""),
@@ -407,8 +405,6 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
     )
     assert result.returncode == expected_status, result.stderr
     assert "Traceback" not in result.stderr
-    if args and args[0] == "--resolve-kimi-model":
-        assert "is retired in the model catalog" in result.stderr
     if expected_output is not None:
         assert result.stdout == expected_output
     else:
@@ -419,7 +415,7 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
         if "launch" in args:
             assert row["argv"][row["argv"].index("--model") + 1] == row["wire_id"]
     if expected_status == 2:
-        retired = "--check-retired-model" in args or "--resolve-kimi-model" in args
+        retired = "--check-retired-model" in args
         assert ("is retired" if retired else "unknown routing role") in result.stderr
     else:
         assert result.stderr == ""
@@ -446,4 +442,9 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
         trace = (receipt.get("value") or {}).get("trace")
         if isinstance(trace, list):
             receipt["value"]["trace"] = [row for row in trace if row.get("name") != "muse"]
+    # Issue 13032 removed the retired kimi subject seat; frozen unknown-seat refusals still name it.
+    reason = (expected.get("value") or {}).get("fail_closed_reason") or ""
+    if reason.startswith("unknown subject seat "):
+        assert reason.count("grok, kimi, muse") == 1
+        expected["value"]["fail_closed_reason"] = reason.replace("grok, kimi, muse", "grok, muse")
     assert res == expected

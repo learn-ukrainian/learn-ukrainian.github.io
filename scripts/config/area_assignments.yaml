@@ -19,7 +19,6 @@ assignments:
       - codex-infra
       - gemini-infra
       - grok-infra
-      - kimi-infra
       - cursor-infra
   epics:
     # The CTO seat (combined CTO and cross-epic lead) drives this lane.
@@ -34,7 +33,6 @@ assignments:
       - codex-devops
       - gemini-devops
       - grok-devops
-      - kimi-devops
       - cursor-devops
       - muse-devops
   monitor:
@@ -52,7 +50,6 @@ assignments:
       - codex-corpus
       - gemini-corpus
       - grok-corpus
-      - kimi-corpus
       - cursor-corpus
   open-model-data:
     # Ownership split 2026-10-06 (#6321): this lane owns word-card data
@@ -78,7 +75,6 @@ assignments:
       - codex-atlas
       - gemini-atlas
       - grok-atlas
-      - kimi-atlas
       - cursor-atlas
   practice:
     driver_agent_type: infra-orchestrator
