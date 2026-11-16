@@ -1912,13 +1912,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/test_kimi_coding_only_admission.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 0
-    },
-    {
       "path": "tests/test_open_model_language_contact_adjudication.py",
       "kind": "store_path",
       "scope": "_candidate",

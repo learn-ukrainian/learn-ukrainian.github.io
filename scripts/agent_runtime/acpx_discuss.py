@@ -40,6 +40,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
+from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, KimiAdmissionRefused
 from lu_machinery.contracts import new_id
 
 from scripts.agent_runtime.adapters.acpx import (
@@ -49,7 +50,6 @@ from scripts.agent_runtime.adapters.acpx import (
     active_discussion_scope,
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
-from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
     _invoke_native_once,

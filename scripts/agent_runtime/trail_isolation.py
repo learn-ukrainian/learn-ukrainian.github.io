@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .kimi_admission import format_refusal
+from lu_machinery.agent_runtime.retired_seat_admission import format_refusal
 
 try:
     from scripts.common.repo_root import machinery_path, project_interpreter

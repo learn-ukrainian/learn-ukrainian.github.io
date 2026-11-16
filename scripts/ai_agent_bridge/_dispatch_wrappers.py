@@ -453,7 +453,8 @@ def run_ask_review_dispatch(
     guidance before the attachment without interpreting or rewriting either.
     """
     # Kimi seats never review: the seat is admitted before the temporary prompt is written.
-    from agent_runtime.kimi_admission import REVIEW_MODE
+    from lu_machinery.agent_runtime.retired_seat_admission import REVIEW_MODE
+
     from agent_runtime.target_admission import resolve_and_admit
 
     (target,) = resolve_and_admit((agent,), mode=REVIEW_MODE, model=model, review=True)

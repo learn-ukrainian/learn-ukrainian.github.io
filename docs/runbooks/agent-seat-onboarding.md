@@ -407,7 +407,7 @@ not permanent routing weights and do not override current CodexBar headroom.
   controller).
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
   Claude, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek. Kimi and KimiCC
-  seats are named in the registry but refused by `kimi_admission`.
+  are retired and have no registry seat; the retired-seat gate refuses them.
 - Grok fixed effective model/effort: `grok-4.7` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
   Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
@@ -513,7 +513,7 @@ receive the contract for awareness but do not start conversations independently.
 | Codex orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | AGY/Gemini sessions (not a driver seat, #9584) | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Grok orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
-| Kimi and KimiCC seats | Not an ACP caller or participant | Retired (OO-58, #11327). Refused by `kimi_admission`; do not dispatch |
+| Kimi and KimiCC seats | Not an ACP caller or participant | Retired (OO-58, #11327). Refused by the retired-seat gate; do not dispatch |
 | Cursor orchestrators with an explicit model | Eligible caller | Explicit routine ACP selection only; never use an automatic/opaque model route |
 | Dispatch-only, worker, and review-only seats | Awareness only | The accountable orchestrator owns invocation |
 

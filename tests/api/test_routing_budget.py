@@ -459,7 +459,7 @@ def test_subscription_need_login_reaches_capacity_pick(monkeypatch, tmp_path):
         batch_state_dir=tmp_path,
     )
     rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget)}
-    for lane in ("claude", "codex", "kimi", "grok"):
+    for lane in ("claude", "codex", "grok"):
         assert budget["agents"][lane]["probe_state"] == "NEED_LOGIN"
         assert rows[lane]["avoid"] is True
 

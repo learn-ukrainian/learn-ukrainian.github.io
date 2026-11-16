@@ -55,7 +55,8 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
     if type(limit) is not int or limit < 1 or limit > 500:
         return unknown
     try:
-        from scripts.agent_runtime.kimi_admission import BRIDGE_MODE
+        from lu_machinery.agent_runtime.retired_seat_admission import BRIDGE_MODE
+
         from scripts.agent_runtime.target_admission import resolve_and_admit
 
         if not re.fullmatch(r"[a-z]+-[a-z0-9]+(?:-[a-z0-9]+)*", recipient):

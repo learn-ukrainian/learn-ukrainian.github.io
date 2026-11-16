@@ -12,7 +12,7 @@ Direct-only seats in this module cover the fixed participant registry:
   ``agent … --agent-profile <hash-pinned-no-tool-profile> --no-leader stdio``
   (never the built-in ``grok-build`` name, which cannot place parent flags
   before ``stdio``)
-- built-in ACP participants for Claude, Kimi, KimiCC K3, Cursor, and Pool
+- built-in ACP participants for Claude, Cursor, and Pool
 - source-blind project ACP wrappers for AGY and DeepSeek
 - native OpenCode ACP for the Z.AI GLM subscription route
 
@@ -610,8 +610,6 @@ ACPX_SUPPORTED_PARTICIPANTS: dict[str, dict[str, str | None]] = {
         "agent": "claude",
         "model": None,
     },
-    "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
-    "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
     "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
     "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
     "agy": {"seat": "acpx-agy-shadow", "agent": "agy", "model": AGY_ACP_MODEL},
@@ -634,8 +632,6 @@ ACPX_PARTICIPANT_CATALOG_TRANSPORTS: dict[str, str] = {
     "codex": "native_codex",
     "grok": "native_grok",
     "claude": "native_claude",
-    "kimi": "native_kimi",
-    "kimicc": "native_kimi",
     "cursor": "cursor",
     "pool": "opencode",
     "agy": "agy",
@@ -813,8 +809,9 @@ ACPX_EXIT_PERMISSION_DENIED = 5
 #
 # Unmapped — the ACP error payload acpx forwards has no typed rate-limit
 # field, so these stay generic transport failures (owner: claude-infra):
-# - kimi, kimicc: ``provider.rate_limit`` stays inside the turn and the
-#   prompt resolves ``stopReason: end_turn``; only auth becomes an error
+# - retired kimi, kimicc: historical only. ``provider.rate_limit`` stayed
+#   inside the turn and the prompt resolved ``stopReason: end_turn``; only
+#   auth became an error. No live seat.
 # - cursor: connect enums (RATE_LIMITED and siblings) are not copied into
 #   JSON-RPC ``error.data``; the SDK wraps the message as ``details`` text
 # - agy: the text-only agent rejects with an ``Error`` string, no typed data
@@ -3661,20 +3658,6 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         if plan.metadata.get("claude_code_launcher_cleanup") == "removed":
             return
         _remove_claude_acp_launcher_copy(plan.metadata.get("claude_code_launcher"), adapter_label=type(self).__name__)
-
-
-class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):
-    name = "acpx-kimi-shadow"
-    target_agent = "kimi"
-    auth_env = "ACPX_AUTH_LOGIN"
-
-
-class AcpxKimiCcShadowAdapter(_AcpxDiscussionAdapter):
-    name = "acpx-kimicc-shadow"
-    target_agent = "kimi"
-    fixed_model = "kimi-code/k3"
-    default_model = fixed_model
-    auth_env = "ACPX_AUTH_LOGIN"
 
 
 class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):

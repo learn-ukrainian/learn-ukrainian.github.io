@@ -32,7 +32,8 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
-from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
+from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
+
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
     require_admitted,

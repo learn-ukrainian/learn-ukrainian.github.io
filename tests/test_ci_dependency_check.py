@@ -101,8 +101,16 @@ def test_only_exact_filtered_ml_omission_is_allowed() -> None:
     )
     assert unexpected_diagnostics(known) == []
     assert unexpected_diagnostics(known + "\n" + skew) == [skew]
-    changed_known_pair = known.replace("accelerate 1.14.0", "accelerate 1.14.1")
-    assert unexpected_diagnostics(changed_known_pair) == [changed_known_pair]
+    # A routine version bump of an allowed requiring package still passes.
+    assert unexpected_diagnostics(known.replace("accelerate 1.14.0", "accelerate 1.14.1")) == []
+    # A new missing dependency of an allowed package, or a new package, fails.
+    new_dependency = "accelerate 1.14.0 requires narwhals, which is not installed."
+    assert unexpected_diagnostics(new_dependency) == [new_dependency]
+    new_package = "scikit-learn 1.9.1 requires torch, which is not installed."
+    assert unexpected_diagnostics(new_package) == [new_package]
+    # A version conflict on an allowed pair is never an intentional omission.
+    allowed_pair_conflict = "accelerate 1.14.0 has requirement torch>=2, but you have torch 1.0."
+    assert unexpected_diagnostics(allowed_pair_conflict) == [allowed_pair_conflict]
     stale_conflict = "httpx2 2.12.0 has requirement httpcore2==2.12.0, but you have httpcore2 2.10.0."
     assert unexpected_diagnostics(stale_conflict) == [stale_conflict]
     assert unexpected_diagnostics("unrecognized pip diagnostic") == [
