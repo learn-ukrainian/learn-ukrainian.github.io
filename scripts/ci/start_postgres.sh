@@ -2,8 +2,8 @@
 # Native test dependencies and the PostgreSQL 16 server for a CI pytest shard.
 #
 # The ubuntu runner image carries PostgreSQL 16, libpq-dev and apparmor; only
-# bubblewrap is missing. Install what is absent from the image's package
-# lists (no `apt-get update` unless that install fails), grant bwrap user
+# bubblewrap is missing. When packages are absent, refresh the package index
+# and install them with apt retries and lock waiting. Grant bwrap user
 # namespaces, then start cluster 16/main and prove it is the server behind
 # LEARN_UKRAINIAN_CP_PG_DSN. Any failure exits non-zero. Tests that need their
 # own clusters (initdb as the runner user) use the same binaries.
