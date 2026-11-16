@@ -2255,7 +2255,8 @@ store_registry:
       kind: operational
       activity: active
       presence: present
-      writers: [agents_extensions/shared/session_streams/db.py:SessionStreamDatabase._connect_once]
+      writers: []
+      writer_note: "Written by the installed lu-machinery release (lu_machinery.session_streams.db, SessionStreamDatabase._connect_once, busy timeout 5000 ms); no tracked product file writes it since #13032."
       journal: wal
       busy_ms: 5000
       busy_source: explicit
