@@ -1710,21 +1710,63 @@ def _isolate_legacy_bridge_telemetry(
     writer reads ``_shared_telemetry_db_path`` and has no store override:
     ``LEARN_UKRAINIAN_STATE_ROOT`` must be the primary checkout, so it cannot
     name a tmp path. A compat-ask test therefore mints the checkout store, and
-    the unregistered-SQLite census ejects the merge group. The directory comes
-    from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse mkdir
-    there breaks tests that require an empty tmp dir (see
-    ``_isolate_write_ownership_ledger``).
+    the unregistered-SQLite census ejects the merge group. Health canaries
+    append under ``data/telemetry/<name>/`` on the same checkout, which the
+    guard now watches. A default ``state_dir`` for this checkout is redirected
+    with the bridge store. An explicit ``state_dir``, and any other repo, keep
+    their own path. The directory comes from ``tmp_path_factory``, not the
+    test's ``tmp_path``: an autouse mkdir there breaks tests that require an
+    empty tmp dir (see ``_isolate_write_ownership_ledger``).
     """
     store = _legacy_bridge_telemetry_base / str(next(_LEGACY_BRIDGE_TELEMETRY_SEQ))
     store.mkdir()
     db_path = store / "legacy_comms_routes.db"
+    checkout = Path(__file__).resolve().parents[1]
 
     def _isolated_db_path(_source_repo_root: Path | None = None) -> Path:
         return db_path
 
+    def _redirect_checkout_state(module: Any, fn_name: str, bucket: str) -> None:
+        original = getattr(module, fn_name)
+
+        def wrapped(*args: Any, **kwargs: Any) -> Any:
+            if kwargs.get("state_dir") is None:
+                repo = args[0] if args else kwargs.get("repo")
+                if repo is not None and Path(repo).resolve() == checkout:
+                    kwargs = dict(kwargs)
+                    kwargs["state_dir"] = store / bucket
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(module, fn_name, wrapped)
+
+    from lu_machinery.agent_runtime.primary_tree_watch import PrimaryTreeWatch
+    from lu_machinery.hygiene import (
+        check_node_modules_integrity,
+        check_primary_integrity,
+        check_venv_integrity,
+        check_worktree_cleanup_integrity,
+    )
     from lu_machinery.telemetry import legacy_bridge
 
     monkeypatch.setattr(legacy_bridge, "_shared_telemetry_db_path", _isolated_db_path)
+    for module, fn_name, bucket in (
+        (check_primary_integrity, "check_primary_integrity", "primary-integrity"),
+        (check_node_modules_integrity, "check_node_modules_integrity", "node-modules-integrity"),
+        (check_venv_integrity, "check_venv_integrity", "venv-integrity"),
+        (check_worktree_cleanup_integrity, "check_worktree_cleanup_integrity", "worktree-cleanup-integrity"),
+    ):
+        _redirect_checkout_state(module, fn_name, bucket)
+
+    original_init = PrimaryTreeWatch.__init__
+
+    def _isolated_watch_init(self: Any, *args: Any, **kwargs: Any) -> None:
+        main_root = kwargs.get("main_root")
+        if kwargs.get("state_dir") is None and main_root is not None and Path(main_root).resolve() == checkout:
+            kwargs = dict(kwargs)
+            kwargs["state_dir"] = store / "primary-integrity"
+        original_init(self, *args, **kwargs)
+
+    monkeypatch.setattr(PrimaryTreeWatch, "__init__", _isolated_watch_init)
     return db_path
 
 
