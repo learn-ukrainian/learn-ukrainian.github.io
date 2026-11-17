@@ -20,7 +20,6 @@ checks. Codex flagged that mixing these would muddy the contract.
 
 from __future__ import annotations
 
-import asyncio
 import json
 import re
 from pathlib import Path
@@ -253,9 +252,9 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
 
 
 @router.get("/{track}/{slug}")
-async def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-module artifact snapshot."""
-    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug, ctx=resolve_context(ctx))
+    result = _compute_artifact_snapshot(track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -398,7 +397,7 @@ def _enumerate_force_deletions(track: str, slug: str, ctx: MonitorContext | None
 
 
 @router.get("/{track}/{slug}/force-preview")
-async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Dry-run preview for ``v6_build.py --force {track} {num}``.
 
     Returns the EXACT list of files ``--force`` would delete, without
@@ -431,7 +430,7 @@ async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get
         )
 
     resolved_ctx = resolve_context(ctx)
-    targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug, ctx=resolved_ctx)
+    targets = _enumerate_force_deletions(track, slug, ctx=resolved_ctx)
 
     try:
         base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
@@ -472,7 +471,7 @@ async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get
 
 
 @router.get("/ship-ready")
-async def ship_ready(
+def ship_ready(
     track: str | None = Query(
         None,
         description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
@@ -491,7 +490,7 @@ async def ship_ready(
             status_code=404,
             content={"error": f"unknown track: {track}"},
         )
-    return await asyncio.to_thread(_list_artifact_gates_green, track, ctx=resolve_context(ctx))
+    return _list_artifact_gates_green(track, ctx=resolve_context(ctx))
 
 
 # ---------------------------------------------------------------------
@@ -629,9 +628,9 @@ def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = N
 
 
 @router.get("/{track}/{slug}/files")
-async def module_files(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def module_files(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Classified file manifest for one module (#1313 / Codex-2)."""
-    result = await asyncio.to_thread(_classify_module_files, track, slug, ctx=resolve_context(ctx))
+    result = _classify_module_files(track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -733,14 +732,14 @@ def _review_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -
 
 
 @router.get("/{track}/{slug}/review-snapshot")
-async def review_snapshot(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def review_snapshot(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Latest main + style review result with empty-findings flag.
 
     Flags the reviewer-gaming pattern where a high score is reported
     with zero actionable findings (#1313 / Codex-3). Deterministic
     detection so bad-review cases don't slip through.
     """
-    result = await asyncio.to_thread(_review_snapshot, track, slug, ctx=resolve_context(ctx))
+    result = _review_snapshot(track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -880,9 +879,9 @@ def _state_drift_check(track: str, slug: str, ctx: MonitorContext | None = None)
 
 
 @router.get("/{track}/{slug}/drift")
-async def drift_check(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def drift_check(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Cross-check module state across state.json, audit, review, disk."""
-    result = await asyncio.to_thread(_state_drift_check, track, slug, ctx=resolve_context(ctx))
+    result = _state_drift_check(track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result

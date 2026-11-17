@@ -312,7 +312,7 @@ def _track_status_rows(
 
 
 @router.get("/status")
-async def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
+def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
     """Per-track wiki compilation status."""
     known_tracks = _known_tracks(ctx)
     cache_key = f"wiki_status_{_wiki_dir(ctx)}_" + ",".join(known_tracks)
@@ -347,7 +347,7 @@ async def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/status/{track}")
-async def wiki_status_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
+def wiki_status_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module wiki compilation status for one track."""
     cache_key = f"wiki_status_track_{track}_{_wiki_dir(ctx)}"
     cached = cache_get(cache_key, ttl=60.0)
@@ -359,7 +359,7 @@ async def wiki_status_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/article/{track}/{slug}")
-async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
+def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single article metadata plus a short preview."""
     _ensure_track_exists(track, ctx)
     if slug not in _track_slugs(track):
@@ -418,20 +418,20 @@ async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_
 
 
 @router.get("/quality-gate")
-async def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
+def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate wiki quality gate issues for all tracks."""
     return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
 
 
 @router.get("/quality-gate/{track}")
-async def wiki_quality_gate_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
+def wiki_quality_gate_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Quality gate issues for one track."""
     _ensure_track_exists(track, ctx)
     return {track: monitor_surface.scan_wiki_track(track)}
 
 
 @router.get("/build-log")
-async def wiki_build_log(
+def wiki_build_log(
     track: str | None = Query(None),
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
@@ -444,7 +444,7 @@ async def wiki_build_log(
 
 
 @router.get("/sources")
-async def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
+def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
     """Row counts for the sources SQLite database."""
     handle = sources_db(ctx)
     if handle is None or not handle.path.exists():
@@ -466,7 +466,7 @@ async def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/sources/{track}/{slug}")
-async def wiki_sources_module(
+def wiki_sources_module(
     track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)
 ):
     """Source availability for a single module."""

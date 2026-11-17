@@ -1,7 +1,10 @@
 """Coverage and summary computations for the state API.
 
 These functions compute summary, pipeline track, research coverage,
-and review coverage data. All are sync functions designed for asyncio.to_thread().
+and review coverage data. The functions are synchronous. Sync routes call them
+on FastAPI's threadpool. Async cache routes pass them to
+``cache_get_or_compute_async``, which runs a miss on a worker and serves a
+warm hit on the event loop.
 """
 
 from __future__ import annotations
@@ -43,7 +46,7 @@ def compute_summary(
     project_root: Path | None = None,
     plans_root: Path | None = None,
 ) -> dict:
-    """Synchronous summary computation -- safe to run in asyncio.to_thread()."""
+    """Synchronous summary computation for the state-summary cache."""
     if curriculum_root is None:
         curriculum_root = config.CURRICULUM_ROOT
     if project_root is None:

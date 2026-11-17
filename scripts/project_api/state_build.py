@@ -1,7 +1,8 @@
 """Build status and track health computations for the state API.
 
 Handles build progress tracking, ETA calculation, and track health
-aggregation. All functions are sync and designed for asyncio.to_thread().
+aggregation. The functions are synchronous. Their routes are sync endpoints,
+so FastAPI runs the work on its threadpool.
 """
 
 from __future__ import annotations

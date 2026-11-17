@@ -419,3 +419,222 @@ class TestOverviewLastGoodHonesty:
         assert meta["generated_at"] == generated_at
         assert meta["age_s"] == source_age
         assert meta["stale"] is (not cached or source_age is None or source_age > 60)
+
+
+def test_pipeline_queues_follow_status_files_and_reuse_until_an_mtime_changes(tmp_path, monkeypatch):
+    """Defect class: pipeline status resolved a path per missing module on the event loop.
+
+    A missing status file is a directory snapshot, not a resolve. A repeat call
+    does not re-read status JSON while those mtimes hold. Editing a status file,
+    including the target of a status symlink, changes that mtime and the queue.
+    A lesson symlink that leaves the track does not count as a lesson.
+    """
+    import json
+
+    from lu_machinery.api.monitor_context import fixture_context
+
+    from scripts.project_api import dashboard_helpers as helpers
+    from scripts.project_api.config import LEVELS
+
+    helpers.clear_pipeline_queue_cache()
+    track = next(level for level in LEVELS if level["id"] == "a2")
+    track_id = track["id"]
+    root = tmp_path / "curriculum"
+    track_dir = root / track["path"]
+    status = track_dir / "status"
+    review = track_dir / "review"
+    status.mkdir(parents=True)
+    review.mkdir()
+    (root / "curriculum.yaml").write_text(
+        "levels:\n"
+        f"  {track_id}:\n"
+        "    modules:\n"
+        "      - missing\n"
+        "      - has-lesson\n"
+        "      - drafted\n"
+        "      - passed\n"
+        "      - reviewed\n"
+        "      - escape\n"
+        "      - linked\n",
+        encoding="utf-8",
+    )
+    (track_dir / "has-lesson.md").write_text("lesson", encoding="utf-8")
+    (status / "drafted.json").write_text(
+        json.dumps({"overall": {"status": "content-complete", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    (status / "passed.json").write_text(
+        json.dumps({"overall": {"status": "pass", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    (status / "reviewed.json").write_text(
+        json.dumps({"overall": {"status": "pass", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    (review / "reviewed-final-review.md").write_text("ok", encoding="utf-8")
+    link_body = status / "linked-body"
+    link_body.write_text(
+        json.dumps({"overall": {"status": "content-complete", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    (status / "linked.json").symlink_to(link_body)
+    outside = tmp_path / "outside.md"
+    outside.write_text("nope", encoding="utf-8")
+    (track_dir / "escape.md").symlink_to(outside)
+
+    ctx = fixture_context(tmp_path).with_roots(curriculum_root=root)
+    reads = {"n": 0}
+    real_load = helpers.json.load
+
+    def counting_load(handle, *args, **kwargs):
+        reads["n"] += 1
+        return real_load(handle, *args, **kwargs)
+
+    monkeypatch.setattr(helpers.json, "load", counting_load)
+    try:
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["missing", "escape"]
+        assert [item["slug"] for item in hetman] == ["drafted", "linked"]
+        assert [item["slug"] for item in final] == ["passed"]
+        assert reads["n"] == 4
+
+        reads["n"] = 0
+        assert helpers.scan_pipeline_queues(ctx) == (otaman, hetman, final)
+        assert reads["n"] == 0
+
+        (status / "drafted.json").write_text(
+            json.dumps(
+                {
+                    "overall": {"status": "fail", "deferred_count": 0},
+                    "gates": {"lesson": {"status": "fail"}},
+                }
+            ),
+            encoding="utf-8",
+        )
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["missing", "drafted", "escape"]
+        assert [item["slug"] for item in hetman] == ["linked"]
+        assert [item["slug"] for item in final] == ["passed"]
+        assert reads["n"] >= 1
+
+        reads["n"] = 0
+        link_body.write_text(
+            json.dumps(
+                {
+                    "overall": {"status": "fail", "deferred_count": 0},
+                    "gates": {"lesson": {"status": "fail"}},
+                }
+            ),
+            encoding="utf-8",
+        )
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["missing", "drafted", "escape", "linked"]
+        assert hetman == []
+        assert [item["slug"] for item in final] == ["passed"]
+        assert reads["n"] >= 1
+    finally:
+        helpers.clear_pipeline_queue_cache()
+
+
+def test_blocking_product_routes_are_sync_unless_they_await_more_than_a_thread():
+    """Defect class: an async route with no await, or only asyncio.to_thread, blocked the loop.
+
+    A route may stay async only when it awaits a websocket, the async cache,
+    or another real await. FastAPI runs every other route on its threadpool.
+    """
+    import ast
+    import inspect
+    import textwrap
+
+    from fastapi.routing import APIRoute
+
+    from scripts.project_api.entry import ROUTERS
+
+    failures: list[str] = []
+    for mount in ROUTERS:
+        for route in mount.router.routes:
+            if not isinstance(route, APIRoute):
+                continue
+            endpoint = route.endpoint
+            if not inspect.iscoroutinefunction(endpoint):
+                continue
+            tree = ast.parse(textwrap.dedent(inspect.getsource(endpoint)))
+            names: list[str] = []
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Await) or not isinstance(node.value, ast.Call):
+                    continue
+                func = node.value.func
+                if isinstance(func, ast.Attribute):
+                    names.append(func.attr)
+                elif isinstance(func, ast.Name):
+                    names.append(func.id)
+            if not names or set(names) <= {"to_thread"}:
+                failures.append(f"{endpoint.__module__}.{endpoint.__name__} awaits {names or 'nothing'}")
+    assert failures == []
+
+
+def test_health_returns_while_pipeline_blocks_in_a_worker(tmp_path, monkeypatch):
+    """Defect class: pipeline status ran on the event loop, so health waited behind it.
+
+    The pipeline handler blocks in a worker until this test releases it. Health
+    is requested before that release. A loop that was stuck in the handler
+    cannot answer within the client timeout.
+    """
+    import threading
+    import time
+    from threading import Thread
+
+    import httpx
+    import uvicorn
+    from fastapi import FastAPI
+    from lu_machinery.api.monitor_context import fixture_context
+
+    import scripts.project_api.dashboard_router as dashboard_router
+
+    started = threading.Event()
+    release = threading.Event()
+
+    def slow_scan(_ctx):
+        started.set()
+        release.wait(timeout=5)
+        return [], [], []
+
+    monkeypatch.setattr(dashboard_router, "scan_pipeline_queues", slow_scan)
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(dashboard_router.router, prefix="/api/dashboard")
+
+    @app.get("/api/health")
+    async def health():
+        return {"ok": True}
+
+    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=0, lifespan="off", log_level="error"))
+    listener = server.config.bind_socket()
+    port = listener.getsockname()[1]
+    thread = Thread(target=server.run, kwargs={"sockets": [listener]}, name="pipeline-probe", daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{port}"
+    pipeline_status: dict[str, int] = {}
+
+    def get_pipeline():
+        response = httpx.get(f"{base}/api/dashboard/pipeline", timeout=8)
+        pipeline_status["code"] = response.status_code
+
+    worker = Thread(target=get_pipeline, name="pipeline-client", daemon=True)
+    try:
+        deadline = time.monotonic() + 5
+        while not getattr(server, "started", False) and time.monotonic() < deadline:
+            time.sleep(0.01)
+        worker.start()
+        assert started.wait(timeout=5), "pipeline handler did not enter the scan"
+        health_response = httpx.get(f"{base}/api/health", timeout=1.0)
+        assert health_response.status_code == 200
+        assert health_response.json() == {"ok": True}
+        assert worker.is_alive()
+    finally:
+        release.set()
+        worker.join(timeout=5)
+        server.should_exit = True
+        thread.join(timeout=5)
+        listener.close()
+    assert pipeline_status.get("code") == 200

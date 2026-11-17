@@ -13,7 +13,6 @@ Validates:
      _classify_module_queue, _fetch_broker_messages, _default_research_info
 """
 
-import asyncio
 import importlib.metadata
 import json
 import os
@@ -390,7 +389,7 @@ class TestDashboardModuleDetail:
 
         ctx = fixture_context(tmp_path)
         ctx = ctx.with_roots(curriculum_root=tmp_path / "curriculum")
-        result = asyncio.run(dashboard_router.module_detail("a1", "test-slug", ctx=ctx))
+        result = dashboard_router.module_detail("a1", "test-slug", ctx=ctx)
         assert result["status"] == {"overall": {"status": "pass"}}
         assert result["status_is_fresh"] is False
         assert result["status_stale_sources"] == ["meta"]

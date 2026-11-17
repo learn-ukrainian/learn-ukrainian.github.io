@@ -110,7 +110,7 @@ def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = N
 
 
 @router.get("")
-async def list_decisions(
+def list_decisions(
     status: str | None = Query(None, description="Filter by status (active, superseded, expired, archived)"),
     ctx: MonitorContext = Depends(get_ctx),
 ):
@@ -125,7 +125,7 @@ async def list_decisions(
 
 
 @router.get("/stale")
-async def stale_decisions(ctx: MonitorContext = Depends(get_ctx)):
+def stale_decisions(ctx: MonitorContext = Depends(get_ctx)):
     """Active decisions past their expiry date — need re-evaluation."""
     decisions = _load_decisions(ctx)
     stale = [d for d in decisions if _is_stale(d)]
@@ -136,7 +136,7 @@ async def stale_decisions(ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/budget")
-async def decision_budget(ctx: MonitorContext = Depends(get_ctx)):
+def decision_budget(ctx: MonitorContext = Depends(get_ctx)):
     """Budget status: how many active decisions vs max allowed."""
     decisions = _load_decisions(ctx)
     active = [d for d in decisions if d.get("status") == "active"]
@@ -156,7 +156,7 @@ async def decision_budget(ctx: MonitorContext = Depends(get_ctx)):
 
 # Keep this route above /{dec_id}; otherwise "lineage" is parsed as a decision ID.
 @router.get("/lineage")
-async def decision_lineage(
+def decision_lineage(
     decision_id: str | None = Query(None, description="Optional decision ID or alias filter, e.g. ADR-008 or dec-007"),
     ctx: MonitorContext = Depends(get_ctx),
 ):
@@ -165,7 +165,7 @@ async def decision_lineage(
 
 
 @router.get("/scope/{scope}")
-async def decisions_by_scope(scope: str, ctx: MonitorContext = Depends(get_ctx)):
+def decisions_by_scope(scope: str, ctx: MonitorContext = Depends(get_ctx)):
     """Filter decisions by scope (pipeline, content, architecture, tooling, pedagogy)."""
     if scope not in _VALID_SCOPES:
         raise HTTPException(
@@ -182,7 +182,7 @@ async def decisions_by_scope(scope: str, ctx: MonitorContext = Depends(get_ctx))
 
 
 @router.get("/{dec_id}")
-async def get_decision(dec_id: str, ctx: MonitorContext = Depends(get_ctx)):
+def get_decision(dec_id: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single decision by ID (e.g., dec-001)."""
     decisions = _load_decisions(ctx)
     for dec in decisions:
