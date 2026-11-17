@@ -123,8 +123,8 @@ you can point to evidence for, and say plainly what is not yet verified.
 3. Add the test, sanitizer, or validator that makes the fix load-bearing; cover at least one edge case.
 4. Write an autopsy for systemic or production-breaking failures; comment only where the why is
    non-obvious.
-5. Run pytest locally before pushing when you edited `scripts/`, `tests/`, `curriculum/`, `.dagger/`,
-   any `.py`, or prompt/rule files with fixture mirrors. Pre-commit is not a test run.
+5. Run pytest locally before pushing when you edited `scripts/`, `tests/`, `curriculum/`, any `.py`,
+   or prompt/rule files with fixture mirrors. Pre-commit is not a test run.
 
 ## Operational rules
 - The primary checkout stays on `main`; all branch work happens in worktrees. Agent-run V7 builds use

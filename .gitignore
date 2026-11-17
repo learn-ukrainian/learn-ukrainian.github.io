@@ -237,7 +237,6 @@ docs/damage-report-*.csv
 !.mcp.json
 !.markdownlint.json
 !pyrightconfig.json
-!dagger.json
 
 # Codex interactive worktree (start-codex.sh)
 .worktrees/

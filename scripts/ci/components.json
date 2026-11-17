@@ -482,9 +482,6 @@
     "SECURITY.md": [
       "shared-core"
     ],
-    "dagger.json": [
-      "shared-core"
-    ],
     "eslint.config.mjs": [
       "shared-core"
     ],
@@ -651,12 +648,6 @@
       "path": ".cursor/",
       "components": [
         "harness"
-      ]
-    },
-    {
-      "path": ".dagger/",
-      "components": [
-        "shared-core"
       ]
     },
     {

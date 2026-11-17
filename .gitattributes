@@ -2,10 +2,9 @@ data/literary_texts/*.jsonl filter=lfs diff=lfs merge=lfs -text
 data/esu/articles.jsonl filter=lfs diff=lfs merge=lfs -text
 site/src/data/lexicon-manifest.fingerprint.json merge=union
 
-# npm: package.json, site/package.json; uv: .dagger/pyproject.toml.
+# npm: package.json, site/package.json.
 /package-lock.json linguist-generated=true
 /site/package-lock.json linguist-generated=true
-/.dagger/uv.lock linguist-generated=true
 # scripts/lexicon/manifest_fingerprint.py: complete output contract.
 /site/src/data/lexicon-manifest.fingerprint.json linguist-generated=true
 

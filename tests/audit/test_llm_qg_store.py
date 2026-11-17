@@ -3,6 +3,7 @@ from __future__ import annotations
 import concurrent.futures
 import hashlib
 import json
+import multiprocessing
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -402,14 +403,16 @@ def _concurrent_worker(args: tuple[Path, Path, int]) -> None:
 
 
 def test_concurrent_writers_shared_store(tmp_path: Path) -> None:
-    import concurrent.futures
     module_dir = _module(tmp_path)
     db_path = tmp_path / "shared_qg.db"
     num_procs = 16
 
     tasks = [(module_dir, db_path, i) for i in range(num_procs)]
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=num_procs) as executor:
+    # Name the start method: the Linux default changed from fork to forkserver in Python 3.14,
+    # and the forkserver keeps a temporary directory that outlives the test's scratch.
+    spawn = multiprocessing.get_context("spawn")
+    with concurrent.futures.ProcessPoolExecutor(max_workers=num_procs, mp_context=spawn) as executor:
         futures = [executor.submit(_concurrent_worker, task) for task in tasks]
         for future in concurrent.futures.as_completed(futures):
             future.result()

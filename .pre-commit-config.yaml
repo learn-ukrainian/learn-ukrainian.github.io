@@ -339,24 +339,3 @@ repos:
       # PRs and runs lint and content-contract gates on every tier.
       # These hooks stay absent rather than re-staged: implicit stages also include
       # pre-push. tests/test_ruff_ci_scope.py pins their absence and required CI ownership.
-
-      # Dagger pre-push pytest hook REMOVED 2026-05-17 per user direction.
-      # Cause: Dagger's cache_volume design accumulates pip wheels every
-      # cold run (was 30 GB/run pre-#2088, ~6 GB/run post-#2088 with .venv
-      # mount filter), and the resulting disk creep filled the SSD to 99%
-      # twice in 12 hours. Local replay value did not justify the recurring
-      # disk cost.
-      #
-      # Manual invocation still available:
-      #
-      #     bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("pre_push/dagger_pytest.sh"))')"
-      #
-      # The script remains in-tree for ad-hoc GHA-replay debugging of a
-      # CI-only failure. CI's `Test (pytest)` workflow remains the
-      # canonical pre-merge gate. For local validation between pushes:
-      #
-      #     .venv/bin/python -m pytest <targeted-paths>
-      #
-      # MEMORY.md #M-7 still applies — run pytest locally before push when
-      # editing .py, scripts/, tests/, .dagger/, or hardcoded test fixtures.
-      # The hook automation is gone; the obligation isn't.
