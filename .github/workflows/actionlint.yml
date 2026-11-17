@@ -66,9 +66,46 @@ jobs:
             --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
           .venv/bin/python -m lu_machinery.ci.slot_inventory --check
 
+      # The release tarball comes from the Actions cache, keyed on the version
+      # pinned in check_workflows.sh; a miss downloads it through the
+      # authenticated releases API. The script checks the tarball's sha256 on
+      # every run, a cache hit included.
+      - name: Read the pinned actionlint version
+        id: actionlint-pin
+        run: |
+          set -euo pipefail
+          mapfile -t versions < <(sed -nE 's/^ACTIONLINT_VERSION="([0-9]+(\.[0-9]+)*)"$/\1/p' scripts/audit/check_workflows.sh)
+          if (( ${#versions[@]} != 1 )); then
+            echo "::error::scripts/audit/check_workflows.sh must pin exactly one ACTIONLINT_VERSION"
+            exit 1
+          fi
+          echo "version=${versions[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the actionlint tarball
+        id: actionlint-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/actionlint-cache
+          key: actionlint-${{ steps.actionlint-pin.outputs.version }}-${{ runner.os }}-${{ runner.arch }}
+
       - name: Lint workflows
         env:
           # Force the pinned, checksum-verified actionlint build for a
           # reproducible result even if a runner image ever bundles its own.
           ACTIONLINT_FORCE_DOWNLOAD: '1'
+          ACTIONLINT_CACHE_DIR: ${{ runner.temp }}/actionlint-cache
+          # contents: read is enough to download a public release.
+          GH_TOKEN: ${{ github.token }}
         run: scripts/audit/check_workflows.sh
+
+      # A few MiB, written only on a miss after the lint step passed (so the
+      # tarball is verified): main writes the entry every ref can read; a pull
+      # request writes its own, readable only by that PR.
+      - name: Save the actionlint tarball
+        if: >-
+          steps.actionlint-cache.outputs.cache-hit != 'true'
+          && (github.ref == 'refs/heads/main' || github.event_name == 'pull_request')
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/actionlint-cache
+          key: ${{ steps.actionlint-cache.outputs.cache-primary-key }}
