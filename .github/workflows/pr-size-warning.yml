@@ -33,18 +33,19 @@ jobs:
         env:
           PROJECT_PYTHON: ${{ steps.python.outputs.python-path }}
         run: '"$PROJECT_PYTHON" -m pip install --disable-pip-version-check PyYAML==6.0.3'
+      - name: Fetch the locked lu-machinery wheel
+        id: machinery-wheel
+        uses: ./.github/actions/python-ci-env
+        with:
+          machinery-wheel-only: 'true'
       # The locked lu-machinery wheel alone (no dependencies); the lock's hash decides which bytes install.
       - name: Install the locked lu-machinery release
         env:
+          MACHINERY_WHEELHOUSE: ${{ steps.machinery-wheel.outputs.machinery-wheelhouse }}
           PYTHON_BIN: ${{ steps.python.outputs.python-path }}
         run: |
           set -euo pipefail
-          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
-          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
-          mkdir -p "$wheelhouse"
-          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
-            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
-            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          wheelhouse="${MACHINERY_WHEELHOUSE}"
           sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
           "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
             --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
