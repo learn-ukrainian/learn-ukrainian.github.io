@@ -16,6 +16,9 @@ inputs:
       'true' fetches the locked lu-machinery wheel into the wheelhouse and does nothing
       else (no uv, no installs); the job installs it with its own --require-hashes command.
     default: 'false'
+  hydrate-manifest:
+    description: 'Verify the Atlas manifest; disable for jobs that only warm dependency caches.'
+    default: 'true'
 outputs:
   uv-cache-key:
     description: 'Exact setup-uv cache key for this runner, Python and both lock files.'
@@ -226,8 +229,25 @@ runs:
         fi
         .venv/bin/python packages/v4-runtime/build_assets.py
 
+    # Use the same pointer key and path as deploy-pages and pytest-slow-nightly.
+    # An artifact supplied by CI is already local; leave it for the loader to verify.
+    - name: Restore Atlas lexicon manifest cache
+      id: atlas-manifest-cache
+      if: inputs.machinery-wheel-only != 'true' && inputs.hydrate-manifest == 'true' && hashFiles('site/src/data/lexicon-manifest.json') == ''
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: site/src/data/lexicon-manifest.json
+        key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
     - name: Hydrate Atlas lexicon manifest
-      if: inputs.machinery-wheel-only != 'true'
+      if: inputs.machinery-wheel-only != 'true' && inputs.hydrate-manifest == 'true'
       shell: bash
       run: |
         .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+    - name: Save Atlas lexicon manifest cache
+      if: inputs.machinery-wheel-only != 'true' && inputs.hydrate-manifest == 'true' && inputs.save-cache == 'true' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: site/src/data/lexicon-manifest.json
+        key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
