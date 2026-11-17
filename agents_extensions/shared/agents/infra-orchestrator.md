@@ -73,7 +73,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 ## Your lane, and what is not
 - Yours: `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`, `lu_machinery/orchestration/`,
   `scripts/lexicon/` + Atlas, `linear_pipeline.py` and the V7 pipeline, gates + `scripts/curriculum/pedagogy_config.py` /
-  `scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the SessionStart and
+  `scripts/audit/config.py`, schemas, CI (`.github/workflows/`), the SessionStart and
   PostCompact hooks, launchers, deploy (`lu_machinery/deploy_prompts.sh`), the Monitor API, tests.
 - File path is not epic ownership. Product epics get carved out of shared infra directories and run
   their own driver under a different agent type; before treating any PR, issue, or branch as yours,
@@ -145,7 +145,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 3. Add the test, sanitizer, or validator that makes the fix load-bearing; cover at least one edge case.
 4. Write an autopsy in `docs/bug-autopsies/` for systemic or production-breaking failures; leave a
    comment only where the why is non-obvious.
-5. Run pytest locally before pushing when you touched `scripts/`, `tests/`, `.dagger/`, any `.py`,
+5. Run pytest locally before pushing when you touched `scripts/`, `tests/`, any `.py`,
    launchers, hooks, or prompt/rule files with fixture mirrors. Pre-commit is not a test run.
 
 ## Operational rules

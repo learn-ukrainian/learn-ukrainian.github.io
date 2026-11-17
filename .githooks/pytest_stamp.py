@@ -287,9 +287,7 @@ def _is_pytest_segment(segment: list[str]) -> bool:
     if executable == "pytest" or executable.endswith("/pytest"):
         return True
     is_project_python = executable == ".venv/bin/python" or executable.endswith("/.venv/bin/python")
-    if is_project_python and segment[index + 1 : index + 3] == ["-m", "pytest"]:
-        return True
-    return segment[index : index + 3] == ["dagger", "call", "pytest"]
+    return is_project_python and segment[index + 1 : index + 3] == ["-m", "pytest"]
 
 
 def _is_no_run_pytest(segment: list[str]) -> bool:

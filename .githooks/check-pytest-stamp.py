@@ -35,7 +35,6 @@ TRIGGER_PREFIXES = (
     "scripts/",
     "curriculum/",
     "agents_extensions/shared/rules/",
-    ".dagger/",
 )
 MAIN_REF = "refs/heads/main"
 

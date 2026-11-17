@@ -32,7 +32,7 @@ correct — it reverts an *unauthorized* local system change, not making one.
 ## ✅ CLOSED THIS SESSION (3)
 - **#3605** (deps #2732) — superseded by #3623 + regressive (idna 3.18 already on main; would downgrade
   mando 0.8.2→0.7.1, remove marker-pdf/mpmath). Isolated `.dagger/uv.lock` idna 3.17→3.18 noted as a
-  clean follow-up if wanted.
+  clean follow-up if wanted (moot: Dagger retired 2026-11-17).
 - **#3598** (form-of) — superseded by #3631.
 - **#3596** (open-data #3449) — superseded by **#3633 (merged)**: scoped to ADDITIVE publication. #3633
   ships `data/lexicon-dataset/` (ATTRIBUTION/NOTICE/README + sharded JSONL) + `export_open_dataset.py` +
