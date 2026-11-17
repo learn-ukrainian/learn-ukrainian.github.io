@@ -71,9 +71,8 @@ delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through `scripts/dispatch.py dispatch` or
-`.venv/bin/python -m lu_machinery.ai_agent_bridge dispatch-fix`, not
-through discussion.
+a PR should go through `scripts/dispatch.py dispatch`, not through
+discussion.
 
 Current adapter policy for discussion calls:
 
@@ -164,14 +163,6 @@ SSE replay, and attachments.
 
 Use these wrappers when the task needs the project-standard model/mode
 assignment enforced by tooling instead of memory.
-
-`.venv/bin/python -m lu_machinery.ai_agent_bridge dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
-Codex worktree implementation run for "fix this and ship a PR" tasks.
-It hardcodes `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --mode workspace-write
---worktree --base origin/main --effort high`, and every generated
-brief includes the commit, push, and PR checklist. If `--brief-file`
-is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
-`gh issue view <issue> --json title,body`.
 
 Exact-head cross-family review through `ask-<lane> --type review` (headless dispatch via
 `scripts/dispatch.py dispatch --model <catalog-model> --agent <reviewer> --mode read-only --worktree --branch <branch>`)

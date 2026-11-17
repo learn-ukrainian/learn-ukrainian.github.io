@@ -683,7 +683,7 @@ Dispatch a worker and record it in that run:
   --agent codex \
   --model gpt-6.1-sol \
   --mode workspace-write \
-  --owned-path scripts/orchestration/ \
+  --owned-path scripts/audit/ \
   --worktree \
   --prompt-file /tmp/a1-gate-policy-worker.md
 ```
