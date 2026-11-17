@@ -17,11 +17,11 @@ from pathlib import Path
 from typing import Any
 
 from lu_machinery.contracts import new_id
+from lu_machinery.identity import KNOWN_HARNESS_EXECUTABLES
 
 from learn_ukrainian_v4_runtime import v4_a3_builder_packet as packet
 from learn_ukrainian_v4_runtime import v4_a7_original_row_factory as a7
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
-from learn_ukrainian_v4_runtime.identity import KNOWN_HARNESS_EXECUTABLES
 
 AUTHOR_PROMPT_PROFILE = "v4-author-source-blind-v1"
 REVIEWER_PROMPT_PROFILE = "v4-reviewer-source-blind-v1"

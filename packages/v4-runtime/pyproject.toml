@@ -13,4 +13,4 @@ dependencies = ["cryptography>=44", "jsonschema>=4.23", "lu-machinery>=0.1.21", 
 where = ["src"]
 
 [tool.setuptools.package-data]
-learn_ukrainian_v4_runtime = ["data/**/*.json", "data/**/*.txt", "sql/*.sql", "provenance/v1/*.json", "provenance/v1/blobs/sha256/*.blob", "LICENSE-CONTENT.md", "release_manifest.json"]
+learn_ukrainian_v4_runtime = ["data/**/*.json", "data/**/*.txt", "provenance/v1/*.json", "provenance/v1/blobs/sha256/*.blob", "LICENSE-CONTENT.md", "release_manifest.json"]

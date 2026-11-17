@@ -24,14 +24,14 @@ from datetime import UTC, datetime
 from typing import Any
 
 from lu_machinery.contracts import CompletionState, ResponseEnvelope
-
-from learn_ukrainian_v4_runtime import v4_trust_authority as trust
-from learn_ukrainian_v4_runtime.identity import (
+from lu_machinery.identity import (
     CURSOR_AUTO_UNION_FAMILY,
     KNOWN_HARNESS_EXECUTABLES,
     UNRESOLVED_AUTHOR_FAMILIES,
     resolve_author_family,
 )
+
+from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 
 # The one outcome this attester ever signs for -- never a caller-supplied
 # argument (PR #7662 repair 6; see ``v4_a7_private_ledger.V4_SHA256`` for
