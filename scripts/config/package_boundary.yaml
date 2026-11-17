@@ -3,9 +3,6 @@ packages:
   docs:
     reason: Validates the product documentation and store registry.
     role: product
-  agent_runtime:
-    reason: operator classification
-    role: machinery
   ai_agent_bridge:
     reason: operator classification
     role: machinery
@@ -93,9 +90,6 @@ packages:
   open_dataset:
     reason: operator classification
     role: product
-  opsec:
-    reason: operator classification
-    role: machinery
   pipeline:
     reason: Curriculum generation pipeline used by build and the monitor.
     role: product

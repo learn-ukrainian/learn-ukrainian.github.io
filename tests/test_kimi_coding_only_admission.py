@@ -91,7 +91,7 @@ def test_an_effective_kimi_model_on_any_seat_is_gated():
     ],
 )
 def test_runner_invoke_refuses_before_attribution_or_trail_provisioning(tmp_path, monkeypatch, mode, tool_config):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     monkeypatch.setattr(runner, "resolve_invocation_attribution", _fail)
     monkeypatch.setattr(runner, "prepare_trail_isolation", _fail)
@@ -101,7 +101,7 @@ def test_runner_invoke_refuses_before_attribution_or_trail_provisioning(tmp_path
 
 
 def test_inter_agent_route_refuses_a_kimi_model_override():
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     for participant, model in (("kimi", None), ("kimicc", None), ("claude", "kimi-code/k3")):
         with pytest.raises(runner.InterAgentTransportError, match=_TOKEN):
@@ -516,7 +516,7 @@ def _acp_ask(trap):
 
 
 def _acp_inter_agent(trap):
-    from scripts.agent_runtime import runner
+    from lu_machinery.agent_runtime import runner
 
     trap.monkeypatch.setenv(runner.ACPX_TRANSPORT_ENV, "active")
     return runner.invoke_inter_agent(
@@ -873,12 +873,9 @@ def _kimi_effect_trap():
     usage telemetry. Every broker connection also gets an authorizer that
     records and denies any INSERT, UPDATE or DELETE on ``messages``.
     """
+    from lu_machinery.agent_runtime import runner as agent_runner
     from lu_machinery.ai_agent_bridge import _acp_compat, _agy, _ask_lifecycle, _messaging, _opencode, _process
     from lu_machinery.telemetry import legacy_bridge
-
-    from agent_runtime import runner as agent_runner
-    from scripts.agent_runtime import runner as scripts_runner
-    from scripts.ai_agent_bridge import _claude, _codex, _cursor, _grok_build
 
     effects: list[str] = []
 
@@ -908,12 +905,7 @@ def _kimi_effect_trap():
         (_process, ("_notify_processing_failure",)),
         (_acp_compat, ("run_compat_ask",)),
         (agent_runner, ("invoke", "invoke_inter_agent")),
-        (scripts_runner, ("invoke", "invoke_inter_agent")),
-        (_claude, ("process_for_claude",)),
-        (_codex, ("process_for_codex",)),
         (_agy, ("process_for_agy",)),
-        (_grok_build, ("process_for_grok_build",)),
-        (_cursor, ("process_for_cursor",)),
         (_opencode, ("process_for_opencode",)),
         (_messaging, ("send_message", "acknowledge")),
         (_ask_lifecycle, ("mark_ask_processing", "record_ask_failure", "record_ask_reply", "_set_ask_status")),
@@ -995,11 +987,9 @@ def _batch(seat):
     def call(_state):
         from lu_machinery.ai_agent_bridge import _cli
 
-        from scripts.ai_agent_bridge import _codex
-
         return {
             "claude": _cli.process_all_claude,
-            "codex": _codex.process_all_codex,
+            "codex": _cli.process_all_codex,
             "gemini": _cli.process_all_gemini,
         }[seat]()
 

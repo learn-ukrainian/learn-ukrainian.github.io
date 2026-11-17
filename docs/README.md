@@ -150,7 +150,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `agent-channels` | registry | current | `docs/agent-channels/**` | Per-channel context files the legacy agent bridge still auto-includes in posts; Fleet Comms now owns durable messages. |
 | `session-state-routers` | doc_family | current | `docs/session-state/**` | Compatibility handoff routers per agent served by the session API; body-light pointers only, no new handoffs here. |
 | `handoffs-march-2026` | doc_family | historical | `docs/handoffs/**` | End-of-session handoff notes from March 2026; handoffs now go through Fleet Comms and the thread-handoff flow. |
-| `token-usage-reports` | generated | historical | `docs/token-usage/**` | A generated April 2026 Claude token report and a hand-written token waste report; not current usage. |
+| `token-usage-reports` | generated | historical | `docs/token-usage/**` | A generated April 2026 Claude token report and a hand-written token waste report; not current usage. The generator was removed, so the report is frozen. |
 | `dispatch-briefs` | doc_family | historical | `docs/dispatch-briefs/**` | The few finished one-shot worker dispatch briefs (May and June 2026) that live docs, scripts or the source permissions register still cite, plus one OpenCode brief kept by policy; each describes finished task scope. |
 | `dispatch-briefs-reusable` | doc_family | current | `docs/dispatch-briefs/luna-max-closeout-contract.md` | Reusable brief fragment - the GPT-6 Luna closeout contract. |
 | `plans` | doc_family | current | `docs/plans/*` | Named plans of record and roadmaps; GitHub issue state wins over stale plan text. |
