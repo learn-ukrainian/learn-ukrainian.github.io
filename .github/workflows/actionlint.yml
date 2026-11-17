@@ -12,7 +12,10 @@ name: actionlint
 # validate-yaml job — is therefore safe to add to branch protection's required
 # checks without deadlocking doc-only PRs (GitHub blocks on a *skipped* required
 # check). The pinned version + checksums live in scripts/audit/check_workflows.sh,
-# which both this job and local devs invoke (single source of truth).
+# which both this job and local devs invoke (single source of truth). The job
+# never uses the anonymous release URL (throttled with HTTP 403 for the shared
+# runner pool): the tarball comes from the Actions cache or, on a miss, through
+# the authenticated releases API with the job token.
 
 permissions:
   contents: read
