@@ -62,9 +62,10 @@ set -u
 
 command -v jq >/dev/null 2>&1 || exit 0
 
-# Deployed statuslines have sibling hooks; the Gemini source overlay shares them.
-context_lib="$(dirname "${BASH_SOURCE[0]}")/../hooks/context-rollover-lib.sh"
-[ -f "$context_lib" ] || context_lib="$(dirname "${BASH_SOURCE[0]}")/../../shared/hooks/context-rollover-lib.sh"
+# Use the release selected by the launcher's trusted project interpreter.
+bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
+case "$bootstrap_python" in /*) ;; *) exit 0 ;; esac
+context_lib="$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("agents_extensions/shared/hooks/context-rollover-lib.sh"))' 2>/dev/null)" || exit 0
 # shellcheck disable=SC1090
 source "$context_lib" 2>/dev/null || exit 0
 
@@ -149,20 +150,13 @@ is_positive_integer() {
   esac
 }
 
-# Locate the checkout containing the canonical session-record helper. The helper
-# itself resolves linked worktrees back to the primary checkout's private state.
+# The release's hook resolver selects the product and shared private state.
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$cwd}"
-if [ ! -f "$PROJECT_DIR/scripts/lib/session_record.py" ]; then
-  PROJECT_DIR=$(git --no-optional-locks -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
-fi
-# The interpreter comes from the shared project resolver, as for the context
-# hooks: a linked worktree has no .venv of its own and uses the primary's. When
-# none resolves, the record is neither read nor written.
-SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
+SESSION_RECORD=""
 PYTHON_BIN=""
-# shellcheck source=scripts/lib/project_interpreter.sh
-if source "$PROJECT_DIR/scripts/lib/project_interpreter.sh" 2>/dev/null; then
-  PYTHON_BIN=$(project_interpreter_resolve "$PROJECT_DIR" 2>/dev/null) || PYTHON_BIN=""
+if context_machinery_bootstrap "$PROJECT_DIR" 2>/dev/null; then
+  PYTHON_BIN="$CONTEXT_PROJECT_PYTHON"
+  SESSION_RECORD="$MACHINERY_DIR/lu_machinery/lib/session_record.py"
 fi
 record_json=""
 if [ -n "$session_id" ] && [ -n "$PYTHON_BIN" ] && [ -x "$PYTHON_BIN" ] && [ -f "$SESSION_RECORD" ]; then

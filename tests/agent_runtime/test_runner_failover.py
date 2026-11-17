@@ -1001,6 +1001,7 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
                                        ("repeated-session", False), ("other-pin", True), ("repeated", True)])
 def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypatch, pin, case, known):
     from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, case))
@@ -1033,6 +1034,7 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
 def test_watchdog_substitution_events_preserve_observed_identity(tmp_path, monkeypatch, kill_reason):
     from lu_machinery.agent_runtime.errors import AgentTimeoutError
     from lu_machinery.telemetry import emit as telemetry_emit
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     pin, observed = "claude-sonnet-5-5-high", "claude-opus-5-5-high"
@@ -1092,6 +1094,7 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
     from lu_machinery.agent_runtime import usage
     from lu_machinery.agent_runtime.failover import FailoverChain, FailoverRoute
     from lu_machinery.telemetry import emit as telemetry_emit
+
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(

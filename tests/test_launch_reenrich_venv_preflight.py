@@ -175,8 +175,7 @@ def test_detached_launcher_requests_pool_and_verifies_before_driver(tmp_path: Pa
     entry_at = next(i for i, arg in enumerate(argv) if arg.endswith("/job_memory_scope.sh"))
     if launcher != "launch_reduce.sh":
         assert f"--setenv=LU_PRODUCT_ROOT={env['ATLAS_REPO']}" in argv
-    expected_package = "scripts" if launcher == "launch_reduce.sh" else "lu_machinery"
-    assert argv[entry_at].endswith(f"/{expected_package}/lib/job_memory_scope.sh")
+    assert argv[entry_at].endswith("/lu_machinery/lib/job_memory_scope.sh")
     assert argv[entry_at + 1:entry_at + 3] == [str(1792 * 1024**2), "--"]
     assert argv[entry_at + 3] in ("/usr/bin/nice", "/bin/bash")
 

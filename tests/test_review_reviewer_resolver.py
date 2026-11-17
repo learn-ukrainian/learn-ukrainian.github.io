@@ -1570,7 +1570,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     expected = {
         "__init__.py": None,
         "_output_schema.py": None,
-        "_gemma_cleanup.py": None,
+        "_template.py": None,
         "acpx.py": None,
         "agy.py": "agy",
         "base.py": None,

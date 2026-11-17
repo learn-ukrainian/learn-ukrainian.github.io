@@ -472,7 +472,7 @@ assert_contains "$output" "PENDING THREAD ROLLOVER DETECTED" "pending packet"
 assert_contains "$output" "bootstrap-replacement -a claude" "pending packet"
 assert_contains "$output" "confirm-replacement -a claude" "pending packet"
 assert_contains "$output" "-t fixture-session-claude" "pending packet"
-assert_contains "$output" "Read the durable handoff, then confirm; nothing to fill." "pending packet"
+assert_contains "$output" "Read the durable handoff before confirming. A different replacement ID fails closed." "pending packet"
 assert_not_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "pending packet"
 
 # 12. No live packet + no legacy artifacts emits cold-start engine guidance.
@@ -495,7 +495,7 @@ assert_not_contains "$output" "confirm-replacement" "foreign-only cold start"
 
 # 12b. --epic infra keeps both same-stream packets with different families.
 setup_fixture "$fixture_root"
-infra_fixture_stream=$(bash -c 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream infra' _ "$REPO_ROOT")
+infra_fixture_stream=$(bash -c 'source "$1/lib/handoff_identity.sh"; launcher_selector_stream infra' _ "$MACHINERY_ROOT")
 for family in infra infra-driver; do
   "$VENV_PYTHON" "$MACHINERY_ROOT/orchestration/thread_handoff.py" \
     --repo-root "$fixture_root" --monitor-base-url http://127.0.0.1:1 prepare \
@@ -564,7 +564,7 @@ output="$(run_post_compact "$fixture_root")"
 # 17. #5201: --epic harness resolves to the claude-infra slot. A live
 #     pending_start packet under claude-infra MUST surface at SessionStart —
 #     never a silent cold start under the phantom claude-harness slot.
-# shellcheck source=scripts/lib/handoff_identity.sh
+# shellcheck source=lu_machinery/lib/handoff_identity.sh
 source "$MACHINERY_ROOT/lib/handoff_identity.sh"
 harness_slot="$(handoff_identity_for_epic harness)"
 eq_slot() {
@@ -625,8 +625,7 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, sys.argv[1])
-from scripts.orchestration import thread_handoff as th
+from lu_machinery.orchestration import thread_handoff as th
 
 root = Path(sys.argv[2])
 pid = int(sys.argv[3])

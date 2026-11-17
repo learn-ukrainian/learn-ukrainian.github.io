@@ -319,18 +319,19 @@ jobs:
         ref: ${{ github.workflow_sha }}
         path: coverage-tooling
         persist-credentials: false
-    - name: Keep measurement tooling outside the measured checkout
-      run: |
-        mkdir -p "$RUNNER_TEMP/coverage-ref"
-        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
-        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
       with:
         python-version-file: .python-version
-    - name: Install the measured coverage tools
+    - name: Python CI environment
+      uses: ./coverage-tooling/.github/actions/python-ci-env # zizmor: ignore[self-repository] nested checkout pinned to github.workflow_sha
+      with:
+        save-cache: false
+    - name: Keep measurement tooling outside the measured checkout
       run: |
-        grep -E '^(coverage|pytest-cov|pytest)==' requirements-lock.txt > "$RUNNER_TEMP/coverage-requirements.txt"
-        python -m pip install -r "$RUNNER_TEMP/coverage-requirements.txt"
+        mkdir -p "$RUNNER_TEMP/coverage-ref"
+        machinery_ci="$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci"))')"
+        cp "$machinery_ci/coverage_ref.py" "$machinery_ci/coverage-ref.ini" "$RUNNER_TEMP/coverage-ref/"
+        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - name: Download all available raw shards
       id: download
       continue-on-error: true
@@ -344,7 +345,7 @@ jobs:
         MEASURED_SHA: ${{ needs.prepare.outputs.validated_revision || inputs.sha }}
         MATRIX_RESULT: ${{ needs.pytest.result }}
       run: |
-        python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" combine \
+        .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" combine \
           --input ci-artifacts/shards --output ci-artifacts/combined \
           --sha "$MEASURED_SHA" --matrix-result "$MATRIX_RESULT"
     - name: Publish combined report and completeness manifest

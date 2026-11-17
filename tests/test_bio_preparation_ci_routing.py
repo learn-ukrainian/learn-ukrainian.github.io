@@ -26,7 +26,7 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 CHECKS_SCRIPT = REPO_ROOT / "scripts/ci/checks.sh"
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
-VALIDATOR_CHECK = 'check "Validate BIO preparation capsules and active holds" .venv/bin/python -m lu_machinery.ci.bio_preparation_gate'
+VALIDATOR_CHECK = 'check "Validate BIO preparation capsules and active holds" .venv/bin/python -m scripts.ci.bio_preparation_gate'
 
 BIO_PREPARATION_PATHS = (
     "curriculum/l2-uk-en/plans/bio/knyahynia-olha.yaml",

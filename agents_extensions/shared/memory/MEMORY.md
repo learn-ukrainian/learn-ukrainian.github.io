@@ -145,7 +145,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Flow: UK wikis → UK A1/A2 
 ## Fleet Comms + Delegation + Local API Cold-Start (2026-07-09)
 **Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor — current models, tiers and seats live in `rules/model-assignment.md` and `lu_machinery/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven and disk-bound, not fixed caps. Use the full fleet for parallel work.
 
-**Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
+**Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python -m lu_machinery.ai_agent_bridge` (bare `ab` = ApacheBench).
 - One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-cursor...)
 - Multi-agent discuss: `discuss <chan> "topic-or-stdin" --with codex,claude,agy --max-rounds 3 [--review]`
 - Broker: inbox / send / post / channel / converse / process-*
