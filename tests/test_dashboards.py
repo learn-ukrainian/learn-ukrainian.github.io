@@ -536,6 +536,116 @@ def test_pipeline_queues_follow_status_files_and_reuse_until_an_mtime_changes(tm
         helpers.clear_pipeline_queue_cache()
 
 
+def _a2_curriculum(tmp_path, modules: str):
+    from scripts.project_api.config import LEVELS
+
+    track = next(level for level in LEVELS if level["id"] == "a2")
+    root = tmp_path / "curriculum"
+    track_dir = root / track["path"]
+    track_dir.mkdir(parents=True)
+    (root / "curriculum.yaml").write_text(
+        f"levels:\n  {track['id']}:\n    modules:\n" + modules,
+        encoding="utf-8",
+    )
+    return track, root, track_dir
+
+
+def test_queue_cache_follows_a_symlink_target_disappearing(tmp_path):
+    """Defect class: a cached queue ignored a nested symlink target disappearing.
+
+    The link stays in the track directory, so that directory's mtime does not
+    move. Classification still asks whether the target exists.
+    """
+    import json
+
+    from lu_machinery.api.monitor_context import fixture_context
+
+    from scripts.project_api import dashboard_helpers as helpers
+
+    helpers.clear_pipeline_queue_cache()
+    _track, root, track_dir = _a2_curriculum(tmp_path, "      - sample\n      - passed\n")
+    lessons = track_dir / "lessons"
+    lessons.mkdir()
+    body = lessons / "body.md"
+    body.write_text("lesson", encoding="utf-8")
+    (track_dir / "sample.md").symlink_to(body)
+    status = track_dir / "status"
+    review = track_dir / "review"
+    reviews = track_dir / "reviews"
+    status.mkdir()
+    review.mkdir()
+    reviews.mkdir()
+    (status / "passed.json").write_text(
+        json.dumps({"overall": {"status": "pass", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    review_body = reviews / "body.md"
+    review_body.write_text("ok", encoding="utf-8")
+    (review / "passed-final-review.md").symlink_to(review_body)
+    ctx = fixture_context(tmp_path).with_roots(curriculum_root=root)
+    try:
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == []
+        assert hetman == []
+        assert final == []
+
+        body.unlink()
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["sample"]
+        assert hetman == []
+        assert final == []
+
+        review_body.unlink()
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["sample"]
+        assert hetman == []
+        assert [item["slug"] for item in final] == ["passed"]
+    finally:
+        helpers.clear_pipeline_queue_cache()
+
+
+def test_queue_scan_rejects_a_status_dir_or_link_that_leaves_the_track(tmp_path):
+    """Defect class: the snapshot read a status directory the old join rejected.
+
+    An escaping status directory skips the track. A dangling status link that
+    leaves the status directory stays out of the lesson shortcut and is otaman.
+    """
+    import json
+
+    from lu_machinery.api.monitor_context import fixture_context
+
+    from scripts.project_api import dashboard_helpers as helpers
+
+    helpers.clear_pipeline_queue_cache()
+    _track, root, track_dir = _a2_curriculum(tmp_path, "      - sample\n")
+    outside = tmp_path / "outside-status"
+    outside.mkdir()
+    (outside / "sample.json").write_text(
+        json.dumps({"overall": {"status": "content-complete", "deferred_count": 0}}),
+        encoding="utf-8",
+    )
+    (track_dir / "status").symlink_to(outside)
+    ctx = fixture_context(tmp_path).with_roots(curriculum_root=root)
+    try:
+        assert helpers.scan_pipeline_queues(ctx) == ([], [], [])
+    finally:
+        helpers.clear_pipeline_queue_cache()
+
+    helpers.clear_pipeline_queue_cache()
+    status = track_dir / "status"
+    status.unlink()
+    status.mkdir()
+    (status / "sample.json").symlink_to(tmp_path / "gone.json")
+    (track_dir / "sample.md").write_text("lesson", encoding="utf-8")
+    try:
+        otaman, hetman, final = helpers.scan_pipeline_queues(ctx)
+        assert [item["slug"] for item in otaman] == ["sample"]
+        assert hetman == []
+        assert final == []
+    finally:
+        helpers.clear_pipeline_queue_cache()
+
+
 def test_blocking_product_routes_are_sync_unless_they_await_more_than_a_thread():
     """Defect class: an async route with no await, or only asyncio.to_thread, blocked the loop.
 

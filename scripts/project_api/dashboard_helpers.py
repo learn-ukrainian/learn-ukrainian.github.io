@@ -600,6 +600,13 @@ def _mtime_ns(path: Path) -> int | None:
         return None
 
 
+def _lstat_mtime_ns(path: Path) -> int | None:
+    try:
+        return path.lstat().st_mtime_ns
+    except OSError:
+        return None
+
+
 def _plain_filename(name: str) -> bool:
     """True when ``name`` is a single path segment ``safe_join`` would accept."""
     if not name or name in {".", ".."}:
@@ -624,9 +631,20 @@ def _json_snapshot(directory: Path) -> tuple[int | None, tuple[tuple[str, int | 
                     continue
                 try:
                     is_link = entry.is_symlink()
+                except OSError:
+                    continue
+                mtime: int | None
+                try:
                     # A link's own mtime stays put when the target is edited.
                     # Classification reads the target, so the fingerprint must too.
+                    # A dangling link still keeps its name: dropping it would
+                    # skip the containment check and treat the status as missing.
                     mtime = entry.stat(follow_symlinks=is_link).st_mtime_ns
+                except OSError:
+                    if not is_link:
+                        continue
+                    mtime = _lstat_mtime_ns(Path(entry.path))
+                try:
                     is_node = is_link or entry.is_file(follow_symlinks=False) or entry.is_dir(follow_symlinks=False)
                 except OSError:
                     continue
@@ -680,6 +698,33 @@ def _markdown_present(
     return False
 
 
+def _symlink_targets(directory: Path) -> tuple[tuple[str, int | None], ...]:
+    """Target mtimes for symlinks in ``directory`` itself.
+
+    ``None`` means the target is missing. Deleting a nested target does not
+    change this directory's mtime, and classification calls ``exists()`` on
+    the target, so the fingerprint has to see it.
+    """
+    rows: list[tuple[str, int | None]] = []
+    try:
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                try:
+                    if not entry.is_symlink():
+                        continue
+                    try:
+                        mtime = entry.stat(follow_symlinks=True).st_mtime_ns
+                    except OSError:
+                        mtime = None
+                    rows.append((entry.name, mtime))
+                except OSError:
+                    continue
+    except OSError:
+        return ()
+    rows.sort()
+    return tuple(rows)
+
+
 def _queue_fingerprint(ctx: MonitorContext) -> tuple:
     """Mtimes that define the queue classification, without reading file bodies."""
     curriculum_root = ctx.roots.curriculum_root
@@ -690,7 +735,11 @@ def _queue_fingerprint(ctx: MonitorContext) -> tuple:
         if track_dir is None:
             tracks.append((track_id, None))
             continue
-        status_mtime, status_rows = _json_snapshot(track_dir / "status")
+        status_dir = _safe_join(track_dir, "status")
+        if status_dir is None:
+            tracks.append((track_id, _mtime_ns(track_dir), "status-rejected", _lstat_mtime_ns(track_dir / "status")))
+            continue
+        status_mtime, status_rows = _json_snapshot(status_dir)
         tracks.append(
             (
                 track_id,
@@ -698,6 +747,8 @@ def _queue_fingerprint(ctx: MonitorContext) -> tuple:
                 status_mtime,
                 _mtime_ns(track_dir / "review"),
                 status_rows,
+                _symlink_targets(track_dir),
+                _symlink_targets(track_dir / "review"),
             )
         )
     return (_mtime_ns(curriculum_root / "curriculum.yaml"), tuple(tracks))
@@ -743,7 +794,9 @@ def _scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
         track_dir = _safe_join(curriculum_root, level_cfg["path"])
         if track_dir is None:
             continue
-        status_dir = track_dir / "status"
+        status_dir = _safe_join(track_dir, "status")
+        if status_dir is None:
+            continue
         _status_mtime, status_rows = _json_snapshot(status_dir)
         regular_status = {name: status_dir / name for name, _mtime, is_link in status_rows if not is_link}
         status_links = {name for name, _mtime, is_link in status_rows if is_link}
@@ -778,8 +831,10 @@ def scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
 
     The manifest bounds the modules. Each track contributes one directory
     snapshot, and a repeat call reuses that classification while the snapshot's
-    mtimes are unchanged. A status JSON edit, a lesson file add/remove, or a
-    final-review add/remove changes one of those mtimes and recomputes.
+    mtimes are unchanged. A status JSON edit, a lesson file add/remove, a
+    final-review add/remove, or a lesson or review symlink whose target
+    appears or disappears changes one of those mtimes and recomputes. A
+    status directory that leaves the track is skipped, as before.
     """
     key = _pipeline_cache_key(ctx)
     fingerprint = _queue_fingerprint(ctx)
