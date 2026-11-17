@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from lu_machinery.ai_agent_bridge import _db
 from lu_machinery.api.main import app
 from lu_machinery.api.monitor_context import production_context
+from lu_machinery.api.telemetry import legacy_comms as legacy_comms_telemetry
 
 from scripts.project_api.context import with_product_roots
 from tests.latency_budget import assert_under_budget
@@ -164,6 +165,10 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
         images_dir=image_root,
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
+    # A production context has no fixture root, so the legacy comms route
+    # telemetry (/api/comms/messages below) records under state_root(): the
+    # checkout's data/telemetry/legacy_comms_routes.db. Keep that store here.
+    monkeypatch.setattr(legacy_comms_telemetry, "state_root", lambda: tmp_path)
 
     client = TestClient(app, raise_server_exceptions=False)
     endpoint_timings: list[tuple[str, str, float]] = []
