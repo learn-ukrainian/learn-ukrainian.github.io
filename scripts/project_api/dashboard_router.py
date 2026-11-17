@@ -58,7 +58,7 @@ from .state_coverage import compute_summary
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.path_safety import safe_join
-from lu_machinery.research_quality import assess_research_compat, find_research_path
+from lu_machinery.research.research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)

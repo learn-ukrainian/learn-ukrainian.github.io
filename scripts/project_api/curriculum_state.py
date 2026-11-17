@@ -38,7 +38,7 @@ from .config import LEVELS, SEMINAR_TRACK_IDS
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.ops.product_entry import load_configured_module
-from lu_machinery.research_quality import assess_research_compat, find_research_path
+from lu_machinery.research.research_quality import assess_research_compat, find_research_path
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _content_file_index_cache: dict[Path, tuple[float, dict[str, Path]]] = {}
