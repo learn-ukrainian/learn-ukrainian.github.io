@@ -95,7 +95,7 @@ Accept content when every plan objective and content point is taught accurately,
 
 ### CORE MODE (A1-C2)
 
-- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1 uses scaffolded immersion; A2 bands come from `IMMERSION_POLICIES` in `lu_machinery/config.py` — `a2-bridge` M01-03: 75-100%, `a2-ramp` M04-07: 85-100%, M08-20: 85-100%, M21-50: 90-100%, M51+: 95-100%; B1+ is Ukrainian-only body prose).
+- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1 uses scaffolded immersion; A2 bands come from `IMMERSION_POLICIES` in `scripts/curriculum/pedagogy_config.py` — `a2-bridge` M01-03: 75-100%, `a2-ramp` M04-07: 85-100%, M08-20: 85-100%, M21-50: 90-100%, M51+: 95-100%; B1+ is Ukrainian-only body prose).
 - [ ] **Grammar accuracy** -- Verify grammar explanations against textbooks using `mcp__sources__search_text`. Flag incorrect rules as **CRITICAL**.
 
 ### HISTORY/BIO/ISTORIO MODE

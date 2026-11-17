@@ -1,0 +1,20 @@
+[Unit]
+Description=Bounded foreground Git maintenance
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=LU_PRODUCT_ROOT=@REPO_ROOT@
+Environment=LEARN_UKRAINIAN_PRIMARY_REPO_ROOT=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@REPO_ROOT@/.venv/bin/python -c 'import os,sys; from importlib.resources import files; os.execvp("bash", ["bash", str(files("lu_machinery.orchestration").joinpath("run_scheduled_worktree_cleanup.sh")), *sys.argv[1:]])' --repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --git-maintenance --apply
+MemoryHigh=1536M
+MemoryMax=2G
+MemorySwapMax=0
+CPUQuota=100%
+TasksMax=32
+Nice=15
+IOSchedulingClass=idle
+TimeoutStartSec=1300
+TimeoutStopSec=10
+KillMode=control-group

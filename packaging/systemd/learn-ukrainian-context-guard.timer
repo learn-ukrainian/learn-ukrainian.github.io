@@ -1,0 +1,10 @@
+[Unit]
+Description=Learn Ukrainian driver-lane context guard timer (every 5 minutes)
+
+[Timer]
+OnCalendar=*:0/5
+AccuracySec=30s
+Unit=learn-ukrainian-context-guard.service
+
+[Install]
+WantedBy=timers.target

@@ -86,7 +86,7 @@ A task with status `done`, a receipt file, an open or queued PR, or a green dash
 Input schema `delivery-baseline-input.v1` has two fields. `records[]` holds each record's `task_id`, `arm`, `stratum`, `matched_setup`, `outcome`, `review_of_record`, `merge`, `cleanup`, optional `exclusion` and `spans[]`. Each span carries `stage`, `kind`, `start_field`, `end_field`, `start` and `end`. The optional `claims[]` lists `{stratum, metric}` pairs. Run it with:
 
 ```bash
-.venv/bin/python -m lu_machinery.ci.delivery_baseline <cohort.json>
+.venv/bin/python -m scripts.ci.delivery_baseline <cohort.json>
 ```
 
 The evaluator exits 0 with a `delivery-baseline-report.v1` JSON document, or exits 2 on malformed input: an unreadable or non-JSON file, a wrong `schema_version`, a top level, record, span, sub-object or claim of the wrong JSON type, a duplicate `task_id`, or two records sharing one outcome without an exclusion (§4). `--help` lists examples, outputs, exit codes and related documents. It reads no task store, GitHub or Fleet database. Extracting canonical values into a cohort file is a separate, later step, and it must not commit real task records or telemetry.

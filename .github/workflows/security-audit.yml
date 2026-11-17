@@ -65,7 +65,7 @@ jobs:
             --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
           export LU_MACHINERY_WHEELHOUSE="${RUNNER_TEMP}/lu-machinery-wheelhouse"
           echo "::group::pip-audit (requirements-lock.txt)"
-          python -m lu_machinery.ci.audit_dependencies --ignore-file "$(python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("config/pip-audit-ignore.yaml"))')" --npm-ignore-file "$(python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("config/npm-audit-ignore.yaml"))')" --skip-node
+          python -m lu_machinery.ci.audit_dependencies --skip-node
           echo "::endgroup::"
 
   npm-audit:
@@ -107,7 +107,7 @@ jobs:
           python -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
             --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
           echo "::group::npm audit (production deps, audited suppressions)"
-          python -m lu_machinery.ci.audit_dependencies --ignore-file "$(python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("config/pip-audit-ignore.yaml"))')" --npm-ignore-file "$(python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("config/npm-audit-ignore.yaml"))')" --skip-python
+          python -m lu_machinery.ci.audit_dependencies --skip-python
           echo "::endgroup::"
           echo "::group::npm audit (all, advisory summary)"
           npm audit --prefix site || true

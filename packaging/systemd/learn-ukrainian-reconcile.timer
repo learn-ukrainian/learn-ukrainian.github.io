@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian reconciliation sweep timer (every 5 minutes)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=learn-ukrainian-reconcile.service
+
+[Install]
+WantedBy=timers.target

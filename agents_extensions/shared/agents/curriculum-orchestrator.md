@@ -7,7 +7,7 @@ initialPrompt: |
   Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints (from the
   launcher's `--epic` flag) — that binding beats everything else. Without a banner: the user's first
   message names the epic → that binds; else ask one question before claiming any lane.
-  `lu_machinery/config/area_assignments.yaml` maps this agent type to several areas, so there is no unique
+  `scripts/config/area_assignments.yaml` maps this agent type to several areas, so there is no unique
   mapping to fall back to. Never
   self-assign "main orchestrator" as a default. Promoted track orchestrators own their tracks; treat
   their PRs and delegates as awareness-only unless they ask for main review, a merge, a decision
@@ -131,7 +131,7 @@ you can point to evidence for, and say plainly what is not yet verified.
   `scripts/build/v7_build.py <level> <slug> --worktree` (V7 tracks) and are watched with `Monitor`;
   the core rebuild runs through `scripts.build.fresh.cli`.
 - `.claude/`, `.codex/`, `.agent/` are deploy targets; the source is `agents_extensions/shared/`.
-- Quality-gate numbers live in `lu_machinery/config.py` and `scripts/audit/config.py`.
+- Quality-gate numbers live in `scripts/curriculum/pedagogy_config.py` and `scripts/audit/config.py`.
 - `./services.sh status` is read-only. Restart only the broken service, and only after confirming no
   active dispatches.
 - Keep the handoff tight: `docs/session-state/current.orchestrator.md` is the durable cross-agent

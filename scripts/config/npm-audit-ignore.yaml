@@ -1,0 +1,13 @@
+# Audited suppression list for npm audit dependency vulnerability scanning.
+# Reference issue: learn-ukrainian/learn-ukrainian.github.io#9561
+#
+# Every suppressed vulnerability requires:
+# - id: GHSA or CVE identifier
+# - package: affected package name
+# - version: currently pinned or installed version range
+# - status: upstream-unpatched | upstream-fix-pending | accepted-risk
+# - reason: technical justification why the vulnerability cannot be exploited in this repository
+#
+# Unsuppressed Critical or High vulnerabilities will fail the blocking gate.
+
+vulnerabilities: []
