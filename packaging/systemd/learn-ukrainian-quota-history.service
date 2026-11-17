@@ -7,7 +7,7 @@ Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
 Environment=LANG=C.UTF-8
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.fleet.quota_history collect
+ExecStart=@REPO_ROOT@/.venv/bin/python -m lu_machinery.fleet.quota_history collect
 TimeoutStartSec=2min
 Nice=15
 IOSchedulingClass=idle
