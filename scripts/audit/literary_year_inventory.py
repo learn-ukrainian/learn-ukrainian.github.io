@@ -59,8 +59,10 @@ _WITNESS_KEYS = ("chunk_id", "source", "source_url")
 # The real inputs nest about 10 (manifest) and 19 (scraper) levels deep; 500
 # stays below the walker's Python recursion limit in every calling context.
 MAX_NESTING_DEPTH = 500
-# One JSON string literal (skipped whole) or one bracket.
-_JSON_BRACKET_SCAN = re.compile(r'"(?:[^"\\]++|\\.)*+"|[\[\]{}]', re.DOTALL)
+# One JSON string literal, skipped whole, or one bracket. An unterminated string
+# runs to the end of the text, so every quote starts a match and the scan is a
+# single linear pass with no retries inside a string.
+_JSON_BRACKET_SCAN = re.compile(r'"(?:[^"\\]++|\\.)*+(?:"|\\?\Z)|[\[\]{}]', re.DOTALL)
 
 
 class InventoryError(Exception):
@@ -182,9 +184,10 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 def _json_depth_breach(text: str) -> int | None:
     """Return the offset of the first bracket opening a level deeper than MAX_NESTING_DEPTH.
 
-    The scan is lexical: string literals are skipped whole, so brackets inside
-    them never count. An unterminated string or a stray closing bracket is a
-    decode error that the caller reports from the decoder itself.
+    The scan is lexical and linear: string literals are skipped whole, so
+    brackets inside them never count, and an unterminated string ends the scan.
+    An unterminated string or a stray closing bracket is a decode error that the
+    caller reports from the decoder itself.
     """
     depth = 0
     for match in _JSON_BRACKET_SCAN.finditer(text):
@@ -201,9 +204,9 @@ def _json_depth_breach(text: str) -> int | None:
 def _decode_manifest_json(text: str, *, truncated_at: int | None = None) -> Any:
     """Decode strict JSON and map each decoder refusal to its fixed code.
 
-    With ``truncated_at``, ``text`` is a prefix that ends just after an
-    over-deep bracket, so a decode error at or after that offset is the cut,
-    and it means the nesting limit.
+    With ``truncated_at``, ``text`` is the prefix that ends just before the
+    first over-deep bracket, so a decode error at or after that offset is at
+    the bracket or the cut, and it means the nesting limit.
     """
     try:
         return json.loads(
@@ -238,8 +241,7 @@ def _parse_manifest(raw: bytes) -> Any:
         breach = _json_depth_breach(text)
         if breach is None:
             raise
-        prefix_end = breach + 1
-        _decode_manifest_json(text[:prefix_end], truncated_at=prefix_end)
+        _decode_manifest_json(text[:breach], truncated_at=breach)
         raise InventoryError("json_nesting_limit") from None
     if _exceeds_nesting_depth(manifest, _json_children):
         raise InventoryError("json_nesting_limit")
