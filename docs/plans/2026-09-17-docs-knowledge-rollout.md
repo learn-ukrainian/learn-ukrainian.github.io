@@ -33,7 +33,7 @@ No other overlap.
 
 ## Wave 0 deliverables (#5537) — this PR
 
-- [x] Register `docs-knowledge` in `scripts/config/issue_streams.yaml`
+- [x] Register `docs-knowledge` in `lu_machinery/config/issue_streams.yaml`
 - [x] Mirror row in `docs/WORKSTREAMS.md`
 - [x] ADR-013 conditional OpenWiki + provider route + exclusions
 - [x] Authority/lifecycle field contract
@@ -115,7 +115,7 @@ ADR-013. Program may close successfully with OpenWiki rejected.
 
 1. Expand beyond the ≤8-page code-anchored pilot (allowlist v2 as needed).
 2. Add a **visual OpenWiki representation in the Ops API UI** (`dashboards/`,
-   served alongside Artifacts). Wire `scripts/api/docs_router.py` allowed roots
+   served alongside Artifacts). Wire `lu_machinery/api/docs_router.py` allowed roots
    to include `openwiki/` so `/artifacts/` can browse the same tree.
 3. UI shows pages + freshness (source digest, generator model/family, last
    regen, cost). Missing/stale wiki → fallback banner (same policy as agent

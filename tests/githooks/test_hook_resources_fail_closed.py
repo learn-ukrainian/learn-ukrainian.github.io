@@ -105,20 +105,21 @@ def _stage_outside(repo: Path, env: dict[str, str]) -> None:
 
 
 def _venv(tmp_path: Path, ownership_source: str | None) -> str:
-    """A fresh interpreter without lu-machinery, or with a stub checker whose source is given."""
+    """A fresh interpreter with release resources and an absent or supplied checker."""
     venv = tmp_path / "venv"
     created = _run([project_python(), "-m", "venv", "--without-pip", str(venv)], tmp_path, _env(project_python()))
     assert created.returncode == 0, created.stderr
     python = venv / "bin" / "python"
-    if ownership_source is not None:
-        site = _run(
-            [str(python), "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], tmp_path, _env(str(python))
-        )
-        package = Path(site.stdout.strip()) / "lu_machinery" / "dispatcher"
-        package.mkdir(parents=True)
-        (package.parent / "__init__.py").write_text("", encoding="utf-8")
-        (package / "__init__.py").write_text("", encoding="utf-8")
-        (package / "ownership.py").write_text(ownership_source, encoding="utf-8")
+    site = _run(
+        [str(python), "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], tmp_path, _env(str(python))
+    )
+    package = Path(site.stdout.strip()) / "lu_machinery"
+    shutil.copytree(Path(str(files("lu_machinery"))), package, ignore=shutil.ignore_patterns("__pycache__"))
+    checker = package / "dispatcher/ownership.py"
+    if ownership_source is None:
+        checker.unlink()
+    else:
+        checker.write_text(ownership_source, encoding="utf-8")
     return str(python)
 
 
@@ -217,7 +218,7 @@ def test_unavailable_ownership_module_refuses_inside_a_task(tmp_path, shadowed):
 
     assert commit.returncode != 0
     assert MISSING_CHECKER in commit.stderr
-    assert "No module named 'lu_machinery'" in commit.stderr
+    assert "No module named 'lu_machinery.dispatcher.ownership'" in commit.stderr
     assert _head(repo, env) == base
 
 

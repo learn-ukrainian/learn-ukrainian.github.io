@@ -51,7 +51,7 @@
 #   file, with its writer, journal, busy, protection and backup facts (#11092).
 # - docs/README.md's family table is generated from this file:
 #   `.venv/bin/python -m scripts.docs.catalogue readme`.
-# Search it (and tracked names and text) with `.venv/bin/python -m scripts.docs.find "<query>"`.
+# Search it (and tracked names and text) with `.venv/bin/python -m lu_machinery.docs.find "<query>"`.
 # Census and evidence: docs/knowledge/inventory/catalogue-census-2026-10-01.md.
 schema_version: 1
 denominator:
@@ -80,7 +80,7 @@ entries:
   - id: docs-entry-map
     kind: doc_family
     paths: [docs/README.md]
-    purpose: Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era.
+    purpose: Cold-start documentation map for humans and agents. It names the one search entry point (python -m lu_machinery.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era.
     keywords: [documentation map, entry point, where to start, docs index, navigation hazards, find a document]
     lifecycle: active
     owner: docs-knowledge
@@ -88,7 +88,7 @@ entries:
       - {topic: documentation map, path: docs/README.md}
       - {topic: document and data catalogue, path: docs/knowledge/catalogue.yaml}
     query:
-      - {surface: cli, how: ".venv/bin/python -m scripts.docs.find '<query>' (catalogue, tracked names and tracked text in one query)"}
+      - {surface: cli, how: ".venv/bin/python -m lu_machinery.docs.find '<query>' (catalogue, tracked names and tracked text in one query)"}
       - {surface: api, how: "GET /api/knowledge/find?q=<query>"}
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/README.md"}
     content_searchable: true
@@ -110,7 +110,7 @@ entries:
       - {topic: docs inventory tool contract, path: docs/knowledge/inventory/README.md}
     query:
       - {surface: cli, how: ".venv/bin/python -m scripts.docs.catalogue check --json"}
-      - {surface: cli, how: ".venv/bin/python scripts/docs/docs_inventory.py (writes audit/docs-inventory/)"}
+      - {surface: cli, how: ".venv/bin/python -m lu_machinery.docs.docs_inventory (writes audit/docs-inventory/)"}
     content_searchable: true
 
   - id: corpus-inventory
@@ -2177,7 +2177,7 @@ entries:
   - id: data-telemetry
     kind: data_store
     store: [data/telemetry/]
-    producer: [scripts/api/telemetry_router.py, scripts/project_api/module_builds.py]
+    producer: [scripts/project_api/module_builds.py]
     producer_note: Integrity-watch events come from the installed lu-machinery release (lu_machinery.hygiene.check_primary_integrity).
     local_only: true
     purpose: Runtime telemetry - tool timings, legacy comms route usage and integrity-watch events.
@@ -2279,46 +2279,20 @@ store_registry:
       backup: none
       protection_gap: The task_records filter stages only json, result, diag, md and prompt files and archive/, so the admission audit trail is not backed up; DB plan step 6 (devops) proposes a keep file row.
       retention: Admission claims and audit events; kept indefinitely.
-    - path: batch_state/tasks/.task_cache.sqlite3
-      owner: monitor
-      kind: operational
-      activity: active
-      presence: present
-      writers: [scripts/api/delegate_router.py:_init_task_cache_db]
-      journal: delete
-      busy_ms: 5000
-      busy_source: default
-      protection: disposable
-      backup: none
-      retention: Derived from task files on every scan; safe to lose.
     - path: .mcp/servers/message-broker/messages.db
       owner: infra-harness
       kind: operational
       activity: active
       presence: present
-      writers: [scripts/ai_agent_bridge/_db.py:init_db, .mcp/servers/message-broker/server.py:handle_send_message]
+      writers: [.mcp/servers/message-broker/server.py:handle_send_message]
       journal: wal
       busy_ms: 5000
       busy_source: explicit
-      busy_setters: [scripts/ai_agent_bridge/_db.py:_tune_connection, .mcp/servers/message-broker/server.py:get_db]
+      busy_setters: [.mcp/servers/message-broker/server.py:get_db]
       protection: keep
       backup: none
       protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'
       retention: 'Legacy broker history; frozen read-only and kept after #6106 retirement, never row-deleted without operator authorization.'
-    - path: <git-common-dir>/ci-recovery.sqlite3
-      owner: devops
-      kind: operational
-      activity: active
-      presence: present
-      writers: [scripts/publish/recovery.py:consume]
-      journal: delete
-      busy_ms: 30000
-      busy_source: explicit
-      protection: keep
-      backup: none
-      protection_gap: Lives in the Git common directory, outside every allowlist root; it records the one-recovery-per-head allowance, and DB plan step 6 proposes keep.
-      retention: One row per PR head recovery attempt; kept indefinitely.
-      note: ledger_path resolves it with git rev-parse --git-common-dir, so every worktree shares one file.
     - path: batch_state/review-findings/a1.sqlite
       owner: core-quality
       kind: operational
@@ -2335,32 +2309,6 @@ store_registry:
       protection_gap: Review findings are a review record like the required review-receipts tree but sit outside every allowlist row; DB plan step 6 proposes the review-findings glob as keep.
       retention: Review findings, attempts and budgets; kept indefinitely.
       note: Missed by the r1 census because its classifier hard-coded live directories.
-    - path: batch_state/agent_monitor.sqlite3
-      owner: monitor
-      kind: operational
-      activity: dormant
-      presence: present
-      writers: [scripts/api/agent_monitor_router.py:_get_db]
-      journal: wal
-      busy_ms: 10000
-      busy_source: explicit
-      protection: disposable
-      backup: none
-      retention: Host RAM reservations from agent leases (0 rows); dormant is a traffic state, not a retirement verdict (DB plan step 8).
-    # ---------------------------------------------------------------- caches
-    - path: batch_state/github-client/cache.sqlite3
-      owner: devops
-      kind: cache
-      activity: active
-      presence: present
-      writers: [scripts/common/github_client.py:GitHubClient._db]
-      busy_setters: [scripts/common/github_client.py:_open_cache]
-      journal: delete
-      busy_ms: 5000
-      busy_source: explicit
-      protection: rebuild
-      backup: drop
-      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization. Its usage table (REST core requests per caller) keeps six hours; the count opens the file with a quarter-second timeout instead.
     - path: data/wiki_cache.db
       owner: corpus-channels
       kind: cache
@@ -2692,34 +2640,6 @@ store_registry:
       backup: none
       retention: Crawler dump (1 row); canonical entries reside in sources.db.
     # ---------------------------------------------------------------- telemetry
-    - path: data/telemetry/tool_timings.db
-      owner: infra-harness
-      kind: telemetry
-      activity: active
-      presence: present
-      catalogue_entry: data-telemetry
-      writers: [scripts/api/telemetry_router.py:_open_telemetry_db]
-      journal: delete
-      busy_ms: 5000
-      busy_source: default
-      protection: disposable
-      backup: none
-      retention: Tool timing samples; regenerated by use.
-    - path: data/telemetry/legacy_comms_routes.db
-      owner: infra-harness
-      kind: telemetry
-      activity: active
-      presence: present
-      catalogue_entry: data-telemetry
-      writers: [scripts/api/telemetry/legacy_comms.py:_initialize_db]
-      journal: wal
-      busy_ms: 5000
-      busy_source: explicit
-      protection: keep
-      backup: none
-      protection_gap: 'The #6106 broker-retirement evidence is not in the allowlist; DB plan step 6 proposes keep until #6106 closes.'
-      retention: 'Legacy route usage counts; kept until #6106 closes.'
-    # ---------------------------------------------------------------- staged and orphan
     - path: data/sum20_staging.db
       owner: corpus-channels
       kind: staged
@@ -2790,19 +2710,6 @@ store_registry:
       protection: rebuild
       backup: none
       retention: Trail run records with receipts beside them.
-    - path: batch_state/agent_runtime_failover_cooldowns.sqlite3
-      owner: infra-harness
-      kind: operational
-      activity: not_created
-      presence: declared_absent
-      absent_reason: Default path in scripts/agent_runtime/failover.py; created on the first provider cooldown.
-      writers: [scripts/agent_runtime/failover.py:FailoverCooldownStore._connect]
-      journal: unknown
-      busy_ms: 5000
-      busy_source: explicit
-      protection: disposable
-      backup: none
-      retention: Short-lived provider cooldowns.
     - path: data/telemetry/module_builds.db
       owner: infra-harness
       kind: telemetry
@@ -2810,7 +2717,7 @@ store_registry:
       presence: declared_absent
       catalogue_entry: data-telemetry
       absent_reason: Default in scripts/project_api/module_builds.py; created on the first module build event.
-      writers: [scripts/api/telemetry_router.py:_open_telemetry_db]
+      writers: [scripts/project_api/module_builds.py:_init_module_build_db]
       journal: unknown
       busy_ms: 5000
       busy_source: default

@@ -12,7 +12,7 @@ else
 fi
 
 heal_status=0
-bash "$source_root/scripts/guardrails/primary_post_checkout_heal.sh" "$@" || heal_status=$?
+bash "$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("guardrails/primary_post_checkout_heal.sh"))')" "$@" || heal_status=$?
 if [[ "$heal_status" -ne 0 ]]; then
   exit "$heal_status"
 fi

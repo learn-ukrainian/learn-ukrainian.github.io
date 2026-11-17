@@ -1004,7 +1004,8 @@ def _run_packets(
             _write_private(prompt_path, prompt)
             command = [
                 sys.executable,
-                "scripts/ai_agent_bridge/__main__.py",
+                "-m",
+                "lu_machinery.ai_agent_bridge",
                 command_name,
                 "-",
                 "--task-id",
@@ -1020,7 +1021,8 @@ def _run_packets(
         else:
             command = [
                 sys.executable,
-                "scripts/ai_agent_bridge/__main__.py",
+                "-m",
+                "lu_machinery.ai_agent_bridge",
                 command_name,
                 "-",
                 "--task-id",

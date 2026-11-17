@@ -180,7 +180,7 @@ class Result:
 ```python
 AGENTS: dict[str, dict] = {
     "codex": {
-        "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
+        "adapter": "lu_machinery.agent_runtime.adapters.codex:CodexAdapter",
         "default_model": "gpt-6.1-sol",
         "cost_tier": "medium",
         "capabilities": {"code_writing", "code_review", "debugging", "adversarial_review"},
@@ -188,7 +188,7 @@ AGENTS: dict[str, dict] = {
         "resume_policy": "bridge_only", # §6.3 — exact bridge identity only
     },
     "claude": {
-        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "adapter": "lu_machinery.agent_runtime.adapters.claude:ClaudeAdapter",
         "default_model": "claude-opus-4-6",
         "cost_tier": "high",
         "capabilities": {"architecture", "review", "content_a1", "planning"},
@@ -196,7 +196,7 @@ AGENTS: dict[str, dict] = {
         "resume_policy": "bridge_only", # §6.3 — resume allowed for bridge messaging, forbidden for delegate/dispatch
     },
     "gemini": {
-        "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
+        "adapter": "lu_machinery.agent_runtime.adapters.gemini:GeminiAdapter",
         "default_model": "gemini-3.1-pro-high",
         "cost_tier": "low",
         "capabilities": {"content_writing", "content_review", "adversarial_review"},
@@ -204,7 +204,7 @@ AGENTS: dict[str, dict] = {
         "resume_policy": "bridge_only", # §6.3 — same as Claude
     },
     "grok": {
-        "adapter": "scripts.agent_runtime.adapters.grok:GrokAdapter",
+        "adapter": "lu_machinery.agent_runtime.adapters.grok:GrokAdapter",
         "default_model": None,
         "cost_tier": "unknown",
         "capabilities": set(),
@@ -527,7 +527,7 @@ The cost of bad documentation here is specifically what triggered the runtime re
    - Common mistakes: resume-in-coding-task, env leaks, missing tool_config, cwd=None for write mode
    - A `mypy --strict`-clean example adapter stub
 
-2. **`scripts/agent_runtime/__init__.py`** — 20-line architectural docstring at the top of the package. Anyone opening the package sees the shape before reading a single class.
+2. **`lu_machinery/agent_runtime/__init__.py`** — 20-line architectural docstring at the top of the package. Anyone opening the package sees the shape before reading a single class.
 
 3. **`scripts/agent_runtime/adapters/_template.py`** — living documentation adapter. Not registered. Extensive inline comments. New adapter authors (human or AI) copy this, not the production adapters.
 

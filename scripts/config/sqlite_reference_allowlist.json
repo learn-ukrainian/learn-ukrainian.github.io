@@ -996,7 +996,7 @@
   },
   {
     "path": "tests/test_readonly_harness_readers.py",
-    "reference_count": 4,
+    "reference_count": 3,
     "kind": "fixture_factory",
     "target_db": null,
     "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",

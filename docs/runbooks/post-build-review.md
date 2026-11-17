@@ -187,7 +187,7 @@ From the issue worktree:
 
 ```bash
 .venv/bin/python -m pytest tests/audit/test_post_build_review.py tests/audit/test_post_build_review_pipeline.py -q
-.venv/bin/python scripts/lint/lint_agent_skills.py
+.venv/bin/python -m lu_machinery.lint.lint_agent_skills
 .venv/bin/python "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" \
   agents_extensions/shared/skills/post-build-review
 npm run agents:deploy

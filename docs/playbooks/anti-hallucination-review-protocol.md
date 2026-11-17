@@ -35,7 +35,7 @@ section before dispatching, then hand the rest verbatim to the agent.
 Before dispatching, fill in these four items for the target project:
 
 1. **Reviewer dispatch seam** — where prompts are assembled before being sent
-   to an agent. (e.g. `scripts/ai_agent_bridge/_prompts.py`,
+   to an agent. (e.g. `lu_machinery/ai_agent_bridge/_prompts.py`,
    `bridge/dispatcher.py`, etc.)
 2. **Channel/multi-agent post seam** (if any) — where multi-round agent
    conversations get their pinned context.
@@ -119,7 +119,7 @@ Wiring requirements:
   and is called from each builder. **Do NOT copy the protocol text into
   multiple files.**
 
-### 3. `scripts/verify_review.py` — standalone, reviewer-agnostic
+### 3. `lu_machinery/verify_review.py` — standalone, reviewer-agnostic
 
 CLI:
 ```

@@ -704,7 +704,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     }
     setup = next(s for s in job['steps'] if s.get('name') == 'Set up bubblewrap')
     assert setup['if'] == "github.event_name == 'pull_request'"
-    assert setup['run'].replace('scripts/', 'lu_machinery/') == 'bash lu_machinery/ci/setup_bubblewrap.sh'
+    assert setup['run'] == 'bash "$(.venv/bin/python -I -c \'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/setup_bubblewrap.sh"))\')"'
     assert not setup.get('continue-on-error', False)
     shared = files('lu_machinery.ci').joinpath('setup_bubblewrap.sh').read_text()
     assert 'set -euo pipefail' in shared

@@ -1,7 +1,7 @@
 # Fleet Taxonomy — Launcher Alias Audit
 
 The launcher estate was consolidated in #5935. Public launchers use one
-grammar from `scripts/lib/launcher_core.sh`; provider adapters do not accept
+grammar from `lu_machinery/lib/launcher_core.sh`; provider adapters do not accept
 ad-hoc selector spellings.
 
 | Entry point | Lane surface | Unknown / invalid behavior |
@@ -12,7 +12,7 @@ ad-hoc selector spellings.
 | `start-gemini-driver.sh` | `--epic SELECTOR` | Selector is allowlisted; uncertified model exits 4. |
 | `start-grok-driver.sh` | `--epic SELECTOR` | Selector is allowlisted; uncertified model exits 4. |
 
-`scripts/lib/handoff_identity.sh` remains the selector source of truth:
+`lu_machinery/lib/handoff_identity.sh` remains the selector source of truth:
 `infra`, `devops`, `atlas`, `hramatka`, `folk`, `bio`, and `corpus`, including
 their documented aliases. Driver lifecycle is deterministic: validate model and
 selector, claim lease, run the provider canary, then bind `drive-epic`.

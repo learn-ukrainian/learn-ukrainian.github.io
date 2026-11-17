@@ -6,7 +6,7 @@
 >
 > **Handoff identity:** `claude-infra`. Launch with **`./start-claude.sh --agent infra-orchestrator`**
 > and/or **`--epic harness`**: the launcher derives `SESSION_HANDOFF_AGENT=claude-infra` from either
-> flag (via `scripts/lib/handoff_identity.sh` — harness is a canonical alias for this lane, not a
+> flag (via `lu_machinery/lib/handoff_identity.sh` — harness is a canonical alias for this lane, not a
 > phantom `claude-harness` slot; #5201), so the SessionStart hook routes cold-start to this lane's own
 > slot (`.agent/claude-infra-thread-handoff.md` + `.agent/thread-rollovers/claude-infra/`) instead of
 > the shared `claude` slot. A bare `claude` / `./start-claude.sh` with no `--agent` (or
@@ -20,12 +20,12 @@
 3. Use the validated automatic SessionStart rollover output as authoritative. Do not manually parse flat handoff files or leases if a rollover packet was surfaced at startup.
 4. If the SessionStart hook output is unavailable, or the API is down, or the hook explicitly surfaces the legacy file, use the legacy flat file fallback: `.agent/claude-infra-thread-handoff.md` (gitignored, machine-local).
 5. Orient via Monitor API (lean cold-start mode): `curl -s --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true&session=$LEARN_UKRAINIAN_SESSION_ID"`
-6. **Cold-start board first:** `.venv/bin/python -m scripts.fleet_comms cold-start-board` —
+6. **Cold-start board first:** `.venv/bin/python -m lu_machinery.fleet_comms cold-start-board` —
    fleet-comms cutover is closed (mode `authority` since operator GO 2026-08-01, evidence on
    [#6159](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6159)); the
    2026-07-22 dual_write handoff queue is superseded/historical-only, not a binding P0. Live
    infra queue: stream [#4707](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4707)
-   (`infra-harness`) + `.venv/bin/python -m scripts.fleet_comms plane-status`.
+   (`infra-harness`) + `.venv/bin/python -m lu_machinery.fleet_comms plane-status`.
 
 
 ## Lane boundaries

@@ -91,7 +91,7 @@ uses `./services.sh supervise api` / launchd.
 Public fixtures use opaque ids `host-teacher` (and mapped `host-job` only when needed).
 
 Available service templates:
-- `learn-ukrainian-api.service`: Monitor API service (`scripts/api/main.py`). A refused API startup makes every endpoint unavailable until the cause is fixed; the unit retries every five seconds.
+- `learn-ukrainian-api.service`: Monitor API service (`lu_machinery/api/main.py`). A refused API startup makes every endpoint unavailable until the cause is fixed; the unit retries every five seconds.
 - `learn-ukrainian-astro.service`: Astro frontend UI.
 - `learn-ukrainian-sources.service`: Sources lookup service.
 - `learn-ukrainian-work.service`: Work projection adapter.
@@ -155,7 +155,7 @@ runner, and orchestrator hosts).
 
 - **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
 - **Frequency**: The shipped systemd timer schedules cleanup hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min` and `Persistent=true`.
-- **What it does**: Runs `lu_machinery/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and sweep temp and session scratch with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles. GC runs separately through `learn-ukrainian-git-maintenance.timer` at 03:30 UTC, with no catch-up, verified cgroup limits and validation exclusion. Install its service, timer and data-volume drop-in together. See [bounded Git maintenance](../../docs/runbooks/worktree-cleanup.md#bounded-git-maintenance-11157) for prerequisites and rollout checks.
+- **What it does**: Runs `lu_machinery/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and sweep temp and session scratch with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles. GC runs separately through `learn-ukrainian-git-maintenance.timer` at 03:30 UTC, with no catch-up, verified cgroup limits and validation exclusion. Install its service, timer and data-volume drop-in together. See [bounded Git maintenance](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/worktree-cleanup.md#bounded-git-maintenance-11157) for prerequisites and rollout checks.
 - **Default mode**: Apply. The shipped unit passes both repository roots and `--apply` to the wrapper. Protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
 - **Disable branch cleanup**: Set `LU_REAPER_DISABLED=1` in the user unit environment to skip the terminal-worktree inventory and every branch deletion. Reload systemd after changing the unit:
   ```bash
@@ -241,7 +241,7 @@ fails the service; retry reuses the day's ignored `batch_state/reports/` payload
 and idempotency key.
 
 Preview and verify with
-`.venv/bin/python -m scripts.orchestration.install_issue_quality_report_timer --check`.
+`.venv/bin/python -m lu_machinery.orchestration.install_issue_quality_report_timer --check`.
 After landing and approval, use `--apply`, or `--apply --enable` to start the
 timer. The installer uses `safe_unit_install` and refuses symlinked destinations.
 The data-volume drop-in is installed through the existing drop-in installer.
@@ -249,13 +249,13 @@ No unit is installed or enabled by tests or by preparing this source candidate.
 
 ## Driver lanes: context guard and boot relaunch
 
-Both read the one lane data file, `scripts/config/driver_lanes.json`, and
+Both read the one lane data file, `lu_machinery/config/driver_lanes.json`, and
 address every lane by tmux session name (`=<session>:`), never by pane id.
 Host-specific launch wrappers and account directories come from the ignored
 local config described in `docs/runbooks/maintenance-window.md`.
 
 - `learn-ukrainian-context-guard.service` + `.timer`: every 5 minutes
-  (`OnCalendar=*:0/5`) runs `scripts.ops.context_guard tick`. Claude lanes
+  (`OnCalendar=*:0/5`) runs `lu_machinery.ops.context_guard tick`. Claude lanes
   hand off at 70% context; Codex lanes after three compactions. A lane that
   prints or posts `HANDOFF-DONE` before the prompt is exited without waiting
   for the threshold. In the handoff phase the guard re-sends `HANDOFF NOW`
@@ -271,7 +271,7 @@ local config described in `docs/runbooks/maintenance-window.md`.
   before the tmux call, since tmux has no compare-and-swap. State and log live under
   `${XDG_STATE_HOME:-$HOME/.local/state}/learn-ukrainian/context-guard/`.
   Keep-alive tools must skip the sessions printed by
-  `.venv/bin/python -m scripts.ops.context_guard handoff-sessions`. The
+  `.venv/bin/python -m lu_machinery.ops.context_guard handoff-sessions`. The
   service has a data-volume drop-in like the other timer services, installed
   with the rest by `scripts/storage/install_data_volume_dropins.py`.
 - `learn-ukrainian-lane-relaunch.service`: a oneshot wanted by
@@ -283,7 +283,7 @@ local config described in `docs/runbooks/maintenance-window.md`.
   lane's local config entry is refused (that lane is not started) or a new
   pane cannot be read back. `--server-scope`
   starts a missing tmux server in its own user scope so it outlives the
-  oneshot. Preview with `.venv/bin/python -m scripts.ops.lane_relaunch --dry-run`.
+  oneshot. Preview with `.venv/bin/python -m lu_machinery.ops.lane_relaunch --dry-run`.
 
 Install from the primary checkout after review. Stop the transient guard timer
 first so two guards never act on the same lane, then render, verify and enable:

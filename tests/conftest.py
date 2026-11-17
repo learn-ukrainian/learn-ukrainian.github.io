@@ -103,7 +103,7 @@ from _pytest.reports import pytest_report_to_serializable as _serialize_pytest_r
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importing repo_root installs the env formatter before any test runs.
-# scripts.common is on the rules-workflow allowlist; scripts.lib is not.
+# lu_machinery.common is on the rules-workflow allowlist; scripts.lib is not.
 from lu_machinery.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from lu_machinery.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from lu_machinery.common.repo_root import main_checkout_root
@@ -112,7 +112,7 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
-    "scripts.common.pytest_scratch",
+    "lu_machinery.common.pytest_scratch",
     "tests.helpers.github_command_boundary",
     "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
@@ -125,7 +125,7 @@ pytest_plugins = [
 ]
 
 # Product tests run the installed lu_machinery API; machinery-classified tests the in-tree copy.  # TRANSITIONAL-PKG3-B2
-_API_STATUS_PACKAGES = ("scripts.api", "lu_machinery.api")  # TRANSITIONAL-PKG3-B2
+_API_STATUS_PACKAGES = ("lu_machinery.api",)  # TRANSITIONAL-PKG3-B2
 
 
 def _under_tests_api(request: pytest.FixtureRequest) -> bool:
@@ -136,14 +136,14 @@ def _under_tests_api(request: pytest.FixtureRequest) -> bool:
         relative = path.resolve().relative_to(Path(request.config.rootpath).resolve())
     except ValueError:
         return False
-    return relative.parts[:2] == ("tests", "api")
+    return relative.parts[:2] == ("tests", 'api')
 
 
 def _api_status_modules(name: str) -> list:  # TRANSITIONAL-PKG3-B2
     modules = []
     for package in _API_STATUS_PACKAGES:
         module_name = f"{package}.{name}"
-        if package == "scripts.api":
+        if package == "lu_machinery.api":
             module = sys.modules.get(module_name)
             if module is None:
                 continue
@@ -225,7 +225,7 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
 
 _GUARD_FREE_DISK_TEST = "test_snapshot_stops_when_free_disk_falls_below_the_floor"
 _guard_reads_production_free_disk = False
-# Same string as ``scripts.storage.generations.FREE_DISK_FLOOR_ENV``.
+# Same string as ``lu_machinery.storage.generations.FREE_DISK_FLOOR_ENV``.
 # The patch below checks that constant once ``Sources`` is imported.
 _FREE_DISK_FLOOR_ENV = "LU_EVIDENCE_FREE_DISK_FLOOR_BYTES"
 _SOURCES_MODULE = "scripts.curriculum.evidence.sources"
@@ -948,7 +948,7 @@ def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
     parts = Path(path).parts
-    return len(parts) >= 3 and parts[-3:-1] == ("agent_runtime", "shims")
+    return len(parts) >= 3 and parts[-3:-1] == ('agent_runtime', "shims")
 
 
 def _resolve_real_gh_binary() -> str | None:
@@ -973,7 +973,7 @@ def _restore_process_umask() -> Generator[None, None, None]:
     """Give every test the umask it started with.
 
     The umask is process-wide, and code run in-process can narrow it for good
-    (``scripts.dispatcher.worker.supervise`` sets 077 for its worker process).
+    (``lu_machinery.dispatcher.worker.supervise`` sets 077 for its worker process).
     Without this, every later test on the same xdist worker gets narrower
     ``mkdir`` modes, so mode checks pass or fail by shard placement.
     """
@@ -997,18 +997,14 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     driver scope; detector tests restore the returned production function,
     while refusal tests can replace the same seam with an inside result.
     """
-    from scripts.orchestration import dispatch_isolation
+    from lu_machinery.orchestration import dispatch_isolation
 
     detector = dispatch_isolation._caller_in_driver_scope
     monkeypatch.setattr(dispatch_isolation, "_caller_in_driver_scope", lambda: False)
     return detector
 
 
-_CLAUDE_ADAPTER_ALIASES = (
-    "scripts.agent_runtime.adapters.claude",
-    "agent_runtime.adapters.claude",
-    "lu_machinery.agent_runtime.adapters.claude",  # TRANSITIONAL-PKG3-B2: product code runs the installed adapter
-)
+_CLAUDE_ADAPTER_ALIASES = ("lu_machinery.agent_runtime.adapters.claude",)
 _STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
 # Bridge package the rules-workflow venv does not install. The Claude adapter
 # reaches it through fleet_comms contracts; its absence is not an alias typo.
@@ -1044,7 +1040,7 @@ def _record_claude_gate_skip(alias: str, missing: str) -> None:
 def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep tests independent of the installed Claude CLI version (#9903).
 
-    ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
+    ``lu_machinery.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
     are two module objects, each with its own process-cached
     ``_probe_claude_cli_version``. The gate calls that probe through the Claude
     module's globals at call time. ``kimicc`` copies the gate by name, so
@@ -1117,7 +1113,7 @@ def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
         state["reason"] = None
 
     # Both machinery copies: the in-tree one and the installed release.  # TRANSITIONAL-PKG3-B2
-    for name in ("scripts.orchestration.dispatch_isolation", "lu_machinery.orchestration.dispatch_isolation"):  # TRANSITIONAL-PKG3-B2
+    for name in ("lu_machinery.orchestration.dispatch_isolation", "lu_machinery.orchestration.dispatch_isolation"):  # TRANSITIONAL-PKG3-B2
         dispatch_isolation = importlib.import_module(name)
 
         def _probe(env: Any = None, _module: Any = dispatch_isolation, **_kwargs: Any) -> Any:
@@ -1223,7 +1219,7 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     # Carry those paths forward so each test gets its own DB under xdist too.
     _BRIDGE_DB_BINDINGS_TO_REPLACE.add(isolated_path.resolve())
     for name, module in tuple(sys.modules.items()):
-        if module is None or not name.startswith(("scripts.", "ai_agent_bridge", "agent_runtime.")):
+        if module is None or not name.startswith(("scripts.", 'lu_machinery.ai_agent_bridge', "agent_runtime.")):
             continue
         for attribute, value in tuple(vars(module).items()):
             if not isinstance(value, (str, os.PathLike)) or not os.fspath(value).endswith(_BRIDGE_DB_SUFFIXES):
@@ -1234,7 +1230,7 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
     for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
-        api_main = _loaded_module(package, "api", "main")
+        api_main = _loaded_module(package, 'api', "main")
         if api_main is None:
             continue
         app = vars(api_main).get("app")
@@ -1703,11 +1699,11 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
         "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
         str(tmp_path / "dashboard_overview_last_good.json"),
     )
-    router = _loaded_module("scripts", "api", "dashboard_router")
+    router = _loaded_module("scripts", 'api', "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
     yield
-    router = _loaded_module("scripts", "api", "dashboard_router")
+    router = _loaded_module("scripts", 'api', "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
 
@@ -1775,7 +1771,7 @@ def _hermetic_credit_lane_snapshot(monkeypatch):
     records hold real rate limits. Credit-lane tests monkeypatch both readers
     themselves.
     """
-    for name in ("scripts.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
+    for name in ("lu_machinery.fleet.credit_lane", "lu_machinery.fleet.credit_lane"):  # TRANSITIONAL-PKG3-B2
         if name.startswith("scripts."):
             credit_lane = sys.modules.get(name)
             if credit_lane is None:
@@ -1862,7 +1858,7 @@ class _RedirectRefreshSidecarLoader:
 class _IssueStreamRefreshImportHook:
     """Redirect refresh sidecars on the audit module's first import (#10519)."""
 
-    _MODULES = ("scripts.orchestration.issue_stream_audit", "lu_machinery.orchestration.issue_stream_audit")  # TRANSITIONAL-PKG3-B2
+    _MODULES = ("lu_machinery.orchestration.issue_stream_audit", "lu_machinery.orchestration.issue_stream_audit")  # TRANSITIONAL-PKG3-B2
 
     def __init__(self, state: Path, lock: Path) -> None:
         self._state = state
@@ -2112,13 +2108,13 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
     for package in ("scripts", "lu_machinery"):  # TRANSITIONAL-PKG3-B2: in-tree app and installed release
-        api_config = _loaded_module(package, "api", "config")
+        api_config = _loaded_module(package, 'api', 'config')
         if api_config is not None:
             monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-        monitor_context = _loaded_module(package, "api", "monitor_context")
+        monitor_context = _loaded_module(package, 'api', "monitor_context")
         if monitor_context is not None:
             monitor_context.production_context.cache_clear()
-        api_main = _loaded_module(package, "api", "main")
+        api_main = _loaded_module(package, 'api', "main")
         if api_main is None:
             continue
         app = vars(api_main).get("app")
@@ -2169,7 +2165,7 @@ def _isolate_runtime_scratch_root(
     """Point fleet scratch at a per-test directory (#9927).
 
     ``LU_SCRATCH_ROOT`` is the supported creation override in
-    ``scripts.common.scratch``. ``LU_RUNTIME_TMP_BASE_ROOT`` is not: the
+    ``lu_machinery.common.scratch``. ``LU_RUNTIME_TMP_BASE_ROOT`` is not: the
     dispatcher records it for nested cleanup, and honoring it would pull
     worker scratch back onto tmpfs. Delegate leases are
     ``ensure_scratch_root() / "learn-ukrainian" / <task-id>``, so an unset
@@ -2795,7 +2791,7 @@ def _analyze_test_module(
 def _sparse_checkout_enabled() -> bool:
     try:
         proc = subprocess.run(
-            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckout"],
+            ["git", "-C", str(_REPO_ROOT), 'config', "--get", "--type=bool", "core.sparseCheckout"],
             capture_output=True,
             text=True,
             check=False,
@@ -2823,7 +2819,7 @@ def _sparse_cone_dirs() -> tuple[str, ...] | None:
     """Directories of this checkout's sparse cone; None when it is not in cone mode or git fails."""
     try:
         cone_mode = subprocess.run(
-            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckoutCone"],
+            ["git", "-C", str(_REPO_ROOT), 'config', "--get", "--type=bool", "core.sparseCheckoutCone"],
             capture_output=True,
             text=True,
             check=False,
@@ -4143,7 +4139,7 @@ def _hermetic_agy_claude_window(monkeypatch):
     which catalog seat those tests select. The default reading is a fresh
     empty window. A test of the real reader restores ``__wrapped__``.
     """
-    for name in ("scripts.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
+    for name in ("lu_machinery.agent_runtime.model_pause", "lu_machinery.agent_runtime.model_pause"):  # TRANSITIONAL-PKG3-B2
         if name.startswith("scripts."):
             mp = sys.modules.get(name)
             if mp is None:

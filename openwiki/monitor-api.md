@@ -15,9 +15,9 @@ tags: [monitor-api, fastapi, orientation, contracts, live-ops-boundary]
 
 The operational dashboard backend is built on **FastAPI** and located under [`scripts/api/`](../scripts/api/). It serves local developer dashboards, provides orientation payloads for agents, and hosts artifact exploration tools.
 
-- **Main Entrypoint:** [`scripts/api/main.py`](../scripts/api/main.py)
+- **Main Entrypoint:** [`lu_machinery/api/main.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/main.py)
 - **Local Port:** Default `localhost:8000` (configurable)
-- **Supervision:** [`scripts/api/run_monitor_api_supervisor.sh`](../scripts/api/run_monitor_api_supervisor.sh)
+- **Supervision:** [`lu_machinery/api/run_monitor_api_supervisor.sh`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/run_monitor_api_supervisor.sh)
 
 ---
 
@@ -25,17 +25,17 @@ The operational dashboard backend is built on **FastAPI** and located under [`sc
 
 | Router file | Prefix / Endpoint | Purpose |
 |---|---|---|
-| [`rules_router.py`](../scripts/api/rules_router.py) | `/api/rules` | Serves authoritative shared agent rules parsed from `agents_extensions/shared/rules/`. |
+| [`rules_router.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/rules_router.py) | `/api/rules` | Serves authoritative shared agent rules parsed from `agents_extensions/shared/rules/`. |
 | [`artifacts_router.py`](../scripts/project_api/artifacts_router.py) | `/artifacts/` | Serves committed and generated evaluation artifacts (HTML reports, scorecards). |
 | [`batch_router.py`](../scripts/project_api/batch_router.py) | `/api/batch/...` | Manages batch build tasks and WebSocket progress reporting. |
 | [`agent_router.py`](../scripts/project_api/agent_router.py) | `/api/agent/...` | Exposes agent metrics, session metadata, and tool invocation stats. |
-| [`docs_router.py`](../scripts/api/docs_router.py) | `/api/docs/...` | Document inspection endpoint. (Post-adopt expansion candidate for OpenWiki browsing). |
+| [`docs_router.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/docs_router.py) | `/api/docs/...` | Document inspection endpoint. (Post-adopt expansion candidate for OpenWiki browsing). |
 
 ---
 
 ## Developer and Agent Orientation Contract
 
-The `/api/orient` endpoint (defined in [`scripts/api/main.py`](../scripts/api/main.py)) is the standard entrypoint for coding agents starting a fresh session. It provides:
+The `/api/orient` endpoint (defined in [`lu_machinery/api/main.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/api/main.py)) is the standard entrypoint for coding agents starting a fresh session. It provides:
 
 1. **Repository Identity & Git Head:** Current commit SHA and branch sanity.
 2. **Recent Milestones & Stream Status:** High-priority active issues and recent handoff digests.

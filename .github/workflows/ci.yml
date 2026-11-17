@@ -16,6 +16,8 @@ permissions:
   contents: read
 
 env:
+  LU_PRODUCT_ROOT: ${{ github.workspace }}
+  LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
   UV_HTTP_RETRIES: '6'
   UV_HTTP_TIMEOUT: '60'
   PIP_RETRIES: '6'
@@ -546,6 +548,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
+            requirements-machinery.lock
             scripts/ci/
             scripts/__init__.py
             scripts/common/__init__.py
@@ -560,6 +563,20 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
+      # The locked lu-machinery wheel alone (no dependencies): the release entry points this
+      # job runs need nothing else. The lock's hash, not the URL, decides which bytes install.
+      - name: Install the locked lu-machinery release
+        run: |
+          set -euo pipefail
+          version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+          wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+          mkdir -p "$wheelhouse"
+          curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+            -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+            "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+          sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+          python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+            --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
       - name: Refresh pytest duration snapshot
         env:
           GH_TOKEN: ${{ github.token }}
@@ -569,11 +586,11 @@ jobs:
           mkdir -p ci-artifacts
           out=ci-artifacts/pytest-file-durations.json
           set +e
-          log=$(python3 -m scripts.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
+          log=$(python3 -m lu_machinery.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
           status=$?
           set -e
           printf '%s\n' "$log"
-          if [ "$status" -ne 0 ] || ! python3 -m scripts.ci.split_tests validate "$out"; then
+          if [ "$status" -ne 0 ] || ! python3 -m lu_machinery.ci.split_tests validate "$out"; then
             echo "::notice::duration refresh failed; retaining committed weights"
             cp scripts/ci/pytest-file-durations.json "$out"
           elif printf '%s\n' "$log" | grep -q "retaining committed fallback"; then
@@ -621,7 +638,6 @@ jobs:
           name: hydrated-atlas-manifest
           path: site/src/data
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
-      - run: bash scripts/ci/test_env.sh start postgres
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: '.python-version'
@@ -630,10 +646,11 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
-      - run: bash scripts/ci/test_env.sh start npm
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
-      - run: bash scripts/ci/test_env.sh wait
+      - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start postgres
+      - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
+      - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
         timeout-minutes: 5
       # The refresh-job result is the same on every shard. Success always uploaded
       # one validated snapshot: fetch it through actions/download-artifact, which for a
@@ -648,7 +665,7 @@ jobs:
           REFRESH_RESULT: ${{ needs.refresh-pytest-durations.result }}
         run: |
           set -euo pipefail
-          decision=$(python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
+          decision=$(.venv/bin/python -m lu_machinery.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
           case "$decision" in
             committed) echo "::notice::duration refresh did not succeed; using committed weights" ;;
             snapshot) ;;
@@ -672,7 +689,7 @@ jobs:
           set -euo pipefail
           snapshot=ci-artifacts/pytest-file-durations.json
           mv ci-artifacts/pytest-duration-input/pytest-file-durations.json "$snapshot"
-          if ! python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
+          if ! .venv/bin/python -m lu_machinery.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
             echo "::error::shared duration snapshot is invalid"
             exit 1
           fi
@@ -691,12 +708,12 @@ jobs:
           # quietly downloading history (scripts/ci/history-tests.txt).
           [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
           snapshot=ci-artifacts/pytest-file-durations.json
-          durations=$(python3 -m scripts.ci.split_tests duration-source \
+          durations=$(.venv/bin/python -m lu_machinery.ci.split_tests duration-source \
             --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
           # The shard's weights go into its artifact: pytest report divides out this
           # runner's speed before recording durations (hosted runners differ ~1.6x).
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
-            | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
+            | .venv/bin/python -m lu_machinery.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
               --durations "$durations" --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json" \
               > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
@@ -783,7 +800,7 @@ jobs:
       # further requires the entire merge-group workflow to have passed.
       # Seconds are divided by each shard's runner speed; files that ran no test record 0.
       - name: Record pytest durations
-        run: python3 -m scripts.ci.split_tests durations --shards ci-artifacts/shards > ci-artifacts/pytest-file-durations.json
+        run: python3 -m lu_machinery.ci.split_tests durations --shards ci-artifacts/shards > ci-artifacts/pytest-file-durations.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-file-durations
@@ -833,16 +850,16 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
-      - if: github.event_name == 'pull_request'
-        run: bash scripts/ci/test_env.sh start npm
       - name: Python CI environment
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/python-ci-env
+      - if: github.event_name == 'pull_request'
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
       - name: Set up bubblewrap
         if: github.event_name == 'pull_request'
-        run: bash scripts/ci/setup_bubblewrap.sh
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/setup_bubblewrap.sh"))')"
       - if: github.event_name == 'pull_request'
-        run: bash scripts/ci/test_env.sh wait
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
         timeout-minutes: 5
       - name: Run changed test files and guards
         env:
@@ -897,16 +914,16 @@ jobs:
           node-version-file: '.nvmrc'
           cache: npm
           cache-dependency-path: package-lock.json
-      - if: github.event_name == 'pull_request'
-        run: bash scripts/ci/test_env.sh start npm
       - name: Python CI environment
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/python-ci-env
+      - if: github.event_name == 'pull_request'
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
       - name: Set up bubblewrap
         if: github.event_name == 'pull_request'
-        run: bash scripts/ci/setup_bubblewrap.sh
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/setup_bubblewrap.sh"))')"
       - if: github.event_name == 'pull_request'
-        run: bash scripts/ci/test_env.sh wait
+        run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
         timeout-minutes: 5
       - name: Run repository invariants
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}

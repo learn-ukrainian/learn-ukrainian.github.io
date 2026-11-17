@@ -254,7 +254,7 @@ Track affinity matrix: use best judgment per channel based on its domain. Mark `
 
 Two other Codex workers are running in parallel (#1322 convergent pipeline + wiki sources refactor). Files likely touched by those:
 - #1322: `scripts/build/*`, `scripts/build/v6_build.py`, `audit/*`
-- Sources refactor: `scripts/wiki/context.py`, `scripts/wiki/compile.py`, `scripts/wiki/compiler.py`, `scripts/api/main.py`, `wiki/*.md`, `wiki/**/*.sources.yaml` (new)
+- Sources refactor: `scripts/wiki/context.py`, `scripts/wiki/compile.py`, `scripts/wiki/compiler.py`, `lu_machinery/api/main.py`, `wiki/*.md`, `wiki/**/*.sources.yaml` (new)
 
 **This external-corpus work is scoped to avoid collision with both:** `scripts/wiki/sources_db.py`, `scripts/wiki/enrichment.py`, and `.mcp/servers/sources/server.py` are NOT in either other worker's scope per their briefs. If you detect uncommitted changes in those files when you start, pause and report.
 

@@ -7,7 +7,12 @@ hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 worktree_root="$(git rev-parse --show-toplevel)"
 # Validate Git metadata with the same resolver as native hook commands before
 # accepting a primary root or interpreter. Never trust commondir for execution.
-source "$worktree_root/scripts/lib/project_interpreter.sh"
+bootstrap_python="${LEARN_UKRAINIAN_PYTHON:-${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:+$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT/.venv/bin/python}}"
+case "$bootstrap_python" in
+  /*) ;;
+  *) echo "Set LEARN_UKRAINIAN_PYTHON to an absolute trusted interpreter path" >&2; exit 2 ;;
+esac
+source "$("$bootstrap_python" -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("lib/project_interpreter.sh"))')"
 project_hook_context_resolve "$worktree_root" || {
   echo "Git hook error: hook context unavailable (step=${PROJECT_HOOK_BOOTSTRAP_STEP:-unknown}); configure the primary-state anchor and interpreter." >&2
   exit 127

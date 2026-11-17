@@ -8,7 +8,7 @@ tags: [pipeline, mdx, build, config-as-policy, generation]
 # Content Pipeline and Build Runtime
 
 > [!NOTE]
-> OpenWiki is a non-authoritative locator. The authoritative sources for pipeline behavior are executable scripts under [`scripts/generate_mdx/`](../scripts/generate_mdx/), [`scripts/build/`](../scripts/build/), and configuration policy in [`scripts/config.py`](../scripts/config.py).
+> OpenWiki is a non-authoritative locator. The authoritative sources for pipeline behavior are executable scripts under [`scripts/generate_mdx/`](../scripts/generate_mdx/), [`scripts/build/`](../scripts/build/), and configuration policy in [`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py).
 
 ## Pipeline Overview
 
@@ -40,7 +40,7 @@ flowchart LR
 
 ---
 
-## Config-as-Policy (`scripts/config.py`)
+## Config-as-Policy (`lu_machinery/config.py`)
 
 All pedagogical parameters, CEFR track configurations, and immersion floors are defined in code as policy:
 
@@ -51,4 +51,4 @@ All pedagogical parameters, CEFR track configurations, and immersion floors are 
 - **`IMMERSION_POLICIES`:** Authoritative structural sub-gates (`_l2_exposure_floor_gate`, `_long_uk_ceiling_gate`, `_component_density_gate`).
 
 > [!TIP]
-> Per [docs-authority-lifecycle.md](../docs/architecture/docs-authority-lifecycle.md), if any narrative document asserts immersion rules differing from `scripts/config.py`, the configuration values in `scripts/config.py` are the authoritative source of truth.
+> Per [docs-authority-lifecycle.md](../docs/architecture/docs-authority-lifecycle.md), if any narrative document asserts immersion rules differing from `lu_machinery/config.py`, the configuration values in `lu_machinery/config.py` are the authoritative source of truth.

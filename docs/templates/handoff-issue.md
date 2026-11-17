@@ -6,7 +6,7 @@ Use this template when creating GitHub issues for agent-to-agent handoffs.
 
 ```bash
 # Copy template, fill in, save to /tmp/issue-body.md, then:
-.venv/bin/python -m scripts.publish issue-create \
+.venv/bin/python -m lu_machinery.publish issue-create \
   --title "type(scope): Brief description" \
   --body-file /tmp/issue-body.md \
   --parent <stream-epic-number> \

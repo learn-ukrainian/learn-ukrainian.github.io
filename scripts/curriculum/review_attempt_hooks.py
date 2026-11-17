@@ -5,7 +5,7 @@ modules below only through this module, which they load by the name configured i
 ``scripts/curriculum/review_hooks.v1.json`` (``lu_machinery.review.product_hooks.attempt_hooks``).
 Each function imports its product module when it is called, as the callers did before, so loading
 this module imports nothing else: ``scripts.build.fresh.manifest`` reaches numpy, and a worker that
-holds review slots must not import it (``scripts.dispatcher.worker._load_bound_review_code``).
+holds review slots must not import it (``lu_machinery.dispatcher.worker._load_bound_review_code``).
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ def openai_structured_output_forbidden_keywords() -> frozenset[str]:
     return OPENAI_STRUCTURED_OUTPUT_FORBIDDEN_KEYWORDS
 
 
-# ``scripts.dispatcher.worker.load_post_start_code`` calls the three functions below as the worker
+# ``lu_machinery.dispatcher.worker.load_post_start_code`` calls the three functions below as the worker
 # starts, each inside the import group it replaces, so a checkout change while the worker runs cannot
 # mix module versions (#12634).
 

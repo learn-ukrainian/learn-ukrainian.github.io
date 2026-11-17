@@ -21,6 +21,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from lu_machinery.common.repo_root import machinery_path
+
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
@@ -1494,7 +1496,7 @@ def run_cycle002(
     prompt = prompt_path.read_bytes()
     command = [
         str(ROOT / ".venv/bin/python"),
-        str(ROOT / "scripts/ai_agent_bridge/__main__.py"),
+        str(machinery_path('ai_agent_bridge/__main__.py')),
         "ask-codex",
         "-",
         "--from",

@@ -22,7 +22,7 @@
 | Fact type | Sole authority | OpenWiki role |
 |---|---|---|
 | Runtime behavior | Code + tests (`scripts/`, `tests/`, `site/`) | Cite file paths and line ranges; never redefine behavior |
-| Config knobs / immersion | Config-as-policy (`scripts/config.py`, `scripts/config/*.yaml`) | Cite config path; never invent policy |
+| Config knobs / immersion | Config-as-policy (`lu_machinery/config.py`, `scripts/config/*.yaml`) | Cite config path; never invent policy |
 | Binding agent rules | `agents_extensions/shared/rules/` (+ served `/api/rules`) | Locator only; never duplicate binding text |
 | Deployed rule copies | Generated consumers (`.claude/`, `.codex/`, `.agent/`, `.gemini/`) | Out of scope; never write harness deploy trees |
 | Curated documentation | Tracked `docs/**` with declared lifecycle (`active`, `draft`, etc.) | Summarize with citations; obey lifecycle state |

@@ -15,7 +15,7 @@ from typing import Any, Union
 import yaml
 
 try:
-    # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
+    # Repo-root imports (lu_machinery.api.main, audit chain) resolve the package form.
     from scripts.build.activity_renderer import (
         error_correction_render_values,
         group_sort_group_name,

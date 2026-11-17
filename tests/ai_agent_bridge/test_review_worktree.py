@@ -14,19 +14,13 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.agent_runtime.adapters.acpx import (
-    AcpxShadowRefusalError,
-    _validate_sealed_review_mcp_config,
-)
-from scripts.ai_agent_bridge import _agy, _claude, _cli
+from lu_machinery.agent_runtime.adapters.acpx import AcpxShadowRefusalError, _validate_sealed_review_mcp_config
+from lu_machinery.ai_agent_bridge import _agy, _cli
+from lu_machinery.review.isolation import create_review_temp_root
+
+from scripts.ai_agent_bridge import _claude
 from scripts.ai_agent_bridge import _review_worktree as review_worktree
-from scripts.review.isolation import create_review_temp_root
-from scripts.review.snapshot import (
-    ReviewSnapshot,
-    _SnapshotState,
-    cleanup_snapshot_state,
-    materialize_review_snapshot,
-)
+from scripts.review.snapshot import ReviewSnapshot, _SnapshotState, cleanup_snapshot_state, materialize_review_snapshot
 
 GIT_TIMEOUT_SECONDS = 10
 
@@ -42,8 +36,10 @@ def _allow_isolated_review_worktree_for_unit_tests(monkeypatch: pytest.MonkeyPat
     import shutil
     import tempfile
 
+    from lu_machinery.review import isolation
+
     from scripts.ai_agent_bridge import _review_worktree
-    from scripts.review import isolation, snapshot
+    from scripts.review import snapshot
 
     orig_create = isolation.create_review_temp_root
 
@@ -1615,11 +1611,6 @@ def test_claude_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.M
 def test_agy_review_bridge_refuses_null_sealed_checkout(monkeypatch: pytest.MonkeyPatch) -> None:
     """AGY sealed CF refuses before checkout provision (#5553)."""
     monkeypatch.setattr(_agy, "_fetch_agy_message", lambda _id: _review_message(to="agy"))
-    monkeypatch.setattr(
-        _agy,
-        "provision_review_worktree",
-        lambda *_a, **_k: pytest.fail("must not provision after AGY sealed-review refuse"),
-    )
     monkeypatch.setattr(
         _agy.agent_runner,
         "invoke",

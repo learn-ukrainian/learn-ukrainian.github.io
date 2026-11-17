@@ -25,7 +25,7 @@ changes still fail the checkout-integrity check.
 The diff uses NUL-delimited Git paths, rename destinations and tracked regular
 files. Deleted files are reported.
 Unsafe paths, missing guards and symlinks fail closed. Tests for changed code come
-from the direct edges of the static scan in `scripts/ci/components.py`
+from the direct edges of the static scan in `lu_machinery/ci/components.py`
 (`scan_imports`): imports, literal loads, file reads and Python subprocess targets.
 Only direct importers are selected; the transitive closure spans most of the suite,
 which the merge group runs. A `conftest.py` counts as an importer for every test file under its directory, because
@@ -220,7 +220,7 @@ test files this change deleted or rewrote.
 
 ## CI Gate
 
-`scripts/ci/gate.py` parses the event JSON and checks the checkout against
+`lu_machinery/ci/gate.py` parses the event JSON and checks the checkout against
 `GITHUB_SHA`, the event ref, action and candidate identity. Unknown events,
 missing metadata, incorrect refs and malformed proof fail closed.
 
@@ -236,7 +236,7 @@ it reports after failed or cancelled dependencies.
 Queue runs never reuse PR results. The tested-tree artifact remains an audit
 record of the candidate and its partition results.
 
-On `merge_group`, the gate's final step (`scripts/ci/queue_review_gate.py`) fails the candidate unless every PR
+On `merge_group`, the gate's final step (`lu_machinery/ci/queue_review_gate.py`) fails the candidate unless every PR
 in it has `fleet/cross-family-review` = `success`, GitHub's newest state for that context, on its current head.
 This applies whichever command enqueued the PR. The event's `base_sha` is the previous entry's candidate, not
 `main`, so the ref's PR number and `base..head` name only the last PR. Membership is the first-parent chain from
@@ -357,7 +357,7 @@ files; those are imported only with `import type`, which the compiler erases.
 
   ```bash
   gh run download <run-id> --pattern 'pytest-junit-shard-*' --dir /tmp/junit
-  .venv/bin/python -m scripts.ci.split_tests durations --shards /tmp/junit > scripts/ci/pytest-file-durations.json
+  .venv/bin/python -m lu_machinery.ci.split_tests durations --shards /tmp/junit > scripts/ci/pytest-file-durations.json
   ```
 
 ### History shard
@@ -424,7 +424,7 @@ scan in place; see
 
 Per shard: checkout (shallow; full history on the history shard), Python
 3.12.15, then `scripts/ci/test_env.sh start` runs `npm ci` and
-`scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
+`lu_machinery/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if
 either background task failed. A container image was not adopted: the checkout
@@ -442,7 +442,7 @@ required a download on every shard.
 
 The history shard keeps full Git history: eight pinned test files read history
 (listed in `scripts/ci/history-tests.txt`, consumed
-by `scripts/ci/split_tests.py`).
+by `lu_machinery/ci/split_tests.py`).
 Other shards are shallow. #9211 rejected blobless checkout because those
 history readers need the committed blobs as well as the commit graph.
 
@@ -455,9 +455,9 @@ mirrors the `python-ci-env` install: same lockfile exclude set
 `packages/v4-runtime --no-build-isolation` + `build_assets.py`, and an
 unconditional hard-fail manifest hydrate. It also requires
 `LEARN_UKRAINIAN_CP_PG_DSN` whenever control-plane tests are selected, and
-detects (never sudo-installs) the native deps `scripts/ci/start_postgres.sh`
+detects (never sudo-installs) the native deps `lu_machinery/ci/start_postgres.sh`
 provisions (`bubblewrap`, `libpq`). It plans node-ID shards with
-`scripts/ci/pytest_shards.py` (`plan` / `run` / `verify-artifacts`), which
+`lu_machinery/ci/pytest_shards.py` (`plan` / `run` / `verify-artifacts`), which
 GitHub Actions no longer uses. **When the CI dependency install changes,
 update the runner script to match** — a drifted runner is a false-green risk.
 Runner ↔ CI parity is covered offline by
@@ -498,13 +498,13 @@ Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`
 
 ```bash
 # Run/job metadata census only, before observing candidate selection/results.
-"$P" -m scripts.ci.component_shadow inventory --output "$R/baseline.json"
-"$P" -m scripts.ci.component_shadow register --baseline "$R/baseline.json" \
+"$P" -m lu_machinery.ci.component_shadow inventory --output "$R/baseline.json"
+"$P" -m lu_machinery.ci.component_shadow register --baseline "$R/baseline.json" \
   --minimum-narrowed-cases 1 --output "$R/registration.json"
 # After registration, acquire the complete live census through the stop date.
-"$P" -m scripts.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
+"$P" -m lu_machinery.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
   --output "$R/receipts/runs.json"
-"$P" -m scripts.ci.component_shadow check --registration "$R/registration.json" \
+"$P" -m lu_machinery.ci.component_shadow check --registration "$R/registration.json" \
   --receipts "$R/receipts"
 ```
 

@@ -24,7 +24,7 @@ The repository cleanly delineates five distinct tiers of knowledge and runtime r
 
 ## Stream Governance
 
-Workstreams are formally cataloged in [`scripts/config/issue_streams.yaml`](../scripts/config/issue_streams.yaml) and mirrored in [`docs/WORKSTREAMS.md`](../docs/WORKSTREAMS.md).
+Workstreams are formally cataloged in [`lu_machinery/config/issue_streams.yaml`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config/issue_streams.yaml) and mirrored in [`docs/WORKSTREAMS.md`](../docs/WORKSTREAMS.md).
 
 Key active streams:
 - **`docs-knowledge` (Epic #5535):** Dedicated stream governing curated docs authority, deterministic inventory, and the conditional OpenWiki pilot. Dispatches under this stream operate independently of infra harness leases.
@@ -63,10 +63,10 @@ graph TD
 Learner pages are built using plain Astro without the Starlight integration (Option A, confirmed 2026-06-09 and amended 2026-09-17 under #5538). Custom layouts ([`CourseLayout.astro`](../site/src/layouts/CourseLayout.astro)) and `--lu-*` CSS tokens provide full control over the lesson experience.
 
 ### 2. Content Generation Pipeline (`scripts/generate_mdx/`, `scripts/build/`)
-Modular Python scripts convert pedagogical blueprints into rich, accessible MDX pages. Track parameters (A1–C2) and immersion policies are configured centrally in [`scripts/config.py`](../scripts/config.py).
+Modular Python scripts convert pedagogical blueprints into rich, accessible MDX pages. Track parameters (A1–C2) and immersion policies are configured centrally in [`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py).
 
 ### 3. Verification & Inventory (`scripts/audit/`, `scripts/docs/`)
-Content is validated against VESUM dictionaries and grammatical rubrics before publication. The documentation inventory tool ([`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py)) tracks all regular documentation blobs directly from Git's index, producing deterministic manifests and reference graphs.
+Content is validated against VESUM dictionaries and grammatical rubrics before publication. The documentation inventory tool ([`lu_machinery/docs/docs_inventory.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/docs/docs_inventory.py)) tracks all regular documentation blobs directly from Git's index, producing deterministic manifests and reference graphs.
 
 ### 4. Monitor API (`scripts/api/`)
 A FastAPI dashboard server provides developer inspection, orientation (`/api/orient`), rule distribution (`/api/rules`), and artifact browsing (`/artifacts/`).

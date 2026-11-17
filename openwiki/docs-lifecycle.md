@@ -17,7 +17,7 @@ The repository formalizes which artifact owns each category of fact. Higher auth
 | Class | Canonical Location | Permitted Overrides |
 |---|---|---|
 | **Behavioral truth** | Code + tests (`scripts/`, `site/`, `tests/`) | Overrides prose or documentation that contradicts observed runtime execution |
-| **Config-as-policy** | `scripts/config.py`, `scripts/config/*.yaml` | Overrides stale curated documentation restating the same knobs |
+| **Config-as-policy** | `lu_machinery/config.py`, `scripts/config/*.yaml` | Overrides stale curated documentation restating the same knobs |
 | **Binding rules** | `agents_extensions/shared/rules/`, `contracts/` | Overrides deployed harness copies (`.claude/`, `.codex/`, `.gemini/`) |
 | **Deployed rule copies** | `.claude/`, `.codex/`, `.agent/`, `.gemini/` | Generated mirrors only; cannot establish policy or override sources |
 | **Curated docs** | Tracked `docs/**` (with frontmatter lifecycles) | Guides humans/agents; cannot override code, config, or binding rules |
@@ -45,9 +45,9 @@ When two repository artifacts disagree on a fact, agents and tooling must execut
 
 ## Worked Example: Immersion Policy Conflict
 
-- **Scenario:** A curated documentation guide claims A1 lessons must maintain 70% Ukrainian text, whereas [`scripts/config.py`](../scripts/config.py) defines `TRACK_CONFIG["a1"]["immersion_range"] = [0.10, 0.50]`.
-- **Resolution:** Config-as-policy wins. The executable configuration in `scripts/config.py` and operator contract item 9 govern runtime lesson building. The documentation is stale for that fact type.
-- **OpenWiki Citation:** OpenWiki must cite `scripts/config.py` and the operator contract path, rather than repeating the obsolete documentation claim.
+- **Scenario:** A curated documentation guide claims A1 lessons must maintain 70% Ukrainian text, whereas [`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py) defines `TRACK_CONFIG["a1"]["immersion_range"] = [0.10, 0.50]`.
+- **Resolution:** Config-as-policy wins. The executable configuration in `lu_machinery/config.py` and operator contract item 9 govern runtime lesson building. The documentation is stale for that fact type.
+- **OpenWiki Citation:** OpenWiki must cite `lu_machinery/config.py` and the operator contract path, rather than repeating the obsolete documentation claim.
 
 ---
 

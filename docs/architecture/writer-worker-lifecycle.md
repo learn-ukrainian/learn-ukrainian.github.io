@@ -843,32 +843,32 @@ Dependencies: approved schema, frozen I-02 continuation API and I-03 removal-rec
 Owned source and template paths:
 
 - `scripts/dispatch.py`
-- `scripts/orchestration/task_record_store.py`
+- `lu_machinery/orchestration/task_record_store.py`
 - `scripts/orchestration/dispatch_settle.py`
 - `scripts/orchestration/task_lifecycle.py`
 - `agents_extensions/shared/schemas/task-lifecycle.v1.schema.json`
 - `scripts/orchestration/task_closeout.py`
-- `scripts/orchestration/stale_task_records.py`
+- `lu_machinery/orchestration/stale_task_records.py`
 - `scripts/orchestration/orchestrator_control.py`
-- `scripts/orchestration/dead_worker_state.py`
-- `scripts/api/fleet_workers_collect.py`
-- `scripts/api/lane_health.py`
-- `scripts/api/occupancy.py`
-- `scripts/api/delegate_router.py`
+- `lu_machinery/orchestration/dead_worker_state.py`
+- `lu_machinery/api/fleet_workers_collect.py`
+- `lu_machinery/api/lane_health.py`
+- `lu_machinery/api/occupancy.py`
+- `lu_machinery/api/delegate_router.py`
 - `scripts/guardrails/delegate_ownership.py`
 - `scripts/work/attention.py`
 - `scripts/build/fresh/writer.py`
 - `scripts/lexicon/runner/atlas_job.py`
 - `scripts/eval/uk_preamble/dispatch.py`
-- `scripts/fleet/hramatka_hygiene_check.py`
-- `scripts/hygiene/tmp_sweep.py`
-- `scripts/session_start.sh`
-- `scripts/config/trails/decision-tables.v0.yaml`
-- `scripts/orchestration/integration_sweep.py`
+- `lu_machinery/fleet/hramatka_hygiene_check.py`
+- `lu_machinery/hygiene/tmp_sweep.py`
+- `lu_machinery/session_start.sh`
+- `lu_machinery/config/trails/decision-tables.v0.yaml`
+- `lu_machinery/orchestration/integration_sweep.py`
 - `scripts/orchestration/merge_queue_keeper.py`
 - `scripts/review/record_cf_verdict.py`
 - `scripts/review/closeout_cli.py`
-- `scripts/publish/github.py`
+- `lu_machinery/publish/github.py`
 - `docs/templates/writer-review-request.v1.md`, new fixed brief template.
 
 Owned test paths:
@@ -955,9 +955,9 @@ Owned source paths:
 
 - `scripts/orchestration/writer_continuation.py`, new helper.
 - `scripts/agent_runtime/runner.py`
-- `scripts/agent_runtime/registry.py`
-- `scripts/agent_runtime/adapters/codex.py`
-- `scripts/agent_runtime/adapters/claude.py`
+- `lu_machinery/agent_runtime/registry.py`
+- `lu_machinery/agent_runtime/adapters/codex.py`
+- `lu_machinery/agent_runtime/adapters/claude.py`
 
 Owned test paths:
 
@@ -987,11 +987,11 @@ Non-goals: global retention eviction or crash-rescue identity. Dependency: I-01 
 Owned source paths:
 
 - `scripts/orchestration/reap_worktrees.py`
-- `scripts/orchestration/worktree_claims.py`
+- `lu_machinery/orchestration/worktree_claims.py`
 - `scripts/fleet/post_task_reap.py`
-- `scripts/fleet/ignored_task_output.py`
+- `lu_machinery/fleet/ignored_task_output.py`
 - `scripts/orchestration/merge_closeout.py`
-- `scripts/orchestration/reaper_lifecycle.py`
+- `lu_machinery/orchestration/reaper_lifecycle.py`
 - `scripts/orchestration/scheduled_worktree_cleanup.py`
 - `scripts/hygiene/branch_sweep.py`
 - `scripts/maintenance/batch_state_retention.py`
@@ -1187,7 +1187,7 @@ The r4 artifact was cherry-picked from `10bdf2ef1c62a430f6a85fb6a34e03d07a12e586
 | B4 | Custody release, lifecycle finality and branch protection; explicit hot-record/ref guards and I-03 manifests | `scripts/orchestration/stale_task_records.py:keep_hot_reason` at 1065 and `archive_terminal` at 1292 depend on path/status; `scripts/maintenance/batch_state_retention.py:_eligible` at 370 checks released status/age; `scripts/hygiene/branch_sweep.py:_active_tasks` at 153 skips released tasks; `scripts/orchestration/scheduled_worktree_cleanup.py:_stale_ref_delete_reason` at 312 accepts durable CLOSED heads; cleanup passes at 490/629/781 need lifecycle protection | I01-AC03/09, I03-AC08 |
 | B5 | Writer-PR classifier and keeper scope freezes exemptions and distinguishes MISSING from UNKNOWN; End shapes D-11 has an attributed D-10 exit with residual owner | `scripts/orchestration/merge_queue_keeper.py:run` inspects PR comments/checks at 766-825; `scripts/review/record_cf_verdict.py:pr_review_facts` at 918 and `record` at 1507 resolve exact-head author/task facts; no current classifier proves the proposed exemption boundary | I01-AC06, I03-AC10, I04-AC03/08 |
 | R1 | Review request authority and rejection history pins the durable canonical writer state file explicitly | `scripts/review/closeout_cli.py:_build_parser` requires global --state-file at 689-697; resolver output merges into that file, with a worktree-relative example in the epilog | I01-AC13 |
-| R2 | Packet ownership and delivery order captures bounded activation delta and freezes all pre-activation PR/task identities before enabling producers | `scripts/orchestration/task_record_store.py` is the existing shared task store; `scripts/dispatch.py` admits tasks; activation/delta capture is a proposed I-04 helper plus I-01 admission integration, not an existing producer capability | I04-AC08, I01-AC06 |
+| R2 | Packet ownership and delivery order captures bounded activation delta and freezes all pre-activation PR/task identities before enabling producers | `lu_machinery/orchestration/task_record_store.py` is the existing shared task store; `scripts/dispatch.py` admits tasks; activation/delta capture is a proposed I-04 helper plus I-01 admission integration, not an existing producer capability | I04-AC08, I01-AC06 |
 | R3 | Bounded blocked custody defines nonwriter admission and dispute attention/clocks; Read-only and review completion replacement retains separate counts | `scripts/orchestration/worktree_claims.py:RELEASED_TASK_STATUSES` at 65 classifies attempt outcomes; `scripts/work/attention.py` is the existing attention consumer owned by I-01; neither proves the proposed debt/dispute policy | I01-AC05/13 |
 
 Source evidence was read with bounded `sed` ranges and `rg -n` definition checks in the assigned worktree.

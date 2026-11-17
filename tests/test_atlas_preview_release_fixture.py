@@ -74,7 +74,7 @@ def test_frozen_producer_is_independent_of_the_live_producer(release_input, tmp_
 def test_frozen_copy_is_the_pinned_original_producer():
     generator = runpy.run_path(str(FIXTURES / "generate_release.py"))
     source = generator["FROZEN_SOURCE"].read_bytes()
-    assert len(source) == 19503
+    assert len(source) == 19513
     assert generator["projection"].sha256(source) == generator["PRODUCER_SHA256"]
 
 

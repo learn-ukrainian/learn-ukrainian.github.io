@@ -184,7 +184,7 @@ Known behavior surfaces to revisit later:
   variant overrides;
 - `scripts/audit/gates.py` treats word count as a floor with warning bands and
   soft caps;
-- `scripts/config.py` encodes the B1+ `OVERSHOOT_FACTOR` / `get_overshoot_factor()`
+- `lu_machinery/config.py` encodes the B1+ `OVERSHOOT_FACTOR` / `get_overshoot_factor()`
   multiplier;
 - `scripts/pipeline/core.py` injects `WORD_CEILING = word_target * 1.5` and B1+
   overshoot rules into prompt placeholders;

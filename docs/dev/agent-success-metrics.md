@@ -1,11 +1,11 @@
 # Agent success metrics
 
-`scripts.fleet.agent_success` reports metadata from dispatch-v2 task records and final review results. It makes no network requests and writes no records.
+`lu_machinery.fleet.agent_success` reports metadata from dispatch-v2 task records and final review results. It makes no network requests and writes no records.
 
 ```bash
-.venv/bin/python -m scripts.fleet.agent_success
-.venv/bin/python -m scripts.fleet.agent_success --window 24h --json
-.venv/bin/python -m scripts.fleet.agent_success --since 2026-10-25 --until 2026-10-28 --json
+.venv/bin/python -m lu_machinery.fleet.agent_success
+.venv/bin/python -m lu_machinery.fleet.agent_success --window 24h --json
+.venv/bin/python -m lu_machinery.fleet.agent_success --since 2026-10-25 --until 2026-10-28 --json
 ```
 
 `--window` accepts `24h`, `3d` (default), and `14d`. Explicit `--since` overrides the duration. `--until` defaults to the current UTC time. Dates and timestamps without an offset use UTC.

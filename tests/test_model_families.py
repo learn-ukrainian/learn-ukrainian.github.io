@@ -306,7 +306,7 @@ def test_cursor_display_name_normaliser_rejects_everything_else(value: str) -> N
     ],
 )
 def test_cursor_auto_selectors_share_canonical_family(selector):
-    from scripts.review.model_catalog import is_cursor_auto_selector
+    from lu_machinery.review.model_catalog import is_cursor_auto_selector
 
     assert is_cursor_auto_selector(selector)
     assert model_families.normalize_family(selector) is model_families.Family.CURSOR

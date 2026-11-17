@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - `curriculum/l2-uk-en/curriculum.yaml`, B1 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - `docs/runbooks/module-build-token-telemetry.md`
-- `scripts/config.py`
+- `lu_machinery/config.py`
 - `scripts/audit/config.py`
 - B1 M83-M94 inventory from `curriculum.yaml`; for each present source directory, read module, activities, vocabulary, plan, wiki, and site MDX
 - Older B1 samples across M1-M82, including:
@@ -121,7 +121,7 @@ git add "$REPORT"
 git commit -m "docs: add B1 normalization quality audit" --trailer "X-Agent: codex/b1-quality-audit"
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 git push -u origin codex/b1-quality-audit
-.venv/bin/python -m scripts.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/b1-quality-audit --base main
+.venv/bin/python -m lu_machinery.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/b1-quality-audit --base main
 ```
 
 ## Expected Final Response

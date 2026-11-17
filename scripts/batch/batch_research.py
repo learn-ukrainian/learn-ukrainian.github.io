@@ -6,10 +6,13 @@ Usage:
     .venv/bin/python scripts/batch_research.py a1 --module 14
     .venv/bin/python scripts/batch_research.py a1 --from 14 --to 44 --dry-run
 """
+
 import argparse
 import subprocess
 import sys
 from pathlib import Path
+
+from lu_machinery.common.repo_root import machinery_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -235,7 +238,7 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     try:
         result = subprocess.run(
             [
-                str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+                str(VENV_PYTHON), str(machinery_path('ai_agent_bridge/__main__.py')),
                 "ask-gemini", "-",
                 "--task-id", task_id,
                 "--output-path", output_path,

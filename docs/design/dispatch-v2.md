@@ -1,6 +1,6 @@
 # Dispatch v2
 
-`scripts/dispatch.py` delegates to `scripts.dispatcher.cli:main`; its `--help`
+`scripts/dispatch.py` delegates to `lu_machinery.dispatcher.cli:main`; its `--help`
 and each subcommand's `--help` are the command reference. This page records
 what `--help` cannot: how dispatch worktrees end and how to see them.
 
@@ -15,7 +15,7 @@ copies untracked files into the task's preserved archive first. The record
 gets `worktree_disposition` (`removed`, `retained` or `error`) with a
 `worktree_disposition_reason` and, when there is one, a
 `worktree_disposition_detail`. The reasons are listed in
-[Worktree cleanup](../runbooks/worktree-cleanup.md).
+[Worktree cleanup](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/worktree-cleanup.md).
 
 Each worker settles only its own task. The hourly hygiene run calls
 `worker.settle_left_worktrees(salvage=True)` to recover crashed supervisors
@@ -84,4 +84,4 @@ repository, it prints one JSON object:
 
 A tree with `no_task_record: true` was not created by this dispatcher, or its
 record was moved away; remove it only after its content is confirmed
-published, through the guarded remover (`scripts.orchestration.worktree_claims`).
+published, through the guarded remover (`lu_machinery.orchestration.worktree_claims`).

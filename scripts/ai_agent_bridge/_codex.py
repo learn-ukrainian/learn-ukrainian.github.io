@@ -1,7 +1,7 @@
 """Codex interaction: ask_codex and process_for_codex.
 
 Phase 4 of #1184 migrated the bridge subprocess path onto
-scripts.agent_runtime. Normal bridge calls may resume their task-scoped Codex
+lu_machinery.agent_runtime. Normal bridge calls may resume their task-scoped Codex
 conversation; the runtime's ``bridge_only`` policy keeps every non-bridge
 entrypoint fresh.
 """
@@ -12,32 +12,32 @@ import os
 import re
 from collections.abc import Callable
 
-from agent_runtime import runner as agent_runner
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.errors import (
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-
-from ._ask_contract import resolve_model_selection, response_provenance
-from ._ask_lifecycle import (
+from lu_machinery.ai_agent_bridge._ask_contract import resolve_model_selection, response_provenance
+from lu_machinery.ai_agent_bridge._ask_lifecycle import (
     launch_background_ask,
     record_ask_failure,
     record_ask_reply,
     register_ask,
     skip_stored_kimi_row,
 )
-from ._config import REPO_ROOT
-from ._db import get_db, get_session, set_session
-from ._messaging import acknowledge, send_message
-from ._prompts import build_codex_prompt, require_core_or_exit
-from ._review_safety import (
+from lu_machinery.ai_agent_bridge._config import REPO_ROOT
+from lu_machinery.ai_agent_bridge._db import get_db, get_session, set_session
+from lu_machinery.ai_agent_bridge._messaging import acknowledge, send_message
+from lu_machinery.ai_agent_bridge._prompts import build_codex_prompt, require_core_or_exit
+from lu_machinery.ai_agent_bridge._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
     warn_missing_review_target,
 )
-from ._review_worktree import (
+
+from agent_runtime import runner as agent_runner
+from scripts.ai_agent_bridge._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
     provision_review_worktree,
@@ -105,7 +105,7 @@ def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
 def _resolve_codex_from_llm(from_llm: str | None) -> str:
     if from_llm:
         return from_llm
-    from ._cli import _detect_caller_identity_from_env
+    from lu_machinery.ai_agent_bridge._cli import _detect_caller_identity_from_env
 
     detected = _detect_caller_identity_from_env()
     if detected:
@@ -252,7 +252,7 @@ def has_codex_headroom(model: str | None = None, codex_account: str | None = Non
     ``codex_account`` defaults to the account of this process's ``CODEX_HOME``
     (the bridge runs on the ambient home); another account's rate limits never block it.
     """
-    from agent_runtime.usage import has_headroom
+    from lu_machinery.agent_runtime.usage import has_headroom
 
     effective_model = model or "gpt-6.1-sol"
     unreadable = {"files": 0, "lines": 0, "records": 0}
@@ -451,7 +451,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     )
     # The shared helper's legacy actual_model parameter/from_model key is a
     # routing label here. Native Codex has no qualified backend observation.
-    from scripts.agent_runtime.telemetry import codex_model_identity
+    from lu_machinery.agent_runtime.telemetry import codex_model_identity
 
     provenance = json.loads(provenance_data)
     provenance["model_identity"] = codex_model_identity()
@@ -531,7 +531,7 @@ def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
     same deferral shape as the rate-limited path below.
     """
     print(f"\n❌ Codex CLI error: {error_msg[:500]}")
-    from ._ask_contract import failed_response_provenance
+    from lu_machinery.ai_agent_bridge._ask_contract import failed_response_provenance
 
     data, from_model = failed_response_provenance(
         msg, bridge_model="codex-bridge-error", harness="codex"
@@ -556,7 +556,7 @@ def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
     """Defer a rate-limited message without acknowledging the inbound row."""
     print(f"\n⛔ Codex rate limited - message {message_id} deferred")
     print(f"   Reason: {reason}")
-    from ._ask_contract import failed_response_provenance
+    from lu_machinery.ai_agent_bridge._ask_contract import failed_response_provenance
 
     data, from_model = failed_response_provenance(
         msg, bridge_model="codex-bridge-rate-limited", harness="codex"
@@ -609,7 +609,7 @@ def process_all_codex(new_session: bool = False):
             skipped += 1
             continue
         try:
-            from ._ask_lifecycle import _process_target
+            from lu_machinery.ai_agent_bridge._ask_lifecycle import _process_target
 
             if _process_target(msg_id, "codex", {"new_session": new_session}) is False:
                 failed += 1

@@ -22,6 +22,7 @@ from typing import Any
 import yaml
 from filelock import FileLock, Timeout
 from jsonschema import Draft202012Validator
+from lu_machinery.common.repo_root import machinery_path
 
 try:  # The script is also loaded directly by focused tests.
     from . import bounded_completion
@@ -394,7 +395,7 @@ def certification_profile_for(
 def _declared_hashes(repo_root: Path, paths: Sequence[str], *, label: str) -> dict[str, str]:
     hashes: dict[str, str] = {}
     for raw in paths:
-        path = _repo_path(repo_root, raw)
+        path = machinery_path(raw.removeprefix("lu_machinery/")) if str(raw).startswith("lu_machinery/") else _repo_path(repo_root, raw)
         if not path.is_file():
             raise CompletionError(f"Missing declared {label} identity input: {raw}")
         hashes[str(raw)] = sha256_file(path)

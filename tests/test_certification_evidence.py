@@ -16,6 +16,7 @@ from typing import Any
 
 import pytest
 import yaml
+from lu_machinery.common.repo_root import machinery_path
 from lu_machinery.orchestration import curriculum_readiness
 
 from scripts.audit import llm_reviewer_dispatch, qg_workflow
@@ -450,7 +451,7 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
         paths.extend(declared)
     relatives = list(dict.fromkeys(paths))
     for relative in relatives:
-        source = ROOT / relative
+        source = machinery_path(relative.removeprefix("lu_machinery/")) if relative.startswith("lu_machinery/") else ROOT / relative
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)

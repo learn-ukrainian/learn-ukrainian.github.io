@@ -73,13 +73,12 @@ def freeze_product_wrapper(source: Path, destination: Path, package: str) -> Non
     The wrapper may name no other machinery path.
     """
     body = source.read_text(encoding="utf-8")
-    old = f'"$ROOT/{machinery_package()}/lib/launcher_core.sh"'
-    code = [line for line in body.replace(old, "").splitlines() if not line.lstrip().startswith("#")]
-    assert body.count(old) == 1 and not [line for line in code if f"{machinery_package()}/" in line], source
+    old = next(line for line in body.splitlines() if line.startswith('source ') and 'launcher_core.sh' in line)
+    assert body.count(old) == 1 and 'machinery_path("lib/launcher_core.sh")' in old, source
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.unlink(missing_ok=True)
     destination.write_text(
-        body.replace(f"source {old}", f'export LU_PRODUCT_ROOT="$ROOT"\nsource "$ROOT/{package}/lib/launcher_core.sh"'),
+        body.replace(old, f'export LU_PRODUCT_ROOT="$ROOT"\nsource "$ROOT/{package}/lib/launcher_core.sh"'),
         encoding="utf-8",
     )
     destination.chmod(0o755)

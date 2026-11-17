@@ -26,9 +26,9 @@
 ## 1. Problem
 
 The Monitor API (`scripts/api/`) is a module-global FastAPI `app` with an attached `_lifespan`
-(`scripts/api/main.py`). Roots and stores are import-bound module globals:
+(`lu_machinery/api/main.py`). Roots and stores are import-bound module globals:
 
-- `scripts/api/config.py`: `PROJECT_ROOT`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, dashboard/batch roots.
+- `lu_machinery/api/config.py`: `PROJECT_ROOT`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, dashboard/batch roots.
 - Per-router `_repo_root` / `_db_path` / `_store` globals, each router owning its own copy.
 - Global in-memory presence and report stores.
 
@@ -145,7 +145,7 @@ Builds a fresh `FastAPI` app, stashes `context` at `app.state.ctx`, registers ro
 app = create_app(production_context())
 ```
 
-One line. The ASGI target stays `scripts.api.main:app` and all existing imports of `main.app` are
+One line. The ASGI target stays `lu_machinery.api.main:app` and all existing imports of `main.app` are
 unchanged — this is the seam that keeps the migration invisible to every external caller (uvicorn
 invocation, `TestClient(app)` call sites, deploy scripts) during the rollout.
 
@@ -165,7 +165,7 @@ that family, confirm the sweep stays green with **fewer** seams than before, run
 against the actual router set — codex's review caught that this is not filing-ready. v2 then
 undercounted the router set itself (said 33) and silently dropped `build_events_router` from the
 step table. Later revisions still miscounted (43, then a table that omitted `batch_router` and
-`cluster_router`). The numbers below come from an AST walk of `scripts/api/main.py`, not from
+`cluster_router`). The numbers below come from an AST walk of `lu_machinery/api/main.py`, not from
 `grep` and not by hand, and `tests/api/test_app_factory_doc_router_count.py` recomputes them on every
 run and compares them with this document, so they cannot drift again. `main.py` makes 48
 `include_router` calls registering **47 distinct router objects**: 46 imported router modules
@@ -204,7 +204,7 @@ claim:
   classes and isolated/skip fixture kinds — see `tests/api/opsec_sweep/registry.py` — and no
   normalization plan for non-deterministic fields like UUIDs/timestamps in real responses):
   1. `main.py`'s bottom becomes `app = create_app(production_context())`. Since no router changed,
-     every existing test that imports `scripts.api.main.app` (the bulk of `tests/api/`) exercises the
+     every existing test that imports `lu_machinery.api.main.app` (the bulk of `tests/api/`) exercises the
      factory-built app already — **the existing `tests/api -n 4` suite passing, unchanged, is itself
      the primary behavioral-equivalence proof**, because the routers it calls are byte-identical
      Python functions before and after this step.
@@ -232,7 +232,7 @@ claim:
      `RequestValidationError`, and `Exception`. Step 0 hardcodes this as an **expected snapshot** —
      not a second live app to diff against — and asserts `create_app(production_context())`'s app
      matches it:
-     Every field below was independently confirmed by importing the real `scripts.api.main.app` and
+     Every field below was independently confirmed by importing the real `lu_machinery.api.main.app` and
      inspecting `app.user_middleware` / `app.exception_handlers` directly (2026-08-25), not guessed:
      - Extract each `app.user_middleware` entry's `.cls`, `.args`, `.kwargs` (these are the real
        `starlette.middleware.Middleware` attribute names, confirmed live — `args` is always `()` for
@@ -275,7 +275,7 @@ claim:
        cleanly, since there is nothing to fail. Making the positive assertion "additional, for
        stronger evidence" left the test able to pass on a factory that wired no lifespan whatsoever.
        **Fixed: the positive assertion is mandatory, not optional.** Patch one of `_lifespan`'s own
-       side-effecting calls (e.g. `scripts.api.main.start_periodic_refresh`, or
+       side-effecting calls (e.g. `lu_machinery.api.main.start_periodic_refresh`, or
        `ensure_broker_db_ready`) with a `Mock`/spy *before* constructing `factory_app`, enter
        `with TestClient(factory_app) as client:`, and assert the spy **was called** — only a call
        recorded on the specific function `_lifespan` invokes proves `create_app()` actually wired
@@ -344,7 +344,7 @@ sub-issue is filed**: for every router module `main.py` mounts, record in
 `docs/design/monitor-api-router-inventory.md` (or a JSON manifest the doc renders as a table):
 
 1. Module path, mount prefix(es), route count, line count (data above is the seed; confirm live).
-2. Every module-global root/store it reads from `scripts/api/config.py` or its own file (the exact
+2. Every module-global root/store it reads from `lu_machinery/api/config.py` or its own file (the exact
    set `MonitorContext.stores`/`roots` in §4.1 must cover).
 3. Every OPSEC sweep seam (`monkeypatch.setattr(...)` call in `tests/api/opsec_sweep/`) that exists
    *because of* this router — this becomes the seam-count baseline. The sweep's shrinkage claim in
@@ -582,7 +582,7 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      `FastAPI()` already registers `WebSocketRequestValidationError` as a default handler, and
      `main.py` never overrides it — an exact-3-key assertion would fail against the real app; a
      subset assertion wouldn't verify complete wiring. **Fixed:** independently re-confirmed by
-     importing `scripts.api.main.app` directly and inspecting `app.exception_handlers` (4 keys,
+     importing `lu_machinery.api.main.app` directly and inspecting `app.exception_handlers` (4 keys,
      exactly as the reviewer described); §5.1 point 3 now specifies all 4 explicitly, with the origin
      of each (3 from `main.py`'s custom handlers, 1 from FastAPI's own default).
   2. **The proposed `repr()` fallback was not stable** — Starlette's middleware `repr()` embeds a
@@ -593,7 +593,7 @@ table above — if the inventory contradicts a row here, the inventory wins and 
      no hedge, since they are now verified rather than assumed.
   - Also noted: `git diff --check` passed; full app import was unavailable in that sandbox (no usable
     temp directory, an environment limitation), but isolated FastAPI/Starlette probes completed —
-    this session's own follow-up verification used the real `scripts.api.main.app` import directly and
+    this session's own follow-up verification used the real `lu_machinery.api.main.app` import directly and
     got the same 4-key, 2-middleware-entry result the reviewer described from its isolated probes.
 
 - **v6 (commit 5e9f595), reviewer: codex, verdict: REJECT.** Confirmed the 4-key exception-handler set

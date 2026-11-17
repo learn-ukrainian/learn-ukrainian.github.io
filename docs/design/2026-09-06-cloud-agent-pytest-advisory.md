@@ -33,7 +33,7 @@ is present at repository baseline `3ac1795f5d4cfda10853be0ee184c25dfe72e293`:
 
 - Runner: `scripts/ci/cursor_cloud_full_pytest.sh`.
 - Runner blob SHA-256: `4c39a7918bbce7ea88f91317e54c549e0def7b75e967dc01de00599dec3c62df`.
-- Planner: `scripts/ci/pytest_shards.py`.
+- Planner: `lu_machinery/ci/pytest_shards.py`.
 - Trusted controller verifier: `scripts/ci/cursor_cloud_pytest_verify.py`.
 - Offline verifier tests: `tests/ci/test_cursor_cloud_pytest_verify.py`.
 
@@ -149,7 +149,7 @@ the controller publishes the result for that same SHA; it must not rerun merely
 to publish. A post-push request may run once if no matching evidence exists.
 
 Cursor Ultra has concurrency **1**, as documented in
-`docs/runbooks/cursor-driver.md` and `scripts/config/fleet_communications.yaml`.
+`docs/runbooks/cursor-driver.md` and `lu_machinery/config/fleet_communications.yaml`.
 The controller admits only one full-suite cloud run at a time across pre-push,
 post-push and outage requests. Reuse a matching run; serialize distinct runs
 through the existing scheduler. Do not spawn four cloud agents for four shards.

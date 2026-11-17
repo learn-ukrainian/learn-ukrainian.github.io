@@ -12,6 +12,7 @@ import ast
 from pathlib import Path
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -37,7 +38,7 @@ _FORBIDDEN_PREFIXES: tuple[str, ...] = (
 def _iter_surface_python_files() -> list[Path]:
     files: list[Path] = []
     for rel in _FLEET_ROUTING_SURFACES:
-        path = _REPO_ROOT / rel
+        path = machinery_path(rel.removeprefix("scripts/"))
         if path.is_file():
             assert path.suffix == ".py", f"surface file must be Python: {rel}"
             files.append(path)

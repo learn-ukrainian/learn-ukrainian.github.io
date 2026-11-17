@@ -36,10 +36,10 @@ def test_monitor_loader_refuses_malformed_names(monitor_paths, name):
     b"\xff", b"{", b"[]", b"{}", b'[' * 1200,
     (b'{"schema":"learn-ukrainian.monitor-paths","schema":"learn-ukrainian.monitor-paths",'
      b'"schema_version":1,"monitor_surface":"scripts.curriculum.monitor_surface"}'),
-    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":true,"monitor_surface":"scripts.api"}',
-    b'{"schema":"wrong","schema_version":1,"monitor_surface":"scripts.api"}',
-    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":2,"monitor_surface":"scripts.api"}',
-    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":1,"monitor_surface":"scripts.api","extra":0}',
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":true,"monitor_surface":"lu_machinery.api"}',
+    b'{"schema":"wrong","schema_version":1,"monitor_surface":"lu_machinery.api"}',
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":2,"monitor_surface":"lu_machinery.api"}',
+    b'{"schema":"learn-ukrainian.monitor-paths","schema_version":1,"monitor_surface":"lu_machinery.api","extra":0}',
 ])
 def test_monitor_loader_keeps_json_refusals(monitor_paths, raw):
     helpers, path = monitor_paths
@@ -78,25 +78,32 @@ def test_monitor_loader_refuses_foreign_cache_and_keeps_startup_pin(monitor_path
 
 def test_configured_loader_accounting_covers_map_callers_once():
     """The scanners must see every configured caller, without double counting."""
+    from dataclasses import replace
     from pathlib import Path
 
     from lu_machinery.ci.components import scan_imports
+    from lu_machinery.common.repo_root import machinery_path
     from lu_machinery.hygiene.lint_source_db_writable_connects import classify_source
     from lu_machinery.lint import boundary_ratchet
 
     root = Path(__file__).resolve().parents[1]
     paths = [
-        "scripts/api/product_contribution.py",
+        "lu_machinery/api/product_contribution.py",
         "scripts/project_api/curriculum_state.py",
         "scripts/project_api/atlas_jobs_router.py",
-        "scripts/pre_commit/product_entry.py",
+        "lu_machinery/pre_commit/product_entry.py",
     ]
-    sources = {path: (root / path).read_bytes() for path in paths}
+    sources = {
+        path: (machinery_path(path.removeprefix("lu_machinery/")) if path.startswith("lu_machinery/") else root / path).read_bytes()
+        for path in paths
+    }
     graph = scan_imports(sources)
     # product_contribution calls the loader twice: the product entry and the Atlas registry adapter.
-    assert [row["path"] for row in graph["configured_loads"]] == sorted([*paths, "scripts/api/product_contribution.py"])
+    assert [row["path"] for row in graph["configured_loads"]] == sorted([*paths, "lu_machinery/api/product_contribution.py"])
     assert all(classify_source(source.decode(), path) == [] for path, source in sources.items())
     config = boundary_ratchet.load_config(root / "scripts/config/package_boundary.yaml")
+    # This census also includes the installed pre-commit caller, whose package left the product tree.
+    config = replace(config, packages={**config.packages, "pre_commit": "machinery"})
     assert boundary_ratchet._dynamic_count(graph, config, "machinery") == 2
     assert boundary_ratchet._dynamic_count(graph, config, "product") == 2
     assert boundary_ratchet._configured_line(graph) == "configured-entry-point implementation=0 callers=4"

@@ -722,20 +722,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/orchestration/worktree_artifacts.py",
-      "kind": "store_path",
-      "scope": "is_disposable_path",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/orchestration/worktree_artifacts.py",
-      "kind": "store_path",
-      "scope": "is_disposable_path",
-      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/practice/extract_textbook_error_corrections.py",
       "kind": "store_path",
       "scope": "main",

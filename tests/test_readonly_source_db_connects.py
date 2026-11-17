@@ -19,11 +19,12 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+from lu_machinery.common import repo_root
+from lu_machinery.common.repo_root import machinery_path
+from lu_machinery.hygiene import lint_source_db_writable_connects as lint
 from lu_machinery.ops import product_entry
 
 import scripts
-from scripts.common import repo_root
-from scripts.hygiene import lint_source_db_writable_connects as lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,16 +44,16 @@ def test_repo_has_no_unallowlisted_writable_source_db_connect():
     assert set(unreadable) <= {line[2:] for line in skipped if line.startswith("S ")}, unreadable
 
 
-@pytest.mark.parametrize("entry", lint.load_allowlist(), ids=lambda entry: entry.path)
+@pytest.mark.parametrize("entry", lint.load_scan_allowlist(REPO_ROOT), ids=lambda entry: entry.path)
 def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
-    source = (REPO_ROOT / entry.path).read_text()
+    source = (machinery_path(entry.path.removeprefix("lu_machinery/")) if entry.path.startswith("lu_machinery/") else REPO_ROOT / entry.path).read_text()
     assert len(lint.classify_source(source, entry.path)) == entry.reference_count
     assert entry.reason.strip()
     if entry.kind == "writer":
         assert entry.target_db and entry.calls
         assert lint.writer_target_violations(source, entry) == []
     elif entry.kind == "store_resolver":
-        assert entry.path == "scripts/storage/topology.py"
+        assert entry.path == "lu_machinery/storage/topology.py"
         assert set(entry.functions) == {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write", "_prepare_store_write_target"}
         assert entry.reference_count == 0
     else:
@@ -72,10 +73,10 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
 
 def test_configured_entry_point_kind_names_only_the_helper():
     """The kind pins one import site, the shared helper's; the helper runs from the installed release (#13032)."""
-    configured = [entry.path for entry in lint.load_allowlist() if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND]
+    configured = [entry.path for entry in lint.load_scan_allowlist(REPO_ROOT) if entry.kind == lint.CONFIGURED_ENTRY_POINT_KIND]
     assert configured == []
     assert lint.CONFIGURED_ENTRY_POINTS == {
-        "scripts/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
+        "lu_machinery/ops/product_entry.py": (1, "return _in_this_checkout(name, importlib.import_module(name), scripts_dir)"),
     }
 
 
@@ -108,7 +109,7 @@ FORBIDDEN = (
         'import sqlite3\nmodules = [sqlite3]\nmodules[0].connect("other.db")',
         'import sqlite3\nAlias = sqlite3\nAlias.connect("other.db")',
         "from sqlite3 import *",
-        "from scripts.lib.readonly_sqlite import sqlite3 as db; db.connect(path)",
+        "from lu_machinery.lib.readonly_sqlite import sqlite3 as db; db.connect(path)",
         "import anywhere as m; m.sqlite3.connect(path)",
         "import anywhere as m; db = m.sqlite3; db.connect(path)",
         'import sys; sys.modules["sqlite3"].connect(path)',
@@ -138,11 +139,11 @@ FORBIDDEN = (
     ]
     + [
         # The configured-entry-point helper, plain, aliased or qualified, with a constant SQLite name.
-        'from scripts.ops.product_entry import load_configured_module\nload_configured_module("sqlite3:connect")',
-        'from scripts.ops.product_entry import load_configured_module as load\nload("scripts.lib.sqlite3")',
-        'import scripts.ops.product_entry as entry\nentry.load_configured_module(name="sqlite3.dbapi2")',
-        'from scripts.ops import product_entry\ndb = product_entry.load_configured_module("_sqlite3")\ndb.connect(path)',
-        'from scripts.ops.product_entry import load_configured_module as load\ndb = load("sqlite3:x")\ndb.Connection',
+        'from lu_machinery.ops.product_entry import load_configured_module\nload_configured_module("sqlite3:connect")',
+        'from lu_machinery.ops.product_entry import load_configured_module as load\nload("scripts.lib.sqlite3")',
+        'import lu_machinery.ops.product_entry as entry\nentry.load_configured_module(name="sqlite3.dbapi2")',
+        'from lu_machinery.ops import product_entry\ndb = product_entry.load_configured_module("_sqlite3")\ndb.connect(path)',
+        'from lu_machinery.ops.product_entry import load_configured_module as load\ndb = load("sqlite3:x")\ndb.Connection',
     ]
 )
 
@@ -162,14 +163,14 @@ def test_any_constructor_reference_fails_in_injected_scripts(source, tmp_path):
     [
         "import sqlite3\nrow = sqlite3.Row\nraise sqlite3.OperationalError()",
         'import importlib\nmodule = importlib.import_module("json")',
-        "from scripts.lib.readonly_sqlite import open_readonly\nconn = open_readonly(path)",
+        "from lu_machinery.lib.readonly_sqlite import open_readonly\nconn = open_readonly(path)",
         'def connect(path): pass\nconnect("cache.db")',
         '# sqlite3.connect(path)\nexample = "sqlite3.Connection"',
         # The helper refuses SQLite names, so a configured name is not a finding.
-        "from scripts.ops.product_entry import load_configured_module\nhooks = load_configured_module(name)\nhooks.connect(path)",
-        "from scripts.ops.product_entry import load_configured_module as load\nhooks = load(name=config['module'])",
-        "import scripts.ops.product_entry as entry\nhooks = entry.load_configured_module(name)",
-        "from scripts.ops import product_entry\nproduct_entry.load_configured_module('scripts.review.hooks')",
+        "from lu_machinery.ops.product_entry import load_configured_module\nhooks = load_configured_module(name)\nhooks.connect(path)",
+        "from lu_machinery.ops.product_entry import load_configured_module as load\nhooks = load(name=config['module'])",
+        "import lu_machinery.ops.product_entry as entry\nhooks = entry.load_configured_module(name)",
+        "from lu_machinery.ops import product_entry\nproduct_entry.load_configured_module('lu_machinery.review.hooks')",
     ],
 )
 def test_unrelated_syntax_passes(source):
@@ -181,30 +182,30 @@ def test_configured_entry_point_pin_rejects_other_files_and_extra_sites(tmp_path
     import json
 
     helper = Path(product_entry.__file__).read_text()
-    (tmp_path / "scripts" / "ops").mkdir(parents=True)
-    pinned = lint.AllowedReference("scripts/ops/product_entry.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
-    (tmp_path / "scripts/ops/product_entry.py").write_text(helper)
+    (tmp_path / "lu_machinery" / "ops").mkdir(parents=True)
+    pinned = lint.AllowedReference("lu_machinery/ops/product_entry.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
+    (tmp_path / "lu_machinery/ops/product_entry.py").write_text(helper)
     assert lint.find_violations(tmp_path, (pinned,)) == ([], [])
     # Without its entry, the helper's own import is a finding.
     assert lint.find_violations(tmp_path, ())[0]
     # A second import site, or a changed one, in the pinned file fails.
-    (tmp_path / "scripts/ops/product_entry.py").write_text(helper + "\n\ndef extra(n):\n    return importlib.import_module(n)\n")
+    (tmp_path / "lu_machinery/ops/product_entry.py").write_text(helper + "\n\ndef extra(n):\n    return importlib.import_module(n)\n")
     assert any("pinned 1 references, found 2" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
-    (tmp_path / "scripts/ops/product_entry.py").write_text(helper.replace("importlib.import_module(name)", "importlib.import_module(name + '')"))
+    (tmp_path / "lu_machinery/ops/product_entry.py").write_text(helper.replace("importlib.import_module(name)", "importlib.import_module(name + '')"))
     assert any("differs from the pinned call site" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
     # The same code in another file stays a finding, and the kind cannot name that file.
-    (tmp_path / "scripts/ops/product_entry.py").write_text(helper)
-    (tmp_path / "scripts" / "copy.py").write_text(helper)
-    other = lint.AllowedReference("scripts/copy.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
-    assert any("scripts/copy.py:" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
-    assert any("scripts/copy.py: configured entry point differs" in v for v in lint.find_violations(tmp_path, (pinned, other))[0])
+    (tmp_path / "lu_machinery/ops/product_entry.py").write_text(helper)
+    (tmp_path / "lu_machinery" / "copy.py").write_text(helper)
+    other = lint.AllowedReference("lu_machinery/copy.py", 1, lint.CONFIGURED_ENTRY_POINT_KIND, None, "fixture")
+    assert any("lu_machinery/copy.py:" in v for v in lint.find_violations(tmp_path, (pinned,))[0])
+    assert any("lu_machinery/copy.py: configured entry point differs" in v for v in lint.find_violations(tmp_path, (pinned, other))[0])
     manifest = tmp_path / "allowlist.json"
     monkeypatch.setattr(lint, "REFERENCE_MANIFEST", manifest)
-    row = {"path": "scripts/ops/product_entry.py", "reference_count": 1, "kind": lint.CONFIGURED_ENTRY_POINT_KIND,
+    row = {"path": "lu_machinery/ops/product_entry.py", "reference_count": 1, "kind": lint.CONFIGURED_ENTRY_POINT_KIND,
            "target_db": None, "reason": "fixture"}
     manifest.write_text(json.dumps([row]))
-    assert [entry.path for entry in lint.load_allowlist()] == ["scripts/ops/product_entry.py"]
-    for change in ({"path": "scripts/copy.py"}, {"reference_count": 2}, {"target_db": "sources.db"},
+    assert [entry.path for entry in lint.load_allowlist()] == ["lu_machinery/ops/product_entry.py"]
+    for change in ({"path": "lu_machinery/copy.py"}, {"reference_count": 2}, {"target_db": "sources.db"},
                    {"calls": ["sqlite3.connect(path)"]}, {"functions": ["load_configured_module"]}):
         manifest.write_text(json.dumps([{**row, **change}]))
         with pytest.raises(ValueError, match="invalid"):
@@ -264,7 +265,7 @@ def test_tests_are_not_script_exemptions(tmp_path):
 
 
 def test_reader_boundary_has_one_open():
-    tree = ast.parse((REPO_ROOT / lint.READER_BOUNDARY).read_text())
+    tree = ast.parse(machinery_path(lint.READER_BOUNDARY.removeprefix("lu_machinery/")).read_text())
     assert sum(isinstance(n, ast.Call) and ast.unparse(n.func) == "sqlite3.connect" for n in ast.walk(tree)) == 1
 
 
@@ -358,7 +359,7 @@ SOURCE_INGEST_BUILD_WRITERS = {
 def test_only_listed_source_ingest_build_writers_declare_protected_databases():
     actual = {
         entry.path
-        for entry in lint.load_allowlist()
+        for entry in lint.load_scan_allowlist(REPO_ROOT)
         if entry.kind == "writer" and any(name in entry.target_db for name in ("sources.db", "vesum.db"))
     }
     assert actual == SOURCE_INGEST_BUILD_WRITERS
@@ -392,9 +393,9 @@ def test_raw_store_constructor_forms(source):
 
 @pytest.mark.parametrize("source", [
     "import sqlite3\nconn = sqlite3.connect('fixture.db')",
-    "from scripts.lib.readonly_sqlite import open_readonly as ro\nconn = ro(db)",
-    "from scripts.storage.topology import resolve_store as resolve\ndef present(): return resolve('sources')\npytestmark = pytest.mark.skipif(not present(), reason='missing')",
-    "from scripts.lib.readonly_sqlite import open_readonly\ndef present(): return open_readonly(db)\n@pytest.mark.skipif(present(), reason='missing')\ndef test_x(): pass",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly as ro\nconn = ro(db)",
+    "from lu_machinery.storage.topology import resolve_store as resolve\ndef present(): return resolve('sources')\npytestmark = pytest.mark.skipif(not present(), reason='missing')",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly\ndef present(): return open_readonly(db)\n@pytest.mark.skipif(present(), reason='missing')\ndef test_x(): pass",
 ])
 def test_import_access_forms_and_helper_calls(source):
     assert any(f.kind == 'test_import_access' for f in lint.classify_store_source(source, 'tests/new.py'))
@@ -406,7 +407,7 @@ def test_live_collection_helpers_in_base_census():
     # the frozen base. Migrated helpers must leave the committed baseline too.
     entries = lint.census('HEAD')['entries']
     actual = {lint.StoreFinding(**e) for e in entries if e['kind'] == 'test_import_access'}
-    expected = {e for e in lint.baseline_entries() if e.kind == 'test_import_access'}
+    expected = {e for e in lint.baseline_entries(REPO_ROOT / lint.PRODUCT_BASELINE) if e.kind == 'test_import_access'}
     assert actual == expected
 
 
@@ -423,9 +424,10 @@ def test_ratchet_rejects_missing_and_new_entries(tmp_path, monkeypatch):
     path = tmp_path / 'tests/x.py'
     source = "def test_x(): return ROOT / 'data' / 'sources.db'"
     path.write_text(source)
-    baseline = tmp_path / 'baseline.json'
+    baseline = tmp_path / lint.PRODUCT_BASELINE
+    baseline.parent.mkdir(parents=True, exist_ok=True)
     baseline.write_text(json.dumps({'entries': [f.__dict__ for f in lint.classify_store_source(source, 'tests/x.py')]}))
-    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
     monkeypatch.setattr(lint, 'BASELINE', baseline)
     assert lint.find_violations(tmp_path, ()) == ([], [])
     path.write_text(source.replace('sources.db', 'vesum.db'))
@@ -438,7 +440,7 @@ def test_resolver_allowlist_is_narrow(tmp_path, monkeypatch):
     import json
     path = tmp_path / 'allowlist.json'
     monkeypatch.setattr(lint, 'REFERENCE_MANIFEST', path)
-    row = dict(path='scripts/storage/topology.py', reference_count=0, kind='store_resolver',
+    row = dict(path='lu_machinery/storage/topology.py', reference_count=0, kind='store_resolver',
                target_db=None, reason='sanctioned', functions=['resolve_store'])
     path.write_text(json.dumps([row]))
     assert lint.load_allowlist()[0].functions == ('resolve_store',)
@@ -476,11 +478,12 @@ def test_fixture_roots_are_not_store_builders(source):
 def test_baseline_cannot_grow_or_change_freeze(tmp_path, monkeypatch):
     import json
     from types import SimpleNamespace
-    path = tmp_path / 'baseline.json'
+    path = tmp_path / lint.PRODUCT_BASELINE
+    path.parent.mkdir(parents=True, exist_ok=True)
     (tmp_path / '.git').mkdir()
     previous = {'base_commit': 'base', 'entries': []}
     path.write_text(json.dumps(previous))
-    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
     monkeypatch.setattr(lint, 'BASELINE', path)
     monkeypatch.setattr(lint.subprocess, 'run', lambda *a, **k: SimpleNamespace(
         returncode=0, stdout=json.dumps(previous)))
@@ -494,7 +497,7 @@ def test_baseline_cannot_grow_or_change_freeze(tmp_path, monkeypatch):
 
 
 def test_resolver_kind_only_exempts_builder_expressions(tmp_path):
-    path = tmp_path / 'scripts/storage/topology.py'
+    path = tmp_path / 'lu_machinery/storage/topology.py'
     path.parent.mkdir(parents=True)
     source = "def resolve_store(): return ROOT / 'data' / 'sources.db'"
     entry = lint.AllowedReference(str(path.relative_to(tmp_path)), 0, 'store_resolver', None,
@@ -526,10 +529,11 @@ def test_cached_base_inputs_do_not_hide_changes_or_removed_entries(tmp_path, mon
     original = lint.classify_store_source
     entry = original(source, 'tests/x.py')[0]
     payload = dict(base_commit='base', file_counts={'tests/x.py': 1}, entries=[entry.__dict__])
-    baseline = tmp_path / 'baseline.json'
+    baseline = tmp_path / lint.PRODUCT_BASELINE
+    baseline.parent.mkdir(parents=True, exist_ok=True)
     baseline.write_text(json.dumps(payload))
     monkeypatch.setattr(lint, 'BASELINE', baseline)
-    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
     monkeypatch.setattr(lint, 'base_blob_ids', lambda *args: {'tests/x.py': lint.source_blob_id(source)})
     scans = []
     def counted(source, path, **kwargs):
@@ -538,10 +542,12 @@ def test_cached_base_inputs_do_not_hide_changes_or_removed_entries(tmp_path, mon
     monkeypatch.setattr(lint, 'classify_store_source', counted)
     assert lint.find_violations(tmp_path, ()) == ([], [])
     assert scans == []
+    baseline.parent.mkdir(parents=True, exist_ok=True)
     baseline.write_text(json.dumps({**payload, 'entries': []}))
     assert lint.find_violations(tmp_path, ())[0]
     assert scans == ['tests/x.py']
     scans.clear()
+    baseline.parent.mkdir(parents=True, exist_ok=True)
     baseline.write_text(json.dumps(payload))
     path.write_text(source.replace('sources.db', 'vesum.db'))
     assert lint.find_violations(tmp_path, ())[0]
@@ -565,7 +571,7 @@ def test_base_blob_ids_include_tracked_sparse_paths(tmp_path):
 
 @pytest.mark.parametrize('source', [
     "from scripts.rag.config import DATA_DIR\nDB = DATA_DIR / 'sources.db'",
-    "from scripts.storage.paths import DATA_ROOT\nDB = DATA_ROOT / 'vesum.db'",
+    "from lu_machinery.storage.paths import DATA_ROOT\nDB = DATA_ROOT / 'vesum.db'",
     "import os\nDB = os.path.join(DATA_DIR, 'vesum.db')",
     "DB = config.DATA_DIR / 'vesum.db'",
     "DB = helper('data', 'sources.db')",
@@ -613,11 +619,12 @@ def test_absent_base_scans_every_file_and_rejects_new_builders(tmp_path, monkeyp
     path = tmp_path / 'tests/x.py'
     path.parent.mkdir()
     path.write_text("DB = DATA_DIR / 'sources.db'")
-    baseline = tmp_path / 'baseline.json'
+    baseline = tmp_path / lint.PRODUCT_BASELINE
     entries = [f.__dict__ for f in lint.classify_store_source(path.read_text(), 'tests/x.py')]
+    baseline.parent.mkdir(parents=True, exist_ok=True)
     baseline.write_text(json.dumps(dict(base_commit='0' * 40, entries=entries,
                                        file_counts={'tests/x.py': 1})))
-    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
     monkeypatch.setattr(lint, 'BASELINE', baseline)
     assert lint.base_blob_ids(tmp_path, '0' * 40) == {}
     assert lint.find_violations(tmp_path, ()) == ([], [])
@@ -674,12 +681,13 @@ def test_initial_census_correction_requires_unlanded_exact_reproduction(tmp_path
     import json
     from types import SimpleNamespace
     (tmp_path / '.git').mkdir()
-    path = tmp_path / 'baseline.json'
+    path = tmp_path / lint.PRODUCT_BASELINE
+    path.parent.mkdir(parents=True, exist_ok=True)
     previous = dict(base_commit='base', entries=[], file_counts={})
     entry = lint.classify_store_source("DB = DATA_DIR / 'sources.db'", 'scripts/x.py')[0].__dict__
     current = dict(base_commit='base', entries=[entry], file_counts={'scripts/x.py': 1})
     path.write_text(json.dumps(current))
-    monkeypatch.setattr(lint, 'REPO_ROOT', tmp_path)
+    monkeypatch.setenv(repo_root.PRODUCT_ROOT_ENV, str(tmp_path))
     monkeypatch.setattr(lint, 'BASELINE', path)
     def git_run(args, **kwargs):
         return SimpleNamespace(returncode=0, stdout=(
@@ -749,7 +757,7 @@ def test_text_joins_preserve_nested_store_builders(tmp_path, source, expression,
     "from pathlib import Path\nimport os\nDB = Path(os.environ.get('LU_SOURCES_DB', 'data/sources.db'))",
     "from sqlite3 import connect as c\nc('data/sources.db')",
     "import sqlite3 as s\nDB = REPO_ROOT / 'data' / 'sources.db'\ns.connect(DB)",
-    "from scripts.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
+    "from lu_machinery.lib.readonly_sqlite import open_readonly\ndef _present(): return open_readonly(REPO / 'data' / 'sources.db')\npytestmark = pytest.mark.skipif(_present(), reason='missing')",
     "import sqlite3\nCONN = sqlite3.connect(REPO / 'data' / 'vesum.db')",
 ])
 @pytest.mark.parametrize('tree', ['scripts', 'tests'])
@@ -807,8 +815,8 @@ def test_literal_prefilter_has_no_false_negatives_for_concatenations():
 
 def test_rebound_reader_alias_still_reports_collection_access():
     source = (
-        'from scripts.lib.readonly_sqlite import open_readonly as ro\n'
-        'from scripts.storage.topology import resolve_store as resolve\n'
+        'from lu_machinery.lib.readonly_sqlite import open_readonly as ro\n'
+        'from lu_machinery.storage.topology import resolve_store as resolve\n'
         'def first():\n    lookup = ro\n'
         'def second():\n    lookup = resolve\n'
         'binding = lookup("sources")'
@@ -819,7 +827,7 @@ def test_rebound_reader_alias_still_reports_collection_access():
     assert findings[0].scope == '<module>'
 
 
-# --- scripts.ops.product_entry.load_configured_module (#12504, LOADER-1104) ---
+# --- lu_machinery.ops.product_entry.load_configured_module (#12504, LOADER-1104) ---
 
 
 @pytest.fixture
@@ -869,7 +877,7 @@ def _no_import(monkeypatch):
     "name",
     [None, 7, b"scripts.lib", "", "scripts", "scripts.", ".scripts.lib", "scripts..lib", "Scripts.lib",
      "scripts.Lib", "scripts.lib-x", "scripts.1lib", "os.path", "json", "scripts.lib\n", " scripts.lib",
-     "scripts.lib.readonly_sqlite:import_named_module", "scripts/lib", "scriptsx.lib", "scripts.lib.é"],
+     "lu_machinery.lib.readonly_sqlite:import_named_module", "scripts/lib", "scriptsx.lib", "scripts.lib.é"],
 )
 def test_configured_module_refuses_malformed_names_before_importing(name, monkeypatch):
     _no_import(monkeypatch)
@@ -888,8 +896,8 @@ def test_configured_module_refuses_sqlite_names_before_importing(name, monkeypat
 
 def test_configured_module_loads_a_module_of_this_checkout():
     assert repo_root.product_root().resolve() == REPO_ROOT.resolve()
-    real = product_entry.load_configured_module("scripts.lib.readonly_sqlite")
-    assert real is sys.modules["scripts.lib.readonly_sqlite"]
+    real = product_entry.load_configured_module("scripts.docs.store_census")
+    assert real is sys.modules["scripts.docs.store_census"]
 
 
 def test_configured_module_loads_and_binds_the_parent(configured_module):

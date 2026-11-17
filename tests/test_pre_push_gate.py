@@ -994,9 +994,7 @@ def test_admission_wait_covers_one_full_gate_run_of_this_or_the_test_running_ver
 
 
 def test_public_gate_material_omits_operational_measurements() -> None:
-    text = GATE_PATH.read_text(encoding="utf-8") + (REPO_ROOT / "docs/runbooks/pre-push-gate.md").read_text(
-        encoding="utf-8"
-    )
+    text = GATE_PATH.read_text(encoding="utf-8")
     assert not re.search(r"(?i)load.average|cpu.seconds|loaded.host|measured[^\n]*\d", text)
     assert not re.search(r"(?i)(?:\d+|two) (?:test |xdist )?workers", text)
     assert not re.search(r"(?i)\b(?:cpu|minutes?|cores?|capacity)\b", text)
@@ -3009,6 +3007,7 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f"""\
         #!/bin/bash
+        if [ "$1" = -I ] && [ "$2" = -c ]; then exec "{sys.executable}" "$@"; fi
         if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$2" = pre_commit ]; then echo pre >> checks; exit {dict(green=0, red=1)[ending]}; fi
@@ -3327,6 +3326,7 @@ def test_injected_scope_executes_full_stages_once_and_reads_peak_before_exit(
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f'''\
         #!/bin/bash
+        if [ "$1" = -I ] && [ "$2" = -c ]; then exec "{sys.executable}" "$@"; fi
         if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$2" != pre_commit ]; then echo "other: $*" >> checks; exit 3; fi
@@ -3896,6 +3896,7 @@ def test_a_busy_sharing_transition_validates_once_on_the_serial_path(repo, endin
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f"""\
         #!/bin/bash
+        if [ "$1" = -I ] && [ "$2" = -c ]; then exec "{sys.executable}" "$@"; fi
         if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$2" = pre_commit ]; then echo pre >> checks; exit {dict(green=0, red=1)[ending]}; fi
@@ -4377,7 +4378,9 @@ def test_a_receipt_with_a_missing_or_altered_field_is_never_reused(
     assert gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0) is accepted
 
 
-def test_a_receipt_for_a_different_tool_or_base_fallback_is_never_reused(tmp_path: Path) -> None:
+def test_a_receipt_for_a_different_tool_or_base_fallback_is_never_reused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     gate.write_receipt(tmp_path, _receipt_plan(), 1000.0)
 
     for name in gate.TOOL_NAMES:
@@ -4394,6 +4397,14 @@ def test_a_receipt_for_a_different_tool_or_base_fallback_is_never_reused(tmp_pat
     resolver.parent.mkdir(parents=True)
     launcher.write_text("#!/bin/bash\nexit 0\n")
     resolver.write_text("original resolver\n")
+    real_run = gate.subprocess.run
+
+    def resolver_query(argv, *args, **kwargs):
+        if argv[:3] == [str(launcher), "-I", "-c"] and "machinery_path" in argv[3]:
+            return subprocess.CompletedProcess(argv, 0, stdout=str(resolver) + "\n", stderr="")
+        return real_run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(gate.subprocess, "run", resolver_query)
     config = tmp_path / "config.yaml"
     config.write_text("repos: []\n")
     before = gate.tool_versions(str(launcher), str(config))

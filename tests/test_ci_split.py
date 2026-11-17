@@ -257,8 +257,8 @@ def _run_pytest_script() -> str:
 
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     script = _run_pytest_script()
-    assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
-    assert "scripts.ci.split_tests duration-source" in script
+    assert '.venv/bin/python -m lu_machinery.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    assert "lu_machinery.ci.split_tests duration-source" in script
     assert '--durations "$durations"' in script
     assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
     assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script

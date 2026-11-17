@@ -191,7 +191,7 @@ def test_tracked_test_files_match_the_workflow_selection() -> None:
         for step in _workflow_jobs()["pytest"]["steps"]
         if step.get("name") == "Run pytest"
     )
-    command = script[script.index("git ls-files") : script.index("| python3")]
+    command = script[script.index("git ls-files") : script.index("| .venv/bin/python")]
     command = command.replace("\\\n", "\n").strip()
     root = Path(__file__).resolve().parents[2]
     result = subprocess.run(
@@ -273,7 +273,7 @@ def test_refresh_job_shell_notices_a_lookup_fallback(tmp_path: Path) -> None:
 
 def _pytest_step_script(name: str) -> str:
     script = next(step["run"] for step in _workflow_jobs()["pytest"]["steps"] if step.get("name") == name)
-    return script.replace("python3", shlex.quote(sys.executable))
+    return script.replace(".venv/bin/python", shlex.quote(sys.executable)).replace("python3", shlex.quote(sys.executable))
 
 
 def _duration_env(refresh_result: str, output: Path) -> dict[str, str]:
@@ -364,7 +364,7 @@ def _run_pytest_duration_selection(snapshot: Path, refresh_result: str) -> subpr
     script = next(step["run"] for step in _workflow_jobs()["pytest"]["steps"] if step.get("name") == "Run pytest")
     selection = script[script.index("snapshot=") : script.index("git ls-files")]
     selection = selection.replace("ci-artifacts/pytest-file-durations.json", str(snapshot))
-    selection = selection.replace("python3", shlex.quote(sys.executable))
+    selection = selection.replace(".venv/bin/python", shlex.quote(sys.executable)).replace("python3", shlex.quote(sys.executable))
     env = os.environ.copy()
     env["REFRESH_RESULT"] = refresh_result
     return subprocess.run(

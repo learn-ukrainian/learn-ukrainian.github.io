@@ -22,7 +22,7 @@ Repair 6 (PR #7662, operator-approved architecture -- see ``batch_state/
 briefs/v4-real-slot-mechanism-repair-6-approval.md``): the production
 entrypoint (``issue_verifier_attestation``) now accepts an opaque
 ``invocation_id`` only. It resolves every evidentiary field from the
-canonical Sources invocation store (``scripts.fleet_comms.v4_canonical_
+canonical Sources invocation store (``lu_machinery.fleet_comms.v4_canonical_
 authority_store``, written only by the Sources MCP wire handler after it
 independently confirms the claimed fields are present in the tool's own
 genuine result -- never a caller-created object), loads the signing key

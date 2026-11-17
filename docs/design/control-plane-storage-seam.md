@@ -3,7 +3,7 @@
 Stamped packet v3 SHA-256:
 `d29a13cedcdc50c6e97516b237155dad9f53116051aba29211b73bfb058c3bcc`
 
-Sqlite remains the **default** live authority. `scripts/control_plane/storage.py`
+Sqlite remains the **default** live authority. `lu_machinery/control_plane/storage.py`
 is the single resolver for durable control-plane stores — still a resolver, not
 a dialect-neutral SQL switchboard (callers own transactions).
 
@@ -40,11 +40,11 @@ Seam consumers already routed in Phase 0a:
 - `agents_extensions/shared/session_streams/db.py` (`SessionStreamDatabase._connect_once`)
 - `scripts/fleet_comms/artifacts.py` (`ArtifactStore`), `cli.py`, `cold_start_board.py`,
   `message_plane.py`, `routing_reservations.py`, and `efficiency_metrics.py`
-- `scripts/fleet_comms/authority.py` delegates to `ArtifactStore`
+- `lu_machinery/fleet_comms/authority.py` delegates to `ArtifactStore`
 
 Remaining allowlisted direct opens in `scripts/hygiene/lint_control_plane_sqlite.py`:
-- Monitor API routers (`scripts/api/fleet_router.py`, `scripts/api/fleet_workers_collect.py`, `scripts/api/runtime_router.py` — handled in #7269 steps 3/4/6)
-- Runtime / slot routing readers (`scripts/agent_runtime/acpx_discuss.py`, `scripts/orchestration/slot_routing.py`)
+- Monitor API routers (`lu_machinery/api/fleet_router.py`, `lu_machinery/api/fleet_workers_collect.py`, `lu_machinery/api/runtime_router.py` — handled in #7269 steps 3/4/6)
+- Runtime / slot routing readers (`lu_machinery/agent_runtime/acpx_discuss.py`, `scripts/orchestration/slot_routing.py`)
 
 Legacy broker `messages.db` call sites remain direct non-authority file opens.
 
@@ -123,7 +123,7 @@ source refuses the entire run before either retention rule computes candidates.
 Symlinks and non-regular files in the export or scanned trees also refuse.
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms retention \
+.venv/bin/python -m lu_machinery.fleet_comms retention \
   --cited-from-tasks batch_state/tasks \
   --cited-from-docs docs \
   --cited-from-github github.jsonl \

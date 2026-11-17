@@ -11,7 +11,7 @@ passed both and then no Codex, Claude or Grok review could settle (#12380, #1239
 `lu_machinery/review/contract_canary.py` declares the contract paths once (`CONTRACT_PATHS`): the bound
 findings schema, the receipt gate, the verdict parser, the recorder, settlement, the dispatcher
 worker and output-schema binding, and each reviewer provider's schema and reply handling. The
-merge-queue keeper and `scripts.publish pr-merge` read the PR's file list. When it touches one of
+merge-queue keeper and `lu_machinery.publish pr-merge` read the PR's file list. When it touches one of
 those paths, both refuse the head with the typed reason `needs-contract-canary` and one of these details:
 
 | Detail | Meaning |
@@ -52,7 +52,7 @@ HEAD_SHA="$(git rev-parse HEAD)"
 for route_model in agy:gemini-3.8-flash-high claude:claude-sonnet-5-5 codex:gpt-6.1-sol \
     cursor:grok-4.7-high; do
   route="${route_model%%:*}"; model="${route_model#*:}"
-  "$PY" -c "import sys; from scripts.dispatcher import cli; sys.exit(cli.main(sys.argv[1:]))" dispatch \
+  "$PY" -c "import sys; from lu_machinery.dispatcher import cli; sys.exit(cli.main(sys.argv[1:]))" dispatch \
     --agent "$route" --model "$model" --effort medium --mode read-only --worktree \
     --task-id "contract-canary-$PR-$route-${HEAD_SHA:0:8}" --prompt-file "$CANARY_BRIEF" \
     --pinned-head "$HEAD_SHA" --review-profile code --require-review-verdict

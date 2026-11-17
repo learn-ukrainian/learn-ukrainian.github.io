@@ -5,7 +5,7 @@ Description=Learn Ukrainian OpenCode session retention
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=@PYTHON@ @REPO_ROOT@/scripts/orchestration/opencode_session_retention.py
+ExecStart=@PYTHON@ -m lu_machinery.orchestration.opencode_session_retention
 TimeoutStartSec=7200
 Nice=15
 IOSchedulingClass=idle

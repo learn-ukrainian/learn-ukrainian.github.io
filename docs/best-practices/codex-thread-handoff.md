@@ -25,7 +25,7 @@ cannot substitute for that note.
 Keep `.claude/<lane>-epic/DRIVER-STATE.md` under 4 KiB. It contains only pinned
 provider and stream facts and DB render instructions. Do not store goals,
 next steps or task state there, or update it when a goal lands.
-`scripts.driver_state whoami` remains an identity diagnostic, not a substitute
+`lu_machinery.driver_state whoami` remains an identity diagnostic, not a substitute
 for DB render/check.
 
 For native Codex, hand off after the fourth compaction and before the eighth.
@@ -53,7 +53,7 @@ Verified locally through 2026-07-15:
   is a compact local thread index.
 - `$CODEX_HOME/automations/` existed but had no `automation.toml` files in
   this audit, only `.run-jitter-salt`.
-- `scripts/ai_agent_bridge/_ui_codex.py` already supports sending messages
+- `lu_machinery/ai_agent_bridge/_ui_codex.py` already supports sending messages
   to an existing Codex UI thread with `codex exec resume`; it does not create
   a new app thread.
 - Monitor state for orchestration is available through `/api/orient` (including
@@ -92,7 +92,7 @@ prompt, and a Task Family Manager transition operation:
 - Other durable agent handoffs: `docs/session-state/current.<agent>.md`
 - Compatibility router: `docs/session-state/current.md` (git-tracked; not used
   for normal thread rollover)
-- Script: `scripts/orchestration/thread_handoff.py`
+- Script: `lu_machinery/orchestration/thread_handoff.py`
 - Canonical schema: `agents_extensions/shared/schemas/task-identity.v1.schema.json`
 - Canonical contract: `agents_extensions/shared/contracts/task-identity.md`
 
@@ -135,7 +135,7 @@ Run this from the repo root when the heartbeat thread enters the rollover
 zone:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare \
   --agent orchestrator --harness codex-app \
   --active-thread-id <current-thread-id> \
   --stream-epic <one-stream-epic-number> \
@@ -150,7 +150,7 @@ zone:
 If the active thread id or automation id is known, include them:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare \
   --agent orchestrator \
   --active-thread-id <current-thread-id> \
   --active-automation-id <old-heartbeat-automation-id> \
@@ -190,20 +190,20 @@ failure and preserve the durable operation for retry rather than creating or
 choosing another task by title.
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff native-action \
   --agent orchestrator --lineage-id <lineage-id> \
   --rollover-id <rollover-id> --action create
 # After native create_thread returns an exact threadId:
-.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff record-native-result \
   --agent orchestrator --lineage-id <lineage-id> \
   --rollover-id <rollover-id> --action create --succeeded \
   --evidence "create_thread returned exact threadId"
-.venv/bin/python scripts/orchestration/thread_handoff.py register-created \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff register-created \
   --agent orchestrator --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
   --replacement-thread-id <exact-replacement-thread-id> \
   --evidence "native create_thread result"
-.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff native-action \
   --agent orchestrator --lineage-id <lineage-id> \
   --rollover-id <rollover-id> --action title
 ```
@@ -224,7 +224,7 @@ When `prepare` reports `native_title_supported: false`, create or bind the
 exact replacement through that harness, then persist the carrier fallback:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py bind-replacement \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff bind-replacement \
   --agent <agent> --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
   --replacement-task-id <exact-replacement-task-id> \
@@ -243,7 +243,7 @@ The bootstrap starts with a checklist that is deliberately hard to skip:
 - repo root + `git status --short --branch`
 - local `.agent/<agent>-thread-handoff.md`
 - `/api/orient?fresh=true`
-- `.venv/bin/python scripts/orchestration/issue_stream_audit.py --json` when
+- `.venv/bin/python -m lu_machinery.orchestration.issue_stream_audit --json` when
   the GitHub issue subsection errors or times out
 - open PR list
 - current worktree hygiene via `git worktree list`
@@ -253,7 +253,7 @@ thread to read its Fleet Comms authority deliveries. `--recipient` and
 `--worker-id` are both required:
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient <your-slot> --worker-id <your-slot>
+.venv/bin/python -m lu_machinery.fleet_comms deliveries receive --recipient <your-slot> --worker-id <your-slot>
 ```
 
 Delegate task state is still summarized by
@@ -263,7 +263,7 @@ excerpts, so the new thread does not have to rediscover raw files under
 first, then the delegate summary:
 
 ```text
-Legacy inbox is a read-only projection in authority mode; read your deliveries with `.venv/bin/python -m scripts.fleet_comms deliveries receive --recipient <slot>` (queued authority deliveries: N).
+Legacy inbox is a read-only projection in authority mode; read your deliveries with `.venv/bin/python -m lu_machinery.fleet_comms deliveries receive --recipient <slot>` (queued authority deliveries: N).
 ```
 
 `<slot>` is `SESSION_HANDOFF_AGENT` when that variable is set, and `N` is
@@ -281,7 +281,7 @@ The replacement thread reads both durable role state and thread rollover state:
 After the replacement thread is visibly running, confirm it:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff confirm-started \
   --agent orchestrator \
   --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
@@ -307,7 +307,7 @@ as for title.
 Agents other than the orchestrator write only their own handoff by default:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare \
   --agent <agent> --harness <harness> \
   --active-thread-id <exact-active-task-id> \
   --stream-epic <one-stream-epic-number> \
@@ -329,7 +329,7 @@ tiny and must keep `Latest-Brief:` plus the `Agent-Handoff:` mapping.
 Confirm the replacement with the same agent name:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff confirm-started \
   --agent codex \
   --lineage-id <lineage-id> \
   --rollover-id <rollover-id> \
@@ -338,7 +338,7 @@ Confirm the replacement with the same agent name:
 
 ## Claude Operator-Restart Rollover (650k / 700k / 750k)
 
-Native Claude sessions (`native_claude` in `scripts/config/context_profiles.yaml`,
+Native Claude sessions (`native_claude` in `lu_machinery/config/context_profiles.yaml`,
 `rollover_mode: operator_restart`, #8511) never continue themselves: they hand
 off and wait for the operator to restart them.
 `agents_extensions/shared/hooks/context-monitor.sh` announces each tier once:
@@ -375,7 +375,7 @@ without it. Safe reconciliation of such ties is tracked in #9789.
 Check the lease at any time:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py check \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff check \
   --agent <agent> --lineage-id <lineage-id>
 ```
 
@@ -398,7 +398,7 @@ supersession.
 
 `audit` includes the same read-only `task_identity` snapshot. Monitor and
 orientation integrations consume
-`scripts.orchestration.thread_handoff.rollover_identity_snapshot(...)` so the
+`lu_machinery.orchestration.thread_handoff.rollover_identity_snapshot(...)` so the
 API view uses this envelope instead of reconstructing titles from lineage IDs.
 
 `prepare` and `confirm-started` refuse to overwrite an unreadable lease file.
@@ -406,7 +406,7 @@ Inspect or restore the file first. If the operator intentionally wants to
 discard the corrupt lease and start a new one, run:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare \
   --agent orchestrator \
   --force-reset-state \
   --context-percent 86
@@ -415,7 +415,7 @@ discard the corrupt lease and start a new one, run:
 Dry-run without writing files:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent codex --dry-run
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare --agent codex --dry-run
 ```
 
 ### Fleet audit, exact selection, and maintenance
@@ -487,7 +487,7 @@ contains a different rollover ID, native creation is forbidden. After verifying
 through the app and receipt that `create_thread` was never called, run:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py repair-native-intent \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff repair-native-intent \
   --agent codex \
   --lineage-id <lineage-id> \
   --rollover-id <current-rollover-id> \
@@ -521,7 +521,7 @@ cd "$canonical"
 npm run agents:deploy | tee "$evidence/canonical-deploy.txt"
 test -z "$(git status --porcelain)"
 source_head=$(git rev-parse HEAD)
-.venv/bin/python scripts/orchestration/thread_handoff.py prepare \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff prepare \
   --agent codex --harness codex-app \
   --active-thread-id <predecessor-task-id> \
   --active-automation-id <predecessor-automation-id> \
@@ -536,7 +536,7 @@ lineage_id=$(jq -r .lineage_id "$evidence/prepare.json")
 rollover_id=$(jq -r .rollover_id "$evidence/prepare.json")
 lease_rel=$(jq -r .state_file "$evidence/prepare.json")
 lease="$canonical/$lease_rel"
-.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff native-action \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" --action create \
   | tee "$evidence/create-action.json"
@@ -554,27 +554,27 @@ fresh=<absolute-app-worktree-path>
 initial_replacement_task_id=<fresh-task-id>
 printf '%s\n' "$initial_replacement_task_id" \
   > "$evidence/initial-replacement-task-id.txt"
-.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff record-native-result \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" --action create --succeeded \
   --evidence "smoke create_thread returned $initial_replacement_task_id"
-.venv/bin/python scripts/orchestration/thread_handoff.py register-created \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff register-created \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
   --replacement-thread-id "$initial_replacement_task_id" \
   --evidence "fresh smoke create_thread result" \
   | tee "$evidence/register-created.json"
-.venv/bin/python scripts/orchestration/thread_handoff.py native-action \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff native-action \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" --action title \
   | tee "$evidence/title-action.json"
 # The app-capable agent calls set_thread_title with title-action.json's exact
 # arguments, then persists its acknowledgement before read-back.
-.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff record-native-result \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" --action title --succeeded \
   --evidence "smoke set_thread_title acknowledgement"
-.venv/bin/python scripts/orchestration/thread_handoff.py reconcile-native \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff reconcile-native \
   --agent codex --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" --action title \
   | tee "$evidence/title-reconcile.json"
@@ -614,7 +614,7 @@ claim_task_id=<handoff-destination-task-id>
 cd "$canonical"
 test "$(git rev-parse HEAD)" = "$source_head"
 test -z "$(git status --porcelain)"
-.venv/bin/python scripts/orchestration/thread_handoff.py resume \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff resume \
   --agent codex \
   --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
@@ -627,7 +627,7 @@ Read the packet and durable role handoff named by SessionStart, then confirm.
 ```bash
 test "$(git rev-parse HEAD)" = "$source_head"
 test -z "$(git status --porcelain)"
-.venv/bin/python scripts/orchestration/thread_handoff.py confirm-started \
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff confirm-started \
   --agent codex \
   --lineage-id "$lineage_id" \
   --rollover-id "$rollover_id" \
@@ -700,7 +700,7 @@ Read Fleet Comms authority deliveries from any current or replacement
 thread. `--recipient` and `--worker-id` are both required:
 
 ```bash
-.venv/bin/python -m scripts.fleet_comms deliveries receive \
+.venv/bin/python -m lu_machinery.fleet_comms deliveries receive \
   --recipient <slot> \
   --worker-id <slot>
 ```
@@ -723,13 +723,13 @@ to stderr and stdout stays the delegate packet.
 Audit local Codex metadata:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py audit
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff audit
 ```
 
 Include live Monitor API state in the audit:
 
 ```bash
-.venv/bin/python scripts/orchestration/thread_handoff.py audit --include-monitor
+.venv/bin/python -m lu_machinery.orchestration.thread_handoff audit --include-monitor
 ```
 
 ## Heartbeat Behavior

@@ -1,6 +1,6 @@
 """SQLite store registry and census (#11092, DB plan step 1).
 
-* The repository catalogue carries the registry: 39 named stores present (33 active, 3
+* The repository catalogue carries the registry: 33 named stores present (28 active, 2
   dormant, 2 staged, 1 orphan), 9 declared-absent defaults, the dynamic families and
   the evidence directories, each row with the required fields (AC-01, AC-03).
 * The static check rejects wrong backup facts, protection below the nightly, keep
@@ -8,7 +8,7 @@
 * The census flags an unregistered SQLite file under data/, .agent/, .mcp/ and
   batch_state/ (by extension or header), passes registered stores, family globs and
   evidence directories, flags missing or unexpected stores and journal mismatches on
-  the store host, reproduces the 39 count on a materialised tree and never writes.
+  the store host, reproduces the 33 count on a materialised tree and never writes.
 
 Every census here walks a temporary tree; the walk of the real checkout is in
 tests/test_docs_catalogue_coverage.py (repo_wide).
@@ -26,13 +26,14 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-from lu_machinery.docs import catalogue as cat
-from lu_machinery.docs import store_census as sc
+
+from scripts.docs import catalogue as cat
+from scripts.docs import store_census as sc
 
 REPO = Path(__file__).resolve().parents[1]
 CATALOGUE = cat.load(REPO / cat.CATALOGUE_PATH)
 REGISTRY = sc.registry(CATALOGUE)
-ALLOWLIST = json.loads((Path(sc.__file__).parents[2] / sc.ALLOWLIST_PATH).read_text(encoding="utf-8"))
+ALLOWLIST = json.loads((REPO / sc.ALLOWLIST_PATH).read_text(encoding="utf-8"))
 STUDY_EVIDENCE_DIRS = {'batch_state/preserved', 'batch_state/devops-*', 'batch_state/codex-atlas',
                        'batch_state/briefs', 'batch_state/open-model-data-*', 'batch_state/review-receipts'}
 
@@ -73,12 +74,12 @@ def row_by_path(reg: dict, path: str) -> dict:
 
 def test_the_registry_reproduces_the_reconciled_inventory():
     present = rows(presence='present')
-    assert len(present) == 39
-    assert Counter(r['activity'] for r in present) == {'active': 33, 'dormant': 3, 'staged': 2, 'orphan': 1}
+    assert len(present) == 33
+    assert Counter(r['activity'] for r in present) == {'active': 28, 'dormant': 2, 'staged': 2, 'orphan': 1}
     active = Counter(r['kind'] for r in present if r['activity'] == 'active')
-    assert active == {'operational': 7, 'cache': 4, 'reference': 9, 'derived': 3, 'job_state': 8, 'telemetry': 2}
+    assert active == {'operational': 5, 'cache': 3, 'reference': 9, 'derived': 3, 'job_state': 8}
     assert {r['path'] for r in rows(activity='dormant')} == {
-        'batch_state/agent_monitor.sqlite3', 'wiki/.state/progress.db', 'data/ulif_dump.db'}
+        'wiki/.state/progress.db', 'data/ulif_dump.db'}
     assert {r['path'] for r in rows(activity='staged')} == {'data/sum20_staging.db', 'data/sum20_slovnyk_staging.db'}
     assert {r['path'] for r in rows(activity='orphan')} == {'batch_state/fleet-comms/v1/artifacts/comms.sqlite3'}
     assert row_by_path(REGISTRY, 'batch_state/review-findings/a1.sqlite')['activity'] == 'active'
@@ -88,7 +89,7 @@ def test_the_registry_records_the_declared_defaults_families_and_evidence():
     absent = {r['path'] for r in rows(presence='declared_absent')}
     assert absent == {
         'batch_state/hramatka/lessons.sqlite3', 'batch_state/trails/runs.sqlite3',
-        'batch_state/agent_runtime_failover_cooldowns.sqlite3', 'data/telemetry/module_builds.db',
+        'data/telemetry/module_builds.db',
         'data/telemetry/llm_qg.db', 'data/telemetry/llm_qg_shadow.db', 'data/embeddings/manifest.db',
         'data/ubertext-freq/frequency.db', 'data/atlas-synthetic.db'}
     families = {f['id'] for f in REGISTRY['families']}
@@ -168,14 +169,14 @@ MUTATIONS = {
     'busy null with a writer': (_set('data/atlas.db', busy_ms=None), 'busy_ms is null'),
     # The failover writer connects with timeout=10.0, then PRAGMA busy_timeout=5000 overrides it.
     'busy timeout other than the writer sets': (
-        _set('batch_state/agent_runtime_failover_cooldowns.sqlite3', busy_ms=10000),
-        "busy_ms 10000 but 'scripts/agent_runtime/failover.py:FailoverCooldownStore._connect' sets 5000"),
+        _set('data/embeddings/manifest.db', busy_ms=10000),
+        "busy_ms 10000 but 'scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__' sets 30000"),
     'busy timeout other than the named helper sets': (
         _set('.mcp/servers/message-broker/messages.db', busy_ms=10000),
-        "busy_ms 10000 but 'scripts/ai_agent_bridge/_db.py:_tune_connection' sets 5000"),
+        "busy_ms 10000 but '.mcp/servers/message-broker/server.py:get_db' sets 5000"),
     'explicit busy timeout set only in an unnamed helper': (
         _set('.mcp/servers/message-broker/messages.db', busy_setters=DROP),
-        "'scripts/ai_agent_bridge/_db.py:init_db' sets no busy timeout; name the shared helper"),
+        "'.mcp/servers/message-broker/server.py:handle_send_message' sets no busy timeout; name the shared helper"),
     'default busy source while the writer sets one': (
         _set('data/embeddings/manifest.db', busy_source='default', busy_ms=5000), 'record it as explicit'),
     'busy setters on a default source': (
@@ -183,8 +184,8 @@ MUTATIONS = {
              busy_setters=['scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__']),
         "busy_setters is for busy_source explicit, not 'default'"),
     'undefined busy setter': (
-        _set('.mcp/servers/message-broker/messages.db', busy_setters=['scripts/ai_agent_bridge/_db.py:nope']),
-        "busy setter 'scripts/ai_agent_bridge/_db.py:nope': 'nope' is not defined"),
+        _set('.mcp/servers/message-broker/messages.db', busy_setters=['.mcp/servers/message-broker/server.py:nope']),
+        "busy setter '.mcp/servers/message-broker/server.py:nope': 'nope' is not defined"),
 }
 
 
@@ -211,7 +212,7 @@ def test_a_family_example_must_match_its_glob_and_not_be_shadowed():
 
 def test_a_store_inside_an_evidence_directory_and_duplicates_are_rejected():
     def inside(reg):
-        reg['stores'].append({**row_by_path(reg, 'batch_state/agent_monitor.sqlite3'),
+        reg['stores'].append({**row_by_path(reg, 'batch_state/fleet-comms/v1/comms.sqlite3'),
                               'path': 'batch_state/preserved/x.sqlite3', 'backup': 'drop'})
     assert any('inside an evidence directory' in e for e in static(mutated(inside)))
 
@@ -366,7 +367,7 @@ def test_coverage_rows_are_confirmed_by_their_schema_table(tmp_path):
 def test_presence_flags_missing_and_unexpected_stores_only_when_asked(tmp_path):
     assert run(tmp_path).ok  # a code-only checkout (CI, a sparse worktree) has no stores
     result = run(tmp_path, expect_present=True)
-    assert not result.ok and len(result.missing) == 39
+    assert not result.ok and len(result.missing) == 33
     store(tmp_path, 'batch_state/trails/runs.sqlite3')
     result = run(tmp_path, expect_present=True)
     assert 'batch_state/trails/runs.sqlite3: registered as declared_absent but present; update its row' in result.problems
@@ -389,16 +390,16 @@ def materialise(root: Path) -> None:
         store(root, logical, wal=row['journal'] == 'wal')
 
 
-def test_a_materialised_registry_reproduces_the_39_count(tmp_path):
+def test_a_materialised_registry_reproduces_the_33_count(tmp_path):
     materialise(tmp_path)
     result = run(tmp_path, expect_present=True)
     assert result.ok, (result.unregistered, result.problems, result.missing)
     counts = result.counts(REGISTRY)
-    assert counts['named_stores_present'] == 39 and counts['missing'] == 0
-    assert counts['by_activity'] == {'active': 33, 'dormant': 3, 'orphan': 1, 'staged': 2}
-    assert counts['active_by_kind'] == {'cache': 4, 'derived': 3, 'job_state': 8, 'operational': 7,
-                                        'reference': 9, 'telemetry': 2}
-    assert counts['declared_absent_rows'] == 9
+    assert counts['named_stores_present'] == 33 and counts['missing'] == 0
+    assert counts['by_activity'] == {'active': 28, 'dormant': 2, 'orphan': 1, 'staged': 2}
+    assert counts['active_by_kind'] == {'cache': 3, 'derived': 3, 'job_state': 8, 'operational': 5,
+                                        'reference': 9}
+    assert counts['declared_absent_rows'] == 8
 
 
 def snapshot(root: Path) -> dict[str, tuple[int, int]]:

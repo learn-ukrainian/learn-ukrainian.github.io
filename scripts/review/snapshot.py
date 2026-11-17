@@ -36,8 +36,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.common.scratch import ensure_scratch_root, make_scratch_dir
-from scripts.review.isolation import (
+from lu_machinery.common.scratch import ensure_scratch_root, make_scratch_dir
+from lu_machinery.review.isolation import (
     REVIEW_TEMP_ROOT_MARKER_NAME,
     ReviewIsolationError,
     create_review_temp_root,
@@ -2129,9 +2129,9 @@ def verify_review_acceptance(
         raise ReviewSnapshotError(f"{DIAG_DRIFT}:isolation_evidence_missing")
 
     if isolation_evidence is not None:
-        from scripts.review.isolation import ISOLATION_POLICY_VERSION as _IPV
-        from scripts.review.isolation import ReviewIsolationError as _RIE
-        from scripts.review.isolation import validate_isolation_evidence
+        from lu_machinery.review.isolation import ISOLATION_POLICY_VERSION as _IPV
+        from lu_machinery.review.isolation import ReviewIsolationError as _RIE
+        from lu_machinery.review.isolation import validate_isolation_evidence
 
         expected_pol = expected_policy_version or _IPV
         try:

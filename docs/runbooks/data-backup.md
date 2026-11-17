@@ -12,7 +12,7 @@ write through the cloud provider's desktop sync mount, overwrite the previous ba
 or restore directly over live project data. Snapshot pruning exists only as
 the explicit manual `retention` command described below.
 
-The backup command reads one allowlist, `scripts/config/backup-allowlist.json`, and
+The backup command reads one allowlist, `lu_machinery/config/backup-allowlist.json`, and
 backs up every kept path in one run. On Linux a clean run writes a bounded
 number of restic snapshots that does not grow by one per database: one base
 snapshot, `ceil(N / K)` database-batch snapshots, and two receipt snapshots
@@ -50,7 +50,7 @@ and whose parent is `data/lexicon`. There is no size cutoff. Nested
 directories are not included. Measured read-only on 2026-10-13T15:31:18Z:
 8 files, 10675420 bytes.
 
-To add a path, edit `scripts/config/backup-allowlist.json` and the KEEP table
+To add a path, edit `lu_machinery/config/backup-allowlist.json` and the KEEP table
 below in the same change. Do not add a path by editing `scripts/backup-data.sh`.
 Set `required` only when a missing path must abort the nightly. A supervised
 run on the backup host is what shows that a nightly finishes; this page only

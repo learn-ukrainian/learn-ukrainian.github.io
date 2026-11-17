@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import ClassVar
 
 import pytest
+from lu_machinery.common.repo_root import machinery_path
 
 ROOT = Path(__file__).resolve().parent.parent
 # The learn-ukrainian pages live in the product package (Monitor split, C-4687).
@@ -195,7 +196,7 @@ class TestApiEndpoints:
     @pytest.mark.repo_wide
     def test_endpoints_defined_in_router(self):
         """Check that API endpoints are defined in router files."""
-        api_dirs = [ROOT / "scripts" / "api", ROOT / "scripts" / "project_api"]
+        api_dirs = [machinery_path("api"), ROOT / "scripts" / "api", ROOT / "scripts" / "project_api"]
         if not all(api_dir.exists() for api_dir in api_dirs):
             pytest.skip("API directory not found")
 

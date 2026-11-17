@@ -17,7 +17,7 @@ pre-cutover assignment:
 
 The current file does not contain a distinct `post_2026_06_15` paragraph under
 rule M0. The post-cutover hard rule is in
-`scripts/config/agent_fallback_substitutions.yaml`:
+`lu_machinery/config/agent_fallback_substitutions.yaml`:
 
 > Per user direction 2026-05-13 ("you should delegate only to codex and gemini
 > after june 15th"): after the agentic credit pool launches, NO `delegate.py
@@ -56,7 +56,7 @@ empirically tested in the target role is marked pending verification.
 
 ## Canonical Substitution Chain
 
-`scripts/config/agent_fallback_substitutions.yaml` is quoted in full:
+`lu_machinery/config/agent_fallback_substitutions.yaml` is quoted in full:
 
 ```yaml
 # Agent fallback substitution map — canonical source of truth.
@@ -268,7 +268,7 @@ Action:
 
 | Surface | Change before cutover | Verification |
 | --- | --- | --- |
-| `scripts/ai_agent_bridge/_dispatch_wrappers.py` | Remove or substitute the `claude` agent in `build_review_deep_command`. | `ab review-deep --dry-run` must not write a task state with `agent=claude`. |
+| `lu_machinery/ai_agent_bridge/_dispatch_wrappers.py` | Remove or substitute the `claude` agent in `build_review_deep_command`. | `ab review-deep --dry-run` must not write a task state with `agent=claude`. |
 | `docs/best-practices/agent-bridge.md` | Rewrite `ab review-deep` documentation after the wrapper changes. | Grep for `review-deep` plus `--agent claude` in docs. |
 | `claude_extensions/memory/MEMORY.md` | Replace the pre-cutover adversarial-review row or mark it as historical with the YAML fallback. | Deploy-rule sync should no longer expose a current Claude delegate command. |
 | `claude_extensions/rules/model-assignment.md` | Mirror the memory change. | `npm run claude:deploy` output, if deployment is in scope for that PR. |

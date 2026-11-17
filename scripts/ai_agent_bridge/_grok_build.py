@@ -15,28 +15,25 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from agent_runtime import runner as agent_runner
-from agent_runtime.adapters.grok_build import (
+from lu_machinery.agent_runtime.adapters.grok_build import (
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
     grok_session_dir,
 )
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.errors import (
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
-
-from ._ask_contract import (
+from lu_machinery.ai_agent_bridge._ask_contract import (
     MAX_TOTAL_ASK_RETRIES,
     NATIVE_ASK_TOOL_CONTRACT,
     requested_effort,
     resolve_model_selection,
     response_provenance,
 )
-from ._ask_lifecycle import (
+from lu_machinery.ai_agent_bridge._ask_lifecycle import (
     _ask_metadata,
     _ask_state_dir,
     claim_ask_retry,
@@ -45,11 +42,14 @@ from ._ask_lifecycle import (
     record_ask_reply,
     register_ask,
 )
-from ._config import REPO_ROOT
-from ._db import get_db, set_session
-from ._messaging import acknowledge, send_message
-from ._prompts import bridge_prompt, require_core_or_exit
-from ._review_worktree import (
+from lu_machinery.ai_agent_bridge._config import REPO_ROOT
+from lu_machinery.ai_agent_bridge._db import get_db, set_session
+from lu_machinery.ai_agent_bridge._messaging import acknowledge, send_message
+from lu_machinery.ai_agent_bridge._prompts import bridge_prompt, require_core_or_exit
+from lu_machinery.common.jsonl import jsonl_lines as split_jsonl_lines
+
+from agent_runtime import runner as agent_runner
+from scripts.ai_agent_bridge._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
     provision_review_worktree,
@@ -155,7 +155,7 @@ def process_for_grok_build(
     if not msg:
         return
 
-    from ._ask_lifecycle import assert_ask_content_present
+    from lu_machinery.ai_agent_bridge._ask_lifecycle import assert_ask_content_present
 
     # #4915: background workers must use the DB-stored body, never empty stdin.
     assert_ask_content_present(msg, message_id=message_id, target="grok")
@@ -611,7 +611,7 @@ def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
     acknowledgement happens only after a successful routed reply.
     """
     print(f"\nGrok Build error for message #{message_id}: {reason}")
-    from ._ask_contract import failed_response_provenance
+    from lu_machinery.ai_agent_bridge._ask_contract import failed_response_provenance
 
     data, from_model = failed_response_provenance(
         msg, bridge_model="grok-bridge-error", harness="grok"

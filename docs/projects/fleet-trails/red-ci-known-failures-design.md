@@ -7,16 +7,16 @@
     `agents_extensions/shared/schemas/red-ci-signature-receipt.v1.schema.json`,
     `agents_extensions/shared/schemas/red-ci-lookup-receipt.v1.schema.json`
   - Validator / lookup module: `scripts/orchestration/red_ci_known_failures.py`
-  - Trail integration: `scripts/config/trails/rb4-red-ci-triage.trail.yaml`
+  - Trail integration: `lu_machinery/config/trails/rb4-red-ci-triage.trail.yaml`
   - Tests: `tests/test_red_ci_known_failures.py`
 - **New in the P11 PR** (not prior git history): checked-in registry seed
-  `scripts/config/trails/red-ci-known-failures.yaml` + `tests/test_red_ci_registry_file.py`.
+  `lu_machinery/config/trails/red-ci-known-failures.yaml` + `tests/test_red_ci_registry_file.py`.
 - **PR refs**: stage 1 (#5926), stage 2 (#5946), TrailSpec v1.1 contract schema base (#5963).
 - **Provenance**: designed by the advisor seat (gpt-5.6-sol @ xhigh, bridge task
   `registry-design-sol`, reply msg 5551, 2026-07-28), commissioned by the infra lane per the
   RB-4 (#5919) review resolution: the registry, its lookup tool, and the rerun primitive are
   designed TOGETHER. Part of #5885.
-- **Consumers**: `scripts/config/trails/rb4-red-ci-triage.trail.yaml` (`allowlist_match` is an
+- **Consumers**: `lu_machinery/config/trails/rb4-red-ci-triage.trail.yaml` (`allowlist_match` is an
   enforced fail-closed gate on the registry file + lookup tool), the `red-ci-triage` decision
   table, and `scripts/orchestration/validate_trailspec.py`.
 - **Integration hazards the memo found in merged RB-4** (fix before activation, tracked by the

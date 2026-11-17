@@ -25,7 +25,7 @@ cd ../learn-ukrainian-wt-817
 git push -u origin fix/817-fix-v4-terminology
 
 # 3. Create PR after exact-head cross-family CF review (see model-assignment.md)
-.venv/bin/python -m scripts.publish pr-create --title "fix: v4 terminology in logs (#817)"
+.venv/bin/python -m lu_machinery.publish pr-create --title "fix: v4 terminology in logs (#817)"
 
 # 4. Get reviews on the PR
 # - Code review agent reviews automatically
@@ -226,7 +226,7 @@ and CLI merge wrappers validate that:
 | Hook | Owns | Blocks |
 | --- | --- | --- |
 | `guard-admin-merge.py` | `gh pr merge --admin` (raw command refused by the shim) | a blocking check is red (#M-0.5) |
-| `guard-pr-merge.py` | every `.venv/bin/python -m scripts.publish pr-merge --number <N>` and raw merge attempts | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
+| `guard-pr-merge.py` | every `.venv/bin/python -m lu_machinery.publish pr-merge --number <N>` and raw merge attempts | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
 
 Both guards judge `--admin` merges. They fail **closed**: if the PR, its checks, or the base branch's
 protection can't be read (gh error/timeout), the merge is refused rather than
@@ -241,7 +241,7 @@ relies on configured required checks to delay merging: with none configured, aut
 merges immediately regardless of check states. The guard inspects branch protection
 per merge — allowed against a base with verified required checks (such as `main`),
 refused when protection cannot be verified or lists no required checks. In that case,
-verify checks green and merge manually. `.venv/bin/python -m scripts.publish pr-disarm --number <N>` is never blocked;
+verify checks green and merge manually. `.venv/bin/python -m lu_machinery.publish pr-disarm --number <N>` is never blocked;
 disarming auto-merge is the remedy, not the offence.
 
 **Escape hatch:** a human runs the merge outside the agent harness. The hooks

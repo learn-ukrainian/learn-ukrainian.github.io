@@ -408,7 +408,7 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
       --trailer "X-Agent: codex/a2-mXX-<slug>-certify"
     .venv/bin/python scripts/audit/lint_agent_trailer.py
     git push -u origin codex/a2-mXX-<slug>-certify
-    .venv/bin/python -m scripts.publish pr-create --base main --head codex/a2-mXX-<slug>-certify \
+    .venv/bin/python -m lu_machinery.publish pr-create --base main --head codex/a2-mXX-<slug>-certify \
       --title "fix(a2): certify MXX <slug>" \
       --body-file /tmp/a2-mXX-<slug>-pr-body.md
     ```
@@ -453,7 +453,7 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     When CI is green and required reviews are addressed:
 
     ```bash
-    .venv/bin/python -m scripts.publish pr-merge --number <PR_NUMBER>
+    .venv/bin/python -m lu_machinery.publish pr-merge --number <PR_NUMBER>
     # Do not pass --delete-branch under merge queue; delete remote only after MERGED.
     # Stay in the dispatch worktree — never `git switch` on the primary checkout.
     ```

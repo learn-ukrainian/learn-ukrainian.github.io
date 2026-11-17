@@ -26,7 +26,7 @@ Use one structured, reviewable ArcSpec per GitHub epic:
 
 `docs/arcs/epics/<epic-number>.arc.yaml`
 
-Do not create a second global arc registry. `scripts/config/issue_streams.yaml` already owns stream-to-epic membership. The API groups ArcSpecs by that registry.
+Do not create a second global arc registry. `lu_machinery/config/issue_streams.yaml` already owns stream-to-epic membership. The API groups ArcSpecs by that registry.
 
 For streams with several epics, exactly one active ArcSpec carries `stream_focus: true`; its current milestone projects into #5897's per-stream milestone line. Other active epics remain visible in the detailed area view.
 

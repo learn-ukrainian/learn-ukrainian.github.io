@@ -457,10 +457,10 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     # The route sweep also traverses diagnostics that import their own local
-    # stores outside ``scripts.api``. Repoint those module-level paths before
+    # stores outside ``lu_machinery.api``. Repoint those module-level paths before
     # installing the global guard, so missing fixture state is handled by each
     # route's documented empty/read-only envelope instead of as a 500.
-    # ``scripts.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
+    # ``lu_machinery.ai_agent_bridge`` is deliberately absent here (#7269 step 5):
     # comms routes now hand the bridge the MonitorContext's broker DB
     # explicitly, so the bridge's import-time default DB_PATH globals are no
     # longer seams this sweep must repoint.

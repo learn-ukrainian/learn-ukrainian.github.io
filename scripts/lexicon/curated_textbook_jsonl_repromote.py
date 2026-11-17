@@ -90,7 +90,7 @@ def _scratch_output(filename: str) -> Path:
     """Resolve at call time; the caller's TMPDIR/task wrapper owns cleanup.
 
     Keep artifacts available for downstream readers after this module returns.
-    Standalone callers can use ``scripts.tools.task_scratch run`` to supply
+    Standalone callers can use ``lu_machinery.tools.task_scratch run`` to supply
     the same managed TMPDIR lifecycle used by dispatch.
     """
     return Path(os.environ.get("TMPDIR") or tempfile.gettempdir()) / filename

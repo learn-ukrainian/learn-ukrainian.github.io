@@ -16,6 +16,8 @@ name: Coverage for an exact commit
 permissions:
   contents: read
 env:
+  LU_PRODUCT_ROOT: ${{ github.workspace }}
+  LEARN_UKRAINIAN_PRIMARY_REPO_ROOT: ${{ github.workspace }}
   UV_HTTP_RETRIES: '6'
   UV_HTTP_TIMEOUT: '60'
   PIP_RETRIES: '6'
@@ -69,11 +71,24 @@ jobs:
           scripts/opsec/gh_snapshot.py
           scripts/opsec/prepublish.py
           .python-version
+          requirements-machinery.lock
         sparse-checkout-cone-mode: false
         ref: ${{ steps.validate.outputs.validated_revision }}
     - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
       with:
         python-version-file: .python-version
+    - name: Install the locked lu-machinery release
+      run: |
+        set -euo pipefail
+        version="$(sed -nE 's/^lu-machinery==([0-9]+(\.[0-9]+)*) \\$/\1/p' requirements-machinery.lock)"
+        wheelhouse="${RUNNER_TEMP}/lu-machinery-wheelhouse"
+        mkdir -p "$wheelhouse"
+        curl -fsSL --retry 10 --retry-all-errors --retry-delay 5 --retry-max-time 300 --connect-timeout 20 \
+          -o "${wheelhouse}/lu_machinery-${version}-py3-none-any.whl" \
+          "https://github.com/learn-ukrainian/machinery/releases/download/v${version}/lu_machinery-${version}-py3-none-any.whl"
+        sed -n '/^lu-machinery==/,/--hash=/p' requirements-machinery.lock > "${RUNNER_TEMP}/lu-machinery-lock.txt"
+        python3 -m pip install --disable-pip-version-check --quiet --no-index --no-deps --require-hashes \
+          --find-links "$wheelhouse" -r "${RUNNER_TEMP}/lu-machinery-lock.txt"
     - name: Refresh pytest duration snapshot
       env:
         GH_TOKEN: ${{ github.token }}
@@ -83,11 +98,11 @@ jobs:
         mkdir -p ci-artifacts
         out=ci-artifacts/pytest-file-durations.json
         set +e
-        log=$(python3 -m scripts.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
+        log=$(python3 -m lu_machinery.ci.split_tests refresh --repo "$REPO" --output "$out" 2>&1)
         status=$?
         set -e
         printf '%s\n' "$log"
-        if [ "$status" -ne 0 ] || ! python3 -m scripts.ci.split_tests validate "$out"; then
+        if [ "$status" -ne 0 ] || ! python3 -m lu_machinery.ci.split_tests validate "$out"; then
           echo "::notice::duration refresh failed; retaining committed weights"
           cp scripts/ci/pytest-file-durations.json "$out"
         elif printf '%s\n' "$log" | grep -q "retaining committed fallback"; then
@@ -169,12 +184,6 @@ jobs:
           scripts/opsec/prepublish.py
           .python-version
         sparse-checkout-cone-mode: false
-    - name: Keep measurement tooling outside the measured checkout
-      run: |
-        mkdir -p "$RUNNER_TEMP/coverage-ref"
-        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage_ref_environment.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
-        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
-    - run: bash scripts/ci/test_env.sh start postgres
     - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
       with:
         python-version-file: .python-version
@@ -182,13 +191,20 @@ jobs:
       with:
         node-version-file: .nvmrc
         package-manager-cache: false
-    - run: bash scripts/ci/test_env.sh start npm
     - name: Python CI environment
       # Use the workflow's action, including when measuring an older commit.
       uses: ./coverage-tooling/.github/actions/python-ci-env # zizmor: ignore[self-repository] nested checkout pinned to github.workflow_sha
       with:
         save-cache: false
-    - run: bash scripts/ci/test_env.sh wait
+    - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start postgres
+    - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" start npm
+    - name: Keep measurement tooling outside the measured checkout
+      run: |
+        mkdir -p "$RUNNER_TEMP/coverage-ref"
+        machinery_ci="$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci"))')"
+        cp "$machinery_ci/coverage_ref.py" "$machinery_ci/coverage_ref_environment.py" "$machinery_ci/coverage-ref.ini" "$RUNNER_TEMP/coverage-ref/"
+        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+    - run: bash "$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci/test_env.sh"))')" wait
       timeout-minutes: 5
     - name: Isolate coverage storage from import-smoke guards
       # patch=subprocess uses interpreter startup, so this must also reach
@@ -201,7 +217,7 @@ jobs:
         REFRESH_RESULT: ${{ needs.prepare.result }}
       run: |
         set -euo pipefail
-        decision=$(python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
+        decision=$(.venv/bin/python -m lu_machinery.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
         case "$decision" in
           committed) echo "::notice::duration refresh did not succeed; using committed weights" ;;
           snapshot) ;;
@@ -225,7 +241,7 @@ jobs:
         set -euo pipefail
         snapshot=ci-artifacts/pytest-file-durations.json
         mv ci-artifacts/pytest-duration-input/pytest-file-durations.json "$snapshot"
-        if ! python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
+        if ! .venv/bin/python -m lu_machinery.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
           echo "::error::shared duration snapshot is invalid"
           exit 1
         fi
@@ -244,12 +260,12 @@ jobs:
         # quietly downloading history (scripts/ci/history-tests.txt).
         [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
         snapshot=ci-artifacts/pytest-file-durations.json
-        durations=$(python3 -m scripts.ci.split_tests duration-source \
+        durations=$(.venv/bin/python -m lu_machinery.ci.split_tests duration-source \
           --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
         # Run 39690968174: integration-check setup alone took 119.06s, while
         # other tests hit 120s. Allow 5x CI's budget under branch tracing (#11226).
         git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
-          | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
+          | .venv/bin/python -m lu_machinery.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
             --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
         .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" run \
           --output ci-artifacts/raw --shard "$SHARD" -- tests \
@@ -258,7 +274,7 @@ jobs:
           --timeout=600 --timeout-method=signal -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
           --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
         # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
-        .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
+        .venv/bin/python -m lu_machinery.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
           --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
     - name: Upload pytest JUnit report
       if: ${{ !cancelled() }}
@@ -303,18 +319,19 @@ jobs:
         ref: ${{ github.workflow_sha }}
         path: coverage-tooling
         persist-credentials: false
-    - name: Keep measurement tooling outside the measured checkout
-      run: |
-        mkdir -p "$RUNNER_TEMP/coverage-ref"
-        cp coverage-tooling/scripts/ci/coverage_ref.py coverage-tooling/scripts/ci/coverage-ref.ini "$RUNNER_TEMP/coverage-ref/"
-        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
       with:
         python-version-file: .python-version
-    - name: Install the measured coverage tools
+    - name: Python CI environment
+      uses: ./coverage-tooling/.github/actions/python-ci-env # zizmor: ignore[self-repository] nested checkout pinned to github.workflow_sha
+      with:
+        save-cache: false
+    - name: Keep measurement tooling outside the measured checkout
       run: |
-        grep -E '^(coverage|pytest-cov|pytest)==' requirements-lock.txt > "$RUNNER_TEMP/coverage-requirements.txt"
-        python -m pip install -r "$RUNNER_TEMP/coverage-requirements.txt"
+        mkdir -p "$RUNNER_TEMP/coverage-ref"
+        machinery_ci="$(.venv/bin/python -I -c 'from lu_machinery.common.repo_root import machinery_path; print(machinery_path("ci"))')"
+        cp "$machinery_ci/coverage_ref.py" "$machinery_ci/coverage-ref.ini" "$RUNNER_TEMP/coverage-ref/"
+        printf 'COVERAGE_RCFILE=%s/coverage-ref/coverage-ref.ini\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
     - name: Download all available raw shards
       id: download
       continue-on-error: true
@@ -328,7 +345,7 @@ jobs:
         MEASURED_SHA: ${{ needs.prepare.outputs.validated_revision || inputs.sha }}
         MATRIX_RESULT: ${{ needs.pytest.result }}
       run: |
-        python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" combine \
+        .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" combine \
           --input ci-artifacts/shards --output ci-artifacts/combined \
           --sha "$MEASURED_SHA" --matrix-result "$MATRIX_RESULT"
     - name: Publish combined report and completeness manifest

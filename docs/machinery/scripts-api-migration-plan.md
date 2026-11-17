@@ -12,7 +12,7 @@ git grep -lE '(from|import) scripts\.api(\.| import)' -- ':!scripts/api' ':!docs
 
 That command lists **59 files: 18 product, 41 tests**. The issue body's "39 test importers" is the earlier count. This tree has 41.
 
-A target is the same module under `lu_machinery.api`. Each imported name on the 57 files below was checked against the 0.1.11 pin and is defined there. Two test files import `scripts.api.fleet_board`, which the pin does not contain.
+A target is the same module under `lu_machinery.api`. Each imported name on the 57 files below was checked against the 0.1.11 pin and is defined there. Two test files import `lu_machinery.api.fleet_board`, which the pin does not contain.
 
 ## Recommendation
 
@@ -20,9 +20,9 @@ Retarget the 57 files by the prefix swap, then prove the opencode provider and t
 
 `scripts/api/fleet_board` has no target. `tests/api/test_fleet_board_prs.py` is that router: 0.1.10 removed it, the product kept the source until B2b, and 0.1.11 still has no `fleet_board` package. That file is retired with the package. It is not pointed at a module the pin will not grow.
 
-`tests/test_red_team_consumer_trace.py` also imports `scripts.api.fleet_board`, but only `test_fleet_board_counts_red_team_as_ready`, the `_board_*` helpers, the module import, and the `HANDLING` row `scripts/api/fleet_board/prs.py` depend on it. The other tests in that file cover retained consumers (the merge queue, the integration sweep, publication, lexicon dispositions, and recovery) and stay.
+`tests/test_red_team_consumer_trace.py` also imports `lu_machinery.api.fleet_board`, but only `test_fleet_board_counts_red_team_as_ready`, the `_board_*` helpers, the module import, and the `HANDLING` row `scripts/api/fleet_board/prs.py` depend on it. The other tests in that file cover retained consumers (the merge queue, the integration sweep, publication, lexicon dispositions, and recovery) and stay.
 
-The opencode provider (`scripts/dispatcher/providers/opencode.py`) is on the operator keep-list. Execution changes only its import of `lu_machinery.api.subscription_usage`, including `_private_usage`, which 0.1.11 still defines. The provider stays.
+The opencode provider (`lu_machinery/dispatcher/providers/opencode.py`) is on the operator keep-list. Execution changes only its import of `lu_machinery.api.subscription_usage`, including `_private_usage`, which 0.1.11 still defines. The provider stays.
 
 Deleting the mirror in one cut, before those retargets, is the worst option: it breaks the provider, the session supervisor, and the launchd wrapper tests while the fleet-board tests still import a removed router.
 
@@ -31,21 +31,21 @@ Deleting the mirror in one cut, before those retargets, is the worst option: it 
 | Importer | lu_machinery target |
 | --- | --- |
 | `scripts/ai_agent_bridge/measure_cold_start.py` | `lu_machinery.api.telemetry.transcript_tokens` |
-| `scripts/dispatcher/providers/opencode.py` | `lu_machinery.api.subscription_usage` |
-| `scripts/fleet/claude_account_lane.py` | `lu_machinery.api.state_router`, `lu_machinery.api.subscription_usage` |
-| `scripts/fleet/credit_lane.py` | `lu_machinery.api.subscription_usage` |
-| `scripts/fleet/reset_reserve.py` | `lu_machinery.api.subscription_usage` |
-| `scripts/fleet/usage.py` | `lu_machinery.api.state_router`, `lu_machinery.api.subscription_usage` |
-| `scripts/fleet_comms/fleet_overview.py` | `lu_machinery.api.occupancy_sanitize` |
+| `lu_machinery/dispatcher/providers/opencode.py` | `lu_machinery.api.subscription_usage` |
+| `lu_machinery/fleet/claude_account_lane.py` | `lu_machinery.api.state_router`, `lu_machinery.api.subscription_usage` |
+| `lu_machinery/fleet/credit_lane.py` | `lu_machinery.api.subscription_usage` |
+| `lu_machinery/fleet/reset_reserve.py` | `lu_machinery.api.subscription_usage` |
+| `lu_machinery/fleet/usage.py` | `lu_machinery.api.state_router`, `lu_machinery.api.subscription_usage` |
+| `lu_machinery/fleet_comms/fleet_overview.py` | `lu_machinery.api.occupancy_sanitize` |
 | `scripts/orchestration/curriculum_coordinator.py` | `lu_machinery.api.state_router` |
-| `scripts/orchestration/issue_stream_audit.py` | `lu_machinery.api.config` |
+| `lu_machinery/orchestration/issue_stream_audit.py` | `lu_machinery.api.config` |
 | `scripts/orchestration/observer_heartbeat.py` | `lu_machinery.api.occupancy_local`, `lu_machinery.api.occupancy_sanitize`, `lu_machinery.api.telemetry.transcript_tokens`, `lu_machinery.api.occupancy` |
 | `scripts/orchestration/session_markers.py` | `lu_machinery.api.occupancy_sanitize` |
-| `scripts/orientation_packet.py` | `lu_machinery.api.session_router` |
+| `lu_machinery/orientation_packet.py` | `lu_machinery.api.session_router` |
 | `scripts/research/consumption.py` | `lu_machinery.api.delegate_router` |
 | `scripts/research/registry.py` | `lu_machinery.api.config` |
 | `scripts/review/bench_health.py` | `lu_machinery.api.state_router` |
-| `scripts/session_supervisor/__init__.py` | `lu_machinery.api.occupancy_local` |
+| `lu_machinery/session_supervisor/__init__.py` | `lu_machinery.api.occupancy_local` |
 | `scripts/tools/check_api_state.py` | `lu_machinery.api.main` |
 | `scripts/work/sources_public.py` | `lu_machinery.api.issues_router`, `lu_machinery.api.delegate_router`, `lu_machinery.api.fleet_router` |
 
@@ -101,21 +101,21 @@ Several of these call private names (`_private_usage`, `_assemble_session`, `_re
 
 ## Callers the import census misses
 
-A second search for the literal `scripts.api` outside `scripts/api`, `docs`, and `archive` found callers the issue command does not list. Deletion still breaks them.
+A second search for the literal `lu_machinery.api` outside `scripts/api`, `docs`, and `archive` found callers the issue command does not list. Deletion still breaks them.
 
 | Caller | What it does | Target |
 | --- | --- | --- |
-| `scripts/lib/session_supervisor.sh` | `python -m scripts.api.occupancy_local resolve-host-id` | `python -m lu_machinery.api.occupancy_local` (the pin CLI has `resolve-host-id`) |
+| `lu_machinery/lib/session_supervisor.sh` | `python -m lu_machinery.api.occupancy_local resolve-host-id` | `python -m lu_machinery.api.occupancy_local` (the pin CLI has `resolve-host-id`) |
 | `tests/test_session_supervisor_shell.py` | stubs that command | the same module path |
-| `tests/conftest.py` | `_API_STATUS_PACKAGES` still names `scripts.api` | drop `scripts.api` when the package is gone |
-| `tests/test_claude_account_bound_snapshot.py` | monkeypatches `scripts.api.state_router.compute_routing_budget` | `lu_machinery.api.state_router.compute_routing_budget` |
-| `scripts/api/run_monitor_api_supervisor.sh` | product copy execs `python -m scripts.api.launchd_supervisor` | the pin's copy of this wrapper already execs `python -m lu_machinery.api.launchd_supervisor` |
+| `tests/conftest.py` | `_API_STATUS_PACKAGES` still names `lu_machinery.api` | drop `lu_machinery.api` when the package is gone |
+| `tests/test_claude_account_bound_snapshot.py` | monkeypatches `lu_machinery.api.state_router.compute_routing_budget` | `lu_machinery.api.state_router.compute_routing_budget` |
+| `lu_machinery/api/run_monitor_api_supervisor.sh` | product copy execs `python -m lu_machinery.api.launchd_supervisor` | the pin's copy of this wrapper already execs `python -m lu_machinery.api.launchd_supervisor` |
 
 `tests/api/test_launchd_supervisor.py` is in the census and also opens the product wrapper path. Docs excluded from the census name that path too: `docs/runbooks/launchd-inventory.md`, `docs/best-practices/local-api-server.md`, and `openwiki/monitor-api.md`. Point them at the installed wrapper in the deletion change.
 
-Comment-only mentions, with no runtime import: `scripts/common/repo_root.py`, `scripts/fleet/quota_history.py`, `scripts/github_rest_cache.py`, `scripts/yaml_activities.py`, and the module docstring in `scripts/research/consumption.py` (that file is also an importer). Update them in the same execution change so a later grep is empty.
+Comment-only mentions, with no runtime import: `lu_machinery/common/repo_root.py`, `lu_machinery/fleet/quota_history.py`, `lu_machinery/github_rest_cache.py`, `scripts/yaml_activities.py`, and the module docstring in `scripts/research/consumption.py` (that file is also an importer). Update them in the same execution change so a later grep is empty.
 
-Negative-path fixtures that use `scripts.api` as a rejected string (`tests/api/test_atlas_jobs_router.py`, `tests/test_api_state.py`, `tests/test_regen_lesson_schema_hook.py`) are not importers.
+Negative-path fixtures that use `lu_machinery.api` as a rejected string (`tests/api/test_atlas_jobs_router.py`, `tests/test_api_state.py`, `tests/test_regen_lesson_schema_hook.py`) are not importers.
 
 ## Execution order, after approval
 

@@ -5,7 +5,7 @@ Use this template when creating issues for large-scale audits or quality reviews
 ## Usage
 
 ```bash
-.venv/bin/python -m scripts.publish issue-create \
+.venv/bin/python -m lu_machinery.publish issue-create \
   --title "review(level): Batch quality review - scope description" \
   --body-file /tmp/issue-body.md \
   --parent <stream-epic-number> \

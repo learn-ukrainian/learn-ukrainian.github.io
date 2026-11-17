@@ -28,10 +28,6 @@ FORMERLY_FROZEN_READERS = [
 ]
 # (repository-relative path, qualified function): reviewed disposition and exact call(s).
 ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
-    ("scripts/agent_runtime/adapters/agy.py", "_read_transcript_events"): (
-        "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
-        "safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()",
-    ),
     ("scripts/projects/open_model_data/correction_protection_consumer.py", "public_bundle"): (
         "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
         "raw.splitlines()",
@@ -79,21 +75,9 @@ ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
         "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
         "_school_ledger_bytes().splitlines()",
     ),
-    ("scripts/deploy_codex_home.py", "merge_config"): (
-        "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
-        "data.splitlines(keepends=True)",
-    ),
     ("scripts/review/receipts/ledger.py", "records"): (
         "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
         "content.splitlines()",
-    ),
-    ("scripts/agent_runtime/adapters/agy.py", "_parse_stdout_marker_tool_calls"): (
-        "Human CLI marker telemetry with optional inline argument coercion, not JSONL record parsing.",
-        "text.splitlines()",
-    ),
-    ("scripts/agent_runtime/failure_codes.py", "provider_stderr_error"): (
-        "Diagnostic lines locate an API Error wrapper; raw_decode receives a slice of the original stderr, not split lines.",
-        "stderr.splitlines(keepends=True)",
     ),
 }
 

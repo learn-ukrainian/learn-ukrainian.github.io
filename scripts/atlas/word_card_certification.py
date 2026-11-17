@@ -18,6 +18,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 from lu_machinery.common.jsonl import jsonl_lines
+from lu_machinery.common.repo_root import machinery_path
 
 from scripts.atlas import word_card_golden_set as gold
 
@@ -28,9 +29,9 @@ SCHEMA_PATH = PROJECT_ROOT / "schemas/word-card-v1.schema.json"
 IMPLEMENTATION_PATHS = (
     *sorted(PROJECT_ROOT.glob("scripts/atlas/*.py")),
     *sorted(PROJECT_ROOT.glob("scripts/review/**/*.py")),
-    PROJECT_ROOT / "scripts/dispatcher/providers/agy.py",
-    PROJECT_ROOT / "scripts/dispatcher/types.py",
-    PROJECT_ROOT / "scripts/agent_runtime/adapters/agy.py",
+    machinery_path('dispatcher/providers/agy.py'),
+    machinery_path('dispatcher/types.py'),
+    machinery_path('agent_runtime/adapters/agy.py'),
     PROJECT_ROOT / "scripts/audit/generate_practice_deck.py",
     PROJECT_ROOT / "scripts/lexicon/teacher_deck_shard.py",
     PROJECT_ROOT / "scripts/practice/densify_paradigm_from_lexemes.py",
@@ -61,7 +62,7 @@ RULE_PATHS = (
     PROJECT_ROOT / "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
     PROJECT_ROOT / "registry/atlas/source-completeness/manifest-contract.md",
     PROJECT_ROOT / "docs/sources/permissions-register.yaml",
-    PROJECT_ROOT / "scripts/config/model_catalog.yaml",
+    machinery_path('config/model_catalog.yaml'),
 )
 
 

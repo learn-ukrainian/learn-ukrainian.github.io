@@ -47,10 +47,10 @@ from pathlib import Path, PurePosixPath
 import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import best_match
+from lu_machinery.docs.docs_inventory import EXCLUDED_PARTS
+from lu_machinery.docs.docs_inventory import metadata as inventory_metadata
 
 from scripts.docs import store_census  # imports this module back; each side uses the other only at call time
-from scripts.docs.docs_inventory import EXCLUDED_PARTS
-from scripts.docs.docs_inventory import metadata as inventory_metadata
 
 
 def _top() -> str:

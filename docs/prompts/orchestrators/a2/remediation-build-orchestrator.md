@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - the A2 audit report being remediated
 - `curriculum/l2-uk-en/curriculum.yaml`
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- `scripts/config.py`, especially A2 immersion policies
+- `lu_machinery/config.py`, especially A2 immersion policies
 - `scripts/audit/config.py`
 - for each target slug:
   - `curriculum/l2-uk-en/plans/a2/<slug>.yaml`
@@ -71,7 +71,7 @@ git rev-parse --show-toplevel
 ## Remediation Rules
 
 - Fix every selected finding; do not truncate.
-- Preserve phase-appropriate immersion from `scripts/config.py`.
+- Preserve phase-appropriate immersion from `lu_machinery/config.py`.
 - Use simple Ukrainian, repeated frames, concrete examples, dialogues, pattern boxes, and tables to solve clarity issues.
 - Keep grammar within A2 limits: no participle-heavy enrichment, no literary register, no unscaffolded B1 syntax.
 - Strengthen late-A2 B1 readiness through controlled Ukrainian metalanguage and short independent reading blocks.

@@ -23,8 +23,8 @@ coverage at ~12 minutes. Recovered time comes from killing **false reds** and
 Command (repeat after landing for AFTER):
 
 ```bash
-.venv/bin/python scripts/ci/ci_timings.py --event pull_request --since 2026-08-25 --limit 40
-.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-25 --limit 20
+.venv/bin/python -m lu_machinery.ci.ci_timings --event pull_request --since 2026-08-25 --limit 40
+.venv/bin/python -m lu_machinery.ci.ci_timings --event merge_group --since 2026-08-25 --limit 20
 ```
 
 Generated `2026-09-02T10:01Z` / `10:02Z`, public workflow `CI`, window since

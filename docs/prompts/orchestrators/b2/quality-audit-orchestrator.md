@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
 - `curriculum/l2-uk-en/curriculum.yaml`, B2 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- `scripts/config.py`
+- `lu_machinery/config.py`
 - `scripts/audit/config.py`
 - target B2 production PR notes or build report if available
 - for each built target slug:
@@ -147,7 +147,7 @@ git add "$REPORT"
 git commit -m "docs: add B2 quality audit" --trailer "X-Agent: codex/b2-quality-audit"
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 git push -u origin codex/b2-quality-audit
-.venv/bin/python -m scripts.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/b2-quality-audit --base main
+.venv/bin/python -m lu_machinery.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/b2-quality-audit --base main
 ```
 
 ## Expected Final Response

@@ -49,7 +49,7 @@ from the dispatch worktree:
 
 ```bash
 git push -u origin HEAD
-.venv/bin/python -m scripts.publish pr-create --title '<title>' \
+.venv/bin/python -m lu_machinery.publish pr-create --title '<title>' \
   --body-file '<project-relative-body-file>' --base main --head '<branch>'
 ```
 

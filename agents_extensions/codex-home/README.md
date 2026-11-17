@@ -50,9 +50,9 @@ of the example target below.
 Deploy from a dispatch worktree with the project interpreter:
 
 ```bash
-.venv/bin/python scripts/deploy_codex_home.py --codex-home "$HOME/.codex" --dry-run
-.venv/bin/python scripts/deploy_codex_home.py --codex-home "$HOME/.codex"
-.venv/bin/python scripts/deploy_codex_home.py --codex-home "$HOME/.codex" --check
+.venv/bin/python -m lu_machinery.deploy_codex_home --codex-home "$HOME/.codex" --dry-run
+.venv/bin/python -m lu_machinery.deploy_codex_home --codex-home "$HOME/.codex"
+.venv/bin/python -m lu_machinery.deploy_codex_home --codex-home "$HOME/.codex" --check
 ```
 
 In a linked worktree, use the canonical checkout's `.venv/bin/python` when

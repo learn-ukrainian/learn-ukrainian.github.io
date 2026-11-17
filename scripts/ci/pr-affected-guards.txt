@@ -1,3 +1,2 @@
-tests/common/test_jsonl_splitlines_guard.py
-tests/test_review_reviewer_resolver.py
-tests/dispatcher/test_core.py::test_read_only_mode_denies_edits_on_every_provider
+tests/test_api_state.py
+tests/test_v7_writer_dispatch.py

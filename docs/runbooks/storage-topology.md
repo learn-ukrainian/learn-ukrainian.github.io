@@ -187,7 +187,7 @@ lock is the refusal `writer_lock_busy`.
   connections and holds the generation again. The ULIF walk (`run`, `walk`,
   `parse`) and `.venv/bin/python -m scripts.wiki.sources_db --migrate` do this.
 - **Every other script** that opens the store writable calls the write guard
-  (`scripts.lib.readonly_sqlite.refuse_writable_corpus_database`) first. For
+  (`lu_machinery.lib.readonly_sqlite.refuse_writable_corpus_database`) first. For
   the store it refuses unless this process holds the lock, and only the
   selected generation may be opened (`writer_lock_not_held`,
   `not_selected_generation`). Run such a script under the lock:
@@ -430,7 +430,7 @@ file descriptors with per-component `O_NOFOLLOW` and
 New callers use `lu_machinery.storage.topology.resolve_store("sources")` or
 `resolve_store("vesum")` at call time. A `StoreBinding` contains `store`,
 `path`, `access_mode="read"`, and `provenance`; pass its path to
-`scripts.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only
+`lu_machinery.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only
 `store` and `reason`, with no path attribute and no silent fallback.
 
 Precedence is an injected test binding, then the explicit store environment
@@ -450,7 +450,7 @@ The store-access ratchet covers `scripts/` and `tests/`. Reproduce its frozen
 baseline with the project interpreter:
 
 ```bash
-.venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects --census <base-commit>
+.venv/bin/python -m lu_machinery.hygiene.lint_source_db_writable_connects --census <base-commit>
 ```
 
 It reads tracked commit

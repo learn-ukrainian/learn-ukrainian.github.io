@@ -48,30 +48,20 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.lib.readonly_sqlite import import_named_module
+    from lu_machinery.lib.readonly_sqlite import import_named_module
 except ModuleNotFoundError as exc:
     if exc.name != Path(os.path.abspath(__file__)).parents[1].name:
         raise
-    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
+    from lu_machinery.lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
-from lu_machinery.agent_runtime.env_sanitize import build_agent_env
-from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
-from lu_machinery.ai_llm.fallback import (
-    AttemptOutcome,
-    AuthMode,
-    CallResult,
-    GeminiRung,
-    resolve_allowed_auth_modes,
-    run_gemini_fallback_ladder,
-)
-from lu_machinery.telemetry.emit import current_run_id, current_session_id
+from lu_machinery.agent_runtime.accounting import model_accounting_fields
 
-# Registry adapter paths are canonicalized under ``scripts.agent_runtime``.
+# Registry adapter paths are canonicalized under ``lu_machinery.agent_runtime``.
 # Import the ACP scope from that same module identity even when this runner is
 # reached through the historical top-level ``agent_runtime`` package alias;
 # otherwise ContextVar provenance is set on one module object and checked on
 # another.
-from scripts.agent_runtime.adapters.acpx import (
+from lu_machinery.agent_runtime.adapters.acpx import (
     ACPX_PARTICIPANT_CATALOG_TRANSPORTS,
     ACPX_PARTICIPANT_EFFORTS,
     ACPX_SUPPORTED_PARTICIPANTS,
@@ -80,19 +70,20 @@ from scripts.agent_runtime.adapters.acpx import (
     _require_local_metadata_field,
     active_communication_scope,
 )
-from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
-from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
-from scripts.agent_runtime.adapters.muse import MuseRunEvidence
-from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
-from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
-from scripts.secret_redactor import redact_value
-
-from .accounting import model_accounting_fields
-from .adapters.base import AgentAdapter
-from .adapters.codex_events import mcp_tool_event
-from .attribution import InvocationAttribution, resolve_invocation_attribution
-from .binary_resolve import augment_path_for_login_bins, resolve_agent_binary
-from .errors import (
+from lu_machinery.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from lu_machinery.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
+from lu_machinery.agent_runtime.adapters.base import AgentAdapter
+from lu_machinery.agent_runtime.adapters.codex_events import mcp_tool_event
+from lu_machinery.agent_runtime.adapters.muse import MuseRunEvidence
+from lu_machinery.agent_runtime.attempt_safe_read import (
+    AttemptReadError,
+    safe_attempt_file_size,
+    safe_read_attempt_file,
+)
+from lu_machinery.agent_runtime.attribution import InvocationAttribution, resolve_invocation_attribution
+from lu_machinery.agent_runtime.binary_resolve import augment_path_for_login_bins, resolve_agent_binary
+from lu_machinery.agent_runtime.env_sanitize import build_agent_env
+from lu_machinery.agent_runtime.errors import (
     AgentRuntimeError,
     AgentStalledError,
     AgentTimeoutError,
@@ -101,7 +92,7 @@ from .errors import (
     RulesCoreDeliveryError,
     RulesCoreMissingError,
 )
-from .failover import (
+from lu_machinery.agent_runtime.failover import (
     FailoverChain,
     FailoverCooldownStore,
     FailoverRoute,
@@ -112,22 +103,33 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
-from .failure_codes import RUNTIME_FAILURE_CODES
-from .primary_tree_watch import PrimaryTreeWatch
-from .registry import AGENTS, MACHINERY_PACKAGE, get_agent_entry
-from .result import AgyModelIdentity, ParseResult, Result
-from .target_admission import resolve_and_admit
-from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
-from .trail_isolation import prepare_trail_isolation
-from .usage import has_headroom as _usage_has_headroom
-from .usage import write_record
-from .watchdog import (
+from lu_machinery.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+from lu_machinery.agent_runtime.primary_tree_watch import PrimaryTreeWatch
+from lu_machinery.agent_runtime.registry import AGENTS, MACHINERY_PACKAGE, get_agent_entry
+from lu_machinery.agent_runtime.result import AgyAttempt, AgyModelIdentity, AgyTelemetry, ParseResult, Result
+from lu_machinery.agent_runtime.retired_seat_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
+from lu_machinery.agent_runtime.target_admission import resolve_and_admit
+from lu_machinery.agent_runtime.telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
+from lu_machinery.agent_runtime.trail_isolation import prepare_trail_isolation
+from lu_machinery.agent_runtime.usage import has_headroom as _usage_has_headroom
+from lu_machinery.agent_runtime.usage import write_record
+from lu_machinery.agent_runtime.watchdog import (
     WatchdogState,
     should_kill,
     start_watchdog,
     stop_watchdog,
     tail_liveness_file_for_debug,
 )
+from lu_machinery.ai_llm.fallback import (
+    AttemptOutcome,
+    AuthMode,
+    CallResult,
+    GeminiRung,
+    resolve_allowed_auth_modes,
+    run_gemini_fallback_ladder,
+)
+from lu_machinery.secret_redactor import redact_value
+from lu_machinery.telemetry.emit import current_run_id, current_session_id
 
 # Poll interval while waiting on subprocess + watchdog. 1s is a good balance:
 # fast enough that stall detection fires within 1s of the threshold, slow
@@ -208,7 +210,7 @@ def _observe_agy_identity(
         observed_slug = AgyAdapter.resolve_model_slug(observed) if isinstance(observed, str) else None
     except ValueError:
         observed_slug = None
-    from scripts.review.model_catalog import load_model_catalog
+    from lu_machinery.review.model_catalog import load_model_catalog
 
     family = next((
         spec["family"] for key, spec in load_model_catalog()["models"].items()
@@ -888,7 +890,7 @@ def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
 
 def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
     """Prepend gh/git shims and stamp env vars when merge guard is active."""
-    from scripts.opsec.prepublish import publish_environment
+    from lu_machinery.opsec.prepublish import publish_environment
 
     if not _merge_guard_enabled(mode=mode, env=env):
         unguarded_env = publish_environment(env)
@@ -1674,7 +1676,7 @@ def _build_gemini_attempt_tool_config(
 
 def _attempt_boundary_refusal(exc: Exception, *, stage: str) -> str:
     """Keep the refusal identifier, never isolation diagnostics or exception text."""
-    from scripts.review.isolation import ReviewIsolationError
+    from lu_machinery.review.isolation import ReviewIsolationError
 
     detail = type(exc).__name__
     if isinstance(exc, ReviewIsolationError):
@@ -1807,7 +1809,7 @@ def _execute_invocation_plan(
         execution = replace(execution, duration_s=elapsed)
         if parse.ok or execution.kill_reason or parse.rate_limited:
             return finish(execution)
-        from .adapters.agy import AGY_BACKGROUND_TASK_CANCELED, AGY_INCOMPLETE_RUN_REASONS
+        from lu_machinery.agent_runtime.adapters.agy import AGY_BACKGROUND_TASK_CANCELED, AGY_INCOMPLETE_RUN_REASONS
 
         cancellation = (
             evidence.completion_reason == AGY_BACKGROUND_TASK_CANCELED
@@ -1973,15 +1975,9 @@ def _execute_invocation_once(
         env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     elif tool_config and tool_config.get("review_isolation"):
         try:
-            from scripts.review.isolation import (
-                ReviewIsolationError,
-                apply_review_isolation_to_invocation,
-            )
+            from lu_machinery.review.isolation import ReviewIsolationError, apply_review_isolation_to_invocation
         except ImportError:  # pragma: no cover - package path
-            from review.isolation import (  # type: ignore
-                ReviewIsolationError,
-                apply_review_isolation_to_invocation,
-            )
+            from lu_machinery.review.isolation import ReviewIsolationError, apply_review_isolation_to_invocation
         try:
             prompt_transport = "stdin" if plan.stdin_payload else "prompt-file"
             (
@@ -3150,7 +3146,7 @@ def _load_worktree_containment():
     Returns ``None`` only if neither import succeeds (a broken deployment).
     """
     for candidate in (
-        "scripts.guardrails.worktree_containment",
+        "lu_machinery.guardrails.worktree_containment",
         "guardrails.worktree_containment",
     ):
         try:
@@ -3543,7 +3539,7 @@ def _prepare_rules_core(
     task_id: str | None,
     tool_config: dict | None,
 ) -> str:
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     if delivery is RulesCoreDelivery.INJECT:
         try:
@@ -3555,9 +3551,8 @@ def _prepare_rules_core(
     if delivery is not RulesCoreDelivery.BOUND:
         raise RulesCoreDeliveryError("runtime rules delivery must be INJECT or admitted BOUND")
 
+    from lu_machinery.dispatcher import store
     from lu_machinery.review.render_contract import check_rules_dependency, recorded_core_context
-
-    from scripts.dispatcher import store
 
     try:
         if not task_id:
@@ -3707,7 +3702,7 @@ def _invoke_impl(
         # Reject known unsatisfiable reads before headroom/failover or any
         # provider execution. Adapter planning repeats this gate for direct
         # callers; neither gate expands the native permission profile (#10334).
-        from .adapters.agy import validate_agy_read_only_paths
+        from lu_machinery.agent_runtime.adapters.agy import validate_agy_read_only_paths
 
         validate_agy_read_only_paths(prompt, mode=mode, cwd=effective_cwd, tool_config=tool_config)
     current_run_id()
@@ -3956,27 +3951,26 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
     Retired-seat admission still runs first.
     """
     if agent_name == "muse":
-        from .adapters.muse import MuseAdapter
+        from lu_machinery.agent_runtime.adapters.muse import MuseAdapter
 
         effective_model = model or MuseAdapter.default_model
     elif str(model or "").strip():
         effective_model = str(model).strip()
     else:
+        from lu_machinery.agent_runtime.registry import AGENTS
         from lu_machinery.agent_runtime.retired_seat_admission import is_kimi_seat
-
-        from .registry import AGENTS
 
         default_model = AGENTS.get(agent_name, {}).get("default_model")
         if not default_model or not is_kimi_seat(agent_name, model=default_model):
             return
         effective_model = default_model
-    from scripts.review.model_catalog import retired_model_refusal
+    from lu_machinery.review.model_catalog import retired_model_refusal
 
     refusal = retired_model_refusal(effective_model)
     if refusal:
         raise ValueError(f"Agent {agent_name!r}: {refusal}")
     if agent_name == "muse":
-        from .adapters.muse import require_muse_execution_model
+        from lu_machinery.agent_runtime.adapters.muse import require_muse_execution_model
 
         require_muse_execution_model(effective_model)
 
@@ -4040,7 +4034,7 @@ def invoke(
     launch = None
     attempt = None
     try:
-        from .attempt_boundary import prepare_attempt_boundary
+        from lu_machinery.agent_runtime.attempt_boundary import prepare_attempt_boundary
 
         try:
             boundary_config = tool_config
@@ -4158,7 +4152,7 @@ def _validate_catalog_model(
 ) -> None:
     """Require a current active catalog model on the adapter's real route that may consult (#9583)."""
     try:
-        from scripts.review.model_catalog import (
+        from lu_machinery.review.model_catalog import (
             CONSULT_ACTIVITY,
             activity_role_refusal,
             load_model_catalog,
@@ -4334,7 +4328,7 @@ def invoke_inter_agent(
     # Every ACP ask, discussion leg and sealed review starts with the rules core
     # (explicit rules_seat, then $LU_RULES_SEAT); without it the call is refused as a typed
     # transport error, before any provenance is bound or a process is spawned.
-    from scripts.lib import rules_core
+    from lu_machinery.lib import rules_core
 
     try:
         rules_core.require_core(rules_seat)

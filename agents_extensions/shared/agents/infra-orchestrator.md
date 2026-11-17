@@ -72,7 +72,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 
 ## Your lane, and what is not
 - Yours: `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`, `scripts/orchestration/`,
-  `scripts/lexicon/` + Atlas, `linear_pipeline.py` and the V7 pipeline, gates + `scripts/config.py` /
+  `scripts/lexicon/` + Atlas, `linear_pipeline.py` and the V7 pipeline, gates + `scripts/curriculum/pedagogy_config.py` /
   `scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the SessionStart and
   PostCompact hooks, launchers, deploy (`scripts/deploy_prompts.sh`), the Monitor API, tests.
 - File path is not epic ownership. Product epics get carved out of shared infra directories and run
@@ -106,7 +106,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   including yours. Co-designing with the user is not fleet cross-verification.
 - The method — orient, route, dispatch, settle, cross-family review, land, clean up, hand off — lives
   in the `drive-epic` skill; follow it rather than restating it. Routing data (lanes, models, review
-  seats, capacity) is live: read `/api/rules` and `scripts/config/model_catalog.yaml`, never memory.
+  seats, capacity) is live: read `/api/rules` and `lu_machinery/config/model_catalog.yaml`, never memory.
 - Delegate independent subtasks and keep working while they run; watch task state with `Monitor`
   on `batch_state/tasks/<id>.json` (terminal = anything outside `spawning|running|""`; `done` is
   success). Before declaring a dispatch dead, check open PRs and the worktree for finished-but-
@@ -153,7 +153,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   `.worktrees/dispatch/<agent>/<task>/`.
 - `.claude/`, `.codex/`, `.agent/`, `.gemini/` are gitignored deploy targets; the source is
   `agents_extensions/shared/` (`npm run agents:deploy`). Edit the source.
-- Quality-gate numbers live in `scripts/config.py` and `scripts/audit/config.py`. V7 only. Agent-run
+- Quality-gate numbers live in `scripts/curriculum/pedagogy_config.py` and `scripts/audit/config.py`. V7 only. Agent-run
   V7 builds use `--worktree` and are watched with `Monitor`, never polled.
 - `./services.sh status` is read-only. Restart only the broken service, and only after confirming no
   active dispatches.

@@ -38,7 +38,7 @@ Evaluation of upstream LangChain OpenWiki (`openwiki@0.5.2`) reveals several beh
 2. **Strict Verbatim Quoting for Ukrainian Text:**
    To eliminate hallucinated pedagogy or obsolete spelling forms, OpenWiki is prohibited from generating synthetic Ukrainian text. All Ukrainian terms must be verbatim quotes from curriculum files or VESUM.
 3. **No UI Visualizer Integration:**
-   While OpenWiki provides a local visualizer (`openwiki visualize`), integration into the Ops API UI (`scripts/api/docs_router.py` serving `/artifacts/openwiki/`) is deferred until an explicit **adopt** verdict is rendered.
+   While OpenWiki provides a local visualizer (`openwiki visualize`), integration into the Ops API UI (`lu_machinery/api/docs_router.py` serving `/artifacts/openwiki/`) is deferred until an explicit **adopt** verdict is rendered.
 
 ---
 

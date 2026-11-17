@@ -2,7 +2,7 @@
 
 > **Canonical contract (v1):** versioned JSON schema
 > `schemas/code-review-findings.v1.schema.json`, validated by
-> `scripts/verify_review.py`. Legacy loose `FINDING:` text is **removed** as a
+> `lu_machinery/verify_review.py`. Legacy loose `FINDING:` text is **removed** as a
 > dual source of truth (issue #5284). The verifier accepts bare schema-valid
 > JSON or the review-loop reply envelope described below.
 
@@ -144,7 +144,7 @@ line endings so a historical result can be replayed without changing its digest.
 **Stage 1 — source-blind capture (before the reviewer runs):**
 
 ```bash
-.venv/bin/python scripts/verify_review.py --emit-target-manifest \
+.venv/bin/python -m lu_machinery.verify_review --emit-target-manifest \
   --mode local --repo-root .
 # → JSON with mode, head_sha (when applicable), changed_paths, input_sha256
 ```
@@ -152,7 +152,7 @@ line endings so a historical result can be replayed without changing its digest.
 **Stage 2 — verify after review (same mode/target):**
 
 ```bash
-.venv/bin/python scripts/verify_review.py --from-stdin --mode local \
+.venv/bin/python -m lu_machinery.verify_review --from-stdin --mode local \
   --expected-input-sha256 "$TARGET_INPUT_SHA" \
   --expected-head "$HEAD_SHA" \   # non-local modes
   --issue-ref '#NNNN' \
@@ -223,7 +223,7 @@ exits `incomplete` (3). Explicit failed proof / same-family exits
 Local / CI (no GitHub mutation) — full envelope example:
 
 ```bash
-TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
+TARGET_SHA=$(.venv/bin/python -m lu_machinery.verify_review --emit-target-manifest \
   --mode local --repo-root . | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["input_sha256"])')
 
 # After `target` and `freeze`, record the proof against that frozen state.
@@ -232,14 +232,14 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
 # behavior-surface field.
 .venv/bin/python -m lu_machinery.review.closeout_cli --state-file "$STATE_FILE" \
   behavior-proof record --surface source_aware --status pass \
-  --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
+  --command '.venv/bin/python -m lu_machinery.verify_review --help' --cwd . \
   --exit-code 0 --observation 'help rendered' --evidence-ref 'terminal:proof-aware'
 .venv/bin/python -m lu_machinery.review.closeout_cli --state-file "$STATE_FILE" \
   behavior-proof record --surface source_blind --status pass \
-  --command '.venv/bin/python scripts/verify_review.py --help' --cwd . \
+  --command '.venv/bin/python -m lu_machinery.verify_review --help' --cwd . \
   --exit-code 0 --observation 'help rendered as a user' --evidence-ref 'terminal:proof-blind'
 
-.venv/bin/python scripts/verify_review.py --from-stdin --mode local \
+.venv/bin/python -m lu_machinery.verify_review --from-stdin --mode local \
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
@@ -256,10 +256,10 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
 Commit / branch / PR targets:
 
 ```bash
-.venv/bin/python scripts/verify_review.py --review-file review.json --mode commit --commit HEAD \
+.venv/bin/python -m lu_machinery.verify_review --review-file review.json --mode commit --commit HEAD \
   --expected-input-sha256 "$TARGET_SHA" --expected-head "$HEAD" ...
-.venv/bin/python scripts/verify_review.py --from-stdin --mode branch --branch feature/x --base origin/main ...
-.venv/bin/python scripts/verify_review.py --from-stdin --mode pr --pr 5286 ...
+.venv/bin/python -m lu_machinery.verify_review --from-stdin --mode branch --branch feature/x --base origin/main ...
+.venv/bin/python -m lu_machinery.verify_review --from-stdin --mode pr --pr 5286 ...
 ```
 
 GitHub comment posting remains **opt-in** (`--post-comment` with `--issue`)
@@ -359,7 +359,7 @@ Multi-finding validation order is deterministic: sort by
 4. Reviewer reads the **exact target** (worktree / `git show <head>:<path>` /
    PR head), not a different checkout.
 5. Reviewer returns **only** `code-review-findings.v1` JSON.
-6. Run `scripts/verify_review.py` with the same mode/base/head constraints,
+6. Run `lu_machinery/verify_review.py` with the same mode/base/head constraints,
    `--expected-input-sha256`, and a complete envelope.
 7. Read the receipt:
    - `clean` → proceed to merge/closeout.

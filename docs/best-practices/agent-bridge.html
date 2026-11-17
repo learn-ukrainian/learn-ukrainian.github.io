@@ -292,7 +292,7 @@ prints a <strong>warning</strong> and still delivers the ask — rejecting after
 already wrote a formal review wastes work (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520; the direct <code>ask-&lt;lane&gt; --type review</code> round is the formal path).
 <strong>Size caps remain fail-closed</strong> for oversized bodies/attachments. Silence the
 steering warning with <code>BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1</code>.</p>
-<p><strong>Formal CF PR review:</strong> request formal CF via direct <code>ask-&lt;lane&gt; - --type review --pr &lt;N&gt;</code> or <code>ask-&lt;lane&gt; - --task-id review-&lt;N&gt; --type review</code>, then post the resulting verdict and findings as a PR comment (<code>.venv/bin/python -m scripts.publish pr-comment --number &lt;N&gt;</code> or <code>.venv/bin/python -m scripts.publish pr-review --number &lt;N&gt;</code>) bound to the exact head SHA (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520). <code>ask-agy --review</code> is not a code-review route
+<p><strong>Formal CF PR review:</strong> request formal CF via direct <code>ask-&lt;lane&gt; - --type review --pr &lt;N&gt;</code> or <code>ask-&lt;lane&gt; - --task-id review-&lt;N&gt; --type review</code>, then post the resulting verdict and findings as a PR comment (<code>.venv/bin/python -m lu_machinery.publish pr-comment --number &lt;N&gt;</code> or <code>.venv/bin/python -m lu_machinery.publish pr-review --number &lt;N&gt;</code>) bound to the exact head SHA (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520). <code>ask-agy --review</code> is not a code-review route
 (operator 2026-09-25): a missing <code>--review-profile</code> is refused, <code>code</code> is
 refused, and Ukrainian content review must pass <code>--review-profile ukrainian</code>.
 <code>scripts/audit/llm_reviewer_dispatch.py</code> content-review routes remain
@@ -323,7 +323,7 @@ holds from attach until its task record is published, and under that lock it
 refuses while another task's unfinished record names the checkout. The skip
 reasons are <code>worktree lock busy</code> and <code>worktree claimed by active task &lt;id&gt;</code>.
 Finish or cancel that task, then rerun the cleanup. From a shell, remove a
-worktree with <code>.venv/bin/python -m scripts.orchestration.worktree_claims remove PATH</code>, never raw <code>git worktree remove</code>; a repo-wide test rejects any
+worktree with <code>.venv/bin/python -m lu_machinery.orchestration.worktree_claims remove PATH</code>, never raw <code>git worktree remove</code>; a repo-wide test rejects any
 other removal call site under <code>scripts/</code>. Dispatch never attaches to
 <code>.worktrees/dispatch/acp/</code>, where the ACP bridge's runtimes live.</p>
 <h3>Hermes / DeepSeek isolation (Sol #213 class)</h3>

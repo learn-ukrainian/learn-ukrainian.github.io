@@ -15,7 +15,7 @@
 > If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.
 >
 > **Seat onboarding (canonical ownership matrix):**
-> [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
+> [`docs/runbooks/agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md) —
 > `discuss` vs `dispatch.py` vs fleet-comms/file handoffs vs experimental ACPX vs
 > Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 > `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
@@ -28,7 +28,7 @@
 | --- | --- | --- |
 | **`discuss`** (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
 | **`scripts/dispatch.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
-| **Fleet-comms + file handoffs** | Durable coordination | Fleet Comms owns durable messages/jobs in `authority` mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query `.venv/bin/python -m scripts.fleet_comms plane-status`, preserve existing stream ownership, and never create legacy message/job writes or another control plane |
+| **Fleet-comms + file handoffs** | Durable coordination | Fleet Comms owns durable messages/jobs in `authority` mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query `.venv/bin/python -m lu_machinery.fleet_comms plane-status`, preserve existing stream ownership, and never create legacy message/job writes or another control plane |
 | **ACPX** | Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow) | Sole surface `acp-discuss`; no automatic launcher/delegate use, queue, retry, formal review, or authority |
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
@@ -37,7 +37,7 @@ seal PRs. Formal CF (shielded `review-pr` / `publish-review-verdict` removed in 
 
 ```bash
 printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + findings." \
-  | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+  | .venv/bin/python -m lu_machinery.ai_agent_bridge ask-<lane> - \
       --task-id review-<N> --type review
 # Post the verdict on the PR; do not treat discussion or same-family helpers as the gate.
 ```
@@ -45,7 +45,7 @@ printf '%s\n' "Cross-family review of PR <N> at exact head <SHA>: VERDICT + find
 Use explicit project entrypoints (no bare `ab` — on many hosts that is ApacheBench).
 
 Full onboarding contract, budgets, troubleshooting, and no-auth smoke:
-[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md).
+[`agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md).
 
 Use ACPX only when direct Codex↔Grok critique is materially useful; otherwise
 use bounded bridge `discuss`. The panel defaults to two rounds (three maximum),
@@ -359,7 +359,7 @@ low-noise surfaces:
 2. **GitHub PRs carry deliverables.** Track orchestrators open PRs with clear
    scope, validation, active dispatch ids, and blockers. The main orchestrator
    reads the PR instead of scraping private chat context.
-3. **Bridge messages are pings, not payloads.** Use `.venv/bin/python scripts/ai_agent_bridge/__main__.py p` / channel posts only
+3. **Bridge messages are pings, not payloads.** Use `.venv/bin/python -m lu_machinery.ai_agent_bridge p` / channel posts only
    to point to the PR, issue, or handoff section that changed.
 4. **Main only interrupts for repo-wide risk.** Examples: generated artifacts in
    diff, `.python-version`/linter config changes, merge conflicts, failing
@@ -442,13 +442,13 @@ Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 For requests needing immediate response. AGY reviews Ukrainian content only
 (`--review --review-profile ukrainian`). Code review uses `ask-codex`.
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy \
   "Перевір український текст у curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-559 \
   --review \
   --review-profile ukrainian
 
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-codex \
   "Bug report posted on #560. Please read and respond." \
   --task-id issue-560
 ```
@@ -457,12 +457,12 @@ For requests needing immediate response. AGY reviews Ukrainian content only
 For iterative co-design, planning, or prompt optimization:
 ```bash
 # Start a conversation
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+.venv/bin/python -m lu_machinery.ai_agent_bridge converse \
   "Let's plan the A1/1 build. Here's the plan: ..." \
   --task-id "a1-1-planning"
 
 # Continue (Gemini sees full history)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+.venv/bin/python -m lu_machinery.ai_agent_bridge converse \
   "Good points. What about the dialogue examples?" \
   --task-id "a1-1-planning"
 ```
@@ -496,18 +496,18 @@ mcp__message-broker__send_message(
 
 ---
 
-## Multi-Agent Deliberation (`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`)
+## Multi-Agent Deliberation (`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss`)
 
-**This section was added 2026-05-02 after recognizing systematic underutilization** of `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` for design/framing/architecture decisions. We were defaulting to single-shot AGY reviews and Claude-alone-reasoning where distributed deliberation would have caught more.
+**This section was added 2026-05-02 after recognizing systematic underutilization** of `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` for design/framing/architecture decisions. We were defaulting to single-shot AGY reviews and Claude-alone-reasoning where distributed deliberation would have caught more.
 
-### What `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is — and isn't
+### What `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` is — and isn't
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
+`.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
 
 **It is NOT formal cross-family review.** Discussion output is design input only.
 Independent PR CF is `ask-<lane> --type review` with the verdict posted on the PR
 (shielded `review-pr` / `publish-review-verdict` removed in #8520 — see ownership matrix in
-[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md)).
+[`agent-seat-onboarding.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/agent-seat-onboarding.md)).
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 
@@ -518,7 +518,7 @@ Independent PR CF is `ask-<lane> --type review` with the verdict posted on the P
 
 ### When to use which tool
 
-| Use `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` | Use bridge `ask-agy` (single-shot) | Don't use either |
+| Use `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` | Use bridge `ask-agy` (single-shot) | Don't use either |
 |---|---|---|
 | Architectural trade-offs (e.g., module_type categories, retrieval strategy) | Mechanical PR review with green CI | Trivial fixes (delete leftover file) |
 | Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits) | Adversarial review of a single PR | Implementation tasks (Codex codes alone) |
@@ -528,22 +528,22 @@ Independent PR CF is `ask-<lane> --type review` with the verdict posted on the P
 
 ### Budget angle
 
-- `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with agy,codex` (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.
-- `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with claude,agy,codex` burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).
+- `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss ... --with agy,codex` (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.
+- `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss ... --with claude,agy,codex` burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).
 
 ### Concrete example — what we missed today (2026-05-02)
 
 When proposing the POC anchor module, Claude reasoned alone and offered A1/M10 colors as a "neutral steady-state baseline." User had to catch the Russian-imperial-propaganda angle on colors that invalidated "neutral." If we had run:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss content "POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1" --with claude,agy,codex --max-rounds 2
+.venv/bin/python -m lu_machinery.ai_agent_bridge discuss content "POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1" --with claude,agy,codex --max-rounds 2
 ```
 
 …Gemini or Codex might have surfaced the colors angle independently. The deliberation transcript would also exist as a referenceable record on the `content` channel, not buried in a Claude session that compaction would eventually destroy. **Pattern: when picking among options that touch decolonization, framing, or pedagogy — discuss, don't decide alone.**
 
-### Decision Card pattern (when `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` surfaces a CHOICE)
+### Decision Card pattern (when `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` surfaces a CHOICE)
 
-Most `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs converge with `[AGREE]` — orchestrator just executes the consensus. But when discussion surfaces **disagreement OR multi-option output**, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.
+Most `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` runs converge with `[AGREE]` — orchestrator just executes the consensus. But when discussion surfaces **disagreement OR multi-option output**, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.
 
 **Template:**
 
@@ -581,11 +581,11 @@ When all participating agents share the same underlying bias on a topic (e.g., R
 
 For high-risk tracks — **FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH** (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:
 
-- **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
-- **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
+- **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
+- **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
   - *Example for HIST:* "Did you check the proposed framing against canonical decolonized sources? Bulgakov-as-Ukrainian, Gogol-as-Ukrainian, Akhmatova-as-Ukrainian, etc., are the 'Kyiv-born equals Ukrainian writer' trap — flag if you see it. Did you check whether the historical actor is being framed in Russian-imperial categories versus Ukrainian native categories?"
 
-**Recommendation:** Prefer **Mechanism B** (proactive — catches bias during discussion) for any new `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` on high-risk tracks. Fall back to **Mechanism A** (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.
+**Recommendation:** Prefer **Mechanism B** (proactive — catches bias during discussion) for any new `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` on high-risk tracks. Fall back to **Mechanism A** (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.
 
 **Pattern:** Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.
 
@@ -618,11 +618,11 @@ The bridge runs a citation-provenance check on every channel post and reply befo
 
 **Annotate-mode, not block-mode.** The check never refuses a post — it surfaces the doubt. This keeps the cost of a false-positive low (the channel still flows; reviewers see the marker and can dismiss it) and the cost of a true-positive a clear breadcrumb for downstream consumers (reviewer prompts, content modules, students never inherit a forged citation).
 
-**Why this exists.** On 2026-05-05, two `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation ("Антоненко-Давидович categorizes feminine собака as a calque/Russianism") in Gemini's reply. АД has no entry on собака per `mcp__sources__search_style_guide`; the model's prior was the bug, not the source. The deliberation-protocol fix (commit `872d8376b0`) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of `[AGREE]`, it would have shipped to curriculum. This check closes that gap.
+**Why this exists.** On 2026-05-05, two `.venv/bin/python -m lu_machinery.ai_agent_bridge discuss` runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation ("Антоненко-Давидович categorizes feminine собака as a calque/Russianism") in Gemini's reply. АД has no entry on собака per `mcp__sources__search_style_guide`; the model's prior was the bug, not the source. The deliberation-protocol fix (commit `872d8376b0`) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of `[AGREE]`, it would have shipped to curriculum. This check closes that gap.
 
 **Detection scope (v1):** verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or "іменник X" / "слово X" patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.
 
-**Implementation:** `scripts/ai_agent_bridge/_citation_check.py` (detection + verification + annotation). Hook lives in `_channels.py:post()` — controlled by `verify_citations: bool = True` keyword. System/audit kinds (anything other than `post`/`reply`) skip verification automatically.
+**Implementation:** `lu_machinery/ai_agent_bridge/_citation_check.py` (detection + verification + annotation). Hook lives in `_channels.py:post()` — controlled by `verify_citations: bool = True` keyword. System/audit kinds (anything other than `post`/`reply`) skip verification automatically.
 
 **Graceful degradation:** the verifier soft-skips if `data/sources.db` is missing (worktree without the data dir, fresh checkout, CI minimal env). Soft-skips never produce flags — they're recorded internally as "verifier unavailable" so a deployment problem cannot manufacture false positives.
 
@@ -721,15 +721,15 @@ At session end: save progress summary to memory.
 
 When starting an issue:
 ```bash
-.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "working:{agent}"
-.venv/bin/python -m scripts.publish issue-comment --number {N} --body "Starting work on X"
+.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels "working:{agent}"
+.venv/bin/python -m lu_machinery.publish issue-comment --number {N} --body "Starting work on X"
 ```
 
 When done:
 ```bash
-.venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels "working:{agent}"
-.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels "review:{reviewer}"  # or review:human
-# or: .venv/bin/python -m scripts.publish issue-close --number {N}
+.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --remove-labels "working:{agent}"
+.venv/bin/python -m lu_machinery.publish issue-edit --number {N} --add-labels "review:{reviewer}"  # or review:human
+# or: .venv/bin/python -m lu_machinery.publish issue-close --number {N}
 ```
 
 ---
@@ -760,11 +760,11 @@ Use Gemini's skill files instead of verbose prompts. Each skill encodes the full
 
 ```bash
 # Seminar track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "/full-rebuild-bio 5" \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "/full-rebuild-bio 5" \
   --task-id rebuild-bio-5
 
 # Core track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "/full-rebuild-core-a a1 3" \
+.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy "/full-rebuild-core-a a1 3" \
   --task-id rebuild-a1-3
 ```
 
@@ -801,7 +801,7 @@ Never parse Gemini's prose output for structured data.
 
 Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
+`.venv/bin/python -m lu_machinery.ai_agent_bridge ask-agy ...` or
 `scripts/dispatch.py dispatch --model <catalog-model> --agent agy ...`.
 
 Direct `agy --model` calls use display labels from `agy models`, such as

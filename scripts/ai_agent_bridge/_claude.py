@@ -20,34 +20,39 @@ import uuid
 from collections.abc import Callable
 from pathlib import Path
 
-from agent_runtime.errors import (
+from lu_machinery.agent_runtime.errors import (
     AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.runner import invoke as runtime_invoke
-from common.repo_root import project_interpreter
-from secret_redactor import redact_text
-
-from ._ask_contract import (
+from lu_machinery.ai_agent_bridge._ask_contract import (
     failed_response_provenance,
     resolve_model_selection,
     response_provenance,
     unsupported_effort_note,
 )
-from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
-from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
-from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
-from ._db import get_db, get_session, set_session
-from ._messaging import acknowledge, send_message
-from ._prompts import build_claude_prompt, require_core_or_exit
-from ._review_safety import (
+from lu_machinery.ai_agent_bridge._ask_lifecycle import (
+    launch_background_ask,
+    record_ask_failure,
+    record_ask_reply,
+    register_ask,
+)
+from lu_machinery.ai_agent_bridge._broker import _is_task_locked, _remove_pid_file, _write_pid_file
+from lu_machinery.ai_agent_bridge._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
+from lu_machinery.ai_agent_bridge._db import get_db, get_session, set_session
+from lu_machinery.ai_agent_bridge._messaging import acknowledge, send_message
+from lu_machinery.ai_agent_bridge._prompts import build_claude_prompt, require_core_or_exit
+from lu_machinery.ai_agent_bridge._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
     warn_missing_review_target,
 )
-from ._review_worktree import (
+from lu_machinery.common.repo_root import project_interpreter
+from lu_machinery.secret_redactor import redact_text
+
+from agent_runtime.runner import invoke as runtime_invoke
+from scripts.ai_agent_bridge._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
     provision_review_worktree,
@@ -467,7 +472,7 @@ def _print_claude_message_info(msg, fire_and_forget, no_timeout, claude_session_
 
 
 # _build_claude_command was removed in Phase 6 — ClaudeAdapter in
-# scripts.agent_runtime.adapters.claude now owns Claude CLI flag
+# lu_machinery.agent_runtime.adapters.claude now owns Claude CLI flag
 # construction including --bare, --resume, --session-id, --model,
 # --output-format, --mcp-config, --allowedTools, and
 # --exclude-dynamic-system-prompt-sections (version-gated).

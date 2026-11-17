@@ -4,11 +4,11 @@
 > **Issue:** #7269
 > **Status:** Live inventory — source of truth for filing per-family sub-issues
 > **Generated:** 2026-08-25 (post-#7302 step 0; includes `core_router`)
-> **Corrected:** 2026-10-03 (#8522, #9630) — seam tables re-derived from the live fixture; router counts, mount prefixes, route counts and line counts recomputed from `scripts/api/main.py` and the router modules; `batch_router` and `cluster_router` added; `tests/api/test_app_factory_doc_router_count.py` pins them
+> **Corrected:** 2026-10-03 (#8522, #9630) — seam tables re-derived from the live fixture; router counts, mount prefixes, route counts and line counts recomputed from `lu_machinery/api/main.py` and the router modules; `batch_router` and `cluster_router` added; `tests/api/test_app_factory_doc_router_count.py` pins them
 > **Split:** 2026-11-04 (C-4687) — the product routers and helpers named below moved to `scripts/project_api/` and mount through the configured product entry (`scripts/project_api/entry.py`); paths below are updated. The machinery/product ownership is in [`../MONITOR-API.md` § Code layout](../MONITOR-API.md#code-layout-machinery-and-product-halves-c-4687).
 > **Refreshed:** 2026-10-10 — combined fleet-board routes, denominator digest, file line counts, and step totals verified after combining the board and snapshot-source endpoints.
 
-This document records every router module `scripts/api/main.py` mounts via
+This document records every router module `lu_machinery/api/main.py` mounts via
 `create_app()` → `factory_app.include_router(...)`, the module-global roots/stores
 each reads, every OPSEC sweep fixture seam installed on it, and a proposed
 migration step grouping per §5.2 point 4 of the parent design.
@@ -144,7 +144,7 @@ print(total)
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
-from scripts.api.main import app
+from lu_machinery.api.main import app
 from tests.api.opsec_sweep.registry import FROZEN_HTTP_OPERATION_COUNT, FROZEN_WEBSOCKET_ROUTE_COUNT
 print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
@@ -190,18 +190,18 @@ Counting rules:
 | `os.environ.FLEET_COMMS_ROOT` | env | 1 |
 | `os.environ.LU_MONITOR_HOST_ID` | env | 1 |
 | `os.environ.MONITOR_OCCUPANCY_HOST_IDS` | env | 1 |
-| `scripts.api.comms_router.default_plane_root` | setattr | 1 |
-| `scripts.api.issues_router._run_gh` | setattr | 1 |
-| `scripts.api.main.build_repository_authority` | setattr | 2 |
-| `scripts.api.repository_authority.build_repository_authority` | setattr | 1 |
-| `scripts.api.state_helpers._ttl_cache` | setattr | 1 |
-| `scripts.api.state_router.build_repository_authority` | setattr | 1 |
-| `scripts.api.state_router.probe_graphql_budget` | setattr | 1 |
-| `scripts.docs.catalogue.git` | setattr | 1 |
-| `scripts.orchestration.issue_stream_audit.read_cache` | setattr | 1 |
-| `scripts.orchestration.issue_stream_audit.read_refresh_state` | setattr | 1 |
-| `scripts.orchestration.issue_stream_audit.schedule_refresh` | setattr | 1 |
-| `scripts.telemetry.legacy_bridge._DB_PATH` | setattr | 1 |
+| `lu_machinery.api.comms_router.default_plane_root` | setattr | 1 |
+| `lu_machinery.api.issues_router._run_gh` | setattr | 1 |
+| `lu_machinery.api.main.build_repository_authority` | setattr | 2 |
+| `lu_machinery.api.repository_authority.build_repository_authority` | setattr | 1 |
+| `lu_machinery.api.state_helpers._ttl_cache` | setattr | 1 |
+| `lu_machinery.api.state_router.build_repository_authority` | setattr | 1 |
+| `lu_machinery.api.state_router.probe_graphql_budget` | setattr | 1 |
+| `lu_machinery.docs.catalogue.git` | setattr | 1 |
+| `lu_machinery.orchestration.issue_stream_audit.read_cache` | setattr | 1 |
+| `lu_machinery.orchestration.issue_stream_audit.read_refresh_state` | setattr | 1 |
+| `lu_machinery.orchestration.issue_stream_audit.schedule_refresh` | setattr | 1 |
+| `lu_machinery.telemetry.legacy_bridge._DB_PATH` | setattr | 1 |
 | `socket.create_connection` | setattr | 1 |
 | `sqlite3.connect` | setattr | 1 |
 | `starlette.datastructures.State.ctx` | setattr | 1 |
@@ -215,8 +215,8 @@ Counting rules:
 | Category | Unique targets |
 | --- | ---: |
 | Router modules (the Seams column below) | 5 |
-| Shared API helpers (`scripts.api.*` modules that are not routers) | 2 |
-| Other repository modules (`scripts.*` outside `scripts.api`, `wiki.*`) | 10 |
+| Shared API helpers (`lu_machinery.api.*` modules that are not routers) | 2 |
+| Other repository modules (`scripts.*` outside `lu_machinery.api`, `wiki.*`) | 10 |
 | Application state (`app.state`) | 1 |
 | Global backstops (`subprocess`, `socket`, `sqlite3`) | 4 |
 | **Unique `setattr` targets** | **22** |
@@ -269,7 +269,7 @@ routers (§4.2 core-router-last ordering).
 ## Per-router inventory
 
 Columns: **Module** · **Mount prefix(es)** · **Routes** · **Lines** ·
-**Config imports** (`scripts/api/config.py`) · **Module globals** ·
+**Config imports** (`lu_machinery/api/config.py`) · **Module globals** ·
 **OPSEC seams** (count) · **Step**
 
 The **Seams** value is the number of unique `setattr` targets `isolated_fixture`
@@ -454,7 +454,7 @@ global. `LEVELS` is track-id config, not a filesystem root.
 `Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
 (`site_router` 4 Path globals + `_run` stub, `worktrees_router` 2 Path globals +
 `_run` stub, `telemetry_router` 3 Path globals, `wiki_router` 4 router-local Path
-globals) are deleted. `scripts.telemetry.legacy_bridge._DB_PATH` and
+globals) are deleted. `lu_machinery.telemetry.legacy_bridge._DB_PATH` and
 `wiki.{config,state}.WIKI_STATE_DIR` (2) remain for external store redirection
 (the worktree reaper's `_run` seam was deleted with it).
 The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are deleted.
@@ -493,7 +493,7 @@ fixture, not `isolated_fixture`, so it is not counted.
 
 **`core_router` seams (1, module `main`):** `build_repository_authority`.
 
-**13 migrated (#7335) & Residual Cleanup (#7269):** the inline routes and orient collectors read roots from `Depends(get_ctx)`. The `path_loop` rewrites (`scripts.api.config.{BATCH_STATE_DIR, CURRICULUM_ROOT, DASHBOARDS_DIR, LIVE_REPO_ROOT, MESSAGE_DB, PROJECT_ROOT}` and `scripts.api.resilience._REPO_ROOT`), `scripts.fleet_comms.legacy_broker_report.main_checkout_root`, and 4 unused `wiki.*` / RAG defaults are deleted.
+**13 migrated (#7335) & Residual Cleanup (#7269):** the inline routes and orient collectors read roots from `Depends(get_ctx)`. The `path_loop` rewrites (`lu_machinery.api.config.{BATCH_STATE_DIR, CURRICULUM_ROOT, DASHBOARDS_DIR, LIVE_REPO_ROOT, MESSAGE_DB, PROJECT_ROOT}` and `lu_machinery.api.resilience._REPO_ROOT`), `lu_machinery.fleet_comms.legacy_broker_report.main_checkout_root`, and 4 unused `wiki.*` / RAG defaults are deleted.
 
 **`batch_router` routes (9):** `/api/batch/dispatcher`, `/api/batch/active`,
 `/api/batch/failures`, `/api/batch/usage`, `/api/batch/checkpoints`,

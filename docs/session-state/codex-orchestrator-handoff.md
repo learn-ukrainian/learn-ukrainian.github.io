@@ -94,7 +94,7 @@ gh pr list --state open --limit 20
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
 # Historical next targets, not current tasking:
 # docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
-.venv/bin/python -m scripts.fleet_comms plane-status
+.venv/bin/python -m lu_machinery.fleet_comms plane-status
 .venv/bin/python scripts/hygiene/retention_engine.py plan
 ```
 

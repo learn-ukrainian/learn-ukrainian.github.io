@@ -7,7 +7,7 @@ Last reviewed: 2026-06-21
 
 - A1 is the beginner track. Do not judge it by B1 or B2 immersion habits.
 - Current repo examples show A1 uses English support, short Ukrainian chunks, stress marks, letter/sound work, and warm repair language.
-- Thresholds and stress/pronunciation rules must be verified from `scripts/config.py`, `scripts/audit/config.py`, and current docs before judging.
+- Thresholds and stress/pronunciation rules must be verified from `lu_machinery/config.py`, `scripts/audit/config.py`, and current docs before judging.
 - This audit must not modify curriculum or site sources. Its only content write is the durable report under `docs/audits/`, plus PR text needed to deliver that report.
 
 ## Goal
@@ -40,7 +40,7 @@ All commands must run from `WORKTREE_ROOT`.
 - `curriculum/l2-uk-en/curriculum.yaml`, A1 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - `docs/runbooks/module-build-token-telemetry.md`
-- `scripts/config.py`
+- `lu_machinery/config.py`
 - `scripts/audit/config.py`
 - `docs/best-practices/ulp-presentation-pattern.md` if present
 - representative A1 files before expanding scope:
@@ -124,7 +124,7 @@ git add "$REPORT"
 git commit -m "docs: add A1 quality audit" --trailer "X-Agent: codex/a1-quality-audit"
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 git push -u origin codex/a1-quality-audit
-.venv/bin/python -m scripts.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/a1-quality-audit --base main
+.venv/bin/python -m lu_machinery.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/a1-quality-audit --base main
 ```
 
 ## Expected Final Response

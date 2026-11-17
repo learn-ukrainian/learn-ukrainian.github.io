@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from lu_machinery.common.repo_root import machinery_path
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
@@ -558,7 +559,7 @@ def _scope_command() -> list[str]:
     return [
         "systemd-run", "--user", "--scope", "--quiet", "--slice=lu.slice",
         "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0",
-        "/bin/bash", str(ROOT / "scripts/lib/job_memory_scope.sh"), str(MEMORY_BYTES), "--",
+        "/bin/bash", str(machinery_path('lib/job_memory_scope.sh')), str(MEMORY_BYTES), "--",
     ]
 
 

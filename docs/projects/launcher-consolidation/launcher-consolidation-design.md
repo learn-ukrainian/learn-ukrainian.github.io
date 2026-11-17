@@ -57,9 +57,9 @@ this design remains forward-looking rather than preserving obsolete commands.
 
    Exact internal boundary:
 
-   - `scripts/lib/launcher_core.sh`
+   - `lu_machinery/lib/launcher_core.sh`
    - `scripts/launchers/{claude,codex,gemini,grok,kimi,glm}.sh`
-   - `scripts/lib/codex_cc_route.sh`
+   - `lu_machinery/lib/codex_cc_route.sh`
    - Existing in-flight `scripts/lib/kimicc_route.sh`
    - New `scripts/lib/glmcc_route.sh`
 

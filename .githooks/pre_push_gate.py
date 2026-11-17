@@ -455,12 +455,36 @@ def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan |
     return Plan(head, tree, base, base_fallback=base_fallback, tools=tool_versions(launcher, config, deployment))
 
 
+def interpreter_resolver_path(launcher: str) -> Path | None:
+    """Ask the isolated project interpreter which installed resolver the launcher uses."""
+    try:
+        result = subprocess.run(
+            [
+                launcher,
+                "-I",
+                "-c",
+                "from lu_machinery.common.repo_root import machinery_path; "
+                "print(machinery_path('lib/project_interpreter.sh'))",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    value = result.stdout.strip()
+    return Path(value) if result.returncode == 0 and value and Path(value).is_absolute() else None
+
+
 def tool_versions(launcher: str, config: str, deployment: str | None = None) -> dict[str, str | None]:
     """``TOOL_NAMES``: the gate, launcher, pre-commit configuration, interpreter and installed hook tools,
     and the deployer identity that proved deployed agent files (``reject_untracked_inputs``); unknown or
     unused is ``None``."""
 
-    def digest(path: Path) -> str | None:
+    def digest(path: Path | None) -> str | None:
+        if path is None:
+            return None
         try:
             return hashlib.sha256(path.read_bytes()).hexdigest()
         except OSError:
@@ -475,7 +499,7 @@ def tool_versions(launcher: str, config: str, deployment: str | None = None) -> 
     return {
         "gate_source": digest(Path(__file__)),
         "launcher": digest(Path(launcher)),
-        "interpreter_resolver": digest(Path(launcher).parent.parent / "lib/project_interpreter.sh"),
+        "interpreter_resolver": digest(interpreter_resolver_path(launcher)),
         "pre_commit_config": digest(Path(config)),
         "python": sys.version,
         "pytest": installed("pytest"),
@@ -1782,13 +1806,13 @@ def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> d
     inputs = {
         "source": Path(__file__),
         "launcher": Path(launcher),
-        "interpreter_resolver": Path(launcher).parent.parent / "lib/project_interpreter.sh",
+        "interpreter_resolver": interpreter_resolver_path(launcher),
         "config": Path(config),
     }
     result: dict[str, str | None] = {"input": hashlib.sha256(text.encode()).hexdigest()}
     for name, path in inputs.items():
         try:
-            result[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+            result[name] = hashlib.sha256(path.read_bytes()).hexdigest() if path is not None else None
         except OSError:
             result[name] = None
     return result

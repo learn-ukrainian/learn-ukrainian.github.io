@@ -30,7 +30,7 @@ changes.
 ```
 
 From a dispatch worktree, use the primary checkout's interpreter (see
-[`worktree-cleanup.md`](worktree-cleanup.md) § Shared Python environment).
+[`worktree-cleanup.md`](https://github.com/learn-ukrainian/machinery/blob/main/docs/runbooks/worktree-cleanup.md) § Shared Python environment).
 
 | Mode | Scans | How |
 | --- | --- | --- |
@@ -190,12 +190,12 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
 | Gate | When | Scope |
 | --- | --- | --- |
 | gitleaks (`.pre-commit-config.yaml`, `.gitleaks.toml`) | Every commit, staged files | Stops a secret before it is committed. |
-| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range. The nightly schedule is an ancestry window, not a commit-date window (below). Verified mode, `--results=verified,unknown`. Required. |
+| TruffleHog in CI (`.github/workflows/ci.yml`, `lu_machinery/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range. The nightly schedule is an ancestry window, not a commit-date window (below). Verified mode, `--results=verified,unknown`. Required. |
 | OPSEC linter (`scripts/audit/lint_opsec_leaks.py`) | CI Secret scan job | Infrastructure identifiers (addresses, key headers) that are not credentials. |
 | This wrapper | On demand, as above | Offline; whole work tree or whole public history. |
 
 The nightly schedule scans `base..HEAD` for a fixed first-parent depth
-(`SCHEDULE_FIRST_PARENT_STEPS` in `scripts/ci/secret_scan_scope.py`, 400 as of
+(`SCHEDULE_FIRST_PARENT_STEPS` in `lu_machinery/ci/secret_scan_scope.py`, 400 as of
 the 2026-10-16 measurement). That range includes every commit reachable from
 HEAD and not from the base, merges and side branches included, with no commit
 date involved. 400 is more than twice the measured peak of 156 first-parent
@@ -238,7 +238,7 @@ out full history without blobs (`filter: blob:none`); the queue job's checkout
 is also sparse (`scripts/` and `.python-version`), since it reads no file
 content. Only the `full-history-audit` dispatch, which reads every blob anyway,
 keeps a full clone. Before TruffleHog runs,
-`python3 -m scripts.ci.secret_scan_scope materialize` takes the scan's base
+`python3 -m lu_machinery.ci.secret_scan_scope materialize` takes the scan's base
 and head (the scope's outputs, or the pull request's base and head that the
 action uses on its own), then:
 

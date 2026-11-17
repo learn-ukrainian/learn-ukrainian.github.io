@@ -30,7 +30,7 @@ def test_schema_version_rejects_boolean_and_float_lookalikes(tmp_path):
 def product_checkout_root(tmp_path, monkeypatch):
     """``tmp_path`` as a self-contained product checkout whose ``scripts`` package is the cached one.
 
-    It has the package shapes the cases name (``scripts.audit`` a package, ``scripts.ops.product_entry``
+    It has the package shapes the cases name (``scripts.audit`` a package, ``lu_machinery.ops.product_entry``
     a module), and the machinery's cached entries of those names are hidden for the test, as once the
     machinery is extracted (C-4764): the loader refuses a cached package from another checkout.
     """
@@ -51,7 +51,7 @@ def product_checkout_root(tmp_path, monkeypatch):
     )
     package = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(package)
-    for name in ("scripts.audit", "scripts.ops", "scripts.ops.product_entry"):
+    for name in ("scripts.audit", "scripts.ops", 'scripts.ops.product_entry'):
         monkeypatch.delitem(sys.modules, name, raising=False)
     monkeypatch.setitem(sys.modules, "scripts", package)
     before = set(sys.modules)
@@ -162,7 +162,7 @@ def test_hooks_refuses_foreign_cached_module_without_repinning(tmp_path, monkeyp
     [
         ("scripts.audit.loader_slice_missing", "hooks_module_missing", None),
         ("scripts.loader_slice_missing.child", None, "scripts.loader_slice_missing"),
-        ("scripts.ops.product_entry.child", None, "scripts.ops.product_entry.child"),
+        ('scripts.ops.product_entry.child', None, 'scripts.ops.product_entry.child'),
     ],
 )
 def test_hooks_missing_target_keeps_leaf_error_and_parent_error(

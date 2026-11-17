@@ -39,12 +39,9 @@ from tests.helpers import machinery_package
 from tests.launcher_libraries import (
     freeze_product_wrapper,
     installed_machinery,
-    launcher_catalog_files,
-    launcher_library_files,
     link_installed_machinery,
 )
 from tests.launcher_sandbox import (
-    copy_slot_registry,
     launcher_environment,
     launcher_wrapper_source,
     tracked_launcher_wrappers,
@@ -342,25 +339,8 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
     (`_install_release`); the same boundary stubs replace the same package files.
     """
     root = tmp_path / "repo"
-    if runtime == "installed":
-        machinery, package = _install_release(root)
-    else:
-        assert runtime == "checkout", runtime
-        machinery, package = REPO / MACHINERY, MACHINERY
-        for wrapper in tracked_launcher_wrappers():
-            destination = root / wrapper
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(launcher_wrapper_source(wrapper), destination)
-        for relative in (
-            f"{MACHINERY}/config/issue_streams.yaml",
-            f"{MACHINERY}/config/launcher_stream_aliases.tsv",
-            *launcher_library_files(REPO),
-            *launcher_catalog_files(REPO),
-        ):
-            destination = root / relative
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(REPO / relative, destination)
-        copy_slot_registry(root)
+    assert runtime in {"checkout", "installed"}, runtime
+    machinery, package = _install_release(root)
     # The real helper with only its kernel cgroup read redirected.
     env = scope_sandbox(root, tmp_path, machinery=machinery, package=package)
     _write(
@@ -402,8 +382,8 @@ def _checkout(tmp_path: Path, runtime: str = "checkout") -> tuple[Path, dict[str
         "TEST_SIGNAL_PROVIDER": str(signal_provider),
         "TEST_SIGNAL_LOG": str(tmp_path / "signal-log"),
     }
-    if runtime == "installed":
-        env["LU_PRODUCT_ROOT"] = str(root)
+    env["LU_PRODUCT_ROOT"] = str(root)
+    env["LEARN_UKRAINIAN_PYTHON"] = str(root / ".venv/bin/python")
     return root, env
 
 
@@ -1221,6 +1201,7 @@ def test_driver_relay_during_close_preserves_client_result(
         body = core.read_text()
         needle = '  if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then\n'
         assert needle in body
+        core.unlink()  # The fixture initially links the recorded release; instrumentation owns a copy.
         core.write_text(body.replace(needle, barrier + needle, 1))
     scope = root / MACHINERY / "lib/driver_scope.sh"
     body = scope.read_text()
@@ -1298,7 +1279,7 @@ def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) ->
     try:
         job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
         os.killpg(job, signal.SIGHUP)
-        assert terminal.finish() == 129
+        assert terminal.finish() == 129, terminal.output.decode(errors="replace")
     finally:
         terminal.close()
     names = [name for name, _ in _events(env)]
@@ -1334,7 +1315,7 @@ def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path:
         terminal.send(b"after quit\n")
         terminal.wait_for(lambda: "LINE after quit" in _signal_log(env), "input after ignored QUIT")
         terminal.send(b"done\n")
-        assert terminal.finish() == PROVIDER_RC
+        assert terminal.finish() == PROVIDER_RC, terminal.output.decode(errors="replace")
     finally:
         terminal.close()
     assert "QUIT" not in _signal_log(env)

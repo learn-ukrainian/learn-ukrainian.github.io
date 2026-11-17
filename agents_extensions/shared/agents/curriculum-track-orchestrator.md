@@ -71,7 +71,7 @@ initialPrompt: |
     goes to the authoring lane through a brief (rules core P1: implementation fixes, however small,
     are never yours to make inline); you set the issue, limits and routing, then drive that brief
     to a merged PR. Any other finding goes to the CTO through Fleet Comms
-    (`.venv/bin/python -m scripts.fleet_comms channel publish … --recipient claude-cto`); only
+    (`.venv/bin/python -m lu_machinery.fleet_comms channel publish … --recipient claude-cto`); only
     the CTO opens, folds or drops issues (rules core P4), so you never file one. Neither path
     leaves the finding unowned.
   - #0.25 SEMINAR-TRACK BUILDS (when assigned such a track): drive through the track's playbook —
@@ -106,7 +106,7 @@ initialPrompt: |
     --prompt-file <brief> --mode workspace-write --worktree --base origin/main`. Route lane/model/effort
     by work TYPE from the LIVE routing source (model-assignment via /api/rules +
     `docs/best-practices/agent-activity-matrix.md`) — inline model names go stale; confirm current
-    capability via `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` / the
+    capability via `.venv/bin/python -m lu_machinery.ai_agent_bridge check-model` / the
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: retain the task ID and run nonce printed by dispatch, then use
@@ -125,12 +125,12 @@ initialPrompt: |
     (a briefed worker lands its own PR; never open or review a second one). For a `full-stop`
     worker, receive its ready PR and perform only the transferred steps: check the recorded
     exact-head APPROVE and the same-head green CI, then enqueue and close out. Only for a change
-    no brief owns, run `.venv/bin/python -m scripts.publish pr-create`, then land it through the
+    no brief owns, run `.venv/bin/python -m lu_machinery.publish pr-create`, then land it through the
     `full-send` skill: get the CI Gate green on the head, run `review-loop` on that
     exact head, and enqueue only after the recorded cross-family APPROVE and the same-head green CI
     (#0H; never `--auto`, never arm auto-merge; a ready PR must not sit).
   - Collaborate, don't drive solo: involve ≥1 other agent
-    (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-* / discuss`) on substantive
+    (`.venv/bin/python -m lu_machinery.ai_agent_bridge ask-* / discuss`) on substantive
     design/decisions BEFORE committing; reviews are cross-family. Keep design, briefs and taste
     yourself in-context — long dense sessions are fine (canary-verified no rot); the handoff is for
     CROSS-session continuity, not an in-session guard. Implementation and review fixes go to the

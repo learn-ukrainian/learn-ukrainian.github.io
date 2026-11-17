@@ -2,7 +2,7 @@
 
 Owns the pg byte-plane blob table plus the narrow request-plane tables the
 pg-capable execute path touches. Column types keep TEXT-parity with the
-sqlite schema in ``scripts.fleet_comms.migrations`` (ISO-8601 timestamps and
+sqlite schema in ``lu_machinery.fleet_comms.migrations`` (ISO-8601 timestamps and
 JSON payloads stay TEXT) so rows are comparable across engines during the
 pre-cutover period. This is deliberately NOT a mirror of the full sqlite
 migration chain — authority-queue, routing, and review tables arrive with
@@ -115,7 +115,7 @@ PG_SCHEMA_STATEMENTS: tuple[str, ...] = _V2_REQUEST_PLANE
 
 # V4 canonical authority store (PR #7662 repair 6): the operator-approved
 # extension of this same pg plane for text-free full execution observations
-# and Sources invocation records. See ``scripts.fleet_comms.v4_canonical_
+# and Sources invocation records. See ``lu_machinery.fleet_comms.v4_canonical_
 # authority_store`` for the write/resolve contract. TEXT-parity with the
 # sqlite migration below, same as every other table in this ledger.
 _V3_V4_CANONICAL_AUTHORITY = (
@@ -138,7 +138,7 @@ _V3_V4_CANONICAL_AUTHORITY = (
 
 # V4 canonical authority store, execution-boundary slice (PR #7662 repair 7):
 # pre-execution dispatch authorization plus request-correlation columns. See
-# the sqlite twin ``scripts.fleet_comms.migrations._V9_STATEMENTS``.
+# the sqlite twin ``lu_machinery.fleet_comms.migrations._V9_STATEMENTS``.
 _V4_EXECUTION_DISPATCH_BINDING = (
     """CREATE TABLE IF NOT EXISTS v4_execution_dispatch_bindings (
         request_id TEXT PRIMARY KEY,
@@ -160,7 +160,7 @@ _V4_EXECUTION_DISPATCH_BINDING = (
 # (PR #7662 repair 8). The native runner claims one attempt immediately
 # before Popen and stores only the capability digest; Sources HTTP auth
 # resolves that digest to the active attempt. Sqlite twin:
-# ``scripts.fleet_comms.migrations._V10_STATEMENTS``.
+# ``lu_machinery.fleet_comms.migrations._V10_STATEMENTS``.
 _V5_V4_RUNNER_ATTEMPTS = (
     """CREATE TABLE IF NOT EXISTS v4_execution_attempts (
         attempt_id TEXT PRIMARY KEY,

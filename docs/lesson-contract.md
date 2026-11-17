@@ -17,7 +17,7 @@
 > v2 from v1: B1+ immersion is uniform 100 % Ukrainian across every tab
 > body, with the **Словник (Tab 2) translation column + idiom/expression
 > notes** as the ONLY sanctioned English at B1+. The stale `b1-m01-05`
-> band in `scripts/config.py` does not exist in this contract — Phase 2
+> band in `lu_machinery/config.py` does not exist in this contract — Phase 2
 > config audit cleans up the file. Tab 2 ``VocabCard`` stays slim per
 > EPIC #1581 (site-wide dictionary section is separate from per-module
 > Словник).
@@ -169,7 +169,7 @@ Component compatibility note: legacy `fill-in-the-blanks` is Deprecated; subsume
    for all four tabs. If a module legitimately has no external
    resources, the plan declares this and the empty state renders.
 6. **Immersion is band-strict and tab-aware:**
-   - **A1 + A2:** writer hits the per-band ramp from `scripts/config.py`
+   - **A1 + A2:** writer hits the per-band ramp from `lu_machinery/config.py`
      IMMERSION_POLICIES across all four tabs.
    - **B1+ (including B2, C1, C2, all seminars):** **Tab 1 / Tab 3 /
      Tab 4 module body is 100 % Ukrainian.** No exceptions, no rescue
@@ -300,7 +300,7 @@ the dictionary destination is real. Source: panel consensus
 **Phase 0 closeout actions** (after this commit):
 1. Update `docs/session-state/archive/2026-04-25-evening-reboot-decision.md`
    line 82: `Зошит` → `Вправи` per P1.
-2. File `scripts/config.py` IMMERSION_POLICIES B1 cleanup issue
+2. File `lu_machinery/config.py` IMMERSION_POLICIES B1 cleanup issue
    (Phase 2 sub-issue under EPIC #1577) — delete `b1-m01-05`,
    collapse `b1-core` to 100 % Ukrainian, rewrite rule string to
    match B2+ language, audit pipeline code for any `b1-m01-05` key

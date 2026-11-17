@@ -5,7 +5,7 @@
 ## Find a document, data store or resource: one entry point
 
 ```bash
-.venv/bin/python -m scripts.docs.find "<query>"          # add --json, --limit N or --family ID
+.venv/bin/python -m lu_machinery.docs.find "<query>"          # add --json, --limit N or --family ID
 curl -s 'http://localhost:8765/api/knowledge/find?q=<query>'   # the same search on the Monitor API
 ```
 
@@ -102,7 +102,7 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 1. **36 top-level docs/ files, no semantic grouping.** Authoritative `north-star.md` sits among April archives. Use this README as primary index.
 2. **18 HTML/MD duplicate pairs.** Prefer `.md` for AI-consumption; `.html` is a human-rendering companion only.
 3. **Rule deploy drift risk.** `agents_extensions/` is source; deployed copies may lag if `npm run agents:deploy` hasn't been run. Verify with `.venv/bin/python -I -m lu_machinery.agent_deploy --project-root "$PWD" --check`.
-4. **V5/V6 era docs not in `_legacy/`.** `docs/architecture/ARCHITECTURE.md` is legacy but at canonical path; its front matter and banner mark it superseded. `scripts.docs.find` reports each hit's status.
+4. **V5/V6 era docs not in `_legacy/`.** `docs/architecture/ARCHITECTURE.md` is legacy but at canonical path; its front matter and banner mark it superseded. `lu_machinery.docs.find` reports each hit's status.
 5. **`docs/architecture/adr/` vs `docs/decisions/`.** ADRs are architectural decisions; decisions are operational/policy. Both authoritative within scope.
 
 A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gaps-and-reorganization/REPORT.md`.
@@ -120,7 +120,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | Family | Kind | Status | Paths | Purpose |
 | --- | --- | --- | --- | --- |
 | `ulif-first-stress-contract` | doc_family | current | `docs/verification/ulif-first-stress.md` | ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification. |
-| `docs-entry-map` | doc_family | current | `docs/README.md` | Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era. |
+| `docs-entry-map` | doc_family | current | `docs/README.md` | Cold-start documentation map for humans and agents. It names the one search entry point (python -m lu_machinery.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era. |
 | `docs-knowledge-system` | doc_family | current | `docs/knowledge/**`, `docs/architecture/docs-authority-lifecycle.md`, `docs/plans/2026-09-17-docs-knowledge-rollout.md` | Repository knowledge system - this catalogue and its schema, the deterministic docs inventory contract, the authority and lifecycle contract, and the docs-knowledge rollout plan. |
 | `corpus-inventory` | doc_family | current | `docs/corpus-inventory.md` | Prose inventory of data/sources.db tables and the local versus bulk-root storage layout; table counts were last refreshed 2026-07-31 and are stale against the live store. |
 | `top-level-references` | doc_family | current | `docs/ACTIVITY-YAML-REFERENCE.md`, `docs/CLAUDE-CODE-FEATURES.md`, `docs/DICTIONARY-PIPELINE-STATUS.md`, `docs/RUNBOOK-BUILD.md`, `docs/SCRIPTS.md`, `docs/WORKSTREAMS.md`, `docs/agent-bridge-setup-guide.md`, `docs/agent-runtime-guide.md`, `docs/review-protocol.md` | Maintained top-level references for scripts and commands, workstreams, the agent runtime, the review protocol, activity YAML and the dictionary pipeline status. |

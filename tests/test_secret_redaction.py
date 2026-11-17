@@ -244,7 +244,7 @@ def test_launcher_secret_drop_fails_closed_without_the_release_sanitizer(tmp_pat
     shared-state anchor its hooks need; with the release module unavailable (an interpreter whose
     site-packages are off), the launch refuses and the provider never runs.
     """
-    from lu_machinery.common.repo_root import main_checkout_root
+    from lu_machinery.common.repo_root import machinery_path, main_checkout_root
 
     interpreter = sys.executable
     if release == "missing":
@@ -257,8 +257,8 @@ def test_launcher_secret_drop_fails_closed_without_the_release_sanitizer(tmp_pat
             "bash",
             "-uc",
             """
-source scripts/lib/launcher_core.sh
-source scripts/lib/project_interpreter.sh
+source "$TEST_MACHINERY_ROOT/lib/launcher_core.sh"
+source "$TEST_MACHINERY_ROOT/lib/project_interpreter.sh"
 LC_ROOT="$PWD"
 LC_PROVIDER=claude
 LC_HARNESS=""
@@ -270,6 +270,9 @@ exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import json, os; print
         ],
         cwd=REPO,
         env=launcher_environment({
+            "TEST_MACHINERY_ROOT": str(machinery_path("lib").parent),
+            "LU_PRODUCT_ROOT": str(REPO),
+            "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT": str(main_checkout_root(REPO)),
             "TEST_PYTHON": interpreter,
             "TEST_REAL_PYTHON": sys.executable,
             "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
@@ -293,7 +296,7 @@ exec "${LC_CHILD_ENV_COMMAND[@]}" "$TEST_REAL_PYTHON" -c 'import json, os; print
         assert proc.returncode == 7
         assert "provider-ran" not in proc.stdout
         assert "could not drop unneeded API keys" in proc.stderr
-        assert "refusing to launch" in proc.stderr
+        assert "launcher child environment refused" in proc.stderr
 
 
 @pytest.mark.parametrize("phase", ["collection", "call", "teardown"])

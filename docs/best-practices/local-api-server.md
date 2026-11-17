@@ -19,7 +19,7 @@ on the Mac itself. Remote delegation has no public defaults — set both
 Normal API commands launch uvicorn in dev-reload mode:
 
 ```bash
-.venv/bin/python -m uvicorn scripts.api.main:app \
+.venv/bin/python -m uvicorn lu_machinery.api.main:app \
   --host 127.0.0.1 \
   --port 8765 \
   --reload \
@@ -39,8 +39,8 @@ mode) under a per-user macOS LaunchAgent:
   cannot add `__pycache__` files that invalidate the release manifest.
 - Label: `com.learn-ukrainian.monitor-api`
 - launchd `Program` is `/bin/bash` plus
-  `scripts/api/run_monitor_api_supervisor.sh`, which execs the primary
-  `.venv/bin/python -m scripts.api.launchd_supervisor`. Binding `Program` to
+  `lu_machinery/api/run_monitor_api_supervisor.sh`, which execs the primary
+  `.venv/bin/python -m lu_machinery.api.launchd_supervisor`. Binding `Program` to
   the venv interpreter is the LWCR exit-78 trap (#6937, #6941).
 - Restart policy: `KeepAlive.SuccessfulExit=false`; the foreground runner turns
   any unexpected API exit, including an unexpected zero exit, into a failed
@@ -106,7 +106,7 @@ API health probe is unreachable. File-based dispatch fallbacks still work and
 may be needed to repair the API; the warning names `services.sh status api` and
 the crash record as recovery steps.
 
-The FastAPI app also installs `scripts/api/resilience.py` middleware:
+The FastAPI app also installs `lu_machinery/api/resilience.py` middleware:
 
 - `API_REQUEST_TIMEOUT_S` defaults to 10 seconds and returns 504 on timeout.
 - `API_MAX_CONCURRENCY` defaults to 16 in-flight requests per worker and
@@ -130,7 +130,7 @@ The FastAPI app also installs `scripts/api/resilience.py` middleware:
 
 ## Architecture Overview
 
-Routers are mounted by domain from `scripts/api/main.py`. The product half comes
+Routers are mounted by domain from `lu_machinery/api/main.py`. The product half comes
 from the configured product entry (`scripts/project_api/entry.py`, C-4687) and is
 mounted ahead of the machinery routers; the static catch-all stays last:
 
@@ -158,7 +158,7 @@ The full route and playground consumer inventory lives in
   short TTL cache.
 - SQLite tables used by polling paths need indexes matching their `WHERE` and
   `ORDER BY` clauses.
-- Use `connect_sqlite()` from `scripts/api/resilience.py` for SQLite inside
+- Use `connect_sqlite()` from `lu_machinery/api/resilience.py` for SQLite inside
   API code so slow queries are visible in logs and `/api/health`.
 - Endpoints that depend on optional local services, such as Qdrant, must fail
   fast when the service is down.
@@ -202,7 +202,7 @@ The full route and playground consumer inventory lives in
 Use these while exercising dashboards:
 
 ```bash
-pid=$(pgrep -f 'uvicorn scripts.api.main:app' | head -1)
+pid=$(pgrep -f 'uvicorn lu_machinery.api.main:app' | head -1)
 ps -o rss= -p "$pid"
 lsof -p "$pid" | wc -l
 curl -s -w '%{time_total}\n' -o /dev/null http://127.0.0.1:8765/api/health

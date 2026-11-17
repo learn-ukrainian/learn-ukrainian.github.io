@@ -15,7 +15,7 @@
 > idiom/expression explanation.
 >
 > **v3.1 — immersion is now ULP-derived, not flat-%.** The earlier model
-> read flat band percentages from `scripts/config.py` `IMMERSION_POLICIES`.
+> read flat band percentages from `lu_machinery/config.py` `IMMERSION_POLICIES`.
 > That model has been superseded by **`compute_immersion_band(track,
 > module_num, learner_state)`** which derives immersion floors and
 > ceilings from the learner's cumulative vocabulary count + the module's
@@ -157,7 +157,7 @@ learner_state)` to derive each module's band from cumulative
 vocabulary + this module's declared new vocabulary + lemma-frequency
 map. The derivation is deterministic and tested; the calibration
 constants (`_ULP_VOCAB_KNEE_PER_BAND`, `_RECYCLE_CADENCE_DEFAULTS`,
-`_PATTERN_FREQ_MASTERY_THRESHOLD`) live in `scripts/config.py`,
+`_PATTERN_FREQ_MASTERY_THRESHOLD`) live in `lu_machinery/config.py`,
 calibrated against Anna Ohoiko's ULP S1–S6 corpus.
 **B1 onwards is uniformly 100 % Ukrainian** in every tab except
 Tab 2 (Словник), where English translations and idiom/expression
@@ -428,7 +428,7 @@ transliterations like `Kyiv` rendered inline next to `Київ`. See
 `docs/lesson-contract.md` §5 for implementation detail. Source: panel
 consensus.
 
-**P7 — `scripts/config.py` IMMERSION_POLICIES cleanup is a Phase 2
+**P7 — `lu_machinery/config.py` IMMERSION_POLICIES cleanup is a Phase 2
 sub-issue, not blocking Phase 4.** The Phase 4 exemplar is A1/20 and
 does not hit the stale B1 code paths. The cleanup (delete
 `b1-m01-05`, collapse `b1-core` to 100 %, rewrite rule string,
@@ -447,7 +447,7 @@ audit pipeline branches) is filed as a Phase 2 sub-issue under EPIC
 **Phase 0 closeout actions** (after this commit):
 1. Update `docs/session-state/archive/2026-04-25-evening-reboot-decision.md`
    line 82: `Зошит` → `Вправи` (lesson contract P1).
-2. File the Phase 2 `scripts/config.py` IMMERSION_POLICIES B1
+2. File the Phase 2 `lu_machinery/config.py` IMMERSION_POLICIES B1
    cleanup issue per P7.
 3. Wire `{NORTH_STAR}` and `{LESSON_CONTRACT}` placeholders into
    `scripts/build/phases/v6-write.md` "Shared Contract" preamble

@@ -26,7 +26,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_certification as certification
-from scripts.common.jsonl import jsonl_lines
+from lu_machinery.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 
@@ -76,7 +76,7 @@ def load_cards(path: Path, register_path: Path) -> list[dict]:
     value = json.loads(path.read_bytes())
     if isinstance(value, dict) and "selection" in value:
         from scripts.atlas import word_card_assembly as assembly
-        from scripts.common.scratch import ensure_scratch_root
+        from lu_machinery.common.scratch import ensure_scratch_root
 
         with ExitStack() as stack:
             scratch = Path(stack.enter_context(tempfile.TemporaryDirectory(dir=ensure_scratch_root())))

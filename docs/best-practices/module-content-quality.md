@@ -134,7 +134,7 @@ what the teaching requires; neither reward nor penalize a word count.
 ## Immersion Standards
 
 Use `IMMERSION_POLICIES` and `compute_immersion_band` in
-[`scripts/config.py`](../../scripts/config.py) for the current track and module.
+[`lu_machinery/config.py`](https://github.com/learn-ukrainian/machinery/blob/main/lu_machinery/config.py) for the current track and module.
 The policy supplies language roles and structural requirements as well as
 advisory percentages. A1 retains English support for learners; apply the
 appropriate band and learner-state rules from the configuration.

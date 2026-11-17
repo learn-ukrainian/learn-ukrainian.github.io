@@ -21,7 +21,7 @@ are local operational state, not committed artifacts.
 The dispatch runtime exposes these delegate agents for this repo:
 `codex`, `gemini`, `claude`, `grok`, `grok-build` (alias), `grok-hermes`, `deepseek`, `qwen`, `agy`,
 and `cursor`. It does not expose a literal `glm` delegate target in
-`scripts/delegate.py` or `scripts/agent_runtime/registry.py` as of this run.
+`scripts/delegate.py` or `lu_machinery/agent_runtime/registry.py` as of this run.
 Older bakeoff docs mention GLM as a model-family participant, but there is no
 callable GLM lane to dispatch here yet.
 
