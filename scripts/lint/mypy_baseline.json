@@ -198,71 +198,6 @@
       "message": "Item \"None\" of \"Any | None\" has no attribute \"__iter__\" (not iterable)"
     },
     {
-      "path": "scripts/api/fleet_board/budget.py",
-      "code": "misc",
-      "message": "Cannot infer type of lambda"
-    },
-    {
-      "path": "scripts/api/fleet_board/http_sources.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/fleet_board/http_sources.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/fleet_board/http_sources.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/fleet_board/http_sources.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
-      "path": "scripts/api/fleet_board/prs.py",
-      "code": "arg-type",
-      "message": "Argument \"body\" to \"Pull\" has incompatible type \"Any | None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/api/fleet_board/prs.py",
-      "code": "arg-type",
-      "message": "Argument 3 to \"_epic_tokens\" has incompatible type \"Any | None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/api/fleet_board/prs.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/api/fleet_board/sources.py",
-      "code": "arg-type",
-      "message": "Argument 2 to \"SourceReport\" has incompatible type \"str\"; expected \"Literal['not_configured', 'ok', 'stale', 'unavailable']\""
-    },
-    {
-      "path": "scripts/api/fleet_board/view.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"Mapping\" has incompatible type \"tuple[str, None | str]\"; expected \"tuple[str, str]\""
-    },
-    {
-      "path": "scripts/api/fleet_board/view.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"Mapping\" has incompatible type \"tuple[str, None | str]\"; expected \"tuple[str, str]\""
-    },
-    {
-      "path": "scripts/api/fleet_board/view.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get\" of \"Mapping\" has incompatible type \"tuple[str, None | str]\"; expected \"tuple[str, str]\""
-    },
-    {
-      "path": "scripts/api/fleet_board/view.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"Any | None | dict[Any, Any]\" has no attribute \"get\""
-    },
-    {
       "path": "scripts/atlas/a1_card_receipts.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"dict[Any, Any]\""
@@ -11551,16 +11486,6 @@
       "path": "scripts/open_dataset/hydrate.py",
       "code": "no-any-return",
       "message": "Returning Any from function declared to return \"bytes\""
-    },
-    {
-      "path": "scripts/orchestration/prompt_contracts.py",
-      "code": "misc",
-      "message": "Invalid base class \"_SafeLoaderBase\""
-    },
-    {
-      "path": "scripts/orchestration/prompt_contracts.py",
-      "code": "valid-type",
-      "message": "Variable \"scripts.orchestration.prompt_contracts._SafeLoaderBase\" is not valid as a type"
     },
     {
       "path": "scripts/pipeline/config_tables.py",

@@ -169,19 +169,6 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MONITOR-API.md docs/monitor-api"}
     content_searchable: true
 
-  - id: fleet-v1-api
-    kind: doc_family
-    paths: [docs/api/fleet-v1.md]
-    purpose: Read-only fleet board v1 contract - the response envelope, source status, and the who-is-doing-what routes.
-    keywords: [fleet board, fleet v1, response envelope, source status, epics, agents]
-    lifecycle: active
-    owner: docs-knowledge
-    entrypoints:
-      - {topic: fleet board v1 contract, path: docs/api/fleet-v1.md}
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/api/fleet-v1.md"}
-    content_searchable: true
-
   - id: machinery-cutover
     kind: doc_family
     paths: [docs/machinery/**]

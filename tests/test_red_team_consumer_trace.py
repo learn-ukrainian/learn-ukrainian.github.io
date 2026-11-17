@@ -8,7 +8,6 @@ import io
 import json
 import subprocess
 import zipfile
-from datetime import UTC, datetime
 from importlib.resources import files
 from pathlib import Path
 from typing import Any
@@ -20,8 +19,6 @@ from lu_machinery.orchestration import integration_sweep as sweep
 from lu_machinery.orchestration import merge_queue_keeper as keeper
 from lu_machinery.review.record_cf_verdict import build_comment
 from lu_machinery.review.record_cf_verdict import build_comment as _recovery_build_comment
-
-from scripts.api.fleet_board import prs
 
 # Product fixtures retained from the machinery test consumers (C-5048).
 
@@ -212,102 +209,6 @@ class _keeper_FakeGitHub:
 
 def _keeper_mutations(fake: _keeper_FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind not in {"squash-read", "cleanup"}]
-
-
-def _board_mq(**kwargs: object) -> prs.MqSnapshot:
-    return prs.MqSnapshot(
-        usable=kwargs.pop("usable", True),
-        keeper=kwargs.pop("keeper", {"queued": {}, "drops": {}}),
-        since=kwargs.pop("since", {}),
-    )
-
-
-_board_SHA = "a" * 40
-
-
-def _board_pull(
-    number: int = 42,
-    sha: str = _board_SHA,
-    *,
-    title: str = "Add a lesson",
-    draft: bool = False,
-    head_ref: str = "feature",
-    base_ref: str = "main",
-    labels: tuple[dict[str, str], ...] = (),
-    body: str = "",
-    merge_state: str | None = "CLEAN",
-    epics: tuple[str, ...] = (),
-    commit_at: str | None = None,
-) -> prs.Pull:
-    return prs.Pull(
-        number=number,
-        title=title,
-        draft=draft,
-        head_sha=sha,
-        head_ref=head_ref,
-        base_ref=base_ref,
-        labels=labels,
-        body=body,
-        merge_state=merge_state,
-        epics=epics,
-        commit_at=commit_at,
-    )
-
-
-_board_LOGIN = "fleet"
-
-_board_REPO = "example/repo"
-
-
-def _board_check(
-    name: str, sha: str = _board_SHA, *, status: str = "completed", conclusion: str = "success"
-) -> dict[str, str]:
-    return {
-        "name": name,
-        "head_sha": sha,
-        "status": status,
-        "conclusion": conclusion,
-        "started_at": "2026-10-09T00:00:00Z",
-    }
-
-
-def _board_green(sha: str = _board_SHA) -> tuple[dict[str, str], ...]:
-    return (_board_check("CI Gate", sha),)
-
-
-def _board_comment(sha: str, *, verdict: str = "APPROVED") -> dict[str, str | dict[str, str]]:
-    started = "2026-10-09T08:00:00.000001+00:00"
-    marker = f"<!-- cf-verdict v1 sha={sha} task=review-one started={started} verdict={verdict} model=gpt-6.1-sol family=openai -->"
-    body = f"### Cross-family review\nhead: {sha}\nReviewer family: openai\nVERDICT: {verdict}\nReviewer model: gpt-6.1-sol\nTask id: review-one\n\n<details><summary>Reviewer's reply</summary>\n\nnoted\n\n</details>\n\n{marker}"
-    return {
-        "id": f"review-{sha[:8]}",
-        "body": body,
-        "user": {"login": _board_LOGIN},
-        "author_association": "OWNER",
-        "created_at": "2026-10-09T08:00:00Z",
-        "updated_at": "2026-10-09T08:00:00Z",
-    }
-
-
-def _board_view(
-    *pulls: prs.Pull, queued: dict[int, bool] | None = None, login: str | None = _board_LOGIN, **kwargs: object
-) -> prs.GithubView:
-    comments = kwargs.pop("comments", None)
-    if comments is None:
-        comments = {pull.number: (_board_comment(pull.head_sha),) for pull in pulls}
-    checks = kwargs.pop("checks", None)
-    if checks is None:
-        checks = {pull.head_sha: _board_green(pull.head_sha) for pull in pulls}
-    return prs.GithubView(
-        repo=_board_REPO,
-        login=login,
-        default_branch=kwargs.pop("default_branch", "main"),
-        pulls=pulls,
-        comments=comments,
-        checks=checks,
-        queued={pull.number: False for pull in pulls} if queued is None else queued,
-        **kwargs,
-    )
 
 
 def _publication_approved_evidence() -> dict[str, object]:
@@ -604,7 +505,6 @@ HANDLING = {
     "lu_machinery/orchestration/stalled_work.py": "ignore",
     "lu_machinery/publish/github.py": "accept-as-approval",
     "lu_machinery/fleet_comms/review_publisher.py": "accept-as-approval",
-    "scripts/api/fleet_board/prs.py": "display-label",
     "lu_machinery/fleet_comms/review_publication.py": "ignore",
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "lu_machinery/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
@@ -681,40 +581,6 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
     assert keeper._recorded_approval_for_head([_comment()], SHA, "fleet") is True
     assert HANDLING["lu_machinery/orchestration/merge_queue_keeper.py"] == "accept-as-approval"
     assert HANDLING["lu_machinery/orchestration/integration_sweep.py"] == "accept-as-approval"
-
-
-def test_fleet_board_counts_red_team_as_ready():
-    """#10452 AC-02: display the mode, and do not present it as an ordinary approval."""
-    from scripts.api.fleet_board import prs
-    _mq = _board_mq
-    _pull = _board_pull
-    _view = _board_view
-    from tests.orchestration.test_integration_sweep import SHA
-
-    pull = _pull(sha=SHA)
-    comment = _comment(login="fleet")
-    view = _view(pull, login="fleet", comments={pull.number: (comment,)})
-    cf = prs._cf(pull, view)
-    ordinary = prs._cf(
-        pull,
-        _view(pull, login="fleet", comments={pull.number: (_comment("cross_family"),)}),
-    )
-    assert cf == {"verdict": "APPROVED", "at_head": True, "review_mode": "red_team"}
-    assert ordinary == {"verdict": "APPROVED", "at_head": True}
-    assert cf.keys() - ordinary.keys() == {"review_mode"}
-    assert prs._verdict_at((comment,), "fleet") is not None
-    _, ready, minutes = prs._ready_minutes(
-        pull,
-        ci="green",
-        cf=cf,
-        mq_status="not_queued",
-        hold=False,
-        mq=_mq(since={f"{pull.number}:{SHA}": "2026-10-11T00:00:00Z"}),
-        now=datetime(2026, 10, 11, 1, tzinfo=UTC),
-        threshold=30,
-    )
-    assert ready is True and minutes == 60
-    assert HANDLING["scripts/api/fleet_board/prs.py"] == "display-label"
 
 
 def test_ci_blocker_exclusion_ignores_review_status():
