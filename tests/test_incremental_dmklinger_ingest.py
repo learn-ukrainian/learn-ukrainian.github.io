@@ -1,4 +1,5 @@
 """Real SQLite and builder-oracle tests for the translations-only boundary."""
+import errno
 import hashlib
 import json
 import select
@@ -481,8 +482,8 @@ def test_public_cli_refuses_symlink_loop_before_any_work(staged, apply, role, me
         ingest.ingest(
             db_arg, input_arg, input_sha256="0" * 64, receipt_path=receipt_arg, apply=apply,
         )
-    assert isinstance(caught.value.__cause__, RuntimeError)
-    assert str(caught.value.__cause__).startswith("Symlink loop from ")
+    assert isinstance(caught.value.__cause__, OSError)
+    assert caught.value.__cause__.errno == errno.ELOOP
     assert _tree(root) == before
     args = ["--db", str(db_arg), "--input", str(input_arg), "--input-sha256", "0" * 64, "--receipt", str(receipt_arg)]
     result = _public_cli(*args, *(["--apply"] if apply else []))
