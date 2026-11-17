@@ -62,6 +62,7 @@ MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
         (
             "corpus_audit",  # Section-extraction tests write reports here.
             "embeddings",  # Sources rebuilds reserve a manifest and wiki shard.
+            "telemetry",  # Legacy-bridge and route stores must not land in the checkout.
         ),
         (),  # Other data files are watched only if git-tracked (see below).
     ),
