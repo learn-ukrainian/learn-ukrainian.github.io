@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
 import os
@@ -176,12 +177,24 @@ def _validate(value: Any, schema: dict, label: str) -> None:
 
 
 def _resolve(path: Path) -> Path:
-    """Resolve a path, reporting every resolution failure as OSError for the caller's exit boundary."""
+    """Resolve a path, reporting every resolution failure as OSError for the caller's exit boundary.
+
+    This is the Python 3.12 ``Path.resolve`` algorithm, spelled out so that a
+    symlink loop fails on every version (since 3.13 ``Path.resolve`` returns a
+    looping path instead of raising): resolve without strictness, then stat the
+    result. ``ELOOP`` fails; any other stat error, such as a missing path, does
+    not. ``realpath`` raises ValueError for an embedded NUL.
+    """
     try:
-        return path.resolve()
-    except (OSError, RuntimeError, ValueError) as exc:
-        # Python 3.12 raises RuntimeError for symlink loops and ValueError for embedded NULs.
+        resolved = Path(os.path.realpath(path))
+    except (OSError, ValueError) as exc:
         raise OSError("path cannot be resolved") from exc
+    try:
+        resolved.stat()
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise OSError("path cannot be resolved") from exc
+    return resolved
 
 
 def _distinct(values: list[Any], label: str) -> None:
