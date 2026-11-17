@@ -84,6 +84,9 @@ jobs:
       - name: Python CI environment
         id: python-ci-env
         uses: ./.github/actions/python-ci-env
+        with:
+          # This job installs wheels and builds runtime assets, but reads no Atlas data.
+          hydrate-manifest: 'false'
 
   verify:
     name: Verify main uv cache entry

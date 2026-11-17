@@ -233,15 +233,56 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Restore pinned Atlas runtime archive
+        id: atlas-runtime-cache
+        if: vars.ATLAS_TREE_SHA256 != '' && vars.ATLAS_TREE_ASSET_ID != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/atlas-runtime.zip
+          key: atlas-runtime-${{ vars.ATLAS_TREE_SHA256 }}
+
+      - name: Download pinned Atlas runtime archive on cache miss
+        if: vars.ATLAS_TREE_SHA256 != '' && vars.ATLAS_TREE_ASSET_ID != '' && steps.atlas-runtime-cache.outputs.cache-hit != 'true'
+        working-directory: .
+        env:
+          ATLAS_TREE_ASSET_ID: ${{ vars.ATLAS_TREE_ASSET_ID }}
+          ATLAS_TREE_SHA256: ${{ vars.ATLAS_TREE_SHA256 }}
+          ARCHIVE_PATH: ${{ runner.temp }}/atlas-runtime.zip
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          .venv/bin/python - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts.deploy.vendor_atlas_tree import download_release_asset, verify_archive_digest
+          archive = download_release_asset(os.environ['ATLAS_TREE_ASSET_ID'], repo=os.environ['GITHUB_REPOSITORY'])
+          verify_archive_digest(archive, os.environ['ATLAS_TREE_SHA256'])
+          Path(os.environ['ARCHIVE_PATH']).write_bytes(archive)
+          PY
+
       - name: Prepare pinned Atlas search runtime
         working-directory: .
         env:
           ATLAS_TREE_ASSET_ID: ${{ vars.ATLAS_TREE_ASSET_ID }}
           ATLAS_TREE_SHA256: ${{ vars.ATLAS_TREE_SHA256 }}
+          ATLAS_TREE_ARCHIVE_PATH: ${{ runner.temp }}/atlas-runtime.zip
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
           .venv/bin/python site/scripts/prepare-atlas-search.py
           --dest "$RUNNER_TEMP/atlas-search-runtime"
+
+      - name: Save pinned Atlas runtime archive
+        if: github.ref == 'refs/heads/main' && steps.atlas-runtime-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/atlas-runtime.zip
+          key: atlas-runtime-${{ vars.ATLAS_TREE_SHA256 }}
+
+      - name: Restore Atlas practice and teacher decks
+        id: atlas-decks-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/public/lexicon/practice-*.json
+          key: atlas-decks-${{ hashFiles('site/src/data/lexicon-practice-deck.pointer.json', 'site/src/data/lexicon-teacher-deck.pointer.json') }}
 
       # #5274: normal build leaves BUILD_ETYMOLOGY_ROUTES off (~296 MB). build:full
       # prerenders ~25k standalone etymology pages and blew the 1 GiB Pages budget.
@@ -260,6 +301,13 @@ jobs:
             exit 1
           fi
           npm run build
+
+      - name: Save Atlas practice and teacher decks
+        if: github.ref == 'refs/heads/main' && steps.atlas-decks-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/public/lexicon/practice-*.json
+          key: atlas-decks-${{ hashFiles('site/src/data/lexicon-practice-deck.pointer.json', 'site/src/data/lexicon-teacher-deck.pointer.json') }}
 
       # Atlas owns the route set; its committed inventory is reconciled with the
       # verified release, then the built preview must match it exactly.
@@ -288,6 +336,7 @@ jobs:
           ATLAS_TREE_ASSET_ID: ${{ vars.ATLAS_TREE_ASSET_ID }}
           ATLAS_TREE_SHA256: ${{ vars.ATLAS_TREE_SHA256 }}
           ATLAS_TREE_METRICS_PATH: ${{ runner.temp }}/atlas-vendor-metrics.json
+          ATLAS_TREE_ARCHIVE_PATH: ${{ runner.temp }}/atlas-runtime.zip
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: .venv/bin/python scripts/deploy/vendor_atlas_tree.py site/dist
 

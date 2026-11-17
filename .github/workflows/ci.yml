@@ -245,7 +245,7 @@ jobs:
           retention-days: 90
 
   # The only job that downloads the pinned release assets: the Atlas manifest and the
-  # practice and teacher decks, once per run through the release API (#12872). Each
+  # practice and teacher decks, through the release API only on a pointer cache miss. Each
   # cold job used to repeat that download, which on 2026-11-13 exhausted the
   # repository's shared API pool (pool_exhausted). Consumers take these artifacts from
   # the Actions artifact service, which spends no REST quota. Their own hydrators then
@@ -276,6 +276,18 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: '.nvmrc'
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Restore Atlas practice and teacher decks
+        id: atlas-decks-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/public/lexicon/practice-*.json
+          key: atlas-decks-${{ hashFiles('site/src/data/lexicon-practice-deck.pointer.json', 'site/src/data/lexicon-teacher-deck.pointer.json') }}
       - name: Download and verify the pinned release assets
         working-directory: site
         env:
@@ -285,6 +297,20 @@ jobs:
           node ./scripts/hydrate-manifest.mjs
           node ./scripts/hydrate-practice-deck.mjs
           node ./scripts/hydrate-teacher-deck.mjs
+      # Only main writes entries that other refs can restore. Hydrators above still
+      # verify every restored file; cache presence never skips the integrity checks.
+      - name: Save Atlas lexicon manifest cache
+        if: github.ref == 'refs/heads/main' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+      - name: Save Atlas practice and teacher decks
+        if: github.ref == 'refs/heads/main' && steps.atlas-decks-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site/public/lexicon/practice-*.json
+          key: atlas-decks-${{ hashFiles('site/src/data/lexicon-practice-deck.pointer.json', 'site/src/data/lexicon-teacher-deck.pointer.json') }}
       # Three artifacts, so each job receives only the files it hydrated before:
       # Checks lints every JSON file in site/public/lexicon, so it must not get the
       # teacher deck.
