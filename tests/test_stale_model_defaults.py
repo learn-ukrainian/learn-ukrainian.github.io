@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import ast
 import asyncio
-import subprocess
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -24,8 +21,6 @@ from scripts.batch import batch_gemini_config
 from scripts.build import linear_pipeline
 from scripts.etymology import bulk_ocr_gemini
 from scripts.tools import convert_plans_v4
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def forbidden(*args, **kwargs):
@@ -100,14 +95,3 @@ def test_enabled_content_quality_records_model_refusal_and_preserves_determinist
     assert "not in the model catalog" in violations[1]["issue"]
     assert "AGY" in violations[1]["fix"]
     assert len(violations) == 2
-
-
-def test_shell_defaults():
-    path = ROOT / "scripts" / "agent_runtime/_smoke_pty_agents.sh"
-    subprocess.run(["bash", "-n", str(path)], check=True, timeout=30)
-    smoke = path.read_text().split("<<'PYDRIVER'\n", 1)[1].split("\nPYDRIVER", 1)[0]
-    tree = ast.parse(smoke)
-    models = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign) and
-                  any(isinstance(target, ast.Name) and target.id == "MODEL_BY_AGENT" for target in node.targets))
-    require_execution_model(models["gemini"], transport="agy")
-    require_execution_model(models["claude"], transport="native_claude")

@@ -3,71 +3,6 @@
   "mypy": "2.1.0",
   "entries": [
     {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "arg-type",
-      "message": "Argument \"model_identity\" to \"replace\" of \"ParseResult\" has incompatible type \"AgyRuntimeIdentity | None\"; expected \"AgyModelIdentity | None\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "arg-type",
-      "message": "Argument \"seat\" to \"InterAgentRoute\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "arg-type",
-      "message": "Argument \"target_agent\" to \"InterAgentRoute\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "arg-type",
-      "message": "Argument 1 to \"get_agent_entry\" has incompatible type \"None | str\"; expected \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | int\", variable has type \"int\")"
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | str\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "\"BaseException\" has no attribute \"agy_telemetry\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "\"BaseException\" has no attribute \"model_identity\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "attr-defined",
-      "message": "\"BaseException\" has no attribute \"model_identity\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "call-overload",
-      "message": "No overload variant of \"get\" of \"dict\" matches argument type \"str\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"AgyRuntimeIdentity | None\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"dict[str, Any]\""
-    },
-    {
-      "path": "scripts/agent_runtime/runner.py",
-      "code": "union-attr",
-      "message": "Item \"None\" of \"AcpxTransportProvenance | None\" has no attribute \"metadata\""
-    },
-    {
       "path": "scripts/aggregate_review_findings.py",
       "code": "arg-type",
       "message": "Argument 1 to \"module_from_spec\" has incompatible type \"ModuleSpec | None\"; expected \"ModuleSpec\""
@@ -81,66 +16,6 @@
       "path": "scripts/aggregate_review_findings.py",
       "code": "union-attr",
       "message": "Item \"None\" of \"ModuleSpec | None\" has no attribute \"loader\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_cursor.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_cursor.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_grok_build.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_grok_build.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"int\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | str\", variable has type \"str\")"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"None | tuple[str, str]\", variable has type \"tuple[str, str]\")"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "assignment",
-      "message": "Incompatible types in assignment (expression has type \"int\", variable has type \"Signals\")"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "index",
-      "message": "Invalid index type \"Any | None\" for \"dict[str, set[int]]\"; expected type \"str\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "index",
-      "message": "Unsupported target for indexed assignment (\"object\")"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "index",
-      "message": "Unsupported target for indexed assignment (\"object\")"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "no-any-return",
-      "message": "Returning Any from function declared to return \"str\""
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_review_worktree.py",
-      "code": "operator",
-      "message": "Unsupported operand types for / (\"Path\" and \"None\")"
     },
     {
       "path": "scripts/ai_agent_bridge/measure_cold_start.py",

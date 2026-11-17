@@ -245,7 +245,7 @@ posting searches at the exact head.
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
 | `agents_extensions/shared/hooks/guard-public-github-text.py` | Routing only |
 | `lu_machinery/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
-| `lu_machinery/agent_runtime/shims/git` push, Git's pre-push hook `scripts/opsec/git_push.py` | Branch, tag and other ref names; annotated tag names and messages; new commit messages with their embedded mergetag tag names and messages |
+| `lu_machinery/agent_runtime/shims/git` push, Git's pre-push hook `lu_machinery/opsec/git_push.py` | Branch, tag and other ref names; annotated tag names and messages; new commit messages with their embedded mergetag tag names and messages |
 | `lu_machinery/ci/data_tier.py`, `lu_machinery/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
 | Printed templates and `lu_machinery/wt.sh` | No outbound publication; executed public writes require publisher verbs |
 
@@ -301,7 +301,7 @@ for everything else (refspecs, leases, `--follow-tags`, tracking refs,
 upstreams); the scanner does not predict or rebuild the push.
 
 The agent git shim makes that hook run. For `git push` the shim adds
-`-c core.hooksPath=<checkout>/scripts/opsec/push_hooks`
+`-c core.hooksPath=<machinery package>/opsec/push_hooks` (the shim's own installed package)
 as the last option before the command. A command-line assignment outranks
 configuration files, `GIT_CONFIG_COUNT`/`GIT_CONFIG_KEY_<n>`/`GIT_CONFIG_VALUE_<n>`
 and earlier `GIT_CONFIG_PARAMETERS`, and the last one wins over every earlier

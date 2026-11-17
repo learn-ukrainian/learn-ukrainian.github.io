@@ -9,16 +9,12 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
-
+from lu_machinery.agent_runtime import runner as runner_mod
 from lu_machinery.agent_runtime.adapters.base import InvocationPlan
 from lu_machinery.agent_runtime.errors import AgentStalledError, RateLimitedError
 from lu_machinery.agent_runtime.failover import FAILOVER_CONFIG_ENV, FAILOVER_COOLDOWN_DB_ENV, RUNNER_FAILOVER_MARKER
 from lu_machinery.agent_runtime.result import ParseResult
 from lu_machinery.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
-
-from agent_runtime import runner as runner_mod
 
 
 class _FailoverTestAdapter:

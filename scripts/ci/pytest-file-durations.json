@@ -19,7 +19,6 @@
   "tests/ai_agent_bridge/test_ask_job_host_forward.py": 0.534,
   "tests/ai_agent_bridge/test_hermes_review_isolation.py": 1.806,
   "tests/ai_agent_bridge/test_measure_cold_start.py": 1.298,
-  "tests/ai_agent_bridge/test_review_worktree.py": 17.498,
   "tests/api/opsec_sweep/test_opsec_main_corpus.py": 10.535,
   "tests/api/opsec_sweep/test_opsec_route_sweep.py": 15.564,
   "tests/api/opsec_sweep/test_opsec_sanitize.py": 3.59,

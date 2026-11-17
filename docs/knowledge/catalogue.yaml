@@ -574,12 +574,12 @@ entries:
   - id: token-usage-reports
     kind: generated
     paths: [docs/token-usage/**]
-    purpose: A generated April 2026 Claude token report and a hand-written token waste report; not current usage.
+    purpose: A generated April 2026 Claude token report and a hand-written token waste report; not current usage. The generator was removed, so the report is frozen.
     keywords: [token usage, token report, token waste]
     lifecycle: archive
     owner: infra-harness
     query:
-      - {surface: cli, how: ".venv/bin/python scripts/token_usage.py --help (regenerates the report; writes files)"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/token-usage"}
     content_searchable: true
 
   # ================================================================ dispatch briefs, plans, epics
