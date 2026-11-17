@@ -12,9 +12,6 @@ packages:
   analytics:
     reason: 'Unsure: cost windows are fleet spend and vocabulary progression is learner data. Product, so the monitor import stays on the ratchet.'
     role: product
-  api:
-    reason: operator classification
-    role: machinery
   atlas:
     reason: operator classification
     role: product
@@ -60,9 +57,6 @@ packages:
   eval:
     reason: 'Unsure: lesson-evaluation harness that also drives the dispatcher. Machinery, so its build, wiki, and verification imports stay on the ratchet.'
     role: machinery
-  evidence:
-    reason: Git-history census of agent repairs.
-    role: machinery
   fleet_comms:
     reason: operator classification
     role: machinery
@@ -98,9 +92,6 @@ packages:
     role: product
   open_dataset:
     reason: operator classification
-    role: product
-  orchestration:
-    reason: Product curriculum readiness and prompt contracts.
     role: product
   opsec:
     reason: operator classification
@@ -359,12 +350,6 @@ modules:
 # The installed catalogue reads them from this product's Git index; this Python-only
 # classifier cannot carry YAML file rows.
 files:
-  scripts/orchestration/curriculum_readiness.py:
-    reason: Product curriculum readiness and evidence contract.
-    role: product
-  scripts/orchestration/prompt_contracts.py:
-    reason: Product curriculum lifecycle prompt contracts.
-    role: product
   scripts/__init__.py:
     reason: Shared package-root binding for product and retained machinery consumers.
     role: shared

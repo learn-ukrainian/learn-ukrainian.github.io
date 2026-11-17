@@ -2,11 +2,7 @@
 
 Status: plan only; it implements nothing. On operator direction (2026-10-06) this text is the version of the PR #9803 proposal to keep. Census figures remain frozen at `3e4bdb3dd9`. This document does not implement anything. It extends the approved design in [docs/plans/agent-friendly-delivery.md](agent-friendly-delivery.md) and the baseline in [docs/design/agent-friendly-delivery-baseline.md](../design/agent-friendly-delivery-baseline.md).
 
-Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737`. Machine-readable snapshot: [agent-friendly-rearchitecture-evidence.json](agent-friendly-rearchitecture-evidence.json). Refresh the git half with:
-
-```bash
-.venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty
-```
+Frozen git head for every count below: `3e4bdb3dd9ecc57d1b519050bf64fa7a0ed9b737`. Machine-readable snapshot: [agent-friendly-rearchitecture-evidence.json](agent-friendly-rearchitecture-evidence.json). The census script that produced the git half had no caller and was removed from the tree on 2026-11-17; the figures stay frozen, and the script remains readable in Git history at the frozen head (`git show 3e4bdb3dd9:scripts/evidence/agent_pitfall_census.py`).
 
 The census pins full UTC calendar days with explicit UTC-midnight bounds and git running with `TZ=UTC`; monthly trailer figures use each commit's own committer offset, so the counts reproduce on any host and at any time of day. The first snapshot of this plan used date-only bounds, which git resolves with the current time of day in the host timezone, so its figures could not be reproduced; this snapshot replaces them.
 

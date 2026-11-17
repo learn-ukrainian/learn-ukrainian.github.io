@@ -98,7 +98,6 @@ ROUTER_MAP = {
     'discussions_router': 'scripts/api/discussions_router.py',
     'docs_router': 'scripts/api/docs_router.py',
     'epics_router': 'scripts/api/epics_router.py',
-    'fleet_board_router': 'scripts/api/fleet_board/router.py',
     'fleet_router': 'scripts/api/fleet_router.py',
     'fleet_workers_router': 'scripts/api/fleet_workers_router.py',
     'git_hygiene_router': 'scripts/api/git_hygiene_router.py',
@@ -461,16 +460,14 @@ The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are d
 
 ### Step 12e — work / epics
 
-The fleet-board routes include `/now`, `/epics`, `/epics/{epic}`, `/agents`,
-`/agents/{agent_id}`, `/backups`, `/downloads`, `/harness`, and
-`/harness/{agent_id}`, alongside the existing index, schema, roster, budget,
-operations, and pull-request routes.
+The fleet board v1 router (`/api/fleet/v1`, 18 routes) was removed on 2026-11-17:
+nothing mounted it after the product `scripts/api/main.py` was deleted, and it had no
+client. The step tallies and totals in this document predate that removal.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `work_router.py` | `/api/work` | 4 | 835 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
 | `epics_router.py` | `/api/epics` | 12 | 1,202 | — | — | 0 | 12e |
-| `fleet_board.router.py` | `/api/fleet/v1` | 18 | 302 | — | — | 0 | 12e |
 
 **12e migrated (#7334):** stores and live repo root now come from
 `Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`

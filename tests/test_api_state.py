@@ -102,8 +102,8 @@ def test_configured_loader_accounting_covers_map_callers_once():
     assert [row["path"] for row in graph["configured_loads"]] == sorted([*paths, "lu_machinery/api/product_contribution.py"])
     assert all(classify_source(source.decode(), path) == [] for path, source in sources.items())
     config = boundary_ratchet.load_config(root / "scripts/config/package_boundary.yaml")
-    # This census also includes the installed pre-commit caller, whose package left the product tree.
-    config = replace(config, packages={**config.packages, "pre_commit": "machinery"})
+    # This census also includes the installed api and pre-commit callers, whose packages left the product tree.
+    config = replace(config, packages={**config.packages, "api": "machinery", "pre_commit": "machinery"})
     assert boundary_ratchet._dynamic_count(graph, config, "machinery") == 2
     assert boundary_ratchet._dynamic_count(graph, config, "product") == 2
     assert boundary_ratchet._configured_line(graph) == "configured-entry-point implementation=0 callers=4"
