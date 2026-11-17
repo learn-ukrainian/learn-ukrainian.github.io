@@ -34,6 +34,10 @@ ROUTES = {
     "/api/sources/stats": ("scripts.project_api.sources_router", {"sources_db": dict}),
 }
 
+# Machinery 752 unmounts this GET. The installed release still serves it, so the
+# child reports absence from the live route table instead of failing the pin.
+UNMOUNTED_BY_MACHINERY_752 = frozenset({"/api/comms/health"})
+
 _CHILD = """
 import inspect
 import json
@@ -46,6 +50,7 @@ from lu_machinery.api.monitor_context import fixture_context
 
 app.state.ctx = fixture_context(Path(sys.argv[1]))
 paths = json.loads(sys.argv[4])
+optional = set(json.loads(sys.argv[5]))
 # FastAPI wraps each include_router in an included router whose own entry has
 # no path; its effective route contexts carry the full path and the endpoint.
 routes = []
@@ -58,6 +63,9 @@ origins = {}
 for path in paths:
     matches = [route for route_path, route in routes
                if route_path == path and 'GET' in (getattr(route, 'methods', None) or ())]
+    if len(matches) == 0 and path in optional:
+        origins[path] = {'absent': True}
+        continue
     assert len(matches) == 1, (path, len(matches))
     endpoint = inspect.unwrap(matches[0].endpoint)
     origins[path] = {'module': endpoint.__module__, 'file': inspect.getfile(endpoint)}
@@ -116,6 +124,7 @@ def test_installed_monitor_does_not_drop_or_shadow_drill_routes(tmp_path: Path, 
                 str(origins_path),
                 str(listener.fileno()),
                 json.dumps(list(ROUTES)),
+                json.dumps(sorted(UNMOUNTED_BY_MACHINERY_752)),
             ],
             cwd=tmp_path,
             env=env,
@@ -141,6 +150,10 @@ def test_installed_monitor_does_not_drop_or_shadow_drill_routes(tmp_path: Path, 
             installed_files = {Path(release.locate_file(path)).resolve() for path in release.files or ()}
             for path, (module, shape) in ROUTES.items():
                 origin = origins[path]
+                if origin.get("absent"):
+                    assert path in UNMOUNTED_BY_MACHINERY_752, path
+                    record_property(f"origin:{path}", json.dumps({"absent": True}))
+                    continue
                 assert origin["module"] == module, (path, origin)
                 source = Path(origin["file"]).resolve()
                 if module.startswith("lu_machinery."):
