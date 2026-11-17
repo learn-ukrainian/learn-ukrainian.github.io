@@ -15,6 +15,7 @@ import ast
 import hashlib
 import json
 import math
+import re
 import sys
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from pathlib import Path
@@ -58,6 +59,8 @@ _WITNESS_KEYS = ("chunk_id", "source", "source_url")
 # The real inputs nest about 10 (manifest) and 19 (scraper) levels deep; 500
 # stays below the walker's Python recursion limit in every calling context.
 MAX_NESTING_DEPTH = 500
+# One JSON string literal (skipped whole) or one bracket.
+_JSON_BRACKET_SCAN = re.compile(r'"(?:[^"\\]++|\\.)*+"|[\[\]{}]', re.DOTALL)
 
 
 class InventoryError(Exception):
@@ -176,10 +179,34 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return obj
 
 
-def _parse_manifest(raw: bytes) -> Any:
-    text = _decode_utf8(raw, "manifest")
+def _json_depth_breach(text: str) -> int | None:
+    """Return the offset of the first bracket opening a level deeper than MAX_NESTING_DEPTH.
+
+    The scan is lexical: string literals are skipped whole, so brackets inside
+    them never count. An unterminated string or a stray closing bracket is a
+    decode error that the caller reports from the decoder itself.
+    """
+    depth = 0
+    for match in _JSON_BRACKET_SCAN.finditer(text):
+        token = match.group()
+        if token == "[" or token == "{":
+            depth += 1
+            if depth > MAX_NESTING_DEPTH:
+                return match.start()
+        elif token == "]" or token == "}":
+            depth = max(depth - 1, 0)
+    return None
+
+
+def _decode_manifest_json(text: str, *, truncated_at: int | None = None) -> Any:
+    """Decode strict JSON and map each decoder refusal to its fixed code.
+
+    With ``truncated_at``, ``text`` is a prefix that ends just after an
+    over-deep bracket, so a decode error at or after that offset is the cut,
+    and it means the nesting limit.
+    """
     try:
-        manifest = json.loads(
+        return json.loads(
             text,
             object_pairs_hook=_reject_duplicate_keys,
             parse_constant=_reject_json_constant,
@@ -188,14 +215,31 @@ def _parse_manifest(raw: bytes) -> Any:
         raise InventoryError("duplicate_json_key") from None
     except _NonstandardJsonConstant:
         raise InventoryError("json_nonstandard_constant") from None
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as exc:
+        if truncated_at is not None and exc.pos >= truncated_at:
+            raise InventoryError("json_nesting_limit") from None
         raise InventoryError("json_parse_failed") from None
     except ValueError as exc:
         if "integer string conversion" not in str(exc):
             raise
         raise InventoryError("json_integer_limit") from None
     except RecursionError:
-        # The decoder can still hit its own limit before the explicit check runs.
+        raise InventoryError("json_nesting_limit") from None
+
+
+def _parse_manifest(raw: bytes) -> Any:
+    text = _decode_utf8(raw, "manifest")
+    try:
+        manifest = _decode_manifest_json(text)
+    except InventoryError:
+        # How deep the decoder gets before it stops depends on the interpreter.
+        # Refuse in document order instead: a decode error before the first
+        # over-deep bracket keeps its code; otherwise the nesting limit applies.
+        breach = _json_depth_breach(text)
+        if breach is None:
+            raise
+        prefix_end = breach + 1
+        _decode_manifest_json(text[:prefix_end], truncated_at=prefix_end)
         raise InventoryError("json_nesting_limit") from None
     if _exceeds_nesting_depth(manifest, _json_children):
         raise InventoryError("json_nesting_limit")
