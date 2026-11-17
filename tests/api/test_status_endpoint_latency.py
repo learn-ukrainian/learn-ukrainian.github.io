@@ -24,14 +24,15 @@ from httpx import ASGITransport
 from lu_machinery.api import delegate_router, epics_router, state_helpers, state_router
 from lu_machinery.api.monitor_context import fixture_context
 
-from scripts.project_api import artifacts_router
+from scripts.project_api import artifacts_router, snapshots
 from scripts.project_api import state_router as product_state_router
 
 _BURST = 20
 # Attempt bound for observable polls. Not a latency budget: the loop exits
 # when the condition is true, and a loaded runner only makes each yield slower.
 _ATTEMPTS = 10_000
-_COLD_ROUTERS = (delegate_router, state_router, product_state_router, artifacts_router, epics_router)
+# Product snapshot routes reach the single-flight through ``snapshots.read_snapshot``.
+_COLD_ROUTERS = (delegate_router, state_router, product_state_router, snapshots, epics_router)
 
 
 @pytest.fixture(autouse=True)

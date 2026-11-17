@@ -25,9 +25,12 @@ Endpoints:
 Performance notes:
   - Heavy endpoints are plain sync functions. FastAPI runs them on its threadpool,
     so a scan does not stall the event loop.
-  - Summary, pipeline-versions, weak-points and research-coverage stay async:
-    a warm ``cache_get_or_compute_async`` hit is served on the event loop.
-  - Results are cached in-memory with a TTL (60s for summary/pipeline, 300s for coverage).
+  - Summary stays async: a warm ``cache_get_or_compute_async`` hit is served on the event loop.
+  - Failing, build-status, pipeline-versions, weak-points, research-coverage,
+    enrichment-status and issues are stale-while-revalidate
+    snapshots (``snapshots.read_snapshot``): a stored scan is served at once with its
+    true age in ``X-Snapshot-Age-S`` and one background scan replaces it after the TTL.
+    The startup warmup fills their default keys.
 """
 
 from __future__ import annotations
@@ -71,6 +74,7 @@ from .curriculum_state import (
     read_v2_state,
     read_v3_state,
 )
+from .snapshots import CacheState, Snapshot, prime_snapshot, read_snapshot, stamp_age
 from .state_build import (
     compute_build_stats,
     compute_build_stats_all,
@@ -108,6 +112,10 @@ STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
 STATE_WEAK_POINTS_TTL_S = 60.0
+STATE_FAILING_TTL_S = 60.0
+STATE_BUILD_STATUS_TTL_S = 30.0
+STATE_ENRICHMENT_TTL_S = 120.0
+STATE_ISSUES_TTL_S = 60.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 
@@ -239,42 +247,116 @@ def _compute_weak_points_payload(
     return {"count": len(weak), "modules": weak[:limit]}
 
 
+def _compute_failing_payload(ctx: MonitorContext, track: str | None) -> dict[str, Any]:
+    """Scan modules for audit failures and failed pipeline phases."""
+    failing = []
+    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
+
+    for level_cfg in level_cfgs:
+        track_id = level_cfg["id"]
+        plan_slugs = get_plan_slugs(
+            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+        )
+        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
+
+        for num, slug in plan_slugs:
+            orch_dir = safe_join(track_dir / "orchestration", slug)
+            version = detect_pipeline_version(orch_dir)
+            audit = get_audit_status(track_dir, slug)
+
+            if version in ("v6", "v5"):
+                phases = read_v2_state(orch_dir).get("phases", {})
+                failed_phases = [k for k, v in phases.items() if isinstance(v, dict) and v.get("status") == "failed"]
+            elif version == "v3":
+                v3 = read_v3_state(orch_dir)
+                phases = v3.get("phases", {})
+                failed_phases = [
+                    k.replace("v3-", "")
+                    for k, v in phases.items()
+                    if isinstance(v, dict) and v.get("status") == "failed"
+                ]
+            else:
+                failed_phases = []
+
+            if audit["status"] == "fail" or failed_phases:
+                failing.append(
+                    {
+                        "track": track_id,
+                        "num": num,
+                        "slug": slug,
+                        "pipeline_version": version,
+                        "audit_status": audit["status"],
+                        "failed_phases": failed_phases,
+                        "blocking_issues": audit.get("blocking_issues", []),
+                    }
+                )
+
+    return {"count": len(failing), "modules": failing}
+
+
 def warm_state_scans(ctx: MonitorContext) -> None:
-    """Populate the default expensive curriculum state-scan caches after process start.
+    """Fill the default state snapshots and the summary cache after process start.
 
     Runs in the machinery state-scan warmup thread, after the routing-budget
-    warm (``lu_machinery.api.state_router.schedule_state_scan_warmup``).
+    warm (``lu_machinery.api.state_router.schedule_state_scan_warmup``). Each
+    scan is primed on its own, so one failure leaves the others warm.
     """
+    roots = ctx.roots
+    prime_snapshot(
+        ctx,
+        "pipeline_versions",
+        ("all",),
+        STATE_PIPELINE_VERSIONS_TTL_S,
+        lambda: _compute_pipeline_versions_payload(ctx, None),
+    )
+    prime_snapshot(
+        ctx,
+        "weak_points",
+        ("all", 7, 20),
+        STATE_WEAK_POINTS_TTL_S,
+        lambda: _compute_weak_points_payload(ctx, None, 7, 20),
+    )
     try:
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "pipeline_versions", "all"),
-            STATE_PIPELINE_VERSIONS_TTL_S,
-            lambda: _compute_pipeline_versions_payload(ctx, None),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
-            STATE_WEAK_POINTS_TTL_S,
-            lambda: _compute_weak_points_payload(ctx, None, 7, 20),
-        )
         cache_get_or_compute(
             _ctx_cache_key(ctx, "summary"),
             STATE_SUMMARY_TTL_S,
             lambda: compute_summary(
-                curriculum_root=ctx.roots.curriculum_root,
-                project_root=ctx.roots.project_root,
-                plans_root=ctx.roots.plans_root,
-            ),
-        )
-        cache_get_or_compute(
-            _ctx_cache_key(ctx, "research_coverage"),
-            STATE_RESEARCH_COVERAGE_TTL_S,
-            lambda: compute_research_coverage(
-                curriculum_root=ctx.roots.curriculum_root,
-                plans_root=ctx.roots.plans_root,
+                curriculum_root=roots.curriculum_root,
+                project_root=roots.project_root,
+                plans_root=roots.plans_root,
             ),
         )
     except Exception as exc:
-        logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
+        logging.getLogger("state_router").warning("State summary warmup failed: %s", exc)
+    prime_snapshot(
+        ctx,
+        "research_coverage",
+        (),
+        STATE_RESEARCH_COVERAGE_TTL_S,
+        lambda: compute_research_coverage(curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
+    )
+    prime_snapshot(ctx, "failing", ("all",), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, None))
+    prime_snapshot(
+        ctx,
+        "build_status_all",
+        (),
+        STATE_BUILD_STATUS_TTL_S,
+        lambda: compute_build_status_all(curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
+    )
+    prime_snapshot(
+        ctx,
+        "enrichment_status",
+        ("all",),
+        STATE_ENRICHMENT_TTL_S,
+        lambda: compute_enrichment_status(None, curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
+    )
+    prime_snapshot(
+        ctx,
+        "issues",
+        ("all", "all"),
+        STATE_ISSUES_TTL_S,
+        lambda: compute_issues(None, None, curriculum_root=roots.curriculum_root, plans_root=roots.plans_root),
+    )
 
 
 def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
@@ -319,21 +401,34 @@ def _with_state_meta(
     stale_after_s: float,
     cache: str,
     age_s: float | None = None,
+    generated_at: str | None = None,
 ) -> dict[str, Any]:
     """Attach freshness metadata without mutating the cached payload."""
     payload = dict(result)
-    generated_at = str(payload.get("generated_at") or _isoformat_z(datetime.now(UTC)))
+    generated_at = str(payload.get("generated_at") or generated_at or _isoformat_z(datetime.now(UTC)))
     meta: dict[str, Any] = {
         "generated_at": generated_at,
         "source": source,
         "cache": cache,
         "stale_after_s": stale_after_s,
-        "stale": False,
+        "stale": age_s is not None and age_s >= stale_after_s > 0,
     }
     if age_s is not None:
         meta["age_s"] = round(age_s, 3)
     payload["meta"] = meta
     return payload
+
+
+def _snapshot_meta(snapshot: Snapshot, state: CacheState, *, source: str, stale_after_s: float) -> dict[str, Any]:
+    """The snapshot payload with ``meta`` describing its true age."""
+    return _with_state_meta(
+        cast(dict[str, Any], snapshot.value),
+        source=source,
+        stale_after_s=stale_after_s,
+        cache=state,
+        age_s=snapshot.age_s,
+        generated_at=snapshot.generated_at,
+    )
 
 
 @router.get("/summary")
@@ -402,28 +497,22 @@ def pipeline_track(track_id: str, fresh: bool = Query(False), ctx: MonitorContex
 
 @router.get("/pipeline-versions")
 async def pipeline_versions(
-    track: str | None = Query(None), fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
+    response: Response,
+    track: str | None = Query(None),
+    fresh: bool = Query(False),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """All modules grouped by pipeline version."""
-    cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
-    was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
+    snapshot, state = await read_snapshot(
+        ctx,
+        "pipeline_versions",
+        (track or "all",),
         STATE_PIPELINE_VERSIONS_TTL_S,
         lambda: _compute_pipeline_versions_payload(ctx, track),
         force=fresh,
     )
-    age_s = 0.0
-    aged = cache_get_with_age(cache_key, STATE_PIPELINE_VERSIONS_TTL_S)
-    if aged is not None:
-        age_s = aged[1]
-    return _with_state_meta(
-        result,
-        source="fs:orchestration",
-        stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=age_s,
-    )
+    stamp_age(response, snapshot)
+    return _snapshot_meta(snapshot, state, source="fs:orchestration", stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S)
 
 
 @router.get("/preparation")
@@ -518,6 +607,7 @@ def preparation_module(
 
 @router.get("/weak-points")
 async def weak_points(
+    response: Response,
     track: str | None = Query(None),
     min_score: int = Query(7, ge=0, le=10),
     limit: int = Query(20, ge=1, le=500),
@@ -525,67 +615,26 @@ async def weak_points(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
-    cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    return await cache_get_or_compute_async(
-        cache_key,
+    snapshot, _state = await read_snapshot(
+        ctx,
+        "weak_points",
+        (track or "all", min_score, limit),
         STATE_WEAK_POINTS_TTL_S,
         lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
         force=fresh,
     )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/failing")
-def failing_modules(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
+async def failing_modules(response: Response, track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
     """All modules with audit failures or phase failures."""
-
-    def _compute():
-        failing = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                audit = get_audit_status(track_dir, slug)
-
-                if version in ("v6", "v5"):
-                    phases = read_v2_state(orch_dir).get("phases", {})
-                    failed_phases = [
-                        k for k, v in phases.items() if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                elif version == "v3":
-                    v3 = read_v3_state(orch_dir)
-                    phases = v3.get("phases", {})
-                    failed_phases = [
-                        k.replace("v3-", "")
-                        for k, v in phases.items()
-                        if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                else:
-                    failed_phases = []
-
-                if audit["status"] == "fail" or failed_phases:
-                    failing.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "pipeline_version": version,
-                            "audit_status": audit["status"],
-                            "failed_phases": failed_phases,
-                            "blocking_issues": audit.get("blocking_issues", []),
-                        }
-                    )
-
-        return {"count": len(failing), "modules": failing}
-
-    return _compute()
+    snapshot, _state = await read_snapshot(
+        ctx, "failing", (track or "all",), STATE_FAILING_TTL_S, lambda: _compute_failing_payload(ctx, track)
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
@@ -701,14 +750,12 @@ def module_scores_one(track: str, slug: str, ctx: MonitorContext = Depends(get_c
 
 
 @router.get("/research-coverage")
-async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
+async def research_coverage(response: Response, fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
     """Per-track research completeness and quality."""
-    cache_key = _ctx_cache_key(ctx, "research_coverage")
-    if fresh:
-        cache_invalidate(cache_key)
-    was_warm = (not fresh) and cache_get(cache_key, STATE_RESEARCH_COVERAGE_TTL_S) is not None
-    result = await cache_get_or_compute_async(
-        cache_key,
+    snapshot, state = await read_snapshot(
+        ctx,
+        "research_coverage",
+        (),
         STATE_RESEARCH_COVERAGE_TTL_S,
         lambda: compute_research_coverage(
             curriculum_root=ctx.roots.curriculum_root,
@@ -716,14 +763,8 @@ async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = De
         ),
         force=fresh,
     )
-    aged = cache_get_with_age(cache_key, STATE_RESEARCH_COVERAGE_TTL_S)
-    return _with_state_meta(
-        result,
-        source="fs:research+dossiers",
-        stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-        cache="hit" if was_warm else "miss",
-        age_s=0.0 if aged is None else aged[1],
-    )
+    stamp_age(response, snapshot)
+    return _snapshot_meta(snapshot, state, source="fs:research+dossiers", stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S)
 
 
 @router.get("/research/{track_id}")
@@ -818,18 +859,20 @@ def build_status(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/build-status")
-def build_status_all(ctx: MonitorContext = Depends(get_ctx)):
+async def build_status_all(response: Response, ctx: MonitorContext = Depends(get_ctx)):
     """All-tracks build progress in one call."""
-    cache_key = _ctx_cache_key(ctx, "build_status_all")
-    cached = cache_get(cache_key, ttl=30.0)
-    if cached is not None:
-        return cached
-    result = compute_build_status_all(
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
+    snapshot, _state = await read_snapshot(
+        ctx,
+        "build_status_all",
+        (),
+        STATE_BUILD_STATUS_TTL_S,
+        lambda: compute_build_status_all(
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        ),
     )
-    cache_set(cache_key, result)
-    return result
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/module-range/{track_id}")
@@ -1065,19 +1108,23 @@ def final_reviews_track(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/enrichment-status")
-def enrichment_status(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
+async def enrichment_status(
+    response: Response, track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)
+):
     """Which plans are enriched per track."""
-    cache_key = _ctx_cache_key(ctx, "enrichment_status", track or "all")
-    cached = cache_get(cache_key, ttl=120.0)
-    if cached is not None:
-        return cached
-    result = compute_enrichment_status(
-        track,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
+    snapshot, _state = await read_snapshot(
+        ctx,
+        "enrichment_status",
+        (track or "all",),
+        STATE_ENRICHMENT_TTL_S,
+        lambda: compute_enrichment_status(
+            track,
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        ),
     )
-    cache_set(cache_key, result)
-    return result
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/track-health/{track_id}")
@@ -1104,18 +1151,27 @@ def track_health(track_id: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/issues")
-def outstanding_issues(
+async def outstanding_issues(
+    response: Response,
     track: str | None = Query(None),
     severity: str | None = Query(None),
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Aggregated outstanding issues from review files + audit failures."""
-    return compute_issues(
-        track,
-        severity,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
+    snapshot, _state = await read_snapshot(
+        ctx,
+        "issues",
+        (track or "all", severity or "all"),
+        STATE_ISSUES_TTL_S,
+        lambda: compute_issues(
+            track,
+            severity,
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        ),
     )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 # ==================== RANGE STATUS (#1313 / Codex-4) ====================

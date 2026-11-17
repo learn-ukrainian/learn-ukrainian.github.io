@@ -20,10 +20,11 @@ from pathlib import Path
 from typing import Any, cast
 
 import yaml
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 
 from .curriculum_state import monitor_surface
+from .snapshots import prime_snapshot, read_snapshot, stamp_age
 
 router = APIRouter(tags=["decisions"])
 
@@ -36,8 +37,10 @@ _VALID_SCOPES = {"pipeline", "content", "architecture", "tooling", "pedagogy"}
 # ── TTL Cache ─────────────────────────────────────────────────────
 
 _cache: dict = {"data": None, "ts": 0.0, "path": None}
-_lineage_cache: dict = {"data": None, "ts": 0.0, "root": None}
 _CACHE_TTL = 60  # seconds
+# Lineage searches the whole git history (tens of seconds); new citations arrive
+# with merges, so a few minutes of age is acceptable and is reported.
+LINEAGE_TTL_S = 300.0
 
 
 
@@ -86,24 +89,19 @@ def _is_stale(dec: dict) -> bool:
 
 
 def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = None) -> dict:
-    """Load decision lineage with a short TTL because git history scans are heavier."""
-    now = time.monotonic()
+    """Scan decision lineage from the live checkout's git history."""
     resolved = resolve_context(ctx)
-    root_key = str(resolved.roots.live_repo_root)
-    if (
-        decision_id is None
-        and _lineage_cache["data"] is not None
-        and _lineage_cache.get("root") == root_key
-        and (now - _lineage_cache["ts"]) < _CACHE_TTL
-    ):
-        return cast("dict[Any, Any]", _lineage_cache["data"])
-
     data: dict = monitor_surface.build_lineage_response(resolved.roots.live_repo_root, decision_id=decision_id)
-    if decision_id is None:
-        _lineage_cache["data"] = data
-        _lineage_cache["ts"] = now
-        _lineage_cache["root"] = root_key
     return data
+
+
+def _lineage_params(ctx: MonitorContext, decision_id: str | None) -> tuple[object, ...]:
+    return (str(ctx.roots.live_repo_root), decision_id or "")
+
+
+def warm_lineage_snapshot(ctx: MonitorContext) -> None:
+    """Fill the unfiltered lineage snapshot after process start."""
+    prime_snapshot(ctx, "decision_lineage", _lineage_params(ctx, None), LINEAGE_TTL_S, lambda: _load_lineage(ctx=ctx))
 
 
 # ── Endpoints ─────────────────────────────────────────────────────
@@ -156,12 +154,21 @@ def decision_budget(ctx: MonitorContext = Depends(get_ctx)):
 
 # Keep this route above /{dec_id}; otherwise "lineage" is parsed as a decision ID.
 @router.get("/lineage")
-def decision_lineage(
+async def decision_lineage(
+    response: Response,
     decision_id: str | None = Query(None, description="Optional decision ID or alias filter, e.g. ADR-008 or dec-007"),
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Decision files with git commit and PR backlink lineage."""
-    return _load_lineage(decision_id=decision_id, ctx=ctx)
+    snapshot, _state = await read_snapshot(
+        ctx,
+        "decision_lineage",
+        _lineage_params(ctx, decision_id),
+        LINEAGE_TTL_S,
+        lambda: _load_lineage(decision_id=decision_id, ctx=ctx),
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/scope/{scope}")

@@ -25,11 +25,10 @@ import re
 from pathlib import Path
 from typing import Any, cast
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from fastapi.responses import JSONResponse
 from lu_machinery.api.docs_router import collect_html_artifacts
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
-from lu_machinery.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 from lu_machinery.path_safety import safe_join
 
 from .config import LEVELS
@@ -41,6 +40,7 @@ from .curriculum_state import (
     get_word_target_from_plan,
 )
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
+from .snapshots import prime_snapshot, read_snapshot, stamp_age
 from .state_compute import _get_review_score
 
 router = APIRouter(tags=["artifacts"])
@@ -48,6 +48,8 @@ router = APIRouter(tags=["artifacts"])
 # Dashboard polls share one tree walk. Direct collector calls stay uncached so
 # a caller that just wrote a file still sees it.
 _ARTIFACT_LIST_TTL_S = 15.0
+# The ship-ready conjunction walks every plan's artifacts.
+_SHIP_READY_TTL_S = 60.0
 
 
 # ---------------------------------------------------------------------
@@ -114,8 +116,36 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 # ---------------------------------------------------------------------
 
 
+def _html_artifact_params(
+    class_: str | None, date_from: str | None, status: str | None, author: str | None, types: tuple[str, ...]
+) -> tuple[object, ...]:
+    # One JSON part, so a colon inside a filter cannot collide with another filter.
+    return (
+        json.dumps(
+            [class_ or "", date_from or "", status or "", author or "", list(types)],
+            separators=(",", ":"),
+        ),
+    )
+
+
+def warm_artifact_snapshots(ctx: MonitorContext) -> None:
+    """Fill the unfiltered artifact list and the all-track ship-ready snapshots after process start."""
+    types = ("html", "md")
+    prime_snapshot(
+        ctx,
+        "artifacts_html",
+        _html_artifact_params(None, None, None, None, types),
+        _ARTIFACT_LIST_TTL_S,
+        lambda: collect_html_artifacts(
+            class_filter=None, date_from=None, status=None, author=None, types=types, ctx=ctx
+        ),
+    )
+    prime_snapshot(ctx, "ship_ready", ("all",), _SHIP_READY_TTL_S, lambda: _list_artifact_gates_green(None, ctx=ctx))
+
+
 @router.get("/html")
 async def html_artifacts(
+    response: Response,
     class_: str | None = Query(None, alias="class"),
     date_from: str | None = Query(None),
     status: str | None = Query(None),
@@ -141,17 +171,10 @@ async def html_artifacts(
         types = ("html", "md")
 
     resolved = resolve_context(ctx)
-    # One JSON part, so a colon inside a filter cannot collide with another filter.
-    cache_key = ctx_scoped_ttl_key(
+    snapshot, _state = await read_snapshot(
         resolved,
-        "artifacts-html",
-        json.dumps(
-            [class_ or "", date_from or "", status or "", author or "", list(types)],
-            separators=(",", ":"),
-        ),
-    )
-    return await cache_get_or_compute_async(
-        cache_key,
+        "artifacts_html",
+        _html_artifact_params(class_, date_from, status, author, types),
         _ARTIFACT_LIST_TTL_S,
         lambda: collect_html_artifacts(
             class_filter=class_,
@@ -162,6 +185,8 @@ async def html_artifacts(
             ctx=resolved,
         ),
     )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 def _level_cfg(track: str) -> dict | None:
@@ -471,7 +496,8 @@ def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx))
 
 
 @router.get("/ship-ready")
-def ship_ready(
+async def ship_ready(
+    response: Response,
     track: str | None = Query(
         None,
         description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
@@ -490,7 +516,16 @@ def ship_ready(
             status_code=404,
             content={"error": f"unknown track: {track}"},
         )
-    return _list_artifact_gates_green(track, ctx=resolve_context(ctx))
+    resolved = resolve_context(ctx)
+    snapshot, _state = await read_snapshot(
+        resolved,
+        "ship_ready",
+        (track or "all",),
+        _SHIP_READY_TTL_S,
+        lambda: _list_artifact_gates_green(track, ctx=resolved),
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 # ---------------------------------------------------------------------

@@ -10,6 +10,8 @@ Example:
 
 from __future__ import annotations
 
+import logging
+import time
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -96,6 +98,23 @@ def _warm_state_scans(ctx: MonitorContext) -> None:
     state_router.warm_state_scans(ctx)
 
 
+def _warm_route_snapshots(ctx: MonitorContext) -> None:
+    """Fill the other slow routes' snapshots; git history (lineage) goes last.
+
+    Logs when every product snapshot is warm: until then a cold route may answer
+    503 SNAPSHOT_WARMING.
+    """
+    started = time.monotonic()
+    artifacts_router.warm_artifact_snapshots(ctx)
+    site_router.warm_site_snapshots(ctx)
+    wiki_router.warm_wiki_snapshots(ctx)
+    dashboard_router.warm_dashboard_snapshots(ctx)
+    decisions_router.warm_lineage_snapshot(ctx)
+    logging.getLogger("project_api.entry").info(
+        "Product snapshot warmup finished; route snapshots took %.1fs", time.monotonic() - started
+    )
+
+
 def _health_fields(ctx: MonitorContext) -> dict[str, Any]:
     return orient.health_fields(ctx)
 
@@ -119,7 +138,7 @@ def build_api(context: MonitorContext) -> ProductContribution:
         page_contracts=route_contracts.PAGE_CONTRACTS,
         preload=PRELOAD_MODULES,
         preload_optional=OPTIONAL_PRELOAD_MODULES,
-        warmup=(_warm_state_scans,),
+        warmup=(_warm_state_scans, _warm_route_snapshots),
         orient_sections=orient.orient_sections,
         health=_health_fields,
         atlas=atlas_jobs_router.ATLAS_PROVIDER,

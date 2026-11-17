@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, cast
 
 import yaml
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from lu_machinery.api.state_helpers import (
     cache_get_with_age,
@@ -49,10 +49,12 @@ from .dashboard_helpers import (
     present_module_count,
     read_yaml_file,
     scan_pipeline_queues,
+    scan_track,
     scan_track_cached,
     scan_track_summary_cached,
     stats_from_state_summary,
 )
+from .snapshots import prime_snapshot, read_snapshot, stamp_age
 from .state_coverage import compute_summary
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -561,9 +563,13 @@ def overview(ctx: MonitorContext = Depends(get_ctx)):
     return payload
 
 
-@router.get("/research")
-def research_overview(ctx: MonitorContext = Depends(get_ctx)):
-    """Research coverage across all tracks with rubric-based quality scoring."""
+# Research files change slowly and the all-track scan reads every module.
+RESEARCH_OVERVIEW_TTL_S = 300.0
+
+
+def _compute_research_overview(ctx: MonitorContext) -> dict[str, Any]:
+    """Scan every track afresh, so the snapshot's age is the age of all its data."""
+    started = datetime.now(UTC).isoformat()
     manifest = load_manifest(ctx)
     levels = manifest.get("levels", {})
 
@@ -581,7 +587,7 @@ def research_overview(ctx: MonitorContext = Depends(get_ctx)):
         if not track_modules:
             continue
 
-        track_data = scan_track_cached(track_id, level_cfg["path"], track_modules, ctx=ctx)
+        track_data = scan_track(track_id, level_cfg["path"], track_modules, ctx=ctx)
         rs = track_data["stats"].get("research", {})
 
         mod_research = []
@@ -615,8 +621,23 @@ def research_overview(ctx: MonitorContext = Depends(get_ctx)):
 
     return {
         "tracks": tracks,
-        "timestamp": datetime.now(UTC).isoformat(),
+        "timestamp": started,
     }
+
+
+def warm_dashboard_snapshots(ctx: MonitorContext) -> None:
+    """Fill the research overview snapshot after process start."""
+    prime_snapshot(ctx, "research_overview", (), RESEARCH_OVERVIEW_TTL_S, lambda: _compute_research_overview(ctx))
+
+
+@router.get("/research")
+async def research_overview(response: Response, ctx: MonitorContext = Depends(get_ctx)):
+    """Research coverage across all tracks with rubric-based quality scoring."""
+    snapshot, _state = await read_snapshot(
+        ctx, "research_overview", (), RESEARCH_OVERVIEW_TTL_S, lambda: _compute_research_overview(ctx)
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/track/{track_id}/summary")

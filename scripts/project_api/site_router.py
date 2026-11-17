@@ -29,10 +29,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from lu_machinery.api import config as api_config
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from lu_machinery.common import github_client
+
+from .snapshots import prime_snapshot, read_snapshot, stamp_age
 
 router = APIRouter(tags=["site"])
 
@@ -49,6 +51,8 @@ CANARY_PATHS: tuple[str, ...] = (
     "/",
     "/a1/",
 )
+# Health runs network probes and git subprocesses; ``checked_at`` dates the result.
+SITE_HEALTH_TTL_S = 60.0
 
 
 
@@ -252,10 +256,17 @@ def _compute_site_health(ctx: MonitorContext | None = None) -> dict[str, Any]:
     }
 
 
+def warm_site_snapshots(ctx: MonitorContext) -> None:
+    """Fill the site health snapshot after process start."""
+    prime_snapshot(ctx, "site_health", (), SITE_HEALTH_TTL_S, lambda: _compute_site_health(ctx))
+
+
 @router.get("/health")
-def site_health(ctx: MonitorContext = Depends(get_ctx)):
+async def site_health(response: Response, ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate public-site health — reachability, freshness, canaries."""
-    return _compute_site_health(ctx)
+    snapshot, _state = await read_snapshot(ctx, "site_health", (), SITE_HEALTH_TTL_S, lambda: _compute_site_health(ctx))
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 # ---------------------------------------------------------------------

@@ -9,6 +9,14 @@ from __future__ import annotations
 
 from lu_machinery.api.route_contracts import PageContract, RouteContract
 
+# Freshness wording shared by the routes that serve ``snapshots.read_snapshot``.
+_SWR = (
+    "served from a stale-while-revalidate snapshot with its true age in X-Snapshot-Age-S; one background "
+    "scan replaces it after the TTL, the startup warmup fills the default keys, a cold read waits at most "
+    "5s then answers 503 SNAPSHOT_WARMING with Retry-After, and a key whose last scan failed is rescanned "
+    "before it is served"
+)
+
 ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
         "/api/state/reviewer-ghosts",
@@ -55,7 +63,9 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Mixed legacy pipeline telemetry plus canonical project, review, build, routing, and cold-start state.",
         "curriculum.yaml, plans, orchestration state, research/dossier docs, audit/review files, artifacts, and cost records.",
-        "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true. Summary, research-coverage, pipeline-versions, and weak-points use a short TTL plus singleflight; a warm hit is served on the event loop. API lifespan schedules a best-effort detached warm of those default keys — early post-start callers may still wait on the first scan. /routing-budget serves a cached snapshot, refreshes it off the request when stale, and never blocks on a provider CLI; agents.claude remains the default-account lane and the additive claude_accounts/preferred_claude_account keys are the per-account view (display only, #10630), aged on every serve rather than frozen in the cached snapshot.",
+        "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true. Summary uses a short TTL plus singleflight; a warm hit is served on the event loop. Failing, build-status, pipeline-versions, weak-points, research-coverage, enrichment-status and issues are "
+        + _SWR
+        + ". /routing-budget serves a cached snapshot, refreshes it off the request when stale, and never blocks on a provider CLI; agents.claude remains the default-account lane and the additive claude_accounts/preferred_claude_account keys are the per-account view (display only, #10630), aged on every serve rather than frozen in the cached snapshot.",
         ("Site LiveStatus", "agents"),
         "Overlaps /api/dashboard projections and legacy team views.",
         "low after #2790 for summary/progress; medium for state endpoints that do not expose meta yet",
@@ -67,7 +77,9 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Rich dashboard projections for audit, curriculum, pipeline, and comms pages.",
         "Dashboard helper scans over plans, status cache, research, reviews, orchestration, and broker data.",
-        "Dashboard helper caches are process-local: track detail 30s, summary 60s, overview reuses state summary 60s. /overview includes meta (derived from state-summary + dashboard caches); most other payloads do not.",
+        "Dashboard helper caches are process-local: track detail 30s, summary 60s, overview reuses state summary 60s; /research (300s TTL) is "
+        + _SWR
+        + ". /overview includes meta (derived from state-summary + dashboard caches); most other payloads do not.",
         ("curriculum-dashboard.html", "index.html"),
         "Overlaps /api/state counts; richer module/audit detail remains distinct.",
         "medium if consumers treat it as canonical fresh state",
@@ -91,7 +103,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Artifact classification, artifact-gate checks, report listing, drift, and force-preview evidence.",
         "Plans, generated curriculum files, site MDX, review/audit docs, docs/audit reports.",
-        "No route cache; live filesystem reads.",
+        "/html (15s TTL) and /ship-ready (60s TTL) are " + _SWR + "; other routes read the filesystem live.",
         ("artifacts.html", "agents", "docs"),
         "Complements /api/state published/stale signals.",
         "low",
@@ -103,7 +115,8 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Wiki compilation status, quality gates, build log, article preview, and source inventory.",
         "Wiki progress state/DB, wiki markdown files, and data/sources.db.",
-        "Selected aggregate reads use short shared TTL cache; article detail reads file bodies on demand.",
+        "/status (60s TTL) and /quality-gate (120s TTL) are " + _SWR + "; per-track reads use a short shared TTL "
+        "cache; article detail reads file bodies on demand.",
         ("agents", "/api/orient wiki section"),
         "Complements /api/state published/wiki status signals.",
         "low/medium",
@@ -152,7 +165,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Decision registry listing, stale/budget/lineage views, scope lookups, and detail.",
         "docs/decisions/**.",
-        "No route cache; live filesystem reads.",
+        "/lineage (git history, 300s TTL) is " + _SWR + "; other routes read docs/decisions with a 60s TTL.",
         ("agents", "docs"),
         "Related to /api/state/governance aggregate.",
         "low",
@@ -176,7 +189,8 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Public site health and deployment observability.",
         "Public site probe and GitHub Pages deployment data.",
-        "No route cache; each request probes/queries live state with bounded subprocess/network behavior.",
+        "/health (60s TTL; checked_at dates the probe) is " + _SWR + "; other routes probe/query live state "
+        "with bounded subprocess/network behavior.",
         ("agents", "docs"),
         "Complements local build/status dashboards.",
         "medium if network/GitHub is unavailable",

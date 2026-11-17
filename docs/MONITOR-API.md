@@ -822,6 +822,21 @@ curl -s -X POST http://127.0.0.1:8765/api/observer/presence \
 
 These are the primary endpoints for understanding pipeline state. All are read-only GETs.
 
+**Snapshot routes (stale-while-revalidate).** These scans take seconds, so the route
+serves the last stored result at once and reports its true age, counted from when
+the scan started reading, in the `X-Snapshot-Age-S` response header: `/api/state/failing`,
+`/build-status`, `/pipeline-versions`, `/weak-points`, `/research-coverage`,
+`/enrichment-status`, `/issues`; `/api/wiki/status` and `/api/wiki/quality-gate`;
+`/api/dashboard/research`; `/api/decisions/lineage`; `/api/site/health`;
+`/api/artifacts/html` and `/api/artifacts/ship-ready`. Once a result is older than
+its route TTL, one background scan replaces it. The startup warmup fills the default
+keys and logs `Product snapshot warmup finished` when done. A cold key waits at most
+5 s and then answers `503` with `detail.code = SNAPSHOT_WARMING` and `Retry-After`.
+The scan keeps running and stores its result. If a key's last scan failed, its old
+result is not served again: the next request rescans and receives the error. The
+`/api/state/preparation` roster is not a snapshot; its contract requires a recompute
+on every request.
+
 ### `GET /api/state/preparation[?track=x]`
 
 Versioned, agent-facing active curriculum authority. This route is distinct
@@ -1006,12 +1021,11 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 Pipeline generation counts and rebuild pressure. **The single-glance migration dashboard.**
 
-**Caching (#7973):** process-local TTL (~60s) with **singleflight** — concurrent cold
-misses share one curriculum walk. API lifespan **schedules** a detached warm of the
-default all-tracks key (best-effort; does not block readiness). An early request
-right after process start may still initiate or join the scan and wait for it.
-Pass `?fresh=true` to force one coalesced recompute (still singleflight). Response
-`meta.cache` is `hit` / `miss` when present.
+**Caching:** a snapshot route (see the note at the top of this section) with a 60 s
+TTL; concurrent cold misses share one curriculum walk. Pass `?fresh=true` to force
+one coalesced recompute (still bounded by the 5 s cold wait). Response `meta.cache`
+is `hit`, `stale` (served while a refresh runs) or `miss`, and `meta.age_s` and
+`meta.stale` repeat the snapshot age.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
@@ -1275,11 +1289,10 @@ Criteria:
 - research score < `min_score` (default 7)
 - word count < 80% of `word_target`
 
-**Caching (#7973):** process-local TTL (~60s) with **singleflight** per
-`(track, min_score, limit)` key. API lifespan **schedules** a detached warm of the
-default glance key (`all`, `min_score=7`, `limit=20`) — best-effort; early callers
-after start may still wait on the first compute. Pass `?fresh=true` to force one
-coalesced recompute. Response schema is unchanged.
+**Caching:** a snapshot route (see the note at the top of this section) with a 60 s
+TTL per `(track, min_score, limit)` key; the warmup fills the default glance key
+(`all`, `min_score=7`, `limit=20`). Pass `?fresh=true` to force one coalesced
+recompute. Response schema is unchanged; the age is in `X-Snapshot-Age-S`.
 
 ```bash
 curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool

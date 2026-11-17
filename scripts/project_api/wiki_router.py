@@ -17,13 +17,14 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, cast
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from lu_machinery.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from lu_machinery.api.state_helpers import cache_get, cache_set
 
 from .config import LEVELS
 from .context import sources_db
 from .curriculum_state import monitor_surface
+from .snapshots import prime_snapshot, read_snapshot, stamp_age
 
 # path_safety is a top-level module when scripts/ is on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -62,6 +63,9 @@ _TABLE_NAMES = [
     "style_guide",
 ]
 _WORD_COUNT_WORKERS = 4
+# The all-track aggregates read every compiled article and its source registry.
+WIKI_STATUS_TTL_S = 60.0
+WIKI_QUALITY_GATE_TTL_S = 120.0
 
 
 
@@ -311,15 +315,7 @@ def _track_status_rows(
     return rows
 
 
-@router.get("/status")
-def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
-    """Per-track wiki compilation status."""
-    known_tracks = _known_tracks(ctx)
-    cache_key = f"wiki_status_{_wiki_dir(ctx)}_" + ",".join(known_tracks)
-    cached = cache_get(cache_key, ttl=60.0)
-    if cached is not None:
-        return cached
-
+def _compute_wiki_status(ctx: MonitorContext, known_tracks: list[str]) -> dict[str, Any]:
     article_candidates = _list_article_candidates(ctx)
     word_count_cache: dict[Path, int] = {}
     _preload_article_word_counts(article_candidates, word_count_cache, _wiki_dir(ctx))
@@ -341,9 +337,34 @@ def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
             "total_words": total_words,
         })
 
-    result = {"tracks": tracks}
-    cache_set(cache_key, result)
-    return result
+    return {"tracks": tracks}
+
+
+def _wiki_status_params(ctx: MonitorContext) -> tuple[list[str], tuple[object, ...]]:
+    known_tracks = _known_tracks(ctx)
+    return known_tracks, (str(_wiki_dir(ctx)), ",".join(known_tracks))
+
+
+def _compute_quality_gate(ctx: MonitorContext) -> dict[str, Any]:
+    return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
+
+
+def warm_wiki_snapshots(ctx: MonitorContext) -> None:
+    """Fill the all-track wiki status and quality-gate snapshots after process start."""
+    known_tracks, params = _wiki_status_params(ctx)
+    prime_snapshot(ctx, "wiki_status", params, WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx, known_tracks))
+    prime_snapshot(ctx, "wiki_quality_gate", (), WIKI_QUALITY_GATE_TTL_S, lambda: _compute_quality_gate(ctx))
+
+
+@router.get("/status")
+async def wiki_status(response: Response, ctx: MonitorContext = Depends(get_ctx)):
+    """Per-track wiki compilation status."""
+    known_tracks, params = _wiki_status_params(ctx)
+    snapshot, _state = await read_snapshot(
+        ctx, "wiki_status", params, WIKI_STATUS_TTL_S, lambda: _compute_wiki_status(ctx, known_tracks)
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/status/{track}")
@@ -418,9 +439,13 @@ def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 @router.get("/quality-gate")
-def wiki_quality_gate(ctx: MonitorContext = Depends(get_ctx)):
+async def wiki_quality_gate(response: Response, ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate wiki quality gate issues for all tracks."""
-    return {track: monitor_surface.scan_wiki_track(track) for track in _known_tracks(ctx)}
+    snapshot, _state = await read_snapshot(
+        ctx, "wiki_quality_gate", (), WIKI_QUALITY_GATE_TTL_S, lambda: _compute_quality_gate(ctx)
+    )
+    stamp_age(response, snapshot)
+    return snapshot.value
 
 
 @router.get("/quality-gate/{track}")

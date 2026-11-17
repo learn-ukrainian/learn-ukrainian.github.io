@@ -11,6 +11,7 @@ import pytest
 from lu_machinery.api import state_helpers
 
 import scripts.project_api.state_router as product_state_router
+from scripts.project_api import snapshots
 
 
 @pytest.fixture(autouse=True)
@@ -229,7 +230,7 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     warm_thread.join(timeout=30)
     assert not warm_thread.is_alive(), "state scan warmup thread did not finish within 30s"
 
-    pipe_key = state_router._ctx_cache_key(ctx, "pipeline_versions", "all")
-    weak_key = state_router._ctx_cache_key(ctx, "weak_points", "all", 7, 20)
-    assert state_helpers.cache_get(pipe_key, 60.0)["track"] is None
-    assert state_helpers.cache_get(weak_key, 60.0)["limit"] == 20
+    pipe_key = snapshots.snapshot_key(ctx, "pipeline_versions", "all")
+    weak_key = snapshots.snapshot_key(ctx, "weak_points", "all", 7, 20)
+    assert state_helpers.cache_get(pipe_key, 60.0).value["track"] is None
+    assert state_helpers.cache_get(weak_key, 60.0).value["limit"] == 20
