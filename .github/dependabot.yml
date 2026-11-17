@@ -165,10 +165,6 @@ updates:
       - dependency-name: "uvicorn"
       - dependency-name: "virtualenv"
       - dependency-name: "werkzeug"
-      # pypdfium2 is exact-pinned by pdftext AND surya-ocr (both require
-      # pypdfium2==4.30.0). A standalone bump (e.g. 4.30.0->5.9.0, #3359) breaks
-      # the OCR/PDF stack; it moves only via a pdftext/surya-ocr bump. Full block.
-      - dependency-name: "pypdfium2"
       # lxml is capped by inscriptis (inscriptis==2.7.1 requires lxml<6.1.0);
       # lxml 6.1.0 re-breaks the inscriptis import that #2732 fixed by pinning
       # down to 6.0.4 (#3282). Allow 6.0.x patches but block >=6.1.0 until
@@ -181,8 +177,3 @@ updates:
       # cap — REMOVE this entry then. Closed PR: #3338.
       - dependency-name: "tokenizers"
         versions: [">=0.23.1"]
-      # openai is capped by marker-pdf (marker-pdf requires openai>=1.65.2,<2.0.0);
-      # the 1.x->2.x SDK is a breaking major. Block >=2.0.0 until marker-pdf
-      # supports openai 2.x — REMOVE this entry then. Closed PR: #3352.
-      - dependency-name: "openai"
-        versions: [">=2.0.0"]

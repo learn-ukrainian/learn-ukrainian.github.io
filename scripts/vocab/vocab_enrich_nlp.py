@@ -3,7 +3,7 @@
 Vocabulary Enrichment using Ukrainian NLP Tools.
 
 Uses:
-- pymorphy2: Lemmatization & POS tagging
+- pymorphy3: Lemmatization & POS tagging
 - ukrainian-word-stress: Stress marks → IPA conversion
 
 Usage:
@@ -13,7 +13,7 @@ This script:
 1. Loads a vocabulary YAML file
 2. For each entry:
    - Converts word form to proper lemma (dictionary form)
-   - Gets correct POS tag from pymorphy2
+   - Gets correct POS tag from pymorphy3
    - Adds stress marks using ukrainian-word-stress
    - Converts stressed form to IPA notation
 3. Deduplicates entries (multiple word forms → one lemma)
@@ -70,7 +70,7 @@ def stressed_to_ipa(stressed_word: str) -> str:
 # POS TAG MAPPING
 # =============================================================================
 
-# pymorphy2 POS tags to our simplified tags
+# pymorphy3 POS tags to our simplified tags
 POS_MAP = {
     'NOUN': 'noun',
     'ADJF': 'adj',   # full adjective
@@ -101,7 +101,7 @@ GENDER_MAP = {
 
 def analyze_word(word: str) -> dict:
     """
-    Analyze a Ukrainian word using pymorphy2.
+    Analyze a Ukrainian word using pymorphy3.
 
     Returns:
         {
@@ -210,7 +210,7 @@ def enrich_vocabulary(yaml_path: Path, dry_run: bool = False) -> dict:
 
         original_word = entry['lemma']
 
-        # Analyze with pymorphy2
+        # Analyze with pymorphy3
         analysis = analyze_word(original_word)
         true_lemma = analysis['lemma']
 
