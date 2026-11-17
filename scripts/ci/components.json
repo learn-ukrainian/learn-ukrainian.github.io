@@ -482,9 +482,6 @@
     "SECURITY.md": [
       "shared-core"
     ],
-    "UI-REVIEW-FINDINGS.md": [
-      "shared-core"
-    ],
     "dagger.json": [
       "shared-core"
     ],
@@ -789,18 +786,6 @@
       ]
     },
     {
-      "path": "openwiki/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
-      "path": "orchestration/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
       "path": "packages/",
       "components": [
         "shared-core"
@@ -854,12 +839,6 @@
       "path": "registry/projects/open_model_data/",
       "components": [
         "open-model-data"
-      ]
-    },
-    {
-      "path": "review/",
-      "components": [
-        "shared-core"
       ]
     },
     {

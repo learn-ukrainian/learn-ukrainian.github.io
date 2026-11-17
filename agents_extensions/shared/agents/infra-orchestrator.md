@@ -71,7 +71,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   a SHA, a Ukrainian form — run the tool, quote it.
 
 ## Your lane, and what is not
-- Yours: `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`, `scripts/orchestration/`,
+- Yours: `scripts/build/`, `scripts/audit/`, `scripts/agent_runtime/`, `lu_machinery/orchestration/`,
   `scripts/lexicon/` + Atlas, `linear_pipeline.py` and the V7 pipeline, gates + `scripts/curriculum/pedagogy_config.py` /
   `scripts/audit/config.py`, schemas, `.dagger/`, CI (`.github/workflows/`), the SessionStart and
   PostCompact hooks, launchers, deploy (`lu_machinery/deploy_prompts.sh`), the Monitor API, tests.

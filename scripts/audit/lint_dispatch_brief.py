@@ -22,60 +22,13 @@ SYMLINK_RE = re.compile(
 NEGATIVE_MARKER_RE = re.compile(r"//\s*(?:BAD|NOT THIS)\b", re.IGNORECASE)
 
 ALLOWLIST_PYTEST_X = {
-    "docs/dispatch-briefs/2026-05-05-1665-holovashchuk-ingest.md",
-    "docs/dispatch-briefs/2026-05-05-1673-1661-cot-tier1-prompts.md",
-    "docs/dispatch-briefs/2026-05-05-1679-search-etymology-removal.md",
-    "docs/dispatch-briefs/2026-05-05-1680-vesum-split-and-mcp-wiki-packet.md",
-    "docs/dispatch-briefs/2026-05-05-1682-test-delegate-isolation.md",
-    "docs/dispatch-briefs/2026-05-05-1687-codeql-suppression-rework.md",
-    "docs/dispatch-briefs/2026-05-05-bakeoff-aggregator-script.md",
-    "docs/dispatch-briefs/2026-05-05-bakeoff-telemetry-instrumentation.md",
-    "docs/dispatch-briefs/2026-05-05-codeql-A-path-injection.md",
-    "docs/dispatch-briefs/2026-05-05-codeql-B-secrets-exposure.md",
-    "docs/dispatch-briefs/2026-05-05-codeql-C-url-tag-validation.md",
-    "docs/dispatch-briefs/2026-05-05-codeql-cleanup-gemini.md",
+    # Finished archival brief kept because docs/best-practices/agent-activity-matrix.md cites it.
     "docs/dispatch-briefs/2026-05-08-night/1785-d4-decision-lineage.md",
-    "docs/dispatch-briefs/2026-05-08-night/1786-ab-discuss-bugs.md",
-    "docs/dispatch-briefs/2026-05-08-night/1787-1.1-brief-linter.md",
-    "docs/dispatch-briefs/2026-05-08-night/1787-1.3-status-verifier.md",
-    "docs/dispatch-briefs/2026-05-08-night/1787-1.4-anti-menu-linter.md",
-    "docs/dispatch-briefs/2026-05-08-night/1787-1.5-handoff-verifier.md",
-    "docs/dispatch-briefs/2026-05-08-night/1789-anti-menu-revise-v2.md",
-    "docs/dispatch-briefs/2026-05-08-night/1789-anti-menu-revise.md",
-    "docs/dispatch-briefs/2026-05-08-night/1790-mcp-streamable-http.md",
-    "docs/dispatch-briefs/2026-05-08-night/1797-d4-revise.md",
-    "docs/dispatch-briefs/2026-05-13-1965-jsx-uk-attribute-extraction.md",
-    "docs/dispatch-briefs/2026-05-13-immersion-gate-phase-a.md",
-    "docs/dispatch-briefs/2026-05-13-immersion-gate-phase-b.md",
-    "docs/dispatch-briefs/2026-05-13-ingest-pohribnyi-pronunciation-corpus.md",
-    "docs/dispatch-briefs/2026-05-13-pipeline-gate-trio.md",
-    "docs/dispatch-briefs/2026-05-13-pr1-learner-state-v7-wiring.md",
-    "docs/dispatch-briefs/2026-05-13-pr2-ulp-immersion-model.md",
-    "docs/dispatch-briefs/2026-05-13-routing-budget-observability.md",
-    "docs/dispatch-briefs/2026-05-13-wiki-obligations-manifest.md",
-    "docs/dispatch-briefs/2026-05-13-writer-prompt-tune.md",
-    "docs/dispatch-briefs/2026-05-14-assembler-tab3-dedupe-vocab-order.md",
-    "docs/dispatch-briefs/2026-05-14-multimedia-resources-search.md",
-    "docs/dispatch-briefs/2026-05-14-v7-mdx-assembler-alignment.md",
-    "docs/dispatch-briefs/2026-05-14-vesum-norm-and-fixblock-parser.md",
-    "docs/dispatch-briefs/2026-05-14-writer-phonetic-ipa-directive.md",
-    "docs/dispatch-briefs/2026-05-14-yaml-activities-unjumble.md",
-    "docs/dispatch-briefs/2026-05-16-2018-activity-schema-gate-codex.md",
-    "docs/dispatch-briefs/2026-05-16-grok-stage-3-writer-plumbing-codex.md",
-    "docs/dispatch-briefs/2026-05-16-pr2019-vesum-gate-test-failures-codex.md",
-    "docs/dispatch-briefs/2026-05-17-judge-calibration-matrix-codex.md",
-    # 2026-05-24 → 2026-05-26 carryover backlog (dispatches already completed).
-    "docs/dispatch-briefs/2026-05-24-option-c-plan-reference-match-gate-cursor.md",
-    "docs/dispatch-briefs/2026-05-24-pr-2256-fixups-gemini.md",
 }
 
-# Grandfathered briefs from the 2026-05-24 → 2026-05-26 carryover backlog.
-# Each dispatch was already sent and completed; the briefs are archival.
-# New briefs going forward must continue to satisfy the venv-guard rule.
-ALLOWLIST_VENV_GUARD = {
-    "docs/dispatch-briefs/2026-05-24-f2-f3-batch-cleanup-codex.md",
-    "docs/dispatch-briefs/2026-05-25-pr-2266-adjustment-codex.md",
-}
+# Grandfathered archival briefs exempt from the venv-guard rule (none remain).
+# New briefs must satisfy the venv-guard rule.
+ALLOWLIST_VENV_GUARD: set[str] = set()
 
 
 def _contexts(text: str) -> list[tuple[int, str, int | None]]:
