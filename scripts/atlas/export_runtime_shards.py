@@ -175,8 +175,45 @@ def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+# CPython 3.12 ``gzip.compress(..., mtime=0)`` returns ``zlib.compress(..., wbits=31)``
+# unchanged, and zlib's Unix OS byte is 3. CPython 3.13+ rewrites that byte to
+# 255, which changes every shard at byte 9 and every manifest sha256. The header
+# is written here so the OS byte stays the 3.12 value.
+_GZIP_OS_UNIX = 3
+
+
+def _gzip_header(compression_level: int) -> bytes:
+    """10-byte RFC 1952 header: mtime 0, zlib's XFL, OS byte fixed at 3.
+
+    XFL follows zlib's gzip wrapper: 4 when the level is below 2, 2 at level 9,
+    otherwise 0. Callers emit this instead of slicing ``gzip.compress``.
+    """
+    if compression_level not in range(10):
+        zlib.compress(b"", level=compression_level)  # raises zlib.error, same as the one-shot path
+        raise ExportError(f"compression level {compression_level} is outside 0..9")
+    if compression_level == 9:
+        xfl = 2
+    elif compression_level < 2:
+        xfl = 4
+    else:
+        xfl = 0
+    return struct.pack("<4sLBB", b"\x1f\x8b\x08\x00", 0, xfl, _GZIP_OS_UNIX)
+
+
 def gzip_bytes(data: bytes, *, compression_level: int) -> bytes:
-    return gzip.compress(data, compresslevel=compression_level, mtime=0)
+    """One-shot gzip whose header does not depend on the CPython version.
+
+    The body is zlib's one-shot gzip wrapper (``wbits=31``), the same bytes
+    CPython 3.12 ``gzip.compress(mtime=0)`` returns. The 10-byte header is
+    ``_gzip_header``, so byte 9 stays 3 when the stdlib writes 255.
+    """
+    blob = zlib.compress(data, level=compression_level, wbits=31)
+    header = _gzip_header(compression_level)
+    if len(blob) < len(header) or blob[:9] != header[:9]:
+        raise ExportError(
+            f"zlib gzip wrapper disagrees with the pinned header at compression level {compression_level}"
+        )
+    return header + blob[len(header) :]
 
 
 def write_text(path: Path, text: str) -> None:
@@ -877,8 +914,9 @@ ChunkSource = Callable[[], Iterable[bytes]]
 # ---------------------------------------------------------------------------
 # Level 0 (stored blocks) without buffering the object.
 #
-# ``gzip_bytes(data, 0)`` is ``zlib.compress(data, 0, wbits=31)`` (CPython 3.12
-# ``gzip.compress`` with ``mtime=0``). Its stored-block lengths are not a fixed
+# ``gzip_bytes(data, 0)`` is ``zlib.compress(data, 0, wbits=31)`` with the header
+# from ``_gzip_header`` (CPython 3.12 ``gzip.compress`` with ``mtime=0``; OS byte
+# 3, not the 255 that 3.13+ writes). Its stored-block lengths are not a fixed
 # 65535 split: zlib's ``deflate_stored`` sizes each block from the input left,
 # its 64 KiB window and the *output space* CPython's growing output buffer hands
 # it. Those decisions depend only on lengths, never on bytes, so the framing is
@@ -900,7 +938,7 @@ _WINDOW_SIZE = 2 * _W_SIZE
 _PENDING_BUF_SIZE = (1 << (8 + 6)) * 4  # lit_bufsize * 4 at DEF_MEM_LEVEL 8
 _MAX_STORED = 65535
 _STORED_HEADER = 5  # (bi_valid + 42) >> 3: level 0 only ever emits byte-aligned stored blocks
-_GZIP_HEADER_BYTES = 10
+_GZIP_HEADER_BYTES = len(_gzip_header(0))
 _GZIP_TRAILER_BYTES = 8
 # CPython 3.12 Include/internal/pycore_blocks_output_buffer.h BUFFER_BLOCK_SIZE.
 _KIB, _MIB = 1024, 1024 * 1024
@@ -1131,7 +1169,7 @@ def _frame_stored_gzip(
     raw_sha = hashlib.sha256()
     raw_bytes = 0
     crc = 0
-    emit(gzip_bytes(b"", compression_level=0)[:_GZIP_HEADER_BYTES])
+    emit(_gzip_header(0))
     plan = iter(blocks)
     remaining = 0
 
@@ -1227,8 +1265,8 @@ def stream_gzip(
     (lazy) chunk source — as soon as the compressed size is certain to exceed
     ``max_bytes``; ``sink`` has then seen a prefix (or nothing) and must be
     discarded by the caller. Levels 1-9: deflate output is independent of how the
-    input is chunked, so one pass streams the one-shot payload (gzip header taken
-    from ``gzip_bytes`` itself, raw deflate body, crc32/isize trailer) and the
+    input is chunked, so one pass streams the one-shot payload (explicit
+    ``_gzip_header``, raw deflate body, crc32/isize trailer) and the
     compressed prefix emitted so far is a strict lower bound on the final size.
     Level 0 (stored blocks) frames blocks the way the one-shot call does, which
     follows the whole input length: ``source`` is read once to plan (aborting once
@@ -1259,7 +1297,7 @@ def stream_gzip(
     raw_bytes = 0
     crc = 0
     deflater = zlib.compressobj(compression_level, zlib.DEFLATED, -zlib.MAX_WBITS)
-    if emit(gzip_bytes(b"", compression_level=compression_level)[:10]):
+    if emit(_gzip_header(compression_level)):
         return None
     for chunk in source():
         raw_sha.update(chunk)
