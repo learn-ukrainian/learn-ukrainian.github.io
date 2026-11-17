@@ -166,7 +166,7 @@ sentencepiece==0.2.1
 setuptools==84.1.0
 shellingham==1.5.4
 six==1.17.0
-soupsieve==4.0
+soupsieve==4.1
 sse-starlette==3.5.0
 stack-data==0.6.3
 stanza==1.15.0
