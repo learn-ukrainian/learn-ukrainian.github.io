@@ -21,6 +21,7 @@ from __future__ import annotations
 import contextlib
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -235,7 +236,7 @@ def load_curriculum(
             current_mtime = curriculum_yaml.stat().st_mtime
             entry = _curriculum_cache.get(curriculum_yaml)
             if entry is None or current_mtime != entry[0]:
-                data = yaml.safe_load(curriculum_yaml.read_text(encoding="utf-8")) or {}
+                data = yaml.load(curriculum_yaml.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or {}
                 _curriculum_cache[curriculum_yaml] = (current_mtime, data)
             return _curriculum_cache[curriculum_yaml][1]
         except (OSError, yaml.YAMLError, Exception):
@@ -469,13 +470,44 @@ def is_content_done(state: dict) -> bool:
     return cast("bool", monitor_surface.phase_is_complete(state, "write"))
 
 
-def find_content_file(track_dir: Path, slug: str) -> Path | None:
+def build_content_file_index(track_dir: Path) -> dict[str, Path]:
+    """Snapshot direct names and numbered aliases in one directory scan.
+
+    Like ``find_content_file``, direct names win over aliases; competing
+    numbered names keep directory order. Directories and dangling symlinks
+    also participate in the glob fallback, just as they do in Path.glob.
+    """
+    index: dict[str, Path] = {}
+    direct: dict[str, Path] = {}
+    try:
+        with os.scandir(track_dir) as entries:
+            for entry in entries:
+                if not entry.name.endswith(".md"):
+                    continue
+                path = track_dir / entry.name
+                stem = path.stem
+                index.setdefault(stem, path)
+                index.setdefault(to_bare_slug(stem), path)
+                if f"{stem}.md" == entry.name and (not entry.is_symlink() or path.exists()):
+                    direct[stem] = Path(os.path.abspath(path))
+    except OSError:
+        pass
+    index.update(direct)
+    return index
+
+
+def find_content_file(
+    track_dir: Path, slug: str, *, content_index: dict[str, Path] | None = None,
+) -> Path | None:
     """Find the module content .md file."""
     try:
         # trusted_join: slug from repo plan config, per-module hot loop (#4931 perf).
         direct_path = trusted_join(track_dir, f"{slug}.md")
     except ValueError:
         return None
+
+    if content_index is not None and "/" not in slug:
+        return content_index.get(slug)
 
     if direct_path.exists():
         return cast("Path | None", direct_path)
@@ -489,12 +521,7 @@ def find_content_file(track_dir: Path, slug: str) -> Path | None:
     if entry and entry[0] == track_mtime:
         return entry[1].get(slug)
 
-    index: dict[str, Path] = {}
-    for content_path in track_dir.glob("*.md"):
-        stem = content_path.stem
-        index.setdefault(stem, content_path)
-        index.setdefault(to_bare_slug(stem), content_path)
-
+    index = build_content_file_index(track_dir)
     _content_file_index_cache[track_dir] = (track_mtime, index)
     return index.get(slug)
 
@@ -502,7 +529,9 @@ def find_content_file(track_dir: Path, slug: str) -> Path | None:
 # ==================== AUDIT STATUS ====================
 
 
-def get_audit_status(track_dir: Path, slug: str) -> dict:
+def get_audit_status(
+    track_dir: Path, slug: str, *, content_index: dict[str, Path] | None = None,
+) -> dict:
     """Read status/{slug}.json. Returns {status, word_count, word_target, blocking_issues}.
 
     Staleness guard: if the content file is newer than the status cache,
@@ -516,7 +545,7 @@ def get_audit_status(track_dir: Path, slug: str) -> dict:
     if not status_file.exists():
         return {"status": "not_run", "word_count": 0, "word_target": 0, "blocking_issues": []}
     try:
-        content_file = find_content_file(track_dir, slug)
+        content_file = find_content_file(track_dir, slug, content_index=content_index)
         if content_file and content_file.exists():
             content_mtime = content_file.stat().st_mtime
             status_mtime = status_file.stat().st_mtime

@@ -13,6 +13,7 @@ Covers:
 """
 
 import json
+import os
 import time
 from unittest.mock import patch
 
@@ -77,6 +78,48 @@ class TestCountReviewIssues:
 
 
 # ==================== state_helpers ====================
+
+
+def test_content_index_preserves_lookup_precedence_and_naming_variants(tmp_path):
+    """Bulk lookup must not select another file or lose numbered/glob matches."""
+    from pathlib import Path
+
+    from scripts.project_api.curriculum_state import build_content_file_index, find_content_file
+
+    for name in (
+        "01-direct.md", "direct.md", "02-numbered.md", "003-long-prefix.md",
+        "4-5-nested-prefix.md", "unprefixed.md", "01-collision.md", "02-collision.md",
+        "01-title # comment.md", "01-spaced .md", "UPPER.md", ".hidden.md", ".md",
+        "not-markdown.mdx", "wrong-case.MD", "invalid:name.md",
+    ):
+        (tmp_path / name).write_text("content", encoding="utf-8")
+    (tmp_path / "directory.md").mkdir()
+    (tmp_path / "linked.md").symlink_to(tmp_path / "unprefixed.md")
+    (tmp_path / "dangling.md").symlink_to(tmp_path / "absent")
+    (tmp_path / "nested").mkdir()
+    (tmp_path / "nested" / "child.md").write_text("nested", encoding="utf-8")
+
+    expected_names = {
+        "direct": "direct.md", "01-direct": "01-direct.md", "numbered": "02-numbered.md",
+        "long-prefix": "003-long-prefix.md", "5-nested-prefix": "4-5-nested-prefix.md",
+        "unprefixed": "unprefixed.md", "title": "01-title # comment.md",
+        "spaced": "01-spaced .md", "UPPER": "UPPER.md", ".hidden": ".hidden.md",
+        ".md": ".md", "directory": "directory.md", "linked": "linked.md",
+        "dangling": "dangling.md", "nested/child": "child.md",
+        "missing": None, "not-markdown": None, "wrong-case": None,
+        "invalid:name": None, "../escape": None,
+    }
+    # glob order is the original tie-breaker, rather than numeric or lexical order.
+    expected_names["collision"] = next(tmp_path.glob("*-collision.md")).name
+    for track_dir in (tmp_path, Path(os.path.relpath(tmp_path))):
+        index = build_content_file_index(track_dir)
+        for slug, expected in expected_names.items():
+            original = find_content_file(track_dir, slug)
+            indexed = find_content_file(track_dir, slug, content_index=index)
+            assert indexed == original, slug
+            assert (indexed.name if indexed is not None else None) == expected, slug
+
+    assert build_content_file_index(tmp_path / "missing-track") == {}
 
 
 class TestDetectPipelineVersionHelpers:

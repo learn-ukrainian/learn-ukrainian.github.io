@@ -9,11 +9,11 @@ warm hit on the event loop.
 
 from __future__ import annotations
 
+import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-import yaml
 from lu_machinery.api import config
 from lu_machinery.path_safety import trusted_join
 
@@ -21,6 +21,7 @@ from .config import LEVELS, SEMINAR_TRACK_IDS
 from .curriculum_state import (
     PROFILE_MAP,
     V6_PHASE_LABELS,
+    build_content_file_index,
     detect_pipeline_version,
     find_content_file,
     get_audit_status,
@@ -28,6 +29,7 @@ from .curriculum_state import (
     get_research_score,
     get_word_target_from_plan,
     is_content_done,
+    load_curriculum,
     load_module_state,
     parse_phase_status_from_state,
 )
@@ -119,11 +121,7 @@ def _module_sources_by_track(*, curriculum_root: Path | None = None) -> dict[str
     """Describe which catalog source get_plan_slugs will use per track."""
     if curriculum_root is None:
         curriculum_root = config.CURRICULUM_ROOT
-    data_path = curriculum_root / "curriculum.yaml"
-    try:
-        data = yaml.safe_load(data_path.read_text(encoding="utf-8")) or {}
-    except Exception:
-        data = {}
+    data = load_curriculum(curriculum_root=curriculum_root)
     levels = data.get("levels", {})
     return {
         level_cfg["id"]: ("curriculum.yaml" if levels.get(level_cfg["id"], {}).get("modules", []) else "plans-fallback")
@@ -138,11 +136,23 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs, *, project_root: P
     generated_md = published_mdx = dossier_done = 0
     dossier_docs = dossier_curriculum = audit_stale = 0
 
+    orchestration_dir = track_dir / "orchestration"
+    status_dir = track_dir / "status"
+    review_dir = track_dir / "review"
     audit_dir = track_dir / "audit"
+    published_dir = _published_mdx_path(track_id, "", project_root=project_root).parent
+    orchestration_names = _directory_names(orchestration_dir)
+    status_names = _directory_names(status_dir)
+    review_names = _directory_names(review_dir)
+    audit_names = _directory_names(audit_dir)
+    published_names = _directory_names(published_dir)
+    content_index = build_content_file_index(track_dir)
     for _num, slug in plan_slugs:
         # trusted_join: slug from repo plan config, per-module scan hot loop (#4931 perf).
-        orch_dir = trusted_join(track_dir / "orchestration", slug)
-        state = load_module_state(track_id, slug, orch_dir)
+        state = {}
+        if _indexed_exists(orchestration_dir, orchestration_names, slug):
+            orch_dir = trusted_join(orchestration_dir, slug)
+            state = load_module_state(track_id, slug, orch_dir)
 
         research_path = find_research_path(track_dir, slug)
         if research_path:
@@ -158,24 +168,25 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs, *, project_root: P
             research_done += 1
         if is_content_done(state):
             content_done += 1
-        if find_content_file(track_dir, slug):
+        if find_content_file(track_dir, slug, content_index=content_index):
             generated_md += 1
-        if _published_mdx_path(track_id, slug, project_root=project_root).exists():
+        if _indexed_exists(published_dir, published_names, f"{slug}.mdx"):
             published_mdx += 1
 
-        audit = get_audit_status(track_dir, slug)
-        if audit["status"] == "pass":
-            audit_passing += 1
-        if audit["status"] == "stale":
-            audit_stale += 1
+        if _indexed_exists(status_dir, status_names, f"{slug}.json"):
+            audit = get_audit_status(track_dir, slug, content_index=content_index)
+            if audit["status"] == "pass":
+                audit_passing += 1
+            if audit["status"] == "stale":
+                audit_stale += 1
 
-        if (track_dir / "review" / f"{slug}-review.md").exists():
+        if _indexed_exists(review_dir, review_names, f"{slug}-review.md"):
             reviewed += 1
-        if (track_dir / "review" / f"{slug}-final-review.md").exists():
+        if _indexed_exists(review_dir, review_names, f"{slug}-final-review.md"):
             final_review_done += 1
-        if (audit_dir / f"{slug}-prompt-review.md").exists():
+        if _indexed_exists(audit_dir, audit_names, f"{slug}-prompt-review.md"):
             prompt_reviewed += 1
-        if (audit_dir / f"{slug}-content-review.md").exists():
+        if _indexed_exists(audit_dir, audit_names, f"{slug}-content-review.md"):
             content_reviewed += 1
 
     return {
@@ -193,6 +204,20 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs, *, project_root: P
         "dossier_curriculum": dossier_curriculum,
         "audit_stale": audit_stale,
     }
+
+
+def _directory_names(directory: Path) -> set[str]:
+    """Snapshot existing entries once instead of issuing per-module stat calls."""
+    try:
+        with os.scandir(directory) as entries:
+            return {entry.name for entry in entries if not entry.is_symlink() or Path(entry.path).exists()}
+    except OSError:
+        return set()
+
+
+def _indexed_exists(directory: Path, names: set[str], name: str) -> bool:
+    # Legacy catalogs can contain nested paths, outside a one-level snapshot.
+    return (directory / name).exists() if "/" in name else name in names
 
 
 def _published_mdx_path(track_id: str, slug: str, *, project_root: Path | None = None) -> Path:
@@ -217,6 +242,7 @@ def compute_pipeline_track(
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     track_dir = curriculum_root / level_cfg["path"]
     modules = []
+    content_index = build_content_file_index(track_dir)
 
     for num, slug in plan_slugs:
         # trusted_join: slug from repo plan config, per-module scan hot loop (#4931 perf).
@@ -224,10 +250,10 @@ def compute_pipeline_track(
         version = detect_pipeline_version(orch_dir)
         state = load_module_state(track_id, slug, orch_dir)
 
-        audit = get_audit_status(track_dir, slug)
+        audit = get_audit_status(track_dir, slug, content_index=content_index)
         research_score = get_research_score(track_dir, slug, track_id)
         research_path = find_research_path(track_dir, slug)
-        content_path = find_content_file(track_dir, slug)
+        content_path = find_content_file(track_dir, slug, content_index=content_index)
 
         word_count = audit.get("word_count", 0)
         word_target = audit.get("word_target", 0)
