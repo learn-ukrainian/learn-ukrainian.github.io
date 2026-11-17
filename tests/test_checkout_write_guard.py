@@ -715,11 +715,15 @@ def test_session_hooks_skip_vanished_files_and_directories(
     victim = directory / "victim.txt"
     victim.write_text("gone", encoding="utf-8")
     deleted = []
-    original_stat = Path.stat
+    original_stat = os.stat
     original_scandir = os.scandir
 
-    def racing_stat(path: Path, *args, **kwargs):
-        if path == victim and not deleted:
+    def racing_stat(path, *args, **kwargs):
+        # Listing uses scandir. The later absence check is os.stat on both
+        # versions: 3.12 Path.is_file() goes through Path.stat, 3.14 goes
+        # through os.path.isfile, and tree scans call Path.stat(). All three
+        # call os.stat. Unlink before that stat so the helper sees the file gone.
+        if not isinstance(path, int) and not deleted and Path(path) == victim:
             victim.unlink()
             deleted.append(victim)
         return original_stat(path, *args, **kwargs)
@@ -730,8 +734,10 @@ def test_session_hooks_skip_vanished_files_and_directories(
             deleted.append(directory)
         return original_scandir(path)
 
-    monkeypatch.setattr(Path, "stat", racing_stat if vanished == "file" else original_stat)
-    monkeypatch.setattr(os, "scandir", racing_scandir if vanished == "directory" else original_scandir)
+    if vanished == "file":
+        monkeypatch.setattr(os, "stat", racing_stat)
+    else:
+        monkeypatch.setattr(os, "scandir", racing_scandir)
     if phase == "start":
         checkout_write_guard.pytest_sessionstart(session)
     else:
