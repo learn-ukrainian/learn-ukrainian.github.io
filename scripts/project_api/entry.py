@@ -57,7 +57,7 @@ PRELOAD_MODULES = (
     "yaml_activities",
     "scripts.build.phase_constants",
     # Release modules the product routers import (machinery, not product code).
-    "lu_machinery.research_quality",
+    "lu_machinery.research.research_quality",
     "lu_machinery.research.research_markdown_utils",
 )
 

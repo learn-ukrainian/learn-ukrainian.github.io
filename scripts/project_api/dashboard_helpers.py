@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.api.state_helpers import ctx_cache_scope
 from lu_machinery.path_safety import safe_join
-from lu_machinery.research_quality import assess_research_compat, find_research_path, get_rubric
+from lu_machinery.research.research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .curriculum_state import detect_pipeline_version, get_plan_slugs, monitor_surface, read_v2_state
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict

@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from lu_machinery.api import config
 from lu_machinery.path_safety import safe_join
-from lu_machinery.research_quality import (
+from lu_machinery.research.research_quality import (
     DIMENSION_SHORT_LABELS,
     assess_research_compat,
     find_research_path,

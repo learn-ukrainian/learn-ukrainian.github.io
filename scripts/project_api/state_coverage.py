@@ -37,7 +37,7 @@ from .curriculum_state import V6_PHASE_ORDER as V6_PHASES
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lu_machinery.research_quality import assess_research_compat, find_research_path
+from lu_machinery.research.research_quality import assess_research_compat, find_research_path
 
 from .review_parsing import count_review_issues, extract_plan_verdict, extract_review_score, extract_review_verdict
 
