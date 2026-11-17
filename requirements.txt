@@ -104,8 +104,9 @@ mcp>=2.2,<3
 beautifulsoup4[chardet]>=4.15.0
 requests[use-chardet-on-py3]>=2.34.2
 
-# YouTube ingestion
-yt-dlp>=2026.7.4
+# YouTube ingestion. The secretstorage extra decrypts Chrome cookies on Linux
+# for --cookies-from-browser chrome (scripts/wiki/fetch_external_sources.py).
+yt-dlp[secretstorage]>=2026.7.4
 
 # Build utilities
 jinja2>=3.1
